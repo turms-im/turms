@@ -95,9 +95,9 @@ public class UserRelationshipGroupController {
             UserRelationshipGroup.KeyList keys,
             @RequestBody UpdateRelationshipGroupDTO updateRelationshipGroupDTO) {
         Mono<UpdateResultDTO> updateMono = userRelationshipGroupService.updateRelationshipGroups(
-                CollectionUtil.newSet(keys.getKeys()),
-                updateRelationshipGroupDTO.getName(),
-                updateRelationshipGroupDTO.getCreationDate())
+                        CollectionUtil.newSet(keys.getKeys()),
+                        updateRelationshipGroupDTO.getName(),
+                        updateRelationshipGroupDTO.getCreationDate())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

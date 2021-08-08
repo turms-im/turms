@@ -71,14 +71,14 @@ public class GroupInvitationController {
     public Mono<ResponseEntity<ResponseDTO<GroupInvitationDTO>>> addGroupInvitation(
             @RequestBody AddGroupInvitationDTO addGroupInvitationDTO) {
         Mono<GroupInvitationDTO> createMono = groupInvitationService.createGroupInvitation(
-                addGroupInvitationDTO.getId(),
-                addGroupInvitationDTO.getGroupId(),
-                addGroupInvitationDTO.getInviterId(),
-                addGroupInvitationDTO.getInviteeId(),
-                addGroupInvitationDTO.getContent(),
-                addGroupInvitationDTO.getStatus(),
-                addGroupInvitationDTO.getCreationDate(),
-                addGroupInvitationDTO.getResponseDate())
+                        addGroupInvitationDTO.getId(),
+                        addGroupInvitationDTO.getGroupId(),
+                        addGroupInvitationDTO.getInviterId(),
+                        addGroupInvitationDTO.getInviteeId(),
+                        addGroupInvitationDTO.getContent(),
+                        addGroupInvitationDTO.getStatus(),
+                        addGroupInvitationDTO.getCreationDate(),
+                        addGroupInvitationDTO.getResponseDate())
                 .map(invitation -> new GroupInvitationDTO(invitation, groupInvitationService.getModelExpirationDate()));
         return ResponseFactory.okIfTruthy(createMono);
     }
@@ -100,16 +100,16 @@ public class GroupInvitationController {
             @RequestParam(required = false) Integer size) {
         size = pageUtil.getSize(size);
         Flux<GroupInvitationDTO> invitationFlux = groupInvitationService.queryInvitations(
-                ids,
-                groupIds,
-                inviterIds,
-                inviteeIds,
-                statuses,
-                DateRange.of(creationDateStart, creationDateEnd),
-                DateRange.of(responseDateStart, responseDateEnd),
-                DateRange.of(expirationDateStart, expirationDateEnd),
-                0,
-                size)
+                        ids,
+                        groupIds,
+                        inviterIds,
+                        inviteeIds,
+                        statuses,
+                        DateRange.of(creationDateStart, creationDateEnd),
+                        DateRange.of(responseDateStart, responseDateEnd),
+                        DateRange.of(expirationDateStart, expirationDateEnd),
+                        0,
+                        size)
                 .map(invitation -> new GroupInvitationDTO(invitation, groupInvitationService.getModelExpirationDate()));
         return ResponseFactory.okIfTruthy(invitationFlux);
     }
@@ -141,16 +141,16 @@ public class GroupInvitationController {
                 DateRange.of(responseDateStart, responseDateEnd),
                 DateRange.of(expirationDateStart, expirationDateEnd));
         Flux<GroupInvitationDTO> invitationFlux = groupInvitationService.queryInvitations(
-                ids,
-                groupIds,
-                inviterIds,
-                inviteeIds,
-                statuses,
-                DateRange.of(creationDateStart, creationDateEnd),
-                DateRange.of(responseDateStart, responseDateEnd),
-                DateRange.of(expirationDateStart, expirationDateEnd),
-                page,
-                size)
+                        ids,
+                        groupIds,
+                        inviterIds,
+                        inviteeIds,
+                        statuses,
+                        DateRange.of(creationDateStart, creationDateEnd),
+                        DateRange.of(responseDateStart, responseDateEnd),
+                        DateRange.of(expirationDateStart, expirationDateEnd),
+                        page,
+                        size)
                 .map(invitation -> new GroupInvitationDTO(invitation, groupInvitationService.getModelExpirationDate()));
         return ResponseFactory.page(count, invitationFlux);
     }
@@ -161,13 +161,13 @@ public class GroupInvitationController {
             @RequestParam Set<Long> ids,
             @RequestBody UpdateGroupInvitationDTO updateGroupInvitationDTO) {
         Mono<UpdateResultDTO> updateMono = groupInvitationService.updateInvitations(
-                ids,
-                updateGroupInvitationDTO.getInviterId(),
-                updateGroupInvitationDTO.getInviteeId(),
-                updateGroupInvitationDTO.getContent(),
-                updateGroupInvitationDTO.getStatus(),
-                updateGroupInvitationDTO.getCreationDate(),
-                updateGroupInvitationDTO.getResponseDate())
+                        ids,
+                        updateGroupInvitationDTO.getInviterId(),
+                        updateGroupInvitationDTO.getInviteeId(),
+                        updateGroupInvitationDTO.getContent(),
+                        updateGroupInvitationDTO.getStatus(),
+                        updateGroupInvitationDTO.getCreationDate(),
+                        updateGroupInvitationDTO.getResponseDate())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

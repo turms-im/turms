@@ -155,43 +155,43 @@ public class UserController {
         if (divideBy == null || divideBy == DivideBy.NOOP) {
             if (deletedStartDate != null || deletedEndDate != null) {
                 counts.add(userService.countDeletedUsers(
-                        DateRange.of(deletedStartDate, deletedEndDate))
+                                DateRange.of(deletedStartDate, deletedEndDate))
                         .doOnNext(statistics::setDeletedUsers));
             }
             if (sentMessageStartDate != null || sentMessageEndDate != null) {
                 counts.add(messageService.countUsersWhoSentMessage(
-                        DateRange.of(sentMessageStartDate, sentMessageEndDate),
-                        null,
-                        false)
+                                DateRange.of(sentMessageStartDate, sentMessageEndDate),
+                                null,
+                                false)
                         .doOnNext(statistics::setUsersWhoSentMessages));
             }
             if (counts.isEmpty() || registeredStartDate != null || registeredEndDate != null) {
                 counts.add(userService.countRegisteredUsers(
-                        DateRange.of(registeredStartDate, registeredEndDate), true)
+                                DateRange.of(registeredStartDate, registeredEndDate), true)
                         .doOnNext(statistics::setRegisteredUsers));
             }
         } else {
             if (deletedStartDate != null && deletedEndDate != null) {
                 counts.add(dateTimeUtil.checkAndQueryBetweenDate(
-                        DateRange.of(deletedStartDate, deletedEndDate),
-                        divideBy,
-                        userService::countDeletedUsers)
+                                DateRange.of(deletedStartDate, deletedEndDate),
+                                divideBy,
+                                userService::countDeletedUsers)
                         .doOnNext(statistics::setDeletedUsersRecords));
             }
             if (sentMessageStartDate != null && sentMessageEndDate != null) {
                 counts.add(dateTimeUtil.checkAndQueryBetweenDate(
-                        DateRange.of(sentMessageStartDate, sentMessageEndDate),
-                        divideBy,
-                        messageService::countUsersWhoSentMessage,
-                        null,
-                        false)
+                                DateRange.of(sentMessageStartDate, sentMessageEndDate),
+                                divideBy,
+                                messageService::countUsersWhoSentMessage,
+                                null,
+                                false)
                         .doOnNext(statistics::setUsersWhoSentMessagesRecords));
             }
             if (registeredStartDate != null && registeredEndDate != null) {
                 counts.add(dateTimeUtil.checkAndQueryBetweenDate(
-                        DateRange.of(registeredStartDate, registeredEndDate),
-                        divideBy,
-                        dateRange -> userService.countRegisteredUsers(dateRange, true))
+                                DateRange.of(registeredStartDate, registeredEndDate),
+                                divideBy,
+                                dateRange -> userService.countRegisteredUsers(dateRange, true))
                         .doOnNext(statistics::setRegisteredUsersRecords));
             }
             if (counts.isEmpty()) {
@@ -207,14 +207,14 @@ public class UserController {
             @RequestParam Set<Long> ids,
             @RequestBody UpdateUserDTO updateUserDTO) {
         Mono<UpdateResultDTO> updateMono = userService.updateUsers(
-                ids,
-                updateUserDTO.getPassword(),
-                updateUserDTO.getName(),
-                updateUserDTO.getIntro(),
-                updateUserDTO.getProfileAccess(),
-                updateUserDTO.getPermissionGroupId(),
-                updateUserDTO.getRegistrationDate(),
-                updateUserDTO.getIsActive())
+                        ids,
+                        updateUserDTO.getPassword(),
+                        updateUserDTO.getName(),
+                        updateUserDTO.getIntro(),
+                        updateUserDTO.getProfileAccess(),
+                        updateUserDTO.getPermissionGroupId(),
+                        updateUserDTO.getRegistrationDate(),
+                        updateUserDTO.getIsActive())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

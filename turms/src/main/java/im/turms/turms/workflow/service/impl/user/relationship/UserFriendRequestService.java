@@ -347,9 +347,9 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
                     switch (action) {
                         case ACCEPT:
                             return mongoClient.inTransaction(
-                                    session -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.ACCEPTED, reason, session)
-                                            .then(userRelationshipService.friendTwoUsers(request.getRequesterId(), requesterId, session))
-                                            .then())
+                                            session -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.ACCEPTED, reason, session)
+                                                    .then(userRelationshipService.friendTwoUsers(request.getRequesterId(), requesterId, session))
+                                                    .then())
                                     .retryWhen(DaoConstant.TRANSACTION_RETRY);
                         case IGNORE:
                             return updatePendingFriendRequestStatus(friendRequestId, RequestStatus.IGNORED, reason, null)

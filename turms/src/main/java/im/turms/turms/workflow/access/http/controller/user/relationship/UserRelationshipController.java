@@ -133,9 +133,9 @@ public class UserRelationshipController {
             UserRelationship.KeyList keys,
             @RequestBody UpdateRelationshipDTO updateRelationshipDTO) {
         Mono<UpdateResultDTO> updateMono = userRelationshipService.updateUserOneSidedRelationships(
-                CollectionUtil.newSet(keys.getKeys()),
-                updateRelationshipDTO.getBlockDate(),
-                updateRelationshipDTO.getEstablishmentDate())
+                        CollectionUtil.newSet(keys.getKeys()),
+                        updateRelationshipDTO.getBlockDate(),
+                        updateRelationshipDTO.getEstablishmentDate())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

@@ -163,13 +163,13 @@ public class GroupQuestionService {
                         .flatMap(idsAndScore -> groupService.queryGroupMinimumScore(groupId)
                                 .flatMap(minimumScore -> idsAndScore.getRight() >= minimumScore
                                         ? groupMemberService.addGroupMember(
-                                        groupId,
-                                        requesterId,
-                                        GroupMemberRole.MEMBER,
-                                        null,
-                                        null,
-                                        null,
-                                        null)
+                                                groupId,
+                                                requesterId,
+                                                GroupMemberRole.MEMBER,
+                                                null,
+                                                null,
+                                                null,
+                                                null)
                                         .thenReturn(true)
                                         : Mono.just(false))
                                 .map(joined -> GroupJoinQuestionsAnswerResult
@@ -222,7 +222,7 @@ public class GroupQuestionService {
                 score);
         return mongoClient.insert(groupJoinQuestion)
                 .then(Mono.defer(() -> groupVersionService.updateJoinQuestionsVersion(groupId)
-                                .onErrorResume(t -> Mono.empty())))
+                        .onErrorResume(t -> Mono.empty())))
                 .thenReturn(groupJoinQuestion);
     }
 

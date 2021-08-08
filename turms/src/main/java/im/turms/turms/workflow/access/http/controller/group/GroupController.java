@@ -184,39 +184,39 @@ public class GroupController {
         if (divideBy == null || divideBy == DivideBy.NOOP) {
             if (deletedStartDate != null || deletedEndDate != null) {
                 counts.add(groupService.countDeletedGroups(
-                        DateRange.of(deletedStartDate, deletedEndDate))
+                                DateRange.of(deletedStartDate, deletedEndDate))
                         .doOnNext(statistics::setDeletedGroups));
             }
             if (sentMessageStartDate != null || sentMessageEndDate != null) {
                 counts.add(messageService.countGroupsThatSentMessages(
-                        DateRange.of(sentMessageStartDate, sentMessageEndDate))
+                                DateRange.of(sentMessageStartDate, sentMessageEndDate))
                         .doOnNext(statistics::setGroupsThatSentMessages));
             }
             if (counts.isEmpty() || createdStartDate != null || createdEndDate != null) {
                 counts.add(groupService.countCreatedGroups(
-                        DateRange.of(createdStartDate, createdEndDate))
+                                DateRange.of(createdStartDate, createdEndDate))
                         .doOnNext(statistics::setCreatedGroups));
             }
         } else {
             if (deletedStartDate != null && deletedEndDate != null) {
                 counts.add(dateTimeUtil.checkAndQueryBetweenDate(
-                        DateRange.of(deletedStartDate, deletedEndDate),
-                        divideBy,
-                        groupService::countDeletedGroups)
+                                DateRange.of(deletedStartDate, deletedEndDate),
+                                divideBy,
+                                groupService::countDeletedGroups)
                         .doOnNext(statistics::setDeletedGroupsRecords));
             }
             if (sentMessageStartDate != null && sentMessageEndDate != null) {
                 counts.add(dateTimeUtil.checkAndQueryBetweenDate(
-                        DateRange.of(sentMessageStartDate, sentMessageEndDate),
-                        divideBy,
-                        messageService::countGroupsThatSentMessages)
+                                DateRange.of(sentMessageStartDate, sentMessageEndDate),
+                                divideBy,
+                                messageService::countGroupsThatSentMessages)
                         .doOnNext(statistics::setGroupsThatSentMessagesRecords));
             }
             if (createdStartDate != null && createdEndDate != null) {
                 counts.add(dateTimeUtil.checkAndQueryBetweenDate(
-                        DateRange.of(createdStartDate, createdEndDate),
-                        divideBy,
-                        groupService::countCreatedGroups)
+                                DateRange.of(createdStartDate, createdEndDate),
+                                divideBy,
+                                groupService::countCreatedGroups)
                         .doOnNext(statistics::setCreatedGroupsRecords));
             }
             if (counts.isEmpty()) {
@@ -256,8 +256,8 @@ public class GroupController {
             @RequestParam(required = false) Set<Long> ids,
             @RequestParam(required = false) Boolean deleteLogically) {
         Mono<DeleteResultDTO> deleted = groupService.deleteGroupsAndGroupMembers(
-                ids,
-                deleteLogically)
+                        ids,
+                        deleteLogically)
                 .map(DeleteResultDTO::get);
         return ResponseFactory.okIfTruthy(deleted);
     }

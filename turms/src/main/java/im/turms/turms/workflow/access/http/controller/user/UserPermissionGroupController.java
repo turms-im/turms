@@ -104,11 +104,11 @@ public class UserPermissionGroupController {
             @RequestParam Set<Long> ids,
             @RequestBody UpdateUserPermissionGroupDTO updateUserPermissionGroupDTO) {
         Mono<UpdateResultDTO> updateMono = userPermissionGroupService.updateUserPermissionGroups(
-                ids,
-                updateUserPermissionGroupDTO.getCreatableGroupTypeIds(),
-                updateUserPermissionGroupDTO.getOwnedGroupLimit(),
-                updateUserPermissionGroupDTO.getOwnedGroupLimitForEachGroupType(),
-                updateUserPermissionGroupDTO.getGroupTypeLimits())
+                        ids,
+                        updateUserPermissionGroupDTO.getCreatableGroupTypeIds(),
+                        updateUserPermissionGroupDTO.getOwnedGroupLimit(),
+                        updateUserPermissionGroupDTO.getOwnedGroupLimitForEachGroupType(),
+                        updateUserPermissionGroupDTO.getGroupTypeLimits())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

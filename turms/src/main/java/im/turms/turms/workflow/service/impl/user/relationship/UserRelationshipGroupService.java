@@ -303,20 +303,21 @@ public class UserRelationshipGroupService {
         if (deleteGroupIndex.equals(newGroupIndex)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         } else {
-            return mongoClient.inTransaction(session -> {
-                Filter filterMember = Filter.newBuilder(2)
-                        .eq(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerId)
-                        .eq(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, deleteGroupIndex);
-                UserRelationshipGroup.Key key = new UserRelationshipGroup.Key(ownerId, deleteGroupIndex);
-                Filter filterGroup = Filter.newBuilder(1)
-                        .eq(DaoConstant.ID_FIELD_NAME, key);
-                // FIXME: after https://github.com/turms-im/turms/issues/589 done
-                Update update = Update.newBuilder(1)
-                        .set(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, newGroupIndex);
-                return mongoClient.updateMany(session, UserRelationshipGroupMember.class, filterMember, update)
-                        .then(mongoClient.deleteMany(session, UserRelationshipGroup.class, filterGroup))
-                        .then(userVersionService.updateRelationshipGroupsVersion(ownerId).onErrorResume(t -> Mono.empty()));
-            })
+            return mongoClient
+                    .inTransaction(session -> {
+                        Filter filterMember = Filter.newBuilder(2)
+                                .eq(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerId)
+                                .eq(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, deleteGroupIndex);
+                        UserRelationshipGroup.Key key = new UserRelationshipGroup.Key(ownerId, deleteGroupIndex);
+                        Filter filterGroup = Filter.newBuilder(1)
+                                .eq(DaoConstant.ID_FIELD_NAME, key);
+                        // FIXME: after https://github.com/turms-im/turms/issues/589 done
+                        Update update = Update.newBuilder(1)
+                                .set(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, newGroupIndex);
+                        return mongoClient.updateMany(session, UserRelationshipGroupMember.class, filterMember, update)
+                                .then(mongoClient.deleteMany(session, UserRelationshipGroup.class, filterGroup))
+                                .then(userVersionService.updateRelationshipGroupsVersion(ownerId).onErrorResume(t -> Mono.empty()));
+                    })
                     .retryWhen(DaoConstant.TRANSACTION_RETRY);
         }
     }

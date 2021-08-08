@@ -101,10 +101,11 @@ public class UserRelationshipService {
                                 .onErrorResume(t -> Mono.empty())
                                 .thenReturn(result));
             } else {
-                return mongoClient.inTransaction(newSession -> mongoClient.deleteMany(newSession, UserRelationship.class, filter)
-                        .flatMap(result -> userVersionService.updateRelationshipsVersion(userIds, newSession)
-                                .onErrorResume(t -> Mono.empty())
-                                .thenReturn(result)))
+                return mongoClient
+                        .inTransaction(newSession -> mongoClient.deleteMany(newSession, UserRelationship.class, filter)
+                                .flatMap(result -> userVersionService.updateRelationshipsVersion(userIds, newSession)
+                                        .onErrorResume(t -> Mono.empty())
+                                        .thenReturn(result)))
                         .retryWhen(TRANSACTION_RETRY);
             }
         } else {
@@ -125,14 +126,15 @@ public class UserRelationshipService {
         for (UserRelationship.Key key : keys) {
             ownerIds.add(key.getOwnerId());
         }
-        return mongoClient.inTransaction(session -> {
-            Filter filter = Filter.newBuilder(1)
-                    .in(DaoConstant.ID_FIELD_NAME, keys);
-            return mongoClient.deleteMany(session, UserRelationship.class, filter)
-                    .flatMap(result -> userRelationshipGroupService.deleteRelatedUsersFromAllRelationshipGroups(keys, session, true)
-                            .then(userVersionService.updateRelationshipsVersion(ownerIds, null).onErrorResume(t -> Mono.empty()))
-                            .thenReturn(result));
-        })
+        return mongoClient
+                .inTransaction(session -> {
+                    Filter filter = Filter.newBuilder(1)
+                            .in(DaoConstant.ID_FIELD_NAME, keys);
+                    return mongoClient.deleteMany(session, UserRelationship.class, filter)
+                            .flatMap(result -> userRelationshipGroupService.deleteRelatedUsersFromAllRelationshipGroups(keys, session, true)
+                                    .then(userVersionService.updateRelationshipsVersion(ownerIds, null).onErrorResume(t -> Mono.empty()))
+                                    .thenReturn(result));
+                })
                 .retryWhen(TRANSACTION_RETRY);
     }
 
@@ -154,14 +156,15 @@ public class UserRelationshipService {
                     .then(userRelationshipGroupService.deleteRelatedUserFromAllRelationshipGroups(
                             ownerId, relatedUserId, session, false))
                     .then(userVersionService.updateSpecificVersion(
-                            ownerId,
-                            session,
-                            UserVersion.Fields.RELATIONSHIP_GROUPS_MEMBERS,
-                            UserVersion.Fields.RELATIONSHIPS)
+                                    ownerId,
+                                    session,
+                                    UserVersion.Fields.RELATIONSHIP_GROUPS_MEMBERS,
+                                    UserVersion.Fields.RELATIONSHIPS)
                             .onErrorResume(t -> Mono.empty()))
                     .then();
         } else {
-            return mongoClient.inTransaction(newSession -> deleteOneSidedRelationship(ownerId, relatedUserId, newSession))
+            return mongoClient
+                    .inTransaction(newSession -> deleteOneSidedRelationship(ownerId, relatedUserId, newSession))
                     .retryWhen(TRANSACTION_RETRY);
         }
     }

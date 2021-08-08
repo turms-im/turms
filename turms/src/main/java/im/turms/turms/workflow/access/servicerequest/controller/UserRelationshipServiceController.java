@@ -87,10 +87,10 @@ public class UserRelationshipServiceController {
         return clientRequest -> {
             CreateFriendRequestRequest request = clientRequest.getTurmsRequest().getCreateFriendRequestRequest();
             return userFriendRequestService.authAndCreateFriendRequest(
-                    clientRequest.getUserId(),
-                    request.getRecipientId(),
-                    request.getContent(),
-                    new Date())
+                            clientRequest.getUserId(),
+                            request.getRecipientId(),
+                            request.getContent(),
+                            new Date())
                     .map(friendRequest -> node.getSharedProperties()
                             .getService()
                             .getNotification().isNotifyRecipientWhenReceivingFriendRequest()
@@ -105,11 +105,11 @@ public class UserRelationshipServiceController {
         return clientRequest -> {
             CreateRelationshipGroupRequest request = clientRequest.getTurmsRequest().getCreateRelationshipGroupRequest();
             return userRelationshipGroupService.createRelationshipGroup(
-                    clientRequest.getUserId(),
-                    null,
-                    request.getName(),
-                    new Date(),
-                    null)
+                            clientRequest.getUserId(),
+                            null,
+                            request.getName(),
+                            new Date(),
+                            null)
                     .map(group -> RequestHandlerResultFactory.get(group.getKey().getGroupIndex().longValue()));
         };
     }
@@ -124,14 +124,14 @@ public class UserRelationshipServiceController {
                     request.getGroupIndex() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
             Date blockDate = request.getBlocked() ? new Date() : null;
             return userRelationshipService.upsertOneSidedRelationship(
-                    clientRequest.getUserId(),
-                    request.getUserId(),
-                    blockDate,
-                    groupIndex,
-                    null,
-                    new Date(),
-                    false,
-                    null)
+                            clientRequest.getUserId(),
+                            request.getUserId(),
+                            blockDate,
+                            groupIndex,
+                            null,
+                            new Date(),
+                            false,
+                            null)
                     .then(Mono.fromCallable(() ->
                             node.getSharedProperties().getService().getNotification()
                                     .isNotifyRelatedUserAfterAddedToOneSidedRelationshipGroupByOthers()
@@ -149,22 +149,22 @@ public class UserRelationshipServiceController {
                     request.getTargetGroupIndex() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
             if (node.getSharedProperties().getService().getNotification()
                     .isNotifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers()) {
-                return userRelationshipGroupService.queryRelatedUserIdsInRelationshipGroup(
-                        clientRequest.getUserId(),
-                        groupIndex)
+                return userRelationshipGroupService.queryRelationshipGroupMemberIds(
+                                clientRequest.getUserId(),
+                                groupIndex)
                         .collect(Collectors.toSet())
                         .flatMap(ids -> userRelationshipGroupService.deleteRelationshipGroupAndMoveMembers(
-                                clientRequest.getUserId(),
-                                groupIndex,
-                                targetGroupIndex)
+                                        clientRequest.getUserId(),
+                                        groupIndex,
+                                        targetGroupIndex)
                                 .then(Mono.fromCallable(() -> ids.isEmpty()
                                         ? RequestHandlerResultFactory.OK
                                         : RequestHandlerResultFactory.get(ids, clientRequest.getTurmsRequest()))));
             }
             return userRelationshipGroupService.deleteRelationshipGroupAndMoveMembers(
-                    clientRequest.getUserId(),
-                    groupIndex,
-                    targetGroupIndex)
+                            clientRequest.getUserId(),
+                            groupIndex,
+                            targetGroupIndex)
                     .thenReturn(RequestHandlerResultFactory.OK);
         };
     }
@@ -198,9 +198,9 @@ public class UserRelationshipServiceController {
             QueryFriendRequestsRequest request = clientRequest.getTurmsRequest().getQueryFriendRequestsRequest();
             Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate()) : null;
             return userFriendRequestService.queryFriendRequestsWithVersion(
-                    clientRequest.getUserId(),
-                    request.getAreSentByMe(),
-                    lastUpdatedDate)
+                            clientRequest.getUserId(),
+                            request.getAreSentByMe(),
+                            lastUpdatedDate)
                     .map(friendRequestsWithVersion -> RequestHandlerResultFactory
                             .get(TurmsNotification.Data
                                     .newBuilder()
@@ -217,10 +217,10 @@ public class UserRelationshipServiceController {
             Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate()) : null;
             Boolean isBlocked = request.hasBlocked() ? request.getBlocked() : null;
             return userRelationshipService.queryRelatedUserIdsWithVersion(
-                    clientRequest.getUserId(),
-                    groupIndex,
-                    isBlocked,
-                    lastUpdatedDate)
+                            clientRequest.getUserId(),
+                            groupIndex,
+                            isBlocked,
+                            lastUpdatedDate)
                     .map(idsWithVersion -> RequestHandlerResultFactory
                             .get(TurmsNotification.Data
                                     .newBuilder()
@@ -237,8 +237,8 @@ public class UserRelationshipServiceController {
             Date lastUpdatedDate = request.hasLastUpdatedDate() ?
                     new Date(request.getLastUpdatedDate()) : null;
             return userRelationshipGroupService.queryRelationshipGroupsInfosWithVersion(
-                    clientRequest.getUserId(),
-                    lastUpdatedDate)
+                            clientRequest.getUserId(),
+                            lastUpdatedDate)
                     .map(groupsWithVersion -> RequestHandlerResultFactory
                             .get(TurmsNotification.Data
                                     .newBuilder()
@@ -259,11 +259,11 @@ public class UserRelationshipServiceController {
             Date lastUpdatedDate = request.hasLastUpdatedDate() ?
                     new Date(request.getLastUpdatedDate()) : null;
             return userRelationshipService.queryRelationshipsWithVersion(
-                    clientRequest.getUserId(),
-                    ids,
-                    groupIndex,
-                    isBlocked,
-                    lastUpdatedDate)
+                            clientRequest.getUserId(),
+                            ids,
+                            groupIndex,
+                            isBlocked,
+                            lastUpdatedDate)
                     .map(relationshipsWithVersion -> RequestHandlerResultFactory
                             .get(TurmsNotification.Data
                                     .newBuilder()
@@ -279,10 +279,10 @@ public class UserRelationshipServiceController {
             ResponseAction action = request.getResponseAction();
             String reason = request.hasReason() ? request.getReason() : null;
             return userFriendRequestService.authAndHandleFriendRequest(
-                    request.getRequestId(),
-                    clientRequest.getUserId(),
-                    action,
-                    reason)
+                            request.getRequestId(),
+                            clientRequest.getUserId(),
+                            action,
+                            reason)
                     .then(Mono.fromCallable(
                             () -> node.getSharedProperties().getService().getNotification().isNotifyRequesterAfterFriendRequestUpdated()
                                     ? RequestHandlerResultFactory.get(request.getRequestId(), clientRequest.getTurmsRequest())
@@ -295,9 +295,9 @@ public class UserRelationshipServiceController {
         return clientRequest -> {
             UpdateRelationshipGroupRequest request = clientRequest.getTurmsRequest().getUpdateRelationshipGroupRequest();
             return userRelationshipGroupService.updateRelationshipGroupName(
-                    clientRequest.getUserId(),
-                    request.getGroupIndex(),
-                    request.getNewName())
+                            clientRequest.getUserId(),
+                            request.getGroupIndex(),
+                            request.getNewName())
                     .thenReturn(RequestHandlerResultFactory.OK);
         };
     }
@@ -310,14 +310,14 @@ public class UserRelationshipServiceController {
             Integer newGroupIndex = request.hasNewGroupIndex() ? request.getNewGroupIndex() : null;
             Integer deleteGroupIndex = request.hasDeleteGroupIndex() ? request.getDeleteGroupIndex() : null;
             return userRelationshipService.upsertOneSidedRelationship(
-                    clientRequest.getUserId(),
-                    request.getUserId(),
-                    blockDate,
-                    newGroupIndex,
-                    deleteGroupIndex,
-                    null,
-                    true,
-                    null)
+                            clientRequest.getUserId(),
+                            request.getUserId(),
+                            blockDate,
+                            newGroupIndex,
+                            deleteGroupIndex,
+                            null,
+                            true,
+                            null)
                     .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification()
                             .isNotifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers()
                             ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())

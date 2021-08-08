@@ -129,9 +129,9 @@ public class GroupBlocklistController {
             GroupBlockedUser.KeyList keys,
             @RequestBody UpdateGroupBlockedUserDTO updateGroupBlockedUserDTO) {
         Mono<UpdateResultDTO> updateMono = groupBlocklistService.updateBlockedUsers(
-                CollectionUtil.newSet(keys.getKeys()),
-                updateGroupBlockedUserDTO.getBlockDate(),
-                updateGroupBlockedUserDTO.getRequesterId())
+                        CollectionUtil.newSet(keys.getKeys()),
+                        updateGroupBlockedUserDTO.getBlockDate(),
+                        updateGroupBlockedUserDTO.getRequesterId())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

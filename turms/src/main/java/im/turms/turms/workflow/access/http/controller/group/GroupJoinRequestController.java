@@ -71,14 +71,14 @@ public class GroupJoinRequestController {
     public Mono<ResponseEntity<ResponseDTO<GroupJoinRequestDTO>>> addGroupJoinRequest(
             @RequestBody AddGroupJoinRequestDTO addGroupJoinRequestDTO) {
         Mono<GroupJoinRequestDTO> createMono = groupJoinRequestService.createGroupJoinRequest(
-                addGroupJoinRequestDTO.getId(),
-                addGroupJoinRequestDTO.getGroupId(),
-                addGroupJoinRequestDTO.getRequesterId(),
-                addGroupJoinRequestDTO.getResponderId(),
-                addGroupJoinRequestDTO.getContent(),
-                addGroupJoinRequestDTO.getStatus(),
-                addGroupJoinRequestDTO.getCreationDate(),
-                addGroupJoinRequestDTO.getResponseDate())
+                        addGroupJoinRequestDTO.getId(),
+                        addGroupJoinRequestDTO.getGroupId(),
+                        addGroupJoinRequestDTO.getRequesterId(),
+                        addGroupJoinRequestDTO.getResponderId(),
+                        addGroupJoinRequestDTO.getContent(),
+                        addGroupJoinRequestDTO.getStatus(),
+                        addGroupJoinRequestDTO.getCreationDate(),
+                        addGroupJoinRequestDTO.getResponseDate())
                 .map(request -> new GroupJoinRequestDTO(request, groupJoinRequestService.getModelExpirationDate()));
         return ResponseFactory.okIfTruthy(createMono);
     }
@@ -100,16 +100,16 @@ public class GroupJoinRequestController {
             @RequestParam(required = false) Integer size) {
         size = pageUtil.getSize(size);
         Flux<GroupJoinRequestDTO> joinRequestFlux = groupJoinRequestService.queryJoinRequests(
-                ids,
-                groupIds,
-                requesterIds,
-                responderIds,
-                statuses,
-                DateRange.of(creationDateStart, creationDateEnd),
-                DateRange.of(responseDateStart, responseDateEnd),
-                DateRange.of(expirationDateStart, expirationDateEnd),
-                0,
-                size)
+                        ids,
+                        groupIds,
+                        requesterIds,
+                        responderIds,
+                        statuses,
+                        DateRange.of(creationDateStart, creationDateEnd),
+                        DateRange.of(responseDateStart, responseDateEnd),
+                        DateRange.of(expirationDateStart, expirationDateEnd),
+                        0,
+                        size)
                 .map(request -> new GroupJoinRequestDTO(request, groupJoinRequestService.getModelExpirationDate()));
         return ResponseFactory.okIfTruthy(joinRequestFlux);
     }
@@ -141,16 +141,16 @@ public class GroupJoinRequestController {
                 DateRange.of(responseDateStart, responseDateEnd),
                 DateRange.of(expirationDateStart, expirationDateEnd));
         Flux<GroupJoinRequestDTO> joinRequestFlux = groupJoinRequestService.queryJoinRequests(
-                ids,
-                groupIds,
-                requesterIds,
-                responderIds,
-                statuses,
-                DateRange.of(creationDateStart, creationDateEnd),
-                DateRange.of(responseDateStart, responseDateEnd),
-                DateRange.of(expirationDateStart, expirationDateEnd),
-                page,
-                size)
+                        ids,
+                        groupIds,
+                        requesterIds,
+                        responderIds,
+                        statuses,
+                        DateRange.of(creationDateStart, creationDateEnd),
+                        DateRange.of(responseDateStart, responseDateEnd),
+                        DateRange.of(expirationDateStart, expirationDateEnd),
+                        page,
+                        size)
                 .map(request -> new GroupJoinRequestDTO(request, groupJoinRequestService.getModelExpirationDate()));
         return ResponseFactory.page(count, joinRequestFlux);
     }
@@ -161,13 +161,13 @@ public class GroupJoinRequestController {
             @RequestParam Set<Long> ids,
             @RequestBody UpdateGroupJoinRequestDTO updateGroupJoinRequestDTO) {
         Mono<UpdateResultDTO> updateMono = groupJoinRequestService.updateJoinRequests(
-                ids,
-                updateGroupJoinRequestDTO.getRequesterId(),
-                updateGroupJoinRequestDTO.getResponderId(),
-                updateGroupJoinRequestDTO.getContent(),
-                updateGroupJoinRequestDTO.getStatus(),
-                updateGroupJoinRequestDTO.getCreationDate(),
-                updateGroupJoinRequestDTO.getResponseDate())
+                        ids,
+                        updateGroupJoinRequestDTO.getRequesterId(),
+                        updateGroupJoinRequestDTO.getResponderId(),
+                        updateGroupJoinRequestDTO.getContent(),
+                        updateGroupJoinRequestDTO.getStatus(),
+                        updateGroupJoinRequestDTO.getCreationDate(),
+                        updateGroupJoinRequestDTO.getResponseDate())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

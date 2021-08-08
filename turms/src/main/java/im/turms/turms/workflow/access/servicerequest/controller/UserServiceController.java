@@ -105,9 +105,9 @@ public class UserServiceController {
         return clientRequest -> {
             QueryUserProfileRequest request = clientRequest.getTurmsRequest().getQueryUserProfileRequest();
             return userService.authAndQueryUserProfile(
-                    clientRequest.getUserId(),
-                    request.getUserId(),
-                    false)
+                            clientRequest.getUserId(),
+                            request.getUserId(),
+                            false)
                     .map(user -> {
                         UsersInfosWithVersion.Builder userBuilder = UsersInfosWithVersion
                                 .newBuilder()
@@ -127,14 +127,14 @@ public class UserServiceController {
             Integer distance = request.hasDistance() ? (int) request.getDistance() : null;
             Short maxNumber = request.hasMaxNumber() ? (short) request.getMaxNumber() : null;
             return usersNearbyService.queryNearbyUsers(
-                    clientRequest.getUserId(),
-                    clientRequest.getDeviceType(),
-                    new Point(request.getLongitude(), request.getLatitude()),
-                    maxNumber,
-                    distance,
-                    request.getWithCoordinates(),
-                    request.getWithDistance(),
-                    request.getWithInfo())
+                            clientRequest.getUserId(),
+                            clientRequest.getDeviceType(),
+                            new Point(request.getLongitude(), request.getLatitude()),
+                            maxNumber,
+                            distance,
+                            request.getWithCoordinates(),
+                            request.getWithDistance(),
+                            request.getWithInfo())
                     .map(nearbyUsers -> {
                         if (nearbyUsers.isEmpty()) {
                             return RequestHandlerResultFactory.NO_CONTENT;
@@ -254,14 +254,14 @@ public class UserServiceController {
             String intro = request.hasIntro() ? request.getIntro() : null;
             ProfileAccessStrategy profileAccessStrategy = request.getProfileAccessStrategy();
             return userService.updateUser(
-                    clientRequest.getUserId(),
-                    password,
-                    name,
-                    intro,
-                    profileAccessStrategy,
-                    null,
-                    null,
-                    null)
+                            clientRequest.getUserId(),
+                            password,
+                            name,
+                            intro,
+                            profileAccessStrategy,
+                            null,
+                            null,
+                            null)
                     .then(Mono.defer(() -> {
                         if (node.getSharedProperties().getService().getNotification()
                                 .isNotifyRelatedUsersAfterOtherRelatedUserInfoUpdated()) {

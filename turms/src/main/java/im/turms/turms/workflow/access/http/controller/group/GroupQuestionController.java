@@ -103,11 +103,11 @@ public class GroupQuestionController {
             @RequestParam Set<Long> ids,
             @RequestBody UpdateGroupJoinQuestionDTO updateGroupJoinQuestionDTO) {
         Mono<UpdateResultDTO> updateMono = groupQuestionService.updateGroupJoinQuestions(
-                ids,
-                updateGroupJoinQuestionDTO.getGroupId(),
-                updateGroupJoinQuestionDTO.getQuestion(),
-                updateGroupJoinQuestionDTO.getAnswers(),
-                updateGroupJoinQuestionDTO.getScore())
+                        ids,
+                        updateGroupJoinQuestionDTO.getGroupId(),
+                        updateGroupJoinQuestionDTO.getQuestion(),
+                        updateGroupJoinQuestionDTO.getAnswers(),
+                        updateGroupJoinQuestionDTO.getScore())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

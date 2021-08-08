@@ -133,17 +133,17 @@ public class GroupServiceController {
             Date muteEndDate = request.hasMuteEndDate() ? new Date(request.getMuteEndDate()) : null;
             Long creatorIdAndOwnerId = clientRequest.getUserId();
             return groupService.authAndCreateGroup(
-                    creatorIdAndOwnerId,
-                    creatorIdAndOwnerId,
-                    request.getName(),
-                    intro,
-                    announcement,
-                    minimumScore,
-                    groupTypeId,
-                    muteEndDate,
-                    null,
-                    null,
-                    node.getSharedProperties().getService().getGroup().isActivateGroupWhenCreated())
+                            creatorIdAndOwnerId,
+                            creatorIdAndOwnerId,
+                            request.getName(),
+                            intro,
+                            announcement,
+                            minimumScore,
+                            groupTypeId,
+                            muteEndDate,
+                            null,
+                            null,
+                            node.getSharedProperties().getService().getGroup().isActivateGroupWhenCreated())
                     .map(group -> RequestHandlerResultFactory.get(group.getId()));
         };
     }
@@ -188,8 +188,8 @@ public class GroupServiceController {
                     .getQueryJoinedGroupIdsRequest();
             Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate()) : null;
             return groupService.queryJoinedGroupIdsWithVersion(
-                    clientRequest.getUserId(),
-                    lastUpdatedDate)
+                            clientRequest.getUserId(),
+                            lastUpdatedDate)
                     .map(idsWithVersion -> RequestHandlerResultFactory.get(TurmsNotification.Data
                             .newBuilder()
                             .setIdsWithVersion(idsWithVersion)
@@ -204,8 +204,8 @@ public class GroupServiceController {
                     .getQueryJoinedGroupInfosRequest();
             Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate()) : null;
             return groupService.queryJoinedGroupsWithVersion(
-                    clientRequest.getUserId(),
-                    lastUpdatedDate)
+                            clientRequest.getUserId(),
+                            lastUpdatedDate)
                     .map(groupsWithVersion -> RequestHandlerResultFactory.get(TurmsNotification.Data
                             .newBuilder()
                             .setGroupsWithVersion(groupsWithVersion)
@@ -267,10 +267,10 @@ public class GroupServiceController {
             CreateGroupBlockedUserRequest request = clientRequest.getTurmsRequest()
                     .getCreateGroupBlockedUserRequest();
             return groupBlocklistService.blockUser(
-                    clientRequest.getUserId(),
-                    request.getGroupId(),
-                    request.getUserId(),
-                    null)
+                            clientRequest.getUserId(),
+                            request.getGroupId(),
+                            request.getUserId(),
+                            null)
                     .then(Mono
                             .fromCallable(() -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterBlockedByGroup()
                                     ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
@@ -284,11 +284,11 @@ public class GroupServiceController {
             DeleteGroupBlockedUserRequest request = clientRequest.getTurmsRequest()
                     .getDeleteGroupBlockedUserRequest();
             return groupBlocklistService.unblockUser(
-                    clientRequest.getUserId(),
-                    request.getGroupId(),
-                    request.getUserId(),
-                    null,
-                    true)
+                            clientRequest.getUserId(),
+                            request.getGroupId(),
+                            request.getUserId(),
+                            null,
+                            true)
                     .then(Mono.fromCallable(
                             () -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterUnblockedByGroup()
                                     ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
@@ -304,8 +304,8 @@ public class GroupServiceController {
             Date lastUpdatedDate = request.hasLastUpdatedDate() ?
                     new Date(request.getLastUpdatedDate()) : null;
             return groupBlocklistService.queryGroupBlockedUserIdsWithVersion(
-                    request.getGroupId(),
-                    lastUpdatedDate)
+                            request.getGroupId(),
+                            lastUpdatedDate)
                     .map(version -> RequestHandlerResultFactory.get(TurmsNotification.Data
                             .newBuilder()
                             .setIdsWithVersion(version)
@@ -320,8 +320,8 @@ public class GroupServiceController {
                     .getQueryGroupBlockedUserInfosRequest();
             Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate()) : null;
             return groupBlocklistService.queryGroupBlockedUserInfosWithVersion(
-                    request.getGroupId(),
-                    lastUpdatedDate)
+                            request.getGroupId(),
+                            lastUpdatedDate)
                     .map(version -> RequestHandlerResultFactory.get(TurmsNotification.Data
                             .newBuilder()
                             .setUsersInfosWithVersion(version)
@@ -351,10 +351,10 @@ public class GroupServiceController {
             CreateGroupInvitationRequest request = clientRequest.getTurmsRequest()
                     .getCreateGroupInvitationRequest();
             return groupInvitationService.authAndCreateGroupInvitation(
-                    request.getGroupId(),
-                    clientRequest.getUserId(),
-                    request.getInviteeId(),
-                    request.getContent())
+                            request.getGroupId(),
+                            clientRequest.getUserId(),
+                            request.getInviteeId(),
+                            request.getContent())
                     .map(invitation -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterInvitedByGroup()
                             ? RequestHandlerResultFactory.get(invitation.getId(), request.getInviteeId(), clientRequest.getTurmsRequest())
                             : RequestHandlerResultFactory.OK);
@@ -367,9 +367,9 @@ public class GroupServiceController {
             CreateGroupJoinRequestRequest request = clientRequest.getTurmsRequest()
                     .getCreateGroupJoinRequestRequest();
             return groupJoinRequestService.authAndCreateGroupJoinRequest(
-                    clientRequest.getUserId(),
-                    request.getGroupId(),
-                    request.getContent())
+                            clientRequest.getUserId(),
+                            request.getGroupId(),
+                            request.getContent())
                     .flatMap(joinRequest -> {
                         if (node.getSharedProperties().getService().getNotification().isNotifyOwnerAndManagersAfterReceivingJoinRequest()) {
                             return groupMemberService.queryGroupManagersAndOwnerId(request.getGroupId())
@@ -412,8 +412,8 @@ public class GroupServiceController {
             DeleteGroupInvitationRequest request = clientRequest.getTurmsRequest().getDeleteGroupInvitationRequest();
             return groupInvitationService.queryInviteeIdByInvitationId(request.getInvitationId())
                     .flatMap(inviteeId -> groupInvitationService.recallPendingGroupInvitation(
-                            clientRequest.getUserId(),
-                            request.getInvitationId())
+                                    clientRequest.getUserId(),
+                                    request.getInvitationId())
                             .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification()
                                     .isNotifyInviteeAfterGroupInvitationRecalled()
                                     ? RequestHandlerResultFactory.get(inviteeId, clientRequest.getTurmsRequest())
@@ -427,8 +427,8 @@ public class GroupServiceController {
             DeleteGroupJoinRequestRequest request = clientRequest.getTurmsRequest()
                     .getDeleteGroupJoinRequestRequest();
             return groupJoinRequestService.recallPendingGroupJoinRequest(
-                    clientRequest.getUserId(),
-                    request.getRequestId())
+                            clientRequest.getUserId(),
+                            request.getRequestId())
                     .then(Mono.defer(() -> {
                         if (node.getSharedProperties().getService().getNotification()
                                 .isNotifyOwnerAndManagersAfterGroupJoinRequestRecalled()) {
@@ -451,8 +451,8 @@ public class GroupServiceController {
             DeleteGroupJoinQuestionRequest request = clientRequest.getTurmsRequest()
                     .getDeleteGroupJoinQuestionRequest();
             return groupQuestionService.authAndDeleteGroupJoinQuestion(
-                    clientRequest.getUserId(),
-                    request.getQuestionId())
+                            clientRequest.getUserId(),
+                            request.getQuestionId())
                     .thenReturn(RequestHandlerResultFactory.OK);
         };
     }
@@ -466,18 +466,18 @@ public class GroupServiceController {
             Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate()) : null;
             if (groupId != null) {
                 return groupInvitationService.queryGroupInvitationsWithVersion(
-                        clientRequest.getUserId(),
-                        groupId,
-                        lastUpdatedDate)
+                                clientRequest.getUserId(),
+                                groupId,
+                                lastUpdatedDate)
                         .map(groupInvitationsWithVersion -> RequestHandlerResultFactory.get(
                                 TurmsNotification.Data.newBuilder()
                                         .setGroupInvitationsWithVersion(groupInvitationsWithVersion)
                                         .build()));
             } else {
                 return groupInvitationService.queryUserGroupInvitationsWithVersion(
-                        clientRequest.getUserId(),
-                        request.hasAreSentByMe() && request.getAreSentByMe(),
-                        lastUpdatedDate)
+                                clientRequest.getUserId(),
+                                request.hasAreSentByMe() && request.getAreSentByMe(),
+                                lastUpdatedDate)
                         .map(groupInvitationsWithVersion -> RequestHandlerResultFactory.get(TurmsNotification.Data
                                 .newBuilder()
                                 .setGroupInvitationsWithVersion(groupInvitationsWithVersion)
@@ -494,9 +494,9 @@ public class GroupServiceController {
             Long groupId = request.hasGroupId() ? request.getGroupId() : null;
             Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate()) : null;
             return groupJoinRequestService.queryGroupJoinRequestsWithVersion(
-                    clientRequest.getUserId(),
-                    groupId,
-                    lastUpdatedDate)
+                            clientRequest.getUserId(),
+                            groupId,
+                            lastUpdatedDate)
                     .map(groupJoinRequestsWithVersion -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
                             .setGroupJoinRequestsWithVersion(groupJoinRequestsWithVersion)
                             .build()));
@@ -510,10 +510,10 @@ public class GroupServiceController {
                     .getQueryGroupJoinQuestionsRequest();
             Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate()) : null;
             return groupQuestionService.queryGroupJoinQuestionsWithVersion(
-                    clientRequest.getUserId(),
-                    request.getGroupId(),
-                    request.getWithAnswers(),
-                    lastUpdatedDate)
+                            clientRequest.getUserId(),
+                            request.getGroupId(),
+                            request.getWithAnswers(),
+                            lastUpdatedDate)
                     .map(groupJoinQuestionsWithVersion -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
                             .setGroupJoinQuestionsWithVersion(groupJoinQuestionsWithVersion)
                             .build()));
@@ -530,11 +530,11 @@ public class GroupServiceController {
             String question = request.hasQuestion() ? request.getQuestion() : null;
             Integer score = request.hasScore() ? request.getScore() : null;
             return groupQuestionService.authAndUpdateGroupJoinQuestion(
-                    clientRequest.getUserId(),
-                    request.getQuestionId(),
-                    question,
-                    answers,
-                    score)
+                            clientRequest.getUserId(),
+                            request.getQuestionId(),
+                            question,
+                            answers,
+                            score)
                     .thenReturn(RequestHandlerResultFactory.OK);
         };
     }
@@ -553,13 +553,13 @@ public class GroupServiceController {
                         .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The role of the new member must not be OWNER"));
             }
             return groupMemberService.authAndAddGroupMember(
-                    clientRequest.getUserId(),
-                    request.getGroupId(),
-                    request.getUserId(),
-                    role,
-                    name,
-                    muteEndDate,
-                    null)
+                            clientRequest.getUserId(),
+                            request.getGroupId(),
+                            request.getUserId(),
+                            role,
+                            name,
+                            muteEndDate,
+                            null)
                     .map(member -> member != null &&
                             node.getSharedProperties().getService().getNotification().isNotifyUserAfterAddedToGroupByOthers()
                             ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
@@ -574,11 +574,11 @@ public class GroupServiceController {
             Long successorId = request.hasSuccessorId() ? request.getSuccessorId() : null;
             Boolean quitAfterTransfer = request.hasQuitAfterTransfer() ? request.getQuitAfterTransfer() : null;
             return groupMemberService.authAndDeleteGroupMember(
-                    clientRequest.getUserId(),
-                    request.getGroupId(),
-                    request.getMemberId(),
-                    successorId,
-                    quitAfterTransfer)
+                            clientRequest.getUserId(),
+                            request.getGroupId(),
+                            request.getMemberId(),
+                            successorId,
+                            quitAfterTransfer)
                     .then(Mono.fromCallable(
                             () -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterRemovedFromGroupByOthers()
                                     && !clientRequest.getUserId().equals(request.getMemberId())
@@ -597,20 +597,20 @@ public class GroupServiceController {
             boolean withStatus = request.hasWithStatus() && request.getWithStatus();
             if (request.getMemberIdsCount() > 0) {
                 return groupMemberService.authAndQueryGroupMembers(
-                        clientRequest.getUserId(),
-                        request.getGroupId(),
-                        memberIds,
-                        withStatus)
+                                clientRequest.getUserId(),
+                                request.getGroupId(),
+                                memberIds,
+                                withStatus)
                         .map(groupMembersWithVersion -> RequestHandlerResultFactory.get(
                                 TurmsNotification.Data.newBuilder()
                                         .setGroupMembersWithVersion(groupMembersWithVersion)
                                         .build()));
             } else {
                 return groupMemberService.authAndQueryGroupMembersWithVersion(
-                        clientRequest.getUserId(),
-                        request.getGroupId(),
-                        lastUpdatedDate,
-                        withStatus)
+                                clientRequest.getUserId(),
+                                request.getGroupId(),
+                                lastUpdatedDate,
+                                withStatus)
                         .map(groupMembersWithVersion -> RequestHandlerResultFactory.get(
                                 TurmsNotification.Data.newBuilder()
                                         .setGroupMembersWithVersion(groupMembersWithVersion)
@@ -627,12 +627,12 @@ public class GroupServiceController {
             GroupMemberRole role = request.getRole() != GroupMemberRole.UNRECOGNIZED ? request.getRole() : null;
             Date muteEndDate = request.hasMuteEndDate() ? new Date(request.getMuteEndDate()) : null;
             return groupMemberService.authAndUpdateGroupMember(
-                    clientRequest.getUserId(),
-                    request.getGroupId(),
-                    request.getMemberId(),
-                    name,
-                    role,
-                    muteEndDate)
+                            clientRequest.getUserId(),
+                            request.getGroupId(),
+                            request.getMemberId(),
+                            name,
+                            role,
+                            muteEndDate)
                     .then(Mono.defer(() -> {
                         if (node.getSharedProperties().getService().getNotification()
                                 .isNotifyMembersAfterOtherMemberInfoUpdated()) {

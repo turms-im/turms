@@ -137,13 +137,13 @@ public class GroupMemberController {
             GroupMember.KeyList keys,
             @RequestBody UpdateGroupMemberDTO updateGroupMemberDTO) {
         Mono<UpdateResultDTO> updateMono = groupMemberService.updateGroupMembers(
-                CollectionUtil.newSet(keys.getKeys()),
-                updateGroupMemberDTO.getName(),
-                updateGroupMemberDTO.getRole(),
-                updateGroupMemberDTO.getJoinDate(),
-                updateGroupMemberDTO.getMuteEndDate(),
-                null,
-                true)
+                        CollectionUtil.newSet(keys.getKeys()),
+                        updateGroupMemberDTO.getName(),
+                        updateGroupMemberDTO.getRole(),
+                        updateGroupMemberDTO.getJoinDate(),
+                        updateGroupMemberDTO.getMuteEndDate(),
+                        null,
+                        true)
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

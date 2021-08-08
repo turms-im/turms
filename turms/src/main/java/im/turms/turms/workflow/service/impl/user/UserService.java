@@ -210,9 +210,9 @@ public class UserService {
                 now);
         Long finalId = id;
         return mongoClient.inTransaction(session -> mongoClient.upsert(session, user)
-                .then(userRelationshipGroupService.createRelationshipGroup(finalId, 0, "", now, session))
-                .then(userVersionService.upsertEmptyUserVersion(user.getId(), date, session).onErrorResume(t -> Mono.empty()))
-                .thenReturn(user))
+                        .then(userRelationshipGroupService.createRelationshipGroup(finalId, 0, "", now, session))
+                        .then(userVersionService.upsertEmptyUserVersion(user.getId(), date, session).onErrorResume(t -> Mono.empty()))
+                        .thenReturn(user))
                 .retryWhen(DaoConstant.TRANSACTION_RETRY)
                 .doOnSuccess(ignored -> registeredUsersCounter.increment());
     }
@@ -331,18 +331,19 @@ public class UserService {
             deleteOrUpdateMono = mongoClient.updateMany(User.class, filter, update)
                     .map(OperationResultUtil::update2delete);
         } else {
-            deleteOrUpdateMono = mongoClient.inTransaction(session -> mongoClient.deleteMany(session, User.class, filter)
-                    .flatMap(result -> {
-                        long count = result.getDeletedCount();
-                        if (count > 0) {
-                            deletedUsersCounter.increment(count);
-                        }
-                        return userRelationshipService.deleteAllRelationships(userIds, session, false)
-                                .then(userRelationshipGroupService.deleteAllRelationshipGroups(userIds, session, false))
-                                .then(conversationService.deletePrivateConversations(userIds, session))
-                                .then(userVersionService.delete(userIds, session).onErrorResume(t -> Mono.empty()))
-                                .thenReturn(result);
-                    }))
+            deleteOrUpdateMono = mongoClient
+                    .inTransaction(session -> mongoClient.deleteMany(session, User.class, filter)
+                            .flatMap(result -> {
+                                long count = result.getDeletedCount();
+                                if (count > 0) {
+                                    deletedUsersCounter.increment(count);
+                                }
+                                return userRelationshipService.deleteAllRelationships(userIds, session, false)
+                                        .then(userRelationshipGroupService.deleteAllRelationshipGroups(userIds, session, false))
+                                        .then(conversationService.deletePrivateConversations(userIds, session))
+                                        .then(userVersionService.delete(userIds, session).onErrorResume(t -> Mono.empty()))
+                                        .thenReturn(result);
+                            }))
                     .retryWhen(DaoConstant.TRANSACTION_RETRY);
         }
         return deleteOrUpdateMono

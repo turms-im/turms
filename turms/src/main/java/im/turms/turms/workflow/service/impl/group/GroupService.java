@@ -153,13 +153,13 @@ public class GroupService {
                     Date now = new Date();
                     return mongoClient.insert(session, group)
                             .then(Mono.defer(() -> groupMemberService.addGroupMember(
-                                    group.getId(),
-                                    creatorId,
-                                    GroupMemberRole.OWNER,
-                                    null,
-                                    now,
-                                    null,
-                                    session)
+                                            group.getId(),
+                                            creatorId,
+                                            GroupMemberRole.OWNER,
+                                            null,
+                                            now,
+                                            null,
+                                            session)
                                     .then(Mono.defer(() -> {
                                         createdGroupsCounter.increment();
                                         return groupVersionService.upsert(groupId, now)
@@ -247,29 +247,30 @@ public class GroupService {
                     .isDeleteGroupLogicallyByDefault();
         }
         boolean finalShouldDeleteLogically = deleteLogically;
-        return mongoClient.inTransaction(session -> {
-            Filter filter = Filter.newBuilder(1)
-                    .inIfNotNull(ID_FIELD_NAME, groupIds);
-            Mono<DeleteResult> updateOrRemoveMono;
-            if (finalShouldDeleteLogically) {
-                Update update = Update.newBuilder(1)
-                        .set(Group.Fields.DELETION_DATE, new Date());
-                updateOrRemoveMono = mongoClient.updateMany(session, Group.class, filter, update)
-                        .map(OperationResultUtil::update2delete);
-            } else {
-                updateOrRemoveMono = mongoClient.deleteMany(session, Group.class, filter);
-            }
-            return updateOrRemoveMono.flatMap(result -> {
-                long count = result.getDeletedCount();
-                if (count > 0) {
-                    deletedGroupsCounter.increment(count);
-                }
-                return groupMemberService.deleteAllGroupMembers(groupIds, session, false)
-                        .then(conversationService.deleteGroupConversations(groupIds, session))
-                        .then(groupVersionService.delete(groupIds, session))
-                        .thenReturn(result);
-            });
-        })
+        return mongoClient
+                .inTransaction(session -> {
+                    Filter filter = Filter.newBuilder(1)
+                            .inIfNotNull(ID_FIELD_NAME, groupIds);
+                    Mono<DeleteResult> updateOrRemoveMono;
+                    if (finalShouldDeleteLogically) {
+                        Update update = Update.newBuilder(1)
+                                .set(Group.Fields.DELETION_DATE, new Date());
+                        updateOrRemoveMono = mongoClient.updateMany(session, Group.class, filter, update)
+                                .map(OperationResultUtil::update2delete);
+                    } else {
+                        updateOrRemoveMono = mongoClient.deleteMany(session, Group.class, filter);
+                    }
+                    return updateOrRemoveMono.flatMap(result -> {
+                        long count = result.getDeletedCount();
+                        if (count > 0) {
+                            deletedGroupsCounter.increment(count);
+                        }
+                        return groupMemberService.deleteAllGroupMembers(groupIds, session, false)
+                                .then(conversationService.deleteGroupConversations(groupIds, session))
+                                .then(groupVersionService.delete(groupIds, session))
+                                .thenReturn(result);
+                    });
+                })
                 .retryWhen(TRANSACTION_RETRY);
     }
 

@@ -102,17 +102,17 @@ public class GroupTypeController {
             @RequestParam Set<Long> ids,
             @RequestBody UpdateGroupTypeDTO updateGroupTypeDTO) {
         Mono<UpdateResultDTO> updateMono = groupTypeService.updateGroupTypes(
-                ids,
-                updateGroupTypeDTO.getName(),
-                updateGroupTypeDTO.getGroupSizeLimit(),
-                updateGroupTypeDTO.getInvitationStrategy(),
-                updateGroupTypeDTO.getJoinStrategy(),
-                updateGroupTypeDTO.getGroupInfoUpdateStrategy(),
-                updateGroupTypeDTO.getMemberInfoUpdateStrategy(),
-                updateGroupTypeDTO.getGuestSpeakable(),
-                updateGroupTypeDTO.getSelfInfoUpdatable(),
-                updateGroupTypeDTO.getEnableReadReceipt(),
-                updateGroupTypeDTO.getMessageEditable())
+                        ids,
+                        updateGroupTypeDTO.getName(),
+                        updateGroupTypeDTO.getGroupSizeLimit(),
+                        updateGroupTypeDTO.getInvitationStrategy(),
+                        updateGroupTypeDTO.getJoinStrategy(),
+                        updateGroupTypeDTO.getGroupInfoUpdateStrategy(),
+                        updateGroupTypeDTO.getMemberInfoUpdateStrategy(),
+                        updateGroupTypeDTO.getGuestSpeakable(),
+                        updateGroupTypeDTO.getSelfInfoUpdatable(),
+                        updateGroupTypeDTO.getEnableReadReceipt(),
+                        updateGroupTypeDTO.getMessageEditable())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

@@ -33,6 +33,7 @@ import im.turms.turms.workflow.dao.domain.conversation.GroupConversation;
 import im.turms.turms.workflow.dao.domain.conversation.PrivateConversation;
 import im.turms.turms.workflow.service.impl.conversation.ConversationService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -99,12 +100,13 @@ public class ConversationController {
             @RequestParam(required = false) Set<Long> groupIds) {
         Mono<DeleteResult> resultMono = isEmptyPrivateConversationKeys(privateConversationKeys)
                 ? Mono.just(OperationResultConstant.ACKNOWLEDGED_DELETE_RESULT)
-                : conversationService.deletePrivateConversations(CollectionUtil.newSet(privateConversationKeys.getPrivateConversationKeys()));
-        if (ownerIds != null && !ownerIds.isEmpty()) {
+                : conversationService
+                .deletePrivateConversations(CollectionUtil.newSet(privateConversationKeys.getPrivateConversationKeys()));
+        if (!CollectionUtils.isEmpty(ownerIds)) {
             resultMono = resultMono.zipWith(conversationService.deletePrivateConversations(ownerIds, null))
                     .map(tuple -> OperationResultUtil.merge(tuple.getT1(), tuple.getT2()));
         }
-        if (groupIds != null && !groupIds.isEmpty()) {
+        if (!CollectionUtils.isEmpty(groupIds)) {
             resultMono = resultMono.zipWith(conversationService.deleteGroupConversations(groupIds, null))
                     .map(tuple -> OperationResultUtil.merge(tuple.getT1(), tuple.getT2()));
         }

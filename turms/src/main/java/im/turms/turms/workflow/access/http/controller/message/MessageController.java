@@ -173,9 +173,9 @@ public class MessageController {
         if (divideBy == null || divideBy == DivideBy.NOOP) {
             if (sentOnAverageStartDate != null || sentOnAverageEndDate != null) {
                 counts.add(messageService.countSentMessagesOnAverage(
-                        DateRange.of(sentOnAverageStartDate, sentOnAverageEndDate),
-                        areGroupMessages,
-                        areSystemMessages)
+                                DateRange.of(sentOnAverageStartDate, sentOnAverageEndDate),
+                                areGroupMessages,
+                                areSystemMessages)
                         .doOnNext(statistics::setSentMessagesOnAverage));
             }
 //            if (acknowledgedStartDate != null || acknowledgedEndDate != null) {
@@ -194,19 +194,19 @@ public class MessageController {
 //            }
             if (counts.isEmpty() || sentStartDate != null || sentEndDate != null) {
                 counts.add(messageService.countSentMessages(
-                        DateRange.of(sentStartDate, sentEndDate),
-                        areGroupMessages,
-                        areSystemMessages)
+                                DateRange.of(sentStartDate, sentEndDate),
+                                areGroupMessages,
+                                areSystemMessages)
                         .doOnNext(statistics::setSentMessages));
             }
         } else {
             if (sentOnAverageStartDate != null && sentOnAverageEndDate != null) {
                 counts.add(dateTimeUtil.checkAndQueryBetweenDate(
-                        DateRange.of(sentOnAverageStartDate, sentOnAverageEndDate),
-                        divideBy,
-                        messageService::countSentMessagesOnAverage,
-                        areGroupMessages,
-                        areSystemMessages)
+                                DateRange.of(sentOnAverageStartDate, sentOnAverageEndDate),
+                                divideBy,
+                                messageService::countSentMessagesOnAverage,
+                                areGroupMessages,
+                                areSystemMessages)
                         .doOnNext(statistics::setSentMessagesOnAverageRecords));
             }
 //            if (acknowledgedStartDate != null && acknowledgedEndDate != null) {
@@ -229,11 +229,11 @@ public class MessageController {
 //            }
             if (sentStartDate != null && sentEndDate != null) {
                 counts.add(dateTimeUtil.checkAndQueryBetweenDate(
-                        DateRange.of(sentStartDate, sentEndDate),
-                        divideBy,
-                        messageService::countSentMessages,
-                        areGroupMessages,
-                        areSystemMessages)
+                                DateRange.of(sentStartDate, sentEndDate),
+                                divideBy,
+                                messageService::countSentMessages,
+                                areGroupMessages,
+                                areSystemMessages)
                         .doOnNext(statistics::setSentMessagesRecords));
             }
             if (counts.isEmpty()) {
@@ -249,13 +249,13 @@ public class MessageController {
             @RequestParam Set<Long> ids,
             @RequestBody UpdateMessageDTO updateMessageDTO) {
         Mono<UpdateResultDTO> updateMono = messageService.updateMessages(
-                ids,
-                updateMessageDTO.getIsSystemMessage(),
-                updateMessageDTO.getText(),
-                updateMessageDTO.getRecords(),
-                updateMessageDTO.getBurnAfter(),
-                updateMessageDTO.getRecallDate(),
-                null)
+                        ids,
+                        updateMessageDTO.getIsSystemMessage(),
+                        updateMessageDTO.getText(),
+                        updateMessageDTO.getRecords(),
+                        updateMessageDTO.getBurnAfter(),
+                        updateMessageDTO.getRecallDate(),
+                        null)
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

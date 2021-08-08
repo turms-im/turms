@@ -319,7 +319,8 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
                                     GroupInvitationsWithVersion.Builder builder = GroupInvitationsWithVersion.newBuilder();
                                     int expireAfterSeconds = getModelExpireAfterSeconds();
                                     for (GroupInvitation groupInvitation : groupInvitations) {
-                                        builder.addGroupInvitations(ProtoModelUtil.groupInvitation2proto(groupInvitation, expireAfterSeconds));
+                                        var invitation = ProtoModelUtil.groupInvitation2proto(groupInvitation, expireAfterSeconds);
+                                        builder.addGroupInvitations(invitation);
                                     }
                                     return builder
                                             .setLastUpdatedDate(version.getTime())

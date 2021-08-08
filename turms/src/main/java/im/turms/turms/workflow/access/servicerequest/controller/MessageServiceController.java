@@ -198,16 +198,16 @@ public class MessageServiceController {
             Long userId = clientRequest.getUserId();
             DateRange dateRange = DateRange.of(deliveryDateAfter, deliveryDateBefore);
             return messageService.authAndQueryCompleteMessages(
-                    true,
-                    idList,
-                    areGroupMessages,
-                    areSystemMessages,
-                    fromId,
-                    userId,
-                    dateRange,
-                    null,
-                    0,
-                    size)
+                            true,
+                            idList,
+                            areGroupMessages,
+                            areSystemMessages,
+                            fromId,
+                            userId,
+                            dateRange,
+                            null,
+                            0,
+                            size)
                     .collectList()
                     .flatMap(messages -> {
                         if (messages.isEmpty()) {
@@ -227,18 +227,19 @@ public class MessageServiceController {
                             for (Map.Entry<MessageFromKey, Collection<Message>> entry : conversationWithMessagesMap.asMap().entrySet()) {
                                 MessageFromKey senderKey = entry.getKey();
                                 Mono<MessagesWithTotal> messsagesWithTotalMono = messageService.countMessages(
-                                        null,
-                                        senderKey.isGroupMessage(),
-                                        null,
-                                        Set.of(senderKey.getFromId()),
-                                        Set.of(clientRequest.getUserId()),
-                                        dateRange,
-                                        null)
+                                                null,
+                                                senderKey.isGroupMessage(),
+                                                null,
+                                                Set.of(senderKey.getFromId()),
+                                                Set.of(clientRequest.getUserId()),
+                                                dateRange,
+                                                null)
                                         .map(total -> MessagesWithTotal.newBuilder()
                                                 .setTotal(total.intValue())
                                                 .setIsGroupMessage(senderKey.isGroupMessage())
                                                 .setFromId(senderKey.getFromId())
-                                                .addAllMessages(Collections2.transform(messages, m -> ProtoModelUtil.message2proto(m).build()))
+                                                .addAllMessages(
+                                                        Collections2.transform(messages, m -> ProtoModelUtil.message2proto(m).build()))
                                                 .build());
                                 messagesWithTotalMonos.add(messsagesWithTotalMono);
                             }
@@ -292,11 +293,11 @@ public class MessageServiceController {
             }
             Date recallDate = request.hasRecallDate() ? new Date(request.getRecallDate()) : null;
             return messageService.authAndUpdateMessage(
-                    clientRequest.getUserId(),
-                    messageId,
-                    text,
-                    records,
-                    recallDate)
+                            clientRequest.getUserId(),
+                            messageId,
+                            text,
+                            records,
+                            recallDate)
                     .then(Mono.defer(() -> {
                         if (node.getSharedProperties().getService().getNotification().isNotifyRecipientsAfterMessageUpdatedBySender()) {
                             return messageService.queryMessageRecipients(messageId)
