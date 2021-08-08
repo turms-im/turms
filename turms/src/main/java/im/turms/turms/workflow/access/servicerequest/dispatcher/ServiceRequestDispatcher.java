@@ -243,7 +243,11 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                         ThrowableInfo info = ThrowableInfo.get(t);
                         if (info.getCode().isServerError()) {
                             tracingContext.updateMdc();
-                            log.error("Caught an internal server error when handling the request " + lastRequest.getRequestId(), t);
+                            // Note we log the whole request instead of the request ID for troubleshooting
+                            // because CommonClientApiLogging only logs a brief description,
+                            // which isn't enough for debugging, but it's enough for statistics
+                            // and user behavior analysis, so we don't plan to change it
+                            log.error("Caught an internal server error when handling the request: " + lastClientRequest, t);
                         }
                         return Mono.just(RequestHandlerResultFactory.get(info.getCode(), info.getReason()));
                     })
