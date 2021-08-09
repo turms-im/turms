@@ -48,7 +48,7 @@ class MessageService(private val turmsClient: TurmsClient) {
 
     fun addMessageListener(listener: (Message, MessageAddition) -> Unit) = messageListeners.add(listener)
 
-    fun removeMessageListener(listener: () -> Unit) = messageListeners.removeIf { it == listener }
+    fun removeMessageListener(listener: (Message, MessageAddition) -> Unit) = messageListeners.remove(listener)
 
     suspend fun sendMessage(
         isGroupMessage: Boolean,

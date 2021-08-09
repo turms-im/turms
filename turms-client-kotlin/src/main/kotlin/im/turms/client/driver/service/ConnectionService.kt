@@ -67,15 +67,15 @@ class ConnectionService(
     }
 
     fun removeOnConnectedListener(listener: () -> Unit) {
-        onConnectedListeners.removeIf { it == listener }
+        onConnectedListeners.remove(listener)
     }
 
     fun removeOnDisconnectedListener(listener: (ConnectionDisconnectInfo) -> Unit) {
-        onDisconnectedListeners.removeIf { it == listener }
+        onDisconnectedListeners.remove(listener)
     }
 
     fun removeMessageListener(listener: (ByteBuffer) -> Unit) {
-        messageListeners.removeIf { it == listener }
+        messageListeners.remove(listener)
     }
 
     private fun notifyOnConnectedListeners() {

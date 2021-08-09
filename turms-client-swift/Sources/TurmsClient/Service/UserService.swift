@@ -77,9 +77,9 @@ public class UserService {
                     }
                 }
             }.done { _ in
+                self.changeToOnline()
                 self.userInfo = user
                 self.storePassword = storePassword
-                self.changeToOnline()
             }
         }
     }

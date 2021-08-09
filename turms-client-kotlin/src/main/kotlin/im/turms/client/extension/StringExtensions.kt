@@ -26,7 +26,7 @@ fun String.camelToSnakeCase(): String {
             if (builder.isNotEmpty()) {
                 builder.append('_')
             }
-            builder.append(char.toLowerCase())
+            builder.append(char.lowercaseChar())
         } else {
             builder.append(char)
         }

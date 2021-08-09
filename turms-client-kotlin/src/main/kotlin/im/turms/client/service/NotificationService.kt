@@ -43,6 +43,6 @@ class NotificationService(turmsClient: TurmsClient) {
         this.notificationListeners.add(listener)
 
     fun removeNotificationListener(listener: ((TurmsRequest) -> Unit)) =
-        this.notificationListeners.removeIf { it == listener }
+        this.notificationListeners.remove(listener)
 
 }

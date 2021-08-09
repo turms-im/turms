@@ -199,7 +199,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
     }
 
     private fun getBucketName(contentType: ContentType): String {
-        return contentType.name.toLowerCase().replace("_", "-")
+        return contentType.name.lowercase().replace("_", "-")
     }
 
 }
