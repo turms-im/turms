@@ -1,14 +1,16 @@
 # 管理员API接口
 
-Turms的API文档基于[Springdoc](https://github.com/springdoc/springdoc-openapi) 依赖实现，并采用OpenAPI 3.0标准。
+Turms的API文档基于[Springdoc](https://github.com/springdoc/springdoc-openapi)依赖实现，并采用[OpenAPI 3.0](https://swagger.io/specification)标准。
 
-Turms在生产环境下默认关闭OpenAPI的UI与API接口（dev profile下该接口默认开启），因此如果您需要查阅API接口文档，则您需要将dist/config/application.yaml配置文件下的springdoc.*.enabled=false属性删除。在启动turms服务端后，访问 http://localhost:8510/swagger-ui.html 即可查阅API接口。如果您需要OpenAPI标准下API接口的JSON数据，可访问 http://localhost:8510/v3/api-docs 获取。
+Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接口一样使用8510端口（turms-gateway没有OpenAPI接口）。如果您需要查阅API接口文档，您可以在启动turms服务端后，访问 http://localhost:8510/swagger-ui.html 查阅API接口。如果您需要API接口的JSON数据，可访问 http://localhost:8510/v3/api-docs 获取。
+
+注意：在将Turms服务端部署到生产环境时，切记要在安全组中，将Turms的8510端口设置为“仅内网访问”，以抵御不必要的公网攻击。
 
 ## 接口设计准则
 
-为了让接口顾名思义，保证开发者能一目了然，turms的管理接口设计在参考[RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer)设计上做了进一步优化与统一，具体遵循以下准则：
+为了让接口能够顾名思义，保证开发者能一目了然，turms的管理接口设计在参考[RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer)设计上做了进一步优化与统一，具体遵循以下准则：
 
-* URL的路径部分代表目标资源（如“/users/relationships”），或是资源的表现形式（如“/users/relationships/page”表示以分页的形式返回资源）
+* URL的路径部分代表目标资源（如“/users/relationships”），或是资源的表现形式（如“/users/relationships/page”表示以分页的形式返回资源。一个URI有且仅可能返回一种格式的Response）
 * POST方法用于Create资源，DELETE方法用于Delete资源，PUT方法用于Update资源，GET方法用于Query资源，以及比较特殊的HEAD方法用于Check资源（类似于GET，但无Response body，仅通过HTTP状态码交互）
 * 请求的Query string用于定位资源或是附加指令。如：“?ids=1,2,3”（定位资源）或“?reset=true”（附加指令）
 * 请求的Body用于描述要创建或更新的数据
@@ -27,7 +29,7 @@ Turms在生产环境下默认关闭OpenAPI的UI与API接口（dev profile下该�
 
 | **种类**       | **Controller**      | 路径             | **补充**                                                     |
 | :------------- | :------------------ | ---------------- | ------------------------------------------------------------ |
-| 管理员管理     | AdminController     | /admins          | 每个Turms集群默认存在一个角色为“ROOT”，账号与密码均为“turms” |
+| 管理员管理     | AdminController     | /admins          | 每个Turms集群默认存在一个角色为“ROOT”，账号名与密码均为“turms”的账号 |
 | 管理员角色管理 | AdminRoleController | /admins/roles    | 每个Turms集群默认存在一个角色为“ROOT”的超级管理员角色，其具有所有权限 |
 | 集群配置管理   | ConfigController    | /cluster/config  |                                                              |
 | 集群节点管理   | MemberController    | /cluster/members |                                                              |
@@ -65,4 +67,5 @@ Turms在生产环境下默认关闭OpenAPI的UI与API接口（dev profile下该�
 
 ## 统计
 
-当前对外暴露的统计相关接口多为Legacy API，不推荐使用。具体原因请查阅[数据分析](https://turms-im.github.io/docs/for-developers/data-analytics.html)章节。
+当前对外暴露的统计相关接口多为Legacy API，不推荐使用。我们会在之后对其进行调整与重构。具体原因请查阅[数据分析](https://turms-im.github.io/docs/for-developers/data-analytics.html)章节。
+
