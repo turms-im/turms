@@ -1,0 +1,29 @@
+const updateScrollMaxHeight = function () {
+    const table = this.$refs.table.$el;
+    const {top, height} = table.getBoundingClientRect();
+    let tableBody = table.tableBody;
+    if (!tableBody) {
+        tableBody = table.querySelector('.ant-table-body');
+        table.tableBody = tableBody;
+    }
+    const {height: bodyHeight} = tableBody.getBoundingClientRect();
+
+    this.scrollMaxHeight = window.pageYOffset + window.innerHeight - top - height + bodyHeight - 30;
+};
+
+export default {
+    methods: {
+        refreshTableUi() {
+            // We update the maxHeight of table by JS instead of CSS because:
+            // To make a child div not overflow its parent while parent should not use "overflow"
+            // (we don't want the parent displays the scrollbar),
+            // we need to add "display: flex" to the parent and "flex-shrink: 1" to the child.
+            // It works fine until the children are <table> and <tbody> because table elements will
+            // become messy if we apply "flex" to them. So we use JS.
+
+            // "setTimeout(() => updateScrollMaxHeight.call(this))" is more accurate
+            // but it will jerk the UI so we don't use it
+            updateScrollMaxHeight.call(this);
+        }
+    }
+};

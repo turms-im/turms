@@ -90,7 +90,7 @@
                     class="action-button"
                     :visible="popconfirmVisible"
                     :title="$t('confirmDeletion')"
-                    @visibleChange="hanlePopconfirmVisibleChange"
+                    @visibleChange="onPopconfirmVisibleChanged"
                     @confirm="deleteSelectedRows"
                 >
                     <a-button
@@ -112,77 +112,77 @@
                 />
             </div>
         </div>
-        <a-spin :spinning="loading">
-            <a-table
-                ref="table"
-                size="small"
-                row-key="rowKey"
-                :columns="columnsData"
-                :data-source="tableData"
-                :pagination="pageable ? pagination : false"
-                :row-selection="selectable ? rowSelection : undefined"
-                :scroll="{ y: 400 }"
-                bordered
-                class="content-table"
-                @change="handleTableChange"
+        <a-table
+            ref="table"
+            bordered
+            class="content-table"
+            row-key="rowKey"
+            size="small"
+            :columns="columnsData"
+            :data-source="tableData"
+            :loading="loading"
+            :pagination="pageable ? pagination : false"
+            :row-selection="selectable ? rowSelection : undefined"
+            :scroll="{ y: scrollMaxHeight }"
+            @change="onTableChanged"
+        >
+            <template
+                v-for="column in columnsData"
+                #[column.dataIndex]="{ text, record }"
             >
-                <template
-                    v-for="column in columnsData"
-                    #[column.dataIndex]="{ text, record }"
+                <div
+                    v-if="column.type === 'tree'"
+                    :key="column.dataIndex"
                 >
-                    <div
-                        v-if="column.type === 'tree'"
-                        :key="column.dataIndex"
+                    <a-tree
+                        :tree-data="text"
+                        :show-icon="true"
                     >
-                        <a-tree
-                            :tree-data="text"
-                            :show-icon="true"
+                        <template #bars>
+                            <span class="content-template__list-icon">
+                                <icon type="bars" />
+                            </span>
+                        </template>
+                        <template #close>
+                            <span class="content-template__close-icon">
+                                <icon type="close" />
+                            </span>
+                        </template>
+                        <template #check>
+                            <span class="content-template__check-icon">
+                                <icon type="check" />
+                            </span>
+                        </template>
+                    </a-tree>
+                </div>
+                <div
+                    v-else-if="column.dataIndex === 'operation'"
+                    :key="column.dataIndex"
+                    class="editable-row-operations"
+                >
+                    <span>
+                        <a-popconfirm
+                            :title="$t('confirmDeletion')"
+                            @confirm="requestDelete([record.rowKey])"
                         >
-                            <template #bars>
-                                <span class="content-template__list-icon">
-                                    <icon type="bars" />
-                                </span>
-                            </template>
-                            <template #close>
-                                <span class="content-template__close-icon">
-                                    <icon type="close" />
-                                </span>
-                            </template>
-                            <template #check>
-                                <span class="content-template__check-icon">
-                                    <icon type="check" />
-                                </span>
-                            </template>
-                        </a-tree>
-                    </div>
-                    <div
-                        v-else-if="column.dataIndex === 'operation'"
-                        :key="column.dataIndex"
-                        class="editable-row-operations"
-                    >
-                        <span>
-                            <a-popconfirm
-                                :title="$t('confirmDeletion')"
-                                @confirm="requestDelete([record.rowKey])"
-                            >
-                                <a>{{ $t('delete') }}</a>
-                            </a-popconfirm>
-                        </span>
-                    </div>
-                    <div
-                        v-else
-                        :key="column.dataIndex"
-                    >
-                        {{ getColumnValue(column, record) }}
-                    </div>
-                </template>
-            </a-table>
-        </a-spin>
+                            <a>{{ $t('delete') }}</a>
+                        </a-popconfirm>
+                    </span>
+                </div>
+                <div
+                    v-else
+                    :key="column.dataIndex"
+                >
+                    {{ getColumnValue(column, record) }}
+                </div>
+            </template>
+        </a-table>
     </div>
 </template>
 
 <script>
 import JSONBig from 'json-bigint';
+import UiMixin from './ui-mixin';
 import Icon from '../../../common/icon';
 import Skeleton from '../../../common/skeleton';
 import CustomInput from '../../../common/custom-input';
@@ -200,6 +200,7 @@ export default {
         DateRangePicker,
         ContentTemplateExport
     },
+    mixins: [UiMixin],
     props: {
         name: {
             type: String,
@@ -274,6 +275,7 @@ export default {
                 pageSize: 20
             },
             popconfirmVisible: false,
+            scrollMaxHeight: '100%',
             selectedRowKeys: [],
             loaded: false,
             initialized: false,
@@ -356,36 +358,54 @@ export default {
             if (this.fetchOnStatusChanged) {
                 this.load();
             }
+        },
+        loading(val) {
+            if (!val) {
+                this.refreshTableUi();
+            }
+        },
+        '$store.getters.tab'(val) {
+            if (this.myTab === val) {
+                setTimeout(() => this.refreshTableUi());
+            }
         }
     },
     mounted() {
+        this.myTab = this.$store.getters.tab;
+        if (!this.myTab) {
+            throw new Error('Failed to get the tab of the current page');
+        }
         if (this.fetchOnStatusChanged) {
             this.load();
         } else {
             this.loaded = true;
             this.initialized = true;
         }
+        window.addEventListener('resize', this.refreshTableUi);
+    },
+    unmounted() {
+        window.removeEventListener('resize', this.refreshTableUi);
     },
     methods: {
         clearFilters() {
             for (const filter of this.filters) {
                 switch (filter.type) {
-                case 'SELECT': {
-                    let model = null;
-                    for (const value of filter.options.base) {
-                        if (value.id === 'ALL') {
-                            model = 'ALL';
-                            break;
+                    case 'SELECT': {
+                        let model = null;
+                        for (const value of filter.options.base) {
+                            if (value.id === 'ALL') {
+                                model = 'ALL';
+                                break;
+                            }
                         }
+                        filter.model = model;
                     }
-                    filter.model = model;
-                }
-                    break;
-                case 'DATE-RANGE':
-                    filter.model = [];
-                    break;
-                default:
-                    filter.model = null;
+                        break;
+                    case 'DATE-RANGE':
+                        filter.model = [];
+                        break;
+                    default:
+                        filter.model = null;
                 }
             }
         },
@@ -414,10 +434,10 @@ export default {
             }
             return value;
         },
-        hanlePopconfirmVisibleChange(visible) {
+        onPopconfirmVisibleChanged(visible) {
             this.popconfirmVisible = visible && this.hasSelectedRows;
         },
-        handleTableChange(pagination) {
+        onTableChanged(pagination) {
             const isPaginationChanged = JSON.stringify(pagination) !== JSON.stringify(this.pagination);
             if (isPaginationChanged) {
                 this.pagination = {...this.pagination, current: pagination.current};

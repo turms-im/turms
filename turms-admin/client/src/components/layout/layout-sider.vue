@@ -7,7 +7,7 @@
             mode="inline"
             :open-keys="openKeys"
             @openChange="openChange"
-            @select="onMenuItemSelected"
+            @select="item => onMenuItemSelected(item.key)"
         >
             <template v-for="item in menuItems">
                 <a-sub-menu
@@ -141,6 +141,7 @@ export default {
         }
         if (paths.length) {
             this.selectedKeys = [fullPath];
+            this.onMenuItemSelected(fullPath);
         }
     },
     methods: {
@@ -149,9 +150,9 @@ export default {
                 ? [subMenu[subMenu.length - 1]]
                 : [];
         },
-        onMenuItemSelected(item) {
-            this.$router.push(item.key);
-            this.$store.setTab(item.key);
+        onMenuItemSelected(tab) {
+            this.$router.push(tab);
+            this.$store.setTab(tab);
         }
     }
 };

@@ -27,52 +27,54 @@
                 {{ $t('disconnectSelectedDevices') }}
             </a-button>
         </div>
-        <a-spin :spinning="loading">
-            <a-table
-                size="middle"
-                :columns="columns"
-                :data-source="records"
-                bordered
-                :scroll="{ y: 400 }"
-                :row-selection="rowSelection"
-                :pagination="false"
-                class="content-table"
+        <a-table
+            bordered
+            class="content-table"
+            size="middle"
+            :columns="columns"
+            :data-source="records"
+            :loading="loading"
+            :scroll="{ y: scrollMaxHeight }"
+            :row-selection="rowSelection"
+            :pagination="false"
+        >
+            <template
+                #operation="{ record }"
             >
-                <template
-                    #operation="{ record }"
-                >
-                    <div class="editable-row-operations">
-                        <span v-if="!['OFFLINE', 'NONEXISTENT'].includes(record.userStatus)">
-                            <a-popconfirm
-                                :title="$t('confirmDisconnect')"
-                                @confirm="() => disconnectUsers([record.id], [record.deviceType])"
-                            >
-                                <a>{{ $t('disconnect') }}</a>
-                            </a-popconfirm>
-                        </span>
-                    </div>
-                </template>
-            </a-table>
-        </a-spin>
+                <div class="editable-row-operations">
+                    <span v-if="!['OFFLINE', 'NONEXISTENT'].includes(record.userStatus)">
+                        <a-popconfirm
+                            :title="$t('confirmDisconnect')"
+                            @confirm="() => disconnectUsers([record.id], [record.deviceType])"
+                        >
+                            <a>{{ $t('disconnect') }}</a>
+                        </a-popconfirm>
+                    </span>
+                </div>
+            </template>
+        </a-table>
     </div>
 </template>
 
 <script>
 const JSONbig = require('json-bigint');
-import CustomInput from '../../../common/custom-input';
 import formatCoords from 'formatcoords';
+import CustomInput from '../../../common/custom-input';
+import UiMixin from '../template/ui-mixin';
 
 export default {
     name: 'content-online-user-info-pane',
     components: {
         CustomInput
     },
+    mixins: [UiMixin],
     data() {
         return {
             isSearchById: false,
             records: [],
             ids: '',
             loading: false,
+            scrollMaxHeight: '100%',
             selectedRowKeys: [],
             selectedRows: [],
             rowSelection: {
@@ -132,6 +134,28 @@ export default {
             });
             return columns;
         }
+    },
+    watch: {
+        loading(val) {
+            if (!val) {
+                this.refreshTableUi();
+            }
+        },
+        '$store.getters.tab'(val) {
+            if (this.myTab === val) {
+                setTimeout(() => this.refreshTableUi());
+            }
+        }
+    },
+    mounted() {
+        this.myTab = this.$store.getters.tab;
+        if (!this.myTab) {
+            throw new Error('Failed to get the tab of the current page');
+        }
+        window.addEventListener('resize', this.refreshTableUi);
+    },
+    unmounted() {
+        window.removeEventListener('resize', this.refreshTableUi);
     },
     methods: {
         search() {

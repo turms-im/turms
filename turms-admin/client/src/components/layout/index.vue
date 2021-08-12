@@ -32,7 +32,6 @@ export default {
     height: 100%;
 
     &__content {
-        min-width: 1024px;
         overflow-y: scroll;
         padding: 24px 24px 24px 24px;
         background-color: white;
