@@ -4,6 +4,19 @@ import type { DefaultThemeOptions } from 'vuepress'
 export default defineUserConfig<DefaultThemeOptions>({
     title: 'Turms Documentation',
     base: '/docs/',
+    plugins: [
+        [
+            '@vuepress/plugin-search',
+            {
+                locales: {
+                    '/': {
+                        placeholder: '搜索',
+                    }
+                },
+                maxSuggestions: 10
+            }
+        ]
+    ],
     themeConfig: {
         repo: 'https://github.com/turms-im/docs',
         contributors: false,
