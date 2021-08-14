@@ -23,6 +23,8 @@ import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.logging.CommonClientApiLogging;
 import im.turms.turms.workflow.access.servicerequest.dto.ClientRequest;
 
+import java.time.Instant;
+
 import static im.turms.server.common.logging.CommonClientApiLogging.LOG_FIELD_DELIMITER;
 
 /**
@@ -61,7 +63,7 @@ public final class ClientApiLogging {
                         + LOG_FIELD_DELIMITER
                         + request.getTurmsRequest().getKindCase()
                         + LOG_FIELD_DELIMITER
-                        + requestTime
+                        + Instant.ofEpochMilli(requestTime)
                         + LOG_FIELD_DELIMITER
                         + requestSize
                         + LOG_FIELD_DELIMITER

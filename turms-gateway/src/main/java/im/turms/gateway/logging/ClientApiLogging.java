@@ -22,6 +22,8 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.logging.CommonClientApiLogging;
 
+import java.time.Instant;
+
 import static im.turms.server.common.logging.CommonClientApiLogging.LOG_FIELD_DELIMITER;
 
 /**
@@ -61,7 +63,7 @@ public final class ClientApiLogging {
                         + LOG_FIELD_DELIMITER
                         + requestType
                         + LOG_FIELD_DELIMITER
-                        + requestTime
+                        + Instant.ofEpochMilli(requestTime)
                         + LOG_FIELD_DELIMITER
                         + requestSize
                         + LOG_FIELD_DELIMITER
