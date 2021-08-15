@@ -33,6 +33,7 @@ import io.netty.buffer.UnpooledByteBufAllocator;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.geo.Point;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 import reactor.test.StepVerifier;
 
 import java.time.Duration;
@@ -62,14 +63,14 @@ class OutboundMessageServiceTests {
         TcpConnection connection = mock(TcpConnection.class);
         UserSession session = new UserSession(1L, DeviceType.ANDROID, new Point(1F, 1F));
         session.setConnection(connection);
-        Mono<ByteBuf> result = session.getNotificationFlux()
+        Sinks.One<ByteBuf> sink = Sinks.one();
+        session.setNotificationConsumer(sink::tryEmitValue);
+        Mono<ByteBuf> result = sink.asMono()
                 .flatMap(byteBuf -> Mono
-                        // Wait to simulate the async process
+                        // Wait 1s to simulate the async process
                         .delay(Duration.ofSeconds(1))
                         .then(Mono.fromRunnable(byteBuf::release))
-                        .thenReturn(byteBuf))
-                .take(1)
-                .single();
+                        .thenReturn(byteBuf));
         when(sessionsManager.getSessionMap())
                 .thenReturn(Map.of(DeviceType.ANDROID, session));
         OutboundMessageService outboundMessageService = newOutboundMessageService(sessionsManager);

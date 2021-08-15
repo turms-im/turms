@@ -70,24 +70,16 @@ public abstract class UserSessionDispatcher {
             InetSocketAddress ip = (InetSocketAddress) connection.address();
             NetConnection netConnection = NetConnection.create(connection);
             UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, ip, closeIdleConnectionAfterSeconds, userSession -> {
-                RequestLoggingContext loggingContext = new RequestLoggingContext();
-                userSession.getNotificationFlux()
-                        // Should not happen
-                        .onErrorResume(throwable -> {
-                            handleNotificationError(throwable, userSession);
-                            return Mono.empty();
-                        })
-                        .flatMap(turmsNotificationBuffer -> {
-                            turmsNotificationBuffer.touch(turmsNotificationBuffer);
-                            NettyOutbound outbound = isWebSocketConnection
-                                    ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
-                                    : out.sendObject(turmsNotificationBuffer);
-                            return Mono.from(outbound);
-                        })
-                        .onErrorResume(throwable -> handleConnectionError(throwable, netConnection, userSession))
-                        .contextWrite(context -> context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext))
-                        .doFinally(signal -> loggingContext.clearMdc())
-                        .subscribe();
+                // TODO: tracing
+                userSession.setNotificationConsumer(turmsNotificationBuffer -> {
+                    turmsNotificationBuffer.touch(turmsNotificationBuffer);
+                    NettyOutbound outbound = isWebSocketConnection
+                            ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
+                            : out.sendObject(turmsNotificationBuffer);
+                    Mono.from(outbound)
+                            .onErrorResume(throwable -> handleConnectionError(throwable, netConnection, userSession))
+                            .subscribe();
+                });
             });
             respondWithRequests(connection, isWebSocketConnection, in, out, sessionWrapper)
                     .subscribe();

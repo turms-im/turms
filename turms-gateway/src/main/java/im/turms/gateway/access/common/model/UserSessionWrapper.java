@@ -30,6 +30,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
+ * Bind the network connection and the user session together
+ * from the perspective of the access layer
+ *
  * @author James Chen
  */
 @Data

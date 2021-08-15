@@ -38,8 +38,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static reactor.core.publisher.Sinks.EmitResult;
-
 /**
  * @author James Chen
  */
@@ -94,9 +92,12 @@ public class OutboundMessageService implements IOutboundMessageService {
                     // It's the responsibility of the downstream to decrease the reference count of the notification by 1
                     // when the notification is queued successfully and released by Netty, or fails to be queued.
                     // Otherwise, there is a memory leak
-                    EmitResult emitResult = userSession.tryEmitNextNotification(wrappedNotificationData);
-                    if (emitResult != EmitResult.OK && userSession.isSessionOpen()) {
-                        log.warn("Failed to send notifications to the session: {} due to {}", userSession, emitResult);
+                    try {
+                        userSession.sendNotification(wrappedNotificationData);
+                    } catch (Exception e) {
+                        if (userSession.isSessionOpen()) {
+                            log.warn("Failed to send a notification to the session: {}", userSession);
+                        }
                     }
                     // Keep the logic easy, and we don't care about whether the notification is really flushed
                     hasForwardedMessageToOneRecipient = true;

@@ -27,6 +27,7 @@ import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.HashedWheelTimer;
 import lombok.Data;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.geo.Point;
 import org.springframework.util.Assert;
 
@@ -40,6 +41,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Data
+@Log4j2
 public final class UserSessionsManager {
 
     /**
@@ -90,7 +92,7 @@ public final class UserSessionsManager {
     }
 
     /**
-     * @return true if the session exists
+     * @return true if the notification is sent
      */
     public boolean pushSessionNotification(DeviceType deviceType, String serverId) {
         UserSession userSession = sessionMap.get(deviceType);
@@ -105,9 +107,13 @@ public final class UserSessionsManager {
                 .setData(TurmsNotification.Data.newBuilder().setUserSession(session))
                 .build();
         ByteBuf byteBuffer = ProtoUtil.getDirectByteBuffer(notification);
-        // TODO: handle failure (though it seems never happen)
-        userSession.tryEmitNextNotification(byteBuffer);
-        return true;
+        try {
+            userSession.sendNotification(byteBuffer);
+            return true;
+        } catch (Exception e) {
+            log.error("Failed to send the session notification", e);
+            return false;
+        }
     }
 
     public UserSession getSession(@NotNull DeviceType deviceType) {

@@ -28,14 +28,12 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.geo.Point;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Sinks;
-import reactor.util.concurrent.Queues;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 /**
  * @author James Chen
@@ -63,8 +61,7 @@ public final class UserSession {
      * 3. We never emit an error in the sink
      */
     @Getter(AccessLevel.PRIVATE)
-    private final Sinks.Many<ByteBuf> notificationSink = Sinks.many().unicast()
-            .onBackpressureBuffer(Queues.<ByteBuf>unbounded(64).get());
+    private Consumer<ByteBuf> notificationConsumer;
     private volatile long lastHeartbeatRequestTimestampMillis;
     private volatile long lastRequestTimestampMillis;
     // No need to add volatile because it can only be accessed by one thread
@@ -110,9 +107,8 @@ public final class UserSession {
     public void close(@NotNull CloseReason closeReason) {
         if (isSessionOpen) {
             isSessionOpen = false;
-            // Note that it is acceptable to complete/close the following objects multiple times
+            // Note that it is acceptable to complete/close the connection multiple times
             // so that it's unnecessary to update isSessionOpen atomically
-            notificationSink.tryEmitComplete();
             if (connection != null) {
                 connection.close(closeReason);
             } else {
@@ -133,18 +129,9 @@ public final class UserSession {
         return deviceType != DeviceType.BROWSER;
     }
 
-    public Flux<ByteBuf> getNotificationFlux() {
-        return notificationSink.asFlux();
-    }
-
-    public Sinks.EmitResult tryEmitNextNotification(ByteBuf byteBuf) {
-        Sinks.EmitResult result = notificationSink.tryEmitNext(byteBuf);
-        if (result != Sinks.EmitResult.OK) {
-            // Release once because the subscriber of the sink
-            // hasn't released it due to the emitting failure.
-            byteBuf.release();
-        }
-        return result;
+    public void sendNotification(ByteBuf byteBuf) {
+        // Note that we do not check if the consumer is null
+        notificationConsumer.accept(byteBuf);
     }
 
     public boolean acquireDeleteSessionRequestLoggingLock() {
