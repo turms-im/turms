@@ -25,8 +25,8 @@ public struct TurmsNotification {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  /// Note: request_id is allowed to be duplicate because
-  /// it is used for clients to identify the response of the same request id in a session
+  /// Response
+  /// request_id is used to tell the client that this notification is for the specific request
   public var requestID: Int64 {
     get {return _storage._requestID ?? 0}
     set {_uniqueStorage()._requestID = newValue}
@@ -63,18 +63,10 @@ public struct TurmsNotification {
   /// Clears the value of `data`. Subsequent reads from it will return its default value.
   public mutating func clearData() {_uniqueStorage()._data = nil}
 
-  public var relayedRequest: TurmsRequest {
-    get {return _storage._relayedRequest ?? TurmsRequest()}
-    set {_uniqueStorage()._relayedRequest = newValue}
-  }
-  /// Returns true if `relayedRequest` has been explicitly set.
-  public var hasRelayedRequest: Bool {return _storage._relayedRequest != nil}
-  /// Clears the value of `relayedRequest`. Subsequent reads from it will return its default value.
-  public mutating func clearRelayedRequest() {_uniqueStorage()._relayedRequest = nil}
-
+  /// Notification
   /// requester_id only exists when a requester triggers a notification to its recipients
-  /// Note: Do not move requester_id to TurmsRequest because it needs to rebuild a whole TurmsNotification
-  /// when recipients need the requester_id.
+  /// Note: Do not move requester_id to TurmsRequest because it requires rebuilding
+  /// a new TurmsNotification when recipients need the requester_id.
   public var requesterID: Int64 {
     get {return _storage._requesterID ?? 0}
     set {_uniqueStorage()._requesterID = newValue}
@@ -92,6 +84,15 @@ public struct TurmsNotification {
   public var hasCloseStatus: Bool {return _storage._closeStatus != nil}
   /// Clears the value of `closeStatus`. Subsequent reads from it will return its default value.
   public mutating func clearCloseStatus() {_uniqueStorage()._closeStatus = nil}
+
+  public var relayedRequest: TurmsRequest {
+    get {return _storage._relayedRequest ?? TurmsRequest()}
+    set {_uniqueStorage()._relayedRequest = newValue}
+  }
+  /// Returns true if `relayedRequest` has been explicitly set.
+  public var hasRelayedRequest: Bool {return _storage._relayedRequest != nil}
+  /// Clears the value of `relayedRequest`. Subsequent reads from it will return its default value.
+  public mutating func clearRelayedRequest() {_uniqueStorage()._relayedRequest = nil}
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -384,9 +385,9 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     2: .same(proto: "code"),
     3: .same(proto: "reason"),
     4: .same(proto: "data"),
-    5: .standard(proto: "relayed_request"),
-    6: .standard(proto: "requester_id"),
-    7: .standard(proto: "close_status"),
+    5: .standard(proto: "requester_id"),
+    6: .standard(proto: "close_status"),
+    7: .standard(proto: "relayed_request"),
   ]
 
   fileprivate class _StorageClass {
@@ -394,9 +395,9 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     var _code: Int32? = nil
     var _reason: String? = nil
     var _data: TurmsNotification.DataMessage? = nil
-    var _relayedRequest: TurmsRequest? = nil
     var _requesterID: Int64? = nil
     var _closeStatus: Int32? = nil
+    var _relayedRequest: TurmsRequest? = nil
 
     static let defaultInstance = _StorageClass()
 
@@ -407,9 +408,9 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
       _code = source._code
       _reason = source._reason
       _data = source._data
-      _relayedRequest = source._relayedRequest
       _requesterID = source._requesterID
       _closeStatus = source._closeStatus
+      _relayedRequest = source._relayedRequest
     }
   }
 
@@ -432,9 +433,9 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         case 2: try { try decoder.decodeSingularInt32Field(value: &_storage._code) }()
         case 3: try { try decoder.decodeSingularStringField(value: &_storage._reason) }()
         case 4: try { try decoder.decodeSingularMessageField(value: &_storage._data) }()
-        case 5: try { try decoder.decodeSingularMessageField(value: &_storage._relayedRequest) }()
-        case 6: try { try decoder.decodeSingularInt64Field(value: &_storage._requesterID) }()
-        case 7: try { try decoder.decodeSingularInt32Field(value: &_storage._closeStatus) }()
+        case 5: try { try decoder.decodeSingularInt64Field(value: &_storage._requesterID) }()
+        case 6: try { try decoder.decodeSingularInt32Field(value: &_storage._closeStatus) }()
+        case 7: try { try decoder.decodeSingularMessageField(value: &_storage._relayedRequest) }()
         default: break
         }
       }
@@ -455,14 +456,14 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
       if let v = _storage._data {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
       }
-      if let v = _storage._relayedRequest {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-      }
       if let v = _storage._requesterID {
-        try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
+        try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
       }
       if let v = _storage._closeStatus {
-        try visitor.visitSingularInt32Field(value: v, fieldNumber: 7)
+        try visitor.visitSingularInt32Field(value: v, fieldNumber: 6)
+      }
+      if let v = _storage._relayedRequest {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -477,9 +478,9 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         if _storage._code != rhs_storage._code {return false}
         if _storage._reason != rhs_storage._reason {return false}
         if _storage._data != rhs_storage._data {return false}
-        if _storage._relayedRequest != rhs_storage._relayedRequest {return false}
         if _storage._requesterID != rhs_storage._requesterID {return false}
         if _storage._closeStatus != rhs_storage._closeStatus {return false}
+        if _storage._relayedRequest != rhs_storage._relayedRequest {return false}
         return true
       }
       if !storagesAreEqual {return false}

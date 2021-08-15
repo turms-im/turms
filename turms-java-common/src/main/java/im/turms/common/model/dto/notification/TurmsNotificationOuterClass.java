@@ -75,10 +75,10 @@ public final class TurmsNotificationOuterClass {
       "\021TurmsNotification\022\027\n\nrequest_id\030\001 \001(\003H\000" +
       "\210\001\001\022\021\n\004code\030\002 \001(\005H\001\210\001\001\022\023\n\006reason\030\003 \001(\tH\002" +
       "\210\001\001\0224\n\004data\030\004 \001(\0132&.im.turms.proto.Turms" +
-      "Notification.Data\0225\n\017relayed_request\030\005 \001" +
-      "(\0132\034.im.turms.proto.TurmsRequest\022\031\n\014requ" +
-      "ester_id\030\006 \001(\003H\003\210\001\001\022\031\n\014close_status\030\007 \001(" +
-      "\005H\004\210\001\001\032\315\n\n\004Data\022*\n\003ids\030\001 \001(\0132\033.im.turms." +
+      "Notification.Data\022\031\n\014requester_id\030\005 \001(\003H" +
+      "\003\210\001\001\022\031\n\014close_status\030\006 \001(\005H\004\210\001\001\0225\n\017relay" +
+      "ed_request\030\007 \001(\0132\034.im.turms.proto.TurmsR" +
+      "equest\032\315\n\n\004Data\022*\n\003ids\030\001 \001(\0132\033.im.turms." +
       "proto.Int64ValuesH\000\022B\n\020ids_with_version\030" +
       "\002 \001(\0132&.im.turms.proto.Int64ValuesWithVe" +
       "rsionH\000\022\r\n\003url\030\003 \001(\tH\000\0226\n\rconversations\030" +
@@ -145,7 +145,7 @@ public final class TurmsNotificationOuterClass {
     internal_static_im_turms_proto_TurmsNotification_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_TurmsNotification_descriptor,
-        new java.lang.String[] { "RequestId", "Code", "Reason", "Data", "RelayedRequest", "RequesterId", "CloseStatus", "RequestId", "Code", "Reason", "RequesterId", "CloseStatus", });
+        new java.lang.String[] { "RequestId", "Code", "Reason", "Data", "RequesterId", "CloseStatus", "RelayedRequest", "RequestId", "Code", "Reason", "RequesterId", "CloseStatus", });
     internal_static_im_turms_proto_TurmsNotification_Data_descriptor =
       internal_static_im_turms_proto_TurmsNotification_descriptor.getNestedTypes().get(0);
     internal_static_im_turms_proto_TurmsNotification_Data_fieldAccessorTable = new

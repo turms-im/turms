@@ -96,7 +96,17 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
-          case 42: {
+          case 40: {
+            bitField0_ |= 0x00000008;
+            requesterId_ = input.readInt64();
+            break;
+          }
+          case 48: {
+            bitField0_ |= 0x00000010;
+            closeStatus_ = input.readInt32();
+            break;
+          }
+          case 58: {
             im.turms.common.model.dto.request.TurmsRequest.Builder subBuilder = null;
             if (relayedRequest_ != null) {
               subBuilder = relayedRequest_.toBuilder();
@@ -107,16 +117,6 @@ private static final long serialVersionUID = 0L;
               relayedRequest_ = subBuilder.buildPartial();
             }
 
-            break;
-          }
-          case 48: {
-            bitField0_ |= 0x00000008;
-            requesterId_ = input.readInt64();
-            break;
-          }
-          case 56: {
-            bitField0_ |= 0x00000010;
-            closeStatus_ = input.readInt32();
             break;
           }
           default: {
@@ -936,7 +936,7 @@ private static final long serialVersionUID = 0L;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (kindCase_ == 3) {
@@ -956,7 +956,7 @@ private static final long serialVersionUID = 0L;
         ref = kind_;
       }
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         if (kindCase_ == 3) {
@@ -2395,7 +2395,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.Int64Values ids = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.common.Int64Values, im.turms.common.model.bo.common.Int64Values.Builder, im.turms.common.model.bo.common.Int64ValuesOrBuilder>
+          im.turms.common.model.bo.common.Int64Values, im.turms.common.model.bo.common.Int64Values.Builder, im.turms.common.model.bo.common.Int64ValuesOrBuilder> 
           getIdsFieldBuilder() {
         if (idsBuilder_ == null) {
           if (!(kindCase_ == 1)) {
@@ -2536,7 +2536,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.common.Int64ValuesWithVersion, im.turms.common.model.bo.common.Int64ValuesWithVersion.Builder, im.turms.common.model.bo.common.Int64ValuesWithVersionOrBuilder>
+          im.turms.common.model.bo.common.Int64ValuesWithVersion, im.turms.common.model.bo.common.Int64ValuesWithVersion.Builder, im.turms.common.model.bo.common.Int64ValuesWithVersionOrBuilder> 
           getIdsWithVersionFieldBuilder() {
         if (idsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 2)) {
@@ -2596,7 +2596,7 @@ private static final long serialVersionUID = 0L;
           ref = kind_;
         }
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           if (kindCase_ == 3) {
@@ -2774,7 +2774,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.Conversations conversations = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.conversation.Conversations, im.turms.common.model.bo.conversation.Conversations.Builder, im.turms.common.model.bo.conversation.ConversationsOrBuilder>
+          im.turms.common.model.bo.conversation.Conversations, im.turms.common.model.bo.conversation.Conversations.Builder, im.turms.common.model.bo.conversation.ConversationsOrBuilder> 
           getConversationsFieldBuilder() {
         if (conversationsBuilder_ == null) {
           if (!(kindCase_ == 4)) {
@@ -2915,7 +2915,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.Messages messages = 5;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.message.Messages, im.turms.common.model.bo.message.Messages.Builder, im.turms.common.model.bo.message.MessagesOrBuilder>
+          im.turms.common.model.bo.message.Messages, im.turms.common.model.bo.message.Messages.Builder, im.turms.common.model.bo.message.MessagesOrBuilder> 
           getMessagesFieldBuilder() {
         if (messagesBuilder_ == null) {
           if (!(kindCase_ == 5)) {
@@ -3056,7 +3056,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 6;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.message.MessagesWithTotalList, im.turms.common.model.bo.message.MessagesWithTotalList.Builder, im.turms.common.model.bo.message.MessagesWithTotalListOrBuilder>
+          im.turms.common.model.bo.message.MessagesWithTotalList, im.turms.common.model.bo.message.MessagesWithTotalList.Builder, im.turms.common.model.bo.message.MessagesWithTotalListOrBuilder> 
           getMessagesWithTotalListFieldBuilder() {
         if (messagesWithTotalListBuilder_ == null) {
           if (!(kindCase_ == 6)) {
@@ -3197,7 +3197,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.UserSession user_session = 7;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.UserSession, im.turms.common.model.bo.user.UserSession.Builder, im.turms.common.model.bo.user.UserSessionOrBuilder>
+          im.turms.common.model.bo.user.UserSession, im.turms.common.model.bo.user.UserSession.Builder, im.turms.common.model.bo.user.UserSessionOrBuilder> 
           getUserSessionFieldBuilder() {
         if (userSessionBuilder_ == null) {
           if (!(kindCase_ == 7)) {
@@ -3338,7 +3338,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 8;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.UsersInfosWithVersion, im.turms.common.model.bo.user.UsersInfosWithVersion.Builder, im.turms.common.model.bo.user.UsersInfosWithVersionOrBuilder>
+          im.turms.common.model.bo.user.UsersInfosWithVersion, im.turms.common.model.bo.user.UsersInfosWithVersion.Builder, im.turms.common.model.bo.user.UsersInfosWithVersionOrBuilder> 
           getUsersInfosWithVersionFieldBuilder() {
         if (usersInfosWithVersionBuilder_ == null) {
           if (!(kindCase_ == 8)) {
@@ -3479,7 +3479,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 9;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.UsersOnlineStatuses, im.turms.common.model.bo.user.UsersOnlineStatuses.Builder, im.turms.common.model.bo.user.UsersOnlineStatusesOrBuilder>
+          im.turms.common.model.bo.user.UsersOnlineStatuses, im.turms.common.model.bo.user.UsersOnlineStatuses.Builder, im.turms.common.model.bo.user.UsersOnlineStatusesOrBuilder> 
           getUsersOnlineStatusesFieldBuilder() {
         if (usersOnlineStatusesBuilder_ == null) {
           if (!(kindCase_ == 9)) {
@@ -3620,7 +3620,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.UserFriendRequestsWithVersion, im.turms.common.model.bo.user.UserFriendRequestsWithVersion.Builder, im.turms.common.model.bo.user.UserFriendRequestsWithVersionOrBuilder>
+          im.turms.common.model.bo.user.UserFriendRequestsWithVersion, im.turms.common.model.bo.user.UserFriendRequestsWithVersion.Builder, im.turms.common.model.bo.user.UserFriendRequestsWithVersionOrBuilder> 
           getUserFriendRequestsWithVersionFieldBuilder() {
         if (userFriendRequestsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 10)) {
@@ -3761,7 +3761,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 11;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.UserRelationshipGroupsWithVersion, im.turms.common.model.bo.user.UserRelationshipGroupsWithVersion.Builder, im.turms.common.model.bo.user.UserRelationshipGroupsWithVersionOrBuilder>
+          im.turms.common.model.bo.user.UserRelationshipGroupsWithVersion, im.turms.common.model.bo.user.UserRelationshipGroupsWithVersion.Builder, im.turms.common.model.bo.user.UserRelationshipGroupsWithVersionOrBuilder> 
           getUserRelationshipGroupsWithVersionFieldBuilder() {
         if (userRelationshipGroupsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 11)) {
@@ -3902,7 +3902,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 12;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.UserRelationshipsWithVersion, im.turms.common.model.bo.user.UserRelationshipsWithVersion.Builder, im.turms.common.model.bo.user.UserRelationshipsWithVersionOrBuilder>
+          im.turms.common.model.bo.user.UserRelationshipsWithVersion, im.turms.common.model.bo.user.UserRelationshipsWithVersion.Builder, im.turms.common.model.bo.user.UserRelationshipsWithVersionOrBuilder> 
           getUserRelationshipsWithVersionFieldBuilder() {
         if (userRelationshipsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 12)) {
@@ -4043,7 +4043,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.NearbyUsers, im.turms.common.model.bo.user.NearbyUsers.Builder, im.turms.common.model.bo.user.NearbyUsersOrBuilder>
+          im.turms.common.model.bo.user.NearbyUsers, im.turms.common.model.bo.user.NearbyUsers.Builder, im.turms.common.model.bo.user.NearbyUsersOrBuilder> 
           getNearbyUsersFieldBuilder() {
         if (nearbyUsersBuilder_ == null) {
           if (!(kindCase_ == 13)) {
@@ -4184,7 +4184,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.group.GroupInvitationsWithVersion, im.turms.common.model.bo.group.GroupInvitationsWithVersion.Builder, im.turms.common.model.bo.group.GroupInvitationsWithVersionOrBuilder>
+          im.turms.common.model.bo.group.GroupInvitationsWithVersion, im.turms.common.model.bo.group.GroupInvitationsWithVersion.Builder, im.turms.common.model.bo.group.GroupInvitationsWithVersionOrBuilder> 
           getGroupInvitationsWithVersionFieldBuilder() {
         if (groupInvitationsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 14)) {
@@ -4325,7 +4325,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult, im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.Builder, im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOrBuilder>
+          im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult, im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.Builder, im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOrBuilder> 
           getGroupJoinQuestionAnswerResultFieldBuilder() {
         if (groupJoinQuestionAnswerResultBuilder_ == null) {
           if (!(kindCase_ == 15)) {
@@ -4466,7 +4466,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.group.GroupJoinRequestsWithVersion, im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.Builder, im.turms.common.model.bo.group.GroupJoinRequestsWithVersionOrBuilder>
+          im.turms.common.model.bo.group.GroupJoinRequestsWithVersion, im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.Builder, im.turms.common.model.bo.group.GroupJoinRequestsWithVersionOrBuilder> 
           getGroupJoinRequestsWithVersionFieldBuilder() {
         if (groupJoinRequestsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 16)) {
@@ -4607,7 +4607,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion, im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.Builder, im.turms.common.model.bo.group.GroupJoinQuestionsWithVersionOrBuilder>
+          im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion, im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.Builder, im.turms.common.model.bo.group.GroupJoinQuestionsWithVersionOrBuilder> 
           getGroupJoinQuestionsWithVersionFieldBuilder() {
         if (groupJoinQuestionsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 17)) {
@@ -4748,7 +4748,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.group.GroupMembersWithVersion, im.turms.common.model.bo.group.GroupMembersWithVersion.Builder, im.turms.common.model.bo.group.GroupMembersWithVersionOrBuilder>
+          im.turms.common.model.bo.group.GroupMembersWithVersion, im.turms.common.model.bo.group.GroupMembersWithVersion.Builder, im.turms.common.model.bo.group.GroupMembersWithVersionOrBuilder> 
           getGroupMembersWithVersionFieldBuilder() {
         if (groupMembersWithVersionBuilder_ == null) {
           if (!(kindCase_ == 18)) {
@@ -4889,7 +4889,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.group.GroupsWithVersion, im.turms.common.model.bo.group.GroupsWithVersion.Builder, im.turms.common.model.bo.group.GroupsWithVersionOrBuilder>
+          im.turms.common.model.bo.group.GroupsWithVersion, im.turms.common.model.bo.group.GroupsWithVersion.Builder, im.turms.common.model.bo.group.GroupsWithVersionOrBuilder> 
           getGroupsWithVersionFieldBuilder() {
         if (groupsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 19)) {
@@ -4964,8 +4964,8 @@ private static final long serialVersionUID = 0L;
   private long requestId_;
   /**
    * <pre>
-   * Note: request_id is allowed to be duplicate because
-   * it is used for clients to identify the response of the same request id in a session
+   * Response
+   * request_id is used to tell the client that this notification is for the specific request
    * </pre>
    *
    * <code>optional int64 request_id = 1;</code>
@@ -4977,8 +4977,8 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * Note: request_id is allowed to be duplicate because
-   * it is used for clients to identify the response of the same request id in a session
+   * Response
+   * request_id is used to tell the client that this notification is for the specific request
    * </pre>
    *
    * <code>optional int64 request_id = 1;</code>
@@ -5028,7 +5028,7 @@ private static final long serialVersionUID = 0L;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
-      com.google.protobuf.ByteString bs =
+      com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
       reason_ = s;
@@ -5044,7 +5044,7 @@ private static final long serialVersionUID = 0L;
       getReasonBytes() {
     java.lang.Object ref = reason_;
     if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b =
+      com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
       reason_ = b;
@@ -5080,42 +5080,17 @@ private static final long serialVersionUID = 0L;
     return getData();
   }
 
-  public static final int RELAYED_REQUEST_FIELD_NUMBER = 5;
-  private im.turms.common.model.dto.request.TurmsRequest relayedRequest_;
-  /**
-   * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
-   * @return Whether the relayedRequest field is set.
-   */
-  @java.lang.Override
-  public boolean hasRelayedRequest() {
-    return relayedRequest_ != null;
-  }
-  /**
-   * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
-   * @return The relayedRequest.
-   */
-  @java.lang.Override
-  public im.turms.common.model.dto.request.TurmsRequest getRelayedRequest() {
-    return relayedRequest_ == null ? im.turms.common.model.dto.request.TurmsRequest.getDefaultInstance() : relayedRequest_;
-  }
-  /**
-   * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
-   */
-  @java.lang.Override
-  public im.turms.common.model.dto.request.TurmsRequestOrBuilder getRelayedRequestOrBuilder() {
-    return getRelayedRequest();
-  }
-
-  public static final int REQUESTER_ID_FIELD_NUMBER = 6;
+  public static final int REQUESTER_ID_FIELD_NUMBER = 5;
   private long requesterId_;
   /**
    * <pre>
+   * Notification
    * requester_id only exists when a requester triggers a notification to its recipients
-   * Note: Do not move requester_id to TurmsRequest because it needs to rebuild a whole TurmsNotification
-   * when recipients need the requester_id.
+   * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
+   * a new TurmsNotification when recipients need the requester_id.
    * </pre>
    *
-   * <code>optional int64 requester_id = 6;</code>
+   * <code>optional int64 requester_id = 5;</code>
    * @return Whether the requesterId field is set.
    */
   @java.lang.Override
@@ -5124,12 +5099,13 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
+   * Notification
    * requester_id only exists when a requester triggers a notification to its recipients
-   * Note: Do not move requester_id to TurmsRequest because it needs to rebuild a whole TurmsNotification
-   * when recipients need the requester_id.
+   * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
+   * a new TurmsNotification when recipients need the requester_id.
    * </pre>
    *
-   * <code>optional int64 requester_id = 6;</code>
+   * <code>optional int64 requester_id = 5;</code>
    * @return The requesterId.
    */
   @java.lang.Override
@@ -5137,10 +5113,10 @@ private static final long serialVersionUID = 0L;
     return requesterId_;
   }
 
-  public static final int CLOSE_STATUS_FIELD_NUMBER = 7;
+  public static final int CLOSE_STATUS_FIELD_NUMBER = 6;
   private int closeStatus_;
   /**
-   * <code>optional int32 close_status = 7;</code>
+   * <code>optional int32 close_status = 6;</code>
    * @return Whether the closeStatus field is set.
    */
   @java.lang.Override
@@ -5148,12 +5124,38 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000010) != 0);
   }
   /**
-   * <code>optional int32 close_status = 7;</code>
+   * <code>optional int32 close_status = 6;</code>
    * @return The closeStatus.
    */
   @java.lang.Override
   public int getCloseStatus() {
     return closeStatus_;
+  }
+
+  public static final int RELAYED_REQUEST_FIELD_NUMBER = 7;
+  private im.turms.common.model.dto.request.TurmsRequest relayedRequest_;
+  /**
+   * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+   * @return Whether the relayedRequest field is set.
+   */
+  @java.lang.Override
+  public boolean hasRelayedRequest() {
+    return relayedRequest_ != null;
+  }
+  /**
+   * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+   * @return The relayedRequest.
+   */
+  @java.lang.Override
+  public im.turms.common.model.dto.request.TurmsRequest getRelayedRequest() {
+    return relayedRequest_ == null ? im.turms.common.model.dto.request.TurmsRequest.getDefaultInstance() : relayedRequest_;
+  }
+  /**
+   * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+   */
+  @java.lang.Override
+  public im.turms.common.model.dto.request.TurmsRequestOrBuilder getRelayedRequestOrBuilder() {
+    return getRelayedRequest();
   }
 
   private byte memoizedIsInitialized = -1;
@@ -5182,14 +5184,14 @@ private static final long serialVersionUID = 0L;
     if (data_ != null) {
       output.writeMessage(4, getData());
     }
-    if (relayedRequest_ != null) {
-      output.writeMessage(5, getRelayedRequest());
-    }
     if (((bitField0_ & 0x00000008) != 0)) {
-      output.writeInt64(6, requesterId_);
+      output.writeInt64(5, requesterId_);
     }
     if (((bitField0_ & 0x00000010) != 0)) {
-      output.writeInt32(7, closeStatus_);
+      output.writeInt32(6, closeStatus_);
+    }
+    if (relayedRequest_ != null) {
+      output.writeMessage(7, getRelayedRequest());
     }
     unknownFields.writeTo(output);
   }
@@ -5215,17 +5217,17 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(4, getData());
     }
-    if (relayedRequest_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(5, getRelayedRequest());
-    }
     if (((bitField0_ & 0x00000008) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(6, requesterId_);
+        .computeInt64Size(5, requesterId_);
     }
     if (((bitField0_ & 0x00000010) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(7, closeStatus_);
+        .computeInt32Size(6, closeStatus_);
+    }
+    if (relayedRequest_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(7, getRelayedRequest());
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -5262,11 +5264,6 @@ private static final long serialVersionUID = 0L;
       if (!getData()
           .equals(other.getData())) return false;
     }
-    if (hasRelayedRequest() != other.hasRelayedRequest()) return false;
-    if (hasRelayedRequest()) {
-      if (!getRelayedRequest()
-          .equals(other.getRelayedRequest())) return false;
-    }
     if (hasRequesterId() != other.hasRequesterId()) return false;
     if (hasRequesterId()) {
       if (getRequesterId()
@@ -5276,6 +5273,11 @@ private static final long serialVersionUID = 0L;
     if (hasCloseStatus()) {
       if (getCloseStatus()
           != other.getCloseStatus()) return false;
+    }
+    if (hasRelayedRequest() != other.hasRelayedRequest()) return false;
+    if (hasRelayedRequest()) {
+      if (!getRelayedRequest()
+          .equals(other.getRelayedRequest())) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -5305,10 +5307,6 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + DATA_FIELD_NUMBER;
       hash = (53 * hash) + getData().hashCode();
     }
-    if (hasRelayedRequest()) {
-      hash = (37 * hash) + RELAYED_REQUEST_FIELD_NUMBER;
-      hash = (53 * hash) + getRelayedRequest().hashCode();
-    }
     if (hasRequesterId()) {
       hash = (37 * hash) + REQUESTER_ID_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
@@ -5317,6 +5315,10 @@ private static final long serialVersionUID = 0L;
     if (hasCloseStatus()) {
       hash = (37 * hash) + CLOSE_STATUS_FIELD_NUMBER;
       hash = (53 * hash) + getCloseStatus();
+    }
+    if (hasRelayedRequest()) {
+      hash = (37 * hash) + RELAYED_REQUEST_FIELD_NUMBER;
+      hash = (53 * hash) + getRelayedRequest().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -5463,16 +5465,16 @@ private static final long serialVersionUID = 0L;
         data_ = null;
         dataBuilder_ = null;
       }
+      requesterId_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000008);
+      closeStatus_ = 0;
+      bitField0_ = (bitField0_ & ~0x00000010);
       if (relayedRequestBuilder_ == null) {
         relayedRequest_ = null;
       } else {
         relayedRequest_ = null;
         relayedRequestBuilder_ = null;
       }
-      requesterId_ = 0L;
-      bitField0_ = (bitField0_ & ~0x00000008);
-      closeStatus_ = 0;
-      bitField0_ = (bitField0_ & ~0x00000010);
       return this;
     }
 
@@ -5518,11 +5520,6 @@ private static final long serialVersionUID = 0L;
       } else {
         result.data_ = dataBuilder_.build();
       }
-      if (relayedRequestBuilder_ == null) {
-        result.relayedRequest_ = relayedRequest_;
-      } else {
-        result.relayedRequest_ = relayedRequestBuilder_.build();
-      }
       if (((from_bitField0_ & 0x00000008) != 0)) {
         result.requesterId_ = requesterId_;
         to_bitField0_ |= 0x00000008;
@@ -5530,6 +5527,11 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000010) != 0)) {
         result.closeStatus_ = closeStatus_;
         to_bitField0_ |= 0x00000010;
+      }
+      if (relayedRequestBuilder_ == null) {
+        result.relayedRequest_ = relayedRequest_;
+      } else {
+        result.relayedRequest_ = relayedRequestBuilder_.build();
       }
       result.bitField0_ = to_bitField0_;
       onBuilt();
@@ -5594,14 +5596,14 @@ private static final long serialVersionUID = 0L;
       if (other.hasData()) {
         mergeData(other.getData());
       }
-      if (other.hasRelayedRequest()) {
-        mergeRelayedRequest(other.getRelayedRequest());
-      }
       if (other.hasRequesterId()) {
         setRequesterId(other.getRequesterId());
       }
       if (other.hasCloseStatus()) {
         setCloseStatus(other.getCloseStatus());
+      }
+      if (other.hasRelayedRequest()) {
+        mergeRelayedRequest(other.getRelayedRequest());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -5636,8 +5638,8 @@ private static final long serialVersionUID = 0L;
     private long requestId_ ;
     /**
      * <pre>
-     * Note: request_id is allowed to be duplicate because
-     * it is used for clients to identify the response of the same request id in a session
+     * Response
+     * request_id is used to tell the client that this notification is for the specific request
      * </pre>
      *
      * <code>optional int64 request_id = 1;</code>
@@ -5649,8 +5651,8 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Note: request_id is allowed to be duplicate because
-     * it is used for clients to identify the response of the same request id in a session
+     * Response
+     * request_id is used to tell the client that this notification is for the specific request
      * </pre>
      *
      * <code>optional int64 request_id = 1;</code>
@@ -5662,8 +5664,8 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Note: request_id is allowed to be duplicate because
-     * it is used for clients to identify the response of the same request id in a session
+     * Response
+     * request_id is used to tell the client that this notification is for the specific request
      * </pre>
      *
      * <code>optional int64 request_id = 1;</code>
@@ -5678,8 +5680,8 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Note: request_id is allowed to be duplicate because
-     * it is used for clients to identify the response of the same request id in a session
+     * Response
+     * request_id is used to tell the client that this notification is for the specific request
      * </pre>
      *
      * <code>optional int64 request_id = 1;</code>
@@ -5763,7 +5765,7 @@ private static final long serialVersionUID = 0L;
         getReasonBytes() {
       java.lang.Object ref = reason_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         reason_ = b;
@@ -5901,7 +5903,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
      */
     public im.turms.common.model.dto.notification.TurmsNotification.Data.Builder getDataBuilder() {
-
+      
       onChanged();
       return getDataFieldBuilder().getBuilder();
     }
@@ -5920,7 +5922,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.notification.TurmsNotification.Data, im.turms.common.model.dto.notification.TurmsNotification.Data.Builder, im.turms.common.model.dto.notification.TurmsNotification.DataOrBuilder>
+        im.turms.common.model.dto.notification.TurmsNotification.Data, im.turms.common.model.dto.notification.TurmsNotification.Data.Builder, im.turms.common.model.dto.notification.TurmsNotification.DataOrBuilder> 
         getDataFieldBuilder() {
       if (dataBuilder_ == null) {
         dataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -5933,18 +5935,124 @@ private static final long serialVersionUID = 0L;
       return dataBuilder_;
     }
 
+    private long requesterId_ ;
+    /**
+     * <pre>
+     * Notification
+     * requester_id only exists when a requester triggers a notification to its recipients
+     * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
+     * a new TurmsNotification when recipients need the requester_id.
+     * </pre>
+     *
+     * <code>optional int64 requester_id = 5;</code>
+     * @return Whether the requesterId field is set.
+     */
+    @java.lang.Override
+    public boolean hasRequesterId() {
+      return ((bitField0_ & 0x00000008) != 0);
+    }
+    /**
+     * <pre>
+     * Notification
+     * requester_id only exists when a requester triggers a notification to its recipients
+     * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
+     * a new TurmsNotification when recipients need the requester_id.
+     * </pre>
+     *
+     * <code>optional int64 requester_id = 5;</code>
+     * @return The requesterId.
+     */
+    @java.lang.Override
+    public long getRequesterId() {
+      return requesterId_;
+    }
+    /**
+     * <pre>
+     * Notification
+     * requester_id only exists when a requester triggers a notification to its recipients
+     * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
+     * a new TurmsNotification when recipients need the requester_id.
+     * </pre>
+     *
+     * <code>optional int64 requester_id = 5;</code>
+     * @param value The requesterId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setRequesterId(long value) {
+      bitField0_ |= 0x00000008;
+      requesterId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Notification
+     * requester_id only exists when a requester triggers a notification to its recipients
+     * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
+     * a new TurmsNotification when recipients need the requester_id.
+     * </pre>
+     *
+     * <code>optional int64 requester_id = 5;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearRequesterId() {
+      bitField0_ = (bitField0_ & ~0x00000008);
+      requesterId_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private int closeStatus_ ;
+    /**
+     * <code>optional int32 close_status = 6;</code>
+     * @return Whether the closeStatus field is set.
+     */
+    @java.lang.Override
+    public boolean hasCloseStatus() {
+      return ((bitField0_ & 0x00000010) != 0);
+    }
+    /**
+     * <code>optional int32 close_status = 6;</code>
+     * @return The closeStatus.
+     */
+    @java.lang.Override
+    public int getCloseStatus() {
+      return closeStatus_;
+    }
+    /**
+     * <code>optional int32 close_status = 6;</code>
+     * @param value The closeStatus to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCloseStatus(int value) {
+      bitField0_ |= 0x00000010;
+      closeStatus_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional int32 close_status = 6;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearCloseStatus() {
+      bitField0_ = (bitField0_ & ~0x00000010);
+      closeStatus_ = 0;
+      onChanged();
+      return this;
+    }
+
     private im.turms.common.model.dto.request.TurmsRequest relayedRequest_;
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.dto.request.TurmsRequest, im.turms.common.model.dto.request.TurmsRequest.Builder, im.turms.common.model.dto.request.TurmsRequestOrBuilder> relayedRequestBuilder_;
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
      * @return Whether the relayedRequest field is set.
      */
     public boolean hasRelayedRequest() {
       return relayedRequestBuilder_ != null || relayedRequest_ != null;
     }
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
      * @return The relayedRequest.
      */
     public im.turms.common.model.dto.request.TurmsRequest getRelayedRequest() {
@@ -5955,7 +6063,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
      */
     public Builder setRelayedRequest(im.turms.common.model.dto.request.TurmsRequest value) {
       if (relayedRequestBuilder_ == null) {
@@ -5971,7 +6079,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
      */
     public Builder setRelayedRequest(
         im.turms.common.model.dto.request.TurmsRequest.Builder builderForValue) {
@@ -5985,7 +6093,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
      */
     public Builder mergeRelayedRequest(im.turms.common.model.dto.request.TurmsRequest value) {
       if (relayedRequestBuilder_ == null) {
@@ -6003,7 +6111,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
      */
     public Builder clearRelayedRequest() {
       if (relayedRequestBuilder_ == null) {
@@ -6017,15 +6125,15 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
      */
     public im.turms.common.model.dto.request.TurmsRequest.Builder getRelayedRequestBuilder() {
-
+      
       onChanged();
       return getRelayedRequestFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
      */
     public im.turms.common.model.dto.request.TurmsRequestOrBuilder getRelayedRequestOrBuilder() {
       if (relayedRequestBuilder_ != null) {
@@ -6036,10 +6144,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.TurmsRequest, im.turms.common.model.dto.request.TurmsRequest.Builder, im.turms.common.model.dto.request.TurmsRequestOrBuilder>
+        im.turms.common.model.dto.request.TurmsRequest, im.turms.common.model.dto.request.TurmsRequest.Builder, im.turms.common.model.dto.request.TurmsRequestOrBuilder> 
         getRelayedRequestFieldBuilder() {
       if (relayedRequestBuilder_ == null) {
         relayedRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -6050,108 +6158,6 @@ private static final long serialVersionUID = 0L;
         relayedRequest_ = null;
       }
       return relayedRequestBuilder_;
-    }
-
-    private long requesterId_ ;
-    /**
-     * <pre>
-     * requester_id only exists when a requester triggers a notification to its recipients
-     * Note: Do not move requester_id to TurmsRequest because it needs to rebuild a whole TurmsNotification
-     * when recipients need the requester_id.
-     * </pre>
-     *
-     * <code>optional int64 requester_id = 6;</code>
-     * @return Whether the requesterId field is set.
-     */
-    @java.lang.Override
-    public boolean hasRequesterId() {
-      return ((bitField0_ & 0x00000008) != 0);
-    }
-    /**
-     * <pre>
-     * requester_id only exists when a requester triggers a notification to its recipients
-     * Note: Do not move requester_id to TurmsRequest because it needs to rebuild a whole TurmsNotification
-     * when recipients need the requester_id.
-     * </pre>
-     *
-     * <code>optional int64 requester_id = 6;</code>
-     * @return The requesterId.
-     */
-    @java.lang.Override
-    public long getRequesterId() {
-      return requesterId_;
-    }
-    /**
-     * <pre>
-     * requester_id only exists when a requester triggers a notification to its recipients
-     * Note: Do not move requester_id to TurmsRequest because it needs to rebuild a whole TurmsNotification
-     * when recipients need the requester_id.
-     * </pre>
-     *
-     * <code>optional int64 requester_id = 6;</code>
-     * @param value The requesterId to set.
-     * @return This builder for chaining.
-     */
-    public Builder setRequesterId(long value) {
-      bitField0_ |= 0x00000008;
-      requesterId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * requester_id only exists when a requester triggers a notification to its recipients
-     * Note: Do not move requester_id to TurmsRequest because it needs to rebuild a whole TurmsNotification
-     * when recipients need the requester_id.
-     * </pre>
-     *
-     * <code>optional int64 requester_id = 6;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearRequesterId() {
-      bitField0_ = (bitField0_ & ~0x00000008);
-      requesterId_ = 0L;
-      onChanged();
-      return this;
-    }
-
-    private int closeStatus_ ;
-    /**
-     * <code>optional int32 close_status = 7;</code>
-     * @return Whether the closeStatus field is set.
-     */
-    @java.lang.Override
-    public boolean hasCloseStatus() {
-      return ((bitField0_ & 0x00000010) != 0);
-    }
-    /**
-     * <code>optional int32 close_status = 7;</code>
-     * @return The closeStatus.
-     */
-    @java.lang.Override
-    public int getCloseStatus() {
-      return closeStatus_;
-    }
-    /**
-     * <code>optional int32 close_status = 7;</code>
-     * @param value The closeStatus to set.
-     * @return This builder for chaining.
-     */
-    public Builder setCloseStatus(int value) {
-      bitField0_ |= 0x00000010;
-      closeStatus_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>optional int32 close_status = 7;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearCloseStatus() {
-      bitField0_ = (bitField0_ & ~0x00000010);
-      closeStatus_ = 0;
-      onChanged();
-      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

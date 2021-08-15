@@ -26,8 +26,8 @@ public interface TurmsNotificationOrBuilder extends
 
   /**
    * <pre>
-   * Note: request_id is allowed to be duplicate because
-   * it is used for clients to identify the response of the same request id in a session
+   * Response
+   * request_id is used to tell the client that this notification is for the specific request
    * </pre>
    *
    * <code>optional int64 request_id = 1;</code>
@@ -36,8 +36,8 @@ public interface TurmsNotificationOrBuilder extends
   boolean hasRequestId();
   /**
    * <pre>
-   * Note: request_id is allowed to be duplicate because
-   * it is used for clients to identify the response of the same request id in a session
+   * Response
+   * request_id is used to tell the client that this notification is for the specific request
    * </pre>
    *
    * <code>optional int64 request_id = 1;</code>
@@ -89,51 +89,53 @@ public interface TurmsNotificationOrBuilder extends
   im.turms.common.model.dto.notification.TurmsNotification.DataOrBuilder getDataOrBuilder();
 
   /**
-   * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
-   * @return Whether the relayedRequest field is set.
-   */
-  boolean hasRelayedRequest();
-  /**
-   * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
-   * @return The relayedRequest.
-   */
-  im.turms.common.model.dto.request.TurmsRequest getRelayedRequest();
-  /**
-   * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
-   */
-  im.turms.common.model.dto.request.TurmsRequestOrBuilder getRelayedRequestOrBuilder();
-
-  /**
    * <pre>
+   * Notification
    * requester_id only exists when a requester triggers a notification to its recipients
-   * Note: Do not move requester_id to TurmsRequest because it needs to rebuild a whole TurmsNotification
-   * when recipients need the requester_id.
+   * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
+   * a new TurmsNotification when recipients need the requester_id.
    * </pre>
    *
-   * <code>optional int64 requester_id = 6;</code>
+   * <code>optional int64 requester_id = 5;</code>
    * @return Whether the requesterId field is set.
    */
   boolean hasRequesterId();
   /**
    * <pre>
+   * Notification
    * requester_id only exists when a requester triggers a notification to its recipients
-   * Note: Do not move requester_id to TurmsRequest because it needs to rebuild a whole TurmsNotification
-   * when recipients need the requester_id.
+   * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
+   * a new TurmsNotification when recipients need the requester_id.
    * </pre>
    *
-   * <code>optional int64 requester_id = 6;</code>
+   * <code>optional int64 requester_id = 5;</code>
    * @return The requesterId.
    */
   long getRequesterId();
 
   /**
-   * <code>optional int32 close_status = 7;</code>
+   * <code>optional int32 close_status = 6;</code>
    * @return Whether the closeStatus field is set.
    */
   boolean hasCloseStatus();
   /**
-   * <code>optional int32 close_status = 7;</code>
+   * <code>optional int32 close_status = 6;</code>
    * @return The closeStatus.
    */
   int getCloseStatus();
+
+  /**
+   * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+   * @return Whether the relayedRequest field is set.
+   */
+  boolean hasRelayedRequest();
+  /**
+   * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+   * @return The relayedRequest.
+   */
+  im.turms.common.model.dto.request.TurmsRequest getRelayedRequest();
+  /**
+   * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+   */
+  im.turms.common.model.dto.request.TurmsRequestOrBuilder getRelayedRequestOrBuilder();
 }

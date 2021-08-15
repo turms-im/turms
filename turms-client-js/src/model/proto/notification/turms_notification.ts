@@ -25,21 +25,22 @@ export const protobufPackage = "im.turms.proto";
 
 export interface TurmsNotification {
   /**
-   * Note: request_id is allowed to be duplicate because
-   * it is used for clients to identify the response of the same request id in a session
+   * Response
+   * request_id is used to tell the client that this notification is for the specific request
    */
   requestId?: string | undefined;
   code?: number | undefined;
   reason?: string | undefined;
   data?: TurmsNotification_Data;
-  relayedRequest?: TurmsRequest;
   /**
+   * Notification
    * requester_id only exists when a requester triggers a notification to its recipients
-   * Note: Do not move requester_id to TurmsRequest because it needs to rebuild a whole TurmsNotification
-   * when recipients need the requester_id.
+   * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
+   * a new TurmsNotification when recipients need the requester_id.
    */
   requesterId?: string | undefined;
   closeStatus?: number | undefined;
+  relayedRequest?: TurmsRequest;
 }
 
 export interface TurmsNotification_Data {
@@ -88,17 +89,17 @@ export const TurmsNotification = {
         writer.uint32(34).fork()
       ).ldelim();
     }
+    if (message.requesterId !== undefined) {
+      writer.uint32(40).int64(message.requesterId);
+    }
+    if (message.closeStatus !== undefined) {
+      writer.uint32(48).int32(message.closeStatus);
+    }
     if (message.relayedRequest !== undefined) {
       TurmsRequest.encode(
         message.relayedRequest,
-        writer.uint32(42).fork()
+        writer.uint32(58).fork()
       ).ldelim();
-    }
-    if (message.requesterId !== undefined) {
-      writer.uint32(48).int64(message.requesterId);
-    }
-    if (message.closeStatus !== undefined) {
-      writer.uint32(56).int32(message.closeStatus);
     }
     return writer;
   },
@@ -123,13 +124,13 @@ export const TurmsNotification = {
           message.data = TurmsNotification_Data.decode(reader, reader.uint32());
           break;
         case 5:
-          message.relayedRequest = TurmsRequest.decode(reader, reader.uint32());
-          break;
-        case 6:
           message.requesterId = longToString(reader.int64() as Long);
           break;
-        case 7:
+        case 6:
           message.closeStatus = reader.int32();
+          break;
+        case 7:
+          message.relayedRequest = TurmsRequest.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
