@@ -82,7 +82,8 @@ public class SessionController {
             UserLocation location = createSessionRequest.getLocation();
             position = new Point(location.getLatitude(), location.getLongitude());
         }
-        Mono<UserSession> processLoginRequestMono = serviceMediator.processLoginRequest(userId,
+        Mono<UserSession> processLoginRequestMono = serviceMediator.processLoginRequest(createSessionRequest.getVersion(),
+                userId,
                 password,
                 deviceType,
                 userStatus,

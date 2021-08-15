@@ -80,8 +80,8 @@ public class UserSessionWrapper {
 
     private Timeout addIdleConnectionTimeoutTask(int closeIdleConnectionAfter) {
         return IDLE_CONNECTION_TIMEOUT_TIMER.newTimeout(timeout -> {
-            CloseReason closeReason = CloseReason.get(SessionCloseStatus.LOGIN_TIMEOUT);
             if (userSession == null || !userSession.isOpen()) {
+                CloseReason closeReason = CloseReason.get(SessionCloseStatus.LOGIN_TIMEOUT);
                 connection.close(closeReason);
             }
         }, closeIdleConnectionAfter, TimeUnit.SECONDS);

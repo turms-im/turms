@@ -59,6 +59,7 @@ public class UserService {
         return connect.then {
             return self.turmsClient.driver.send {
                 $0.createSessionRequest = .with {
+                    $0.version = 1
                     $0.userID = userId
                     if let v = password {
                         $0.password = v

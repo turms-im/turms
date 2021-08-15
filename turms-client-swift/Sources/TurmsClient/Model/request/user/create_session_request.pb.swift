@@ -25,6 +25,8 @@ public struct CreateSessionRequest {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
+  public var version: Int32 = 0
+
   public var userID: Int64 = 0
 
   public var password: String {
@@ -82,12 +84,13 @@ fileprivate let _protobuf_package = "im.turms.proto"
 extension CreateSessionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".CreateSessionRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "user_id"),
-    2: .same(proto: "password"),
-    3: .standard(proto: "user_status"),
-    4: .standard(proto: "device_type"),
-    5: .standard(proto: "device_details"),
-    6: .same(proto: "location"),
+    1: .same(proto: "version"),
+    2: .standard(proto: "user_id"),
+    3: .same(proto: "password"),
+    4: .standard(proto: "user_status"),
+    5: .standard(proto: "device_type"),
+    6: .standard(proto: "device_details"),
+    7: .same(proto: "location"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -96,40 +99,45 @@ extension CreateSessionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt64Field(value: &self.userID) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self._password) }()
-      case 3: try { try decoder.decodeSingularEnumField(value: &self._userStatus) }()
-      case 4: try { try decoder.decodeSingularEnumField(value: &self.deviceType) }()
-      case 5: try { try decoder.decodeSingularStringField(value: &self._deviceDetails) }()
-      case 6: try { try decoder.decodeSingularMessageField(value: &self._location) }()
+      case 1: try { try decoder.decodeSingularInt32Field(value: &self.version) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.userID) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self._password) }()
+      case 4: try { try decoder.decodeSingularEnumField(value: &self._userStatus) }()
+      case 5: try { try decoder.decodeSingularEnumField(value: &self.deviceType) }()
+      case 6: try { try decoder.decodeSingularStringField(value: &self._deviceDetails) }()
+      case 7: try { try decoder.decodeSingularMessageField(value: &self._location) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.version != 0 {
+      try visitor.visitSingularInt32Field(value: self.version, fieldNumber: 1)
+    }
     if self.userID != 0 {
-      try visitor.visitSingularInt64Field(value: self.userID, fieldNumber: 1)
+      try visitor.visitSingularInt64Field(value: self.userID, fieldNumber: 2)
     }
     if let v = self._password {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: v, fieldNumber: 3)
     }
     if let v = self._userStatus {
-      try visitor.visitSingularEnumField(value: v, fieldNumber: 3)
+      try visitor.visitSingularEnumField(value: v, fieldNumber: 4)
     }
     if self.deviceType != .desktop {
-      try visitor.visitSingularEnumField(value: self.deviceType, fieldNumber: 4)
+      try visitor.visitSingularEnumField(value: self.deviceType, fieldNumber: 5)
     }
     if let v = self._deviceDetails {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 5)
+      try visitor.visitSingularStringField(value: v, fieldNumber: 6)
     }
     if let v = self._location {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: CreateSessionRequest, rhs: CreateSessionRequest) -> Bool {
+    if lhs.version != rhs.version {return false}
     if lhs.userID != rhs.userID {return false}
     if lhs._password != rhs._password {return false}
     if lhs._userStatus != rhs._userStatus {return false}

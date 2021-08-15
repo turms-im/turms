@@ -44,6 +44,8 @@ public final class UserSession {
 
     private final int id = RandomUtil.nextPositiveInt();
 
+    private final int version;
+
     private final Long userId;
     private final DeviceType deviceType;
     private final Date loginDate;
@@ -90,10 +92,12 @@ public final class UserSession {
     @Nullable
     private NetConnection connection;
 
-    public UserSession(Long userId,
+    public UserSession(int version,
+                       Long userId,
                        DeviceType loggingInDeviceType,
                        @Nullable Point loginLocation) {
         Date now = new Date();
+        this.version = version;
         this.userId = userId;
         this.deviceType = loggingInDeviceType;
         this.loginDate = now;
@@ -142,6 +146,7 @@ public final class UserSession {
     public String toString() {
         return "UserSession{" +
                 "id=" + id +
+                ", version=" + version +
                 ", userId=" + userId +
                 ", deviceType=" + deviceType +
                 ", loginDate=" + loginDate +

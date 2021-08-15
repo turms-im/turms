@@ -95,6 +95,7 @@ class UserService(private val turmsClient: TurmsClient) {
             turmsClient.driver.connect()
         }
         turmsClient.driver.send(CreateSessionRequest.newBuilder().apply {
+            this.version = 1
             this.userId = userId
             password?.let { this.password = it }
             deviceType.let { this.deviceType = it }

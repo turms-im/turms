@@ -19,15 +19,12 @@ package im.turms.gateway.pojo.dto;
 
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.user.CreateSessionRequest;
-import lombok.Data;
 
 /**
  * @author James Chen
  */
-@Data
-public class SimpleTurmsRequest {
-    private final long requestId;
-    private final TurmsRequest.KindCase type;
-
-    private final CreateSessionRequest createSessionRequest;
+public record SimpleTurmsRequest(
+        long requestId,
+        TurmsRequest.KindCase type,
+        CreateSessionRequest createSessionRequest) {
 }

@@ -33,7 +33,6 @@ import im.turms.server.common.util.ReactorUtil;
 import im.turms.turms.logging.ApiLoggingContext;
 import im.turms.turms.logging.ClientApiLogging;
 import io.netty.buffer.ByteBuf;
-import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
@@ -165,8 +164,8 @@ public class OutboundMessageService {
                     SetMultimap<String, Long> userIdsByNodeId =
                             HashMultimap.create(expectedMembersCount, expectedRecipientCountPerMember);
                     for (RecipientAndNodeIds pair : pairs) {
-                        for (String nodeId : pair.getNodeIds()) {
-                            userIdsByNodeId.put(nodeId, pair.getRecipientId());
+                        for (String nodeId : pair.nodeIds) {
+                            userIdsByNodeId.put(nodeId, pair.recipientId);
                         }
                     }
                     return forwardClientMessageToNodes(messageData, userIdsByNodeId);
@@ -267,10 +266,7 @@ public class OutboundMessageService {
         return mono;
     }
 
-    @Data
-    private static class RecipientAndNodeIds {
-        private final Long recipientId;
-        private final Collection<String> nodeIds;
+    private record RecipientAndNodeIds(Long recipientId, Collection<String> nodeIds) {
     }
 
 }

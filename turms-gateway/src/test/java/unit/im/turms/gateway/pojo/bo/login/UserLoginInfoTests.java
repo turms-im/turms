@@ -34,6 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AllArgsConstructor
 class UserLoginInfoTests {
 
+    private final int version = 1;
     private final Long userId = 1L;
     private final String password = "123";
     private final DeviceType loggingInDeviceType = DeviceType.ANDROID;
@@ -45,20 +46,23 @@ class UserLoginInfoTests {
 
     @Test
     void constructor_shouldReturnInstance() {
-        UserLoginInfo userLoginInfo = new UserLoginInfo(userId, password, loggingInDeviceType, userStatus, location, ip, deviceDetails);
+        UserLoginInfo userLoginInfo =
+                new UserLoginInfo(version, userId, password, loggingInDeviceType, userStatus, location, ip, deviceDetails);
         assertThat(userLoginInfo).isNotNull();
     }
 
     @Test
     void getters_shouldGetValues() {
-        UserLoginInfo userLoginInfo = new UserLoginInfo(userId, password, loggingInDeviceType, userStatus, location, ip, deviceDetails);
-        assertThat(userLoginInfo.getUserId()).isEqualTo(userId);
-        assertThat(userLoginInfo.getPassword()).isEqualTo(password);
-        assertThat(userLoginInfo.getLoggingInDeviceType()).isEqualTo(loggingInDeviceType);
-        assertThat(userLoginInfo.getUserStatus()).isEqualTo(userStatus);
-        assertThat(userLoginInfo.getLocation()).isEqualTo(location);
-        assertThat(userLoginInfo.getIp()).isEqualTo(ip);
-        assertThat(userLoginInfo.getDeviceDetails()).isEqualTo(deviceDetails);
+        UserLoginInfo userLoginInfo =
+                new UserLoginInfo(version, userId, password, loggingInDeviceType, userStatus, location, ip, deviceDetails);
+        assertThat(userLoginInfo.version()).isEqualTo(version);
+        assertThat(userLoginInfo.userId()).isEqualTo(userId);
+        assertThat(userLoginInfo.password()).isEqualTo(password);
+        assertThat(userLoginInfo.loggingInDeviceType()).isEqualTo(loggingInDeviceType);
+        assertThat(userLoginInfo.userStatus()).isEqualTo(userStatus);
+        assertThat(userLoginInfo.location()).isEqualTo(location);
+        assertThat(userLoginInfo.ip()).isEqualTo(ip);
+        assertThat(userLoginInfo.deviceDetails()).isEqualTo(deviceDetails);
     }
 
 }

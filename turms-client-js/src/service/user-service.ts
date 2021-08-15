@@ -152,6 +152,7 @@ export default class UserService {
                 .then(() => {
                     return this._turmsClient.driver.send({
                         createSessionRequest: {
+                            version: 1,
                             userId,
                             password,
                             deviceType: userInfo.deviceType,

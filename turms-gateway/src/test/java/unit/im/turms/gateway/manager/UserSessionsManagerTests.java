@@ -36,6 +36,7 @@ import static org.mockito.Mockito.mock;
  */
 class UserSessionsManagerTests {
 
+    private final int version = 1;
     private final long userId = 1L;
     private final UserStatus userStatus = UserStatus.AVAILABLE;
     private final DeviceType deviceType = DeviceType.ANDROID;
@@ -58,7 +59,7 @@ class UserSessionsManagerTests {
     @Test
     void setDeviceOffline_shouldSucceed() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(deviceType, null);
+        manager.addSessionIfAbsent(version, deviceType, null);
         NetConnection connection = mock(NetConnection.class);
         manager.getSession(deviceType).setConnection(connection);
 
@@ -70,7 +71,7 @@ class UserSessionsManagerTests {
     @Test
     void pushSessionNotification_shouldReturnTrue_ifSessionExists() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(deviceType, null)
+        manager.addSessionIfAbsent(version, deviceType, null)
                 .setNotificationConsumer(byteBuf -> {});
         assertThat(manager.pushSessionNotification(deviceType, serverId)).isTrue();
     }
@@ -78,32 +79,32 @@ class UserSessionsManagerTests {
     @Test
     void pushSessionNotification_shouldReturnFalse_ifSessionNotExists() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(DeviceType.ANDROID, null);
+        manager.addSessionIfAbsent(version, DeviceType.ANDROID, null);
         assertThat(manager.pushSessionNotification(DeviceType.IOS, serverId)).isFalse();
     }
 
     @Test
     void getSession_shouldReturnSession() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(deviceType, null);
+        manager.addSessionIfAbsent(version, deviceType, null);
         assertThat(manager.getSession(deviceType)).isNotNull();
     }
 
     @Test
     void getSessionsNumber_shouldBeThree_forThreeSessions() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(DeviceType.ANDROID, null);
-        manager.addSessionIfAbsent(DeviceType.IOS, null);
-        manager.addSessionIfAbsent(DeviceType.DESKTOP, null);
+        manager.addSessionIfAbsent(version, DeviceType.ANDROID, null);
+        manager.addSessionIfAbsent(version, DeviceType.IOS, null);
+        manager.addSessionIfAbsent(version, DeviceType.DESKTOP, null);
         assertThat(manager.getSessionsNumber()).isEqualTo(3);
     }
 
     @Test
     void getLoggedInDeviceTypes_shouldBeSame() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(DeviceType.ANDROID, null);
-        manager.addSessionIfAbsent(DeviceType.IOS, null);
-        manager.addSessionIfAbsent(DeviceType.DESKTOP, null);
+        manager.addSessionIfAbsent(version, DeviceType.ANDROID, null);
+        manager.addSessionIfAbsent(version, DeviceType.IOS, null);
+        manager.addSessionIfAbsent(version, DeviceType.DESKTOP, null);
 
         Set<DeviceType> loggedInDeviceTypes = manager.getLoggedInDeviceTypes();
 

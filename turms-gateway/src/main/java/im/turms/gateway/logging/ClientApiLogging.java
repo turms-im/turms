@@ -41,6 +41,7 @@ public final class ClientApiLogging {
      * users don't need to write different parsers for them.
      */
     public static void log(Long userId,
+                           Integer version,
                            String ip,
                            Integer sessionId,
                            DeviceType deviceType,
@@ -55,6 +56,8 @@ public final class ClientApiLogging {
                 userId
                         + LOG_FIELD_DELIMITER
                         // session information
+                        + version
+                        + LOG_FIELD_DELIMITER
                         + ip
                         + LOG_FIELD_DELIMITER
                         + sessionId
@@ -82,6 +85,7 @@ public final class ClientApiLogging {
     }
 
     public static void log(Long userId,
+                           Integer version,
                            String ip,
                            Integer sessionId,
                            DeviceType deviceType,
@@ -96,6 +100,8 @@ public final class ClientApiLogging {
                 userId
                         + LOG_FIELD_DELIMITER
                         // session information
+                        + version
+                        + LOG_FIELD_DELIMITER
                         + ip
                         + LOG_FIELD_DELIMITER
                         + sessionId

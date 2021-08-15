@@ -29,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class UserSessionTests {
 
+    private final int version = 1;
     private final Long userId = 1L;
     private final DeviceType deviceType = DeviceType.ANDROID;
     private final Point loginLocation = new Point(1F, 1F);
@@ -36,6 +37,7 @@ class UserSessionTests {
     @Test
     void constructor_shouldReturnInstance() {
         UserSession userSession = new UserSession(
+                version,
                 userId,
                 deviceType,
                 loginLocation);
@@ -45,6 +47,7 @@ class UserSessionTests {
     @Test
     void getters_shouldGetValues() {
         UserSession userSession = new UserSession(
+                version,
                 userId,
                 deviceType,
                 loginLocation);

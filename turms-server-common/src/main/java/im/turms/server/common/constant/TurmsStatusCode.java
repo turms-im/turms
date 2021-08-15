@@ -69,10 +69,12 @@ public enum TurmsStatusCode {
     // User
 
     // User - Login
-    LOGIN_TIMEOUT(2000, "Login timeout", 408),
-    LOGIN_AUTHENTICATION_FAILED(2001, "The user's login details are incorrect", 401),
-    LOGGING_IN_USER_NOT_ACTIVE(2002, "The logging in user is inactive", 401),
-    LOGIN_FROM_FORBIDDEN_DEVICE_TYPE(2003, "The device type is forbidden to login", 401),
+    UNSUPPORTED_CLIENT_VERSION(2000, "The version of the client isn't supported", 403),
+
+    LOGIN_TIMEOUT(2010, "Login timeout", 408),
+    LOGIN_AUTHENTICATION_FAILED(2011, "The user's login details are incorrect", 401),
+    LOGGING_IN_USER_NOT_ACTIVE(2012, "The logging in user is inactive", 401),
+    LOGIN_FROM_FORBIDDEN_DEVICE_TYPE(2013, "The device type is forbidden to login", 401),
 
     // User - Session
     SESSION_SIMULTANEOUS_CONFLICTS_DECLINE(2100, "A different device has logged into your account", 409),

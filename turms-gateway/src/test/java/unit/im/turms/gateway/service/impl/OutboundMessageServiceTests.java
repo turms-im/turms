@@ -61,7 +61,7 @@ class OutboundMessageServiceTests {
     void sendNotificationToLocalClients_shouldReleaseAndReturnTrue_ifRecipientsAreOnline() {
         UserSessionsManager sessionsManager = mock(UserSessionsManager.class);
         TcpConnection connection = mock(TcpConnection.class);
-        UserSession session = new UserSession(1L, DeviceType.ANDROID, new Point(1F, 1F));
+        UserSession session = new UserSession(1, 1L, DeviceType.ANDROID, new Point(1F, 1F));
         session.setConnection(connection);
         Sinks.One<ByteBuf> sink = Sinks.one();
         session.setNotificationConsumer(sink::tryEmitValue);

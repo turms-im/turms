@@ -107,7 +107,7 @@ public class UserRequestDispatcher {
         long requestTime = System.currentTimeMillis();
         int requestSize = serviceRequestBuffer.readableBytes();
         SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(serviceRequestBuffer.nioBuffer());
-        TurmsRequest.KindCase requestType = request.getType();
+        TurmsRequest.KindCase requestType = request.type();
         TracingContext tracingContext = supportsTracing(requestType) ? new TracingContext() : TracingContext.NOOP;
         // Check if we can log to avoid logging DeleteSessionRequest twice
         boolean canLogRequest = true;
@@ -129,29 +129,31 @@ public class UserRequestDispatcher {
                         tracingContext.updateMdc();
                         log.error("Failed to handle the service request: {}", request, throwable);
                     }
-                    return Mono.just(NotificationFactory.create(info, request.getRequestId()));
+                    return Mono.just(NotificationFactory.create(info, request.requestId()));
                 })
                 .map(notification -> {
-                    TurmsRequest.KindCase type = request.getType();
+                    TurmsRequest.KindCase type = request.type();
                     // TODO: exclude the error because the server is inactive
                     if (TurmsStatusCode.isServerError(notification.getCode())
                             || apiLoggingContext.shouldLog(type) && finalCanLogRequest) {
                         try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
                             UserSession userSession = sessionWrapper.getUserSession();
+                            Integer version = null;
                             Long userId = null;
                             Integer sessionId = null;
                             DeviceType deviceType = null;
                             if (userSession != null) {
+                                version = userSession.getVersion();
                                 userId = userSession.getUserId();
                                 sessionId = userSession.getId();
                                 deviceType = userSession.getDeviceType();
                             }
-                            ClientApiLogging.log(
-                                    userId,
+                            ClientApiLogging.log(userId,
+                                    version,
                                     sessionWrapper.getIp(),
                                     sessionId,
                                     deviceType,
-                                    request.getRequestId(),
+                                    request.requestId(),
                                     type,
                                     requestSize,
                                     requestTime,
@@ -177,7 +179,7 @@ public class UserRequestDispatcher {
                                                         TracingContext tracingContext) {
         try {
             // Validate
-            long requestId = request.getRequestId();
+            long requestId = request.requestId();
             if (requestId <= 0) {
                 TurmsNotification notification = NotificationFactory.create(TurmsStatusCode.INVALID_REQUEST,
                         "The request ID must be greater than 0",
@@ -190,12 +192,12 @@ public class UserRequestDispatcher {
                 return Mono.just(notification);
             }
             // Handle the request to get a response
-            TurmsRequest.KindCase requestType = request.getType();
+            TurmsRequest.KindCase requestType = request.type();
             tracingContext.updateMdc();
             return switch (requestType) {
                 case CREATE_SESSION_REQUEST -> sessionController
-                        .handleCreateSessionRequest(sessionWrapper, request.getCreateSessionRequest())
-                        .map(result -> getNotificationFromHandlerResult(result, request.getRequestId()));
+                        .handleCreateSessionRequest(sessionWrapper, request.createSessionRequest())
+                        .map(result -> getNotificationFromHandlerResult(result, request.requestId()));
                 case DELETE_SESSION_REQUEST -> sessionController.handleDeleteSessionRequest(sessionWrapper);
                 default -> {
                     serviceRequestBuffer.retain();
@@ -204,7 +206,7 @@ public class UserRequestDispatcher {
             };
         } catch (Exception e) {
             TurmsNotification notification = NotificationFactory
-                    .create(ThrowableInfo.get(e), request.getRequestId());
+                    .create(ThrowableInfo.get(e), request.requestId());
             return Mono.just(notification);
         } finally {
             serviceRequestBuffer.release();
@@ -229,14 +231,14 @@ public class UserRequestDispatcher {
                                                                  ByteBuf serviceRequestBuffer) {
         UserSession session = sessionWrapper.getUserSession();
         if (session == null || !session.isOpen()) {
-            return Mono.just(TurmsNotificationUtil.sessionClosed(request.getRequestId()));
+            return Mono.just(TurmsNotificationUtil.sessionClosed(request.requestId()));
         }
         ServiceRequest serviceRequest = new ServiceRequest(
                 sessionWrapper.getAddress().getAddress().getAddress(),
                 session.getUserId(),
                 session.getDeviceType(),
-                request.getRequestId(),
-                request.getType(),
+                request.requestId(),
+                request.type(),
                 serviceRequestBuffer);
         return serviceMediator.processServiceRequest(serviceRequest);
     }

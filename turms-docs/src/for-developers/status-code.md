@@ -41,10 +41,11 @@ TurmsStatusCode表明请求响应中的处理状态，类似HTTP的状态码。
 |                      | SEND_REQUEST_FROM_NON_EXISTING_SESSION               | 1105   |      |
 | 服务端错误           | SERVER_INTERNAL_ERROR                                | 1200   |      |
 |                      | SERVER_UNAVAILABLE                                   | 1201   |      |
-| 用户登录相关错误     | LOGIN_TIMEOUT                                        | 2000   |      |
-|                      | LOGIN_AUTHENTICATION_FAILED                          | 2001   |      |
-|                      | LOGGING_IN_USER_NOT_ACTIVE                           | 2002   |      |
-|                      | LOGIN_FROM_FORBIDDEN_DEVICE_TYPE                     | 2003   |      |
+| 用户登录相关错误     | UNSUPPORTED_CLIENT_VERSION                           | 2000   |      |
+|                      | LOGIN_TIMEOUT                                        | 2010   |      |
+|                      | LOGIN_AUTHENTICATION_FAILED                          | 2011   |      |
+|                      | LOGGING_IN_USER_NOT_ACTIVE                           | 2012   |      |
+|                      | LOGIN_FROM_FORBIDDEN_DEVICE_TYPE                     | 2013   |      |
 | 用户会话相关错误     | SESSION_SIMULTANEOUS_CONFLICTS_DECLINE               | 2100   |      |
 |                      | SESSION_SIMULTANEOUS_CONFLICTS_NOTIFY                | 2101   |      |
 |                      | SESSION_SIMULTANEOUS_CONFLICTS_OFFLINE               | 2102   |      |

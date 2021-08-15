@@ -64,7 +64,9 @@ public enum TurmsStatusCode: Int {
     // User
 
     // User - Login
-    case loginTimeout = 2000
+    case unsupportedClientVersion = 2000
+
+    case loginTimeout = 2010
     case loginAuthenticationFailed
     case loggingInUserNotActive
     case loginFromForbiddenDeviceType

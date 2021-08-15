@@ -71,10 +71,12 @@ public final class UserSessionsManager {
      */
     @Nullable
     public UserSession addSessionIfAbsent(
+            int version,
             @NotNull DeviceType loggingInDeviceType,
             @Nullable Point position) {
         Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
         UserSession userSession = new UserSession(
+                version,
                 userId,
                 loggingInDeviceType,
                 position);

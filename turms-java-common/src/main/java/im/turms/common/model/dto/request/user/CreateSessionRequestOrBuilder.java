@@ -25,84 +25,90 @@ public interface CreateSessionRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int64 user_id = 1;</code>
+   * <code>int32 version = 1;</code>
+   * @return The version.
+   */
+  int getVersion();
+
+  /**
+   * <code>int64 user_id = 2;</code>
    * @return The userId.
    */
   long getUserId();
 
   /**
-   * <code>optional string password = 2;</code>
+   * <code>optional string password = 3;</code>
    * @return Whether the password field is set.
    */
   boolean hasPassword();
   /**
-   * <code>optional string password = 2;</code>
+   * <code>optional string password = 3;</code>
    * @return The password.
    */
   java.lang.String getPassword();
   /**
-   * <code>optional string password = 2;</code>
+   * <code>optional string password = 3;</code>
    * @return The bytes for password.
    */
   com.google.protobuf.ByteString
       getPasswordBytes();
 
   /**
-   * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
+   * <code>optional .im.turms.proto.UserStatus user_status = 4;</code>
    * @return Whether the userStatus field is set.
    */
   boolean hasUserStatus();
   /**
-   * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
+   * <code>optional .im.turms.proto.UserStatus user_status = 4;</code>
    * @return The enum numeric value on the wire for userStatus.
    */
   int getUserStatusValue();
   /**
-   * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
+   * <code>optional .im.turms.proto.UserStatus user_status = 4;</code>
    * @return The userStatus.
    */
   im.turms.common.constant.UserStatus getUserStatus();
 
   /**
-   * <code>.im.turms.proto.DeviceType device_type = 4;</code>
+   * <code>.im.turms.proto.DeviceType device_type = 5;</code>
    * @return The enum numeric value on the wire for deviceType.
    */
   int getDeviceTypeValue();
   /**
-   * <code>.im.turms.proto.DeviceType device_type = 4;</code>
+   * <code>.im.turms.proto.DeviceType device_type = 5;</code>
    * @return The deviceType.
    */
   im.turms.common.constant.DeviceType getDeviceType();
 
   /**
-   * <code>optional string device_details = 5;</code>
+   * <code>optional string device_details = 6;</code>
    * @return Whether the deviceDetails field is set.
    */
   boolean hasDeviceDetails();
   /**
-   * <code>optional string device_details = 5;</code>
+   * <code>optional string device_details = 6;</code>
    * @return The deviceDetails.
    */
   java.lang.String getDeviceDetails();
   /**
-   * <code>optional string device_details = 5;</code>
+   * <code>optional string device_details = 6;</code>
    * @return The bytes for deviceDetails.
    */
   com.google.protobuf.ByteString
       getDeviceDetailsBytes();
 
   /**
-   * <code>optional .im.turms.proto.UserLocation location = 6;</code>
+   * <code>optional .im.turms.proto.UserLocation location = 7;</code>
    * @return Whether the location field is set.
    */
   boolean hasLocation();
   /**
-   * <code>optional .im.turms.proto.UserLocation location = 6;</code>
+   * <code>optional .im.turms.proto.UserLocation location = 7;</code>
    * @return The location.
    */
   im.turms.common.model.bo.user.UserLocation getLocation();
   /**
-   * <code>optional .im.turms.proto.UserLocation location = 6;</code>
+   * <code>optional .im.turms.proto.UserLocation location = 7;</code>
    */
   im.turms.common.model.bo.user.UserLocationOrBuilder getLocationOrBuilder();
 }

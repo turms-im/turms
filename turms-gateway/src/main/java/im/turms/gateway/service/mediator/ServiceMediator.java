@@ -81,6 +81,7 @@ public class ServiceMediator {
     // Login
 
     public Mono<UserSession> processLoginRequest(
+            int version,
             @NotNull Long userId,
             @Nullable String password,
             @NotNull DeviceType deviceType,
@@ -88,12 +89,15 @@ public class ServiceMediator {
             @Nullable Point position,
             @Nullable String ip,
             @Nullable String deviceDetails) {
+        if (version != 1) {
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNSUPPORTED_CLIENT_VERSION, "The supported versions are: 1"));
+        }
         if (userSimultaneousLoginService.isForbiddenDeviceType(deviceType)) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE));
         }
-        return authenticate(userId, password, deviceType, userStatus, position, ip, deviceDetails)
+        return authenticate(version, userId, password, deviceType, userStatus, position, ip, deviceDetails)
                 .flatMap(statusCode -> statusCode == TurmsStatusCode.OK
-                        ? sessionService.tryRegisterOnlineUser(userId, deviceType, userStatus, position)
+                        ? sessionService.tryRegisterOnlineUser(version, userId, deviceType, userStatus, position)
                         : Mono.error(TurmsBusinessException.get(statusCode)));
     }
 
@@ -168,6 +172,7 @@ public class ServiceMediator {
      * @return OK, AUTHENTICATION_FAILED, LOGGING_IN_USER_NOT_ACTIVE
      */
     private Mono<TurmsStatusCode> authenticate(
+            int version,
             @NotNull Long userId,
             @Nullable String password,
             @NotNull DeviceType deviceType,
@@ -184,6 +189,7 @@ public class ServiceMediator {
             if (!authenticatorList.isEmpty()) {
                 Mono<Boolean> authenticate = Mono.empty();
                 UserLoginInfo userLoginInfo = new UserLoginInfo(
+                        version,
                         userId,
                         password,
                         deviceType,

@@ -291,6 +291,7 @@ public class SessionService implements ISessionService {
      * Return a new session and disconnect the remote session if the existing session is on a different machine.
      */
     public Mono<UserSession> tryRegisterOnlineUser(
+            int version,
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
@@ -318,7 +319,7 @@ public class SessionService implements ISessionService {
                     // Check the current sessions status
                     UserStatus existingUserStatus = sessionsStatus.getUserStatus();
                     if (existingUserStatus == UserStatus.OFFLINE) {
-                        return addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position);
+                        return addOnlineDeviceIfAbsent(version, userId, deviceType, userStatus, position);
                     }
                     boolean conflicts = sessionsStatus.getLoggedInDeviceTypes().contains(deviceType);
                     if (conflicts) {
@@ -347,7 +348,7 @@ public class SessionService implements ISessionService {
                     }
                     return disconnectConflictedDeviceTypes(userId, deviceType, sessionsStatus)
                             .flatMap(wasSuccessful -> wasSuccessful
-                                    ? addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position)
+                                    ? addOnlineDeviceIfAbsent(version, userId, deviceType, userStatus, position)
                                     : Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
                 });
     }
@@ -415,6 +416,7 @@ public class SessionService implements ISessionService {
     }
 
     private Mono<UserSession> addOnlineDeviceIfAbsent(
+            int version,
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
@@ -428,11 +430,11 @@ public class SessionService implements ISessionService {
                     UserStatus finalUserStatus = userStatus != null ? userStatus : UserStatus.AVAILABLE;
                     UserSessionsManager manager =
                             sessionsManagerByUserId.computeIfAbsent(userId, key -> new UserSessionsManager(key, finalUserStatus));
-                    UserSession session = manager.addSessionIfAbsent(deviceType, position);
+                    UserSession session = manager.addSessionIfAbsent(version, deviceType, position);
                     // This should never happen
                     if (session == null) {
                         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE));
-                        session = manager.addSessionIfAbsent(deviceType, position);
+                        session = manager.addSessionIfAbsent(version, deviceType, position);
                         if (session == null) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR));
                         }

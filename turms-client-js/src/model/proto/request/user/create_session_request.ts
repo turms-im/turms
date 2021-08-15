@@ -8,6 +8,7 @@ import { UserLocation } from "../../model/user/user_location";
 export const protobufPackage = "im.turms.proto";
 
 export interface CreateSessionRequest {
+  version: number;
   userId: string;
   password?: string | undefined;
   userStatus?: UserStatus | undefined;
@@ -16,30 +17,37 @@ export interface CreateSessionRequest {
   location?: UserLocation | undefined;
 }
 
-const baseCreateSessionRequest: object = { userId: "0", deviceType: 0 };
+const baseCreateSessionRequest: object = {
+  version: 0,
+  userId: "0",
+  deviceType: 0,
+};
 
 export const CreateSessionRequest = {
   encode(
     message: CreateSessionRequest,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
+    if (message.version !== 0) {
+      writer.uint32(8).int32(message.version);
+    }
     if (message.userId !== "0") {
-      writer.uint32(8).int64(message.userId);
+      writer.uint32(16).int64(message.userId);
     }
     if (message.password !== undefined) {
-      writer.uint32(18).string(message.password);
+      writer.uint32(26).string(message.password);
     }
     if (message.userStatus !== undefined) {
-      writer.uint32(24).int32(message.userStatus);
+      writer.uint32(32).int32(message.userStatus);
     }
     if (message.deviceType !== 0) {
-      writer.uint32(32).int32(message.deviceType);
+      writer.uint32(40).int32(message.deviceType);
     }
     if (message.deviceDetails !== undefined) {
-      writer.uint32(42).string(message.deviceDetails);
+      writer.uint32(50).string(message.deviceDetails);
     }
     if (message.location !== undefined) {
-      UserLocation.encode(message.location, writer.uint32(50).fork()).ldelim();
+      UserLocation.encode(message.location, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -55,21 +63,24 @@ export const CreateSessionRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.userId = longToString(reader.int64() as Long);
+          message.version = reader.int32();
           break;
         case 2:
-          message.password = reader.string();
+          message.userId = longToString(reader.int64() as Long);
           break;
         case 3:
-          message.userStatus = reader.int32() as any;
+          message.password = reader.string();
           break;
         case 4:
-          message.deviceType = reader.int32() as any;
+          message.userStatus = reader.int32() as any;
           break;
         case 5:
-          message.deviceDetails = reader.string();
+          message.deviceType = reader.int32() as any;
           break;
         case 6:
+          message.deviceDetails = reader.string();
+          break;
+        case 7:
           message.location = UserLocation.decode(reader, reader.uint32());
           break;
         default:

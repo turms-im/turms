@@ -84,8 +84,8 @@ class TurmsRequestUtilTests {
                 .asReadOnlyByteBuffer();
 
         SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(requestWithRequestId);
-        assertThat(request.getRequestId()).isEqualTo(requestId);
-        assertThat(request.getType()).isEqualTo(TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST);
+        assertThat(request.requestId()).isEqualTo(requestId);
+        assertThat(request.type()).isEqualTo(TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST);
     }
 
 }

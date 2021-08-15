@@ -167,12 +167,16 @@ public class TurmsApplicationContext {
 
     private boolean isMongoConnectionClosedException(Throwable throwable) {
         Throwable cause = throwable.getCause();
-        return cause instanceof IllegalStateException && cause.getMessage().equals("state should be: open");
+        if (cause instanceof IllegalStateException) {
+            String message = cause.getMessage();
+            return "state should be: open".equals(message) || "state should be: server session pool is open".equals(message);
+        }
+        return false;
     }
 
     private boolean isRedisConnectionClosedException(Throwable throwable) {
         Throwable cause = throwable.getCause();
-        return cause instanceof RedisException && cause.getMessage().equals("Connection closed");
+        return cause instanceof RedisException && "Connection closed".equals(cause.getMessage());
     }
 
 }

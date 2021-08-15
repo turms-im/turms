@@ -16,7 +16,7 @@ function getConfig({output, useBabel, withDeclaration}) {
             transpiler: "babel"
         })
         : ts({
-            // disable browserslist, or the the Typescript target will be determined
+            // disable browserslist, or the Typescript target will be determined
             // by Browserslist instead of the target property of tsconfig.json
             browserslist: false,
             tsconfig: config => ({ ...config, declaration: withDeclaration, declarationMap: withDeclaration }),

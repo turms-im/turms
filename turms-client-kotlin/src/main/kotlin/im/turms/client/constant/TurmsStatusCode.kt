@@ -84,10 +84,12 @@ object TurmsStatusCode {
     // User
 
     // User - Login
-    const val LOGIN_TIMEOUT = 2000
-    const val LOGIN_AUTHENTICATION_FAILED = 2001
-    const val LOGGING_IN_USER_NOT_ACTIVE = 2002
-    const val LOGIN_FROM_FORBIDDEN_DEVICE_TYPE = 2003
+    const val UNSUPPORTED_CLIENT_VERSION = 2000
+
+    const val LOGIN_TIMEOUT = 2010
+    const val LOGIN_AUTHENTICATION_FAILED = 2011
+    const val LOGGING_IN_USER_NOT_ACTIVE = 2012
+    const val LOGIN_FROM_FORBIDDEN_DEVICE_TYPE = 2013
 
     // User - Session
     const val SESSION_SIMULTANEOUS_CONFLICTS_DECLINE = 2100
