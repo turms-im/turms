@@ -23,7 +23,6 @@ import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.common.model.bo.user.UserRelationshipGroupsWithVersion;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
@@ -59,6 +58,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.util.Date;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author James Chen
@@ -100,7 +100,7 @@ public class UserRelationshipGroupService {
             return Mono.error(e);
         }
         Integer finalGroupIndex = groupIndex == null
-                ? (int) node.nextRandomId(ServiceType.USER_RELATIONSHIP_GROUP)
+                ? ThreadLocalRandom.current().nextInt()
                 : groupIndex;
         if (creationDate == null) {
             creationDate = new Date();
