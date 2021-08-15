@@ -73,6 +73,7 @@ public class SessionController {
         if (deviceType == DeviceType.UNRECOGNIZED) {
             deviceType = DeviceType.UNKNOWN;
         }
+        // TODO: Log deviceDetails in API logs
         String deviceDetails = createSessionRequest.hasDeviceDetails()
                 ? createSessionRequest.getDeviceDetails()
                 : null;
@@ -86,8 +87,7 @@ public class SessionController {
                 deviceType,
                 userStatus,
                 position,
-                // Note that don't use getHostString() to avoid getting a hostname
-                sessionWrapper.getIp().getAddress().getHostAddress(),
+                sessionWrapper.getIp(),
                 deviceDetails);
         Timeout idleConnectionTimeout = sessionWrapper.getConnectionTimeoutTask();
         DeviceType finalDeviceType = deviceType;

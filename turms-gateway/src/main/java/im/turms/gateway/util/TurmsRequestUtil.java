@@ -66,7 +66,8 @@ public final class TurmsRequestUtil {
                     int kindFieldNumber = tag >>> 3;
                     type = TurmsRequest.KindCase.forNumber(kindFieldNumber);
                     if (type == null || type == KIND_NOT_SET) {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest: Unknown request type " + type);
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT,
+                                "Not a valid TurmsRequest: Unknown request type " + type);
                     }
                     break;
                 }

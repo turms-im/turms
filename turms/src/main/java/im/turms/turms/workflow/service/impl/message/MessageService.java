@@ -61,6 +61,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -647,7 +648,7 @@ public class MessageService {
             @Nullable String text,
             @Nullable List<byte[]> records,
             @Nullable @PastOrPresent Date recallDate) {
-        boolean updateMessageContent = text != null || (records != null && !records.isEmpty());
+        boolean updateMessageContent = text != null || !CollectionUtils.isEmpty(records);
         if (!updateMessageContent && recallDate == null) {
             return Mono.empty();
         }

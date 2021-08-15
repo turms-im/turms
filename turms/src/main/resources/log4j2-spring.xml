@@ -32,17 +32,6 @@
                         </Policies>
                     </RollingFile>
                 </Route>
-                <Route key="USER_ACTIVITY">
-                    <RollingFile name="File"
-                                 fileName="${env:TURMS_HOME:-.}/log/turms-user-activity.log"
-                                 filePattern="${env:TURMS_HOME:-.}/log/$${date:yyyy-MM}/turms-user-activity-%d{yyyy-MM-dd-HH}-%i.log.gz">
-                        <PatternLayout pattern="${sys:FILE_LOG_PATTERN}"
-                                       charset="UTF-8"/>
-                        <Policies>
-                            <SizeBasedTriggeringPolicy size="10 MB"/>
-                        </Policies>
-                    </RollingFile>
-                </Route>
                 <Route key="CLIENT_API">
                     <RollingFile name="File"
                                  fileName="${env:TURMS_HOME:-.}/log/turms-client-api.log"

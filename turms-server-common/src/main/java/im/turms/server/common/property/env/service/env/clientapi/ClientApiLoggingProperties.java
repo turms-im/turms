@@ -21,7 +21,6 @@ import im.turms.server.common.property.env.common.clientapi.CommonClientApiLoggi
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
@@ -29,6 +28,5 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class ClientApiLoggingProperties extends CommonClientApiLoggingProperties {
 }

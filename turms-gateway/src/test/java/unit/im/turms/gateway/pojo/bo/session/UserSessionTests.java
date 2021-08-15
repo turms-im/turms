@@ -32,15 +32,13 @@ class UserSessionTests {
     private final Long userId = 1L;
     private final DeviceType deviceType = DeviceType.ANDROID;
     private final Point loginLocation = new Point(1F, 1F);
-    private final long logId = 1L;
 
     @Test
     void constructor_shouldReturnInstance() {
         UserSession userSession = new UserSession(
                 userId,
                 deviceType,
-                loginLocation,
-                logId);
+                loginLocation);
         assertThat(userSession).isNotNull();
     }
 
@@ -49,11 +47,9 @@ class UserSessionTests {
         UserSession userSession = new UserSession(
                 userId,
                 deviceType,
-                loginLocation,
-                logId);
+                loginLocation);
         assertThat(userSession.getDeviceType()).isEqualTo(deviceType);
         assertThat(userSession.getLoginLocation()).isEqualTo(loginLocation);
-        assertThat(userSession.getLogId()).isEqualTo(logId);
     }
 
 }

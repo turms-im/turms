@@ -32,12 +32,9 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * @author James Chen
  */
-public final class LoggingRequestUtil {
+public abstract class CommonApiLoggingContext {
 
-    private LoggingRequestUtil() {
-    }
-
-    public static Map<TurmsRequest.KindCase, LoggingRequestProperties> getSupportedLoggingRequestProperties(
+    protected Map<TurmsRequest.KindCase, LoggingRequestProperties> getSupportedLoggingRequestProperties(
             Set<LoggingCategoryProperties> includedCategories,
             Set<LoggingRequestProperties> loggingRequests,
             Set<LoggingRequestCategory> excludedCategories,
@@ -73,8 +70,8 @@ public final class LoggingRequestUtil {
         return result;
     }
 
-    public static boolean shouldLog(TurmsRequest.KindCase requestType,
-                                    Map<TurmsRequest.KindCase, LoggingRequestProperties> requestPropertiesMap) {
+    protected boolean shouldLog(TurmsRequest.KindCase requestType,
+                                Map<TurmsRequest.KindCase, LoggingRequestProperties> requestPropertiesMap) {
         LoggingRequestProperties requestProperties = requestPropertiesMap.get(requestType);
         if (requestProperties == null) {
             return false;
@@ -90,7 +87,7 @@ public final class LoggingRequestUtil {
         return false;
     }
 
-    private static Set<LoggingRequestProperties> getRequestProperties(LoggingCategoryProperties categoryProperties) {
+    private Set<LoggingRequestProperties> getRequestProperties(LoggingCategoryProperties categoryProperties) {
         LoggingRequestCategory category = categoryProperties.getCategory();
         Set<TurmsRequest.KindCase> requestTypes = category.getRequestTypes();
         if (requestTypes.isEmpty()) {

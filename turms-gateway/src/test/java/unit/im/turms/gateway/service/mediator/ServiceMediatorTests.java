@@ -149,7 +149,7 @@ class ServiceMediatorTests {
     void processHeartbeatRequest_shouldSucceed() {
         ServiceMediator mediator = newServiceMediator();
         assertThatNoException().isThrownBy(() ->
-                mediator.processHeartbeatRequest(new UserSession(userId, deviceType, null, null)));
+                mediator.processHeartbeatRequest(new UserSession(userId, deviceType, null)));
     }
 
     @Test
@@ -195,7 +195,7 @@ class ServiceMediatorTests {
 
         SessionService sessionService = mock(SessionService.class);
         UserSession userSession = mock(UserSession.class);
-        when(sessionService.tryRegisterOnlineUser(any(), any(), any(), any(), any(), any()))
+        when(sessionService.tryRegisterOnlineUser(any(), any(), any(), any()))
                 .thenReturn(Mono.just(userSession));
         when(sessionService.setLocalSessionOfflineByUserIdAndDeviceType(any(), any(), any()))
                 .thenReturn(Mono.just(true));

@@ -20,6 +20,7 @@ package im.turms.gateway.access.tcp;
 import im.turms.gateway.access.common.UserSessionDispatcher;
 import im.turms.gateway.access.common.controller.UserRequestDispatcher;
 import im.turms.gateway.access.tcp.factory.TcpServerFactory;
+import im.turms.gateway.logging.ApiLoggingContext;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
@@ -44,11 +45,12 @@ public class TcpDispatcher extends UserSessionDispatcher {
     private final String host;
     private final int port;
 
-    public TcpDispatcher(TurmsPropertiesManager propertiesManager,
+    public TcpDispatcher(ApiLoggingContext apiLoggingContext,
+                         TurmsPropertiesManager propertiesManager,
                          ServiceMediator serviceMediator,
                          ServerStatusManager serverStatusManager,
                          UserRequestDispatcher userRequestDispatcher) {
-        super(serviceMediator, userRequestDispatcher,
+        super(apiLoggingContext, serviceMediator, userRequestDispatcher,
                 propertiesManager.getLocalProperties().getGateway().getTcp().getCloseIdleConnectionAfterSeconds());
         TcpProperties tcpProperties = propertiesManager.getLocalProperties().getGateway().getTcp();
         enabled = tcpProperties.isEnabled();

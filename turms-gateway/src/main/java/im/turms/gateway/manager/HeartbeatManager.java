@@ -163,9 +163,9 @@ public class HeartbeatManager {
         if (closeIdleSessionAfterMillis > 0 && heartbeatElapsedTime > closeIdleSessionAfterMillis) {
             CloseReason closeReason = CloseReason.get(SessionCloseStatus.HEARTBEAT_TIMEOUT);
             sessionService.setLocalSessionOfflineByUserIdAndDeviceType(
-                    session.getUserId(),
-                    session.getDeviceType(),
-                    closeReason)
+                            session.getUserId(),
+                            session.getDeviceType(),
+                            closeReason)
                     .onErrorResume(t -> {
                         log.error("Caught an error when disconnecting the local session: {} with the close reason: {}",
                                 session, closeReason);

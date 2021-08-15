@@ -40,8 +40,9 @@ public final class ClientApiLogging {
      * 2. We use the common log pattern (including the trace ID) so that our
      * users don't need to write different parsers for them.
      */
-    public static void log(String ip,
-                           Long userId,
+    public static void log(Long userId,
+                           String ip,
+                           Integer sessionId,
                            DeviceType deviceType,
                            long requestId,
                            TurmsRequest.KindCase requestType,
@@ -50,11 +51,13 @@ public final class ClientApiLogging {
                            TurmsNotification response,
                            long processingTime) {
         String message =
-                // client information
-                ip
+                // user information
+                userId
                         + LOG_FIELD_DELIMITER
-                        // user information
-                        + userId
+                        // session information
+                        + ip
+                        + LOG_FIELD_DELIMITER
+                        + sessionId
                         + LOG_FIELD_DELIMITER
                         + deviceType
                         + LOG_FIELD_DELIMITER
@@ -75,6 +78,47 @@ public final class ClientApiLogging {
                         + (response.hasData() ? response.getData().getKindCase() : null)
                         + LOG_FIELD_DELIMITER
                         + response.getSerializedSize();
+        CommonClientApiLogging.logger.info(message);
+    }
+
+    public static void log(Long userId,
+                           String ip,
+                           Integer sessionId,
+                           DeviceType deviceType,
+                           long requestId,
+                           TurmsRequest.KindCase requestType,
+                           int requestSize,
+                           long requestTime,
+                           int responseCode,
+                           long processingTime) {
+        String message =
+                // user information
+                userId
+                        + LOG_FIELD_DELIMITER
+                        // session information
+                        + ip
+                        + LOG_FIELD_DELIMITER
+                        + sessionId
+                        + LOG_FIELD_DELIMITER
+                        + deviceType
+                        + LOG_FIELD_DELIMITER
+                        // request information
+                        + requestId
+                        + LOG_FIELD_DELIMITER
+                        + requestType
+                        + LOG_FIELD_DELIMITER
+                        + Instant.ofEpochMilli(requestTime)
+                        + LOG_FIELD_DELIMITER
+                        + requestSize
+                        + LOG_FIELD_DELIMITER
+                        // response information
+                        + processingTime
+                        + LOG_FIELD_DELIMITER
+                        + responseCode
+                        + LOG_FIELD_DELIMITER
+                        + null
+                        + LOG_FIELD_DELIMITER
+                        + 0;
         CommonClientApiLogging.logger.info(message);
     }
 

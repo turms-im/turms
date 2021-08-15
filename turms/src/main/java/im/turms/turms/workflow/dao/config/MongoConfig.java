@@ -18,7 +18,6 @@
 package im.turms.turms.workflow.dao.config;
 
 import com.google.common.collect.Maps;
-import im.turms.server.common.bo.log.UserLocationLog;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.MongoCollectionOptions;
@@ -94,7 +93,6 @@ public class MongoConfig {
         mongoClient.registerEntitiesByOptions(
                 MongoCollectionOptions.of(User.class, properties.getUserWriteConcern()),
                 MongoCollectionOptions.of(UserFriendRequest.class, properties.getUserFriendRequestWriteConcern()),
-                MongoCollectionOptions.of(UserLocationLog.class, properties.getUserLocationWriteConcern()),
                 MongoCollectionOptions.of(UserPermissionGroup.class, properties.getUserPermissionGroupWriteConcern()),
                 MongoCollectionOptions.of(UserRelationship.class, properties.getUserRelationshipWriteConcern()),
                 MongoCollectionOptions.of(UserRelationshipGroup.class, properties.getUserRelationshipGroupWriteConcern()),

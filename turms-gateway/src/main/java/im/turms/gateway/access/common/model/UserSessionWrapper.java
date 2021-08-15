@@ -36,19 +36,29 @@ import java.util.function.Consumer;
 public class UserSessionWrapper {
 
     private static final HashedWheelTimer IDLE_CONNECTION_TIMEOUT_TIMER = new HashedWheelTimer();
-    private final InetSocketAddress ip;
+    private final InetSocketAddress address;
     private final Timeout connectionTimeoutTask;
     private final Consumer<UserSession> onSessionEstablished;
     private NetConnection connection;
     private UserSession userSession;
 
-    public UserSessionWrapper(NetConnection connection, InetSocketAddress ip, int closeAfter, Consumer<UserSession> onSessionEstablished) {
+    public UserSessionWrapper(NetConnection connection,
+                              InetSocketAddress address,
+                              int closeAfter,
+                              Consumer<UserSession> onSessionEstablished) {
         this.connection = connection;
-        this.ip = ip;
+        this.address = address;
         this.onSessionEstablished = onSessionEstablished;
         connectionTimeoutTask = closeAfter > 0
                 ? addIdleConnectionTimeoutTask(closeAfter)
                 : null;
+    }
+
+    /**
+     * @implNote Don't use getHostString() to avoid getting a hostname
+     */
+    public String getIp() {
+        return address.getAddress().getHostAddress();
     }
 
     public void setUserSession(UserSession userSession) {

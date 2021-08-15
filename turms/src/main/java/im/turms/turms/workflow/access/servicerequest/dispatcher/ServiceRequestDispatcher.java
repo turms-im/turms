@@ -21,20 +21,17 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.ThrowableInfo;
-import im.turms.server.common.logging.LoggingRequestUtil;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.service.env.clientapi.ClientApiLoggingProperties;
-import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ProtoUtil;
+import im.turms.turms.logging.ApiLoggingContext;
 import im.turms.turms.logging.ClientApiLogging;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
 import im.turms.turms.workflow.access.servicerequest.dto.ClientRequest;
@@ -70,20 +67,21 @@ import static im.turms.server.common.constant.CommonMetricsConstant.CLIENT_REQUE
 @Service
 public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
+    private final ApiLoggingContext apiLoggingContext;
     private final ServerStatusManager serverStatusManager;
     private final OutboundMessageService outboundMessageService;
     private final TurmsPluginManager turmsPluginManager;
 
     private final Map<TurmsRequest.KindCase, ClientRequestHandler> router;
     private final boolean pluginEnabled;
-    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingRequestProperties;
 
-    public ServiceRequestDispatcher(ApplicationContext context,
-                                    Node node,
+    public ServiceRequestDispatcher(ApiLoggingContext apiLoggingContext,
+                                    ApplicationContext context,
                                     ServerStatusManager serverStatusManager,
                                     OutboundMessageService outboundMessageService,
                                     TurmsPropertiesManager turmsPropertiesManager,
                                     TurmsPluginManager turmsPluginManager) {
+        this.apiLoggingContext = apiLoggingContext;
         this.serverStatusManager = serverStatusManager;
         this.outboundMessageService = outboundMessageService;
         Set<TurmsRequest.KindCase> disabledEndpoints =
@@ -96,12 +94,6 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         }
         this.turmsPluginManager = turmsPluginManager;
         pluginEnabled = turmsPropertiesManager.getLocalProperties().getPlugin().isEnabled();
-        ClientApiLoggingProperties loggingProperties = node.getSharedProperties().getService().getClientApi().getLogging();
-        supportedLoggingRequestProperties = LoggingRequestUtil.getSupportedLoggingRequestProperties(
-                loggingProperties.getIncludedRequestCategories(),
-                loggingProperties.getIncludedRequests(),
-                loggingProperties.getExcludedRequestCategories(),
-                loggingProperties.getExcludedRequestTypes());
     }
 
     private Map<TurmsRequest.KindCase, ClientRequestHandler> getMappings(ConfigurableApplicationContext context,
@@ -257,8 +249,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                 handlerResult.getCode(),
                                 handlerResult.getReason());
                         // 6. Log
-                        if (response.getCode().isServerError()
-                                || LoggingRequestUtil.shouldLog(requestType, supportedLoggingRequestProperties)) {
+                        if (response.getCode().isServerError() || apiLoggingContext.shouldLogRequest(requestType)) {
                             tracingContext.updateMdc();
                             ClientApiLogging
                                     .log(lastClientRequest,

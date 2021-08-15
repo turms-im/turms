@@ -60,7 +60,7 @@ class OutboundMessageServiceTests {
     void sendNotificationToLocalClients_shouldReleaseAndReturnTrue_ifRecipientsAreOnline() {
         UserSessionsManager sessionsManager = mock(UserSessionsManager.class);
         TcpConnection connection = mock(TcpConnection.class);
-        UserSession session = new UserSession(1L, DeviceType.ANDROID, new Point(1F, 1F), null);
+        UserSession session = new UserSession(1L, DeviceType.ANDROID, new Point(1F, 1F));
         session.setConnection(connection);
         Mono<ByteBuf> result = session.getNotificationFlux()
                 .flatMap(byteBuf -> Mono

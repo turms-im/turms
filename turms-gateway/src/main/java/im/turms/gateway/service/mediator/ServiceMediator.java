@@ -93,7 +93,7 @@ public class ServiceMediator {
         }
         return authenticate(userId, password, deviceType, userStatus, position, ip, deviceDetails)
                 .flatMap(statusCode -> statusCode == TurmsStatusCode.OK
-                        ? sessionService.tryRegisterOnlineUser(userId, deviceType, userStatus, position, ip, deviceDetails)
+                        ? sessionService.tryRegisterOnlineUser(userId, deviceType, userStatus, position)
                         : Mono.error(TurmsBusinessException.get(statusCode)));
     }
 

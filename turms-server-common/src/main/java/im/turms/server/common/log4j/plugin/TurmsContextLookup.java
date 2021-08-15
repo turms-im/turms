@@ -23,7 +23,6 @@ import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.log4j.LogContextConstant;
 import im.turms.server.common.logging.AdminApiLogging;
 import im.turms.server.common.logging.CommonClientApiLogging;
-import im.turms.server.common.logging.UserActivityLogging;
 import im.turms.server.common.util.ReflectionUtil;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -65,8 +64,6 @@ public class TurmsContextLookup implements StrLookup {
                 AsyncLogger logger = (AsyncLogger) LOGGER.get(logEvent);
                 if (logger == CommonClientApiLogging.logger) {
                     yield LogContextConstant.LogType.CLIENT_API;
-                } else if (logger == UserActivityLogging.logger) {
-                    yield LogContextConstant.LogType.USER_ACTIVITY;
                 } else if (logger == AdminApiLogging.logger) {
                     yield LogContextConstant.LogType.ADMIN_API;
                 } else {

@@ -179,7 +179,7 @@ public class SharedPropertyService implements ClusterService {
                     if (nodeType == NodeType.GATEWAY) {
                         if (properties.getGatewayProperties() == null) {
                             filter.eq(SharedClusterProperties.Fields.gatewayProperties, null);
-                            Update update = Update.newBuilder()
+                            Update update = Update.newBuilder(1)
                                     .set(SharedClusterProperties.Fields.gatewayProperties, clusterProperties.getGatewayProperties());
                             return sharedConfigService.updateOne(SharedClusterProperties.class, filter, update)
                                     .map(result -> {
@@ -194,7 +194,7 @@ public class SharedPropertyService implements ClusterService {
                     } else {
                         if (properties.getServiceProperties() == null) {
                             filter.eq(SharedClusterProperties.Fields.serviceProperties, null);
-                            Update update = Update.newBuilder()
+                            Update update = Update.newBuilder(1)
                                     .set(SharedClusterProperties.Fields.serviceProperties, clusterProperties.getServiceProperties());
                             return sharedConfigService.updateOne(SharedClusterProperties.class, filter, update)
                                     .map(result -> {

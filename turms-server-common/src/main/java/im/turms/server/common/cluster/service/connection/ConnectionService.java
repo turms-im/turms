@@ -72,10 +72,10 @@ import static im.turms.server.common.cluster.service.connection.request.ClosingH
  * 4. Start closing handshake -> Completed
  *
  * @author James Chen
- * @implNote Note that ConnectionService has a strong relationship with RpcService,
- * ConnectionService isn't just TransportService, and it maintains transport channels between peers,
- * but also needs to check if channels still healthy by sending keepalive RPC request via RpcService,
- * while RpcService sends RPC requests and receives RPC responses, depending the transport provided by ConnectionService
+ * @implNote Note that ConnectionService has a strong relationship with RpcService because:
+ * 1. ConnectionService isn't just TransportService, and it maintains transport channels between peers,
+ * but also needs to check if channels still healthy by sending keepalive RPC requests via RpcService.
+ * 2. RpcService sends RPC requests and receives RPC responses, depending on the transport channels provided by ConnectionService.
  * <p>
  * We don't make RpcService as a part of ConnectionService because:
  * 1. Decouple RPC ability from ConnectionService to follow single responsibility principle for better maintainability

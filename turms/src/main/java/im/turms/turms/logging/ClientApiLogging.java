@@ -50,11 +50,11 @@ public final class ClientApiLogging {
         TurmsNotification.Data dataForRequester = response.getDataForRequester();
         TurmsNotification.Data.KindCase responseType = dataForRequester == null ? null : dataForRequester.getKindCase();
         String message =
-                // client information
-                serviceRequest.getIpStr()
+                // user information
+                request.getUserId()
                         + LOG_FIELD_DELIMITER
-                        // user information
-                        + request.getUserId()
+                        // session information
+                        + serviceRequest.getIpStr()
                         + LOG_FIELD_DELIMITER
                         + request.getDeviceType()
                         + LOG_FIELD_DELIMITER

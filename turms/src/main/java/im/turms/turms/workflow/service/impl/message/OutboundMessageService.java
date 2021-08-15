@@ -22,19 +22,15 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.SetMultimap;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.logging.LoggingRequestUtil;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
-import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.gateway.clientapi.ClientApiLoggingProperties;
-import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.request.SendNotificationRequest;
 import im.turms.server.common.service.session.UserStatusService;
 import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.server.common.util.ReactorUtil;
+import im.turms.turms.logging.ApiLoggingContext;
 import im.turms.turms.logging.ClientApiLogging;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
@@ -65,18 +61,13 @@ import java.util.Set;
 public class OutboundMessageService {
 
     private final Node node;
+    private final ApiLoggingContext apiLoggingContext;
     private final UserStatusService userStatusService;
-    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingNotificationProperties;
 
-    public OutboundMessageService(Node node, TurmsPropertiesManager propertiesManager, UserStatusService userStatusService) {
+    public OutboundMessageService(Node node, ApiLoggingContext apiLoggingContext, UserStatusService userStatusService) {
         this.node = node;
+        this.apiLoggingContext = apiLoggingContext;
         this.userStatusService = userStatusService;
-        ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties().getGateway().getClientApi().getLogging();
-        supportedLoggingNotificationProperties = LoggingRequestUtil.getSupportedLoggingRequestProperties(
-                loggingProperties.getIncludedNotificationCategories(),
-                loggingProperties.getIncludedNotifications(),
-                loggingProperties.getExcludedNotificationCategories(),
-                loggingProperties.getExcludedNotificationTypes());
     }
 
     /**
@@ -268,7 +259,7 @@ public class OutboundMessageService {
     // Logging
 
     private Mono<Boolean> tryLogNotification(Mono<Boolean> mono, TurmsNotification notification) {
-        if (LoggingRequestUtil.shouldLog(notification.getRelayedRequest().getKindCase(), supportedLoggingNotificationProperties)) {
+        if (apiLoggingContext.shouldLogNotification(notification.getRelayedRequest().getKindCase())) {
             return mono
                     .doOnSuccess(sent -> ClientApiLogging.log(sent, notification));
         }

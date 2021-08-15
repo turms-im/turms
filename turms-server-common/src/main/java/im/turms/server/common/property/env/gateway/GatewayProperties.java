@@ -93,10 +93,4 @@ public class GatewayProperties {
     @NestedConfigurationProperty
     private WebSocketProperties websocket = new WebSocketProperties();
 
-    // Observability
-
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
-    private LogProperties log = new LogProperties();
-
 }

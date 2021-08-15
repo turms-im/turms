@@ -19,7 +19,6 @@ package im.turms.gateway.plugin.manager;
 
 import im.turms.gateway.plugin.extension.NotificationHandler;
 import im.turms.gateway.plugin.extension.UserAuthenticator;
-import im.turms.gateway.plugin.extension.UserLoginActionLogHandler;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.server.common.plugin.base.AbstractTurmsPluginManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
@@ -38,7 +37,6 @@ import java.util.List;
 @Log4j2
 public class TurmsPluginManager extends AbstractTurmsPluginManager {
 
-    private List<UserLoginActionLogHandler> userLoginActionLogHandlerList;
     private List<NotificationHandler> notificationHandlerList;
     private List<UserAuthenticator> userAuthenticatorList;
     private List<UserOnlineStatusChangeHandler> userOnlineStatusChangeHandlerList;
@@ -51,7 +49,6 @@ public class TurmsPluginManager extends AbstractTurmsPluginManager {
 
     @Override
     protected void initPlugins() {
-        userLoginActionLogHandlerList = getAndInitExtensions(UserLoginActionLogHandler.class);
         notificationHandlerList = getAndInitExtensions(NotificationHandler.class);
         userAuthenticatorList = getAndInitExtensions(UserAuthenticator.class);
         userOnlineStatusChangeHandlerList = getAndInitExtensions(UserOnlineStatusChangeHandler.class);

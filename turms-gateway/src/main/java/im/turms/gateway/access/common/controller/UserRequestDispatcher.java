@@ -23,6 +23,7 @@ import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.gateway.access.common.model.UserSessionWrapper;
 import im.turms.gateway.access.tcp.dto.RequestHandlerResult;
 import im.turms.gateway.access.tcp.util.TurmsNotificationUtil;
+import im.turms.gateway.logging.ApiLoggingContext;
 import im.turms.gateway.logging.ClientApiLogging;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
@@ -32,12 +33,8 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.exception.ThrowableInfo;
 import im.turms.server.common.factory.NotificationFactory;
-import im.turms.server.common.logging.LoggingRequestUtil;
 import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.manager.ServerStatusManager;
-import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.gateway.clientapi.ClientApiLoggingProperties;
-import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ProtoUtil;
@@ -48,8 +45,6 @@ import io.netty.buffer.UnpooledByteBufAllocator;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
-import java.util.Map;
 
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
@@ -77,24 +72,20 @@ public class UserRequestDispatcher {
         HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE = Unpooled.unreleasableBuffer(ProtoUtil.getDirectByteBuffer(notification));
     }
 
+    private final ApiLoggingContext apiLoggingContext;
+
     private final SessionController sessionController;
     private final ServiceMediator serviceMediator;
     private final ServerStatusManager serverStatusManager;
-    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingRequestProperties;
 
-    public UserRequestDispatcher(SessionController sessionController,
+    public UserRequestDispatcher(ApiLoggingContext apiLoggingContext,
+                                 SessionController sessionController,
                                  ServiceMediator serviceMediator,
-                                 ServerStatusManager serverStatusManager,
-                                 TurmsPropertiesManager propertiesManager) {
+                                 ServerStatusManager serverStatusManager) {
+        this.apiLoggingContext = apiLoggingContext;
         this.sessionController = sessionController;
         this.serviceMediator = serviceMediator;
         this.serverStatusManager = serverStatusManager;
-        ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties().getGateway().getClientApi().getLogging();
-        supportedLoggingRequestProperties = LoggingRequestUtil.getSupportedLoggingRequestProperties(
-                loggingProperties.getIncludedRequestCategories(),
-                loggingProperties.getIncludedRequests(),
-                loggingProperties.getExcludedRequestCategories(),
-                loggingProperties.getExcludedRequestTypes());
     }
 
     /**
@@ -118,6 +109,15 @@ public class UserRequestDispatcher {
         SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(serviceRequestBuffer.nioBuffer());
         TurmsRequest.KindCase requestType = request.getType();
         TracingContext tracingContext = supportsTracing(requestType) ? new TracingContext() : TracingContext.NOOP;
+        // Check if we can log to avoid logging DeleteSessionRequest twice
+        boolean canLogRequest = true;
+        if (requestType == DELETE_SESSION_REQUEST) {
+            UserSession session = sessionWrapper.getUserSession();
+            if (session != null) {
+                canLogRequest = session.acquireDeleteSessionRequestLoggingLock();
+            }
+        }
+        boolean finalCanLogRequest = canLogRequest;
         return handleServiceRequest(sessionWrapper, request, serviceRequestBuffer, tracingContext)
                 // Metrics and logging
                 .name(CLIENT_REQUEST_NAME)
@@ -135,17 +135,21 @@ public class UserRequestDispatcher {
                     TurmsRequest.KindCase type = request.getType();
                     // TODO: exclude the error because the server is inactive
                     if (TurmsStatusCode.isServerError(notification.getCode())
-                            || LoggingRequestUtil.shouldLog(type, supportedLoggingRequestProperties)) {
+                            || apiLoggingContext.shouldLog(type) && finalCanLogRequest) {
                         try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
                             UserSession userSession = sessionWrapper.getUserSession();
                             Long userId = null;
+                            Integer sessionId = null;
                             DeviceType deviceType = null;
                             if (userSession != null) {
                                 userId = userSession.getUserId();
+                                sessionId = userSession.getId();
                                 deviceType = userSession.getDeviceType();
                             }
-                            ClientApiLogging.log(sessionWrapper.getIp().getAddress().getHostAddress(),
+                            ClientApiLogging.log(
                                     userId,
+                                    sessionWrapper.getIp(),
+                                    sessionId,
                                     deviceType,
                                     request.getRequestId(),
                                     type,
@@ -228,7 +232,7 @@ public class UserRequestDispatcher {
             return Mono.just(TurmsNotificationUtil.sessionClosed(request.getRequestId()));
         }
         ServiceRequest serviceRequest = new ServiceRequest(
-                sessionWrapper.getIp().getAddress().getAddress(),
+                sessionWrapper.getAddress().getAddress().getAddress(),
                 session.getUserId(),
                 session.getDeviceType(),
                 request.getRequestId(),
@@ -249,8 +253,8 @@ public class UserRequestDispatcher {
     }
 
     /**
-     * @implNote Though the requests for gateway don't need trace currently,
-     * but we may need tracing in the future so we use a mechanism to support
+     * @implNote Though the requests for gateway don't need to trace currently,
+     * but we may need tracing in the future, so we use a mechanism to support
      * tracing any requests if we want
      */
     private boolean supportsTracing(TurmsRequest.KindCase requestType) {

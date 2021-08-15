@@ -234,7 +234,7 @@ public class Node {
         try {
             service.stop();
         } catch (Exception e) {
-            log.error("Failed to stop {}", service.getClass().getName(), e);
+            log.error("Failed to stop service {}", service.getClass().getName(), e);
         }
     }
 

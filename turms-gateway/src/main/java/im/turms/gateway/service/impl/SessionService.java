@@ -28,10 +28,8 @@ import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
-import im.turms.gateway.service.impl.log.UserLoginActionService;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.dto.CloseReason;
@@ -83,7 +81,6 @@ public class SessionService implements ISessionService {
 
     private final SessionLocationService sessionLocationService;
     private final UserStatusService userStatusService;
-    private final UserLoginActionService userLoginActionService;
     private final UserSimultaneousLoginService userSimultaneousLoginService;
 
     private final boolean pluginEnabled;
@@ -96,13 +93,11 @@ public class SessionService implements ISessionService {
             Node node,
             TurmsPropertiesManager turmsPropertiesManager,
             TurmsPluginManager turmsPluginManager,
-            UserLoginActionService userLoginActionService,
             SessionLocationService sessionLocationService,
             UserStatusService userStatusService,
             UserSimultaneousLoginService userSimultaneousLoginService,
             MetricsService metricsService) {
         this.node = node;
-        this.userLoginActionService = userLoginActionService;
         this.sessionLocationService = sessionLocationService;
         this.turmsPropertiesManager = turmsPropertiesManager;
         this.turmsPluginManager = turmsPluginManager;
@@ -241,11 +236,6 @@ public class SessionService implements ISessionService {
                     }
                     return Flux.merge(disconnectMonos)
                             .doOnNext(session -> {
-                                // Log and disconnect
-                                Long logId = session.getLogId();
-                                if (logId != null) {
-                                    userLoginActionService.tryLogLogoutActionAndTriggerHandlers(logId, userId, disconnectionDate);
-                                }
                                 manager.setDeviceOffline(session.getDeviceType(), closeReason);
                                 removeSessionsManagerIfEmpty(closeReason, manager, userId);
                             })
@@ -304,9 +294,7 @@ public class SessionService implements ISessionService {
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
-            @Nullable Point position,
-            @Nullable String ip,
-            @Nullable String deviceDetails) {
+            @Nullable Point position) {
         try {
             AssertUtil.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
@@ -330,7 +318,7 @@ public class SessionService implements ISessionService {
                     // Check the current sessions status
                     UserStatus existingUserStatus = sessionsStatus.getUserStatus();
                     if (existingUserStatus == UserStatus.OFFLINE) {
-                        return addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position, ip, deviceDetails);
+                        return addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position);
                     }
                     boolean conflicts = sessionsStatus.getLoggedInDeviceTypes().contains(deviceType);
                     if (conflicts) {
@@ -359,7 +347,7 @@ public class SessionService implements ISessionService {
                     }
                     return disconnectConflictedDeviceTypes(userId, deviceType, sessionsStatus)
                             .flatMap(wasSuccessful -> wasSuccessful
-                                    ? addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position, ip, deviceDetails)
+                                    ? addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position)
                                     : Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
                 });
     }
@@ -430,9 +418,7 @@ public class SessionService implements ISessionService {
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
-            @Nullable Point position,
-            @Nullable String ip,
-            @Nullable String deviceDetails) {
+            @Nullable Point position) {
         // Try to update the global user status
         return userStatusService.addOnlineDeviceIfAbsent(userId, deviceType, userStatus, closeIdleSessionAfterSeconds)
                 .flatMap(wasSuccessful -> {
@@ -442,28 +428,20 @@ public class SessionService implements ISessionService {
                     UserStatus finalUserStatus = userStatus != null ? userStatus : UserStatus.AVAILABLE;
                     UserSessionsManager manager =
                             sessionsManagerByUserId.computeIfAbsent(userId, key -> new UserSessionsManager(key, finalUserStatus));
-                    UserSession session = manager.addSessionIfAbsent(deviceType, position, null);
+                    UserSession session = manager.addSessionIfAbsent(deviceType, position);
                     // This should never happen
                     if (session == null) {
                         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE));
-                        session = manager.addSessionIfAbsent(deviceType, position, null);
+                        session = manager.addSessionIfAbsent(deviceType, position);
                         if (session == null) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR));
                         }
                     }
-
-                    long logId = node.nextRandomId(ServiceType.LOG);
                     Date now = new Date();
                     if (position != null && sessionLocationService.isLocationEnabled()) {
                         return sessionLocationService.upsertUserLocation(userId, deviceType, position, now)
-                                .doOnSuccess(ignored -> userLoginActionService
-                                        .tryLogLoginActionAndTriggerHandlers(logId, userId, finalUserStatus, deviceType, position, ip,
-                                                deviceDetails, now))
                                 .thenReturn(session);
                     } else {
-                        userLoginActionService
-                                .tryLogLoginActionAndTriggerHandlers(logId, userId, finalUserStatus, deviceType, position, ip,
-                                        deviceDetails, now);
                         return Mono.just(session);
                     }
                 });

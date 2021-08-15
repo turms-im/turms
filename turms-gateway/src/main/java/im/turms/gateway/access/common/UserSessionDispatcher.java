@@ -22,9 +22,12 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.gateway.access.common.controller.UserRequestDispatcher;
 import im.turms.gateway.access.common.function.ConnectionHandler;
 import im.turms.gateway.access.common.model.UserSessionWrapper;
+import im.turms.gateway.logging.ApiLoggingContext;
+import im.turms.gateway.logging.ClientApiLogging;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.gateway.service.mediator.ServiceMediator;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.util.ExceptionUtil;
@@ -39,19 +42,24 @@ import reactor.netty.NettyOutbound;
 import javax.annotation.Nullable;
 import java.net.InetSocketAddress;
 
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
+
 /**
  * @author James Chen
  */
 @Log4j2
 public abstract class UserSessionDispatcher {
 
+    private final ApiLoggingContext apiLoggingContext;
     protected final ServiceMediator serviceMediator;
     protected final UserRequestDispatcher userRequestDispatcher;
     protected final int closeIdleConnectionAfterSeconds;
 
-    protected UserSessionDispatcher(ServiceMediator serviceMediator,
+    protected UserSessionDispatcher(ApiLoggingContext apiLoggingContext,
+                                    ServiceMediator serviceMediator,
                                     UserRequestDispatcher userRequestDispatcher,
                                     int closeIdleConnectionAfterSeconds) {
+        this.apiLoggingContext = apiLoggingContext;
         this.serviceMediator = serviceMediator;
         this.userRequestDispatcher = userRequestDispatcher;
         this.closeIdleConnectionAfterSeconds = closeIdleConnectionAfterSeconds;
@@ -133,17 +141,31 @@ public abstract class UserSessionDispatcher {
                         throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(), sessionWrapper.getUserSession()))
                 .doFinally(signal -> {
                     UserSession userSession = sessionWrapper.getUserSession();
-                    if (userSession != null && userSession.isOpen()) {
-                        Long userId = userSession.getUserId();
-                        DeviceType deviceType = userSession.getDeviceType();
-                        if (!userSession.getConnection().isSwitchingToUdp()) {
-                            // The close status code is UNKNOWN_ERROR
-                            // and should never be sent to the client because
-                            // the connection has been closed
-                            serviceMediator
-                                    .setLocalUserDeviceOffline(userId, deviceType, SessionCloseStatus.UNKNOWN_ERROR)
-                                    .subscribe();
-                        }
+                    if (userSession == null) {
+                        return;
+                    }
+                    Long userId = userSession.getUserId();
+                    DeviceType deviceType = userSession.getDeviceType();
+                    if (userSession.isOpen() && !userSession.getConnection().isSwitchingToUdp()) {
+                        // The close status code is UNKNOWN_ERROR
+                        // and should never be sent to the client because
+                        // the connection has been closed
+                        serviceMediator
+                                .setLocalUserDeviceOffline(userId, deviceType, SessionCloseStatus.UNKNOWN_ERROR)
+                                .subscribe();
+                    }
+                    if (userSession.acquireDeleteSessionRequestLoggingLock() && apiLoggingContext.shouldLog(DELETE_SESSION_REQUEST)) {
+                        ClientApiLogging.log(
+                                userId,
+                                sessionWrapper.getIp(),
+                                userSession.getId(),
+                                deviceType,
+                                0,
+                                DELETE_SESSION_REQUEST,
+                                0,
+                                System.currentTimeMillis(),
+                                TurmsStatusCode.OK.getBusinessCode(),
+                                0);
                     }
                 });
     }

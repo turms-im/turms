@@ -35,6 +35,7 @@ import reactor.util.concurrent.Queues;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author James Chen
@@ -54,19 +55,16 @@ public final class UserSession {
      * 1. Use {@link ByteBuf} instead of {@link TurmsNotification}
      * so that turms-gateway can:
      * a. Transfer data through zero copy without parsing (if SSL is disabled)
-     * b. Decouple business logic from turms servers
+     * b. Send the same ByteBuf without duplicating to multiple clients
+     * c. Decouple business logic from turms servers
+     * d. {@link ByteBuf} isn't {@link TurmsNotification} if the connection is UDP (will be supported in the future)
      * <p>
-     * 2. Although we can forward the same WebSocketMessage when there are different recipients connecting to the local turms-gateway,
-     * we still use ByteBuf for code clarity and extensibility (we will integrate UDP in the future)
-     * and ByteBuf won't be copied in the scenario so it's acceptable.
-     * Note that the ByteBuf (TurmsNotification) comes from turms servers in most scenarios.
+     * 2. The ByteBuf (TurmsNotification) comes from turms servers in most scenarios.
      * 3. We never emit an error in the sink
      */
     @Getter(AccessLevel.PRIVATE)
     private final Sinks.Many<ByteBuf> notificationSink = Sinks.many().unicast()
             .onBackpressureBuffer(Queues.<ByteBuf>unbounded(64).get());
-    @Nullable
-    private Long logId;
     private volatile long lastHeartbeatRequestTimestampMillis;
     private volatile long lastRequestTimestampMillis;
     // No need to add volatile because it can only be accessed by one thread
@@ -88,19 +86,21 @@ public final class UserSession {
      * @implNote For better performance, it's acceptable for our scenarios to not update isSessionOpen atomically.
      */
     private volatile boolean isSessionOpen = true;
+    /**
+     * Used to avoid logging DeleteSessionRequest twice in a session
+     */
+    private AtomicBoolean isDeleteSessionLockAcquired = new AtomicBoolean(false);
     @Nullable
     private NetConnection connection;
 
     public UserSession(Long userId,
                        DeviceType loggingInDeviceType,
-                       @Nullable Point loginLocation,
-                       @Nullable Long logId) {
+                       @Nullable Point loginLocation) {
         Date now = new Date();
         this.userId = userId;
         this.deviceType = loggingInDeviceType;
         this.loginDate = now;
         this.loginLocation = loginLocation;
-        this.logId = logId;
         this.lastHeartbeatRequestTimestampMillis = now.getTime();
     }
 
@@ -147,6 +147,10 @@ public final class UserSession {
         return result;
     }
 
+    public boolean acquireDeleteSessionRequestLoggingLock() {
+        return isDeleteSessionLockAcquired.compareAndSet(false, true);
+    }
+
     @Override
     public String toString() {
         return "UserSession{" +
@@ -155,8 +159,8 @@ public final class UserSession {
                 ", deviceType=" + deviceType +
                 ", loginDate=" + loginDate +
                 ", loginLocation=" + loginLocation +
-                ", logId=" + logId +
                 ", isSessionOpen=" + isSessionOpen +
+                ", connection=" + connection +
                 '}';
     }
 

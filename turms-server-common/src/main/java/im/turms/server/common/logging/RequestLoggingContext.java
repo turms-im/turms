@@ -49,15 +49,6 @@ public class RequestLoggingContext {
         return tracingContext.getTraceId();
     }
 
-    public static boolean updateMdcFromContext(ContextView context) {
-        RequestLoggingContext loggingContext = context.getOrDefault(CTX_KEY_NAME, null);
-        if (loggingContext == null) {
-            return false;
-        }
-        loggingContext.updateMdc();
-        return true;
-    }
-
     public void clearMdc() {
         tracingContext.clearMdc();
     }

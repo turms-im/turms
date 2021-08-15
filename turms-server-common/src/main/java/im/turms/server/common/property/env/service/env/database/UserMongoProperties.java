@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 public class UserMongoProperties extends TurmsMongoProperties {
     private WriteConcern userWriteConcern = WriteConcern.ACKNOWLEDGED;
     private WriteConcern userFriendRequestWriteConcern = WriteConcern.ACKNOWLEDGED;
-    private WriteConcern userLocationWriteConcern = WriteConcern.ACKNOWLEDGED;
     private WriteConcern userMaxDailyOnlineUserWriteConcern = WriteConcern.ACKNOWLEDGED;
     private WriteConcern userPermissionGroupWriteConcern = WriteConcern.ACKNOWLEDGED;
     private WriteConcern userRelationshipWriteConcern = WriteConcern.ACKNOWLEDGED;
