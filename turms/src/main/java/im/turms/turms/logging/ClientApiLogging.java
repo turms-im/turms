@@ -18,6 +18,7 @@
 package im.turms.turms.logging;
 
 import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.logging.CommonClientApiLogging;
@@ -82,15 +83,29 @@ public final class ClientApiLogging {
         }
     }
 
-    public static void log(boolean sent, TurmsNotification notification) {
+    /**
+     * Note that although TurmsNotification can represent a "response" or "notification",
+     * the method is only designed to log "notification" instead of "response"
+     */
+    public static void log(boolean sent, TurmsNotification notification, int recipientCount) {
+        TurmsRequest relayedRequest = notification.getRelayedRequest();
         String message =
-                (sent ? "Sent" : "Unsent")
+                // User info
+                notification.getRequesterId()
                         + LOG_FIELD_DELIMITER
-                        + (notification.hasCode() ? notification.getCode() : null)
+                        // Notification info
+                        + (sent ? "SENT" : "UNSET")
+                        + LOG_FIELD_DELIMITER
+                        + recipientCount
                         + LOG_FIELD_DELIMITER
                         + (notification.hasCloseStatus() ? notification.getCloseStatus() : null)
                         + LOG_FIELD_DELIMITER
-                        + (notification.hasData() ? notification.getData().getKindCase() : null);
+                        + notification.getSerializedSize()
+                        + LOG_FIELD_DELIMITER
+                        // Relayed request info
+                        + relayedRequest.getRequestId()
+                        + LOG_FIELD_DELIMITER
+                        + relayedRequest.getKindCase();
         CommonClientApiLogging.logger.info(message);
     }
 

@@ -90,10 +90,11 @@ public class OutboundMessageService {
             notificationData.release();
             return Mono.just(true);
         }
-        Mono<Boolean> mono = recipientIds.size() == 1
+        int recipientCount = recipientIds.size();
+        Mono<Boolean> mono = recipientCount == 1
                 ? forwardClientMessageByRecipientId(notificationData, recipientIds.iterator().next())
                 : forwardClientMessageByRecipientIds(notificationData, recipientIds);
-        return tryLogNotification(mono, notificationForLogging);
+        return tryLogNotification(mono, notificationForLogging, recipientCount);
     }
 
     /**
@@ -119,7 +120,7 @@ public class OutboundMessageService {
                         return Mono.just(false);
                     }
                     Mono<Boolean> mono = forwardClientMessageToNodes(notificationData, nodeIds, recipientId);
-                    return tryLogNotification(mono, notificationForLogging);
+                    return tryLogNotification(mono, notificationForLogging, 1);
                 })
                 .switchIfEmpty(Mono.fromCallable(() -> {
                     notificationData.release();
@@ -258,10 +259,10 @@ public class OutboundMessageService {
 
     // Logging
 
-    private Mono<Boolean> tryLogNotification(Mono<Boolean> mono, TurmsNotification notification) {
+    private Mono<Boolean> tryLogNotification(Mono<Boolean> mono, TurmsNotification notification, int recipientCount) {
         if (apiLoggingContext.shouldLogNotification(notification.getRelayedRequest().getKindCase())) {
             return mono
-                    .doOnSuccess(sent -> ClientApiLogging.log(sent, notification));
+                    .doOnSuccess(sent -> ClientApiLogging.log(sent, notification, recipientCount));
         }
         return mono;
     }
