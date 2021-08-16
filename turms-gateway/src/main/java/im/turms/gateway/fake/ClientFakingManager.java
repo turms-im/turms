@@ -31,6 +31,7 @@ import im.turms.server.common.fake.RandomProtobufGenerator;
 import im.turms.server.common.fake.RandomRequestFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.FakeProperties;
+import im.turms.server.common.util.ExceptionUtil;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.extern.log4j.Log4j2;
@@ -128,11 +129,15 @@ public class ClientFakingManager {
             Iterator<TurmsClient> clientIterator = Iterators.cycle(clients);
             Set<String> excludedRequestNames = Set.of(RandomRequestFactory.CREATE_SESSION_REQUEST_FILED_NAME,
                     RandomRequestFactory.DELETE_SESSION_REQUEST_FILED_NAME);
-            while (!Thread.currentThread().isInterrupted()) {
+            while (!Thread.currentThread().isInterrupted() && clientIterator.hasNext()) {
                 int sentRequestCount = 0;
                 while (sentRequestCount < requestCountPerInterval) {
                     TurmsClient client = clientIterator.next();
                     try {
+                        if (!client.isOpen()) {
+                            removeCurrentClient(clientIterator, client);
+                            continue;
+                        }
                         RandomProtobufGenerator.GeneratorOptions options = new RandomProtobufGenerator
                                 .GeneratorOptions(1, 1, fakedNumberRange);
                         TurmsRequest.Builder builder = RandomRequestFactory.create(excludedRequestNames, options);
@@ -148,6 +153,9 @@ public class ClientFakingManager {
                                     log.error("Caught an internal error when sending request: {}",
                                             ProtoUtil.toLogString(builder.build()),
                                             t);
+                                    if (ExceptionUtil.isDisconnectedClientError(t)) {
+                                        removeCurrentClient(clientIterator, client);
+                                    }
                                     return Mono.empty();
                                 })
                                 .subscribe();
@@ -165,8 +173,14 @@ public class ClientFakingManager {
                     break;
                 }
             }
+            log.warn("All fake clients has been closed");
         });
         thread.start();
+    }
+
+    private void removeCurrentClient(Iterator<TurmsClient> clientIterator, TurmsClient client) {
+        clientIterator.remove();
+        log.warn("The session {} has been closed and removed", client.getSessionId());
     }
 
 }

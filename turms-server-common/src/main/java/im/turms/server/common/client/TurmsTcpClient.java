@@ -32,6 +32,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToMessageEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import im.turms.server.common.constant.TurmsStatusCode;
 import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 import reactor.netty.channel.ChannelOperations;
@@ -50,6 +51,23 @@ import static im.turms.server.common.util.ProtoUtil.getDirectByteBuffer;
 public class TurmsTcpClient extends TurmsClient {
 
     private ChannelOperations<?, ?> connection;
+    private long userId;
+    private DeviceType deviceType;
+
+    @Override
+    public long getUserId() {
+        return userId;
+    }
+
+    @Override
+    public DeviceType getDeviceType() {
+        return deviceType;
+    }
+
+    @Override
+    public boolean isOpen() {
+        return !connection.isDisposed();
+    }
 
     @Override
     public Mono<Void> connect(String host, int port, LoopResources loopResources) {
@@ -86,10 +104,20 @@ public class TurmsTcpClient extends TurmsClient {
     public Mono<TurmsNotification> login(long userId, DeviceType deviceType, @Nullable String password) {
         return sendRequest(TurmsRequest.newBuilder()
                 .setCreateSessionRequest(CreateSessionRequest.newBuilder()
+                        .setVersion(1)
                         .setUserId(userId)
                         .setDeviceType(deviceType)
                         .setPassword(password)
-                        .build()));
+                        .build()))
+                .flatMap(n -> {
+                    if (n.getCode() == TurmsStatusCode.OK.getBusinessCode()) {
+                        this.userId = userId;
+                        this.deviceType = deviceType;
+                    } else {
+                        return Mono.error(new IllegalStateException("Failed to login: " + n));
+                    }
+                    return Mono.just(n);
+                });
     }
 
     @Override

@@ -39,6 +39,12 @@ public abstract class TurmsClient {
         return new TurmsTcpClient();
     }
 
+    public abstract long getUserId();
+
+    public abstract DeviceType getDeviceType();
+
+    public abstract boolean isOpen();
+
     public abstract Mono<Void> connect(String host, int port, LoopResources loopResources);
 
     public abstract Mono<TurmsNotification> login(long userId, DeviceType deviceType, @Nullable String password);
@@ -46,6 +52,10 @@ public abstract class TurmsClient {
     public abstract Mono<Void> logout();
 
     public abstract Mono<TurmsNotification> sendRequest(TurmsRequest.Builder requestBuilder);
+
+    public String getSessionId() {
+        return "%d:%s".formatted(getUserId(), getDeviceType().name());
+    }
 
     Mono<TurmsNotification> waitForResponse(TurmsRequest request) {
         long requestId = request.getRequestId();
