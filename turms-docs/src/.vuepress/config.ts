@@ -21,6 +21,7 @@ export default defineUserConfig<DefaultThemeOptions>({
         repo: 'https://github.com/turms-im/docs',
         contributors: false,
         lastUpdatedText: '上次更新',
+        logo: 'https://raw.githubusercontent.com/turms-im/assets/master/logo/pegion.svg',
         smoothScroll: false,
         sidebar: [
             {
