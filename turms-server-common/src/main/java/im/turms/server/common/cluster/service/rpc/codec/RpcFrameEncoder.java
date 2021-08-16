@@ -23,21 +23,15 @@ import im.turms.server.common.cluster.service.codec.exception.CodecNotFoundExcep
 import im.turms.server.common.cluster.service.rpc.dto.RpcRequest;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.util.IllegalReferenceCountException;
 
 /**
  * @author James Chen
  */
-public final class RpcFrameEncoder extends LengthFieldPrepender {
-
-    public static final int LENGTH_FIELD_LENGTH = 2;
+public final class RpcFrameEncoder extends ProtobufVarint32LengthFieldPrepender {
 
     public static final RpcFrameEncoder INSTANCE = new RpcFrameEncoder();
-
-    private RpcFrameEncoder() {
-        super(LENGTH_FIELD_LENGTH);
-    }
 
     public <T> ByteBuf encode(int requestId, T value) {
         if (requestId < 0) {

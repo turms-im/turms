@@ -116,7 +116,9 @@ public class RpcService implements ClusterService {
 
             @Override
             public void onConnectionClosed() {
-                endpointPool.remove(member.getNodeId());
+                if (member != null) {
+                    endpointPool.remove(member.getNodeId());
+                }
             }
 
             @Override

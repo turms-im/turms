@@ -27,40 +27,38 @@ import im.turms.server.common.rpc.codec.request.RpcRequestCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.CorruptedFrameException;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import reactor.netty.ReactorNetty;
 
-import static im.turms.server.common.cluster.service.rpc.codec.RpcFrameEncoder.LENGTH_FIELD_LENGTH;
+import java.util.List;
 
 /**
  * @author James Chen
  */
-public class RpcFrameDecoder extends LengthFieldBasedFrameDecoder {
-
-    private static final int LENGTH_FIELD_OFFSET = 0;
-    private static final int MAX_FRAME_LENGTH = 1 << (Byte.SIZE * LENGTH_FIELD_LENGTH);
+public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
 
     // Codec ID
     private static final int HEADER_LENGTH = Short.BYTES;
 
-    public RpcFrameDecoder() {
-        super(MAX_FRAME_LENGTH, LENGTH_FIELD_OFFSET, LENGTH_FIELD_LENGTH, 0, LENGTH_FIELD_LENGTH);
+    @Override
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+        super.decode(ctx, in, out);
+        int size = out.size();
+        for (int i = 0; i < size; i++) {
+            // Note "frame" is "retainedSlice" from "in"
+            // So after "super.decode(...)", the refCnt of "in" is 2 (but it will
+            // be released once by "cumulation.release()" in
+            // in io.netty.handler.codec.ByteToMessageDecoder.channelRead())
+            // and the refCnt of "frame" is 1
+
+            // Because releasing "frame" will also release "in",
+            // we just need to ensure the frame is released once by us finally
+            ByteBuf frame = (ByteBuf) out.get(i);
+            out.set(i, decode(ctx, frame));
+        }
     }
 
-    @Override
-    protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
-        // Note "frame" is "retainedSlice" from "in"
-        // So after "super.decode()", the refCnt of "in" is 2 (but it will
-        // be released once by "cumulation.release()"
-        // in io.netty.handler.codec.ByteToMessageDecoder.channelRead())
-        // and the refCnt of "frame" is 1
-
-        // Because releasing "frame" will also release "in",
-        // we just need to ensure the frame is released once by us finally
-        ByteBuf frame = (ByteBuf) super.decode(ctx, in);
-        if (frame == null) {
-            return null;
-        }
+    protected Object decode(ChannelHandlerContext ctx, ByteBuf frame) {
         try {
             // Validate
             int length = frame.readableBytes();
