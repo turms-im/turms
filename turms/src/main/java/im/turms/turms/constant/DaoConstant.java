@@ -48,7 +48,7 @@ public final class DaoConstant {
     public static final int MONGO_TRANSACTION_RETRIES_NUMBER = 3;
     public static final Duration MONGO_TRANSACTION_BACKOFF = Duration.ofSeconds(3);
 
-    public static final List<Class<? extends Throwable>> NON_RETRIABLE_EXCEPTIONS =
+    public static final List<Class<? extends Throwable>> NON_RETRYABLE_EXCEPTIONS =
             List.of(DuplicateKeyException.class, TurmsBusinessException.class);
     public static final Retry TRANSACTION_RETRY = Retry
             .withThrowable(reactor.retry.Retry
@@ -57,7 +57,7 @@ public final class DaoConstant {
                         if (exception == null) {
                             return true;
                         }
-                        for (Class<? extends Throwable> clazz : NON_RETRIABLE_EXCEPTIONS) {
+                        for (Class<? extends Throwable> clazz : NON_RETRYABLE_EXCEPTIONS) {
                             if (clazz.isInstance(exception)) {
                                 return false;
                             }

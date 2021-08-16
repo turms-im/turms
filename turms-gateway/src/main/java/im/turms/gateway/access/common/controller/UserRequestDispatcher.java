@@ -148,11 +148,12 @@ public class UserRequestDispatcher {
                                 sessionId = userSession.getId();
                                 deviceType = userSession.getDeviceType();
                             }
-                            ClientApiLogging.log(userId,
+                            ClientApiLogging.log(
+                                    sessionId,
+                                    userId,
+                                    deviceType,
                                     version,
                                     sessionWrapper.getIp(),
-                                    sessionId,
-                                    deviceType,
                                     request.requestId(),
                                     type,
                                     requestSize,

@@ -30,6 +30,7 @@ import static im.turms.server.common.logging.CommonClientApiLogging.LOG_FIELD_DE
 
 /**
  * @author James Chen
+ * @implNote Don't use StringBuilder because String#join is more efficient
  */
 public final class ClientApiLogging {
 
@@ -49,33 +50,21 @@ public final class ClientApiLogging {
                            ServiceResponse response,
                            long processingTime) {
         TurmsNotification.Data dataForRequester = response.getDataForRequester();
-        TurmsNotification.Data.KindCase responseType = dataForRequester == null ? null : dataForRequester.getKindCase();
-        String message =
-                // user information
-                request.getUserId()
-                        + LOG_FIELD_DELIMITER
-                        // session information
-                        + serviceRequest.getIpStr()
-                        + LOG_FIELD_DELIMITER
-                        + request.getDeviceType()
-                        + LOG_FIELD_DELIMITER
-                        // request information
-                        + request.getRequestId()
-                        + LOG_FIELD_DELIMITER
-                        + request.getTurmsRequest().getKindCase()
-                        + LOG_FIELD_DELIMITER
-                        + Instant.ofEpochMilli(requestTime)
-                        + LOG_FIELD_DELIMITER
-                        + requestSize
-                        + LOG_FIELD_DELIMITER
-                        // response information
-                        + processingTime
-                        + LOG_FIELD_DELIMITER
-                        + response.getCode()
-                        + LOG_FIELD_DELIMITER
-                        + responseType
-                        + LOG_FIELD_DELIMITER
-                        + response.getReason();
+        String responseType = dataForRequester == null ? "" : dataForRequester.getKindCase().name();
+        String message = String.join(LOG_FIELD_DELIMITER,
+                // session information
+                request.getUserId().toString(),
+                request.getDeviceType().name(),
+                serviceRequest.getIpStr(),
+                // request information
+                request.getRequestId().toString(),
+                request.getTurmsRequest().getKindCase().name(),
+                String.valueOf(requestSize),
+                Instant.ofEpochMilli(requestTime).toString(),
+                // response information
+                String.valueOf(response.getCode()),
+                responseType,
+                String.valueOf(processingTime));
         if (response.getCode().isServerError()) {
             CommonClientApiLogging.logger.error(message);
         } else {
@@ -89,23 +78,17 @@ public final class ClientApiLogging {
      */
     public static void log(boolean sent, TurmsNotification notification, int recipientCount) {
         TurmsRequest relayedRequest = notification.getRelayedRequest();
-        String message =
+        String message = String.join(LOG_FIELD_DELIMITER,
                 // User info
-                notification.getRequesterId()
-                        + LOG_FIELD_DELIMITER
-                        // Notification info
-                        + (sent ? "SENT" : "UNSET")
-                        + LOG_FIELD_DELIMITER
-                        + recipientCount
-                        + LOG_FIELD_DELIMITER
-                        + (notification.hasCloseStatus() ? notification.getCloseStatus() : null)
-                        + LOG_FIELD_DELIMITER
-                        + notification.getSerializedSize()
-                        + LOG_FIELD_DELIMITER
-                        // Relayed request info
-                        + relayedRequest.getRequestId()
-                        + LOG_FIELD_DELIMITER
-                        + relayedRequest.getKindCase();
+                String.valueOf(notification.getRequesterId()),
+                // Notification info
+                sent ? "SENT" : "UNSET",
+                String.valueOf(recipientCount),
+                notification.hasCloseStatus() ? String.valueOf(notification.getCloseStatus()) : "",
+                String.valueOf(notification.getSerializedSize()),
+                // Relayed request info
+                String.valueOf(relayedRequest.getRequestId()),
+                relayedRequest.getKindCase().name());
         CommonClientApiLogging.logger.info(message);
     }
 

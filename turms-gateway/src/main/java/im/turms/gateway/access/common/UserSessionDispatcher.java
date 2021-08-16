@@ -148,11 +148,11 @@ public abstract class UserSessionDispatcher {
                     }
                     if (userSession.acquireDeleteSessionRequestLoggingLock() && apiLoggingContext.shouldLog(DELETE_SESSION_REQUEST)) {
                         ClientApiLogging.log(
+                                userSession.getId(),
                                 userId,
+                                deviceType,
                                 userSession.getVersion(),
                                 sessionWrapper.getIp(),
-                                userSession.getId(),
-                                deviceType,
                                 0,
                                 DELETE_SESSION_REQUEST,
                                 0,

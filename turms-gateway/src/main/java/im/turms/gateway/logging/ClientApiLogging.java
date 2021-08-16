@@ -21,6 +21,7 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.logging.CommonClientApiLogging;
+import im.turms.server.common.util.StringUtil;
 
 import java.time.Instant;
 
@@ -28,6 +29,7 @@ import static im.turms.server.common.logging.CommonClientApiLogging.LOG_FIELD_DE
 
 /**
  * @author James Chen
+ * @implNote Don't use StringBuilder because String#join is more efficient
  */
 public final class ClientApiLogging {
 
@@ -40,91 +42,65 @@ public final class ClientApiLogging {
      * 2. We use the common log pattern (including the trace ID) so that our
      * users don't need to write different parsers for them.
      */
-    public static void log(Long userId,
+    public static void log(Integer sessionId,
+                           Long userId,
+                           DeviceType deviceType,
                            Integer version,
                            String ip,
-                           Integer sessionId,
-                           DeviceType deviceType,
                            long requestId,
                            TurmsRequest.KindCase requestType,
                            int requestSize,
                            long requestTime,
                            TurmsNotification response,
                            long processingTime) {
-        String message =
-                // user information
-                userId
-                        + LOG_FIELD_DELIMITER
-                        // session information
-                        + version
-                        + LOG_FIELD_DELIMITER
-                        + ip
-                        + LOG_FIELD_DELIMITER
-                        + sessionId
-                        + LOG_FIELD_DELIMITER
-                        + deviceType
-                        + LOG_FIELD_DELIMITER
-                        // request information
-                        + requestId
-                        + LOG_FIELD_DELIMITER
-                        + requestType
-                        + LOG_FIELD_DELIMITER
-                        + Instant.ofEpochMilli(requestTime)
-                        + LOG_FIELD_DELIMITER
-                        + requestSize
-                        + LOG_FIELD_DELIMITER
-                        // response information
-                        + processingTime
-                        + LOG_FIELD_DELIMITER
-                        + response.getCode()
-                        + LOG_FIELD_DELIMITER
-                        + (response.hasData() ? response.getData().getKindCase() : null)
-                        + LOG_FIELD_DELIMITER
-                        + response.getSerializedSize();
+        String message = String.join(LOG_FIELD_DELIMITER,
+                // session information
+                StringUtil.toString(sessionId),
+                StringUtil.toString(userId),
+                StringUtil.toString(deviceType),
+                StringUtil.toString(version),
+                StringUtil.toString(ip),
+                // request information
+                String.valueOf(requestId),
+                requestType.toString(),
+                String.valueOf(requestSize),
+                Instant.ofEpochMilli(requestTime).toString(),
+                // response information
+                String.valueOf(response.getCode()),
+                response.hasData() ? response.getData().getKindCase().name() : "",
+                String.valueOf(response.getSerializedSize()),
+                String.valueOf(processingTime));
         CommonClientApiLogging.logger.info(message);
     }
 
-    public static void log(Long userId,
+    public static void log(Integer sessionId,
+                           Long userId,
+                           DeviceType deviceType,
                            Integer version,
                            String ip,
-                           Integer sessionId,
-                           DeviceType deviceType,
                            long requestId,
                            TurmsRequest.KindCase requestType,
                            int requestSize,
                            long requestTime,
                            int responseCode,
                            long processingTime) {
-        String message =
-                // user information
-                userId
-                        + LOG_FIELD_DELIMITER
-                        // session information
-                        + version
-                        + LOG_FIELD_DELIMITER
-                        + ip
-                        + LOG_FIELD_DELIMITER
-                        + sessionId
-                        + LOG_FIELD_DELIMITER
-                        + deviceType
-                        + LOG_FIELD_DELIMITER
-                        // request information
-                        + requestId
-                        + LOG_FIELD_DELIMITER
-                        + requestType
-                        + LOG_FIELD_DELIMITER
-                        + Instant.ofEpochMilli(requestTime)
-                        + LOG_FIELD_DELIMITER
-                        + requestSize
-                        + LOG_FIELD_DELIMITER
-                        // response information
-                        + processingTime
-                        + LOG_FIELD_DELIMITER
-                        + responseCode
-                        + LOG_FIELD_DELIMITER
-                        + null
-                        + LOG_FIELD_DELIMITER
-                        + 0;
+        String message = String.join(LOG_FIELD_DELIMITER,
+                // session information
+                StringUtil.toString(sessionId),
+                StringUtil.toString(userId),
+                StringUtil.toString(deviceType),
+                StringUtil.toString(version),
+                StringUtil.toString(ip),
+                // request information
+                String.valueOf(requestId),
+                requestType.toString(),
+                String.valueOf(requestSize),
+                Instant.ofEpochMilli(requestTime).toString(),
+                // response information
+                String.valueOf(responseCode),
+                "", // Response data type
+                "0", // Response serialized size
+                String.valueOf(processingTime));
         CommonClientApiLogging.logger.info(message);
     }
 
