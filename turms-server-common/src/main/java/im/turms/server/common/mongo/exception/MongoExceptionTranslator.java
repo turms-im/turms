@@ -32,6 +32,8 @@ public class MongoExceptionTranslator {
             if (error.getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
                 return new DuplicateKeyException(t.getMessage(), t);
             }
+        } else if (t instanceof com.mongodb.DuplicateKeyException) {
+            return new DuplicateKeyException(t.getMessage(), t);
         }
         return t;
     }
