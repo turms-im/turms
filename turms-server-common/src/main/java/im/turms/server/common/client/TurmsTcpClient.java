@@ -17,21 +17,13 @@
 
 package im.turms.server.common.client;
 
-import com.google.protobuf.MessageLite;
-import com.google.protobuf.MessageLiteOrBuilder;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.user.CreateSessionRequest;
 import im.turms.common.model.dto.request.user.DeleteSessionRequest;
 import im.turms.common.util.RandomUtil;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ByteToMessageDecoder;
-import io.netty.handler.codec.MessageToMessageEncoder;
-import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
-import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import im.turms.server.common.access.tcp.codec.CodecFactory;
 import im.turms.server.common.constant.TurmsStatusCode;
 import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
@@ -40,9 +32,6 @@ import reactor.netty.resources.LoopResources;
 import reactor.netty.tcp.TcpClient;
 
 import javax.annotation.Nullable;
-import java.util.List;
-
-import static im.turms.server.common.util.ProtoUtil.getDirectByteBuffer;
 
 /**
  * @author James Chen
@@ -81,11 +70,11 @@ public class TurmsTcpClient extends TurmsClient {
 
                     connection
                             // Inbound
-                            .addHandlerLast("protobufFrameDecoder", new ProtobufVarint32FrameDecoder())
-                            .addHandlerLast("turmsProtobufDecoder", new TurmsProtobufDecoder())
+                            .addHandlerLast("varintLengthBasedFrameDecoder", CodecFactory.getVarintLengthBasedFrameDecoder())
+                            .addHandlerLast("turmsNotificationDecoder", CodecFactory.getTurmsNotificationDecoder())
                             // Outbound
-                            .addHandlerFirst("turmsProtobufEncoder", new TurmsProtobufEncoder())
-                            .addHandlerFirst("protobufFrameEncoder", new ProtobufVarint32LengthFieldPrepender());
+                            .addHandlerFirst("protobufFrameEncoder", CodecFactory.getProtobufFrameEncoder())
+                            .addHandlerFirst("varintLengthFieldPrepender", CodecFactory.getVarintLengthFieldPrepender());
 
                     connection
                             .receiveObject()
@@ -150,26 +139,6 @@ public class TurmsTcpClient extends TurmsClient {
                 .sendObject(request)
                 .then()
                 .then(Mono.defer(() -> waitForResponse(request)));
-    }
-
-    private static class TurmsProtobufDecoder extends ByteToMessageDecoder {
-        @Override
-        protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-            TurmsNotification notification = TurmsNotification.parseFrom(in.nioBuffer());
-            in.skipBytes(in.readableBytes());
-            out.add(notification);
-        }
-    }
-
-    @ChannelHandler.Sharable
-    private static class TurmsProtobufEncoder extends MessageToMessageEncoder<MessageLiteOrBuilder> {
-        @Override
-        protected void encode(ChannelHandlerContext ctx, MessageLiteOrBuilder messageLiteOrBuilder, List<Object> out) {
-            MessageLite message = messageLiteOrBuilder instanceof MessageLite.Builder builder
-                    ? builder.build()
-                    : (MessageLite) messageLiteOrBuilder;
-            out.add(getDirectByteBuffer(message));
-        }
     }
 
 }

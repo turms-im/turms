@@ -18,10 +18,9 @@
 package im.turms.gateway.access.tcp.handler;
 
 import im.turms.gateway.access.common.handler.ServerAvailabilityHandler;
+import im.turms.server.common.access.tcp.codec.CodecFactory;
 import im.turms.server.common.manager.ServerStatusManager;
 import io.netty.channel.Channel;
-import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
-import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import reactor.netty.Connection;
 
 /**
@@ -41,10 +40,14 @@ public class TcpHandlerConfig {
 
     public void configureConnection(Connection connection) {
         // Inbound
-        connection.addHandlerLast("protobufFrameDecoder", new ProtobufVarint32FrameDecoder());
+        connection.addHandlerLast("varintLengthBasedFrameDecoder", CodecFactory.getVarintLengthBasedFrameDecoder());
 
         // Outbound
-        connection.addHandlerLast("protobufFrameEncoder", new ProtobufVarint32LengthFieldPrepender());
+        connection.addHandlerLast("varintLengthFieldPrepender", CodecFactory.getVarintLengthFieldPrepender());
+        // For advanced operations, they encode messages to buffers themselves,
+        // "turmsNotificationEncoder" will just ignore them. But some simple
+        // operations pass TurmsNotification instances down, so we need to encode them.
+        connection.addHandlerLast("protobufFrameEncoder", CodecFactory.getProtobufFrameEncoder());
     }
 
 }
