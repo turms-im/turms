@@ -232,6 +232,7 @@ public class UserRequestDispatcher {
                                                                  ByteBuf serviceRequestBuffer) {
         UserSession session = sessionWrapper.getUserSession();
         if (session == null || !session.isOpen()) {
+            serviceRequestBuffer.release();
             return Mono.just(TurmsNotificationUtil.sessionClosed(request.requestId()));
         }
         ServiceRequest serviceRequest = new ServiceRequest(
