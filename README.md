@@ -42,7 +42,7 @@ The architecture of Turms depends on the fanout read design for creating inboxes
 
 And compared to many projects with obsolete technology stacks, Turms is also the only open source IM solution that is based on modern architecture and modern technology and is suitable for medium to large scale applications.
 
-In addition, architecture design is an art of trade-off. Some IM products take rich features as their slogan at the cost of no support for medium to large scale applications (they are only suitable for team communications). However, Turms takes extreme performance as the first priority and supports complete (rather than rich) IM features. Please refer to [Turms Schema Design](https://turms-im.github.io/docs/for-developers/schema.html) for details. And Turms Monitoring System (TODO).
+In addition, architecture design is an art of trade-off. Some IM products take rich features as their slogan at the cost of no support for medium to large scale applications (they are only suitable for team communications). However, Turms takes extreme performance as the first priority and supports complete (rather than rich) IM features. Please refer to [Turms Schema Design](https://turms-im.github.io/docs/for-developers/schema.html) and [Observability][https://turms-im.github.io/docs/for-developers/observability.html] for details.
 
 ### Business Features
 
@@ -78,8 +78,8 @@ In addition, architecture design is an art of trade-off. Some IM products take r
   * (Network)
     * (I/O) turms server is a reactive application. All network I/O operations (database call, Redis call, service discovery call, RPC) are based on Netty to achieve non-blocking I/O. Therefore, the turms server can make full use of system resources in each module (while traditional servers can't)
     * (Encoding) Protobuf is used to encode the traffic data between the turms server and turms clients; Custom encoding without any redundant data is used to encode the RPC requests and responses between turms servers.
-  * (Thread) turms server has an excellent thread model, and its thread number is constant, which is independent of the size of online users and the number of requests. Since the default number of threads in the access layer of the turms server is the same as that of the CPU, the turms server can make full use of the CPU cache, and greatly reduce the cost of thread context switching compared with traditional servers
-  * (Memory) Turms allocates heap or direct memory smartly according to its usage to reduce the memory footprint.
+  * (Thread) turms server has an excellent thread model, and its thread number is constant, which is independent of the number of online users and the number of requests. Since the default number of threads in the access layer of the turms server is the same as that of the CPU processors, the turms server can make full use of the CPU cache, and greatly reduce the cost of thread context switching compared with traditional servers
+  * (Memory) turms server allocates heap or direct memory smartly according to its usage to reduce the memory footprint.
   * (Cache) Each module of the turms server make full use of the local memory cache
 ## Subprojects
 
@@ -111,7 +111,7 @@ The architecture design of Turms is derived from commercial instant messaging ar
 | Comment               | It is highly recommended to use Rocket.Chat for team communications | Although both are open source IM projects, they have completely different application scenarios. Turms is a general instant messaging engine for medium to large scale instant messaging applications. You cannot just hand Turms to your customers (just as most products don't let customers write SQL statements to query business data in the database). <br/>However, based on Turms, you can implement all the open-source instant messaging projects on GitHub more efficiently, comprehensively, and extensively |
 ## Demo with Specific Business Implementation
 
-For the positioning of the Turms, Turms does not plan to provide client demo with UI and specific business logic in the near future because:
+Considering the positioning of Turms, we do not plan to provide client demo with UI and specific business logic in the near future because:
 
-* It's easy for developers to verify the business features supported by Turms. If you just want to test the business features of Turms, you can run the turms server without even typing a line of code. Only ten lines of code can realize the login, sending messages, sending friends' requests and other business features, or modify properties to customize various requirements.
+* It is easy for developers to verify the business features supported by Turms. If you just want to test the business features of Turms, you can run the turms server without even typing a line of code. Only ten lines of code can realize the login, sending messages, sending friends' requests and other business features, or modify properties to customize various requirements.
 * The design and implementation of the demo are closely related to the specific business scenarios, specific programming language, specific technical architecture, and specific OS while Turms has been committed to efficiently meeting various complex and challenging instant messaging scenarios, and we don't want to publish a demo that limits the imagination of developers. And developing and maintaining a demo is also very time-consuming and will slow down the progress of the development of Turms.

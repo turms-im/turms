@@ -61,6 +61,7 @@ export default defineUserConfig<DefaultThemeOptions>({
                     // Theory
                     '/for-developers/architecture.md',
                     '/for-developers/schema.md',
+                    '/for-developers/observability.md',
                     '/for-developers/status-aware.md',
                     '/for-developers/data-analytics.md'
                 ]

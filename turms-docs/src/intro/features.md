@@ -2,7 +2,7 @@
 
 Turms基于读扩散消息模型进行架构设计，对业务模型感知同时支持推模式、拉模式与推拉结合模式（详细文档：[Turms业务模型状态感知](https://turms-im.github.io/docs/for-developers/status-aware.html)），其中涉及到的大部分设计细节也源自主流的大中小型商用即时通讯项目。并且相比很多技术栈落后的开源项目或闭源商用项目，Turms解决方案也是全球即时通讯开源领域内唯一一个基于现代化架构与现代化工程技术，并且适合中大规模部署的解决方案。
 
-另外，Turms作为通用的即时通讯开源项目很难能可贵的一点是：Turms知道什么功能该做，什么功能不该做。具体原因可查阅[Turms集合设计](https://turms-im.github.io/docs/for-developers/schema.html)以及Turms监控系统（TODO）相关文档。
+另外，Turms作为通用的即时通讯开源项目很难能可贵的一点是：Turms知道什么功能该做，什么功能不该做。具体原因可查阅[Turms集合设计](https://turms-im.github.io/docs/for-developers/schema.html)以及[Turms可观测性体系](https://turms-im.github.io/docs/for-developers/observability.html)相关文档。
 
 ### 功能特性
 
@@ -24,7 +24,7 @@ Turms基于读扩散消息模型进行架构设计，对业务模型感知同时
 
 ### 其他特性
 
-1. 重视可观察性体系建设（详细文档：[Turms监控系统](https://turms-im.github.io/docs/for-developers/observibility.html)）。具体而言包括以下三个维度：
+1. 重视可观测性体系建设（详细文档：[Turms可观测性体系](https://turms-im.github.io/docs/for-developers/observability.html)）。具体而言包括以下三个维度：
 
    * 日志（针对事件）：共提供了三大类日志：监控日志、业务日志、统计日志
    * 度量（针对可聚合数据）。包括系统运行状态的实时监控信息，以及业务相关数据的实时信息

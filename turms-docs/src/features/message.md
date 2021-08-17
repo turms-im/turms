@@ -2,10 +2,10 @@
 
 ## 相关路径与模型
 
-* 管理员API路径：/messages。具体API细节请参考OpenAPI文档
-* 客户端接口：请查阅MessageService类
-* 底层请求模型：请查阅turms-java-common/src/main/proto/request/message目录下的接口描述文件
-* 配置类：im.turms.server.common.property.env.service.business.message.MessageProperties
+* 管理员API路径：`/messages`。具体API细节请参考OpenAPI文档
+* 客户端接口：请查阅`MessageServiceController`类
+* 底层请求模型：请查阅`https://github.com/turms-im/proto/tree/master/request/message`目录下的接口描述文件
+* 配置类：`im.turms.server.common.property.env.service.business.message.MessageProperties`
 
 ## 功能列表
 
@@ -26,7 +26,7 @@
 
 ## 业务消息类型
 
-从开发者角度看，Turms客户端在发送消息时内部有且仅使用一种数据模型，即CreateMessageRequest。由于它带有string与List<byte[]>类型的字段，因此您实际上能在发送消息时传递任何形式的数据。只是Turms为方便开发者快速实现各种业务消息类型，Turms客户端对常见消息类型做了划分，以方便开发者快速上手。
+从开发者角度看，Turms客户端在发送消息时内部有且仅使用一种数据模型，即`CreateMessageRequest`。由于它带有string与List<byte[]>类型的字段，因此您实际上能在发送消息时传递任何形式的数据。只是Turms为方便开发者快速实现各种业务消息类型，Turms客户端对常见消息类型做了划分，以方便开发者快速上手。
 
 提醒：Turms的消息（所有业务类型的消息）均可以标记为系统消息。但系统消息只能通过turms管理员API发送，Turms客户端无法发送系统消息。
 

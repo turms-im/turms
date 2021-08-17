@@ -2,10 +2,10 @@
 
 ## 相关路径与模型
 
-* 管理员API路径：/users。具体API细节请参考OpenAPI文档
-* 客户端接口：请查阅UserService类
-* 底层请求模型：请查阅turms-java-common/src/main/proto/request/user目录下的接口描述文件
-* 配置类：im.turms.server.common.property.env.service.business.user.UserProperties
+* 管理员API路径：`/users`。具体API细节请参考OpenAPI文档
+* 客户端接口：请查阅`UserServiceController`类
+* 底层请求模型：请查阅`https://github.com/turms-im/proto/tree/master/request/user`目录下的接口描述文件
+* 配置类：`im.turms.server.common.property.env.service.business.user.UserProperties`
 
 ## 用户信息功能
 
@@ -43,7 +43,7 @@
 | 从某分组中删除关系人                        | 将关系人从关系人分组中删除                                   |                                                              |
 
 ## 定位功能
-配置类：im.turms.server.common.property.env.common.LocationProperties
+配置类：`im.turms.server.common.property.env.common.LocationProperties`
 
 | **功能**     | **功能描述**                       | **相关配置**                                                 |
 | ------------ | ---------------------------------- | ------------------------------------------------------------ |
@@ -52,7 +52,7 @@
 
 ## 统计功能
 
-配置类：im.turms.server.common.property.env.service.business.StatisticsProperties
+配置类：`im.turms.server.common.property.env.service.business.StatisticsProperties`
 
 | **功能**       | **功能描述**                                                 | **相关配置**                                           |
 | -------------- | ------------------------------------------------------------ | ------------------------------------------------------ |

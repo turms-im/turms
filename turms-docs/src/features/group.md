@@ -4,10 +4,10 @@
 
 ## 相关路径与模型
 
-* 管理员API路径：/groups。具体API细节请参考OpenAPI文档
-* 客户端接口：请查阅GroupService类。
-* 底层请求模型：请查阅turms-java-common/src/main/proto/request/group目录下的接口描述文件
-* 配置类：im.turms.server.common.property.env.service.business.GroupProperties
+* 管理员API路径：`/groups`。具体API细节请参考OpenAPI文档
+* 客户端接口：请查阅`GroupServiceController`类。
+* 底层请求模型：请查阅`https://github.com/turms-im/proto/tree/master/request/group`目录下的接口描述文件
+* 配置类：`im.turms.server.common.property.env.service.business.GroupProperties`
 
 ## 功能列表
 
@@ -37,8 +37,8 @@
 
 在群组配置方面，Turms使用了“群组类型”这一概念。默认情况下，Turms提供了一种通用的群组类型，同时您也可以通过对“群组类型”做增删改查操作，以满足您定制化的群组类型需求。
 
-对应的管理员API路径：/groups/types。具体API细节请查阅OpenAPI文档
-对应的配置模型：im.turms.turms.workflow.dao.domain.GroupType
+对应的管理员API路径：`/groups/types`。具体API细节请查阅OpenAPI文档
+对应的配置模型：`im.turms.turms.workflow.dao.domain.GroupType`
 
 ### 配置列表
 

@@ -5,7 +5,6 @@
 * ### 用户类
 
   * UserAuthenticator：用户登陆认证。当客户端向turms-gateway请求登录时，turms-gateway会调用该插件以实现自定义的登录认证逻辑。
-  * UserLoginActionLogHandler。用户登录行为日志Handler。当用户登录成功或下线时，turms-gateway会调用该Handler。
   * UserOnlineStatusChangeHandler： 用户在线状态变更Handler。当任意一位用户进入上线或离线状态时，turms-gateway会调用该接口。
 * ### 请求类
   
@@ -22,12 +21,12 @@
 ## 实现步骤
 
 1. 搭建插件项目
-   * 方案一（推荐）：克隆turms-plugin-demo项目到本地，基于该模板进行开发，以减少不必要的重复工作。
+   * 方案一（推荐）：克隆`turms-plugin-demo`项目到本地，基于该模板进行开发，以减少不必要的重复工作。
    * 方案二：手动搭建。具体步骤如下：
      
      1. Clone Turms的仓库，并在Turms服务端项目的目录下，通过`mvn install`命令将其安装到本地的Maven仓库中
      
-     2. 新建一个Maven项目，并在pom.xml中添加依赖（实现turms服务端的插件，则添加turms依赖。实现turms-gateway的插件，则添加turms-gateway的依赖）：
+     2. 新建一个Maven项目，并在`pom.xml`中添加依赖（实现turms服务端的插件，则添加turms依赖。实现turms-gateway的插件，则添加turms-gateway的依赖）：
      
         ```xml
         <dependency>
@@ -57,8 +56,8 @@
         plugin.version=0.0.1
         ```
 
-5. 在自定义的TurmsPlugin子类内部，定义您想要实现的接口插件静态子类（例如：public static class MyTurmsRequestHandler extends ClientRequestHandler），并在该静态类上添加@Extension注释，之后就可以编写您自定义的逻辑代码。
+5. 在自定义的`TurmsPlugin`子类内部，定义您想要实现的接口插件静态子类（例如：`public static class MyTurmsRequestHandler extends ClientRequestHandler`），并在该静态类上添加`@Extension`注释，之后就可以编写您自定义的逻辑代码。
 
-3. 用Maven打包项目，并将打包好的jar包放入turms的plugins目录下
+3. 用Maven打包项目，并将打包好的jar包放入turms的`plugins`目录下
 
 4. 启动turms或turms-gateway服务端，它们会在服务端启动时自动加载plugins目录下的所有插件

@@ -19,7 +19,7 @@ Turms客户端对版本的最低要求，主要是根据：平台全球市场占
 | 平台    | 支持的最低版本                                               | 原因                                                         |      |
 | ------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ---- |
 | Android | 16+                                                          | turms-client-kotlin采用SSLContext实现TLS，其在Android API 16+提供了对TLSv1.2的支持（参考资料[SSLContext](https://developer.android.com/reference/javax/net/ssl/SSLContext)） |      |
-| iOS     | 12.0+                                                        | 考虑到[iOS 12.0+在全球的市场占有率](https://developer.apple.com/support/app-store/)以及苹果产品用户的习惯，turms-client-swift采用NWConnection实现TCP协议，因此设备版本的要求等同于支持NWConnection设备的版本要求。<br />另外，turms-client-swift不会考虑用古老的CFStreamCreatePairWithSocketToHost来实现TCP协议。 |      |
+| iOS     | 12.0+                                                        | 考虑到[iOS 12.0+在全球的市场占有率](https://developer.apple.com/support/app-store/)以及苹果产品用户的习惯，turms-client-swift采用NWConnection实现TCP协议，因此设备版本的要求等同于支持`NWConnection`设备的版本要求。<br />另外，turms-client-swift不会考虑用古老的`CFStreamCreatePairWithSocketToHost`来实现TCP协议。 |      |
 | 浏览器  | [支持WebSocket协议的浏览器](https://caniuse.com/?search=websocket) | 对于IE系列浏览器，turms-client-js仅对IE 11提供官方支持。<br />另外，turms-client-js不会将WebSocket降级为轮询机制 |      |
 | 桌面端  | turms-client-kotlin(JDK8+)<br />turms-client-js(Node.js 8+)  | 如果您采用turms-client-kotlin实现，则要求JDK版本为8(+)，因为JDK 8+默认提供对TLSv1.2的支持。<br />如果您采用turms-client-js实现，则Turms提供对Node.js 8+的官方支持 |      |
 
@@ -109,9 +109,9 @@ Turms客户端的会话生命周期比较容易理解，具体而言：先通过
 * 方案一：在application.yaml配置文件中更新以下配置：
    1. 将`turms.gateway.session.enable-authentication`设置为false（取消用户登录认证）
    2. 将`turms.service.message.allow-sending-messages-to-stranger`也设置为true（允许没有用户关系的用户互相发送消息）
-* 方案二：使用自带“dev” profile配置。因为Turms提供的“dev” profile已做了上述配置。默认情况下，Turms发布包中的application.yaml的profile字段为空，即默认的profile不是“dev”，需要您手动配置为“dev”。
+* 方案二：使用自带`dev`profile配置。因为Turms提供的`dev`profile已做了上述配置。默认情况下，Turms发布包中的application.yaml的profile字段为空，即默认的profile不是`dev`，需要您手动配置为`dev`。
 
-提醒：以下客户端API为最新版本示例，而目前Playground上的Turms服务端（ http://playground.turms.im:9510 ）为老版本，因此如果您直接连接Playground的服务端，可以会出现数据不一致的问题。
+提醒：以下客户端API为最新版本示例，而目前Playground上的Turms服务端（http://playground.turms.im:9510）为老版本，因此如果您直接连接Playground的服务端，可以会出现数据不一致的问题。
 
 ### turms-client-js版本
 
@@ -171,7 +171,7 @@ client.userService.login('1', '123')
 
 ```kotlin
 // Initialize client
-val client = TurmsClient() // new TurmsClient("ws://any-turms-gateway-server.com");
+val client = TurmsClient() // TurmsClient("ws://any-turms-gateway-server.com")
 
 // Listen to the offline event
 client.userService.addOnOfflineListener { info ->
