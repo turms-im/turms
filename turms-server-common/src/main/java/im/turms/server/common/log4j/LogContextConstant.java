@@ -33,7 +33,7 @@ public final class LogContextConstant {
         }
 
         public static final String ADMIN_API = "ADMIN_API";
-        public static final String CLIENT_API = "USER_API";
+        public static final String CLIENT_API = "CLIENT_API";
     }
 
     public static final class NodeType {
