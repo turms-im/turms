@@ -165,14 +165,14 @@ turms-gateway的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 
 ##### turms服务端
 
-格式：`用户ID|设备|IP|请求ID|请求类型|请求大小|请求时间|响应状态码|处理时间`。其中`会话信息`是`用户ID`、`设备`、`IP`；`请求信息`是`请求ID`、`请求类型`、`请求大小`、`请求时间`；`响应信息`是`响应状态码`、`处理时间`。
+格式：`用户ID|设备|IP|请求ID|请求类型|请求大小|请求时间|响应状态码|响应数据类型|处理时间`。其中`会话信息`是`用户ID`、`设备`、`IP`；`请求信息`是`请求ID`、`请求类型`、`请求大小`、`请求时间`；`响应信息`是`响应状态码`、`响应数据类型`、`处理时间`。
 
 示例：
 
 ```spreadsheet
-2021-08-17 13:25:11.809  INFO S lkumxlpd [1650561895646191481] Thread-13       i.t.s.c.l.CommonClientApiLogging         : 101|DESKTOP|::1|6798130843268792999|QUERY_MESSAGES_REQUEST|28|2021-08-17T13:25:11.807Z|NO_CONTENT||2
-2021-08-17 13:25:11.809  INFO S lkumxlpd [2979813149711907727] Thread-9        i.t.s.c.l.CommonClientApiLogging         : 100|DESKTOP|::1|5095384146247218867|QUERY_GROUP_JOIN_QUESTIONS_REQUEST|17|2021-08-17T13:25:11.807Z|ALREADY_UP_TO_DATE||2
-2021-08-17 13:25:11.809  INFO S lkumxlpd [7231219143674352809] ver-worker-14-1 i.t.s.c.l.CommonClientApiLogging         : 101|DESKTOP|::1|358075665001342897|QUERY_SIGNED_GET_URL_REQUEST|40|2021-08-17T13:25:11.809Z|STORAGE_NOT_IMPLEMENTED||0
+2021-08-17 13:25:11.809  INFO S lkumxlpd [1650561895646191481] Thread-13       i.t.s.c.l.CommonClientApiLogging         : 101|DESKTOP|::1|6798130843268792999|QUERY_MESSAGES_REQUEST|28|2021-08-17T13:25:11.807Z|1001||2
+2021-08-17 13:25:11.809  INFO S lkumxlpd [2979813149711907727] Thread-9        i.t.s.c.l.CommonClientApiLogging         : 100|DESKTOP|::1|5095384146247218867|QUERY_GROUP_JOIN_QUESTIONS_REQUEST|17|2021-08-17T13:25:11.807Z|1002||2
+2021-08-17 13:25:11.809  INFO S lkumxlpd [7231219143674352809] ver-worker-14-1 i.t.s.c.l.CommonClientApiLogging         : 101|DESKTOP|::1|358075665001342897|QUERY_SIGNED_GET_URL_REQUEST|40|2021-08-17T13:25:11.809Z|6000||0
 ```
 
 ##### turms-gateway服务端

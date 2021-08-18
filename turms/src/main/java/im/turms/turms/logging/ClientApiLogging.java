@@ -62,7 +62,7 @@ public final class ClientApiLogging {
                 String.valueOf(requestSize),
                 Instant.ofEpochMilli(requestTime).toString(),
                 // response information
-                String.valueOf(response.getCode()),
+                String.valueOf(response.getCode().getBusinessCode()),
                 responseType,
                 String.valueOf(processingTime));
         if (response.getCode().isServerError()) {
