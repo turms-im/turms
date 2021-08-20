@@ -6,11 +6,11 @@
         :url="url"
         :initial-data-urls="initialDataUrls"
         :filters="filters"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
-        @onDataDeleted="onDataDeleted"
-        @onDataUpdated="onDataUpdated"
         @onDataInited="onDataInited"
+        @onRecordsDeleted="onRecordsDeleted"
+        @onRecordsUpdated="onRecordsUpdated"
     />
 </template>
 
@@ -32,7 +32,6 @@ export default {
             filters: [
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'accounts',
                     placeholder: 'adminAccount',
                     rules: {
@@ -52,8 +51,8 @@ export default {
                     }
                 }
             ],
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addAdmin',
                     type: 'CREATE',
                     fields: [
@@ -98,7 +97,7 @@ export default {
                             type: 'SELECT'
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [{
@@ -129,23 +128,15 @@ export default {
         };
     },
     methods: {
-        onDataDeleted(accounts) {
+        onRecordsDeleted(accounts) {
             if (accounts?.includes(this.$store.getters.admin.account)) {
                 this.$store.setAdmin();
             }
         },
-        onDataUpdated(accounts, value) {
+        onRecordsUpdated(accounts, updatedFields) {
             const admin = this.$store.getters.admin;
             if (accounts.includes(admin.account)) {
-                if (value.name) {
-                    admin.name = value.name;
-                }
-                if (value.password) {
-                    admin.password = value.password;
-                }
-                if (value.roleId) {
-                    admin.roleId = value.roleId;
-                }
+                Object.assign(admin, updatedFields);
                 this.$store.setAdmin(admin);
             }
         },
@@ -154,7 +145,7 @@ export default {
                 item.label = `${item.name}(${item.id})`;
                 return item;
             });
-            this.$ui.fillSelectsWithValues(['roleId', 'roleIds'], data, this.actionGroups, this.filters);
+            this.$ui.fillSelectsWithValues(['roleId', 'roleIds'], data, this.actions, this.filters);
         }
     }
 };

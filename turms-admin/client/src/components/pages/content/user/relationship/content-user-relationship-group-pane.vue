@@ -5,7 +5,7 @@
         :query-key="queryKey"
         :url="url"
         :filters="filters"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
     />
 </template>
@@ -27,19 +27,16 @@ export default {
             filters: [
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'ownerIds',
                     placeholder: 'ownerId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'indexes',
                     placeholder: 'groupIndex'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'names',
                     placeholder: 'name',
                     rules: {
@@ -48,12 +45,11 @@ export default {
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'creationDate'
                 }
             ],
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addUserRelationshipGroup',
                     type: 'CREATE',
                     size: 'L',
@@ -94,7 +90,7 @@ export default {
                             type: 'DATE'
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [

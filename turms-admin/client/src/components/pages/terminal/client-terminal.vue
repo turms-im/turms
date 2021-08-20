@@ -14,7 +14,7 @@
 <script>
 import Terminal from './terminal';
 import TurmsClient from 'turms-client-js/dist/turms-client.esm';
-import * as TurmsClientPackage from 'turms-client-js/package.json';
+import TurmsClientPackage from 'turms-client-js/package.json';
 
 const ONBOARD_MESSAGES = [
     `Current version of turms-client-js: ${TurmsClientPackage.version}`,

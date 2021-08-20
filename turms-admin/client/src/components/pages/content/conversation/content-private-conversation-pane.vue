@@ -5,7 +5,7 @@
         :record-key="recordKey"
         :query-key="queryKey"
         :filters="filters"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
         :pageable="pageable"
         :transform="transform"
@@ -33,13 +33,12 @@ export default {
             filters: [
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'ownerIds',
                     placeholder: 'ownerId'
                 }
             ],
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'updateSelectedConversationReadDate',
                     type: 'UPDATE',
                     fields: [
@@ -48,7 +47,7 @@ export default {
                             type: 'DATE'
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [

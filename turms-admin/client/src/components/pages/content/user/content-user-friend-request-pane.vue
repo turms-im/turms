@@ -3,7 +3,7 @@
         :name="name"
         :url="url"
         :filters="filters"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
     />
 </template>
@@ -23,19 +23,16 @@ export default {
             filters: [
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'ids',
                     placeholder: 'friendRequestId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'requesterIds',
                     placeholder: 'requesterId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'recipientIds',
                     placeholder: 'recipientId'
                 },
@@ -80,12 +77,11 @@ export default {
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'creationDate'
                 }
             ],
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addFriendRequest',
                     type: 'CREATE',
                     size: 'L',
@@ -165,7 +161,7 @@ export default {
                             type: 'DATE'
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [

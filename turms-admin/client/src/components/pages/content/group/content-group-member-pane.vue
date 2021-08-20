@@ -5,7 +5,7 @@
         :query-key="queryKey"
         :url="url"
         :filters="filters"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
     />
 </template>
@@ -27,13 +27,11 @@ export default {
             filters: [
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'groupIds',
                     placeholder: 'groupId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'userIds',
                     placeholder: 'userId'
                 },
@@ -70,17 +68,15 @@ export default {
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'joinDate'
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'muteEndDate'
                 }
             ],
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addGroupMember',
                     type: 'CREATE',
                     size: 'L',
@@ -184,7 +180,7 @@ export default {
                             type: 'DATE'
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [

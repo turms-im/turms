@@ -5,7 +5,7 @@
         :query-key="queryKey"
         :url="url"
         :filters="filters"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
     />
 </template>
@@ -27,30 +27,26 @@ export default {
             filters: [
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'groupIds',
                     placeholder: 'groupId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'userIds',
                     placeholder: 'userId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'requesterIds',
                     placeholder: 'requesterId'
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'blockDate'
                 }
             ],
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addBlockedUser',
                     type: 'CREATE',
                     size: 'L',
@@ -91,7 +87,7 @@ export default {
                             type: 'DATE'
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [

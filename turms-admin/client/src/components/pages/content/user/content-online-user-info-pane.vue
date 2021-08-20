@@ -57,7 +57,6 @@
 </template>
 
 <script>
-const JSONbig = require('json-bigint');
 import formatCoords from 'formatcoords';
 import CustomInput from '../../../common/custom-input';
 import UiMixin from '../template/ui-mixin';
@@ -136,14 +135,9 @@ export default {
         }
     },
     watch: {
-        loading(val) {
-            if (!val) {
-                this.refreshTableUi();
-            }
-        },
         '$store.getters.tab'(val) {
             if (this.myTab === val) {
-                setTimeout(() => this.refreshTableUi());
+                setTimeout(() => this.$refs.table.refreshTableUi());
             }
         }
     },
@@ -179,7 +173,7 @@ export default {
                         record.key = record.userId;
                         if (record.sessionMap) {
                             for (const key of Object.keys(record.sessionMap)) {
-                                const target = JSONbig.parse(JSONbig.stringify(record));
+                                const target = this.$util.copy(record);
                                 const source = target.sessionMap[key];
                                 const friendlyDate = this.$moment(source.loginDate).fromNow();
                                 source.loginDate = `${source.loginDate} (${friendlyDate})`;
@@ -262,6 +256,10 @@ export default {
 .content-online-user {
     display: flex;
     flex-direction: column;
+}
+
+.search-filter-id {
+    max-width: 200px;
 }
 
 .search-button {

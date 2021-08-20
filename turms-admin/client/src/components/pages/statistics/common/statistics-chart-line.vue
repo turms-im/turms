@@ -44,7 +44,7 @@ export default {
         },
         update() {
             if (this.statisticsData.length > 0) {
-                const records = JSON.parse(JSON.stringify(this.statisticsData))
+                const records = this.$util.copy(this.statisticsData)
                     .flatMap(record => {
                         const results = [];
                         Object.entries(record).forEach(([key, value]) => {

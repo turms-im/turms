@@ -3,7 +3,7 @@
         :name="name"
         :url="url"
         :filters="filters"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
     />
 </template>
@@ -23,25 +23,21 @@ export default {
             filters: [
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'ids',
                     placeholder: 'invitationId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'groupIds',
                     placeholder: 'groupId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'inviterIds',
                     placeholder: 'inviterId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'inviteeIds',
                     placeholder: 'inviteeId'
                 },
@@ -49,50 +45,51 @@ export default {
                     id: 'status',
                     type: 'SELECT',
                     options: {
-                        values: [
-                            {
-                                id: 'PENDING',
-                                label: 'pending'
-                            },
-                            {
-                                id: 'ACCEPTED',
-                                label: 'accepted'
-                            },
-                            {
-                                id: 'ACCEPTED_WITHOUT_CONFIRM',
-                                label: 'acceptedWithoutConfirm'
-                            },
-                            {
-                                id: 'DECLINED',
-                                label: 'declined'
-                            },
-                            {
-                                id: 'IGNORED',
-                                label: 'ignored'
-                            },
-                            {
-                                id: 'EXPIRED',
-                                label: 'expired'
-                            },
-                            {
-                                id: 'CANCELED',
-                                label: 'canceled'
-                            }]
+                        base: [{
+                            id: 'ALL',
+                            label: 'allStatuses'
+                        },
+                        {
+                            id: 'PENDING',
+                            label: 'pending'
+                        },
+                        {
+                            id: 'ACCEPTED',
+                            label: 'accepted'
+                        },
+                        {
+                            id: 'ACCEPTED_WITHOUT_CONFIRM',
+                            label: 'acceptedWithoutConfirm'
+                        },
+                        {
+                            id: 'DECLINED',
+                            label: 'declined'
+                        },
+                        {
+                            id: 'IGNORED',
+                            label: 'ignored'
+                        },
+                        {
+                            id: 'EXPIRED',
+                            label: 'expired'
+                        },
+                        {
+                            id: 'CANCELED',
+                            label: 'canceled'
+                        }]
                     }
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'creationDate'
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'responseDate'
                 }
             ],
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addInvitation',
                     type: 'CREATE',
                     size: 'L',
@@ -237,7 +234,7 @@ export default {
                             type: 'DATE'
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [

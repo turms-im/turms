@@ -2,7 +2,7 @@
     <content-template
         :name="name"
         :url="url"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
     />
 </template>
@@ -19,8 +19,8 @@ export default {
         return {
             name: 'user-permission-group',
             url: this.$rs.apis.userPermissionGroup,
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addPermissionGroup',
                     type: 'CREATE',
                     size: 'XL',
@@ -81,7 +81,7 @@ export default {
                             label: 'groupTypeLimit'
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [

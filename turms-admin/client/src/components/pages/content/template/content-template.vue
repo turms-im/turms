@@ -1,204 +1,58 @@
 <template>
     <skeleton v-if="!initialized" />
     <div
-        v-else
+        v-show="initialized"
         class="content-template"
     >
-        <div class="content-template__filter-group">
-            <template v-for="(filter, index) in filters">
-                <custom-input
-                    v-if="filter.type.toUpperCase() === 'INPUT'"
-                    :key="index"
-                    v-model:value="filter.model"
-                    :placeholder="$t(filter.placeholder)"
-                    :only-number-and-comma="filter.rules == null || filter.rules.onlyNumberAndComma"
-                    :non-space="filter.rules?.nonSpace"
-                    class="search-filter search-filter__input"
-                />
-                <a-select
-                    v-if="filter.type.toUpperCase() === 'SELECT'"
-                    :key="index"
-                    v-model:value="filter.model"
-                    class="search-filter search-filter__select"
-                >
-                    <a-select-option
-                        v-for="option in (filter.options.base || []).concat(filter.options.values || [])"
-                        :key="option.id.toString()"
-                        :value="option.id.toString()"
-                    >
-                        {{ $t(option.label) }}
-                    </a-select-option>
-                </a-select>
-                <date-range-picker
-                    v-if="filter.type.toUpperCase() === 'DATE-RANGE'"
-                    :key="index"
-                    v-model:value="filter.model"
-                    :include-today="true"
-                    :show-time="true"
-                    :placeholder="getDatePickerPlaceholder(filter)"
-                    class="search-filter search-filter__date-picker"
-                />
-                <a-date-picker
-                    v-if="filter.type.toUpperCase() === 'DATE'"
-                    :key="index"
-                    v-model:value="filter.model"
-                    :show-time="filter.showTime ?? true"
-                />
-            </template>
-            <a-button
-                class="search-filter"
-                type="primary"
-                :loading="loading"
-                @click="search"
-            >
-                {{ filters.length ? $t('search') : $t('refresh') }}
-            </a-button>
-            <a-button
-                v-if="filters.length"
-                class="search-filter"
-                type="danger"
-                :loading="loading"
-                @click="clearFilters"
-            >
-                {{ $t('clearFilters') }}
-            </a-button>
-        </div>
-        <div class="action-groups">
-            <div
-                v-for="(actions, index) in actionGroups"
-                :key="index"
-                class="action-group"
-            >
-                <button-modal-template
-                    v-for="(action, actionIndex) in actions"
-                    :key="actionIndex"
-                    :button-label="$t(action.buttonLabel || action.title)"
-                    :title="$t(action.title)"
-                    :fields="action.fields"
-                    :type="action.type"
-                    :query-key="queryKey"
-                    :keys="selectedRowKeys"
-                    :url="url"
-                    :disabled="action.type === 'UPDATE' && !hasSelectedRows"
-                    :params="action.params || {}"
-                    :size="action.size"
-                    class="action-button"
-                    @onDataUpdated="onRecordsUpdated"
-                />
-                <a-popconfirm
-                    v-if="!deletion.disabled"
-                    class="action-button"
-                    :visible="popconfirmVisible"
-                    :title="$t('confirmDeletion')"
-                    @visibleChange="onPopconfirmVisibleChanged"
-                    @confirm="deleteSelectedRows"
-                >
-                    <a-button
-                        type="danger"
-                        :disabled="!hasSelectedRows"
-                    >
-                        {{ $t('deleteSelectedRecords') }}
-                    </a-button>
-                </a-popconfirm>
-            </div>
-            <div class="action-group">
-                <content-template-export
-                    :url="queryUrl"
-                    :params="searchParams"
-                    :disabled="!records.length"
-                    :file-name="'turms-' + name"
-                    :transform="transform"
-                    class="action-button"
-                />
-            </div>
-        </div>
-        <a-table
+        <filter-group
+            :filters="filters"
+            :loading="loading"
+            @onSearchClicked="onSearchClicked"
+        />
+        <action-group
+            :actions="actions"
+            :deletion="deletion"
+            :export-file-name="'turms-' + name"
+            :has-records="records.length"
+            :query-key="queryKey"
+            :query-params="queryParams"
+            :resource-url="url + '/page'"
+            :selected-record-keys="selectedRecordKeys"
+            :submit-url="url"
+            :transform="transform"
+            @onRecordCreated="onRecordCreated"
+            @onRecordsUpdated="onRecordsUpdated"
+            @requestDelete="requestDelete"
+        />
+        <content-table
             ref="table"
-            bordered
-            class="content-table"
-            row-key="rowKey"
-            size="small"
-            :columns="columnsData"
+            :columns="tableColumns"
             :data-source="tableData"
             :loading="loading"
-            :pagination="pageable ? pagination : false"
-            :row-selection="selectable ? rowSelection : undefined"
-            :scroll="{ y: scrollMaxHeight }"
-            @change="onTableChanged"
-        >
-            <template
-                v-for="column in columnsData"
-                #[column.dataIndex]="{ text, record }"
-            >
-                <div
-                    v-if="column.type === 'tree'"
-                    :key="column.dataIndex"
-                >
-                    <a-tree
-                        :tree-data="text"
-                        :show-icon="true"
-                    >
-                        <template #bars>
-                            <span class="content-template__list-icon">
-                                <icon type="bars" />
-                            </span>
-                        </template>
-                        <template #close>
-                            <span class="content-template__close-icon">
-                                <icon type="close" />
-                            </span>
-                        </template>
-                        <template #check>
-                            <span class="content-template__check-icon">
-                                <icon type="check" />
-                            </span>
-                        </template>
-                    </a-tree>
-                </div>
-                <div
-                    v-else-if="column.dataIndex === 'operation'"
-                    :key="column.dataIndex"
-                    class="editable-row-operations"
-                >
-                    <span>
-                        <a-popconfirm
-                            :title="$t('confirmDeletion')"
-                            @confirm="requestDelete([record.rowKey])"
-                        >
-                            <a>{{ $t('delete') }}</a>
-                        </a-popconfirm>
-                    </span>
-                </div>
-                <div
-                    v-else
-                    :key="column.dataIndex"
-                >
-                    {{ getColumnValue(column, record) }}
-                </div>
-            </template>
-        </a-table>
+            :pageable="pageable"
+            :selectable="selectable"
+            :row-selection="rowSelection"
+            @onPaginationChanged="onPaginationChanged"
+            @requestDelete="requestDelete"
+        />
     </div>
 </template>
 
 <script>
 import JSONBig from 'json-bigint';
-import UiMixin from './ui-mixin';
-import Icon from '../../../common/icon';
+import ActionGroup from './action-group';
+import ContentTable from './table';
 import Skeleton from '../../../common/skeleton';
-import CustomInput from '../../../common/custom-input';
-import ButtonModalTemplate from './button-modal-template';
-import DateRangePicker from '../../../common/date-range-picker';
-import ContentTemplateExport from './content-template-export';
+import UiMixin from './ui-mixin';
+import FilterGroup from './filter-group';
 
 export default {
     name: 'content-template',
     components: {
-        Icon,
-        Skeleton,
-        ButtonModalTemplate,
-        CustomInput,
-        DateRangePicker,
-        ContentTemplateExport
+        ActionGroup,
+        ContentTable,
+        FilterGroup,
+        Skeleton
     },
     mixins: [UiMixin],
     props: {
@@ -235,7 +89,7 @@ export default {
             type: Boolean,
             default: true
         },
-        params: {
+        queryParams: {
             type: Object,
             required: false,
             default: () => ({})
@@ -248,7 +102,7 @@ export default {
             type: Array,
             default: () => []
         },
-        actionGroups: {
+        actions: {
             type: Array,
             default: () => []
         },
@@ -262,29 +116,21 @@ export default {
             default: null
         }
     },
-    emits: ['onDataInited'],
+    emits: ['onDataInited', 'onRecordsDeleted', 'onRecordsUpdated'],
     data() {
         return {
             loading: false,
             initialData: [],
             records: [],
-            activeKey: 1,
             sorter: null,
-            pagination: {
-                current: 1,
-                pageSize: 20
-            },
-            popconfirmVisible: false,
-            scrollMaxHeight: '100%',
-            selectedRowKeys: [],
+            selectedRecordKeys: [],
             loaded: false,
             initialized: false,
             rowSelection: {
-                onChange: (selectedRowKeys) => {
-                    this.selectedRowKeys = selectedRowKeys;
+                onChange: (selectedRecordKeys) => {
+                    this.selectedRecordKeys = selectedRecordKeys;
                 }
-            },
-            lastFilters: {}
+            }
         };
     },
     computed: {
@@ -293,36 +139,7 @@ export default {
                 ? this.url + '/page'
                 : this.url;
         },
-        searchParams() {
-            const params = {};
-            this.filters.forEach(filter => {
-                let data = this.getIfValid(filter.model);
-                if (filter.type.toUpperCase() === 'SELECT' && typeof data === 'string') {
-                    data = data.toUpperCase();
-                    if (data === 'ALL') {
-                        return;
-                    }
-                }
-                if (filter.type.toUpperCase() === 'DATE-RANGE' && data && !filter.name.endsWith('StartDate') && !filter.name.endsWith('EndDate')) {
-                    params[`${filter.name}Start`] = this.getTimeIfNotNull(data[0]);
-                    params[`${filter.name}End`] = this.getTimeIfNotNull(data[1]);
-                } else {
-                    params[filter.name] = data;
-                }
-            });
-            if (JSONBig.stringify(this.lastFilters) !== JSONBig.stringify(params)) {
-                // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-                this.pagination.current = 1;
-            }
-
-            const pageParams = this.pageable ? {
-                page: this.pagination.current - 1,
-                size: this.pagination.pageSize
-            } : {};
-            Object.assign(params, pageParams, this.params);
-            return params;
-        },
-        columnsData() {
+        tableColumns() {
             return this.table.columns.map(column => {
                 const fields = column.key.split('.');
                 let sorter;
@@ -344,13 +161,13 @@ export default {
         },
         tableData() {
             // Must copy records, or <a-table> will cause "Error: Maximum recursive updates exceeded."
-            return JSON.parse(JSON.stringify(this.records));
+            return this.$util.copy(this.records);
         },
         admin() {
             return this.$store.getters.admin;
         },
         hasSelectedRows() {
-            return !!this.selectedRowKeys.length;
+            return this.selectedRecordKeys.length;
         }
     },
     watch: {
@@ -359,14 +176,9 @@ export default {
                 this.load();
             }
         },
-        loading(val) {
-            if (!val) {
-                this.refreshTableUi();
-            }
-        },
         '$store.getters.tab'(val) {
             if (this.myTab === val) {
-                setTimeout(() => this.refreshTableUi());
+                setTimeout(() => this.$refs.table.refreshTableUi());
             }
         }
     },
@@ -381,127 +193,149 @@ export default {
             this.loaded = true;
             this.initialized = true;
         }
-        window.addEventListener('resize', this.refreshTableUi);
-    },
-    unmounted() {
-        window.removeEventListener('resize', this.refreshTableUi);
     },
     methods: {
-        clearFilters() {
-            for (const filter of this.filters) {
-                switch (filter.type) {
-                    case 'SELECT': {
-                        let model = null;
-                        for (const value of filter.options.base) {
-                            if (value.id === 'ALL') {
-                                model = 'ALL';
-                                break;
-                            }
-                        }
-                        filter.model = model;
-                    }
-                        break;
-                    case 'DATE-RANGE':
-                        filter.model = [];
-                        break;
-                    default:
-                        filter.model = null;
-                }
-            }
-        },
-        getDatePickerPlaceholder(filter) {
-            if (filter.placeholder) {
-                return this.$t(filter.placeholder);
-            }
-            return [this.$t(`${filter.name}Range.start`), this.$t(`${filter.name}Range.end`)];
-        },
         load() {
             if (this.admin) {
                 if (!this.loaded) {
-                    this.search();
+                    this.requestRecords();
                 }
                 if (!this.initialized) {
-                    this.init();
+                    this.requestInitialData();
                 }
             }
         },
-        getColumnValue(column, record) {
-            let value = this.$_.get(record, column.dataIndex, column.default);
-            if (value instanceof Array) {
-                value = value.join(',');
-            } else if (column.dataIndex.endsWith('Date') && value) {
-                value = this.$moment(value).format();
-            }
-            return value;
+        getQueryParams() {
+            const params = this.getQueryParamsFromFilters();
+            const pageParams = this.getQueryParamsFromPagination();
+            return Object.assign(params, pageParams, this.queryParams);
         },
-        onPopconfirmVisibleChanged(visible) {
-            this.popconfirmVisible = visible && this.hasSelectedRows;
-        },
-        onTableChanged(pagination) {
-            const isPaginationChanged = JSON.stringify(pagination) !== JSON.stringify(this.pagination);
-            if (isPaginationChanged) {
-                this.pagination = {...this.pagination, current: pagination.current};
-                if (this.pageable) {
-                    this.search();
+        getQueryParamsFromFilters() {
+            const params = {};
+            this.filters.forEach(filter => {
+                let data = this.getIfValid(filter.model);
+                if (data == null) {
+                    return;
                 }
-            }
-        },
-        init() {
-            if (this.initialDataUrls.length) {
-                const promises = this.initialDataUrls.map(url => this.$http.get(url));
-                Promise.all(promises)
-                    .catch(() => {
-                        setTimeout(() => this.init(), 3000);
-                    })
-                    .then(responseList => {
-                        this.initialized = true;
-                        this.$emit('onDataInited', responseList);
-                    });
-            } else {
-                this.initialized = true;
-            }
-        },
-        getIfValid(object) {
-            if (typeof object === 'number' || typeof object === 'boolean') {
-                return object;
-            } else if (object instanceof Array) {
-                if (object.length) {
-                    return object;
+                if (filter.type.toUpperCase() === 'SELECT' && typeof data === 'string') {
+                    data = data.toUpperCase();
+                    if (data === 'ALL') {
+                        return;
+                    }
                 }
-            } else if (object) {
-                return object;
+                if (filter.type.toUpperCase() === 'DATE-RANGE' && data && !filter.name.endsWith('StartDate') && !filter.name.endsWith('EndDate')) {
+                    params[`${filter.name}Start`] = this.getTimeIfNotNull(data[0]);
+                    params[`${filter.name}End`] = this.getTimeIfNotNull(data[1]);
+                } else {
+                    params[filter.name] = data;
+                }
+            });
+            return params;
+        },
+        getQueryParamsFromPagination() {
+            const pageParams = {};
+            if (this.pageable) {
+                const pagination = this.$refs.table.pagination || {
+                    current: 1,
+                    pageSize: 20
+                };
+                pageParams.page = pagination.current - 1;
+                pageParams.size = pagination.pageSize;
+            }
+            return pageParams;
+        },
+        getIfValid(val) {
+            if (typeof val === 'number' || typeof val === 'boolean') {
+                return val;
+            } else if (val instanceof Array) {
+                if (val.length) {
+                    return val;
+                }
+            } else if (val) {
+                return val;
             }
         },
         getTimeIfNotNull(object) {
-            return object?.format();
+            return object?.format() || '';
         },
-        search() {
-            this.loading = true;
-            this.$http.get(this.queryUrl, {params: this.searchParams})
-                .then(response => {
-                    if (response.status === 204) {
-                        this.records = [];
-                        this.pagination = {...this.pagination, total: 0};
-                    } else {
-                        this.loaded = true;
-                        const data = this.transform
-                            ? this.transform(response.data.data)
-                            : response.data.data;
-                        this.records = data.records.map(record => {
-                            Object.entries(record).forEach(([key, value]) => {
-                                if (value._isBigNumber) {
-                                    record[key] = value.toFixed();
-                                } else if (key === this.recordKey && typeof value === 'object') {
-                                    Object.keys(value).forEach(subKey => {
-                                        record[`${key}.${subKey}`] = value[subKey];
-                                    });
-                                }
-                            });
-                            record.rowKey = JSONBig.stringify(record[this.recordKey]);
-                            return record;
+        onPaginationChanged() {
+            this.requestRecords();
+        },
+        onRecordCreated() {
+            this.requestRecords();
+        },
+        onRecordsUpdated(recordKeys, updatedFields) {
+            this.records = this.records.map(record => {
+                if (recordKeys.includes(record.rowKey)) {
+                    Object.assign(record, updatedFields);
+                }
+                return record;
+            });
+            this.$emit('onRecordsUpdated', recordKeys, updatedFields);
+        },
+        onSearchClicked() {
+            this.$refs.table.goToFirst();
+            this.requestRecords();
+        },
+        parseResponseRecords(data) {
+            data = this.transform ? this.transform(data) : data;
+            return data.records.map(record => {
+                Object.entries(record).forEach(([key, value]) => {
+                    if (this.$util.isBigNumber(value)) {
+                        record[key] = value.toFixed();
+                    } else if (key === this.recordKey && typeof value === 'object') {
+                        Object.keys(value).forEach(subKey => {
+                            record[`${key}.${subKey}`] = value[subKey];
                         });
-                        this.pagination = {...this.pagination, total: data.total};
                     }
+                });
+                record.rowKey = JSONBig.stringify(record[this.recordKey]);
+                return record;
+            });
+        },
+        requestDelete(recordKeys) {
+            if (!this.url) {
+                return;
+            }
+            this.loading = true;
+            const params = this.$rq.getQueryParams(this.queryKey, recordKeys);
+            return this.$http.delete(`${this.url}${params}`)
+                .then(() => {
+                    this.$message.success(this.$t('deletedSuccessfully'));
+                    if (this.deletion.refresh) {
+                        this.requestRecords();
+                    } else {
+                        this.records = this.records
+                            .filter(record => !recordKeys.includes(record.rowKey));
+                    }
+                    this.$emit('onRecordsDeleted', recordKeys);
+                })
+                .catch(error => this.$error(this.$t('deleteFailed'), error))
+                .finally(() => this.loading = false);
+        },
+        requestInitialData() {
+            if (!this.initialDataUrls.length) {
+                this.initialized = true;
+                return;
+            }
+            const promises = this.initialDataUrls.map(url => this.$http.get(url));
+            Promise.all(promises)
+                .catch(() => {
+                    setTimeout(() => this.requestInitialData(), 3000);
+                })
+                .then(responseList => {
+                    this.initialized = true;
+                    this.$emit('onDataInited', responseList);
+                });
+        },
+        requestRecords() {
+            this.loading = true;
+            this.$http.get(this.queryUrl, {params: this.getQueryParams()})
+                .then(response => {
+                    const data = response.data?.data || {};
+                    this.records = this.parseResponseRecords(data);
+                    this.$refs.table.updatePaginateTotal(data.total ?? 0);
+                    this.loaded = true;
                 })
                 .catch(error => {
                     if (error.response?.status === 404) {
@@ -511,75 +345,18 @@ export default {
                     this.$error(this.$t('failedToFetchData'), error);
                 })
                 .finally(() => {
-                    this.selectedRowKeys = this.selectedRowKeys
+                    this.selectedRecordKeys = this.selectedRecordKeys
                         .filter(key => this.records.some(record => record.rowKey === key));
                     this.loading = false;
                 });
-        },
-        deleteSelectedRows() {
-            this.requestDelete(this.selectedRowKeys);
-        },
-        requestDelete(deleteKeys) {
-            if (this.url) {
-                this.loading = true;
-                const params = this.$rq.getQueryParams(this.queryKey, deleteKeys);
-                return this.$http.delete(`${this.url}${params}`)
-                    .then(() => {
-                        this.$message.success(this.$t('deletedSuccessfully'));
-                        if (this.deletion.refresh) {
-                            this.search();
-                        } else {
-                            this.records = this.records
-                                .filter(record => !deleteKeys.includes(record.rowKey));
-                        }
-                        this.$emit('onDataDeleted', deleteKeys);
-                    })
-                    .catch(error => {
-                        this.$error(this.$t('deleteFailed'), error);
-                    })
-                    .finally(() => this.loading = false);
-            }
-        },
-        onRecordsUpdated(keys, values) {
-            this.records.forEach(record => {
-                if (keys.includes(record.rowKey)) {
-                    Object.assign(record, values);
-                }
-            });
         }
     }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .content-template {
     display: flex;
     flex-direction: column;
-
-    .content-template__filter-group {
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    .content-template__close-icon {
-        color: #cf1322;
-    }
-
-    .content-template__check-icon {
-        color: #52c41a;
-    }
 }
 
-.action-groups {
-    display: flex;
-    flex-wrap: wrap;
-
-    .action-group {
-        display: flex;
-        flex-wrap: wrap;
-
-        &:not(:first-child) {
-            margin-left: 24px;
-        }
-    }
-}
 </style>

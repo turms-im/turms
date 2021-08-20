@@ -4,7 +4,7 @@
         :url="url"
         :deletion="deletion"
         :filters="filters"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
     />
 </template>
@@ -27,30 +27,25 @@ export default {
             filters: [
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'ids',
                     placeholder: 'messageId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'senderIds',
                     placeholder: 'senderId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'targetIds',
                     placeholder: 'targetId'
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'deliveryDate'
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'deletionDate'
                 },
                 {
@@ -92,8 +87,8 @@ export default {
                     }
                 }
             ],
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addMessage',
                     type: 'CREATE',
                     size: 'L',
@@ -167,7 +162,7 @@ export default {
                             rules: this.$validator.create({onlyNumber: true})
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [

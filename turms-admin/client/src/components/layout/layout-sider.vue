@@ -126,10 +126,12 @@ export default {
                 title: 'about'
             }
         ];
+        const selectedKeys = ['/content/user'];
+        this.onMenuItemSelected(selectedKeys[0]);
         return {
             menuItems,
             openKeys: ['/content'],
-            selectedKeys: ['/content/user']
+            selectedKeys
         };
     },
     mounted() {

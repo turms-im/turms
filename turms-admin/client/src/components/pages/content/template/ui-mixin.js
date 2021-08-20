@@ -1,5 +1,8 @@
 const updateScrollMaxHeight = function () {
-    const table = this.$refs.table.$el;
+    const table = this.$refs.table?.$el;
+    if (!table) {
+        return;
+    }
     const {top, height} = table.getBoundingClientRect();
     let tableBody = table.tableBody;
     if (!tableBody) {
@@ -22,7 +25,7 @@ export default {
             // become messy if we apply "flex" to them. So we use JS.
 
             // "setTimeout(() => updateScrollMaxHeight.call(this))" is more accurate
-            // but it will jerk the UI so we don't use it
+            // but it will cause a jerk in the UI so we don't use it
             updateScrollMaxHeight.call(this);
         }
     }

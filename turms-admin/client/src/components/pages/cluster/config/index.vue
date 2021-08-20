@@ -160,7 +160,7 @@ export default {
             return this.fetchConfig()
                 .then(response => {
                     this.defaultConfig = response.data.data;
-                    this.currentConfig = JSON.parse(JSON.stringify(this.defaultConfig));
+                    this.currentConfig = this.$util.copy(this.defaultConfig);
                     if (this.initialized) {
                         this.$message.success(this.$t('refreshedDataSuccessfully'));
                     } else {
@@ -191,7 +191,7 @@ export default {
                 });
         },
         discardChanges() {
-            this.currentConfig = JSON.parse(JSON.stringify(this.defaultConfig));
+            this.currentConfig = this.$util.copy(this.defaultConfig);
             this.$message.success(this.$t('discardChangesSuccessfully'));
         },
         requestApplyChanges() {

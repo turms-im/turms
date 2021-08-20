@@ -3,7 +3,7 @@
         :name="name"
         :url="url"
         :filters="filters"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
     />
 </template>
@@ -23,25 +23,21 @@ export default {
             filters: [
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'ids',
                     placeholder: 'joinRequestId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'groupIds',
                     placeholder: 'groupId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'requesterIds',
                     placeholder: 'requesterId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'responderIds',
                     placeholder: 'responderId'
                 },
@@ -86,17 +82,15 @@ export default {
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'creationDate'
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'responseDate'
                 }
             ],
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addJoinRequest',
                     type: 'CREATE',
                     fields: [
@@ -234,7 +228,7 @@ export default {
                             type: 'DATE'
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [

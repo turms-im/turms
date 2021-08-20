@@ -3,7 +3,7 @@
         :name="name"
         :url="url"
         :filters="filters"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
     />
 </template>
@@ -23,7 +23,6 @@ export default {
             filters: [
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'ids',
                     placeholder: 'groupQuestionId',
                     rules: {
@@ -32,13 +31,12 @@ export default {
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'groupIds',
                     placeholder: 'groupId'
                 }
             ],
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addGroupQuestion',
                     type: 'CREATE',
                     fields: [
@@ -63,17 +61,10 @@ export default {
                             label: 'answer',
                             placeholder: 'correctAnswer',
                             addButtonLabel: 'addCorrectAnswer',
-                            rules: this.$validator.create({required: true},
-                                {
-                                    validateTrigger: ['change', 'blur'],
-                                    rules: [
-                                        {
-                                            required: true,
-                                            whitespace: true,
-                                            message: 'operateAnswerPrompt'
-                                        }
-                                    ]
-                                })
+                            rules: [{
+                                required: true,
+                                messageId: 'operateAnswerPrompt'
+                            }]
                         }
                     ]
                 },
@@ -96,20 +87,13 @@ export default {
                             label: 'answer',
                             placeholder: 'correctAnswer',
                             addButtonLabel: 'addCorrectAnswer',
-                            rules: this.$validator.create(
-                                {
-                                    validateTrigger: ['change', 'blur'],
-                                    rules: [
-                                        {
-                                            required: true,
-                                            whitespace: true,
-                                            message: 'operateAnswerPrompt'
-                                        }
-                                    ]
-                                })
+                            rules: {
+                                required: true,
+                                messageId: 'operateAnswerPrompt'
+                            }
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [{

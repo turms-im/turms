@@ -23,6 +23,9 @@ export default {
     },
     methods: {
         refresh() {
+            if (this.refreshing) {
+                return;
+            }
             this.refreshing = true;
             const hide = this.$message.loading(this.$t('refreshingData'), 0);
             this.refreshFunc()

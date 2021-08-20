@@ -4,7 +4,7 @@
         :url="url"
         :deletion="deletion"
         :filters="filters"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
     />
 </template>
@@ -27,25 +27,21 @@ export default {
             filters: [
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'ids',
                     placeholder: 'groupId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'typeIds',
                     placeholder: 'groupTypeId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'creatorIds',
                     placeholder: 'creatorId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'ownerIds',
                     placeholder: 'ownerId'
                 },
@@ -70,22 +66,19 @@ export default {
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'creationDate'
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'deletionDate'
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'muteEndDate'
                 }
             ],
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addGroup',
                     type: 'CREATE',
                     size: 'L',
@@ -222,7 +215,7 @@ export default {
                             }
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [

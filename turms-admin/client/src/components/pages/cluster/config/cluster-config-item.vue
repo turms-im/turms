@@ -106,7 +106,7 @@ export default {
             return item.defaultValue != null && item.defaultValue !== item.value;
         },
         onRollbackClicked(item) {
-            item.value = JSON.parse(JSON.stringify(item.defaultValue));
+            item.value = this.$util.copy(item.defaultValue);
         },
         isFlatListType({type, elementType}) {
             const isList = type === 'java.util.List'

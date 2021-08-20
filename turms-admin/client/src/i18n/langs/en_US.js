@@ -241,7 +241,7 @@ const en_US = {
     'oneUpdateFieldAtLeast': 'No fields to update',
     'onlineDevice': 'Online Device',
     'onlineUserStatus': 'Online User Status',
-    'operateAnswerPrompt': 'Please enter the correct answer or delete the item',
+    'operateAnswerPrompt': 'Please enter the correct answer or delete this item',
     'operation': 'Action',
     'ownedGroupLimit': 'Owned Group Limit',
     'ownedGroupLimitForEachGroupType': 'Owned Group Limit For Each Group Type',

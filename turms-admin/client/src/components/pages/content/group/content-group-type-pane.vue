@@ -2,7 +2,7 @@
     <content-template
         :name="name"
         :url="url"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
     />
 </template>
@@ -19,8 +19,8 @@ export default {
         return {
             name: 'group-type',
             url: this.$rs.apis.groupType,
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addGroupType',
                     type: 'CREATE',
                     size: 'XL',
@@ -238,7 +238,7 @@ export default {
                             }
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [

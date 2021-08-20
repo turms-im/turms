@@ -3,7 +3,7 @@
         :name="name"
         :url="url"
         :initial-data-urls="initialDataUrls"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
         :transform="transform"
         @onDataInited="onDataInited"
@@ -26,8 +26,8 @@ export default {
             name: 'admin-role',
             url: this.$rs.apis.adminRole,
             initialDataUrls: [this.$rs.apis.adminRole],
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addRole',
                     type: 'CREATE',
                     fields: [
@@ -51,7 +51,6 @@ export default {
                             id: 'permissions',
                             type: 'TREE',
                             label: 'permission',
-                            checkedKeys: [],
                             data: {},
                             transform: this.transformParams,
                             rules: this.$validator.create({required: true})
@@ -76,12 +75,11 @@ export default {
                             id: 'permissions',
                             type: 'TREE',
                             label: 'permission',
-                            checkedKeys: [],
                             data: {},
                             transform: this.transformParams
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [
@@ -101,7 +99,7 @@ export default {
                     {
                         title: 'permission',
                         key: 'permissions',
-                        type: 'tree',
+                        type: 'TREE',
                         width: '45%'
                     },
                     {
@@ -114,7 +112,7 @@ export default {
     },
     mounted() {
         if (!ALL_PERMISSIONS_TREE) {
-            const permissions = JSON.parse(JSON.stringify(this.$rs.permissions));
+            const permissions = this.$util.copy(this.$rs.permissions);
             ALL_PERMISSIONS_TREE = this.parseTree(permissions);
             ALL_PERMISSIONS_ARRAY = this.parseArray(permissions);
         }
@@ -125,12 +123,12 @@ export default {
                 item.label = `${item.name}(${item.id})`;
                 return item;
             });
-            this.$ui.fillSelectsWithValues(['roleId', 'roleIds'], data, this.actionGroups);
+            this.$ui.fillSelectsWithValues(['roleId', 'roleIds'], data, this.actions);
         },
         transform(data) {
             this.resetPermissionTreeData();
             for (const record of data.records) {
-                const currentPermissions = JSON.parse(JSON.stringify(ALL_PERMISSIONS_TREE));
+                const currentPermissions = this.$util.copy(ALL_PERMISSIONS_TREE);
                 for (const ownedPermission of record.permissions) {
                     const foundRecord = this.$util.deepSearch(currentPermissions, 'key', (key, value) => value === ownedPermission);
                     if (foundRecord) {
@@ -145,13 +143,11 @@ export default {
             return data;
         },
         resetPermissionTreeData() {
-            for (const actions of this.actionGroups) {
-                for (const action of actions) {
-                    for (const field of action.fields) {
-                        if (field.type.toUpperCase() === 'TREE' && field.id === 'permissions') {
-                            field.data = ALL_PERMISSIONS_TREE;
-                            return;
-                        }
+            for (const action of this.actions) {
+                for (const field of action.fields) {
+                    if (field.type.toUpperCase() === 'TREE' && field.id === 'permissions') {
+                        field.data = ALL_PERMISSIONS_TREE;
+                        return;
                     }
                 }
             }

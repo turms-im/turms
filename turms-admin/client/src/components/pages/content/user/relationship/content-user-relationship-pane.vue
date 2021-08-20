@@ -3,10 +3,10 @@
         :name="name"
         :record-key="recordKey"
         :query-key="queryKey"
+        :query-params="queryParams"
         :url="url"
-        :params="params"
         :filters="filters"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
     />
 </template>
@@ -23,7 +23,7 @@ export default {
         return {
             name: 'user-relationship',
             url: this.$rs.apis.userRelationship,
-            params: {
+            queryParams: {
                 withGroupIndexes: true
             },
             recordKey: 'key',
@@ -31,35 +31,30 @@ export default {
             filters: [
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'ownerIds',
                     placeholder: 'ownerId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'relatedUserIds',
                     placeholder: 'relatedUserId'
                 },
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'groupIndexes',
                     placeholder: 'relationshipGroupIndex'
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'blockDate'
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'establishmentDate'
                 }
             ],
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addUserRelationship',
                     type: 'CREATE',
                     size: 'L',
@@ -98,7 +93,7 @@ export default {
                             type: 'DATE'
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [

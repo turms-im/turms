@@ -1,11 +1,9 @@
+import JSONBig from 'json-bigint';
+
 export default class CommonUtil {
 
-    static splitByCapitals(text) {
-        return text.split(/(?=[A-Z])/).join(' ');
-    }
-
-    static upperFirst(text) {
-        return text.charAt(0).toUpperCase() + text.slice(1);
+    static copy(val) {
+        return JSONBig.parse(JSONBig.stringify(val));
     }
 
     static deepSearch (object, key, predicate) {
@@ -22,6 +20,10 @@ export default class CommonUtil {
         }
     }
 
+    static isBigNumber(val) {
+        return val?._isBigNumber;
+    }
+
     static sort(a, b, isAscend = true) {
         let result;
         if (typeof a ==='string' && typeof b === 'string') {
@@ -33,6 +35,18 @@ export default class CommonUtil {
         }
         result = result ?? a - b;
         return isAscend ? result : -result;
+    }
+
+    static removeEmpty(obj) {
+        return Object.keys(obj).forEach((k) => obj[k] == null && delete obj[k]);
+    }
+
+    static splitByCapitals(text) {
+        return text.split(/(?=[A-Z])/).join(' ');
+    }
+
+    static upperFirst(text) {
+        return text.charAt(0).toUpperCase() + text.slice(1);
     }
 
 }

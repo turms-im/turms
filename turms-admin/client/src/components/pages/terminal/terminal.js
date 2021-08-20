@@ -18,7 +18,7 @@ const FAVORITE_FONTS = [
 ];
 
 function findFavoriteFont() {
-    const isSupportedFont = (family) => document.fonts && document.fonts.check('12px ' + family);
+    const isSupportedFont = (family) => document.fonts?.check('12px ' + family);
     for (const font of FAVORITE_FONTS) {
         if (isSupportedFont(font)) {
             return font;

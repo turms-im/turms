@@ -4,7 +4,7 @@
         :url="url"
         :deletion="deletion"
         :filters="filters"
-        :action-groups="actionGroups"
+        :actions="actions"
         :table="table"
     />
 </template>
@@ -27,18 +27,15 @@ export default {
             filters: [
                 {
                     type: 'INPUT',
-                    model: '',
                     name: 'ids',
                     placeholder: 'userId'
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'registrationDate'
                 },
                 {
                     type: 'DATE-RANGE',
-                    model: [],
                     name: 'deletionDate'
                 },
                 {
@@ -61,10 +58,11 @@ export default {
                     }
                 }
             ],
-            actionGroups: [
-                [{
+            actions: [
+                {
                     title: 'addUser',
                     type: 'CREATE',
+                    size: 'L',
                     fields: [
                         {
                             id: 'id',
@@ -136,6 +134,7 @@ export default {
                 {
                     title: 'updateSelectedUsers',
                     type: 'UPDATE',
+                    size: 'L',
                     fields: [
                         {
                             id: 'id',
@@ -204,7 +203,7 @@ export default {
                             }
                         }
                     ]
-                }]
+                }
             ],
             table: {
                 columns: [
