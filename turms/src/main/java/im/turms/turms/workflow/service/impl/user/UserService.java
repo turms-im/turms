@@ -267,9 +267,9 @@ public class UserService {
         }
         return isAllowToQueryUserProfile(requesterId, userId)
                 .flatMap(permission -> {
-                    TurmsStatusCode code = permission.getCode();
+                    TurmsStatusCode code = permission.code();
                     if (code != TurmsStatusCode.OK) {
-                        return Mono.error(TurmsBusinessException.get(code, permission.getReason()));
+                        return Mono.error(TurmsBusinessException.get(code, permission.reason()));
                     }
                     return queryUsersProfiles(Set.of(userId), queryDeletedRecords).singleOrEmpty();
                 });

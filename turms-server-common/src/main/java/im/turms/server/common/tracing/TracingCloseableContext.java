@@ -22,12 +22,9 @@ import java.io.Closeable;
 /**
  * @author James Chen
  */
-public class TracingCloseableContext implements Closeable {
+public record TracingCloseableContext(TracingContext tracingContext) implements Closeable {
 
-    private final TracingContext tracingContext;
-
-    TracingCloseableContext(TracingContext tracingContext) {
-        this.tracingContext = tracingContext;
+    public TracingCloseableContext {
         tracingContext.updateMdc();
     }
 

@@ -17,15 +17,13 @@
 
 package im.turms.turms.workflow.access.http.dto.request.user;
 
-import lombok.Data;
-
 import java.util.Map;
 
 /**
  * @author James Chen
  */
-@Data
-public final class OnlineUserNumberDTO {
-    private final Integer total;
-    private final Map<String, Integer> numberById;
+public record OnlineUserNumberDTO(
+        Integer total,
+        Map<String, Integer> numberById
+) {
 }

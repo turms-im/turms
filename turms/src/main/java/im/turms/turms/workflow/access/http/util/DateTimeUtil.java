@@ -57,8 +57,8 @@ public class DateTimeUtil {
             @Nullable Integer maxHourRanges,
             @Nullable Integer maxDayRanges,
             @Nullable Integer maxMonthRanges) {
-        Date startDate = dateRange.getStart();
-        Date endDate = dateRange.getStart();
+        Date startDate = dateRange.start();
+        Date endDate = dateRange.end();
         return switch (divideBy) {
             case HOUR -> maxHourRanges == null || getRangesNumber(startDate, endDate, divideBy) <= maxHourRanges;
             case DAY -> maxDayRanges == null || getRangesNumber(startDate, endDate, divideBy) <= maxDayRanges;
@@ -131,7 +131,7 @@ public class DateTimeUtil {
             @NotNull Function3<DateRange, Boolean, Boolean, Mono<Long>> function,
             @Nullable Boolean areGroupMessages,
             @Nullable Boolean areSystemMessages) {
-        List<Pair<Date, Date>> dates = divide(dateRange.getStart(), dateRange.getEnd(), divideBy);
+        List<Pair<Date, Date>> dates = divide(dateRange.start(), dateRange.end(), divideBy);
         List<Mono<StatisticsRecordDTO>> monos = new ArrayList<>(dates.size());
         for (Pair<Date, Date> datePair : dates) {
             Mono<Long> result = function.apply(
@@ -149,7 +149,7 @@ public class DateTimeUtil {
             @NotNull DateRange dateRange,
             @NotNull DivideBy divideBy,
             @NotNull Function<DateRange, Mono<Long>> function) {
-        List<Pair<Date, Date>> dates = divide(dateRange.getStart(), dateRange.getEnd(), divideBy);
+        List<Pair<Date, Date>> dates = divide(dateRange.start(), dateRange.end(), divideBy);
         List<Mono<StatisticsRecordDTO>> monos = new ArrayList<>(dates.size());
         for (Pair<Date, Date> datePair : dates) {
             DateRange range = DateRange.of(datePair.getLeft(), datePair.getRight());
@@ -203,8 +203,8 @@ public class DateTimeUtil {
     private Mono<List<StatisticsRecordDTO>> merge(List<Mono<StatisticsRecordDTO>> monos) {
         return Flux.merge(monos)
                 .collectSortedList((o1, o2) -> {
-                    Date date1 = o1.getDate();
-                    Date date2 = o2.getDate();
+                    Date date1 = o1.date();
+                    Date date2 = o2.date();
                     if (date1.before(date2)) {
                         return -1;
                     } else if (date1.after(date2)) {

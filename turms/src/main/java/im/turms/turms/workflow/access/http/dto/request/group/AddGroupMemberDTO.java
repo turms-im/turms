@@ -18,19 +18,18 @@
 package im.turms.turms.workflow.access.http.dto.request.group;
 
 import im.turms.common.constant.GroupMemberRole;
-import lombok.Data;
 
 import java.util.Date;
 
 /**
  * @author James Chen
  */
-@Data
-public final class AddGroupMemberDTO {
-    private final Long groupId;
-    private final Long userId;
-    private final String name;
-    private final GroupMemberRole role;
-    private final Date joinDate;
-    private final Date muteEndDate;
+public record AddGroupMemberDTO(
+        Long groupId,
+        Long userId,
+        String name,
+        GroupMemberRole role,
+        Date joinDate,
+        Date muteEndDate
+) {
 }

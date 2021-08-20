@@ -18,22 +18,17 @@
 package im.turms.gateway.access.tcp.dto;
 
 import im.turms.server.common.constant.TurmsStatusCode;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@Data
-public class RequestHandlerResult {
-
-    private final TurmsStatusCode code;
-    private final String reason;
+public record RequestHandlerResult(
+        TurmsStatusCode code,
+        String reason
+) {
 
     public RequestHandlerResult(TurmsStatusCode code) {
-        this.code = code;
-        reason = null;
+        this(code, null);
     }
 
 }

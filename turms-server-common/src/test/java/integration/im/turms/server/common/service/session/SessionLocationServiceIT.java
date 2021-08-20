@@ -85,7 +85,6 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
         TurmsRedisClientManager manager =
                 new TurmsRedisClientManager(redisProperties, RedisCodecContextPool.GEO_USER_SESSION_ID_CODEC_CONTEXT);
         SESSION_LOCATION_SERVICE = new SessionLocationService(node,
-                pluginManager,
                 propertiesManager,
                 manager);
     }

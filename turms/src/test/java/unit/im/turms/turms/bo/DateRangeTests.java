@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 class DateRangeTests {
 
     @Test
-    void of_shouldThrowException_whenPassingWrongParameters() {
+    void of_shouldThrowException_withInvalidParameters() {
         Date earlier = new Date(0);
         Date later = new Date(1);
         assertThatExceptionOfType(TurmsBusinessException.class)
@@ -40,7 +40,7 @@ class DateRangeTests {
     }
 
     @Test
-    void of_shouldAssignValues_whenPassingCorrectParameters() {
+    void of_shouldAssignValues_withValidParameters() {
         Date earlier = new Date(0);
         Date later = new Date(1);
 
@@ -51,13 +51,13 @@ class DateRangeTests {
         DateRange earlierLater = DateRange.of(earlier, later);
 
         assertThat(nullNull).isNull();
-        assertThat(nullDate.getEnd()).isEqualTo(earlier);
-        assertThat(dateNull.getStart()).isEqualTo(earlier);
-        assertThat(dateNull.getStart()).isEqualTo(earlier);
-        assertThat(same.getStart()).isEqualTo(earlier);
-        assertThat(same.getEnd()).isEqualTo(earlier);
-        assertThat(earlierLater.getStart()).isEqualTo(earlier);
-        assertThat(earlierLater.getEnd()).isEqualTo(later);
+        assertThat(nullDate.end()).isEqualTo(earlier);
+        assertThat(dateNull.start()).isEqualTo(earlier);
+        assertThat(dateNull.end()).isNull();
+        assertThat(same.start()).isEqualTo(earlier);
+        assertThat(same.end()).isEqualTo(earlier);
+        assertThat(earlierLater.start()).isEqualTo(earlier);
+        assertThat(earlierLater.end()).isEqualTo(later);
     }
 
 }

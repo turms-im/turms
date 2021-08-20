@@ -17,17 +17,15 @@
 
 package im.turms.turms.workflow.access.http.dto.request.user;
 
-import lombok.Data;
-
 import java.util.Date;
 
 /**
  * @author James Chen
  */
-@Data
-public final class AddRelationshipGroupDTO {
-    private final Long ownerId;
-    private final Integer index;
-    private final String name;
-    private final Date creationDate;
+public record AddRelationshipGroupDTO(
+        Long ownerId,
+        Integer index,
+        String name,
+        Date creationDate
+) {
 }

@@ -317,7 +317,7 @@ public class SessionService implements ISessionService {
                     // the local node failed to refresh the heartbeat info of users in Redis.
                     sessionsStatus = getSessionStatusFromSharedAndLocalInfo(userId, sessionsStatus);
                     // Check the current sessions status
-                    UserStatus existingUserStatus = sessionsStatus.getUserStatus();
+                    UserStatus existingUserStatus = sessionsStatus.userStatus();
                     if (existingUserStatus == UserStatus.OFFLINE) {
                         return addOnlineDeviceIfAbsent(version, userId, deviceType, userStatus, position);
                     }
@@ -471,16 +471,13 @@ public class SessionService implements ISessionService {
         if (manager == null) {
             return sharedSessionsStatus;
         }
-        Map<DeviceType, String> sharedOnlineDeviceTypeAndNodeIdMap = sharedSessionsStatus.getOnlineDeviceTypeAndNodeIdMap();
+        Map<DeviceType, String> sharedOnlineDeviceTypeAndNodeIdMap = sharedSessionsStatus.onlineDeviceTypeAndNodeIdMap();
         for (Map.Entry<DeviceType, UserSession> entry : manager.getSessionMap().entrySet()) {
             // Don't just merge two maps for convenience to avoiding creating a new map
             if (!sharedOnlineDeviceTypeAndNodeIdMap.containsKey(entry.getKey())) {
                 Map<DeviceType, String> onlineDeviceTypeAndNodeIdMap = MapUtil.merge(sharedOnlineDeviceTypeAndNodeIdMap,
                         Maps.transformValues(manager.getSessionMap(), ignored -> Node.getNodeId()));
-                return sharedSessionsStatus.toBuilder()
-                        .userStatus(manager.getUserStatus())
-                        .onlineDeviceTypeAndNodeIdMap(onlineDeviceTypeAndNodeIdMap)
-                        .build();
+                return new UserSessionsStatus(manager.getUserStatus(), onlineDeviceTypeAndNodeIdMap);
             }
         }
         return sharedSessionsStatus;

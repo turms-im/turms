@@ -79,19 +79,19 @@ public class GroupController {
     @PostMapping
     @RequiredPermission(GROUP_CREATE)
     public Mono<ResponseEntity<ResponseDTO<Group>>> addGroup(@RequestBody AddGroupDTO addGroupDTO) {
-        Long ownerId = addGroupDTO.getOwnerId();
+        Long ownerId = addGroupDTO.ownerId();
         Mono<Group> createdGroup = groupService.authAndCreateGroup(
-                addGroupDTO.getCreatorId(),
-                ownerId != null ? ownerId : addGroupDTO.getCreatorId(),
-                addGroupDTO.getName(),
-                addGroupDTO.getIntro(),
-                addGroupDTO.getAnnouncement(),
-                addGroupDTO.getMinimumScore(),
-                addGroupDTO.getTypeId(),
-                addGroupDTO.getCreationDate(),
-                addGroupDTO.getDeletionDate(),
-                addGroupDTO.getMuteEndDate(),
-                addGroupDTO.getIsActive());
+                addGroupDTO.creatorId(),
+                ownerId != null ? ownerId : addGroupDTO.creatorId(),
+                addGroupDTO.name(),
+                addGroupDTO.intro(),
+                addGroupDTO.announcement(),
+                addGroupDTO.minimumScore(),
+                addGroupDTO.typeId(),
+                addGroupDTO.creationDate(),
+                addGroupDTO.deletionDate(),
+                addGroupDTO.muteEndDate(),
+                addGroupDTO.isActive());
         return ResponseFactory.okIfTruthy(createdGroup);
     }
 
@@ -231,21 +231,21 @@ public class GroupController {
     public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateGroups(
             @RequestParam Set<Long> ids,
             @RequestBody UpdateGroupDTO updateGroupDTO) {
-        Long successorId = updateGroupDTO.getSuccessorId();
+        Long successorId = updateGroupDTO.successorId();
         Mono<UpdateResult> updateMono = successorId != null
-                ? groupService.checkAndTransferGroupOwnership(ids, successorId, updateGroupDTO.getQuitAfterTransfer(), null)
+                ? groupService.checkAndTransferGroupOwnership(ids, successorId, updateGroupDTO.quitAfterTransfer(), null)
                 : groupService.updateGroupsInformation(ids,
-                updateGroupDTO.getTypeId(),
-                updateGroupDTO.getCreatorId(),
-                updateGroupDTO.getOwnerId(),
-                updateGroupDTO.getName(),
-                updateGroupDTO.getIntro(),
-                updateGroupDTO.getAnnouncement(),
-                updateGroupDTO.getMinimumScore(),
-                updateGroupDTO.getIsActive(),
-                updateGroupDTO.getCreationDate(),
-                updateGroupDTO.getDeletionDate(),
-                updateGroupDTO.getMuteEndDate(),
+                updateGroupDTO.typeId(),
+                updateGroupDTO.creatorId(),
+                updateGroupDTO.ownerId(),
+                updateGroupDTO.name(),
+                updateGroupDTO.intro(),
+                updateGroupDTO.announcement(),
+                updateGroupDTO.minimumScore(),
+                updateGroupDTO.isActive(),
+                updateGroupDTO.creationDate(),
+                updateGroupDTO.deletionDate(),
+                updateGroupDTO.muteEndDate(),
                 null);
         return ResponseFactory.updateResult(updateMono);
     }

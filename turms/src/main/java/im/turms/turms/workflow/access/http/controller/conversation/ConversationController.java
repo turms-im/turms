@@ -123,12 +123,12 @@ public class ConversationController {
                 ? Mono.empty()
                 : conversationService
                 .upsertPrivateConversationsReadDate(CollectionUtil.newSet(privateConversationKeys.getPrivateConversationKeys()),
-                        updateConversationDTO.getReadDate());
+                        updateConversationDTO.readDate());
         Mono<Void> updateGroupConversationsMono = isEmptyGroupConversationKeys(groupConversationMemberKeys)
                 ? Mono.empty()
                 : conversationService
                 .upsertGroupConversationsReadDate(CollectionUtil.newSet(groupConversationMemberKeys.getGroupConversationMemberKeys()),
-                        updateConversationDTO.getReadDate());
+                        updateConversationDTO.readDate());
         return Mono.when(updatePrivateConversions, updateGroupConversationsMono)
                 .thenReturn(ResponseFactory.OK);
     }

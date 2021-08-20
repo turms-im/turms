@@ -71,14 +71,14 @@ public class UserFriendRequestController {
     public Mono<ResponseEntity<ResponseDTO<UserFriendRequestDTO>>> createFriendRequest(
             @RequestBody AddFriendRequestDTO addFriendRequestDTO) {
         Mono<UserFriendRequestDTO> createMono = userFriendRequestService.createFriendRequest(
-                        addFriendRequestDTO.getId(),
-                        addFriendRequestDTO.getRequesterId(),
-                        addFriendRequestDTO.getRecipientId(),
-                        addFriendRequestDTO.getContent(),
-                        addFriendRequestDTO.getStatus(),
-                        addFriendRequestDTO.getCreationDate(),
-                        addFriendRequestDTO.getResponseDate(),
-                        addFriendRequestDTO.getReason())
+                        addFriendRequestDTO.id(),
+                        addFriendRequestDTO.requesterId(),
+                        addFriendRequestDTO.recipientId(),
+                        addFriendRequestDTO.content(),
+                        addFriendRequestDTO.status(),
+                        addFriendRequestDTO.creationDate(),
+                        addFriendRequestDTO.responseDate(),
+                        addFriendRequestDTO.reason())
                 .map(request -> new UserFriendRequestDTO(request, userFriendRequestService.getModelExpirationDate()));
         return ResponseFactory.okIfTruthy(createMono);
     }
@@ -157,13 +157,13 @@ public class UserFriendRequestController {
             @RequestBody UpdateFriendRequestDTO updateFriendRequestDTO) {
         Mono<UpdateResultDTO> updateMono = userFriendRequestService.updateFriendRequests(
                         ids,
-                        updateFriendRequestDTO.getRequesterId(),
-                        updateFriendRequestDTO.getRecipientId(),
-                        updateFriendRequestDTO.getContent(),
-                        updateFriendRequestDTO.getStatus(),
-                        updateFriendRequestDTO.getReason(),
-                        updateFriendRequestDTO.getCreationDate(),
-                        updateFriendRequestDTO.getResponseDate())
+                        updateFriendRequestDTO.requesterId(),
+                        updateFriendRequestDTO.recipientId(),
+                        updateFriendRequestDTO.content(),
+                        updateFriendRequestDTO.status(),
+                        updateFriendRequestDTO.reason(),
+                        updateFriendRequestDTO.creationDate(),
+                        updateFriendRequestDTO.responseDate())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

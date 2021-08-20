@@ -20,7 +20,6 @@ package im.turms.turms.workflow.access.http.dto.response;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.mongo.exception.DuplicateKeyException;
-import lombok.Data;
 import org.springframework.core.io.buffer.DataBufferLimitException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -52,12 +51,11 @@ public final class ErrorAttributesFactory {
                 throwable.getClass().getName());
     }
 
-    @Data
-    private static class SimpleErrorAttributes {
-
-        private final int httpStatus;
-        private final TurmsStatusCode statusCode;
-        private final String reason;
+    private static record SimpleErrorAttributes(
+            int httpStatus,
+            TurmsStatusCode statusCode,
+            String reason
+    ) {
 
         private static SimpleErrorAttributes fromTurmsBusinessException(TurmsBusinessException exception) {
             TurmsStatusCode statusCode = exception.getCode();

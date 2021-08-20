@@ -17,24 +17,22 @@
 
 package im.turms.turms.workflow.access.http.dto.request.group;
 
-import lombok.Data;
-
 import java.util.Date;
 
 /**
  * @author James Chen
  */
-@Data
-public final class AddGroupDTO {
-    private final Long typeId;
-    private final Long creatorId;
-    private final Long ownerId;
-    private final String name;
-    private final String intro;
-    private final String announcement;
-    private final Integer minimumScore;
-    private final Date creationDate;
-    private final Date deletionDate;
-    private final Date muteEndDate;
-    private final Boolean isActive;
+public record AddGroupDTO(
+        Long typeId,
+        Long creatorId,
+        Long ownerId,
+        String name,
+        String intro,
+        String announcement,
+        Integer minimumScore,
+        Date creationDate,
+        Date deletionDate,
+        Date muteEndDate,
+        Boolean isActive
+) {
 }

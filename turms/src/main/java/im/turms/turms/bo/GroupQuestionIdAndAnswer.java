@@ -17,13 +17,11 @@
 
 package im.turms.turms.bo;
 
-import lombok.Data;
-
 /**
  * @author James Chen
  */
-@Data
-public final class GroupQuestionIdAndAnswer {
-    private final Long id;
-    private final String answer;
+public record GroupQuestionIdAndAnswer(
+        Long id,
+        String answer
+) {
 }

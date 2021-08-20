@@ -168,7 +168,7 @@ public class UserOnlineInfoController {
             @RequestParam(required = false) Set<DeviceType> deviceTypes,
             @RequestBody UpdateOnlineStatusDTO updateOnlineStatusDTO) {
         Mono<Boolean> updateMono;
-        UserStatus onlineStatus = updateOnlineStatusDTO.getOnlineStatus();
+        UserStatus onlineStatus = updateOnlineStatusDTO.onlineStatus();
         if (onlineStatus == UserStatus.OFFLINE) {
             updateMono = deviceTypes != null
                     ? sessionService.disconnect(ids, deviceTypes, SessionCloseStatus.DISCONNECTED_BY_ADMIN)

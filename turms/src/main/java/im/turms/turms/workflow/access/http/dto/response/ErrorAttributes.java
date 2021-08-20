@@ -17,18 +17,16 @@
 
 package im.turms.turms.workflow.access.http.dto.response;
 
-import lombok.Data;
-
 import java.util.Date;
 
 /**
  * @author James Chen
  */
-@Data
-public class ErrorAttributes {
-    private final Integer status;
-    private final int code;
-    private final String reason;
-    private final Date timestamp;
-    private final String exception;
+public record ErrorAttributes(
+        Integer status,
+        int code,
+        String reason,
+        Date timestamp,
+        String exception
+) {
 }

@@ -221,7 +221,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         }
         return Mono.when(entityMap.asMap().entrySet().stream()
                 .map(entry -> entry.getKey().ensureIndexesAndShard(entry.getValue().stream()
-                        .map(MongoEntity::getEntityClass)
+                        .map(MongoEntity::entityClass)
                         .collect(Collectors.toList())))
                 .toList());
     }
@@ -247,11 +247,11 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     private Mono<Void> ensureZones(MultiTemperatureProperties temperatureProperties,
                                    TurmsMongoClient mongoClient,
                                    MongoEntity<?> entity) {
-        Zone zone = entity.getZone();
+        Zone zone = entity.zone();
         if (zone == null) {
             return Mono.empty();
         }
-        String collectionName = entity.getCollectionName();
+        String collectionName = entity.collectionName();
         log.info("Adding the shards of the {} collection to zones...", collectionName);
         Map<String, TemperatureProperties> temperatures = new LinkedHashMap<>(8);
         temperatures.put(collectionName + "_hot", temperatureProperties.getHot());
@@ -262,7 +262,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         Mono<Void> ensureZones = Mono.empty();
         Date startDate = new Date();
         int currentDay = 0;
-        String creationDateFieldName = zone.getCreationDateFieldName();
+        String creationDateFieldName = zone.creationDateFieldName();
         for (Map.Entry<String, TemperatureProperties> entry : temperatures.entrySet()) {
             String zoneName = entry.getKey();
             TemperatureProperties properties = entry.getValue();

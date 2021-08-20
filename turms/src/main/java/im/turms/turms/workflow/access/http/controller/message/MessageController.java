@@ -79,15 +79,15 @@ public class MessageController {
             @RequestBody CreateMessageDTO createMessageDTO) {
         Mono<Void> sendMono = messageService.authAndSaveAndSendMessage(
                 send,
-                createMessageDTO.getId(),
-                createMessageDTO.getIsGroupMessage(),
-                createMessageDTO.getIsSystemMessage(),
-                createMessageDTO.getText(),
-                createMessageDTO.getRecords(),
-                createMessageDTO.getSenderId(),
-                createMessageDTO.getTargetId(),
-                createMessageDTO.getBurnAfter(),
-                createMessageDTO.getReferenceId());
+                createMessageDTO.id(),
+                createMessageDTO.isGroupMessage(),
+                createMessageDTO.isSystemMessage(),
+                createMessageDTO.text(),
+                createMessageDTO.records(),
+                createMessageDTO.senderId(),
+                createMessageDTO.targetId(),
+                createMessageDTO.burnAfter(),
+                createMessageDTO.referenceId());
         return sendMono.thenReturn(ResponseFactory.OK);
     }
 
@@ -250,11 +250,11 @@ public class MessageController {
             @RequestBody UpdateMessageDTO updateMessageDTO) {
         Mono<UpdateResultDTO> updateMono = messageService.updateMessages(
                         ids,
-                        updateMessageDTO.getIsSystemMessage(),
-                        updateMessageDTO.getText(),
-                        updateMessageDTO.getRecords(),
-                        updateMessageDTO.getBurnAfter(),
-                        updateMessageDTO.getRecallDate(),
+                        updateMessageDTO.isSystemMessage(),
+                        updateMessageDTO.text(),
+                        updateMessageDTO.records(),
+                        updateMessageDTO.burnAfter(),
+                        updateMessageDTO.recallDate(),
                         null)
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);

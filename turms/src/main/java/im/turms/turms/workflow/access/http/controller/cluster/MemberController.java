@@ -83,23 +83,23 @@ public class MemberController {
     @RequiredPermission(CLUSTER_MEMBERS_CREATE)
     public Mono<ResponseEntity<ResponseDTO<Void>>> addMember(@RequestBody AddMemberDTO addMemberDTO) {
         String clusterId = node.getDiscoveryService().getLocalMember().getClusterId();
-        NodeType nodeType = addMemberDTO.getNodeType();
+        NodeType nodeType = addMemberDTO.nodeType();
         Member member = new Member(
                 clusterId,
-                addMemberDTO.getNodeId(),
+                addMemberDTO.nodeId(),
                 nodeType,
-                NodeVersion.parse(addMemberDTO.getVersion()),
+                NodeVersion.parse(addMemberDTO.version()),
                 addMemberDTO.isSeed(),
                 nodeType == NodeType.SERVICE && addMemberDTO.isLeaderEligible(),
-                addMemberDTO.getRegistrationDate(),
-                addMemberDTO.getPriority(),
-                addMemberDTO.getMemberHost(),
-                addMemberDTO.getMemberPort(),
-                addMemberDTO.getMetricsApiAddress(),
-                addMemberDTO.getAdminApiAddress(),
-                addMemberDTO.getWsAddress(),
-                addMemberDTO.getTcpAddress(),
-                addMemberDTO.getUdpAddress(),
+                addMemberDTO.registrationDate(),
+                addMemberDTO.priority(),
+                addMemberDTO.memberHost(),
+                addMemberDTO.memberPort(),
+                addMemberDTO.metricsApiAddress(),
+                addMemberDTO.adminApiAddress(),
+                addMemberDTO.wsAddress(),
+                addMemberDTO.tcpAddress(),
+                addMemberDTO.udpAddress(),
                 false,
                 addMemberDTO.isActive());
         return node.getDiscoveryService()
@@ -114,10 +114,10 @@ public class MemberController {
             @RequestBody UpdateMemberDTO updateMemberDTO) {
         Mono<Void> addMemberMono = node.getDiscoveryService().updateMemberInfo(
                 id,
-                updateMemberDTO.getIsSeed(),
-                updateMemberDTO.getIsLeaderEligible(),
-                updateMemberDTO.getIsActive(),
-                updateMemberDTO.getPriority());
+                updateMemberDTO.isSeed(),
+                updateMemberDTO.isLeaderEligible(),
+                updateMemberDTO.isActive(),
+                updateMemberDTO.priority());
         return addMemberMono.thenReturn(ResponseFactory.OK);
     }
 

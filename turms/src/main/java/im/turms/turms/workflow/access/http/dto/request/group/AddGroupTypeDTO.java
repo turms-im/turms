@@ -20,30 +20,20 @@ package im.turms.turms.workflow.access.http.dto.request.group;
 import im.turms.common.constant.GroupInvitationStrategy;
 import im.turms.common.constant.GroupJoinStrategy;
 import im.turms.common.constant.GroupUpdateStrategy;
-import lombok.Data;
 
 /**
  * @author James Chen
  */
-@Data
-public final class AddGroupTypeDTO {
-    private final String name;
-
-    private final Integer groupSizeLimit;
-
-    private final GroupInvitationStrategy invitationStrategy;
-
-    private final GroupJoinStrategy joinStrategy;
-
-    private final GroupUpdateStrategy groupInfoUpdateStrategy;
-
-    private final GroupUpdateStrategy memberInfoUpdateStrategy;
-
-    private final Boolean guestSpeakable;
-
-    private final Boolean selfInfoUpdatable;
-
-    private final Boolean enableReadReceipt;
-
-    private final Boolean messageEditable;
+public record AddGroupTypeDTO(
+        String name,
+        Integer groupSizeLimit,
+        GroupInvitationStrategy invitationStrategy,
+        GroupJoinStrategy joinStrategy,
+        GroupUpdateStrategy groupInfoUpdateStrategy,
+        GroupUpdateStrategy memberInfoUpdateStrategy,
+        Boolean guestSpeakable,
+        Boolean selfInfoUpdatable,
+        Boolean enableReadReceipt,
+        Boolean messageEditable
+) {
 }

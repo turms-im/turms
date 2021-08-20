@@ -34,8 +34,8 @@ public class ServiceResponseCodec implements Codec<ServiceResponse> {
 
     @Override
     public void write(ByteBuf output, ServiceResponse data) {
-        output.writeShort((short) data.getCode().getBusinessCode());
-        CodecUtil.writeString(output, data.getReason());
+        output.writeShort((short) data.code().getBusinessCode());
+        CodecUtil.writeString(output, data.reason());
     }
 
     @Override
@@ -59,14 +59,14 @@ public class ServiceResponseCodec implements Codec<ServiceResponse> {
 
     @Override
     public int initialCapacity(ServiceResponse data) {
-        String reason = data.getReason();
+        String reason = data.reason();
         int reasonLength = reason == null ? 0 : reason.length();
         return Short.BYTES * 2 + reasonLength;
     }
 
     @Override
     public ByteBuf byteBufToComposite(ServiceResponse data) {
-        TurmsNotification.Data dataForRequester = data.getDataForRequester();
+        TurmsNotification.Data dataForRequester = data.dataForRequester();
         return dataForRequester != null
                 ? ProtoUtil.getDirectByteBuffer(dataForRequester)
                 : null;

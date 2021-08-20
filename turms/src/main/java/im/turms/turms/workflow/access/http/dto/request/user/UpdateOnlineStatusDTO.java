@@ -18,12 +18,11 @@
 package im.turms.turms.workflow.access.http.dto.request.user;
 
 import im.turms.common.constant.UserStatus;
-import lombok.Data;
 
 /**
  * @author James Chen
  */
-@Data
-public final class UpdateOnlineStatusDTO {
-    private final UserStatus onlineStatus;
+public record UpdateOnlineStatusDTO(
+        UserStatus onlineStatus
+) {
 }

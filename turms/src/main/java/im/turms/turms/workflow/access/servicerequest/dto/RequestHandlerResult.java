@@ -21,32 +21,29 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.util.ProtoUtil;
-import lombok.Data;
 
 import java.util.Set;
 
 /**
  * @author James Chen
  */
-@Data
-public class RequestHandlerResult {
-
-    private final TurmsNotification.Data dataForRequester;
-    private final boolean forwardDataForRecipientsToOtherSenderOnlineDevices;
-    private final Set<Long> recipients;
-    private final TurmsRequest dataForRecipients;
-    private final TurmsStatusCode code;
-    private final String reason;
-
+public record RequestHandlerResult(
+        TurmsNotification.Data dataForRequester,
+        boolean forwardDataForRecipientsToOtherSenderOnlineDevices,
+        Set<Long> recipients,
+        TurmsRequest dataForRecipients,
+        TurmsStatusCode code,
+        String reason
+) {
     @Override
     public String toString() {
-        return "RequestHandlerResult{" +
+        return "RequestHandlerResult[" +
                 "dataForRequester=" + ProtoUtil.toLogString(dataForRequester) +
                 ", forwardDataForRecipientsToOtherSenderOnlineDevices=" + forwardDataForRecipientsToOtherSenderOnlineDevices +
                 ", recipients=" + recipients +
                 ", dataForRecipients=" + ProtoUtil.toLogString(dataForRecipients) +
                 ", code=" + code +
-                ", reason='" + reason + '\'' +
-                '}';
+                ", reason=" + reason +
+                ']';
     }
 }

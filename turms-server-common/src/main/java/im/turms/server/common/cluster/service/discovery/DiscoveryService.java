@@ -156,12 +156,12 @@ public class DiscoveryService implements ClusterService {
                 discoveryProperties.getHeartbeatTimeoutSeconds(),
                 discoveryProperties.getHeartbeatIntervalSeconds());
         serviceAddressManager.addOnAddressesChangedListener(addresses -> {
-            String nodeHost = addresses.getMemberHost();
-            String metricsApiAddress = addresses.getMetricsApiAddress();
-            String adminApiAddress = addresses.getAdminApiAddress();
-            String wsAddress = addresses.getWsAddress();
-            String tcpAddress = addresses.getTcpAddress();
-            String udpAddress = addresses.getUdpAddress();
+            String nodeHost = addresses.memberHost();
+            String metricsApiAddress = addresses.metricsApiAddress();
+            String adminApiAddress = addresses.adminApiAddress();
+            String wsAddress = addresses.wsAddress();
+            String tcpAddress = addresses.tcpAddress();
+            String udpAddress = addresses.udpAddress();
             Update update = Update.newBuilder(6)
                     .setIfNotNull(Member.Fields.memberHost, nodeHost)
                     .setIfNotNull(Member.Fields.metricsApiAddress, metricsApiAddress)

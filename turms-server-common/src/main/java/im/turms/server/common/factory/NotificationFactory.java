@@ -54,20 +54,20 @@ public final class NotificationFactory {
     }
 
     public static TurmsNotification create(ThrowableInfo info, long requestId) {
-        TurmsStatusCode code = info.getCode();
+        TurmsStatusCode code = info.code();
         TurmsNotification.Builder builder = TurmsNotification
                 .newBuilder()
                 .setRequestId(requestId)
                 .setCode(code.getBusinessCode());
-        String reason = info.getReason();
+        String reason = info.reason();
         trySetReason(builder, reason, code);
         return builder.build();
     }
 
     public static TurmsNotification create(CloseReason closeReason) {
-        TurmsStatusCode statusCode = closeReason.getBusinessStatusCode();
-        SessionCloseStatus closeStatus = closeReason.getCloseStatus();
-        String reason = closeReason.getReason();
+        TurmsStatusCode statusCode = closeReason.businessStatusCode();
+        SessionCloseStatus closeStatus = closeReason.closeStatus();
+        String reason = closeReason.reason();
         TurmsNotification.Builder builder = TurmsNotification
                 .newBuilder()
                 .setCloseStatus(closeStatus.getCode());

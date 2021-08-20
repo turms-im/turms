@@ -71,14 +71,14 @@ public class GroupInvitationController {
     public Mono<ResponseEntity<ResponseDTO<GroupInvitationDTO>>> addGroupInvitation(
             @RequestBody AddGroupInvitationDTO addGroupInvitationDTO) {
         Mono<GroupInvitationDTO> createMono = groupInvitationService.createGroupInvitation(
-                        addGroupInvitationDTO.getId(),
-                        addGroupInvitationDTO.getGroupId(),
-                        addGroupInvitationDTO.getInviterId(),
-                        addGroupInvitationDTO.getInviteeId(),
-                        addGroupInvitationDTO.getContent(),
-                        addGroupInvitationDTO.getStatus(),
-                        addGroupInvitationDTO.getCreationDate(),
-                        addGroupInvitationDTO.getResponseDate())
+                        addGroupInvitationDTO.id(),
+                        addGroupInvitationDTO.groupId(),
+                        addGroupInvitationDTO.inviterId(),
+                        addGroupInvitationDTO.inviteeId(),
+                        addGroupInvitationDTO.content(),
+                        addGroupInvitationDTO.status(),
+                        addGroupInvitationDTO.creationDate(),
+                        addGroupInvitationDTO.responseDate())
                 .map(invitation -> new GroupInvitationDTO(invitation, groupInvitationService.getModelExpirationDate()));
         return ResponseFactory.okIfTruthy(createMono);
     }
@@ -162,12 +162,12 @@ public class GroupInvitationController {
             @RequestBody UpdateGroupInvitationDTO updateGroupInvitationDTO) {
         Mono<UpdateResultDTO> updateMono = groupInvitationService.updateInvitations(
                         ids,
-                        updateGroupInvitationDTO.getInviterId(),
-                        updateGroupInvitationDTO.getInviteeId(),
-                        updateGroupInvitationDTO.getContent(),
-                        updateGroupInvitationDTO.getStatus(),
-                        updateGroupInvitationDTO.getCreationDate(),
-                        updateGroupInvitationDTO.getResponseDate())
+                        updateGroupInvitationDTO.inviterId(),
+                        updateGroupInvitationDTO.inviteeId(),
+                        updateGroupInvitationDTO.content(),
+                        updateGroupInvitationDTO.status(),
+                        updateGroupInvitationDTO.creationDate(),
+                        updateGroupInvitationDTO.responseDate())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

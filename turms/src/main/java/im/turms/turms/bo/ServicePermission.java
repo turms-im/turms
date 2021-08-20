@@ -18,21 +18,16 @@
 package im.turms.turms.bo;
 
 import im.turms.server.common.constant.TurmsStatusCode;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 /**
  * @author James Chen
  */
-@Data
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ServicePermission {
+public record ServicePermission(
+        TurmsStatusCode code,
+        String reason
+) {
 
     public static final ServicePermission OK = new ServicePermission(TurmsStatusCode.OK, null);
-
-    private final TurmsStatusCode code;
-    private final String reason;
 
     public static ServicePermission get(TurmsStatusCode code) {
         return new ServicePermission(code, null);

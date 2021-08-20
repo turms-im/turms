@@ -204,11 +204,11 @@ public class TurmsRedisClient {
             key.retain();
         }
         return (Mono<T>) commands
-                .createFlux(() -> commandBuilder.evalsha(script.getDigest(), script.getOutputType(), keys))
+                .createFlux(() -> commandBuilder.evalsha(script.digest(), script.outputType(), keys))
                 .onErrorResume(e -> {
                     if (exceptionContainsNoScriptException(e)) {
                         return commands.createFlux(
-                                () -> commandBuilder.eval(script.getScript(), script.getOutputType(), keys));
+                                () -> commandBuilder.eval(script.script(), script.outputType(), keys));
                     }
                     return Flux.error(e);
                 })

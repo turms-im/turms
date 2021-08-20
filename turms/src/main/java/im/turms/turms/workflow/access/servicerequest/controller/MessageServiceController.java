@@ -87,7 +87,7 @@ public class MessageServiceController {
     @ServiceRequestMapping(CREATE_MESSAGE_REQUEST)
     public ClientRequestHandler handleCreateMessageRequest() {
         return clientRequest -> {
-            CreateMessageRequest request = clientRequest.getTurmsRequest().getCreateMessageRequest();
+            CreateMessageRequest request = clientRequest.turmsRequest().getCreateMessageRequest();
             if (request.hasIsSystemMessage() && request.getIsSystemMessage()) {
                 return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Users cannot send the system message"));
             }
@@ -100,7 +100,7 @@ public class MessageServiceController {
             long targetId = isGroupMessage ? request.getGroupId() : request.getRecipientId();
             if (request.hasMessageId()) {
                 messageAndRelatedUserIdsMono = messageService.authAndCloneAndSaveMessage(
-                        clientRequest.getUserId(),
+                        clientRequest.userId(),
                         request.getMessageId(),
                         isGroupMessage,
                         false,
@@ -117,7 +117,7 @@ public class MessageServiceController {
                 Date deliveryDate = new Date(request.getDeliveryDate());
                 messageAndRelatedUserIdsMono = messageService.authAndSaveMessage(
                         null,
-                        clientRequest.getUserId(),
+                        clientRequest.userId(),
                         targetId,
                         isGroupMessage,
                         false,
@@ -138,7 +138,7 @@ public class MessageServiceController {
                     }
                     TurmsRequest dataForRecipients;
                     if (request.hasMessageId()) {
-                        dataForRecipients = clientRequest.getTurmsRequest()
+                        dataForRecipients = clientRequest.turmsRequest()
                                 .toBuilder()
                                 .setCreateMessageRequest(ProtoModelUtil.cloneAndFillMessageRequest(request, message))
                                 .build();
@@ -148,7 +148,7 @@ public class MessageServiceController {
                         if (messageService.getTimeType() == TimeType.LOCAL_SERVER_TIME) {
                             requestBuilder.setDeliveryDate(message.getDeliveryDate().getTime());
                         }
-                        dataForRecipients = clientRequest.getTurmsRequest()
+                        dataForRecipients = clientRequest.turmsRequest()
                                 .toBuilder()
                                 .setCreateMessageRequest(requestBuilder)
                                 .build();
@@ -159,9 +159,9 @@ public class MessageServiceController {
                             node.getSharedProperties().getService().getMessage().isSendMessageToOtherSenderOnlineDevices(),
                             dataForRecipients);
                 } else if (hasDataForRecipients) {
-                    TurmsRequest dataForRecipients = clientRequest.getTurmsRequest();
+                    TurmsRequest dataForRecipients = clientRequest.turmsRequest();
                     if (messageService.getTimeType() == TimeType.LOCAL_SERVER_TIME) {
-                        dataForRecipients = clientRequest.getTurmsRequest().toBuilder()
+                        dataForRecipients = clientRequest.turmsRequest().toBuilder()
                                 .setCreateMessageRequest(request.toBuilder().setDeliveryDate(System.currentTimeMillis()))
                                 .build();
                     }
@@ -178,7 +178,7 @@ public class MessageServiceController {
     @ServiceRequestMapping(QUERY_MESSAGES_REQUEST)
     public ClientRequestHandler handleQueryMessagesRequest() {
         return clientRequest -> {
-            QueryMessagesRequest request = clientRequest.getTurmsRequest().getQueryMessagesRequest();
+            QueryMessagesRequest request = clientRequest.turmsRequest().getQueryMessagesRequest();
             List<Long> idList = request.getIdsCount() > 0 ? request.getIdsList() : null;
             Boolean areGroupMessages = request.hasAreGroupMessages() ? request.getAreGroupMessages() : null;
             Boolean areSystemMessages = request.hasAreSystemMessages() ? request.getAreSystemMessages() : null;
@@ -195,7 +195,7 @@ public class MessageServiceController {
                         ? node.getSharedProperties().getService().getMessage().getDefaultAvailableMessagesNumberWithTotal()
                         : null;
             }
-            Long userId = clientRequest.getUserId();
+            Long userId = clientRequest.userId();
             DateRange dateRange = DateRange.of(deliveryDateAfter, deliveryDateBefore);
             return messageService.authAndQueryCompleteMessages(
                             true,
@@ -230,14 +230,14 @@ public class MessageServiceController {
                                                 null,
                                                 senderKey.isGroupMessage(),
                                                 null,
-                                                Set.of(senderKey.getFromId()),
-                                                Set.of(clientRequest.getUserId()),
+                                                Set.of(senderKey.fromId()),
+                                                Set.of(clientRequest.userId()),
                                                 dateRange,
                                                 null)
                                         .map(total -> MessagesWithTotal.newBuilder()
                                                 .setTotal(total.intValue())
                                                 .setIsGroupMessage(senderKey.isGroupMessage())
-                                                .setFromId(senderKey.getFromId())
+                                                .setFromId(senderKey.fromId())
                                                 .addAllMessages(
                                                         Collections2.transform(messages, m -> ProtoModelUtil.message2proto(m).build()))
                                                 .build());
@@ -281,7 +281,7 @@ public class MessageServiceController {
     @ServiceRequestMapping(UPDATE_MESSAGE_REQUEST)
     public ClientRequestHandler handleUpdateMessageRequest() {
         return clientRequest -> {
-            UpdateMessageRequest request = clientRequest.getTurmsRequest().getUpdateMessageRequest();
+            UpdateMessageRequest request = clientRequest.turmsRequest().getUpdateMessageRequest();
             long messageId = request.getMessageId();
             String text = request.hasText() ? request.getText() : null;
             List<byte[]> records = null;
@@ -293,7 +293,7 @@ public class MessageServiceController {
             }
             Date recallDate = request.hasRecallDate() ? new Date(request.getRecallDate()) : null;
             return messageService.authAndUpdateMessage(
-                            clientRequest.getUserId(),
+                            clientRequest.userId(),
                             messageId,
                             text,
                             records,
@@ -304,7 +304,7 @@ public class MessageServiceController {
                                     .collect(Collectors.toSet())
                                     .map(recipientIds -> recipientIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
-                                            : RequestHandlerResultFactory.get(recipientIds, clientRequest.getTurmsRequest()));
+                                            : RequestHandlerResultFactory.get(recipientIds, clientRequest.turmsRequest()));
                         } else {
                             return Mono.just(RequestHandlerResultFactory.OK);
                         }

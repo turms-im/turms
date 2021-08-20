@@ -17,17 +17,15 @@
 
 package im.turms.turms.workflow.access.http.dto.request.group;
 
-import lombok.Data;
-
 import java.util.Set;
 
 /**
  * @author James Chen
  */
-@Data
-public final class AddGroupJoinQuestionDTO {
-    private final Long groupId;
-    private final String question;
-    private final Set<String> answers;
-    private final Integer score;
+public record AddGroupJoinQuestionDTO(
+        Long groupId,
+        String question,
+        Set<String> answers,
+        Integer score
+) {
 }

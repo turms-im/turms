@@ -49,23 +49,23 @@ public final class ClientApiLogging {
                            long requestTime,
                            ServiceResponse response,
                            long processingTime) {
-        TurmsNotification.Data dataForRequester = response.getDataForRequester();
+        TurmsNotification.Data dataForRequester = response.dataForRequester();
         String responseType = dataForRequester == null ? "" : dataForRequester.getKindCase().name();
         String message = String.join(LOG_FIELD_DELIMITER,
                 // session information
-                request.getUserId().toString(),
-                request.getDeviceType().name(),
+                request.userId().toString(),
+                request.deviceType().name(),
                 serviceRequest.getIpStr(),
                 // request information
-                request.getRequestId().toString(),
-                request.getTurmsRequest().getKindCase().name(),
+                request.requestId().toString(),
+                request.turmsRequest().getKindCase().name(),
                 String.valueOf(requestSize),
                 Instant.ofEpochMilli(requestTime).toString(),
                 // response information
-                String.valueOf(response.getCode().getBusinessCode()),
+                String.valueOf(response.code().getBusinessCode()),
                 responseType,
                 String.valueOf(processingTime));
-        if (response.getCode().isServerError()) {
+        if (response.code().isServerError()) {
             CommonClientApiLogging.logger.error(message);
         } else {
             CommonClientApiLogging.logger.info(message);

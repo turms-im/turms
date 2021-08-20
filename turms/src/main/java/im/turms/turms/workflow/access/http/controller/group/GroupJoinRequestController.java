@@ -71,14 +71,14 @@ public class GroupJoinRequestController {
     public Mono<ResponseEntity<ResponseDTO<GroupJoinRequestDTO>>> addGroupJoinRequest(
             @RequestBody AddGroupJoinRequestDTO addGroupJoinRequestDTO) {
         Mono<GroupJoinRequestDTO> createMono = groupJoinRequestService.createGroupJoinRequest(
-                        addGroupJoinRequestDTO.getId(),
-                        addGroupJoinRequestDTO.getGroupId(),
-                        addGroupJoinRequestDTO.getRequesterId(),
-                        addGroupJoinRequestDTO.getResponderId(),
-                        addGroupJoinRequestDTO.getContent(),
-                        addGroupJoinRequestDTO.getStatus(),
-                        addGroupJoinRequestDTO.getCreationDate(),
-                        addGroupJoinRequestDTO.getResponseDate())
+                        addGroupJoinRequestDTO.id(),
+                        addGroupJoinRequestDTO.groupId(),
+                        addGroupJoinRequestDTO.requesterId(),
+                        addGroupJoinRequestDTO.responderId(),
+                        addGroupJoinRequestDTO.content(),
+                        addGroupJoinRequestDTO.status(),
+                        addGroupJoinRequestDTO.creationDate(),
+                        addGroupJoinRequestDTO.responseDate())
                 .map(request -> new GroupJoinRequestDTO(request, groupJoinRequestService.getModelExpirationDate()));
         return ResponseFactory.okIfTruthy(createMono);
     }
@@ -162,12 +162,12 @@ public class GroupJoinRequestController {
             @RequestBody UpdateGroupJoinRequestDTO updateGroupJoinRequestDTO) {
         Mono<UpdateResultDTO> updateMono = groupJoinRequestService.updateJoinRequests(
                         ids,
-                        updateGroupJoinRequestDTO.getRequesterId(),
-                        updateGroupJoinRequestDTO.getResponderId(),
-                        updateGroupJoinRequestDTO.getContent(),
-                        updateGroupJoinRequestDTO.getStatus(),
-                        updateGroupJoinRequestDTO.getCreationDate(),
-                        updateGroupJoinRequestDTO.getResponseDate())
+                        updateGroupJoinRequestDTO.requesterId(),
+                        updateGroupJoinRequestDTO.responderId(),
+                        updateGroupJoinRequestDTO.content(),
+                        updateGroupJoinRequestDTO.status(),
+                        updateGroupJoinRequestDTO.creationDate(),
+                        updateGroupJoinRequestDTO.responseDate())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

@@ -32,8 +32,8 @@ public class GeoUserSessionIdCodec implements TurmsRedisCodec<UserSessionId> {
     @Override
     public ByteBuf encode(UserSessionId sessionId) {
         return UnpooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES + Byte.BYTES)
-                .writeLong(sessionId.getUserId())
-                .writeByte(sessionId.getDeviceType().getNumber());
+                .writeLong(sessionId.userId())
+                .writeByte(sessionId.deviceType().getNumber());
     }
 
     @Override

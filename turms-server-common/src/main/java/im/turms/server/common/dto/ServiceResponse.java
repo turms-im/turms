@@ -20,27 +20,23 @@ package im.turms.server.common.dto;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.util.ProtoUtil;
-import lombok.Data;
 
 import javax.annotation.Nullable;
 
 /**
  * @author James Chen
  */
-@Data
-public final class ServiceResponse {
-
-    @Nullable
-    private final TurmsNotification.Data dataForRequester;
-    private final TurmsStatusCode code;
-    private final String reason;
-
+public record ServiceResponse(
+        @Nullable TurmsNotification.Data dataForRequester,
+        TurmsStatusCode code,
+        String reason
+) {
     @Override
     public String toString() {
-        return "ServiceResponse{" +
+        return "ServiceResponse[" +
                 "dataForRequester=" + ProtoUtil.toLogString(dataForRequester) +
                 ", code=" + code +
-                ", reason='" + reason + '\'' +
-                '}';
+                ", reason=" + reason +
+                ']';
     }
 }

@@ -21,7 +21,6 @@ import im.turms.server.common.util.ByteBufUtil;
 import io.lettuce.core.ScriptOutputType;
 import io.lettuce.core.codec.Base16;
 import io.netty.buffer.ByteBuf;
-import lombok.Data;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
@@ -29,25 +28,23 @@ import java.io.IOException;
 /**
  * @author James Chen
  */
-@Data
-public class RedisScript {
-
+public record RedisScript(
+        ByteBuf script,
+        ByteBuf digest,
+        ScriptOutputType outputType
+) {
     private static final int MAX_SCRIPT_SIZE = 1024;
 
-    private final ByteBuf script;
-    private final ByteBuf digest;
-    private final ScriptOutputType outputType;
-
-    public RedisScript(ClassPathResource resource, ScriptOutputType outputType) {
-        this.outputType = outputType;
+    public static RedisScript get(ClassPathResource resource, ScriptOutputType outputType) {
         try {
             byte[] bytes = resource.getInputStream().readAllBytes();
             if (bytes.length > MAX_SCRIPT_SIZE) {
                 String error = "The script cannot be larger than " + MAX_SCRIPT_SIZE + ": " + resource.getPath();
                 throw new IllegalStateException(error);
             }
-            script = ByteBufUtil.getUnreleasableDirectBuffer(bytes);
-            digest = ByteBufUtil.getUnreleasableDirectBuffer(Base16.digest(bytes).getBytes());
+            return new RedisScript(ByteBufUtil.getUnreleasableDirectBuffer(bytes),
+                    ByteBufUtil.getUnreleasableDirectBuffer(Base16.digest(bytes).getBytes()),
+                    outputType);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

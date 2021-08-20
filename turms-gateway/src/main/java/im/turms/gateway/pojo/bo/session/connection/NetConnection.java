@@ -65,7 +65,7 @@ public abstract class NetConnection {
     public void close(@NotNull CloseReason closeReason) {
         isConnected = false;
         isConnectionRecovering = false;
-        isSwitchingToUdp = closeReason.getCloseStatus().equals(SessionCloseStatus.SWITCH);
+        isSwitchingToUdp = closeReason.closeStatus().equals(SessionCloseStatus.SWITCH);
     }
 
     public void close() {

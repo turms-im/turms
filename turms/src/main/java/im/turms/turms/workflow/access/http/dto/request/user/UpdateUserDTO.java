@@ -18,26 +18,19 @@
 package im.turms.turms.workflow.access.http.dto.request.user;
 
 import im.turms.common.constant.ProfileAccessStrategy;
-import lombok.Data;
 
 import java.util.Date;
 
 /**
  * @author James Chen
  */
-@Data
-public final class UpdateUserDTO {
-    private final String password;
-
-    private final String name;
-
-    private final String intro;
-
-    private final ProfileAccessStrategy profileAccess;
-
-    private final Long permissionGroupId;
-
-    private final Date registrationDate;
-
-    private final Boolean isActive;
+public record UpdateUserDTO(
+        String password,
+        String name,
+        String intro,
+        ProfileAccessStrategy profileAccess,
+        Long permissionGroupId,
+        Date registrationDate,
+        Boolean isActive
+) {
 }

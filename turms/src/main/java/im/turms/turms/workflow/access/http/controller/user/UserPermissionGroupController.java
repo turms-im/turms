@@ -65,15 +65,15 @@ public class UserPermissionGroupController {
     @RequiredPermission(AdminPermission.USER_PERMISSION_GROUP_CREATE)
     public Mono<ResponseEntity<ResponseDTO<UserPermissionGroup>>> addUserPermissionGroup(
             @RequestBody AddUserPermissionGroupDTO addUserPermissionGroupDTO) {
-        Set<Long> creatableGroupTypesIds = addUserPermissionGroupDTO.getCreatableGroupTypeIds();
+        Set<Long> creatableGroupTypesIds = addUserPermissionGroupDTO.creatableGroupTypeIds();
         creatableGroupTypesIds = creatableGroupTypesIds != null ? creatableGroupTypesIds : Collections.emptySet();
-        Map<Long, Integer> groupTypeLimits = addUserPermissionGroupDTO.getGroupTypeLimits();
+        Map<Long, Integer> groupTypeLimits = addUserPermissionGroupDTO.groupTypeLimits();
         groupTypeLimits = groupTypeLimits != null ? groupTypeLimits : Collections.emptyMap();
         Mono<UserPermissionGroup> userPermissionGroupMono = userPermissionGroupService.addUserPermissionGroup(
-                addUserPermissionGroupDTO.getId(),
+                addUserPermissionGroupDTO.id(),
                 creatableGroupTypesIds,
-                addUserPermissionGroupDTO.getOwnedGroupLimit(),
-                addUserPermissionGroupDTO.getOwnedGroupLimitForEachGroupType(),
+                addUserPermissionGroupDTO.ownedGroupLimit(),
+                addUserPermissionGroupDTO.ownedGroupLimitForEachGroupType(),
                 groupTypeLimits);
         return ResponseFactory.okIfTruthy(userPermissionGroupMono);
     }
@@ -105,10 +105,10 @@ public class UserPermissionGroupController {
             @RequestBody UpdateUserPermissionGroupDTO updateUserPermissionGroupDTO) {
         Mono<UpdateResultDTO> updateMono = userPermissionGroupService.updateUserPermissionGroups(
                         ids,
-                        updateUserPermissionGroupDTO.getCreatableGroupTypeIds(),
-                        updateUserPermissionGroupDTO.getOwnedGroupLimit(),
-                        updateUserPermissionGroupDTO.getOwnedGroupLimitForEachGroupType(),
-                        updateUserPermissionGroupDTO.getGroupTypeLimits())
+                        updateUserPermissionGroupDTO.creatableGroupTypeIds(),
+                        updateUserPermissionGroupDTO.ownedGroupLimit(),
+                        updateUserPermissionGroupDTO.ownedGroupLimitForEachGroupType(),
+                        updateUserPermissionGroupDTO.groupTypeLimits())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

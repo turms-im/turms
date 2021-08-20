@@ -63,12 +63,12 @@ public class ConversationServiceController {
     @ServiceRequestMapping(QUERY_CONVERSATIONS_REQUEST)
     public ClientRequestHandler handleQueryConversationsRequest() {
         return clientRequest -> {
-            QueryConversationsRequest request = clientRequest.getTurmsRequest()
+            QueryConversationsRequest request = clientRequest.turmsRequest()
                     .getQueryConversationsRequest();
             List<Long> targetIds = request.getTargetIdsList();
             Mono<TurmsNotification.Data> dataFlux;
             if (!targetIds.isEmpty()) {
-                dataFlux = conversationService.queryPrivateConversations(clientRequest.getUserId(), targetIds)
+                dataFlux = conversationService.queryPrivateConversations(clientRequest.userId(), targetIds)
                         .map(conversation -> ProtoModelUtil.privateConversation2proto(conversation).build())
                         .collect(CollectorUtil.toList(targetIds.size()))
                         .map(conversations -> TurmsNotification.Data
@@ -112,11 +112,11 @@ public class ConversationServiceController {
             if (!node.getSharedProperties().getService().getConversation().getTypingStatus().isEnabled()) {
                 return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.UPDATING_TYPING_STATUS_IS_DISABLED));
             }
-            UpdateTypingStatusRequest request = clientRequest.getTurmsRequest()
+            UpdateTypingStatusRequest request = clientRequest.turmsRequest()
                     .getUpdateTypingStatusRequest();
             return Mono.just(RequestHandlerResultFactory.get(
                     request.getToId(),
-                    clientRequest.getTurmsRequest(),
+                    clientRequest.turmsRequest(),
                     TurmsStatusCode.OK));
         };
     }
@@ -124,13 +124,13 @@ public class ConversationServiceController {
     @ServiceRequestMapping(UPDATE_CONVERSATION_REQUEST)
     public ClientRequestHandler handleUpdateConversationRequest() {
         return clientRequest -> {
-            UpdateConversationRequest request = clientRequest.getTurmsRequest()
+            UpdateConversationRequest request = clientRequest.turmsRequest()
                     .getUpdateConversationRequest();
             if (!request.hasTargetId() && !request.hasGroupId()) {
                 return Mono.just(RequestHandlerResultFactory
                         .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The targetId and groupId must not all null"));
             }
-            Long requesterId = clientRequest.getUserId();
+            Long requesterId = clientRequest.userId();
             long readDateValue = request.getReadDate();
             Date readDate = new Date(readDateValue);
             boolean isUpdatePrivateConversationRequest = request.hasTargetId();
@@ -149,7 +149,7 @@ public class ConversationServiceController {
                             .isNotifyPrivateConversationParticipantAfterReadDateUpdated()) {
                         return Mono.just(RequestHandlerResultFactory.get(
                                 targetId,
-                                clientRequest.getTurmsRequest(),
+                                clientRequest.turmsRequest(),
                                 TurmsStatusCode.OK));
                     }
                 } else if (node.getSharedProperties().getService().getNotification()
@@ -158,7 +158,7 @@ public class ConversationServiceController {
                             .collect(CollectorUtil.toSet(50))
                             .map(memberIds -> RequestHandlerResultFactory.get(
                                     memberIds,
-                                    clientRequest.getTurmsRequest()));
+                                    clientRequest.turmsRequest()));
                 }
                 return Mono.just(RequestHandlerResultFactory.OK);
             }));

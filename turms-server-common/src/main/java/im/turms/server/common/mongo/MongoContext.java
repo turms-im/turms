@@ -143,7 +143,7 @@ public class MongoContext {
                 pairs.add(Pair.of(entity, collection));
             } else {
                 entity = ENTITY_FACTORY.parse(clazz);
-                MongoCollection<?> collection = database.getCollection(entity.getCollectionName(), clazz)
+                MongoCollection<?> collection = database.getCollection(entity.collectionName(), clazz)
                         .withWriteConcern(properties.getWriteConcern());
                 entityMap.put(clazz, entity);
                 collectionMap.put(clazz, collection);

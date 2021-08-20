@@ -169,12 +169,12 @@ public final class ProtoModelUtil {
     public static NearbyUser.Builder nearbyUser2proto(@NotNull im.turms.server.common.bo.location.NearbyUser nearbyUser) {
         NearbyUser.Builder builder = NearbyUser
                 .newBuilder();
-        UserSessionId sessionId = nearbyUser.getSessionId();
-        Long userId = sessionId.getUserId();
-        DeviceType deviceType = sessionId.getDeviceType();
-        GeoCoordinates coordinates = nearbyUser.getCoordinates();
-        Integer distance = nearbyUser.getDistance();
-        User info = nearbyUser.getInfo();
+        UserSessionId sessionId = nearbyUser.sessionId();
+        Long userId = sessionId.userId();
+        DeviceType deviceType = sessionId.deviceType();
+        GeoCoordinates coordinates = nearbyUser.coordinates();
+        Integer distance = nearbyUser.distance();
+        User info = nearbyUser.info();
         if (userId != null) {
             builder.setUserId(userId);
         }

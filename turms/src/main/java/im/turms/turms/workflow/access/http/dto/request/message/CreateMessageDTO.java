@@ -17,22 +17,20 @@
 
 package im.turms.turms.workflow.access.http.dto.request.message;
 
-import lombok.Data;
-
 import java.util.List;
 
 /**
  * @author James Chen
  */
-@Data
-public final class CreateMessageDTO {
-    private final Long id;
-    private final Boolean isGroupMessage;
-    private final Boolean isSystemMessage;
-    private final String text;
-    private final List<byte[]> records;
-    private final Long senderId;
-    private final Long targetId;
-    private final Integer burnAfter;
-    private final Long referenceId;
+public record CreateMessageDTO(
+        Long id,
+        Boolean isGroupMessage,
+        Boolean isSystemMessage,
+        String text,
+        List<byte[]> records,
+        Long senderId,
+        Long targetId,
+        Integer burnAfter,
+        Long referenceId
+) {
 }

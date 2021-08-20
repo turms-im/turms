@@ -20,25 +20,18 @@ package im.turms.server.common.bo.common;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.util.DateUtil;
-import lombok.Data;
 
 import java.util.Date;
 
 /**
  * @author James Chen
  */
-@Data
-public final class DateRange {
+public record DateRange(Date start, Date end) {
 
-    private final Date start;
-    private final Date end;
-
-    private DateRange(Date start, Date end) {
+    public DateRange {
         if (start != null && end != null && end.before(start)) {
             throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The end date must not be before the start date");
         }
-        this.start = start;
-        this.end = end;
     }
 
     public static DateRange of(Date start, Date end) {
@@ -53,8 +46,8 @@ public final class DateRange {
         if (range == null || equals(range)) {
             return this;
         }
-        return new DateRange(DateUtil.max(start, range.getStart()),
-                DateUtil.min(end, range.getEnd()));
+        return new DateRange(DateUtil.max(start, range.start()),
+                DateUtil.min(end, range.end()));
     }
 
     public DateRange move(long millis) {

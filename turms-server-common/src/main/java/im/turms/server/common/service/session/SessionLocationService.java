@@ -24,7 +24,6 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.plugin.base.AbstractTurmsPluginManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.location.LocationProperties;
 import im.turms.server.common.property.env.common.location.UsersNearbyRequestProperties;
@@ -52,7 +51,6 @@ import java.util.Date;
 public class SessionLocationService {
 
     private final Node node;
-    private final AbstractTurmsPluginManager turmsPluginManager;
     @Getter
     private final boolean locationEnabled;
     @Getter
@@ -61,11 +59,9 @@ public class SessionLocationService {
 
     public SessionLocationService(
             Node node,
-            AbstractTurmsPluginManager turmsPluginManager,
             TurmsPropertiesManager turmsPropertiesManager,
             TurmsRedisClientManager locationRedisClientManager) {
         this.node = node;
-        this.turmsPluginManager = turmsPluginManager;
         this.locationRedisClientManager = locationRedisClientManager;
         LocationProperties locationProperties = turmsPropertiesManager.getLocalProperties().getLocation();
         locationEnabled = locationProperties.isEnabled();

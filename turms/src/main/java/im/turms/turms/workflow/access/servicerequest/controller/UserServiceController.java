@@ -103,9 +103,9 @@ public class UserServiceController {
     @ServiceRequestMapping(QUERY_USER_PROFILE_REQUEST)
     public ClientRequestHandler handleQueryUserProfileRequest() {
         return clientRequest -> {
-            QueryUserProfileRequest request = clientRequest.getTurmsRequest().getQueryUserProfileRequest();
+            QueryUserProfileRequest request = clientRequest.turmsRequest().getQueryUserProfileRequest();
             return userService.authAndQueryUserProfile(
-                            clientRequest.getUserId(),
+                            clientRequest.userId(),
                             request.getUserId(),
                             false)
                     .map(user -> {
@@ -123,12 +123,12 @@ public class UserServiceController {
     @ServiceRequestMapping(QUERY_NEARBY_USERS_REQUEST)
     public ClientRequestHandler handleQueryNearbyUsersRequest() {
         return clientRequest -> {
-            QueryNearbyUsersRequest request = clientRequest.getTurmsRequest().getQueryNearbyUsersRequest();
+            QueryNearbyUsersRequest request = clientRequest.turmsRequest().getQueryNearbyUsersRequest();
             Integer distance = request.hasDistance() ? (int) request.getDistance() : null;
             Short maxNumber = request.hasMaxNumber() ? (short) request.getMaxNumber() : null;
             return usersNearbyService.queryNearbyUsers(
-                            clientRequest.getUserId(),
-                            clientRequest.getDeviceType(),
+                            clientRequest.userId(),
+                            clientRequest.deviceType(),
                             new Point(request.getLongitude(), request.getLatitude()),
                             maxNumber,
                             distance,
@@ -154,7 +154,7 @@ public class UserServiceController {
     @ServiceRequestMapping(QUERY_USER_ONLINE_STATUSES_REQUEST)
     public ClientRequestHandler handleQueryUsersOnlineStatusRequest() {
         return clientRequest -> {
-            QueryUserOnlineStatusesRequest request = clientRequest.getTurmsRequest().getQueryUserOnlineStatusesRequest();
+            QueryUserOnlineStatusesRequest request = clientRequest.turmsRequest().getQueryUserOnlineStatusesRequest();
             if (request.getUserIdsCount() == 0) {
                 return Mono.empty();
             }
@@ -187,10 +187,10 @@ public class UserServiceController {
     @ServiceRequestMapping(UPDATE_USER_LOCATION_REQUEST)
     public ClientRequestHandler handleUpdateUserLocationRequest() {
         return clientRequest -> {
-            UpdateUserLocationRequest request = clientRequest.getTurmsRequest().getUpdateUserLocationRequest();
+            UpdateUserLocationRequest request = clientRequest.turmsRequest().getUpdateUserLocationRequest();
             Mono<Void> updateMono = sessionLocationService.upsertUserLocation(
-                    clientRequest.getUserId(),
-                    clientRequest.getDeviceType(),
+                    clientRequest.userId(),
+                    clientRequest.deviceType(),
                     new Point(request.getLatitude(), request.getLongitude()),
                     new Date());
             return updateMono.thenReturn(RequestHandlerResultFactory.OK);
@@ -205,7 +205,7 @@ public class UserServiceController {
     @ServiceRequestMapping(UPDATE_USER_ONLINE_STATUS_REQUEST)
     public ClientRequestHandler handleUpdateUserOnlineStatusRequest() {
         return clientRequest -> {
-            UpdateUserOnlineStatusRequest request = clientRequest.getTurmsRequest().getUpdateUserOnlineStatusRequest();
+            UpdateUserOnlineStatusRequest request = clientRequest.turmsRequest().getUpdateUserOnlineStatusRequest();
             UserStatus userStatus = request.getUserStatus();
             if (userStatus == UserStatus.UNRECOGNIZED) {
                 return Mono.just(RequestHandlerResultFactory
@@ -215,10 +215,10 @@ public class UserServiceController {
             Mono<Boolean> updateMono;
             if (userStatus == UserStatus.OFFLINE) {
                 updateMono = deviceTypes != null
-                        ? sessionService.disconnect(clientRequest.getUserId(), deviceTypes, SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE)
-                        : sessionService.disconnect(clientRequest.getUserId(), SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE);
+                        ? sessionService.disconnect(clientRequest.userId(), deviceTypes, SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE)
+                        : sessionService.disconnect(clientRequest.userId(), SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE);
             } else {
-                updateMono = userStatusService.updateOnlineUserStatusIfPresent(clientRequest.getUserId(), userStatus);
+                updateMono = userStatusService.updateOnlineUserStatusIfPresent(clientRequest.userId(), userStatus);
             }
             boolean notifyMembers =
                     node.getSharedProperties().getService().getNotification().isNotifyMembersAfterOtherMemberOnlineStatusUpdated();
@@ -228,10 +228,10 @@ public class UserServiceController {
                 return updateMono.thenReturn(RequestHandlerResultFactory.OK);
             } else {
                 Mono<Set<Long>> queryMemberIds = notifyMembers
-                        ? groupMemberService.queryMemberIdsInUsersJoinedGroups(Set.of(clientRequest.getUserId()))
+                        ? groupMemberService.queryMemberIdsInUsersJoinedGroups(Set.of(clientRequest.userId()))
                         : Mono.just(Collections.emptySet());
                 Mono<Set<Long>> queryRelatedUserIds = notifyRelatedUser
-                        ? userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.getUserId()), false)
+                        ? userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.userId()), false)
                         .collect(Collectors.toSet())
                         : Mono.just(Collections.emptySet());
                 return queryMemberIds.zipWith(queryRelatedUserIds)
@@ -239,7 +239,7 @@ public class UserServiceController {
                             results.getT1().addAll(results.getT2());
                             return results.getT1().isEmpty()
                                     ? RequestHandlerResultFactory.OK
-                                    : RequestHandlerResultFactory.get(results.getT1(), clientRequest.getTurmsRequest());
+                                    : RequestHandlerResultFactory.get(results.getT1(), clientRequest.turmsRequest());
                         });
             }
         };
@@ -248,13 +248,13 @@ public class UserServiceController {
     @ServiceRequestMapping(UPDATE_USER_REQUEST)
     public ClientRequestHandler handleUpdateUserRequest() {
         return clientRequest -> {
-            UpdateUserRequest request = clientRequest.getTurmsRequest().getUpdateUserRequest();
+            UpdateUserRequest request = clientRequest.turmsRequest().getUpdateUserRequest();
             String password = request.hasPassword() ? request.getPassword() : null;
             String name = request.hasName() ? request.getName() : null;
             String intro = request.hasIntro() ? request.getIntro() : null;
             ProfileAccessStrategy profileAccessStrategy = request.getProfileAccessStrategy();
             return userService.updateUser(
-                            clientRequest.getUserId(),
+                            clientRequest.userId(),
                             password,
                             name,
                             intro,
@@ -265,11 +265,11 @@ public class UserServiceController {
                     .then(Mono.defer(() -> {
                         if (node.getSharedProperties().getService().getNotification()
                                 .isNotifyRelatedUsersAfterOtherRelatedUserInfoUpdated()) {
-                            return userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.getUserId()), false)
+                            return userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.userId()), false)
                                     .collect(Collectors.toSet())
                                     .map(relatedUserIds -> relatedUserIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
-                                            : RequestHandlerResultFactory.get(relatedUserIds, clientRequest.getTurmsRequest()));
+                                            : RequestHandlerResultFactory.get(relatedUserIds, clientRequest.turmsRequest()));
                         } else {
                             return Mono.just(RequestHandlerResultFactory.OK);
                         }

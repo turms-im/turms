@@ -90,7 +90,7 @@ public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
             return Mono.error(throwable);
         }
         ErrorAttributes errorAttributes = ErrorAttributesFactory.parse(throwable);
-        int status = errorAttributes.getStatus();
+        int status = errorAttributes.status();
         ServerResponse.BodyBuilder builder = ServerResponse
                 .status(status)
                 .contentType(MediaType.APPLICATION_JSON);

@@ -90,10 +90,10 @@ public class GroupQuestionController {
     public Mono<ResponseEntity<ResponseDTO<GroupJoinQuestion>>> addGroupJoinQuestion(
             @RequestBody AddGroupJoinQuestionDTO addGroupJoinQuestionDTO) {
         Mono<GroupJoinQuestion> createMono = groupQuestionService.createGroupJoinQuestion(
-                addGroupJoinQuestionDTO.getGroupId(),
-                addGroupJoinQuestionDTO.getQuestion(),
-                addGroupJoinQuestionDTO.getAnswers(),
-                addGroupJoinQuestionDTO.getScore());
+                addGroupJoinQuestionDTO.groupId(),
+                addGroupJoinQuestionDTO.question(),
+                addGroupJoinQuestionDTO.answers(),
+                addGroupJoinQuestionDTO.score());
         return ResponseFactory.okIfTruthy(createMono);
     }
 
@@ -104,10 +104,10 @@ public class GroupQuestionController {
             @RequestBody UpdateGroupJoinQuestionDTO updateGroupJoinQuestionDTO) {
         Mono<UpdateResultDTO> updateMono = groupQuestionService.updateGroupJoinQuestions(
                         ids,
-                        updateGroupJoinQuestionDTO.getGroupId(),
-                        updateGroupJoinQuestionDTO.getQuestion(),
-                        updateGroupJoinQuestionDTO.getAnswers(),
-                        updateGroupJoinQuestionDTO.getScore())
+                        updateGroupJoinQuestionDTO.groupId(),
+                        updateGroupJoinQuestionDTO.question(),
+                        updateGroupJoinQuestionDTO.answers(),
+                        updateGroupJoinQuestionDTO.score())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

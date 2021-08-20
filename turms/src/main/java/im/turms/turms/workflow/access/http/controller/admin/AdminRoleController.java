@@ -69,10 +69,10 @@ public class AdminRoleController {
             @RequestBody AddAdminRoleDTO addAdminRoleDTO) {
         Mono<AdminRole> adminRoleMono = adminRoleService.authAndAddAdminRole(
                 requesterAccount,
-                addAdminRoleDTO.getId(),
-                addAdminRoleDTO.getName(),
-                addAdminRoleDTO.getPermissions(),
-                addAdminRoleDTO.getRank());
+                addAdminRoleDTO.id(),
+                addAdminRoleDTO.name(),
+                addAdminRoleDTO.permissions(),
+                addAdminRoleDTO.rank());
         return ResponseFactory.okIfTruthy(adminRoleMono);
     }
 
@@ -129,9 +129,9 @@ public class AdminRoleController {
         Mono<UpdateResult> updateMono = adminRoleService.authAndUpdateAdminRole(
                 requesterAccount,
                 ids,
-                updateAdminRoleDTO.getName(),
-                updateAdminRoleDTO.getPermissions(),
-                updateAdminRoleDTO.getRank());
+                updateAdminRoleDTO.name(),
+                updateAdminRoleDTO.permissions(),
+                updateAdminRoleDTO.rank());
         return ResponseFactory.updateResult(updateMono);
     }
 

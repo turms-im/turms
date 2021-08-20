@@ -218,7 +218,7 @@ public class GroupService {
         Long finalGroupTypeId = groupTypeId;
         return isAllowedToCreateGroupAndHaveGroupType(creatorId, groupTypeId)
                 .flatMap(result -> {
-                    TurmsStatusCode code = result.getCode();
+                    TurmsStatusCode code = result.code();
                     if (code == TurmsStatusCode.OK) {
                         return createGroup(creatorId,
                                 ownerId,
@@ -232,7 +232,7 @@ public class GroupService {
                                 muteEndDate,
                                 isActive);
                     } else {
-                        return Mono.error(TurmsBusinessException.get(code, result.getReason()));
+                        return Mono.error(TurmsBusinessException.get(code, result.reason()));
                     }
                 });
     }
@@ -430,9 +430,9 @@ public class GroupService {
                         .flatMap(groupTypeId ->
                                 isAllowedToCreateGroupAndHaveGroupType(successorId, groupTypeId)
                                         .flatMap(result -> {
-                                            TurmsStatusCode code = result.getCode();
+                                            TurmsStatusCode code = result.code();
                                             if (code != TurmsStatusCode.OK) {
-                                                return Mono.error(TurmsBusinessException.get(code, result.getReason()));
+                                                return Mono.error(TurmsBusinessException.get(code, result.reason()));
                                             }
                                             if (quitAfterTransfer) {
                                                 return groupMemberService.deleteGroupMembers(groupId, ownerId, session, false);
@@ -597,23 +597,18 @@ public class GroupService {
                 .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.UPDATE_INFO_OF_NON_EXISTING_GROUP)))
                 .flatMap(groupType -> {
                     GroupUpdateStrategy groupUpdateStrategy = groupType.getGroupInfoUpdateStrategy();
-                    switch (groupUpdateStrategy) {
-                        case OWNER:
-                            return groupMemberService.isOwner(requesterId, groupId)
-                                    .map(isOwner -> isOwner ? TurmsStatusCode.OK : TurmsStatusCode.NOT_OWNER_TO_UPDATE_GROUP_INFO);
-                        case OWNER_MANAGER:
-                            return groupMemberService.isOwnerOrManager(requesterId, groupId)
-                                    .map(isOwnerOrManager -> isOwnerOrManager
-                                            ? TurmsStatusCode.OK
-                                            : TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_INFO);
-                        case OWNER_MANAGER_MEMBER:
-                            return groupMemberService.isOwnerOrManagerOrMember(requesterId, groupId)
-                                    .map(isMember -> isMember ? TurmsStatusCode.OK : TurmsStatusCode.NOT_MEMBER_TO_UPDATE_GROUP_INFO);
-                        case ALL:
-                            return Mono.just(TurmsStatusCode.OK);
-                        default:
-                            return Mono.error(new IllegalStateException("Unexpected value: " + groupUpdateStrategy));
-                    }
+                    return switch (groupUpdateStrategy) {
+                        case OWNER -> groupMemberService.isOwner(requesterId, groupId)
+                                .map(isOwner -> isOwner ? TurmsStatusCode.OK : TurmsStatusCode.NOT_OWNER_TO_UPDATE_GROUP_INFO);
+                        case OWNER_MANAGER -> groupMemberService.isOwnerOrManager(requesterId, groupId)
+                                .map(isOwnerOrManager -> isOwnerOrManager
+                                        ? TurmsStatusCode.OK
+                                        : TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_INFO);
+                        case OWNER_MANAGER_MEMBER -> groupMemberService.isOwnerOrManagerOrMember(requesterId, groupId)
+                                .map(isMember -> isMember ? TurmsStatusCode.OK : TurmsStatusCode.NOT_MEMBER_TO_UPDATE_GROUP_INFO);
+                        case ALL -> Mono.just(TurmsStatusCode.OK);
+                        default -> Mono.error(new IllegalStateException("Unexpected value: " + groupUpdateStrategy));
+                    };
                 })
                 .flatMap(code -> code == TurmsStatusCode.OK
                         ? updateGroupInformation(groupId, typeId, creatorId, ownerId, name, intro,
@@ -734,9 +729,9 @@ public class GroupService {
         Mono<UserPermissionGroup> userPermissionGroupMono = userPermissionGroupService.queryUserPermissionGroupByUserId(requesterId);
         return userPermissionGroupMono
                 .flatMap(userPermissionGroup -> isAllowedToCreateGroup(requesterId, userPermissionGroup)
-                        .flatMap(permission -> permission.getCode() == TurmsStatusCode.OK
+                        .flatMap(permission -> permission.code() == TurmsStatusCode.OK
                                 ? isAllowedHaveGroupType(requesterId, groupTypeId, userPermissionGroup)
-                                : Mono.just(ServicePermission.get(permission.getCode(), permission.getReason()))));
+                                : Mono.just(ServicePermission.get(permission.code(), permission.reason()))));
     }
 
     /**

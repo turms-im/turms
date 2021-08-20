@@ -63,11 +63,11 @@ import java.util.Set;
 public class UserStatusService {
 
     private final RedisScript addOnlineUserScript =
-            new RedisScript(new ClassPathResource("redis/try_add_online_user_with_ttl.lua"), ScriptOutputType.BOOLEAN);
+            RedisScript.get(new ClassPathResource("redis/try_add_online_user_with_ttl.lua"), ScriptOutputType.BOOLEAN);
     private final RedisScript updateUsersTtlScript =
-            new RedisScript(new ClassPathResource("redis/update_users_ttl.lua"), ScriptOutputType.BOOLEAN);
+            RedisScript.get(new ClassPathResource("redis/update_users_ttl.lua"), ScriptOutputType.BOOLEAN);
     private final RedisScript updateOnlineUserStatusIfPresent =
-            new RedisScript(new ClassPathResource("redis/update_online_user_status_if_present.lua"), ScriptOutputType.BOOLEAN);
+            RedisScript.get(new ClassPathResource("redis/update_online_user_status_if_present.lua"), ScriptOutputType.BOOLEAN);
 
     /**
      * <pre>
@@ -138,7 +138,7 @@ public class UserStatusService {
         }
         return getUserSessionsStatus(userId)
                 .flatMap(sessionsStatus -> {
-                    String nodeId = sessionsStatus.getOnlineDeviceTypeAndNodeIdMap().get(deviceType);
+                    String nodeId = sessionsStatus.onlineDeviceTypeAndNodeIdMap().get(deviceType);
                     return nodeId != null ? Mono.just(nodeId) : Mono.empty();
                 });
     }
@@ -155,7 +155,7 @@ public class UserStatusService {
         if (cacheUserSessionsStatus) {
             UserSessionsStatus sessionsStatus = userSessionsStatusCache.getIfPresent(userId);
             if (sessionsStatus != null) {
-                Map<DeviceType, String> deviceTypeAndNodeIdMap = sessionsStatus.getOnlineDeviceTypeAndNodeIdMap();
+                Map<DeviceType, String> deviceTypeAndNodeIdMap = sessionsStatus.onlineDeviceTypeAndNodeIdMap();
                 return deviceTypeAndNodeIdMap != null && !deviceTypeAndNodeIdMap.isEmpty()
                         ? Mono.just(deviceTypeAndNodeIdMap)
                         : Mono.empty();
@@ -163,7 +163,7 @@ public class UserStatusService {
         }
         return fetchUserSessionsStatus(userId)
                 .flatMap(sessionsStatus -> {
-                    Map<DeviceType, String> deviceTypeAndNodeIdMap = sessionsStatus.getOnlineDeviceTypeAndNodeIdMap();
+                    Map<DeviceType, String> deviceTypeAndNodeIdMap = sessionsStatus.onlineDeviceTypeAndNodeIdMap();
                     return deviceTypeAndNodeIdMap != null && !deviceTypeAndNodeIdMap.isEmpty()
                             ? Mono.just(deviceTypeAndNodeIdMap)
                             : Mono.empty();

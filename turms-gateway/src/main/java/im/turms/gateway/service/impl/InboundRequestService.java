@@ -122,16 +122,16 @@ public class InboundRequestService {
     }
 
     private TurmsNotification getNotificationFromResponse(@NotNull ServiceResponse response, long requestId) {
-        TurmsStatusCode code = response.getCode();
+        TurmsStatusCode code = response.code();
         if (code == null) {
             throw new IllegalArgumentException("The business code should not be null in the service response: " + response);
         }
         TurmsNotification.Builder builder = TurmsNotification.newBuilder();
-        String reason = response.getReason();
+        String reason = response.reason();
         if (reason != null) {
             builder.setReason(reason);
         }
-        TurmsNotification.Data dataForRequester = response.getDataForRequester();
+        TurmsNotification.Data dataForRequester = response.dataForRequester();
         if (dataForRequester != null) {
             builder.setData(dataForRequester);
         }

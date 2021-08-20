@@ -113,7 +113,7 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryConversationsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result -> assertThat(result.getDataForRequester().hasConversations()).isTrue());
+        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().hasConversations()).isTrue());
     }
 
     @Test
@@ -126,7 +126,7 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryConversationsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result -> assertThat(result.getDataForRequester().hasConversations()).isTrue());
+        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().hasConversations()).isTrue());
     }
 
 }

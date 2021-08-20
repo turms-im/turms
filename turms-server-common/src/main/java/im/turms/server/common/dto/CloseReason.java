@@ -20,23 +20,17 @@ package im.turms.server.common.dto;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.ThrowableInfo;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 import javax.annotation.Nullable;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Data
-public class CloseReason {
-    private final SessionCloseStatus closeStatus;
-    @Nullable
-    private final TurmsStatusCode businessStatusCode;
-    @Nullable
-    private final String reason;
+public record CloseReason(
+        SessionCloseStatus closeStatus,
+        @Nullable TurmsStatusCode businessStatusCode,
+        @Nullable String reason
+) {
 
     public static CloseReason get(SessionCloseStatus closeStatus) {
         return new CloseReason(closeStatus, null, null);
@@ -44,7 +38,7 @@ public class CloseReason {
 
     public static CloseReason get(Throwable throwable) {
         ThrowableInfo info = ThrowableInfo.get(throwable);
-        TurmsStatusCode code = info.getCode();
+        TurmsStatusCode code = info.code();
         SessionCloseStatus closeStatus;
         if (TurmsStatusCode.isServerError(code.getBusinessCode())) {
             closeStatus = SessionCloseStatus.SERVER_ERROR;
@@ -57,11 +51,11 @@ public class CloseReason {
                 closeStatus = SessionCloseStatus.UNKNOWN_ERROR;
             }
         }
-        return new CloseReason(closeStatus, code, info.getReason());
+        return new CloseReason(closeStatus, code, info.reason());
     }
 
     public boolean isServerError() {
-        return (businessStatusCode != null && businessStatusCode.isServerError())
+        return businessStatusCode != null && businessStatusCode.isServerError()
                 || closeStatus.isServerError();
     }
 

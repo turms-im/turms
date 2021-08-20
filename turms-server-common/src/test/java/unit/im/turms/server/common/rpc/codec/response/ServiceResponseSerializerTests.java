@@ -39,9 +39,9 @@ class ServiceResponseSerializerTests extends BaseCodecTest {
         ServiceResponse actualRequest = writeDataAndReadBuffer(new ServiceResponseCodec(),
                 expectedResponse);
 
-        assertThat(actualRequest.getCode()).isEqualTo(expectedResponse.getCode());
-        assertThat(actualRequest.getReason()).isEqualTo(expectedResponse.getReason());
-        assertThat(actualRequest.getDataForRequester()).isEqualTo(expectedResponse.getDataForRequester());
+        assertThat(actualRequest.code()).isEqualTo(expectedResponse.code());
+        assertThat(actualRequest.reason()).isEqualTo(expectedResponse.reason());
+        assertThat(actualRequest.dataForRequester()).isEqualTo(expectedResponse.dataForRequester());
     }
 
 }

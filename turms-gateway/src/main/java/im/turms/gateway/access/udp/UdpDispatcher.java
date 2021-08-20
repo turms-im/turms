@@ -84,8 +84,8 @@ public class UdpDispatcher {
                                         .onErrorContinue((throwable, o) -> handleExceptionForIncomingPacket(throwable))
                                         .map(code -> new DatagramPacket(UdpSignalResponseBufferPool.get(code), packet.sender())));
                         Flux<DatagramPacket> notificationFlux = notificationSink.asFlux()
-                                .map(notification -> new DatagramPacket(UdpSignalResponseBufferPool.get(notification.getType()),
-                                        notification.getRecipientAddress()));
+                                .map(notification -> new DatagramPacket(UdpSignalResponseBufferPool.get(notification.type()),
+                                        notification.recipientAddress()));
                         Flux<DatagramPacket> outputFlux = responseFlux.mergeWith(notificationFlux);
                         outbound.sendObject(outputFlux, o -> true)
                                 .then()

@@ -79,14 +79,14 @@ public class UserController {
     @RequiredPermission(USER_CREATE)
     public Mono<ResponseEntity<ResponseDTO<User>>> addUser(@RequestBody AddUserDTO addUserDTO) {
         Mono<User> addUser = userService.addUser(
-                addUserDTO.getId(),
-                addUserDTO.getPassword(),
-                addUserDTO.getName(),
-                addUserDTO.getIntro(),
-                addUserDTO.getProfileAccess(),
-                addUserDTO.getPermissionGroupId(),
-                addUserDTO.getRegistrationDate(),
-                addUserDTO.getIsActive());
+                addUserDTO.id(),
+                addUserDTO.password(),
+                addUserDTO.name(),
+                addUserDTO.intro(),
+                addUserDTO.profileAccess(),
+                addUserDTO.permissionGroupId(),
+                addUserDTO.registrationDate(),
+                addUserDTO.isActive());
         return ResponseFactory.okIfTruthy(addUser);
     }
 
@@ -208,13 +208,13 @@ public class UserController {
             @RequestBody UpdateUserDTO updateUserDTO) {
         Mono<UpdateResultDTO> updateMono = userService.updateUsers(
                         ids,
-                        updateUserDTO.getPassword(),
-                        updateUserDTO.getName(),
-                        updateUserDTO.getIntro(),
-                        updateUserDTO.getProfileAccess(),
-                        updateUserDTO.getPermissionGroupId(),
-                        updateUserDTO.getRegistrationDate(),
-                        updateUserDTO.getIsActive())
+                        updateUserDTO.password(),
+                        updateUserDTO.name(),
+                        updateUserDTO.intro(),
+                        updateUserDTO.profileAccess(),
+                        updateUserDTO.permissionGroupId(),
+                        updateUserDTO.registrationDate(),
+                        updateUserDTO.isActive())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

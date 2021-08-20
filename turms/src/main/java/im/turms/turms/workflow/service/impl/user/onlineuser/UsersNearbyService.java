@@ -80,7 +80,7 @@ public class UsersNearbyService {
             resultMono = nearbyUserFlux
                     .collectMap(geo -> {
                         if (geo.getMember() instanceof UserSessionId sessionId) {
-                            return sessionId.getUserId();
+                            return sessionId.userId();
                         }
                         return (Long) geo.getMember();
                     }, geo -> geo)

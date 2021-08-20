@@ -18,21 +18,20 @@
 package im.turms.turms.workflow.access.http.dto.request.user;
 
 import im.turms.common.constant.RequestStatus;
-import lombok.Data;
 
 import java.util.Date;
 
 /**
  * @author James Chen
  */
-@Data
-public final class AddFriendRequestDTO {
-    private final Long id;
-    private final Long requesterId;
-    private final Long recipientId;
-    private final String content;
-    private final RequestStatus status;
-    private final String reason;
-    private final Date creationDate;
-    private final Date responseDate;
+public record AddFriendRequestDTO(
+        Long id,
+        Long requesterId,
+        Long recipientId,
+        String content,
+        RequestStatus status,
+        String reason,
+        Date creationDate,
+        Date responseDate
+) {
 }

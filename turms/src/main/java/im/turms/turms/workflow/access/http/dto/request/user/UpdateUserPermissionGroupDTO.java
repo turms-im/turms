@@ -17,18 +17,16 @@
 
 package im.turms.turms.workflow.access.http.dto.request.user;
 
-import lombok.Data;
-
 import java.util.Map;
 import java.util.Set;
 
 /**
  * @author James Chen
  */
-@Data
-public final class UpdateUserPermissionGroupDTO {
-    private final Set<Long> creatableGroupTypeIds;
-    private final Integer ownedGroupLimit;
-    private final Integer ownedGroupLimitForEachGroupType;
-    private final Map<Long, Integer> groupTypeLimits;
+public record UpdateUserPermissionGroupDTO(
+        Set<Long> creatableGroupTypeIds,
+        Integer ownedGroupLimit,
+        Integer ownedGroupLimitForEachGroupType,
+        Map<Long, Integer> groupTypeLimits
+) {
 }

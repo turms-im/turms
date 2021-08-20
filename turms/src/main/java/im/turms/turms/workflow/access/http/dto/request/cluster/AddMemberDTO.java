@@ -18,28 +18,27 @@
 package im.turms.turms.workflow.access.http.dto.request.cluster;
 
 import im.turms.server.common.cluster.node.NodeType;
-import lombok.Data;
 
 import java.util.Date;
 
 /**
  * @author James Chen
  */
-@Data
-public class AddMemberDTO {
-    private final String nodeId;
-    private final NodeType nodeType;
-    private final String version;
-    private final boolean isSeed;
-    private final boolean isLeaderEligible;
-    private final Date registrationDate;
-    private final int priority;
-    private final String memberHost;
-    private final int memberPort;
-    private final String metricsApiAddress;
-    private final String adminApiAddress;
-    private final String wsAddress;
-    private final String tcpAddress;
-    private final String udpAddress;
-    private final boolean isActive;
+public record AddMemberDTO(
+        String nodeId,
+        NodeType nodeType,
+        String version,
+        boolean isSeed,
+        boolean isLeaderEligible,
+        Date registrationDate,
+        int priority,
+        String memberHost,
+        int memberPort,
+        String metricsApiAddress,
+        String adminApiAddress,
+        String wsAddress,
+        String tcpAddress,
+        String udpAddress,
+        boolean isActive
+) {
 }

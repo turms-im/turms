@@ -142,9 +142,9 @@ public class GroupMemberService {
         return isAllowedToInviteOrAdd(groupId, requesterId, groupMemberRole)
                 .flatMap(pair -> {
                     ServicePermission permission = pair.getLeft();
-                    TurmsStatusCode code = permission.getCode();
+                    TurmsStatusCode code = permission.code();
                     if (code != TurmsStatusCode.OK) {
-                        return Mono.error(TurmsBusinessException.get(code, permission.getReason()));
+                        return Mono.error(TurmsBusinessException.get(code, permission.reason()));
                     }
                     Mono<Boolean> isBlockedMono = isBlocked(groupId, userId);
                     Mono<Boolean> isGroupActiveMono = groupService.isGroupActiveAndNotDeleted(groupId);

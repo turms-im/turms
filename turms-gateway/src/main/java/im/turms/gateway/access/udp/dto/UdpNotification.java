@@ -18,19 +18,14 @@
 package im.turms.gateway.access.udp.dto;
 
 import im.turms.common.model.dto.udpsignal.UdpNotificationType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
 
 import java.net.InetSocketAddress;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@Getter
-@ToString
-public class UdpNotification {
-    private final InetSocketAddress recipientAddress;
-    private final UdpNotificationType type;
+public record UdpNotification(
+        InetSocketAddress recipientAddress,
+        UdpNotificationType type
+) {
 }

@@ -26,7 +26,7 @@ public class MyPlugin extends TurmsPlugin {
     public static class MyTurmsRequestHandler extends ClientRequestHandler {
         @Override
         public Mono<ClientRequest> transform(@NotNull ClientRequest clientRequest) {
-            TurmsRequest turmsRequest = clientRequest.getTurmsRequest();
+            TurmsRequest turmsRequest = clientRequest.turmsRequest();
             if (turmsRequest.getKindCase() == TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST) {
                 CreateMessageRequest request = turmsRequest.getCreateMessageRequest();
                 CreateMessageRequest.Builder builder = request.toBuilder()
@@ -36,10 +36,11 @@ public class MyPlugin extends TurmsPlugin {
                         .build();
             }
             logger.info("Hi Turms, I have handled the request");
-            ClientRequest newRequest = clientRequest
-                    .toBuilder()
-                    .turmsRequest(turmsRequest)
-                    .build();
+            ClientRequest newRequest = new ClientRequest(
+                    clientRequest.userId(),
+                    clientRequest.deviceType(),
+                    clientRequest.requestId(),
+                    turmsRequest);
             return Mono.just(newRequest);
         }
 

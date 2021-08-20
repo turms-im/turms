@@ -80,10 +80,10 @@ public class AdminController {
             @RequestBody AddAdminDTO addAdminDTO) {
         Mono<Admin> generatedAdmin = adminService.authAndAddAdmin(
                 requesterAccount,
-                addAdminDTO.getAccount(),
-                addAdminDTO.getPassword(),
-                addAdminDTO.getRoleId(),
-                addAdminDTO.getName(),
+                addAdminDTO.account(),
+                addAdminDTO.password(),
+                addAdminDTO.roleId(),
+                addAdminDTO.name(),
                 new Date(),
                 false);
         return ResponseFactory.okIfTruthy(generatedAdmin);
@@ -134,9 +134,9 @@ public class AdminController {
         Mono<UpdateResult> updateMono = adminService.authAndUpdateAdmins(
                 requesterAccount,
                 accounts,
-                updateAdminDTO.getPassword(),
-                updateAdminDTO.getName(),
-                updateAdminDTO.getRoleId());
+                updateAdminDTO.password(),
+                updateAdminDTO.name(),
+                updateAdminDTO.roleId());
         return ResponseFactory.updateResult(updateMono);
     }
 

@@ -17,6 +17,9 @@
 
 package im.turms.server.common.lang;
 
+/**
+ * @author James Chen
+ */
 public final class Null {
 
     public static final Null INSTANCE = new Null();

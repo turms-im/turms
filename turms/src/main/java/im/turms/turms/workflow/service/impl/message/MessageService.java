@@ -300,7 +300,7 @@ public class MessageService {
         QueryOptions options = QueryOptions.newBuilder(closeToDate ? 3 : 2)
                 .paginateIfNotNull(page, size);
         if (closeToDate) {
-            boolean isAsc = deliveryDateRange != null && deliveryDateRange.getStart() != null;
+            boolean isAsc = deliveryDateRange != null && deliveryDateRange.start() != null;
             options.sort(isAsc, Message.Fields.DELIVERY_DATE);
         }
         filter.inIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds);
@@ -711,9 +711,9 @@ public class MessageService {
         }
         return userService.isAllowedToSendMessageToTarget(isGroupMessage, isSystemMessage, senderId, targetId)
                 .flatMap(permission -> {
-                    TurmsStatusCode code = permission.getCode();
+                    TurmsStatusCode code = permission.code();
                     if (code != OK) {
-                        return Mono.error(TurmsBusinessException.get(code, permission.getReason()));
+                        return Mono.error(TurmsBusinessException.get(code, permission.reason()));
                     }
                     Mono<Set<Long>> recipientIdsMono;
                     if (isGroupMessage) {
@@ -858,9 +858,9 @@ public class MessageService {
                                                        @PastOrPresent Date recallDate) {
         return isMessageRecallable(messageId)
                 .flatMap(permission -> {
-                    TurmsStatusCode code = permission.getCode();
+                    TurmsStatusCode code = permission.code();
                     if (code != OK) {
-                        return Mono.error(TurmsBusinessException.get(code, permission.getReason()));
+                        return Mono.error(TurmsBusinessException.get(code, permission.reason()));
                     }
                     return updateMessage(messageId, null, text, records, null, recallDate, null);
                 });

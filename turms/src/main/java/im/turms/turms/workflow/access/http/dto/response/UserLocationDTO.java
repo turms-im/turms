@@ -18,15 +18,14 @@
 package im.turms.turms.workflow.access.http.dto.response;
 
 import im.turms.common.constant.DeviceType;
-import lombok.Data;
 import org.springframework.data.geo.Point;
 
 /**
  * @author James Chen
  */
-@Data
-public class UserLocationDTO {
-    private final Long userId;
-    private final DeviceType deviceType;
-    private final Point coordinates;
+public record UserLocationDTO(
+        Long userId,
+        DeviceType deviceType,
+        Point coordinates
+) {
 }

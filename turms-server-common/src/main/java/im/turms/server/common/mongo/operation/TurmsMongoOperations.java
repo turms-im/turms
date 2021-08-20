@@ -210,7 +210,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         Class<T> clazz = (Class<T>) o.getClass();
         MongoEntity<T> entity = (MongoEntity<T>) context.getEntity(o.getClass());
         MongoCollection<T> collection = context.getCollection(clazz);
-        Bson filter = entity.getShardKey();
+        Bson filter = entity.shardKey();
         if (filter == null) {
             filter = EMPTY_FILTER;
         }
@@ -375,7 +375,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         }
         MongoCollection<T> collection = context.getCollection(clazz);
         Publisher<String> source = collection.createIndexes(indexModels);
-        String collectionName = context.getEntity(clazz).getCollectionName();
+        String collectionName = context.getEntity(clazz).collectionName();
         return Flux.from(source)
                 .then()
                 .doOnError(throwable -> log.error("Failed to index the collection {}", collectionName, throwable))
@@ -409,12 +409,12 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
 
     @Override
     public Mono<Void> shard(MongoDatabase databaseToShard, MongoDatabase adminDatabase, MongoEntity<?> entity) {
-        BsonDocument shardKey = entity.getShardKey();
+        BsonDocument shardKey = entity.shardKey();
         if (shardKey == null) {
             return Mono.empty();
         }
         String dbName = databaseToShard.getName();
-        String namespace = String.format("%s.%s", dbName, entity.getCollectionName());
+        String namespace = String.format("%s.%s", dbName, entity.collectionName());
         Document command = new Document("shardCollection", namespace).append("key", shardKey);
         Mono<Document> shardCollection = Mono.from(adminDatabase.runCommand(command))
                 .doOnError(throwable ->
@@ -433,8 +433,8 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         Mono<Void> ensureIndexes = Mono.empty();
         for (Class<?> clazz : classes) {
             MongoEntity<?> entity = context.getEntity(clazz);
-            List<IndexModel> indexes = entity.getIndexes();
-            IndexModel compoundIndex = entity.getCompoundIndex();
+            List<IndexModel> indexes = entity.indexes();
+            IndexModel compoundIndex = entity.compoundIndex();
             int indexSize = indexes.size();
             if (compoundIndex != null) {
                 List<IndexModel> temp = new ArrayList<>(indexSize + 1);
@@ -445,7 +445,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
             if (!indexes.isEmpty()) {
                 List<IndexModel> finalIndexes = indexes;
                 ensureIndexes = ensureIndexes
-                        .then(Mono.defer(() -> ensureIndexes(entity.getEntityClass(), finalIndexes)));
+                        .then(Mono.defer(() -> ensureIndexes(entity.entityClass(), finalIndexes)));
             }
         }
         return ensureIndexes
@@ -489,7 +489,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public Mono<Void> createCollection(Class<?> clazz) {
         MongoEntity<?> entity = context.getEntity(clazz);
-        Publisher<Void> source = context.getDatabase().createCollection(entity.getCollectionName());
+        Publisher<Void> source = context.getDatabase().createCollection(entity.collectionName());
         return Mono.from(source);
     }
 
@@ -497,7 +497,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     public Mono<Boolean> collectionExists(Class<?> clazz) {
         MongoEntity<?> entity = context.getEntity(clazz);
         return Flux.from(context.getDatabase().listCollectionNames())
-                .filter(name -> name.equals(entity.getCollectionName()))
+                .filter(name -> name.equals(entity.collectionName()))
                 .map(name -> true)
                 .single(false);
     }

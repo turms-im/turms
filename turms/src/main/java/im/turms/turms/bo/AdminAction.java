@@ -18,26 +18,18 @@
 package im.turms.turms.bo;
 
 import com.mongodb.DBObject;
-import lombok.Data;
 
 import java.util.Date;
 
 /**
  * @author James Chen
  */
-@Data
-public final class AdminAction {
-
-    private final String account;
-
-    private final Date logDate;
-
-    private final String ip;
-
-    private final String action;
-
-    private final DBObject params;
-
-    private final DBObject body;
-
+public record AdminAction(
+        String account,
+        Date logDate,
+        String ip,
+        String action,
+        DBObject params,
+        DBObject body
+) {
 }

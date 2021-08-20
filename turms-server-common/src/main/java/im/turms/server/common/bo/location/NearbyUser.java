@@ -20,15 +20,14 @@ package im.turms.server.common.bo.location;
 import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.dao.domain.User;
 import io.lettuce.core.GeoCoordinates;
-import lombok.Data;
 
 /**
  * @author James Chen
  */
-@Data
-public class NearbyUser {
-    private final UserSessionId sessionId;
-    private final GeoCoordinates coordinates;
-    private final Integer distance;
-    private final User info;
+public record NearbyUser(
+        UserSessionId sessionId,
+        GeoCoordinates coordinates,
+        Integer distance,
+        User info
+) {
 }

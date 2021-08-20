@@ -18,17 +18,16 @@
 package im.turms.turms.workflow.access.http.dto.request.admin;
 
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
-import lombok.Data;
 
 import java.util.Set;
 
 /**
  * @author James Chen
  */
-@Data
-public final class AddAdminRoleDTO {
-    private final Long id;
-    private final String name;
-    private final Set<AdminPermission> permissions;
-    private final Integer rank;
+public record AddAdminRoleDTO(
+        Long id,
+        String name,
+        Set<AdminPermission> permissions,
+        Integer rank
+) {
 }

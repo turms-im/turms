@@ -63,16 +63,16 @@ public class GroupTypeController {
     @RequiredPermission(AdminPermission.GROUP_TYPE_CREATE)
     public Mono<ResponseEntity<ResponseDTO<GroupType>>> addGroupType(@RequestBody AddGroupTypeDTO addGroupTypeDTO) {
         Mono<GroupType> addedGroupType = groupTypeService.addGroupType(
-                addGroupTypeDTO.getName(),
-                addGroupTypeDTO.getGroupSizeLimit(),
-                addGroupTypeDTO.getInvitationStrategy(),
-                addGroupTypeDTO.getJoinStrategy(),
-                addGroupTypeDTO.getGroupInfoUpdateStrategy(),
-                addGroupTypeDTO.getMemberInfoUpdateStrategy(),
-                addGroupTypeDTO.getGuestSpeakable(),
-                addGroupTypeDTO.getSelfInfoUpdatable(),
-                addGroupTypeDTO.getEnableReadReceipt(),
-                addGroupTypeDTO.getMessageEditable());
+                addGroupTypeDTO.name(),
+                addGroupTypeDTO.groupSizeLimit(),
+                addGroupTypeDTO.invitationStrategy(),
+                addGroupTypeDTO.joinStrategy(),
+                addGroupTypeDTO.groupInfoUpdateStrategy(),
+                addGroupTypeDTO.memberInfoUpdateStrategy(),
+                addGroupTypeDTO.guestSpeakable(),
+                addGroupTypeDTO.selfInfoUpdatable(),
+                addGroupTypeDTO.enableReadReceipt(),
+                addGroupTypeDTO.messageEditable());
         return ResponseFactory.okIfTruthy(addedGroupType);
     }
 
@@ -103,16 +103,16 @@ public class GroupTypeController {
             @RequestBody UpdateGroupTypeDTO updateGroupTypeDTO) {
         Mono<UpdateResultDTO> updateMono = groupTypeService.updateGroupTypes(
                         ids,
-                        updateGroupTypeDTO.getName(),
-                        updateGroupTypeDTO.getGroupSizeLimit(),
-                        updateGroupTypeDTO.getInvitationStrategy(),
-                        updateGroupTypeDTO.getJoinStrategy(),
-                        updateGroupTypeDTO.getGroupInfoUpdateStrategy(),
-                        updateGroupTypeDTO.getMemberInfoUpdateStrategy(),
-                        updateGroupTypeDTO.getGuestSpeakable(),
-                        updateGroupTypeDTO.getSelfInfoUpdatable(),
-                        updateGroupTypeDTO.getEnableReadReceipt(),
-                        updateGroupTypeDTO.getMessageEditable())
+                        updateGroupTypeDTO.name(),
+                        updateGroupTypeDTO.groupSizeLimit(),
+                        updateGroupTypeDTO.invitationStrategy(),
+                        updateGroupTypeDTO.joinStrategy(),
+                        updateGroupTypeDTO.groupInfoUpdateStrategy(),
+                        updateGroupTypeDTO.memberInfoUpdateStrategy(),
+                        updateGroupTypeDTO.guestSpeakable(),
+                        updateGroupTypeDTO.selfInfoUpdatable(),
+                        updateGroupTypeDTO.enableReadReceipt(),
+                        updateGroupTypeDTO.messageEditable())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

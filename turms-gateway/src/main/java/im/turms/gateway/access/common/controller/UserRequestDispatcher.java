@@ -125,7 +125,7 @@ public class UserRequestDispatcher {
                 .metrics()
                 .onErrorResume(throwable -> {
                     ThrowableInfo info = ThrowableInfo.get(throwable);
-                    if (info.getCode().isServerError()) {
+                    if (info.code().isServerError()) {
                         tracingContext.updateMdc();
                         log.error("Failed to handle the service request: {}", request, throwable);
                     }
@@ -248,8 +248,8 @@ public class UserRequestDispatcher {
     private TurmsNotification getNotificationFromHandlerResult(RequestHandlerResult result, long requestId) {
         TurmsNotification.Builder builder = TurmsNotification.newBuilder()
                 .setRequestId(requestId)
-                .setCode(result.getCode().getBusinessCode());
-        String reason = result.getReason();
+                .setCode(result.code().getBusinessCode());
+        String reason = result.reason();
         if (reason != null) {
             builder.setReason(reason);
         }

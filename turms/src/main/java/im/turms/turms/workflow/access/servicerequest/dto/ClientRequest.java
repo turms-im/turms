@@ -20,29 +20,24 @@ package im.turms.turms.workflow.access.servicerequest.dto;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.util.ProtoUtil;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 
 /**
  * @author James Chen
  */
-@Data
-@AllArgsConstructor
-@Builder(toBuilder = true)
-public class ClientRequest {
-    private final Long userId;
-    private final DeviceType deviceType;
-    private final Long requestId;
-    private final TurmsRequest turmsRequest;
-
+public record ClientRequest(
+        Long userId,
+        DeviceType deviceType,
+        Long requestId,
+        TurmsRequest turmsRequest
+) {
     @Override
     public String toString() {
-        return "ClientRequest{" +
+        return "ClientRequest[" +
                 "userId=" + userId +
                 ", deviceType=" + deviceType +
                 ", requestId=" + requestId +
                 ", turmsRequest=" + ProtoUtil.toLogString(turmsRequest) +
-                '}';
+                ']';
     }
+
 }

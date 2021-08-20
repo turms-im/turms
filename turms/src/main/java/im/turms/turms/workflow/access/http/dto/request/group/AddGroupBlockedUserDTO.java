@@ -17,17 +17,15 @@
 
 package im.turms.turms.workflow.access.http.dto.request.group;
 
-import lombok.Data;
-
 import java.util.Date;
 
 /**
  * @author James Chen
  */
-@Data
-public final class AddGroupBlockedUserDTO {
-    private final Long groupId;
-    private final Long userId;
-    private final Date blockDate;
-    private final Long requesterId;
+public record AddGroupBlockedUserDTO(
+        Long groupId,
+        Long userId,
+        Date blockDate,
+        Long requesterId
+) {
 }

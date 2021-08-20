@@ -19,9 +19,6 @@ package im.turms.server.common.bo.session;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 
 import java.util.Map;
 import java.util.Set;
@@ -29,13 +26,10 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@Builder(toBuilder = true)
-@Data
-public final class UserSessionsStatus {
-
-    private final UserStatus userStatus;
-    private final Map<DeviceType, String> onlineDeviceTypeAndNodeIdMap;
+public record UserSessionsStatus(
+        UserStatus userStatus,
+        Map<DeviceType, String> onlineDeviceTypeAndNodeIdMap
+) {
 
     public String getNodeIdByDeviceType(DeviceType deviceType) {
         return onlineDeviceTypeAndNodeIdMap.get(deviceType);

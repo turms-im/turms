@@ -18,7 +18,6 @@
 package im.turms.turms.workflow.access.http.dto.request.user;
 
 import im.turms.turms.workflow.dao.domain.user.UserRelationship;
-import lombok.Data;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -28,19 +27,15 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-@Data
-public final class UserRelationshipDTO {
-
-    private final Key key;
-    private final Date blockDate;
-    private final Date establishmentDate;
-    private final Set<Integer> groupIndexes;
+public record UserRelationshipDTO(
+        Key key,
+        Date blockDate,
+        Date establishmentDate,
+        Set<Integer> groupIndexes
+) {
 
     public UserRelationshipDTO(Long ownerId, Long relatedUserId, Date blockDate, Date establishmentDate, Set<Integer> groupIndexes) {
-        this.key = new Key(ownerId, relatedUserId);
-        this.blockDate = blockDate;
-        this.establishmentDate = establishmentDate;
-        this.groupIndexes = groupIndexes;
+        this(new Key(ownerId, relatedUserId), blockDate, establishmentDate, groupIndexes);
     }
 
     public static UserRelationshipDTO fromDomain(UserRelationship relationship) {
@@ -56,9 +51,6 @@ public final class UserRelationshipDTO {
                 groupIndexes);
     }
 
-    @Data
-    public static final class Key {
-        private final Long ownerId;
-        private final Long relatedUserId;
+    public static record Key(Long ownerId, Long relatedUserId) {
     }
 }

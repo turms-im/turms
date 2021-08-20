@@ -188,7 +188,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         }
         return clientRequestMono.flatMap(lastClientRequest -> {
             // 3. Validate ClientRequest
-            TurmsRequest lastRequest = lastClientRequest.getTurmsRequest();
+            TurmsRequest lastRequest = lastClientRequest.turmsRequest();
             if (lastRequest == null) {
                 String message = "The TurmsRequest instance is null in the client request: " + lastClientRequest;
                 return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, message));
@@ -220,7 +220,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     .metrics()
                     .defaultIfEmpty(RequestHandlerResultFactory.NO_CONTENT)
                     .doOnSuccess(requestResult -> {
-                        if (requestResult.getCode() == TurmsStatusCode.OK) {
+                        if (requestResult.code() == TurmsStatusCode.OK) {
                             notifyRelatedUsersOfAction(requestResult, userId, deviceType)
                                     .onErrorResume(t -> {
                                         try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
@@ -233,7 +233,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     })
                     .onErrorResume(t -> {
                         ThrowableInfo info = ThrowableInfo.get(t);
-                        if (info.getCode().isServerError()) {
+                        if (info.code().isServerError()) {
                             tracingContext.updateMdc();
                             // Note we log the whole request instead of the request ID for troubleshooting
                             // because CommonClientApiLogging only logs a brief description,
@@ -241,15 +241,15 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                             // and user behavior analysis, so we don't plan to change it
                             log.error("Caught an internal server error when handling the request: " + lastClientRequest, t);
                         }
-                        return Mono.just(RequestHandlerResultFactory.get(info.getCode(), info.getReason()));
+                        return Mono.just(RequestHandlerResultFactory.get(info.code(), info.reason()));
                     })
                     .map(handlerResult -> {
                         ServiceResponse response = ServiceResponseFactory.get(
-                                handlerResult.getDataForRequester(),
-                                handlerResult.getCode(),
-                                handlerResult.getReason());
+                                handlerResult.dataForRequester(),
+                                handlerResult.code(),
+                                handlerResult.reason());
                         // 6. Log
-                        if (response.getCode().isServerError() || apiLoggingContext.shouldLogRequest(requestType)) {
+                        if (response.code().isServerError() || apiLoggingContext.shouldLogRequest(requestType)) {
                             tracingContext.updateMdc();
                             ClientApiLogging
                                     .log(lastClientRequest,
@@ -268,8 +268,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             @NotNull RequestHandlerResult result,
             @NotNull Long requesterId,
             @NotNull DeviceType requesterDevice) {
-        TurmsRequest dataForRecipients = result.getDataForRecipients();
-        Set<Long> recipients = result.getRecipients();
+        TurmsRequest dataForRecipients = result.dataForRecipients();
+        Set<Long> recipients = result.recipients();
         if (dataForRecipients == null || recipients.isEmpty()) {
             return Mono.empty();
         }
@@ -279,7 +279,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 .setRequesterId(requesterId)
                 .build();
         ByteBuf notificationByteBuf = ProtoUtil.getDirectByteBuffer(notificationForRecipients);
-        if (result.isForwardDataForRecipientsToOtherSenderOnlineDevices()) {
+        if (result.forwardDataForRecipientsToOtherSenderOnlineDevices()) {
             notificationByteBuf.retain(2);
             Mono<Boolean> notifyRequesterMono = outboundMessageService
                     .forwardNotification(notificationForRecipients, notificationByteBuf, requesterId, requesterDevice);

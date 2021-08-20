@@ -17,15 +17,13 @@
 
 package im.turms.turms.workflow.access.http.dto.response;
 
-import lombok.Data;
-
 import java.util.Date;
 
 /**
  * @author James Chen
  */
-@Data
-public final class StatisticsRecordDTO {
-    private final Date date;
-    private final Long total;
+public record StatisticsRecordDTO(
+        Date date,
+        Long total
+) {
 }

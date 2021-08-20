@@ -18,21 +18,20 @@
 package im.turms.turms.workflow.access.http.dto.request.group;
 
 import im.turms.common.constant.RequestStatus;
-import lombok.Data;
 
 import java.util.Date;
 
 /**
  * @author James Chen
  */
-@Data
-public final class AddGroupInvitationDTO {
-    private final Long id;
-    private final String content;
-    private final RequestStatus status;
-    private final Date creationDate;
-    private final Date responseDate;
-    private final Long groupId;
-    private final Long inviterId;
-    private final Long inviteeId;
+public record AddGroupInvitationDTO(
+        Long id,
+        String content,
+        RequestStatus status,
+        Date creationDate,
+        Date responseDate,
+        Long groupId,
+        Long inviterId,
+        Long inviteeId
+) {
 }

@@ -239,9 +239,9 @@ class UserStatusServiceIT extends BaseIntegrationTest {
         StepVerifier
                 .create(statusMono)
                 .assertNext(status -> {
-                    assertThat(status.getUserStatus())
+                    assertThat(status.userStatus())
                             .isEqualTo(USER_1_STATUS_AFTER_UPDATED);
-                    assertThat(status.getOnlineDeviceTypeAndNodeIdMap())
+                    assertThat(status.onlineDeviceTypeAndNodeIdMap())
                             .containsOnly(entry(USER_1_DEVICE, LOCAL_NODE_ID), entry(USER_1_DIFF_DEVICE, LOCAL_NODE_ID));
                 })
                 .expectComplete()
@@ -255,8 +255,8 @@ class UserStatusServiceIT extends BaseIntegrationTest {
         StepVerifier
                 .create(statusMono)
                 .assertNext(status -> {
-                    assertThat(status.getUserStatus()).isEqualTo(UserStatus.OFFLINE);
-                    assertThat(status.getOnlineDeviceTypeAndNodeIdMap()).isEmpty();
+                    assertThat(status.userStatus()).isEqualTo(UserStatus.OFFLINE);
+                    assertThat(status.onlineDeviceTypeAndNodeIdMap()).isEmpty();
                 })
                 .expectComplete()
                 .verify();

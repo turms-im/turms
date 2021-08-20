@@ -77,12 +77,12 @@ public class UserRelationshipController {
     @RequiredPermission(USER_RELATIONSHIP_CREATE)
     public Mono<ResponseEntity<ResponseDTO<Void>>> addRelationship(@RequestBody AddRelationshipDTO addRelationshipDTO) {
         Mono<Void> upsertMono = userRelationshipService.upsertOneSidedRelationship(
-                addRelationshipDTO.getOwnerId(),
-                addRelationshipDTO.getRelatedUserId(),
-                addRelationshipDTO.getBlockDate(),
+                addRelationshipDTO.ownerId(),
+                addRelationshipDTO.relatedUserId(),
+                addRelationshipDTO.blockDate(),
                 DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX,
                 null,
-                addRelationshipDTO.getEstablishmentDate(),
+                addRelationshipDTO.establishmentDate(),
                 false,
                 null);
         return upsertMono.thenReturn(ResponseFactory.OK);
@@ -134,8 +134,8 @@ public class UserRelationshipController {
             @RequestBody UpdateRelationshipDTO updateRelationshipDTO) {
         Mono<UpdateResultDTO> updateMono = userRelationshipService.updateUserOneSidedRelationships(
                         CollectionUtil.newSet(keys.getKeys()),
-                        updateRelationshipDTO.getBlockDate(),
-                        updateRelationshipDTO.getEstablishmentDate())
+                        updateRelationshipDTO.blockDate(),
+                        updateRelationshipDTO.establishmentDate())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

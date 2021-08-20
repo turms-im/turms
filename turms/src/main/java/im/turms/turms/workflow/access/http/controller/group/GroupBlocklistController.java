@@ -71,10 +71,10 @@ public class GroupBlocklistController {
     public Mono<ResponseEntity<ResponseDTO<GroupBlockedUser>>> addGroupBlockedUser(
             @RequestBody AddGroupBlockedUserDTO addGroupBlockedUserDTO) {
         Mono<GroupBlockedUser> createMono = groupBlocklistService.addBlockedUser(
-                addGroupBlockedUserDTO.getGroupId(),
-                addGroupBlockedUserDTO.getUserId(),
-                addGroupBlockedUserDTO.getRequesterId(),
-                addGroupBlockedUserDTO.getBlockDate());
+                addGroupBlockedUserDTO.groupId(),
+                addGroupBlockedUserDTO.userId(),
+                addGroupBlockedUserDTO.requesterId(),
+                addGroupBlockedUserDTO.blockDate());
         return ResponseFactory.okIfTruthy(createMono);
     }
 
@@ -130,8 +130,8 @@ public class GroupBlocklistController {
             @RequestBody UpdateGroupBlockedUserDTO updateGroupBlockedUserDTO) {
         Mono<UpdateResultDTO> updateMono = groupBlocklistService.updateBlockedUsers(
                         CollectionUtil.newSet(keys.getKeys()),
-                        updateGroupBlockedUserDTO.getBlockDate(),
-                        updateGroupBlockedUserDTO.getRequesterId())
+                        updateGroupBlockedUserDTO.blockDate(),
+                        updateGroupBlockedUserDTO.requesterId())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

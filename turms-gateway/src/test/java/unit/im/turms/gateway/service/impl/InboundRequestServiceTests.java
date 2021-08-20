@@ -100,7 +100,7 @@ class InboundRequestServiceTests {
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
-                .expectNextMatches(notification -> notification.getCode() == responseForSuccess.getCode().getBusinessCode())
+                .expectNextMatches(notification -> notification.getCode() == responseForSuccess.code().getBusinessCode())
                 .verifyComplete();
     }
 

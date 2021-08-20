@@ -73,8 +73,8 @@ public class Filter implements Bson {
             @NotNull String key,
             @Nullable DateRange dateRange) {
         if (dateRange != null) {
-            Date start = dateRange.getStart();
-            Date end = dateRange.getEnd();
+            Date start = dateRange.start();
+            Date end = dateRange.end();
             if (start != null && end == null) {
                 document.append(key, new BsonDocument("$gte", new BsonDateTime(start.getTime())));
             } else if (start == null && end != null) {

@@ -18,7 +18,6 @@
 package im.turms.server.common.mongo.entity;
 
 import com.mongodb.client.model.IndexModel;
-import lombok.Data;
 import org.bson.BsonDocument;
 import org.springframework.data.mapping.PreferredConstructor;
 
@@ -28,32 +27,22 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-@Data
-public class MongoEntity<T> {
-
-    // Meta
-
-    private final Class<T> entityClass;
-    private final PreferredConstructor<T, ?> constructor;
-
-    // Collection
-
-    private final String collectionName;
-
-    // Shard key, zone and index
-
-    private final BsonDocument shardKey;
-    private final Zone zone;
-    private final IndexModel compoundIndex;
-    private final List<IndexModel> indexes;
-
-    // Field
-
-    private final String idFieldName;
-    private final Map<String, EntityField<?>> fieldMap;
-
+public record MongoEntity<T>(
+        // Meta
+        Class<T> entityClass,
+        PreferredConstructor<T, ?> constructor,
+        // Collection
+        String collectionName,
+        // Shard key, zone and index
+        BsonDocument shardKey,
+        Zone zone,
+        IndexModel compoundIndex,
+        List<IndexModel> indexes,
+        // Field
+        String idFieldName,
+        Map<String, EntityField<?>> fieldMap
+) {
     public <F> EntityField<F> getField(String fieldName) {
         return (EntityField<F>) fieldMap.get(fieldName);
     }
-
 }

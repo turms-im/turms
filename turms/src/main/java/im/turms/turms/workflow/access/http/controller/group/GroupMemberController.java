@@ -68,12 +68,12 @@ public class GroupMemberController {
     @RequiredPermission(AdminPermission.GROUP_MEMBER_CREATE)
     public Mono<ResponseEntity<ResponseDTO<GroupMember>>> addGroupMember(@RequestBody AddGroupMemberDTO addGroupMemberDTO) {
         Mono<GroupMember> createMono = groupMemberService.addGroupMember(
-                addGroupMemberDTO.getGroupId(),
-                addGroupMemberDTO.getUserId(),
-                addGroupMemberDTO.getRole(),
-                addGroupMemberDTO.getName(),
-                addGroupMemberDTO.getJoinDate(),
-                addGroupMemberDTO.getMuteEndDate(),
+                addGroupMemberDTO.groupId(),
+                addGroupMemberDTO.userId(),
+                addGroupMemberDTO.role(),
+                addGroupMemberDTO.name(),
+                addGroupMemberDTO.joinDate(),
+                addGroupMemberDTO.muteEndDate(),
                 null);
         return ResponseFactory.okIfTruthy(createMono);
     }
@@ -138,10 +138,10 @@ public class GroupMemberController {
             @RequestBody UpdateGroupMemberDTO updateGroupMemberDTO) {
         Mono<UpdateResultDTO> updateMono = groupMemberService.updateGroupMembers(
                         CollectionUtil.newSet(keys.getKeys()),
-                        updateGroupMemberDTO.getName(),
-                        updateGroupMemberDTO.getRole(),
-                        updateGroupMemberDTO.getJoinDate(),
-                        updateGroupMemberDTO.getMuteEndDate(),
+                        updateGroupMemberDTO.name(),
+                        updateGroupMemberDTO.role(),
+                        updateGroupMemberDTO.joinDate(),
+                        updateGroupMemberDTO.muteEndDate(),
                         null,
                         true)
                 .map(UpdateResultDTO::get);

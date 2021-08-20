@@ -120,8 +120,8 @@ public class GroupQuestionService {
         }
         List<Mono<Pair<Long, Integer>>> checks = new ArrayList<>(questionIdAndAnswers.size());
         for (GroupQuestionIdAndAnswer entry : questionIdAndAnswers) {
-            checks.add(checkGroupQuestionAnswerAndCountScore(entry.getId(), entry.getAnswer(), groupId)
-                    .map(score -> Pair.of(entry.getId(), score)));
+            checks.add(checkGroupQuestionAnswerAndCountScore(entry.id(), entry.answer(), groupId)
+                    .map(score -> Pair.of(entry.id(), score)));
         }
         return Flux.merge(checks)
                 .collect(CollectorUtil.toList(checks.size()))
@@ -148,7 +148,7 @@ public class GroupQuestionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Long firstQuestionId = questionIdAndAnswers.iterator().next().getId();
+        Long firstQuestionId = questionIdAndAnswers.iterator().next().id();
         return queryGroupId(firstQuestionId)
                 .flatMap(groupId -> groupMemberService.isBlocked(groupId, requesterId)
                         .flatMap(isBlocked -> isBlocked

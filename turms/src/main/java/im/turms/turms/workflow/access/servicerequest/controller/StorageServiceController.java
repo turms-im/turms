@@ -50,12 +50,12 @@ public class StorageServiceController {
     @ServiceRequestMapping(QUERY_SIGNED_GET_URL_REQUEST)
     public ClientRequestHandler handleQuerySignedGetUrlRequest() {
         return clientRequest -> {
-            QuerySignedGetUrlRequest querySignedGetUrlRequest = clientRequest.getTurmsRequest().getQuerySignedGetUrlRequest();
+            QuerySignedGetUrlRequest querySignedGetUrlRequest = clientRequest.turmsRequest().getQuerySignedGetUrlRequest();
             ContentType contentType = querySignedGetUrlRequest.getContentType();
             if (contentType != ContentType.UNRECOGNIZED) {
                 String keyStr = querySignedGetUrlRequest.hasKeyStr() ? querySignedGetUrlRequest.getKeyStr() : null;
                 Long keyNum = querySignedGetUrlRequest.hasKeyNum() ? querySignedGetUrlRequest.getKeyNum() : null;
-                return storageService.queryPresignedGetUrl(clientRequest.getUserId(), contentType, keyStr, keyNum)
+                return storageService.queryPresignedGetUrl(clientRequest.userId(), contentType, keyStr, keyNum)
                         .map(url -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
                                 .setUrl(url)
                                 .build()));
@@ -69,13 +69,13 @@ public class StorageServiceController {
     @ServiceRequestMapping(QUERY_SIGNED_PUT_URL_REQUEST)
     public ClientRequestHandler handleQuerySignedPutUrlRequest() {
         return clientRequest -> {
-            QuerySignedPutUrlRequest querySignedPutUrlRequest = clientRequest.getTurmsRequest().getQuerySignedPutUrlRequest();
+            QuerySignedPutUrlRequest querySignedPutUrlRequest = clientRequest.turmsRequest().getQuerySignedPutUrlRequest();
             ContentType contentType = querySignedPutUrlRequest.getContentType();
             if (contentType != ContentType.UNRECOGNIZED) {
                 long contentLength = querySignedPutUrlRequest.getContentLength();
                 String keyStr = querySignedPutUrlRequest.hasKeyStr() ? querySignedPutUrlRequest.getKeyStr() : null;
                 Long keyNum = querySignedPutUrlRequest.hasKeyNum() ? querySignedPutUrlRequest.getKeyNum() : null;
-                return storageService.queryPresignedPutUrl(clientRequest.getUserId(), contentType, keyStr, keyNum, contentLength)
+                return storageService.queryPresignedPutUrl(clientRequest.userId(), contentType, keyStr, keyNum, contentLength)
                         .map(url -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
                                 .setUrl(url)
                                 .build()));
@@ -89,12 +89,12 @@ public class StorageServiceController {
     @ServiceRequestMapping(DELETE_RESOURCE_REQUEST)
     public ClientRequestHandler handleDeleteResourceRequest() {
         return clientRequest -> {
-            DeleteResourceRequest deleteResourceRequest = clientRequest.getTurmsRequest().getDeleteResourceRequest();
+            DeleteResourceRequest deleteResourceRequest = clientRequest.turmsRequest().getDeleteResourceRequest();
             ContentType contentType = deleteResourceRequest.getContentType();
             if (contentType != ContentType.UNRECOGNIZED) {
                 String keyStr = deleteResourceRequest.hasKeyStr() ? deleteResourceRequest.getKeyStr() : null;
                 Long keyNum = deleteResourceRequest.hasKeyNum() ? deleteResourceRequest.getKeyNum() : null;
-                return storageService.deleteResource(clientRequest.getUserId(), contentType, keyStr, keyNum)
+                return storageService.deleteResource(clientRequest.userId(), contentType, keyStr, keyNum)
                         .thenReturn(RequestHandlerResultFactory.OK);
             } else {
                 return Mono

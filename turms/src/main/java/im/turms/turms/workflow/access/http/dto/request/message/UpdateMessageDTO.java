@@ -17,19 +17,17 @@
 
 package im.turms.turms.workflow.access.http.dto.request.message;
 
-import lombok.Data;
-
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author James Chen
  */
-@Data
-public final class UpdateMessageDTO {
-    private final Boolean isSystemMessage;
-    private final String text;
-    private final List<byte[]> records;
-    private final Integer burnAfter;
-    private final Date recallDate;
+public record UpdateMessageDTO(
+        Boolean isSystemMessage,
+        String text,
+        List<byte[]> records,
+        Integer burnAfter,
+        Date recallDate
+) {
 }

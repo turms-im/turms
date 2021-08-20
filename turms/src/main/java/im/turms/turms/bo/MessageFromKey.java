@@ -17,16 +17,12 @@
 
 package im.turms.turms.bo;
 
-import lombok.Data;
-
 /**
+ * @param fromId group id or sender id
  * @author James Chen
  */
-@Data
-public class MessageFromKey {
-    private final boolean isGroupMessage;
-    /**
-     * group id or sender id
-     */
-    private final long fromId;
+public record MessageFromKey(
+        boolean isGroupMessage,
+        long fromId
+) {
 }

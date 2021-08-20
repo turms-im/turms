@@ -17,15 +17,13 @@
 
 package im.turms.turms.workflow.access.http.dto.request.cluster;
 
-import lombok.Data;
-
 /**
  * @author James Chen
  */
-@Data
-public class UpdateMemberDTO {
-    private final Boolean isSeed;
-    private final Boolean isLeaderEligible;
-    private final Boolean isActive;
-    private final Integer priority;
+public record UpdateMemberDTO(
+        Boolean isSeed,
+        Boolean isLeaderEligible,
+        Boolean isActive,
+        Integer priority
+) {
 }

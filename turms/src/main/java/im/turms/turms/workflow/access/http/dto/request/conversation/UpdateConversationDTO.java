@@ -17,14 +17,12 @@
 
 package im.turms.turms.workflow.access.http.dto.request.conversation;
 
-import lombok.Data;
-
 import java.util.Date;
 
 /**
  * @author James Chen
  */
-@Data
-public final class UpdateConversationDTO {
-    private final Date readDate;
+public record UpdateConversationDTO(
+        Date readDate
+) {
 }

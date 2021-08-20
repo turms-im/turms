@@ -17,12 +17,10 @@
 
 package im.turms.server.common.mongo.entity;
 
-import lombok.Data;
-
 /**
  * @author James Chen
  */
-@Data
-public class Zone {
-    private final String creationDateFieldName;
+public record Zone(
+        String creationDateFieldName
+) {
 }

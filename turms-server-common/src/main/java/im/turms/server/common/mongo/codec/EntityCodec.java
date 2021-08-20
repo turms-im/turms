@@ -57,7 +57,7 @@ public class EntityCodec<T> implements Codec<T> {
     @Override
     public T decode(BsonReader reader, DecoderContext decoderContext) {
         try {
-            PreferredConstructor<T, ?> constructor = entity.getConstructor();
+            PreferredConstructor<T, ?> constructor = entity.constructor();
             Constructor<T> ctor = constructor.getConstructor();
             if (constructor.isNoArgConstructor()) {
                 T instance = ctor.newInstance();
@@ -68,7 +68,7 @@ public class EntityCodec<T> implements Codec<T> {
                 return ctor.newInstance(ctorValues);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Failed to decode Bson to " + entity.getEntityClass().getName(), e);
+            throw new RuntimeException("Failed to decode Bson to " + entity.entityClass().getName(), e);
         }
     }
 
@@ -76,7 +76,7 @@ public class EntityCodec<T> implements Codec<T> {
     public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         try {
-            for (EntityField<?> field : entity.getFieldMap().values()) {
+            for (EntityField<?> field : entity.fieldMap().values()) {
                 Object fieldValue = field.get(value);
                 if (fieldValue != null) {
                     if (field.isIdField()) {
@@ -96,7 +96,7 @@ public class EntityCodec<T> implements Codec<T> {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Failed to encode " + entity.getEntityClass().getName(), e);
+            throw new RuntimeException("Failed to encode " + entity.entityClass().getName(), e);
         }
         writer.writeEndDocument();
     }
@@ -111,7 +111,7 @@ public class EntityCodec<T> implements Codec<T> {
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String fieldName = reader.readName();
             EntityField field = ID_FIELD.equals(fieldName)
-                    ? entity.getField(entity.getIdFieldName())
+                    ? entity.getField(entity.idFieldName())
                     : entity.getField(fieldName);
             if (field != null) {
                 Object value = null;
@@ -121,15 +121,16 @@ public class EntityCodec<T> implements Codec<T> {
                     try {
                         value = decode(field, reader, decoderContext);
                     } catch (Exception e) {
-                        String message =
-                                String.format("Failed to decode the field %s of the class %s", fieldName, entity.getEntityClass().getName());
+                        String message = "Failed to decode the field %s of the class %s"
+                                .formatted(fieldName, entity.entityClass().getName());
                         throw new IllegalStateException(message, e);
                     }
                 }
                 try {
                     field.set(instance, value);
                 } catch (Exception e) {
-                    String message = String.format("Failed to set the field %s of the class %s", fieldName, entity.getEntityClass().getName());
+                    String message = "Failed to set the field %s of the class %s"
+                            .formatted(fieldName, entity.entityClass().getName());
                     throw new IllegalStateException(message, e);
                 }
             } else {
@@ -141,13 +142,13 @@ public class EntityCodec<T> implements Codec<T> {
     }
 
     private Object[] parseCtorValues(BsonReader reader, DecoderContext decoderContext) {
-        List<?> parameters = entity.getConstructor().getParameters();
+        List<?> parameters = entity.constructor().getParameters();
         Object[] values = new Object[parameters.size()];
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String fieldName = reader.readName();
             EntityField<?> field = ID_FIELD.equals(fieldName)
-                    ? entity.getField(entity.getIdFieldName())
+                    ? entity.getField(entity.idFieldName())
                     : entity.getField(fieldName);
             if (field != null) {
                 Object value = null;
@@ -157,8 +158,8 @@ public class EntityCodec<T> implements Codec<T> {
                     try {
                         value = decode(field, reader, decoderContext);
                     } catch (Exception e) {
-                        String message =
-                                String.format("Failed to decode the field %s of the class %s", fieldName, entity.getEntityClass().getName());
+                        String message = "Failed to decode the field %s of the class %s"
+                                .formatted(fieldName, entity.entityClass().getName());
                         throw new IllegalStateException(message, e);
                     }
                 }

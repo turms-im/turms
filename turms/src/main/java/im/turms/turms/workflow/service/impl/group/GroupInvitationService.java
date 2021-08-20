@@ -135,9 +135,9 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
                 .isAllowedToInviteOrAdd(groupId, inviterId, null)
                 .flatMap(pair -> {
                     ServicePermission permission = pair.getLeft();
-                    TurmsStatusCode statusCode = permission.getCode();
+                    TurmsStatusCode statusCode = permission.code();
                     if (statusCode != TurmsStatusCode.OK) {
-                        return Mono.error(TurmsBusinessException.get(statusCode, permission.getReason()));
+                        return Mono.error(TurmsBusinessException.get(statusCode, permission.reason()));
                     }
                     return groupMemberService
                             .isAllowedToBeInvited(groupId, inviteeId)

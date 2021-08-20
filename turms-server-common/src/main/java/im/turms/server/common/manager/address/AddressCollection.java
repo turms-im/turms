@@ -17,17 +17,15 @@
 
 package im.turms.server.common.manager.address;
 
-import lombok.Data;
-
 /**
  * @author James Chen
  */
-@Data
-public class AddressCollection {
-    private final String memberHost;
-    private final String metricsApiAddress;
-    private final String adminApiAddress;
-    private final String wsAddress;
-    private final String tcpAddress;
-    private final String udpAddress;
+public record AddressCollection(
+        String memberHost,
+        String metricsApiAddress,
+        String adminApiAddress,
+        String wsAddress,
+        String tcpAddress,
+        String udpAddress
+) {
 }

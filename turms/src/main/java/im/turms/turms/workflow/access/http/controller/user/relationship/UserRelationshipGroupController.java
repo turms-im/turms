@@ -71,10 +71,10 @@ public class UserRelationshipGroupController {
     public Mono<ResponseEntity<ResponseDTO<UserRelationshipGroup>>> addRelationshipGroup(
             @RequestBody AddRelationshipGroupDTO addRelationshipGroupDTO) {
         Mono<UserRelationshipGroup> createMono = userRelationshipGroupService.createRelationshipGroup(
-                addRelationshipGroupDTO.getOwnerId(),
-                addRelationshipGroupDTO.getIndex(),
-                addRelationshipGroupDTO.getName(),
-                addRelationshipGroupDTO.getCreationDate(),
+                addRelationshipGroupDTO.ownerId(),
+                addRelationshipGroupDTO.index(),
+                addRelationshipGroupDTO.name(),
+                addRelationshipGroupDTO.creationDate(),
                 null);
         return ResponseFactory.okIfTruthy(createMono);
     }
@@ -96,8 +96,8 @@ public class UserRelationshipGroupController {
             @RequestBody UpdateRelationshipGroupDTO updateRelationshipGroupDTO) {
         Mono<UpdateResultDTO> updateMono = userRelationshipGroupService.updateRelationshipGroups(
                         CollectionUtil.newSet(keys.getKeys()),
-                        updateRelationshipGroupDTO.getName(),
-                        updateRelationshipGroupDTO.getCreationDate())
+                        updateRelationshipGroupDTO.name(),
+                        updateRelationshipGroupDTO.creationDate())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

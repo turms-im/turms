@@ -63,7 +63,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
         assertResultIsOkAndRecipients(resultMono,
-                result -> privateMessageId = result.getDataForRequester().getIds().getValues(0),
+                result -> privateMessageId = result.dataForRequester().getIds().getValues(0),
                 RECIPIENT_ID);
     }
 
@@ -79,7 +79,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result -> groupMessageId = result.getDataForRequester().getIds().getValues(0));
+        assertResultIsOk(resultMono, result -> groupMessageId = result.dataForRequester().getIds().getValues(0));
     }
 
     @Test
@@ -93,7 +93,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result -> assertThat(result.getDataForRequester().getIds().getValuesList()).isNotEmpty());
+        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getIds().getValuesList()).isNotEmpty());
     }
 
     @Test
@@ -107,7 +107,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result -> assertThat(result.getDataForRequester().getIds().getValuesList()).isNotEmpty());
+        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getIds().getValuesList()).isNotEmpty());
     }
 
     // Update
@@ -154,7 +154,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         ClientRequest clientRequest = new ClientRequest(RECIPIENT_ID, SENDER_DEVICE_TYPE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryMessagesRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result -> assertThat(result.getDataForRequester().getMessages().getMessagesList()).isNotEmpty());
+        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getMessages().getMessagesList()).isNotEmpty());
     }
 
     @Test
@@ -169,7 +169,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         Mono<RequestHandlerResult> resultMono = getController().handleQueryMessagesRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.getDataForRequester().getMessagesWithTotalList().getMessagesWithTotalListList()).isNotEmpty());
+                result -> assertThat(result.dataForRequester().getMessagesWithTotalList().getMessagesWithTotalListList()).isNotEmpty());
     }
 
 

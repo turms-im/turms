@@ -53,7 +53,7 @@ public class BaseServiceControllerTest<T> extends SpringAwareIntegrationTest {
                 })
                 .flatMap(result -> {
                     if (expectedCodes != null && expectedCodes.length > 0) {
-                        assertThat(result.getCode()).isIn((Object[]) expectedCodes);
+                        assertThat(result.code()).isIn((Object[]) expectedCodes);
                     }
                     if (resultConsumer != null) {
                         resultConsumer.accept(result);
@@ -83,14 +83,14 @@ public class BaseServiceControllerTest<T> extends SpringAwareIntegrationTest {
         StepVerifier
                 .create(resultMono)
                 .expectNextMatches(result -> {
-                    assertThat(result.getCode())
+                    assertThat(result.code())
                             .as("The status code should be " + TurmsStatusCode.OK)
                             .isEqualTo(TurmsStatusCode.OK);
                     if (resultConsumer != null) {
                         resultConsumer.accept(result);
                     }
                     if (recipients != null && recipients.length > 0) {
-                        assertThat(result.getRecipients()).containsExactlyInAnyOrder(recipients);
+                        assertThat(result.recipients()).containsExactlyInAnyOrder(recipients);
                     }
                     return true;
                 })

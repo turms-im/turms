@@ -63,7 +63,7 @@ public final class DomainConstraintUtil {
     }
 
     public static void validGroupQuestionIdAndAnswer(GroupQuestionIdAndAnswer value) {
-        if (value == null || value.getId() == null || value.getAnswer() == null) {
+        if (value == null || value.id() == null || value.answer() == null) {
             throw new IllegalArgumentException("The question ID and answer must not be null");
         }
     }

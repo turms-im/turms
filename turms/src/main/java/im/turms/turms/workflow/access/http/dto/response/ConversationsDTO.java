@@ -19,15 +19,14 @@ package im.turms.turms.workflow.access.http.dto.response;
 
 import im.turms.turms.workflow.dao.domain.conversation.GroupConversation;
 import im.turms.turms.workflow.dao.domain.conversation.PrivateConversation;
-import lombok.Data;
 
 import java.util.List;
 
 /**
  * @author James Chen
  */
-@Data
-public class ConversationsDTO {
-    private final List<PrivateConversation> privateConversations;
-    private final List<GroupConversation> groupConversations;
+public record ConversationsDTO(
+        List<PrivateConversation> privateConversations,
+        List<GroupConversation> groupConversations
+) {
 }
