@@ -1,17 +1,13 @@
 name: Publish turms-admin
 
-on:
-  push:
-    branches:
-      - master
+on: [ push, pull_request ]
 
 jobs:
   publish:
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout
       - uses: actions/checkout@v2
-        with:
-          ref: master
 
       - name: Build turms-admin image
         # FIXME: We use the root context currently because turms-admin requires turms-client-js,
@@ -19,9 +15,11 @@ jobs:
         run: DOCKER_BUILDKIT=1 docker build --rm=false -t "ghcr.io/turms-im/turms-admin:latest" -f turms-admin/Dockerfile .
 
       - name: Docker login
+        if: ${{ github.ref == 'refs/heads/master' }}
         run: docker login ghcr.io -u $GITHUB_ACTOR -p $GITHUB_TOKEN
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Publish turms-admin
+        if: ${{ github.ref == 'refs/heads/master' }}
         run: docker push "ghcr.io/turms-im/turms-admin:latest"
