@@ -44,8 +44,6 @@ turms-admin/data/
 turms-admin/dist/
 turms-admin/node_modules/
 
-turms-apm/target/
-
 ### Turms Server Test ###
 turms-server-test-common/target
 turms-server-test/target

@@ -20,8 +20,6 @@ Turms是一套全球范围内最为先进的、为同时在线用户数为100K~1
 
 * turms服务端的管理员API地址（DEV配置，带Mock数据）：http://playground.turms.im:8510
 
-  （提醒：如果您直接打开该页面，会提示401无权限”）
-
 * turms-gateway服务端地址：http://playground.turms.im:10510 （WebSocket端口）、http://playground.turms.im:11510 （TCP端口）
 
 您可以使用任意turms-client-(java/js/swift)客户端，向turms-gateway服务端发送请求，并与其他用户进行交互。
@@ -110,7 +108,6 @@ Turms基于读扩散消息模型进行架构设计，对业务数据变化感知
 | <span style="white-space:nowrap;">turms-client-kotlin</span> | 同上                                                         |
 | <span style="white-space:nowrap;">turms-client-swift</span>  | 同上                                                         |
 | <span style="white-space:nowrap;">turms-admin</span>         | 为Turms服务端集群提供：内容管理、集群配置等功能              |
-| ~~<span style="white-space:nowrap;">turms-apm</span>~~       | （该项目将会被移除，其功能将会集成到turms-admin中）为Turms服务端集群提供监控与报警功能 |
 | <span style="white-space:nowrap;">turms-plugin</span>        | 当指定事件（如用户上下线、消息接收与转发等）被触发时，turms和turms-gateway会调用对应的自定义插件以方便开发者实现各种各样定制化功能 |
 | <span style="white-space:nowrap;">turms-plugin-minio</span>  | 基于turms-plugin实现的存储服务插件。用于与MinIO服务端进行交互 |
 | <span style="white-space:nowrap;">turms-data（TODO）</span>  | 尚未发布。基于Flink生态的独立数据分析系统，负责业务数据统计与分析，为turms的管理员统计API与turms-admin运营报表提供底层数据支持 |

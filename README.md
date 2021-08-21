@@ -18,8 +18,6 @@ Please refer to [Turms Documentation](https://turms-im.github.io/docs) (no Engli
 
 * turms (Admin API in dev environment with fake data supported): http://playground.turms.im:8510
 
-  (Note that if you open the link (API) directly in the browser, it will get a response with 401 (no permission))
-
 * turms-gateway: http://playground.turms.im:10510 (port for WebSocket access) and http://playground.turms.im:11510 (port for TCP access)
 
   You can use any turms-client-(java/js/swift) implementation to send requests to turms-gateway and interact with other users.
@@ -91,10 +89,10 @@ In addition, architecture design is an art of trade-off. Some IM products take r
 | <span style="white-space:nowrap;"> turns-client-kotlin</span> | ditto|
 | <span style="white-space:nowrap;"> turns-client-swift </span> | ditto|
 | <span style="white-space:nowrap;"> turms-admin</span> |Provides features such as business data management and cluster management for turms server cluster|
-| ~~<span style="white-space:nowrap;"> turms-apm </span>~~ |(This project will be removed and its features will be integrated into turms-admin) Provides monitoring for turms cluster|
 | <span style="white-space:nowrap;"> turms-plugin </span> | When events (such as user going online/offline, message receiving and forwarding, etc) are fired, turms and turms-gateway will trigger corresponding custom plugins to facilitate developers to implement custom features |
 | <span style="white-space:nowrap;"> turms-plugin-minio</span> |A plugin based on turms-plugin for the storage service, and is used to interact with MinIO server|
 | <span style="white-space:nowrap;"> turms-data (TODO)</span> | Not yet published. An independent data analysis system based on Flink ecosystem is responsible for business data analysis, and provides underlying data support for the statistics APIs of turms for admins and operational reports of turms-admin |
+
 ## Reference Architecture
 
 The architecture design of Turms is derived from commercial instant messaging architectures. The following figure shows the reference architecture of Turms. The services framed by dotted lines are optional services, while the services framed by solid lines are required services. Please refer to [Turms Architecture Design](https://turms-im.github.io/docs/for-developers/architecture.html) for details.
