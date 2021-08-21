@@ -279,6 +279,9 @@ export default {
         },
         parseResponseRecords(data) {
             data = this.transform ? this.transform(data) : data;
+            if (!data.records) {
+                return [];
+            }
             return data.records.map(record => {
                 Object.entries(record).forEach(([key, value]) => {
                     if (this.$util.isBigNumber(value)) {
