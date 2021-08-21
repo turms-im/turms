@@ -1,24 +1,42 @@
 ####################################################################
 # Stage 0 : BUILD
 ####################################################################
-FROM node:14-alpine as builder
+FROM node:16-alpine as builder
 COPY . .
 
 # build in China
 #RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
-#    && apk add --no-cache python make g++ \
-#    && npm install --no-optional --registry=https://registry.npm.taobao.org \
+#RUN apk add --no-cache python3 make g++ \
+#    pkgconfig \
+#    pixman-dev \
+#    cairo-dev \
+#    pango-dev \
+#    jpeg-dev \
+#    giflib-dev \
+#    librsvg-dev \
+#    && cd ./turms-admin \
+#    && npm i --no-optional --force --registry=https://registry.npm.taobao.org \
 #    && npm run build
 
-RUN apk add --no-cache python make g++ \
-    && npm install --no-optional \
+# python3: required by node-gyp
+# *-dev: required by node-canvas
+RUN apk add --no-cache python3 make g++ \
+    pkgconfig \
+    pixman-dev \
+    cairo-dev \
+    pango-dev \
+    jpeg-dev \
+    giflib-dev \
+    librsvg-dev \
+    && cd ./turms-admin \
+    && npm i --no-optional --force \
     && npm run build
 
 ####################################################################
 # Stage 1 : RUN
 ####################################################################
-FROM nginx:1.18-alpine
-COPY --from=builder /dist /usr/share/nginx/html
+FROM nginx:1.20-alpine
+COPY --from=builder /turms-admin/dist /usr/share/nginx/html
 
 RUN echo '                                                        \
 server {                                                          \

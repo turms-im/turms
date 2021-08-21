@@ -1,10 +1,10 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 const commonjs = require('@rollup/plugin-commonjs');
 const filesize = require('rollup-plugin-filesize');
 const resolve = require('@rollup/plugin-node-resolve').nodeResolve;
-const terser = require("rollup-plugin-terser").terser;
+const terser = require('rollup-plugin-terser').terser;
 const ts = require('rollup-plugin-ts');
 const visualizer = require('rollup-plugin-visualizer').visualizer;
 
@@ -13,7 +13,7 @@ const pkg = require('./package.json');
 function getConfig({output, useBabel, withDeclaration}) {
     const transpile = useBabel ?
         ts({
-            transpiler: "babel"
+            transpiler: 'babel'
         })
         : ts({
             // disable browserslist, or the Typescript target will be determined
@@ -48,7 +48,9 @@ function getConfig({output, useBabel, withDeclaration}) {
     };
 }
 
-fs.rmdirSync('dist', {recursive: true});
+if (fs.existsSync('dist')) {
+    fs.rmdirSync('dist', {recursive: true});
+}
 
 module.exports = [
     // CommonJS for Node

@@ -14,7 +14,9 @@ jobs:
           ref: master
 
       - name: Build turms-admin image
-        run: DOCKER_BUILDKIT=1 docker build --rm=false -t "ghcr.io/turms-im/turms-admin:latest" -f turms-admin/Dockerfile turms-admin/
+        # FIXME: We use the root context currently because turms-admin requires turms-client-js,
+        # which doesn't have a publish workflow for now.
+        run: DOCKER_BUILDKIT=1 docker build --rm=false -t "ghcr.io/turms-im/turms-admin:latest" -f turms-admin/Dockerfile .
 
       - name: Docker login
         run: docker login ghcr.io -u $GITHUB_ACTOR -p $GITHUB_TOKEN

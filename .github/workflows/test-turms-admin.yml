@@ -9,8 +9,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
 
       - name: Fetch package-lock.json
         run: npm --prefix turms-admin i
