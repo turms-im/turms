@@ -47,6 +47,10 @@ public class GatewayProperties {
     @NestedConfigurationProperty
     private ClientApiProperties clientApi = new ClientApiProperties();
 
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private NotificationLoggingProperties notificationLogging = new NotificationLoggingProperties();
+
     // Business Behavior
 
     @JsonView(MutablePropertiesView.class)

@@ -15,18 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.logging;
+package im.turms.gateway.pojo.dto;
+
+import im.turms.common.model.dto.request.TurmsRequest;
 
 /**
  * @author James Chen
  */
-public final class AdminApiLogging {
-
-    private AdminApiLogging() {
-    }
-
-    public static void log(Object info) {
-        CustomLogger.ADMIN_API_LOGGER.info(info);
-    }
-
+public record SimpleTurmsNotification(
+        long requesterId,
+        Integer closeStatus,
+        TurmsRequest.KindCase relayedRequestType
+) {
 }

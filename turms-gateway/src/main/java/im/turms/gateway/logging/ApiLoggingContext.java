@@ -33,6 +33,7 @@ import java.util.Map;
 public class ApiLoggingContext extends CommonApiLoggingContext {
 
     private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingRequestProperties;
+    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingNotificationsProperties;
 
     public ApiLoggingContext(TurmsPropertiesManager propertiesManager) {
         ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties().getGateway().getClientApi().getLogging();
@@ -41,10 +42,19 @@ public class ApiLoggingContext extends CommonApiLoggingContext {
                 loggingProperties.getIncludedRequests(),
                 loggingProperties.getExcludedRequestCategories(),
                 loggingProperties.getExcludedRequestTypes());
+        supportedLoggingNotificationsProperties = getSupportedLoggingRequestProperties(
+                loggingProperties.getIncludedNotificationCategories(),
+                loggingProperties.getIncludedNotifications(),
+                loggingProperties.getExcludedNotificationCategories(),
+                loggingProperties.getExcludedNotificationTypes());
     }
 
-    public boolean shouldLog(TurmsRequest.KindCase requestType) {
+    public boolean shouldLogRequest(TurmsRequest.KindCase requestType) {
         return shouldLog(requestType, supportedLoggingRequestProperties);
+    }
+
+    public boolean shouldLogNotification(TurmsRequest.KindCase requestType) {
+        return shouldLog(requestType, supportedLoggingNotificationsProperties);
     }
 
 }

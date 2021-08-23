@@ -18,15 +18,14 @@
 package im.turms.turms.logging;
 
 import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
-import im.turms.server.common.logging.CommonClientApiLogging;
+import im.turms.server.common.logging.CustomLogger;
 import im.turms.turms.workflow.access.servicerequest.dto.ClientRequest;
 
 import java.time.Instant;
 
-import static im.turms.server.common.logging.CommonClientApiLogging.LOG_FIELD_DELIMITER;
+import static im.turms.server.common.logging.CustomLogger.LOG_FIELD_DELIMITER;
 
 /**
  * @author James Chen
@@ -66,30 +65,10 @@ public final class ClientApiLogging {
                 responseType,
                 String.valueOf(processingTime));
         if (response.code().isServerError()) {
-            CommonClientApiLogging.logger.error(message);
+            CustomLogger.CLIENT_API_LOGGER.error(message);
         } else {
-            CommonClientApiLogging.logger.info(message);
+            CustomLogger.CLIENT_API_LOGGER.info(message);
         }
-    }
-
-    /**
-     * Note that although TurmsNotification can represent a "response" or "notification",
-     * the method is only designed to log "notification" instead of "response"
-     */
-    public static void log(boolean sent, TurmsNotification notification, int recipientCount) {
-        TurmsRequest relayedRequest = notification.getRelayedRequest();
-        String message = String.join(LOG_FIELD_DELIMITER,
-                // User info
-                String.valueOf(notification.getRequesterId()),
-                // Notification info
-                sent ? "SENT" : "UNSET",
-                String.valueOf(recipientCount),
-                notification.hasCloseStatus() ? String.valueOf(notification.getCloseStatus()) : "",
-                String.valueOf(notification.getSerializedSize()),
-                // Relayed request info
-                String.valueOf(relayedRequest.getRequestId()),
-                relayedRequest.getKindCase().name());
-        CommonClientApiLogging.logger.info(message);
     }
 
 }

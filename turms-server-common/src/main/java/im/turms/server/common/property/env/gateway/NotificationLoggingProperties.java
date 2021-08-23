@@ -15,18 +15,26 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.logging;
+package im.turms.server.common.property.env.gateway;
+
+
+import im.turms.server.common.property.metadata.annotation.Description;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
-public final class AdminApiLogging {
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@Data
+@NoArgsConstructor
+public class NotificationLoggingProperties {
 
-    private AdminApiLogging() {
-    }
-
-    public static void log(Object info) {
-        CustomLogger.ADMIN_API_LOGGER.info(info);
-    }
+    @Description("Whether to parse the buffer of TurmsNotification to log. " +
+            "Note that the property has a impact on performance")
+    private boolean enabled;
 
 }

@@ -146,7 +146,8 @@ public abstract class UserSessionDispatcher {
                                 .setLocalUserDeviceOffline(userId, deviceType, SessionCloseStatus.UNKNOWN_ERROR)
                                 .subscribe();
                     }
-                    if (userSession.acquireDeleteSessionRequestLoggingLock() && apiLoggingContext.shouldLog(DELETE_SESSION_REQUEST)) {
+                    if (userSession.acquireDeleteSessionRequestLoggingLock()
+                            && apiLoggingContext.shouldLogRequest(DELETE_SESSION_REQUEST)) {
                         ClientApiLogging.log(
                                 userSession.getId(),
                                 userId,

@@ -18,6 +18,7 @@
 package unit.im.turms.gateway.service.impl;
 
 import im.turms.common.constant.DeviceType;
+import im.turms.gateway.logging.ApiLoggingContext;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.NotificationHandler;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
@@ -27,6 +28,7 @@ import im.turms.gateway.service.impl.OutboundMessageService;
 import im.turms.gateway.service.impl.SessionService;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.property.TurmsProperties;
+import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.PluginProperties;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
@@ -53,7 +55,10 @@ class OutboundMessageServiceTests {
 
     @Test
     void constructor_shouldReturnInstance() {
-        OutboundMessageService outboundMessageService = new OutboundMessageService(null, null, null);
+        TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
+        when(propertiesManager.getLocalProperties()).thenReturn(new TurmsProperties());
+
+        OutboundMessageService outboundMessageService = new OutboundMessageService(null, null, null, null, propertiesManager);
         assertThat(outboundMessageService).isNotNull();
     }
 
@@ -120,14 +125,22 @@ class OutboundMessageServiceTests {
         NotificationHandler handler = mock(NotificationHandler.class);
         when(handler.handle(any(), any(), any()))
                 .thenReturn(Mono.empty());
+
+        ApiLoggingContext apiLoggingContext = mock(ApiLoggingContext.class);
+        when(apiLoggingContext.shouldLogNotification(any()))
+                .thenReturn(true);
+
         TurmsPluginManager pluginManager = mock(TurmsPluginManager.class);
         when(pluginManager.getNotificationHandlerList())
                 .thenReturn(List.of(handler));
 
+        TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
+        when(propertiesManager.getLocalProperties()).thenReturn(new TurmsProperties());
+
         SessionService sessionService = mock(SessionService.class);
         when(sessionService.getUserSessionsManager(any()))
                 .thenReturn(userSessionsManager);
-        return new OutboundMessageService(node, sessionService, pluginManager);
+        return new OutboundMessageService(node, apiLoggingContext, sessionService, pluginManager, propertiesManager);
     }
 
 }

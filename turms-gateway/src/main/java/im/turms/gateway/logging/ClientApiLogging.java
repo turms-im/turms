@@ -20,12 +20,12 @@ package im.turms.gateway.logging;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.server.common.logging.CommonClientApiLogging;
+import im.turms.server.common.logging.CustomLogger;
 import im.turms.server.common.util.StringUtil;
 
 import java.time.Instant;
 
-import static im.turms.server.common.logging.CommonClientApiLogging.LOG_FIELD_DELIMITER;
+import static im.turms.server.common.logging.CustomLogger.LOG_FIELD_DELIMITER;
 
 /**
  * @author James Chen
@@ -62,7 +62,7 @@ public final class ClientApiLogging {
                 StringUtil.toString(ip),
                 // request information
                 String.valueOf(requestId),
-                requestType.toString(),
+                requestType.name(),
                 String.valueOf(requestSize),
                 Instant.ofEpochMilli(requestTime).toString(),
                 // response information
@@ -70,7 +70,7 @@ public final class ClientApiLogging {
                 response.hasData() ? response.getData().getKindCase().name() : "",
                 String.valueOf(response.getSerializedSize()),
                 String.valueOf(processingTime));
-        CommonClientApiLogging.logger.info(message);
+        CustomLogger.CLIENT_API_LOGGER.info(message);
     }
 
     public static void log(Integer sessionId,
@@ -93,7 +93,7 @@ public final class ClientApiLogging {
                 StringUtil.toString(ip),
                 // request information
                 String.valueOf(requestId),
-                requestType.toString(),
+                requestType.name(),
                 String.valueOf(requestSize),
                 Instant.ofEpochMilli(requestTime).toString(),
                 // response information
@@ -101,7 +101,7 @@ public final class ClientApiLogging {
                 "", // Response data type
                 "0", // Response serialized size
                 String.valueOf(processingTime));
-        CommonClientApiLogging.logger.info(message);
+        CustomLogger.CLIENT_API_LOGGER.info(message);
     }
 
 }

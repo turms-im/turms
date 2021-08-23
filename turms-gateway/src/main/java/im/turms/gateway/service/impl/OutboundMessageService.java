@@ -18,11 +18,16 @@
 package im.turms.gateway.service.impl;
 
 import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.gateway.logging.ApiLoggingContext;
+import im.turms.gateway.logging.NotificationLogging;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.NotificationHandler;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
+import im.turms.gateway.pojo.dto.SimpleTurmsNotification;
+import im.turms.gateway.pojo.parser.TurmsNotificationParser;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.service.IOutboundMessageService;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectionUtil;
@@ -46,21 +51,30 @@ import java.util.Set;
 public class OutboundMessageService implements IOutboundMessageService {
 
     private final Node node;
+    private final ApiLoggingContext apiLoggingContext;
     private final SessionService sessionService;
     private final TurmsPluginManager turmsPluginManager;
 
+    private final boolean isNotificationLoggingEnabled;
+
     public OutboundMessageService(
             Node node,
+            ApiLoggingContext apiLoggingContext,
             SessionService sessionService,
-            TurmsPluginManager turmsPluginManager) {
+            TurmsPluginManager turmsPluginManager,
+            TurmsPropertiesManager turmsPropertiesManager) {
         this.node = node;
+        this.apiLoggingContext = apiLoggingContext;
         this.sessionService = sessionService;
         this.turmsPluginManager = turmsPluginManager;
+        isNotificationLoggingEnabled = turmsPropertiesManager
+                .getLocalProperties().getGateway().getNotificationLogging().isEnabled();
     }
 
     /**
-     * @param notificationData should be a buffer of TurmsNotification
-     * @return true if the notification is ready to forward (queued) or has forwarded
+     * @param notificationData should be a buffer of TurmsNotification, and it's
+     *                         always a "notification" instead of "response" in fact
+     * @return true if the notification is ready to forward or has forwarded
      * to one recipient at least
      * @implNote The method ensures notificationData will be released by 1
      */
@@ -76,6 +90,11 @@ public class OutboundMessageService implements IOutboundMessageService {
         Set<Long> offlineRecipientIds = triggerHandlers
                 ? CollectionUtil.newSetWithExpectedSize(Math.max(1, recipientIds.size() / 2))
                 : Collections.emptySet();
+
+        int notificationSize = notificationData.readableBytes();
+        SimpleTurmsNotification notification = isNotificationLoggingEnabled
+                ? TurmsNotificationParser.parseSimpleNotification(notificationData.nioBuffer())
+                : null;
 
         // RefCntAwareByteBuf is used to release the buffer to 0
         // because when the method returns, Netty may not flush the buffer to recipients
@@ -110,12 +129,20 @@ public class OutboundMessageService implements IOutboundMessageService {
             }
         }
 
+        wrappedNotificationData.stopRetainCounter();
+
         // Trigger plugins
         if (triggerHandlers) {
             triggerPlugins(wrappedNotificationData, recipientIds, offlineRecipientIds);
         }
 
-        wrappedNotificationData.stopRetainCounter();
+        if (isNotificationLoggingEnabled
+                && apiLoggingContext.shouldLogNotification(notification.relayedRequestType())) {
+            NotificationLogging.log(hasForwardedMessageToOneRecipient,
+                    notification,
+                    notificationSize,
+                    recipientIds.size());
+        }
 
         return hasForwardedMessageToOneRecipient;
     }

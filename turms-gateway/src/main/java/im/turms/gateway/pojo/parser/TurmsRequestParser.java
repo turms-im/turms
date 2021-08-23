@@ -15,16 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.util;
+package im.turms.gateway.pojo.parser;
 
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.ExtensionRegistry;
+import com.google.protobuf.WireFormat;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.user.CreateSessionRequest;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
@@ -36,51 +36,52 @@ import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_S
 /**
  * @author James Chen
  */
-@Log4j2
-public final class TurmsRequestUtil {
+public final class TurmsRequestParser {
 
     /**
-     * {@link im.turms.common.model.dto.request.TurmsRequest:73}
+     * {@link TurmsRequest:73}
      */
-    private static final int TURMS_REQUEST_REQUEST_ID_TAG = 8;
+    private static final int REQUEST_ID_TAG = 8;
     private static final ExtensionRegistry REGISTRY = ExtensionRegistry.getEmptyRegistry();
     private static final long UNDEFINED_REQUEST_ID = Long.MIN_VALUE;
 
-    private TurmsRequestUtil() {
+    private TurmsRequestParser() {
     }
 
     public static SimpleTurmsRequest parseSimpleRequest(ByteBuffer turmsRequestBuffer) {
         Assert.notNull(turmsRequestBuffer, "turmsRequestBuffer must not be null");
-        // The CodedInputStream.newInstance should be efficient because it reuses the direct buffer
-        // see com.google.protobuf.CodedInputStream.newInstance(java.nio.ByteBuffer, boolean)
+        // The CodedInputStream.newInstance is efficient because it reuses the direct buffer
         CodedInputStream stream = CodedInputStream.newInstance(turmsRequestBuffer);
         try {
             long requestId = UNDEFINED_REQUEST_ID;
             TurmsRequest.KindCase type;
             while (true) {
                 int tag = stream.readTag();
-                if (tag == TURMS_REQUEST_REQUEST_ID_TAG) {
-                    requestId = stream.readInt64();
-                } else {
-                    // key = (field_number << 3) | wire_type
-                    int kindFieldNumber = tag >>> 3;
-                    type = TurmsRequest.KindCase.forNumber(kindFieldNumber);
-                    if (type == null || type == KIND_NOT_SET) {
+                if (tag == REQUEST_ID_TAG) {
+                    if (requestId == UNDEFINED_REQUEST_ID) {
+                        requestId = stream.readInt64();
+                    } else {
                         throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT,
-                                "Not a valid TurmsRequest: Unknown request type " + type);
+                                "Not a valid TurmsRequest: Duplicate request ID");
                     }
+                } else {
+                    int kindFieldNumber = WireFormat.getTagFieldNumber(tag);
+                    type = TurmsRequest.KindCase.forNumber(kindFieldNumber);
                     break;
                 }
             }
-            if (requestId != UNDEFINED_REQUEST_ID) {
-                CreateSessionRequest createSessionRequest = null;
-                if (type == CREATE_SESSION_REQUEST) {
-                    createSessionRequest = stream.readMessage(CreateSessionRequest.parser(), REGISTRY);
-                }
-                return new SimpleTurmsRequest(requestId, type, createSessionRequest);
-            } else {
+            if (requestId == UNDEFINED_REQUEST_ID) {
                 throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest: No request ID");
             }
+            if (type == null || type == KIND_NOT_SET) {
+                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT,
+                        "Not a valid TurmsRequest: Unknown request type " + type);
+            }
+            CreateSessionRequest createSessionRequest = null;
+            if (type == CREATE_SESSION_REQUEST) {
+                createSessionRequest = stream.readMessage(CreateSessionRequest.parser(), REGISTRY);
+            }
+            return new SimpleTurmsRequest(requestId, type, createSessionRequest);
         } catch (IOException e) {
             throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest: " + e.getMessage());
         }

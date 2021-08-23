@@ -55,7 +55,7 @@ Turms与其他常规服务端一样，将可观测性的具体实现分为三类
 | Class  | jvm.classes.loaded        | Gauge   | 已加载classes数                                              |
 |        | jvm.classes.unloaded      | Counter | 已卸载classes数                                              |
 
-#### 集群间TCP连接
+#### 集群间TCP连接度量
 
 （TODO：rename）
 
@@ -82,18 +82,18 @@ Turms与其他常规服务端一样，将可观测性的具体实现分为三类
 | ConnectionProvider（连接池） | TODO                                        |                     |                  |
 | ByteBufAllocator（内存）     | TODO                                        |                     |                  |
 
-#### RPC
+#### RPC度量
 
 | 名称                      | 类型    | 含义                      |
 | ------------------------- | ------- | ------------------------- |
 | rpc.request.subscribed    | Counter | 某类型RPC请求的已处理次数 |
 | rpc.request.flow.duration | Timer   | 某类型RPC请求的处理时长   |
 
-#### 管理员API
+#### Admin API度量
 
 TODO
 
-#### 客户端请求
+#### 客户端请求度量
 
 | 名称                         | 类型    | 含义                         |
 | ---------------------------- | ------- | ---------------------------- |
@@ -170,9 +170,9 @@ turms-gateway的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 示例：
 
 ```spreadsheet
-2021-08-17 13:25:11.809  INFO S lkumxlpd [1650561895646191481] Thread-13       i.t.s.c.l.CommonClientApiLogging         : 101|DESKTOP|::1|6798130843268792999|QUERY_MESSAGES_REQUEST|28|2021-08-17T13:25:11.807Z|1001||2
-2021-08-17 13:25:11.809  INFO S lkumxlpd [2979813149711907727] Thread-9        i.t.s.c.l.CommonClientApiLogging         : 100|DESKTOP|::1|5095384146247218867|QUERY_GROUP_JOIN_QUESTIONS_REQUEST|17|2021-08-17T13:25:11.807Z|1002||2
-2021-08-17 13:25:11.809  INFO S lkumxlpd [7231219143674352809] ver-worker-14-1 i.t.s.c.l.CommonClientApiLogging         : 101|DESKTOP|::1|358075665001342897|QUERY_SIGNED_GET_URL_REQUEST|40|2021-08-17T13:25:11.809Z|6000||0
+2021-08-17 13:25:11.809  INFO S lkumxlpd [1650561895646191481] Thread-13 : 101|DESKTOP|::1|6798130843268792999|QUERY_MESSAGES_REQUEST|28|2021-08-17T13:25:11.807Z|1001||2
+2021-08-17 13:25:11.809  INFO S lkumxlpd [2979813149711907727] Thread-9 : 100|DESKTOP|::1|5095384146247218867|QUERY_GROUP_JOIN_QUESTIONS_REQUEST|17|2021-08-17T13:25:11.807Z|1002||2
+2021-08-17 13:25:11.809  INFO S lkumxlpd [7231219143674352809] ver-worker-14-1 : 101|DESKTOP|::1|358075665001342897|QUERY_SIGNED_GET_URL_REQUEST|40|2021-08-17T13:25:11.809Z|6000||0
 ```
 
 ##### turms-gateway服务端
@@ -182,9 +182,9 @@ turms-gateway的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 示例：
 
 ```spreadsheet
-2021-08-17 13:21:10.082  INFO G ocnpinxk 4073578036035627538 gateway-tcp-worker-18-2 i.t.s.c.l.CommonClientApiLogging         : 1669286372|100|DESKTOP|1|0:0:0:0:0:0:0:1|6275734689527119988|CREATE_GROUP_MEMBER_REQUEST|32|2021-08-17T13:21:10.079Z|1201||21|3
-2021-08-17 13:21:10.086  INFO G ocnpinxk 8485909300068121199 gateway-tcp-worker-18-1 i.t.s.c.l.CommonClientApiLogging         : 315622910|101|DESKTOP|1|0:0:0:0:0:0:0:1|8981788720014999664|QUERY_GROUP_JOIN_REQUESTS_REQUEST|17|2021-08-17T13:21:10.082Z|1201||21|4
-2021-08-17 13:21:10.087  INFO G ocnpinxk 195568170846055794  gateway-tcp-worker-18-2 i.t.s.c.l.CommonClientApiLogging         : 1669286372|100|DESKTOP|1|0:0:0:0:0:0:0:1|7875023820838742819|CREATE_GROUP_JOIN_QUESTION_REQUEST|181|2021-08-17T13:21:10.083Z|1201||21|4
+2021-08-17 13:21:10.082  INFO G ocnpinxk 4073578036035627538 gateway-tcp-worker-18-2 : 1669286372|100|DESKTOP|1|0:0:0:0:0:0:0:1|6275734689527119988|CREATE_GROUP_MEMBER_REQUEST|32|2021-08-17T13:21:10.079Z|1201||21|3
+2021-08-17 13:21:10.086  INFO G ocnpinxk 8485909300068121199 gateway-tcp-worker-18-1 : 315622910|101|DESKTOP|1|0:0:0:0:0:0:0:1|8981788720014999664|QUERY_GROUP_JOIN_REQUESTS_REQUEST|17|2021-08-17T13:21:10.082Z|1201||21|4
+2021-08-17 13:21:10.087  INFO G ocnpinxk 195568170846055794  gateway-tcp-worker-18-2 : 1669286372|100|DESKTOP|1|0:0:0:0:0:0:0:1|7875023820838742819|CREATE_GROUP_JOIN_QUESTION_REQUEST|181|2021-08-17T13:21:10.083Z|1201||21|4
 ```
 
 补充：

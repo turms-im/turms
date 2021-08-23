@@ -27,8 +27,8 @@ import im.turms.gateway.logging.ApiLoggingContext;
 import im.turms.gateway.logging.ClientApiLogging;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
+import im.turms.gateway.pojo.parser.TurmsRequestParser;
 import im.turms.gateway.service.mediator.ServiceMediator;
-import im.turms.gateway.util.TurmsRequestUtil;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.exception.ThrowableInfo;
@@ -106,7 +106,7 @@ public class UserRequestDispatcher {
         // Parse and handle service requests
         long requestTime = System.currentTimeMillis();
         int requestSize = serviceRequestBuffer.readableBytes();
-        SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(serviceRequestBuffer.nioBuffer());
+        SimpleTurmsRequest request = TurmsRequestParser.parseSimpleRequest(serviceRequestBuffer.nioBuffer());
         TurmsRequest.KindCase requestType = request.type();
         TracingContext tracingContext = supportsTracing(requestType) ? new TracingContext() : TracingContext.NOOP;
         // Check if we can log to avoid logging DeleteSessionRequest twice
@@ -135,7 +135,7 @@ public class UserRequestDispatcher {
                     TurmsRequest.KindCase type = request.type();
                     // TODO: exclude the error because the server is inactive
                     if (TurmsStatusCode.isServerError(notification.getCode())
-                            || apiLoggingContext.shouldLog(type) && finalCanLogRequest) {
+                            || apiLoggingContext.shouldLogRequest(type) && finalCanLogRequest) {
                         try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
                             UserSession userSession = sessionWrapper.getUserSession();
                             Integer version = null;

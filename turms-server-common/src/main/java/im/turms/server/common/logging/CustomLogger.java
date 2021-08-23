@@ -23,12 +23,16 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author James Chen
  */
-public final class CommonClientApiLogging {
+public final class CustomLogger {
 
     public static final String LOG_FIELD_DELIMITER = "|";
-    public static final Logger logger = LogManager.getLogger(CommonClientApiLogging.class);
+    public static final Logger ADMIN_API_LOGGER = LogManager.getLogger(CustomLogger.class);
+    public static final Logger CLIENT_API_LOGGER = LogManager.getLogger(CustomLogger.class);
+    public static final Logger NOTIFICATION_LOGGER = LogManager.getLogger(CustomLogger.class);
 
-    private CommonClientApiLogging() {
+//    public static final org.apache.logging.log4j.Logger slowlogLogger = LogManager.getLogger(Logger.class);
+
+    private CustomLogger() {
     }
 
 }

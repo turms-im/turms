@@ -21,8 +21,7 @@ package im.turms.server.common.log4j.plugin;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.log4j.LogContextConstant;
-import im.turms.server.common.logging.AdminApiLogging;
-import im.turms.server.common.logging.CommonClientApiLogging;
+import im.turms.server.common.logging.CustomLogger;
 import im.turms.server.common.util.ReflectionUtil;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -62,10 +61,12 @@ public class TurmsContextLookup implements StrLookup {
         return switch (key) {
             case LogContextConstant.LOG_TYPE -> {
                 AsyncLogger logger = (AsyncLogger) LOGGER.get(logEvent);
-                if (logger == CommonClientApiLogging.logger) {
-                    yield LogContextConstant.LogType.CLIENT_API;
-                } else if (logger == AdminApiLogging.logger) {
+                if (logger == CustomLogger.ADMIN_API_LOGGER) {
                     yield LogContextConstant.LogType.ADMIN_API;
+                } else if (logger == CustomLogger.CLIENT_API_LOGGER) {
+                    yield LogContextConstant.LogType.CLIENT_API;
+                } else if (logger == CustomLogger.NOTIFICATION_LOGGER) {
+                    yield LogContextConstant.LogType.NOTIFICATION;
                 } else {
                     yield null;
                 }

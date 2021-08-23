@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-package unit.im.turms.gateway.util;
+package unit.im.turms.gateway.pojo.parser;
 
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.message.CreateMessageRequest;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
-import im.turms.gateway.util.TurmsRequestUtil;
+import im.turms.gateway.pojo.parser.TurmsRequestParser;
 import im.turms.server.common.exception.TurmsBusinessException;
 import org.junit.jupiter.api.Test;
 
@@ -32,12 +32,12 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 /**
  * @author James Chen
  */
-class TurmsRequestUtilTests {
+class TurmsRequestParserTests {
 
     @Test
     void parseSimpleRequest_shouldThrow_forNullArgument() {
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> TurmsRequestUtil.parseSimpleRequest(null));
+                .isThrownBy(() -> TurmsRequestParser.parseSimpleRequest(null));
     }
 
     @Test
@@ -48,29 +48,19 @@ class TurmsRequestUtilTests {
                 .asReadOnlyByteBuffer();
 
         assertThatExceptionOfType(TurmsBusinessException.class)
-                .isThrownBy(() -> TurmsRequestUtil.parseSimpleRequest(emptyRequest));
+                .isThrownBy(() -> TurmsRequestParser.parseSimpleRequest(emptyRequest));
     }
 
     @Test
     void parseSimpleRequest_shouldThrow_forPartialRequestWithoutRequestId() {
         ByteBuffer partialRequestWithoutRequestId = TurmsRequest.newBuilder()
+                .setCreateMessageRequest(CreateMessageRequest.newBuilder().buildPartial())
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
         assertThatExceptionOfType(TurmsBusinessException.class)
-                .isThrownBy(() -> TurmsRequestUtil.parseSimpleRequest(partialRequestWithoutRequestId));
-    }
-
-    @Test
-    void parseSimpleRequest_shouldThrow_forPartialRequestWithNullRequestId() {
-        ByteBuffer partialRequestWithNullRequestId = TurmsRequest.newBuilder()
-                .build()
-                .toByteString()
-                .asReadOnlyByteBuffer();
-
-        assertThatExceptionOfType(TurmsBusinessException.class)
-                .isThrownBy(() -> TurmsRequestUtil.parseSimpleRequest(partialRequestWithNullRequestId));
+                .isThrownBy(() -> TurmsRequestParser.parseSimpleRequest(partialRequestWithoutRequestId));
     }
 
     @Test
@@ -83,7 +73,7 @@ class TurmsRequestUtilTests {
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
-        SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(requestWithRequestId);
+        SimpleTurmsRequest request = TurmsRequestParser.parseSimpleRequest(requestWithRequestId);
         assertThat(request.requestId()).isEqualTo(requestId);
         assertThat(request.type()).isEqualTo(TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST);
     }

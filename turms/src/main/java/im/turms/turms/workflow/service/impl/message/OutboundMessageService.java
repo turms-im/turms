@@ -31,7 +31,7 @@ import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.server.common.util.ReactorUtil;
 import im.turms.turms.logging.ApiLoggingContext;
-import im.turms.turms.logging.ClientApiLogging;
+import im.turms.turms.logging.NotificationLogging;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.DependsOn;
@@ -261,7 +261,7 @@ public class OutboundMessageService {
     private Mono<Boolean> tryLogNotification(Mono<Boolean> mono, TurmsNotification notification, int recipientCount) {
         if (apiLoggingContext.shouldLogNotification(notification.getRelayedRequest().getKindCase())) {
             return mono
-                    .doOnSuccess(sent -> ClientApiLogging.log(sent, notification, recipientCount));
+                    .doOnSuccess(sent -> NotificationLogging.log(sent, notification, recipientCount));
         }
         return mono;
     }
