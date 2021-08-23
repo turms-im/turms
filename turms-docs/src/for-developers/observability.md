@@ -61,6 +61,8 @@ Turms与其他常规服务端一样，将可观测性的具体实现分为三类
 
 ##### 服务端
 
+在连接度量中，因为服务端的节点数有限，所以每个度量都会把TCP端的远程地址作为tag，来区分每个TCP端各自的度量数据，以更细致地观察节点之间的通信情况。
+
 | 类型                     | 名称                                        | 类型                | 含义             |
 | ------------------------ | ------------------------------------------- | ------------------- | ---------------- |
 | Connection（连接）       | reactor.netty.tcp.server.data.received      | DistributionSummary | 已接收字节数     |
@@ -71,16 +73,18 @@ Turms与其他常规服务端一样，将可观测性的具体实现分为三类
 
 ##### 客户端
 
-| 类型                         | 名称                                        | 类型                | 含义             |
-| ---------------------------- | ------------------------------------------- | ------------------- | ---------------- |
-| Connection（连接）           | reactor.netty.tcp.client.data.received      | DistributionSummary | 已接收字节数     |
-|                              | reactor.netty.tcp.client.data.sent          | DistributionSummary | 已发送字节数     |
-|                              | reactor.netty.tcp.client.errors             | Counter             | 连接异常触发次数 |
-|                              | reactor.netty.tcp.client.tls.handshake.time | Timer               | TLS握手用时      |
-|                              | reactor.netty.tcp.client.connect.time       | Timer               | 连接建立用时     |
-|                              | reactor.netty.tcp.client.address.resolver   | Timer               | 域名解析用时     |
-| ConnectionProvider（连接池） | TODO                                        |                     |                  |
-| ByteBufAllocator（内存）     | TODO                                        |                     |                  |
+在连接度量中，因为客户端的数量无限多，所以每个度量**不会**把对端的远程地址作为tag，来区分每个端各自的度量数据。另外，连接度量通过tag `uri`来区分TCP/UDP/WebSocket三类连接各自的度量数据。
+
+| 类型                         | 名称                                    | 类型                | 含义             |
+| ---------------------------- | --------------------------------------- | ------------------- | ---------------- |
+| Connection（连接）           | turms.client.network.data.received      | DistributionSummary | 已接收字节数     |
+|                              | turms.client.network.data.sent          | DistributionSummary | 已发送字节数     |
+|                              | turms.client.network.errors             | Counter             | 连接异常触发次数 |
+|                              | turms.client.network.tls.handshake.time | Timer               | TLS握手用时      |
+|                              | turms.client.network.connect.time       | Timer               | 连接建立用时     |
+|                              | turms.client.network.address.resolver   | Timer               | 域名解析用时     |
+| ConnectionProvider（连接池） | TODO                                    |                     |                  |
+| ByteBufAllocator（内存）     | TODO                                    |                     |                  |
 
 #### RPC度量
 
@@ -130,7 +134,7 @@ Turms服务端不使用JSON格式的原因是：
 
 * Turms服务端构成很简单，不需要通过JSON来统一日志格式。
 * JSON序列化需要占用额外内存与CPU资源，且存储开销大，如果使用压缩技术，还要额外占用CPU资源。特别是，序列化加上压缩时所需的CPU资源甚至比Turms服务端处理业务请求所需CPU资源还高，这对Turms来说是难以接受的。
-* JSON格式其实在原始数据可读性上并不好。因为原始日志是以单行形式进行展示，一行即表明一个事件。Turms服务端的客户端API访问日志通过`|`分隔符拆分各字段。用户初次只需要多看几个日志，之后就能反应出各字段是代表什么信息。而JSON格式在单行显示时，会带来大量“噪音”，大量的JSON元数据、JSON键与JSON值纵横交错，用肉眼阅读的话就非常劳累。
+* JSON格式其实在原始数据可读性上并不好。因为原始日志是以单行形式进行展示，一行即表明一个事件。JSON格式在单行显示时，会带来大量“噪音”，大量的JSON元数据、JSON键与JSON值纵横交错，用肉眼阅读的话就非常劳累。而Turms服务端的客户端API访问日志通过`|`分隔符拆分各字段。用户初次只需要多看几个日志，之后就能反应出各字段是代表什么信息。
 
 当然，采用传统的单行格式会造成云服务解析相对复杂，且配置不灵活。但考虑到这种东西配一次即一劳永逸，综合考虑以上情况，Turms服务端日志不采用JSON格式，而仍采用传统的单行格式。
 
@@ -147,6 +151,8 @@ turms-gateway的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 #### 服务端运行日志
 
 描述Turms服务端内发生的主要事件，如RPC连接状态的转变、请求处理中服务端错误的发生等。
+
+构成：事件发送时间、日志等级、服务端类型、节点ID、Trace ID、线程、类、消息。其中，服务端信息的主要作用是在分布式日志采集过程中，用于区分日志的来源节点。其他类型日志也都使用这样的日志格式（除了客户端API访问日志与通知日志不记录“类”信息），它们只是在“消息”部分使用了定制化的消息格式。
 
 日志文件格式：`%d{${sys:LOG_DATEFORMAT_PATTERN}}{GMT+0} ${sys:LOG_LEVEL_PATTERN} ${myctx:NODE_TYPE} ${myctx:NODE_ID} %-19.19X{traceId} %t %-40.40c{1.} : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}`
 

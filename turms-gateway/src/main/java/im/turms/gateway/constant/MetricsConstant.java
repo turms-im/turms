@@ -25,6 +25,8 @@ public final class MetricsConstant {
     private MetricsConstant() {
     }
 
+    public static final String CLIENT_NETWORK = "turms.client.network";
+
     public static final String LOGGED_IN_USERS_COUNTER_NAME = "user.logged_in";
     public static final String ONLINE_USERS_GAUGE_NAME = "user.online";
 }

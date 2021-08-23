@@ -19,6 +19,7 @@ package im.turms.gateway.access.tcp.factory;
 
 import im.turms.gateway.access.common.function.ConnectionHandler;
 import im.turms.gateway.access.tcp.handler.TcpHandlerConfig;
+import im.turms.gateway.constant.MetricsConstant;
 import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.env.gateway.TcpProperties;
@@ -62,6 +63,7 @@ public final class TcpServerFactory {
                 .childOption(TCP_NODELAY, true)
                 .wiretap(tcpProperties.isWiretap())
                 .runOn(LoopResourcesFactory.createForServer("gateway-tcp"))
+                .metrics(true, () -> new TurmsMicrometerChannelMetricsRecorder(MetricsConstant.CLIENT_NETWORK, "tcp"))
                 // Note that the elements from "in.receive()" is emitted by FluxReceive,
                 // which will release buffer after "onNext" returns
                 .handle((in, out) -> handler.handle((Connection) in, false, in.receive(), out, ((Connection) in).onDispose()))
