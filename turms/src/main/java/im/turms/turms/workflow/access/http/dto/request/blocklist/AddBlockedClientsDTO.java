@@ -15,23 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.service.impl;
+package im.turms.turms.workflow.access.http.dto.request.blocklist;
 
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Metrics;
-import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Service;
+import java.util.Set;
 
 /**
  * @author James Chen
  */
-
-@Service
-@Log4j2
-public class MetricsService {
-
-    @Getter
-    private final MeterRegistry registry = Metrics.globalRegistry;
-
+public record AddBlockedClientsDTO(
+        Set<Long> userIds,
+        Set<String> ips,
+        int blockTime
+) {
 }

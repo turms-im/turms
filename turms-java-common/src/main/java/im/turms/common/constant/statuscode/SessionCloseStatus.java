@@ -65,7 +65,8 @@ public enum SessionCloseStatus {
     //**********************************************************
     //* Closed due to the change of user status
     //**********************************************************
-    USER_IS_DELETED_OR_INACTIVATED(700);
+    USER_IS_DELETED_OR_INACTIVATED(700),
+    USER_IS_BLOCKED(701);
 
     private static final Map<Integer, SessionCloseStatus> CODE_POOL = new HashMap<>((int) (SessionCloseStatus.values().length / 0.5));
 

@@ -31,6 +31,10 @@ import java.util.Set;
  */
 public interface ISessionService {
 
+    Mono<Boolean> setLocalSessionsOfflineByIp(
+            @NotNull byte[] ip,
+            @NotNull CloseReason closeReason);
+
     Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes(
             @NotNull Long userId,
             @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,

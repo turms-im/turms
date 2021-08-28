@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.service.impl;
+package im.turms.gateway.service.impl.session;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;

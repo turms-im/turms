@@ -57,6 +57,10 @@ public class UserSessionWrapper {
                 : null;
     }
 
+    public byte[] getRawIp() {
+        return address.getAddress().getAddress();
+    }
+
     /**
      * @implNote Don't use getHostString() to avoid getting a hostname
      */

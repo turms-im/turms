@@ -21,7 +21,7 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.gateway.access.udp.UdpDispatcher;
 import im.turms.gateway.pojo.bo.session.UserSession;
-import im.turms.gateway.service.impl.SessionService;
+import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.service.session.UserStatusService;
 import io.netty.util.concurrent.DefaultThreadFactory;

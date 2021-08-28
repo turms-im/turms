@@ -19,6 +19,7 @@ package im.turms.server.common.redis.codec;
 
 import io.lettuce.core.codec.RedisCodec;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
 import java.nio.ByteBuffer;
 
@@ -53,7 +54,13 @@ public final class TurmsRedisCodecAdapter<K, V> implements RedisCodec<K, V> {
             return null;
         }
         if (keyDecoder == null) {
-            throw new UnsupportedOperationException("No keyDecoder to decode key");
+            try {
+                byte[] bytes = new byte[buffer.remaining()];
+                buffer.get(bytes);
+                return (K) Unpooled.wrappedBuffer(bytes);
+            } catch (Exception e) {
+                throw new UnsupportedOperationException("No keyDecoder to decode key: " + buffer);
+            }
         }
         return (K) keyDecoder.decode(buffer);
     }
@@ -64,7 +71,13 @@ public final class TurmsRedisCodecAdapter<K, V> implements RedisCodec<K, V> {
             return null;
         }
         if (valueDecoder == null) {
-            throw new UnsupportedOperationException("No valueDecoder to decode value");
+            try {
+                byte[] bytes = new byte[buffer.remaining()];
+                buffer.get(bytes);
+                return (V) Unpooled.wrappedBuffer(bytes);
+            } catch (Exception e) {
+                throw new UnsupportedOperationException("No valueDecoder to decode key: " + buffer);
+            }
         }
         return (V) valueDecoder.decode(buffer);
     }

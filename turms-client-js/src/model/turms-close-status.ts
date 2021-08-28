@@ -17,7 +17,8 @@ enum TurmsCloseStatus {
 
     DISCONNECTED_BY_ADMIN = 600,
 
-    USER_IS_DELETED_OR_INACTIVATED = 700
+    USER_IS_DELETED_OR_INACTIVATED = 700,
+    USER_IS_BLOCKED
 }
 
 export default TurmsCloseStatus;

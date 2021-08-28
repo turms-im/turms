@@ -10,9 +10,9 @@ Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接
 
 为了让接口能够顾名思义，保证开发者能一目了然，turms的管理接口设计在参考[RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer)设计上做了进一步优化与统一，具体遵循以下准则：
 
-* URL的路径部分代表目标资源（如“/users/relationships”），或是资源的表现形式（如“/users/relationships/page”表示以分页的形式返回资源。一个URI有且仅可能返回一种格式的Response）
+* URL的路径部分代表目标资源（如`/users/relationships`），或是资源的表现形式（如`/users/relationships/page`表示以分页的形式返回资源。一个URI有且仅可能返回一种格式的Response）
 * POST方法用于Create资源，DELETE方法用于Delete资源，PUT方法用于Update资源，GET方法用于Query资源，以及比较特殊的HEAD方法用于Check资源（类似于GET，但无Response body，仅通过HTTP状态码交互）
-* 请求的Query string用于定位资源或是附加指令。如：“?ids=1,2,3”（定位资源）或“?reset=true”（附加指令）
+* 请求的Query string用于定位资源，如`?ids=1,2,3`；或是附加指令，如`?reset=true`
 * 请求的Body用于描述要创建或更新的数据
 
 ## 使用管理接口的对象
@@ -27,12 +27,25 @@ Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接
 
 ### 非业务相关类
 
-| **种类**       | **Controller**      | 路径             | **补充**                                                     |
-| :------------- | :------------------ | ---------------- | ------------------------------------------------------------ |
-| 管理员管理     | AdminController     | /admins          | 每个Turms集群默认存在一个角色为“ROOT”，账号名与密码均为“turms”的账号 |
-| 管理员角色管理 | AdminRoleController | /admins/roles    | 每个Turms集群默认存在一个角色为“ROOT”的超级管理员角色，其具有所有权限 |
-| 集群配置管理   | ConfigController    | /cluster/config  |                                                              |
-| 集群节点管理   | MemberController    | /cluster/members |                                                              |
+### 管理员类
+
+| **种类**       | **Controller**      | 路径          | **补充**                                                     |
+| :------------- | :------------------ | ------------- | ------------------------------------------------------------ |
+| 管理员管理     | AdminController     | /admins       | 每个Turms集群默认存在一个角色为`ROOT`，账号名与密码均为`turms`的账号 |
+| 管理员角色管理 | AdminRoleController | /admins/roles | 每个Turms集群默认存在一个角色为`ROOT`的超级管理员角色，其具有所有权限 |
+
+### 集群类
+
+| **种类**     | **Controller**   | 路径             |
+| :----------- | :--------------- | ---------------- |
+| 集群配置管理 | ConfigController | /cluster/config  |
+| 集群节点管理 | MemberController | /cluster/members |
+
+### 黑名单类
+
+| **种类**         | **Controller**            | 路径             |
+| :--------------- | :------------------------ | ---------------- |
+| 客户端黑名单管理 | ClientBlocklistController | /blocked-clients |
 
 ## 业务相关类
 
@@ -46,26 +59,31 @@ Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接
 | 用户关系管理     | UserRelationshipController      | /users/relationships                 |
 | 用户关系组管理   | UserRelationshipGroupController | /users/relationships/groups          |
 | 用户好友请求管理 | UserFriendRequestController     | /users/relationships/friend-requests |
+
 ### 群组类
 
-| 职责             | Controller                 | 路径                      |
-| ---------------- | -------------------------- | ------------------------- |
-| 群组管理         | GroupController            | /groups                   |
-| 群组类型管理     | GroupTypeController        | /groups/types             |
-| 群组入群问题管理 | GroupQuestionController    | /groups/questions         |
-| 群组成员管理     | GroupMemberController      | /groups/members           |
-| 群组黑名单管理   | GroupBlacklistController   | /groups/blacklisted-users |
-| 群组邀请管理     | GroupInvitationController  | /groups/invitations       |
-| 群组入群请求管理 | GroupJoinRequestController | /groups/join-requests     |
+| 职责             | Controller                 | 路径                  |
+| ---------------- | -------------------------- | --------------------- |
+| 群组管理         | GroupController            | /groups               |
+| 群组类型管理     | GroupTypeController        | /groups/types         |
+| 群组入群问题管理 | GroupQuestionController    | /groups/questions     |
+| 群组成员管理     | GroupMemberController      | /groups/members       |
+| 群组黑名单管理   | GroupBlocklistController   | /groups/blocked-users |
+| 群组邀请管理     | GroupInvitationController  | /groups/invitations   |
+| 群组入群请求管理 | GroupJoinRequestController | /groups/join-requests |
+
+### 会话类
+
+| 职责     | Controller             | 路径           |
+| -------- | ---------------------- | -------------- |
+| 会话管理 | ConversationController | /conversations |
 
 ### 消息类
 
-| 职责         | Controller              | 路径               |
-| ------------ | ----------------------- | ------------------ |
-| 消息管理     | MessageController       | /messages          |
-| 消息状态管理 | MessageStatusController | /messages/statuses |
+| 职责     | Controller        | 路径      |
+| -------- | ----------------- | --------- |
+| 消息管理 | MessageController | /messages |
 
 ## 统计
 
 当前对外暴露的统计相关接口多为Legacy API，不推荐使用。我们会在之后对其进行调整与重构。具体原因请查阅[数据分析](https://turms-im.github.io/docs/for-developers/data-analytics.html)章节。
-

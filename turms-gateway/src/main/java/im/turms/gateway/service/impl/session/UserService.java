@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.service.impl;
+package im.turms.gateway.service.impl.session;
 
 import im.turms.gateway.constant.DomainFieldName;
 import im.turms.server.common.dao.domain.User;

@@ -12,6 +12,7 @@
 *.iws
 *.iml
 *.ipr
+checkstyleidea.tmp/
 
 ### NetBeans ###
 /nbproject/private/
@@ -34,8 +35,10 @@ turms-server-common/target/
 turms-java-common/target/
 
 ### Turms Servers ###
+turms/dist/log/
 turms/target/
 
+turms-gateway/dist/log/
 turms-gateway/target/
 
 turms-admin/cypress/screenshots/

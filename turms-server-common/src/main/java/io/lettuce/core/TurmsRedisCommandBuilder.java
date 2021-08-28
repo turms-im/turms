@@ -75,14 +75,18 @@ public class TurmsRedisCommandBuilder extends RedisCommandBuilder {
 
     // Scripting
 
-    public <T> Command<ByteBuf, ByteBuf, T> evalsha(ByteBuf digest, ScriptOutputType type, ByteBuf[] keys) {
+    public <T> Command<ByteBuf, ByteBuf, T> evalsha(ByteBuf digest,
+                                                    ScriptOutputType type,
+                                                    ByteBuf[] keys) {
         CommandArgs<ByteBuf, ByteBuf> args = new CommandArgs<>(codec);
         args.addKey(digest).add(keys.length).addKeys(keys);
         CommandOutput<ByteBuf, ByteBuf, T> output = newScriptOutput(codec, type);
         return createCommand(EVALSHA, output, args);
     }
 
-    public <T> Command<ByteBuf, ByteBuf, T> eval(ByteBuf script, ScriptOutputType type, ByteBuf[] keys) {
+    public <T> Command<ByteBuf, ByteBuf, T> eval(ByteBuf script,
+                                                 ScriptOutputType type,
+                                                 ByteBuf[] keys) {
         CommandArgs<ByteBuf, ByteBuf> args = new CommandArgs<>(codec);
         args.addKey(script).add(keys.length).addKeys(keys);
         CommandOutput<ByteBuf, ByteBuf, T> output = newScriptOutput(codec, type);

@@ -129,6 +129,11 @@
                 "ADMIN_ROLE_QUERY"
             ]
         },
+        "CLIENT_BLOCKLIST": [
+            "CLIENT_BLOCKLIST_CREATE",
+            "CLIENT_BLOCKLIST_DELETE",
+            "CLIENT_BLOCKLIST_QUERY"
+        ],
         "CLUSTER_MEMBER": [
             "CLUSTER_MEMBERS_CREATE",
             "CLUSTER_MEMBERS_DELETE",

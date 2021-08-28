@@ -47,10 +47,10 @@ import java.util.List;
 
 import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_LEADER_QUERY;
 import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_LEADER_UPDATE;
-import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBERS_CREATE;
-import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBERS_DELETE;
-import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBERS_QUERY;
-import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBERS_UPDATE;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBER_CREATE;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBER_DELETE;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBER_QUERY;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBER_UPDATE;
 
 
 /**
@@ -67,20 +67,20 @@ public class MemberController {
     }
 
     @GetMapping
-    @RequiredPermission(CLUSTER_MEMBERS_QUERY)
+    @RequiredPermission(CLUSTER_MEMBER_QUERY)
     public ResponseEntity<ResponseDTO<Collection<Member>>> queryMembers() {
         return ResponseFactory.okIfTruthy(node.getDiscoveryService().getAllKnownMembers().values());
     }
 
     @DeleteMapping
-    @RequiredPermission(CLUSTER_MEMBERS_DELETE)
+    @RequiredPermission(CLUSTER_MEMBER_DELETE)
     public Mono<ResponseEntity<ResponseDTO<Void>>> removeMembers(@RequestParam List<String> ids) {
         Mono<Void> unregisterMembers = node.getDiscoveryService().unregisterMembers(CollectionUtil.newSet(ids));
         return unregisterMembers.thenReturn(ResponseFactory.OK);
     }
 
     @PostMapping
-    @RequiredPermission(CLUSTER_MEMBERS_CREATE)
+    @RequiredPermission(CLUSTER_MEMBER_CREATE)
     public Mono<ResponseEntity<ResponseDTO<Void>>> addMember(@RequestBody AddMemberDTO addMemberDTO) {
         String clusterId = node.getDiscoveryService().getLocalMember().getClusterId();
         NodeType nodeType = addMemberDTO.nodeType();
@@ -108,7 +108,7 @@ public class MemberController {
     }
 
     @PutMapping
-    @RequiredPermission(CLUSTER_MEMBERS_UPDATE)
+    @RequiredPermission(CLUSTER_MEMBER_UPDATE)
     public Mono<ResponseEntity<ResponseDTO<Void>>> updateMember(
             @RequestParam String id,
             @RequestBody UpdateMemberDTO updateMemberDTO) {

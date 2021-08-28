@@ -27,10 +27,10 @@ import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.login.UserLoginInfo;
 import im.turms.gateway.pojo.bo.session.UserSession;
-import im.turms.gateway.service.impl.InboundRequestService;
-import im.turms.gateway.service.impl.SessionService;
-import im.turms.gateway.service.impl.UserService;
-import im.turms.gateway.service.impl.UserSimultaneousLoginService;
+import im.turms.gateway.service.impl.message.InboundRequestService;
+import im.turms.gateway.service.impl.session.SessionService;
+import im.turms.gateway.service.impl.session.UserService;
+import im.turms.gateway.service.impl.session.UserSimultaneousLoginService;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
@@ -82,12 +82,13 @@ public class ServiceMediator {
 
     public Mono<UserSession> processLoginRequest(
             int version,
+            @NotNull byte[] ip,
             @NotNull Long userId,
             @Nullable String password,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
             @Nullable Point position,
-            @Nullable String ip,
+            @Nullable String ipStr,
             @Nullable String deviceDetails) {
         if (version != 1) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNSUPPORTED_CLIENT_VERSION, "The supported versions are: 1"));
@@ -95,9 +96,9 @@ public class ServiceMediator {
         if (userSimultaneousLoginService.isForbiddenDeviceType(deviceType)) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE));
         }
-        return authenticate(version, userId, password, deviceType, userStatus, position, ip, deviceDetails)
+        return authenticate(version, userId, password, deviceType, userStatus, position, ipStr, deviceDetails)
                 .flatMap(statusCode -> statusCode == TurmsStatusCode.OK
-                        ? sessionService.tryRegisterOnlineUser(version, userId, deviceType, userStatus, position)
+                        ? sessionService.tryRegisterOnlineUser(version, ip, userId, deviceType, userStatus, position)
                         : Mono.error(TurmsBusinessException.get(statusCode)));
     }
 

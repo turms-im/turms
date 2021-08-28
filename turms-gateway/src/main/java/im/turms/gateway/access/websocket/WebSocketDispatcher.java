@@ -26,6 +26,7 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.WebSocketProperties;
+import im.turms.server.common.service.blocklist.BlocklistService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.netty.DisposableServer;
@@ -44,6 +45,7 @@ public class WebSocketDispatcher extends UserSessionDispatcher {
     public WebSocketDispatcher(
             Node node,
             ApiLoggingContext apiLoggingContext,
+            BlocklistService blocklistService,
             TurmsPropertiesManager propertiesManager,
             ServerStatusManager serverStatusManager,
             ServiceMediator serviceMediator,
@@ -54,6 +56,7 @@ public class WebSocketDispatcher extends UserSessionDispatcher {
         if (webSocketProperties.isEnabled()) {
             server = WebSocketFactory.create(
                     webSocketProperties,
+                    blocklistService,
                     serverStatusManager,
                     bindConnectionWithSessionWrapper());
             log.info("WebSocket server started on {}:{}", server.host(), server.port());

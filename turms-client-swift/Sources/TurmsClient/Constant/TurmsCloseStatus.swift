@@ -21,4 +21,5 @@ public enum TurmsCloseStatus: Int {
     case disconnectedByAdmin = 600
 
     case userIsDeletedOrInactivated = 700
+    case userIsBlocked
 }

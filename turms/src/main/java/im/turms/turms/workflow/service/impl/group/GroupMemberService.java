@@ -375,9 +375,8 @@ public class GroupMemberService {
                             if (code == TurmsStatusCode.OK) {
                                 return Mono.just(Pair.of(ServicePermission.OK, strategy));
                             } else {
-                                String reason = String.format(
-                                        "The inviter with the role %s isn't allowed to send an invitation under the strategy %s",
-                                        inviterRole, strategy);
+                                String reason = "The inviter with the role %s isn't allowed to send an invitation under the strategy %s"
+                                        .formatted(inviterRole, strategy);
                                 return Mono.just(Pair.of(ServicePermission.get(code, reason), strategy));
                             }
                         })

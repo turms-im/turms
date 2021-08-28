@@ -156,6 +156,8 @@ services:
 
         -Dturms.service.redis.session.uri-list[0]=redis://redis:6379
         -Dturms.service.redis.location.uri-list[0]=redis://redis:6379
+        -Dturms.service.redis.ip-blocklist.uri=redis://redis:6379
+        -Dturms.service.redis.user-id-blocklist.uri=redis://redis:6379
     mem_limit: 2g
     healthcheck:
       test: "curl --fail --silent --user turms:turms turms:8510/actuator/health | grep UP || exit 1"
@@ -218,6 +220,8 @@ services:
 
         -Dturms.gateway.redis.session.uri-list[0]=redis://redis:6379
         -Dturms.gateway.redis.location.uri-list[0]=redis://redis:6379
+        -Dturms.gateway.redis.ip-blocklist.uri=redis://redis:6379
+        -Dturms.gateway.redis.user-id-blocklist.uri=redis://redis:6379
     healthcheck:
       test: "curl --fail --silent --user turms:turms turms-gateway:9510/actuator/health | grep UP || exit 1"
       interval: 10s

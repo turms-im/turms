@@ -4,6 +4,7 @@ import im.turms.gateway.access.common.function.ConnectionHandler;
 import im.turms.gateway.access.tcp.factory.TcpServerFactory;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.env.gateway.TcpProperties;
+import im.turms.server.common.service.blocklist.BlocklistService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.OngoingStubbing;
@@ -15,6 +16,7 @@ import reactor.netty.tcp.TcpClient;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +32,10 @@ class TcpServerIT {
         tcpProperties.setPort(0);
         tcpProperties.setWiretap(true);
 
+        BlocklistService blocklistService = mock(BlocklistService.class);
+        when(blocklistService.isIpBlocked(any(byte[].class)))
+                .thenReturn(false);
+
         ServerStatusManager serverStatusManager = mock(ServerStatusManager.class);
         List<Boolean> isActiveReturnValues = List.of(true, false, true, false);
         OngoingStubbing<Boolean> isActiveStubbing = when(serverStatusManager.isActive());
@@ -37,7 +43,7 @@ class TcpServerIT {
             isActiveStubbing = isActiveStubbing.thenReturn(returnValue);
         }
 
-        DisposableServer server = TcpServerFactory.create(tcpProperties, serverStatusManager, NEVER_CLOSE);
+        DisposableServer server = TcpServerFactory.create(tcpProperties, blocklistService, serverStatusManager, NEVER_CLOSE);
 
         int i = 0;
         for (Boolean isActive : isActiveReturnValues) {

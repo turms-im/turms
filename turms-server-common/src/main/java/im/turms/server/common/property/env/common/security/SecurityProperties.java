@@ -36,4 +36,7 @@ public class SecurityProperties {
     @NestedConfigurationProperty
     private PasswordProperties password = new PasswordProperties();
 
+    @NestedConfigurationProperty
+    private BlocklistProperties blocklist = new BlocklistProperties();
+
 }

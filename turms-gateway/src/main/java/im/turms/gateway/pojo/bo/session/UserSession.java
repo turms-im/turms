@@ -133,6 +133,13 @@ public final class UserSession {
         return deviceType != DeviceType.BROWSER;
     }
 
+    public byte[] getIp() {
+        if (connection == null) {
+            return null;
+        }
+        return connection.getAddress().getAddress().getAddress();
+    }
+
     public void sendNotification(ByteBuf byteBuf) {
         // Note that we do not check if the consumer is null
         notificationConsumer.accept(byteBuf);

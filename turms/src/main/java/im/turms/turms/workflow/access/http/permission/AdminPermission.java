@@ -109,10 +109,14 @@ public enum AdminPermission {
     ADMIN_ROLE_UPDATE,
     ADMIN_ROLE_QUERY,
 
-    CLUSTER_MEMBERS_CREATE,
-    CLUSTER_MEMBERS_DELETE,
-    CLUSTER_MEMBERS_UPDATE,
-    CLUSTER_MEMBERS_QUERY,
+    CLIENT_BLOCKLIST_CREATE,
+    CLIENT_BLOCKLIST_DELETE,
+    CLIENT_BLOCKLIST_QUERY,
+
+    CLUSTER_MEMBER_CREATE,
+    CLUSTER_MEMBER_DELETE,
+    CLUSTER_MEMBER_UPDATE,
+    CLUSTER_MEMBER_QUERY,
 
     CLUSTER_LEADER_UPDATE,
     CLUSTER_LEADER_QUERY,
@@ -202,10 +206,10 @@ public enum AdminPermission {
             ADMIN_ROLE_QUERY);
 
     public static final Set<AdminPermission> ALL_CLUSTER = Set.of(
-            CLUSTER_MEMBERS_CREATE,
-            CLUSTER_MEMBERS_DELETE,
-            CLUSTER_MEMBERS_UPDATE,
-            CLUSTER_MEMBERS_QUERY,
+            CLUSTER_MEMBER_CREATE,
+            CLUSTER_MEMBER_DELETE,
+            CLUSTER_MEMBER_UPDATE,
+            CLUSTER_MEMBER_QUERY,
             CLUSTER_CONFIG_UPDATE,
             CLUSTER_CONFIG_QUERY);
 
@@ -225,7 +229,8 @@ public enum AdminPermission {
             MESSAGE_CREATE,
             ADMIN_CREATE,
             ADMIN_ROLE_CREATE,
-            CLUSTER_MEMBERS_CREATE);
+            CLIENT_BLOCKLIST_CREATE,
+            CLUSTER_MEMBER_CREATE);
 
     public static final Set<AdminPermission> ALL_QUERY = Set.of(
             STATISTICS_USER_QUERY,
@@ -248,7 +253,8 @@ public enum AdminPermission {
             MESSAGE_QUERY,
             ADMIN_QUERY,
             ADMIN_ROLE_QUERY,
-            CLUSTER_MEMBERS_QUERY,
+            CLIENT_BLOCKLIST_QUERY,
+            CLUSTER_MEMBER_QUERY,
             CLUSTER_CONFIG_QUERY);
 
 }

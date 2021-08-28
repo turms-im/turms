@@ -63,11 +63,11 @@ import java.util.Set;
 public class UserStatusService {
 
     private final RedisScript addOnlineUserScript =
-            RedisScript.get(new ClassPathResource("redis/try_add_online_user_with_ttl.lua"), ScriptOutputType.BOOLEAN);
+            RedisScript.get(new ClassPathResource("redis/session/try_add_online_user_with_ttl.lua"), ScriptOutputType.BOOLEAN);
     private final RedisScript updateUsersTtlScript =
-            RedisScript.get(new ClassPathResource("redis/update_users_ttl.lua"), ScriptOutputType.BOOLEAN);
+            RedisScript.get(new ClassPathResource("redis/session/update_users_ttl.lua"), ScriptOutputType.BOOLEAN);
     private final RedisScript updateOnlineUserStatusIfPresent =
-            RedisScript.get(new ClassPathResource("redis/update_online_user_status_if_present.lua"), ScriptOutputType.BOOLEAN);
+            RedisScript.get(new ClassPathResource("redis/session/update_online_user_status_if_present.lua"), ScriptOutputType.BOOLEAN);
 
     /**
      * <pre>

@@ -18,12 +18,13 @@
 package im.turms.gateway.access.websocket.factory;
 
 import im.turms.gateway.access.common.function.ConnectionHandler;
-import im.turms.gateway.access.common.handler.ServerAvailabilityHandler;
+import im.turms.gateway.access.common.handler.ServiceAvailabilityHandler;
 import im.turms.gateway.access.tcp.factory.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.gateway.constant.MetricsConstant;
 import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.env.gateway.WebSocketProperties;
+import im.turms.server.common.service.blocklist.BlocklistService;
 import im.turms.server.common.util.SslUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpHeaders;
@@ -86,9 +87,10 @@ public final class WebSocketFactory {
     }
 
     public static DisposableServer create(WebSocketProperties webSocketProperties,
+                                          BlocklistService blocklistService,
                                           ServerStatusManager serverStatusManager,
                                           ConnectionHandler handler) {
-        ServerAvailabilityHandler serverAvailabilityHandler = new ServerAvailabilityHandler(serverStatusManager);
+        ServiceAvailabilityHandler serviceAvailabilityHandler = new ServiceAvailabilityHandler(blocklistService, serverStatusManager);
         // Don't set SO_SNDBUF and SO_RCVBUF because of
         // the reasons mentioned in https://developer.aliyun.com/article/724580
         HttpServer server = HttpServer.create()
@@ -104,7 +106,7 @@ public final class WebSocketFactory {
                 .metrics(true, () -> new TurmsMicrometerChannelMetricsRecorder(MetricsConstant.CLIENT_NETWORK, "websocket"))
                 .handle(getHttpRequestHandler(handler))
                 .doOnChannelInit((connectionObserver, channel, remoteAddress) ->
-                        channel.pipeline().addFirst("serverAvailabilityHandler", serverAvailabilityHandler));
+                        channel.pipeline().addFirst("serviceAvailabilityHandler", serviceAvailabilityHandler));
         Ssl ssl = webSocketProperties.getSsl();
         if (ssl.isEnabled()) {
             server.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true), true);

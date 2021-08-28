@@ -18,25 +18,37 @@
 package im.turms.gateway.access.common.handler;
 
 import im.turms.server.common.manager.ServerStatusManager;
+import im.turms.server.common.service.blocklist.BlocklistService;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 /**
  * @author James Chen
  */
 @ChannelHandler.Sharable
-public class ServerAvailabilityHandler extends ChannelInboundHandlerAdapter {
+public class ServiceAvailabilityHandler extends ChannelInboundHandlerAdapter {
 
+    private final BlocklistService blocklistService;
     private final ServerStatusManager serverStatusManager;
 
-    public ServerAvailabilityHandler(ServerStatusManager serverStatusManager) {
+    public ServiceAvailabilityHandler(BlocklistService blocklistService, ServerStatusManager serverStatusManager) {
+        this.blocklistService = blocklistService;
         this.serverStatusManager = serverStatusManager;
     }
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) {
         if (serverStatusManager.isActive()) {
+            SocketAddress socketAddress = ctx.channel().remoteAddress();
+            if (socketAddress instanceof InetSocketAddress address
+                    && blocklistService.isIpBlocked(address.getAddress().getAddress())) {
+                ctx.close();
+                return;
+            }
             ctx.fireChannelRegistered();
         } else {
             ctx.close();

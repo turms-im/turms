@@ -10,6 +10,8 @@ import java.time.Duration;
  */
 public abstract class BaseIntegrationTest {
 
+    protected long waitMillis = 1000L;
+
     public static final TestingEnvContainer ENV = new TestingEnvContainer(TestingEnvContainerOptions.builder()
             .build());
 
@@ -31,6 +33,14 @@ public abstract class BaseIntegrationTest {
         try {
             return new String(resource.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected void waitToSync() {
+        try {
+            Thread.sleep(waitMillis);
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

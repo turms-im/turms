@@ -19,9 +19,6 @@ package im.turms.server.common.manager.address;
 
 import im.turms.server.common.manager.PublicIpManager;
 import im.turms.server.common.property.constant.AdvertiseStrategy;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -71,7 +68,7 @@ public class AddressCollector {
     }
 
     private String attachPortToHost(String host) {
-        return String.format("%s:%d", host, port);
+        return "%s:%d".formatted(host, port);
     }
 
     private String queryHost() throws UnknownHostException {
@@ -100,8 +97,8 @@ public class AddressCollector {
             return new AddressGroup(
                     host,
                     address,
-                    String.format("%s://%s", httpProtocol, address),
-                    String.format("%s://%s", wsProtocol, address));
+                    "%s://%s".formatted(httpProtocol, address),
+                    "%s://%s".formatted(wsProtocol, address));
         } else {
             throw new UnknownHostException("The address of the current server cannot be found");
         }
@@ -123,14 +120,12 @@ public class AddressCollector {
         return addressGroup.wsAddress;
     }
 
-    @AllArgsConstructor
-    @EqualsAndHashCode
-    @Data
-    public static final class AddressGroup {
-        private final String host;
-        private final String address;
-        private final String httpAddress;
-        private final String wsAddress;
+    public record AddressGroup(
+            String host,
+            String address,
+            String httpAddress,
+            String wsAddress
+    ) {
     }
 
 }

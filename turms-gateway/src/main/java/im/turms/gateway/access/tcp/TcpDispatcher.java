@@ -25,6 +25,7 @@ import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.TcpProperties;
+import im.turms.server.common.service.blocklist.BlocklistService;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -47,6 +48,7 @@ public class TcpDispatcher extends UserSessionDispatcher {
 
     public TcpDispatcher(ApiLoggingContext apiLoggingContext,
                          TurmsPropertiesManager propertiesManager,
+                         BlocklistService blocklistService,
                          ServiceMediator serviceMediator,
                          ServerStatusManager serverStatusManager,
                          UserRequestDispatcher userRequestDispatcher) {
@@ -57,6 +59,7 @@ public class TcpDispatcher extends UserSessionDispatcher {
         if (enabled) {
             server = TcpServerFactory.create(
                     tcpProperties,
+                    blocklistService,
                     serverStatusManager,
                     bindConnectionWithSessionWrapper());
             host = server.host();

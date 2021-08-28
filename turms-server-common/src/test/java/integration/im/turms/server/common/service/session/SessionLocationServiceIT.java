@@ -80,7 +80,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
 
         RedisProperties redisProperties = new RedisProperties()
                 .toBuilder()
-                .uriList(List.of(String.format("redis://%s:%d", ENV.getRedisHost(), ENV.getRedisPort())))
+                .uriList(List.of("redis://%s:%d".formatted(ENV.getRedisHost(), ENV.getRedisPort())))
                 .build();
         TurmsRedisClientManager manager =
                 new TurmsRedisClientManager(redisProperties, RedisCodecContextPool.GEO_USER_SESSION_ID_CODEC_CONTEXT);

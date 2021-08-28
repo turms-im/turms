@@ -23,6 +23,7 @@ import im.turms.gateway.constant.MetricsConstant;
 import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.env.gateway.TcpProperties;
+import im.turms.server.common.service.blocklist.BlocklistService;
 import im.turms.server.common.util.SslUtil;
 import org.springframework.boot.web.server.Ssl;
 import reactor.netty.Connection;
@@ -47,9 +48,10 @@ public final class TcpServerFactory {
 
     @Nullable
     public static DisposableServer create(TcpProperties tcpProperties,
+                                          BlocklistService blocklistService,
                                           ServerStatusManager serverStatusManager,
                                           ConnectionHandler handler) {
-        TcpHandlerConfig handlerConfig = new TcpHandlerConfig(serverStatusManager);
+        TcpHandlerConfig handlerConfig = new TcpHandlerConfig(blocklistService, serverStatusManager);
         TcpServer server = TcpServer.create()
                 .host(tcpProperties.getHost())
                 .port(tcpProperties.getPort())

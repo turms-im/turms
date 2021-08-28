@@ -20,10 +20,14 @@ package im.turms.server.common.redis.script;
 import im.turms.server.common.util.ByteBufUtil;
 import io.lettuce.core.ScriptOutputType;
 import io.lettuce.core.codec.Base16;
+import io.lettuce.core.protocol.BaseRedisCommandBuilder;
 import io.netty.buffer.ByteBuf;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 /**
  * @author James Chen
@@ -33,11 +37,30 @@ public record RedisScript(
         ByteBuf digest,
         ScriptOutputType outputType
 ) {
-    private static final int MAX_SCRIPT_SIZE = 1024;
+    private static final int MAX_SCRIPT_SIZE = 10 * 1024;
 
+    /**
+     * @param outputType {@link BaseRedisCommandBuilder#newScriptOutput}
+     */
     public static RedisScript get(ClassPathResource resource, ScriptOutputType outputType) {
+        return get(resource, outputType, null);
+    }
+
+    /**
+     * @param outputType {@link BaseRedisCommandBuilder#newScriptOutput}
+     */
+    public static RedisScript get(ClassPathResource resource,
+                                  ScriptOutputType outputType,
+                                  Map<String, Object> placeholders) {
         try {
             byte[] bytes = resource.getInputStream().readAllBytes();
+            if (!CollectionUtils.isEmpty(placeholders)) {
+                String s = new String(bytes, StandardCharsets.UTF_8);
+                for (Map.Entry<String, Object> entry : placeholders.entrySet()) {
+                    s = s.replace(entry.getKey(), entry.getValue().toString());
+                }
+                bytes = s.getBytes(StandardCharsets.UTF_8);
+            }
             if (bytes.length > MAX_SCRIPT_SIZE) {
                 String error = "The script cannot be larger than " + MAX_SCRIPT_SIZE + ": " + resource.getPath();
                 throw new IllegalStateException(error);

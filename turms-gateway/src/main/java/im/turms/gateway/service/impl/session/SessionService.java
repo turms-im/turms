@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.service.impl;
+package im.turms.gateway.service.impl.session;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
@@ -28,6 +28,7 @@ import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
+import im.turms.gateway.service.impl.observability.MetricsService;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
@@ -84,8 +85,10 @@ public class SessionService implements ISessionService {
     private final UserSimultaneousLoginService userSimultaneousLoginService;
 
     private final boolean pluginEnabled;
-    private final Map<Long, UserSessionsManager> sessionsManagerByUserId;
     private int closeIdleSessionAfterSeconds;
+
+    private final Map<Long, UserSessionsManager> sessionsManagerByUserId;
+    private final Map<byte[], UserSession> sessionByIp;
 
     private final Counter loggedInUsersCounter;
 
@@ -104,8 +107,8 @@ public class SessionService implements ISessionService {
         this.userStatusService = userStatusService;
         this.userSimultaneousLoginService = userSimultaneousLoginService;
         TurmsProperties turmsProperties = node.getSharedProperties();
-        // Use ConcurrentHashMap to avoid overwriting an existing sessions manager by accident
         sessionsManagerByUserId = new ConcurrentHashMap<>(4096);
+        sessionByIp = new ConcurrentHashMap<>(4096);
         pluginEnabled = turmsProperties.getPlugin().isEnabled();
 
         SessionProperties sessionProperties = turmsProperties.getGateway().getSession();
@@ -139,6 +142,28 @@ public class SessionService implements ISessionService {
         CloseReason closeReason = CloseReason.get(SessionCloseStatus.SERVER_CLOSED);
         clearAllLocalSessions(new Date(), closeReason)
                 .subscribe();
+    }
+
+    /**
+     * @return true if the user was online
+     */
+    @Override
+    public Mono<Boolean> setLocalSessionsOfflineByIp(
+            @NotNull byte[] ip,
+            @NotNull CloseReason closeReason) {
+        try {
+            AssertUtil.notNull(ip, "ip");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
+        UserSession session = sessionByIp.get(ip);
+        if (session == null) {
+            return Mono.just(false);
+        }
+        return setLocalSessionOfflineByUserIdAndDeviceTypes(session.getUserId(),
+                DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
+                closeReason,
+                new Date());
     }
 
     /**
@@ -237,6 +262,10 @@ public class SessionService implements ISessionService {
                     return Flux.merge(disconnectMonos)
                             .doOnNext(session -> {
                                 manager.setDeviceOffline(session.getDeviceType(), closeReason);
+                                byte[] ip = session.getIp();
+                                if (ip != null) {
+                                    sessionByIp.remove(ip);
+                                }
                                 removeSessionsManagerIfEmpty(closeReason, manager, userId);
                             })
                             .then(Mono.just(true));
@@ -292,11 +321,14 @@ public class SessionService implements ISessionService {
      */
     public Mono<UserSession> tryRegisterOnlineUser(
             int version,
+            @NotNull byte[] ip,
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
             @Nullable Point position) {
         try {
+            AssertUtil.notNull(ip, "ip");
+            AssertUtil.notNull(userId, "userId");
             AssertUtil.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
             AssertUtil.state(userStatus != UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
@@ -319,7 +351,7 @@ public class SessionService implements ISessionService {
                     // Check the current sessions status
                     UserStatus existingUserStatus = sessionsStatus.userStatus();
                     if (existingUserStatus == UserStatus.OFFLINE) {
-                        return addOnlineDeviceIfAbsent(version, userId, deviceType, userStatus, position);
+                        return addOnlineDeviceIfAbsent(version, ip, userId, deviceType, userStatus, position);
                     }
                     boolean conflicts = sessionsStatus.getLoggedInDeviceTypes().contains(deviceType);
                     if (conflicts) {
@@ -348,7 +380,7 @@ public class SessionService implements ISessionService {
                     }
                     return disconnectConflictedDeviceTypes(userId, deviceType, sessionsStatus)
                             .flatMap(wasSuccessful -> wasSuccessful
-                                    ? addOnlineDeviceIfAbsent(version, userId, deviceType, userStatus, position)
+                                    ? addOnlineDeviceIfAbsent(version, ip, userId, deviceType, userStatus, position)
                                     : Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
                 });
     }
@@ -417,6 +449,7 @@ public class SessionService implements ISessionService {
 
     private Mono<UserSession> addOnlineDeviceIfAbsent(
             int version,
+            @NotNull byte[] ip,
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
@@ -434,11 +467,13 @@ public class SessionService implements ISessionService {
                     // This should never happen
                     if (session == null) {
                         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE));
+                        sessionByIp.remove(ip);
                         session = manager.addSessionIfAbsent(version, deviceType, position);
                         if (session == null) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR));
                         }
                     }
+                    sessionByIp.put(ip, session);
                     Date now = new Date();
                     if (position != null && sessionLocationService.isLocationEnabled()) {
                         return sessionLocationService.upsertUserLocation(userId, deviceType, position, now)

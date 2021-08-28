@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.service.impl;
+package im.turms.gateway.service.impl.message;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.manager.RateLimitingManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
+import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;

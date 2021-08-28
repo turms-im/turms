@@ -50,6 +50,8 @@ public class ContainerConfig {
         TurmsRedisProperties redis = service.getRedis();
         redis.getSession().setUriList(List.of(redisUri));
         redis.getLocation().setUriList(List.of(redisUri));
+        redis.getIpBlocklist().setUri(redisUri);
+        redis.getUserIdBlocklist().setUri(redisUri);
     }
 
 }

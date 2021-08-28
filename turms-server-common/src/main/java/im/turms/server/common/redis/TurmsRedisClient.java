@@ -56,9 +56,10 @@ import static io.lettuce.core.protocol.CommandType.GEORADIUSBYMEMBER;
 
 /**
  * @author James Chen
- * @implNote For Redis commands, release the key/val buffers to ensure that
+ * @implNote 1. For Redis commands, release the key/val buffers to ensure that
  * if a command is cancelled or encounters an error, the buffers can be released
- * (In these cases, it won't be released by Lettuce because it haven't flushed the buffers),
+ * (In these cases, it won't be released by Lettuce because it hasn't flushed the buffers),
+ * 2. These buffers must be unpooled because https://github.com/turms-im/turms/issues/786
  * @see AbstractRedisReactiveCommands
  */
 @Log4j2
@@ -212,13 +213,7 @@ public class TurmsRedisClient {
                     }
                     return Flux.error(e);
                 })
-                .doFinally(signal -> {
-                    for (ByteBuf key : keys) {
-                        if (key.refCnt() > 0) {
-                            key.release();
-                        }
-                    }
-                })
+                .doFinally(signal -> ByteBufUtil.ensureReleased(keys))
                 .single();
     }
 

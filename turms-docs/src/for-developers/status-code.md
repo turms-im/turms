@@ -153,3 +153,4 @@ SessionCloseStatus表明会话关闭的原因。
 |                | DISCONNECTED_BY_OTHER_DEVICE   | 501    | 由于当前用户的其他设备上线，导致当前会话关闭      |
 | 管理员主动关闭 | DISCONNECTED_BY_ADMIN          | 600    | 管理员通过API主动关闭会话                         |
 | 用户状态变更   | USER_IS_DELETED_OR_INACTIVATED | 700    | 用户账号被删除或进入未激活状态                    |
+|                | USER_IS_BLOCKED                | 701    | 用户IP或用户ID被封禁                              |

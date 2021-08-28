@@ -70,8 +70,8 @@ public class NodeVersion implements Comparable<NodeVersion> {
     @Override
     public String toString() {
         return qualifier == 0
-                ? String.format("%d.%d.%d", major, minor, patch)
-                : String.format("%d.%d.%d-SNAPSHOT", major, minor, patch);
+                ? "%d.%d.%d".formatted(major, minor, patch)
+                : "%d.%d.%d-SNAPSHOT".formatted(major, minor, patch);
     }
 
     @Override
