@@ -16,6 +16,7 @@
                 :key="filter.id"
                 v-model:value="filter.model"
                 class="search-filter search-filter__select"
+                :style="`width: ${getSelectWidth(filter)}px`"
                 :data-id="filter.id"
             >
                 <a-select-option
@@ -134,6 +135,13 @@ export default {
             }
             return [this.$t(`${filter.name}Range.start`), this.$t(`${filter.name}Range.end`)];
         },
+        getSelectWidth(filter) {
+            const longestLabel = (filter.options.base || [])
+                .concat(filter.options.values || [])
+                .map(val => this.$t(val.label))
+                .reduce((max, val) => max.length > val.length ? max : val);
+            return longestLabel.length * 11;
+        },
         onSearchClicked() {
             this.$emit('onSearchClicked');
         }
@@ -154,7 +162,7 @@ export default {
 
 .search-filter__select {
     min-width: 140px;
-    max-width: 200px;
+    max-width: 260px;
 }
 
 .search-filter__date-picker {
