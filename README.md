@@ -20,9 +20,11 @@ Please refer to [Turms Documentation](https://turms-im.github.io/docs) (no Engli
 
 * turms-gateway: http://playground.turms.im:10510 (port for WebSocket access) and http://playground.turms.im:11510 (port for TCP access)
 
-  You can use any turms-client-(java/js/swift) implementation to send requests to turms-gateway and interact with other users.
+* Prometheus: http://playground.turms.im:9090; Grafana: http://playground.turms.im:3000
 
-In addition, Playground is set up automatically by just one command: `ENV=dev docker-compose -f docker-compose.standalone.yml up --force-recreate -d`
+You can use any turms-client-(java/js/swift) implementation to send requests to turms-gateway and interact with other users.
+
+In addition, Playground is set up automatically by just one command: `ENV=dev docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`
 
 ## Quick Start
 Running the following commands to setup a minimum viable cluster (including turms, turms-gateway and turms-admin) and its dependent servers (MongoDB sharded cluster and Redis) automatically:
@@ -33,6 +35,19 @@ docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all
 docker-compose -f docker-compose.standalone.yml up --force-recreate
 ```
 After the cluster is set up, you can visit turms-admin at http://localhost:6510, and enter the account and password (`turms` by default). If you log in successfully, it means that turms has been setup successfully.
+
+You can also apply the Terraform modules provided by Turms to quickly purchase cloud services and set up a turms cluster (uses spot instances by default). After running `terraform apply`, wait for about 3~15 minutes (Alibaba Cloud ECS is slow to pull ghcr images), and then visit `http://<public IP>:6510`, if you can access turms-admin, it means that the turms cluster has been set up successfully.
+
+**（Note: The following commands will automatically purchase cloud services and deduct the corresponding fees from your account）**
+
+```sh
+git clone --depth 1 https://github.com/turms-im/turms.git
+cd turms/terraform/alicloud/playground
+export ALICLOUD_ACCESS_KEY=<your_access_key>
+export ALICLOUD_SECRET_KEY=<your_secret_key>
+terraform init
+terraform apply
+```
 
 ## Intro
 
@@ -51,11 +66,11 @@ In addition, architecture design is an art of trade-off. Some IM products take r
 
 ### Common Architecture Features
 
-1. (Agility) Support updating turms server without the users' awareness of shutdown to support rapid iteration
-2. (Scalability) Turms server is stateless to be scaled out; Support multi-active across data centers
+1. (Agility) Support updating turms servers without the users' awareness of shutdown to support rapid iteration
+2. (Scalability) The Turms server is stateless to be scaled out; Support multi-active across data centers
 3. (Deployability) Support container deployment to facilitate integration (CI/CD) with cloud services
 4. (Observability) Support relatively complete features of observability for business analysis and troubleshoot
-5. (Scalability) Support medium to large scale instant messaging applications, and there is no need to refactor even if the application becomes large from medium-scale (There is still a lot of optimization work to be done for large applications, but turms server is easy to upgrade)
+5. (Scalability) Support medium to large scale instant messaging applications, and there is no need to refactor even if the application becomes large from medium-scale (There is still a lot of optimization work to be done for large applications, but turms servers are easy to upgrade)
 6. (Simplicity) The Turms architecture is lightweight, which makes Turms easy to learn and redevelop. Please refer to [Turms Architecture Design](https://turms-im.github.io/docs/for-developers/architecture.html) for details)
 7. Turms depends on the MongoDB sharded cluster to support request routing (such as read-write separation) for medium to large scale applications
 
@@ -63,7 +78,7 @@ In addition, architecture design is an art of trade-off. Some IM products take r
 
 ### Other Features
 
-1. Observable system (Please refer to Turms Monitoring System (TODO) for details)
+1. Observable system (Please refer to [Observability](https://turms-im.github.io/docs/for-developers/observability.html) for details)
    * Log (for events): Turms provides three types of logs: monitoring log, business log, and statistics log
    
    * Metrics (for aggregable data). It reflects the real-time status of the system and business data
@@ -74,11 +89,11 @@ In addition, architecture design is an art of trade-off. Some IM products take r
 2. Extreme performance
     We always try to archive extreme performance in the implementation of all business workflows. Please refer to the source code for details.
   * (Network)
-    * (I/O) turms server is a reactive application. All network I/O operations (database call, Redis call, service discovery call, RPC) are based on Netty to achieve non-blocking I/O. Therefore, the turms server can make full use of system resources in each module (while traditional servers can't)
-    * (Encoding) Protobuf is used to encode the traffic data between the turms server and turms clients; Custom encoding without any redundant data is used to encode the RPC requests and responses between turms servers.
-  * (Thread) turms server has an excellent thread model, and its thread number is constant, which is independent of the number of online users and the number of requests. Since the default number of threads in the access layer of the turms server is the same as that of the CPU processors, the turms server can make full use of the CPU cache, and greatly reduce the cost of thread context switching compared with traditional servers
-  * (Memory) turms server allocates heap or direct memory smartly according to its usage to reduce the memory footprint.
-  * (Cache) Each module of the turms server make full use of the local memory cache
+    * (I/O) The turms server is a reactive application. All network I/O operations (e.g. database call, Redis call, service discovery call, RPC) are based on Netty to achieve non-blocking I/O. Therefore, the turms server can make full use of system resources (while traditional servers can't)
+    * (Encoding) Protobuf is used to encode the traffic data between turms servers and turms clients; Custom encoding without any redundant data is used to encode the RPC requests and responses between turms servers.
+  * (Thread) The turms server has an excellent thread model, and its thread number is constant, which is independent of the number of online users and the number of requests. Since the default number of threads in the access layer of the turms server is the same as that of the CPU processors, the turms server can make full use of the CPU cache, and greatly reduce the cost of thread context switching compared with traditional servers
+  * (Memory) The turms server allocates heap or direct memory smartly according to its usage to reduce the memory footprint.
+  * (Cache) The turms server makes full use of the local memory cache
 ## Subprojects
 
 |Name | Summary |
@@ -107,6 +122,7 @@ The architecture design of Turms is derived from commercial instant messaging ar
 | Advantages            | 1. The client implementation is cross-platform and out-of-the-box for users<br/>2. Support a complete and unified UI suite<br/>3. Support rich advanced instant messaging features, such as audio and video conference, file sharing, screen sharing <br/>4. Provide commercial users with technical support | The advantages are the features described above              |
 | Disadvantages         | 1. Only suitable for small-scale applications<br/>2. Narrow application scenarios and hard to customize | 1. Only meets the general instant messaging needs, and does not provide some advanced features (for example, no support for audio and video conferencing)<br/>2. The admin system does not provide advanced operation features currently <br/>3. No support for specific business logic and UI<br />4. Servers are reactive, which is challenging for some developers |
 | Comment               | It is highly recommended to use Rocket.Chat for team communications | Although both are open source IM projects, they have completely different application scenarios. Turms is a general instant messaging engine for medium to large scale instant messaging applications. You cannot just hand Turms to your customers (just as most products don't let customers write SQL statements to query business data in the database). <br/>However, based on Turms, you can implement all the open-source instant messaging projects on GitHub more efficiently, comprehensively, and extensively |
+
 ## Demo with Specific Business Implementation
 
 Considering the positioning of Turms, we do not plan to provide client demo with UI and specific business logic in the near future because:

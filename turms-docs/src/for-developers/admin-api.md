@@ -27,29 +27,29 @@ Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接
 
 ### 非业务相关类
 
-### 管理员类
+#### 管理员类
 
 | **种类**       | **Controller**      | 路径          | **补充**                                                     |
 | :------------- | :------------------ | ------------- | ------------------------------------------------------------ |
 | 管理员管理     | AdminController     | /admins       | 每个Turms集群默认存在一个角色为`ROOT`，账号名与密码均为`turms`的账号 |
 | 管理员角色管理 | AdminRoleController | /admins/roles | 每个Turms集群默认存在一个角色为`ROOT`的超级管理员角色，其具有所有权限 |
 
-### 集群类
+#### 集群类
 
 | **种类**     | **Controller**   | 路径             |
 | :----------- | :--------------- | ---------------- |
 | 集群配置管理 | ConfigController | /cluster/config  |
 | 集群节点管理 | MemberController | /cluster/members |
 
-### 黑名单类
+#### 黑名单类
 
 | **种类**         | **Controller**            | 路径             |
 | :--------------- | :------------------------ | ---------------- |
 | 客户端黑名单管理 | ClientBlocklistController | /blocked-clients |
 
-## 业务相关类
+### 业务相关类
 
-### 用户类
+用户类
 
 | **职责**         | **Controller**                  | 路径                                 |
 | :--------------- | :------------------------------ | ------------------------------------ |
@@ -60,7 +60,7 @@ Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接
 | 用户关系组管理   | UserRelationshipGroupController | /users/relationships/groups          |
 | 用户好友请求管理 | UserFriendRequestController     | /users/relationships/friend-requests |
 
-### 群组类
+#### 群组类
 
 | 职责             | Controller                 | 路径                  |
 | ---------------- | -------------------------- | --------------------- |
@@ -72,13 +72,13 @@ Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接
 | 群组邀请管理     | GroupInvitationController  | /groups/invitations   |
 | 群组入群请求管理 | GroupJoinRequestController | /groups/join-requests |
 
-### 会话类
+#### 会话类
 
 | 职责     | Controller             | 路径           |
 | -------- | ---------------------- | -------------- |
 | 会话管理 | ConversationController | /conversations |
 
-### 消息类
+#### 消息类
 
 | 职责     | Controller        | 路径      |
 | -------- | ----------------- | --------- |
