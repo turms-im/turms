@@ -328,7 +328,6 @@ public class SessionService implements ISessionService {
             @Nullable Point position) {
         try {
             AssertUtil.notNull(ip, "ip");
-            AssertUtil.notNull(userId, "userId");
             AssertUtil.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
             AssertUtil.state(userStatus != UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");

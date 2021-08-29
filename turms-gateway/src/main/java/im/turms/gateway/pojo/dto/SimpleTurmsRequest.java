@@ -19,6 +19,7 @@ package im.turms.gateway.pojo.dto;
 
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.user.CreateSessionRequest;
+import im.turms.server.common.util.ProtoUtil;
 
 /**
  * @author James Chen
@@ -27,4 +28,12 @@ public record SimpleTurmsRequest(
         long requestId,
         TurmsRequest.KindCase type,
         CreateSessionRequest createSessionRequest) {
+    @Override
+    public String toString() {
+        return "SimpleTurmsRequest[" +
+                "requestId=" + requestId +
+                ", type=" + type +
+                ", createSessionRequest=" + ProtoUtil.toLogString(createSessionRequest) +
+                ']';
+    }
 }
