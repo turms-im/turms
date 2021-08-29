@@ -65,7 +65,7 @@ public class ClientFakingManager {
 
     public ClientFakingManager(TcpDispatcher tcpDispatcher,
                                TurmsApplicationContext context,
-                               TurmsPropertiesManager propertiesManager) {
+                               TurmsPropertiesManager propertiesManager) throws InterruptedException {
         this.tcpDispatcher = tcpDispatcher;
         fakeProperties = propertiesManager.getLocalProperties()
                 .getGateway()
@@ -78,6 +78,10 @@ public class ClientFakingManager {
             throw new IllegalStateException("Cannot run clients because the TCP server is disabled");
         }
         log.info("Preparing clients");
+        // Though the local TCP server has just been set up,
+        // we wait to ensure it's ready for connections.
+        // Otherwise, clients will fail to connect due to "Connection reset"
+        Thread.sleep(1000);
         clients = prepareClients(fakeProperties.getFirstUserId(), fakeProperties.getUserCount())
                 .block(Duration.ofSeconds(15));
     }
