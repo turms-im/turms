@@ -470,7 +470,7 @@ public class ConnectionService implements ClusterService {
                     .subscribe(ignored -> {
                         Member memberToConnect = discoveryService.getAllKnownMembers().get(nodeId);
                         if (memberToConnect != null) {
-                            connectMemberUntilSucceedOrRemoved(member);
+                            connectMemberUntilSucceedOrRemoved(memberToConnect);
                         }
                     });
         }

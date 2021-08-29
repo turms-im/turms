@@ -134,8 +134,8 @@ public class UdpDispatcher {
                 if (session == null) {
                     yield Mono.just(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION);
                 }
-                // Update the address because it may has changed
-                session.getConnection().setAddress(senderAddress);
+                // Update the address because it may have changed
+                session.getConnection().setUdpAddress(senderAddress);
                 yield Mono.just(TurmsStatusCode.OK);
             }
             case GO_OFFLINE -> {

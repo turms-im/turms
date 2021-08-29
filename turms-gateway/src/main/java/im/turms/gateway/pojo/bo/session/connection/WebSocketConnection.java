@@ -30,6 +30,8 @@ import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 import reactor.netty.http.websocket.WebsocketOutbound;
 
+import java.net.InetSocketAddress;
+
 /**
  * @author James Chen
  */
@@ -43,6 +45,11 @@ public class WebSocketConnection extends NetConnection {
         super(isConnected);
         this.connection = connection;
         out = (WebsocketOutbound) connection;
+    }
+
+    @Override
+    public InetSocketAddress getAddress() {
+        return (InetSocketAddress) connection.address();
     }
 
     /**

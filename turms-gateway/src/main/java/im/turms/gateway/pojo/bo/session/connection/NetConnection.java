@@ -29,6 +29,7 @@ import reactor.netty.http.HttpOperations;
 import reactor.util.retry.Retry;
 import reactor.util.retry.RetryBackoffSpec;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.net.InetSocketAddress;
 import java.time.Duration;
@@ -42,13 +43,18 @@ public abstract class NetConnection {
             .backoff(2, Duration.ofSeconds(3))
             .filter(throwable -> !ExceptionUtil.isDisconnectedClientError(throwable));
 
-    private InetSocketAddress address;
+    @Nullable
+    private InetSocketAddress udpAddress;
     private volatile boolean isConnected;
     private volatile boolean isSwitchingToUdp;
     /**
      * true if it is switching UDP to TCP/WebSocket
      */
     private volatile boolean isConnectionRecovering;
+
+    protected NetConnection(boolean isConnected) {
+        this.isConnected = isConnected;
+    }
 
     public static NetConnection create(Connection connection) {
         if (connection instanceof HttpOperations) {
@@ -58,9 +64,7 @@ public abstract class NetConnection {
         }
     }
 
-    protected NetConnection(boolean isConnected) {
-        this.isConnected = isConnected;
-    }
+    public abstract InetSocketAddress getAddress();
 
     public void close(@NotNull CloseReason closeReason) {
         isConnected = false;
@@ -79,8 +83,8 @@ public abstract class NetConnection {
     }
 
     public void tryNotifyClientToRecover() {
-        if (!isConnected && !isConnectionRecovering) {
-            UdpDispatcher.instance.sendSignal(address, UdpNotificationType.OPEN_CONNECTION);
+        if (!isConnected && !isConnectionRecovering && udpAddress != null) {
+            UdpDispatcher.instance.sendSignal(udpAddress, UdpNotificationType.OPEN_CONNECTION);
             isConnectionRecovering = true;
         }
     }

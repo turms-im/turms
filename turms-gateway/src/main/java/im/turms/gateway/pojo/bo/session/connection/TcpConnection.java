@@ -25,6 +25,8 @@ import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 import reactor.netty.channel.ChannelOperations;
 
+import java.net.InetSocketAddress;
+
 /**
  * @author James Chen
  */
@@ -36,6 +38,11 @@ public class TcpConnection extends NetConnection {
     protected TcpConnection(ChannelOperations<?, ?> connection, boolean isConnected) {
         super(isConnected);
         this.connection = connection;
+    }
+
+    @Override
+    public InetSocketAddress getAddress() {
+        return (InetSocketAddress) connection.address();
     }
 
     /**
