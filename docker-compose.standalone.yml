@@ -249,7 +249,7 @@ services:
   # optional services for observability - metrics
 
   grafana:
-    image: grafana/grafana:8.0.3
+    image: grafana/grafana:8.1.2
     depends_on:
       - prometheus
     environment:
@@ -264,7 +264,7 @@ services:
       - ./ops/grafana/provisioning/:/etc/grafana/provisioning/
 
   prometheus:
-    image: prom/prometheus:v2.27.1
+    image: prom/prometheus:v2.29.2
     ports:
       - "9090:9090"
     profiles:
@@ -274,7 +274,7 @@ services:
       - ./ops/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
   node-exporter:
-    image: prom/node-exporter:v1.1.2
+    image: prom/node-exporter:v1.2.2
     ports:
       - "9100:9100"
     profiles:
@@ -292,8 +292,17 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
 
+  mongo-exporter:
+    image: bitnami/mongodb-exporter:0.20.7
+    environment:
+      MONGODB_URI: "mongodb://root:turms@mongodb-router:27017"
+    ports:
+      - "9216:9216"
+    profiles:
+      - monitoring
+
   redis-exporter:
-    image: oliver006/redis_exporter:v1.24.0
+    image: oliver006/redis_exporter:v1.26.0
     depends_on:
       - redis
     environment:
@@ -306,7 +315,7 @@ services:
   # Services for observability - logging
 
   loki:
-    image: grafana/loki:2.2.1
+    image: grafana/loki:2.3.0
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
