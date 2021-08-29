@@ -38,9 +38,10 @@ import java.util.List;
 
 /**
  * @author James Chen
+ * @implNote The index for "_id" is frequently used by isMemberMuted and queryGroupMemberRole
  */
-@Data
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
+@Data
 @Document(GroupMember.COLLECTION_NAME)
 @Sharded(shardKey = GroupMember.Fields.ID_GROUP_ID, shardingStrategy = ShardingStrategy.HASH)
 public final class GroupMember {
@@ -87,7 +88,11 @@ public final class GroupMember {
         @Indexed(IndexType.HASH)
         private Long groupId;
 
+        /**
+         * Used by queryMemberIdsInUsersJoinedGroups, queryUsersJoinedGroupIds
+         */
         @Field(Fields.USER_ID)
+        @Indexed(IndexType.HASH)
         private Long userId;
 
         public static final class Fields {
