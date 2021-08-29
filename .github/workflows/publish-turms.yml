@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       - name: Build turms image
         run: DOCKER_BUILDKIT=1 docker build --rm=false -t "ghcr.io/turms-im/turms:latest" -f turms/Dockerfile .
