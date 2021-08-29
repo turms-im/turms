@@ -18,8 +18,10 @@
 package im.turms.server.common.util;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufs;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.RefCntCorrectorByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.buffer.UnpooledByteBufAllocator;
 
 import java.nio.charset.StandardCharsets;
 
@@ -37,32 +39,38 @@ public final class ByteBufUtil {
         BYTE_CACHE = new ByteBuf[BYTE_CACHE_SIZE];
         INTEGER_CACHE = new ByteBuf[INTEGER_CACHE_SIZE];
         for (int i = 0; i < BYTE_CACHE_SIZE; i++) {
-            BYTE_CACHE[i] = Unpooled.unreleasableBuffer(Unpooled.directBuffer(Byte.BYTES).writeByte(i));
+            BYTE_CACHE[i] = getUnreleasableDirectBuffer((byte) i);
         }
         for (int i = 0; i < INTEGER_CACHE_SIZE; i++) {
-            INTEGER_CACHE[i] = Unpooled.unreleasableBuffer(Unpooled.directBuffer(Integer.BYTES).writeInt(i));
+            INTEGER_CACHE[i] = getUnreleasableDirectBuffer(i);
         }
     }
 
     private ByteBufUtil() {
     }
 
-    public static ByteBuf getByteBuffer(int value) {
+    public static ByteBuf getPooledPreferredByteBuffer(int value) {
         if (0 <= value && value < BYTE_CACHE_SIZE) {
             return BYTE_CACHE[value];
         }
-        return UnpooledByteBufAllocator.DEFAULT.directBuffer(Byte.BYTES).writeByte(value);
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Byte.BYTES).writeByte(value);
     }
 
-    public static ByteBuf getIntegerBuffer(int value) {
+    public static ByteBuf getPooledPreferredIntegerBuffer(int value) {
         if (0 <= value && value < INTEGER_CACHE_SIZE) {
             return INTEGER_CACHE[value];
         }
-        return UnpooledByteBufAllocator.DEFAULT.directBuffer(Integer.BYTES).writeInt(value);
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Integer.BYTES).writeInt(value);
     }
 
-    public static ByteBuf getLongBuffer(long value) {
-        return UnpooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES).writeLong(value);
+    public static ByteBuf getPooledLongBuffer(long value) {
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES).writeLong(value);
+    }
+
+    public static ByteBuf getUnreleasableDirectBuffer(byte b) {
+        ByteBuf buffer = Unpooled.directBuffer(Byte.BYTES)
+                .writeByte(b);
+        return Unpooled.unreleasableBuffer(buffer);
     }
 
     public static ByteBuf getUnreleasableDirectBuffer(byte[] bytes) {
@@ -71,37 +79,43 @@ public final class ByteBufUtil {
         return Unpooled.unreleasableBuffer(buffer);
     }
 
+    public static ByteBuf getUnreleasableDirectBuffer(int i) {
+        ByteBuf buffer = Unpooled.directBuffer(Integer.BYTES)
+                .writeInt(i);
+        return Unpooled.unreleasableBuffer(buffer);
+    }
+
     public static ByteBuf obj2Buffer(Object obj) {
         if (obj instanceof ByteBuf element) {
             return element;
         }
         if (obj instanceof Byte element) {
-            return getByteBuffer(element.intValue());
+            return getPooledPreferredByteBuffer(element.intValue());
         }
         if (obj instanceof Short element) {
-            return UnpooledByteBufAllocator.DEFAULT.directBuffer(Short.BYTES).writeShort(element);
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Short.BYTES).writeShort(element);
         }
         if (obj instanceof Integer element) {
-            return getIntegerBuffer(element);
+            return getPooledPreferredIntegerBuffer(element);
         }
         if (obj instanceof Long element) {
-            return UnpooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES).writeLong(element);
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES).writeLong(element);
         }
         if (obj instanceof String element) {
             byte[] bytes = element.getBytes(StandardCharsets.UTF_8);
-            return UnpooledByteBufAllocator.DEFAULT.directBuffer(bytes.length).writeBytes(bytes);
+            return PooledByteBufAllocator.DEFAULT.directBuffer(bytes.length).writeBytes(bytes);
         }
         if (obj instanceof Float element) {
-            return UnpooledByteBufAllocator.DEFAULT.directBuffer(Float.BYTES).writeFloat(element);
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Float.BYTES).writeFloat(element);
         }
         if (obj instanceof Double element) {
-            return UnpooledByteBufAllocator.DEFAULT.directBuffer(Double.BYTES).writeDouble(element);
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Double.BYTES).writeDouble(element);
         }
         if (obj instanceof Character element) {
-            return UnpooledByteBufAllocator.DEFAULT.directBuffer(Character.BYTES).writeChar(element);
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Character.BYTES).writeChar(element);
         }
         if (obj instanceof Boolean element) {
-            return getByteBuffer(element ? 1 : 0);
+            return getPooledPreferredByteBuffer(element ? 1 : 0);
         }
         throw new IllegalArgumentException("Cannot serialize the unknown value: " + obj);
     }
@@ -109,11 +123,24 @@ public final class ByteBufUtil {
     public static ByteBuf[] objs2Buffers(Object... objs) {
         ByteBuf[] buffers = new ByteBuf[objs.length];
         for (int i = 0; i < objs.length; i++) {
-            buffers[i] = ByteBufUtil.obj2Buffer(objs[i]);
+            try {
+                buffers[i] = ByteBufUtil.obj2Buffer(objs[i]);
+            } catch (Exception e) {
+                for (int j = 0; j < i; j++) {
+                    buffers[j].release();
+                }
+                throw new RuntimeException(e);
+            }
         }
         return buffers;
     }
 
+    public static ByteBuf ensureByteBufRefCnfCorrect(ByteBuf buf) {
+        if (ByteBufs.isUnreleasable(buf) || buf instanceof RefCntCorrectorByteBuf) {
+            return buf;
+        }
+        return new RefCntCorrectorByteBuf(buf);
+    }
 
     public static void ensureReleased(ByteBuf buffer) {
         int refCnt = buffer.refCnt();

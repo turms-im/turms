@@ -21,7 +21,6 @@ import im.turms.common.constant.UserStatus;
 import im.turms.server.common.property.env.common.cluster.NodeProperties;
 import im.turms.server.common.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.UnpooledByteBufAllocator;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -38,14 +37,14 @@ public class SessionHashValueCodec implements TurmsRedisCodec<Object> {
             // Note that we use the negative number for user status so that we can know
             // the type of the value from the first byte when deserializing
             int userStatus = status.getNumber();
-            buffer = ByteBufUtil.getByteBuffer(userStatus);
+            buffer = ByteBufUtil.getPooledPreferredByteBuffer(userStatus);
         } else if (element instanceof String nodeId) {
             byte[] nodeIdBytes = nodeId.getBytes(StandardCharsets.UTF_8);
             if (nodeIdBytes.length == 0 || nodeIdBytes.length > NodeProperties.NODE_ID_MAX_LENGTH) {
                 throw new IllegalArgumentException(
                         "The length of node ID must be greater than 0 and less than or equals to " + NodeProperties.NODE_ID_MAX_LENGTH);
             }
-            buffer = UnpooledByteBufAllocator.DEFAULT.directBuffer(nodeIdBytes.length)
+            buffer = BUFFER_ALLOCATOR.directBuffer(nodeIdBytes.length)
                     .writeBytes(nodeIdBytes);
         } else {
             throw new IllegalArgumentException("The data must be an instance of UserStatus or String");

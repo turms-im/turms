@@ -56,10 +56,9 @@ import static io.lettuce.core.protocol.CommandType.GEORADIUSBYMEMBER;
 
 /**
  * @author James Chen
- * @implNote 1. For Redis commands, release the key/val buffers to ensure that
+ * @implNote For Redis commands, release the key/val buffers to ensure that
  * if a command is cancelled or encounters an error, the buffers can be released
  * (In these cases, it won't be released by Lettuce because it hasn't flushed the buffers),
- * 2. These buffers must be unpooled because https://github.com/turms-im/turms/issues/786
  * @see AbstractRedisReactiveCommands
  */
 @Log4j2
@@ -201,8 +200,9 @@ public class TurmsRedisClient {
     // Scripting
 
     public <T> Mono<T> eval(RedisScript script, ByteBuf... keys) {
-        for (ByteBuf key : keys) {
-            key.retain();
+        for (int i = 0; i < keys.length; i++) {
+            keys[i] = ByteBufUtil.ensureByteBufRefCnfCorrect(keys[i])
+                    .retain();
         }
         return (Mono<T>) commands
                 .createFlux(() -> commandBuilder.evalsha(script.digest(), script.outputType(), keys))
@@ -217,7 +217,7 @@ public class TurmsRedisClient {
                 .single();
     }
 
-    private static boolean exceptionContainsNoScriptException(Throwable e) {
+    private boolean exceptionContainsNoScriptException(Throwable e) {
         if (e instanceof RedisNoScriptException) {
             return true;
         }

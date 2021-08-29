@@ -31,7 +31,7 @@ public abstract class BaseSystemTest {
     private static final Duration HTTP_TIMEOUT = Duration.ofSeconds(10);
 
     protected void assertTurmsGatewayAvailable(String host, int port) {
-        String uri = String.format("http://%s:%d/actuator/health", host, port);
+        String uri = "http://%s:%d/actuator/health".formatted(host, port);
         String response = HttpClient
                 .create()
                 .get()

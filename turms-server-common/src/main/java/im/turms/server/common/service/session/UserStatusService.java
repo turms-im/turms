@@ -348,7 +348,14 @@ public class UserStatusService {
         buffers[0] = ByteBufUtil.obj2Buffer((short) ttl);
         int i = 1;
         for (Long userId : userIds) {
-            buffers[i] = ByteBufUtil.getLongBuffer(userId);
+            try {
+                buffers[i] = ByteBufUtil.getPooledLongBuffer(userId);
+            } catch (Exception e) {
+                for (int j = 0; j < i; j++) {
+                    buffers[j].release();
+                }
+                throw new RuntimeException(e);
+            }
             i++;
         }
         return buffers;

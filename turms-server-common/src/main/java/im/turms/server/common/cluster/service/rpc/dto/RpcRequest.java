@@ -95,8 +95,8 @@ public abstract class RpcRequest<T> {
             return applicationContext.getBean(clazz);
         } catch (NoSuchBeanDefinitionException e) {
             NodeType nodeType = ExceptionUtil.suppress(() -> applicationContext.getBean(NodeType.class));
-            String message =
-                    String.format("Failed to get the bean. The request type %s may be sent to the wrong server %s", name(), nodeType);
+            String message = "Failed to get the bean. The request type %s may be sent to the wrong server %s"
+                    .formatted(name(), nodeType);
             throw new IllegalStateException(message, e);
         }
     }

@@ -24,8 +24,9 @@ import im.turms.server.common.redis.TurmsRedisClient;
 import im.turms.server.common.redis.script.RedisScript;
 import im.turms.server.common.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
-import io.netty.buffer.UnpooledByteBufAllocator;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Mono;
@@ -62,7 +63,7 @@ import java.util.function.Consumer;
  * it will perform a full sync (We do NOT support sync by cursor currently).
  * <p>
  * The implementation of blocklist is similar to the one of replicated map,
- * and both of them use maintain a full map and logs to sync delta actions.
+ * and both of them use a full map and logs to perform full and delta sync.
  * <p>
  * Data in Redis, taking IP blocklist as an example:
  * 1. "blocklist:ip:target": Sorted Set, sorted by the block end time. Used to perform full sync
@@ -84,8 +85,9 @@ public class BlocklistServiceManager<T> {
     private static final int MAX_BLOCK_TIME_MINUTES = Integer.MAX_VALUE / 60;
     private static final int LOG_ENTRY_ELEMENTS_COUNT = 3;
 
-    private static final ByteBuf BLOCKLIST_KEY_FOR_IP = ByteBufUtil.getByteBuffer('i');
-    private static final ByteBuf BLOCKLIST_KEY_FOR_USER_ID = ByteBufUtil.getByteBuffer('u');
+    private static final ByteBufAllocator BUFFER_ALLOCATOR = PooledByteBufAllocator.DEFAULT;
+    private static final ByteBuf BLOCKLIST_KEY_FOR_IP = ByteBufUtil.getUnreleasableDirectBuffer((byte) 'i');
+    private static final ByteBuf BLOCKLIST_KEY_FOR_USER_ID = ByteBufUtil.getUnreleasableDirectBuffer((byte) 'u');
     private static final int UNINITIALIZED_ID = -1;
 
     private final RedisScript blockClientsScript;
@@ -417,23 +419,22 @@ public class BlocklistServiceManager<T> {
         return isIpBlocklist ? BLOCKLIST_KEY_FOR_IP : BLOCKLIST_KEY_FOR_USER_ID;
     }
 
+    /**
+     * TODO: cache
+     */
     private ByteBuf encodeLocalTimestamp() {
-        return UnpooledByteBufAllocator.DEFAULT
-                .directBuffer(4)
-                .writeInt(localTimestamp);
+        return BUFFER_ALLOCATOR.directBuffer(Integer.BYTES).writeInt(localTimestamp);
     }
 
+    /**
+     * TODO: cache
+     */
     private ByteBuf encodeLocalLogId() {
-        return UnpooledByteBufAllocator.DEFAULT
-                .directBuffer(4)
-                .writeInt(localLogId);
+        return BUFFER_ALLOCATOR.directBuffer(Integer.BYTES).writeInt(localLogId);
     }
 
     private ByteBuf encodeId(T id) {
-        return isIpBlocklist
-                ? Unpooled.wrappedBuffer((byte[]) id)
-                : UnpooledByteBufAllocator.DEFAULT.directBuffer()
-                .writeLong((long) id);
+        return isIpBlocklist ? Unpooled.wrappedBuffer((byte[]) id) : BUFFER_ALLOCATOR.directBuffer().writeLong((long) id);
     }
 
     private T decodeTargetId(ByteBuf id) {
@@ -446,7 +447,7 @@ public class BlocklistServiceManager<T> {
      * The max date it can represent in integer is: new Date(EPOCH + Integer.MAX_VALUE * 1000L) => 2089 year
      */
     private ByteBuf encodeBlockEndTime(long blockEndTimeMillis) {
-        return UnpooledByteBufAllocator.DEFAULT.directBuffer(4)
+        return BUFFER_ALLOCATOR.directBuffer(Integer.BYTES)
                 .writeInt((int) ((blockEndTimeMillis - EPOCH_MILLIS) / 1000L));
     }
 
@@ -469,7 +470,7 @@ public class BlocklistServiceManager<T> {
 
     /**
      * The log doesn't have a field like "recordTime" because we use
-     * the item index in Redis to distinguish which data are before and after
+     * the item index in Redis to distinguish which logs come first
      */
     private record BlockClientLog(Object targetId, long blockEndTimeMillis, boolean isBlockAction) {
     }

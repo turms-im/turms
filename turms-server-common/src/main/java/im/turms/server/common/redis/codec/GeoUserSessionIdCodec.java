@@ -20,7 +20,6 @@ package im.turms.server.common.redis.codec;
 import im.turms.common.constant.DeviceType;
 import im.turms.server.common.bo.session.UserSessionId;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.UnpooledByteBufAllocator;
 
 import java.nio.ByteBuffer;
 
@@ -31,7 +30,7 @@ public class GeoUserSessionIdCodec implements TurmsRedisCodec<UserSessionId> {
 
     @Override
     public ByteBuf encode(UserSessionId sessionId) {
-        return UnpooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES + Byte.BYTES)
+        return BUFFER_ALLOCATOR.directBuffer(Long.BYTES + Byte.BYTES)
                 .writeLong(sessionId.userId())
                 .writeByte(sessionId.deviceType().getNumber());
     }

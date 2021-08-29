@@ -32,10 +32,10 @@ public class SessionHashFieldCodec implements TurmsRedisCodec<Object> {
     @Override
     public ByteBuf encode(Object value) {
         if (value instanceof DeviceType deviceType) {
-            return ByteBufUtil.getByteBuffer(deviceType.getNumber());
+            return ByteBufUtil.getPooledPreferredByteBuffer(deviceType.getNumber());
         } else {
             // This should never happen because we set session status in lua currently
-            return ByteBufUtil.getByteBuffer((byte) value);
+            return ByteBufUtil.getPooledPreferredByteBuffer((byte) value);
         }
     }
 

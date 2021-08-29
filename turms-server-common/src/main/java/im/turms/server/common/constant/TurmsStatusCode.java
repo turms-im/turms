@@ -58,8 +58,8 @@ public enum TurmsStatusCode {
     NO_FILTER_FOR_DELETE_OPERATION(1301, "Delete operation should have at least one filter", 400),
 
     // Blocklist
-    IP_BLOCKLIST_IS_DISABLED(1400, "Blocking an IP is disabled", 510),
-    USER_ID_BLOCKLIST_IS_DISABLED(1401, "Blocking a user ID is disabled", 510),
+    IP_BLOCKLIST_IS_DISABLED(1400, "Blocking an IP is disabled", 403),
+    USER_ID_BLOCKLIST_IS_DISABLED(1401, "Blocking a user ID is disabled", 403),
 
     // Cluster - Leader
     NON_EXISTING_MEMBER_TO_BE_LEADER(1800, "Cannot find the node", 404),

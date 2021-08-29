@@ -106,8 +106,9 @@ public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
                         ? TracingContext.NOOP
                         : loggingContext.getTracingContext();
                 try (TracingCloseableContext ctx = tracingContext.asCloseable()) {
-                    log.error(LogMessage.of(() -> String.format("%s 500 Server Error for %s",
-                            request.exchange().getLogPrefix(), formatRequest(request))), throwable);
+                    log.error(LogMessage.of(() -> "%s 500 Server Error for %s"
+                                    .formatted(request.exchange().getLogPrefix(), formatRequest(request))),
+                            throwable);
                 }
             }
             // force content-type since writeTo won't overwrite response header values

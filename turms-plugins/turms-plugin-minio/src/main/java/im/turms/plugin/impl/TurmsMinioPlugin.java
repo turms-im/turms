@@ -154,7 +154,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                                 }
                                 String key = keyStr == null
                                         ? keyNum.toString()
-                                        : String.format("%d/%s", keyNum, keyStr);
+                                        : "%d/%s".formatted(keyNum, keyStr);
                                 String url = presignedUrlForGet(getBucketName(contentType), key);
                                 yield Mono.just(url);
                             }
@@ -206,7 +206,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                                 }
                                 objectKey = keyStr == null
                                         ? keyNum.toString()
-                                        : String.format("%d/%s", keyNum, keyStr);
+                                        : "%d/%s".formatted(keyNum, keyStr);
                             }
                             default -> {
                                 return Mono.error(new IllegalStateException("Unexpected value: " + contentType));

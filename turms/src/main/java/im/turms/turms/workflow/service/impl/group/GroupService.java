@@ -762,8 +762,7 @@ public class GroupService {
                                         code = TurmsStatusCode.OK;
                                     } else {
                                         code = TurmsStatusCode.MAX_OWNED_GROUPS_REACHED;
-                                        reason = String.format("The number of groups owned by the requester has reached the limit %d",
-                                                ownedGroupLimit);
+                                        reason = "The number of groups owned by the requester has reached the limit " + ownedGroupLimit;
                                     }
                                     return ServicePermission.get(code, reason);
                                 });

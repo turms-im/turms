@@ -178,7 +178,7 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
     }
 
     public String getMongoUri(String dbName) {
-        return String.format("mongodb://root:%s@%s:%d/%s?authSource=admin",
+        return "mongodb://root:%s@%s:%d/%s?authSource=admin".formatted(
                 getMongoPassword(),
                 getMongoHost(),
                 getMongoPort(),
@@ -204,7 +204,7 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
     }
 
     public String getRedisUri() {
-        return String.format("redis://%s:%d", getRedisHost(), getRedisPort());
+        return "redis://%s:%d".formatted(getRedisHost(), getRedisPort());
     }
 
     // turms
@@ -236,6 +236,6 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
     }
 
     public String getTurmsGatewayWebSocketServerUri() {
-        return String.format("ws://%s:%d", getTurmsGatewayWsHost(), getTurmsGatewayWsPort());
+        return "ws://%s:%d".formatted(getTurmsGatewayWsHost(), getTurmsGatewayWsPort());
     }
 }

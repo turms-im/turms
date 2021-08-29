@@ -238,7 +238,7 @@ public final class MongoEntityFactory {
                 return i;
             }
         }
-        throw new IllegalStateException(String.format("Cannot find the index of the parameter %s in constructor", fieldName));
+        throw new IllegalStateException("Cannot find the index of the parameter %s in constructor".formatted(fieldName));
     }
 
     /**

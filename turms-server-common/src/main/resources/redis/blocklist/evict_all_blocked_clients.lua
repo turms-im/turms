@@ -1,6 +1,6 @@
 local remove_all = #KEYS == 0
 
-local function removeblocklist(name)
+local function remove_blocklist(name)
     local now = tonumber(redis.call('TIME')[1]) - 1630022400
     redis.call('SET', name .. ':timestamp', now)
     redis.call('DEL', name .. ':log_id')
@@ -9,9 +9,9 @@ local function removeblocklist(name)
 end
 
 if remove_all then
-    removeblocklist('blocklist:ip')
-    removeblocklist('blocklist:uid')
+    remove_blocklist('blocklist:ip')
+    remove_blocklist('blocklist:uid')
 else
     local blocklist_key = KEYS[1] == 'i' and 'blocklist:ip' or 'blocklist:uid'
-    removeblocklist(blocklist_key)
+    remove_blocklist(blocklist_key)
 end

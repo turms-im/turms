@@ -67,9 +67,9 @@ public class TurmsPropertiesManager {
             configDir = "./config";
         }
         String latestConfigFileName = activeProfile != null
-                ? String.format("application-%s-latest.yaml", activeProfile)
+                ? "application-%s-latest.yaml".formatted(activeProfile)
                 : "application-latest.yaml";
-        latestConfigFilePath = Path.of(String.format("%s/%s", configDir, latestConfigFileName));
+        latestConfigFilePath = Path.of("%s/%s".formatted(configDir, latestConfigFileName));
     }
 
     /**

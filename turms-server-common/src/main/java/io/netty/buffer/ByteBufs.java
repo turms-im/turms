@@ -15,23 +15,18 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.redis.codec;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.PooledByteBufAllocator;
-
-import java.nio.ByteBuffer;
+package io.netty.buffer;
 
 /**
  * @author James Chen
  */
-public interface TurmsRedisCodec<T> {
+public final class ByteBufs {
 
-    ByteBufAllocator BUFFER_ALLOCATOR = PooledByteBufAllocator.DEFAULT;
+    private ByteBufs() {
+    }
 
-    ByteBuf encode(T value);
-
-    T decode(ByteBuffer in);
+    public static boolean isUnreleasable(ByteBuf buf) {
+        return buf instanceof UnreleasableByteBuf;
+    }
 
 }

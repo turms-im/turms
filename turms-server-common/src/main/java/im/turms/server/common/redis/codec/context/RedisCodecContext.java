@@ -20,6 +20,7 @@ package im.turms.server.common.redis.codec.context;
 import im.turms.server.common.redis.codec.TurmsRedisCodec;
 import im.turms.server.common.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.RefCntCorrectorByteBuf;
 import lombok.Builder;
 import lombok.Data;
 
@@ -50,7 +51,14 @@ public class RedisCodecContext {
     public ByteBuf[] encodeHashFields(Object[] fields) {
         ByteBuf[] buffers = new ByteBuf[fields.length];
         for (int i = 0; i < fields.length; i++) {
-            buffers[i] = encodeHashField(fields[i]);
+            try {
+                buffers[i] = encodeHashField(fields[i]);
+            } catch (Exception e) {
+                for (int j = 0; j < i; j++) {
+                    buffers[j].release();
+                }
+                throw new RuntimeException(e);
+            }
         }
         return buffers;
     }
@@ -64,7 +72,14 @@ public class RedisCodecContext {
     public ByteBuf[] encodeGeoMembers(Object[] members) {
         ByteBuf[] buffers = new ByteBuf[members.length];
         for (int i = 0; i < members.length; i++) {
-            buffers[i] = encodeGeoMember(members[i]);
+            try {
+                buffers[i] = encodeGeoMember(members[i]);
+            } catch (Exception e) {
+                for (int j = 0; j < i; j++) {
+                    buffers[j].release();
+                }
+                throw new RuntimeException(e);
+            }
         }
         return buffers;
     }
@@ -81,9 +96,9 @@ public class RedisCodecContext {
             if (byteBuf == null) {
                 throw new UnsupportedOperationException("Cannot encode value: " + value);
             }
-            return byteBuf;
+            return ByteBufUtil.ensureByteBufRefCnfCorrect(byteBuf);
         }
-        return codec.encode(value);
+        return new RefCntCorrectorByteBuf(codec.encode(value));
     }
 
 }

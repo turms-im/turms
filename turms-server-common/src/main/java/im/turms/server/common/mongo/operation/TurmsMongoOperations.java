@@ -414,7 +414,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
             return Mono.empty();
         }
         String dbName = databaseToShard.getName();
-        String namespace = String.format("%s.%s", dbName, entity.collectionName());
+        String namespace = "%s.%s".formatted(dbName, entity.collectionName());
         Document command = new Document("shardCollection", namespace).append("key", shardKey);
         Mono<Document> shardCollection = Mono.from(adminDatabase.runCommand(command))
                 .doOnError(throwable ->

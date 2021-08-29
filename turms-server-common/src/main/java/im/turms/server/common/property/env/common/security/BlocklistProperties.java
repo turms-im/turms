@@ -47,7 +47,7 @@ public class BlocklistProperties {
 
         private boolean enabled = true;
 
-        private int syncBlocklistIntervalMillis = 1000;
+        private int syncBlocklistIntervalMillis = 10 * 1000;
 
     }
 
