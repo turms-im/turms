@@ -12,6 +12,11 @@ const DUPLICATE_MAP = {
     '(': ')',
     '[': ']'
 };
+const CHARS_TO_SKIP = Object.values(DUPLICATE_MAP)
+    .reduce((result, val) => {
+        result[val] = true;
+        return result;
+    }, {});
 const FAVORITE_FONTS = [
     'Consolas', // Windows
     'Monaco' // MacOS
@@ -63,16 +68,22 @@ export default class Terminal extends XTerm {
                 this.insertText(key);
             }
         });
-        this.onWinResize = () => {
+        // We don't use "onData" because we cannot distinguish
+        // it's a paste event or an input event
+        this.textarea.addEventListener('paste', event => {
+            const text = event.clipboardData?.getData('text/plain');
+            this.insertText(text);
+        });
+        this._onWinResize = () => {
             this.fit();
         };
-        window.addEventListener('resize', this.onWinResize);
+        window.addEventListener('resize', this._onWinResize);
     }
 
     // Lifecycle
 
     dispose() {
-        window.removeEventListener('resize', this.onWinResize);
+        window.removeEventListener('resize', this._onWinResize);
         super.dispose();
     }
 
@@ -103,11 +114,20 @@ export default class Terminal extends XTerm {
 
     // Text
 
+    getNextChar() {
+        return this.currentLine[this.cursor];
+    }
+
     insertText(text) {
         if (!text) {
             return;
         }
-        text = text.replace(/\r\n/g, '');
+        text = text.replace(/\r?\n/g, '');
+        if (CHARS_TO_SKIP[text] && text === this.getNextChar()) {
+            this.cursor++;
+            this.cursorTo(this.cursor);
+            return;
+        }
         const duplicate = DUPLICATE_MAP[text];
         const output = duplicate ? text + duplicate : text;
         const isCursorAtEnd = this.cursor === this.currentLine.length;
