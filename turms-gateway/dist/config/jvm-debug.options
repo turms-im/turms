@@ -28,7 +28,7 @@
 -XX:+HeapDumpOnOutOfMemoryError
 -XX:+HeapDumpAfterFullGC
 -XX:+HeapDumpBeforeFullGC
--XX:HeapDumpPath=${TURMS_GATEWAY_HOME}/hprof/turms-gateway_pid%p.hprof
+-XX:HeapDumpPath=${TURMS_GATEWAY_HOME}/hprof/turms-gateway-pid%p.hprof
 
 # Diagnostics - GC
 

@@ -38,7 +38,7 @@
 在群组配置方面，Turms使用了“群组类型”这一概念。默认情况下，Turms提供了一种通用的群组类型，同时您也可以通过对“群组类型”做增删改查操作，以满足您定制化的群组类型需求。
 
 对应的管理员API路径：`/groups/types`。具体API细节请查阅OpenAPI文档
-对应的配置模型：`im.turms.turms.workflow.dao.domain.GroupType`
+对应的配置模型：`im.turms.service.workflow.dao.domain.GroupType`
 
 ### 配置列表
 

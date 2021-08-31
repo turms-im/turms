@@ -27,24 +27,24 @@ scrape_configs:
       - targets:
           - 'redis-exporter:9121'
 
-  - job_name: 'turms'
-    metrics_path: '/metrics/prometheus'
-    metric_relabel_configs:
-      - source_labels:
-          - __name__
-        replacement: 'turms_${1}'
-        target_label: __name__
-    static_configs:
-      - targets:
-          - 'turms:8510'
-
   - job_name: 'turms-gateway'
     metrics_path: '/metrics/prometheus'
     metric_relabel_configs:
       - source_labels:
           - __name__
-        replacement: 'gateway_${1}'
+        replacement: 'turms_gateway_${1}'
         target_label: __name__
     static_configs:
       - targets:
           - 'turms-gateway:9510'
+
+  - job_name: 'turms-service'
+    metrics_path: '/metrics/prometheus'
+    metric_relabel_configs:
+      - source_labels:
+          - __name__
+        replacement: 'turms_service_${1}'
+        target_label: __name__
+    static_configs:
+      - targets:
+          - 'turms-service:8510'

@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
-    <description>The parent project of turms and turms-gateway</description>
+    <description>The parent project of turms-gateway and turms-service</description>
     <url>https://github.com/turms-im/turms</url>
     <licenses>
         <license>
@@ -57,15 +57,20 @@
     </properties>
 
     <modules>
-        <module>turms</module>
-        <module>turms-client-kotlin</module>
-        <module>turms-gateway</module>
         <module>turms-java-common</module>
+
+        <module>turms-client-kotlin</module>
+
+        <module>turms-server-common</module>
+        <module>turms-server-test-common</module>
+
+        <module>turms-gateway</module>
+        <module>turms-service</module>
+
         <module>turms-plugin-demo</module>
         <module>turms-plugins/turms-plugin-minio</module>
-        <module>turms-server-common</module>
+
         <module>turms-server-test</module>
-        <module>turms-server-test-common</module>
     </modules>
 
     <dependencies>
@@ -87,7 +92,7 @@
         </dependency>
 
         <!-- Web -->
-        <!-- Used to provide metrics APIs (turms and turms-gateway) and admin APIs (turms) -->
+        <!-- Used to provide metrics APIs (turms-gateway and turms-service) and admin APIs (turms-service) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>

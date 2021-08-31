@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  * @author James Chen
  * @implNote JVM Total Memory:
  * 1. Off-Heap:
- * a. Mapped files, b. Direct buffers c. Java stacks d. Metaspace (Class meta data: Constant pool, Field & Method data),
+ * a. Mapped files, b. Direct buffers c. Java stacks d. Metaspace (Class metadata: Constant pool, Field & Method data),
  * e. Native code (JVM internal use only): PC registers, Native method stacks, Code cache,
  * Structures used & allocated by native libraries(e.g IO libraries), Shared libraries of the JVM, etc.
  * f. etc

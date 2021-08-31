@@ -48,43 +48,6 @@ services:
       retries: 5
 
   # turms servers
-  turms:
-    image: "ghcr.io/turms-im/turms"
-    depends_on:
-      mongodb-router:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    environment:
-      TURMS_JVM_OPTS: >
-        -Dspring.profiles.active=test
-
-        -Dturms.cluster.connection.server.port-auto-increment=false
-
-        -Dturms.cluster.discovery.address.advertise-strategy=advertise_address
-        -Dturms.cluster.discovery.address.advertise-host=turms
-
-        -Dturms.cluster.shared-config.mongo.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
-        -Dturms.service.mongo.admin.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
-        -Dturms.service.mongo.user.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
-        -Dturms.service.mongo.group.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
-        -Dturms.service.mongo.conversation.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
-        -Dturms.service.mongo.message.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
-
-        -Dturms.service.redis.session.uri-list[0]=redis://redis:6379
-        -Dturms.service.redis.location.uri-list[0]=redis://redis:6379
-        -Dturms.service.redis.ip-blocklist.uri=redis://redis:6379
-        -Dturms.service.redis.user-id-blocklist.uri=redis://redis:6379
-    healthcheck:
-      test: "curl --fail --silent --user turms:turms turms:8510/actuator/health | grep UP || exit 1"
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    ulimits:
-      nofile:
-        soft: 65536
-        hard: 65536
-
   turms-admin:
     image: "ghcr.io/turms-im/turms-admin"
 
@@ -123,3 +86,40 @@ services:
       nofile:
         soft: 1024000
         hard: 1024000
+
+  turms-service:
+    image: "ghcr.io/turms-im/turms-service"
+    depends_on:
+      mongodb-router:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      TURMS_SERVICE_JVM_OPTS: >
+        -Dspring.profiles.active=test
+
+        -Dturms.cluster.connection.server.port-auto-increment=false
+
+        -Dturms.cluster.discovery.address.advertise-strategy=advertise_address
+        -Dturms.cluster.discovery.address.advertise-host=turms
+
+        -Dturms.cluster.shared-config.mongo.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
+        -Dturms.service.mongo.admin.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
+        -Dturms.service.mongo.user.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
+        -Dturms.service.mongo.group.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
+        -Dturms.service.mongo.conversation.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
+        -Dturms.service.mongo.message.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
+
+        -Dturms.service.redis.session.uri-list[0]=redis://redis:6379
+        -Dturms.service.redis.location.uri-list[0]=redis://redis:6379
+        -Dturms.service.redis.ip-blocklist.uri=redis://redis:6379
+        -Dturms.service.redis.user-id-blocklist.uri=redis://redis:6379
+    healthcheck:
+      test: "curl --fail --silent --user turms:turms turms-service:8510/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536

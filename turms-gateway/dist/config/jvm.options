@@ -1,6 +1,4 @@
-# References:
-# hotspot/share/gc/shared/gc_globals.hpp
-# hotspot/os/linux/globals_linux.hpp
+# References: https://github.com/openjdk/jdk/blob/master/src/java.base/share/man/java.1
 
 # Memory
 
@@ -29,7 +27,7 @@
 # Diagnostics - Memory
 
 -XX:+HeapDumpOnOutOfMemoryError
--XX:HeapDumpPath=${TURMS_GATEWAY_HOME}/hprof/turms-gateway_pid%p.hprof
+-XX:HeapDumpPath=${TURMS_GATEWAY_HOME}/hprof/turms-gateway-pid%p.hprof
 
 # Diagnostics - GC
 

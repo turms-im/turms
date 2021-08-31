@@ -8,6 +8,9 @@ import java.util.concurrent.TimeUnit;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
+/**
+ * @author James Chen
+ */
 public abstract class BaseTurmsApplication {
 
     static {
@@ -19,7 +22,7 @@ public abstract class BaseTurmsApplication {
             SpringApplication.run(applicationClass, args);
         } catch (Exception e) {
             // Note that org.springframework.boot.SpringApplication.handleRunFailure may not trigger
-            // im.turms.turms.context.ApplicationContextConfig.handleContextClosedEvent
+            // im.turms.service.context.ApplicationContextConfig.handleContextClosedEvent
             // if the context hadn't been initialized.
 
             Logger log = getLogger(BaseTurmsApplication.class);

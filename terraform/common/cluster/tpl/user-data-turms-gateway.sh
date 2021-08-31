@@ -29,7 +29,7 @@ root      hard    nofile      1000000
 root      soft    nofile      1000000
 EOF
 
-# Run Turms
+# Run turms-gateway
 HOST=$(hostname -i)
 docker pull ghcr.io/turms-im/turms-gateway:latest
 docker run -d --name turms-gateway --ulimit nofile=1000000 \
@@ -40,7 +40,7 @@ docker run -d --name turms-gateway --ulimit nofile=1000000 \
   --health-timeout=5s \
   --health-retries=3 \
   --health-start-period=60s \
-  -e TURMS_JVM_OPTS="
+  -e TURMS_GATEWAY_JVM_OPTS="
   -Dspring.profiles.active=${PROFILE}
   -Dturms.cluster.connection.server.port-auto-increment=false
   -Dturms.cluster.discovery.address.advertise-strategy=advertise_address

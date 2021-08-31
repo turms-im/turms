@@ -50,4 +50,8 @@ public final class DateUtil {
         return date1;
     }
 
+    public static boolean isAfterOrSame(@Nullable Date d1, Date d2) {
+        return d1 != null && !d1.before(d2);
+    }
+
 }

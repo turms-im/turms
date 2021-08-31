@@ -80,7 +80,7 @@ resource "alicloud_instance" "default" {
   # TODO: replace with image
   user_data = templatefile("${path.root}/../../common/cluster/tpl/user-data-turms-gateway.sh", {
     PROFILE         = var.turms_gateway_profile
-    CUSTOM_JVM_OPTS = var.turms_gateway_jvm_opts
+    CUSTOM_JVM_OPTS = var.turms_gateway_jvm_options
 
     CONFIG_MONGODB_URI = local.config_mongodb_uri
     USER_MONGODB_URI   = local.user_mongodb_uri

@@ -1,0 +1,13 @@
+*
+
+!pom.xml
+
+!turms-service/dist
+!turms-service/src
+!turms-service/pom.xml
+
+!turms-java-common/src
+!turms-java-common/pom.xml
+
+!turms-server-common/src
+!turms-server-common/pom.xml

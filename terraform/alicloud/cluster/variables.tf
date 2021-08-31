@@ -48,12 +48,12 @@ variable "create_redis" {
   default = true
 }
 
-variable "create_turms" {
+variable "create_turms_gateway" {
   type    = bool
   default = true
 }
 
-variable "create_turms_gateway" {
+variable "create_turms_service" {
   type    = bool
   default = true
 }
@@ -442,128 +442,6 @@ locals {
   }, {for k, v in val: k => v if v != null})]
 }
 
-#=============== ECS - Turms
-
-variable "turms_instance_count" {
-  type    = number
-  default = 1
-}
-
-# Info
-
-variable "turms_host_name" {
-  type    = string
-  default = "turms"
-}
-
-variable "turms_ecs_name" {
-  type    = string
-  default = "turms"
-}
-
-variable "turms_ecs_tags" {
-  type    = map(string)
-  default = {
-    Group = "turms"
-    Type  = "cluster"
-  }
-}
-
-# Charge
-
-variable "turms_internet_charge_type" {
-  type    = string
-  default = "PayByTraffic"
-}
-
-variable "turms_period" {
-  type    = number
-  default = null
-}
-
-# Specification
-
-variable "turms_image_name_regex" {
-  type    = string
-  default = "^ubuntu_20.*64"
-}
-
-variable "turms_instance_type" {
-  type    = string
-  default = "ecs.t5-lc1m1.small"
-}
-
-# Network
-
-variable "turms_max_bandwidth_out" {
-  type    = number
-  default = 0
-}
-
-variable "turms_nic_type" {
-  type    = string
-  default = "intranet"
-}
-
-# Disk
-
-variable "turms_disk_category" {
-  type    = string
-  default = "cloud_efficiency"
-}
-
-variable "turms_disk_size" {
-  type    = number
-  default = 20
-}
-
-# Security
-
-variable "turms_security_group_name" {
-  type    = string
-  default = "sg-turms"
-}
-
-variable "turms_security_group_tags" {
-  type    = map(string)
-  default = {
-    Group = "turms"
-    Type  = "cluster"
-  }
-}
-
-variable "turms_key_pair_name" {
-  type    = string
-  default = "kp-turms"
-}
-
-variable "turms_key_pair_tags" {
-  type    = map(string)
-  default = {
-    Group = "turms"
-    Type  = "cluster"
-  }
-}
-
-# Protection
-
-variable "turms_delete_protection" {
-  type    = bool
-  default = false
-}
-
-# Turms
-
-variable "turms_profile" {
-  type    = string
-  default = "prod"
-}
-
-variable "turms_jvm_options" {
-  type    = string
-  default = ""
-}
-
 #=============== ECS - Turms Gateway
 
 variable "turms_gateway_instance_count" {
@@ -682,6 +560,128 @@ variable "turms_gateway_profile" {
 }
 
 variable "turms_gateway_jvm_options" {
+  type    = string
+  default = ""
+}
+
+#=============== ECS - Turms Service
+
+variable "turms_service_instance_count" {
+  type    = number
+  default = 1
+}
+
+# Info
+
+variable "turms_service_host_name" {
+  type    = string
+  default = "turms"
+}
+
+variable "turms_service_ecs_name" {
+  type    = string
+  default = "turms"
+}
+
+variable "turms_service_ecs_tags" {
+  type    = map(string)
+  default = {
+    Group = "turms"
+    Type  = "cluster"
+  }
+}
+
+# Charge
+
+variable "turms_service_internet_charge_type" {
+  type    = string
+  default = "PayByTraffic"
+}
+
+variable "turms_service_period" {
+  type    = number
+  default = null
+}
+
+# Specification
+
+variable "turms_service_image_name_regex" {
+  type    = string
+  default = "^ubuntu_20.*64"
+}
+
+variable "turms_service_instance_type" {
+  type    = string
+  default = "ecs.t5-lc1m1.small"
+}
+
+# Network
+
+variable "turms_service_max_bandwidth_out" {
+  type    = number
+  default = 0
+}
+
+variable "turms_service_nic_type" {
+  type    = string
+  default = "intranet"
+}
+
+# Disk
+
+variable "turms_service_disk_category" {
+  type    = string
+  default = "cloud_efficiency"
+}
+
+variable "turms_service_disk_size" {
+  type    = number
+  default = 20
+}
+
+# Security
+
+variable "turms_service_security_group_name" {
+  type    = string
+  default = "sg-turms"
+}
+
+variable "turms_service_security_group_tags" {
+  type    = map(string)
+  default = {
+    Group = "turms"
+    Type  = "cluster"
+  }
+}
+
+variable "turms_service_key_pair_name" {
+  type    = string
+  default = "kp-turms"
+}
+
+variable "turms_service_key_pair_tags" {
+  type    = map(string)
+  default = {
+    Group = "turms"
+    Type  = "cluster"
+  }
+}
+
+# Protection
+
+variable "turms_service_delete_protection" {
+  type    = bool
+  default = false
+}
+
+# Turms
+
+variable "turms_service_profile" {
+  type    = string
+  default = "prod"
+}
+
+variable "turms_service_jvm_options" {
   type    = string
   default = ""
 }

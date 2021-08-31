@@ -26,19 +26,19 @@
      
      1. Clone Turms的仓库，并在Turms服务端项目的目录下，通过`mvn install`命令将其安装到本地的Maven仓库中
      
-     2. 新建一个Maven项目，并在`pom.xml`中添加依赖（实现turms服务端的插件，则添加turms依赖。实现turms-gateway的插件，则添加turms-gateway的依赖）：
+     2. 新建一个Maven项目，并在`pom.xml`中添加依赖（实现turms-gateway服务端的插件，则添加turms-gateway依赖。实现turms-service的插件，则添加turms-service的依赖）：
      
         ```xml
         <dependency>
             <groupId>im.turms</groupId>
-            <artifactId>turms</artifactId>
+            <artifactId>turms-gateway</artifactId>
             <version>0.10.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         
         <dependency>
             <groupId>im.turms</groupId>
-            <artifactId>turms-gateway</artifactId>
+            <artifactId>turms-service</artifactId>
             <version>0.10.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>

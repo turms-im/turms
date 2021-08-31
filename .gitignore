@@ -35,11 +35,11 @@ turms-server-common/target/
 turms-java-common/target/
 
 ### Turms Servers ###
-turms/dist/log/
-turms/target/
-
 turms-gateway/dist/log/
 turms-gateway/target/
+
+turms-service/dist/log/
+turms-service/target/
 
 turms-admin/cypress/screenshots/
 turms-admin/cypress/videos/

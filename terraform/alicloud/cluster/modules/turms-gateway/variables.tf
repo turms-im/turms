@@ -56,7 +56,7 @@ variable "delete_protection" {}
 
 variable "turms_gateway_profile" {}
 
-variable "turms_gateway_jvm_opts" {}
+variable "turms_gateway_jvm_options" {}
 
 # MongoDB
 

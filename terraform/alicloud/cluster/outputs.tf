@@ -32,19 +32,19 @@ output "redis" {
   } : null)
 }
 
-output "turms" {
-  value = (var.create_turms ? {
-    instance_ids    = module.turms.instance_ids
-    public_ip_list  = module.turms.public_ip_list
-    private_ip_list = module.turms.private_ip_list
-  } : null)
-}
-
 output "turms_gateway" {
   value = (var.create_turms_gateway ? {
     instance_ids    = module.turms_gateway.instance_ids
     public_ip_list  = module.turms_gateway.public_ip_list
     private_ip_list = module.turms_gateway.private_ip_list
+  } : null)
+}
+
+output "turms_service" {
+  value = (var.create_turms_service ? {
+    instance_ids    = module.turms_service.instance_ids
+    public_ip_list  = module.turms_service.public_ip_list
+    private_ip_list = module.turms_service.private_ip_list
   } : null)
 }
 

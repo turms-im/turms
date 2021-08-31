@@ -18,15 +18,15 @@ provider "alicloud" {
 }
 
 data "alicloud_zones" "multi" {
-  available_instance_type     = var.turms_instance_type
-  available_disk_category     = var.turms_disk_category
+  available_instance_type     = var.turms_gateway_instance_type
+  available_disk_category     = var.turms_gateway_disk_category
   available_resource_creation = "MongoDB"
   multi                       = true
 }
 
 data "alicloud_zones" "single1" {
-  available_instance_type     = var.turms_gateway_instance_type
-  available_disk_category     = var.turms_gateway_disk_category
+  available_instance_type     = var.turms_service_instance_type
+  available_disk_category     = var.turms_service_disk_category
   available_resource_creation = "KVStore"
 }
 
@@ -116,71 +116,6 @@ module "redis" {
   instances = local.redis_instances
 }
 
-module "turms" {
-  source       = "./modules/turms"
-  create_turms = var.create_turms
-
-  instance_count = var.turms_instance_count
-
-  # Info
-  host_name = var.turms_host_name
-  ecs_name  = var.turms_ecs_name
-  ecs_tags  = var.turms_ecs_tags
-
-  # Charge
-  internet_charge_type = var.turms_internet_charge_type
-  period               = var.turms_period
-
-  # Specification
-  image_name_regex = var.turms_image_name_regex
-  instance_type    = var.turms_instance_type
-
-  # Network
-  vpc_id            = module.vpc.vpc_id
-  vswitch_id        = module.vpc.vswitch_ids[0]
-  max_bandwidth_out = var.turms_max_bandwidth_out
-  nic_type          = var.turms_nic_type
-
-  # Disk
-  disk_category = var.turms_disk_category
-  disk_size     = var.turms_disk_size
-
-  # Security
-  security_group_name = var.turms_security_group_name
-  security_group_tags = var.turms_security_group_tags
-  key_pair_name       = var.turms_key_pair_name
-  key_pair_tags       = var.turms_key_pair_tags
-
-  # Protection
-  delete_protection = var.turms_delete_protection
-
-  # Turms Gateway
-  turms_jvm_opts = var.turms_jvm_options
-  turms_profile  = var.turms_profile
-
-  # MongoDB
-  config_mongodb_hosts                  = module.mongodb.config_mongodb_hosts
-  config_mongodb_account_password       = module.mongodb.config_mongodb_account_password
-  admin_mongodb_account_password        = module.mongodb.admin_mongodb_account_password
-  admin_mongodb_hosts                   = module.mongodb.admin_mongodb_hosts
-  user_mongodb_hosts                    = module.mongodb.user_mongodb_hosts
-  user_mongodb_account_password         = module.mongodb.user_mongodb_account_password
-  group_mongodb_hosts                   = module.mongodb.group_mongodb_hosts
-  group_mongodb_account_password        = module.mongodb.group_mongodb_account_password
-  conversation_mongodb_hosts            = module.mongodb.conversation_mongodb_hosts
-  conversation_mongodb_account_password = module.mongodb.conversation_mongodb_account_password
-  message_mongodb_hosts                 = module.mongodb.message_mongodb_hosts
-  message_mongodb_account_password      = module.mongodb.message_mongodb_account_password
-
-  # Redis
-  session_redis_host              = module.redis.session_redis_host
-  session_redis_account_name      = module.redis.session_redis_account_name
-  session_redis_account_password  = module.redis.session_redis_account_password
-  location_redis_host             = module.redis.location_redis_host
-  location_redis_account_name     = module.redis.location_redis_account_name
-  location_redis_account_password = module.redis.location_redis_account_password
-}
-
 module "turms_gateway" {
   source               = "./modules/turms-gateway"
   create_turms_gateway = var.create_turms_gateway
@@ -214,13 +149,13 @@ module "turms_gateway" {
   security_group_name = var.turms_gateway_security_group_name
   security_group_tags = var.turms_gateway_security_group_tags
   key_pair_name       = var.turms_gateway_key_pair_name
-  key_pair_tags       = var.turms_key_pair_tags
+  key_pair_tags       = var.turms_gateway_key_pair_tags
 
   # Protection
   delete_protection = var.turms_gateway_delete_protection
 
   # Turms Gateway
-  turms_gateway_jvm_opts = var.turms_gateway_jvm_options
+  turms_gateway_jvm_options = var.turms_gateway_jvm_options
   turms_gateway_profile  = var.turms_gateway_profile
 
   # MongoDB
@@ -228,6 +163,71 @@ module "turms_gateway" {
   config_mongodb_account_password = module.mongodb.config_mongodb_account_password
   user_mongodb_hosts              = module.mongodb.user_mongodb_hosts
   user_mongodb_account_password   = module.mongodb.user_mongodb_account_password
+
+  # Redis
+  session_redis_host              = module.redis.session_redis_host
+  session_redis_account_name      = module.redis.session_redis_account_name
+  session_redis_account_password  = module.redis.session_redis_account_password
+  location_redis_host             = module.redis.location_redis_host
+  location_redis_account_name     = module.redis.location_redis_account_name
+  location_redis_account_password = module.redis.location_redis_account_password
+}
+
+module "turms_service" {
+  source       = "./modules/turms-service"
+  create_turms_service = var.create_turms_service
+
+  instance_count = var.turms_service_instance_count
+
+  # Info
+  host_name = var.turms_service_host_name
+  ecs_name  = var.turms_service_ecs_name
+  ecs_tags  = var.turms_service_ecs_tags
+
+  # Charge
+  internet_charge_type = var.turms_service_internet_charge_type
+  period               = var.turms_service_period
+
+  # Specification
+  image_name_regex = var.turms_service_image_name_regex
+  instance_type    = var.turms_service_instance_type
+
+  # Network
+  vpc_id            = module.vpc.vpc_id
+  vswitch_id        = module.vpc.vswitch_ids[0]
+  max_bandwidth_out = var.turms_service_max_bandwidth_out
+  nic_type          = var.turms_service_nic_type
+
+  # Disk
+  disk_category = var.turms_service_disk_category
+  disk_size     = var.turms_service_disk_size
+
+  # Security
+  security_group_name = var.turms_service_security_group_name
+  security_group_tags = var.turms_service_security_group_tags
+  key_pair_name       = var.turms_service_key_pair_name
+  key_pair_tags       = var.turms_service_key_pair_tags
+
+  # Protection
+  delete_protection = var.turms_service_delete_protection
+
+  # Turms Service
+  turms_service_jvm_options = var.turms_service_jvm_options
+  turms_service_profile  = var.turms_service_profile
+
+  # MongoDB
+  config_mongodb_hosts                  = module.mongodb.config_mongodb_hosts
+  config_mongodb_account_password       = module.mongodb.config_mongodb_account_password
+  admin_mongodb_account_password        = module.mongodb.admin_mongodb_account_password
+  admin_mongodb_hosts                   = module.mongodb.admin_mongodb_hosts
+  user_mongodb_hosts                    = module.mongodb.user_mongodb_hosts
+  user_mongodb_account_password         = module.mongodb.user_mongodb_account_password
+  group_mongodb_hosts                   = module.mongodb.group_mongodb_hosts
+  group_mongodb_account_password        = module.mongodb.group_mongodb_account_password
+  conversation_mongodb_hosts            = module.mongodb.conversation_mongodb_hosts
+  conversation_mongodb_account_password = module.mongodb.conversation_mongodb_account_password
+  message_mongodb_hosts                 = module.mongodb.message_mongodb_hosts
+  message_mongodb_account_password      = module.mongodb.message_mongodb_account_password
 
   # Redis
   session_redis_host              = module.redis.session_redis_host
@@ -269,7 +269,7 @@ module "turms_admin" {
   security_group_name = var.turms_admin_security_group_name
   security_group_tags = var.turms_admin_security_group_tags
   key_pair_name       = var.turms_admin_key_pair_name
-  key_pair_tags       = var.turms_key_pair_tags
+  key_pair_tags       = var.turms_admin_key_pair_tags
 
   # Protection
   delete_protection = var.turms_admin_delete_protection

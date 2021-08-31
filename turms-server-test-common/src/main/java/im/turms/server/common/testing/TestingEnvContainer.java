@@ -33,7 +33,7 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
     private static final String REDIS_SERVICE_NAME = "redis_1";
     private static final int REDIS_SERVICE_PORT = 6379;
 
-    private static final String TURMS_SERVICE_NAME = "turms_1";
+    private static final String TURMS_SERVICE_SERVICE_NAME = "turms-service_1";
     private static final int TURMS_SERVICE_ADMIN_PORT = 8510;
 
     private static final String TURMS_GATEWAY_SERVICE_NAME = "turms-gateway_1";
@@ -67,15 +67,15 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         withExposedService(REDIS_SERVICE_NAME, REDIS_SERVICE_PORT);
         withLogConsumer(REDIS_SERVICE_NAME, new ServiceLogConsumer(REDIS_SERVICE_NAME));
 
-        if (options.isSetupTurms()) {
-            withExposedService(TURMS_SERVICE_NAME, TURMS_SERVICE_ADMIN_PORT);
-            withLogConsumer(TURMS_SERVICE_NAME, new ServiceLogConsumer(TURMS_SERVICE_NAME));
-        }
-
         if (options.isSetupTurmsGateway()) {
             withExposedService(TURMS_GATEWAY_SERVICE_NAME, TURMS_GATEWAY_SERVICE_ADMIN_PORT);
             withExposedService(TURMS_GATEWAY_SERVICE_NAME, TURMS_GATEWAY_SERVICE_WS_PORT);
             withLogConsumer(TURMS_GATEWAY_SERVICE_NAME, new ServiceLogConsumer(TURMS_GATEWAY_SERVICE_NAME));
+        }
+
+        if (options.isSetupTurmsService()) {
+            withExposedService(TURMS_SERVICE_SERVICE_NAME, TURMS_SERVICE_ADMIN_PORT);
+            withLogConsumer(TURMS_SERVICE_SERVICE_NAME, new ServiceLogConsumer(TURMS_SERVICE_SERVICE_NAME));
         }
     }
 
@@ -106,17 +106,6 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
             Yaml yaml = new Yaml();
             Map<String, Object> config = yaml.load(resource);
             Map<String, Object> services = (Map<String, Object>) config.get("services");
-            if (options.isSetupTurms()) {
-                String jvmOptions = parseJvmOptions(options.getTurmsJvmOptions());
-                if (!jvmOptions.isBlank()) {
-                    Map<String, Object> turms = (Map<String, Object>) services.get("turms");
-                    String turmsJvmOpts = (String) turms.get("TURMS_JVM_OPTS");
-                    turmsJvmOpts += jvmOptions;
-                    turms.put("TURMS_JVM_OPTS", turmsJvmOpts);
-                }
-            } else {
-                services.remove("turms");
-            }
             if (options.isSetupTurmsGateway()) {
                 String jvmOptions = parseJvmOptions(options.getTurmsGatewayJvmOptions());
                 if (!jvmOptions.isBlank()) {
@@ -127,6 +116,17 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
                 }
             } else {
                 services.remove("turms-gateway");
+            }
+            if (options.isSetupTurmsService()) {
+                String jvmOptions = parseJvmOptions(options.getTurmsServiceJvmOptions());
+                if (!jvmOptions.isBlank()) {
+                    Map<String, Object> turms = (Map<String, Object>) services.get("turms-service");
+                    String turmsServiceJvmOpts = (String) turms.get("TURMS_SERVICE_JVM_OPTS");
+                    turmsServiceJvmOpts += jvmOptions;
+                    turms.put("TURMS_SERVICE_JVM_OPTS", turmsServiceJvmOpts);
+                }
+            } else {
+                services.remove("turms-service");
             }
             if (!options.isSetupTurmsAdmin()) {
                 services.remove("turms-admin");
@@ -207,14 +207,14 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         return "redis://%s:%d".formatted(getRedisHost(), getRedisPort());
     }
 
-    // turms
+    // turms-service
 
-    public String getTurmsAdminHost() {
-        return getServiceHost(TURMS_SERVICE_NAME, TURMS_SERVICE_ADMIN_PORT);
+    public String getTurmsServiceHost() {
+        return getServiceHost(TURMS_SERVICE_SERVICE_NAME, TURMS_SERVICE_ADMIN_PORT);
     }
 
-    public int getTurmsAdminPort() {
-        return getServicePort(TURMS_SERVICE_NAME, TURMS_SERVICE_ADMIN_PORT);
+    public int getTurmsServicePort() {
+        return getServicePort(TURMS_SERVICE_SERVICE_NAME, TURMS_SERVICE_ADMIN_PORT);
     }
 
     // turms-gateway

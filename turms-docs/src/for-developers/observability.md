@@ -55,6 +55,8 @@ Turms与其他常规服务端一样，将可观测性的具体实现分为三类
 | Class  | jvm.classes.loaded        | Gauge   | 已加载classes数                                              |
 |        | jvm.classes.unloaded      | Counter | 已卸载classes数                                              |
 
+注意：Turms在进行网络IO操作时，使用的都是内存池中的堆外内存（即通过Netty的PooledByteBufAllocator分配堆外内存），通过故意不释放堆外内存，并将这些堆外内存缓存起来，来避免低效的堆外内存分配与释放操作，因此Turms的内存占用率会持续走高，并且总体没有下降趋势。这不是内存泄漏，只是Turms在缓存这些堆外内存。
+
 #### 集群间TCP连接度量
 
 （TODO：rename）
@@ -108,13 +110,13 @@ TODO
 
 | 服务端        | 名称            | 类型    | 含义         |
 | ------------- | --------------- | ------- | ------------ |
-| turms         | user.registered | Counter | 注册用户数   |
+| turms-gateway | user.logged_in  | Counter | 登录用户数   |
+|               | user.online     | Gauge   | 在线用户数   |
+| turms-service | user.registered | Counter | 注册用户数   |
 |               | user.deleted    | Counter | 注销用户数   |
 |               | group.created   | Counter | 创建群组数   |
 |               | group.deleted   | Counter | 注销群组数   |
 |               | msg.sent        | Counter | 已发送消息数 |
-| turms-gateway | user.logged_in  | Counter | 登录用户数   |
-|               | user.online     | Gauge   | 在线用户数   |
 
 ## 日志
 
@@ -144,9 +146,9 @@ Turms服务端不使用JSON格式的原因是：
 
 用于JVM性能测试、分析调优、排查定位问题。
 
-turms的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:file=${TURMS_HOME}/log/turms-gc.log:utctime,pid,tags:filecount=32,filesize=32m`
-
 turms-gateway的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:file=${TURMS_GATEWAY_HOME}/log/turms-gateway-gc.log:utctime,pid,tags:filecount=32,filesize=32m`
+
+turms-service的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:file=${TURMS_SERVICE_HOME}/log/turms-service-gc.log:utctime,pid,tags:filecount=32,filesize=32m`
 
 #### 服务端运行日志
 
@@ -169,18 +171,6 @@ turms-gateway的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 
 由于客户端API访问日志数据是企业的重要资产，因此再次强调：该日志看似简单常规，但其衍生出的运营数据可以高达上百项，既是企业的宝库，也是指引产品发展方向的灯塔。宁可因为100%采样落盘导致服务端吞吐量大减，也不建议您修改相关配置。除非您明确知道且能承受修改参数后会带来的后果。
 
-##### turms服务端
-
-格式：`用户ID|设备|IP|请求ID|请求类型|请求大小|请求时间|响应状态码|响应数据类型|处理时间`。其中`会话信息`是`用户ID`、`设备`、`IP`；`请求信息`是`请求ID`、`请求类型`、`请求大小`、`请求时间`；`响应信息`是`响应状态码`、`响应数据类型`、`处理时间`。
-
-示例：
-
-```spreadsheet
-2021-08-17 13:25:11.809  INFO S lkumxlpd [1650561895646191481] Thread-13 : 101|DESKTOP|::1|6798130843268792999|QUERY_MESSAGES_REQUEST|28|2021-08-17T13:25:11.807Z|1001||2
-2021-08-17 13:25:11.809  INFO S lkumxlpd [2979813149711907727] Thread-9 : 100|DESKTOP|::1|5095384146247218867|QUERY_GROUP_JOIN_QUESTIONS_REQUEST|17|2021-08-17T13:25:11.807Z|1002||2
-2021-08-17 13:25:11.809  INFO S lkumxlpd [7231219143674352809] ver-worker-14-1 : 101|DESKTOP|::1|358075665001342897|QUERY_SIGNED_GET_URL_REQUEST|40|2021-08-17T13:25:11.809Z|6000||0
-```
-
 ##### turms-gateway服务端
 
 格式：`会话ID|用户ID|设备|版本|IP|请求ID|请求类型|请求大小|请求时间|响应状态码|响应数据类型|响应大小|处理时间`。其中`会话信息`是`会话ID`、`用户ID`、`设备`、`版本`、`IP`；`请求信息`是`请求ID`、`请求类型`、`请求大小`、`请求时间`；`响应信息`是`响应状态码`、`响应数据类型`、`响应大小`、`处理时间`。
@@ -193,9 +183,21 @@ turms-gateway的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 2021-08-17 13:21:10.087  INFO G ocnpinxk 195568170846055794  gateway-tcp-worker-18-2 : 1669286372|100|DESKTOP|1|0:0:0:0:0:0:0:1|7875023820838742819|CREATE_GROUP_JOIN_QUESTION_REQUEST|181|2021-08-17T13:21:10.083Z|1201||21|4
 ```
 
+##### turms-service服务端
+
+格式：`用户ID|设备|IP|请求ID|请求类型|请求大小|请求时间|响应状态码|响应数据类型|处理时间`。其中`会话信息`是`用户ID`、`设备`、`IP`；`请求信息`是`请求ID`、`请求类型`、`请求大小`、`请求时间`；`响应信息`是`响应状态码`、`响应数据类型`、`处理时间`。
+
+示例：
+
+```spreadsheet
+2021-08-17 13:25:11.809  INFO S lkumxlpd [1650561895646191481] Thread-13 : 101|DESKTOP|::1|6798130843268792999|QUERY_MESSAGES_REQUEST|28|2021-08-17T13:25:11.807Z|1001||2
+2021-08-17 13:25:11.809  INFO S lkumxlpd [2979813149711907727] Thread-9 : 100|DESKTOP|::1|5095384146247218867|QUERY_GROUP_JOIN_QUESTIONS_REQUEST|17|2021-08-17T13:25:11.807Z|1002||2
+2021-08-17 13:25:11.809  INFO S lkumxlpd [7231219143674352809] ver-worker-14-1 : 101|DESKTOP|::1|358075665001342897|QUERY_SIGNED_GET_URL_REQUEST|40|2021-08-17T13:25:11.809Z|6000||0
+```
+
 补充：
 
-* 在turms服务端的客户端API访问日志中，一个请求的“开始时间”实际指的是“服务端成功接收一个请求所包含的数据流，但尚未进行解析”这一时刻，而非“服务端接收到请求的第一个字节”这一时刻。
+* 在Turms服务端的客户端API访问日志中，一个请求的“开始时间”实际指的是“服务端成功接收一个请求所包含的数据流，但尚未进行解析”这一时刻，而非“服务端接收到请求的第一个字节”这一时刻。
 * 请求的执行是异步的。假设一个请求执行时间是1秒，但其占用Turms服务端的CPU时间可能就只有几毫秒，其他时间CPU都在处理其他请求，不会出现CPU闲置等待的情况。
 
 

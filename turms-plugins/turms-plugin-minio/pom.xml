@@ -69,7 +69,7 @@
     <dependencies>
         <dependency>
             <groupId>im.turms</groupId>
-            <artifactId>turms</artifactId>
+            <artifactId>turms-service</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

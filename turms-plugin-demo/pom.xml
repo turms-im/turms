@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>im.turms</groupId>
-            <artifactId>turms</artifactId>
+            <artifactId>turms-service</artifactId>
             <version>0.10.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>

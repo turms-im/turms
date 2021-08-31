@@ -21,7 +21,7 @@ locals {
     "22/22",
     # turms-admin
     "6510/6510",
-    # turms: Metrics APIs + Admin APIs
+    # turms-service: Metrics APIs + Admin APIs
     "8510/8510",
     # turms-gateway: Metrics APIs
     "9510/9510",

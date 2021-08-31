@@ -28,9 +28,9 @@ import java.util.List;
 @Builder
 @Data
 public class TestingEnvContainerOptions {
-    private boolean setupTurms;
-    private boolean setupTurmsGateway;
     private boolean setupTurmsAdmin;
-    private List<String> turmsJvmOptions;
+    private boolean setupTurmsGateway;
+    private boolean setupTurmsService;
     private List<String> turmsGatewayJvmOptions;
+    private List<String> turmsServiceJvmOptions;
 }

@@ -1,0 +1,35 @@
+# References: https://github.com/openjdk/jdk/blob/master/src/java.base/share/man/java.1
+
+# Memory
+
+-XX:MaxRAMPercentage=75
+-XX:InitialRAMPercentage=75
+-XX:-RestrictContended
+-XX:+UseStringDeduplication
+# Remove this option once we supports primitive objects
+-XX:AutoBoxCacheMax=16384
+
+# GC
+
+-XX:+UseG1GC
+
+# Module
+--add-opens java.base/java.nio=ALL-UNNAMED
+--illegal-access=permit
+
+# Diagnostics
+
+-XshowSettings:vm
+-XX:+PrintFlagsFinal
+
+-XX:+FlightRecorder
+-XX:StartFlightRecording=dumponexit=true,filename=${TURMS_SERVICE_HOME}/jfr/turms-service.jfr,maxsize=128m,delay=60s
+
+# Diagnostics - Memory
+
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:HeapDumpPath=${TURMS_SERVICE_HOME}/hprof/turms-service-pid%p.hprof
+
+# Diagnostics - GC
+
+-Xlog:gc*,gc+age=trace,safepoint:file=${TURMS_SERVICE_HOME}/log/turms-service-gc.log:utctime,pid,tags:filecount=32,filesize=32m

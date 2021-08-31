@@ -8,7 +8,7 @@
 
 #### 基于docker-compose
 
-通过以下命令，可以全自动地搭建一套完整的Turms最小集群（包含turms、turms-gateway与turms-admin）及其依赖服务端（MongoDB分片集群与Redis）
+通过以下命令，可以全自动地搭建一套完整的Turms最小集群（包含turms-gateway、turms-service与turms-admin）及其依赖服务端（MongoDB分片集群与Redis）
 
 ```bash
 git clone --depth 1 https://github.com/turms-im/turms.git
@@ -17,7 +17,7 @@ docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all
 docker-compose -f docker-compose.standalone.yml up --force-recreate
 ```
 
-等集群完成搭建后，可以通过 http://localhost:6510 访问turms-admin后台管理系统，并输入账号密码（默认均为`turms`）。如果登录成功，则说明turms服务端也已启动成功。
+等集群完成搭建后，可以通过 http://localhost:6510 访问turms-admin后台管理系统，并输入账号密码（默认均为`turms`）。如果登录成功，则说明Turms集群搭建成功。
 
 补充：配合`--profile monitoring`（`docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate`），还可以额外自动搭建Prometheus与Grafana服务端。
 
@@ -64,9 +64,9 @@ terraform apply
 3. 在一个可用区内默认部署一套`Redis服务`
 4. 为接收发送给Turms ECS的外网流量，开通`SLB服务`
 5. 为实现Turms ECS的外网访问，开通`NAT服务`
-6. 为turms、turms-gateway与turms-admin服务端分别搭建各自的`安全组`
-7. 为turms服务端，开通无公网带宽的`ECS实例`（默认数量为1）。通过user-data实现turms服务初始化与执行，并与上述SLB、NAT、安全组、MongoDB、Redis服务绑定
-8. 为turms-gateway服务端，开通无公网带宽的`ECS实例`（默认数量为1）。通过user-data实现turms-gateway服务初始化与执行，并与上述SLB、NAT、安全组、MongoDB、Redis服务绑定
+6. 为turms-gateway、turms-service与turms-admin服务端分别搭建各自的`安全组`
+7. 为turms-gateway服务端，开通无公网带宽的`ECS实例`（默认数量为1）。通过user-data实现turms-gateway服务初始化与执行，并与上述SLB、NAT、安全组、MongoDB、Redis服务绑定
+8. 为turms-service服务端，开通无公网带宽的`ECS实例`（默认数量为1）。通过user-data实现turms-service服务初始化与执行，并与上述SLB、NAT、安全组、MongoDB、Redis服务绑定
 9. 为turms-admin服务端，开通无公网带宽的`ECS实例`（默认数量为1）。通过user-data实现turms-admin服务初始化与执行，并与上述安全组服务绑定
 
 自此整套Turms基础集群搭建完成（未来还会提供诸如日志分析服务等）。若希望了解更多实现细节，请查阅`turms/terraform/alicloud/cluster`目录下的具体Terraform模块配置
@@ -114,19 +114,19 @@ terraform apply
 
      对于Windows平台，可在 [tporadowski/redis](https://github.com/tporadowski/redis/releases) 下载Windows版本供本地开发测试用。
 
-3. Turms集群搭建（以下为手动搭建方案，之后会提供turms-cli做自动化集群部署）
+3. Turms集群搭建
 
    方案一：拉取Turms服务端Docker镜像，并运行：
 
    ```bash
    # Pull images
    docker pull ghcr.io/turms-im/turms-admin
-   docker pull ghcr.io/turms-im/turms
    docker pull ghcr.io/turms-im/turms-gateway
+   docker pull ghcr.io/turms-im/turms-service
    
    # Run images
    docker run -p 6510:6510 ghcr.io/turms-im/turms-admin
-   docker run -p 7510:7510 -p 8510:8510 ghcr.io/turms-im/turms
+   docker run -p 7510:7510 -p 8510:8510 ghcr.io/turms-im/turms-service
    docker run --ulimit nofile=102400:102400 -p 7510:7510 -p 9510:9510 -p 10510:10510 -p 11510:11510 -p 12510:12510 ghcr.io/turms-im/turms-gateway
    ```
    
@@ -136,11 +136,11 @@ terraform apply
    
    - （如果您将MongoDB与Redis都安装默认配置安装在本地，可跳过此步骤）根据您的需求配置config/jvm.options、config/application.yaml（您可以在此处配置Turms自定义的配置参数，并且您也可以在此处配置多个MongoDB或mongos的服务端地址。具体可参考：https://docs.mongodb.com/manual/reference/connection-string）。
    
-   - （推荐使用Ansible）在所有需要运行Turms服务端的系统上，运行bin/turms脚本（默认以Thin包形式执行，若需以Fat包形式执行，请在执行脚本时加上`-f`参数，如：`sh run.sh -f`。之后再运行turms-gateway服务端。turms与turms-gateway服务端会通过MongoDB（作为服务注册中心）来自动寻找其他服务端节点，由此Turms集群开始运作。
+   - （推荐使用Ansible）在所有需要运行Turms服务端的系统上，运行bin/turms脚本（默认以Thin包形式执行，若需以Fat包形式执行，请在执行脚本时加上`-f`参数，如：`sh run.sh -f`。之后再运行turms-gateway服务端。turms-gateway与turms-service服务端会通过MongoDB（作为服务注册中心）来自动寻找其他服务端节点，由此Turms集群开始运作。
    
-   方案三：克隆Turms仓库源码，直接通过IDE运行turms与turms-gateway服务端。（参考命令：`git clone --depth 1 https://github.com/turms-im/turms.git`）
+   方案三：克隆Turms仓库源码，直接通过IDE运行turms-gateway与turms-service服务端。（参考命令：`git clone --depth 1 https://github.com/turms-im/turms.git`）
 
 **提醒**
 
-* turms服务端在启动时，会自动检测数据库中是否已存在一个角色为`ROOT`，且账号为`turms`的超级管理员账号。如果不存在，则turms服务端会自动创建一个角色为`ROOT`、名称与密码均为`turms`的管理员账号。在生产环境中，请务必记得要修改默认密码。
+* turms-service服务端在启动时，会自动检测数据库中是否已存在一个角色为`ROOT`，且账号为`turms`的超级管理员账号。如果不存在，则turms-service服务端会自动创建一个角色为`ROOT`、名称与密码均为`turms`的管理员账号。在生产环境中，请务必记得要修改默认密码。
 * 上述操作主要用于您初次体验Turms集群使用，若您需将Turms部署在生产环境当中，请务必查阅Wiki手册，了解各种配置参数的意义，以最小的资源消耗，来定制属于您自己的业务需求与业务组合。

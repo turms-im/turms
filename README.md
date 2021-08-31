@@ -10,15 +10,15 @@ Turms is the most advanced open-source instant messaging engine for 100K~10M con
 Please refer to [Turms Documentation](https://turms-im.github.io/docs) (no English version for now) for details.
 
 ## Playground
-(Version of demo servers: `ghcr.io/turms-im/turms:latest`, `ghcr.io/turms-im/turms-gateway:latest`, `ghcr.io/turms-im/turms-admin:latest`)
+(Version of demo servers: `ghcr.io/turms-im/turms-admin:latest`, `ghcr.io/turms-im/turms-gateway:latest`, `ghcr.io/turms-im/turms-service:latest`)
 
 * turms-admin: http://playground.turms.im:6510
 
   Both the account and the password are: `guest`. (The account is allowed to query and add data, but is not allowed to update and delete data.)
 
-* turms (Admin API in dev environment with fake data supported): http://playground.turms.im:8510
-
 * turms-gateway: http://playground.turms.im:10510 (port for WebSocket access) and http://playground.turms.im:11510 (port for TCP access)
+
+* turms-service (Admin API in dev environment with fake data supported): http://playground.turms.im:8510
 
 * Prometheus: http://playground.turms.im:9090; Grafana: http://playground.turms.im:3000
 
@@ -27,14 +27,14 @@ You can use any turms-client-(java/js/swift) implementation to send requests to 
 In addition, Playground is set up automatically by just one command: `ENV=dev docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`
 
 ## Quick Start
-Running the following commands to setup a minimum viable cluster (including turms, turms-gateway and turms-admin) and its dependent servers (MongoDB sharded cluster and Redis) automatically:
+Running the following commands to setup a minimum viable cluster (including turms-gateway, turms-service and turms-admin) and its dependent servers (MongoDB sharded cluster and Redis) automatically:
 ```sh
 git clone --depth 1 https://github.com/turms-im/turms.git
 cd turms
 docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
 docker-compose -f docker-compose.standalone.yml up --force-recreate
 ```
-After the cluster is set up, you can visit turms-admin at http://localhost:6510, and enter the account and password (`turms` by default). If you log in successfully, it means that turms has been setup successfully.
+After the cluster is set up, you can visit turms-admin at http://localhost:6510, and enter the account and password (`turms` by default). If you log in successfully, it means that the cluster of Turms has been setup successfully.
 
 You can also apply the Terraform modules provided by Turms to quickly purchase cloud services and set up a turms cluster (uses spot instances by default). After running `terraform apply`, wait for about 3~15 minutes (Alibaba Cloud ECS is slow to pull ghcr images), and then visit `http://<public IP>:6510`, if you can access turms-admin, it means that the turms cluster has been set up successfully.
 
@@ -66,11 +66,11 @@ In addition, architecture design is an art of trade-off. Some IM products take r
 
 ### Common Architecture Features
 
-1. (Agility) Support updating turms servers without the users' awareness of shutdown to support rapid iteration
+1. (Agility) Support updating Turms servers without the users' awareness of shutdown to support rapid iteration
 2. (Scalability) The Turms server is stateless to be scaled out; Support multi-active across data centers
 3. (Deployability) Support container deployment to facilitate integration (CI/CD) with cloud services
 4. (Observability) Support relatively complete features of observability for business analysis and troubleshoot
-5. (Scalability) Support medium to large scale instant messaging applications, and there is no need to refactor even if the application becomes large from medium-scale (There is still a lot of optimization work to be done for large applications, but turms servers are easy to upgrade)
+5. (Scalability) Support medium to large scale instant messaging applications, and there is no need to refactor even if the application becomes large from medium-scale (There is still a lot of optimization work to be done for large applications, but Turms servers are easy to upgrade)
 6. (Simplicity) The Turms architecture is lightweight, which makes Turms easy to learn and redevelop. Please refer to [Turms Architecture Design](https://turms-im.github.io/docs/for-developers/architecture.html) for details)
 7. Turms depends on the MongoDB sharded cluster to support request routing (such as read-write separation) for medium to large scale applications
 
@@ -85,26 +85,26 @@ In addition, architecture design is an art of trade-off. Some IM products take r
    
    * Tracing
    
-   Note that the turms server will provide more monitoring features that can be implemented efficiently as much as possible, but will not provide some common features that have a great impact on performance (such as DAU). For this kind of extended feature, you can implement them by offline or real-time analysis of the logs or metrics of turms servers.
+   Note that the Turms server will provide more monitoring features that can be implemented efficiently as much as possible, but will not provide some common features that have a great impact on performance (such as DAU). For this kind of extended feature, you can implement them by offline or real-time analysis of the logs or metrics of Turms servers.
 2. Extreme performance
     We always try to archive extreme performance in the implementation of all business workflows. Please refer to the source code for details.
   * (Network)
-    * (I/O) The turms server is a reactive application. All network I/O operations (e.g. database call, Redis call, service discovery call, RPC) are based on Netty to achieve non-blocking I/O. Therefore, the turms server can make full use of system resources (while traditional servers can't)
-    * (Encoding) Protobuf is used to encode the traffic data between turms servers and turms clients; Custom encoding without any redundant data is used to encode the RPC requests and responses between turms servers.
-  * (Thread) The turms server has an excellent thread model, and its thread number is constant, which is independent of the number of online users and the number of requests. Since the default number of threads in the access layer of the turms server is the same as that of the CPU processors, the turms server can make full use of the CPU cache, and greatly reduce the cost of thread context switching compared with traditional servers
-  * (Memory) The turms server allocates heap or direct memory smartly according to its usage to reduce the memory footprint.
-  * (Cache) The turms server makes full use of the local memory cache
+    * (I/O) The Turms server is a reactive application. All network I/O operations (e.g. database call, Redis call, service discovery call, RPC) are based on Netty to achieve non-blocking I/O. Therefore, the Turms server can make full use of system resources (while traditional servers can't)
+    * (Encoding) Protobuf is used to encode the traffic data between Turms servers and turms clients; Custom encoding without any redundant data is used to encode the RPC requests and responses between Turms servers.
+  * (Thread) The Turms server has an excellent thread model, and its thread number is constant, which is independent of the number of online users and the number of requests. Since the default number of threads in the access layer of the Turms server is the same as that of the CPU processors, the Turms server can make full use of the CPU cache, and greatly reduce the cost of thread context switching compared with traditional servers
+  * (Memory) The Turms server allocates heap or direct memory smartly according to its usage to reduce the memory footprint.
+  * (Cache) The Turms server makes full use of the local memory cache
 ## Subprojects
 
 |Name | Summary |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| <span style="white-space:nowrap;"> turms</span> |Implements IM business logic, and provides admins with business data management, RBAC, cluster management|
-| <span style="white-space:nowrap;"> turms-gateway </span> | A gateway (push server) interacting with clients, and responsible for user authentication, session management, push notification, and load balancing of turms servers |
-| <span style="white-space:nowrap;"> turms-client-js</span> | Exposes APIs to interact with the turms server to implement IM features and underlying driver logic (such as heartbeat). You don't need to know its implementations because it's transparent for developers |
+| <span style="white-space:nowrap;"> turms-gateway </span> | A gateway (push server) interacting with clients, and responsible for user authentication, session management, push notification, and load balancing for turms-service servers |
+| <span style="white-space:nowrap;"> turms-service</span> |Implements IM business logic, and provides admins with business data management, RBAC, cluster management|
+| <span style="white-space:nowrap;"> turms-admin</span> |Provides features such as business data management and cluster management for Turms server cluster|
+| <span style="white-space:nowrap;"> turms-client-js</span> | Exposes APIs to interact with the Turms server to implement IM features and underlying driver logic (such as heartbeat). You don't need to know its implementations because it's transparent for developers |
 | <span style="white-space:nowrap;"> turns-client-kotlin</span> | ditto|
 | <span style="white-space:nowrap;"> turns-client-swift </span> | ditto|
-| <span style="white-space:nowrap;"> turms-admin</span> |Provides features such as business data management and cluster management for turms server cluster|
-| <span style="white-space:nowrap;"> turms-plugin </span> | When events (such as user going online/offline, message receiving and forwarding, etc) are fired, turms and turms-gateway will trigger corresponding custom plugins to facilitate developers to implement custom features |
+| <span style="white-space:nowrap;"> turms-plugin </span> | When events (such as user going online/offline, message receiving and forwarding, etc) are fired, turms-gateway and turms-service will trigger corresponding custom plugins to facilitate developers to implement custom features |
 | <span style="white-space:nowrap;"> turms-plugin-minio</span> |A plugin based on turms-plugin for the storage service, and is used to interact with MinIO server|
 | <span style="white-space:nowrap;"> turms-data (TODO)</span> | Not yet published. An independent data analysis system based on Flink ecosystem is responsible for business data analysis, and provides underlying data support for the statistics APIs of turms for admins and operational reports of turms-admin |
 
@@ -127,5 +127,5 @@ The architecture design of Turms is derived from commercial instant messaging ar
 
 Considering the positioning of Turms, we do not plan to provide client demo with UI and specific business logic in the near future because:
 
-* It is easy for developers to verify the business features supported by Turms. If you just want to test the business features of Turms, you can run the turms server without even typing a line of code. Only ten lines of code can realize the login, sending messages, sending friends' requests and other business features, or modify properties to customize various requirements.
+* It is easy for developers to verify the business features supported by Turms. If you just want to test the business features of Turms, you can run the Turms server without even typing a line of code. Only ten lines of code can realize the login, sending messages, sending friends' requests and other business features, or modify properties to customize various requirements.
 * The design and implementation of the demo are closely related to the specific business scenarios, specific programming language, specific technical architecture, and specific OS while Turms has been committed to efficiently meeting various complex and challenging instant messaging scenarios, and we don't want to publish a demo that limits the imagination of developers. And developing and maintaining a demo is also very time-consuming and will slow down the progress of the development of Turms.
