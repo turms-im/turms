@@ -23,9 +23,11 @@ import com.google.common.collect.SetMultimap;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.rpc.request.SendNotificationRequest;
 import im.turms.server.common.service.session.UserStatusService;
+import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.ProtoUtil;
@@ -261,7 +263,17 @@ public class OutboundMessageService {
     private Mono<Boolean> tryLogNotification(Mono<Boolean> mono, TurmsNotification notification, int recipientCount) {
         if (apiLoggingContext.shouldLogNotification(notification.getRelayedRequest().getKindCase())) {
             return mono
-                    .doOnSuccess(sent -> NotificationLogging.log(sent, notification, recipientCount));
+                    .doOnEach(signal -> {
+                        if (!signal.isOnNext()) {
+                            return;
+                        }
+                        boolean sent = Boolean.TRUE.equals(signal.get());
+                        RequestLoggingContext loggingContext = signal.getContextView()
+                                .getOrDefault(RequestLoggingContext.CTX_KEY_NAME, RequestLoggingContext.DEFAULT);
+                        try (TracingCloseableContext ignored = loggingContext.getTracingContext().asCloseable()) {
+                            NotificationLogging.log(sent, notification, recipientCount);
+                        }
+                    });
         }
         return mono;
     }

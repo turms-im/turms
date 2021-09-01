@@ -17,6 +17,7 @@
 
 package im.turms.server.common.rpc.service;
 
+import im.turms.server.common.tracing.TracingContext;
 import io.netty.buffer.ByteBuf;
 
 import javax.validation.constraints.NotEmpty;
@@ -29,6 +30,7 @@ import java.util.Set;
 public interface IOutboundMessageService {
 
     boolean sendNotificationToLocalClients(
+            @NotNull TracingContext tracingContext,
             @NotNull ByteBuf notificationData,
             @NotEmpty Set<Long> recipientIds);
 

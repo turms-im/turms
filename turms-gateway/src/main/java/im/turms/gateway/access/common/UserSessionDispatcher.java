@@ -30,6 +30,8 @@ import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.logging.RequestLoggingContext;
+import im.turms.server.common.tracing.TracingCloseableContext;
+import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ExceptionUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
@@ -70,14 +72,14 @@ public abstract class UserSessionDispatcher {
             InetSocketAddress ip = (InetSocketAddress) connection.address();
             NetConnection netConnection = NetConnection.create(connection);
             UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, ip, closeIdleConnectionAfterSeconds, userSession -> {
-                // TODO: tracing
-                userSession.setNotificationConsumer(turmsNotificationBuffer -> {
+                userSession.setNotificationConsumer((turmsNotificationBuffer, tracingContext) -> {
                     turmsNotificationBuffer.touch(turmsNotificationBuffer);
+                    // sendObject() will release the buffer no matter it succeeds or fails
                     NettyOutbound outbound = isWebSocketConnection
                             ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
                             : out.sendObject(turmsNotificationBuffer);
                     Mono.from(outbound)
-                            .onErrorResume(throwable -> handleConnectionError(throwable, netConnection, userSession))
+                            .onErrorResume(throwable -> handleConnectionError(throwable, netConnection, userSession, tracingContext))
                             .subscribe();
                 });
             });
@@ -117,20 +119,22 @@ public abstract class UserSessionDispatcher {
                                 return Mono.from(outbound);
                             })
                             .onErrorResume(throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(),
-                                    sessionWrapper.getUserSession()))
+                                    sessionWrapper.getUserSession(), loggingContext.getTracingContext()))
                             .contextWrite(context -> context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext))
                             .doFinally(signal -> loggingContext.clearMdc())
                             .subscribe();
                 })
                 .then()
                 .onErrorResume(
-                        throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(), sessionWrapper.getUserSession()));
+                        throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(),
+                                sessionWrapper.getUserSession(), TracingContext.NOOP));
     }
 
     private Mono<Void> tryRemoveSessionInfoOnConnectionClosed(Mono<Void> onClose, UserSessionWrapper sessionWrapper) {
         return onClose
                 .onErrorResume(
-                        throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(), sessionWrapper.getUserSession()))
+                        throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(),
+                                sessionWrapper.getUserSession(), TracingContext.NOOP))
                 .doFinally(signal -> {
                     UserSession userSession = sessionWrapper.getUserSession();
                     if (userSession == null) {
@@ -166,11 +170,16 @@ public abstract class UserSessionDispatcher {
 
     // Error handling
 
-    private Mono<Void> handleConnectionError(Throwable throwable, NetConnection connection, @Nullable UserSession userSession) {
+    private Mono<Void> handleConnectionError(Throwable throwable,
+                                             NetConnection connection,
+                                             @Nullable UserSession userSession,
+                                             TracingContext tracingContext) {
         if (!ExceptionUtil.isDisconnectedClientError(throwable)) {
-            log.error("Catch an exception from a connection bound with the session: {}",
-                    userSession,
-                    throwable);
+            try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
+                log.error("Caught an exception from a connection bound with the session: {}",
+                        userSession,
+                        throwable);
+            }
         }
         if (userSession == null) {
             connection.close();
@@ -179,7 +188,16 @@ public abstract class UserSessionDispatcher {
             Long userId = userSession.getUserId();
             DeviceType deviceType = userSession.getDeviceType();
             CloseReason closeReason = CloseReason.get(throwable);
-            return serviceMediator.setLocalUserDeviceOffline(userId, deviceType, closeReason).then();
+            return serviceMediator.setLocalUserDeviceOffline(userId, deviceType, closeReason)
+                    .onErrorResume(t -> {
+                        // Log because this should be the last error handler here
+                        try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
+                            log.error("Caught an exception when setting the local session [{}:{}] offline due to connection error",
+                                    userId, deviceType, t);
+                        }
+                        return Mono.empty();
+                    })
+                    .then();
         }
     }
 

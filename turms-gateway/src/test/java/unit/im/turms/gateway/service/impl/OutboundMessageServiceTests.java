@@ -30,6 +30,7 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.PluginProperties;
+import im.turms.server.common.tracing.TracingContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import org.junit.jupiter.api.Test;
@@ -69,7 +70,7 @@ class OutboundMessageServiceTests {
         UserSession session = new UserSession(1, 1L, DeviceType.ANDROID, new Point(1F, 1F));
         session.setConnection(connection);
         Sinks.One<ByteBuf> sink = Sinks.one();
-        session.setNotificationConsumer(sink::tryEmitValue);
+        session.setNotificationConsumer((notification, tracingContext) -> sink.tryEmitValue(notification));
         Mono<ByteBuf> result = sink.asMono()
                 .flatMap(byteBuf -> Mono
                         // Wait 1s to simulate the async process
@@ -82,7 +83,7 @@ class OutboundMessageServiceTests {
 
         ByteBuf byteBuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
-        boolean sent = outboundMessageService.sendNotificationToLocalClients(byteBuf, recipientIds);
+        boolean sent = outboundMessageService.sendNotificationToLocalClients(TracingContext.NOOP, byteBuf, recipientIds);
 
         assertThat(byteBuf.refCnt())
                 .as("Buffer should not be released if the notification hasn't been sent")
@@ -102,7 +103,7 @@ class OutboundMessageServiceTests {
 
         ByteBuf byteBuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
-        boolean sent = outboundMessageService.sendNotificationToLocalClients(byteBuf, recipientIds);
+        boolean sent = outboundMessageService.sendNotificationToLocalClients(TracingContext.NOOP, byteBuf, recipientIds);
 
         assertThat(byteBuf.refCnt())
                 .as("Buffer should be released if recipients are offline")

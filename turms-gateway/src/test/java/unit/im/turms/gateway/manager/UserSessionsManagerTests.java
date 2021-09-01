@@ -72,7 +72,7 @@ class UserSessionsManagerTests {
     void pushSessionNotification_shouldReturnTrue_ifSessionExists() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
         manager.addSessionIfAbsent(version, deviceType, null)
-                .setNotificationConsumer(byteBuf -> {});
+                .setNotificationConsumer((byteBuf, tracingContext) -> {});
         assertThat(manager.pushSessionNotification(deviceType, serverId)).isTrue();
     }
 

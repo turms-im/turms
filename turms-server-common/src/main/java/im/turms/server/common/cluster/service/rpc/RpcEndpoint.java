@@ -90,7 +90,7 @@ public final class RpcEndpoint {
                 resolveRequest(requestId, null, new IllegalStateException("Failed to encode request", e));
                 break;
             }
-            // Note sendObject() should release the buffer no matter it succeeds or fails
+            // sendObject() will release the buffer no matter it succeeds or fails
             conn.sendObject(buffer)
                     .then()
                     .onErrorResume(t -> {

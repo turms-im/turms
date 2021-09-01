@@ -35,6 +35,7 @@ public class RequestLoggingContext {
     @Setter
     private TracingContext tracingContext = TracingContext.NOOP;
 
+    public static final RequestLoggingContext DEFAULT = new RequestLoggingContext(TracingContext.NOOP);
     public static final String CTX_KEY_NAME = "REQ";
 
     public static Long readTraceIdFromContext(ContextView context) {

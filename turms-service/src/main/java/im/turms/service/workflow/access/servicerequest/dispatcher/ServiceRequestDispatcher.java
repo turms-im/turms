@@ -219,17 +219,23 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     .tag(CLIENT_REQUEST_TAG_TYPE, requestType.name())
                     .metrics()
                     .defaultIfEmpty(RequestHandlerResultFactory.NO_CONTENT)
-                    .doOnSuccess(requestResult -> {
-                        if (requestResult.code() == TurmsStatusCode.OK) {
-                            notifyRelatedUsersOfAction(requestResult, userId, deviceType)
-                                    .onErrorResume(t -> {
-                                        try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
-                                            log.error("Failed to notify related users of the action", t);
-                                        }
-                                        return Mono.empty();
-                                    })
-                                    .subscribe();
+                    .doOnEach(signal -> {
+                        if (!signal.isOnNext()) {
+                            return;
                         }
+                        RequestHandlerResult requestResult = signal.get();
+                        if (requestResult == null || requestResult.code() != TurmsStatusCode.OK) {
+                            return;
+                        }
+                        notifyRelatedUsersOfAction(requestResult, userId, deviceType)
+                                .onErrorResume(t -> {
+                                    try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
+                                        log.error("Failed to notify related users of the action", t);
+                                    }
+                                    return Mono.empty();
+                                })
+                                .contextWrite(signal.getContextView())
+                                .subscribe();
                     })
                     .onErrorResume(t -> {
                         ThrowableInfo info = ThrowableInfo.get(t);

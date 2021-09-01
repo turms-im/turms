@@ -30,6 +30,7 @@ import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.service.IOutboundMessageService;
+import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectionUtil;
 import io.netty.buffer.ByteBuf;
@@ -77,10 +78,13 @@ public class OutboundMessageService implements IOutboundMessageService {
      *                         always a "notification" instead of "response" in fact
      * @return true if the notification is ready to forward or has forwarded
      * to one recipient at least
-     * @implNote The method ensures notificationData will be released by 1
+     * @implNote 1. The method ensures notificationData will be released by 1
+     * 2. No need to updateMdc for trace ID here
+     * because we know sendNotificationToLocalClients() is in the tracing scope
      */
     @Override
-    public boolean sendNotificationToLocalClients(ByteBuf notificationData,
+    public boolean sendNotificationToLocalClients(TracingContext tracingContext,
+                                                  ByteBuf notificationData,
                                                   Set<Long> recipientIds) {
         AssertUtil.notNull(notificationData, "notificationData");
         AssertUtil.notEmpty(recipientIds, "recipientIds");
@@ -113,7 +117,7 @@ public class OutboundMessageService implements IOutboundMessageService {
                     // when the notification is queued successfully and released by Netty, or fails to be queued.
                     // Otherwise, there is a memory leak
                     try {
-                        userSession.sendNotification(wrappedNotificationData);
+                        userSession.sendNotification(wrappedNotificationData, tracingContext);
                     } catch (Exception e) {
                         if (userSession.isSessionOpen()) {
                             log.warn("Failed to send a notification to the session: {}", userSession);

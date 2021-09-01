@@ -22,6 +22,7 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.util.RandomUtil;
 import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.server.common.dto.CloseReason;
+import im.turms.server.common.tracing.TracingContext;
 import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -33,7 +34,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 /**
  * @author James Chen
@@ -63,7 +64,7 @@ public final class UserSession {
      * 3. We never emit an error in the sink
      */
     @Getter(AccessLevel.PRIVATE)
-    private Consumer<ByteBuf> notificationConsumer;
+    private BiConsumer<ByteBuf, TracingContext> notificationConsumer;
     private volatile long lastHeartbeatRequestTimestampMillis;
     private volatile long lastRequestTimestampMillis;
     // No need to add volatile because it can only be accessed by one thread
@@ -142,7 +143,12 @@ public final class UserSession {
 
     public void sendNotification(ByteBuf byteBuf) {
         // Note that we do not check if the consumer is null
-        notificationConsumer.accept(byteBuf);
+        notificationConsumer.accept(byteBuf, TracingContext.NOOP);
+    }
+
+    public void sendNotification(ByteBuf byteBuf, TracingContext tracingContext) {
+        // Note that we do not check if the consumer is null
+        notificationConsumer.accept(byteBuf, tracingContext);
     }
 
     public boolean acquireDeleteSessionRequestLoggingLock() {

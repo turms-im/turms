@@ -36,6 +36,7 @@ import im.turms.server.common.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.property.env.common.cluster.RpcProperties;
+import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.ExceptionUtil;
@@ -130,42 +131,61 @@ public class RpcService implements ClusterService {
             @Override
             public void onDataReceived(Object data) {
                 if (data instanceof RpcRequest<?> request) {
-                    ChannelOperations<?, ?> conn = connection.getConnection();
-                    requestExecutor.runRpcRequest(request, connection, connection.getNodeId())
-                            .onErrorResume(RpcException.class, t -> (Mono) Mono.just(t))
-                            .doOnNext(response -> {
-                                if (conn.isDisposed()) {
-                                    log.error("Cannot send response to disposed connection: " + response);
-                                    return;
-                                }
-                                ByteBuf buf;
-                                try {
-                                    buf = RpcFrameEncoder.INSTANCE.encode(request.getRequestId(), response);
-                                } catch (Exception e) {
-                                    log.error("Failed to encode response: {}", response, e);
-                                    return;
-                                }
-                                if (buf.refCnt() == 0) {
-                                    log.error("The buffer of response is released unexpectedly: " + response);
-                                    return;
-                                }
-                                conn.sendObject(buf)
-                                        .then()
-                                        .onErrorResume(t -> {
-                                            log.error("Failed to send response", t);
-                                            return Mono.empty();
-                                        })
-                                        .subscribe();
-                            })
-                            .subscribe();
+                    onRequestReceived(request);
                 } else if (data instanceof RpcResponse response) {
-                    if (endpoint == null) {
-                        endpoint = getOrCreateEndpoint(connection.getNodeId(), connection);
-                    }
-                    endpoint.handleResponse(response);
+                    onResponseReceived(response);
                 } else {
                     log.error("Receive an unknown data: " + data);
                 }
+            }
+
+            public void onRequestReceived(RpcRequest<?> request) {
+                ChannelOperations<?, ?> conn = connection.getConnection();
+                RequestLoggingContext loggingContext = new RequestLoggingContext(request.getTracingContext());
+                Mono<?> mono = requestExecutor.runRpcRequest(loggingContext, request, connection, connection.getNodeId());
+                mono.cast(Object.class)
+                        .onErrorResume(RpcException.class, Mono::just)
+                        .doOnNext(response -> {
+                            if (conn.isDisposed()) {
+                                try (TracingCloseableContext ignored = loggingContext.getTracingContext().asCloseable()) {
+                                    log.error("Cannot send response to disposed connection: " + response);
+                                }
+                                return;
+                            }
+                            ByteBuf buf;
+                            try {
+                                buf = RpcFrameEncoder.INSTANCE.encode(request.getRequestId(), response);
+                            } catch (Exception e) {
+                                try (TracingCloseableContext ignored = loggingContext.getTracingContext().asCloseable()) {
+                                    log.error("Failed to encode response: {}", response, e);
+                                }
+                                return;
+                            }
+                            if (buf.refCnt() == 0) {
+                                try (TracingCloseableContext ignored = loggingContext.getTracingContext().asCloseable()) {
+                                    log.error("The buffer of response is released unexpectedly: " + response);
+                                }
+                                return;
+                            }
+                            conn.sendObject(buf)
+                                    .then()
+                                    .onErrorResume(t -> {
+                                        try (TracingCloseableContext ignored = loggingContext.getTracingContext().asCloseable()) {
+                                            log.error("Failed to send response", t);
+                                        }
+                                        return Mono.empty();
+                                    })
+                                    .subscribe();
+                        })
+                        .contextWrite(context -> context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext))
+                        .subscribe();
+            }
+
+            public void onResponseReceived(RpcResponse response) {
+                if (endpoint == null) {
+                    endpoint = getOrCreateEndpoint(connection.getNodeId(), connection);
+                }
+                endpoint.handleResponse(response);
             }
         });
     }
@@ -265,7 +285,10 @@ public class RpcService implements ClusterService {
     public <T> Mono<T> requestResponse(String memberNodeId, RpcRequest<T> request, Duration timeout, @Nullable TurmsConnection connection) {
         try {
             if (discoveryService.getLocalNodeStatusManager().isLocalNodeId(memberNodeId)) {
-                return requestExecutor.runRpcRequest(request, null, memberNodeId);
+                return requestExecutor.runRpcRequest(new RequestLoggingContext(request.getTracingContext()),
+                        request,
+                        null,
+                        memberNodeId);
             }
             RpcEndpoint endpoint = getOrCreateEndpoint(memberNodeId, connection);
             return requestResponse0(endpoint, request, timeout);

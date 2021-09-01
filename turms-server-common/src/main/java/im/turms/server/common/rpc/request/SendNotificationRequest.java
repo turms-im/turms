@@ -81,7 +81,7 @@ public class SendNotificationRequest extends RpcRequest<Boolean> {
      */
     @Override
     public Boolean call() {
-        return outboundMessageService.sendNotificationToLocalClients(notificationBuffer, recipientIds);
+        return outboundMessageService.sendNotificationToLocalClients(getTracingContext(), notificationBuffer, recipientIds);
     }
 
     @Override

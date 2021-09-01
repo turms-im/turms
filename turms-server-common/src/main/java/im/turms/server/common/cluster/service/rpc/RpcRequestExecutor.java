@@ -23,6 +23,7 @@ import im.turms.server.common.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.lang.Null;
+import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.tracing.TracingContext;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
@@ -46,13 +47,14 @@ public class RpcRequestExecutor {
      * @implNote 1. We record request time/response here because the RPC request may run on the local machine
      * 2.The method itself will call RpcRequest#releaseBoundBuffer()
      */
-    public <T> Mono<T> runRpcRequest(RpcRequest<T> rpcRequest, @Nullable TurmsConnection connection, String fromNodeId) {
+    public <T> Mono<T> runRpcRequest(RequestLoggingContext loggingContext,
+                                     RpcRequest<T> rpcRequest,
+                                     @Nullable TurmsConnection connection,
+                                     String fromNodeId) {
         rpcRequest.touchBuffer(rpcRequest);
-        TracingContext tracingContext = null;
+        TracingContext tracingContext = loggingContext.getTracingContext();
         try {
-            tracingContext = rpcRequest.getTracingContext();
             tracingContext.updateMdc();
-            TracingContext finalTracingContext = tracingContext;
             rpcRequest.init(context, connection, fromNodeId);
             Mono<T> result;
             // It's the responsibility of the implementations of call() or callAsync()
@@ -73,7 +75,7 @@ public class RpcRequestExecutor {
                     .onErrorMap(e -> e instanceof RpcException
                             ? e
                             : RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString(), e))
-                    .doFinally(signalType -> finalTracingContext.clearMdc());
+                    .doFinally(signalType -> tracingContext.clearMdc());
         } catch (RpcException e) {
             rpcRequest.releaseBoundBuffer();
             return Mono.error(e);
