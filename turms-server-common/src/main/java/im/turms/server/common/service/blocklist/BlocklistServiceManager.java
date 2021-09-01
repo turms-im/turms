@@ -106,7 +106,7 @@ public class BlocklistServiceManager<T> {
     private final Consumer<T> onTargetBlocked;
 
     /**
-     * Used to check a user is blocked or not
+     * Used to check if a user is blocked or not
      */
     private final ConcurrentHashMap<T, Long> blocklist;
     /**

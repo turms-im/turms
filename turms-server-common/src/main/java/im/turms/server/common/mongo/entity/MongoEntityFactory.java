@@ -254,25 +254,27 @@ public final class MongoEntityFactory {
      * @return The indexes of the current field with its nested fields
      */
     private List<IndexModel> parseIndexes(Field field) {
-        List<IndexModel> models = null;
+        List<IndexModel> indexes = null;
         IndexModel index = parseIndex(null, field);
         if (index != null) {
-            models = new ArrayList<>(1);
-            models.add(index);
+            indexes = new ArrayList<>(1);
+            indexes.add(index);
         }
         String fieldName = field.isAnnotationPresent(Id.class)
                 ? "_id"
                 : parseFieldName(field);
         for (Field subField : field.getType().getDeclaredFields()) {
             IndexModel subIndex = parseIndex(fieldName, subField);
-            if (subIndex != null && models == null) {
-                models = new ArrayList<>(1);
-                models.add(subIndex);
+            if (subIndex != null) {
+                if (indexes == null) {
+                    indexes = new ArrayList<>(1);
+                }
+                indexes.add(subIndex);
             }
         }
-        return models == null
+        return indexes == null
                 ? Collections.emptyList()
-                : models;
+                : indexes;
     }
 
     /**

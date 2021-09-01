@@ -12,5 +12,12 @@
       "_id.oid": "hashed"
     },
     "name": "_id.oid_hashed"
+  },
+  {
+    "v": 2,
+    "key": {
+      "_id.rid": "hashed"
+    },
+    "name": "_id.rid_hashed"
   }
 ]

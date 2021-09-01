@@ -12,5 +12,12 @@
       "_id.gid": "hashed"
     },
     "name": "_id.gid_hashed"
+  },
+  {
+    "v": 2,
+    "key": {
+      "_id.uid": "hashed"
+    },
+    "name": "_id.uid_hashed"
   }
 ]

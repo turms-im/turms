@@ -142,8 +142,8 @@ public class RpcService implements ClusterService {
             public void onRequestReceived(RpcRequest<?> request) {
                 ChannelOperations<?, ?> conn = connection.getConnection();
                 RequestLoggingContext loggingContext = new RequestLoggingContext(request.getTracingContext());
-                Mono<?> mono = requestExecutor.runRpcRequest(loggingContext, request, connection, connection.getNodeId());
-                mono.cast(Object.class)
+                requestExecutor.runRpcRequest(loggingContext, request, connection, connection.getNodeId())
+                        .cast(Object.class)
                         .onErrorResume(RpcException.class, Mono::just)
                         .doOnNext(response -> {
                             if (conn.isDisposed()) {
