@@ -15,25 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.service.workflow.access.http.dto.request.admin;
-
-
-import im.turms.service.constant.SecurityConstant;
+package im.turms.service.constant;
 
 /**
  * @author James Chen
  */
-public record UpdateAdminDTO(
-        String password,
-        String name,
-        Long roleId
-) {
-    @Override
-    public String toString() {
-        return "UpdateAdminDTO[" +
-                "password=" + SecurityConstant.SENSITIVE_VALUE +
-                ", name=" + name +
-                ", roleId=" + roleId +
-                ']';
+public final class SecurityConstant {
+
+    public static final String SENSITIVE_VALUE = "******";
+
+    private SecurityConstant() {
     }
 }

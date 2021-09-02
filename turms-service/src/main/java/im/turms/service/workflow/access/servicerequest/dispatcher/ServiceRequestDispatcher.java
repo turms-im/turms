@@ -123,8 +123,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
     /**
      * @implNote 1. Flow Control:
-     * turms-gateway is responsible for the flow control of client requests
-     * and RSocket is responsible for the backpressure between turms and turms-gateway
+     * turms-gateway is responsible for the rate limiting of client requests
+     * and (TODO) we will to implement backpressure between serves in https://github.com/turms-im/turms/issues/761
      * so we don't check the request rate here.
      * <p>
      * 2. The method should never return MonoError, and it should be considered as a bug if it occurs
@@ -240,6 +240,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     .onErrorResume(t -> {
                         ThrowableInfo info = ThrowableInfo.get(t);
                         if (info.code().isServerError()) {
+                            // We update MDC and not clear because we know the downstream will clear
                             tracingContext.updateMdc();
                             // Note we log the whole request instead of the request ID for troubleshooting
                             // because CommonClientApiLogging only logs a brief description,

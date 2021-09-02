@@ -66,12 +66,12 @@ public class GroupProperties {
     @Description("Whether to allow users to recall the join requests sent by themselves")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean allowRecallingJoinRequestSentByOneself;
+    private boolean allowRecallJoinRequestSentByOneself;
 
     @Description("Whether to allow the owner and managers of a group to recall pending group invitations")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean allowRecallingPendingGroupInvitationByOwnerAndManager;
+    private boolean allowRecallPendingGroupInvitationByOwnerAndManager;
 
     @Description("Whether to delete groups logically by default")
     @GlobalProperty

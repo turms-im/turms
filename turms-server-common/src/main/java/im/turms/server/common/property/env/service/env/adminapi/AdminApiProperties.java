@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.service.env;
+package im.turms.server.common.property.env.service.env.adminapi;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.env.common.AddressProperties;
@@ -47,7 +47,7 @@ public class AdminApiProperties {
             "Better false to prevent administrators from deleting all data by accident")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean allowDeletingWithoutFilter;
+    private boolean allowDeleteWithoutFilter;
 
     // FIXME: The property is unused
     @Description("The maximum day difference per query request")
@@ -96,5 +96,9 @@ public class AdminApiProperties {
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private AddressProperties address = new AddressProperties();
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private LogProperties log = new LogProperties();
 
 }

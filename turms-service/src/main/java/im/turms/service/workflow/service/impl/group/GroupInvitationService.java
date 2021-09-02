@@ -225,7 +225,7 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
             return Mono.error(e);
         }
         if (!node.getSharedProperties()
-                .getService().getGroup().isAllowRecallingPendingGroupInvitationByOwnerAndManager()) {
+                .getService().getGroup().isAllowRecallPendingGroupInvitationByOwnerAndManager()) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.RECALLING_GROUP_INVITATION_IS_DISABLED));
         }
         return queryGroupIdAndStatus(invitationId)

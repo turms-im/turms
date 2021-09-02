@@ -182,7 +182,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (!node.getSharedProperties().getService().getGroup().isAllowRecallingJoinRequestSentByOneself()) {
+        if (!node.getSharedProperties().getService().getGroup().isAllowRecallJoinRequestSentByOneself()) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED));
         }
         return queryRequesterIdAndStatusAndGroupId(requestId)

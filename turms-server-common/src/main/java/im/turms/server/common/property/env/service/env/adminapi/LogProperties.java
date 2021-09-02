@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.service.env;
+package im.turms.server.common.property.env.service.env.adminapi;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.metadata.annotation.Description;
@@ -35,21 +35,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LogProperties {
 
-    // Admin
-
-    @Description("The destination of the logs of admin action")
+    @Description("Whether to log API calls")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean logAdminAction = true;
+    private boolean enabled = true;
 
     @Description("Whether to log the parameters of requests")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean logAdminRequestParams = true;
-
-    @Description("Whether to log the body of requests. Better log the body of requests by monitor systems (e.g. Nginx, AWS)")
-    @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
-    private boolean logAdminRequestBody;
+    private boolean logRequestParams = true;
 
 }

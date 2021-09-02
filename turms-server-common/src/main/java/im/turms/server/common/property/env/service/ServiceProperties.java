@@ -25,9 +25,8 @@ import im.turms.server.common.property.env.service.business.activity.ActivityLog
 import im.turms.server.common.property.env.service.business.conversation.ConversationProperties;
 import im.turms.server.common.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.property.env.service.business.user.UserProperties;
-import im.turms.server.common.property.env.service.env.AdminApiProperties;
 import im.turms.server.common.property.env.service.env.FakeProperties;
-import im.turms.server.common.property.env.service.env.LogProperties;
+import im.turms.server.common.property.env.service.env.adminapi.AdminApiProperties;
 import im.turms.server.common.property.env.service.env.clientapi.ClientApiProperties;
 import im.turms.server.common.property.env.service.env.database.MongoProperties;
 import im.turms.server.common.property.env.service.env.redis.TurmsRedisProperties;
@@ -60,10 +59,6 @@ public class ServiceProperties {
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private FakeProperties fake = new FakeProperties();
-
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
-    private LogProperties log = new LogProperties();
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty

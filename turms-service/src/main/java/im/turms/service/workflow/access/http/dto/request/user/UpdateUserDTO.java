@@ -18,6 +18,7 @@
 package im.turms.service.workflow.access.http.dto.request.user;
 
 import im.turms.common.constant.ProfileAccessStrategy;
+import im.turms.service.constant.SecurityConstant;
 
 import java.util.Date;
 
@@ -33,4 +34,16 @@ public record UpdateUserDTO(
         Date registrationDate,
         Boolean isActive
 ) {
+    @Override
+    public String toString() {
+        return "UpdateUserDTO[" +
+                "password=" + SecurityConstant.SENSITIVE_VALUE +
+                ", name=" + name +
+                ", intro=" + intro +
+                ", profileAccess=" + profileAccess +
+                ", permissionGroupId=" + permissionGroupId +
+                ", registrationDate=" + registrationDate +
+                ", isActive=" + isActive +
+                ']';
+    }
 }

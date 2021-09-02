@@ -48,7 +48,7 @@ public class FriendRequestProperties {
     @Description("Whether to allow resending a friend request after the previous request has been declined, ignored, or expired")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean allowResendingRequestAfterDeclinedOrIgnoredOrExpired;
+    private boolean allowSendRequestAfterDeclinedOrIgnoredOrExpired;
 
     @Description("A friend request will become expired after the expireAfter has elapsed")
     @GlobalProperty

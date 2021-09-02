@@ -20,6 +20,7 @@ package im.turms.service.workflow.access.http.config;
 import org.springframework.boot.autoconfigure.web.reactive.WebFluxRegistrations;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter;
+import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping;
 
 /**
  * @author James Chen
@@ -32,4 +33,8 @@ public class WebFluxConfig implements WebFluxRegistrations {
         return new TurmsRequestMappingHandlerAdapter();
     }
 
+    @Override
+    public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
+        return new TurmsRequestMappingHandlerMapping();
+    }
 }

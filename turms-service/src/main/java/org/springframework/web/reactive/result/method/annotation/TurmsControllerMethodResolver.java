@@ -17,13 +17,15 @@
 
 package org.springframework.web.reactive.result.method.annotation;
 
+import im.turms.server.common.util.ReflectionUtil;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.http.codec.HttpMessageReader;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.reactive.result.method.InvocableHandlerMethod;
+import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
 import org.springframework.web.reactive.result.method.TurmsHandlerMethod;
 
+import java.lang.invoke.MethodHandle;
 import java.util.List;
 
 /**
@@ -31,18 +33,26 @@ import java.util.List;
  */
 public class TurmsControllerMethodResolver extends ControllerMethodResolver {
 
+    private final List<HandlerMethodArgumentResolver> requestMappingResolvers;
+
     public TurmsControllerMethodResolver(ArgumentResolverConfigurer customResolvers,
                                          ReactiveAdapterRegistry adapterRegistry,
                                          ConfigurableApplicationContext context,
                                          List<HttpMessageReader<?>> readers) {
         super(customResolvers, adapterRegistry, context, readers);
+        try {
+            MethodHandle requestMappingResolvers = ReflectionUtil
+                    .getGetter(ControllerMethodResolver.class.getDeclaredField("requestMappingResolvers"));
+            this.requestMappingResolvers = (List<HandlerMethodArgumentResolver>) requestMappingResolvers.invoke(this);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public TurmsHandlerMethod getRequestMappingMethod(HandlerMethod handlerMethod) {
-        InvocableHandlerMethod invocable = super.getRequestMappingMethod(handlerMethod);
-        TurmsHandlerMethod method = new TurmsHandlerMethod(invocable);
-        method.setArgumentResolvers(invocable.getResolvers());
+        TurmsHandlerMethod method = (TurmsHandlerMethod) handlerMethod;
+        method.setArgumentResolvers(requestMappingResolvers);
         return method;
     }
 }

@@ -35,7 +35,7 @@ public record ThrowableInfo(
             return new ThrowableInfo(e.getStatusCode(), e.getMessage());
         } else if (throwable instanceof DuplicateKeyException e) {
             // We consider DuplicateKeyException as a client error here,
-            // because if it's indeed an exception caused by the illegal args provided
+            // because if it's an exception caused by the illegal args provided
             // by the server, it should recover in the upstream rather than
             // passing down DuplicateKeyException
             return new ThrowableInfo(TurmsStatusCode.RECORD_CONTAINS_DUPLICATE_KEY,

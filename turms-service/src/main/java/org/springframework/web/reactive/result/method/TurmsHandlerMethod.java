@@ -41,22 +41,30 @@ import java.util.stream.Stream;
 
 /**
  * @author James Chen
+ * @implNote We add support for {@link MethodInvokeInterceptor}
+ * based on the existing code of Spring to avoid using AOP
  */
 public class TurmsHandlerMethod extends InvocableHandlerMethod {
 
     private static final Mono<Object[]> EMPTY_ARGS = Mono.just(new Object[0]);
     private static final Object NO_ARG_VALUE = new Object();
 
+    private final TurmsHandlerMethodArgumentResolverComposite resolvers = new TurmsHandlerMethodArgumentResolverComposite();
+
     public TurmsHandlerMethod(HandlerMethod handlerMethod) {
         super(handlerMethod);
     }
 
-    private final TurmsHandlerMethodArgumentResolverComposite resolvers = new TurmsHandlerMethodArgumentResolverComposite();
+    @Override
+    public HandlerMethod createWithResolvedBean() {
+        return new TurmsHandlerMethod(super.createWithResolvedBean());
+    }
 
     @Override
     public void setArgumentResolvers(List<? extends HandlerMethodArgumentResolver> resolvers) {
         this.resolvers.addResolvers(resolvers);
     }
+
 
     @Override
     public Mono<HandlerResult> invoke(ServerWebExchange exchange, BindingContext bindingContext, Object... providedArgs) {
@@ -65,7 +73,19 @@ public class TurmsHandlerMethod extends InvocableHandlerMethod {
             try {
                 Method method = getBridgedMethod();
                 ReflectionUtils.makeAccessible(method);
-                value = method.invoke(getBean(), args);
+                Object bean = getBean();
+                MethodInvokeInterceptor interceptor = exchange
+                        .getAttributeOrDefault(MethodInvokeInterceptor.ATTRIBUTE_INTERCEPTOR, MethodInvokeInterceptor.DEFAULT);
+                value = interceptor.beforeInvoke(exchange, method, args);
+                if (value == null) {
+                    try {
+                        value = method.invoke(bean, args);
+                    } catch (Exception e) {
+                        interceptor.afterInvoke(exchange, method, args, null, e);
+                        throw e;
+                    }
+                    interceptor.afterInvoke(exchange, method, args, value, null);
+                }
             } catch (IllegalArgumentException ex) {
                 String text = ex.getMessage() != null ? ex.getMessage() : "Illegal argument";
                 return Mono.error(new IllegalStateException(formatInvokeError(text, args), ex));

@@ -74,8 +74,7 @@ public class TurmsRequestMappingHandlerAdapter extends RequestMappingHandlerAdap
         TurmsInitBinderBindingContext bindingContext = new TurmsInitBinderBindingContext(
                 getWebBindingInitializer(), methodResolver.getInitBinderMethods(handlerMethod));
 
-        TurmsHandlerMethod invocableMethod = handlerMethodCache
-                .computeIfAbsent(handlerMethod, method -> methodResolver.getRequestMappingMethod(method));
+        TurmsHandlerMethod invocableMethod = methodResolver.getRequestMappingMethod(handlerMethod);
 
         Function<Throwable, Mono<HandlerResult>> exceptionHandler =
                 ex -> handleException(ex, handlerMethod, bindingContext, exchange);

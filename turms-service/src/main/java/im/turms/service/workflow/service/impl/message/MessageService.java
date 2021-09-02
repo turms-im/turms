@@ -655,12 +655,12 @@ public class MessageService {
         if (recallDate != null && !node.getSharedProperties()
                 .getService()
                 .getMessage()
-                .isAllowRecallingMessage()) {
+                .isAllowRecallMessage()) {
             return Mono.error(TurmsBusinessException.get(RECALLING_MESSAGE_IS_DISABLED));
         }
         if (updateMessageContent && !node.getSharedProperties()
                 .getService()
-                .getMessage().isAllowEditingMessageBySender()) {
+                .getMessage().isAllowEditMessageBySender()) {
             return Mono.error(TurmsBusinessException.get(UPDATING_MESSAGE_BY_SENDER_IS_DISABLED));
         }
         return isMessageSentByUser(messageId, requesterId)

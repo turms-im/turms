@@ -17,19 +17,17 @@
 
 package im.turms.service.bo;
 
-import com.mongodb.DBObject;
-
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author James Chen
  */
 public record AdminAction(
         String account,
-        Date logDate,
+        Date requestTime,
         String ip,
         String action,
-        DBObject params,
-        DBObject body
+        Map<String, Object> params
 ) {
 }

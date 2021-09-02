@@ -17,6 +17,8 @@
 
 package im.turms.service.workflow.access.http.dto.request.admin;
 
+import im.turms.service.constant.SecurityConstant;
+
 /**
  * @author James Chen
  */
@@ -26,4 +28,13 @@ public record AddAdminDTO(
         String name,
         Long roleId
 ) {
+    @Override
+    public String toString() {
+        return "AddAdminDTO[" +
+                "account=" + account +
+                ", password=" + SecurityConstant.SENSITIVE_VALUE +
+                ", name=" + name +
+                ", roleId=" + roleId +
+                ']';
+    }
 }

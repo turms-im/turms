@@ -222,7 +222,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
                     // Allow to create a friend request even there is already an accepted request
                     // because the relationships can be deleted and rebuilt
                     Mono<Boolean> requestExistsMono = node.getSharedProperties().getService().getUser().getFriendRequest()
-                            .isAllowResendingRequestAfterDeclinedOrIgnoredOrExpired()
+                            .isAllowSendRequestAfterDeclinedOrIgnoredOrExpired()
                             ? hasPendingFriendRequest(requesterId, recipientId)
                             : hasPendingOrDeclinedOrIgnoredOrExpiredRequest(requesterId, recipientId);
                     return requestExistsMono.flatMap(requestExists -> {

@@ -39,8 +39,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * Reserved for future.
  * <p>
  * 8 bits for member ID (256).
- * Note turms-gateway also works as a load balancer to route traffic to turms servers so the number
- * of turms servers is better more than or equals to the number of turms-gateway servers in practice.
+ * Note turms-gateway also works as a load balancer to route traffic to turms-service servers so the number
+ * of turms-service servers is better more than or equals to the number of turms-gateway servers in practice.
  * In other words, the max number that can be represented by the bits for memberId should be better
  * more than the number of turms-gateway servers that you will deploy
  * <p>

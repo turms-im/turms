@@ -91,23 +91,23 @@ public class MessageProperties {
     @Description("Whether to allow users to send messages to a stranger")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean allowSendingMessagesToStranger = true;
+    private boolean allowSendMessagesToStranger = true;
 
     @Description("Whether to allow users to send messages to themselves")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean allowSendingMessagesToOneself;
+    private boolean allowSendMessagesToOneself;
 
     @Description("Whether to allow users to recall messages.\n" +
             "Note: To recall messages, more system resources are needed")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean allowRecallingMessage = true;
+    private boolean allowRecallMessage = true;
 
     @Description("Whether to allow the sender of a message to edit the message")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean allowEditingMessageBySender = true;
+    private boolean allowEditMessageBySender = true;
 
     @Description("The available recall duration for the sender of a message")
     @GlobalProperty

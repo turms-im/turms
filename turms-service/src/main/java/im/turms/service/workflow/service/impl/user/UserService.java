@@ -132,11 +132,11 @@ public class UserService {
                     .map(ServicePermission::get);
         } else {
             if (requesterId.equals(targetId)) {
-                return node.getSharedProperties().getService().getMessage().isAllowSendingMessagesToOneself()
+                return node.getSharedProperties().getService().getMessage().isAllowSendMessagesToOneself()
                         ? Mono.just(ServicePermission.OK)
                         : Mono.just(ServicePermission.get(TurmsStatusCode.SENDING_MESSAGES_TO_ONESELF_IS_DISABLED));
             } else {
-                if (node.getSharedProperties().getService().getMessage().isAllowSendingMessagesToStranger()) {
+                if (node.getSharedProperties().getService().getMessage().isAllowSendMessagesToStranger()) {
                     if (node.getSharedProperties().getService().getMessage().isCheckIfTargetActiveAndNotDeleted()) {
                         return isActiveAndNotDeleted(targetId)
                                 .flatMap(isActiveAndNotDeleted -> {

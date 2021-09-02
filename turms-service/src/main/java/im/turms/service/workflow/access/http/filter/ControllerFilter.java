@@ -17,44 +17,50 @@
 
 package im.turms.service.workflow.access.http.filter;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.AdminApiLogging;
 import im.turms.server.common.logging.RequestLoggingContext;
+import im.turms.server.common.property.env.service.env.adminapi.LogProperties;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
+import im.turms.server.common.util.MapUtil;
+import im.turms.service.bo.AdminAction;
+import im.turms.service.plugin.extension.handler.AdminActionHandler;
 import im.turms.service.plugin.manager.TurmsPluginManager;
 import im.turms.service.workflow.access.http.permission.RequiredPermission;
 import im.turms.service.workflow.service.impl.admin.AdminService;
-import im.turms.service.workflow.service.impl.log.AdminActionLogService;
 import org.springdoc.core.SpringDocConfigProperties;
 import org.springdoc.webflux.api.OpenApiWebfluxResource;
 import org.springdoc.webflux.ui.SwaggerWelcomeWebFlux;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.cors.reactive.CorsUtils;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.reactive.result.method.MethodInvokeInterceptor;
+import org.springframework.web.reactive.result.method.TurmsHandlerMethod;
 import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.nio.charset.StandardCharsets;
+import java.lang.reflect.Method;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE;
@@ -67,13 +73,10 @@ public class ControllerFilter implements WebFilter {
 
     private static final String BASIC_AUTH_PREFIX = "Basic ";
     private static final String ATTRIBUTES_ACCOUNT = "account";
-    private static final BasicDBObject EMPTY_DBOJBECT = new BasicDBObject();
-    private static final String ATTR_BODY = "BODY";
 
     private final Node node;
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
     private final AdminService adminService;
-    private final AdminActionLogService adminActionLogService;
     private final TurmsPluginManager turmsPluginManager;
     private final boolean pluginEnabled;
     private final boolean enableAdminApi;
@@ -86,12 +89,10 @@ public class ControllerFilter implements WebFilter {
             Node node,
             RequestMappingHandlerMapping requestMappingHandlerMapping,
             AdminService adminService,
-            AdminActionLogService adminActionLogService,
             TurmsPluginManager turmsPluginManager,
             @Autowired(required = false) SpringDocConfigProperties springDocConfigProperties) {
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
         this.adminService = adminService;
-        this.adminActionLogService = adminActionLogService;
         this.node = node;
         this.turmsPluginManager = turmsPluginManager;
         pluginEnabled = node.getSharedProperties().getPlugin().isEnabled();
@@ -105,14 +106,18 @@ public class ControllerFilter implements WebFilter {
         return requestMappingHandlerMapping.getHandler(exchange)
                 .switchIfEmpty(Mono.defer(() -> filterUnhandledRequest(exchange, chain)))
                 .flatMap(o -> {
-                    if (o instanceof HandlerMethod method) {
+                    if (o instanceof TurmsHandlerMethod method) {
                         return filterHandlerMethod(method, exchange, chain);
+                    }
+                    if (o instanceof HandlerMethod) {
+                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR,
+                                "The handler method should be TurmsHandlerMethod instead of HandlerMethod"));
                     }
                     return filterUnhandledRequest(exchange, chain);
                 });
     }
 
-    private Mono<Void> filterHandlerMethod(HandlerMethod handlerMethod, ServerWebExchange exchange, WebFilterChain chain) {
+    private Mono<Void> filterHandlerMethod(TurmsHandlerMethod handlerMethod, ServerWebExchange exchange, WebFilterChain chain) {
         if (isOpenApiEnabledAndOpenApiRequest(handlerMethod)) {
             return chain.filter(exchange);
         }
@@ -207,106 +212,42 @@ public class ControllerFilter implements WebFilter {
     }
 
     private Mono<Void> tryPersistAndPass(
-            @NotNull String account,
-            @NotNull ServerWebExchange exchange,
-            @NotNull WebFilterChain chain,
-            @NotNull HandlerMethod handlerMethod) {
-        boolean logAdminAction = node.getSharedProperties().getService().getLog().isLogAdminAction();
+            String account,
+            ServerWebExchange exchange,
+            WebFilterChain chain,
+            TurmsHandlerMethod handlerMethod) {
+        LogProperties logProperties = node.getSharedProperties().getService().getAdminApi().getLog();
+        boolean isLogEnabled = logProperties.isEnabled();
         boolean triggerHandlers = pluginEnabled && !turmsPluginManager.getAdminActionHandlerList().isEmpty();
-        Mono<Void> additionalMono;
-        if (logAdminAction || triggerHandlers) {
+        TracingContext tracingContext = new TracingContext();
+        RequestLoggingContext loggingContext = new RequestLoggingContext(tracingContext);
+        if (isLogEnabled || triggerHandlers) {
             ServerHttpRequest request = exchange.getRequest();
             String action = handlerMethod.getMethod().getName();
             String host = Objects.requireNonNull(request.getRemoteAddress()).getHostString();
-            DBObject params = null;
-            Mono<BasicDBObject> bodyMono;
-            if (node.getSharedProperties().getService().getLog().isLogAdminRequestParams()) {
-                params = parseValidParams(request, handlerMethod);
-            }
-            if (node.getSharedProperties().getService().getLog().isLogAdminRequestBody()) {
-                bodyMono = parseValidBody(exchange);
-                exchange = replaceRequestBody(exchange);
-            } else {
-                bodyMono = Mono.empty();
-            }
-            DBObject finalParams = params;
-            additionalMono = bodyMono.defaultIfEmpty(EMPTY_DBOJBECT).doOnNext(dbObject -> {
-                DBObject body = dbObject != EMPTY_DBOJBECT ? dbObject : null;
-                adminActionLogService.tryLogAndTriggerHandlers(
-                        account,
-                        new Date(),
-                        host,
-                        action,
-                        finalParams,
-                        body);
-            }).then();
-        } else {
-            additionalMono = Mono.empty();
-        }
-        ServerWebExchange finalExchange = exchange;
-        TracingContext tracingContext = new TracingContext();
-        return additionalMono
-                .then(Mono.defer(() -> {
-                    try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
-                        return chain.filter(finalExchange);
+            Date requestTime = new Date();
+            exchange.getAttributes().put(MethodInvokeInterceptor.ATTRIBUTE_INTERCEPTOR, new MethodInvokeInterceptor() {
+                @Nullable
+                @Override
+                public Object beforeInvoke(ServerWebExchange exchange, Method method, Object[] args) {
+                    if (method.isAnnotationPresent(DeleteMapping.class) && !isValidDeleteRequest(args)) {
+                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NO_FILTER_FOR_DELETE_OPERATION));
                     }
-                }))
+                    return null;
+                }
+
+                @Override
+                public void afterInvoke(ServerWebExchange exchange, Method method, Object[] args,
+                                        @Nullable Object returnVal, @Nullable Throwable t) {
+                    logAndTriggerHandlers(handlerMethod, args, tracingContext, account, requestTime, host, action);
+                }
+            });
+        }
+        return chain.filter(exchange)
                 .contextWrite(context -> {
-                    RequestLoggingContext loggingContext = new RequestLoggingContext(tracingContext);
-                    finalExchange.getAttributes().put(RequestLoggingContext.CTX_KEY_NAME, loggingContext);
+                    exchange.getAttributes().put(RequestLoggingContext.CTX_KEY_NAME, loggingContext);
                     return context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext);
-                })
-                .doFinally(signalType -> finalExchange.getAttributes().remove(ATTR_BODY));
-    }
-
-    private DBObject parseValidParams(ServerHttpRequest request, HandlerMethod handlerMethod) {
-        MethodParameter[] methodParameters = handlerMethod.getMethodParameters();
-        MultiValueMap<String, String> queryParams = request.getQueryParams();
-        BasicDBObject params = null;
-        if (methodParameters.length > 0 && !queryParams.isEmpty()) {
-            params = new BasicDBObject(queryParams.size());
-            for (MethodParameter methodParameter : methodParameters) {
-                String parameterName = methodParameter.getParameterName();
-                if (parameterName != null) {
-                    String value = queryParams.getFirst(parameterName);
-                    if (value != null) {
-                        params.put(parameterName, value);
-                    }
-                }
-            }
-            if (params.isEmpty()) {
-                params = EMPTY_DBOJBECT;
-            }
-        }
-        return params;
-    }
-
-    private Mono<BasicDBObject> parseValidBody(@NotNull ServerWebExchange exchange) {
-        return DataBufferUtils.join(exchange.getRequest().getBody())
-                .map(dataBuffer -> {
-                    exchange.getAttributes().put(ATTR_BODY, dataBuffer);
-                    String json = dataBuffer.toString(StandardCharsets.UTF_8);
-                    BasicDBObject dbObject = BasicDBObject.parse(json);
-                    return dbObject.isEmpty() ? EMPTY_DBOJBECT : dbObject;
                 });
-    }
-
-    /**
-     * Build a new request with a new body to pass down to RequestBodyMethodArgumentResolver.resolveArgument
-     */
-    private ServerWebExchange replaceRequestBody(ServerWebExchange exchange) {
-        ServerHttpRequest mutatedRequest = new ServerHttpRequestDecorator(exchange.getRequest()) {
-            @Override
-            public Flux<DataBuffer> getBody() {
-                DataBuffer dataBuffer = exchange.getAttribute(ATTR_BODY);
-                if (dataBuffer != null) {
-                    return Flux.just(dataBuffer);
-                } else {
-                    return getDelegate().getBody();
-                }
-            }
-        };
-        return exchange.mutate().request(mutatedRequest).build();
     }
 
     private boolean isOpenApiEnabledAndOpenApiRequest(HandlerMethod handlerMethod) {
@@ -319,6 +260,50 @@ public class ControllerFilter implements WebFilter {
 
     private boolean isOpenApiEnabledAndOpenApiRequest(ServerWebExchange exchange) {
         return isOpenApiEnabled && exchange.getRequest().getURI().getPath().startsWith("/webjars/swagger-ui");
+    }
+
+    private boolean isValidDeleteRequest(Object[] args) {
+        if (node.getSharedProperties().getService().getAdminApi().isAllowDeleteWithoutFilter()) {
+            return true;
+        }
+        return !Validator.areAllFalsy(args);
+    }
+
+    private void logAndTriggerHandlers(
+            TurmsHandlerMethod handlerMethod,
+            Object[] args,
+            TracingContext tracingContext,
+            String account,
+            Date requestTime,
+            String ip,
+            String action) {
+        Map<String, Object> params = new HashMap<>(MapUtil.getCapability(args.length));
+        for (int i = 0; i < args.length; i++) {
+            Object arg = args[i];
+            if (arg == null) {
+                continue;
+            }
+            MethodParameter parameter = handlerMethod.getMethodParameters()[i];
+            params.put(parameter.getParameterName(), arg);
+        }
+        boolean triggerHandlers = turmsPluginManager.isEnabled() && !turmsPluginManager.getAdminActionHandlerList().isEmpty();
+        AdminAction adminAction = new AdminAction(
+                account,
+                requestTime,
+                ip,
+                action,
+                params);
+        if (triggerHandlers) {
+            Mono<Void> handleAdminAction = Mono.empty();
+            for (AdminActionHandler handler : turmsPluginManager.getAdminActionHandlerList()) {
+                handleAdminAction = handleAdminAction
+                        .then(Mono.defer(() -> handler.handleAdminAction(adminAction)));
+            }
+            handleAdminAction.subscribe();
+        }
+        try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
+            AdminApiLogging.log(adminAction);
+        }
     }
 
 }
