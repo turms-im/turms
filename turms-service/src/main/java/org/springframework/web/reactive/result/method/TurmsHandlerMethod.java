@@ -84,7 +84,10 @@ public class TurmsHandlerMethod extends InvocableHandlerMethod {
                         interceptor.afterInvoke(exchange, method, args, null, e);
                         throw e;
                     }
-                    interceptor.afterInvoke(exchange, method, args, value, null);
+                    Object result = interceptor.afterInvoke(exchange, method, args, value, null);
+                    if (result != null) {
+                        value = result;
+                    }
                 }
             } catch (IllegalArgumentException ex) {
                 String text = ex.getMessage() != null ? ex.getMessage() : "Illegal argument";

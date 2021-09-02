@@ -21,9 +21,8 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.logging.CustomLogger;
+import im.turms.server.common.util.DateUtil;
 import im.turms.server.common.util.StringUtil;
-
-import java.time.Instant;
 
 import static im.turms.server.common.logging.CustomLogger.LOG_FIELD_DELIMITER;
 
@@ -64,7 +63,7 @@ public final class ClientApiLogging {
                 String.valueOf(requestId),
                 requestType.name(),
                 String.valueOf(requestSize),
-                Instant.ofEpochMilli(requestTime).toString(),
+                DateUtil.toISO(requestTime),
                 // response information
                 String.valueOf(response.getCode()),
                 response.hasData() ? response.getData().getKindCase().name() : "",
@@ -95,7 +94,7 @@ public final class ClientApiLogging {
                 String.valueOf(requestId),
                 requestType.name(),
                 String.valueOf(requestSize),
-                Instant.ofEpochMilli(requestTime).toString(),
+                DateUtil.toISO(requestTime),
                 // response information
                 String.valueOf(responseCode),
                 "", // Response data type

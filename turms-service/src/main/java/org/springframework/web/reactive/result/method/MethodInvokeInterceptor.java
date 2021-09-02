@@ -36,7 +36,11 @@ public abstract class MethodInvokeInterceptor {
         return null;
     }
 
-    public void afterInvoke(ServerWebExchange exchange, Method method, Object[] args,
-                            @Nullable Object returnVal, @Nullable Throwable t) {
+
+    @Nullable
+    public Object afterInvoke(ServerWebExchange exchange, Method method, Object[] args,
+                              @Nullable Object returnVal, @Nullable Throwable t) {
+        return null;
     }
+
 }

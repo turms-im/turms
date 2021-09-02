@@ -17,6 +17,12 @@
 
 package im.turms.server.common.logging;
 
+import im.turms.server.common.util.DateUtil;
+
+import java.util.Map;
+
+import static im.turms.server.common.logging.CustomLogger.LOG_FIELD_DELIMITER;
+
 /**
  * @author James Chen
  */
@@ -25,8 +31,22 @@ public final class AdminApiLogging {
     private AdminApiLogging() {
     }
 
-    public static void log(Object info) {
-        CustomLogger.ADMIN_API_LOGGER.info(info);
+    public static void log(String account, String ip, long requestTime, String action,
+                           Map<String, Object> params, int processingTime, Throwable throwable) {
+        boolean isSuccessful = throwable == null;
+        String msg = String.join(LOG_FIELD_DELIMITER,
+                // Session
+                account,
+                ip,
+                // Request
+                DateUtil.toISO(requestTime),
+                action,
+                params.toString(),
+                // Response
+                isSuccessful ? "TRUE" : "FALSE",
+                String.valueOf(processingTime),
+                isSuccessful ? "" : throwable.toString());
+        CustomLogger.ADMIN_API_LOGGER.info(msg);
     }
 
 }

@@ -52,6 +52,7 @@ import org.springframework.web.reactive.result.method.annotation.RequestMappingH
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
@@ -225,7 +226,7 @@ public class ControllerFilter implements WebFilter {
             ServerHttpRequest request = exchange.getRequest();
             String action = handlerMethod.getMethod().getName();
             String host = Objects.requireNonNull(request.getRemoteAddress()).getHostString();
-            Date requestTime = new Date();
+            long requestTime = System.currentTimeMillis();
             exchange.getAttributes().put(MethodInvokeInterceptor.ATTRIBUTE_INTERCEPTOR, new MethodInvokeInterceptor() {
                 @Nullable
                 @Override
@@ -237,9 +238,19 @@ public class ControllerFilter implements WebFilter {
                 }
 
                 @Override
-                public void afterInvoke(ServerWebExchange exchange, Method method, Object[] args,
-                                        @Nullable Object returnVal, @Nullable Throwable t) {
-                    logAndTriggerHandlers(handlerMethod, args, tracingContext, account, requestTime, host, action);
+                public Object afterInvoke(ServerWebExchange exchange, Method method, Object[] args,
+                                          @Nullable Object response, @Nullable Throwable t) {
+                    int processingTime = (int) (System.currentTimeMillis() - requestTime);
+                    return logAndTriggerHandlers(handlerMethod,
+                            tracingContext,
+                            account,
+                            host,
+                            requestTime,
+                            processingTime,
+                            action,
+                            args,
+                            response,
+                            t);
                 }
             });
         }
@@ -269,14 +280,62 @@ public class ControllerFilter implements WebFilter {
         return !Validator.areAllFalsy(args);
     }
 
-    private void logAndTriggerHandlers(
+    private Mono<?> logAndTriggerHandlers(
             TurmsHandlerMethod handlerMethod,
-            Object[] args,
             TracingContext tracingContext,
             String account,
-            Date requestTime,
             String ip,
-            String action) {
+            long requestTime,
+            int processingTime,
+            String action,
+            Object[] args,
+            Object response,
+            Throwable throwable) {
+        if (response instanceof Mono<?> responseMono) {
+            return responseMono
+                    .doOnEach(signal -> {
+                        Throwable t;
+                        if (signal.isOnComplete() || signal.isOnError()) {
+                            t = signal.getThrowable();
+                        } else {
+                            return;
+                        }
+                        logAndTriggerHandlers0(handlerMethod,
+                                tracingContext,
+                                account,
+                                ip,
+                                requestTime,
+                                action,
+                                args,
+                                processingTime,
+                                t);
+                    });
+        } else if (response instanceof Flux) {
+            throw new IllegalStateException("Unexpected response type: Flux. Use Mono instead");
+        } else {
+            logAndTriggerHandlers0(handlerMethod,
+                    tracingContext,
+                    account,
+                    ip,
+                    requestTime,
+                    action,
+                    args,
+                    processingTime,
+                    throwable);
+        }
+        return null;
+    }
+
+    private void logAndTriggerHandlers0(
+            TurmsHandlerMethod handlerMethod,
+            TracingContext tracingContext,
+            String account,
+            String ip,
+            long requestTime,
+            String action,
+            Object[] args,
+            int processingTime,
+            Throwable throwable) {
         Map<String, Object> params = new HashMap<>(MapUtil.getCapability(args.length));
         for (int i = 0; i < args.length; i++) {
             Object arg = args[i];
@@ -287,14 +346,15 @@ public class ControllerFilter implements WebFilter {
             params.put(parameter.getParameterName(), arg);
         }
         boolean triggerHandlers = turmsPluginManager.isEnabled() && !turmsPluginManager.getAdminActionHandlerList().isEmpty();
-        AdminAction adminAction = new AdminAction(
-                account,
-                requestTime,
-                ip,
-                action,
-                params);
         if (triggerHandlers) {
             Mono<Void> handleAdminAction = Mono.empty();
+            AdminAction adminAction = new AdminAction(
+                    account,
+                    ip,
+                    new Date(requestTime),
+                    action,
+                    params,
+                    processingTime);
             for (AdminActionHandler handler : turmsPluginManager.getAdminActionHandlerList()) {
                 handleAdminAction = handleAdminAction
                         .then(Mono.defer(() -> handler.handleAdminAction(adminAction)));
@@ -302,8 +362,14 @@ public class ControllerFilter implements WebFilter {
             handleAdminAction.subscribe();
         }
         try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
-            AdminApiLogging.log(adminAction);
+            AdminApiLogging.log(
+                    account,
+                    ip,
+                    requestTime,
+                    action,
+                    params,
+                    processingTime,
+                    throwable);
         }
     }
-
 }

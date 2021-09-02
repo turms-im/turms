@@ -22,7 +22,6 @@ import StateStore from './state-store';
 import {TurmsNotification} from '../model/proto/notification/turms_notification';
 import {TurmsRequest} from '../model/proto/request/turms_request';
 import {ParsedNotification} from '../model/parsed-notification';
-import TurmsBusinessError from '../model/turms-business-error';
 
 export default class TurmsDriver {
 

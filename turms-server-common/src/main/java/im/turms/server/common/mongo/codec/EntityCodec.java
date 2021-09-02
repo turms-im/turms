@@ -134,7 +134,7 @@ public class EntityCodec<T> implements Codec<T> {
                     throw new IllegalStateException(message, e);
                 }
             } else {
-                log.warn("Found property not present in the entity: " + fieldName);
+                log.warn("Found property {} not present in the entity {}", fieldName, entity.collectionName());
                 reader.skipValue();
             }
         }

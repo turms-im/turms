@@ -25,9 +25,10 @@ import java.util.Map;
  */
 public record AdminAction(
         String account,
-        Date requestTime,
         String ip,
+        Date requestTime,
         String action,
-        Map<String, Object> params
+        Map<String, Object> params,
+        int processingTime
 ) {
 }

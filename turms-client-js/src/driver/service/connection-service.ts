@@ -148,7 +148,7 @@ export default class ConnectionService extends BaseService {
             // onClose will always be triggered with a CloseEvent instance when
             // 1. rejected by the HTTP upgrade error response
             // 2. disconnected no matter by error (after onerror) or else
-            // so that we don't need to add a listener on onerror
+            // so we don't need to add a listener on onerror
             ws.onclose = (event): void => {
                 if (connectTimeoutId) {
                     clearTimeout(connectTimeoutId);

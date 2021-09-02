@@ -21,9 +21,8 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.logging.CustomLogger;
+import im.turms.server.common.util.DateUtil;
 import im.turms.service.workflow.access.servicerequest.dto.ClientRequest;
-
-import java.time.Instant;
 
 import static im.turms.server.common.logging.CustomLogger.LOG_FIELD_DELIMITER;
 
@@ -59,7 +58,7 @@ public final class ClientApiLogging {
                 request.requestId().toString(),
                 request.turmsRequest().getKindCase().name(),
                 String.valueOf(requestSize),
-                Instant.ofEpochMilli(requestTime).toString(),
+                DateUtil.toISO(requestTime),
                 // response information
                 String.valueOf(response.code().getBusinessCode()),
                 responseType,
