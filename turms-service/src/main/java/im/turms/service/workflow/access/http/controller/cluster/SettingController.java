@@ -43,28 +43,28 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static im.turms.service.workflow.access.http.permission.AdminPermission.CLUSTER_CONFIG_QUERY;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.CLUSTER_CONFIG_UPDATE;
+import static im.turms.service.workflow.access.http.permission.AdminPermission.CLUSTER_SETTING_QUERY;
+import static im.turms.service.workflow.access.http.permission.AdminPermission.CLUSTER_SETTING_UPDATE;
 
 /**
  * @author James Chen
  */
 @Log4j2
 @RestController
-@RequestMapping("/cluster/config")
-public class ConfigController {
+@RequestMapping("/cluster/settings")
+public class SettingController {
 
     private final Node node;
     private final TurmsPropertiesManager turmsPropertiesManager;
 
-    public ConfigController(Node node, TurmsPropertiesManager turmsPropertiesManager) {
+    public SettingController(Node node, TurmsPropertiesManager turmsPropertiesManager) {
         this.node = node;
         this.turmsPropertiesManager = turmsPropertiesManager;
     }
 
     @GetMapping
-    @RequiredPermission(CLUSTER_CONFIG_QUERY)
-    public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterConfig(@RequestParam(defaultValue = "false") Boolean onlyMutable)
+    @RequiredPermission(CLUSTER_SETTING_QUERY)
+    public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterSettings(@RequestParam(defaultValue = "false") Boolean onlyMutable)
             throws IOException {
         return ResponseFactory.okIfTruthy(PropertiesUtil.getPropertyValueMap(node.getSharedProperties(), onlyMutable));
     }
@@ -73,25 +73,25 @@ public class ConfigController {
      * @implNote Do NOT declare turmsProperties as TurmsProperties because TurmsProperties has default values
      */
     @PutMapping
-    @RequiredPermission(CLUSTER_CONFIG_UPDATE)
+    @RequiredPermission(CLUSTER_SETTING_UPDATE)
     @Operation(description = "Do not call this method frequently because it costs a lot of resources",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content =
             @Content(schema = @Schema(implementation = TurmsProperties.class))))
-    public Mono<ResponseEntity<ResponseDTO<Void>>> updateClusterConfig(
+    public Mono<ResponseEntity<ResponseDTO<Void>>> updateClusterSettings(
             @RequestParam(defaultValue = "false") Boolean reset,
-            @RequestParam(defaultValue = "false") Boolean updateGlobalProperties,
+            @RequestParam(defaultValue = "false") Boolean updateGlobalSettings,
             @RequestBody(required = false) Map<String, Object> turmsProperties) throws IOException {
-        if (updateGlobalProperties) {
-            Mono<Void> updatePropertiesMono = turmsPropertiesManager.updateGlobalConfig(reset, turmsProperties);
+        if (updateGlobalSettings) {
+            Mono<Void> updatePropertiesMono = turmsPropertiesManager.updateGlobalProperties(reset, turmsProperties);
             return updatePropertiesMono.thenReturn(ResponseFactory.OK);
         } else {
-            turmsPropertiesManager.updateLocalConfig(reset, turmsProperties);
+            turmsPropertiesManager.updateLocalProperties(reset, turmsProperties);
             return Mono.just(ResponseFactory.OK);
         }
     }
 
     @GetMapping("/metadata")
-    @RequiredPermission(CLUSTER_CONFIG_QUERY)
+    @RequiredPermission(CLUSTER_SETTING_QUERY)
     public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterConfigMetadata(
             @RequestParam(defaultValue = "false") Boolean onlyMutable,
             @RequestParam(defaultValue = "false") Boolean withValue) {

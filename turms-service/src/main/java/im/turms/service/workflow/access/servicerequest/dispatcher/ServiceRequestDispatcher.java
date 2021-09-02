@@ -124,7 +124,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     /**
      * @implNote 1. Flow Control:
      * turms-gateway is responsible for the rate limiting of client requests
-     * and (TODO) we will to implement backpressure between serves in https://github.com/turms-im/turms/issues/761
+     * and (TODO) we will implement backpressure between serves in https://github.com/turms-im/turms/issues/761
      * so we don't check the request rate here.
      * <p>
      * 2. The method should never return MonoError, and it should be considered as a bug if it occurs

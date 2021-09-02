@@ -55,7 +55,7 @@ The architecture of Turms depends on the fanout read design for creating inboxes
 
 And compared to many projects with obsolete technology stacks, Turms is also the only open source IM solution that is based on modern architecture and modern technology and is suitable for medium to large scale applications.
 
-In addition, architecture design is an art of trade-off. Some IM products take rich features as their slogan at the cost of no support for medium to large scale applications (they are only suitable for team communications). However, Turms takes extreme performance as the first priority and supports complete (rather than rich) IM features. Please refer to [Turms Schema Design](https://turms-im.github.io/docs/for-developers/schema.html) and [Observability][https://turms-im.github.io/docs/for-developers/observability.html] for details.
+In addition, architecture design is an art of trade-off. Some IM products take rich features as their slogan at the cost of no support for medium to large scale applications (they are only suitable for team communications). However, Turms takes extreme performance as the first priority and supports complete (rather than rich) IM features. Please refer to [Turms Schema Design](https://turms-im.github.io/docs/for-developers/schema.html) and [Observability](https://turms-im.github.io/docs/for-developers/observability.html) for details.
 
 ### Business Features
 

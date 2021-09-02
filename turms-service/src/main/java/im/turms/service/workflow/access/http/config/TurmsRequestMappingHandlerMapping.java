@@ -20,6 +20,7 @@ package im.turms.service.workflow.access.http.config;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.reactive.result.method.RequestMappingInfoHandlerMapping;
 import org.springframework.web.reactive.result.method.TurmsHandlerMethod;
 import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.server.ServerWebExchange;
@@ -42,7 +43,7 @@ public class TurmsRequestMappingHandlerMapping extends RequestMappingHandlerMapp
     }
 
     /**
-     * Note RequestMappingInfoHandlerMapping won't cache handlers.
+     * Note {@link RequestMappingInfoHandlerMapping} won't cache handlers.
      * Our scenario is easy, so we cache them and this can eliminate a lot of objects.
      */
     @Override

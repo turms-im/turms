@@ -82,7 +82,7 @@ public class TurmsPropertiesManager {
 
     // Update
 
-    public void updateLocalConfig(
+    public void updateLocalProperties(
             boolean reset,
             Map<String, Object> propertiesForUpdating) throws IOException {
         TurmsProperties newLocalProperties;
@@ -113,7 +113,7 @@ public class TurmsPropertiesManager {
         notifyListeners(newLocalProperties);
     }
 
-    public Mono<Void> updateGlobalConfig(
+    public Mono<Void> updateGlobalProperties(
             boolean reset,
             Map<String, Object> turmsPropertiesForUpdating) throws IOException {
         if (reset) {

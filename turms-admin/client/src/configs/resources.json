@@ -145,7 +145,8 @@
             "CLUSTER_LEADER_QUERY"
         ],
         "CLUSTER_CONFIG": [
-            "CLUSTER_CONFIG_UPDATE"
+            "CLUSTER_SETTING_UPDATE",
+            "CLUSTER_SETTING_QUERY"
         ]
     },
     "apis": {

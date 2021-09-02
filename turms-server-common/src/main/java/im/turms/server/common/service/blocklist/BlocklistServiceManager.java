@@ -478,7 +478,7 @@ public class BlocklistServiceManager<T> {
     /**
      * @implNote Only use "id" in equals() and hashCode(),
      * because blockEndTimeInMillis isn't precise and blockedClientSkipList should
-     * only use the "id" to check if a blocked client has exists or not
+     * only use the "id" to check if a blocked client exists or not
      */
     private record BlockedClient(Object id, long blockEndTimeInMillis) {
         @Override

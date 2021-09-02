@@ -27,7 +27,7 @@ import io.netty.buffer.ByteBuf;
  * @implNote RpcRequestCodec and its impls are special codecs, because they only serialize
  * a part of the data (e.g. without requestId), this is because we want to decouple the header
  * and body so that we can reuse and flush the same buffer of body to multiple peers without duplicating
- * while using different headers according for different peers
+ * while using different headers according to different peers
  */
 public abstract class RpcRequestCodec<T extends RpcRequest<?>> implements Codec<T> {
 

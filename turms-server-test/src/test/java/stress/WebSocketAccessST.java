@@ -106,7 +106,7 @@ class WebSocketAccessST extends BasePerformanceTest {
                             // It's a TCP exception no matter turms-gateway is available or not
                             // when the client or server has reach the maximum TCP connections that the system supports
                             if (t instanceof IOException) {
-                                // It's a unexpected error and the client or the server should
+                                // It's an unexpected error and the client or the server should
                                 // increase the maximum allowed TCP connections
                                 log.error("Failed to connect. This may be a TCP related error", t);
                             } else {
@@ -152,7 +152,7 @@ class WebSocketAccessST extends BasePerformanceTest {
                                     .toByteArray();
                             ByteBuf requestBuffer = Unpooled.wrappedBuffer(request);
                             BinaryWebSocketFrame frame = new BinaryWebSocketFrame(requestBuffer);
-                            out.sendObject(Mono.just(frame), data -> true)
+                            out.sendObject(frame)
                                     .then()
                                     .subscribe();
                             return in.receiveCloseStatus()
@@ -175,7 +175,7 @@ class WebSocketAccessST extends BasePerformanceTest {
                     .isTrue();
 
             assertThat(unexpectedError.get())
-                    .as("No unexpected occurs")
+                    .as("No unexpected error occurs")
                     .isNull();
 
             assertTurmsGatewayAvailable(gatewayAdminHost, gatewayAdminPort);

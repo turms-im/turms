@@ -175,13 +175,13 @@ export default {
                 });
         },
         fetchConfig() {
-            return this.$http.get('/cluster/config/metadata?withValue=true')
+            return this.$http.get('/cluster/settings/metadata?withValue=true')
                 .catch(error => {
                     this.$error(this.$t('failedToFetchData'), error);
                 });
         },
         requestResetToDefault() {
-            return this.$http.put('/cluster/config?reset=true&updateGlobalProperties=true')
+            return this.$http.put('/cluster/settings?reset=true&updateGlobalSettings=true')
                 .then(() => {
                     this.$message.success(this.$t('updatedSuccessfully'));
                     this.fetchData();
@@ -195,7 +195,6 @@ export default {
             this.$message.success(this.$t('discardChangesSuccessfully'));
         },
         requestApplyChanges() {
-            // const configWithValue = this.extractValues(this.currentConfig, true);
             const diffs = (diff(this.currentConfig, this.defaultConfig) || [])
                 .filter(difference => difference.path[difference.path.length - 1] === 'value');
             const config = {};
@@ -204,7 +203,7 @@ export default {
                 const value = this.$_.get(this.currentConfig, paths);
                 this.$_.set(config, paths.slice(0, paths.length - 1), value);
             }
-            return this.$http.put('/cluster/config', config)
+            return this.$http.put('/cluster/settings', config)
                 .then(() => {
                     this.$message.success(this.$t('updatedSuccessfully'));
                     this.fetchData();

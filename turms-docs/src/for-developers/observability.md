@@ -180,7 +180,7 @@ turms-service的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 示例：
 
 ```spreadsheet
-2021-09-02 07:19:27.219  INFO S wzocsebz [3501287524626242885] Thread-28 : turms|0:0:0:0:0:0:0:1|2021-09-02T07:30:30.414Z|updateUser|1|{ids=[1], updateUserDTO=UpdateUserDTO[password=******, name=null, intro=null, profileAccess=null, permissionGroupId=null, registrationDate=null, isActive=null]}|TRUE|
+2021-09-02 07:19:27.219  INFO S wzocsebz 3501287524626242885 Thread-28 : turms|0:0:0:0:0:0:0:1|2021-09-02T07:30:30.414Z|updateUser|1|{ids=[1], updateUserDTO=UpdateUserDTO[password=******, name=null, intro=null, profileAccess=null, permissionGroupId=null, registrationDate=null, isActive=null]}|TRUE|
 ```
 
 #### 客户端API访问日志
@@ -214,9 +214,9 @@ turms-service的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 示例：
 
 ```spreadsheet
-2021-08-17 13:25:11.809  INFO S lkumxlpd [1650561895646191481] Thread-13 : 101|DESKTOP|::1|6798130843268792999|QUERY_MESSAGES_REQUEST|28|2021-08-17T13:25:11.807Z|1001||2
-2021-08-17 13:25:11.809  INFO S lkumxlpd [2979813149711907727] Thread-9 : 100|DESKTOP|::1|5095384146247218867|QUERY_GROUP_JOIN_QUESTIONS_REQUEST|17|2021-08-17T13:25:11.807Z|1002||2
-2021-08-17 13:25:11.809  INFO S lkumxlpd [7231219143674352809] ver-worker-14-1 : 101|DESKTOP|::1|358075665001342897|QUERY_SIGNED_GET_URL_REQUEST|40|2021-08-17T13:25:11.809Z|6000||0
+2021-08-17 13:25:11.809  INFO S lkumxlpd 1650561895646191481 Thread-13 : 101|DESKTOP|::1|6798130843268792999|QUERY_MESSAGES_REQUEST|28|2021-08-17T13:25:11.807Z|1001||2
+2021-08-17 13:25:11.809  INFO S lkumxlpd 2979813149711907727 Thread-9 : 100|DESKTOP|::1|5095384146247218867|QUERY_GROUP_JOIN_QUESTIONS_REQUEST|17|2021-08-17T13:25:11.807Z|1002||2
+2021-08-17 13:25:11.809  INFO S lkumxlpd 7231219143674352809 ver-worker-14-1 : 101|DESKTOP|::1|358075665001342897|QUERY_SIGNED_GET_URL_REQUEST|40|2021-08-17T13:25:11.809Z|6000||0
 ```
 
 补充：

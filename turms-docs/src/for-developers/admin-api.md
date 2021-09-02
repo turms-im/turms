@@ -38,8 +38,8 @@ Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接
 
 | **种类**     | **Controller**   | 路径             |
 | :----------- | :--------------- | ---------------- |
-| 集群配置管理 | ConfigController | /cluster/config  |
 | 集群节点管理 | MemberController | /cluster/members |
+| 集群配置管理 | SettingController | /cluster/settings  |
 
 #### 黑名单类
 

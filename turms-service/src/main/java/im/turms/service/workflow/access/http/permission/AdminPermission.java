@@ -121,8 +121,8 @@ public enum AdminPermission {
     CLUSTER_LEADER_UPDATE,
     CLUSTER_LEADER_QUERY,
 
-    CLUSTER_CONFIG_UPDATE,
-    CLUSTER_CONFIG_QUERY;
+    CLUSTER_SETTING_UPDATE,
+    CLUSTER_SETTING_QUERY;
 
     public static final Set<AdminPermission> ALL = Set.of(AdminPermission.values());
 
@@ -210,8 +210,8 @@ public enum AdminPermission {
             CLUSTER_MEMBER_DELETE,
             CLUSTER_MEMBER_UPDATE,
             CLUSTER_MEMBER_QUERY,
-            CLUSTER_CONFIG_UPDATE,
-            CLUSTER_CONFIG_QUERY);
+            CLUSTER_SETTING_UPDATE,
+            CLUSTER_SETTING_QUERY);
 
     public static final Set<AdminPermission> ALL_CREATE = Set.of(
             USER_CREATE,
@@ -255,6 +255,6 @@ public enum AdminPermission {
             ADMIN_ROLE_QUERY,
             CLIENT_BLOCKLIST_QUERY,
             CLUSTER_MEMBER_QUERY,
-            CLUSTER_CONFIG_QUERY);
+            CLUSTER_SETTING_QUERY);
 
 }
