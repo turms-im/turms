@@ -68,6 +68,8 @@ public class SnowflakeIdGenerator {
 
     private static final long SEQUENCE_NUMBER_MASK = (1 << SEQUENCE_NUMBER_BITS) - 1;
 
+    public static final int MAX_DATA_CENTER_ID = 1 << DATA_CENTER_ID_BITS;
+
     // Used to ensure clock moves forward.
     private final AtomicLong lastTimestamp = new AtomicLong();
 
@@ -86,9 +88,9 @@ public class SnowflakeIdGenerator {
     }
 
     public void updateNodeInfo(int dataCenterId, int memberId) {
-        if (dataCenterId >= (1 << DATA_CENTER_ID_BITS)) {
+        if (dataCenterId >= MAX_DATA_CENTER_ID) {
             String reason = "Illegal dataCenterId %d. The dataCenterId must be in the range [0, %d)"
-                    .formatted(dataCenterId, 1 << DATA_CENTER_ID_BITS);
+                    .formatted(dataCenterId, MAX_DATA_CENTER_ID);
             throw new IllegalArgumentException(reason);
         }
         if (memberId >= (1 << MEMBER_ID_BITS)) {

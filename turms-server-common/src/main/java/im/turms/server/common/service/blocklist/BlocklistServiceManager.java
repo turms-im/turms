@@ -53,7 +53,7 @@ import java.util.function.Consumer;
  * If a push action fails, we will NOT retry to push it to keep logic simple currently,
  * so it will only take effects on the local node.
  * (To implement "retry", we need to implement "pendingActions" and
- * add "log time" to each action to distinguish which actions come first,
+ * add "log time" for each action to distinguish which actions come first,
  * which makes thing complex, we will implement it in the future)
  * <p>
  * By comparing the latest log id, and fetching and applying the delta logs,
@@ -444,7 +444,8 @@ public class BlocklistServiceManager<T> {
     }
 
     /**
-     * The max date it can represent in integer is: new Date(EPOCH + Integer.MAX_VALUE * 1000L) => 2089 year
+     * The max date it can represent in integer is:
+     * new Date(EPOCH_MILLIS + Integer.MAX_VALUE * 1000L) => 2089 year
      */
     private ByteBuf encodeBlockEndTime(long blockEndTimeMillis) {
         return BUFFER_ALLOCATOR.directBuffer(Integer.BYTES)

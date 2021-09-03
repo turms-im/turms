@@ -26,6 +26,7 @@ import java.util.Date;
  */
 public record AddMemberDTO(
         String nodeId,
+        String zone,
         NodeType nodeType,
         String version,
         boolean isSeed,

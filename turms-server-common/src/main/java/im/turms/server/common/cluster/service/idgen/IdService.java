@@ -18,11 +18,16 @@
 package im.turms.server.common.cluster.service.idgen;
 
 import im.turms.server.common.cluster.service.ClusterService;
+import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import im.turms.server.common.cluster.service.discovery.DiscoveryService;
+import lombok.extern.log4j.Log4j2;
+
+import java.util.TreeSet;
 
 /**
  * @author James Chen
  */
+@Log4j2
 public class IdService implements ClusterService {
 
     private static final int FLAKE_ID_GENERATORS_LENGTH = ServiceType.values().length;
@@ -31,22 +36,41 @@ public class IdService implements ClusterService {
      * Use an array to mitigate unnecessary thread contention.
      */
     private final SnowflakeIdGenerator[] idGenerators = new SnowflakeIdGenerator[FLAKE_ID_GENERATORS_LENGTH];
-    private int previousLocalMemberIndex;
+    private int previousLocalDataCenterId;
+    private int previousLocalMemberId;
 
     public IdService(DiscoveryService discoveryService) {
         for (int i = 0; i < FLAKE_ID_GENERATORS_LENGTH; i++) {
-            // Reserve the dataCenterId value for future use.
             idGenerators[i] = new SnowflakeIdGenerator(0, 0);
         }
         // Listen to the member changes to get the local member index
         // as the memberId of the snowflake algorithm
         discoveryService.addListenerOnMembersChange(() -> {
-            Integer localMemberIndex = discoveryService.getLocalServiceMemberIndex();
-            if (localMemberIndex != null && localMemberIndex != previousLocalMemberIndex) {
-                for (SnowflakeIdGenerator idGenerator : idGenerators) {
-                    idGenerator.updateNodeInfo(0, localMemberIndex);
+            TreeSet<String> zones = new TreeSet<>();
+            for (Member member : discoveryService.getAllKnownMembers().values()) {
+                zones.add(member.getZone());
+            }
+            int dataCenterId = zones
+                    .headSet(discoveryService.getLocalMember().getZone())
+                    .size();
+            if (dataCenterId >= SnowflakeIdGenerator.MAX_DATA_CENTER_ID) {
+                int fallbackDataCenterId = dataCenterId % SnowflakeIdGenerator.MAX_DATA_CENTER_ID;
+                log.warn("The data center ID {} is larger than {}, so the ID fall back to {}." +
+                                " It runs the risk of generating same IDs in the cluster",
+                        dataCenterId, SnowflakeIdGenerator.MAX_DATA_CENTER_ID - 1, fallbackDataCenterId);
+                dataCenterId = fallbackDataCenterId;
+            }
+            Integer localMemberId = discoveryService.getLocalServiceMemberIndex();
+            boolean isMemberIdChanged = localMemberId != null && localMemberId != previousLocalMemberId;
+            if (isMemberIdChanged || previousLocalDataCenterId != dataCenterId) {
+                if (localMemberId == null) {
+                    localMemberId = previousLocalMemberId;
                 }
-                previousLocalMemberIndex = localMemberIndex;
+                for (SnowflakeIdGenerator idGenerator : idGenerators) {
+                    idGenerator.updateNodeInfo(dataCenterId, localMemberId);
+                }
+                previousLocalDataCenterId = dataCenterId;
+                previousLocalMemberId = localMemberId;
             }
         });
     }

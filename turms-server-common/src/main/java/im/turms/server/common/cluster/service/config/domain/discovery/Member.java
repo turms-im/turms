@@ -50,6 +50,8 @@ public final class Member {
     @EqualsAndHashCode.Include
     private final Key key;
 
+    private String zone;
+
     private final NodeVersion nodeVersion;
 
     private final NodeType nodeType;
@@ -57,7 +59,7 @@ public final class Member {
     /**
      * For a seed member, it won't be removed from the config server even if TTL (60s) passed
      * (TTL should be always longer than the heartbeat timeout).
-     * Otherwise, the record will be removed automatically.
+     * Otherwise, the record will be removed automatically if its heartbeat times out.
      */
     private boolean isSeed;
 
@@ -92,6 +94,7 @@ public final class Member {
     @PersistenceConstructor
     public Member(
             Key key,
+            String zone,
             NodeType nodeType,
             NodeVersion nodeVersion,
             boolean isSeed,
@@ -107,6 +110,7 @@ public final class Member {
             String udpAddress,
             MemberStatus status) {
         this.key = key;
+        this.zone = zone;
         this.nodeType = nodeType;
         this.nodeVersion = nodeVersion;
         this.isSeed = isSeed;
@@ -126,6 +130,7 @@ public final class Member {
     public Member(
             String clusterId,
             String nodeId,
+            String zone,
             NodeType nodeType,
             NodeVersion nodeVersion,
             boolean isSeed,
@@ -142,6 +147,7 @@ public final class Member {
             boolean hasJoinedCluster,
             boolean isActive) {
         this(new Key(clusterId, nodeId),
+                zone,
                 nodeType,
                 nodeVersion,
                 isSeed,
@@ -159,6 +165,7 @@ public final class Member {
     }
 
     public void updateIfNotNull(
+            String zone,
             Boolean isSeed,
             Boolean isLeaderEligible,
             Integer priority,
@@ -172,6 +179,9 @@ public final class Member {
             Boolean hasJoinedCluster,
             Boolean isActive,
             Date lastHeartbeatDate) {
+        if (zone != null) {
+            this.zone = zone;
+        }
         if (isSeed != null) {
             this.isSeed = isSeed;
         }

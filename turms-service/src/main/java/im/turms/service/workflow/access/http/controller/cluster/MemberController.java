@@ -87,6 +87,7 @@ public class MemberController {
         Member member = new Member(
                 clusterId,
                 addMemberDTO.nodeId(),
+                addMemberDTO.zone(),
                 nodeType,
                 NodeVersion.parse(addMemberDTO.version()),
                 addMemberDTO.isSeed(),
@@ -114,6 +115,7 @@ public class MemberController {
             @RequestBody UpdateMemberDTO updateMemberDTO) {
         Mono<Void> addMemberMono = node.getDiscoveryService().updateMemberInfo(
                 id,
+                updateMemberDTO.zone(),
                 updateMemberDTO.isSeed(),
                 updateMemberDTO.isLeaderEligible(),
                 updateMemberDTO.isActive(),

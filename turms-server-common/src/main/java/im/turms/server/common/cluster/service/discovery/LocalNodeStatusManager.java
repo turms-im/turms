@@ -148,33 +148,34 @@ public class LocalNodeStatusManager {
     }
 
     public void startHeartbeat() {
-        if (heartbeatFuture == null || heartbeatFuture.isDone()) {
-            heartbeatFuture = scheduler.scheduleWithFixedDelay(() -> {
-                if (isClosing) {
-                    return;
-                }
-                try {
-                    Date now = new Date();
-                    List<Mono<?>> monos = new ArrayList<>(2);
-                    monos.add(upsertLocalNodeInfo(Update.newBuilder(1)
-                            .set(Member.STATUS_LAST_HEARTBEAT_DATE, now)));
-                    if (isLocalNodeLeader()) {
-                        monos.add(renewLocalLeader(now)
-                                .flatMap(isLeader -> isLeader ? updateMembersStatus(now) : Mono.empty()));
-                    }
-                    Mono.when(monos)
-                            .timeout(heartbeatInterval)
-                            .doOnSuccess(ignored -> localMember.getStatus().setLastHeartbeatDate(now))
-                            .onErrorResume(e -> {
-                                log.error("Failed to send heartbeat request", e);
-                                return Mono.empty();
-                            })
-                            .subscribe();
-                } catch (Exception e) {
-                    log.error("Failed to send heartbeat request", e);
-                }
-            }, heartbeatIntervalMillis, heartbeatIntervalMillis, TimeUnit.MILLISECONDS);
+        if (heartbeatFuture != null && !heartbeatFuture.isDone()) {
+            return;
         }
+        heartbeatFuture = scheduler.scheduleWithFixedDelay(() -> {
+            if (isClosing) {
+                return;
+            }
+            try {
+                Date now = new Date();
+                List<Mono<?>> monos = new ArrayList<>(2);
+                monos.add(upsertLocalNodeInfo(Update.newBuilder(1)
+                        .set(Member.STATUS_LAST_HEARTBEAT_DATE, now)));
+                if (isLocalNodeLeader()) {
+                    monos.add(renewLocalLeader(now)
+                            .flatMap(isLeader -> isLeader ? updateMembersStatus(now) : Mono.empty()));
+                }
+                Mono.when(monos)
+                        .timeout(heartbeatInterval)
+                        .doOnSuccess(ignored -> localMember.getStatus().setLastHeartbeatDate(now))
+                        .onErrorResume(e -> {
+                            log.error("Failed to send heartbeat request", e);
+                            return Mono.empty();
+                        })
+                        .subscribe();
+            } catch (Exception e) {
+                log.error("Failed to send heartbeat request", e);
+            }
+        }, heartbeatIntervalMillis, heartbeatIntervalMillis, TimeUnit.MILLISECONDS);
     }
 
     public void updateInfo(Member member) {
@@ -182,6 +183,7 @@ public class LocalNodeStatusManager {
         boolean wasLeaderEligible = localMember.isLeaderEligible();
         boolean isLeaderEligibleChanged = isLeaderEligible != wasLeaderEligible;
         this.localMember.updateIfNotNull(
+                member.getZone(),
                 member.isSeed(),
                 member.isLeaderEligible(),
                 member.getPriority(),

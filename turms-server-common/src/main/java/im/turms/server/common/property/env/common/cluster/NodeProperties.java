@@ -39,6 +39,9 @@ public class NodeProperties {
             "e.g. \"turms001\", \"turms_002\"")
     private String id = "";
 
+    @Description("e.g. \"us-east-1\" and \"ap-east-1\"")
+    private String zone = "";
+
     private boolean activeByDefault = true;
 
     @Description("Only works when it's a service node")

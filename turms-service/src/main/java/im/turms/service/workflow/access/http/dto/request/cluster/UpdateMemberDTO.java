@@ -21,6 +21,7 @@ package im.turms.service.workflow.access.http.dto.request.cluster;
  * @author James Chen
  */
 public record UpdateMemberDTO(
+        String zone,
         Boolean isSeed,
         Boolean isLeaderEligible,
         Boolean isActive,

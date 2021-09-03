@@ -53,11 +53,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -101,13 +101,13 @@ public class DiscoveryService implements ClusterService {
      * Use independent collections to speed up query operations
      */
     @Getter
-    private final Map<String, Member> allKnownMembers = new HashMap<>();
+    private final Map<String, Member> allKnownMembers = new ConcurrentHashMap<>(32);
 
     @Getter
-    private List<Member> activeSortedServiceMembers = new ArrayList<>();
+    private List<Member> activeSortedServiceMembers = Collections.emptyList();
 
     @Getter
-    private List<Member> activeSortedGatewayMembers = new ArrayList<>();
+    private List<Member> activeSortedGatewayMembers = Collections.emptyList();
 
     @Getter
     private List<String> otherActiveConnectedServiceMemberIds = Collections.emptyList();
@@ -121,6 +121,7 @@ public class DiscoveryService implements ClusterService {
     public DiscoveryService(
             String clusterId,
             String nodeId,
+            String zone,
             NodeType nodeType,
             NodeVersion nodeVersion,
             boolean isLeaderEligible,
@@ -132,6 +133,7 @@ public class DiscoveryService implements ClusterService {
         Date now = new Date();
         Member localMember = new Member(clusterId,
                 nodeId,
+                zone,
                 nodeType,
                 nodeVersion,
                 false,
@@ -285,31 +287,32 @@ public class DiscoveryService implements ClusterService {
                             ? changedMember.getClusterId()
                             : ChangeStreamUtil.getStringFromId(event.getDocumentKey(), Member.Key.Fields.clusterId);
                     String nodeId = ChangeStreamUtil.getStringFromId(event.getDocumentKey(), Member.Key.Fields.nodeId);
-                    if (clusterId.equals(localNodeStatusManager.getLocalMember().getClusterId())) {
-                        switch (event.getOperationType()) {
-                            case INSERT, REPLACE -> onMemberAddedOrReplaced(changedMember);
-                            case UPDATE -> onMemberUpdated(nodeId, event.getUpdateDescription());
-                            case DELETE -> {
-                                Member deletedMember = allKnownMembers.remove(nodeId);
-                                updateOtherActiveConnectedMemberList(false, deletedMember);
-                                // Note that we assume that there is no the case:
-                                // a node is running but has just been unregistered in the registry
-                                // because the node may lose the connection with the registry and TTL has passed.
-                                // During the time, another node with the SAME node ID registers itself.
-                                // If the lost node recovers again, there is a potential bug.
-                                if (nodeId.equals(localNodeStatusManager.getLocalMember().getNodeId())) {
-                                    localNodeStatusManager.setLocalNodeRegistered(false);
-                                    if (!localNodeStatusManager.isClosing()) {
-                                        // Ignore the error because the node may have been registered by its heartbeat timer
-                                        localNodeStatusManager.registerLocalMember(true)
-                                                .subscribe();
-                                    }
+                    if (!clusterId.equals(localNodeStatusManager.getLocalMember().getClusterId())) {
+                        return;
+                    }
+                    switch (event.getOperationType()) {
+                        case INSERT, REPLACE -> onMemberAddedOrReplaced(changedMember);
+                        case UPDATE -> onMemberUpdated(nodeId, event.getUpdateDescription());
+                        case DELETE -> {
+                            Member deletedMember = allKnownMembers.remove(nodeId);
+                            updateOtherActiveConnectedMemberList(false, deletedMember);
+                            // Note that we assume that there is no the case:
+                            // a node is running but has just been unregistered in the registry
+                            // because the node may lose the connection with the registry and TTL has passed.
+                            // During the time, another node with the SAME node ID registers itself.
+                            // If the lost node recovers again, there is a potential bug.
+                            if (nodeId.equals(localNodeStatusManager.getLocalMember().getNodeId())) {
+                                localNodeStatusManager.setLocalNodeRegistered(false);
+                                if (!localNodeStatusManager.isClosing()) {
+                                    // Ignore the error because the node may have been registered by its heartbeat timer
+                                    localNodeStatusManager.registerLocalMember(true)
+                                            .subscribe();
                                 }
                             }
                         }
-                        updateActiveMembers(allKnownMembers.values());
-                        connectionService.updateHasConnectedToAllMembers(allKnownMembers.keySet());
                     }
+                    updateActiveMembers(allKnownMembers.values());
+                    connectionService.updateHasConnectedToAllMembers(allKnownMembers.keySet());
                 })
                 .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of Member: {}", o, throwable))
                 .subscribe();
@@ -323,6 +326,7 @@ public class DiscoveryService implements ClusterService {
         Boolean isActive = null;
         Date lastHeartbeatDate = null;
         // Info
+        String zone = null;
         Boolean isSeed = null;
         Boolean isLeaderEligible = null;
         Integer priority = null;
@@ -350,6 +354,10 @@ public class DiscoveryService implements ClusterService {
                 continue;
             }
             // Check info
+            if (fieldName.equals(Member.Fields.zone)) {
+                zone = value.asString().getValue();
+                continue;
+            }
             if (fieldName.equals(Member.Fields.isSeed)) {
                 isSeed = value.asBoolean().getValue();
                 continue;
@@ -387,6 +395,7 @@ public class DiscoveryService implements ClusterService {
             }
         }
         memberToUpdate.updateIfNotNull(
+                zone,
                 isSeed,
                 isLeaderEligible,
                 priority,
@@ -408,8 +417,8 @@ public class DiscoveryService implements ClusterService {
         String nodeId = newMember.getNodeId();
         Member localMember = localNodeStatusManager.getLocalMember();
         boolean isLocalNode = nodeId.equals(localMember.getNodeId());
+        allKnownMembers.put(nodeId, newMember);
         synchronized (this) {
-            allKnownMembers.put(nodeId, newMember);
             if (isLocalNode) {
                 localNodeStatusManager.updateInfo(newMember);
             }
@@ -436,19 +445,19 @@ public class DiscoveryService implements ClusterService {
         List<Member> list = new ArrayList<>(allKnownMembers);
         list.sort(MEMBER_PRIORITY_COMPARATOR);
         int size = list.size();
-        List<Member> tempActiveSortedServiceMemberList = new ArrayList<>(size);
-        List<Member> tempActiveSortedGatewayMemberList = new ArrayList<>(size);
+        List<Member> tempActiveSortedServiceMembers = new ArrayList<>(size);
+        List<Member> tempActiveSortedGatewayMembers = new ArrayList<>(size);
         for (Member member : list) {
             if (member.getStatus().isActive()) {
                 if (member.getNodeType() == NodeType.SERVICE) {
-                    tempActiveSortedServiceMemberList.add(member);
+                    tempActiveSortedServiceMembers.add(member);
                 } else {
-                    tempActiveSortedGatewayMemberList.add(member);
+                    tempActiveSortedGatewayMembers.add(member);
                 }
             }
         }
-        activeSortedServiceMembers = tempActiveSortedServiceMemberList;
-        activeSortedGatewayMembers = tempActiveSortedGatewayMemberList;
+        activeSortedServiceMembers = tempActiveSortedServiceMembers;
+        activeSortedGatewayMembers = tempActiveSortedGatewayMembers;
     }
 
     private synchronized void updateOtherActiveConnectedMemberList(boolean isAdd, Member member) {
@@ -516,6 +525,7 @@ public class DiscoveryService implements ClusterService {
     }
 
     public Mono<Void> updateMemberInfo(@NotNull String id,
+                                       @Nullable String zone,
                                        @Nullable Boolean isSeed,
                                        @Nullable Boolean isLeaderEligible,
                                        @Nullable Boolean isActive,
@@ -527,7 +537,8 @@ public class DiscoveryService implements ClusterService {
         Filter filter = Filter.newBuilder(2)
                 .eq(Member.ID_CLUSTER_ID, getLocalMember().getClusterId())
                 .eq(Member.ID_NODE_ID, id);
-        Update update = Update.newBuilder(4)
+        Update update = Update.newBuilder(5)
+                .setIfNotNull(Member.Fields.zone, zone)
                 .setIfNotNull(Member.Fields.isSeed, isSeed)
                 .setIfNotNull(Member.Fields.isLeaderEligible, isLeaderEligible)
                 .setIfNotNull(Member.STATUS_IS_ACTIVE, isActive)

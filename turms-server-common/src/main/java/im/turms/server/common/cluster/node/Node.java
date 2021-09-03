@@ -111,6 +111,10 @@ public class Node {
 
         String clusterId = clusterProperties.getId();
         nodeId = initNodeId(nodeProperties.getId());
+        String zone = nodeProperties.getZone();
+        if (zone == null) {
+            zone = "";
+        }
 
         // Init services
         // pass the properties one by one rather than passing the node instance
@@ -121,6 +125,7 @@ public class Node {
         sharedConfigService = new SharedConfigService(sharedConfigProperties.getMongo());
         discoveryService = new DiscoveryService(clusterId,
                 nodeId,
+                zone,
                 nodeType,
                 nodeVersion,
                 nodeType == NodeType.SERVICE && nodeProperties.isLeaderEligible(),
