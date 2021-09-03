@@ -21,7 +21,7 @@ turms:
   service:
     client-api:
       logging:
-        included-request-categories:
+        included-notification-categories:
           - category: all
     fake:
       enabled: true

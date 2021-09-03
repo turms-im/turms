@@ -46,6 +46,15 @@ public abstract class CommonClientApiLoggingProperties {
             "\"includedNotificationCategories\" and \"includedNotifications\" " +
             "except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"";
 
+    private static final LinkedHashSet<LoggingCategoryProperties> CATEGORY_ALL;
+
+    static {
+        LoggingCategoryProperties categoryProperties = new LoggingCategoryProperties(LoggingRequestCategory.ALL, 1.0F);
+        LinkedHashSet<LoggingCategoryProperties> set = new LinkedHashSet<>();
+        set.add(categoryProperties);
+        CATEGORY_ALL = set;
+    }
+
     // Request + Response
 
     /**
@@ -53,7 +62,7 @@ public abstract class CommonClientApiLoggingProperties {
      * can be replaced by the ones of the following categories for common requests.
      */
     @Description(DESC_STRATEGY_TO_GET_INCLUDED_REQUESTS)
-    private LinkedHashSet<LoggingCategoryProperties> includedRequestCategories = new LinkedHashSet<>();
+    private LinkedHashSet<LoggingCategoryProperties> includedRequestCategories = CATEGORY_ALL;
 
     @Description(DESC_STRATEGY_TO_GET_INCLUDED_REQUESTS)
     private LinkedHashSet<LoggingRequestProperties> includedRequests = new LinkedHashSet<>();

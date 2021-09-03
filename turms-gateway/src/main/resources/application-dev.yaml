@@ -20,8 +20,6 @@ turms:
   gateway:
     client-api:
       logging:
-        included-request-categories:
-          - category: all
         included-notification-categories:
           - category: all
       return-reason-for-server-error: true

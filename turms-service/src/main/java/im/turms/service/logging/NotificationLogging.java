@@ -42,7 +42,7 @@ public final class NotificationLogging {
                 // User info
                 String.valueOf(notification.getRequesterId()),
                 // Notification info
-                sent ? "SENT" : "UNSET",
+                sent ? "SENT" : "UNSENT",
                 String.valueOf(recipientCount),
                 notification.hasCloseStatus() ? String.valueOf(notification.getCloseStatus()) : "",
                 String.valueOf(notification.getSerializedSize()),
