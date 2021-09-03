@@ -23,6 +23,9 @@ import im.turms.server.common.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ExceptionUtil;
 import io.micrometer.core.instrument.Tag;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.util.ReferenceCounted;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -34,13 +37,20 @@ import javax.annotation.Nullable;
 /**
  * @param <T> The data type of the response
  * @author James Chen
- * @implNote We use inheritance instead of composition because:
+ * @implNote 1. We use inheritance instead of composition because:
  * Some properties are provided for request impls indeed (e.g. fromNodeId),
- * if we use composition, we need to pass RpcRequest to request impls, which brings circular references (bad practice),
- * or extract these properties into an independent class like RequestContext, which brings redundant overhead.
+ * if we use composition, we need to pass RpcRequest to request impls,
+ * which brings circular references (bad practice), or extract these
+ * properties into an independent class like RequestContext, which brings redundant overhead.
  * So we still use inheritance to keep the code simple (flat classes)
+ * <p>
+ * 2. We implement {@link ReferenceCounted} so RpcRequest can be released correctly by
+ * the middle {@link io.netty.channel.ChannelInboundHandler} that we cannot control when decoding.
+ * For example, the following method will try to release RpcRequest and just return
+ * without calling our own downstream RPC acceptor if the connection has been closed
+ * {@link reactor.netty.channel.FluxReceive#onInboundNext(java.lang.Object)}
  */
-public abstract class RpcRequest<T> {
+public abstract class RpcRequest<T> implements ReferenceCounted {
 
     /**
      * Is null if the RPC request runs on the local node
@@ -68,6 +78,9 @@ public abstract class RpcRequest<T> {
     @Getter
     @Setter
     private ApplicationContext applicationContext;
+
+    @Setter
+    private ByteBuf boundBuffer = Unpooled.EMPTY_BUFFER;
 
     @Override
     public String toString() {
@@ -132,13 +145,45 @@ public abstract class RpcRequest<T> {
         throw new UnsupportedOperationException();
     }
 
-    public void retainBoundBuffer() {
+    // Adaptor to ReferenceCounted
+
+    @Override
+    public int refCnt() {
+        return boundBuffer.refCnt();
     }
 
-    public void releaseBoundBuffer() {
+    @Override
+    public RpcRequest<T> retain() {
+        boundBuffer.retain();
+        return this;
     }
 
-    public void touchBuffer(Object hint) {
+    @Override
+    public RpcRequest<T> retain(int increment) {
+        boundBuffer.retain(increment);
+        return this;
+    }
+
+    @Override
+    public RpcRequest<T> touch() {
+        boundBuffer.touch();
+        return this;
+    }
+
+    @Override
+    public RpcRequest<T> touch(Object hint) {
+        boundBuffer.touch(hint);
+        return this;
+    }
+
+    @Override
+    public boolean release() {
+        return boundBuffer.release();
+    }
+
+    @Override
+    public boolean release(int decrement) {
+        return boundBuffer.release(decrement);
     }
 
 }

@@ -45,13 +45,13 @@ public class RpcRequestExecutor {
 
     /**
      * @implNote 1. We record request time/response here because the RPC request may run on the local machine
-     * 2.The method itself will call RpcRequest#releaseBoundBuffer()
+     * 2.The method itself will call {@link RpcRequest#release()}
      */
     public <T> Mono<T> runRpcRequest(RequestLoggingContext loggingContext,
                                      RpcRequest<T> rpcRequest,
                                      @Nullable TurmsConnection connection,
                                      String fromNodeId) {
-        rpcRequest.touchBuffer(rpcRequest);
+        rpcRequest.touch(rpcRequest);
         TracingContext tracingContext = loggingContext.getTracingContext();
         try {
             tracingContext.updateMdc();
@@ -77,13 +77,13 @@ public class RpcRequestExecutor {
                             : RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString(), e))
                     .doFinally(signalType -> tracingContext.clearMdc());
         } catch (RpcException e) {
-            rpcRequest.releaseBoundBuffer();
+            rpcRequest.release();
             return Mono.error(e);
         } catch (TurmsBusinessException e) {
-            rpcRequest.releaseBoundBuffer();
+            rpcRequest.release();
             return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, e.getCode(), e.getReason()));
         } catch (Exception e) {
-            rpcRequest.releaseBoundBuffer();
+            rpcRequest.release();
             return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString(), e));
         } finally {
             if (tracingContext != null) {

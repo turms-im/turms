@@ -270,7 +270,7 @@ public class OutboundMessageService {
                         boolean sent = Boolean.TRUE.equals(signal.get());
                         RequestLoggingContext loggingContext = signal.getContextView()
                                 .getOrDefault(RequestLoggingContext.CTX_KEY_NAME, RequestLoggingContext.DEFAULT);
-                        try (TracingCloseableContext ignored = loggingContext.getTracingContext().asCloseable()) {
+                        try (TracingCloseableContext ignored = loggingContext.asCloseable()) {
                             NotificationLogging.log(sent, notification, recipientCount);
                         }
                     });

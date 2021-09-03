@@ -17,6 +17,7 @@
 
 package im.turms.server.common.logging;
 
+import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -48,6 +49,10 @@ public class RequestLoggingContext {
             return null;
         }
         return tracingContext.getTraceId();
+    }
+
+    public TracingCloseableContext asCloseable() {
+        return new TracingCloseableContext(tracingContext);
     }
 
     public void clearMdc() {

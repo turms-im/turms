@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
 
-    // Codec ID
+    // Header = Codec ID (2 Bytes)
     private static final int HEADER_LENGTH = Short.BYTES;
 
     @Override
@@ -54,7 +54,9 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
             // Because releasing "frame" will also release "in",
             // we just need to ensure the frame is released once by us finally
             ByteBuf frame = (ByteBuf) out.get(i);
-            out.set(i, decode(ctx, frame));
+            Object val = decode(ctx, frame);
+            frame.touch(val);
+            out.set(i, val);
         }
     }
 
@@ -69,6 +71,10 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
             }
             return decodePayload(ctx, frame);
         } finally {
+            // For some RPC requests, we deallocate the frame here,
+            // but for other requests like HandleServiceRequest,
+            // they will retain the frame by 1 in their codec so
+            // the frame will NOT be just deallocated here
             frame.release();
         }
     }

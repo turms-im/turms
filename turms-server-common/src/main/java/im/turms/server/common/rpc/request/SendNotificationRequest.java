@@ -46,6 +46,7 @@ public class SendNotificationRequest extends RpcRequest<Boolean> {
     public SendNotificationRequest(@NotNull ByteBuf notificationBuffer, @NotEmpty Set<Long> recipientIds) {
         this.notificationBuffer = notificationBuffer;
         this.recipientIds = recipientIds;
+        setBoundBuffer(notificationBuffer);
     }
 
     @Override
@@ -82,21 +83,6 @@ public class SendNotificationRequest extends RpcRequest<Boolean> {
     @Override
     public Boolean call() {
         return outboundMessageService.sendNotificationToLocalClients(getTracingContext(), notificationBuffer, recipientIds);
-    }
-
-    @Override
-    public void retainBoundBuffer() {
-        notificationBuffer.retain();
-    }
-
-    @Override
-    public void releaseBoundBuffer() {
-        notificationBuffer.release();
-    }
-
-    @Override
-    public void touchBuffer(Object hint) {
-        notificationBuffer.touch(hint);
     }
 
 }

@@ -140,6 +140,8 @@ public class RpcService implements ClusterService {
             }
 
             public void onRequestReceived(RpcRequest<?> request) {
+                // Retain to avoid being released by FluxReceive
+                request.retain();
                 ChannelOperations<?, ?> conn = connection.getConnection();
                 RequestLoggingContext loggingContext = new RequestLoggingContext(request.getTracingContext());
                 requestExecutor.runRpcRequest(loggingContext, request, connection, connection.getNodeId())
@@ -147,7 +149,7 @@ public class RpcService implements ClusterService {
                         .onErrorResume(RpcException.class, Mono::just)
                         .doOnNext(response -> {
                             if (conn.isDisposed()) {
-                                try (TracingCloseableContext ignored = loggingContext.getTracingContext().asCloseable()) {
+                                try (TracingCloseableContext ignored = loggingContext.asCloseable()) {
                                     log.error("Cannot send response to disposed connection: " + response);
                                 }
                                 return;
@@ -156,13 +158,13 @@ public class RpcService implements ClusterService {
                             try {
                                 buf = RpcFrameEncoder.INSTANCE.encode(request.getRequestId(), response);
                             } catch (Exception e) {
-                                try (TracingCloseableContext ignored = loggingContext.getTracingContext().asCloseable()) {
+                                try (TracingCloseableContext ignored = loggingContext.asCloseable()) {
                                     log.error("Failed to encode response: {}", response, e);
                                 }
                                 return;
                             }
                             if (buf.refCnt() == 0) {
-                                try (TracingCloseableContext ignored = loggingContext.getTracingContext().asCloseable()) {
+                                try (TracingCloseableContext ignored = loggingContext.asCloseable()) {
                                     log.error("The buffer of response is released unexpectedly: " + response);
                                 }
                                 return;
@@ -170,7 +172,7 @@ public class RpcService implements ClusterService {
                             conn.sendObject(buf)
                                     .then()
                                     .onErrorResume(t -> {
-                                        try (TracingCloseableContext ignored = loggingContext.getTracingContext().asCloseable()) {
+                                        try (TracingCloseableContext ignored = loggingContext.asCloseable()) {
                                             log.error("Failed to send response", t);
                                         }
                                         return Mono.empty();
@@ -229,7 +231,7 @@ public class RpcService implements ClusterService {
         List<String> otherMembers = getOtherActiveConnectedMembersToRespond(request);
         int size = otherMembers.size();
         if (size == 0) {
-            request.releaseBoundBuffer();
+            request.release();
             return Mono.error(RpcException.get(RpcErrorCode.MEMBER_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         // use System.currentTimeMillis() instead of "RandomUtil.nextPositiveInt()" for better performance
@@ -239,11 +241,11 @@ public class RpcService implements ClusterService {
         try {
             client = getOrCreateEndpoint(memberNodeId);
         } catch (Exception e) {
-            request.releaseBoundBuffer();
+            request.release();
             return Mono.error(e);
         }
         // Retain to invoke requestResponse() again if an error occurs
-        request.retainBoundBuffer();
+        request.retain();
         return requestResponse(client, request, defaultRequestTimeoutDuration)
                 .onErrorResume(throwable -> {
                     if (ExceptionUtil.isDisconnectedClientError(throwable)) {
@@ -256,7 +258,7 @@ public class RpcService implements ClusterService {
                     // No need to translate the error because it should have been translated
                     return Mono.error(throwable);
                 })
-                .doFinally(signal -> request.releaseBoundBuffer());
+                .doFinally(signal -> request.release());
     }
 
     /**
@@ -293,7 +295,7 @@ public class RpcService implements ClusterService {
             RpcEndpoint endpoint = getOrCreateEndpoint(memberNodeId, connection);
             return requestResponse0(endpoint, request, timeout);
         } catch (Exception e) {
-            request.releaseBoundBuffer();
+            request.release();
             return Mono.error(e);
         }
     }
@@ -364,7 +366,7 @@ public class RpcService implements ClusterService {
         try {
             assertCurrentNodeIsAllowedToSend(request);
         } catch (Exception e) {
-            request.releaseBoundBuffer();
+            request.release();
             return Mono.error(e);
         }
         if (timeout == null) {
@@ -377,7 +379,7 @@ public class RpcService implements ClusterService {
                     try {
                         requestBody = codecService.serializeWithoutCodecId(request);
                     } catch (Exception e) {
-                        request.releaseBoundBuffer();
+                        request.release();
                         return Mono.error(new IllegalStateException("Failed to encode the request: " + request, e));
                     }
                     return endpoint.sendRequest(request, requestBody);
@@ -507,7 +509,7 @@ public class RpcService implements ClusterService {
 
 
     private Throwable mapThrowable(Throwable throwable, RpcRequest<?> callable) {
-        // else e.g. ClosedChannelException
+        // e.g. ClosedChannelException
         return new IllegalStateException("Failed to request a response for the request: " + callable, throwable);
     }
 
