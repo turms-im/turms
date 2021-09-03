@@ -120,7 +120,7 @@ TODO
 
 ## 日志
 
-每条日志都对应着Turms服务端运行时发生的事件，用于追踪系统的运行状态与生成高纬度的统计数据。Turms中的日志分类两大类，即`系统日志`与`业务日志`。系统运行日志本身数量不多，占用空间不大，遵循精与准原则。但为业务分析而设计的客户端API访问日志则不同，它是大部分统计数据的基础数据，是企业的重要资产，因此Turms默认对其进行100%采样，存储消耗巨大。
+每条日志都对应着Turms服务端运行时发生的事件，用于追踪系统的运行状态与生成高纬度的统计数据。Turms中的日志分类两大类，即`应用日志`与`业务日志`。应用运行日志本身数量不多，占用空间不大，遵循精与准原则。但为业务分析而设计的客户端API访问日志则不同，它是大部分统计数据的基础数据，是企业的重要资产，因此Turms默认对其进行100%采样，存储消耗巨大。
 
 注意：Turms的所有日志、度量与链路追踪的数据格式设计，都是兼顾“简单快捷，方便快速查询”与“精准采样，方便日志服务分析”设计的，但Turms本身不提供任何日志分析功能。
 
@@ -154,9 +154,11 @@ turms-service的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 
 描述Turms服务端内发生的主要事件，如RPC连接状态的转变、请求处理中服务端错误的发生等。
 
+文件名：`turms-gateway.log`（turms-gateway服务端）；`turms-service.log`（turms-service服务端）
+
 构成：事件发送时间、日志等级、服务端类型、节点ID、Trace ID、线程、类、消息。其中，服务端信息的主要作用是在分布式日志采集过程中，用于区分日志的来源节点。其他类型日志也都使用这样的日志格式（除了客户端API访问日志与通知日志不记录“类”信息），它们只是在“消息”部分使用了定制化的消息格式。
 
-日志文件格式：`%d{${sys:LOG_DATEFORMAT_PATTERN}}{GMT+0} ${sys:LOG_LEVEL_PATTERN} ${myctx:NODE_TYPE} ${myctx:NODE_ID} %-19.19X{traceId} %t %-40.40c{1.} : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}`
+格式：`%d{${sys:LOG_DATEFORMAT_PATTERN}}{GMT+0} ${sys:LOG_LEVEL_PATTERN} ${myctx:NODE_TYPE} ${myctx:NODE_ID} %-19.19X{traceId} %t %-40.40c{1.} : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}`
 
 解析Regex：`(?P<time>\d{4}-\d{2}-\d{2}\s\d{1,2}\:\d{2}\:\d{2}\.\d{3})\s+(?P<level>[A-Z]{4,5})\s+(?P<node_type>[A-Z])\s+(?P<node_id>\S*)\s+\[(?P<trace_id>.{19})\]\s+(?P<thread>\S*)\s+(?P<class>\S*)\s+:\s(?P<msg>.*)`
 
@@ -170,6 +172,8 @@ turms-service的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 #### Admin API访问日志（审计日志）
 
 记录管理员对Turms服务端的各种操作。
+
+文件名：`turms-service-admin-api.log`
 
 格式：`管理员账号|管理员IP|请求时间|请求API|请求参数|处理结果|处理时间|处理异常信息`。其中：
 
@@ -189,6 +193,8 @@ turms-service的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 
 ##### turms-gateway服务端
 
+文件名：`turms-gateway-client-api.log`
+
 格式：`会话ID|用户ID|设备|版本|IP|请求ID|请求类型|请求大小|请求时间|响应状态码|响应数据类型|响应大小|处理时间`。其中：
 
 * 会话信息：会话ID、用户ID、设备、版本、IP
@@ -204,6 +210,8 @@ turms-service的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 ```
 
 ##### turms-service服务端
+
+文件名：`turms-service-client-api.log`
 
 格式：`用户ID|设备|IP|请求ID|请求类型|请求大小|请求时间|响应状态码|响应数据类型|处理时间`。其中：
 
@@ -235,7 +243,46 @@ turms-service的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 
 #### 通知日志
 
-TODO
+部分客户端请求与管理员API请求会触发对其他用户的通知，如“正在输入”与“添加好友”通知。该日志用于该类通知事件。
+
+补充：
+
+* `通知日志记录`与`客户端API访问日志记录`可以一一对应起来。具体而言，可以通过通知日志记录中的`Trace ID`或`Request ID`字段将二者关联。
+* 通知的发起操作只会由turms-service执行。turms-service通过`SendNotificationRequest`这一RPC请求，将通知操作代理给turms-gateway，让其进行实际的通知下推操作
+
+##### turms-gateway服务端
+
+文件名：`turms-gateway-notification.log`
+
+格式：`通知触发用户ID|发送状态|通知目标用户数|会话关闭状态码|通知大小|通知转发的请求类型`。其中：
+
+* 通知触发用户信息：通知触发用户ID
+* 通知信息：发送状态、通知目标用户数、会话关闭状态码、通知大小
+* 通知转发的请求信息：通知转发的请求类型
+
+示例：
+
+```spreadsheet
+2021-09-03 00:08:22.537  INFO G hkivjeav 3166178398923546492 -client-io-15-3 : 149|SENT|1||75|UPDATE_FRIEND_REQUEST_REQUEST
+2021-09-03 00:08:37.636  INFO G hkivjeav 8332948877634499289 -client-io-15-3 : 190|SENT|1||19|UPDATE_TYPING_STATUS_REQUEST
+```
+
+##### turms-service服务端
+
+文件名：`turms-service-notification.log`
+
+格式：`通知触发用户ID|发送状态|通知目标用户数|会话关闭状态码|通知大小|通知转发的请求ID|通知转发的请求类型`。其中：
+
+* 通知触发用户信息：通知触发用户ID
+* 通知信息：发送状态、通知目标用户数、会话关闭状态码、通知大小
+* 通知转发的请求信息：通知转发的请求ID、通知转发的请求类型
+
+示例：
+
+```spreadsheet
+2021-09-03 00:08:22.537  INFO S hkivjeav 3166178398923546492 -client-io-15-3 : 149|SENT|1||75|4971734074638762694|UPDATE_FRIEND_REQUEST_REQUEST
+2021-09-03 00:08:37.636  INFO S hkivjeav 8332948877634499289 -client-io-15-3 : 190|SENT|1||19|6469201046445182337|UPDATE_TYPING_STATUS_REQUEST
+```
 
 #### 慢日志
 
