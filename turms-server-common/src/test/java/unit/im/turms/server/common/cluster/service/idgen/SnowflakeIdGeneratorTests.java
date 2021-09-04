@@ -31,14 +31,14 @@ class SnowflakeIdGeneratorTests {
     }
 
     @Test
-    void nextRandomId_shouldGeneratePositiveAndUniqueAndRandomId() {
+    void nextLargeGapId_shouldGeneratePositiveAndUniqueAndLargeGapId() {
         SnowflakeIdGenerator generator = new SnowflakeIdGenerator(0, 0);
         int number = 100_000;
         LongHashSet ids = new LongHashSet(number);
         long previousId = -1;
         boolean isMonotonicallyIncreasing = true;
         for (int i = 0; i < number; i++) {
-            long newId = generator.nextRandomId();
+            long newId = generator.nextLargeGapId();
             assertThat(newId)
                     .as("ID should be greater than 0")
                     .isPositive();

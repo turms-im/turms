@@ -38,14 +38,14 @@ import java.util.concurrent.atomic.AtomicLong;
  * A data center usually represents a region in cloud.
  * Reserved for future.
  * <p>
- * 8 bits for member ID (256).
+ * 8 bits for worker ID (256).
  * Note turms-gateway also works as a load balancer to route traffic to turms-service servers so the number
  * of turms-service servers is better more than or equals to the number of turms-gateway servers in practice.
- * In other words, the max number that can be represented by the bits for memberId should be better
+ * In other words, the max number that can be represented by the bits for workerId should be better
  * more than the number of turms-gateway servers that you will deploy
  * <p>
  * 10 bits for sequenceNumber (1,024).
- * It can represent up to 1024*1000 sequence numbers per seconds.
+ * It can represent up to 1024*1000 sequence numbers per second.
  *
  * @author James Chen
  */
@@ -59,14 +59,14 @@ public class SnowflakeIdGenerator {
 
     private static final int TIMESTAMP_BITS = 41;
     private static final int DATA_CENTER_ID_BITS = 4;
-    private static final int MEMBER_ID_BITS = 8;
+    private static final int WORKER_ID_BITS = 8;
     private static final int SEQUENCE_NUMBER_BITS = 10;
 
-    private static final long TIMESTAMP_LEFT_SHIFT = SEQUENCE_NUMBER_BITS + MEMBER_ID_BITS + DATA_CENTER_ID_BITS;
-    private static final long DATA_CENTER_ID_SHIFT = SEQUENCE_NUMBER_BITS + MEMBER_ID_BITS;
-    private static final long MEMBER_ID_SHIFT = SEQUENCE_NUMBER_BITS;
+    private static final long TIMESTAMP_LEFT_SHIFT = SEQUENCE_NUMBER_BITS + WORKER_ID_BITS + DATA_CENTER_ID_BITS;
+    private static final long DATA_CENTER_ID_SHIFT = SEQUENCE_NUMBER_BITS + WORKER_ID_BITS;
+    private static final long WORKER_ID_SHIFT = SEQUENCE_NUMBER_BITS;
 
-    private static final long SEQUENCE_NUMBER_MASK = (1 << SEQUENCE_NUMBER_BITS) - 1;
+    private static final long SEQUENCE_WORKER_ID_MASK = (1 << SEQUENCE_NUMBER_BITS) - 1;
 
     public static final int MAX_DATA_CENTER_ID = 1 << DATA_CENTER_ID_BITS;
 
@@ -81,30 +81,30 @@ public class SnowflakeIdGenerator {
     private long dataCenterId;
 
     @Contended("nodeInfo")
-    private long memberId;
+    private long workerId;
 
-    public SnowflakeIdGenerator(int dataCenterId, int memberId) {
-        updateNodeInfo(dataCenterId, memberId);
+    public SnowflakeIdGenerator(int dataCenterId, int workerId) {
+        updateNodeInfo(dataCenterId, workerId);
     }
 
-    public void updateNodeInfo(int dataCenterId, int memberId) {
+    public void updateNodeInfo(int dataCenterId, int workerId) {
         if (dataCenterId >= MAX_DATA_CENTER_ID) {
             String reason = "Illegal dataCenterId %d. The dataCenterId must be in the range [0, %d)"
                     .formatted(dataCenterId, MAX_DATA_CENTER_ID);
             throw new IllegalArgumentException(reason);
         }
-        if (memberId >= (1 << MEMBER_ID_BITS)) {
-            String reason = "Illegal memberId %d. The memberId must be in the range [0, %d)"
-                    .formatted(memberId, 1 << MEMBER_ID_BITS);
+        if (workerId >= (1 << WORKER_ID_BITS)) {
+            String reason = "Illegal workerId %d. The workerId must be in the range [0, %d)"
+                    .formatted(workerId, 1 << WORKER_ID_BITS);
             throw new IllegalArgumentException(reason);
         }
         this.dataCenterId = dataCenterId;
-        this.memberId = memberId;
+        this.workerId = workerId;
     }
 
     public long nextIncreasingId() {
         // prepare each part of ID
-        long sequenceId = sequenceNumber.incrementAndGet() & SEQUENCE_NUMBER_MASK;
+        long sequenceId = sequenceNumber.incrementAndGet() & SEQUENCE_WORKER_ID_MASK;
         long timestamp = this.lastTimestamp.updateAndGet(lastTs -> {
             // Don't let timestamp go backwards at least while this JVM is running.
             long nonBackwardsTimestamp = Math.max(lastTs, System.currentTimeMillis());
@@ -119,13 +119,20 @@ public class SnowflakeIdGenerator {
         // Get ID
         return (timestamp << TIMESTAMP_LEFT_SHIFT)
                 | (dataCenterId << DATA_CENTER_ID_SHIFT)
-                | (memberId << MEMBER_ID_SHIFT)
+                | (workerId << WORKER_ID_SHIFT)
                 | sequenceId;
     }
 
-    public long nextRandomId() {
+    /**
+     * 1. The purpose of generating IDs with large gaps is to generate
+     * shard keys in a large range so that MongoDB can split them into
+     * a lot of chunks to distribute them to different MongoDB servers
+     * 2. To avoid generating monotonical IDs to guarantee
+     * even distribution of data across the sharded cluster
+     */
+    public long nextLargeGapId() {
         // prepare each part of ID
-        long sequenceId = sequenceNumber.incrementAndGet() & SEQUENCE_NUMBER_MASK;
+        long sequenceId = sequenceNumber.incrementAndGet() & SEQUENCE_WORKER_ID_MASK;
         long timestamp = this.lastTimestamp.updateAndGet(now -> {
             // Don't let timestamp go backwards at least while this JVM is running.
             long nonBackwardsTimestamp = Math.max(now, System.currentTimeMillis());
@@ -138,10 +145,10 @@ public class SnowflakeIdGenerator {
         }) - EPOCH;
 
         // Get ID
-        return (sequenceId << (TIMESTAMP_BITS + DATA_CENTER_ID_BITS + MEMBER_ID_BITS))
-                | (timestamp << (DATA_CENTER_ID_BITS + MEMBER_ID_BITS))
-                | (dataCenterId << MEMBER_ID_BITS)
-                | memberId;
+        return (sequenceId << (TIMESTAMP_BITS + DATA_CENTER_ID_BITS + WORKER_ID_BITS))
+                | (timestamp << (DATA_CENTER_ID_BITS + WORKER_ID_BITS))
+                | (dataCenterId << WORKER_ID_BITS)
+                | workerId;
     }
 
 }

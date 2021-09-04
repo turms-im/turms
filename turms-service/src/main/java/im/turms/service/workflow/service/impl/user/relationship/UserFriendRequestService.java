@@ -180,7 +180,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        id = id != null ? id : node.nextRandomId(ServiceType.USER_FRIEND_REQUEST);
+        id = id != null ? id : node.nextLargeGapId(ServiceType.USER_FRIEND_REQUEST);
         Date now = new Date();
         if (creationDate == null) {
             creationDate = now;

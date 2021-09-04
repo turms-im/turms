@@ -216,7 +216,7 @@ public class GroupQuestionService {
             return Mono.error(e);
         }
         GroupJoinQuestion groupJoinQuestion = new GroupJoinQuestion(
-                node.nextRandomId(ServiceType.GROUP_JOIN_QUESTION),
+                node.nextLargeGapId(ServiceType.GROUP_JOIN_QUESTION),
                 groupId,
                 question,
                 answers,

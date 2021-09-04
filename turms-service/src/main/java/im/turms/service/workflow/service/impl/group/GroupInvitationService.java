@@ -179,7 +179,7 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        id = id != null ? id : node.nextRandomId(ServiceType.GROUP_INVITATION);
+        id = id != null ? id : node.nextLargeGapId(ServiceType.GROUP_INVITATION);
         if (content == null) {
             content = "";
         }

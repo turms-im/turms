@@ -137,7 +137,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
                     if (!isActive) {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SEND_JOIN_REQUEST_TO_INACTIVE_GROUP));
                     }
-                    long id = node.nextRandomId(ServiceType.GROUP_JOIN_REQUEST);
+                    long id = node.nextLargeGapId(ServiceType.GROUP_JOIN_REQUEST);
                     String finalContent = content != null ? content : "";
                     GroupJoinRequest groupJoinRequest = new GroupJoinRequest(
                             id,
@@ -400,7 +400,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
             return Mono.error(e);
         }
         Date now = new Date();
-        id = id != null ? id : node.nextRandomId(ServiceType.GROUP_JOIN_REQUEST);
+        id = id != null ? id : node.nextLargeGapId(ServiceType.GROUP_JOIN_REQUEST);
         if (content == null) {
             content = "";
         }

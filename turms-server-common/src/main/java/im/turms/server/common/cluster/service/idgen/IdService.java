@@ -37,15 +37,13 @@ public class IdService implements ClusterService {
      */
     private final SnowflakeIdGenerator[] idGenerators = new SnowflakeIdGenerator[FLAKE_ID_GENERATORS_LENGTH];
     private int previousLocalDataCenterId;
-    private int previousLocalMemberId;
+    private int previousLocalWorkerId;
 
     public IdService(DiscoveryService discoveryService) {
         for (int i = 0; i < FLAKE_ID_GENERATORS_LENGTH; i++) {
             idGenerators[i] = new SnowflakeIdGenerator(0, 0);
         }
-        // Listen to the member changes to get the local member index
-        // as the memberId of the snowflake algorithm
-        discoveryService.addListenerOnMembersChange(() -> {
+        discoveryService.addOnMembersChangeListener(() -> {
             TreeSet<String> zones = new TreeSet<>();
             for (Member member : discoveryService.getAllKnownMembers().values()) {
                 zones.add(member.getZone());
@@ -60,17 +58,17 @@ public class IdService implements ClusterService {
                         dataCenterId, SnowflakeIdGenerator.MAX_DATA_CENTER_ID - 1, fallbackDataCenterId);
                 dataCenterId = fallbackDataCenterId;
             }
-            Integer localMemberId = discoveryService.getLocalServiceMemberIndex();
-            boolean isMemberIdChanged = localMemberId != null && localMemberId != previousLocalMemberId;
-            if (isMemberIdChanged || previousLocalDataCenterId != dataCenterId) {
-                if (localMemberId == null) {
-                    localMemberId = previousLocalMemberId;
+            Integer localWorkerId = discoveryService.getLocalServiceMemberIndex();
+            boolean isWorkerIdChanged = localWorkerId != null && localWorkerId != previousLocalWorkerId;
+            if (isWorkerIdChanged || previousLocalDataCenterId != dataCenterId) {
+                if (localWorkerId == null) {
+                    localWorkerId = previousLocalWorkerId;
                 }
                 for (SnowflakeIdGenerator idGenerator : idGenerators) {
-                    idGenerator.updateNodeInfo(dataCenterId, localMemberId);
+                    idGenerator.updateNodeInfo(dataCenterId, localWorkerId);
                 }
                 previousLocalDataCenterId = dataCenterId;
-                previousLocalMemberId = localMemberId;
+                previousLocalWorkerId = localWorkerId;
             }
         });
     }
@@ -82,8 +80,8 @@ public class IdService implements ClusterService {
         return idGenerators[serviceType.ordinal()].nextIncreasingId();
     }
 
-    public long nextRandomId(ServiceType serviceType) {
-        return idGenerators[serviceType.ordinal()].nextRandomId();
+    public long nextLargeGapId(ServiceType serviceType) {
+        return idGenerators[serviceType.ordinal()].nextLargeGapId();
     }
 
 }

@@ -221,8 +221,8 @@ public class Node {
         return idService.nextIncreasingId(serviceType);
     }
 
-    public long nextRandomId(ServiceType serviceType) {
-        return idService.nextRandomId(serviceType);
+    public long nextLargeGapId(ServiceType serviceType) {
+        return idService.nextLargeGapId(serviceType);
     }
 
     public boolean isLocalNodeLeader() {

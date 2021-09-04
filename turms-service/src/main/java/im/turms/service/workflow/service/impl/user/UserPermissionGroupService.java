@@ -129,7 +129,7 @@ public class UserPermissionGroupService {
             return Mono.error(e);
         }
         if (groupId == null) {
-            groupId = node.nextRandomId(ServiceType.USER_PERMISSION_GROUP);
+            groupId = node.nextLargeGapId(ServiceType.USER_PERMISSION_GROUP);
         }
         UserPermissionGroup userPermissionGroup = new UserPermissionGroup(
                 groupId,

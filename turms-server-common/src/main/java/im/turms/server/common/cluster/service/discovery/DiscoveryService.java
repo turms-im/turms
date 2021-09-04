@@ -200,8 +200,8 @@ public class DiscoveryService implements ClusterService {
         for (Member member : memberList) {
             if (localMember.isSameNode(member)) {
                 String message = "Failed to bootstrap the local node because the local node has been registered: "
-                        + "[Local Node]: " + localMember + ", "
-                        + "[Registered Node]" + member;
+                        + "Local Node: " + localMember + ", "
+                        + "Registered Node: " + member;
                 throw new IllegalStateException(message);
             }
             onMemberAddedOrReplaced(member);
@@ -295,6 +295,9 @@ public class DiscoveryService implements ClusterService {
                         case UPDATE -> onMemberUpdated(nodeId, event.getUpdateDescription());
                         case DELETE -> {
                             Member deletedMember = allKnownMembers.remove(nodeId);
+                            if (deletedMember == null) {
+                                return;
+                            }
                             updateOtherActiveConnectedMemberList(false, deletedMember);
                             // Note that we assume that there is no the case:
                             // a node is running but has just been unregistered in the registry
@@ -442,12 +445,12 @@ public class DiscoveryService implements ClusterService {
     }
 
     private synchronized void updateActiveMembers(Collection<Member> allKnownMembers) {
-        List<Member> list = new ArrayList<>(allKnownMembers);
-        list.sort(MEMBER_PRIORITY_COMPARATOR);
-        int size = list.size();
+        List<Member> knownMembers = new ArrayList<>(allKnownMembers);
+        knownMembers.sort(MEMBER_PRIORITY_COMPARATOR);
+        int size = knownMembers.size();
         List<Member> tempActiveSortedServiceMembers = new ArrayList<>(size);
         List<Member> tempActiveSortedGatewayMembers = new ArrayList<>(size);
-        for (Member member : list) {
+        for (Member member : knownMembers) {
             if (member.getStatus().isActive()) {
                 if (member.getNodeType() == NodeType.SERVICE) {
                     tempActiveSortedServiceMembers.add(member);
@@ -550,7 +553,7 @@ public class DiscoveryService implements ClusterService {
 
     // Event
 
-    public void addListenerOnMembersChange(MembersChangeListener listener) {
+    public void addOnMembersChangeListener(MembersChangeListener listener) {
         membersChangeListeners.add(listener);
     }
 
