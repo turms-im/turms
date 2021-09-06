@@ -61,12 +61,10 @@ public class HandleServiceRequestCodec extends RpcRequestCodec<HandleServiceRequ
     public HandleServiceRequest readRequestData(ByteBuf in) {
         boolean isIpV4 = in.readByte() == IS_IPV4_FLAG;
         int ipByteLength = isIpV4 ? IPV4_BYTE_LENGTH : IPV6_BYTE_LENGTH;
-        ByteBuf byteBufForBasicInfo = in.readSlice(FIXED_FIELDS_LENGTH - Byte.BYTES + ipByteLength);
-
         byte[] ip = new byte[ipByteLength];
-        byteBufForBasicInfo.readBytes(ip);
-        long userId = byteBufForBasicInfo.readLong();
-        DeviceType deviceType = DeviceType.forNumber(byteBufForBasicInfo.readByte());
+        in.readBytes(ip);
+        long userId = in.readLong();
+        DeviceType deviceType = DeviceType.forNumber(in.readByte());
 
         ByteBuf turmsRequestBuffer = in.readRetainedSlice(in.readableBytes());
         ServiceRequest serviceRequest = new ServiceRequest(ip, userId, deviceType, null, null, turmsRequestBuffer);

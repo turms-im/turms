@@ -127,4 +127,68 @@ public final class CodecUtil {
         return integers;
     }
 
+    // Varint / ZigZag
+
+    public static int computeVarint32Size(int value) {
+        if ((value & (~0 << 7)) == 0) {
+            return 1;
+        }
+        if ((value & (~0 << 14)) == 0) {
+            return 2;
+        }
+        if ((value & (~0 << 21)) == 0) {
+            return 3;
+        }
+        if ((value & (~0 << 28)) == 0) {
+            return 4;
+        }
+        return 5;
+    }
+
+    public static void writeVarint32(ByteBuf out, int value) {
+        while (true) {
+            if ((value & ~0x7F) == 0) {
+                out.writeByte(value);
+                return;
+            } else {
+                out.writeByte((value & 0x7F) | 0x80);
+                value >>>= 7;
+            }
+        }
+    }
+
+    public static int readVarint32(ByteBuf in) {
+        byte tmp = in.readByte();
+        if (0 <= tmp) {
+            return tmp;
+        }
+        int out = tmp & 0x7F;
+        if ((tmp = in.readByte()) >= 0) {
+            out |= tmp << 7;
+        } else {
+            out |= (tmp & 0x7F) << 7;
+            if ((tmp = in.readByte()) >= 0) {
+                out |= tmp << 14;
+            } else {
+                out |= (tmp & 0x7F) << 14;
+                if ((tmp = in.readByte()) >= 0) {
+                    out |= tmp << 21;
+                } else {
+                    out |= (tmp & 0x7F) << 21;
+                    out |= (tmp = in.readByte()) << 28;
+                    if (tmp < 0) {
+                        // Discard upper 32 bits.
+                        for (int i = 0; i < 5; i++) {
+                            if (0 <= in.readByte()) {
+                                return out;
+                            }
+                        }
+                        throw new IllegalArgumentException("Failed to read varint32");
+                    }
+                }
+            }
+        }
+        return out;
+    }
+
 }

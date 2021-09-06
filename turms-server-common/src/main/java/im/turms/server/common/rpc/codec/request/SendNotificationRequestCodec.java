@@ -19,6 +19,7 @@ package im.turms.server.common.rpc.codec.request;
 
 import im.turms.server.common.cluster.service.codec.codec.CodecId;
 import im.turms.server.common.rpc.request.SendNotificationRequest;
+import im.turms.server.common.util.CodecUtil;
 import im.turms.server.common.util.MapUtil;
 import io.netty.buffer.ByteBuf;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
@@ -36,22 +37,22 @@ public class SendNotificationRequestCodec extends RpcRequestCodec<SendNotificati
     }
 
     @Override
-    public void writeRequestData(ByteBuf output, SendNotificationRequest data) {
-        short recipientsNumber = (short) data.getRecipientIds().size();
-        if (recipientsNumber == 0) {
+    public void writeRequestData(ByteBuf out, SendNotificationRequest data) {
+        int recipientCount = data.getRecipientIds().size();
+        if (recipientCount == 0) {
             throw new IllegalArgumentException("The number of recipients must be greater than 0");
         }
-        output.writeShort(recipientsNumber);
+        CodecUtil.writeVarint32(out, recipientCount);
         for (Long id : data.getRecipientIds()) {
-            output.writeLong(id);
+            out.writeLong(id);
         }
     }
 
     @Override
     public SendNotificationRequest readRequestData(ByteBuf in) {
-        int recipientsNumber = in.readShort();
-        Set<Long> recipientIds = UnifiedSet.newSet(MapUtil.getCapability(recipientsNumber));
-        for (int i = 0; i < recipientsNumber; i++) {
+        int recipientCount = CodecUtil.readVarint32(in);
+        Set<Long> recipientIds = UnifiedSet.newSet(MapUtil.getCapability(recipientCount));
+        for (int i = 0; i < recipientCount; i++) {
             recipientIds.add(in.readLong());
         }
         ByteBuf notificationBuffer = in.readRetainedSlice(in.readableBytes());
@@ -61,7 +62,7 @@ public class SendNotificationRequestCodec extends RpcRequestCodec<SendNotificati
     @Override
     public int initialCapacityForRequest(SendNotificationRequest data) {
         int size = data.getRecipientIds().size();
-        return Short.BYTES + size * Long.BYTES;
+        return CodecUtil.computeVarint32Size(size) + size * Long.BYTES;
     }
 
     @Override
