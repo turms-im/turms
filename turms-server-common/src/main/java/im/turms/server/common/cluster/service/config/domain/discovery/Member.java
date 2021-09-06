@@ -59,21 +59,21 @@ public final class Member {
     /**
      * For a seed member, it won't be removed from the config server even if TTL (60s) passed
      * (TTL should be always longer than the heartbeat timeout).
-     * Otherwise, the record will be removed automatically if its heartbeat times out.
+     * Otherwise, the record will be removed automatically if TTL passed.
      */
     private boolean isSeed;
 
     private final Date registrationDate;
 
     /**
-     * Only active leader-eligible turms server (not turms-gateway) can be a leader
+     * Only active leader-eligible turms-service server can be a leader
      */
     private boolean isLeaderEligible;
 
     /**
      * The priority to be a leader.
      * 1. When there is no leader, a qualified (active, leader-eligible, and nodeType=SERVICE) member
-     * with a highest priority will be selected as a leader.
+     * with the highest priority will be selected as a leader.
      * 2. When there is a leader, even if a new qualified member with a higher priority joins,
      * the new member will NOT be elected as a new leader immediately until the existing leader dies,
      * or a developer triggers a new leader election manually via admin API.

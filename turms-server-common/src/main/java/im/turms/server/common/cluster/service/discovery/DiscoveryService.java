@@ -199,7 +199,7 @@ public class DiscoveryService implements ClusterService {
         Member localMember = localNodeStatusManager.getLocalMember();
         for (Member member : memberList) {
             if (localMember.isSameNode(member)) {
-                String message = "Failed to bootstrap the local node because the local node has been registered: "
+                String message = "Failed to bootstrap the local node because the local node has been registered. "
                         + "Local Node: " + localMember + ", "
                         + "Registered Node: " + member;
                 throw new IllegalStateException(message);

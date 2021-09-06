@@ -60,19 +60,18 @@ public final class DeviceTypeUtil {
     }
 
     public static byte deviceTypesToByte(Set<DeviceType> deviceTypes) {
-        if (deviceTypes != null && !deviceTypes.isEmpty()) {
-            byte deviceTypesByte = 0;
-            for (DeviceType deviceType : deviceTypes) {
-                validDeviceType(deviceType);
-                // e.g.
-                // The first device type (0) -> 0000 0001
-                // The last device type (5) -> 0001 0000
-                deviceTypesByte |= 1 << deviceType.getNumber();
-            }
-            return deviceTypesByte;
-        } else {
+        if (deviceTypes == null || deviceTypes.isEmpty()) {
             return 0;
         }
+        byte deviceTypesByte = 0;
+        for (DeviceType deviceType : deviceTypes) {
+            validDeviceType(deviceType);
+            // e.g.
+            // The first device type (0) -> 0000 0001
+            // The last device type (5) -> 0001 0000
+            deviceTypesByte |= 1 << deviceType.getNumber();
+        }
+        return deviceTypesByte;
     }
 
     public static void validDeviceType(DeviceType deviceType) {

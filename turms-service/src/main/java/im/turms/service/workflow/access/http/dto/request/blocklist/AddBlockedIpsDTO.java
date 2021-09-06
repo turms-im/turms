@@ -22,9 +22,8 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-public record AddBlockedClientsDTO(
-        Set<Long> userIds,
-        Set<String> ips,
+public record AddBlockedIpsDTO(
+        Set<String> ids,
         int blockTime
 ) {
 }

@@ -15,15 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.service.workflow.access.http.dto.response;
+package im.turms.service.workflow.access.http.dto.request.blocklist;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author James Chen
  */
-public record BlockedClientsDTO(
-        List<String> ips,
-        List<Long> userIds
+public record AddBlockedUserIdsDTO(
+        Set<Long> ids,
+        int blockTime
 ) {
 }

@@ -188,6 +188,14 @@ public class BlocklistService {
 
     // Query
 
+    public int countBlockIps() {
+        return ipBlocklistServiceManager.count();
+    }
+
+    public int countBlockUsers() {
+        return userIdBlocklistServiceManager.count();
+    }
+
     public List<String> getBlockedIpStrings(Set<String> ips) {
         List<String> ipList = new ArrayList<>(ips.size());
         for (String ip : ips) {
@@ -212,6 +220,21 @@ public class BlocklistService {
         return result;
     }
 
+    public List<String> getBlockedIps(int page, int size) {
+        if (!isIpBlocklistEnabled) {
+            return Collections.emptyList();
+        }
+        List<byte[]> blockedClients = ipBlocklistServiceManager.getBlockedClients(page, size);
+        if (blockedClients.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<String> ips = new ArrayList<>(blockedClients.size());
+        for (byte[] ip : blockedClients) {
+            ips.add(InetAddressUtil.ipBytesToString(ip));
+        }
+        return ips;
+    }
+
     public List<Long> getBlockedUserIds(Set<Long> userIds) {
         if (!isUserIdBlocklistEnabled) {
             return Collections.emptyList();
@@ -223,6 +246,13 @@ public class BlocklistService {
             }
         }
         return result;
+    }
+
+    public List<Long> getBlockedUserIds(int page, int size) {
+        if (!isUserIdBlocklistEnabled) {
+            return Collections.emptyList();
+        }
+        return userIdBlocklistServiceManager.getBlockedClients(page, size);
     }
 
     public boolean isIpBlocked(String ip) {

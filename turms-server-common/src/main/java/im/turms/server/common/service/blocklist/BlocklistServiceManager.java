@@ -258,6 +258,10 @@ public class BlocklistServiceManager<T> {
         }
     }
 
+    public int count() {
+        return blocklist.size();
+    }
+
     public boolean isTargetBlocked(T target) {
         Long blockEndTime = blocklist.get(target);
         if (blockEndTime == null) {
@@ -269,6 +273,23 @@ public class BlocklistServiceManager<T> {
             return false;
         }
         return true;
+    }
+
+    public List<T> getBlockedClients(int page, int size) {
+        int offset = size * page;
+        size = Math.min(size, blockedClientSkipList.size() - offset);
+        if (size <= 0) {
+            return Collections.emptyList();
+        }
+        List<T> blockedClients = new ArrayList<>(size);
+        Iterator<BlockedClient> iterator = blockedClientSkipList.iterator();
+        for (int i = 0; i < offset && iterator.hasNext(); i++) {
+            iterator.next();
+        }
+        while (iterator.hasNext()) {
+            blockedClients.add((T) iterator.next().id);
+        }
+        return blockedClients;
     }
 
     // Logs and Synchronization

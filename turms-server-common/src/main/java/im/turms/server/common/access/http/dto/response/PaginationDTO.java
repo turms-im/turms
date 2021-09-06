@@ -17,15 +17,13 @@
 
 package im.turms.server.common.access.http.dto.response;
 
-import lombok.Data;
-
 import java.util.Collection;
 
 /**
  * @author James Chen
  */
-@Data
-public final class PaginationDTO<T> {
-    private final Long total;
-    private final Collection<T> records;
+public record PaginationDTO<T>(
+        Long total,
+        Collection<T> records
+) {
 }

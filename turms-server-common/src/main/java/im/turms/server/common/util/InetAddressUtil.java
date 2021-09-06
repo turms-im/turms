@@ -21,6 +21,10 @@ import com.google.common.net.InetAddresses;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+
 /**
  * @author James Chen
  */
@@ -34,6 +38,14 @@ public final class InetAddressUtil {
             throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The IP " + ip + " is illegal");
         }
         return address;
+    }
+
+    public static String ipBytesToString(byte[] ip) {
+        try {
+            return InetAddress.getByAddress(ip).getHostAddress();
+        } catch (UnknownHostException e) {
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The IP " + Arrays.toString(ip) + " is illegal");
+        }
     }
 
 }

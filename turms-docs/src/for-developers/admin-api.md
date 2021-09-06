@@ -43,9 +43,10 @@ Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接
 
 #### 黑名单类
 
-| **种类**         | **Controller**            | 路径             |
-| :--------------- | :------------------------ | ---------------- |
-| 客户端黑名单管理 | ClientBlocklistController | /blocked-clients |
+| **种类**       | **Controller**          | 路径                   |
+| :------------- | :---------------------- | ---------------------- |
+| IP黑名单管理   | IpBlocklistController   | /blocked-clients/ips   |
+| 用户黑名单管理 | UserBlocklistController | /blocked-clients/users |
 
 ### 业务相关类
 

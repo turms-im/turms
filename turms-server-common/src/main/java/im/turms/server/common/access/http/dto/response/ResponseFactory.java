@@ -41,12 +41,20 @@ public final class ResponseFactory {
             .ok()
             .body(new ResponseDTO<>(TurmsStatusCode.OK, null));
 
+    public static <T> ResponseEntity<ResponseDTO<PaginationDTO<T>>> page(long total, Collection<T> data) {
+        if (total <= 0) {
+            throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
+        }
+        PaginationDTO<T> pagination = new PaginationDTO<>(total, data);
+        return okIfTruthy(pagination);
+    }
+
     public static <T> Mono<ResponseEntity<ResponseDTO<PaginationDTO<T>>>> page(Mono<Long> totalMono, Flux<T> data) {
         Mono<PaginationDTO<T>> mono = Mono
                 .zip(totalMono, data.collectList())
                 .map(tuple -> {
                     Long total = tuple.getT1();
-                    if (total.equals(0L)) {
+                    if (total <= 0L) {
                         throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
                     }
                     return new PaginationDTO<>(total, tuple.getT2());
