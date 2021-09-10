@@ -14,8 +14,6 @@
 -XX:+UseG1GC
 
 # Module
---add-opens java.base/java.nio=ALL-UNNAMED
---illegal-access=permit
 
 # Diagnostics
 
