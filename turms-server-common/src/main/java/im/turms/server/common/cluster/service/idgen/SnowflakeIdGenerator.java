@@ -36,7 +36,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * <p>
  * 4 bits for data center ID (16).
  * A data center usually represents a region in cloud.
- * Reserved for future.
  * <p>
  * 8 bits for worker ID (256).
  * Note turms-gateway also works as a load balancer to route traffic to turms-service servers so the number

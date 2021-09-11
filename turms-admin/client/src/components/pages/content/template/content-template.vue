@@ -13,7 +13,7 @@
             :actions="actions"
             :deletion="deletion"
             :export-file-name="'turms-' + name"
-            :has-records="records.length"
+            :has-records="!!records.length"
             :query-key="queryKey"
             :query-params="queryParams"
             :resource-url="url + '/page'"
@@ -68,6 +68,10 @@ export default {
         url: {
             type: String,
             default: ''
+        },
+        disablePaginationIfFilterExists: {
+            type: Boolean,
+            default: false
         },
         selectable: {
             type: Boolean,
@@ -128,17 +132,12 @@ export default {
             initialized: false,
             rowSelection: {
                 onChange: (selectedRecordKeys) => {
-                    this.selectedRecordKeys = selectedRecordKeys;
+                    this.updateSelectedRecordKeys(selectedRecordKeys);
                 }
             }
         };
     },
     computed: {
-        queryUrl() {
-            return this.pageable
-                ? this.url + '/page'
-                : this.url;
-        },
         tableColumns() {
             return this.table.columns.map(column => {
                 const fields = column.key.split('.');
@@ -176,9 +175,12 @@ export default {
                 this.load();
             }
         },
+        records() {
+            this.updateSelectedRecordKeys();
+        },
         '$store.getters.tab'(val) {
             if (this.myTab === val) {
-                setTimeout(() => this.$refs.table.refreshTableUi());
+                setTimeout(() => this.$refs.table?.refreshTableUi());
             }
         }
     },
@@ -279,10 +281,10 @@ export default {
         },
         parseResponseRecords(data) {
             data = this.transform ? this.transform(data) : data;
-            if (!data.records) {
-                return [];
-            }
-            return data.records.map(record => {
+            const records = data instanceof Array
+                ? data
+                : data.records || [];
+            return records.map(record => {
                 Object.entries(record).forEach(([key, value]) => {
                     if (this.$util.isBigNumber(value)) {
                         record[key] = value.toFixed();
@@ -333,7 +335,12 @@ export default {
         },
         requestRecords() {
             this.loading = true;
-            this.$http.get(this.queryUrl, {params: this.getQueryParams()})
+            const enablePagination = !this.disablePaginationIfFilterExists
+                || !Object.keys(this.getQueryParamsFromFilters()).length;
+            const queryUrl = this.pageable && enablePagination
+                ? this.url + '/page'
+                : this.url;
+            this.$http.get(queryUrl, {params: this.getQueryParams()})
                 .then(response => {
                     const data = response.data?.data || {};
                     this.records = this.parseResponseRecords(data);
@@ -348,10 +355,16 @@ export default {
                     this.$error(this.$t('failedToFetchData'), error);
                 })
                 .finally(() => {
-                    this.selectedRecordKeys = this.selectedRecordKeys
-                        .filter(key => this.records.some(record => record.rowKey === key));
                     this.loading = false;
                 });
+        },
+        updateSelectedRecordKeys(keys) {
+            if (!keys) {
+                keys = this.selectedRecordKeys
+                    .filter(key => this.records.some(record => record.rowKey === key));
+            }
+            this.selectedRecordKeys = keys;
+            this.rowSelection.selectedRowKeys = keys;
         }
     }
 };

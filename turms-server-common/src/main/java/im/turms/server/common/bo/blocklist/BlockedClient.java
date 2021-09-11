@@ -15,15 +15,31 @@
  * limitations under the License.
  */
 
-package im.turms.service.workflow.access.http.dto.request.blocklist;
+package im.turms.server.common.bo.blocklist;
 
-import java.util.Set;
+import java.util.Objects;
 
 /**
+ * @param blockEndTime in millis
  * @author James Chen
  */
-public record AddBlockedIpsDTO(
-        Set<String> ids,
-        int blockMinutes
-) {
+public record BlockedClient(Object id, long blockEndTime) {
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        BlockedClient that = (BlockedClient) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
 }

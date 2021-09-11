@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.collection;
+package im.turms.server.common.lang;
 
 import im.turms.server.common.util.ReflectionUtil;
 

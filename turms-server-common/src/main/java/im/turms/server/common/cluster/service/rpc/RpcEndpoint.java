@@ -67,12 +67,12 @@ public final class RpcEndpoint {
      */
     public <T> Mono<T> sendRequest(RpcRequest<T> request, ByteBuf requestBody) {
         ChannelOperations<?, ?> conn = connection.getConnection();
+        if (requestBody.refCnt() == 0) {
+            return Mono.error(new IllegalReferenceCountException("The request body has been released"));
+        }
         if (conn.isDisposed()) {
             requestBody.release();
             return Mono.error(new ClosedChannelException());
-        }
-        if (requestBody.refCnt() == 0) {
-            return Mono.error(new IllegalReferenceCountException("The request body has been released"));
         }
         Sinks.One<T> sink = Sinks.one();
         while (true) {

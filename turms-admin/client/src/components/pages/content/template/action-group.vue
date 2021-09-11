@@ -19,7 +19,8 @@
             @confirm="deleteSelectedRows"
         >
             <a-button
-                type="danger"
+                type="primary"
+                danger
                 :disabled="!hasSelectedRows"
             >
                 {{ $t('deleteSelectedRecords') }}

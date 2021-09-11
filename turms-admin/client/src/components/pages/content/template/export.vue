@@ -73,10 +73,11 @@ export default {
                 });
         },
         fetchData() {
-            const queryParams = Object.assign(this.queryParams, {
+            const queryParams = {
+                ... this.queryParams,
                 page: 0,
                 size: 1000
-            });
+            };
             return this.$http.get(this.resourceUrl, {params: queryParams})
                 .then(response => {
                     this.records = this.parseResponseRecords(response.data?.data?.records);

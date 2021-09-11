@@ -21,7 +21,7 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.pojo.bo.session.UserSession;
-import im.turms.server.common.collection.ConcurrentEnumMap;
+import im.turms.server.common.lang.ConcurrentEnumMap;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;

@@ -15,15 +15,36 @@
  * limitations under the License.
  */
 
-package im.turms.service.workflow.access.http.dto.request.blocklist;
+package im.turms.server.common.lang;
 
-import java.util.Set;
+import java.util.Arrays;
 
 /**
  * @author James Chen
  */
-public record AddBlockedIpsDTO(
-        Set<String> ids,
-        int blockMinutes
-) {
+public record ByteWrapper(byte[] bytes) implements Comparable {
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ByteWrapper that) {
+            return Arrays.equals(bytes, that.bytes);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(bytes);
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(bytes);
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return Arrays.compare(bytes, ((ByteWrapper) o).bytes);
+    }
+
 }

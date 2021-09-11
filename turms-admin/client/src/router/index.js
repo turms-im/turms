@@ -3,6 +3,7 @@ import ContentUser from '../components/pages/content/user/index';
 import ContentGroup from '../components/pages/content/group/index';
 import ContentConversation from '../components/pages/content/conversation/index';
 import ContentMessage from '../components/pages/content/message/index';
+import Blocklist from '../components/pages/blocklist/index';
 import AccessControl from '../components/pages/access/index';
 import ClusterManagement from '../components/pages/cluster/config';
 import ClientTerminal from '../components/pages/terminal';
@@ -46,6 +47,10 @@ const routes = [
     {
         path: '/content/message',
         component: ContentMessage
+    },
+    {
+        path: '/blocklist',
+        component: Blocklist
     },
     {
         path: '/access',

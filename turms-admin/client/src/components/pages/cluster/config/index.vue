@@ -38,7 +38,8 @@
                         class="cluster-config__action-group__item"
                     >
                         <a-button
-                            type="danger"
+                            type="primary"
+                            danger
                         >
                             {{ $t('resetToDefault') }}
                         </a-button>

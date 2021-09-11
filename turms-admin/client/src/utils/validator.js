@@ -1,3 +1,5 @@
+import IpRegex from 'ip-regex';
+
 export default class Validator {
 
     static getMessage;
@@ -53,6 +55,16 @@ export default class Validator {
         };
     }
 
+    static isIp(messageId) {
+        return {
+            validator: (rule, value) => {
+                return IpRegex({exact: true}).test(value)
+                    ? Promise.resolve()
+                    : Promise.reject(Validator.getMessage(messageId))
+            }
+        };
+    }
+
     static isUrl(messageId) {
         return {
             type: 'url',
@@ -87,9 +99,14 @@ export default class Validator {
                 case 'maxNumber':
                     rules.push(Validator.maxNumber('fieldMaxLength', {number: value}, value));
                     break;
+                case 'isIp':
+                    rules.push(Validator.isIp('fieldMustBeIp'));
+                    break;
                 case 'isUrl':
                     rules.push(Validator.isUrl('fieldMustBeUrl'));
                     break;
+                default:
+                    throw new Error(`Cannot create a rule for the unknown type ${type}`);
             }
         }
         return rules.concat(baseRules || []);

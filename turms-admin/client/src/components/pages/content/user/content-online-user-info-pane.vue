@@ -77,9 +77,8 @@ export default {
             selectedRowKeys: [],
             selectedRows: [],
             rowSelection: {
-                onChange: (selectedRowKeys, selectedRows) => {
-                    this.selectedRowKeys = selectedRowKeys;
-                    this.selectedRows = selectedRows;
+                onChange: (selectedRowKeys) => {
+                    this.updateSelectedRecordKeys(selectedRowKeys);
                 }
             }
         };
@@ -135,9 +134,12 @@ export default {
         }
     },
     watch: {
+        records() {
+            this.updateSelectedRecordKeys();
+        },
         '$store.getters.tab'(val) {
             if (this.myTab === val) {
-                setTimeout(() => this.$refs.table.refreshTableUi());
+                setTimeout(() => this.$refs.table?.refreshTableUi());
             }
         }
     },
@@ -201,10 +203,6 @@ export default {
                     this.$error(this.$t('updateFailed'), error);
                 })
                 .finally(() => {
-                    this.selectedRowKeys = this.selectedRowKeys
-                        .filter(key => this.records.some(record => record.rowKey === key));
-                    this.selectedRows = this.selectedRows
-                        .filter(row => this.records.some(record => record.rowKey === row.rowKey));
                     this.loading = false;
                 });
         },
@@ -248,6 +246,16 @@ export default {
                     this.$error(this.$t('failedToDisconnect'), error);
                 })
                 .finally(() => this.loading = false);
+        },
+        updateSelectedRecordKeys(keys) {
+            if (!keys) {
+                keys = this.selectedRowKeys
+                    .filter(key => this.records.some(record => record.rowKey === key));
+            }
+            this.selectedRowKeys = keys;
+            this.selectedRows = this.selectedRows
+                .filter(row => this.records.some(record => record.rowKey === row.rowKey));
+            this.rowSelection.selectedRowKeys = keys;
         }
     }
 };

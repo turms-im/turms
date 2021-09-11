@@ -17,6 +17,7 @@
     <rollback-outlined v-if="type === 'rollback'" />
     <safety-outlined v-if="type === 'safety'" />
     <setting-outlined v-if="type === 'setting'" />
+    <stop-outlined v-if="type === 'stop'" />
     <team-outlined v-if="type === 'team'" />
     <user-outlined v-if="type === 'user'" />
 </template>
@@ -41,6 +42,7 @@ import {
     RollbackOutlined,
     SafetyOutlined,
     SettingOutlined,
+    StopOutlined,
     TeamOutlined,
     UserOutlined
 } from '@ant-design/icons-vue';
@@ -66,6 +68,7 @@ export default {
         RollbackOutlined,
         SafetyOutlined,
         SettingOutlined,
+        StopOutlined,
         TeamOutlined,
         UserOutlined
     },

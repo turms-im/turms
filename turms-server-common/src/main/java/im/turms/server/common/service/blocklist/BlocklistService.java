@@ -18,10 +18,12 @@
 package im.turms.server.common.service.blocklist;
 
 import im.turms.common.constant.statuscode.SessionCloseStatus;
+import im.turms.server.common.bo.blocklist.BlockedClient;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.lang.ByteWrapper;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.security.BlocklistProperties;
 import im.turms.server.common.redis.TurmsRedisClient;
@@ -37,7 +39,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.PreDestroy;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,7 +57,7 @@ public class BlocklistService {
     private final boolean isIpBlocklistEnabled;
     private final boolean isUserIdBlocklistEnabled;
 
-    private final BlocklistServiceManager<byte[]> ipBlocklistServiceManager;
+    private final BlocklistServiceManager<ByteWrapper> ipBlocklistServiceManager;
     private final BlocklistServiceManager<Long> userIdBlocklistServiceManager;
 
     private final ScheduledThreadPoolExecutor threadPoolExecutor;
@@ -99,7 +100,7 @@ public class BlocklistService {
                     evictAllBlockedClients, evictExpiredBlockedClients, getBlocklistLogsScript,
                     ip -> {
                         if (sessionService != null) {
-                            sessionService.setLocalSessionsOfflineByIp(ip, CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED));
+                            sessionService.setLocalSessionsOfflineByIp(ip.bytes(), CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED));
                         }
                     });
         } else {
@@ -135,7 +136,7 @@ public class BlocklistService {
         return ipBlocklistServiceManager.blockClients(ipsToBytes(ips), blockMinutes);
     }
 
-    public Mono<Void> blockIps(Set<byte[]> ips, int blockMinutes) {
+    public Mono<Void> blockIps(Set<ByteWrapper> ips, int blockMinutes) {
         if (!isIpBlocklistEnabled) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.IP_BLOCKLIST_IS_DISABLED));
         }
@@ -158,7 +159,7 @@ public class BlocklistService {
         return ipBlocklistServiceManager.unblockTargets(ipsToBytes(ips));
     }
 
-    public Mono<Void> unblockIps(Set<byte[]> ips) {
+    public Mono<Void> unblockIps(Set<ByteWrapper> ips) {
         if (!isIpBlocklistEnabled) {
             return Mono.empty();
         }
@@ -196,59 +197,54 @@ public class BlocklistService {
         return userIdBlocklistServiceManager.count();
     }
 
-    public List<String> getBlockedIpStrings(Set<String> ips) {
-        List<String> ipList = new ArrayList<>(ips.size());
+    public List<BlockedClient> getBlockedIpStrings(Set<String> ips) {
+        List<BlockedClient> ipList = new LinkedList<>();
         for (String ip : ips) {
-            byte[] address = InetAddressUtil.ipStringToBytes(ip);
-            if (ipBlocklistServiceManager.isTargetBlocked(address)) {
-                ipList.add(ip);
+            ByteWrapper address = new ByteWrapper(InetAddressUtil.ipStringToBytes(ip));
+            BlockedClient blockedClient = ipBlocklistServiceManager.getBlockedClient(address);
+            if (blockedClient != null) {
+                ipList.add(blockedClient);
             }
         }
         return ipList;
     }
 
-    public List<byte[]> getBlockedIps(Set<byte[]> ips) {
+    public List<BlockedClient> getBlockedIps(Set<ByteWrapper> ips) {
         if (!isIpBlocklistEnabled) {
             return Collections.emptyList();
         }
-        List<byte[]> result = new LinkedList<>();
-        for (byte[] ip : ips) {
-            if (ipBlocklistServiceManager.isTargetBlocked(ip)) {
-                result.add(ip);
+        List<BlockedClient> result = new LinkedList<>();
+        for (ByteWrapper ip : ips) {
+            BlockedClient blockedClient = ipBlocklistServiceManager.getBlockedClient(ip);
+            if (blockedClient != null) {
+                result.add(blockedClient);
             }
         }
         return result;
     }
 
-    public List<String> getBlockedIps(int page, int size) {
+    public List<BlockedClient> getBlockedIps(int page, int size) {
         if (!isIpBlocklistEnabled) {
             return Collections.emptyList();
         }
-        List<byte[]> blockedClients = ipBlocklistServiceManager.getBlockedClients(page, size);
-        if (blockedClients.isEmpty()) {
-            return Collections.emptyList();
-        }
-        List<String> ips = new ArrayList<>(blockedClients.size());
-        for (byte[] ip : blockedClients) {
-            ips.add(InetAddressUtil.ipBytesToString(ip));
-        }
-        return ips;
+        return ipBlocklistServiceManager.getBlockedClients(page, size);
     }
 
-    public List<Long> getBlockedUserIds(Set<Long> userIds) {
+    public List<BlockedClient> getBlockedUsers(Set<Long> userIds) {
         if (!isUserIdBlocklistEnabled) {
             return Collections.emptyList();
         }
-        List<Long> result = new LinkedList<>();
+        List<BlockedClient> result = new LinkedList<>();
         for (Long userId : userIds) {
-            if (userIdBlocklistServiceManager.isTargetBlocked(userId)) {
-                result.add(userId);
+            BlockedClient blockedClient = userIdBlocklistServiceManager.getBlockedClient(userId);
+            if (blockedClient != null) {
+                result.add(blockedClient);
             }
         }
         return result;
     }
 
-    public List<Long> getBlockedUserIds(int page, int size) {
+    public List<BlockedClient> getBlockedUsers(int page, int size) {
         if (!isUserIdBlocklistEnabled) {
             return Collections.emptyList();
         }
@@ -259,14 +255,14 @@ public class BlocklistService {
         if (!isIpBlocklistEnabled) {
             return false;
         }
-        return ipBlocklistServiceManager.isTargetBlocked(InetAddressUtil.ipStringToBytes(ip));
+        return ipBlocklistServiceManager.isTargetBlocked(new ByteWrapper(InetAddressUtil.ipStringToBytes(ip)));
     }
 
     public boolean isIpBlocked(byte[] ip) {
         if (!isIpBlocklistEnabled) {
             return false;
         }
-        return ipBlocklistServiceManager.isTargetBlocked(ip);
+        return ipBlocklistServiceManager.isTargetBlocked(new ByteWrapper(ip));
     }
 
     public boolean isUserIdBlocked(Long userId) {
@@ -278,10 +274,10 @@ public class BlocklistService {
 
     // Internals
 
-    private Set<byte[]> ipsToBytes(Set<String> ips) {
-        Set<byte[]> ipList = CollectionUtil.newSetWithExpectedSize(ips.size());
+    private Set<ByteWrapper> ipsToBytes(Set<String> ips) {
+        Set<ByteWrapper> ipList = CollectionUtil.newSetWithExpectedSize(ips.size());
         for (String ip : ips) {
-            byte[] address = InetAddressUtil.ipStringToBytes(ip);
+            ByteWrapper address = new ByteWrapper(InetAddressUtil.ipStringToBytes(ip));
             ipList.add(address);
         }
         return ipList;

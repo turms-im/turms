@@ -20,6 +20,7 @@ package im.turms.service.workflow.access.http.controller.blocklist;
 import im.turms.server.common.access.http.dto.response.PaginationDTO;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
+import im.turms.server.common.bo.blocklist.BlockedClient;
 import im.turms.server.common.service.blocklist.BlocklistService;
 import im.turms.service.workflow.access.http.dto.request.blocklist.AddBlockedIpsDTO;
 import im.turms.service.workflow.access.http.permission.RequiredPermission;
@@ -63,26 +64,26 @@ public class IpBlocklistController {
     public Mono<ResponseEntity<ResponseDTO<Void>>> addBlockedIps(
             @RequestBody AddBlockedIpsDTO addBlockedIpsDTO) {
         Mono<Void> result = blocklistService.blockIpStrings(addBlockedIpsDTO.ids(),
-                addBlockedIpsDTO.blockTime());
+                addBlockedIpsDTO.blockMinutes());
         return ResponseFactory.okIfTruthy(result);
     }
 
     @GetMapping
     @RequiredPermission(CLIENT_BLOCKLIST_QUERY)
-    public ResponseEntity<ResponseDTO<Collection<String>>> queryBlockedIps(
+    public ResponseEntity<ResponseDTO<Collection<BlockedClient>>> queryBlockedIps(
             @RequestParam Set<String> ids) {
-        List<String> blockedIps = blocklistService.getBlockedIpStrings(ids);
+        List<BlockedClient> blockedIps = blocklistService.getBlockedIpStrings(ids);
         return ResponseFactory.okIfTruthy(blockedIps);
     }
 
     @GetMapping("/page")
     @RequiredPermission(CLIENT_BLOCKLIST_QUERY)
-    public ResponseEntity<ResponseDTO<PaginationDTO<String>>> queryBlockedIps(
+    public ResponseEntity<ResponseDTO<PaginationDTO<BlockedClient>>> queryBlockedIps(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(required = false) Integer size) {
         size = pageUtil.getSize(size);
         int blockedIpCount = blocklistService.countBlockIps();
-        List<String> blockedIps = blocklistService.getBlockedIps(page, size);
+        List<BlockedClient> blockedIps = blocklistService.getBlockedIps(page, size);
         return ResponseFactory.page(blockedIpCount, blockedIps);
     }
 

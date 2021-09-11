@@ -153,6 +153,9 @@
         "admin": "/admins",
         "adminRole": "/admins/roles",
 
+        "blocklistIp": "/blocked-clients/ips",
+        "blocklistUser": "/blocked-clients/users",
+
         "user": "/users",
         "userStatus": "/users/online-infos/statuses",
         "userPermissionGroup": "/users/permission-groups",

@@ -38,13 +38,21 @@
                         :placeholder="(field.placeholder && $t(field.placeholder)) || ''"
                         :date-id="field.id"
                     />
+                    <a-input-number
+                        v-if="field.type === 'INPUT-NUMBER'"
+                        v-model:value="formState[field.id]"
+                        class="content-modal-form__item"
+                        :max="field.max"
+                        :min="field.min"
+                    />
                     <a-date-picker
                         v-if="field.type === 'DATE'"
                         v-model:value="formState[field.id]"
                         class="content-modal-form__item content-modal-form__date-picker"
                         type="date"
                         :show-time="true"
-                        :disabled-date="disabledDate"
+                        :disabled-date="(cur) => isDateDisabled(cur, field.allowFuture, field.allowPast)"
+                        :disabled-time="(cur) => getDisabledTime(cur, field.allowFuture, field.allowPast)"
                         :date-id="field.id"
                     />
                     <a-switch
@@ -112,7 +120,7 @@
                         <a-input
                             v-model:value="val.value"
                             class="content-modal-form__item dynamic-input"
-                            :placeholder="$t(field.placeholder)"
+                            :placeholder="field.placeholder ? $t(field.placeholder) : ''"
                             :date-id="`${field.id}-${val.key}`"
                         />
                         <minus-circle-outlined
@@ -192,7 +200,7 @@ export default {
     data() {
         const formState = {};
         for (const item of this.formItems) {
-            formState[item.id] = null;
+            formState[item.id] = item.value;
             if (item.type === 'DYNAMIC-INPUT') {
                 formState[item.id] = [{
                     value: '',
@@ -255,9 +263,25 @@ export default {
         deleteInput(field, index) {
             this.formState[field.id].splice(index, 1);
         },
-        disabledDate(current) {
-            // Cannot select the days before today and today
-            return current && current > this.$moment().endOf('day');
+        getDisabledTime(current, allowFuture, allowPast = true) {
+            if (allowFuture && allowPast) {
+                return;
+            }
+            const present = this.$moment();
+            const currentStartOfDate = this.$moment(current).startOf('day').toDate().getTime();
+            const presentStartOfDate = this.$moment().startOf('day').toDate().getTime();
+            if (currentStartOfDate !== presentStartOfDate) {
+                return;
+            }
+            if (allowFuture) {
+                return {
+                    disabledHours: () => this.$util.range(0, present.hour() - 1)
+                };
+            } else {
+                return {
+                    disabledHours: () => this.$util.range(present.hour() + 1, 24)
+                };
+            }
         },
         hide() {
             this.$emit('hide');
@@ -275,6 +299,23 @@ export default {
                         this.requestUpdateRecord(record);
                     }
                 });
+        },
+        isDateDisabled(current, allowFuture, allowPast = true) {
+            if (!current) {
+                return true;
+            }
+            current = this.$moment(current).startOf('day').toDate().getTime();
+            const present = this.$moment().startOf('day').toDate().getTime();
+            if (current === present) {
+                return false;
+            }
+            if (allowFuture && allowPast) {
+                return false;
+            } else if (allowFuture) {
+                return current <= present;
+            } else {
+                return current >= present;
+            }
         },
         parseRecord(formState) {
             const record = this.$util.copy(formState);
@@ -307,14 +348,10 @@ export default {
         requestCreateNewRecord(record) {
             this.loading = true;
             this.$http.post(this.submitUrl, this.getRequestBodyData(record))
-                .then(response => {
-                    if (response.status === 204) {
-                        this.$message.error(this.$t('createFailed'));
-                    } else {
-                        this.$message.success(this.$t('createdSuccessfully'));
-                        this.$emit('onRecordCreated', record);
-                        this.hide();
-                    }
+                .then(() => {
+                    this.$message.success(this.$t('createdSuccessfully'));
+                    this.$emit('onRecordCreated', record);
+                    this.hide();
                 })
                 .catch(err => {
                     this.$error(this.$t('createFailed'), err);

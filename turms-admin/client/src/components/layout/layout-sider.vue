@@ -106,6 +106,11 @@ export default {
                 ]
             },
             {
+                key: '/blocklist',
+                iconType: 'stop',
+                title: 'blocklist'
+            },
+            {
                 key: '/access',
                 iconType: 'safety',
                 title: 'accessControl'

@@ -33,18 +33,18 @@ public final class InetAddressUtil {
     }
 
     public static byte[] ipStringToBytes(String ip) {
-        byte[] address = InetAddresses.forString(ip).getAddress();
-        if (address == null) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The IP " + ip + " is illegal");
+        try {
+            return InetAddresses.forString(ip).getAddress();
+        } catch (Exception e) {
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The IP " + ip + " is invalid");
         }
-        return address;
     }
 
     public static String ipBytesToString(byte[] ip) {
         try {
             return InetAddress.getByAddress(ip).getHostAddress();
         } catch (UnknownHostException e) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The IP " + Arrays.toString(ip) + " is illegal");
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The IP " + Arrays.toString(ip) + " is invalid");
         }
     }
 

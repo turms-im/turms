@@ -38,7 +38,7 @@ createApp(App)
         install: app => {
             const globalProperties = app.config.globalProperties;
             globalProperties.$http = axios.create({
-                timeout: 15 * 1000,
+                timeout: 60 * 1000,
                 transformResponse: [function (data) {
                     return data ? JSONbig.parse(data) : data;
                 }]

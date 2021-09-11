@@ -80,7 +80,7 @@ import static im.turms.server.common.cluster.service.connection.request.ClosingH
  * We don't make RpcService as a part of ConnectionService because:
  * 1. Decouple RPC ability from ConnectionService to follow single responsibility principle for better maintainability
  * 2. It's more nature for users to call "rpcService.requestResponse()" instead of "connectionService.requestResponse()",
- * which makes it more general in functionality
+ * which makes it too general in functionality
  */
 @Log4j2
 public class ConnectionService implements ClusterService {

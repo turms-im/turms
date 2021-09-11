@@ -24,6 +24,6 @@ import java.util.Set;
  */
 public record AddBlockedUserIdsDTO(
         Set<Long> ids,
-        int blockTime
+        int blockMinutes
 ) {
 }

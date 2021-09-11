@@ -37,6 +37,14 @@ export default class CommonUtil {
         return isAscend ? result : -result;
     }
 
+    static range(start, end) {
+        const result = [];
+        for (let i = start; i <= end; i++) {
+            result.push(i);
+        }
+        return result;
+    }
+
     static removeEmpty(obj) {
         return Object.keys(obj).forEach((k) => obj[k] == null && delete obj[k]);
     }

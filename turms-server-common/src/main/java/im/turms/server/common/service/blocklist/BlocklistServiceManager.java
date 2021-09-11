@@ -17,9 +17,11 @@
 
 package im.turms.server.common.service.blocklist;
 
+import im.turms.server.common.bo.blocklist.BlockedClient;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.lang.ByteWrapper;
 import im.turms.server.common.redis.TurmsRedisClient;
 import im.turms.server.common.redis.script.RedisScript;
 import im.turms.server.common.util.ByteBufUtil;
@@ -35,8 +37,9 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -147,7 +150,14 @@ public class BlocklistServiceManager<T> {
 
         this.onTargetBlocked = onTargetBlocked;
 
-        blockedClientSkipList = new ConcurrentSkipListSet<>((o1, o2) -> (int) (o1.blockEndTimeInMillis - o2.blockEndTimeInMillis));
+        blockedClientSkipList = new ConcurrentSkipListSet<>((o1, o2) -> {
+            int i = (int) (o1.blockEndTime() - o2.blockEndTime());
+            if (i == 0) {
+                Comparable<T> c = (Comparable<T>) o1.id();
+                return c.compareTo((T) o2.id());
+            }
+            return i;
+        });
         blocklist = new ConcurrentHashMap<>(1024);
 
         resetAndSyncAllBlockedClients(false)
@@ -173,8 +183,11 @@ public class BlocklistServiceManager<T> {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT,
                     "The blockMinutes cannot be larger than " + MAX_BLOCK_TIME_MINUTES));
         }
-        long now = System.currentTimeMillis();
-        long blockEndTimeMillis = now + (blockMinutes * 60L * 1000L);
+        if (blockMinutes <= 0) {
+            return Mono.empty();
+        }
+        long now = System.currentTimeMillis() / 1000;
+        long blockEndTimeMillis = (now + blockMinutes * 60L) * 1000L;
         for (T targetId : targetIds) {
             BlockedClient blockedClient = new BlockedClient(targetId, blockEndTimeMillis);
             blocklist.put(targetId, blockEndTimeMillis);
@@ -198,11 +211,11 @@ public class BlocklistServiceManager<T> {
     }
 
     private void addBlockedClient(BlockedClient blockedClient, long now) {
-        long blockEndTimeInMillis = blockedClient.blockEndTimeInMillis;
+        long blockEndTimeInMillis = blockedClient.blockEndTime();
         if (blockEndTimeInMillis < now) {
             return;
         }
-        T targetId = (T) blockedClient.id;
+        T targetId = (T) blockedClient.id();
         blocklist.put(targetId, blockEndTimeInMillis);
         blockedClientSkipList.add(blockedClient);
         triggerOnTargetBlocked(targetId);
@@ -249,9 +262,10 @@ public class BlocklistServiceManager<T> {
         long now = System.currentTimeMillis();
         while (iterator.hasNext()) {
             BlockedClient blockedClient = iterator.next();
-            if (blockedClient.blockEndTimeInMillis < now) {
+            if (blockedClient.blockEndTime() < now) {
                 iterator.remove();
-                blocklist.remove((T) blockedClient.id);
+                T id = (T) blockedClient.id();
+                blocklist.remove(id, blockedClient.blockEndTime());
             } else {
                 break;
             }
@@ -275,19 +289,51 @@ public class BlocklistServiceManager<T> {
         return true;
     }
 
-    public List<T> getBlockedClients(int page, int size) {
+    public BlockedClient getBlockedClient(T target) {
+        Long blockEndTime = blocklist.get(target);
+        if (blockEndTime == null) {
+            return null;
+        }
+        if (blockEndTime < System.currentTimeMillis()) {
+            blocklist.remove(target, blockEndTime);
+            blockedClientSkipList.remove(new BlockedClient(target, blockEndTime));
+            return null;
+        }
+        return new BlockedClient(target, blockEndTime);
+    }
+
+    public List<BlockedClient> getBlockedClients(int page, int size) {
         int offset = size * page;
-        size = Math.min(size, blockedClientSkipList.size() - offset);
+        size = Math.min(size, blocklist.size() - offset);
         if (size <= 0) {
             return Collections.emptyList();
         }
-        List<T> blockedClients = new ArrayList<>(size);
-        Iterator<BlockedClient> iterator = blockedClientSkipList.iterator();
-        for (int i = 0; i < offset && iterator.hasNext(); i++) {
-            iterator.next();
+        List<BlockedClient> blockedClients = new LinkedList<>();
+        Iterator<Map.Entry<T, Long>> iterator = blocklist.entrySet().iterator();
+        long now = System.currentTimeMillis();
+        int i = 0;
+        long blockEndTime;
+        while (i < offset && iterator.hasNext()) {
+            Map.Entry<T, Long> entry = iterator.next();
+            blockEndTime = entry.getValue();
+            if (blockEndTime < now) {
+                iterator.remove();
+                blockedClientSkipList.remove(new BlockedClient(entry.getKey(), blockEndTime));
+            } else {
+                i++;
+            }
         }
-        while (iterator.hasNext()) {
-            blockedClients.add((T) iterator.next().id);
+        i = 0;
+        while (i < size && iterator.hasNext()) {
+            Map.Entry<T, Long> entry = iterator.next();
+            blockEndTime = entry.getValue();
+            if (blockEndTime < now) {
+                iterator.remove();
+                blockedClientSkipList.remove(new BlockedClient(entry.getKey(), blockEndTime));
+            } else {
+                blockedClients.add(new BlockedClient(entry.getKey(), entry.getValue()));
+                i++;
+            }
         }
         return blockedClients;
     }
@@ -455,11 +501,13 @@ public class BlocklistServiceManager<T> {
     }
 
     private ByteBuf encodeId(T id) {
-        return isIpBlocklist ? Unpooled.wrappedBuffer((byte[]) id) : BUFFER_ALLOCATOR.directBuffer().writeLong((long) id);
+        return isIpBlocklist
+                ? Unpooled.wrappedBuffer(((ByteWrapper) id).bytes())
+                : BUFFER_ALLOCATOR.directBuffer().writeLong((long) id);
     }
 
     private T decodeTargetId(ByteBuf id) {
-        T val = isIpBlocklist ? (T) id.array() : (T) (Long) id.readLong();
+        T val = isIpBlocklist ? (T) new ByteWrapper(id.array()) : (T) (Long) id.readLong();
         id.release();
         return val;
     }
@@ -489,39 +537,14 @@ public class BlocklistServiceManager<T> {
 
     // Data structure
 
+    private record LogVersion(int timestamp, int logId) {
+    }
 
     /**
      * The log doesn't have a field like "recordTime" because we use
      * the item index in Redis to distinguish which logs come first
      */
     private record BlockClientLog(Object targetId, long blockEndTimeMillis, boolean isBlockAction) {
-    }
-
-    /**
-     * @implNote Only use "id" in equals() and hashCode(),
-     * because blockEndTimeInMillis isn't precise and blockedClientSkipList should
-     * only use the "id" to check if a blocked client exists or not
-     */
-    private record BlockedClient(Object id, long blockEndTimeInMillis) {
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            BlockedClient that = (BlockedClient) o;
-            return Objects.equals(id, that.id);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id);
-        }
-    }
-
-    private record LogVersion(int timestamp, int logId) {
     }
 
 }

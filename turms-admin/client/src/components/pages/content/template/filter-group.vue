@@ -56,7 +56,8 @@
         <a-button
             v-if="filters.length"
             class="search-filter search-filter__clear-filters"
-            type="danger"
+            type="primary"
+            danger
             :loading="loading"
             @click="clearFilters"
         >
