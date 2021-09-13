@@ -100,7 +100,7 @@ terraform apply
      mlaunch init --replicaset --sharded 1 --nodes 1 --config 1 --hostname localhost --port 27017 --mongos 1
      ```
      
-     请确保运行正常，否则Turms会抛出MongoSocketOpenException异常。
+     请确保运行正常，否则Turms会抛出`MongoSocketOpenException`异常。
    
   2. 下载、安装并启动Redis服务端（用于实现用户状态管理以及“附近的用户”）。以RHEL/CentOS为例：
 
