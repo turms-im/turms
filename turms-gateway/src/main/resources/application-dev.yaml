@@ -20,6 +20,7 @@ turms:
   gateway:
     client-api:
       logging:
+        heartbeat-sample-rate: 1
         included-notification-categories:
           - category: all
       return-reason-for-server-error: true

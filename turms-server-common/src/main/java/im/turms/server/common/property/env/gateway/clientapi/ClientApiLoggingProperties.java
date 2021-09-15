@@ -18,15 +18,22 @@
 package im.turms.server.common.property.env.gateway.clientapi;
 
 import im.turms.server.common.property.env.common.clientapi.CommonClientApiLoggingProperties;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
 @Builder(toBuilder = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class ClientApiLoggingProperties extends CommonClientApiLoggingProperties {
+
+    private float heartbeatSampleRate;
+
 }

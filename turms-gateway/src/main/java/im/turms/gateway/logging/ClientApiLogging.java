@@ -24,6 +24,8 @@ import im.turms.server.common.logging.CustomLogger;
 import im.turms.server.common.util.DateUtil;
 import im.turms.server.common.util.StringUtil;
 
+import javax.annotation.Nullable;
+
 import static im.turms.server.common.logging.CustomLogger.LOG_FIELD_DELIMITER;
 
 /**
@@ -41,10 +43,10 @@ public final class ClientApiLogging {
      * 2. We use the common log pattern (including the trace ID) so that our
      * users don't need to write different parsers for them.
      */
-    public static void log(Integer sessionId,
-                           Long userId,
-                           DeviceType deviceType,
-                           Integer version,
+    public static void log(@Nullable Integer sessionId,
+                           @Nullable Long userId,
+                           @Nullable DeviceType deviceType,
+                           @Nullable Integer version,
                            String ip,
                            long requestId,
                            TurmsRequest.KindCase requestType,
@@ -58,7 +60,7 @@ public final class ClientApiLogging {
                 StringUtil.toString(userId),
                 StringUtil.toString(deviceType),
                 StringUtil.toString(version),
-                StringUtil.toString(ip),
+                ip,
                 // request information
                 String.valueOf(requestId),
                 requestType.name(),
@@ -72,10 +74,10 @@ public final class ClientApiLogging {
         CustomLogger.CLIENT_API_LOGGER.info(message);
     }
 
-    public static void log(Integer sessionId,
-                           Long userId,
-                           DeviceType deviceType,
-                           Integer version,
+    public static void log(@Nullable Integer sessionId,
+                           @Nullable Long userId,
+                           @Nullable DeviceType deviceType,
+                           @Nullable Integer version,
                            String ip,
                            long requestId,
                            TurmsRequest.KindCase requestType,
@@ -89,7 +91,7 @@ public final class ClientApiLogging {
                 StringUtil.toString(userId),
                 StringUtil.toString(deviceType),
                 StringUtil.toString(version),
-                StringUtil.toString(ip),
+                ip,
                 // request information
                 String.valueOf(requestId),
                 requestType.name(),
@@ -99,6 +101,39 @@ public final class ClientApiLogging {
                 String.valueOf(responseCode),
                 "", // Response data type
                 "0", // Response serialized size
+                String.valueOf(processingTime));
+        CustomLogger.CLIENT_API_LOGGER.info(message);
+    }
+
+    public static void log(@Nullable Integer sessionId,
+                           @Nullable Long userId,
+                           @Nullable DeviceType deviceType,
+                           @Nullable Integer version,
+                           String ip,
+                           long requestId,
+                           String requestType,
+                           int requestSize,
+                           long requestTime,
+                           int responseCode,
+                           @Nullable String responseDataType,
+                           int responseSize,
+                           long processingTime) {
+        String message = String.join(LOG_FIELD_DELIMITER,
+                // session information
+                StringUtil.toString(sessionId),
+                StringUtil.toString(userId),
+                StringUtil.toString(deviceType),
+                StringUtil.toString(version),
+                ip,
+                // request information
+                String.valueOf(requestId),
+                requestType,
+                String.valueOf(requestSize),
+                DateUtil.toISO(requestTime),
+                // response information
+                String.valueOf(responseCode),
+                StringUtil.toString(responseDataType),
+                String.valueOf(responseSize),
                 String.valueOf(processingTime));
         CustomLogger.CLIENT_API_LOGGER.info(message);
     }

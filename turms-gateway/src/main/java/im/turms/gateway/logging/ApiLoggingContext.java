@@ -34,6 +34,7 @@ public class ApiLoggingContext extends CommonApiLoggingContext {
 
     private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingRequestProperties;
     private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingNotificationsProperties;
+    private final float heartbeatSampleRate;
 
     public ApiLoggingContext(TurmsPropertiesManager propertiesManager) {
         ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties().getGateway().getClientApi().getLogging();
@@ -47,6 +48,11 @@ public class ApiLoggingContext extends CommonApiLoggingContext {
                 loggingProperties.getIncludedNotifications(),
                 loggingProperties.getExcludedNotificationCategories(),
                 loggingProperties.getExcludedNotificationTypes());
+        heartbeatSampleRate = loggingProperties.getHeartbeatSampleRate();
+    }
+
+    public boolean shouldLogHeartbeatRequest() {
+        return shouldLog(heartbeatSampleRate);
     }
 
     public boolean shouldLogRequest(TurmsRequest.KindCase requestType) {

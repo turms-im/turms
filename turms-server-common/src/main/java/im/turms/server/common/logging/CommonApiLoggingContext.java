@@ -77,14 +77,18 @@ public abstract class CommonApiLoggingContext {
             return false;
         }
         float sampleRate = requestProperties.getSampleRate();
-        if (sampleRate > 0) {
-            if (sampleRate < 1.0f) {
-                return ThreadLocalRandom.current().nextFloat() < sampleRate;
-            } else {
-                return true;
-            }
+        return shouldLog(sampleRate);
+    }
+
+    protected boolean shouldLog(float sampleRate) {
+        if (sampleRate <= 0) {
+            return false;
         }
-        return false;
+        if (sampleRate < 1.0f) {
+            return ThreadLocalRandom.current().nextFloat() < sampleRate;
+        } else {
+            return true;
+        }
     }
 
     private Set<LoggingRequestProperties> getRequestProperties(LoggingCategoryProperties categoryProperties) {

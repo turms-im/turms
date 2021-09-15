@@ -218,11 +218,27 @@ public class UserRequestDispatcher {
     private Mono<ByteBuf> handleHeartbeatRequest(UserSessionWrapper sessionWrapper) {
         UserSession session = sessionWrapper.getUserSession();
         ByteBuf data;
-        if (session != null) {
+        if (session != null && session.isOpen()) {
             serviceMediator.processHeartbeatRequest(session);
             data = HEARTBEAT_RESPONSE_SUCCESS;
         } else {
             data = HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT;
+        }
+        if (apiLoggingContext.shouldLogHeartbeatRequest()) {
+            UserSession userSession = sessionWrapper.getUserSession();
+            Integer version = null;
+            Long userId = null;
+            Integer sessionId = null;
+            DeviceType deviceType = null;
+            if (userSession != null) {
+                version = userSession.getVersion();
+                userId = userSession.getUserId();
+                sessionId = userSession.getId();
+                deviceType = userSession.getDeviceType();
+            }
+            ClientApiLogging.log(sessionId, userId, deviceType, version, sessionWrapper.getIp(),
+                    0, "HEARTBEAT", 0, System.currentTimeMillis(),
+                    data == HEARTBEAT_RESPONSE_SUCCESS ? 1 : 0, null, 0, 0);
         }
         return Mono.just(data);
     }
