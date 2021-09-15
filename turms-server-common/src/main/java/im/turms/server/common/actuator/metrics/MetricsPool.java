@@ -84,7 +84,7 @@ public class MetricsPool {
     public Map<String, Set<String>> getAvailableTags(Collection<Meter> meters) {
         Map<String, Set<String>> availableTags = new HashMap<>();
         for (Meter meter : meters) {
-            for (Tag tag : meter.getId().getTags()) {
+            for (Tag tag : meter.getId().getTagsAsIterable()) {
                 Set<String> value = Collections.singleton(tag.getValue());
                 // tag.getKey() e.g. "total", "max", "count", "value" etc.
                 availableTags.merge(tag.getKey(), value, Sets::union);

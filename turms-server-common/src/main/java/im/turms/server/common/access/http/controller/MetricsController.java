@@ -21,6 +21,7 @@ import com.google.common.io.CharStreams;
 import im.turms.server.common.access.http.dto.response.MetricDTO;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
+import im.turms.server.common.actuator.metrics.CsvReporter;
 import im.turms.server.common.actuator.metrics.MetricsPool;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
@@ -30,6 +31,8 @@ import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 import io.prometheus.client.exporter.common.TextFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,6 +61,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/metrics")
 public class MetricsController {
+
+    private static final MediaType MEDIA_TYPE_CSV = MediaType.parseMediaType("text/csv");
 
     private final MetricsPool pool;
     private final PrometheusMeterRegistry prometheusMeterRegistry;
@@ -114,6 +119,15 @@ public class MetricsController {
     public ResponseEntity<ResponseDTO<Collection<String>>> getNames() {
         Set<String> names = pool.collectNames();
         return ResponseFactory.okIfTruthy(names);
+    }
+
+    @GetMapping("/csv")
+    public ResponseEntity<String> getCsv(@RequestParam(required = false) Set<String> names) {
+        String csv = CsvReporter.scrape(pool, names);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"turms-metrics.csv\"")
+                .contentType(MEDIA_TYPE_CSV)
+                .body(csv);
     }
 
     @GetMapping(value = "/prometheus")

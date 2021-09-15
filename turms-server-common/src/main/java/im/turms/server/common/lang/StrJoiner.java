@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,34 +17,36 @@
 
 package im.turms.server.common.lang;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author James Chen
  */
-public record ByteWrapper(byte[] bytes) implements Comparable<ByteWrapper> {
+public class StrJoiner {
 
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof ByteWrapper that) {
-            return Arrays.equals(bytes, that.bytes);
-        }
-        return false;
-    }
+    private final List<CharSequence> elements;
 
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(bytes);
+    public StrJoiner(int size) {
+        this.elements = new ArrayList<>(size);
     }
 
     @Override
     public String toString() {
-        return Arrays.toString(bytes);
+        int size = 0;
+        for (CharSequence element : elements) {
+            size += element.length();
+        }
+        StringBuilder builder = new StringBuilder(size);
+        for (CharSequence element : elements) {
+            builder.append(element);
+        }
+        return builder.toString();
     }
 
-    @Override
-    public int compareTo(ByteWrapper o) {
-        return Arrays.compare(bytes, o.bytes);
+    public StrJoiner add(String element) {
+        elements.add(element);
+        return this;
     }
 
 }

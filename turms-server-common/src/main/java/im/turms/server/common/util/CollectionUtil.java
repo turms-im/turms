@@ -30,6 +30,18 @@ public final class CollectionUtil {
     private CollectionUtil() {
     }
 
+    public static int getSize(Iterable<?> iterable) {
+        if (iterable instanceof Collection<?> collection) {
+            return collection.size();
+        } else {
+            int size = 0;
+            for (Object ignored : iterable) {
+                size++;
+            }
+            return size;
+        }
+    }
+
     public static <T> Set<T> intersection(Set<T> c1, Collection<T> c2) {
         Set<T> result = UnifiedSet.newSet(MapUtil.getCapability(Math.min(c1.size(), c2.size())));
         for (T value : c2) {

@@ -128,7 +128,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
      * so we don't check the request rate here.
      * <p>
      * 2. The method should never return MonoError, and it should be considered as a bug if it occurs
-     * because the method itself should wrap all kinds of Throwable as a ServiceResponse instance.
+     * because the method itself should map all kinds of Throwable to a ServiceResponse instance.
      * 3. The method ensures turmsRequestBuffer in serviceRequest will be released by 1
      */
     @Override
@@ -167,10 +167,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         try {
             // Note that "parseFrom" won't block because the buffer is fully read
             request = TurmsRequest.parseFrom(turmsRequestBuffer.nioBuffer());
-            turmsRequestBuffer.touch(request);
         } catch (InvalidProtocolBufferException e) {
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.INVALID_REQUEST, e.getMessage()));
         }
+        turmsRequestBuffer.touch(request);
 
         // 2. Transform and handle the request
         ClientRequest clientRequest = new ClientRequest(

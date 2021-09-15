@@ -15,36 +15,29 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.lang;
+package im.turms.server.common.actuator.metrics;
 
-import java.util.Arrays;
+import im.turms.server.common.lang.StrJoiner;
+import im.turms.server.common.util.ReflectionUtil;
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.Tag;
+import io.micrometer.core.instrument.Tags;
+
+import java.lang.invoke.VarHandle;
 
 /**
  * @author James Chen
  */
-public record ByteWrapper(byte[] bytes) implements Comparable<ByteWrapper> {
+public final class MetricsUtil {
 
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof ByteWrapper that) {
-            return Arrays.equals(bytes, that.bytes);
-        }
-        return false;
+    private static final VarHandle GET_TAGS = ReflectionUtil.getVarHandle(Tags.class, "tags");
+
+    private MetricsUtil() {
     }
 
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(bytes);
-    }
-
-    @Override
-    public String toString() {
-        return Arrays.toString(bytes);
-    }
-
-    @Override
-    public int compareTo(ByteWrapper o) {
-        return Arrays.compare(bytes, o.bytes);
+    public static Tag[] getTags(Meter.Id id) {
+        Tags tags = (Tags) id.getTagsAsIterable();
+        return (Tag[]) GET_TAGS.get(tags);
     }
 
 }
