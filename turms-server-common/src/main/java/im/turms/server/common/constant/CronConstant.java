@@ -18,7 +18,7 @@
 package im.turms.server.common.constant;
 
 /**
- * Place all cron expressions here so we know what happens at the specific times clearly
+ * Place all cron expressions here, so we know what happens at the specific times clearly
  *
  * @author James Chen
  * @see org.springframework.scheduling.support.CronExpression
@@ -35,5 +35,7 @@ public final class CronConstant {
     public static final String DEFAULT_EXPIRED_GROUP_JOIN_REQUESTS_CLEANUP_CRON = "0 30 2 * * *";
 
     public static final String DEFAULT_EXPIRED_MESSAGES_CLEANUP_CRON = "0 45 2 * * *";
+
+    public static final String EXPIRED_BLOCKED_CLIENT_CLEANUP_CRON = "0 0 1/6 * * *";
 
 }

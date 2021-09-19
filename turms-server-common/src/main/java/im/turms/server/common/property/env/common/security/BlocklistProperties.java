@@ -22,6 +22,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
@@ -34,20 +35,72 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class BlocklistProperties {
 
     @NestedConfigurationProperty
-    private BlocklistTypeProperties ip = new BlocklistTypeProperties();
+    private IpBlocklistTypeProperties ip = new IpBlocklistTypeProperties();
 
     @NestedConfigurationProperty
-    private BlocklistTypeProperties userId = new BlocklistTypeProperties();
+    private UserIdBlocklistTypeProperties userId = new UserIdBlocklistTypeProperties();
 
     @AllArgsConstructor
     @Builder(toBuilder = true)
     @Data
     @NoArgsConstructor
-    public static class BlocklistTypeProperties {
+    public static class IpAutoBlockProperties {
+
+        @NestedConfigurationProperty
+        private AutoBlockItemProperties corruptedFrame = new AutoBlockItemProperties();
+
+        @NestedConfigurationProperty
+        private AutoBlockItemProperties corruptedRequest = new AutoBlockItemProperties();
+
+        @NestedConfigurationProperty
+        private AutoBlockItemProperties frequentRequest = new AutoBlockItemProperties();
+
+    }
+
+    @AllArgsConstructor
+    @Builder(toBuilder = true)
+    @Data
+    @NoArgsConstructor
+    public static class UserIdAutoBlockProperties {
+
+        @NestedConfigurationProperty
+        private AutoBlockItemProperties corruptedRequest = new AutoBlockItemProperties();
+
+        @NestedConfigurationProperty
+        private AutoBlockItemProperties frequentRequest = new AutoBlockItemProperties();
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @SuperBuilder(toBuilder = true)
+    public abstract static class BaseBlocklistTypeProperties {
 
         private boolean enabled = true;
 
         private int syncBlocklistIntervalMillis = 10 * 1000;
+
+    }
+
+    @AllArgsConstructor
+    @Data
+    @NoArgsConstructor
+    @SuperBuilder(toBuilder = true)
+    public static class IpBlocklistTypeProperties extends BaseBlocklistTypeProperties {
+
+        @NestedConfigurationProperty
+        private IpAutoBlockProperties autoBlock = new IpAutoBlockProperties();
+
+    }
+
+    @AllArgsConstructor
+    @Data
+    @NoArgsConstructor
+    @SuperBuilder(toBuilder = true)
+    public static class UserIdBlocklistTypeProperties extends BaseBlocklistTypeProperties {
+
+        @NestedConfigurationProperty
+        private UserIdAutoBlockProperties autoBlock = new UserIdAutoBlockProperties();
 
     }
 

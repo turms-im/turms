@@ -18,6 +18,7 @@ import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.gateway.clientapi.ClientApiProperties;
 import im.turms.server.common.property.env.gateway.clientapi.RateLimitingProperties;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
+import im.turms.server.common.service.blocklist.BlocklistService;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ class InboundRequestServiceTests {
     @Test
     void constructor_shouldReturnInstance() {
         Node node = mockNode(false);
-        InboundRequestService inboundRequestService = new InboundRequestService(node, null);
+        InboundRequestService inboundRequestService = new InboundRequestService(node, null, null);
 
         assertThat(inboundRequestService).isNotNull();
     }
@@ -124,12 +125,15 @@ class InboundRequestServiceTests {
         when(node.getSharedProperties())
                 .thenReturn(properties);
 
+        // BlocklistService
+        BlocklistService blocklistService = mock(BlocklistService.class);
+
         // SessionService
         SessionService sessionService = mock(SessionService.class);
         when(sessionService.getLocalUserSession(any(), any()))
                 .thenReturn(session);
 
-        return new InboundRequestService(node, sessionService);
+        return new InboundRequestService(node, blocklistService, sessionService);
     }
 
     private ServiceRequest newServiceRequest() {

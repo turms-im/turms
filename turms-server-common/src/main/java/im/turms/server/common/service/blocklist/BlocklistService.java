@@ -20,10 +20,13 @@ package im.turms.server.common.service.blocklist;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.server.common.bo.blocklist.BlockedClient;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.cluster.node.NodeType;
+import im.turms.server.common.constant.CronConstant;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.lang.ByteWrapper;
+import im.turms.server.common.manager.TrivialTaskManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.security.BlocklistProperties;
 import im.turms.server.common.redis.TurmsRedisClient;
@@ -60,22 +63,31 @@ public class BlocklistService {
     private final BlocklistServiceManager<ByteWrapper> ipBlocklistServiceManager;
     private final BlocklistServiceManager<Long> userIdBlocklistServiceManager;
 
+    private final AutoBlockManager<ByteWrapper> ipAutoBlockManagerForCorruptedFrame;
+    private final AutoBlockManager<ByteWrapper> ipAutoBlockManagerForCorruptedRequest;
+    private final AutoBlockManager<ByteWrapper> ipAutoBlockManagerForFrequentRequest;
+
+    private final AutoBlockManager<Long> userIdAutoBlockManagerForCorruptedRequest;
+    private final AutoBlockManager<Long> userIdAutoBlockManagerForFrequentRequest;
+
     private final ScheduledThreadPoolExecutor threadPoolExecutor;
 
     public BlocklistService(Node node,
+                            TrivialTaskManager trivialTaskManager,
                             TurmsRedisClient ipBlocklistRedisClient,
                             TurmsRedisClient userIdBlocklistRedisClient,
                             TurmsPropertiesManager turmsPropertiesManager,
                             @Autowired(required = false) ISessionService sessionService) {
         BlocklistProperties blocklistProperties = turmsPropertiesManager.getLocalProperties().getSecurity().getBlocklist();
-        BlocklistProperties.BlocklistTypeProperties ipBlocklistProperties = blocklistProperties.getIp();
-        BlocklistProperties.BlocklistTypeProperties userIdBlocklistProperties = blocklistProperties.getUserId();
+        BlocklistProperties.IpBlocklistTypeProperties ipBlocklistProperties = blocklistProperties.getIp();
+        BlocklistProperties.UserIdBlocklistTypeProperties userIdBlocklistProperties = blocklistProperties.getUserId();
 
         threadPoolExecutor =
                 new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory("turms-client-blocklist-sync", true));
 
         isIpBlocklistEnabled = ipBlocklistProperties.isEnabled();
         isUserIdBlocklistEnabled = userIdBlocklistProperties.isEnabled();
+        boolean isGateway = node.getNodeType() == NodeType.GATEWAY;
 
         Map<String, Object> params = Map.of("MAX_LOG_QUEUE_SIZE", maxLogQueueSize);
 
@@ -93,6 +105,15 @@ public class BlocklistService {
                 .get(new ClassPathResource("redis/blocklist/get_blocklist_logs.lua"), ScriptOutputType.MULTI, params);
 
         if (isIpBlocklistEnabled) {
+            BlocklistProperties.IpAutoBlockProperties autoBlock = ipBlocklistProperties.getAutoBlock();
+            ipAutoBlockManagerForCorruptedRequest = new AutoBlockManager<>(autoBlock.getCorruptedRequest(), this::blockIp);
+            if (isGateway) {
+                ipAutoBlockManagerForCorruptedFrame = new AutoBlockManager<>(autoBlock.getCorruptedFrame(), this::blockIp);
+                ipAutoBlockManagerForFrequentRequest = new AutoBlockManager<>(autoBlock.getFrequentRequest(), this::blockIp);
+            } else {
+                ipAutoBlockManagerForCorruptedFrame = null;
+                ipAutoBlockManagerForFrequentRequest = null;
+            }
             ipBlocklistServiceManager = new BlocklistServiceManager<>(true, maxLogQueueSize,
                     ipBlocklistProperties.getSyncBlocklistIntervalMillis(), node,
                     ipBlocklistRedisClient, threadPoolExecutor,
@@ -102,11 +123,26 @@ public class BlocklistService {
                         if (sessionService != null) {
                             sessionService.setLocalSessionsOfflineByIp(ip.bytes(), CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED));
                         }
+                        ipAutoBlockManagerForCorruptedRequest.unblockClient(ip);
+                        if (isGateway) {
+                            ipAutoBlockManagerForCorruptedFrame.unblockClient(ip);
+                            ipAutoBlockManagerForFrequentRequest.unblockClient(ip);
+                        }
                     });
         } else {
             ipBlocklistServiceManager = null;
+            ipAutoBlockManagerForCorruptedRequest = null;
+            ipAutoBlockManagerForCorruptedFrame = null;
+            ipAutoBlockManagerForFrequentRequest = null;
         }
         if (isUserIdBlocklistEnabled) {
+            BlocklistProperties.UserIdAutoBlockProperties autoBlock = userIdBlocklistProperties.getAutoBlock();
+            userIdAutoBlockManagerForCorruptedRequest = new AutoBlockManager<>(autoBlock.getCorruptedRequest(), this::blockUserId);
+            if (isGateway) {
+                userIdAutoBlockManagerForFrequentRequest = new AutoBlockManager<>(autoBlock.getFrequentRequest(), this::blockUserId);
+            } else {
+                userIdAutoBlockManagerForFrequentRequest = null;
+            }
             userIdBlocklistServiceManager = new BlocklistServiceManager<>(false, maxLogQueueSize,
                     userIdBlocklistProperties.getSyncBlocklistIntervalMillis(), node,
                     userIdBlocklistRedisClient, threadPoolExecutor,
@@ -116,10 +152,31 @@ public class BlocklistService {
                         if (sessionService != null) {
                             sessionService.setLocalUserOffline(userId, CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED));
                         }
+                        userIdAutoBlockManagerForCorruptedRequest.unblockClient(userId);
+                        if (isGateway) {
+                            userIdAutoBlockManagerForFrequentRequest.unblockClient(userId);
+                        }
                     });
         } else {
             userIdBlocklistServiceManager = null;
+            userIdAutoBlockManagerForCorruptedRequest = null;
+            userIdAutoBlockManagerForFrequentRequest = null;
         }
+        trivialTaskManager.reschedule("expiredBlockedClientCleanup", CronConstant.EXPIRED_BLOCKED_CLIENT_CLEANUP_CRON, () -> {
+            if (isIpBlocklistEnabled) {
+                ipAutoBlockManagerForCorruptedRequest.evictExpiredBlockedClient();
+                if (isGateway) {
+                    ipAutoBlockManagerForCorruptedFrame.evictExpiredBlockedClient();
+                    ipAutoBlockManagerForFrequentRequest.evictExpiredBlockedClient();
+                }
+            }
+            if (isUserIdBlocklistEnabled) {
+                userIdAutoBlockManagerForCorruptedRequest.evictExpiredBlockedClient();
+                if (isGateway) {
+                    userIdAutoBlockManagerForFrequentRequest.evictExpiredBlockedClient();
+                }
+            }
+        });
     }
 
     @PreDestroy
@@ -128,6 +185,14 @@ public class BlocklistService {
     }
 
     // Block
+
+    public void blockIp(ByteWrapper address, int blockMinutes) {
+        if (!isIpBlocklistEnabled) {
+            throw TurmsBusinessException.get(TurmsStatusCode.IP_BLOCKLIST_IS_DISABLED);
+        }
+        ipBlocklistServiceManager.blockClients(Set.of(address), blockMinutes)
+                .subscribe();
+    }
 
     public Mono<Void> blockIpStrings(Set<String> ips, int blockMinutes) {
         if (!isIpBlocklistEnabled) {
@@ -143,11 +208,49 @@ public class BlocklistService {
         return ipBlocklistServiceManager.blockClients(ips, blockMinutes);
     }
 
+    public void blockUserId(Long userId, int blockMinutes) {
+        if (!isUserIdBlocklistEnabled) {
+            throw TurmsBusinessException.get(TurmsStatusCode.USER_ID_BLOCKLIST_IS_DISABLED);
+        }
+        userIdBlocklistServiceManager.blockClients(Set.of(userId), blockMinutes)
+                .subscribe();
+    }
+
     public Mono<Void> blockUserIds(Set<Long> userIds, int blockMinutes) {
         if (!isUserIdBlocklistEnabled) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.USER_ID_BLOCKLIST_IS_DISABLED));
         }
         return userIdBlocklistServiceManager.blockClients(userIds, blockMinutes);
+    }
+
+    public void tryBlockIpForCorruptedFrame(byte[] ip) {
+        if (isIpBlocklistEnabled) {
+            ipAutoBlockManagerForCorruptedFrame.tryBlockClient(new ByteWrapper(ip));
+        }
+    }
+
+    public void tryBlockIpForCorruptedRequest(byte[] ip) {
+        if (isIpBlocklistEnabled) {
+            ipAutoBlockManagerForCorruptedRequest.tryBlockClient(new ByteWrapper(ip));
+        }
+    }
+
+    public void tryBlockIpForFrequentRequest(byte[] ip) {
+        if (isIpBlocklistEnabled) {
+            ipAutoBlockManagerForFrequentRequest.tryBlockClient(new ByteWrapper(ip));
+        }
+    }
+
+    public void tryBlockUserIdForCorruptedRequest(Long userId) {
+        if (isUserIdBlocklistEnabled) {
+            userIdAutoBlockManagerForCorruptedRequest.tryBlockClient(userId);
+        }
+    }
+
+    public void tryBlockUserIdForFrequentRequest(Long userId) {
+        if (isUserIdBlocklistEnabled) {
+            userIdAutoBlockManagerForFrequentRequest.tryBlockClient(userId);
+        }
     }
 
     // Unblock

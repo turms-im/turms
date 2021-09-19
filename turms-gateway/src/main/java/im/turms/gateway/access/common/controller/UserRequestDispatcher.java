@@ -32,9 +32,11 @@ import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.exception.ThrowableInfo;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.factory.NotificationFactory;
 import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.manager.ServerStatusManager;
+import im.turms.server.common.service.blocklist.BlocklistService;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ProtoUtil;
@@ -48,6 +50,7 @@ import reactor.core.publisher.Mono;
 
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
 import static im.turms.server.common.constant.CommonMetricsConstant.CLIENT_REQUEST_NAME;
 import static im.turms.server.common.constant.CommonMetricsConstant.CLIENT_REQUEST_TAG_TYPE;
 
@@ -62,6 +65,8 @@ public class UserRequestDispatcher {
     private static final ByteBuf HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT;
     private static final ByteBuf HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE;
 
+    private static final SimpleTurmsRequest UNRECOGNIZED_REQUEST = new SimpleTurmsRequest(-1, KIND_NOT_SET, null);
+
     private static final long HEARTBEAT_FAILURE_REQUEST_ID = -100;
 
     static {
@@ -74,15 +79,19 @@ public class UserRequestDispatcher {
 
     private final ApiLoggingContext apiLoggingContext;
 
+    private final BlocklistService blocklistService;
+
     private final SessionController sessionController;
     private final ServiceMediator serviceMediator;
     private final ServerStatusManager serverStatusManager;
 
     public UserRequestDispatcher(ApiLoggingContext apiLoggingContext,
+                                 BlocklistService blocklistService,
                                  SessionController sessionController,
                                  ServiceMediator serviceMediator,
                                  ServerStatusManager serverStatusManager) {
         this.apiLoggingContext = apiLoggingContext;
+        this.blocklistService = blocklistService;
         this.sessionController = sessionController;
         this.serviceMediator = serviceMediator;
         this.serverStatusManager = serverStatusManager;
@@ -90,9 +99,9 @@ public class UserRequestDispatcher {
 
     /**
      * @implNote 1. If a throwable instance is thrown due to the failure of handling the client request,
-     * the method should recover it to TurmsNotification.
+     * the method should recover it to {@link TurmsNotification}.
      * In other words, the method should never return MonoError, and it should be considered as a bug if it occurs.
-     * 2. The method ensures serviceRequestBuffer will be released by 1
+     * 2. The method ensures {@param serviceRequestBuffer} will be released by 1
      */
     public Mono<ByteBuf> handleRequest(UserSessionWrapper sessionWrapper, ByteBuf serviceRequestBuffer) {
         // Check if it's a heartbeat request
@@ -106,7 +115,22 @@ public class UserRequestDispatcher {
         // Parse and handle service requests
         long requestTime = System.currentTimeMillis();
         int requestSize = serviceRequestBuffer.readableBytes();
-        SimpleTurmsRequest request = TurmsRequestParser.parseSimpleRequest(serviceRequestBuffer.nioBuffer());
+        SimpleTurmsRequest request;
+        SimpleTurmsRequest req;
+        Mono<TurmsNotification> notificationMono = null;
+        try {
+            req = TurmsRequestParser.parseSimpleRequest(serviceRequestBuffer.nioBuffer());
+        } catch (Exception e) {
+            serviceRequestBuffer.release();
+            req = UNRECOGNIZED_REQUEST;
+            UserSession session = sessionWrapper.getUserSession();
+            if (session != null) {
+                blocklistService.tryBlockUserIdForCorruptedRequest(session.getUserId());
+            }
+            blocklistService.tryBlockIpForCorruptedRequest(sessionWrapper.getRawIp());
+            notificationMono = Mono.error(TurmsBusinessException.get(TurmsStatusCode.INVALID_REQUEST, e.getMessage()));
+        }
+        request = req;
         TurmsRequest.KindCase requestType = request.type();
         TracingContext tracingContext = supportsTracing(requestType) ? new TracingContext() : TracingContext.NOOP;
         // Check if we can log to avoid logging DeleteSessionRequest twice
@@ -118,7 +142,10 @@ public class UserRequestDispatcher {
             }
         }
         boolean finalCanLogRequest = canLogRequest;
-        return handleServiceRequest(sessionWrapper, request, serviceRequestBuffer, tracingContext)
+        if (notificationMono == null) {
+            notificationMono = handleServiceRequest(sessionWrapper, request, serviceRequestBuffer, tracingContext);
+        }
+        return notificationMono
                 // Metrics and logging
                 .name(CLIENT_REQUEST_NAME)
                 .tag(CLIENT_REQUEST_TAG_TYPE, requestType.name())

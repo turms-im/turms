@@ -19,7 +19,10 @@ package im.turms.server.common.util;
 
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.RandomAccess;
 import java.util.Set;
 
 /**
@@ -61,6 +64,13 @@ public final class CollectionUtil {
             return (Set<T>) keys;
         }
         return UnifiedSet.newSet(keys);
+    }
+
+    public static <T> List<T> toListSupportRandomAccess(Collection<T> collection) {
+        if (collection instanceof List<T> list && collection instanceof RandomAccess) {
+            return list;
+        }
+        return new ArrayList<>(collection);
     }
 
 }

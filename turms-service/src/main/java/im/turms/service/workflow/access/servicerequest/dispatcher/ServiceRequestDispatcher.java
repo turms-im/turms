@@ -28,6 +28,7 @@ import im.turms.server.common.exception.ThrowableInfo;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
+import im.turms.server.common.service.blocklist.BlocklistService;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ProtoUtil;
@@ -68,6 +69,7 @@ import static im.turms.server.common.constant.CommonMetricsConstant.CLIENT_REQUE
 public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
     private final ApiLoggingContext apiLoggingContext;
+    private final BlocklistService blocklistService;
     private final ServerStatusManager serverStatusManager;
     private final OutboundMessageService outboundMessageService;
     private final TurmsPluginManager turmsPluginManager;
@@ -77,11 +79,13 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
     public ServiceRequestDispatcher(ApiLoggingContext apiLoggingContext,
                                     ApplicationContext context,
+                                    BlocklistService blocklistService,
                                     ServerStatusManager serverStatusManager,
                                     OutboundMessageService outboundMessageService,
                                     TurmsPropertiesManager turmsPropertiesManager,
                                     TurmsPluginManager turmsPluginManager) {
         this.apiLoggingContext = apiLoggingContext;
+        this.blocklistService = blocklistService;
         this.serverStatusManager = serverStatusManager;
         this.outboundMessageService = outboundMessageService;
         Set<TurmsRequest.KindCase> disabledEndpoints =
@@ -168,6 +172,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             // Note that "parseFrom" won't block because the buffer is fully read
             request = TurmsRequest.parseFrom(turmsRequestBuffer.nioBuffer());
         } catch (InvalidProtocolBufferException e) {
+            blocklistService.tryBlockIpForCorruptedRequest(serviceRequest.getIp());
+            blocklistService.tryBlockUserIdForCorruptedRequest(serviceRequest.getUserId());
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.INVALID_REQUEST, e.getMessage()));
         }
         turmsRequestBuffer.touch(request);

@@ -28,6 +28,7 @@ import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
+import im.turms.server.common.service.blocklist.BlocklistService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -46,12 +47,15 @@ public class InboundRequestService {
 
     private final Node node;
     private final RateLimitingManager rateLimitingManager;
+    private final BlocklistService blocklistService;
     private final SessionService sessionService;
 
     public InboundRequestService(Node node,
+                                 BlocklistService blocklistService,
                                  SessionService sessionService) {
         this.node = node;
         rateLimitingManager = new RateLimitingManager(node);
+        this.blocklistService = blocklistService;
         this.sessionService = sessionService;
     }
 
@@ -91,6 +95,8 @@ public class InboundRequestService {
         Long requestId = serviceRequest.getRequestId();
         long now = System.currentTimeMillis();
         if (rateLimitingManager.areRequestsTooFrequent(now, session)) {
+            blocklistService.tryBlockIpForFrequentRequest(serviceRequest.getIp());
+            blocklistService.tryBlockUserIdForFrequentRequest(userId);
             TurmsNotification notification = getNotificationFromStatusCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT, requestId);
             return Mono.just(notification);
         }

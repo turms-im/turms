@@ -22,6 +22,8 @@ import im.turms.server.common.service.blocklist.BlocklistService;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.codec.http.websocketx.CorruptedWebSocketFrameException;
+import io.netty.util.internal.OutOfDirectMemoryError;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -53,6 +55,17 @@ public class ServiceAvailabilityHandler extends ChannelInboundHandlerAdapter {
         } else {
             ctx.close();
         }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        if (cause instanceof CorruptedWebSocketFrameException) {
+            InetSocketAddress address = (InetSocketAddress) ctx.channel().remoteAddress();
+            blocklistService.tryBlockIpForCorruptedFrame(address.getAddress().getAddress());
+        } else if (cause instanceof OutOfDirectMemoryError) {
+            ctx.close();
+        }
+        ctx.fireExceptionCaught(cause);
     }
 
 }

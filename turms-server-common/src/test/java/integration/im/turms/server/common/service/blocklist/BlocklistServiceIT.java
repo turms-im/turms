@@ -18,6 +18,7 @@
 package integration.im.turms.server.common.service.blocklist;
 
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.manager.TrivialTaskManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.security.BlocklistProperties;
@@ -249,15 +250,20 @@ class BlocklistServiceIT extends BaseIntegrationTest {
         when(node.isLocalNodeLeader()).thenReturn(true);
 
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
-        BlocklistProperties.BlocklistTypeProperties blocklistTypeProperties = new BlocklistProperties.BlocklistTypeProperties().toBuilder()
-                .syncBlocklistIntervalMillis(10)
-                .build();
+        BlocklistProperties.IpBlocklistTypeProperties ipBlocklistTypeProperties =
+                new BlocklistProperties.IpBlocklistTypeProperties().toBuilder()
+                        .syncBlocklistIntervalMillis(10)
+                        .build();
+        BlocklistProperties.UserIdBlocklistTypeProperties userIdBlocklistTypeProperties =
+                new BlocklistProperties.UserIdBlocklistTypeProperties().toBuilder()
+                        .syncBlocklistIntervalMillis(10)
+                        .build();
         when(propertiesManager.getLocalProperties())
                 .thenReturn(new TurmsProperties().toBuilder()
                         .security(SecurityProperties.builder()
                                 .blocklist(new BlocklistProperties().toBuilder()
-                                        .ip(blocklistTypeProperties)
-                                        .userId(blocklistTypeProperties)
+                                        .ip(ipBlocklistTypeProperties)
+                                        .userId(userIdBlocklistTypeProperties)
                                         .build())
                                 .build())
                         .build());
@@ -266,6 +272,7 @@ class BlocklistServiceIT extends BaseIntegrationTest {
 
         BlocklistService.maxLogQueueSize = maxLogSize;
         return new BlocklistService(node,
+                new TrivialTaskManager(),
                 CommonRedisConfig.newIpBlocklistRedisClient(uri),
                 CommonRedisConfig.newUserIdBlocklistRedisClient(uri),
                 propertiesManager,

@@ -69,20 +69,19 @@ public abstract class UserSessionDispatcher {
 
     protected ConnectionHandler bindConnectionWithSessionWrapper() {
         return (connection, isWebSocketConnection, in, out, onClose) -> {
-            InetSocketAddress ip = (InetSocketAddress) connection.address();
+            InetSocketAddress address = (InetSocketAddress) connection.address();
             NetConnection netConnection = NetConnection.create(connection);
-            UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, ip, closeIdleConnectionAfterSeconds, userSession -> {
-                userSession.setNotificationConsumer((turmsNotificationBuffer, tracingContext) -> {
-                    turmsNotificationBuffer.touch(turmsNotificationBuffer);
-                    // sendObject() will release the buffer no matter it succeeds or fails
-                    NettyOutbound outbound = isWebSocketConnection
-                            ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
-                            : out.sendObject(turmsNotificationBuffer);
-                    Mono.from(outbound)
-                            .onErrorResume(throwable -> handleConnectionError(throwable, netConnection, userSession, tracingContext))
-                            .subscribe();
-                });
-            });
+            UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, address, closeIdleConnectionAfterSeconds,
+                    userSession -> userSession.setNotificationConsumer((turmsNotificationBuffer, tracingContext) -> {
+                        turmsNotificationBuffer.touch(turmsNotificationBuffer);
+                        // sendObject() will release the buffer no matter it succeeds or fails
+                        NettyOutbound outbound = isWebSocketConnection
+                                ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
+                                : out.sendObject(turmsNotificationBuffer);
+                        Mono.from(outbound)
+                                .onErrorResume(t -> handleConnectionError(t, netConnection, userSession, tracingContext))
+                                .subscribe();
+                    }));
             respondWithRequests(connection, isWebSocketConnection, in, out, sessionWrapper)
                     .subscribe();
             return tryRemoveSessionInfoOnConnectionClosed(onClose, sessionWrapper);
@@ -184,21 +183,20 @@ public abstract class UserSessionDispatcher {
         if (userSession == null) {
             connection.close();
             return Mono.empty();
-        } else {
-            Long userId = userSession.getUserId();
-            DeviceType deviceType = userSession.getDeviceType();
-            CloseReason closeReason = CloseReason.get(throwable);
-            return serviceMediator.setLocalUserDeviceOffline(userId, deviceType, closeReason)
-                    .onErrorResume(t -> {
-                        // Log because this should be the last error handler here
-                        try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
-                            log.error("Caught an exception when setting the local session [{}:{}] offline due to connection error",
-                                    userId, deviceType, t);
-                        }
-                        return Mono.empty();
-                    })
-                    .then();
         }
+        Long userId = userSession.getUserId();
+        DeviceType deviceType = userSession.getDeviceType();
+        CloseReason closeReason = CloseReason.get(throwable);
+        return serviceMediator.setLocalUserDeviceOffline(userId, deviceType, closeReason)
+                .onErrorResume(t -> {
+                    // Log because this should be the last error handler here
+                    try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
+                        log.error("Caught an exception when setting the local session [{}:{}] offline due to connection error",
+                                userId, deviceType, t);
+                    }
+                    return Mono.empty();
+                })
+                .then();
     }
 
     private void handleNotificationError(Throwable throwable, @Nullable UserSession userSession) {
