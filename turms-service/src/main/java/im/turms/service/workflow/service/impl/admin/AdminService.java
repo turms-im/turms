@@ -26,7 +26,7 @@ import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.manager.PasswordManager;
+import im.turms.server.common.security.PasswordManager;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -194,7 +194,7 @@ public class AdminService {
         account = account != null
                 ? account
                 : RandomStringUtils.randomAlphabetic(16);
-        String password = StringUtils.hasText(rawPassword)
+        byte[] password = StringUtils.hasText(rawPassword)
                 ? passwordManager.encodeAdminPassword(rawPassword)
                 : passwordManager.encodeAdminPassword(RandomStringUtils.randomAlphabetic(10));
         name = StringUtils.hasText(name)
@@ -433,7 +433,7 @@ public class AdminService {
         }
         Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, targetAccounts);
-        String password = rawPassword != null
+        byte[] password = rawPassword != null
                 ? passwordManager.encodeAdminPassword(rawPassword)
                 : null;
         Update update = Update.newBuilder(3)

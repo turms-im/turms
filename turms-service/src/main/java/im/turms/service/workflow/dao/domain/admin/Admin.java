@@ -47,7 +47,7 @@ public final class Admin {
      * @see SecurityProperties#adminPasswordEncodingAlgorithm
      */
     @Field(Fields.PASSWORD)
-    private final String password;
+    private final byte[] password;
 
     @Field(Fields.NAME)
     private final String name;

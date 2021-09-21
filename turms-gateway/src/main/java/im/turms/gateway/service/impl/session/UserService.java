@@ -20,7 +20,7 @@ package im.turms.gateway.service.impl.session;
 import im.turms.gateway.constant.DomainFieldName;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.manager.PasswordManager;
+import im.turms.server.common.security.PasswordManager;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;

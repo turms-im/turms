@@ -29,7 +29,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.manager.PasswordManager;
+import im.turms.server.common.security.PasswordManager;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -180,7 +180,7 @@ public class UserService {
         }
         Date now = new Date();
         id = id != null ? id : node.nextLargeGapId(ServiceType.USER);
-        String password = rawPassword != null
+        byte[] password = rawPassword != null
                 ? passwordManager.encodeUserPassword(rawPassword)
                 : null;
         name = name != null ? name : "";
@@ -457,7 +457,7 @@ public class UserService {
                 isActive)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        String password = null;
+        byte[] password = null;
         if (rawPassword != null && !rawPassword.isEmpty()) {
             password = passwordManager.encodeUserPassword(rawPassword);
         }

@@ -26,7 +26,7 @@ import im.turms.common.constant.GroupUpdateStrategy;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.RequestStatus;
 import im.turms.server.common.dao.domain.User;
-import im.turms.server.common.manager.PasswordManager;
+import im.turms.server.common.security.PasswordManager;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.property.env.service.env.FakeProperties;
 import im.turms.server.common.util.CollectionUtil;

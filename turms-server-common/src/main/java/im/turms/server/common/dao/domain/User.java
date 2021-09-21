@@ -41,7 +41,7 @@ public final class User {
     private final Long id;
 
     @Field(Fields.PASSWORD)
-    private final String password;
+    private final byte[] password;
 
     @Field(Fields.NAME)
     private final String name;

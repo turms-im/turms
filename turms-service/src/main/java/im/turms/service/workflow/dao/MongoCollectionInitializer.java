@@ -21,7 +21,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.dao.domain.User;
-import im.turms.server.common.manager.PasswordManager;
+import im.turms.server.common.security.PasswordManager;
 import im.turms.server.common.mongo.BsonPool;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;

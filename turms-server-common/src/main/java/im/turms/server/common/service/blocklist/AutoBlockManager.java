@@ -105,9 +105,8 @@ public class AutoBlockManager<T> {
             Map.Entry<T, BlockStatus> entry = iterator.next();
             BlockStatus status = entry.getValue();
             int reduceOneTriggerTimeInterval = status.currentLevelProperties.getReduceOneTriggerTimeIntervalMillis();
-            int times = status.triggerTimes;
             if (reduceOneTriggerTimeInterval > 0) {
-                times -= (int) (now - status.lastBlockTriggerTime) / reduceOneTriggerTimeInterval;
+                int times = status.triggerTimes - (int) (now - status.lastBlockTriggerTime) / reduceOneTriggerTimeInterval;
                 if (times <= 0) {
                     iterator.remove();
                 }
