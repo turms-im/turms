@@ -31,7 +31,7 @@ public final class DateUtil {
     private static final ThreadLocal<Calendar> CALENDAR_THREAD_LOCAL = ThreadLocal
             .withInitial(() -> new GregorianCalendar(TimeZone.getTimeZone("UTC")));
     // "1970-01-01T00:00:00.000Z"
-    private static final int DATE_TIME_LENGTH = 24;
+    public static final int DATE_TIME_LENGTH = 24;
 
     private DateUtil() {
     }

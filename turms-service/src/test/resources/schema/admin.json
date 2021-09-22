@@ -15,7 +15,7 @@
         "bsonType": "date"
       },
       "pw": {
-        "bsonType": "string"
+        "bsonType": "binData"
       },
       "rid": {
         "bsonType": "long"

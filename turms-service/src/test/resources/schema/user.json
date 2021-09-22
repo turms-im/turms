@@ -28,7 +28,7 @@
         "bsonType": "long"
       },
       "pw": {
-        "bsonType": "string"
+        "bsonType": "binData"
       },
       "intro": {
         "bsonType": "string"
