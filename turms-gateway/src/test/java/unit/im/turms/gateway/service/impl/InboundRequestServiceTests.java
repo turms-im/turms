@@ -14,9 +14,6 @@ import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.property.TurmsProperties;
-import im.turms.server.common.property.env.gateway.GatewayProperties;
-import im.turms.server.common.property.env.gateway.clientapi.ClientApiProperties;
-import im.turms.server.common.property.env.gateway.clientapi.RateLimitingProperties;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
 import im.turms.server.common.service.blocklist.BlocklistService;
 import io.netty.buffer.ByteBuf;
@@ -27,6 +24,7 @@ import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -54,7 +52,7 @@ class InboundRequestServiceTests {
 
     @Test
     void processServiceRequest_shouldThrow_ifUserIsOffline() {
-        InboundRequestService inboundRequestService = newInboundRequestService(null, false, true);
+        InboundRequestService inboundRequestService = newInboundRequestService(false, false, true);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
@@ -65,11 +63,7 @@ class InboundRequestServiceTests {
 
     @Test
     void processServiceRequest_shouldReturnError_ifRequestTooFrequent() {
-        UserSession session = mock(UserSession.class);
-        when(session.getLastRequestTimestampMillis())
-                .thenReturn(System.currentTimeMillis());
-
-        InboundRequestService inboundRequestService = newInboundRequestService(session, true, true);
+        InboundRequestService inboundRequestService = newInboundRequestService(true, true, true);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
@@ -80,11 +74,7 @@ class InboundRequestServiceTests {
 
     @Test
     void processServiceRequest_shouldReturnError_ifFailedToHandleRequest() {
-        UserSession session = mock(UserSession.class);
-        when(session.getLastRequestTimestampMillis())
-                .thenReturn(System.currentTimeMillis());
-
-        InboundRequestService inboundRequestService = newInboundRequestService(session, false, false);
+        InboundRequestService inboundRequestService = newInboundRequestService(true, false, false);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
@@ -93,11 +83,7 @@ class InboundRequestServiceTests {
 
     @Test
     void processServiceRequest_shouldReturnOk_ifHandleRequestSuccessfully() {
-        UserSession session = mock(UserSession.class);
-        when(session.getLastRequestTimestampMillis())
-                .thenReturn(System.currentTimeMillis());
-
-        InboundRequestService inboundRequestService = newInboundRequestService(session, false, true);
+        InboundRequestService inboundRequestService = newInboundRequestService(true, false, true);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
@@ -106,29 +92,26 @@ class InboundRequestServiceTests {
     }
 
     private InboundRequestService newInboundRequestService(
-            UserSession session,
+            boolean sessionExists,
             boolean isFrequent,
             boolean handleRequestSuccessfully) {
         // Node
         Node node = mockNode(handleRequestSuccessfully);
 
-        int minClientRequestInterval = isFrequent ? Integer.MAX_VALUE : 0;
-        TurmsProperties properties = new TurmsProperties().toBuilder()
-                .gateway(new GatewayProperties().toBuilder()
-                        .clientApi(new ClientApiProperties().toBuilder()
-                                .rateLimiting(new RateLimitingProperties().toBuilder()
-                                        .minClientRequestIntervalMillis(minClientRequestInterval)
-                                        .build())
-                                .build())
-                        .build())
-                .build();
         when(node.getSharedProperties())
-                .thenReturn(properties);
+                .thenReturn(new TurmsProperties());
 
         // BlocklistService
         BlocklistService blocklistService = mock(BlocklistService.class);
 
         // SessionService
+        UserSession session = null;
+        if (sessionExists) {
+            session = mock(UserSession.class);
+            when(session.tryAcquireToken(anyLong()))
+                    .thenReturn(!isFrequent);
+        }
+
         SessionService sessionService = mock(SessionService.class);
         when(sessionService.getLocalUserSession(any(), any()))
                 .thenReturn(session);

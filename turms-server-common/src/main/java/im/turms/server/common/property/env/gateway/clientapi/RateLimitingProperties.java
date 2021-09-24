@@ -37,25 +37,28 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 public class RateLimitingProperties {
 
-    @Description("The minimum allowed interval between client requests. " +
-            "If 0, there is no debounce. " +
-            "It's better set the same value as client's for a better UX.")
+    @Description("The maximum number of tokens that the bucket can hold")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    @Min(0)
-    private int minClientRequestIntervalMillis;
+    @Min(1)
+    private int capacity = 50;
 
-    @Description("\"permits\" specifies the number of requests are allowed in every time period \"perSeconds\". " +
-            "0 for no limit")
+    @Description("The initial number of tokens for new session")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
     @Min(0)
-    private int permits = 60;
+    private int initialTokens = 50;
 
-    @Description("The time period in which the number \"permits\" of requests are allowed. " +
-            "0 for no limit")
+    @Description("Refills the bucket with the specified number of tokens per period if the bucket isn't full")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
+    @Min(1)
+    private int tokensPerPeriod = 1;
+
+    @Description("The time interval to refill. 0 means never refill")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
     @Min(0)
-    private int perSeconds = 30;
+    private int refillIntervalMillis = 1000;
+
 }

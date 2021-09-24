@@ -21,6 +21,8 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.util.RandomUtil;
 import im.turms.gateway.pojo.bo.session.connection.NetConnection;
+import im.turms.gateway.throttle.TokenBucket;
+import im.turms.gateway.throttle.TokenBucketContext;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.tracing.TracingContext;
 import io.netty.buffer.ByteBuf;
@@ -71,13 +73,10 @@ public final class UserSession {
     // (the thread "heartbeat-update" in HeartbeatManager)
     private long lastHeartbeatUpdateTimestampMillis;
 
-    // Rate limiting
     /**
-     * We don't use AtomicInteger for better performance,
-     * and it's acceptable that the count isn't accurate when ++
+     * Rate limiting
      */
-    private volatile int currentProcessedRequestCount;
-    private long firstRequestTimestampMillis;
+    private final TokenBucket requestTokenBucket;
 
     /**
      * Note that it's acceptable that the session is still open even if the connection is closed
@@ -96,7 +95,8 @@ public final class UserSession {
     public UserSession(int version,
                        Long userId,
                        DeviceType loggingInDeviceType,
-                       @Nullable Point loginLocation) {
+                       @Nullable Point loginLocation,
+                       TokenBucketContext tokenBucketContext) {
         Date now = new Date();
         this.version = version;
         this.userId = userId;
@@ -104,6 +104,7 @@ public final class UserSession {
         this.loginDate = now;
         this.loginLocation = loginLocation;
         this.lastHeartbeatRequestTimestampMillis = now.getTime();
+        requestTokenBucket = new TokenBucket(tokenBucketContext);
     }
 
     /**
@@ -149,6 +150,10 @@ public final class UserSession {
     public void sendNotification(ByteBuf byteBuf, TracingContext tracingContext) {
         // Note that we do not check if the consumer is null
         notificationConsumer.accept(byteBuf, tracingContext);
+    }
+
+    public boolean tryAcquireToken(long time) {
+        return requestTokenBucket.tryAcquire(time);
     }
 
     public boolean acquireDeleteSessionRequestLoggingLock() {

@@ -21,8 +21,9 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.pojo.bo.session.UserSession;
-import im.turms.server.common.lang.ConcurrentEnumMap;
+import im.turms.gateway.throttle.TokenBucketContext;
 import im.turms.server.common.dto.CloseReason;
+import im.turms.server.common.lang.ConcurrentEnumMap;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.HashedWheelTimer;
@@ -52,34 +53,33 @@ public final class UserSessionsManager {
 
     private final Long userId;
     private UserStatus userStatus;
+    private final TokenBucketContext tokenBucketContext;
     /**
      * The online session map of a user
      */
     private final Map<DeviceType, UserSession> sessionMap = new ConcurrentEnumMap<>(SESSION_MAP_TEMPLATE);
 
-    public UserSessionsManager(
-            @NotNull Long userId,
-            @NotNull UserStatus userStatus) {
+    public UserSessionsManager(Long userId, UserStatus userStatus, TokenBucketContext tokenBucketContext) {
         Assert.notNull(userId, "userId must not be null");
         Assert.notNull(userStatus, "userStatus must not be null");
+        Assert.notNull(tokenBucketContext, "tokenBucketContext must not be null");
         this.userId = userId;
         this.userStatus = userStatus;
+        this.tokenBucketContext = tokenBucketContext;
     }
 
     /**
      * @return new session if added
      */
     @Nullable
-    public UserSession addSessionIfAbsent(
-            int version,
-            @NotNull DeviceType loggingInDeviceType,
-            @Nullable Point position) {
+    public UserSession addSessionIfAbsent(int version, DeviceType loggingInDeviceType, @Nullable Point position) {
         Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
         UserSession userSession = new UserSession(
                 version,
                 userId,
                 loggingInDeviceType,
-                position);
+                position,
+                tokenBucketContext);
         boolean added = sessionMap.putIfAbsent(loggingInDeviceType, userSession) == null;
         return added ? userSession : null;
     }

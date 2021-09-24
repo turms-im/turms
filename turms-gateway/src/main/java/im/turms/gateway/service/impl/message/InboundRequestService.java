@@ -19,7 +19,6 @@ package im.turms.gateway.service.impl.message;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.gateway.manager.RateLimitingManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.cluster.node.Node;
@@ -46,7 +45,6 @@ public class InboundRequestService {
     private static final ServiceResponse REQUEST_RESPONSE_NO_CONTENT = new ServiceResponse(null, TurmsStatusCode.NO_CONTENT, null);
 
     private final Node node;
-    private final RateLimitingManager rateLimitingManager;
     private final BlocklistService blocklistService;
     private final SessionService sessionService;
 
@@ -54,7 +52,6 @@ public class InboundRequestService {
                                  BlocklistService blocklistService,
                                  SessionService sessionService) {
         this.node = node;
-        rateLimitingManager = new RateLimitingManager(node);
         this.blocklistService = blocklistService;
         this.sessionService = sessionService;
     }
@@ -94,7 +91,7 @@ public class InboundRequestService {
         // Rate limiting
         Long requestId = serviceRequest.getRequestId();
         long now = System.currentTimeMillis();
-        if (rateLimitingManager.areRequestsTooFrequent(now, session)) {
+        if (!session.tryAcquireToken(now)) {
             blocklistService.tryBlockIpForFrequentRequest(serviceRequest.getIp());
             blocklistService.tryBlockUserIdForFrequentRequest(userId);
             TurmsNotification notification = getNotificationFromStatusCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT, requestId);

@@ -19,6 +19,7 @@ package unit.im.turms.gateway.pojo.bo.session;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.gateway.pojo.bo.session.UserSession;
+import im.turms.gateway.throttle.TokenBucketContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.geo.Point;
 
@@ -33,6 +34,7 @@ class UserSessionTests {
     private final Long userId = 1L;
     private final DeviceType deviceType = DeviceType.ANDROID;
     private final Point loginLocation = new Point(1F, 1F);
+    private final TokenBucketContext requestTokenBucketContext = new TokenBucketContext();
 
     @Test
     void constructor_shouldReturnInstance() {
@@ -40,7 +42,8 @@ class UserSessionTests {
                 version,
                 userId,
                 deviceType,
-                loginLocation);
+                loginLocation,
+                requestTokenBucketContext);
         assertThat(userSession).isNotNull();
     }
 
@@ -50,7 +53,8 @@ class UserSessionTests {
                 version,
                 userId,
                 deviceType,
-                loginLocation);
+                loginLocation,
+                requestTokenBucketContext);
         assertThat(userSession.getDeviceType()).isEqualTo(deviceType);
         assertThat(userSession.getLoginLocation()).isEqualTo(loginLocation);
     }

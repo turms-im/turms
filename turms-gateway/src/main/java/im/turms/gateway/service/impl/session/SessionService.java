@@ -29,6 +29,7 @@ import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.observability.MetricsService;
+import im.turms.gateway.throttle.TokenBucketContext;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
@@ -37,7 +38,9 @@ import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.gateway.SessionProperties;
+import im.turms.server.common.property.env.gateway.clientapi.RateLimitingProperties;
 import im.turms.server.common.rpc.request.SetUserOfflineRequest;
 import im.turms.server.common.rpc.service.ISessionService;
 import im.turms.server.common.service.session.SessionLocationService;
@@ -87,6 +90,12 @@ public class SessionService implements ISessionService {
     private final boolean pluginEnabled;
     private int closeIdleSessionAfterSeconds;
 
+    /**
+     * Share the context with all instances of token buckets
+     * so that we can apply new properties easily
+     */
+    private final TokenBucketContext requestTokenBucketContext;
+
     private final Map<Long, UserSessionsManager> sessionsManagerByUserId;
     private final Map<byte[], UserSession> sessionByIp;
 
@@ -111,8 +120,12 @@ public class SessionService implements ISessionService {
         sessionByIp = new ConcurrentHashMap<>(4096);
         pluginEnabled = turmsProperties.getPlugin().isEnabled();
 
-        SessionProperties sessionProperties = turmsProperties.getGateway().getSession();
+        GatewayProperties gatewayProperties = turmsProperties.getGateway();
+        SessionProperties sessionProperties = gatewayProperties.getSession();
         closeIdleSessionAfterSeconds = sessionProperties.getCloseIdleSessionAfterSeconds();
+
+        requestTokenBucketContext = new TokenBucketContext();
+        updateRequestTokenBucket(requestTokenBucketContext, gatewayProperties.getClientApi().getRateLimiting());
 
         heartbeatManager = new HeartbeatManager(this,
                 userStatusService,
@@ -123,17 +136,27 @@ public class SessionService implements ISessionService {
                 sessionProperties.getSwitchProtocolAfterSeconds());
 
         node.addPropertiesChangeListener(newProperties -> {
-            SessionProperties newSessionProperties = newProperties.getGateway().getSession();
+            GatewayProperties newGatewayProperties = newProperties.getGateway();
+            SessionProperties newSessionProperties = newGatewayProperties.getSession();
             closeIdleSessionAfterSeconds = newSessionProperties.getCloseIdleSessionAfterSeconds();
             heartbeatManager.setClientHeartbeatIntervalSeconds(newSessionProperties.getClientHeartbeatIntervalSeconds());
             heartbeatManager.setCloseIdleSessionAfterSeconds(newSessionProperties.getCloseIdleSessionAfterSeconds());
             heartbeatManager.setMinHeartbeatIntervalMillis(newSessionProperties.getMinHeartbeatIntervalSeconds() * 1000);
             heartbeatManager.setSwitchProtocolAfterMillis(newSessionProperties.getSwitchProtocolAfterSeconds() * 1000);
+
+            updateRequestTokenBucket(requestTokenBucketContext, newGatewayProperties.getClientApi().getRateLimiting());
         });
 
         MeterRegistry registry = metricsService.getRegistry();
         loggedInUsersCounter = registry.counter(LOGGED_IN_USERS_COUNTER_NAME);
         registry.gaugeMapSize(ONLINE_USERS_GAUGE_NAME, Tags.empty(), sessionsManagerByUserId);
+    }
+
+    private void updateRequestTokenBucket(TokenBucketContext context, RateLimitingProperties properties) {
+        context.setCapacity(properties.getCapacity());
+        context.setInitialTokens(properties.getInitialTokens());
+        context.setTokensPerPeriod(properties.getTokensPerPeriod());
+        context.setRefillIntervalMillis(properties.getRefillIntervalMillis());
     }
 
     @PreDestroy
@@ -459,22 +482,23 @@ public class SessionService implements ISessionService {
                     if (!wasSuccessful) {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
                     }
-                    UserStatus finalUserStatus = userStatus != null ? userStatus : UserStatus.AVAILABLE;
+                    UserStatus finalUserStatus = null == userStatus ? UserStatus.AVAILABLE : userStatus;
                     UserSessionsManager manager =
-                            sessionsManagerByUserId.computeIfAbsent(userId, key -> new UserSessionsManager(key, finalUserStatus));
+                            sessionsManagerByUserId.computeIfAbsent(userId, key ->
+                                    new UserSessionsManager(key, finalUserStatus, requestTokenBucketContext));
                     UserSession session = manager.addSessionIfAbsent(version, deviceType, position);
                     // This should never happen
-                    if (session == null) {
+                    if (null == session) {
                         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE));
                         sessionByIp.remove(ip);
                         session = manager.addSessionIfAbsent(version, deviceType, position);
-                        if (session == null) {
+                        if (null == session) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR));
                         }
                     }
                     sessionByIp.put(ip, session);
                     Date now = new Date();
-                    if (position != null && sessionLocationService.isLocationEnabled()) {
+                    if (null != position && sessionLocationService.isLocationEnabled()) {
                         return sessionLocationService.upsertUserLocation(userId, deviceType, position, now)
                                 .thenReturn(session);
                     } else {

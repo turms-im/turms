@@ -22,6 +22,7 @@ import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.pojo.bo.session.connection.NetConnection;
+import im.turms.gateway.throttle.TokenBucketContext;
 import im.turms.server.common.dto.CloseReason;
 import org.junit.jupiter.api.Test;
 
@@ -41,24 +42,25 @@ class UserSessionsManagerTests {
     private final UserStatus userStatus = UserStatus.AVAILABLE;
     private final DeviceType deviceType = DeviceType.ANDROID;
     private final String serverId = "turms001";
+    private final TokenBucketContext tokenBucketContext = new TokenBucketContext();
 
     @Test
     void constructor_shouldSucceed_ifRequiredParamsExist() {
-        UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
+        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, tokenBucketContext);
         assertThat(manager).isNotNull();
     }
 
     @Test
     void constructor_shouldThrow_ifRequiredParamsNotExist() {
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> new UserSessionsManager(null, userStatus));
+                .isThrownBy(() -> new UserSessionsManager(null, userStatus, tokenBucketContext));
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> new UserSessionsManager(userId, null));
+                .isThrownBy(() -> new UserSessionsManager(userId, null, tokenBucketContext));
     }
 
     @Test
     void setDeviceOffline_shouldSucceed() {
-        UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
+        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, tokenBucketContext);
         manager.addSessionIfAbsent(version, deviceType, null);
         NetConnection connection = mock(NetConnection.class);
         manager.getSession(deviceType).setConnection(connection);
@@ -70,29 +72,30 @@ class UserSessionsManagerTests {
 
     @Test
     void pushSessionNotification_shouldReturnTrue_ifSessionExists() {
-        UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
+        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, tokenBucketContext);
         manager.addSessionIfAbsent(version, deviceType, null)
-                .setNotificationConsumer((byteBuf, tracingContext) -> {});
+                .setNotificationConsumer((byteBuf, tracingContext) -> {
+                });
         assertThat(manager.pushSessionNotification(deviceType, serverId)).isTrue();
     }
 
     @Test
     void pushSessionNotification_shouldReturnFalse_ifSessionNotExists() {
-        UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
+        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, tokenBucketContext);
         manager.addSessionIfAbsent(version, DeviceType.ANDROID, null);
         assertThat(manager.pushSessionNotification(DeviceType.IOS, serverId)).isFalse();
     }
 
     @Test
     void getSession_shouldReturnSession() {
-        UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
+        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, tokenBucketContext);
         manager.addSessionIfAbsent(version, deviceType, null);
         assertThat(manager.getSession(deviceType)).isNotNull();
     }
 
     @Test
     void getSessionsNumber_shouldBeThree_forThreeSessions() {
-        UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
+        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, tokenBucketContext);
         manager.addSessionIfAbsent(version, DeviceType.ANDROID, null);
         manager.addSessionIfAbsent(version, DeviceType.IOS, null);
         manager.addSessionIfAbsent(version, DeviceType.DESKTOP, null);
@@ -101,7 +104,7 @@ class UserSessionsManagerTests {
 
     @Test
     void getLoggedInDeviceTypes_shouldBeSame() {
-        UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
+        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, tokenBucketContext);
         manager.addSessionIfAbsent(version, DeviceType.ANDROID, null);
         manager.addSessionIfAbsent(version, DeviceType.IOS, null);
         manager.addSessionIfAbsent(version, DeviceType.DESKTOP, null);

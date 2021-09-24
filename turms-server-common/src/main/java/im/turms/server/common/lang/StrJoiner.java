@@ -26,6 +26,7 @@ import java.util.List;
 public class StrJoiner {
 
     private final List<CharSequence> elements;
+    private int charCount;
 
     public StrJoiner(int size) {
         this.elements = new ArrayList<>(size);
@@ -33,11 +34,7 @@ public class StrJoiner {
 
     @Override
     public String toString() {
-        int size = 0;
-        for (CharSequence element : elements) {
-            size += element.length();
-        }
-        StringBuilder builder = new StringBuilder(size);
+        StringBuilder builder = new StringBuilder(charCount);
         for (CharSequence element : elements) {
             builder.append(element);
         }
@@ -46,6 +43,7 @@ public class StrJoiner {
 
     public StrJoiner add(String element) {
         elements.add(element);
+        charCount += element.length();
         return this;
     }
 

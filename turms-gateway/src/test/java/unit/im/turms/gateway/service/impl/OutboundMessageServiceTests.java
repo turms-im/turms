@@ -26,6 +26,7 @@ import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.bo.session.connection.TcpConnection;
 import im.turms.gateway.service.impl.message.OutboundMessageService;
 import im.turms.gateway.service.impl.session.SessionService;
+import im.turms.gateway.throttle.TokenBucketContext;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
@@ -67,7 +68,7 @@ class OutboundMessageServiceTests {
     void sendNotificationToLocalClients_shouldReleaseAndReturnTrue_ifRecipientsAreOnline() {
         UserSessionsManager sessionsManager = mock(UserSessionsManager.class);
         TcpConnection connection = mock(TcpConnection.class);
-        UserSession session = new UserSession(1, 1L, DeviceType.ANDROID, new Point(1F, 1F));
+        UserSession session = new UserSession(1, 1L, DeviceType.ANDROID, new Point(1F, 1F), new TokenBucketContext());
         session.setConnection(connection);
         Sinks.One<ByteBuf> sink = Sinks.one();
         session.setNotificationConsumer((notification, tracingContext) -> sink.tryEmitValue(notification));
