@@ -47,24 +47,43 @@
 
 * 在部分IM项目的架构设计中，它们会把`会话管理`再拆成`网络连接管理`与`会话逻辑管理`两个服务，来实现停机更新`会话逻辑管理`服务时，客户端不需要断开与`网络连接管理`服务的连接。但考虑到turms-gateway几乎没什么会话业务逻辑，既有的业务逻辑也很固定，主要的业务逻辑都是在turms-service里实现的，因此turms-gateway很少有停机更新业务逻辑的需要。综上，把将网络连接与会话逻辑拆分成两个独立服务对Turms而言还为时过早，既增加了故障点，性能折损也大，又没什么收益，故Turms架构暂不对`会话管理`再进行拆分。
 
-### 客户端访问服务端经典流程
+### 客户端访问服务端标准流程
 
-该流程为客户端访问服务端经典流程，也是Turms架构实现水平扩展的过程，您可以根据实际情况进行简化。
+该流程为客户端访问服务端标准流程，也是Turms架构实现水平扩展的过程，您可以根据实际情况进行调整。
 
-* 当客户端需要与服务端建立连接时，客户端通过`DNS服务`来查询接入层服务端域名对应的IP地址，而该IP地址指向`SLB/ELB服务`（通常基于LVS与Nginx）、`全球加速服务`、或`turms-gateway`，具体如何搭配要根据您实际应用的需求与规模而定。该DNS服务端可以配置一个或多个公网IP地址（生产环境中切勿配置真实IP地址，以缓解DDoS攻击），并通过轮询或其他策略返回给客户端一个IP地址。
+* 当客户端需要与turms-gateway服务端建立TCP连接时，客户端可以通过`DNS服务`来查询接入层服务端域名对应的IP地址，而该IP地址指向`SLB/ELB服务`（通常基于LVS与Nginx）、`全球加速服务`、或`turms-gateway`，具体如何搭配要根据您实际应用的需求与规模而定。该DNS服务端可以配置一个或多个公网IP地址（生产环境中切勿配置真实IP地址，以缓解DDoS攻击），并通过轮询或其他策略返回给客户端一个IP地址。补充：
 
-* 客户端拿到IP地址之后，客户端可以向该地址发起业务请求的Protobuf数据流。
+  * 无论Turms客户端使用的是TCP协议，还是上层的WebSocket协议，turms-gateway的上游服务（DNS/SLB等）都应该根据客户端IP地址进行TCP连接的负载均衡。
 
-  补充：通常情况下，您应该将SSL/TLS证书放在turms-gateway的上游服务端，即上游的SLB服务或Nginx服务端等
+  * 并且，强烈建议您开启SLB服务的`Sticky Session`功能，让会话始终与一个turms-gateway服务端进行连接。这么做的好处是能缓解很大一部分DDoS攻击。因为turms-gateway提供客户端自动封禁机制，能够迅速检测并封禁本地有异常行为的IP或用户，但turms-gateway服务端之间同步封禁客户端数据默认时间间隔约10~15秒，因此如果关闭了`Sticky Session`功能，黑客就能利用封禁数据同步间隔这段时间，切换与turms-gateway的TCP连接，进行DDoS攻击。
 
-* 该数据流经过负载均衡服务端（可选）的转发后，会先到达turms-gateway。turms-gateway会先对该数据流进行简单的Protobuf格式校验（不校验具体业务请求的合法性，是为了与turms服务端进行业务逻辑解耦，以实现turms服务端对业务请求格式进行更新后，turms-gateway不需要停机），如果是非法数据流，则直接断开TCP连接。否则，若为合法请求，则会对其进行部分解析，以确认turms-gateway能否自行处理这个请求。如果能够自行处理，则在处理后返回响应。如果无法处理，则先根据负载均衡策略从可用的turms-service服务端列表中选出一个turms-service服务端，再通过自研的RPC框架将请求转发给turms-service服务端。
+  * 通常情况下，您应该将SSL证书放在turms-gateway的上游服务端，即上游的SLB服务或Nginx服务端等。
 
-  补充：由于turms-gateway采用了无状态的架构设计，因此任意用户可以连接到任意一个turms-gateway服务端上，您也可以弹性增删turms-gateway节点，以实现弹性水平拓展；状态（即用户会话信息）被转移到了分布式内存Redis服务端当中。
+  * 由于turms-gateway采用了无状态的架构设计，因此任意客户端可以连接到任意一个turms-gateway服务端上，您也可以弹性增删turms-gateway节点，以实现弹性水平拓展；状态（即用户会话信息）被转移到了分布式内存Redis服务端当中。
 
-* turms-service服务端收到RPC请求（包裹着用户请求）后，对其进行校验与处理（处理过程中通常会发送对应的CRUD请求至mongos进行处理），并将产生的响应与通知，发回给turms-gateway。
+* 客户端拿到IP地址，并与turms-gateway成功建立TCP连接之后，turms-gateway会检测该IP是否已被封禁，或者turms-gateway自身负载是否过大，如果是，则主动断开TCP连接。否则，放行TCP连接。
 
-  补充：Turms采用MongoDB的分片副本架构。mongos收到CRUD请求后，会根据配置进行CRUD请求路由
+* 如果turms-gateway放行TCP连接，
 
-* 对于响应，turms-gateway不对其进行合法性校验，而是直接透传给用户。对于通知，turms-gateway会先查询通知所涉及到的用户，再通过Redis查询该批用户各自所连接的turms-gateway地址，并触发NotificationHandler插件方法以协助开发者实现自定义逻辑（如：实现离线用户的消息推送功能）。之后，turms-gateway会将通知转发给在线用户所连接的turms-gateway，而收到通知的turms-gateway会将该通知转发给自身所连接的对应用户。
+  * 对于使用纯TCP连接的Turms客户端，客户端可以开始发起`TurmsRequest`的Protobuf数据流。该数据流由ZigZag编码的`正文长度`头，与Protobuf编码的`正文`，这两部分组成。
+  * 对于使用WebSocket连接的Turms客户端，客户端会在TCP连接建立成功后，向turms-gateway发起HTTP Upgrade请求，请求将HTTP Upgrade成WebSocket协议。如果升级成功，客户端就可以通过在WebSocket Binary Frame的正文中，存放Protobuf编码`TurmsRequest`数据，并向turms-gateway发送数据流。
+
+  注意：这时Turms客户端只是与turms-gateway建立的网络层连接，但用户尚未`登陆`，也并没有建立`会话信息`。
+
+* 该数据流经过负载均衡服务端（可选）的转发后，会先到达turms-gateway。turms-gateway会先对该数据流进行简单的Protobuf格式校验（不校验具体业务请求的合法性，是为了与turms服务端进行业务逻辑解耦，以实现turms服务端对业务请求格式进行更新后，turms-gateway不需要停机），如果是非法数据流，则直接断开TCP连接。
+
+  否则，若为合法请求，则会对其进行部分解析，以确认turms-gateway能否自行处理这个请求。
+
+* 如果能够自行处理，则在处理后返回响应。如果无法处理，则再检测用户是否已在本机登陆，如果没有登陆，则拒绝执行请求，并发回响应。如果已登陆，则先根据负载均衡策略从可用的turms-service服务端列表中选出一个turms-service服务端，再通过自研的RPC框架将请求转发给该turms-service服务端，让其进行处理。
+
+  * 如果turms-gateway检测到该客户端请求是`登陆请求`，则turms-gateway会根据`用户ID`与请求登陆的`设备类型`构成一个`会话ID`，并根据Redis或本地缓存中的用户会话信息，判断该会话ID是否与已登陆会话冲突。如果发生冲突，则拒绝其进行上线操作，并发回响应，告知客户端被拒绝登陆的原因。否则，将当前用户会话信息注册到Redis，并发回登陆成功响应。此时，用户进入了`在线`状态。
+
+    注意：一个会话ID（用户ID+设备）在同一时刻只会与一个turms-gateway服务端构成`用户会话`，与一个turms-gateway服务端构成TCP连接。用户后续的所有业务请求都是在这一个会话与TCP连接中完成的，直到会话关闭、用户下线。
+
+  * 如果turms-gateway无法处理该客户端请求，则通过RPC服务将客户端请求下发给turms-service。turms-service服务端在收到客户端请求后，会对请求进行校验与处理，并触发`ClientRequestHandler`插件以协助开发者实现自定义逻辑（如敏感词过滤），另外在处理过程中通常也会向mongos发送对应的CRUD请求。等用户请求处理完毕后，turms-service会将产生的`响应`，发回给turms-gateway。对于处理过程中产生的`通知`，turms-service会先根据被通知用户的ID，向Redis或本地缓存查询该批用户所连接的turms-gateway的节点ID，并通过RPC服务将通知发送给这批turms-gateway，让其进行通知下推操作。
+
+    补充：Turms采用MongoDB的分片副本架构。mongos收到CRUD请求后，会根据配置进行CRUD请求路由。
+
+  * 无论对于响应还是通知，turms-gateway都不会对其进行合法性校验，而是直接透传给用户。在通知下推过程中，turms-gateway会触发`NotificationHandler`插件方法以协助开发者实现自定义逻辑（如离线用户的消息推送）。
 
   （值得一提的是，Turms的所有网络IO操作都是基于Netty实现的，即以上所有RPC、数据库调用均是异步非阻塞的）
