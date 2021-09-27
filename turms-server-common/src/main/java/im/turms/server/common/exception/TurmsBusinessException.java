@@ -45,6 +45,7 @@ public final class TurmsBusinessException extends StacklessException {
     }
 
     private final TurmsStatusCode code;
+    @Nullable
     private final String reason;
 
     private TurmsBusinessException(@NotNull TurmsStatusCode code, @Nullable String reason) {
@@ -56,13 +57,14 @@ public final class TurmsBusinessException extends StacklessException {
     private TurmsBusinessException(@NotNull TurmsStatusCode code, @Nullable Throwable cause) {
         super(formatMessage(code, null), cause);
         this.code = code;
-        this.reason = null;
+        reason = null;
     }
 
     public static TurmsBusinessException get(@NotNull TurmsStatusCode code) {
         return EXCEPTION_POOL.get(code);
     }
 
+    @Nullable
     public static TurmsBusinessException get(int statusCode) {
         for (TurmsStatusCode value : TurmsStatusCode.values()) {
             if (value.getBusinessCode() == statusCode) {
@@ -72,6 +74,7 @@ public final class TurmsBusinessException extends StacklessException {
         return null;
     }
 
+    @Nullable
     public static TurmsBusinessException get(int statusCode, @Nullable String reason) {
         for (TurmsStatusCode value : TurmsStatusCode.values()) {
             if (value.getBusinessCode() == statusCode) {
@@ -96,8 +99,8 @@ public final class TurmsBusinessException extends StacklessException {
     public static TurmsBusinessException get(TurmsNotification notification) {
         int code = notification.getCode();
         return notification.hasReason()
-                ? TurmsBusinessException.get(code, notification.getReason())
-                : TurmsBusinessException.get(code);
+                ? get(code, notification.getReason())
+                : get(code);
     }
 
     private static String formatMessage(@NotNull TurmsStatusCode code, @Nullable String reason) {

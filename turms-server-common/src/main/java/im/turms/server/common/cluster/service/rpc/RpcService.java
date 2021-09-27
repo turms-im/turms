@@ -200,16 +200,16 @@ public class RpcService implements ClusterService {
         if (nodeId.equals(discoveryService.getLocalMember().getNodeId())) {
             throw new IllegalArgumentException("The target node ID of RPC endpoint cannot be the local node ID: " + nodeId);
         }
-        RpcEndpoint client = endpointPool.get(nodeId);
-        if (client != null && (connection == null || connection == client.getConnection())) {
-            return client;
+        RpcEndpoint endpoint = endpointPool.get(nodeId);
+        if (endpoint != null && (connection == null || connection == endpoint.getConnection())) {
+            return endpoint;
         }
-        client = createClient(nodeId, connection);
-        endpointPool.put(nodeId, client);
-        return client;
+        endpoint = createEndpoint(nodeId, connection);
+        endpointPool.put(nodeId, endpoint);
+        return endpoint;
     }
 
-    public synchronized RpcEndpoint createClient(String nodeId, @Nullable TurmsConnection connection) {
+    public RpcEndpoint createEndpoint(String nodeId, @Nullable TurmsConnection connection) {
         if (connection == null) {
             connection = connectionService.getMemberConnection(nodeId);
             if (connection == null) {

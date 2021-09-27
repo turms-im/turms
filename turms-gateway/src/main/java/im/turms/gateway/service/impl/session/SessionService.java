@@ -26,7 +26,7 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.gateway.manager.HeartbeatManager;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
-import im.turms.gateway.plugin.manager.TurmsPluginManager;
+import im.turms.gateway.plugin.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.observability.MetricsService;
 import im.turms.gateway.throttle.TokenBucketContext;

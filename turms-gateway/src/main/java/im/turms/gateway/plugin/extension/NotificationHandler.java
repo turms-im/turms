@@ -18,7 +18,7 @@
 package im.turms.gateway.plugin.extension;
 
 import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.server.common.plugin.base.TurmsExtension;
+import im.turms.server.common.plugin.ExtensionPoint;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotEmpty;
@@ -30,10 +30,10 @@ import java.util.Set;
  *
  * @author James Chen
  */
-public abstract class NotificationHandler extends TurmsExtension {
+public interface NotificationHandler extends ExtensionPoint {
 
-    public abstract Mono<Void> handle(@NotNull TurmsNotification notification,
-                                      @NotEmpty Set<Long> recipientIds,
-                                      @NotNull Set<Long> offlineRecipientIds);
+    Mono<Void> handle(@NotNull TurmsNotification notification,
+                      @NotEmpty Set<Long> recipientIds,
+                      @NotNull Set<Long> offlineRecipientIds);
 
 }

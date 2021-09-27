@@ -21,7 +21,7 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.manager.UserSessionsManager;
-import im.turms.gateway.plugin.manager.TurmsPluginManager;
+import im.turms.gateway.plugin.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.message.InboundRequestService;
 import im.turms.gateway.service.impl.session.SessionService;

@@ -53,17 +53,16 @@ public class TokenBucket {
             }
             return tryAcquire(time);
         }
-        long lastTime = lastRefillTime;
         int refillInterval = context.refillIntervalMillis;
         if (refillInterval <= 0) {
             return false;
         }
-        int periods = (int) (time - lastTime) / refillInterval;
+        int periods = (int) (time - lastRefillTime) / refillInterval;
         if (periods > 0) {
             // We expect tokensPerPeriod is always greater than 0
-            // so expectedTokens can be always greater than or equals to 0
-            int expectedTokens = Math.min(periods * context.tokensPerPeriod - 1, context.capacity);
-            if (TOKENS_UPDATER.compareAndSet(this, 0, expectedTokens)) {
+            // so tokenCount can be always greater than or equals to 0
+            tokenCount = Math.min(periods * context.tokensPerPeriod - 1, context.capacity);
+            if (TOKENS_UPDATER.compareAndSet(this, 0, tokenCount)) {
                 lastRefillTime = time;
                 return true;
             }

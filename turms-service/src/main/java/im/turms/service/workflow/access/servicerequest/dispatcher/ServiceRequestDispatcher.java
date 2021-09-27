@@ -34,7 +34,7 @@ import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.service.logging.ApiLoggingContext;
 import im.turms.service.logging.ClientApiLogging;
-import im.turms.service.plugin.manager.TurmsPluginManager;
+import im.turms.service.plugin.TurmsPluginManager;
 import im.turms.service.workflow.access.servicerequest.dto.ClientRequest;
 import im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResultFactory;
@@ -185,10 +185,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 request.getRequestId(),
                 request);
         Mono<ClientRequest> clientRequestMono = Mono.just(clientRequest);
-        List<im.turms.service.plugin.extension.handler.ClientRequestHandler> clientClientRequestHandlerList =
+        List<im.turms.service.plugin.extension.ClientRequestHandler> clientClientRequestHandlerList =
                 turmsPluginManager.getClientRequestHandlerList();
         if (pluginEnabled) {
-            for (im.turms.service.plugin.extension.handler.ClientRequestHandler clientRequestHandler : clientClientRequestHandlerList) {
+            for (im.turms.service.plugin.extension.ClientRequestHandler clientRequestHandler : clientClientRequestHandlerList) {
                 clientRequestMono = clientRequestMono
                         .flatMap(req -> Mono.defer(() -> clientRequestHandler.transform(req)));
             }
@@ -212,7 +212,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             Mono<RequestHandlerResult> result;
             if (pluginEnabled && !clientClientRequestHandlerList.isEmpty()) {
                 Mono<RequestHandlerResult> requestResultMono = Mono.empty();
-                for (im.turms.service.plugin.extension.handler.ClientRequestHandler clientRequestHandler : clientClientRequestHandlerList) {
+                for (im.turms.service.plugin.extension.ClientRequestHandler clientRequestHandler : clientClientRequestHandlerList) {
                     requestResultMono = requestResultMono
                             .switchIfEmpty(Mono.defer(() -> clientRequestHandler.handleClientRequest(lastClientRequest)));
                 }

@@ -17,6 +17,7 @@
 
 package im.turms.server.common.context;
 
+import im.turms.server.common.cluster.node.NodeType;
 import io.lettuce.core.RedisException;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Hooks;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -45,15 +47,24 @@ public class TurmsApplicationContext {
 
     private boolean isClosing;
 
+    private final Path home;
     private final boolean isProduction;
     private final boolean isDevOrLocalTest;
     private final String activeEnvProfile;
     private final String version;
 
     public TurmsApplicationContext(Environment environment,
+                                   NodeType nodeType,
                                    @Autowired(required = false) BuildProperties buildProperties) {
         // Don't allow developers to configure it because it's a bad practice to use other zone
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+
+        String homeDir = nodeType == NodeType.SERVICE
+                ? System.getenv("TURMS_SERVICE_HOME")
+                : System.getenv("TURMS_GATEWAY_HOME");
+        home = homeDir == null
+                ? Path.of("").toAbsolutePath()
+                : Path.of(homeDir).toAbsolutePath();
 
         List<String> devEnvs = List.of("dev", "development",
                 "local");

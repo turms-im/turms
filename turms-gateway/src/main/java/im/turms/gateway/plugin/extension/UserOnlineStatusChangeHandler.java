@@ -20,7 +20,7 @@ package im.turms.gateway.plugin.extension;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.server.common.dto.CloseReason;
-import im.turms.server.common.plugin.base.TurmsExtension;
+import im.turms.server.common.plugin.ExtensionPoint;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
@@ -30,10 +30,10 @@ import javax.validation.constraints.NotNull;
  *
  * @author James Chen
  */
-public abstract class UserOnlineStatusChangeHandler extends TurmsExtension {
+public interface UserOnlineStatusChangeHandler extends ExtensionPoint {
 
-    public abstract Mono<Void> goOnline(@NotNull UserSessionsManager userSessionsManager, @NotNull UserSession userSession);
+    Mono<Void> goOnline(@NotNull UserSessionsManager userSessionsManager, @NotNull UserSession userSession);
 
-    public abstract Mono<Void> goOffline(@NotNull UserSessionsManager userSessionsManager, @NotNull CloseReason closeReason);
+    Mono<Void> goOffline(@NotNull UserSessionsManager userSessionsManager, @NotNull CloseReason closeReason);
 
 }

@@ -71,7 +71,7 @@ import java.util.function.Consumer;
  * Data in Redis, taking IP blocklist as an example:
  * 1. "blocklist:ip:target": Sorted Set, sorted by the block end time. Used to perform full sync
  * 2. "blocklist:ip:timestamp": Integer. Used to detect whether the blocklist is cleared to
- * ensure the blocklist in nodes is consistent even the Redis server crashes or the blocklist is cleared
+ * ensure the blocklist in nodes is consistent even if the Redis server crashes or the blocklist is cleared
  * 3. "blocklist:ip:log": List. Used to perform delta sync
  * 4. "blocklist:ip:log_id": Counter. Used to perform delta sync
  */
@@ -114,6 +114,11 @@ public class BlocklistServiceManager<T> {
     private final ConcurrentHashMap<T, Long> blocklist;
     /**
      * Used to remove the local expired blocked clients quickly
+     * so that we can run eviction more frequently without worrying
+     * about if there are a lot of blocked clients
+     *
+     * @implNote It's acceptable to store the same IP/User ID with different
+     * block times in the skiplist because it's how the skiplist works
      */
     private final ConcurrentSkipListSet<BlockedClient> blockedClientSkipList;
 

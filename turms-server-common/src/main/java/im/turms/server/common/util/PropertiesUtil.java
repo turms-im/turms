@@ -116,7 +116,7 @@ public final class PropertiesUtil {
     public static TurmsProperties mergeAsProperties(
             @NotNull TurmsProperties propertiesToUpdate,
             Map<String, Object> propertiesForUpdating) throws IOException {
-        return mergeAsProperties(propertiesToUpdate, PropertiesUtil.toMutablePropertiesString(propertiesForUpdating));
+        return mergeAsProperties(propertiesToUpdate, toMutablePropertiesString(propertiesForUpdating));
     }
 
     public static Map<String, Object> mergePropertiesWithMetadata(

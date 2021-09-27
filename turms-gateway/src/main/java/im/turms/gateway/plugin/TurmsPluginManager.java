@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.plugin.manager;
+package im.turms.gateway.plugin;
 
 import im.turms.gateway.plugin.extension.NotificationHandler;
 import im.turms.gateway.plugin.extension.UserAuthenticator;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
-import im.turms.server.common.plugin.base.AbstractTurmsPluginManager;
+import im.turms.server.common.context.TurmsApplicationContext;
+import im.turms.server.common.plugin.AbstractTurmsPluginManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -43,15 +44,16 @@ public class TurmsPluginManager extends AbstractTurmsPluginManager {
 
     public TurmsPluginManager(
             ApplicationContext context,
-            TurmsPropertiesManager turmsPropertiesManager) {
-        super(context, turmsPropertiesManager.getLocalProperties());
+            TurmsApplicationContext applicationContext,
+            TurmsPropertiesManager propertiesManager) {
+        super(context, applicationContext, propertiesManager);
     }
 
     @Override
-    protected void initPlugins() {
-        notificationHandlerList = getAndInitExtensions(NotificationHandler.class);
-        userAuthenticatorList = getAndInitExtensions(UserAuthenticator.class);
-        userOnlineStatusChangeHandlerList = getAndInitExtensions(UserOnlineStatusChangeHandler.class);
+    protected void afterPluginsInitialized() {
+        notificationHandlerList = getAndStartExtensionPoints(NotificationHandler.class);
+        userAuthenticatorList = getAndStartExtensionPoints(UserAuthenticator.class);
+        userOnlineStatusChangeHandlerList = getAndStartExtensionPoints(UserOnlineStatusChangeHandler.class);
     }
 
 }

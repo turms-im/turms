@@ -15,18 +15,21 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.plugin.base;
+package unit.im.turms.server.common.plugin;
 
-import org.pf4j.Plugin;
-import org.pf4j.PluginWrapper;
+import im.turms.server.common.plugin.TurmsExtension;
+import im.turms.server.common.plugin.TurmsPlugin;
+
+import java.util.Set;
 
 /**
  * @author James Chen
  */
-public abstract class TurmsPlugin extends Plugin {
+public class MyPlugin extends TurmsPlugin {
 
-    public TurmsPlugin(PluginWrapper wrapper) {
-        super(wrapper);
+    @Override
+    public Set<Class<? extends TurmsExtension>> getExtensions() {
+        return Set.of(MyExtension.class);
     }
 
 }

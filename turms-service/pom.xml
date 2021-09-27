@@ -93,6 +93,15 @@
                             <goal>build-info</goal>
                         </goals>
                     </execution>
+                    <!-- Generate two jars,
+                    the original jar is used as deps for plugins to compile
+                    and the repackaged jar is used to run as a server -->
+                    <execution>
+                        <id>repackage</id>
+                        <configuration>
+                            <classifier>exec</classifier>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
@@ -111,8 +120,6 @@
                             <target>17</target>
                             <annotationProcessors>
                                 <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor
-                                </annotationProcessor>
-                                <annotationProcessor>org.pf4j.processor.ExtensionAnnotationProcessor
                                 </annotationProcessor>
                             </annotationProcessors>
                         </configuration>

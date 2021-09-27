@@ -42,7 +42,7 @@ public abstract class RpcRequestCodec<T extends RpcRequest<?>> implements Codec<
     public void write(ByteBuf output, T data) {
         TracingContext tracingContext = data.getTracingContext();
         if (!tracingContext.hasTraceId()) {
-            throw new IllegalArgumentException("Cannot get the trace ID in the request: " + data.name());
+            throw new IllegalArgumentException("The trace ID is missing in the request: " + data.name());
         }
         output.writeLong(tracingContext.getTraceId());
         writeRequestData(output, data);

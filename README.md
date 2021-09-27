@@ -57,9 +57,9 @@ And compared to many projects with obsolete technology stacks, Turms is also the
 
 In addition, architecture design is an art of trade-off. Some IM products take rich features as their slogan at the cost of no support for medium to large scale applications (they are only suitable for team communications). However, Turms takes extreme performance as the first priority and supports complete (rather than rich) IM features to support medium and large-scale applications. Please refer to [Turms Schema Design](https://turms-im.github.io/docs/for-developers/schema.html) and [Observability](https://turms-im.github.io/docs/for-developers/observability.html) for details.
 
-When you need to compare Turms with other open source IM projects for features, you can first compare Turms with other open source IM projects based on the following features of Turms. Usually, you can find the difference between professional IM projects and amateur IM projects through such comparisons. In addition, under the chapter of `Product Comparison`, we also mentioned the shortcomings of the Turms project for your reference.
+When you need to compare Turms with other open source IM projects for features, you can first compare Turms with other open source IM projects based on the following features of Turms. Usually, you can find the differences between professional IM projects and amateur IM projects. In addition, under the chapter of `Product Comparison`, we also mentioned the shortcomings of the Turms project for your reference.
 
-Note: The main disadvantage of the current Turms project is that it does not provide support for living/chat room. The technical implementation of the living/chat room is not difficult, but the product requirements, quality attribute requirements, and restrictive conditions are quite different from the scenarios of general social applications, so the first version of Turms design does not provide support for it. In addition, Turms is also not suitable for small-scale enterprise communication scenarios. Using Turms for enterprise communication scenarios is using a sledgehammer to crack a nut, because enterprise communication emphasizes feature-rich rather than extreme performance, which is inconsistent with the goals of Turms, so their design is also different. If you want to support enterprise communication scenarios, you need to develop on Turms yourselves.
+Note: The main disadvantage of the current Turms project is that it does not provide support for living/chat room. The technical implementation of the living/chat room is not difficult, but the product requirements, quality attribute requirements, and restrictive conditions are quite different from the scenarios of general social applications, so the first version of Turms does not provide support for it. In addition, Turms is also not suitable for small-scale enterprise communication scenarios. Using Turms for enterprise communication scenarios is using a sledgehammer to crack a nut, because enterprise communication emphasizes feature-rich rather than extreme performance, which is inconsistent with the goals of Turms, so their designs are also different. If you want to support enterprise communication scenarios, you need to develop based on Turms yourselves.
 
 ### Business Features
 
@@ -78,8 +78,6 @@ Note: The main disadvantage of the current Turms project is that it does not pro
 6. (Security) Support throttling API requests and blocking user/IP to resist most CC attacks
 7. (Simplicity) The Turms architecture is lightweight, which makes Turms easy to learn and redevelop. Please refer to [Turms Architecture Design](https://turms-im.github.io/docs/for-developers/architecture.html) for details)
 8. Turms depends on the MongoDB sharded cluster to support request routing (such as read-write separation) for medium to large scale applications
-
-### IM-specific Architecture Features (TODO)
 
 ### Other Features
 

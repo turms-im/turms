@@ -15,19 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.service.plugin.extension.handler;
-
-import im.turms.server.common.plugin.base.TurmsExtension;
-import im.turms.service.bo.AdminAction;
-import reactor.core.publisher.Mono;
-
-import javax.validation.constraints.NotNull;
+package org.springframework.boot;
 
 /**
  * @author James Chen
  */
-public abstract class AdminActionHandler extends TurmsExtension {
+public class SpringApplication {
 
-    public abstract Mono<Void> handleAdminAction(@NotNull AdminAction adminAction);
+    public boolean test() {
+        return true;
+    }
 
 }

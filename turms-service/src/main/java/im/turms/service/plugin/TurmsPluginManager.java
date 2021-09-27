@@ -15,14 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.service.plugin.manager;
+package im.turms.service.plugin;
 
-import im.turms.server.common.plugin.base.AbstractTurmsPluginManager;
+import im.turms.server.common.context.TurmsApplicationContext;
+import im.turms.server.common.plugin.AbstractTurmsPluginManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.service.plugin.extension.handler.AdminActionHandler;
-import im.turms.service.plugin.extension.handler.ClientRequestHandler;
-import im.turms.service.plugin.extension.handler.ExpiredMessageAutoDeletionNotificationHandler;
-import im.turms.service.plugin.extension.service.StorageServiceProvider;
+import im.turms.service.plugin.extension.AdminActionHandler;
+import im.turms.service.plugin.extension.ClientRequestHandler;
+import im.turms.service.plugin.extension.ExpiredMessageAutoDeletionNotificationHandler;
+import im.turms.service.plugin.extension.StorageServiceProvider;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
@@ -43,16 +44,18 @@ public class TurmsPluginManager extends AbstractTurmsPluginManager {
     private List<ExpiredMessageAutoDeletionNotificationHandler> expiredMessageAutoDeletionNotificationHandlerList;
     private StorageServiceProvider storageServiceProvider;
 
-    public TurmsPluginManager(ApplicationContext context, TurmsPropertiesManager turmsPropertiesManager) {
-        super(context, turmsPropertiesManager.getLocalProperties());
+    public TurmsPluginManager(ApplicationContext context,
+                              TurmsApplicationContext applicationContext,
+                              TurmsPropertiesManager propertiesManager) {
+        super(context, applicationContext, propertiesManager);
     }
 
     @Override
-    protected void initPlugins() {
-        adminActionHandlerList = getAndInitExtensions(AdminActionHandler.class);
-        clientRequestHandlerList = getAndInitExtensions(ClientRequestHandler.class);
-        expiredMessageAutoDeletionNotificationHandlerList = getAndInitExtensions(ExpiredMessageAutoDeletionNotificationHandler.class);
-        storageServiceProvider = getAndInitExtension(StorageServiceProvider.class);
+    protected void afterPluginsInitialized() {
+        adminActionHandlerList = getAndStartExtensionPoints(AdminActionHandler.class);
+        clientRequestHandlerList = getAndStartExtensionPoints(ClientRequestHandler.class);
+        expiredMessageAutoDeletionNotificationHandlerList = getAndStartExtensionPoints(ExpiredMessageAutoDeletionNotificationHandler.class);
+        storageServiceProvider = getAndStartFirstExtensionPoint(StorageServiceProvider.class);
     }
 
 }

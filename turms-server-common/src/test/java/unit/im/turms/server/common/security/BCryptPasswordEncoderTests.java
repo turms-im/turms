@@ -27,7 +27,8 @@ class BCryptPasswordEncoderTests extends BasePasswordEncoderTests {
 
     @Test
     void test() {
-        test(new BCryptPasswordEncoder());
+        int bcryptOutputLength = 24;
+        test(new BCryptPasswordEncoder(), BCryptPasswordEncoder.SALT_SIZE_BYTES + bcryptOutputLength);
     }
 
 }

@@ -15,11 +15,10 @@
  * limitations under the License.
  */
 
-package im.turms.service.plugin.extension.handler;
+package im.turms.service.plugin.extension;
 
-import im.turms.server.common.plugin.base.TurmsExtension;
-import im.turms.service.workflow.access.servicerequest.dto.ClientRequest;
-import im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResult;
+import im.turms.server.common.plugin.ExtensionPoint;
+import im.turms.service.bo.AdminAction;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
@@ -27,16 +26,8 @@ import javax.validation.constraints.NotNull;
 /**
  * @author James Chen
  */
-public abstract class ClientRequestHandler extends TurmsExtension {
+public interface AdminActionHandler extends ExtensionPoint {
 
-    /**
-     * @return the returned {@link ClientRequest} will be passed to downstream.
-     */
-    public abstract Mono<ClientRequest> transform(@NotNull ClientRequest clientRequest);
-
-    /**
-     * @return returning Mono.empty() will pass the request to downstream to handle.
-     */
-    public abstract Mono<RequestHandlerResult> handleClientRequest(@NotNull ClientRequest clientRequest);
+    Mono<Void> handleAdminAction(@NotNull AdminAction adminAction);
 
 }

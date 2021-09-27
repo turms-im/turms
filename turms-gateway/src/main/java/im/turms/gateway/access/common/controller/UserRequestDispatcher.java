@@ -160,7 +160,7 @@ public class UserRequestDispatcher {
                 })
                 .map(notification -> {
                     TurmsRequest.KindCase type = request.type();
-                    // TODO: exclude the error because the server is inactive
+                    // TODO: exclude the error caused by the inactive of turms-service
                     if (TurmsStatusCode.isServerError(notification.getCode())
                             || apiLoggingContext.shouldLogRequest(type) && finalCanLogRequest) {
                         try (TracingCloseableContext ignored = tracingContext.asCloseable()) {

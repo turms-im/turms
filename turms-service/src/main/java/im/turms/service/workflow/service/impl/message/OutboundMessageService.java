@@ -139,18 +139,18 @@ public class OutboundMessageService {
             messageData.release();
             return Mono.just(true);
         }
-        int recipientIdsSize = recipientIds.size();
-        if (recipientIdsSize == 1) {
+        int recipientIdCount = recipientIds.size();
+        if (recipientIdCount == 1) {
             return forwardClientMessageByRecipientId(messageData, recipientIds.iterator().next());
         }
-        List<Mono<RecipientAndNodeIds>> monos = new ArrayList<>(recipientIdsSize);
+        List<Mono<RecipientAndNodeIds>> monos = new ArrayList<>(recipientIdCount);
         for (Long recipientId : recipientIds) {
             monos.add(userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
                     .map(map -> new RecipientAndNodeIds(recipientId, map.values())));
         }
         return Flux.merge(monos)
                 .doOnError(t -> messageData.release())
-                .collect(CollectorUtil.toList(recipientIdsSize))
+                .collect(CollectorUtil.toList(recipientIdCount))
                 .flatMap(pairs -> {
                     if (pairs.isEmpty()) {
                         messageData.release();
@@ -161,8 +161,8 @@ public class OutboundMessageService {
                         messageData.release();
                         return Mono.just(false);
                     }
-                    int expectedMembersCount = Math.min(gatewayMemberCount, recipientIdsSize);
-                    int expectedRecipientCountPerMember = Math.max(1, recipientIdsSize / expectedMembersCount);
+                    int expectedMembersCount = Math.min(gatewayMemberCount, recipientIdCount);
+                    int expectedRecipientCountPerMember = Math.max(1, recipientIdCount / expectedMembersCount);
                     SetMultimap<String, Long> userIdsByNodeId =
                             HashMultimap.create(expectedMembersCount, expectedRecipientCountPerMember);
                     for (RecipientAndNodeIds pair : pairs) {
@@ -261,21 +261,21 @@ public class OutboundMessageService {
     // Logging
 
     private Mono<Boolean> tryLogNotification(Mono<Boolean> mono, TurmsNotification notification, int recipientCount) {
-        if (apiLoggingContext.shouldLogNotification(notification.getRelayedRequest().getKindCase())) {
-            return mono
-                    .doOnEach(signal -> {
-                        if (!signal.isOnNext()) {
-                            return;
-                        }
-                        boolean sent = Boolean.TRUE.equals(signal.get());
-                        RequestLoggingContext loggingContext = signal.getContextView()
-                                .getOrDefault(RequestLoggingContext.CTX_KEY_NAME, RequestLoggingContext.DEFAULT);
-                        try (TracingCloseableContext ignored = loggingContext.asCloseable()) {
-                            NotificationLogging.log(sent, notification, recipientCount);
-                        }
-                    });
+        if (!apiLoggingContext.shouldLogNotification(notification.getRelayedRequest().getKindCase())) {
+            return mono;
         }
-        return mono;
+        return mono
+                .doOnEach(signal -> {
+                    if (!signal.isOnNext()) {
+                        return;
+                    }
+                    boolean sent = Boolean.TRUE.equals(signal.get());
+                    RequestLoggingContext loggingContext = signal.getContextView()
+                            .getOrDefault(RequestLoggingContext.CTX_KEY_NAME, RequestLoggingContext.DEFAULT);
+                    try (TracingCloseableContext ignored = loggingContext.asCloseable()) {
+                        NotificationLogging.log(sent, notification, recipientCount);
+                    }
+                });
     }
 
     private record RecipientAndNodeIds(Long recipientId, Collection<String> nodeIds) {

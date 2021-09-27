@@ -3,7 +3,7 @@ package integration.im.turms.server.common.service.session;
 import im.turms.common.constant.DeviceType;
 import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.plugin.base.AbstractTurmsPluginManager;
+import im.turms.server.common.plugin.AbstractTurmsPluginManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.location.LocationProperties;

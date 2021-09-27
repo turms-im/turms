@@ -15,15 +15,25 @@
  * limitations under the License.
  */
 
-package im.turms.plugin.impl;
+package unit.im.turms.server.common.plugin;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import im.turms.plugin.MyExtensionPoint;
+import im.turms.server.common.cluster.service.rpc.RpcService;
+import im.turms.server.common.plugin.TurmsExtension;
+import org.springframework.boot.SpringApplication;
 
 /**
  * @author James Chen
  */
-@Configuration
-@EnableConfigurationProperties(MinioProperties.class)
-public class MinioAutoConfiguration {
+public class MyExtension extends TurmsExtension implements MyExtensionPoint {
+
+    // Used for tests
+    public Class<RpcService> rpcServiceClass = RpcService.class;
+    public SpringApplication application = new SpringApplication();
+
+    @Override
+    public boolean test() {
+        return true;
+    }
+
 }

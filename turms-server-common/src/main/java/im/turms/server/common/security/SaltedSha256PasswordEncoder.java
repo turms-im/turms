@@ -29,9 +29,9 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class SaltedSha256PasswordEncoder implements PasswordEncoder {
 
-    private static final int SALT_SIZE_BYTES = 8;
+    public static final int SALT_SIZE_BYTES = 8;
 
-    private final ThreadLocal<MessageDigest> sha256Digest = ThreadLocal.withInitial(() -> {
+    private static final ThreadLocal<MessageDigest> DIGEST = ThreadLocal.withInitial(() -> {
         try {
             return MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
@@ -41,7 +41,7 @@ public class SaltedSha256PasswordEncoder implements PasswordEncoder {
 
     public SaltedSha256PasswordEncoder() {
         // Check if SHA-256 exists
-        sha256Digest.get();
+        DIGEST.get();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class SaltedSha256PasswordEncoder implements PasswordEncoder {
         ThreadLocalRandom.current().nextBytes(salt);
 
         byte[] rawPasswordWithSalt = ArrayUtil.concat(salt, rawPassword);
-        byte[] saltedPassword = sha256Digest.get().digest(rawPasswordWithSalt);
+        byte[] saltedPassword = DIGEST.get().digest(rawPasswordWithSalt);
 
         return ArrayUtil.concat(salt, saltedPassword);
     }
@@ -63,7 +63,7 @@ public class SaltedSha256PasswordEncoder implements PasswordEncoder {
         byte[] rawPasswordWithSalt = new byte[SALT_SIZE_BYTES + rawPassword.length];
         System.arraycopy(saltedPasswordWithSalt, 0, rawPasswordWithSalt, 0, SALT_SIZE_BYTES);
         System.arraycopy(rawPassword, 0, rawPasswordWithSalt, SALT_SIZE_BYTES, rawPassword.length);
-        byte[] saltedPassword = sha256Digest.get().digest(rawPasswordWithSalt);
+        byte[] saltedPassword = DIGEST.get().digest(rawPasswordWithSalt);
         return Arrays.equals(saltedPassword, 0, saltedPassword.length,
                 saltedPasswordWithSalt, SALT_SIZE_BYTES, saltedPasswordWithSalt.length);
     }

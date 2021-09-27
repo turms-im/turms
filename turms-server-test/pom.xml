@@ -44,6 +44,9 @@
         <!-- Property -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+
+        <!-- Configs -->
+        <skipSTs>false</skipSTs>
     </properties>
 
     <dependencies>
@@ -149,6 +152,7 @@
                     <includes>
                         <include>**/*ST.java</include>
                     </includes>
+                    <skipTests>${skipSTs}</skipTests>
                 </configuration>
             </plugin>
         </plugins>

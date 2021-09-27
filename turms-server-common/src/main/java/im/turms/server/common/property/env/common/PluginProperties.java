@@ -37,10 +37,4 @@ public class PluginProperties {
     @Description("Whether to enable plugins")
     private boolean enabled = true;
 
-    @Description("The path of plugins")
-    private String dir = "plugins";
-
-    @Description("Whether to exit if any exception is thrown at startup")
-    private boolean exitIfExceptionOccursAtStartup = true;
-
 }

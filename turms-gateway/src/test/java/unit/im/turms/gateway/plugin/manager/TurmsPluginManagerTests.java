@@ -17,12 +17,15 @@
 
 package unit.im.turms.gateway.plugin.manager;
 
-import im.turms.gateway.plugin.manager.TurmsPluginManager;
+import im.turms.gateway.plugin.TurmsPluginManager;
+import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.PluginProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
+
+import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -41,12 +44,11 @@ class TurmsPluginManagerTests {
         TurmsProperties properties = new TurmsProperties().toBuilder()
                 .plugin(new PluginProperties().toBuilder()
                         .enabled(true)
-                        .dir(".")
                         .build())
                 .build();
         when(propertiesManager.getLocalProperties())
                 .thenReturn(properties);
-        TurmsPluginManager turmsPluginManager = new TurmsPluginManager(context, propertiesManager);
+        TurmsPluginManager turmsPluginManager = new TurmsPluginManager(context, getContext(), propertiesManager);
 
         assertThat(turmsPluginManager.getNotificationHandlerList()).isNotNull();
         assertThat(turmsPluginManager.getUserAuthenticatorList()).isNotNull();
@@ -60,15 +62,21 @@ class TurmsPluginManagerTests {
         TurmsProperties properties = new TurmsProperties().toBuilder()
                 .plugin(new PluginProperties().toBuilder()
                         .enabled(true)
-                        .dir(".")
                         .build())
                 .build();
         when(propertiesManager.getLocalProperties())
                 .thenReturn(properties);
-        TurmsPluginManager turmsPluginManager = new TurmsPluginManager(context, propertiesManager);
+        TurmsPluginManager turmsPluginManager = new TurmsPluginManager(context, getContext(), propertiesManager);
 
         assertThatCode(turmsPluginManager::destroy)
                 .doesNotThrowAnyException();
+    }
+
+    TurmsApplicationContext getContext() {
+        TurmsApplicationContext context = mock(TurmsApplicationContext.class);
+        when(context.getHome())
+                .thenReturn(Path.of(""));
+        return context;
     }
 
 }

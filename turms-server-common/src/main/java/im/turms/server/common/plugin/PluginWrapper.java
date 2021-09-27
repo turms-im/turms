@@ -15,23 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.service.plugin.extension.handler;
+package im.turms.server.common.plugin;
 
-import im.turms.server.common.plugin.base.TurmsExtension;
-import im.turms.service.workflow.dao.domain.message.Message;
-import reactor.core.publisher.Mono;
-
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
- * The plugin is useful when developers needing to persist messages in other places
- * while deleting them in the databases for turms servers.
- *
  * @author James Chen
  */
-public abstract class ExpiredMessageAutoDeletionNotificationHandler extends TurmsExtension {
-
-    public abstract Mono<List<Message>> getMessagesToDelete(@NotEmpty List<Message> messages);
-
+public record PluginWrapper(
+        PluginDescriptor descriptor,
+        TurmsPlugin plugin,
+        List<TurmsExtension> extensions
+) {
 }

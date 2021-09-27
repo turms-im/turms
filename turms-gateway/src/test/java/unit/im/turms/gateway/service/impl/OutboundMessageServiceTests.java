@@ -21,7 +21,7 @@ import im.turms.common.constant.DeviceType;
 import im.turms.gateway.logging.ApiLoggingContext;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.NotificationHandler;
-import im.turms.gateway.plugin.manager.TurmsPluginManager;
+import im.turms.gateway.plugin.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.bo.session.connection.TcpConnection;
 import im.turms.gateway.service.impl.message.OutboundMessageService;

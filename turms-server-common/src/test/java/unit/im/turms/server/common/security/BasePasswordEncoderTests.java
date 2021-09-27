@@ -28,12 +28,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public abstract class BasePasswordEncoderTests {
 
-    void test(PasswordEncoder encoder) {
+    void test(PasswordEncoder encoder, int expectedEncodedPasswordLength) {
         byte[] rawPassword = "asdfjh9^(*:L}{<sdfy516测试テスト".getBytes(StandardCharsets.UTF_8);
         byte[] encodedPassword = encoder.encode(rawPassword);
         boolean matches = encoder.matches(rawPassword, encodedPassword);
 
         assertThat(matches).isTrue();
+        assertThat(encodedPassword).hasSize(expectedEncodedPasswordLength);
 
         rawPassword = "asdfjh9^(*:L}{<sdfy516".getBytes(StandardCharsets.UTF_8);
         matches = encoder.matches(rawPassword, encodedPassword);

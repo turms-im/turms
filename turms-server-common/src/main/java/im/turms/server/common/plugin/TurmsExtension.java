@@ -15,19 +15,48 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.plugin.base;
+package im.turms.server.common.plugin;
 
-import lombok.Data;
-import org.pf4j.ExtensionPoint;
 import org.springframework.context.ApplicationContext;
 
 /**
  * @author James Chen
  */
-@Data
-public abstract class TurmsExtension implements ExtensionPoint {
+public abstract class TurmsExtension {
 
     private ApplicationContext context;
-    private boolean isServing;
+    private boolean started;
+
+    protected ApplicationContext getContext() {
+        return context;
+    }
+
+    void setContext(ApplicationContext context) {
+        this.context = context;
+    }
+
+    protected <T> T loadProperties(Class<T> propertiesClass) {
+        return context.getBean(AbstractTurmsPluginManager.class).loadProperties(propertiesClass);
+    }
+
+    void start() {
+        if (!started) {
+            onStarted();
+        }
+        started = true;
+    }
+
+    void stop() {
+        if (started) {
+            onStopped();
+        }
+        started = false;
+    }
+
+    protected void onStarted() {
+    }
+
+    protected void onStopped() {
+    }
 
 }

@@ -46,7 +46,7 @@ public class FakeProperties {
     @Min(0)
     private int userCount = 100;
 
-    @Description("The number of requests to send per interval Interval. " +
+    @Description("The number of requests to send per interval. " +
             "If requestIntervalMillis is 1000, requestCountPerInterval is TPS in fact")
     @Min(1)
     private int requestCountPerInterval = 10;

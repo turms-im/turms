@@ -21,13 +21,12 @@ import im.turms.common.constant.ContentType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.util.AssertUtil;
-import im.turms.service.plugin.extension.service.StorageServiceProvider;
-import im.turms.service.plugin.manager.TurmsPluginManager;
+import im.turms.service.plugin.TurmsPluginManager;
+import im.turms.service.plugin.extension.StorageServiceProvider;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -38,11 +37,11 @@ public class StorageService {
     private final StorageServiceProvider provider;
 
     public StorageService(TurmsPluginManager turmsPluginManager) {
-        this.provider = turmsPluginManager.getStorageServiceProvider();
+        provider = turmsPluginManager.getStorageServiceProvider();
     }
 
-    public Mono<String> queryPresignedGetUrl(@NotNull Long requesterId,
-                                             @NotNull ContentType contentType,
+    public Mono<String> queryPresignedGetUrl(Long requesterId,
+                                             ContentType contentType,
                                              @Nullable String keyStr,
                                              @Nullable Long keyNum) {
         try {
@@ -51,19 +50,18 @@ public class StorageService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (provider != null) {
-            if (provider.isServing()) {
-                return provider.queryPresignedGetUrl(requesterId, contentType, keyStr, keyNum);
-            } else {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
-            }
-        } else {
+        if (provider == null) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.STORAGE_NOT_IMPLEMENTED));
+        }
+        try {
+            return provider.queryPresignedGetUrl(requesterId, contentType, keyStr, keyNum);
+        } catch (Exception e) {
+            return Mono.error(e);
         }
     }
 
-    public Mono<String> queryPresignedPutUrl(@NotNull Long requesterId,
-                                             @NotNull ContentType contentType,
+    public Mono<String> queryPresignedPutUrl(Long requesterId,
+                                             ContentType contentType,
                                              @Nullable String keyStr,
                                              @Nullable Long keyNum,
                                              long contentLength) {
@@ -73,19 +71,18 @@ public class StorageService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (provider != null) {
-            if (provider.isServing()) {
-                return provider.queryPresignedPutUrl(requesterId, contentType, keyStr, keyNum, contentLength);
-            } else {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
-            }
-        } else {
+        if (provider == null) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.STORAGE_NOT_IMPLEMENTED));
+        }
+        try {
+            return provider.queryPresignedPutUrl(requesterId, contentType, keyStr, keyNum, contentLength);
+        } catch (Exception e) {
+            return Mono.error(e);
         }
     }
 
-    public Mono<Void> deleteResource(@NotNull Long requesterId,
-                                     @NotNull ContentType contentType,
+    public Mono<Void> deleteResource(Long requesterId,
+                                     ContentType contentType,
                                      @Nullable String keyStr,
                                      @Nullable Long keyNum) {
         try {
@@ -94,14 +91,13 @@ public class StorageService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (provider != null) {
-            if (provider.isServing()) {
-                return provider.deleteResource(requesterId, contentType, keyStr, keyNum);
-            } else {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
-            }
-        } else {
+        if (provider == null) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.STORAGE_NOT_IMPLEMENTED));
+        }
+        try {
+            return provider.deleteResource(requesterId, contentType, keyStr, keyNum);
+        } catch (Exception e) {
+            return Mono.error(e);
         }
     }
 

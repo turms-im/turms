@@ -18,7 +18,7 @@
 package im.turms.gateway.plugin.extension;
 
 import im.turms.gateway.pojo.bo.login.UserLoginInfo;
-import im.turms.server.common.plugin.base.TurmsExtension;
+import im.turms.server.common.plugin.ExtensionPoint;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author James Chen
  */
-public abstract class UserAuthenticator extends TurmsExtension {
+public interface UserAuthenticator extends ExtensionPoint {
 
     /**
      * @return 1. Return Mono.just(true) if the user is authenticated.
@@ -35,6 +35,6 @@ public abstract class UserAuthenticator extends TurmsExtension {
      * <p>
      * 3. Return Mono.empty() if the authentication should be processed by the next handler.
      */
-    public abstract Mono<Boolean> authenticate(@NotNull UserLoginInfo userLoginInfo);
+    Mono<Boolean> authenticate(@NotNull UserLoginInfo userLoginInfo);
 
 }
