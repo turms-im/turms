@@ -64,6 +64,7 @@ turms-client-swift/.build/
 
 ### Turms Plugins ###
 turms-plugins/turms-plugin-minio/target/
+turms-plugins/turms-plugin-spam/target/
 turms-plugin-demo/target/
 
 ### Turms Docs ###
