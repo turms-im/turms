@@ -28,30 +28,30 @@ import java.util.Queue;
  */
 public class AhoCorasickDoubleArrayTrie {
 
-    private final int[] fail;
-    private final int[][] output;
-    private final int[] termLengths;
-    private final DoubleArrayTrie dat;
+    final int[] fail;
+    final int[][] output;
+    final int[] termLengths;
+    final DoubleArrayTrie dat;
 
-    public AhoCorasickDoubleArrayTrie(List<String> terms) {
+    public AhoCorasickDoubleArrayTrie(List<char[]> terms) {
         termLengths = new int[terms.size()];
         Trie trie = new Trie();
         int i = 0;
-        for (String term : terms) {
-            termLengths[i] = term.length();
+        for (char[] term : terms) {
+            termLengths[i] = term.length;
             trie.addTerm(term, i++);
         }
         dat = new DoubleArrayTrie(trie, terms.size());
-        fail = new int[dat.currentMaxCodePoint + 1];
-        output = new int[dat.currentMaxCodePoint + 1][];
+        fail = new int[dat.capacity];
+        output = new int[dat.capacity][];
         constructOutputAndFailure(trie);
     }
 
     public void findOccurrences(char[] text, HitHandler handler) {
         int position = 1;
         int currentState = 0;
-        for (char codePoint : text) {
-            currentState = findNextState(currentState, codePoint);
+        for (char code : text) {
+            currentState = findNextState(currentState, code);
             int[] emits = output[currentState];
             if (emits != null) {
                 for (int emit : emits) {
@@ -64,8 +64,8 @@ public class AhoCorasickDoubleArrayTrie {
 
     public boolean matches(char[] text) {
         int currentState = 0;
-        for (char codePoint : text) {
-            currentState = findNextState(currentState, codePoint);
+        for (char code : text) {
+            currentState = findNextState(currentState, code);
             int[] emits = output[currentState];
             if (emits != null) {
                 return true;
@@ -74,18 +74,18 @@ public class AhoCorasickDoubleArrayTrie {
         return false;
     }
 
-    private int findNextState(int currentState, char codePoint) {
-        int nextState = transitionWithRoot(currentState, codePoint);
+    private int findNextState(int currentState, char code) {
+        int nextState = transitionWithRoot(currentState, code);
         while (nextState == -1) {
             currentState = fail[currentState];
-            nextState = transitionWithRoot(currentState, codePoint);
+            nextState = transitionWithRoot(currentState, code);
         }
         return nextState;
     }
 
-    private int transitionWithRoot(int indexInDat, char codePoint) {
+    private int transitionWithRoot(int indexInDat, char code) {
         int offset = dat.base[indexInDat];
-        int nextState = offset + codePoint + 1;
+        int nextState = offset + code + 1;
         if (offset == dat.check[nextState]) {
             return nextState;
         }
@@ -99,8 +99,7 @@ public class AhoCorasickDoubleArrayTrie {
         for (State depthOneState : trie.rootState.getStates()) {
             State rootState = trie.rootState;
             depthOneState.failure = rootState;
-            int indexInDat = rootState.indexInDat;
-            fail[indexInDat] = indexInDat;
+            fail[depthOneState.failure.indexInDat] = rootState.indexInDat;
             queue.add(depthOneState);
             constructOutput(depthOneState);
         }
@@ -119,8 +118,7 @@ public class AhoCorasickDoubleArrayTrie {
                 }
                 State newFailureState = traceFailureState.findNextState(transition);
                 targetState.failure = newFailureState;
-                int indexInDat = newFailureState.indexInDat;
-                fail[indexInDat] = indexInDat;
+                fail[targetState.indexInDat] = newFailureState.indexInDat;
                 IntHashSet emits = newFailureState.emits;
                 if (emits != null) {
                     targetState.addEmits(emits);

@@ -24,9 +24,9 @@ public class Trie {
 
     final State rootState = new State(0);
 
-    void addTerm(String term, int termIndex) {
+    void addTerm(char[] term, int termIndex) {
         State state = rootState;
-        for (char character : term.toCharArray()) {
+        for (char character : term) {
             state = state.addState(character);
         }
         state.addEmit(termIndex);

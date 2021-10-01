@@ -17,9 +17,8 @@
 
 package im.turms.plugin.spam.ac;
 
-import javax.annotation.Nullable;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -31,33 +30,32 @@ import java.util.Set;
 public class DoubleArrayTrie {
 
     private static final int MAX_CAPACITY = 10_000_000;
-    private static final float MIN_GROW_FACTOR = 1.1f;
+    private static final float GROW_FACTOR = 1.5f;
 
     /**
      * nextState = base[currentState] + code
      * value: 0 if unused; positive for termination; negative for leaf
+     * range: [0, currentMaxPos]
      */
     int[] base;
     /**
-     * check[nextState] == currentState
+     * check[nextState] = currentState
      * value: 0 if unused; positive if used
+     * range: [0, currentMaxPos]
      */
     int[] check;
-    @Nullable
-    private boolean[] used;
-    /**
-     * a parameter controls the memory growth speed of the arrays
-     */
-    private int progress;
     /**
      * the next position to check unused memory
      */
-    private int nextCheckPos;
+    int checkPosForNextRun;
 
-    int currentMaxCodePoint;
+    /**
+     * currentMaxPos = max code + 1. Add 1 to avoid occupying the position of root
+     */
+    int currentMaxPos;
 
-    private int capacity;
-    private final int termCount;
+    int capacity;
+    final int termCount;
 
     public DoubleArrayTrie(Trie trie, int termCount) {
         this.termCount = termCount;
@@ -74,86 +72,93 @@ public class DoubleArrayTrie {
         for (Map.Entry<Character, State> entry : siblingEntries) {
             siblings.add(new NodeEntry(entry.getKey() + 1, entry.getValue()));
         }
-        Queue<SiblingGroup> siblingGroupQueue = new ArrayDeque<>(16);
+        Queue<SiblingGroup> siblingGroupQueue = new LinkedList<>();
         SiblingGroup siblingGroup = new SiblingGroup(-1, siblings);
         do {
             insert(siblingGroupQueue, siblingGroup);
         } while ((siblingGroup = siblingGroupQueue.poll()) != null);
+        compact();
     }
 
-    private void resize(int newSize) {
+    private void ensureSize(int minSize) {
+        if (capacity >= minSize) {
+            return;
+        }
+        if (minSize >= MAX_CAPACITY) {
+            throw new RuntimeException("The capacity of double array trie cannot be greater than %d. Requested: %d"
+                    .formatted(MAX_CAPACITY, minSize));
+        }
+        int newSize = capacity == 0 ? 65536 : (int) (capacity * 1.5f);
+        newSize = Math.max(minSize, newSize);
         int[] newBase = new int[newSize];
         int[] newCheck = new int[newSize];
-        boolean[] newUsed = new boolean[newSize];
         if (capacity > 0) {
             System.arraycopy(base, 0, newBase, 0, capacity);
             System.arraycopy(check, 0, newCheck, 0, capacity);
-            System.arraycopy(used, 0, newUsed, 0, capacity);
         }
         base = newBase;
         check = newCheck;
-        used = newUsed;
         capacity = newSize;
+    }
+
+    private void compact() {
+        int newCapacity = currentMaxPos + 1;
+        if (capacity <= newCapacity) {
+            return;
+        }
+        int[] newBase = new int[newCapacity];
+        int[] newCheck = new int[newCapacity];
+        System.arraycopy(base, 0, newBase, 0, newCapacity);
+        System.arraycopy(check, 0, newCheck, 0, newCapacity);
+        base = newBase;
+        check = newCheck;
+        capacity = newCapacity;
     }
 
     private void insert(Queue<SiblingGroup> siblingGroupQueue, SiblingGroup siblingGroup) {
         List<NodeEntry> siblings = siblingGroup.siblings;
-
         int siblingCount = siblings.size();
         int firstSiblingPos = siblings.get(0).pos;
+        int lastSiblingPos = siblings.get(siblingCount - 1).pos;
+        // > 0 because base[0] is for the root state
         int begin;
-        int pos = Math.max(firstSiblingPos, nextCheckPos - 1);
+        int checkPos = Math.max(firstSiblingPos, checkPosForNextRun);
         int usedSize = 0;
-        boolean first = false;
+        boolean isFirstFreeCheckPosFound = false;
 
-        if (capacity <= pos) {
-            resize(pos + 1);
-        }
-
-        // Find the "pos" and "begin" to ensure there is
-        // an available continuous space for siblings that satisfy
+        // Find the "checkPos" and "begin" to ensure there are
+        // consecutive free positions for siblings that satisfy
         // base[begin + siblings1...siblingsn]
         findBeginLoop:
         while (true) {
-            pos++;
-            if (capacity <= pos) {
-                resize(pos + 1);
-            }
-            if (check[pos] == 0) {
-                if (!first) {
-                    nextCheckPos = pos;
-                    first = true;
-                }
-            } else {
+            checkPos++;
+            ensureSize(checkPos);
+            if (check[checkPos] != 0) {
                 usedSize++;
                 continue;
             }
-            begin = pos - firstSiblingPos;
-            if (capacity <= (begin + siblings.get(siblingCount - 1).pos)) {
-                int newSize = (int) (Math.max(MIN_GROW_FACTOR, ((float) termCount) / (progress + 1)) * capacity);
-                if (newSize >= MAX_CAPACITY) {
-                    throw new RuntimeException("The capacity of double array trie cannot be greater than %d. Requested: %d"
-                            .formatted(MAX_CAPACITY, newSize));
-                }
-                resize(Math.min(newSize, MAX_CAPACITY));
+            if (!isFirstFreeCheckPosFound) {
+                checkPosForNextRun = checkPos;
+                isFirstFreeCheckPosFound = true;
             }
-            if (used[begin]) {
-                continue;
-            }
-            for (int i = 1; i < siblingCount; i++) {
+            begin = checkPos - firstSiblingPos;
+            ensureSize(begin + lastSiblingPos);
+            for (int i = 0; i < siblingCount; i++) {
                 if (check[begin + siblings.get(i).pos] != 0) {
                     continue findBeginLoop;
                 }
             }
+            if (checkPosForNextRun == checkPos) {
+                checkPosForNextRun += siblingCount;
+            }
             break;
         }
 
-        used[begin] = true;
-        currentMaxCodePoint = Math.max(currentMaxCodePoint, begin + siblings.get(siblingCount - 1).pos + 1);
-        // if 95% space of check between the "nextCheckPos" and "pos"
-        // is taken, set "nextCheckPos" to "pos" to find the next position when inserting the next node
-        if (((float) usedSize) / (pos - nextCheckPos + 1) >= 0.95f) {
-            nextCheckPos = pos;
+        currentMaxPos = Math.max(currentMaxPos, begin + lastSiblingPos);
+        // if 95% positions of check between "nextCheckPos" and "pos"
+        // is taken, set "checkPosForNextRun" to "pos" to find the next check position next time
+        if (((float) usedSize) / (checkPos - checkPosForNextRun + 1) >= 0.95f) {
+            checkPosForNextRun = checkPos;
         }
         for (NodeEntry sibling : siblings) {
             int targetPos = begin + sibling.pos;
@@ -171,7 +176,6 @@ public class DoubleArrayTrie {
             }
             if (newSiblings.isEmpty()) {
                 base[targetPos] = -parent.getLargestTermIndex() - 1;
-                progress++;
             } else {
                 siblingGroupQueue.add(new SiblingGroup(targetPos, newSiblings));
             }
@@ -186,7 +190,7 @@ public class DoubleArrayTrie {
     }
 
     /**
-     * @param pos = code point + 1
+     * @param pos = code + 1. Add 1 to avoid occupying the position of root
      */
     private record NodeEntry(int pos, State state) {
     }

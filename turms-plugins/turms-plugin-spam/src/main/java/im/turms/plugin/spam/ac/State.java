@@ -39,12 +39,12 @@ public class State {
     int largestTermIndex;
     int indexInDat;
 
-    public State(int depth) {
+    State(int depth) {
         this.depth = depth;
         success = new TreeMap<>();
     }
 
-    public void addEmit(int termIndex) {
+    void addEmit(int termIndex) {
         if (emits == null) {
             emits = new IntHashSet(4);
         }
@@ -61,7 +61,7 @@ public class State {
         return largestTermIndex;
     }
 
-    public void addEmits(IntHashSet emits) {
+    void addEmits(IntHashSet emits) {
         MutableIntIterator iterator = emits.intIterator();
         while (iterator.hasNext()) {
             addEmit(iterator.next());
@@ -72,8 +72,8 @@ public class State {
         return depth > 0 && emits != null;
     }
 
-    State findNextState(char codePoint) {
-        State nextState = success.get(codePoint);
+    State findNextState(char code) {
+        State nextState = success.get(code);
         if (nextState == null && depth == 0) {
             nextState = this;
         }
@@ -81,15 +81,15 @@ public class State {
     }
 
     @Nullable
-    private State nextStateIgnoreRootState(char codePoint) {
-        return success.get(codePoint);
+    private State nextStateIgnoreRootState(char code) {
+        return success.get(code);
     }
 
-    State addState(char codePoint) {
-        State nextState = nextStateIgnoreRootState(codePoint);
+    State addState(char code) {
+        State nextState = nextStateIgnoreRootState(code);
         if (nextState == null) {
             nextState = new State(depth + 1);
-            success.put(codePoint, nextState);
+            success.put(code, nextState);
         }
         return nextState;
     }
