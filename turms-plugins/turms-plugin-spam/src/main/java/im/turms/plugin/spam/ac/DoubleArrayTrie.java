@@ -44,21 +44,17 @@ public class DoubleArrayTrie {
      * range: [0, currentMaxPos]
      */
     int[] check;
+    int capacity;
     /**
      * the next position to check unused memory
      */
     int checkPosForNextRun;
-
     /**
      * currentMaxPos = max code + 1. Add 1 to avoid occupying the position of root
      */
     int currentMaxPos;
 
-    int capacity;
-    final int termCount;
-
-    public DoubleArrayTrie(Trie trie, int termCount) {
-        this.termCount = termCount;
+    public DoubleArrayTrie(Trie trie) {
         State rootNode = trie.rootState;
         Set<Map.Entry<Character, State>> siblingEntries = rootNode.success.entrySet();
         int size = siblingEntries.size();
@@ -80,6 +76,12 @@ public class DoubleArrayTrie {
         compact();
     }
 
+    public DoubleArrayTrie(int[] base, int[] check, int capacity) {
+        this.base = base;
+        this.check = check;
+        this.capacity = capacity;
+    }
+
     private void ensureSize(int minSize) {
         if (capacity >= minSize) {
             return;
@@ -88,7 +90,7 @@ public class DoubleArrayTrie {
             throw new RuntimeException("The capacity of double array trie cannot be greater than %d. Requested: %d"
                     .formatted(MAX_CAPACITY, minSize));
         }
-        int newSize = capacity == 0 ? 65536 : (int) (capacity * 1.5f);
+        int newSize = capacity == 0 ? 65536 : (int) (capacity * GROW_FACTOR);
         newSize = Math.max(minSize, newSize);
         int[] newBase = new int[newSize];
         int[] newCheck = new int[newSize];
@@ -119,8 +121,10 @@ public class DoubleArrayTrie {
         List<NodeEntry> siblings = siblingGroup.siblings;
         int siblingCount = siblings.size();
         int firstSiblingPos = siblings.get(0).pos;
-        int lastSiblingPos = siblings.get(siblingCount - 1).pos;
-        // > 0 because base[0] is for the root state
+        int lastSiblingPos = siblingCount > 1
+                ? siblings.get(siblingCount - 1).pos
+                : firstSiblingPos;
+        // begin is always greater than 0 because base[0] is for the root state
         int begin;
         int checkPos = Math.max(firstSiblingPos, checkPosForNextRun);
         int usedSize = 0;
@@ -128,11 +132,11 @@ public class DoubleArrayTrie {
 
         // Find the "checkPos" and "begin" to ensure there are
         // consecutive free positions for siblings that satisfy
-        // base[begin + siblings1...siblingsn]
+        // base[begin + siblings[0].pos...siblings[n].pos]
         findBeginLoop:
         while (true) {
             checkPos++;
-            ensureSize(checkPos);
+            ensureSize(checkPos + 1);
             if (check[checkPos] != 0) {
                 usedSize++;
                 continue;
@@ -142,7 +146,7 @@ public class DoubleArrayTrie {
                 isFirstFreeCheckPosFound = true;
             }
             begin = checkPos - firstSiblingPos;
-            ensureSize(begin + lastSiblingPos);
+            ensureSize(begin + lastSiblingPos + 1);
             for (int i = 0; i < siblingCount; i++) {
                 if (check[begin + siblings.get(i).pos] != 0) {
                     continue findBeginLoop;
@@ -166,7 +170,7 @@ public class DoubleArrayTrie {
             State parent = sibling.state;
             Set<Map.Entry<Character, State>> siblingEntries = parent.success.entrySet();
             List<NodeEntry> newSiblings = new ArrayList<>(siblingEntries.size() + 1);
-            if (parent.isMiddleState()) {
+            if (parent.isTermination()) {
                 State child = new State(-parent.depth - 1);
                 child.addEmit(parent.getLargestTermIndex());
                 newSiblings.add(new NodeEntry(0, child));

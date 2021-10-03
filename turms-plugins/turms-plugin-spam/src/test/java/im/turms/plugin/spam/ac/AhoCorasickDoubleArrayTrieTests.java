@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-import im.turms.plugin.spam.ac.AhoCorasickDoubleArrayTrie;
+package im.turms.plugin.spam.ac;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,25 +30,11 @@ class AhoCorasickDoubleArrayTrieTests {
 
     @Test
     void test() {
-        List<char[]> terms = Stream.of(
-                        "薬指",
-                        "リング",
-                        "人目忍ぶ恋",
-                        "選んだ",
-                        "強い",
-                        "女",
-                        "見えて",
-                        "心",
-                        "中",
-                        "切なさ",
-                        "揺れて",
-                        "oh no",
-                        "oh yes",
-                        "but no",
-                        "loving you is not right")
-                .map(String::toCharArray)
-                .toList();
+        List<char[]> terms = Store.TERMS;
         AhoCorasickDoubleArrayTrie trie = new AhoCorasickDoubleArrayTrie(terms);
+        for (char[] term : terms) {
+            assertThat(trie.matches(term)).isTrue();
+        }
         assertThat(trie.matches("人".toCharArray())).isFalse();
         assertThat(trie.matches("恋".toCharArray())).isFalse();
         assertThat(trie.matches("人目忍ぶ".toCharArray())).isFalse();
@@ -57,6 +43,11 @@ class AhoCorasickDoubleArrayTrieTests {
 
         assertThat(trie.matches("oo".toCharArray())).isFalse();
         assertThat(trie.matches("oh no".toCharArray())).isTrue();
+
+        assertThat(trie.matches("靐靐".toCharArray())).isTrue();
+        assertThat(trie.matches("雷靐".toCharArray())).isTrue();
+        assertThat(trie.matches("靐雷".toCharArray())).isTrue();
+        assertThat(trie.matches("雷雷".toCharArray())).isFalse();
     }
 
 }

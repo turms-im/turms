@@ -19,7 +19,7 @@ package im.turms.plugin.spam.ac;
 
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
-import java.util.ArrayDeque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -41,10 +41,17 @@ public class AhoCorasickDoubleArrayTrie {
             termLengths[i] = term.length;
             trie.addTerm(term, i++);
         }
-        dat = new DoubleArrayTrie(trie, terms.size());
+        dat = new DoubleArrayTrie(trie);
         fail = new int[dat.capacity];
         output = new int[dat.capacity][];
         constructOutputAndFailure(trie);
+    }
+
+    public AhoCorasickDoubleArrayTrie(int[] fail, int[][] output, int[] termLengths, DoubleArrayTrie dat) {
+        this.fail = fail;
+        this.output = output;
+        this.termLengths = termLengths;
+        this.dat = dat;
     }
 
     public void findOccurrences(char[] text, HitHandler handler) {
@@ -93,7 +100,7 @@ public class AhoCorasickDoubleArrayTrie {
     }
 
     private void constructOutputAndFailure(Trie trie) {
-        Queue<State> queue = new ArrayDeque<>(16);
+        Queue<State> queue = new LinkedList<>();
 
         // Point the failure of states of the depth 1 to the root state
         for (State depthOneState : trie.rootState.getStates()) {
@@ -104,8 +111,8 @@ public class AhoCorasickDoubleArrayTrie {
             constructOutput(depthOneState);
         }
 
-        // Use BFS for states of the depth >1 to set failure to
-        // the same code point in the direct children of the failure of the parent state.
+        // Use BFS to set the failure of the states of depth >1 to
+        // the same code in the direct children of the failure of the parent state.
         // If not found, refers to the root state.
         State currentState;
         while ((currentState = queue.poll()) != null) {

@@ -68,7 +68,7 @@ public class State {
         }
     }
 
-    boolean isMiddleState() {
+    boolean isTermination() {
         return depth > 0 && emits != null;
     }
 
