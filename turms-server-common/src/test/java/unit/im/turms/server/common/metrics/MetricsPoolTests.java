@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package unit.im.turms.server.common.actuator.metrics;
+package unit.im.turms.server.common.metrics;
 
-import im.turms.server.common.actuator.metrics.MetricsPool;
+import im.turms.server.common.metrics.MetricsPool;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;

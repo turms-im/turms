@@ -25,10 +25,13 @@ import org.springframework.boot.web.server.Ssl;
 import reactor.netty.ChannelBindException;
 import reactor.netty.DisposableServer;
 import reactor.netty.channel.ChannelOperations;
+import reactor.netty.channel.MicrometerChannelMetricsRecorder;
 import reactor.netty.tcp.TcpServer;
 
 import java.time.Duration;
 import java.util.function.Consumer;
+
+import static im.turms.server.common.constant.CommonMetricsConstant.NODE_TCP_SERVER_NAME;
 
 /**
  * @author James Chen
@@ -74,6 +77,7 @@ public class ConnectionServer {
                         .runOn(LoopResourcesFactory.createForServer("connection-server"))
                         .host(host)
                         .port(currentPort)
+                        .metrics(true, () -> new MicrometerChannelMetricsRecorder(NODE_TCP_SERVER_NAME, "tcp"))
                         .doOnConnection(connection -> connectionConsumer.accept((ChannelOperations<?, ?>) connection));
                 if (ssl.isEnabled()) {
                     tcpServer.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true));
@@ -91,7 +95,7 @@ public class ConnectionServer {
                 }
             }
         }
-        this.port = currentPort;
+        port = currentPort;
     }
 
     public void dispose() {

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.actuator.metrics;
+package im.turms.server.common.metrics;
 
 import im.turms.server.common.lang.StrJoiner;
 import im.turms.server.common.util.ReflectionUtil;

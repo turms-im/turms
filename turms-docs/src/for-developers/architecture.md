@@ -66,7 +66,7 @@
 * 如果turms-gateway放行TCP连接，
 
   * 对于使用纯TCP连接的Turms客户端，客户端可以开始发起`TurmsRequest`的Protobuf数据流。该数据流由ZigZag编码的`正文长度`头，与Protobuf编码的`正文`，这两部分组成。
-  * 对于使用WebSocket连接的Turms客户端，客户端会在TCP连接建立成功后，向turms-gateway发起HTTP Upgrade请求，请求将HTTP Upgrade成WebSocket协议。如果升级成功，客户端就可以通过在WebSocket Binary Frame的正文中，存放Protobuf编码`TurmsRequest`数据，并向turms-gateway发送数据流。
+  * 对于使用WebSocket连接的Turms客户端，客户端会在TCP连接建立成功后，向turms-gateway发起HTTP Upgrade请求，请求将HTTP Upgrade成WebSocket协议。如果升级成功，客户端就可以把Protobuf编码的`TurmsRequest`数据放在WebSocket Binary Frame的正文中，并发送给turms-gateway。
 
   注意：这时Turms客户端只是与turms-gateway建立的网络层连接，但用户尚未`登陆`，也并没有建立`会话信息`。
 
@@ -84,6 +84,6 @@
 
     补充：Turms采用MongoDB的分片副本架构。mongos收到CRUD请求后，会根据配置进行CRUD请求路由。
 
-  * 无论对于响应还是通知，turms-gateway都不会对其进行合法性校验，而是直接透传给用户。在通知下推过程中，turms-gateway会触发`NotificationHandler`插件方法以协助开发者实现自定义逻辑（如离线用户的消息推送）。
+  * 无论turms-gateway接收到的是响应还是通知，turms-gateway都不会对其进行合法性校验，而是直接透传给用户。在通知下推过程中，turms-gateway会触发`NotificationHandler`插件方法以协助开发者实现自定义逻辑（如离线用户的消息推送）。
 
   （值得一提的是，Turms的所有网络IO操作都是基于Netty实现的，即以上所有RPC、数据库调用均是异步非阻塞的）

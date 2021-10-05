@@ -19,7 +19,7 @@ package im.turms.gateway.access.websocket.factory;
 
 import im.turms.gateway.access.common.function.ConnectionHandler;
 import im.turms.gateway.access.common.handler.ServiceAvailabilityHandler;
-import im.turms.gateway.access.tcp.factory.TurmsMicrometerChannelMetricsRecorder;
+import im.turms.server.common.metrics.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.gateway.constant.MetricsConstant;
 import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.manager.ServerStatusManager;

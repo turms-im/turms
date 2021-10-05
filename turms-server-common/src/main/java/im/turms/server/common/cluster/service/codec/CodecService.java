@@ -28,10 +28,11 @@ import io.netty.util.IllegalReferenceCountException;
 import lombok.extern.log4j.Log4j2;
 
 /**
- * Note that to get a better performance do NOT use reflection to serialize/deserialize data.
+ * Note that to get a better performance and serialize data with the least bytes,
+ * do NOT use reflection to serialize/deserialize data.
  * <p>
  * The reason to use codec (Use independent codec to serialize data)
- * instead of something like Writeable (The code used to (de)serialize data is included in the data class)
+ * instead of something like Writeable interface (The code used to (de)serialize data is included in the data class)
  * is to separate the (de)serialization logic from the business logic or the code will tend to be messy.
  *
  * @author James Chen
@@ -40,7 +41,7 @@ import lombok.extern.log4j.Log4j2;
 public class CodecService implements ClusterService {
 
     public CodecService() {
-        // Init here so the application can exit if an error is detected
+        // Init here so the application can exit if an error is thrown
         CodecPool.init();
     }
 

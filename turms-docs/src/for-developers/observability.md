@@ -59,34 +59,29 @@ Turms与其他常规服务端一样，将可观测性的具体实现分为三类
 
 #### 集群间TCP连接度量
 
-（TODO：rename）
-
-##### 服务端
-
 在连接度量中，因为服务端的节点数有限，所以每个度量都会把TCP端的远程地址作为tag，来区分每个TCP端各自的度量数据，以更细致地观察节点之间的通信情况。
 
-| 类型                     | 名称                                        | 类型                | 含义             |
-| ------------------------ | ------------------------------------------- | ------------------- | ---------------- |
-| Connection（连接）       | reactor.netty.tcp.server.data.received      | DistributionSummary | 已接收字节数     |
-|                          | reactor.netty.tcp.server.data.sent          | DistributionSummary | 已发送字节数     |
-|                          | reactor.netty.tcp.server.errors             | Counter             | 连接异常触发次数 |
-|                          | reactor.netty.tcp.server.tls.handshake.time | Timer               | TLS握手用时      |
-| ByteBufAllocator（内存） | TODO                                        |                     |                  |
+##### TCP服务端
 
-##### 客户端
+| 类型                     | 名称                                     | 类型                | 含义             |
+| ------------------------ | ---------------------------------------- | ------------------- | ---------------- |
+| Connection（连接）       | turms.node.tcp.server.data.received      | DistributionSummary | 已接收字节数     |
+|                          | turms.node.tcp.server.data.sent          | DistributionSummary | 已发送字节数     |
+|                          | turms.node.tcp.server.errors             | Counter             | 连接异常触发次数 |
+|                          | turms.node.tcp.server.tls.handshake.time | Timer               | TLS握手用时      |
+| ByteBufAllocator（内存） | TODO                                     |                     |                  |
 
-在连接度量中，因为客户端的数量无限多，所以每个度量**不会**把对端的远程地址作为tag，来区分每个端各自的度量数据。另外，连接度量通过tag `uri`来区分TCP/UDP/WebSocket三类连接各自的度量数据。
+##### TCP客户端
 
-| 类型                         | 名称                                    | 类型                | 含义             |
-| ---------------------------- | --------------------------------------- | ------------------- | ---------------- |
-| Connection（连接）           | turms.client.network.data.received      | DistributionSummary | 已接收字节数     |
-|                              | turms.client.network.data.sent          | DistributionSummary | 已发送字节数     |
-|                              | turms.client.network.errors             | Counter             | 连接异常触发次数 |
-|                              | turms.client.network.tls.handshake.time | Timer               | TLS握手用时      |
-|                              | turms.client.network.connect.time       | Timer               | 连接建立用时     |
-|                              | turms.client.network.address.resolver   | Timer               | 域名解析用时     |
-| ConnectionProvider（连接池） | TODO                                    |                     |                  |
-| ByteBufAllocator（内存）     | TODO                                    |                     |                  |
+| 类型                     | 名称                                     | 类型                | 含义             |
+| ------------------------ | ---------------------------------------- | ------------------- | ---------------- |
+| Connection（连接）       | turms.node.tcp.client.data.received      | DistributionSummary | 已接收字节数     |
+|                          | turms.node.tcp.client.data.sent          | DistributionSummary | 已发送字节数     |
+|                          | turms.node.tcp.client.errors             | Counter             | 连接异常触发次数 |
+|                          | turms.node.tcp.client.tls.handshake.time | Timer               | TLS握手用时      |
+|                          | turms.node.tcp.client.connect.time       | Timer               | TCP连接建立用时  |
+|                          | turms.node.tcp.client.address.resolver   | Timer               | 地址解析用时     |
+| ByteBufAllocator（内存） | TODO                                     |                     |                  |
 
 #### RPC度量
 
@@ -97,14 +92,32 @@ Turms与其他常规服务端一样，将可观测性的具体实现分为三类
 
 #### Admin API度量
 
-TODO
+因为管理员的IP可以无限多，所以每个度量**不会**把对端的远程地址作为tag，来区分每个端各自的度量数据。
 
-#### 客户端请求度量
+| 类型               | 名称                         | 类型                | 含义             |
+| ------------------ | ---------------------------- | ------------------- | ---------------- |
+| Connection（连接） | admin.api.data.received      | DistributionSummary | 已接收字节数     |
+|                    | admin.api.data.sent          | DistributionSummary | 已发送字节数     |
+|                    | admin.api.errors             | Counter             | 连接异常触发次数 |
+|                    | admin.api.tls.handshake.time | Timer               | TLS握手用时      |
 
-| 名称                         | 类型    | 含义                         |
-| ---------------------------- | ------- | ---------------------------- |
-| client.request.subscribed    | Counter | 某类型客户端请求的已处理次数 |
-| client.request.flow.duration | Timer   | 某类型客户端请求的处理时长   |
+#### Turms客户端度量
+
+在连接度量中，因为客户端的数量无限多，所以每个度量**不会**把对端的远程地址作为tag，来区分每个端各自的度量数据。另外，连接度量通过tag `uri`来区分TCP/UDP/WebSocket三类连接各自的度量数据。
+
+| 类型                         | 名称                                    | 类型                | 含义                         |
+| ---------------------------- | --------------------------------------- | ------------------- | ---------------------------- |
+| Connection（连接）           | turms.client.network.data.received      | DistributionSummary | 已接收字节数                 |
+|                              | turms.client.network.data.sent          | DistributionSummary | 已发送字节数                 |
+|                              | turms.client.network.errors             | Counter             | 连接异常触发次数             |
+|                              | turms.client.network.tls.handshake.time | Timer               | TLS握手用时                  |
+|                              | turms.client.network.connect.time       | Timer               | 连接建立用时                 |
+|                              | turms.client.network.address.resolver   | Timer               | 域名解析用时                 |
+| Request（请求）              | turms.client.request.subscribed         | Counter             | 某类型客户端请求的已处理次数 |
+|                              | turms.client.request.flow.duration      | Timer               | 某类型客户端请求的处理时长   |
+| ConnectionProvider（连接池） | TODO                                    |                     |                              |
+| ByteBufAllocator（内存）     | TODO                                    |                     |                              |
+
 
 ### 业务度量
 
@@ -136,7 +149,7 @@ Turms服务端不使用JSON格式的原因是：
 
 * Turms服务端构成很简单，不需要通过JSON来统一日志格式。
 * JSON序列化需要占用额外内存与CPU资源，且存储开销大，如果使用压缩技术，还要额外占用CPU资源。特别是，序列化加上压缩时所需的CPU资源甚至比Turms服务端处理业务请求所需CPU资源还高，这对Turms来说是难以接受的。
-* JSON格式其实在原始数据可读性上并不好。因为原始日志是以单行形式进行展示，一行即表明一个事件。JSON格式在单行显示时，会带来大量“噪音”，大量的JSON元数据、JSON键与JSON值纵横交错，用肉眼阅读的话就非常劳累。而Turms服务端的客户端API访问日志通过`|`分隔符拆分各字段。用户初次只需要多看几个日志，之后就能反应出各字段是代表什么信息。
+* JSON格式其实在原始数据可读性上并不好。因为原始日志是以单行形式进行展示，一行即表明一个事件。JSON格式在单行显示时，会带来大量“噪音”，大量的JSON元数据、JSON键与JSON值纵横交错，直接阅读原始数据的话就比较费力。而Turms服务端的客户端API访问日志通过`|`分隔符拆分各字段。用户初次只需要多看几个日志，之后就能反应出各字段是代表什么信息。
 
 当然，采用传统的单行格式会造成云服务解析相对复杂，且配置不灵活。但考虑到这种东西配一次即一劳永逸，综合考虑以上情况，Turms服务端日志不采用JSON格式，而仍采用传统的单行格式。
 

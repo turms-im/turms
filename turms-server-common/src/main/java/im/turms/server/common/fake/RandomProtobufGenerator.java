@@ -21,7 +21,6 @@ import com.google.common.collect.Range;
 import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Message;
-import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
@@ -129,11 +128,10 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
         return ThreadLocalRandom.current().nextLong(lowerBound, upperBound);
     }
 
-    @AllArgsConstructor
-    public static class GeneratorOptions {
-        final float possibilityToFillOptionalFields;
-        final float possibilityToHaveNotEmptyRepeatedFields;
-        final Range<Long> numberRange;
+    public static record GeneratorOptions(
+            float possibilityToFillOptionalFields,
+            float possibilityToHaveNotEmptyRepeatedFields,
+            Range<Long> numberRange) {
     }
 
 }

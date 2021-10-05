@@ -1,6 +1,6 @@
 # 自定义插件
 
-## 插件列表
+## 插件拓展点列表
 
 | 类别                       | 拓展点                                        | 描述                                                         |
 | -------------------------- | --------------------------------------------- | ------------------------------------------------------------ |
@@ -14,7 +14,7 @@
 
 ## 实现步骤
 
-1. 安装Turms项目依赖
+1. 安装Turms项目的JAR包依赖，供您插件编译时使用
 
    * Clone Turms的仓库。参考命令：`git clone --depth 1 https://github.com/turms-im/turms.git`
    * 在Turms项目的根目录（即`.git`目录的父目录）下，通过执行`mvn install -DskipUTs -DskipITs -DskipSTs`命令来编译Turms项目源码，并将生成的JAR包自动安装到本地的Maven仓库中，供您插件编译时使用
@@ -83,10 +83,10 @@
 
    其中：
 
-   * `TurmsPlugin`实例是插件的Entry类，且必须具有public的无参构造函数。在`plugin.properties`的引导下，Turms服务端会找到这个类，并对其进行初始化
+   * `TurmsPlugin`的自定义子类是插件的入口类，且必须带有public的无参构造函数。在`plugin.properties`的引导下，Turms服务端会找到这个类，并对其进行初始化
    * `TurmsPlugin`带有一个用于指定的`TurmsExtension`类的函数`getExtensions()`。它用于引导Turms服务端加载并初始化插件内自定义的`TurmsExtension`实现
-   * `TurmsExtension`是拓展功能点的具体实现类，一个`TurmsExtension`可`implement`一个或多个`ExtensionPoint`
-   * `ExtensionPoint`是Turms服务端定义的具体拓展功能接口，如`UserAuthenticator`与`ClientRequestHandler`
+   * `TurmsExtension`是拓展功能点的具体实现类，一个`TurmsExtension`可`implement`一个或多个`ExtensionPoint`，且必须具有public的无参构造函数
+   * `ExtensionPoint`是Turms服务端定义的具体拓展功能点的接口，如`UserAuthenticator`与`ClientRequestHandler`
 
 4. （可选）创建插件配置类，写上插件所需配置，并配置上`org.springframework.boot.context.properties.ConfigurationProperties`注释，用于定义配置名前缀。之后，您可以在`TurmsExtension`的实现类下，通过`loadProperties`函数，初始化并自动填充该配置类。
 
@@ -118,20 +118,17 @@
 
 5. 用构建工具（如Maven与Gradle）将源码编译并打包成JAR包，并将JAR包放到Turms服务端的`plugins`目录下。注意，Turms不支持加载`plugins`子目录的JAR包。
 
-   插件包的最终目录结构类似：
+   插件JAR包内的目录结构类似于：
 
    ```text
    ├─plugin.properties
    ├─META-INF
    │  └─MANIFEST.MF
-   └─im
-     └─turms
-       └─server
-         └─common
-           └─plugin
-             ├─MyStorageServiceProvider.class
-             ├─MyPlugin.class
-             └─MyPluginProperties.class
+   └─com
+     └─mydomain
+       ├─MyStorageServiceProvider.class
+       ├─MyPlugin.class
+       └─MyPluginProperties.class
    ```
 
 注意事项：
@@ -148,11 +145,11 @@ Turms服务端中的插件实现相对灵活，既允许插件使用独立类环
 
 TODO
 
-## 插件开发环境Intellij IDEA Debug步骤
+## 插件Debug步骤（基于Intellij IDEA）
 
-1. `Ctrl + F9`编译并打包您的插件JAR包到`<您插件项目根目录>/target`目录下
+1. 在您插件项目下，按`Ctrl + F9`来自动编译并打包您的插件JAR包到`<您插件项目根目录>/target`目录下
 
-2. 在`turms-server-common`项目下，将在`src/main/java/im/turms/server/common/plugin/AbstractTurmsPluginManager.java`类内的`getPluginDir`函数实现改成
+2. 在`turms-server-common`项目下，把在`src/main/java/im/turms/server/common/plugin/AbstractTurmsPluginManager.java`类内的`getPluginDir`函数实现改成：
 
    ```java
    private Path getPluginDir(Path home) {

@@ -22,7 +22,7 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.udpsignal.UdpNotificationType;
 import im.turms.common.model.dto.udpsignal.UdpRequestType;
 import im.turms.common.model.dto.udpsignal.UdpSignalRequest;
-import im.turms.gateway.access.tcp.factory.TurmsMicrometerChannelMetricsRecorder;
+import im.turms.server.common.metrics.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.gateway.access.udp.dto.UdpNotification;
 import im.turms.gateway.access.udp.dto.UdpSignalResponseBufferPool;
 import im.turms.gateway.constant.MetricsConstant;

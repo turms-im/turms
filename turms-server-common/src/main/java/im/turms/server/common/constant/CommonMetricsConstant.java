@@ -25,9 +25,14 @@ public final class CommonMetricsConstant {
     private CommonMetricsConstant() {
     }
 
+    // Node connection
+
+    public static final String NODE_TCP_SERVER_NAME = "turms.node.tcp.server";
+    public static final String NODE_TCP_CLIENT_NAME = "turms.node.tcp.client";
+
     // Client requests
 
-    public static final String CLIENT_REQUEST_NAME = "client.request";
+    public static final String CLIENT_REQUEST_NAME = "turms.client.request";
     public static final String CLIENT_REQUEST_TAG_TYPE = "type";
 
 }

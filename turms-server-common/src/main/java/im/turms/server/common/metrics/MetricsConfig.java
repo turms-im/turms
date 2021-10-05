@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.actuator.metrics;
+package im.turms.server.common.metrics;
 
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.binder.MeterBinder;

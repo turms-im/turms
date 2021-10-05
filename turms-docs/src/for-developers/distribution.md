@@ -29,7 +29,7 @@ turms-gateway与turms-service服务端的发布目录结构如下：
 | lib    | 是       | 存放运行时Jar包依赖，包括自定义的插件实现                    |
 | log    | 否       | 存储日志（包括GC日志、API调用日志、应用日志等）              |
 
-注意：环境变量`TURMS_GATEWAY_HOME`（对应turms-gateway服务端）或`TURMS_SERVICE_HOME`（对应turms-service服务端）对于run.sh脚本与turms服务端的正确读取与存储数据都至关重要。如果您通过run.sh或Docker镜像运行Turms服务端，并且您没有设置该环境变量，则run.sh脚本会自动推导出HOME目录位置。如果您不通过上述方式运行（如通过IDE直接启动），则建议您手动配置`TURMS_GATEWAY_HOME`或`TURMS_SERVICE_HOME`环境变量。
+注意：环境变量`TURMS_GATEWAY_HOME`（对应turms-gateway服务端）或`TURMS_SERVICE_HOME`（对应turms-service服务端）对于run.sh脚本与turms服务端的正确读取与存储数据都至关重要。如果您通过run.sh或Docker镜像运行Turms服务端，并且您没有设置上述的环境变量，则run.sh脚本会自动推导出HOME目录位置。如果您不通过上述方式运行（如通过IDE直接启动），则建议您手动配置`TURMS_GATEWAY_HOME`或`TURMS_SERVICE_HOME`环境变量，否则Turms服务端将以`.`（当前目录）作为HOME环境。
 
 ## Docker镜像
 

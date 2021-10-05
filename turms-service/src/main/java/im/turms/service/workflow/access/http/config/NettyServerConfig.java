@@ -17,11 +17,13 @@
 
 package im.turms.service.workflow.access.http.config;
 
+import im.turms.server.common.metrics.TurmsMicrometerChannelMetricsRecorder;
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory;
 import org.springframework.boot.web.embedded.netty.NettyServerCustomizer;
 import org.springframework.context.annotation.Configuration;
 import reactor.netty.http.server.HttpServer;
 
+import static im.turms.service.constant.MetricsConstant.ADMIN_API_NAME;
 import static io.netty.channel.ChannelOption.SO_LINGER;
 import static io.netty.channel.ChannelOption.SO_REUSEADDR;
 import static io.netty.channel.ChannelOption.TCP_NODELAY;
@@ -42,7 +44,8 @@ public class NettyServerConfig implements NettyServerCustomizer {
                 .option(SO_REUSEADDR, true)
                 .childOption(SO_REUSEADDR, true)
                 .childOption(SO_LINGER, 0)
-                .childOption(TCP_NODELAY, true);
+                .childOption(TCP_NODELAY, true)
+                .metrics(true, () -> new TurmsMicrometerChannelMetricsRecorder(ADMIN_API_NAME, "http"));
     }
 
 }

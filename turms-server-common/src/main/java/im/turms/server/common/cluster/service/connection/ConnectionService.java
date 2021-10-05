@@ -42,6 +42,7 @@ import org.springframework.boot.web.server.Ssl;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 import reactor.netty.channel.ChannelOperations;
+import reactor.netty.channel.MicrometerChannelMetricsRecorder;
 import reactor.netty.tcp.TcpClient;
 
 import javax.annotation.Nullable;
@@ -58,6 +59,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import static im.turms.server.common.cluster.service.connection.request.ClosingHandshakeRequest.CLOSE_STATUS_CODE_SERVER_SHUTTING_DOWN;
+import static im.turms.server.common.constant.CommonMetricsConstant.NODE_TCP_CLIENT_NAME;
 
 /**
  * Responsibilities: Focus on endpoint communication (including network transport)
@@ -224,7 +226,7 @@ public class ConnectionService implements ClusterService {
         TcpClient client = TcpClient.newConnection()
                 .host(host)
                 .port(port)
-                .metrics(true)
+                .metrics(true, () -> new MicrometerChannelMetricsRecorder(NODE_TCP_CLIENT_NAME, "tcp"))
                 .runOn(eventLoopGroupForClients);
         if (clientSsl.isEnabled()) {
             client.secure(sslContextSpec -> SslUtil.configureSslContextSpec(sslContextSpec, clientSsl, false));
