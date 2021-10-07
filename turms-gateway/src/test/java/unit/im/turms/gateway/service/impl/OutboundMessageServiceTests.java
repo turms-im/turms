@@ -26,7 +26,7 @@ import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.bo.session.connection.TcpConnection;
 import im.turms.gateway.service.impl.message.OutboundMessageService;
 import im.turms.gateway.service.impl.session.SessionService;
-import im.turms.gateway.throttle.TokenBucketContext;
+import im.turms.server.common.throttle.TokenBucketContext;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;

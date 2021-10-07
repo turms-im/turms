@@ -15,17 +15,20 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.throttle;
+package im.turms.server.common.property.env.service.env.adminapi;
 
-import lombok.Setter;
+import im.turms.server.common.property.env.common.CommonRateLimitingProperties;
 
 /**
  * @author James Chen
  */
-@Setter
-public class TokenBucketContext {
-    int capacity;
-    int tokensPerPeriod;
-    int refillIntervalMillis;
-    int initialTokens;
+public class AdminApiRateLimitingProperties extends CommonRateLimitingProperties {
+
+    public AdminApiRateLimitingProperties() {
+        setCapacity(50);
+        setInitialTokens(50);
+        setTokensPerPeriod(50);
+        setRefillIntervalMillis(1000);
+    }
+
 }

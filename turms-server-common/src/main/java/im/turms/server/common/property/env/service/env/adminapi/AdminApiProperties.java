@@ -99,6 +99,10 @@ public class AdminApiProperties {
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
+    private AdminApiRateLimitingProperties rateLimiting = new AdminApiRateLimitingProperties();
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
     private LogProperties log = new LogProperties();
 
 }

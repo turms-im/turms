@@ -15,14 +15,13 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.gateway.clientapi;
+package im.turms.server.common.property.env.common;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -32,10 +31,9 @@ import javax.validation.constraints.Min;
  * @author James Chen
  */
 @AllArgsConstructor
-@Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class RateLimitingProperties {
+public abstract class CommonRateLimitingProperties {
 
     @Description("The maximum number of tokens that the bucket can hold")
     @GlobalProperty

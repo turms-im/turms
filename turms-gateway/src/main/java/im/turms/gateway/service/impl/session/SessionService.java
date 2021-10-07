@@ -25,11 +25,10 @@ import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.gateway.manager.HeartbeatManager;
 import im.turms.gateway.manager.UserSessionsManager;
-import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.gateway.plugin.TurmsPluginManager;
+import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.observability.MetricsService;
-import im.turms.gateway.throttle.TokenBucketContext;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
@@ -40,11 +39,11 @@ import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.gateway.SessionProperties;
-import im.turms.server.common.property.env.gateway.clientapi.RateLimitingProperties;
 import im.turms.server.common.rpc.request.SetUserOfflineRequest;
 import im.turms.server.common.rpc.service.ISessionService;
 import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.server.common.service.session.UserStatusService;
+import im.turms.server.common.throttle.TokenBucketContext;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.DeviceTypeUtil;
 import im.turms.server.common.util.MapUtil;
@@ -124,8 +123,7 @@ public class SessionService implements ISessionService {
         SessionProperties sessionProperties = gatewayProperties.getSession();
         closeIdleSessionAfterSeconds = sessionProperties.getCloseIdleSessionAfterSeconds();
 
-        requestTokenBucketContext = new TokenBucketContext();
-        updateRequestTokenBucket(requestTokenBucketContext, gatewayProperties.getClientApi().getRateLimiting());
+        requestTokenBucketContext = new TokenBucketContext(gatewayProperties.getClientApi().getRateLimiting());
 
         heartbeatManager = new HeartbeatManager(this,
                 userStatusService,
@@ -144,19 +142,12 @@ public class SessionService implements ISessionService {
             heartbeatManager.setMinHeartbeatIntervalMillis(newSessionProperties.getMinHeartbeatIntervalSeconds() * 1000);
             heartbeatManager.setSwitchProtocolAfterMillis(newSessionProperties.getSwitchProtocolAfterSeconds() * 1000);
 
-            updateRequestTokenBucket(requestTokenBucketContext, newGatewayProperties.getClientApi().getRateLimiting());
+            requestTokenBucketContext.updateRequestTokenBucket(newGatewayProperties.getClientApi().getRateLimiting());
         });
 
         MeterRegistry registry = metricsService.getRegistry();
         loggedInUsersCounter = registry.counter(LOGGED_IN_USERS_COUNTER_NAME);
         registry.gaugeMapSize(ONLINE_USERS_GAUGE_NAME, Tags.empty(), sessionsManagerByUserId);
-    }
-
-    private void updateRequestTokenBucket(TokenBucketContext context, RateLimitingProperties properties) {
-        context.setCapacity(properties.getCapacity());
-        context.setInitialTokens(properties.getInitialTokens());
-        context.setTokensPerPeriod(properties.getTokensPerPeriod());
-        context.setRefillIntervalMillis(properties.getRefillIntervalMillis());
     }
 
     @PreDestroy

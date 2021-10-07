@@ -19,7 +19,7 @@ package unit.im.turms.gateway.pojo.bo.session;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.gateway.pojo.bo.session.UserSession;
-import im.turms.gateway.throttle.TokenBucketContext;
+import im.turms.server.common.throttle.TokenBucketContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.geo.Point;
 

@@ -28,7 +28,7 @@ import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.gateway.service.impl.session.UserService;
 import im.turms.gateway.service.impl.session.UserSimultaneousLoginService;
 import im.turms.gateway.service.mediator.ServiceMediator;
-import im.turms.gateway.throttle.TokenBucketContext;
+import im.turms.server.common.throttle.TokenBucketContext;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;

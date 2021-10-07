@@ -26,6 +26,7 @@ import org.bson.BsonDateTime;
 import org.bson.BsonDocument;
 import org.bson.BsonNull;
 import org.bson.BsonValue;
+import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 
@@ -43,8 +44,8 @@ import java.util.Set;
 public class Filter implements Bson {
 
     /**
-     * Use org.bson.BsonDocument instead of org.bson.Document
-     * because Document will be converted to BsonDocument by mongo-java-driver finally,
+     * Use {@link BsonDocument} instead of {@link Document}
+     * because {@link Document} will be converted to {@link BsonDocument} by mongo-java-driver finally,
      * which is a huge waste of system resources because both documents are heavy
      */
     private final BsonDocument document;

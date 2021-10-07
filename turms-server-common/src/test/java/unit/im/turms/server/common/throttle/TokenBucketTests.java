@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-package unit.im.turms.gateway.throttle;
+package unit.im.turms.server.common.throttle;
 
-import im.turms.gateway.throttle.TokenBucket;
-import im.turms.gateway.throttle.TokenBucketContext;
+import im.turms.server.common.throttle.TokenBucket;
+import im.turms.server.common.throttle.TokenBucketContext;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

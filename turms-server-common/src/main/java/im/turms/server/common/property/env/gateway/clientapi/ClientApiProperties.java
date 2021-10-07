@@ -44,7 +44,7 @@ public class ClientApiProperties {
     private ClientApiLoggingProperties logging = new ClientApiLoggingProperties();
 
     @NestedConfigurationProperty
-    private RateLimitingProperties rateLimiting = new RateLimitingProperties();
+    private ClientApiRateLimitingProperties rateLimiting = new ClientApiRateLimitingProperties();
 
     public void setReturnReasonForServerError(boolean returnReasonForServerError) {
         this.returnReasonForServerError = returnReasonForServerError;

@@ -42,10 +42,9 @@ public final class JarUtil {
 
     @SneakyThrows
     public static Path createJarFile(String outputFile, List<Class<?>> classEntries, List<String> resources) {
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        ClassLoader loader = JarUtil.class.getClassLoader();
         URI jarFileUri = loader.getResource(".").toURI().resolve(outputFile);
-        Path jarPath = Paths.get(jarFileUri);
-        File jarFile = jarPath.toFile();
+        File jarFile = Paths.get(jarFileUri).toFile();
         Manifest manifest = new Manifest();
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
         try (FileOutputStream fos = new FileOutputStream(jarFile, false);

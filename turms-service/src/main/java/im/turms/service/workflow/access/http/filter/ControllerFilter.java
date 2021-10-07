@@ -23,14 +23,16 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.AdminApiLogging;
 import im.turms.server.common.logging.RequestLoggingContext;
+import im.turms.server.common.property.env.service.env.adminapi.AdminApiProperties;
 import im.turms.server.common.property.env.service.env.adminapi.LogProperties;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.MapUtil;
 import im.turms.service.bo.AdminAction;
-import im.turms.service.plugin.extension.AdminActionHandler;
 import im.turms.service.plugin.TurmsPluginManager;
+import im.turms.service.plugin.extension.AdminActionHandler;
 import im.turms.service.workflow.access.http.permission.RequiredPermission;
+import im.turms.service.workflow.access.http.throttle.AdminApiRateLimitingManager;
 import im.turms.service.workflow.service.impl.admin.AdminService;
 import org.springdoc.core.SpringDocConfigProperties;
 import org.springdoc.webflux.api.OpenApiWebfluxResource;
@@ -62,7 +64,6 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE;
 
@@ -77,6 +78,7 @@ public class ControllerFilter implements WebFilter {
 
     private final Node node;
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
+    private final AdminApiRateLimitingManager adminApiRateLimitingManager;
     private final AdminService adminService;
     private final TurmsPluginManager turmsPluginManager;
     private final boolean pluginEnabled;
@@ -89,10 +91,12 @@ public class ControllerFilter implements WebFilter {
     public ControllerFilter(
             Node node,
             RequestMappingHandlerMapping requestMappingHandlerMapping,
+            AdminApiRateLimitingManager adminApiRateLimitingManager,
             AdminService adminService,
             TurmsPluginManager turmsPluginManager,
             @Autowired(required = false) SpringDocConfigProperties springDocConfigProperties) {
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
+        this.adminApiRateLimitingManager = adminApiRateLimitingManager;
         this.adminService = adminService;
         this.node = node;
         this.turmsPluginManager = turmsPluginManager;
@@ -120,11 +124,11 @@ public class ControllerFilter implements WebFilter {
 
     private Mono<Void> filterHandlerMethod(TurmsHandlerMethod handlerMethod, ServerWebExchange exchange, WebFilterChain chain) {
         if (isOpenApiEnabledAndOpenApiRequest(handlerMethod)) {
-            return chain.filter(exchange);
+            return checkFrequencyAndPass(chain, exchange);
         }
         RequiredPermission requiredPermission = handlerMethod.getMethodAnnotation(RequiredPermission.class);
         if (requiredPermission == null) {
-            return chain.filter(exchange);
+            return checkFrequencyAndPass(chain, exchange);
         }
         if (!enableAdminApi) {
             exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
@@ -163,7 +167,7 @@ public class ControllerFilter implements WebFilter {
             return Mono.empty();
         }
         if (isOpenApiEnabledAndOpenApiRequest(exchange)) {
-            return chain.filter(exchange);
+            return checkFrequencyAndPass(chain, exchange);
         }
         String[] credentials = parseAccountAndPassword(exchange);
         if (credentials == null) {
@@ -174,14 +178,14 @@ public class ControllerFilter implements WebFilter {
         exchange.getAttributes().put(ATTRIBUTES_ACCOUNT, account);
         return adminService.authenticate(account, password)
                 .flatMap(authenticated -> authenticated
-                        ? chain.filter(exchange)
+                        ? checkFrequencyAndPass(chain, exchange)
                         : respondWith401(response));
     }
 
     /**
      * 1. We don't expose configs for developers to customize the cors config
      * because it's better to be done by firewall/ECS/EC2
-     * 2. Note that no only CORS requests but also some normal requests need these headers
+     * 2. Note that both CORS requests and some normal requests need these headers
      */
     private void allowAnyRequest(ServerHttpResponse response) {
         HttpHeaders headers = response.getHeaders();
@@ -189,6 +193,15 @@ public class ControllerFilter implements WebFilter {
         headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "*");
         headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*");
         headers.set(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "7200");
+    }
+
+    private Mono<Void> checkFrequencyAndPass(WebFilterChain chain, ServerWebExchange exchange) {
+        String ip = exchange.getRequest().getRemoteAddress().getAddress().getHostAddress();
+        if (adminApiRateLimitingManager.tryAcquireTokenByIp(ip)) {
+            return chain.filter(exchange);
+        }
+        exchange.getResponse().setStatusCode(HttpStatus.TOO_MANY_REQUESTS);
+        return Mono.empty();
     }
 
     private Mono<Void> respondWith401(ServerHttpResponse response) {
@@ -225,36 +238,12 @@ public class ControllerFilter implements WebFilter {
         if (isLogEnabled || triggerHandlers) {
             ServerHttpRequest request = exchange.getRequest();
             String action = handlerMethod.getMethod().getName();
-            String host = Objects.requireNonNull(request.getRemoteAddress()).getHostString();
+            String ip = request.getRemoteAddress().getAddress().getHostAddress();
             long requestTime = System.currentTimeMillis();
-            exchange.getAttributes().put(MethodInvokeInterceptor.ATTRIBUTE_INTERCEPTOR, new MethodInvokeInterceptor() {
-                @Nullable
-                @Override
-                public Object beforeInvoke(ServerWebExchange exchange, Method method, Object[] args) {
-                    if (method.isAnnotationPresent(DeleteMapping.class) && !isValidDeleteRequest(args)) {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NO_FILTER_FOR_DELETE_OPERATION));
-                    }
-                    return null;
-                }
-
-                @Override
-                public Object afterInvoke(ServerWebExchange exchange, Method method, Object[] args,
-                                          @Nullable Object response, @Nullable Throwable t) {
-                    int processingTime = (int) (System.currentTimeMillis() - requestTime);
-                    return logAndTriggerHandlers(handlerMethod,
-                            tracingContext,
-                            account,
-                            host,
-                            requestTime,
-                            processingTime,
-                            action,
-                            args,
-                            response,
-                            t);
-                }
-            });
+            exchange.getAttributes().put(MethodInvokeInterceptor.ATTRIBUTE_INTERCEPTOR,
+                    new ControllerMethodInvokeInterceptor(handlerMethod, requestTime, tracingContext, account, ip, action));
         }
-        return chain.filter(exchange)
+        return checkFrequencyAndPass(chain, exchange)
                 .contextWrite(context -> {
                     exchange.getAttributes().put(RequestLoggingContext.CTX_KEY_NAME, loggingContext);
                     return context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext);
@@ -372,4 +361,54 @@ public class ControllerFilter implements WebFilter {
                     throwable);
         }
     }
+
+    private class ControllerMethodInvokeInterceptor extends MethodInvokeInterceptor {
+
+        private final TurmsHandlerMethod handlerMethod;
+        private final long requestTime;
+        private final TracingContext tracingContext;
+        private final String account;
+        private final String ip;
+        private final String action;
+
+        ControllerMethodInvokeInterceptor(TurmsHandlerMethod handlerMethod,
+                                          long requestTime,
+                                          TracingContext tracingContext,
+                                          String account,
+                                          String ip,
+                                          String action) {
+            this.handlerMethod = handlerMethod;
+            this.requestTime = requestTime;
+            this.tracingContext = tracingContext;
+            this.account = account;
+            this.ip = ip;
+            this.action = action;
+        }
+
+        @Nullable
+        @Override
+        public Object beforeInvoke(ServerWebExchange exchange, Method method, Object[] args) {
+            if (method.isAnnotationPresent(DeleteMapping.class) && !isValidDeleteRequest(args)) {
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NO_FILTER_FOR_DELETE_OPERATION));
+            }
+            return null;
+        }
+
+        @Override
+        public Object afterInvoke(ServerWebExchange exchange, Method method, Object[] args,
+                                  @Nullable Object response, @Nullable Throwable t) {
+            int processingTime = (int) (System.currentTimeMillis() - requestTime);
+            return logAndTriggerHandlers(handlerMethod,
+                    tracingContext,
+                    account,
+                    ip,
+                    requestTime,
+                    processingTime,
+                    action,
+                    args,
+                    response,
+                    t);
+        }
+    }
+
 }

@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.throttle;
+package im.turms.server.common.throttle;
+
+import lombok.Getter;
 
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
@@ -29,6 +31,7 @@ public class TokenBucket {
 
     private final TokenBucketContext context;
 
+    @Getter
     private volatile int tokens;
     private volatile long lastRefillTime;
 
@@ -58,17 +61,35 @@ public class TokenBucket {
             return false;
         }
         int periods = (int) (time - lastRefillTime) / refillInterval;
-        if (periods > 0) {
-            // We expect tokensPerPeriod is always greater than 0
-            // so tokenCount can be always greater than or equals to 0
-            tokenCount = Math.min(periods * context.tokensPerPeriod - 1, context.capacity);
-            if (TOKENS_UPDATER.compareAndSet(this, 0, tokenCount)) {
-                lastRefillTime = time;
-                return true;
-            }
-            return tryAcquire(time);
+        if (periods <= 0) {
+            return false;
         }
-        return false;
+        // We expect tokensPerPeriod is always greater than 0
+        // so tokenCount can be always greater than or equals to 0
+        tokenCount = Math.min(periods * context.tokensPerPeriod - 1, context.capacity);
+        if (TOKENS_UPDATER.compareAndSet(this, 0, tokenCount)) {
+            lastRefillTime = time;
+            return true;
+        }
+        return tryAcquire(time);
+    }
+
+    public void refill(long time) {
+        int refillInterval = context.refillIntervalMillis;
+        if (refillInterval <= 0) {
+            return;
+        }
+        int periods = (int) (time - lastRefillTime) / refillInterval;
+        if (periods <= 0) {
+            return;
+        }
+        int tokenCount = tokens;
+        int newTokenCount = Math.min(tokenCount + periods * context.tokensPerPeriod, context.capacity);
+        if (TOKENS_UPDATER.compareAndSet(this, tokenCount, newTokenCount)) {
+            lastRefillTime = time;
+        } else {
+            refill(time);
+        }
     }
 
 }
