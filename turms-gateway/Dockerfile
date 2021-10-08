@@ -3,7 +3,7 @@
 ####################################################################
 # Stage 0 : BUILD JAR
 ####################################################################
-FROM maven:3-eclipse-temurin-17 AS maven-builder
+FROM maven:3.8.3-eclipse-temurin-17 AS maven-builder
 COPY . ./
 #RUN sed -i '/<mirrors>/a                                       \
 #<mirror>                                                       \
@@ -17,16 +17,16 @@ RUN mvn clean package -am -B -DskipUTs -DskipITs -P artifact-fat-jar -pl turms-g
 ####################################################################
 # Stage 1:  BUILD LAYERS
 ####################################################################
-FROM eclipse-temurin:17-jre AS layers-builder
+FROM eclipse-temurin:17-focal AS layers-builder
 WORKDIR /build/
-COPY --from=maven-builder /turms-gateway/target/*.jar ./app.jar
+COPY --from=maven-builder /turms-gateway/target/*-exec.jar ./app.jar
 RUN ["mkdir", "dependencies", "snapshot-dependencies", "spring-boot-loader", "application"]
 RUN java -Djarmode=layertools -jar app.jar extract
 
 ####################################################################
 # Stage 2: BUILD IMAGE
 ####################################################################
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:17-focal
 
 ENV TURMS_GATEWAY_HOME=/opt/turms/turms-gateway
 WORKDIR ${TURMS_GATEWAY_HOME}
