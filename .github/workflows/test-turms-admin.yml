@@ -10,9 +10,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Fetch package-lock.json
-        run: npm --prefix turms-admin i
-
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
