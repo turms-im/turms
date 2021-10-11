@@ -22,9 +22,9 @@ import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.manager.UserSessionsManager;
+import im.turms.gateway.plugin.TurmsPluginManager;
 import im.turms.gateway.plugin.extension.UserAuthenticator;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
-import im.turms.gateway.plugin.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.login.UserLoginInfo;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.message.InboundRequestService;
@@ -55,6 +55,8 @@ import java.util.List;
 @Component
 @Log4j2
 public class ServiceMediator {
+
+    private static final long ADMIN_ID = 0;
 
     private final Node node;
     private final TurmsPluginManager turmsPluginManager;
@@ -170,7 +172,7 @@ public class ServiceMediator {
     // Internal implementation
 
     /**
-     * @return OK, AUTHENTICATION_FAILED, LOGGING_IN_USER_NOT_ACTIVE
+     * @return OK, LOGIN_AUTHENTICATION_FAILED, LOGGING_IN_USER_NOT_ACTIVE
      */
     private Mono<TurmsStatusCode> authenticate(
             int version,
@@ -181,6 +183,9 @@ public class ServiceMediator {
             @Nullable Point position,
             @Nullable String ip,
             @Nullable String deviceDetails) {
+        if (userId == ADMIN_ID) {
+            return Mono.just(TurmsStatusCode.LOGIN_AUTHENTICATION_FAILED);
+        }
         boolean enableAuthentication = node.getSharedProperties().getGateway().getSession().isEnableAuthentication();
         if (!enableAuthentication) {
             return Mono.just(TurmsStatusCode.OK);
