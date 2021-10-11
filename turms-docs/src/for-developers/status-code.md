@@ -122,6 +122,7 @@ TurmsStatusCode表明请求响应中的处理状态，类似HTTP的状态码。
 |                      | SENDING_MESSAGES_TO_ONESELF_IS_DISABLED              | 5006   |      |
 |                      | MUTED_MEMBER_SEND_MESSAGE                            | 5007   |      |
 |                      | GUESTS_HAVE_BEEN_MUTED                               | 5008   |      |
+|                      | MESSAGE_IS_ILLEGAL                                   | 5009   |      |
 | 消息更新相关错误     | UPDATING_MESSAGE_BY_SENDER_IS_DISABLED               | 5100   |      |
 |                      | NOT_SENDER_TO_UPDATE_MESSAGE                         | 5101   |      |
 |                      | NOT_MESSAGE_RECIPIENT_TO_UPDATE_MESSAGE_READ_DATE    | 5102   |      |

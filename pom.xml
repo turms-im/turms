@@ -69,7 +69,7 @@
 
         <module>turms-plugin-demo</module>
         <module>turms-plugins/turms-plugin-minio</module>
-        <module>turms-plugins/turms-plugin-spam</module>
+        <module>turms-plugins/turms-plugin-antispam</module>
 
         <module>turms-server-test</module>
     </modules>

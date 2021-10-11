@@ -193,6 +193,7 @@ public enum TurmsStatusCode {
     SENDING_MESSAGES_TO_ONESELF_IS_DISABLED(5006, "The feature to send a message to oneself is disabled", 510),
     MUTED_MEMBER_SEND_MESSAGE(5007, "The muted group member cannot send a message", 403),
     GUESTS_HAVE_BEEN_MUTED(5008, "All guests of the group have been muted", 403),
+    MESSAGE_IS_ILLEGAL(5009, "The message contains unwanted words", 403),
 
     // Message - Update
     UPDATING_MESSAGE_BY_SENDER_IS_DISABLED(5100, "The feature to update messages sent by the sender is disabled", 510),

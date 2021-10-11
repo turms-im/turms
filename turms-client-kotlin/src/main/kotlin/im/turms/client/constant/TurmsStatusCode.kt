@@ -202,6 +202,7 @@ object TurmsStatusCode {
     const val SENDING_MESSAGES_TO_ONESELF_IS_DISABLED = 5006
     const val MUTED_MEMBER_SEND_MESSAGE = 5007
     const val GUESTS_HAVE_BEEN_MUTED = 5008
+    const val MESSAGE_IS_ILLEGAL = 5009
 
     // Message - Update
     const val UPDATING_MESSAGE_BY_SENDER_IS_DISABLED = 5100

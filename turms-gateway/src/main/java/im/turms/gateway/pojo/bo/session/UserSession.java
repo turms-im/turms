@@ -21,9 +21,9 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.util.RandomUtil;
 import im.turms.gateway.pojo.bo.session.connection.NetConnection;
+import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.throttle.TokenBucket;
 import im.turms.server.common.throttle.TokenBucketContext;
-import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.tracing.TracingContext;
 import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
@@ -59,11 +59,10 @@ public final class UserSession {
      * so that turms-gateway can:
      * a. Transfer data through zero copy without parsing (if SSL is disabled)
      * b. Send the same ByteBuf without duplicating to multiple clients
-     * c. Decouple business logic from turms servers
+     * c. Decouple business logic from turms-service servers
      * d. {@link ByteBuf} isn't {@link TurmsNotification} if the connection is UDP (will be supported in the future)
      * <p>
-     * 2. The ByteBuf (TurmsNotification) comes from turms servers in most scenarios.
-     * 3. We never emit an error in the sink
+     * 2. The ByteBuf (TurmsNotification) comes from turms-services servers in most scenarios.
      */
     @Getter(AccessLevel.PRIVATE)
     private BiConsumer<ByteBuf, TracingContext> notificationConsumer;

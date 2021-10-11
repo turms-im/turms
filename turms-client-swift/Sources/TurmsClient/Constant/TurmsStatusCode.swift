@@ -182,6 +182,7 @@ public enum TurmsStatusCode: Int {
     case sendingMessagesToOneselfIsDisabled
     case mutedMemberSendMessage
     case guestsHaveBeenMuted
+    case messageIsIllegal
 
     // Message - Update
     case updatingMessageBySenderIsDisabled = 5100
