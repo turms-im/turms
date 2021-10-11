@@ -40,7 +40,7 @@ public class MyTurmsRequestHandler extends TurmsExtension implements ClientReque
     }
 
     @Override
-    public Mono<RequestHandlerResult> handleClientRequest(@NotNull ClientRequest clientRequest) {
+    public Mono<RequestHandlerResult> handle(@NotNull ClientRequest clientRequest) {
         return Mono.empty();
     }
 

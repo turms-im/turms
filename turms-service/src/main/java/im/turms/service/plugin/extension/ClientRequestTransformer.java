@@ -19,7 +19,6 @@ package im.turms.service.plugin.extension;
 
 import im.turms.server.common.plugin.ExtensionPoint;
 import im.turms.service.workflow.access.servicerequest.dto.ClientRequest;
-import im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResult;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
@@ -27,11 +26,11 @@ import javax.validation.constraints.NotNull;
 /**
  * @author James Chen
  */
-public interface ClientRequestHandler extends ExtensionPoint {
+public interface ClientRequestTransformer extends ExtensionPoint {
 
     /**
-     * @return returning Mono.empty() will pass the request to downstream to handle.
+     * @return the returned {@link ClientRequest} will be passed to downstream.
      */
-    Mono<RequestHandlerResult> handle(@NotNull ClientRequest clientRequest);
+    Mono<ClientRequest> transform(@NotNull ClientRequest clientRequest);
 
 }

@@ -35,6 +35,7 @@ import im.turms.server.common.util.ProtoUtil;
 import im.turms.service.logging.ApiLoggingContext;
 import im.turms.service.logging.ClientApiLogging;
 import im.turms.service.plugin.TurmsPluginManager;
+import im.turms.service.plugin.extension.ClientRequestTransformer;
 import im.turms.service.workflow.access.servicerequest.dto.ClientRequest;
 import im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResultFactory;
@@ -185,12 +186,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 request.getRequestId(),
                 request);
         Mono<ClientRequest> clientRequestMono = Mono.just(clientRequest);
-        List<im.turms.service.plugin.extension.ClientRequestHandler> clientClientRequestHandlerList =
-                turmsPluginManager.getClientRequestHandlerList();
         if (pluginEnabled) {
-            for (im.turms.service.plugin.extension.ClientRequestHandler clientRequestHandler : clientClientRequestHandlerList) {
+            for (ClientRequestTransformer transformer : turmsPluginManager.getClientRequestTransformerList()) {
                 clientRequestMono = clientRequestMono
-                        .flatMap(req -> Mono.defer(() -> clientRequestHandler.transform(req)));
+                        .flatMap(req -> Mono.defer(() -> transformer.transform(req)));
             }
         }
         return clientRequestMono.flatMap(lastClientRequest -> {
@@ -210,11 +209,12 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             }
             // 4. Pass the request to the controller and get a response
             Mono<RequestHandlerResult> result;
-            if (pluginEnabled && !clientClientRequestHandlerList.isEmpty()) {
+            List<im.turms.service.plugin.extension.ClientRequestHandler> handlers = turmsPluginManager.getClientRequestHandlerList();
+            if (pluginEnabled && !handlers.isEmpty()) {
                 Mono<RequestHandlerResult> requestResultMono = Mono.empty();
-                for (im.turms.service.plugin.extension.ClientRequestHandler clientRequestHandler : clientClientRequestHandlerList) {
+                for (im.turms.service.plugin.extension.ClientRequestHandler clientRequestHandler : handlers) {
                     requestResultMono = requestResultMono
-                            .switchIfEmpty(Mono.defer(() -> clientRequestHandler.handleClientRequest(lastClientRequest)));
+                            .switchIfEmpty(Mono.defer(() -> clientRequestHandler.handle(lastClientRequest)));
                 }
                 result = requestResultMono.switchIfEmpty(Mono.defer(() -> handler.handle(lastClientRequest)));
             } else {

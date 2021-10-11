@@ -22,6 +22,7 @@ import im.turms.server.common.plugin.AbstractTurmsPluginManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.service.plugin.extension.AdminActionHandler;
 import im.turms.service.plugin.extension.ClientRequestHandler;
+import im.turms.service.plugin.extension.ClientRequestTransformer;
 import im.turms.service.plugin.extension.ExpiredMessageAutoDeletionNotificationHandler;
 import im.turms.service.plugin.extension.StorageServiceProvider;
 import lombok.Getter;
@@ -41,6 +42,7 @@ public class TurmsPluginManager extends AbstractTurmsPluginManager {
 
     private List<AdminActionHandler> adminActionHandlerList;
     private List<ClientRequestHandler> clientRequestHandlerList;
+    private List<ClientRequestTransformer> clientRequestTransformerList;
     private List<ExpiredMessageAutoDeletionNotificationHandler> expiredMessageAutoDeletionNotificationHandlerList;
     private StorageServiceProvider storageServiceProvider;
 
@@ -54,6 +56,7 @@ public class TurmsPluginManager extends AbstractTurmsPluginManager {
     protected void afterPluginsInitialized() {
         adminActionHandlerList = getAndStartExtensionPoints(AdminActionHandler.class);
         clientRequestHandlerList = getAndStartExtensionPoints(ClientRequestHandler.class);
+        clientRequestTransformerList = getAndStartExtensionPoints(ClientRequestTransformer.class);
         expiredMessageAutoDeletionNotificationHandlerList = getAndStartExtensionPoints(ExpiredMessageAutoDeletionNotificationHandler.class);
         storageServiceProvider = getAndStartFirstExtensionPoint(StorageServiceProvider.class);
     }

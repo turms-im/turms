@@ -28,9 +28,8 @@ import im.turms.plugin.antispam.property.UnwantedWordHandleStrategy;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.plugin.TurmsExtension;
-import im.turms.service.plugin.extension.ClientRequestHandler;
+import im.turms.service.plugin.extension.ClientRequestTransformer;
 import im.turms.service.workflow.access.servicerequest.dto.ClientRequest;
-import im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResult;
 import reactor.core.publisher.Mono;
 
 import java.nio.file.Path;
@@ -39,7 +38,7 @@ import java.util.Arrays;
 /**
  * @author James Chen
  */
-public class AntiSpamHandler extends TurmsExtension implements ClientRequestHandler {
+public class AntiSpamHandler extends TurmsExtension implements ClientRequestTransformer {
 
     private final boolean enabled;
     private final UnwantedWordHandleStrategy unwantedWordHandleStrategy;
@@ -86,11 +85,6 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestHand
             }
             default -> Mono.just(clientRequest);
         };
-    }
-
-    @Override
-    public Mono<RequestHandlerResult> handleClientRequest(ClientRequest clientRequest) {
-        return Mono.empty();
     }
 
     private AhoCorasickDoubleArrayTrie buildTrie(DictionaryParsingProperties dictParsing) {
