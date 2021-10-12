@@ -57,19 +57,19 @@ public class AhoCorasickDoubleArrayTrie {
     public boolean findOccurrences(char[] text, HitHandler handler) {
         int position = 1;
         int currentState = 0;
-        boolean containsUnwantedWord = false;
+        boolean found = false;
         for (char code : text) {
             currentState = findNextState(currentState, code);
             int[] emits = output[currentState];
             if (emits != null) {
                 for (int emit : emits) {
-                    containsUnwantedWord = true;
+                    found = true;
                     handler.hit(position - termLengths[emit], position);
                 }
             }
             ++position;
         }
-        return containsUnwantedWord;
+        return found;
     }
 
     public boolean matches(char[] text) {

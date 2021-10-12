@@ -12,6 +12,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <lombok.version>1.18.20</lombok.version>
+
+        <icu4j.version>69.1</icu4j.version>
+
         <assertj.version>3.21.0</assertj.version>
         <junit.version>5.8.1</junit.version>
     </properties>
@@ -28,6 +31,12 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>${icu4j.version}</version>
+            <scope>test</scope>
         </dependency>
         <!-- Testing -->
         <dependency>
