@@ -21,10 +21,11 @@ import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.message.CreateMessageRequest;
 import im.turms.plugin.antispam.ac.AhoCorasickCodec;
 import im.turms.plugin.antispam.ac.AhoCorasickDoubleArrayTrie;
-import im.turms.plugin.antispam.ac.TrieFactory;
+import im.turms.plugin.antispam.parser.DictionaryParser;
 import im.turms.plugin.antispam.property.AntiSpamProperties;
 import im.turms.plugin.antispam.property.DictionaryParsingProperties;
 import im.turms.plugin.antispam.property.UnwantedWordHandleStrategy;
+import im.turms.plugin.antispam.property.TextParsingStrategy;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.plugin.TurmsExtension;
@@ -34,6 +35,7 @@ import reactor.core.publisher.Mono;
 
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author James Chen
@@ -52,7 +54,7 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
         unwantedWordHandleStrategy = properties.getUnwantedWordHandleStrategy();
         mask = properties.getMask();
         if (enabled) {
-            trie = buildTrie(properties.getDictParsing());
+            trie = buildTrie(properties.getDictParsing(), properties.getTextParsingStrategy());
         } else {
             trie = null;
         }
@@ -87,12 +89,17 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
         };
     }
 
-    private AhoCorasickDoubleArrayTrie buildTrie(DictionaryParsingProperties dictParsing) {
+    private AhoCorasickDoubleArrayTrie buildTrie(DictionaryParsingProperties dictParsing,
+                                                 TextParsingStrategy parsingStrategy) {
         String path = dictParsing.getBinFilePath();
         if (path != null && !path.isBlank()) {
             return AhoCorasickCodec.deserialize(path);
         }
-        return TrieFactory.buildTrie(Path.of(dictParsing.getTextFilePath()), dictParsing.getTextFileCharset());
+        List<char[]> words = DictionaryParser.parse(Path.of(dictParsing.getTextFilePath()),
+                dictParsing.getTextFileCharset(),
+                dictParsing.isSkipInvalidCharacter(),
+                parsingStrategy);
+        return new AhoCorasickDoubleArrayTrie(words);
     }
 
 }

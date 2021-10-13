@@ -19,14 +19,14 @@ package im.turms.plugin.antispam.character;
 
 import lombok.SneakyThrows;
 
-import javax.annotation.Nullable;
-
 public class CharNormalizer {
 
     private static final char[][][] cache = new char[256][][];
 
+    private CharNormalizer() {
+    }
+
     @SneakyThrows
-    @Nullable
     public static char[] normalize(int codepoint) {
         int high = (codepoint >> 8) & 0xFF;
         int low = codepoint & 0xFF;
@@ -39,9 +39,6 @@ public class CharNormalizer {
             cache[high] = data;
         }
         return data[low];
-    }
-
-    private CharNormalizer() {
     }
 
 }

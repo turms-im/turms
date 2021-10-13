@@ -17,6 +17,8 @@
 
 package im.turms.plugin.antispam.ac;
 
+import im.turms.plugin.antispam.parser.DictionaryParser;
+import im.turms.plugin.antispam.property.TextParsingStrategy;
 import lombok.SneakyThrows;
 
 import java.io.FileInputStream;
@@ -24,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * @author James Chen
@@ -36,6 +39,11 @@ public final class AhoCorasickCodec {
     public static void main(String[] args) {
         String dictPath = parseArg(args, 0);
         String charsetName = parseArg(args, 1);
+        String skipInvalidCharacterStr = parseArg(args, 2);
+        String wordParsingStrategyStr = parseArg(args, 3);
+
+        boolean skipInvalidCharacter = false;
+        TextParsingStrategy parsingStrategy = TextParsingStrategy.NORMALIZATION_TRANSLITERATION;
         if (dictPath == null) {
             throw new RuntimeException("The dictionary path must be specified");
         }
@@ -43,8 +51,15 @@ public final class AhoCorasickCodec {
             System.out.println("The charset isn't specified, and falls back to UTF-8");
             charsetName = "UTF-8";
         }
+        if (skipInvalidCharacterStr != null) {
+            skipInvalidCharacter = Boolean.parseBoolean(skipInvalidCharacterStr);
+        }
+        if (wordParsingStrategyStr != null) {
+            parsingStrategy = TextParsingStrategy.valueOf(wordParsingStrategyStr);
+        }
         Path path = Path.of(dictPath);
-        AhoCorasickDoubleArrayTrie trie = TrieFactory.buildTrie(path, charsetName);
+        List<char[]> words = DictionaryParser.parse(path, charsetName, skipInvalidCharacter, parsingStrategy);
+        AhoCorasickDoubleArrayTrie trie = new AhoCorasickDoubleArrayTrie(words);
         serialize(trie, path.getParent().resolve("words.bin").toString());
     }
 

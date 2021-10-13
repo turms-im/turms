@@ -17,27 +17,10 @@
 
 package im.turms.plugin.antispam.property;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import static im.turms.plugin.antispam.property.TextParsingStrategy.NORMALIZATION_TRANSLITERATION;
-import static im.turms.plugin.antispam.property.UnwantedWordHandleStrategy.MASK_TEXT;
-
 /**
  * @author James Chen
  */
-@ConfigurationProperties("turms.plugin.antispam")
-@Data
-public class AntiSpamProperties {
-
-    private boolean enabled = true;
-
-    private DictionaryParsingProperties dictParsing = new DictionaryParsingProperties();
-
-    private TextParsingStrategy textParsingStrategy = NORMALIZATION_TRANSLITERATION;
-
-    private UnwantedWordHandleStrategy unwantedWordHandleStrategy = MASK_TEXT;
-
-    private char mask = '*';
-
+public enum TextParsingStrategy {
+    NORMALIZATION,
+    NORMALIZATION_TRANSLITERATION
 }
