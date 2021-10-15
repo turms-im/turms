@@ -26,7 +26,6 @@ import im.turms.plugin.antispam.ac.AhoCorasickDoubleArrayTrie;
 import im.turms.plugin.antispam.parser.DictionaryParser;
 import im.turms.plugin.antispam.property.AntiSpamProperties;
 import im.turms.plugin.antispam.property.DictionaryParsingProperties;
-import im.turms.plugin.antispam.property.TextParsingStrategy;
 import im.turms.plugin.antispam.property.TextType;
 import im.turms.plugin.antispam.property.UnwantedWordHandleStrategy;
 import im.turms.server.common.constant.TurmsStatusCode;
@@ -37,7 +36,6 @@ import im.turms.service.workflow.access.servicerequest.dto.ClientRequest;
 import reactor.core.publisher.Mono;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,29 +51,30 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
     private final UnwantedWordHandleStrategy unwantedWordHandleStrategy;
     private final char mask;
 
-    private final AhoCorasickDoubleArrayTrie trie;
+    private final SpamDetector spamDetector;
+    private final TextPreprocessor textPreprocessor;
 
     private final Map<TurmsRequest.KindCase, TextTypeProperties> textTypeMap = new IdentityHashMap<>();
 
     public AntiSpamHandler() {
         AntiSpamProperties properties = loadProperties(AntiSpamProperties.class);
         enabled = properties.isEnabled();
-        parsingStrategy = properties.getTextParsingStrategy();
+        textPreprocessor = new TextPreprocessor(properties.getTextParsingStrategy());
         unwantedWordHandleStrategy = properties.getUnwantedWordHandleStrategy();
         mask = properties.getMask();
-        trie = enabled
-                ? buildTrie(properties.getDictParsing(), parsingStrategy)
+        spamDetector = enabled
+                ? new SpamDetector(textPreprocessor, buildTrie(properties.getDictParsing(), textPreprocessor))
                 : null;
         initTextTypeMap(textTypeMap, properties.getTextTypes());
     }
 
     public AntiSpamHandler(AntiSpamProperties properties) {
         enabled = properties.isEnabled();
-        parsingStrategy = properties.getTextParsingStrategy();
+        textPreprocessor = new TextPreprocessor(properties.getTextParsingStrategy());
         unwantedWordHandleStrategy = properties.getUnwantedWordHandleStrategy();
         mask = properties.getMask();
-        trie = enabled
-                ? buildTrie(properties.getDictParsing(), parsingStrategy)
+        spamDetector = enabled
+                ? new SpamDetector(textPreprocessor, buildTrie(properties.getDictParsing(), textPreprocessor))
                 : null;
         initTextTypeMap(textTypeMap, properties.getTextTypes());
     }
@@ -104,18 +103,18 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
         GeneratedMessageV3 req = (GeneratedMessageV3) builder.getField(requestFieldDescriptor);
         for (FieldDescriptor fieldDescriptor : properties.fieldDescriptors) {
             String text = (String) req.getField(fieldDescriptor);
-            if (text == null) {
+            if (text == null || text.isEmpty()) {
                 continue;
             }
             char[] chars = text.toCharArray();
             if (unwantedWordHandleStrategy == UnwantedWordHandleStrategy.MASK_TEXT) {
-                boolean containsUnwantedWord = trie.findOccurrences(chars, (begin, end) -> Arrays.fill(chars, begin, end, mask));
-                if (containsUnwantedWord) {
-                    Message newReq = req.toBuilder().setField(fieldDescriptor, new String(chars)).build();
+                if (spamDetector.mask(chars, mask)) {
+                    Message newReq = req.toBuilder()
+                            .setField(fieldDescriptor, new String(chars)).build();
                     builder = builder
                             .setField(requestFieldDescriptor, newReq);
                 }
-            } else if (trie.matches(chars)) {
+            } else if (spamDetector.containsUnwantedWords(chars)) {
                 return Mono.error(TurmsBusinessException.get(TurmsStatusCode.MESSAGE_IS_ILLEGAL));
             }
         }
@@ -123,7 +122,7 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
     }
 
     private AhoCorasickDoubleArrayTrie buildTrie(DictionaryParsingProperties dictParsing,
-                                                 TextParsingStrategy parsingStrategy) {
+                                                 TextPreprocessor textPreprocessor) {
         String path = dictParsing.getBinFilePath();
         if (path != null && !path.isBlank()) {
             return AhoCorasickCodec.deserialize(path);
@@ -132,10 +131,10 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
         if (textFilePath == null || textFilePath.isBlank()) {
             throw new RuntimeException("The binary file path and the text file path cannot be both blank");
         }
-        List<char[]> words = DictionaryParser.parse(Path.of(textFilePath),
+        DictionaryParser parser = new DictionaryParser(textPreprocessor);
+        List<char[]> words = parser.parse(Path.of(textFilePath),
                 dictParsing.getTextFileCharset(),
-                dictParsing.isSkipInvalidCharacter(),
-                parsingStrategy);
+                dictParsing.isSkipInvalidCharacter());
         return new AhoCorasickDoubleArrayTrie(words);
     }
 

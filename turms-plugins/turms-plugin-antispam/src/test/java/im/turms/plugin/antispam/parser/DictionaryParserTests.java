@@ -17,9 +17,9 @@
 
 package im.turms.plugin.antispam.parser;
 
+import im.turms.plugin.antispam.TextPreprocessor;
 import org.junit.jupiter.api.Test;
 
-import static im.turms.plugin.antispam.parser.DictionaryParser.parseWord;
 import static im.turms.plugin.antispam.property.TextParsingStrategy.NORMALIZATION;
 import static im.turms.plugin.antispam.property.TextParsingStrategy.NORMALIZATION_TRANSLITERATION;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,36 +33,39 @@ class DictionaryParserTests {
 
     @Test
     void test() {
+        DictionaryParser nParser = new DictionaryParser(new TextPreprocessor(NORMALIZATION));
+        DictionaryParser tParser = new DictionaryParser(new TextPreprocessor(NORMALIZATION_TRANSLITERATION));
+
         String word;
 
         word = "Hello,./";
-        assertThat(parseWord(word, true, NORMALIZATION))
+        assertThat(nParser.parseWord(word, true))
                 .containsExactly("hello".toCharArray());
-        assertThat(parseWord(word, true, NORMALIZATION_TRANSLITERATION))
+        assertThat(tParser.parseWord(word, true))
                 .containsExactly("hello".toCharArray());
 
         word = "⑩*&(元Ⅰ[]二角";
-        assertThat(parseWord(word, true, NORMALIZATION))
+        assertThat(nParser.parseWord(word, true))
                 .containsExactly("10元12角".toCharArray());
-        assertThat(parseWord(word, true, NORMALIZATION_TRANSLITERATION))
+        assertThat(tParser.parseWord(word, true))
                 .containsExactly("10yuan12jiao".toCharArray());
 
         word = "";
-        assertThat(parseWord(word, true, NORMALIZATION))
+        assertThat(nParser.parseWord(word, true))
                 .containsExactly(EMPTY);
-        assertThat(parseWord(word, true, NORMALIZATION_TRANSLITERATION))
+        assertThat(tParser.parseWord(word, true))
                 .containsExactly(EMPTY);
 
         word = "*";
-        assertThat(parseWord(word, true, NORMALIZATION))
+        assertThat(nParser.parseWord(word, true))
                 .containsExactly(EMPTY);
-        assertThat(parseWord(word, true, NORMALIZATION_TRANSLITERATION))
+        assertThat(tParser.parseWord(word, true))
                 .containsExactly(EMPTY);
 
         word = "𤳵";
-        assertThat(parseWord(word, true, NORMALIZATION))
+        assertThat(nParser.parseWord(word, true))
                 .containsExactly(EMPTY);
-        assertThat(parseWord(word, true, NORMALIZATION_TRANSLITERATION))
+        assertThat(tParser.parseWord(word, true))
                 .containsExactly(EMPTY);
     }
 

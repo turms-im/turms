@@ -25,7 +25,12 @@ import java.util.stream.Stream;
  */
 public final class Store {
 
-    public static final List<char[]> TERMS = Stream.of(
+    public static final List<char[]> UNWANTED_TERMS = Stream.of(
+                    "123",
+
+                    "敏感词",
+                    "敏感词句",
+
                     "薬指",
                     "リング",
                     "人目忍ぶ恋",

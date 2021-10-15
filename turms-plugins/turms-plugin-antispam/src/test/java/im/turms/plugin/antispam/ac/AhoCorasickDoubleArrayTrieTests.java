@@ -30,7 +30,7 @@ class AhoCorasickDoubleArrayTrieTests {
 
     @Test
     void test() {
-        List<char[]> terms = Store.TERMS;
+        List<char[]> terms = Store.UNWANTED_TERMS;
         AhoCorasickDoubleArrayTrie trie = new AhoCorasickDoubleArrayTrie(terms);
         for (char[] term : terms) {
             assertThat(trie.matches(term)).isTrue();

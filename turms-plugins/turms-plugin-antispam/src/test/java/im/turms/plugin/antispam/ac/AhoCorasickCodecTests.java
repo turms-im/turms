@@ -43,13 +43,12 @@ class AhoCorasickCodecTests {
     }
 
     void test0() {
-        AhoCorasickDoubleArrayTrie trie = new AhoCorasickDoubleArrayTrie(Store.TERMS);
+        AhoCorasickDoubleArrayTrie trie = new AhoCorasickDoubleArrayTrie(Store.UNWANTED_TERMS);
         AhoCorasickCodec.serialize(trie, FILE);
         AhoCorasickDoubleArrayTrie actualTrie = AhoCorasickCodec.deserialize(FILE);
 
         assertThat(actualTrie.fail).containsExactly(trie.fail);
         assertThat(actualTrie.output).isDeepEqualTo(trie.output);
-        assertThat(actualTrie.termLengths).containsExactly(trie.termLengths);
         assertThat(actualTrie.dat.base).containsExactly(trie.dat.base);
         assertThat(actualTrie.dat.check).containsExactly(trie.dat.check);
         assertThat(actualTrie.dat.capacity).isEqualTo(trie.dat.capacity);

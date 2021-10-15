@@ -17,8 +17,7 @@
 
 package im.turms.plugin.antispam.parser;
 
-import im.turms.plugin.antispam.character.CharNormalizer;
-import im.turms.plugin.antispam.property.TextParsingStrategy;
+import im.turms.plugin.antispam.TextPreprocessor;
 import im.turms.server.common.lang.CharArrayBuffer;
 import lombok.SneakyThrows;
 
@@ -27,101 +26,70 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author James Chen
  */
-public abstract class DictionaryParser {
+public class DictionaryParser {
 
-    private static final char[][] VALID_CODE_POINT_RANGES = {
-            {'a', 'z'},
-            {'0', '9'},
-            {'\u4E00', '\u9FFF'} // CJK Unified Ideographs
-    };
+    private final TextPreprocessor textPreprocessor;
 
-    private DictionaryParser() {
+    public DictionaryParser(TextPreprocessor textPreprocessor) {
+        this.textPreprocessor = textPreprocessor;
     }
 
     @SneakyThrows
-    public static List<char[]> parse(Path dictPath,
-                                     String charsetName,
-                                     boolean skipInvalidCharacter,
-                                     TextParsingStrategy parsingStrategy) {
-        List<char[]> list = new LinkedList<>();
+    public List<char[]> parse(Path dictPath, String charsetName, boolean skipInvalidCharacter) {
+        List<char[]> terms = new LinkedList<>();
         try (InputStream stream = Files.newInputStream(dictPath);
              BufferedReader reader = new BufferedReader(new InputStreamReader(stream, charsetName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                char[] chars = parseWord(line.toCharArray(), skipInvalidCharacter, parsingStrategy);
+                char[] chars = parseWord(line.toCharArray(), skipInvalidCharacter);
                 if (chars.length != 0) {
-                    list.add(chars);
+                    terms.add(chars);
                 }
             }
         }
-        return list;
+        Set<CharArrayBuffer> set = new HashSet<>();
+        for (char[] term : terms) {
+            set.add(new CharArrayBuffer(term));
+        }
+        terms = set.stream().map(b -> b.toCharArray()).collect(Collectors.toList());
+        return terms;
     }
 
-    public static char[] parseWord(String word,
-                                   boolean skipInvalidCharacter,
-                                   TextParsingStrategy parsingStrategy) {
-        return parseWord(word.toCharArray(), skipInvalidCharacter, parsingStrategy);
+    public char[] parseWord(String word, boolean skipInvalidCharacter) {
+        return parseWord(word.toCharArray(), skipInvalidCharacter);
     }
 
     /**
      * "Hello,./" -> "hello"
      * "⑩*&(元Ⅰ[]二角" -> ["10元12角", "10yuan12jiao"]
      */
-    public static char[] parseWord(char[] word,
-                                   boolean skipInvalidCharacter,
-                                   TextParsingStrategy parsingStrategy) {
+    public char[] parseWord(char[] word, boolean skipInvalidCharacter) {
         CharArrayBuffer newWord = new CharArrayBuffer(word.length);
         for (char character : word) {
-            if (Character.isDigit(character)) {
-                newWord.append(character);
-                continue;
-            }
-            char[] normalizedChars = CharNormalizer.normalize(character);
-            if (normalizedChars.length > 0 && Character.isDigit(normalizedChars[0])) {
-                newWord.append(normalizedChars);
-                continue;
-            }
-            if (parsingStrategy == TextParsingStrategy.NORMALIZATION && isValidateChar(character)) {
-                newWord.append(character);
-                continue;
-            }
-            if (isValidateChars(normalizedChars)) {
-                newWord.append(normalizedChars);
-            } else if (!skipInvalidCharacter) {
-                throw new IllegalArgumentException("The character '%c' of the block %s is invalid. "
-                        .formatted(character, Character.UnicodeBlock.of(character).toString()) +
-                        "Please remove the character in the dictionary, " +
-                        "or update \"im.turms.plugin.antispam.parser.DictionaryParser.VALID_CODE_POINT_RANGES\" to support the character.");
+            Object newChars = textPreprocessor.process(character);
+            if (newChars == null) {
+                if (!skipInvalidCharacter) {
+                    throw new IllegalArgumentException("The character '%c' of the block %s is invalid. "
+                            .formatted(character, Character.UnicodeBlock.of(character).toString()) +
+                            "Please remove the character in the dictionary, " +
+                            "or update \"im.turms.plugin.antispam.TextPreprocessor.VALID_CODE_POINT_RANGES\" to support the character.");
+                }
+            } else if (newChars instanceof char[] chars) {
+                newWord.append(chars);
+            } else {
+                newWord.append((char) newChars);
             }
         }
         return newWord.toCharArray();
-    }
-
-    private static boolean isValidateChars(char[] chars) {
-        if (chars.length == 0) {
-            return false;
-        }
-        for (char c : chars) {
-            if (!isValidateChar(c)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static boolean isValidateChar(char c) {
-        for (char[] validCharRange : VALID_CODE_POINT_RANGES) {
-            if (validCharRange[0] <= c && c <= validCharRange[1]) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }

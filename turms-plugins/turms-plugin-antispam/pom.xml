@@ -17,6 +17,7 @@
 
         <assertj.version>3.21.0</assertj.version>
         <junit.version>5.8.1</junit.version>
+        <reactor-test.version>3.4.10</reactor-test.version>
     </properties>
 
     <dependencies>
@@ -49,6 +50,12 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-test</artifactId>
+            <version>${reactor-test.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

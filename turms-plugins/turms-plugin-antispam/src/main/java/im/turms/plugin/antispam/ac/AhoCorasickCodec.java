@@ -17,6 +17,7 @@
 
 package im.turms.plugin.antispam.ac;
 
+import im.turms.plugin.antispam.TextPreprocessor;
 import im.turms.plugin.antispam.parser.DictionaryParser;
 import im.turms.plugin.antispam.property.TextParsingStrategy;
 import lombok.SneakyThrows;
@@ -58,7 +59,8 @@ public final class AhoCorasickCodec {
             parsingStrategy = TextParsingStrategy.valueOf(wordParsingStrategyStr);
         }
         Path path = Path.of(dictPath);
-        List<char[]> words = DictionaryParser.parse(path, charsetName, skipInvalidCharacter, parsingStrategy);
+        DictionaryParser parser = new DictionaryParser(new TextPreprocessor(parsingStrategy));
+        List<char[]> words = parser.parse(path, charsetName, skipInvalidCharacter);
         AhoCorasickDoubleArrayTrie trie = new AhoCorasickDoubleArrayTrie(words);
         serialize(trie, path.getParent().resolve("words.bin").toString());
     }
@@ -72,7 +74,6 @@ public final class AhoCorasickCodec {
 
                 outputStream.writeObject(trie.fail);
                 outputStream.writeObject(trie.output);
-                outputStream.writeObject(trie.termLengths);
 
                 outputStream.writeObject(trie.dat.base);
                 outputStream.writeObject(trie.dat.check);
@@ -92,13 +93,12 @@ public final class AhoCorasickCodec {
                 }
                 int[] fail = (int[]) inputStream.readObject();
                 int[][] output = (int[][]) inputStream.readObject();
-                int[] termLengths = (int[]) inputStream.readObject();
 
                 int[] base = (int[]) inputStream.readObject();
                 int[] check = (int[]) inputStream.readObject();
                 int capacity = inputStream.readInt();
                 DoubleArrayTrie trie = new DoubleArrayTrie(base, check, capacity);
-                return new AhoCorasickDoubleArrayTrie(fail, output, termLengths, trie);
+                return new AhoCorasickDoubleArrayTrie(fail, output, trie);
             }
         }
     }

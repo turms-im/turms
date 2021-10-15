@@ -21,6 +21,12 @@ package im.turms.plugin.antispam.property;
  * @author James Chen
  */
 public enum TextParsingStrategy {
+    /**
+     * "⑩HELLO*)(你{}好./" -> "10hello你好"
+     */
     NORMALIZATION,
+    /**
+     * "⑩HELLO*)(你{}好./" -> "10hellonihao"
+     */
     NORMALIZATION_TRANSLITERATION
 }
