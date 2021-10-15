@@ -63,7 +63,7 @@ Note: The main disadvantage of the current Turms project is that it does not pro
 
 ### Business Features
 
-1. Support a complete set of [IM features](https://turms-im.github.io/docs/features). Turms supports almost all IM features supported by commercial instant messaging products and no restrictions on business features.
+1. Support a complete set of [IM features](https://turms-im.github.io/docs/features). Turms supports almost all IM features supported by commercial instant messaging products and no restrictions on business features. For example, Turms supports advanced features as unwanted words filtering (using Aho-Corasick automaton with double array trie).
     (The data analysis feature will be supported when turms-data is released in the future. Please refer to [Turms Data Analysis](https://turms-im.github.io/docs/for-developers/data-analytics.html ) for details)
 2. (Extensibility) Turms supports two approaches to extend: configuration properties and custom plugins. Of course, you can also modify the source code. For example, the plugin turms-plugin-minio based on turms-plugin is used to interact with MinIO server.
 2. (Flexibility) Turms provides hundreds of configuration properties for developers to meet various requirements. And most of the properties can be updated at the cluster level when the cluster is running without performance loss.
@@ -113,6 +113,7 @@ Note: The main disadvantage of the current Turms project is that it does not pro
 | <span style="white-space:nowrap;"> turns-client-kotlin</span> | ditto|
 | <span style="white-space:nowrap;"> turns-client-swift </span> | ditto|
 | <span style="white-space:nowrap;"> turms-plugin </span> | When events (such as user going online/offline, message receiving and forwarding, etc) are fired, turms-gateway and turms-service will trigger corresponding custom plugins to facilitate developers to implement custom features |
+| <span style="white-space:nowrap;">turms-plugin-antispam</span> | A plugin based on turms-plugin for the anti-spam protection using Aho-Corasick automaton with double array trie (The time complexity of detection is O(n), and n is the length of target string code points) |
 | <span style="white-space:nowrap;"> turms-plugin-minio</span> |A plugin based on turms-plugin for the storage service, and is used to interact with MinIO server|
 | <span style="white-space:nowrap;"> turms-data (TODO)</span> | Not yet published. An independent data analysis system based on Flink ecosystem is responsible for business data analysis, and provides underlying data support for the statistics APIs of turms for admins and operational reports of turms-admin |
 

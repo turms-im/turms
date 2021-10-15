@@ -66,7 +66,7 @@ Turms基于读扩散消息模型进行架构设计，对业务数据变化感知
 
 ### 业务功能相关特性
 
-1. （业务功能完善性）Turms支持几乎所有商用即时通讯产品所支持的[即时通讯相关功能](https://turms-im.github.io/docs/features/)（甚至还有更多的业务功能），且无业务功能限制。
+1. （业务功能完善性）Turms支持几乎所有商用即时通讯产品所支持的[即时通讯相关功能](https://turms-im.github.io/docs/features/)（甚至还有更多的业务功能），且无业务功能限制。比如Turms支持敏感词过滤（基于双数组Trie的AC自动机算法实现）等高级IM功能。
    （数据分析与挖掘功能会在之后发布turms-data的时候提供，具体细节可查阅 [Turms数据分析](https://turms-im.github.io/docs/for-developers/data-analytics.html)）
 2. （功能拓展性）Turms同时支持两种拓展模式：配置参数与开发插件。当然您也完全可以对源码进行修改。目前用于接入的MinIO对象存储服务的插件turms-plugin-minio就是基于turms-plugin实现的。
 3. （配置灵活性）Turms提供了上百个配置参数供用户定制，以满足各种需求。并且大部分配置都可以在集群运作时（不需要停机），进行集群级别的同步更新，并且无性能损失。
@@ -119,6 +119,7 @@ Turms基于读扩散消息模型进行架构设计，对业务数据变化感知
 | <span style="white-space:nowrap;">turms-client-kotlin</span> | 同上                                                         |
 | <span style="white-space:nowrap;">turms-client-swift</span>  | 同上                                                         |
 | <span style="white-space:nowrap;">turms-plugin</span>        | 当指定事件（如用户上下线、消息接收与转发等）被触发时，turms-gateway和turms-service会调用对应的自定义插件以方便开发者实现各种各样定制化功能 |
+| <span style="white-space:nowrap;">turms-plugin-antispam</span> | 基于双数组Trie的AC自动机算法实现（检测的时间复杂度为O(n)，n为目标字符串code points的长度） |
 | <span style="white-space:nowrap;">turms-plugin-minio</span>  | 基于turms-plugin实现的存储服务插件。用于与MinIO服务端进行交互 |
 | <span style="white-space:nowrap;">turms-data（TODO）</span>  | 尚未发布。基于Flink生态的独立数据分析系统，负责业务数据统计与分析，为turms的管理员统计API与turms-admin运营报表提供底层数据支持 |
 

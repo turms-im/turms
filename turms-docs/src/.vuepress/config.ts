@@ -63,6 +63,7 @@ export default defineUserConfig<DefaultThemeOptions>({
                     '/for-developers/schema.md',
                     '/for-developers/observability.md',
                     '/for-developers/security.md',
+                    '/for-developers/anti-spam.md',
                     '/for-developers/status-aware.md',
                     '/for-developers/data-analytics.md'
                 ]
