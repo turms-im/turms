@@ -103,15 +103,15 @@ public class AhoCorasickDoubleArrayTrie {
             for (char transition : currentState.getTransitions()) {
                 State targetState = currentState.findNextState(transition);
                 queue.add(targetState);
-                State traceFailureState = currentState.failure;
-                while (traceFailureState.findNextState(transition) == null) {
-                    traceFailureState = traceFailureState.failure;
+                State tempFailureState = currentState.failure;
+                State targetFailureState;
+                while ((targetFailureState = tempFailureState.findNextState(transition)) == null) {
+                    tempFailureState = tempFailureState.failure;
                 }
-                State newFailureState = traceFailureState.findNextState(transition);
-                targetState.failure = newFailureState;
-                fail[targetState.indexInDat] = newFailureState.indexInDat;
-                IntHashSet emits = newFailureState.emits;
-                if (emits != null) {
+                targetState.failure = targetFailureState;
+                fail[targetState.indexInDat] = targetFailureState.indexInDat;
+                IntHashSet emits = targetFailureState.emits;
+                if (emits != null && !emits.isEmpty()) {
                     targetState.addEmits(emits);
                 }
                 constructOutput(targetState);
@@ -121,10 +121,9 @@ public class AhoCorasickDoubleArrayTrie {
 
     protected void constructOutput(State targetState) {
         IntHashSet emits = targetState.emits;
-        if (emits == null || emits.isEmpty()) {
-            return;
+        if (emits != null && !emits.isEmpty()) {
+            output[targetState.indexInDat] = emits.toArray();
         }
-        output[targetState.indexInDat] = emits.toArray();
     }
 
 }

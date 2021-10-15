@@ -21,7 +21,6 @@ import lombok.ToString;
 import org.eclipse.collections.api.iterator.MutableIntIterator;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
@@ -84,13 +83,8 @@ public class State {
         return nextState;
     }
 
-    @Nullable
-    private State nextStateIgnoreRootState(char code) {
-        return success.get(code);
-    }
-
     State addState(char code) {
-        State nextState = nextStateIgnoreRootState(code);
+        State nextState = success.get(code);
         if (nextState == null) {
             nextState = new State(depth + 1);
             success.put(code, nextState);

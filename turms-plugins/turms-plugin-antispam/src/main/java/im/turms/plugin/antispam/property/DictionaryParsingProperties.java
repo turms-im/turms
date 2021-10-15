@@ -31,12 +31,12 @@ public class DictionaryParsingProperties {
 
     private String textFileCharset = "UTF-8";
 
-    @Description("Path to the binary dictionary file. "
-            + "Used to build a trie from binary to avoiding building a trie from scratch")
-    private String binFilePath;
-
     @Description("Whether to skip invalid characters in the dictionary file. e.g. '/', '?'. " +
             "If false, the plugin will throw if encounters an invalid character when parsing")
     private boolean skipInvalidCharacter = true;
+
+    @Description("Path to the binary dictionary file. "
+            + "Used to build a trie from binary to avoiding building a trie from scratch")
+    private String binFilePath;
 
 }

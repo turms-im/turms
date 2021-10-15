@@ -127,7 +127,7 @@ public class DoubleArrayTrie {
         // begin is always greater than 0 because base[0] is for the root state
         int begin;
         int checkPos = Math.max(firstSiblingPos, checkPosForNextRun);
-        int usedSize = 0;
+        int usedPositionCount = 0;
         boolean isFirstFreeCheckPosFound = false;
 
         // Find the "checkPos" and "begin" to ensure there are
@@ -138,7 +138,7 @@ public class DoubleArrayTrie {
             checkPos++;
             ensureSize(checkPos + 1);
             if (check[checkPos] != 0) {
-                usedSize++;
+                usedPositionCount++;
                 continue;
             }
             if (!isFirstFreeCheckPosFound) {
@@ -147,8 +147,8 @@ public class DoubleArrayTrie {
             }
             begin = checkPos - firstSiblingPos;
             ensureSize(begin + lastSiblingPos + 1);
-            for (int i = 0; i < siblingCount; i++) {
-                if (check[begin + siblings.get(i).pos] != 0) {
+            for (NodeEntry sibling : siblings) {
+                if (check[begin + sibling.pos] != 0) {
                     continue findBeginLoop;
                 }
             }
@@ -161,7 +161,7 @@ public class DoubleArrayTrie {
         currentMaxPos = Math.max(currentMaxPos, begin + lastSiblingPos);
         // if 95% positions of check between "nextCheckPos" and "pos"
         // is taken, set "checkPosForNextRun" to "pos" to find the next check position next time
-        if (((float) usedSize) / (checkPos - checkPosForNextRun + 1) >= 0.95f) {
+        if (((float) usedPositionCount) / (checkPos - checkPosForNextRun + 1) >= 0.95f) {
             checkPosForNextRun = checkPos;
         }
         for (NodeEntry sibling : siblings) {

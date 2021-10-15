@@ -17,7 +17,7 @@
 
 package im.turms.service.workflow.access.servicerequest.dispatcher;
 
-import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.CodedInputStream;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
@@ -51,6 +51,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -170,9 +171,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         ByteBuf turmsRequestBuffer = serviceRequest.getTurmsRequestBuffer();
         int requestSize = turmsRequestBuffer.readableBytes();
         try {
-            // Note that "parseFrom" won't block because the buffer is fully read
-            requestBuilder = TurmsRequest.newBuilder().mergeFrom(turmsRequestBuffer.array());
-        } catch (InvalidProtocolBufferException e) {
+            // Note that "mergeFrom" won't block because the buffer is fully read
+            CodedInputStream stream = CodedInputStream.newInstance(turmsRequestBuffer.nioBuffer());
+            requestBuilder = TurmsRequest.newBuilder().mergeFrom(stream);
+        } catch (IOException e) {
             blocklistService.tryBlockIpForCorruptedRequest(serviceRequest.getIp());
             blocklistService.tryBlockUserIdForCorruptedRequest(serviceRequest.getUserId());
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.INVALID_REQUEST, e.getMessage()));

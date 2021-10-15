@@ -18,12 +18,11 @@
 package im.turms.plugin.antispam;
 
 import com.google.protobuf.Descriptors.FieldDescriptor;
-import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.Message;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.plugin.antispam.ac.AhoCorasickCodec;
 import im.turms.plugin.antispam.ac.AhoCorasickDoubleArrayTrie;
-import im.turms.plugin.antispam.parser.DictionaryParser;
+import im.turms.plugin.antispam.dictionary.DictionaryParser;
 import im.turms.plugin.antispam.property.AntiSpamProperties;
 import im.turms.plugin.antispam.property.DictionaryParsingProperties;
 import im.turms.plugin.antispam.property.TextType;
@@ -65,7 +64,7 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
         spamDetector = enabled
                 ? new SpamDetector(textPreprocessor, buildTrie(properties.getDictParsing(), textPreprocessor))
                 : null;
-        initTextTypeMap(textTypeMap, properties.getTextTypes());
+        initTextTypeMap(textTypeMap, properties.getTextTypes(), properties.getSilentIllegalTextTypes());
     }
 
     public AntiSpamHandler(AntiSpamProperties properties) {
@@ -76,18 +75,21 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
         spamDetector = enabled
                 ? new SpamDetector(textPreprocessor, buildTrie(properties.getDictParsing(), textPreprocessor))
                 : null;
-        initTextTypeMap(textTypeMap, properties.getTextTypes());
+        initTextTypeMap(textTypeMap, properties.getTextTypes(), properties.getSilentIllegalTextTypes());
     }
 
-    private void initTextTypeMap(Map<TurmsRequest.KindCase, TextTypeProperties> map, Set<TextType> textTypes) {
+    private void initTextTypeMap(Map<TurmsRequest.KindCase, TextTypeProperties> map,
+                                 Set<TextType> textTypes,
+                                 Set<TextType> silentIllegalTextTypes) {
         for (TextType textType : textTypes) {
             TextTypeProperties properties = map.get(textType.getType());
+            boolean rejectSilently = silentIllegalTextTypes.contains(textType);
             if (properties == null) {
-                List<FieldDescriptor> list = new LinkedList<>();
-                list.add(textType.getFieldDescriptor());
-                map.put(textType.getType(), new TextTypeProperties(textType.getRequestFieldDescriptor(), list));
+                List<RequestField> fields = new LinkedList<>();
+                fields.add(new RequestField(textType.getFieldDescriptor(), rejectSilently));
+                map.put(textType.getType(), new TextTypeProperties(textType.getRequestFieldDescriptor(), fields));
             } else {
-                properties.fieldDescriptors.add(textType.getFieldDescriptor());
+                properties.fields.add(new RequestField(textType.getFieldDescriptor(), rejectSilently));
             }
         }
     }
@@ -98,24 +100,31 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
             return Mono.just(clientRequest);
         }
         TurmsRequest.Builder builder = clientRequest.turmsRequestBuilder();
-        TextTypeProperties properties = textTypeMap.get(builder.getKindCase());
+        TurmsRequest.KindCase requestType = builder.getKindCase();
+        TextTypeProperties properties = textTypeMap.get(requestType);
         FieldDescriptor requestFieldDescriptor = properties.requestFieldDescriptor;
-        GeneratedMessageV3 req = (GeneratedMessageV3) builder.getField(requestFieldDescriptor);
-        for (FieldDescriptor fieldDescriptor : properties.fieldDescriptors) {
+        Message.Builder req = builder.getFieldBuilder(requestFieldDescriptor);
+        for (RequestField field : properties.fields) {
+            FieldDescriptor fieldDescriptor = field.descriptor;
             String text = (String) req.getField(fieldDescriptor);
             if (text == null || text.isEmpty()) {
                 continue;
             }
             char[] chars = text.toCharArray();
-            if (unwantedWordHandleStrategy == UnwantedWordHandleStrategy.MASK_TEXT) {
-                if (spamDetector.mask(chars, mask)) {
-                    Message newReq = req.toBuilder()
-                            .setField(fieldDescriptor, new String(chars)).build();
-                    builder = builder
-                            .setField(requestFieldDescriptor, newReq);
+            switch (unwantedWordHandleStrategy) {
+                case REJECT_REQUEST -> {
+                    if (spamDetector.containsUnwantedWords(chars)) {
+                        return field.shouldRejectSilently()
+                                ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.OK))
+                                : Mono.error(TurmsBusinessException.get(TurmsStatusCode.MESSAGE_IS_ILLEGAL));
+                    }
                 }
-            } else if (spamDetector.containsUnwantedWords(chars)) {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.MESSAGE_IS_ILLEGAL));
+                case MASK_TEXT -> {
+                    if (spamDetector.mask(chars, mask)) {
+                        req.setField(fieldDescriptor, new String(chars));
+                    }
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + unwantedWordHandleStrategy);
             }
         }
         return Mono.just(clientRequest);
@@ -140,8 +149,11 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
 
     private record TextTypeProperties(
             FieldDescriptor requestFieldDescriptor,
-            List<FieldDescriptor> fieldDescriptors
+            List<RequestField> fields
     ) {
+    }
+
+    private record RequestField(FieldDescriptor descriptor, boolean shouldRejectSilently) {
     }
 
 }

@@ -22,8 +22,6 @@ import im.turms.plugin.antispam.property.TextParsingStrategy;
 
 /**
  * @author James Chen
- * @implNote We don't use the design pattern "Chain of Responsibility" because
- * it isn't efficient than this one
  */
 public class TextPreprocessor {
 
@@ -40,11 +38,11 @@ public class TextPreprocessor {
     }
 
     public Object process(char character) {
-        if (Character.isDigit(character)) {
+        if (isDigit(character)) {
             return character;
         }
         char[] normalizedChars = CharNormalizer.normalize(character);
-        if (normalizedChars.length > 0 && Character.isDigit(normalizedChars[0])) {
+        if (normalizedChars.length > 0 && isDigit(normalizedChars[0])) {
             return normalizedChars;
         }
         if (parsingStrategy == TextParsingStrategy.NORMALIZATION && isValidateChar(character)) {
@@ -54,6 +52,13 @@ public class TextPreprocessor {
             return normalizedChars;
         }
         return null;
+    }
+
+    /**
+     * @implNote Don't use {@link Character#isDigit(char)}, which is slow
+     */
+    private boolean isDigit(char character) {
+        return '0' <= character && character <= '9';
     }
 
     private boolean isValidateChars(char[] chars) {

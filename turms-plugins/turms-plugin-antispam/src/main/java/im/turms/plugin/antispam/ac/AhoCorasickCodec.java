@@ -18,7 +18,7 @@
 package im.turms.plugin.antispam.ac;
 
 import im.turms.plugin.antispam.TextPreprocessor;
-import im.turms.plugin.antispam.parser.DictionaryParser;
+import im.turms.plugin.antispam.dictionary.DictionaryParser;
 import im.turms.plugin.antispam.property.TextParsingStrategy;
 import lombok.SneakyThrows;
 

@@ -26,7 +26,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.Set;
 
 import static im.turms.plugin.antispam.property.TextParsingStrategy.NORMALIZATION_TRANSLITERATION;
+import static im.turms.plugin.antispam.property.TextType.CREATE_MESSAGE_REQUEST_TEXT;
 import static im.turms.plugin.antispam.property.UnwantedWordHandleStrategy.MASK_TEXT;
+import static im.turms.plugin.antispam.property.UnwantedWordHandleStrategy.REJECT_REQUEST;
 
 /**
  * @author James Chen
@@ -44,10 +46,12 @@ public class AntiSpamProperties {
 
     private TextParsingStrategy textParsingStrategy = NORMALIZATION_TRANSLITERATION;
 
-    private UnwantedWordHandleStrategy unwantedWordHandleStrategy = MASK_TEXT;
+    private UnwantedWordHandleStrategy unwantedWordHandleStrategy = REJECT_REQUEST;
 
     private char mask = '*';
 
     private Set<TextType> textTypes = Set.of(TextType.values());
+
+    private Set<TextType> silentIllegalTextTypes = Set.of(CREATE_MESSAGE_REQUEST_TEXT);
 
 }

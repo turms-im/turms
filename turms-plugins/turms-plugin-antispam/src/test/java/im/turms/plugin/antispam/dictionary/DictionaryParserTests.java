@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.plugin.antispam.parser;
+package im.turms.plugin.antispam.dictionary;
 
 import im.turms.plugin.antispam.TextPreprocessor;
 import org.junit.jupiter.api.Test;
