@@ -21,23 +21,92 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.util.ProtoUtil;
 
+import java.util.Objects;
+
 /**
  * @author James Chen
  */
-public record ClientRequest(
-        Long userId,
-        DeviceType deviceType,
-        Long requestId,
-        TurmsRequest turmsRequest
-) {
+public final class ClientRequest {
+    private final Long userId;
+    private final DeviceType deviceType;
+    private final Long requestId;
+    private final TurmsRequest.Builder turmsRequestBuilder;
+    private TurmsRequest turmsRequest;
+
+    public ClientRequest(
+            Long userId,
+            DeviceType deviceType,
+            Long requestId,
+            TurmsRequest.Builder turmsRequestBuilder,
+            TurmsRequest turmsRequest) {
+        this.userId = userId;
+        this.deviceType = deviceType;
+        this.requestId = requestId;
+        this.turmsRequestBuilder = turmsRequestBuilder;
+        this.turmsRequest = turmsRequest;
+    }
+
+    public ClientRequest(
+            Long userId,
+            DeviceType deviceType,
+            Long requestId,
+            TurmsRequest turmsRequest) {
+        this.userId = userId;
+        this.deviceType = deviceType;
+        this.requestId = requestId;
+        this.turmsRequestBuilder = null;
+        this.turmsRequest = turmsRequest;
+    }
+
     @Override
     public String toString() {
         return "ClientRequest[" +
                 "userId=" + userId +
                 ", deviceType=" + deviceType +
                 ", requestId=" + requestId +
-                ", turmsRequest=" + ProtoUtil.toLogString(turmsRequest) +
+                ", turmsRequest=" + ProtoUtil.toLogString(turmsRequest()) +
                 ']';
     }
+
+    public TurmsRequest turmsRequest() {
+        if (turmsRequest == null) {
+            turmsRequest = turmsRequestBuilder.build();
+        }
+        return turmsRequest;
+    }
+
+    public Long userId() {
+        return userId;
+    }
+
+    public DeviceType deviceType() {
+        return deviceType;
+    }
+
+    public Long requestId() {
+        return requestId;
+    }
+
+    public TurmsRequest.Builder turmsRequestBuilder() {
+        return turmsRequestBuilder;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (ClientRequest) obj;
+        return Objects.equals(this.userId, that.userId) &&
+                Objects.equals(this.deviceType, that.deviceType) &&
+                Objects.equals(this.requestId, that.requestId) &&
+                Objects.equals(this.turmsRequestBuilder, that.turmsRequestBuilder) &&
+                Objects.equals(this.turmsRequest, that.turmsRequest);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, deviceType, requestId, turmsRequestBuilder, turmsRequest);
+    }
+
 
 }

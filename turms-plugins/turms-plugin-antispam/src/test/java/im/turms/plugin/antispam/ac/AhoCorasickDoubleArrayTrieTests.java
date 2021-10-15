@@ -44,10 +44,10 @@ class AhoCorasickDoubleArrayTrieTests {
         assertThat(trie.matches("oo".toCharArray())).isFalse();
         assertThat(trie.matches("oh no".toCharArray())).isTrue();
 
-        assertThat(trie.matches("靐靐".toCharArray())).isTrue();
-        assertThat(trie.matches("雷靐".toCharArray())).isTrue();
-        assertThat(trie.matches("靐雷".toCharArray())).isTrue();
-        assertThat(trie.matches("雷雷".toCharArray())).isFalse();
+        assertThat(trie.matches("𤳵靐".toCharArray())).isTrue();
+        assertThat(trie.matches("靐𤳵".toCharArray())).isTrue();
+        assertThat(trie.matches("𤳵𤳵".toCharArray())).isTrue();
+        assertThat(trie.matches("靐靐".toCharArray())).isFalse();
     }
 
 }

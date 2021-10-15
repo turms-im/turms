@@ -17,8 +17,13 @@
 
 package im.turms.plugin.antispam.property;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.Set;
 
 import static im.turms.plugin.antispam.property.TextParsingStrategy.NORMALIZATION_TRANSLITERATION;
 import static im.turms.plugin.antispam.property.UnwantedWordHandleStrategy.MASK_TEXT;
@@ -26,8 +31,11 @@ import static im.turms.plugin.antispam.property.UnwantedWordHandleStrategy.MASK_
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @ConfigurationProperties("turms.plugin.antispam")
 @Data
+@NoArgsConstructor
 public class AntiSpamProperties {
 
     private boolean enabled = true;
@@ -39,5 +47,7 @@ public class AntiSpamProperties {
     private UnwantedWordHandleStrategy unwantedWordHandleStrategy = MASK_TEXT;
 
     private char mask = '*';
+
+    private Set<TextType> textTypes = Set.of(TextType.values());
 
 }

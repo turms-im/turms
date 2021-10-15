@@ -43,7 +43,7 @@ public final class Store {
                     "but no",
                     "loving you is not right",
 
-                    "靐")
+                    "𤳵")
             .map(String::toCharArray)
             .toList();
 

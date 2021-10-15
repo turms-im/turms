@@ -96,7 +96,7 @@ public class AhoCorasickDoubleArrayTrie {
     private int transitionWithRoot(int indexInDat, char code) {
         int offset = dat.base[indexInDat];
         int nextState = offset + code + 1;
-        if (offset == dat.check[nextState]) {
+        if (nextState < dat.capacity && offset == dat.check[nextState]) {
             return nextState;
         }
         return indexInDat == 0 ? 0 : -1;

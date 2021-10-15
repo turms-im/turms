@@ -29,9 +29,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class DictionaryParserTests {
 
+    private static final char[] EMPTY = "".toCharArray();
+
     @Test
     void test() {
-        String word = "Hello,./";
+        String word;
+
+        word = "Hello,./";
         assertThat(parseWord(word, true, NORMALIZATION))
                 .containsExactly("hello".toCharArray());
         assertThat(parseWord(word, true, NORMALIZATION_TRANSLITERATION))
@@ -45,15 +49,21 @@ class DictionaryParserTests {
 
         word = "";
         assertThat(parseWord(word, true, NORMALIZATION))
-                .containsExactly("".toCharArray());
+                .containsExactly(EMPTY);
         assertThat(parseWord(word, true, NORMALIZATION_TRANSLITERATION))
-                .containsExactly("".toCharArray());
+                .containsExactly(EMPTY);
 
         word = "*";
         assertThat(parseWord(word, true, NORMALIZATION))
-                .containsExactly("".toCharArray());
+                .containsExactly(EMPTY);
         assertThat(parseWord(word, true, NORMALIZATION_TRANSLITERATION))
-                .containsExactly("".toCharArray());
+                .containsExactly(EMPTY);
+
+        word = "𤳵";
+        assertThat(parseWord(word, true, NORMALIZATION))
+                .containsExactly(EMPTY);
+        assertThat(parseWord(word, true, NORMALIZATION_TRANSLITERATION))
+                .containsExactly(EMPTY);
     }
 
 }

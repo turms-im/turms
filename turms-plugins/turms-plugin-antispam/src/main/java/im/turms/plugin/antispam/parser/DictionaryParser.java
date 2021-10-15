@@ -54,7 +54,10 @@ public abstract class DictionaryParser {
              BufferedReader reader = new BufferedReader(new InputStreamReader(stream, charsetName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                list.add(parseWord(line.toCharArray(), skipInvalidCharacter, parsingStrategy));
+                char[] chars = parseWord(line.toCharArray(), skipInvalidCharacter, parsingStrategy);
+                if (chars.length != 0) {
+                    list.add(chars);
+                }
             }
         }
         return list;

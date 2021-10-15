@@ -166,25 +166,26 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         if (!serverStatusManager.isActive()) {
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_UNAVAILABLE));
         }
-        TurmsRequest request;
+        TurmsRequest.Builder requestBuilder;
         ByteBuf turmsRequestBuffer = serviceRequest.getTurmsRequestBuffer();
         int requestSize = turmsRequestBuffer.readableBytes();
         try {
             // Note that "parseFrom" won't block because the buffer is fully read
-            request = TurmsRequest.parseFrom(turmsRequestBuffer.nioBuffer());
+            requestBuilder = TurmsRequest.newBuilder().mergeFrom(turmsRequestBuffer.array());
         } catch (InvalidProtocolBufferException e) {
             blocklistService.tryBlockIpForCorruptedRequest(serviceRequest.getIp());
             blocklistService.tryBlockUserIdForCorruptedRequest(serviceRequest.getUserId());
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.INVALID_REQUEST, e.getMessage()));
         }
-        turmsRequestBuffer.touch(request);
+        turmsRequestBuffer.touch(requestBuilder);
 
         // 2. Transform and handle the request
         ClientRequest clientRequest = new ClientRequest(
                 serviceRequest.getUserId(),
                 serviceRequest.getDeviceType(),
-                request.getRequestId(),
-                request);
+                requestBuilder.getRequestId(),
+                requestBuilder,
+                null);
         Mono<ClientRequest> clientRequestMono = Mono.just(clientRequest);
         if (pluginEnabled) {
             for (ClientRequestTransformer transformer : turmsPluginManager.getClientRequestTransformerList()) {
