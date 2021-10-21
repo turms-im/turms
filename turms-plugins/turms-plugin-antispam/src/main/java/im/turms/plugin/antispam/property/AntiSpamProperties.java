@@ -23,6 +23,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.Collections;
 import java.util.Set;
 
 import static im.turms.plugin.antispam.property.TextParsingStrategy.NORMALIZATION_TRANSLITERATION;
@@ -52,6 +53,6 @@ public class AntiSpamProperties {
 
     private Set<TextType> textTypes = Set.of(TextType.values());
 
-    private Set<TextType> silentIllegalTextTypes = Set.of(CREATE_MESSAGE_REQUEST_TEXT);
+    private Set<TextType> silentIllegalTextTypes = Collections.emptySet();
 
 }

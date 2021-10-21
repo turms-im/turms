@@ -110,18 +110,18 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
             if (text == null || text.isEmpty()) {
                 continue;
             }
-            char[] chars = text.toCharArray();
             switch (unwantedWordHandleStrategy) {
                 case REJECT_REQUEST -> {
-                    if (spamDetector.containsUnwantedWords(chars)) {
+                    if (spamDetector.containsUnwantedWords(text)) {
                         return field.shouldRejectSilently()
                                 ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.OK))
                                 : Mono.error(TurmsBusinessException.get(TurmsStatusCode.MESSAGE_IS_ILLEGAL));
                     }
                 }
                 case MASK_TEXT -> {
-                    if (spamDetector.mask(chars, mask)) {
-                        req.setField(fieldDescriptor, new String(chars));
+                    String maskedStr = spamDetector.mask(text, this.mask);
+                    if (maskedStr != null) {
+                        req.setField(fieldDescriptor, maskedStr);
                     }
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + unwantedWordHandleStrategy);

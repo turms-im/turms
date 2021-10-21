@@ -76,7 +76,7 @@ Turms不支持且未来也不会支持图片、视频与语音的反垃圾检测
 | unwantedWordHandleStrategy       | REJECT_REQUEST                | 非法文本处理策略：<br />REJECT_REQUEST：向客户端返回“MESSAGE_IS_ILLEGAL”错误状态码<br />MASK_TEXT：替换非法字符，并继续正常处理请求 |
 | mask                             | '*'                           | 当“unwantedWordHandleStrategy”为“MASK_TEXT”时，所采用的掩码  |
 | textTypes                        | 所有其他用户可见的文本        | 配置哪些请求的哪些文本字段需要进行检测                       |
-| silentIllegalTextTypes           | CREATE_MESSAGE_REQUEST_TEXT   | 配置当检测到这些请求的这些文本字段包含非法字符时，服务端会“OK”状态码响应客户端，但服务端实际并没有继续处理该请求 |
+| silentIllegalTextTypes           | 空                            | 配置当检测到这些请求的这些文本字段包含非法字符时，服务端会“OK”状态码响应客户端，但服务端实际并没有继续处理该请求。<br />在实际业务场景中，该值除了通常为空外，还通常为`CREATE_MESSAGE_REQUEST_TEXT`，用于静默拒绝发送用户消息 |
 
 ## Admin API
 

@@ -18,12 +18,13 @@
 package im.turms.plugin.antispam.ac;
 
 import lombok.ToString;
+import org.eclipse.collections.api.iterator.MutableCharIterator;
 import org.eclipse.collections.api.iterator.MutableIntIterator;
+import org.eclipse.collections.api.map.primitive.MutableCharObjectMap;
+import org.eclipse.collections.impl.factory.primitive.CharObjectMaps;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * @author James Chen
@@ -32,7 +33,7 @@ import java.util.TreeMap;
 public class State {
 
     final int depth;
-    final Map<Character, State> success;
+    final MutableCharObjectMap<State> success;
     /**
      * points to the state that its prefix has the longest common subsequence
      * with the suffix of the current state
@@ -44,7 +45,7 @@ public class State {
 
     State(int depth) {
         this.depth = depth;
-        success = new TreeMap<>();
+        success = CharObjectMaps.mutable.empty();
     }
 
     void addEmit(int termIndex) {
@@ -96,7 +97,8 @@ public class State {
         return success.values();
     }
 
-    Collection<Character> getTransitions() {
-        return success.keySet();
+    MutableCharIterator getTransitions() {
+        return success.keySet().charIterator();
     }
+
 }

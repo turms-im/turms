@@ -17,6 +17,7 @@
 
 package im.turms.plugin.antispam.ac;
 
+import org.eclipse.collections.api.iterator.MutableCharIterator;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
 import java.util.LinkedList;
@@ -66,15 +67,15 @@ public class AhoCorasickDoubleArrayTrie {
     }
 
     protected int findNextState(int currentState, char code) {
-        int nextState = transitionWithRoot(currentState, code);
+        int nextState = transition(currentState, code);
         while (nextState == -1) {
             currentState = fail[currentState];
-            nextState = transitionWithRoot(currentState, code);
+            nextState = transition(currentState, code);
         }
         return nextState;
     }
 
-    protected int transitionWithRoot(int indexInDat, char code) {
+    protected int transition(int indexInDat, char code) {
         int offset = dat.base[indexInDat];
         int nextState = offset + code + 1;
         if (nextState < dat.capacity && offset == dat.check[nextState]) {
@@ -100,7 +101,9 @@ public class AhoCorasickDoubleArrayTrie {
         // If not found, refers to the root state.
         State currentState;
         while ((currentState = queue.poll()) != null) {
-            for (char transition : currentState.getTransitions()) {
+            MutableCharIterator transitions = currentState.getTransitions();
+            while (transitions.hasNext()) {
+                char transition = transitions.next();
                 State targetState = currentState.findNextState(transition);
                 queue.add(targetState);
                 State tempFailureState = currentState.failure;

@@ -17,12 +17,13 @@
 
 package im.turms.plugin.antispam.ac;
 
+import org.eclipse.collections.api.RichIterable;
+import org.eclipse.collections.api.tuple.primitive.CharObjectPair;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -56,7 +57,7 @@ public class DoubleArrayTrie {
 
     public DoubleArrayTrie(Trie trie) {
         State rootNode = trie.rootState;
-        Set<Map.Entry<Character, State>> siblingEntries = rootNode.success.entrySet();
+        RichIterable<CharObjectPair<State>> siblingEntries = rootNode.success.keyValuesView();
         int size = siblingEntries.size();
         if (size == 0) {
             return;
@@ -65,8 +66,8 @@ public class DoubleArrayTrie {
         // For the root state
         base[0] = 1;
         List<NodeEntry> siblings = new ArrayList<>(size);
-        for (Map.Entry<Character, State> entry : siblingEntries) {
-            siblings.add(new NodeEntry(entry.getKey() + 1, entry.getValue()));
+        for (CharObjectPair<State> entry : siblingEntries) {
+            siblings.add(new NodeEntry(entry.getOne() + 1, entry.getTwo()));
         }
         Queue<SiblingGroup> siblingGroupQueue = new LinkedList<>();
         SiblingGroup siblingGroup = new SiblingGroup(-1, siblings);
@@ -86,12 +87,11 @@ public class DoubleArrayTrie {
         if (capacity >= minSize) {
             return;
         }
-        if (minSize >= MAX_CAPACITY) {
+        if (minSize > MAX_CAPACITY) {
             throw new RuntimeException("The capacity of double array trie cannot be greater than %d. Requested: %d"
                     .formatted(MAX_CAPACITY, minSize));
         }
-        int newSize = capacity == 0 ? 65536 : (int) (capacity * GROW_FACTOR);
-        newSize = Math.max(minSize, newSize);
+        int newSize = Math.max(minSize, Math.min((int) (capacity * GROW_FACTOR), MAX_CAPACITY));
         int[] newBase = new int[newSize];
         int[] newCheck = new int[newSize];
         if (capacity > 0) {
@@ -168,15 +168,15 @@ public class DoubleArrayTrie {
             int targetPos = begin + sibling.pos;
             check[targetPos] = begin;
             State parent = sibling.state;
-            Set<Map.Entry<Character, State>> siblingEntries = parent.success.entrySet();
+            RichIterable<CharObjectPair<State>> siblingEntries = parent.success.keyValuesView();
             List<NodeEntry> newSiblings = new ArrayList<>(siblingEntries.size() + 1);
             if (parent.isTermination()) {
                 State child = new State(-parent.depth - 1);
                 child.addEmit(parent.getLargestTermIndex());
                 newSiblings.add(new NodeEntry(0, child));
             }
-            for (Map.Entry<Character, State> entry : siblingEntries) {
-                newSiblings.add(new NodeEntry(entry.getKey() + 1, entry.getValue()));
+            for (CharObjectPair<State> entry : siblingEntries) {
+                newSiblings.add(new NodeEntry(entry.getOne() + 1, entry.getTwo()));
             }
             if (newSiblings.isEmpty()) {
                 base[targetPos] = -parent.getLargestTermIndex() - 1;
