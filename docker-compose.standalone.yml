@@ -60,7 +60,7 @@ x-logging-turms: &logging-turms
 services:
   # MongoDB
   mongodb-router:
-    image: "bitnami/mongodb-sharded:4.4.4"
+    image: "bitnami/mongodb-sharded:4.4.10"
     depends_on:
       - loki
     environment:
@@ -80,7 +80,7 @@ services:
     <<: *logging-mongo
 
   mongodb-shard:
-    image: "bitnami/mongodb-sharded:4.4.4"
+    image: "bitnami/mongodb-sharded:4.4.10"
     depends_on:
       - loki
     environment:
@@ -94,7 +94,7 @@ services:
     <<: *logging-mongo
 
   mongodb-cfg:
-    image: "bitnami/mongodb-sharded:4.4.4"
+    image: "bitnami/mongodb-sharded:4.4.10"
     depends_on:
       - loki
     environment:
@@ -250,7 +250,7 @@ services:
    # optional services for observability - metrics
 
   grafana:
-    image: grafana/grafana:8.1.2
+    image: grafana/grafana:8.2.2
     depends_on:
       - prometheus
     environment:
@@ -265,7 +265,7 @@ services:
       - ./ops/grafana/provisioning/:/etc/grafana/provisioning/
 
   prometheus:
-    image: prom/prometheus:v2.29.2
+    image: prom/prometheus:v2.30.3
     ports:
       - "9090:9090"
     profiles:
@@ -294,7 +294,7 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
 
   mongo-exporter:
-    image: bitnami/mongodb-exporter:0.20.7
+    image: bitnami/mongodb-exporter:0.20.8
     environment:
       MONGODB_URI: "mongodb://root:turms@mongodb-router:27017"
     ports:
@@ -303,7 +303,7 @@ services:
       - monitoring
 
   redis-exporter:
-    image: oliver006/redis_exporter:v1.26.0
+    image: oliver006/redis_exporter:v1.29.0
     depends_on:
       - redis
     environment:

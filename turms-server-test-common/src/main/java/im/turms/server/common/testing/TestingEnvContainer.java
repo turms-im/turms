@@ -4,17 +4,12 @@ import lombok.extern.log4j.Log4j2;
 import org.testcontainers.containers.ContainerState;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
-import org.testcontainers.utility.DockerImageName;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.VarHandle;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -39,24 +34,6 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
     private static final String TURMS_GATEWAY_SERVICE_NAME = "turms-gateway_1";
     private static final int TURMS_GATEWAY_SERVICE_ADMIN_PORT = 9510;
     private static final int TURMS_GATEWAY_SERVICE_WS_PORT = 10510;
-
-    static {
-        try {
-            // FIXME: Remove the hacky code once DockerComposeContainer supports
-            //  using a custom version of docker-compose
-            // https://github.com/testcontainers/testcontainers-java/issues/4164
-            Class<?> compose = Class.forName("org.testcontainers.containers.ContainerisedDockerCompose");
-            Field field = compose.getDeclaredField("DEFAULT_IMAGE_NAME");
-            field.setAccessible(true);
-            VarHandle modifiersHandle = MethodHandles
-                    .privateLookupIn(Field.class, MethodHandles.lookup())
-                    .findVarHandle(Field.class, "modifiers", int.class);
-            modifiersHandle.set(field, field.getModifiers() & ~Modifier.FINAL);
-            field.set(null, DockerImageName.parse("docker/compose:1.29.1"));
-        } catch (Exception e) {
-            log.error("Cannot change the version of docker-compose", e);
-        }
-    }
 
     public TestingEnvContainer(TestingEnvContainerOptions options) {
         super(getComposeFile(options));
