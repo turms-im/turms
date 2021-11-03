@@ -33,7 +33,6 @@
 
     <properties>
         <commons-io.version>2.11.0</commons-io.version>
-        <springdoc.version>1.5.9</springdoc.version>
 
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     </properties>
@@ -61,11 +60,6 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-webflux-ui</artifactId>
-            <version>${springdoc.version}</version>
         </dependency>
         <dependency>
             <groupId>im.turms</groupId>

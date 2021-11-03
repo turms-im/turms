@@ -54,10 +54,6 @@ public class Filter implements Bson {
         document = new BsonDocument(MapUtil.getCapability(expectedSize));
     }
 
-    public static Filter newBuilder() {
-        return new Filter(4);
-    }
-
     public static Filter newBuilder(int expectedSize) {
         return new Filter(expectedSize);
     }

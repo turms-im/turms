@@ -34,6 +34,7 @@
     <properties>
         <eclipse-collections.version>10.4.0</eclipse-collections.version>
         <flight-recorder-starter.version>2.2.1</flight-recorder-starter.version>
+        <springdoc.version>1.5.12</springdoc.version>
     </properties>
 
     <dependencies>
@@ -51,6 +52,11 @@
             <groupId>de.mirkosertic</groupId>
             <artifactId>flight-recorder-starter</artifactId>
             <version>${flight-recorder-starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-webflux-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
         <!-- Testing -->
         <dependency>
