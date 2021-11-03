@@ -100,7 +100,9 @@ public class TurmsHandlerMethod extends InvocableHandlerMethod {
             }
 
             HttpStatus status = getResponseStatus();
-            exchange.getResponse().setStatusCode(status);
+            if (status != null) {
+                exchange.getResponse().setStatusCode(status);
+            }
 
             MethodParameter returnType = getReturnType();
             ReactiveAdapter adapter = ReactiveAdapterRegistry.getSharedInstance().getAdapter(returnType.getParameterType());
