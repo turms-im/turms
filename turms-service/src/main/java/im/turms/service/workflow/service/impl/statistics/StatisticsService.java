@@ -51,11 +51,11 @@ public class StatisticsService {
         this.node = node;
         taskManager.reschedule(
                 "onlineUsersNumberLogging",
-                turmsPropertiesManager.getLocalProperties().getService().getActivityLogging().getStatistics()
+                turmsPropertiesManager.getLocalProperties().getService().getStatistics()
                         .getOnlineUsersNumberLoggingCron(),
                 () -> {
                     if (node.isLocalNodeLeader() &&
-                            node.getSharedProperties().getService().getActivityLogging().getStatistics().isLogOnlineUsersNumber()) {
+                            node.getSharedProperties().getService().getStatistics().isLogOnlineUsersNumber()) {
                         countOnlineUsers()
                                 .onErrorResume(t -> {
                                     log.error("Failed to count online users", t);

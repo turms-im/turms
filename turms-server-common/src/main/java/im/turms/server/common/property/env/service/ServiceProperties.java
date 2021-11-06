@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.env.service.business.GroupProperties;
 import im.turms.server.common.property.env.service.business.NotificationProperties;
 import im.turms.server.common.property.env.service.business.StorageProperties;
-import im.turms.server.common.property.env.service.business.activity.ActivityLoggingProperties;
+import im.turms.server.common.property.env.service.env.StatisticsProperties;
 import im.turms.server.common.property.env.service.business.conversation.ConversationProperties;
 import im.turms.server.common.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.property.env.service.business.user.UserProperties;
@@ -68,6 +68,10 @@ public class ServiceProperties {
     @NestedConfigurationProperty
     private TurmsRedisProperties redis = new TurmsRedisProperties();
 
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private StatisticsProperties statistics = new StatisticsProperties();
+
     // Business
 
     @JsonView(MutablePropertiesView.class)
@@ -93,9 +97,5 @@ public class ServiceProperties {
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private NotificationProperties notification = new NotificationProperties();
-
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
-    private ActivityLoggingProperties activityLogging = new ActivityLoggingProperties();
 
 }

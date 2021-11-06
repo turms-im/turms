@@ -29,56 +29,57 @@ Turms属性分为三大类配置：Turms Service配置、Turms Gateway配置，�
 
 由于所有的配置项高达上百个，直接看代码比看文档更加直观，因此推荐您直接查阅`im.turms.server.common.property`目录下各配置类，下文仅对大的分类做简要介绍。
 
-提醒：您在本地编译`turms/turms-gateway`服务端项目后，编译器会生成`target/classes/META-INF/spring-configuration-metadata.json`文件。IntelliJ IDEA 能够自动检测到该文件，并在您输入Turms相关配置的时提供配置提示与补全功能
+提醒：您在本地编译`turms/turms-gateway`服务端项目后，编译器会生成`target/classes/META-INF/spring-configuration-metadata.json`文件。IntelliJ IDEA 能够自动检测到该文件，并在您输入Turms相关配置的时提供配置提示与补全功能，如下图所示：
+
+![](https://raw.githubusercontent.com/turms-im/assets/master/turms/configuration-code-completion.png)
 
 ### Tumrs Service配置
 
-#### 非业务相关类
-
-| 类                   | 字段名    | 描述                                     | 补充                                                         |
-| -------------------- | --------- | ---------------------------------------- | ------------------------------------------------------------ |
-| AdminApiProperties   | adminApi  | 管理员API接口相关配置                    |                                                              |
-| DiscoveryProperties  | discovery | 管理员API服务对外暴露的Advertise相关配置 |                                                              |
-| LogProperties        | log       | 日志相关配置                             |                                                              |
-| MockProperties       | mock      | Mock数据相关配置                         |                                                              |
-| MongoProperties      | mongo     | MongoDB数据库相关配置                    | Turms完全复用MongoDB的URI配置。参考文档：<br />https://docs.mongodb.com/manual/reference/connection-string/ |
-| TurmsRedisProperties | redis     | Redis数据库相关配置                      |                                                              |
-
-#### 业务相关类
-
-| 类                     | 字段名       | 描述                 |
-| ---------------------- | ------------ | -------------------- |
-| UserProperties         | user         | 用户相关配置         |
-| GroupProperties        | group        | 群组相关配置         |
-| ConversationProperties | conversation | 消息会话服务相关配置 |
-| MessageProperties      | message      | 消息服务相关配置     |
-| StorageProperties      | storage      | 存储相关配置         |
-| NotificationProperties | notification | 通知相关配置         |
-| StatisticsProperties   | statistics   | 统计相关配置         |
+| 类别      | 类                     | 字段名       | 描述                  | 补充                                                         |
+| --------- | ---------------------- | ------------ | --------------------- | ------------------------------------------------------------ |
+| 管理员API | AdminApiProperties     | adminApi     | 管理员API接口相关配置 |                                                              |
+| 客户端API | ClientApiProperties    | clientApi    | 客户端API接口相关配置 |                                                              |
+| Fake数据  | FakeProperties         | fake         | Fake数据相关配置      |                                                              |
+| 数据源    | MongoProperties        | mongo        | MongoDB数据库相关配置 | Turms完全复用MongoDB的URI配置。参考文档：<br />https://docs.mongodb.com/manual/reference/connection-string/ |
+|           | TurmsRedisProperties   | redis        | Redis数据库相关配置   |                                                              |
+| 统计      | StatisticsProperties   | statistics   | 统计相关配置          |                                                              |
+| 通知      | NotificationProperties | notification | 通知相关配置          |                                                              |
+| 文件存储  | StorageProperties      | storage      | 存储相关配置          |                                                              |
+| 业务行为  | UserProperties         | user         | 用户相关配置          |                                                              |
+|           | GroupProperties        | group        | 群组相关配置          |                                                              |
+|           | ConversationProperties | conversation | 消息会话服务相关配置  |                                                              |
+|           | MessageProperties      | message      | 消息服务相关配置      |                                                              |
 
 ### Turms Gateway配置
 
-| 类                          | 字段名            | 描述                                                         |
-| --------------------------- | ----------------- | ------------------------------------------------------------ |
-| ClientApiProperties         | clientApi         | 面向客户端的HTTP接入层相关配置（即ReasonController的相关配置） |
-| DiscoveryProperties         | discovery         | 网关对外暴露的Advertise相关配置                              |
-| LogProperties               | log               | 日志相关配置                                                 |
-| MongoProperties             | mongo             | MongoDB数据库相关配置                                        |
-| PluginProperties            | plugin            | 插件相关配置                                                 |
-| SimultaneousLoginProperties | simultaneousLogin | 多端登录相关配置                                             |
-| SessionProperties           | session           | 会话相关配置                                                 |
-| TurmsRedisProperties        | redis             | Redis数据库相关配置                                          |
+| 类别      | 类                            | 字段名              | 描述                                                         |
+| --------- | ----------------------------- | ------------------- | ------------------------------------------------------------ |
+| 管理员API | AddressProperties             | metricsApiAddress   | 度量API地址相关配置                                          |
+| 客户端API | ClientApiProperties           | clientApi           | 面向客户端的HTTP接入层相关配置（即ReasonController的相关配置） |
+|           | NotificationLoggingProperties | notificationLogging | 通知日志相关配置                                             |
+| 服务接口  | UdpProperties                 | udp                 | UDP服务端相关配置                                            |
+|           | TcpProperties                 | tcp                 | TCP服务端相关配置                                            |
+|           | WebSocketProperties           | websocket           | WebSocket服务端相关配置                                      |
+|           | DiscoveryProperties           | serviceDiscovery    | 服务发现相关配置                                             |
+| Fake数据  | FakeProperties                | fake                | Fake数据相关配置                                             |
+| 数据源    | MongoProperties               | mongo               | MongoDB数据库相关配置                                        |
+|           | TurmsRedisProperties          | redis               | Redis数据库相关配置                                          |
+| 业务行为  | SimultaneousLoginProperties   | simultaneousLogin   | 多端登录相关配置                                             |
+|           | SessionProperties             | session             | 会话相关配置                                                 |
 
 ### Common通用配置
 
-| 类                   | 字段名     | 描述                                                         |
-| -------------------- | ---------- | ------------------------------------------------------------ |
-| ClusterProperties    | cluster    | 集群相关配置。包括配置当前运行节点信息、服务发现注册信息、配置中心信息、RPC参数 |
-| IpProperties         | ip         | 公网IP探测相关配置                                           |
-| SecurityProperties   | security   | 用户与管理员密码加密相关配置                                 |
-| PluginProperties     | plugin     | 插件相关配置                                                 |
-| LocationProperties   | location   | 用户坐标相关配置                                             |
-| UserStatusProperties | userStatus | 用户会话（连接）状态相关配置                                 |
+| 类                           | 字段名             | 描述                                                         |
+| ---------------------------- | ------------------ | ------------------------------------------------------------ |
+| ClusterProperties            | cluster            | 集群相关配置。包括配置当前运行节点信息、服务发现注册信息、配置中心信息、RPC参数 |
+| IpProperties                 | ip                 | 公网IP探测相关配置                                           |
+| LocationProperties           | location           | 用户坐标相关配置                                             |
+| LoggingProperties            | logging            | 基础日志配置                                                 |
+| MonitorProperties            | monitor            | 节点状态监控配置                                             |
+| PluginProperties             | plugin             | 插件相关配置                                                 |
+| SecurityProperties           | security           | 用户与管理员密码加密相关配置                                 |
+| ServerAvailabilityProperties | serverAvailability | 服务端可用性判定配置                                         |
+| UserStatusProperties         | userStatus         | 用户会话（连接）状态相关配置                                 |
 
 ## 补充
 

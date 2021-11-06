@@ -15,26 +15,32 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.service.business.activity;
+package im.turms.server.common.property.env.service.env;
 
+import im.turms.server.common.constant.CronConstant;
+import im.turms.server.common.constraint.ValidCron;
+import im.turms.server.common.property.metadata.annotation.Description;
+import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
- * @implNote To make it clearer for developers to configure the logging behaviors of client requests and the responses
- * we put the properties together in ClientApiProperties instead of ActivityLoggingProperties
  */
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class ActivityLoggingProperties {
+public class StatisticsProperties {
 
-    @NestedConfigurationProperty
-    private StatisticsProperties statistics = new StatisticsProperties();
+    @Description("The cron expression to specify the time to log online users' number")
+    @ValidCron
+    private String onlineUsersNumberLoggingCron = CronConstant.DEFAULT_ONLINE_USERS_NUMBER_LOGGING_CRON;
+
+    @Description("Whether to log online users number")
+    @GlobalProperty
+    private boolean logOnlineUsersNumber = true;
 
 }
