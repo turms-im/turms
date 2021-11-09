@@ -57,6 +57,7 @@ export default defineUserConfig<DefaultThemeOptions>({
                     '/for-developers/client-api.md',
                     '/for-developers/status-code.md',
                     // Redevelopment
+                    '/for-developers/cluster.md',
                     '/for-developers/custom-plugin.md',
                     // Theory
                     '/for-developers/architecture.md',
