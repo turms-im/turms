@@ -65,9 +65,10 @@ public class SnowflakeIdGenerator {
     private static final long DATA_CENTER_ID_SHIFT = SEQUENCE_NUMBER_BITS + WORKER_ID_BITS;
     private static final long WORKER_ID_SHIFT = SEQUENCE_NUMBER_BITS;
 
-    private static final long SEQUENCE_WORKER_ID_MASK = (1 << SEQUENCE_NUMBER_BITS) - 1;
+    private static final long SEQUENCE_NUMBER_MASK = (1 << SEQUENCE_NUMBER_BITS) - 1;
 
     public static final int MAX_DATA_CENTER_ID = 1 << DATA_CENTER_ID_BITS;
+    public static final int MAX_WORKER_ID = 1 << WORKER_ID_BITS;
 
     // Used to ensure clock moves forward.
     private final AtomicLong lastTimestamp = new AtomicLong();
@@ -103,11 +104,11 @@ public class SnowflakeIdGenerator {
 
     public long nextIncreasingId() {
         // prepare each part of ID
-        long sequenceId = sequenceNumber.incrementAndGet() & SEQUENCE_WORKER_ID_MASK;
+        long sequenceNum = sequenceNumber.incrementAndGet() & SEQUENCE_NUMBER_MASK;
         long timestamp = this.lastTimestamp.updateAndGet(lastTs -> {
             // Don't let timestamp go backwards at least while this JVM is running.
             long nonBackwardsTimestamp = Math.max(lastTs, System.currentTimeMillis());
-            if (sequenceId == 0) {
+            if (sequenceNum == 0) {
                 // Always force the clock to increment whenever sequence number is 0,
                 // in case we have a long time-slip backwards
                 nonBackwardsTimestamp++;
@@ -119,7 +120,7 @@ public class SnowflakeIdGenerator {
         return (timestamp << TIMESTAMP_LEFT_SHIFT)
                 | (dataCenterId << DATA_CENTER_ID_SHIFT)
                 | (workerId << WORKER_ID_SHIFT)
-                | sequenceId;
+                | sequenceNum;
     }
 
     /**
@@ -131,11 +132,11 @@ public class SnowflakeIdGenerator {
      */
     public long nextLargeGapId() {
         // prepare each part of ID
-        long sequenceId = sequenceNumber.incrementAndGet() & SEQUENCE_WORKER_ID_MASK;
+        long sequenceNum = sequenceNumber.incrementAndGet() & SEQUENCE_NUMBER_MASK;
         long timestamp = this.lastTimestamp.updateAndGet(now -> {
             // Don't let timestamp go backwards at least while this JVM is running.
             long nonBackwardsTimestamp = Math.max(now, System.currentTimeMillis());
-            if (sequenceId == 0) {
+            if (sequenceNum == 0) {
                 // Always force the clock to increment whenever sequence number is 0,
                 // in case we have a long time-slip backwards
                 nonBackwardsTimestamp++;
@@ -144,7 +145,7 @@ public class SnowflakeIdGenerator {
         }) - EPOCH;
 
         // Get ID
-        return (sequenceId << (TIMESTAMP_BITS + DATA_CENTER_ID_BITS + WORKER_ID_BITS))
+        return (sequenceNum << (TIMESTAMP_BITS + DATA_CENTER_ID_BITS + WORKER_ID_BITS))
                 | (timestamp << (DATA_CENTER_ID_BITS + WORKER_ID_BITS))
                 | (dataCenterId << WORKER_ID_BITS)
                 | workerId;

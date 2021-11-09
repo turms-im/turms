@@ -78,7 +78,6 @@ public class DiscoveryService implements ClusterService {
     private static final Duration CRUD_TIMEOUT_DURATION = Duration.ofSeconds(10);
     private static final Comparator<Member> MEMBER_PRIORITY_COMPARATOR = DiscoveryService::compareMemberPriority;
 
-    @Getter
     private final ScheduledExecutorService scheduler =
             new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory("turms-cluster-discovery"));
     private ScheduledFuture<?> notifyMembersChangeFuture;
@@ -98,7 +97,7 @@ public class DiscoveryService implements ClusterService {
     private Leader leader;
 
     /**
-     * Use independent collections to speed up query operations
+     * Use independent collections to speed up querying
      */
     @Getter
     private final Map<String, Member> allKnownMembers = new ConcurrentHashMap<>(32);

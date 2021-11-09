@@ -32,6 +32,8 @@ public class IdService implements ClusterService {
 
     private static final int FLAKE_ID_GENERATORS_LENGTH = ServiceType.values().length;
 
+    private final DiscoveryService discoveryService;
+
     /**
      * Use an array to mitigate unnecessary thread contention.
      */
@@ -40,30 +42,14 @@ public class IdService implements ClusterService {
     private int previousLocalWorkerId;
 
     public IdService(DiscoveryService discoveryService) {
+        this.discoveryService = discoveryService;
         for (int i = 0; i < FLAKE_ID_GENERATORS_LENGTH; i++) {
             idGenerators[i] = new SnowflakeIdGenerator(0, 0);
         }
         discoveryService.addOnMembersChangeListener(() -> {
-            TreeSet<String> zones = new TreeSet<>();
-            for (Member member : discoveryService.getAllKnownMembers().values()) {
-                zones.add(member.getZone());
-            }
-            int dataCenterId = zones
-                    .headSet(discoveryService.getLocalMember().getZone())
-                    .size();
-            if (dataCenterId >= SnowflakeIdGenerator.MAX_DATA_CENTER_ID) {
-                int fallbackDataCenterId = dataCenterId % SnowflakeIdGenerator.MAX_DATA_CENTER_ID;
-                log.warn("The data center ID {} is larger than {}, so the ID fall back to {}." +
-                                " It runs the risk of generating same IDs in the cluster",
-                        dataCenterId, SnowflakeIdGenerator.MAX_DATA_CENTER_ID - 1, fallbackDataCenterId);
-                dataCenterId = fallbackDataCenterId;
-            }
-            Integer localWorkerId = discoveryService.getLocalServiceMemberIndex();
-            boolean isWorkerIdChanged = localWorkerId != null && localWorkerId != previousLocalWorkerId;
-            if (isWorkerIdChanged || previousLocalDataCenterId != dataCenterId) {
-                if (localWorkerId == null) {
-                    localWorkerId = previousLocalWorkerId;
-                }
+            int dataCenterId = findNewDataCenterId();
+            int localWorkerId = findNewWorkerId();
+            if (previousLocalDataCenterId != dataCenterId || localWorkerId != previousLocalWorkerId) {
                 for (SnowflakeIdGenerator idGenerator : idGenerators) {
                     idGenerator.updateNodeInfo(dataCenterId, localWorkerId);
                 }
@@ -82,6 +68,41 @@ public class IdService implements ClusterService {
 
     public long nextLargeGapId(ServiceType serviceType) {
         return idGenerators[serviceType.ordinal()].nextLargeGapId();
+    }
+
+    private int findNewDataCenterId() {
+        TreeSet<String> zones = new TreeSet<>();
+        for (Member member : discoveryService.getAllKnownMembers().values()) {
+            zones.add(member.getZone());
+        }
+        int dataCenterId = zones
+                .headSet(discoveryService.getLocalMember().getZone())
+                .size();
+        if (dataCenterId >= SnowflakeIdGenerator.MAX_DATA_CENTER_ID) {
+            int fallbackDataCenterId = dataCenterId % SnowflakeIdGenerator.MAX_DATA_CENTER_ID;
+            log.warn("The data center ID {} is larger than {}, so the ID falls back to {}." +
+                            " It runs the risk of generating same IDs in the cluster",
+                    dataCenterId, SnowflakeIdGenerator.MAX_DATA_CENTER_ID - 1, fallbackDataCenterId);
+            dataCenterId = fallbackDataCenterId;
+        }
+        return dataCenterId;
+    }
+
+    private int findNewWorkerId() {
+        Integer localWorkerId = discoveryService.getLocalServiceMemberIndex();
+        if (localWorkerId == null) {
+            // Use the previous worker ID instead of 0
+            // to decrease chance of collision
+            return previousLocalWorkerId;
+        }
+        if (localWorkerId >= SnowflakeIdGenerator.MAX_WORKER_ID) {
+            int fallbackWorkerId = localWorkerId % SnowflakeIdGenerator.MAX_WORKER_ID;
+            log.warn("The node ID {} is larger than {}, so the ID falls back to {}." +
+                            " It runs the risk of generating same IDs in the cluster",
+                    localWorkerId, SnowflakeIdGenerator.MAX_WORKER_ID - 1, fallbackWorkerId);
+            return fallbackWorkerId;
+        }
+        return localWorkerId;
     }
 
 }
