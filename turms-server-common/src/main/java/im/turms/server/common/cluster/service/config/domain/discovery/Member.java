@@ -261,7 +261,7 @@ public final class Member {
     public static class MemberStatus {
         /**
          * True if the last heartbeat has not timed out.
-         * isHealthy only works as an indicate for node status,
+         * isHealthy only works as an indicator for node status,
          * and it can still handle client requests even if a node isn't healthy.
          */
         private boolean isHealthy;
