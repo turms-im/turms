@@ -26,12 +26,15 @@ import im.turms.common.model.dto.request.TurmsRequest
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import okio.ByteString.Companion.toByteString
-import java.nio.ByteBuffer
+import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ThreadLocalRandom
-import kotlin.coroutines.*
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * @author James Chen
@@ -46,7 +49,7 @@ class MessageService(
     private val requestTimeout = requestTimeout ?: 60 * 1000
     private val minRequestInterval = minRequestInterval ?: 0
     private val notificationListeners: MutableList<(TurmsNotification) -> Unit> = LinkedList()
-    private val requestMap = ConcurrentHashMap<Long, TurmsRequestCont>(256)
+    private val requestMap = ConcurrentHashMap<Long, TurmsRequestContext>(256)
 
     // Listeners
     fun addNotificationListener(listener: (TurmsNotification) -> Unit) {
@@ -54,7 +57,7 @@ class MessageService(
     }
 
     fun removeNotificationListener(listener: (TurmsNotification) -> Unit) {
-        notificationListeners.removeIf { it == listener }
+        notificationListeners.remove(listener)
     }
 
     private fun notifyNotificationListeners(notification: TurmsNotification) {
@@ -86,19 +89,24 @@ class MessageService(
             val request = requestBuilder
                 .setRequestId(requestId)
                 .build()
-            val currentRequest = TurmsRequestCont(request, cont, null)
-            val wasRequestAbsent = requestMap.putIfAbsent(requestId, currentRequest) == null
+            val requestContext = TurmsRequestContext(request, cont, null)
+            val wasRequestAbsent = requestMap.putIfAbsent(requestId, requestContext) == null
             if (wasRequestAbsent) {
-                val data = ByteBuffer.wrap(request.toByteArray())
-                val wasEnqueued: Boolean = stateStore.websocket!!.send(data.toByteString())
-                if (!wasEnqueued) {
-                    cont.resumeWithException(TurmsBusinessException(TurmsStatusCode.MESSAGE_IS_REJECTED))
+                launch {
+                    try {
+                        val payload = request.toByteArray()
+                        val tcp = stateStore.tcp!!
+                        tcp.writeVarInt(payload.size)
+                        tcp.write(payload)
+                    } catch (e: Exception) {
+                        cont.resumeWithException(e)
+                    }
                 }
                 if (requestTimeout > 0) {
-                    currentRequest.timeoutDeferred = async {
+                    requestContext.timeoutDeferred = async {
                         delay(requestTimeout.toLong())
                         requestMap.remove(requestId)?.let {
-                            if (!currentRequest.timeoutDeferred!!.isCompleted) {
+                            if (!requestContext.timeoutDeferred!!.isCompleted) {
                                 cont.tryResumeWithException(TurmsBusinessException(TurmsStatusCode.REQUEST_TIMEOUT))
                             }
                         }
@@ -154,7 +162,7 @@ class MessageService(
     override fun onDisconnected() =
         rejectRequests(TurmsBusinessException(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
 
-    private data class TurmsRequestCont(
+    private data class TurmsRequestContext(
         val request: TurmsRequest,
         val cont: Continuation<TurmsNotification>,
         var timeoutDeferred: Deferred<*>?

@@ -24,9 +24,13 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
-import okio.ByteString
+import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentLinkedQueue
-import kotlin.coroutines.*
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * @author James Chen
@@ -34,9 +38,9 @@ import kotlin.coroutines.*
 class HeartbeatService(
     coroutineContext: CoroutineContext,
     stateStore: StateStore,
-    heartbeatInterval: Int?
+    heartbeatIntervalMillis: Int?
 ) : BaseService(coroutineContext, stateStore) {
-    private val heartbeatInterval = heartbeatInterval ?: 120 * 1000
+    private val heartbeatInterval = heartbeatIntervalMillis ?: (120 * 1000)
     private val heartbeatTimerInterval = 1L.coerceAtLeast(this.heartbeatInterval / 10L)
     private var lastHeartbeatRequestDate = 0L
     private var heartbeatTimerDeferred: Deferred<*>? = null
@@ -72,12 +76,14 @@ class HeartbeatService(
             cont.resumeWithException(TurmsBusinessException(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
             return@suspendCoroutine
         }
-        val wasEnqueued = stateStore.websocket!!.send(ByteString.EMPTY)
-        if (wasEnqueued) {
-            heartbeatContinuationQueue.offer(cont)
-        } else {
-            cont.resumeWithException(TurmsBusinessException(TurmsStatusCode.MESSAGE_IS_REJECTED))
+        launch {
+            try {
+                stateStore.tcp!!.write(HEARTBEAT)
+            } catch (e: Exception) {
+                cont.resumeWithException(e)
+            }
         }
+        heartbeatContinuationQueue.offer(cont)
     }
 
     fun completeHeartbeatFutures() {
@@ -111,6 +117,7 @@ class HeartbeatService(
 
     companion object {
         private const val HEARTBEAT_FAILURE_REQUEST_ID = -100L
+        private val HEARTBEAT = byteArrayOf(0)
     }
 
 }

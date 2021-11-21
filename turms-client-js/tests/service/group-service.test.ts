@@ -92,8 +92,8 @@ describe('Query', () => {
         expect(groupWithVersion.group.id).toEqual(groupId);
     });
     it('queryJoinedGroupIds_shouldEqualNewGroupId', async () => {
-        const joinedGroupsIdsWithVersion = await turmsClient.groupService.queryJoinedGroupIds();
-        expect(joinedGroupsIdsWithVersion.ids).toContain(groupId);
+        const joinedGroupIdsWithVersion = await turmsClient.groupService.queryJoinedGroupIds();
+        expect(joinedGroupIdsWithVersion.ids).toContain(groupId);
     });
     it('queryJoinedGroupInfos_shouldEqualNewGroupId', async () => {
         const groupWithVersion = await turmsClient.groupService.queryJoinedGroupInfos();

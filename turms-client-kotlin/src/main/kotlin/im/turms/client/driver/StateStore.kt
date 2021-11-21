@@ -16,14 +16,14 @@
  */
 package im.turms.client.driver
 
-import okhttp3.internal.ws.RealWebSocket
+import im.turms.client.transport.TcpClient
 
 /**
  * @author James Chen
  */
 class StateStore {
     // Connection
-    var websocket: RealWebSocket? = null
+    var tcp: TcpClient? = null
 
     @Volatile
     var isConnected = false
@@ -38,7 +38,7 @@ class StateStore {
     var lastRequestDate = 0L
 
     fun reset() {
-        websocket = null
+        tcp = null
         isConnected = false
         isSessionOpen = false
         sessionId = null

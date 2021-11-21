@@ -16,16 +16,21 @@
  */
 package im.turms.client.service
 
+import helper.Constants.HOST
 import helper.Constants.ORDER_HIGH_PRIORITY
 import helper.Constants.ORDER_LOW_PRIORITY
 import helper.Constants.ORDER_MIDDLE_PRIORITY
-import helper.Constants.WS_URL
 import im.turms.client.TurmsClient
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
+import org.junit.jupiter.api.Timeout
 
 @TestMethodOrder(OrderAnnotation::class)
 internal class StorageServiceET {
@@ -113,7 +118,7 @@ internal class StorageServiceET {
         @Timeout(5)
         @JvmStatic
         fun setup() = runBlocking {
-            turmsClient = TurmsClient(WS_URL)
+            turmsClient = TurmsClient(HOST)
             turmsClient.userService.login(USER_ID, "123")
         }
 

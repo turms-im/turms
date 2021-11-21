@@ -47,7 +47,6 @@ object TurmsStatusCode {
     const val CLIENT_SESSION_HAS_BEEN_CLOSED = 301
 
     // Message
-    const val MESSAGE_IS_REJECTED = 400
 
     // Storage
     const val QUERY_PROFILE_URL_TO_UPDATE_BEFORE_LOGIN = 500

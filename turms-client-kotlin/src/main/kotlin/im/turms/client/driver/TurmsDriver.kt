@@ -23,7 +23,7 @@ import im.turms.client.driver.service.ConnectionService
 import im.turms.client.driver.service.HeartbeatService
 import im.turms.client.driver.service.MessageService
 import im.turms.client.extension.camelToSnakeCase
-import im.turms.client.model.ConnectionDisconnectInfo
+import im.turms.client.transport.Pin
 import im.turms.common.model.dto.notification.TurmsNotification
 import im.turms.common.model.dto.request.TurmsRequest
 import kotlinx.coroutines.CoroutineScope
@@ -34,32 +34,35 @@ import java.nio.ByteBuffer
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.logging.Level
 import java.util.logging.Logger
+import javax.net.ssl.X509TrustManager
 import kotlin.coroutines.CoroutineContext
 
 /**
  * @author James Chen
  */
 class TurmsDriver(
-    websocketUrl: String?,
-    connectTimeout: Int?,
-    requestTimeout: Int?,
-    minRequestInterval: Int?,
-    heartbeatInterval: Int?
+    host: String?,
+    port: Int?,
+    connectTimeoutMillis: Int?,
+    requestTimeoutMillis: Int?,
+    minRequestIntervalMillis: Int?,
+    heartbeatIntervalMillis: Int?,
+    context: CoroutineContext?
 ) : CoroutineScope {
 
     override val coroutineContext: CoroutineContext =
-        ScheduledThreadPoolExecutor(1) { r -> Thread(r, "turms-scheduler") }.asCoroutineDispatcher()
+        context ?: ScheduledThreadPoolExecutor(2) { r -> Thread(r, "turms-scheduler") }.asCoroutineDispatcher()
     internal val stateStore: StateStore = StateStore()
 
     private val connectionService: ConnectionService =
-        ConnectionService(coroutineContext, stateStore, websocketUrl, connectTimeout).apply {
+        ConnectionService(coroutineContext, stateStore, host, port, connectTimeoutMillis).apply {
             addOnDisconnectedListener { onConnectionDisconnected() }
             addMessageListener { byteBuffer: ByteBuffer -> onMessage(byteBuffer) }
         }
     private val heartbeatService: HeartbeatService =
-        HeartbeatService(coroutineContext, stateStore, heartbeatInterval)
+        HeartbeatService(coroutineContext, stateStore, heartbeatIntervalMillis)
     private val messageService: MessageService =
-        MessageService(coroutineContext, stateStore, requestTimeout, minRequestInterval)
+        MessageService(coroutineContext, stateStore, requestTimeoutMillis, minRequestIntervalMillis)
 
     // Close
 
@@ -86,9 +89,15 @@ class TurmsDriver(
     // Connection Service
 
     suspend fun connect(
-        wsUrl: String? = null,
-        connectTimeout: Int? = null
-    ) = connectionService.connect(wsUrl, connectTimeout)
+        host: String? = null,
+        port: Int? = null,
+        connectTimeoutMillis: Int? = null,
+        useTls: Boolean? = null,
+        trustManager: X509TrustManager? = null,
+        serverName: String? = null,
+        hostname: String? = null,
+        pins: List<Pin>? = null
+    ) = connectionService.connect(host, port, connectTimeoutMillis, useTls, trustManager, serverName, hostname, pins)
 
     suspend fun disconnect() = connectionService.disconnect()
 
@@ -100,13 +109,13 @@ class TurmsDriver(
     fun addOnConnectedListener(listener: () -> Unit) =
         connectionService.addOnConnectedListener(listener)
 
-    fun addOnDisconnectedListener(listener: (ConnectionDisconnectInfo) -> Unit) =
+    fun addOnDisconnectedListener(listener: () -> Unit) =
         connectionService.addOnDisconnectedListener(listener)
 
     fun removeOnConnectedListener(listener: () -> Unit) =
         connectionService.removeOnConnectedListener(listener)
 
-    fun removeOnDisconnectedListener(listener: (ConnectionDisconnectInfo) -> Unit) =
+    fun removeOnDisconnectedListener(listener: () -> Unit) =
         connectionService.removeOnDisconnectedListener(listener)
 
     // Message Service

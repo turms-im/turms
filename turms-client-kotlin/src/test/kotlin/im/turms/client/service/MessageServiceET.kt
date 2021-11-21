@@ -16,12 +16,12 @@
  */
 package im.turms.client.service
 
+import helper.Constants.HOST
 import helper.Constants.ORDER_FIRST
 import helper.Constants.ORDER_HIGHEST_PRIORITY
 import helper.Constants.ORDER_HIGH_PRIORITY
 import helper.Constants.ORDER_LOW_PRIORITY
 import helper.Constants.ORDER_MIDDLE_PRIORITY
-import helper.Constants.WS_URL
 import im.turms.client.TurmsClient
 import im.turms.client.service.MessageService.Companion.generateAudioRecordByData
 import im.turms.client.service.MessageService.Companion.generateAudioRecordByDescription
@@ -33,10 +33,15 @@ import im.turms.client.service.MessageService.Companion.generateLocationRecord
 import im.turms.client.service.MessageService.Companion.generateVideoRecordByData
 import im.turms.client.service.MessageService.Companion.generateVideoRecordByDescription
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
+import org.junit.jupiter.api.Timeout
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -199,9 +204,9 @@ internal class MessageServiceET {
         @Timeout(10)
         @JvmStatic
         fun setup() = runBlocking {
-            senderClient = TurmsClient(WS_URL)
-            recipientClient = TurmsClient(WS_URL)
-            groupMemberClient = TurmsClient(WS_URL)
+            senderClient = TurmsClient(HOST)
+            recipientClient = TurmsClient(HOST)
+            groupMemberClient = TurmsClient(HOST)
             senderClient.userService.login(SENDER_ID, "123")
             recipientClient.userService.login(RECIPIENT_ID, "123")
             groupMemberClient.userService.login(GROUP_MEMBER_ID, "123")

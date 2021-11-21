@@ -17,21 +17,36 @@
 package im.turms.client
 
 import im.turms.client.driver.TurmsDriver
-import im.turms.client.service.*
+import im.turms.client.service.ConversationService
+import im.turms.client.service.GroupService
+import im.turms.client.service.MessageService
+import im.turms.client.service.NotificationService
+import im.turms.client.service.StorageService
+import im.turms.client.service.UserService
+import kotlin.coroutines.CoroutineContext
 
 /**
  * @author James Chen
  */
 class TurmsClient constructor(
-    url: String? = null,
-    connectTimeout: Int? = null,
-    requestTimeout: Int? = null,
-    minRequestInterval: Int? = null,
-    heartbeatInterval: Int? = null,
-    storageServerUrl: String? = null
+    host: String? = null,
+    port: Int? = null,
+    connectTimeoutMillis: Int? = null,
+    requestTimeoutMillis: Int? = null,
+    minRequestIntervalMillis: Int? = null,
+    heartbeatIntervalMillis: Int? = null,
+    storageServerUrl: String? = null,
+    coroutineContext: CoroutineContext? = null,
 ) {
-    val driver: TurmsDriver =
-        TurmsDriver(url, connectTimeout, requestTimeout, minRequestInterval, heartbeatInterval)
+    val driver: TurmsDriver = TurmsDriver(
+        host,
+        port,
+        connectTimeoutMillis,
+        requestTimeoutMillis,
+        minRequestIntervalMillis,
+        heartbeatIntervalMillis,
+        coroutineContext
+    )
     val userService: UserService = UserService(this)
     val groupService: GroupService = GroupService(this)
     val conversationService: ConversationService = ConversationService(this)

@@ -27,7 +27,6 @@ public enum TurmsStatusCode: Int {
     case clientSessionHasBeenClosed
 
     // Message
-    case messageIsRejected = 400
 
     // Storage
     case queryProfileUrlToUpdateBeforeLogin = 500

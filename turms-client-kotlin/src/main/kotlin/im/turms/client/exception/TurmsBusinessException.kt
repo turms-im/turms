@@ -25,25 +25,25 @@ import java.util.*
  */
 class TurmsBusinessException internal constructor(
     val code: Int,
-    reason: String? = null,
-    cause: Throwable? = null
+    val reason: String? = null,
+    override val cause: Throwable? = null
 ) : StacklessException(formatMessage(code, reason), cause) {
 
-    override val message: String? = reason
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
-        if (other == null || javaClass != other.javaClass) {
-            return false
-        }
-        val that = other as TurmsBusinessException
-        return code == that.code && message == that.message
+    override fun hashCode(): Int {
+        return Objects.hash(code, reason, cause)
     }
 
-    override fun hashCode(): Int {
-        return Objects.hash(code, message)
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as TurmsBusinessException
+
+        if (code != other.code) return false
+        if (reason != other.reason) return false
+        if (cause != other.cause) return false
+
+        return true
     }
 
     companion object {

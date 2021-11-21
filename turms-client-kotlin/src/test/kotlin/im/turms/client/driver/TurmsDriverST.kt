@@ -16,19 +16,27 @@
  */
 package im.turms.client.driver
 
+import helper.Constants.HOST
 import helper.Constants.ORDER_FIRST
 import helper.Constants.ORDER_HIGHEST_PRIORITY
 import helper.Constants.ORDER_HIGH_PRIORITY
 import helper.Constants.ORDER_LOWEST_PRIORITY
 import helper.Constants.ORDER_MIDDLE_PRIORITY
-import helper.Constants.WS_URL
 import im.turms.client.TurmsClient
 import im.turms.client.extension.isSuccessful
 import im.turms.common.model.dto.request.TurmsRequest
 import im.turms.common.model.dto.request.user.QueryUserProfileRequest
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
+import org.junit.jupiter.api.Timeout
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 internal class TurmsDriverST {
@@ -91,7 +99,7 @@ internal class TurmsDriverST {
         @BeforeAll
         @JvmStatic
         fun setup() {
-            client = TurmsClient(WS_URL)
+            client = TurmsClient(HOST)
             driver = client.driver
         }
 

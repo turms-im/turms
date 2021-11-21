@@ -19,17 +19,18 @@ package im.turms.client.driver.service
 import im.turms.client.constant.TurmsStatusCode
 import im.turms.client.driver.StateStore
 import im.turms.client.exception.TurmsBusinessException
-import im.turms.client.extension.tryResumeWithException
-import im.turms.client.model.ConnectionDisconnectInfo
-import okhttp3.*
-import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.internal.ws.RealWebSocket
-import okio.ByteString
+import im.turms.client.transport.Pin
+import im.turms.client.transport.TcpClient
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.withTimeout
+import java.net.SocketException
 import java.nio.ByteBuffer
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
-import java.util.concurrent.TimeUnit
-import kotlin.coroutines.*
+import javax.net.ssl.X509TrustManager
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.resume
 
 /**
  * @author James Chen
@@ -37,16 +38,17 @@ import kotlin.coroutines.*
 class ConnectionService(
     coroutineContext: CoroutineContext,
     stateStore: StateStore,
-    wsUrl: String?,
-    connectTimeout: Int?
+    host: String?,
+    port: Int?,
+    connectTimeoutMillis: Int?
 ) : BaseService(coroutineContext, stateStore) {
-    private val initialWsUrl: String = wsUrl ?: DEFAULT_WEBSOCKET_URL
-    private val initialConnectTimeout: Int =
-        if (connectTimeout == null || connectTimeout <= 0) DEFAULT_CONNECT_TIMEOUT else connectTimeout
-    private var httpClient: OkHttpClient = OkHttpClient().newBuilder().build()
-    private val disconnectFutures = ConcurrentLinkedQueue<Continuation<Unit>>()
+    private val initialHost = host ?: "127.0.0.1"
+    private val initialPort = port ?: 11510
+    private val initialConnectTimeout =
+        if (connectTimeoutMillis == null || connectTimeoutMillis <= 0) 30 * 1000 else connectTimeoutMillis
+    private val disconnectFutures = ConcurrentLinkedQueue<Continuation<Throwable?>>()
     private val onConnectedListeners: MutableList<() -> Unit> = LinkedList()
-    private val onDisconnectedListeners: MutableList<(ConnectionDisconnectInfo) -> Unit> = LinkedList()
+    private val onDisconnectedListeners: MutableList<() -> Unit> = LinkedList()
     private val messageListeners: MutableList<(ByteBuffer) -> Unit> = LinkedList()
 
     private fun resetStates() {
@@ -58,7 +60,7 @@ class ConnectionService(
         onConnectedListeners.add(listener)
     }
 
-    fun addOnDisconnectedListener(listener: (ConnectionDisconnectInfo) -> Unit) {
+    fun addOnDisconnectedListener(listener: () -> Unit) {
         onDisconnectedListeners.add(listener)
     }
 
@@ -70,7 +72,7 @@ class ConnectionService(
         onConnectedListeners.remove(listener)
     }
 
-    fun removeOnDisconnectedListener(listener: (ConnectionDisconnectInfo) -> Unit) {
+    fun removeOnDisconnectedListener(listener: () -> Unit) {
         onDisconnectedListeners.remove(listener)
     }
 
@@ -84,9 +86,9 @@ class ConnectionService(
         }
     }
 
-    private fun notifyOnDisconnectedListeners(info: ConnectionDisconnectInfo) {
+    private fun notifyOnDisconnectedListeners() {
         for (listener in onDisconnectedListeners) {
-            listener(info)
+            listener()
         }
     }
 
@@ -96,102 +98,100 @@ class ConnectionService(
         }
     }
 
-    private fun completeDisconnectFutures() {
+    private fun completeDisconnectFutures(t: Throwable? = null) {
         while (true) {
-            disconnectFutures.poll()?.resume(Unit) ?: return
+            disconnectFutures.poll()?.resume(t) ?: return
         }
     }
 
     // Connection
     suspend fun connect(
-        wsUrl: String? = initialWsUrl,
-        connectTimeout: Int? = initialConnectTimeout
-    ) = suspendCoroutine<Unit> { cont ->
-        val wsUrl = wsUrl ?: initialWsUrl
-        val connectTimeout = connectTimeout ?: initialConnectTimeout
+        host: String? = initialHost,
+        port: Int? = 11510,
+        connectTimeoutMillis: Int? = initialConnectTimeout,
+        useTls: Boolean? = false,
+        trustManager: X509TrustManager? = null,
+        serverName: String? = null,
+        hostname: String? = null,
+        pins: List<Pin>? = null
+    ) {
         if (stateStore.isConnected) {
-            if (wsUrl.toHttpUrl() == stateStore.websocket?.request()?.url) {
-                cont.resume(Unit)
+            if (host == stateStore.tcp?.host && port == stateStore.tcp?.port) {
+                return
             } else {
-                cont.resumeWithException(TurmsBusinessException(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED))
+                throw TurmsBusinessException(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED)
             }
-            return@suspendCoroutine
         }
         resetStates()
-        val isConnectTimeoutChanged = connectTimeout != httpClient.connectTimeoutMillis
-        if (isConnectTimeoutChanged) {
-            httpClient = httpClient.newBuilder()
-                .connectTimeout(connectTimeout.toLong(), TimeUnit.MILLISECONDS)
-                .build()
+        val tcp = TcpClient(coroutineContext)
+        tcp.onClose = {
+            onSocketClose(it)
         }
-        val request = Request.Builder()
-            .url(wsUrl)
-            .build()
-        stateStore.websocket = httpClient.newWebSocket(request, object : WebSocketListener() {
-            override fun onOpen(webSocket: WebSocket, response: Response) {
-                onWebSocketOpen()
-                cont.resume(Unit)
+        if (connectTimeoutMillis == null) {
+            tcp.connect(
+                host ?: initialHost,
+                port ?: initialPort,
+                useTls ?: false,
+                trustManager,
+                serverName,
+                hostname,
+                pins
+            )
+        } else {
+            try {
+                withTimeout(connectTimeoutMillis.toLong()) {
+                    tcp.connect(
+                        host ?: initialHost,
+                        port ?: initialPort,
+                        useTls ?: false,
+                        trustManager,
+                        serverName,
+                        hostname,
+                        pins
+                    )
+                }
+            } catch (e: TimeoutCancellationException) {
+                tcp.close()
+                throw e
             }
-
-            override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-                notifyMessageListeners(bytes.asByteBuffer())
+        }
+        stateStore.tcp = tcp
+        onSocketOpen()
+        tcp.startReading {
+            while (stateStore.isConnected) {
+                val length = try {
+                    tcp.readVarInt()
+                } catch (e: SocketException) {
+                    return@startReading
+                }
+                if (length == 0) {
+                    notifyMessageListeners(EMPTY_BUFFER)
+                } else {
+                    tcp.read(length) {
+                        notifyMessageListeners(it)
+                    }
+                }
             }
-
-            override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-                stateStore.isConnected = false
-            }
-
-            override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-                onWebSocketClose(code, reason, null)
-                cont.tryResumeWithException(IllegalStateException())
-            }
-
-            /**
-             * @param response is not null when it failed at handshake stage
-             */
-            override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                onWebSocketClose(1006, null, t)
-                cont.tryResumeWithException(t)
-            }
-        }) as RealWebSocket
+        }
     }
 
-    suspend fun disconnect(): Unit = suspendCoroutine { cont ->
+    suspend fun disconnect() {
         if (stateStore.isConnected) {
-            // close is a synchronous method
-            val wasEnqueued = stateStore.websocket!!.close(1000, null)
-            if (wasEnqueued) {
-                disconnectFutures.offer(cont)
-            } else {
-                cont.resumeWithException(TurmsBusinessException(TurmsStatusCode.MESSAGE_IS_REJECTED))
-            }
-        } else {
-            cont.resume(Unit)
+            stateStore.isConnected = false
+            stateStore.tcp?.close()
         }
     }
 
     // Lifecycle hooks
-    private fun onWebSocketOpen() {
+    private fun onSocketOpen() {
         stateStore.isConnected = true
         notifyOnConnectedListeners()
     }
 
-    private fun onWebSocketClose(
-        code: Int,
-        reason: String?,
-        throwable: Throwable?
-    ): ConnectionDisconnectInfo {
-        val wasConnected = stateStore.isConnected
-        val url = stateStore.websocket!!.request().url.toUrl()
-        completeDisconnectFutures()
-        val disconnectInfo = ConnectionDisconnectInfo(wasConnected, url, code, reason, throwable)
-        notifyOnDisconnectedListeners(disconnectInfo)
-        return disconnectInfo
-    }
-
-    companion object {
-        private const val DEFAULT_WEBSOCKET_URL = "ws://localhost:10510"
-        private const val DEFAULT_CONNECT_TIMEOUT = 30 * 1000
+    private fun onSocketClose(t: Throwable?) {
+        stateStore.isConnected = false
+        completeDisconnectFutures(t)
+        notifyOnDisconnectedListeners()
     }
 
     override suspend fun close() {
@@ -199,6 +199,10 @@ class ConnectionService(
     }
 
     override fun onDisconnected() {
+    }
+
+    companion object {
+        private val EMPTY_BUFFER = ByteBuffer.allocate(0)
     }
 
 }

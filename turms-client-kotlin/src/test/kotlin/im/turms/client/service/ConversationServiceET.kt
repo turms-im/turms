@@ -16,18 +16,23 @@
  */
 package im.turms.client.service
 
+import helper.Constants.HOST
 import helper.Constants.ORDER_FIRST
 import helper.Constants.ORDER_LOW_PRIORITY
 import helper.Constants.ORDER_MIDDLE_PRIORITY
-import helper.Constants.WS_URL
 import im.turms.client.TurmsClient
 import im.turms.common.model.bo.conversation.GroupConversation
 import im.turms.common.model.bo.conversation.PrivateConversation
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
+import org.junit.jupiter.api.Timeout
 
 @TestMethodOrder(OrderAnnotation::class)
 internal class ConversationServiceET {
@@ -101,7 +106,7 @@ internal class ConversationServiceET {
         @JvmStatic
         @Timeout(5)
         fun setup() = runBlocking {
-            client = TurmsClient(WS_URL)
+            client = TurmsClient(HOST)
             client.userService.login(USER_ID, "123")
         }
 

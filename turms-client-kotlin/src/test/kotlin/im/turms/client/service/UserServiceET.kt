@@ -16,6 +16,7 @@
  */
 package im.turms.client.service
 
+import helper.Constants.HOST
 import helper.Constants.ORDER_FIRST
 import helper.Constants.ORDER_HIGHEST_PRIORITY
 import helper.Constants.ORDER_HIGH_PRIORITY
@@ -23,16 +24,22 @@ import helper.Constants.ORDER_LAST
 import helper.Constants.ORDER_LOWEST_PRIORITY
 import helper.Constants.ORDER_LOW_PRIORITY
 import helper.Constants.ORDER_MIDDLE_PRIORITY
-import helper.Constants.WS_URL
 import helper.ExceptionUtil.isTurmsStatusCode
 import im.turms.client.TurmsClient
 import im.turms.client.constant.TurmsStatusCode
 import im.turms.common.constant.ResponseAction
 import im.turms.common.constant.UserStatus
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
+import org.junit.jupiter.api.Timeout
 import java.util.concurrent.ExecutionException
 import kotlin.properties.Delegates
 
@@ -295,7 +302,7 @@ internal class UserServiceET {
         @BeforeAll
         @JvmStatic
         fun setup() {
-            turmsClient = TurmsClient(WS_URL)
+            turmsClient = TurmsClient(HOST)
         }
 
         @AfterAll

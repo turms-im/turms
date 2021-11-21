@@ -25,8 +25,12 @@ import im.turms.common.model.dto.request.TurmsRequest
 import im.turms.common.model.dto.request.storage.DeleteResourceRequest
 import im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequest
 import im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequest
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
 import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
