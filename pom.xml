@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.6</version>
+        <version>2.6.0</version>
     </parent>
 
     <groupId>im.turms</groupId>
@@ -36,7 +36,6 @@
         <blockhound.version>1.0.6.RELEASE</blockhound.version>
         <disruptor.version>3.4.4</disruptor.version>
         <guava.version>31.0-jre</guava.version>
-        <mongodb.version>4.3.3</mongodb.version> <!-- TODO: Remove once spring-boot-dependencies supports -->
         <protobuf.version>3.19.0</protobuf.version>
 
         <!-- Runtime Deps for Testing -->

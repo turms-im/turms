@@ -32,6 +32,7 @@ import io.micrometer.prometheus.PrometheusMeterRegistry;
 import org.springframework.boot.actuate.autoconfigure.metrics.MetricsProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.util.List;
 
@@ -41,6 +42,7 @@ import java.util.List;
 @Configuration
 public class MetricsConfig {
 
+    @Primary
     @Bean
     public MetricsProperties metricsProperties() {
         // For org.springframework.boot.actuate.autoconfigure.metrics.web.reactive.WebFluxMetricsAutoConfiguration

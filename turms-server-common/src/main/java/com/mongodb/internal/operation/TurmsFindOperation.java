@@ -23,9 +23,10 @@ import com.mongodb.MongoNamespace;
 import com.mongodb.MongoQueryException;
 import com.mongodb.internal.async.AsyncBatchCursor;
 import com.mongodb.internal.async.SingleResultCallback;
+import com.mongodb.internal.async.function.AsyncCallbackSupplier;
+import com.mongodb.internal.async.function.RetryState;
 import com.mongodb.internal.binding.AsyncReadBinding;
 import com.mongodb.internal.binding.ReadBinding;
-import com.mongodb.internal.connection.Connection;
 import com.mongodb.internal.connection.NoOpSessionContext;
 import com.mongodb.internal.connection.QueryResult;
 import com.mongodb.internal.session.SessionContext;
@@ -34,15 +35,21 @@ import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.bson.codecs.Decoder;
 
+import java.util.function.Supplier;
+
 import static com.mongodb.assertions.Assertions.notNull;
 import static com.mongodb.internal.async.ErrorHandlingResultCallback.errorHandlingCallback;
-import static com.mongodb.internal.operation.CommandOperationHelper.executeCommandAsyncWithConnection;
-import static com.mongodb.internal.operation.CommandOperationHelper.executeCommandWithConnection;
+import static com.mongodb.internal.operation.CommandOperationHelper.createReadCommandAndExecute;
+import static com.mongodb.internal.operation.CommandOperationHelper.createReadCommandAndExecuteAsync;
+import static com.mongodb.internal.operation.CommandOperationHelper.decorateReadWithRetries;
+import static com.mongodb.internal.operation.CommandOperationHelper.initialRetryState;
+import static com.mongodb.internal.operation.CommandOperationHelper.logRetryExecute;
 import static com.mongodb.internal.operation.ExplainHelper.asExplainCommand;
 import static com.mongodb.internal.operation.OperationHelper.LOGGER;
+import static com.mongodb.internal.operation.OperationHelper.canRetryRead;
 import static com.mongodb.internal.operation.OperationHelper.cursorDocumentToQueryResult;
-import static com.mongodb.internal.operation.OperationHelper.withAsyncReadConnection;
-import static com.mongodb.internal.operation.OperationHelper.withReadConnectionSource;
+import static com.mongodb.internal.operation.OperationHelper.withAsyncSourceAndConnection;
+import static com.mongodb.internal.operation.OperationHelper.withSourceAndConnection;
 import static com.mongodb.internal.operation.OperationReadConcernHelper.appendReadConcernToCommand;
 import static com.mongodb.internal.operation.ServerVersionHelper.MIN_WIRE_VERSION;
 
@@ -96,32 +103,44 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
 
     @Override
     public BatchCursor<T> execute(final ReadBinding binding) {
-        return withReadConnectionSource(binding, source -> {
-            Connection connection = source.getConnection();
-            try {
-                return executeCommandWithConnection(binding, source, namespace.getDatabaseName(),
-                        getCommandCreator(binding.getSessionContext()),
-                        CommandResultDocumentCodec.create(decoder, FIRST_BATCH), transformer(), retryReads, connection);
-            } catch (MongoCommandException e) {
-                throw new MongoQueryException(e);
-            }
+        RetryState retryState = initialRetryState(retryReads);
+        Supplier<BatchCursor<T>> read = decorateReadWithRetries(retryState, () -> {
+            logRetryExecute(retryState);
+            return withSourceAndConnection(binding::getReadConnectionSource, false, (source, connection) -> {
+                retryState.breakAndThrowIfRetryAnd(() -> !canRetryRead(source.getServerDescription(), connection.getDescription(),
+                        binding.getSessionContext()));
+                try {
+                    return createReadCommandAndExecute(retryState, binding, source, namespace.getDatabaseName(),
+                            getCommandCreator(binding.getSessionContext()), CommandResultDocumentCodec.create(decoder, FIRST_BATCH),
+                            transformer(), connection);
+                } catch (MongoCommandException e) {
+                    throw new MongoQueryException(e);
+                }
+            });
         });
+        return read.get();
     }
 
     @Override
     public void executeAsync(final AsyncReadBinding binding, final SingleResultCallback<AsyncBatchCursor<T>> callback) {
-        withAsyncReadConnection(binding, (source, connection, t) -> {
-            SingleResultCallback<AsyncBatchCursor<T>> errHandlingCallback = errorHandlingCallback(callback, LOGGER);
-            if (t != null) {
-                errHandlingCallback.onResult(null, t);
-            } else {
-                final SingleResultCallback<AsyncBatchCursor<T>> wrappedCallback =
-                        exceptionTransformingCallback(errHandlingCallback);
-                executeCommandAsyncWithConnection(binding, source, namespace.getDatabaseName(),
-                        getCommandCreator(binding.getSessionContext()), CommandResultDocumentCodec.create(decoder, FIRST_BATCH),
-                        asyncTransformer(), retryReads, connection, wrappedCallback);
-            }
-        });
+        RetryState retryState = initialRetryState(retryReads);
+        binding.retain();
+        AsyncCallbackSupplier<AsyncBatchCursor<T>> asyncRead = CommandOperationHelper.<AsyncBatchCursor<T>>decorateReadWithRetries(
+                retryState, funcCallback -> {
+                    logRetryExecute(retryState);
+                    withAsyncSourceAndConnection(binding::getReadConnectionSource, false, funcCallback,
+                            (source, connection, releasingCallback) -> {
+                                if (retryState.breakAndCompleteIfRetryAnd(() -> !canRetryRead(source.getServerDescription(), connection.getDescription(),
+                                        binding.getSessionContext()), releasingCallback)) {
+                                    return;
+                                }
+                                final SingleResultCallback<AsyncBatchCursor<T>> wrappedCallback = exceptionTransformingCallback(releasingCallback);
+                                createReadCommandAndExecuteAsync(retryState, binding, source, namespace.getDatabaseName(),
+                                        getCommandCreator(binding.getSessionContext()), CommandResultDocumentCodec.create(decoder, FIRST_BATCH),
+                                        asyncTransformer(), connection, wrappedCallback);
+                            });
+                }).whenComplete(binding::release);
+        asyncRead.get(errorHandlingCallback(callback, LOGGER));
     }
 
     private static <T> SingleResultCallback<T> exceptionTransformingCallback(final SingleResultCallback<T> callback) {
