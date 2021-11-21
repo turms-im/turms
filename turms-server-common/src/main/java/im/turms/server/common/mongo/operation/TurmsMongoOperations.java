@@ -62,6 +62,8 @@ import org.bson.conversions.Bson;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -88,6 +90,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     private static final Filter FILTER_ALL = Filter.newBuilder(0);
     private static final BsonDocument EMPTY_FILTER = new BsonDocument();
     private static final BsonDocument FILTER_ALL_DOCUMENT = EMPTY_FILTER;
+    private static final Scheduler WATCH_SCHEDULER = Schedulers.newSingle("turms-mongo-watch", false);
 
     /**
      * Session
@@ -340,7 +343,9 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         MongoCollection<T> collection = context.getCollection(clazz);
         Publisher<ChangeStreamDocument<T>> source = collection.watch(clazz)
                 .fullDocument(fullDocument);
-        return Flux.from(source);
+        // Use single thread for onNext calls to ensure they happen in sequence
+        // without the need of "synchronized"
+        return Flux.from(source).publishOn(WATCH_SCHEDULER);
     }
 
     /**
