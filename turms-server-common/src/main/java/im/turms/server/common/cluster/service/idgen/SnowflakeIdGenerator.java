@@ -19,7 +19,6 @@ package im.turms.server.common.cluster.service.idgen;
 
 
 import im.turms.common.util.RandomUtil;
-import jdk.internal.vm.annotation.Contended;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -40,8 +39,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * 8 bits for worker ID (256).
  * Note turms-gateway also works as a load balancer to route traffic to turms-service servers so the number
  * of turms-service servers is better more than or equals to the number of turms-gateway servers in practice.
- * In other words, the max number that can be represented by the bits for workerId should be better
- * more than the number of turms-gateway servers that you will deploy
+ * In other words, the max number that can be represented by the bits of workerId should be better
+ * more than the number of turms-gateway servers that you plan to deploy
  * <p>
  * 10 bits for sequenceNumber (1,024).
  * It can represent up to 1024*1000 sequence numbers per second.
@@ -77,10 +76,7 @@ public class SnowflakeIdGenerator {
     // we randomize the sequenceNumber on init to decrease chance of collision
     private final AtomicLong sequenceNumber = new AtomicLong(RandomUtil.nextPositiveInt());
 
-    @Contended("nodeInfo")
     private long dataCenterId;
-
-    @Contended("nodeInfo")
     private long workerId;
 
     public SnowflakeIdGenerator(int dataCenterId, int workerId) {

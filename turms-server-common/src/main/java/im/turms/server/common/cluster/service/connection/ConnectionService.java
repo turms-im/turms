@@ -194,7 +194,9 @@ public class ConnectionService implements ClusterService {
 
     public boolean isMemberConnected(String memberId) {
         TurmsConnection connection = connectionPool.get(memberId);
-        return connection != null && !connection.getConnection().isDisposed();
+        return connection != null
+                && !connection.getConnection().isDisposed()
+                && !connection.isClosing();
     }
 
     public synchronized void updateHasConnectedToAllMembers(Set<String> allMemberNodeIds) {
@@ -450,13 +452,16 @@ public class ConnectionService implements ClusterService {
     }
 
     private void onConnectionClosed(TurmsConnection connection, @Nullable Throwable throwable) {
+        boolean isLocalNodeClient = connection.isLocalNodeClient();
+        String nodeType = isLocalNodeClient ? "Client" : "Server";
         String nodeId = connection.getNodeId();
         Member member = discoveryService.getMember(nodeId);
+        String memberIdAndAddress = member == null ? "" : ": " + getMemberIdAndAddress(member);
         Level logLevel = connection.isClosing() ? Level.INFO : Level.WARN;
-        log.log(logLevel, "[{}] The connection to a member has been closed{}{}",
-                connection.isLocalNodeClient() ? "Client" : "Server",
+        log.log(logLevel, "[{}] The connection to the member{} has been closed{}",
+                nodeType,
+                memberIdAndAddress,
                 connection.isClosing() ? "" : " unexpectedly",
-                member == null ? "" : ": " + getMemberIdAndAddress(member),
                 throwable);
         for (MemberConnectionListener listener : connection.getListeners()) {
             try {
@@ -465,9 +470,9 @@ public class ConnectionService implements ClusterService {
                 log.error("Caught an error when invoking onConnectionClosed listeners", e);
             }
         }
-        if (connection.isLocalNodeClient()
-                && discoveryService.isKnownMember(nodeId)
-                && !discoveryService.getLocalNodeStatusManager().isClosing()) {
+        boolean isKnownMember = discoveryService.isKnownMember(nodeId);
+        boolean isClosing = discoveryService.getLocalNodeStatusManager().isClosing();
+        if (isLocalNodeClient && isKnownMember && !isClosing) {
             Mono.delay(reconnectInterval)
                     .subscribe(ignored -> {
                         Member memberToConnect = discoveryService.getAllKnownMembers().get(nodeId);
@@ -475,6 +480,14 @@ public class ConnectionService implements ClusterService {
                             connectMemberUntilSucceedOrRemoved(memberToConnect);
                         }
                     });
+        } else {
+            String reason = !isLocalNodeClient
+                    ? "the local node is server"
+                    : !isKnownMember
+                    ? "the member is unknown"
+                    : "the local node is closing";
+            log.info("[{}] Stop to connect the member{} because {}",
+                    nodeType, memberIdAndAddress, reason);
         }
     }
 
