@@ -37,10 +37,15 @@ public class ServerStatusManager {
         this.node = node;
         MonitorProperties monitorProperties = propertiesManager.getLocalProperties().getMonitor();
         ServerAvailabilityProperties availabilityProperties = propertiesManager.getLocalProperties().getServerAvailability();
-        memoryMonitor = new MemoryMonitor(monitorProperties.getUpdateMemoryIntervalSeconds(),
+        memoryMonitor = new MemoryMonitor(monitorProperties.getUpdateMemoryInfoIntervalSeconds(),
+                monitorProperties.getDirectMemoryWarningThresholdPercentage(),
+                monitorProperties.getHeapMemoryWarningThresholdPercentage(),
+                monitorProperties.getMinMemoryWarningIntervalSeconds(),
                 availabilityProperties.getMaxAvailableMemoryPercentage(),
-                availabilityProperties.getMaxAvailableDirectPercentage(),
-                availabilityProperties.getMaxAvailableHeapPercentage());
+                availabilityProperties.getMaxAvailableDirectMemoryPercentage(),
+                availabilityProperties.getMinFreeSystemMemoryBytes(),
+                availabilityProperties.getHeapMemoryGcThresholdPercentage(),
+                availabilityProperties.getMinHeapMemoryGcIntervalSeconds());
     }
 
     public boolean isActive() {

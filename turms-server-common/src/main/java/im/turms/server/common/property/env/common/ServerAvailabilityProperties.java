@@ -23,6 +23,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 /**
@@ -36,24 +37,35 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 public class ServerAvailabilityProperties {
 
-    private static final String MAX_MEMORY_PERCENTAGE_DESC =
-            "Do not use 100% memory to reserve some memory for JVM internal use. " +
-                    "Note that the max available memory percentage doesn't conflict with " +
-                    "the usage of limiting memory in docker because docker limits the " +
-                    "memory of the JVM process, while the memory percentage only limits " +
-                    "the available managed memory for our (server developers) use rather " +
-                    "than JVM internal use.";
-
-    @Description(MAX_MEMORY_PERCENTAGE_DESC)
+    @Description("The server will refuse to serve when the used memory (heap memory + JVM internal non-heap memory + direct buffer pool) " +
+            "exceeds the physical memory of the percentage. " +
+            "The server will try to reserve max(maxAvailableMemoryPercentage of the physical memory, minFreeSystemMemoryBytes) " +
+            "for kernel and other processes. " +
+            "Note that the max available memory percentage doesn't conflict with " +
+            "the usage of limiting memory in docker because docker limits the " +
+            "memory of the container, while this memory percentage only limits " +
+            "the available memory for JVM")
+    @Max(100)
     @Min(1)
-    private int maxAvailableMemoryPercentage = 90;
+    private int maxAvailableMemoryPercentage = 95;
 
-    @Description(MAX_MEMORY_PERCENTAGE_DESC)
+    @Description("The server will refuse to serve when the used direct memory exceeds the max direct memory of the percentage " +
+            "to try to avoid OutOfMemoryError")
+    @Max(100)
     @Min(1)
-    private int maxAvailableDirectPercentage = 90;
+    private int maxAvailableDirectMemoryPercentage = 95;
 
-    @Description(MAX_MEMORY_PERCENTAGE_DESC)
-    @Min(1)
-    private int maxAvailableHeapPercentage = 90;
+    @Description("The server will refuse to serve when the free system memory is less than minFreeSystemMemoryBytes")
+    private int minFreeSystemMemoryBytes = 128 * 1024 * 1024;
+
+    // GC
+
+    @Description("If the used memory has used the reserved memory specified by maxAvailableMemoryPercentage and minFreeSystemMemoryBytes, " +
+            "try to start GC when the used heap memory exceeds the max heap memory of the percentage")
+    @Max(100)
+    @Min(0)
+    private int heapMemoryGcThresholdPercentage = 60;
+
+    private int minHeapMemoryGcIntervalSeconds = 10;
 
 }

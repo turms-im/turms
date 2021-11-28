@@ -17,10 +17,14 @@
 
 package im.turms.server.common.property.env.common;
 
+import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 /**
  * Convention over configuration
@@ -33,6 +37,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MonitorProperties {
 
-    private int updateMemoryIntervalSeconds = 3;
+    @Min(1)
+    private int updateMemoryInfoIntervalSeconds = 3;
+
+    // Warning
+
+    @Description("Log warning messages if the used direct memory exceeds the max direct memory of the percentage")
+    @Max(100)
+    @Min(0)
+    private int directMemoryWarningThresholdPercentage = 50;
+
+    @Description("Log warning messages if the used heap memory exceeds the max heap memory of the percentage")
+    @Max(100)
+    @Min(0)
+    private int heapMemoryWarningThresholdPercentage = 95;
+
+    private int minMemoryWarningIntervalSeconds = 10;
 
 }
