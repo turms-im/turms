@@ -22,6 +22,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 /**
@@ -31,13 +32,13 @@ import javax.validation.constraints.Min;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class HealthCheckProperties {
+public class CpuHealthCheckProperties {
 
+    @Max(100)
     @Min(1)
-    private int checkIntervalSeconds = 3;
+    private int unhealthyLoadThresholdPercentage = 95;
 
-    private CpuHealthCheckProperties cpu = new CpuHealthCheckProperties();
-
-    private MemoryHealthCheckProperties memory = new MemoryHealthCheckProperties();
+    @Min(0)
+    private int retries = 5;
 
 }

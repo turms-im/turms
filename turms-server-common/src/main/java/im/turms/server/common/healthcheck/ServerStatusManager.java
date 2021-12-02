@@ -27,15 +27,15 @@ import org.springframework.stereotype.Component;
 public class ServerStatusManager {
 
     private final Node node;
-    private final HealthChecker healthChecker;
+    private final HealthCheckManager healthCheckManager;
 
-    public ServerStatusManager(Node node, HealthChecker healthChecker) {
+    public ServerStatusManager(Node node, HealthCheckManager healthCheckManager) {
         this.node = node;
-        this.healthChecker = healthChecker;
+        this.healthCheckManager = healthCheckManager;
     }
 
     public boolean isActive() {
-        return node.isActive() && healthChecker.isHealthy();
+        return node.isActive() && healthCheckManager.isHealthy();
     }
 
 }
