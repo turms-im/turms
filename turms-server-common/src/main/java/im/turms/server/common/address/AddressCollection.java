@@ -15,27 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.common.cluster;
-
-import im.turms.server.common.property.metadata.annotation.Description;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.Min;
+package im.turms.server.common.address;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@Builder(toBuilder = true)
-@Data
-@NoArgsConstructor
-public class RpcProperties {
-
-    @Description("The timeout for RPC requests in milliseconds")
-    @Min(1)
-    private int requestTimeoutMillis = 30 * 1000;
-
+public record AddressCollection(
+        String memberHost,
+        String metricsApiAddress,
+        String adminApiAddress,
+        String wsAddress,
+        String tcpAddress,
+        String udpAddress
+) {
 }

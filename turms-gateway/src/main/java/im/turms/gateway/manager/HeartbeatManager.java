@@ -29,6 +29,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -138,6 +139,7 @@ public class HeartbeatManager {
         return userIdToUpdateHeartbeat;
     }
 
+    @Nullable
     private Long handleSession(UserSession session, long now) {
         if (!session.isOpen()) {
             return null;

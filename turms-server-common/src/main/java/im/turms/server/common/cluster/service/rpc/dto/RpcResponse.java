@@ -22,5 +22,9 @@ import im.turms.server.common.cluster.service.rpc.exception.RpcException;
 /**
  * @author James Chen
  */
-public record RpcResponse(int requestId, Object result, RpcException exception) {
+public record RpcResponse(
+        int requestId,
+        Object result,
+        RpcException exception
+) {
 }

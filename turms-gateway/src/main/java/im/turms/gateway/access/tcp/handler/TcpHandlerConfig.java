@@ -19,7 +19,7 @@ package im.turms.gateway.access.tcp.handler;
 
 import im.turms.gateway.access.common.handler.ServiceAvailabilityHandler;
 import im.turms.server.common.access.tcp.codec.CodecFactory;
-import im.turms.server.common.manager.ServerStatusManager;
+import im.turms.server.common.healthcheck.ServerStatusManager;
 import im.turms.server.common.service.blocklist.BlocklistService;
 import io.netty.channel.Channel;
 import reactor.netty.Connection;

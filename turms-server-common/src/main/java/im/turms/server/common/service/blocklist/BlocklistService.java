@@ -25,13 +25,13 @@ import im.turms.server.common.constant.CronConstant;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.lang.ByteWrapper;
-import im.turms.server.common.manager.TrivialTaskManager;
+import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.security.BlocklistProperties;
 import im.turms.server.common.redis.TurmsRedisClient;
 import im.turms.server.common.redis.script.RedisScript;
 import im.turms.server.common.rpc.service.ISessionService;
+import im.turms.server.common.task.TrivialTaskManager;
 import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.InetAddressUtil;
 import io.lettuce.core.ScriptOutputType;
@@ -60,12 +60,12 @@ public class BlocklistService {
     private final boolean isIpBlocklistEnabled;
     private final boolean isUserIdBlocklistEnabled;
 
-    private final BlocklistServiceManager<ByteWrapper> ipBlocklistServiceManager;
+    private final BlocklistServiceManager<ByteArrayWrapper> ipBlocklistServiceManager;
     private final BlocklistServiceManager<Long> userIdBlocklistServiceManager;
 
-    private final AutoBlockManager<ByteWrapper> ipAutoBlockManagerForCorruptedFrame;
-    private final AutoBlockManager<ByteWrapper> ipAutoBlockManagerForCorruptedRequest;
-    private final AutoBlockManager<ByteWrapper> ipAutoBlockManagerForFrequentRequest;
+    private final AutoBlockManager<ByteArrayWrapper> ipAutoBlockManagerForCorruptedFrame;
+    private final AutoBlockManager<ByteArrayWrapper> ipAutoBlockManagerForCorruptedRequest;
+    private final AutoBlockManager<ByteArrayWrapper> ipAutoBlockManagerForFrequentRequest;
 
     private final AutoBlockManager<Long> userIdAutoBlockManagerForCorruptedRequest;
     private final AutoBlockManager<Long> userIdAutoBlockManagerForFrequentRequest;
@@ -186,7 +186,7 @@ public class BlocklistService {
 
     // Block
 
-    public void blockIp(ByteWrapper address, int blockMinutes) {
+    public void blockIp(ByteArrayWrapper address, int blockMinutes) {
         if (!isIpBlocklistEnabled) {
             throw TurmsBusinessException.get(TurmsStatusCode.IP_BLOCKLIST_IS_DISABLED);
         }
@@ -201,7 +201,7 @@ public class BlocklistService {
         return ipBlocklistServiceManager.blockClients(ipsToBytes(ips), blockMinutes);
     }
 
-    public Mono<Void> blockIps(Set<ByteWrapper> ips, int blockMinutes) {
+    public Mono<Void> blockIps(Set<ByteArrayWrapper> ips, int blockMinutes) {
         if (!isIpBlocklistEnabled) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.IP_BLOCKLIST_IS_DISABLED));
         }
@@ -225,19 +225,19 @@ public class BlocklistService {
 
     public void tryBlockIpForCorruptedFrame(byte[] ip) {
         if (isIpBlocklistEnabled) {
-            ipAutoBlockManagerForCorruptedFrame.tryBlockClient(new ByteWrapper(ip));
+            ipAutoBlockManagerForCorruptedFrame.tryBlockClient(new ByteArrayWrapper(ip));
         }
     }
 
     public void tryBlockIpForCorruptedRequest(byte[] ip) {
         if (isIpBlocklistEnabled) {
-            ipAutoBlockManagerForCorruptedRequest.tryBlockClient(new ByteWrapper(ip));
+            ipAutoBlockManagerForCorruptedRequest.tryBlockClient(new ByteArrayWrapper(ip));
         }
     }
 
     public void tryBlockIpForFrequentRequest(byte[] ip) {
         if (isIpBlocklistEnabled) {
-            ipAutoBlockManagerForFrequentRequest.tryBlockClient(new ByteWrapper(ip));
+            ipAutoBlockManagerForFrequentRequest.tryBlockClient(new ByteArrayWrapper(ip));
         }
     }
 
@@ -262,7 +262,7 @@ public class BlocklistService {
         return ipBlocklistServiceManager.unblockTargets(ipsToBytes(ips));
     }
 
-    public Mono<Void> unblockIps(Set<ByteWrapper> ips) {
+    public Mono<Void> unblockIps(Set<ByteArrayWrapper> ips) {
         if (!isIpBlocklistEnabled) {
             return Mono.empty();
         }
@@ -303,7 +303,7 @@ public class BlocklistService {
     public List<BlockedClient> getBlockedIpStrings(Set<String> ips) {
         List<BlockedClient> ipList = new LinkedList<>();
         for (String ip : ips) {
-            ByteWrapper address = new ByteWrapper(InetAddressUtil.ipStringToBytes(ip));
+            ByteArrayWrapper address = new ByteArrayWrapper(InetAddressUtil.ipStringToBytes(ip));
             BlockedClient blockedClient = ipBlocklistServiceManager.getBlockedClient(address);
             if (blockedClient != null) {
                 ipList.add(blockedClient);
@@ -312,12 +312,12 @@ public class BlocklistService {
         return ipList;
     }
 
-    public List<BlockedClient> getBlockedIps(Set<ByteWrapper> ips) {
+    public List<BlockedClient> getBlockedIps(Set<ByteArrayWrapper> ips) {
         if (!isIpBlocklistEnabled) {
             return Collections.emptyList();
         }
         List<BlockedClient> result = new LinkedList<>();
-        for (ByteWrapper ip : ips) {
+        for (ByteArrayWrapper ip : ips) {
             BlockedClient blockedClient = ipBlocklistServiceManager.getBlockedClient(ip);
             if (blockedClient != null) {
                 result.add(blockedClient);
@@ -358,14 +358,14 @@ public class BlocklistService {
         if (!isIpBlocklistEnabled) {
             return false;
         }
-        return ipBlocklistServiceManager.isTargetBlocked(new ByteWrapper(InetAddressUtil.ipStringToBytes(ip)));
+        return ipBlocklistServiceManager.isTargetBlocked(new ByteArrayWrapper(InetAddressUtil.ipStringToBytes(ip)));
     }
 
     public boolean isIpBlocked(byte[] ip) {
         if (!isIpBlocklistEnabled) {
             return false;
         }
-        return ipBlocklistServiceManager.isTargetBlocked(new ByteWrapper(ip));
+        return ipBlocklistServiceManager.isTargetBlocked(new ByteArrayWrapper(ip));
     }
 
     public boolean isUserIdBlocked(Long userId) {
@@ -377,10 +377,10 @@ public class BlocklistService {
 
     // Internals
 
-    private Set<ByteWrapper> ipsToBytes(Set<String> ips) {
-        Set<ByteWrapper> ipList = CollectionUtil.newSetWithExpectedSize(ips.size());
+    private Set<ByteArrayWrapper> ipsToBytes(Set<String> ips) {
+        Set<ByteArrayWrapper> ipList = CollectionUtil.newSetWithExpectedSize(ips.size());
         for (String ip : ips) {
-            ByteWrapper address = new ByteWrapper(InetAddressUtil.ipStringToBytes(ip));
+            ByteArrayWrapper address = new ByteArrayWrapper(InetAddressUtil.ipStringToBytes(ip));
             ipList.add(address);
         }
         return ipList;

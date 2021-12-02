@@ -25,6 +25,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import lombok.extern.log4j.Log4j2;
 
+import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 
 /**
@@ -50,6 +51,7 @@ public final class ProtoUtil {
         return output;
     }
 
+    @Nullable
     public static String toLogString(AbstractMessage message) {
         if (message == null) {
             return null;

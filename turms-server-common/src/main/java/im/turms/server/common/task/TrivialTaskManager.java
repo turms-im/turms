@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.manager;
+package im.turms.server.common.task;
 
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
@@ -27,6 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
 /**
+ * Handle trivial tasks in a thread
+ *
  * @author James Chen
  */
 @Component

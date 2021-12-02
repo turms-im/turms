@@ -81,15 +81,6 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
     }
 
     /**
-     * Gets the decoder used to decode the result documents.
-     *
-     * @return the decoder
-     */
-    public Decoder<T> getDecoder() {
-        return decoder;
-    }
-
-    /**
      * Enables retryable reads if a read fails due to a network error.
      *
      * @param retryReads true if reads should be retried
@@ -176,7 +167,6 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
                 asExplainCommand(command, verbosity),
                 resultDecoder);
     }
-
 
     private CommandOperationHelper.CommandCreator getCommandCreator(final SessionContext sessionContext) {
         return (serverDescription, connectionDescription) -> {

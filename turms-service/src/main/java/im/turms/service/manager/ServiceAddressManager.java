@@ -17,10 +17,10 @@
 
 package im.turms.service.manager;
 
-import im.turms.server.common.manager.PublicIpManager;
-import im.turms.server.common.manager.address.AddressCollection;
-import im.turms.server.common.manager.address.AddressCollector;
-import im.turms.server.common.manager.address.BaseServiceAddressManager;
+import im.turms.server.common.address.AddressCollection;
+import im.turms.server.common.address.AddressCollector;
+import im.turms.server.common.address.BaseServiceAddressManager;
+import im.turms.server.common.address.PublicIpManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.AddressProperties;
 import lombok.extern.log4j.Log4j2;

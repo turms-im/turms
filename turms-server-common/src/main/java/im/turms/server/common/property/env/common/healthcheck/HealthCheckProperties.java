@@ -15,43 +15,27 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.common;
+package im.turms.server.common.property.env.common.healthcheck;
 
-import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 /**
- * Convention over configuration
- *
  * @author James Chen
  */
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class MonitorProperties {
+public class HealthCheckProperties {
 
     @Min(1)
-    private int updateMemoryInfoIntervalSeconds = 3;
+    private int checkIntervalSeconds = 3;
 
-    // Warning
-
-    @Description("Log warning messages if the used direct memory exceeds the max direct memory of the percentage")
-    @Max(100)
-    @Min(0)
-    private int directMemoryWarningThresholdPercentage = 50;
-
-    @Description("Log warning messages if the used heap memory exceeds the max heap memory of the percentage")
-    @Max(100)
-    @Min(0)
-    private int heapMemoryWarningThresholdPercentage = 95;
-
-    private int minMemoryWarningIntervalSeconds = 10;
+    private MemoryHealthCheckProperties memory = new MemoryHealthCheckProperties();
 
 }

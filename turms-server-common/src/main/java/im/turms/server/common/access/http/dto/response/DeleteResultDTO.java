@@ -18,16 +18,14 @@
 package im.turms.server.common.access.http.dto.response;
 
 import com.mongodb.client.result.DeleteResult;
-import lombok.Data;
 
 /**
  * @author James Chen
  */
-@Data
-public class DeleteResultDTO {
-    private final Long deletedCount;
+public record DeleteResultDTO(Long deletedCount) {
 
     public static DeleteResultDTO get(DeleteResult result) {
         return new DeleteResultDTO(result.getDeletedCount());
     }
+
 }

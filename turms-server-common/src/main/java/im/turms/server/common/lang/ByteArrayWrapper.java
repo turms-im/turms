@@ -15,17 +15,36 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.manager.address;
+package im.turms.server.common.lang;
+
+import java.util.Arrays;
 
 /**
  * @author James Chen
  */
-public record AddressCollection(
-        String memberHost,
-        String metricsApiAddress,
-        String adminApiAddress,
-        String wsAddress,
-        String tcpAddress,
-        String udpAddress
-) {
+public record ByteArrayWrapper(byte[] bytes) implements Comparable<ByteArrayWrapper> {
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ByteArrayWrapper that) {
+            return Arrays.equals(bytes, that.bytes);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(bytes);
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(bytes);
+    }
+
+    @Override
+    public int compareTo(ByteArrayWrapper o) {
+        return Arrays.compare(bytes, o.bytes);
+    }
+
 }

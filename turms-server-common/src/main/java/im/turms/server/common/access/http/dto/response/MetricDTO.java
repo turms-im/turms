@@ -17,8 +17,6 @@
 
 package im.turms.server.common.access.http.dto.response;
 
-import lombok.Data;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,23 +24,15 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-@Data
-public class MetricDTO {
+public record MetricDTO(
+        String name,
+        String description,
+        String baseUnit,
+        List<MeasurementDTO> measurements,
+        Map<String, Set<String>> availableTags
+) {
 
-    private final String name;
-
-    private final String description;
-
-    private final String baseUnit;
-
-    private final List<MeasurementDTO> measurements;
-
-    private final Map<String, Set<String>> availableTags;
-
-    @Data
-    public static class MeasurementDTO {
-        private final List<String> tags;
-        private final Map<String, Double> measurements;
+    public record MeasurementDTO(List<String> tags, Map<String, Double> measurements) {
     }
 
 }

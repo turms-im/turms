@@ -23,7 +23,7 @@ import im.turms.gateway.access.websocket.factory.WebSocketFactory;
 import im.turms.gateway.logging.ApiLoggingContext;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.manager.ServerStatusManager;
+import im.turms.server.common.healthcheck.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.WebSocketProperties;
 import im.turms.server.common.service.blocklist.BlocklistService;

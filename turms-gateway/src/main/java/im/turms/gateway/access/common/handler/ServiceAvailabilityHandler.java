@@ -17,7 +17,7 @@
 
 package im.turms.gateway.access.common.handler;
 
-import im.turms.server.common.manager.ServerStatusManager;
+import im.turms.server.common.healthcheck.ServerStatusManager;
 import im.turms.server.common.service.blocklist.BlocklistService;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;

@@ -18,13 +18,13 @@
 package integration.im.turms.server.common.service.blocklist;
 
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.manager.TrivialTaskManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.security.BlocklistProperties;
 import im.turms.server.common.property.env.common.security.SecurityProperties;
 import im.turms.server.common.redis.CommonRedisConfig;
 import im.turms.server.common.service.blocklist.BlocklistService;
+import im.turms.server.common.task.TrivialTaskManager;
 import im.turms.server.common.testing.BaseIntegrationTest;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;

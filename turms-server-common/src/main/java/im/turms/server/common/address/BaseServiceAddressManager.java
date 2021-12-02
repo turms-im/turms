@@ -15,9 +15,8 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.manager.address;
+package im.turms.server.common.address;
 
-import im.turms.server.common.manager.PublicIpManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.constant.AdvertiseStrategy;
 import im.turms.server.common.property.env.common.AddressProperties;
@@ -25,6 +24,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.web.server.Ssl;
 
+import javax.annotation.Nullable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
@@ -58,22 +58,27 @@ public abstract class BaseServiceAddressManager {
         return memberHost;
     }
 
+    @Nullable
     public String getMetricsApiAddress() {
         return null;
     }
 
+    @Nullable
     public String getAdminApiAddress() {
         return null;
     }
 
+    @Nullable
     public String getWsAddress() {
         return null;
     }
 
+    @Nullable
     public String getTcpAddress() {
         return null;
     }
 
+    @Nullable
     public String getUdpAddress() {
         return null;
     }

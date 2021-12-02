@@ -17,6 +17,7 @@
 
 package im.turms.server.common.mongo.operation.option;
 
+import com.mongodb.internal.client.model.FindOptions;
 import im.turms.server.common.mongo.BsonPool;
 import im.turms.server.common.util.MapUtil;
 import lombok.Getter;
@@ -29,8 +30,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author James Chen
- * @implNote We don't use com.mongodb.internal.client.model.FindOptions
- * because it's really heavy
+ * @implNote We don't use {@link FindOptions} because it's really heavy
  */
 @Getter
 public final class QueryOptions {
@@ -54,7 +54,8 @@ public final class QueryOptions {
 
     /**
      * @implNote We merge filter into query options so that we don't need to create two
-     * documents and merge them later for better performance
+     * documents and merge them later for better performance.
+     * Filter count: 2
      */
     public BsonDocument asDocument(String collectionName, BsonDocument filter) {
         document.put("find", new BsonString(collectionName));
@@ -62,17 +63,26 @@ public final class QueryOptions {
         return document;
     }
 
+    /**
+     * @implNote filter count: 1
+     */
     public QueryOptions batchSize(int batchSize) {
         document.put("batchSize", new BsonInt32(batchSize));
         return this;
     }
 
+    /**
+     * @implNote filter count: 2
+     */
     public QueryOptions max(String field) {
         document.put("limit", BsonPool.BSON_INT32_1);
         document.put("sort", new BsonDocument(field, BsonPool.BSON_INT32_NEGATIVE_1));
         return this;
     }
 
+    /**
+     * @implNote filter count: 2
+     */
     public QueryOptions min(String field) {
         document.put("limit", BsonPool.BSON_INT32_1);
         document.put("sort", new BsonDocument(field, BsonPool.BSON_INT32_1));
@@ -81,6 +91,7 @@ public final class QueryOptions {
 
     /**
      * @param page starts from 0
+     * @implNote filter count: 2 or 0
      */
     public QueryOptions paginateIfNotNull(@Nullable Integer page, @Nullable Integer size) {
         if (size != null) {
@@ -93,6 +104,9 @@ public final class QueryOptions {
         return this;
     }
 
+    /**
+     * @implNote filter count: 1
+     */
     public QueryOptions sort(boolean asc, String field) {
         BsonInt32 value = asc
                 ? BsonPool.BSON_INT32_1
@@ -101,6 +115,9 @@ public final class QueryOptions {
         return this;
     }
 
+    /**
+     * @implNote filter count: 1
+     */
     public QueryOptions include(String... fields) {
         BsonDocument projection = new BsonDocument();
         for (String field : fields) {
@@ -110,6 +127,9 @@ public final class QueryOptions {
         return this;
     }
 
+    /**
+     * @implNote filter count: 1
+     */
     public QueryOptions exclude(String... fields) {
         BsonDocument projection = new BsonDocument();
         for (String field : fields) {
@@ -119,16 +139,25 @@ public final class QueryOptions {
         return this;
     }
 
+    /**
+     * @implNote filter count: 1
+     */
     public QueryOptions limit(int limit) {
         document.put("limit", new BsonInt32(limit));
         return this;
     }
 
+    /**
+     * @implNote filter count: 1
+     */
     public QueryOptions projection(BsonDocument projection) {
         document.put("projection", projection);
         return this;
     }
 
+    /**
+     * @implNote filter count: 1
+     */
     public QueryOptions singleBatch() {
         document.put("singleBatch", BsonBoolean.TRUE);
         return this;

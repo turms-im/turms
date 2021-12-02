@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.common;
+package im.turms.server.common.property.env.common.healthcheck;
 
 import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.AllArgsConstructor;
@@ -27,15 +27,15 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 /**
- * Convention over configuration
- *
  * @author James Chen
  */
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class ServerAvailabilityProperties {
+public class MemoryHealthCheckProperties {
+
+    // Memory Usage
 
     @Description("The server will refuse to serve when the used memory (heap memory + JVM internal non-heap memory + direct buffer pool) " +
             "exceeds the physical memory of the percentage. " +
@@ -57,6 +57,20 @@ public class ServerAvailabilityProperties {
 
     @Description("The server will refuse to serve when the free system memory is less than minFreeSystemMemoryBytes")
     private int minFreeSystemMemoryBytes = 128 * 1024 * 1024;
+
+    // Memory Usage Warning
+
+    @Description("Log warning messages if the used direct memory exceeds the max direct memory of the percentage")
+    @Max(100)
+    @Min(0)
+    private int directMemoryWarningThresholdPercentage = 50;
+
+    @Description("Log warning messages if the used heap memory exceeds the max heap memory of the percentage")
+    @Max(100)
+    @Min(0)
+    private int heapMemoryWarningThresholdPercentage = 95;
+
+    private int minMemoryWarningIntervalSeconds = 10;
 
     // GC
 

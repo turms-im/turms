@@ -21,7 +21,7 @@ import im.turms.server.common.bo.blocklist.BlockedClient;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.lang.ByteWrapper;
+import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.redis.TurmsRedisClient;
 import im.turms.server.common.redis.script.RedisScript;
 import im.turms.server.common.util.ByteBufUtil;
@@ -507,12 +507,12 @@ public class BlocklistServiceManager<T> {
 
     private ByteBuf encodeId(T id) {
         return isIpBlocklist
-                ? Unpooled.wrappedBuffer(((ByteWrapper) id).bytes())
+                ? Unpooled.wrappedBuffer(((ByteArrayWrapper) id).bytes())
                 : BUFFER_ALLOCATOR.directBuffer().writeLong((long) id);
     }
 
     private T decodeTargetId(ByteBuf id) {
-        T val = isIpBlocklist ? (T) new ByteWrapper(id.array()) : (T) (Long) id.readLong();
+        T val = isIpBlocklist ? (T) new ByteArrayWrapper(id.array()) : (T) (Long) id.readLong();
         id.release();
         return val;
     }

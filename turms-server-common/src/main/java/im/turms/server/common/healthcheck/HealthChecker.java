@@ -15,15 +15,19 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.monitor;
+package im.turms.server.common.healthcheck;
 
 import com.sun.management.HotSpotDiagnosticMXBean;
 import com.sun.management.OperatingSystemMXBean;
 import com.sun.management.VMOption;
+import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.property.env.common.healthcheck.HealthCheckProperties;
+import im.turms.server.common.property.env.common.healthcheck.MemoryHealthCheckProperties;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.netty.util.internal.PlatformDependent;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
+import org.springframework.stereotype.Component;
 
 import java.lang.management.BufferPoolMXBean;
 import java.lang.management.ManagementFactory;
@@ -47,8 +51,9 @@ import java.util.concurrent.TimeUnit;
  * @see jdk.internal.access.JavaNioAccess#getDirectBufferPool
  * @see io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
  */
+@Component
 @Log4j2
-public final class MemoryMonitor {
+public final class HealthChecker {
 
     private final long maxAvailableMemory;
     private final long maxAvailableDirectMemory;
@@ -78,17 +83,7 @@ public final class MemoryMonitor {
     private final int minHeapMemoryGcIntervalMillis;
     private long lastHeapMemoryGcTimestamp;
 
-    public MemoryMonitor(int updateMemoryInfoIntervalSeconds,
-                         int directMemoryWarningThresholdPercentage,
-                         int heapMemoryWarningThresholdPercentage,
-                         int minMemoryWarningIntervalSeconds,
-
-                         int maxAvailableMemoryPercentage,
-                         int maxAvailableDirectMemoryPercentage,
-                         int minFreeSystemMemoryBytes,
-
-                         int heapMemoryGcThresholdPercentage,
-                         int minHeapMemoryGcIntervalSeconds) {
+    public HealthChecker(TurmsPropertiesManager propertiesManager) {
         HotSpotDiagnosticMXBean diagnosticBean = ManagementFactory.getPlatformMXBean(HotSpotDiagnosticMXBean.class);
         VMOption disableExplicitGC = diagnosticBean.getVMOption("DisableExplicitGC");
         if (!"false".equals(disableExplicitGC.getValue())) {
@@ -112,19 +107,21 @@ public final class MemoryMonitor {
         directBufferPoolBean = pool.get();
         memoryMXBean = ManagementFactory.getMemoryMXBean();
 
+        HealthCheckProperties properties = propertiesManager.getLocalProperties().getHealthCheck();
+        MemoryHealthCheckProperties memoryProperties = properties.getMemory();
         // "-XX:MaxDirectMemorySize" or "Runtime.getRuntime().maxMemory()"
         maxDirectMemory = PlatformDependent.maxDirectMemory();
         if (maxDirectMemory < 0) {
             throw new IllegalStateException("Cannot detect the max direct memory: " + maxDirectMemory);
         }
-        maxAvailableDirectMemory = (long) (maxDirectMemory * (maxAvailableDirectMemoryPercentage / 100F));
+        maxAvailableDirectMemory = (long) (maxDirectMemory * (memoryProperties.getMaxAvailableDirectMemoryPercentage() / 100F));
         maxHeapMemory = memoryMXBean.getHeapMemoryUsage().getMax();
         if (maxHeapMemory < 0) {
             throw new IllegalStateException("Cannot detect the max heap memory: " + maxHeapMemory);
         }
         operatingSystemBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
         totalPhysicalMemorySize = operatingSystemBean.getTotalMemorySize();
-        maxAvailableMemory = (long) (totalPhysicalMemorySize * (maxAvailableMemoryPercentage / 100F));
+        maxAvailableMemory = (long) (totalPhysicalMemorySize * (memoryProperties.getMaxAvailableMemoryPercentage() / 100F));
         int minAvailableMemory = 1000 * 1024 * 1024;
         if (maxAvailableMemory < minAvailableMemory) {
             throw new IllegalStateException("The max available memory is too small to run. Actual: %s. Expected: >= %s"
@@ -141,20 +138,20 @@ public final class MemoryMonitor {
                     + "which indicates that some memory will never be used by the server");
         }
 
-        this.directMemoryWarningThresholdPercentage = directMemoryWarningThresholdPercentage;
-        this.heapMemoryWarningThresholdPercentage = heapMemoryWarningThresholdPercentage;
-        this.minMemoryWarningIntervalMillis = minMemoryWarningIntervalSeconds * 1000;
-        this.minFreeSystemMemory = minFreeSystemMemoryBytes;
-        this.heapMemoryGcThresholdPercentage = heapMemoryGcThresholdPercentage;
-        this.minHeapMemoryGcIntervalMillis = minHeapMemoryGcIntervalSeconds * 1000;
+        this.directMemoryWarningThresholdPercentage = memoryProperties.getDirectMemoryWarningThresholdPercentage();
+        this.heapMemoryWarningThresholdPercentage = memoryProperties.getHeapMemoryWarningThresholdPercentage();
+        this.minMemoryWarningIntervalMillis = memoryProperties.getMinMemoryWarningIntervalSeconds() * 1000;
+        this.minFreeSystemMemory = memoryProperties.getMinFreeSystemMemoryBytes();
+        this.heapMemoryGcThresholdPercentage = memoryProperties.getHeapMemoryGcThresholdPercentage();
+        this.minHeapMemoryGcIntervalMillis = memoryProperties.getMinHeapMemoryGcIntervalSeconds() * 1000;
 
-        startMonitor(updateMemoryInfoIntervalSeconds);
+        startMonitor(properties.getCheckIntervalSeconds());
     }
 
-    public boolean isExceeded() {
-        return usedAvailableMemory > maxAvailableMemory
-                || usedDirectMemory > maxAvailableDirectMemory
-                || freeSystemMemory < minFreeSystemMemory;
+    public boolean isHealthy() {
+        return usedAvailableMemory < maxAvailableMemory
+                || usedDirectMemory < maxAvailableDirectMemory
+                || freeSystemMemory > minFreeSystemMemory;
     }
 
     private void startMonitor(int intervalSeconds) {
@@ -183,8 +180,8 @@ public final class MemoryMonitor {
     }
 
     private void tryLog() {
-        boolean exceeded = isExceeded();
-        Level logLevel = exceeded ? Level.WARN : Level.DEBUG;
+        boolean isHealthy = isHealthy();
+        Level logLevel = isHealthy ? Level.DEBUG : Level.WARN;
         if (log.isEnabled(logLevel)) {
             log.log(logLevel, "Used system memory: {}/{}; "
                             + "Used available memory: {}/{}; "
@@ -221,7 +218,7 @@ public final class MemoryMonitor {
             log.warn("The used heap memory has exceeded the warning threshold: {}/{}/{}/{}",
                     asMbString(usedHeapMemory), asMbString(maxHeapMemory), usedMemoryPercentage, heapMemoryWarningThresholdPercentage);
         }
-        if (exceeded && heapMemoryGcThresholdPercentage > 0 && heapMemoryGcThresholdPercentage < usedMemoryPercentage
+        if (!isHealthy && heapMemoryGcThresholdPercentage > 0 && heapMemoryGcThresholdPercentage < usedMemoryPercentage
                 && minHeapMemoryGcIntervalMillis < (now - lastHeapMemoryGcTimestamp)) {
             lastHeapMemoryGcTimestamp = now;
             log.info("Trying to start GC because the available memory has exceeded and the used heap memory has exceeded the GC threshold: {}/{}/{}/{}",

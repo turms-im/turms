@@ -226,7 +226,7 @@ public class MessageServiceController {
                             List<Mono<MessagesWithTotal>> messagesWithTotalMonos = new ArrayList<>(conversationWithMessagesMap.size());
                             for (Map.Entry<MessageFromKey, Collection<Message>> entry : conversationWithMessagesMap.asMap().entrySet()) {
                                 MessageFromKey senderKey = entry.getKey();
-                                Mono<MessagesWithTotal> messsagesWithTotalMono = messageService.countMessages(
+                                Mono<MessagesWithTotal> messagesWithTotalMono = messageService.countMessages(
                                                 null,
                                                 senderKey.isGroupMessage(),
                                                 null,
@@ -241,7 +241,7 @@ public class MessageServiceController {
                                                 .addAllMessages(
                                                         Collections2.transform(messages, m -> ProtoModelUtil.message2proto(m).build()))
                                                 .build());
-                                messagesWithTotalMonos.add(messsagesWithTotalMono);
+                                messagesWithTotalMonos.add(messagesWithTotalMono);
                             }
                             dataMono = Flux.merge(messagesWithTotalMonos)
                                     .collect(CollectorUtil.toList(messagesWithTotalMonos.size()))

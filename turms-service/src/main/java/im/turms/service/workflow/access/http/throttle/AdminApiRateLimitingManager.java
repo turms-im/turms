@@ -19,8 +19,8 @@ package im.turms.service.workflow.access.http.throttle;
 
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.CronConstant;
-import im.turms.server.common.manager.TrivialTaskManager;
 import im.turms.server.common.property.env.service.env.adminapi.AdminApiRateLimitingProperties;
+import im.turms.server.common.task.TrivialTaskManager;
 import im.turms.server.common.throttle.TokenBucket;
 import im.turms.server.common.throttle.TokenBucketContext;
 import org.springframework.stereotype.Component;

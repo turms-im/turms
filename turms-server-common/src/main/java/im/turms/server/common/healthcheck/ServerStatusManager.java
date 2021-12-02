@@ -15,36 +15,27 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.lang;
+package im.turms.server.common.healthcheck;
 
-import java.util.Arrays;
+import im.turms.server.common.cluster.node.Node;
+import org.springframework.stereotype.Component;
 
 /**
  * @author James Chen
  */
-public record ByteWrapper(byte[] bytes) implements Comparable<ByteWrapper> {
+@Component
+public class ServerStatusManager {
 
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof ByteWrapper that) {
-            return Arrays.equals(bytes, that.bytes);
-        }
-        return false;
+    private final Node node;
+    private final HealthChecker healthChecker;
+
+    public ServerStatusManager(Node node, HealthChecker healthChecker) {
+        this.node = node;
+        this.healthChecker = healthChecker;
     }
 
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(bytes);
-    }
-
-    @Override
-    public String toString() {
-        return Arrays.toString(bytes);
-    }
-
-    @Override
-    public int compareTo(ByteWrapper o) {
-        return Arrays.compare(bytes, o.bytes);
+    public boolean isActive() {
+        return node.isActive() && healthChecker.isHealthy();
     }
 
 }

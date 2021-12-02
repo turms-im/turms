@@ -22,8 +22,8 @@ import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.pojo.bo.session.connection.NetConnection;
-import im.turms.server.common.throttle.TokenBucketContext;
 import im.turms.server.common.dto.CloseReason;
+import im.turms.server.common.throttle.TokenBucketContext;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;

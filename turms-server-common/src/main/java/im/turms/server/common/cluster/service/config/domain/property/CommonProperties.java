@@ -19,11 +19,10 @@ package im.turms.server.common.cluster.service.config.domain.property;
 
 import im.turms.server.common.property.env.common.IpProperties;
 import im.turms.server.common.property.env.common.LoggingProperties;
-import im.turms.server.common.property.env.common.MonitorProperties;
 import im.turms.server.common.property.env.common.PluginProperties;
-import im.turms.server.common.property.env.common.ServerAvailabilityProperties;
 import im.turms.server.common.property.env.common.UserStatusProperties;
 import im.turms.server.common.property.env.common.cluster.ClusterProperties;
+import im.turms.server.common.property.env.common.healthcheck.HealthCheckProperties;
 import im.turms.server.common.property.env.common.location.LocationProperties;
 import im.turms.server.common.property.env.common.security.SecurityProperties;
 import lombok.AllArgsConstructor;
@@ -38,19 +37,17 @@ public class CommonProperties {
 
     private ClusterProperties cluster;
 
+    private HealthCheckProperties healthCheck;
+
     private IpProperties ip;
 
     private LocationProperties location;
 
     private LoggingProperties logging;
 
-    private MonitorProperties monitor;
-
     private PluginProperties plugin;
 
     private SecurityProperties security;
-
-    private ServerAvailabilityProperties serverAvailability;
 
     private UserStatusProperties userStatus;
 

@@ -17,10 +17,10 @@
 
 package im.turms.server.common.cluster;
 
+import im.turms.server.common.address.BaseServiceAddressManager;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.context.TurmsApplicationContext;
-import im.turms.server.common.manager.address.BaseServiceAddressManager;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import org.springframework.context.ApplicationContext;

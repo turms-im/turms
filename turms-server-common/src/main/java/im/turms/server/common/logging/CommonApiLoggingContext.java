@@ -96,13 +96,12 @@ public abstract class CommonApiLoggingContext {
         Set<TurmsRequest.KindCase> requestTypes = category.getRequestTypes();
         if (requestTypes.isEmpty()) {
             return Collections.emptySet();
-        } else {
-            Set<LoggingRequestProperties> loggingRequests = Sets.newHashSetWithExpectedSize(requestTypes.size());
-            for (TurmsRequest.KindCase requestType : requestTypes) {
-                loggingRequests.add(new LoggingRequestProperties(requestType, categoryProperties.getSampleRate()));
-            }
-            return loggingRequests;
         }
+        Set<LoggingRequestProperties> loggingRequests = Sets.newHashSetWithExpectedSize(requestTypes.size());
+        for (TurmsRequest.KindCase requestType : requestTypes) {
+            loggingRequests.add(new LoggingRequestProperties(requestType, categoryProperties.getSampleRate()));
+        }
+        return loggingRequests;
     }
 
 }

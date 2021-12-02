@@ -21,7 +21,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import im.turms.server.common.bo.blocklist.BlockedClient;
-import im.turms.server.common.lang.ByteWrapper;
+import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.util.DateUtil;
 import im.turms.server.common.util.InetAddressUtil;
 import org.springframework.boot.jackson.JsonComponent;
@@ -42,7 +42,7 @@ public class BlockedClientSerializer {
             if (id instanceof Long userId) {
                 gen.writeNumberField("id", userId);
             } else {
-                gen.writeStringField("id", InetAddressUtil.ipBytesToString(((ByteWrapper) id).bytes()));
+                gen.writeStringField("id", InetAddressUtil.ipBytesToString(((ByteArrayWrapper) id).bytes()));
             }
             gen.writeStringField("blockEndTime", DateUtil.toISO(value.blockEndTime()));
             gen.writeEndObject();

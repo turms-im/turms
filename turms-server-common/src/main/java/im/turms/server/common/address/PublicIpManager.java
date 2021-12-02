@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.manager;
+package im.turms.server.common.address;
 
 import com.google.common.net.InetAddresses;
 import im.turms.server.common.property.TurmsPropertiesManager;

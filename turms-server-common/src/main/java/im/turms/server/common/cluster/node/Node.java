@@ -17,6 +17,7 @@
 
 package im.turms.server.common.cluster.node;
 
+import im.turms.server.common.address.BaseServiceAddressManager;
 import im.turms.server.common.cluster.service.ClusterService;
 import im.turms.server.common.cluster.service.codec.CodecService;
 import im.turms.server.common.cluster.service.config.SharedConfigService;
@@ -27,7 +28,6 @@ import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.context.TurmsApplicationContext;
-import im.turms.server.common.manager.address.BaseServiceAddressManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.cluster.ClusterProperties;

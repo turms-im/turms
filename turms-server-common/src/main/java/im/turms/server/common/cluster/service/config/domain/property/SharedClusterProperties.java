@@ -69,13 +69,12 @@ public class SharedClusterProperties {
     public static CommonProperties getCommonProperties(TurmsProperties turmsProperties) {
         return new CommonProperties(
                 turmsProperties.getCluster(),
+                turmsProperties.getHealthCheck(),
                 turmsProperties.getIp(),
                 turmsProperties.getLocation(),
                 turmsProperties.getLogging(),
-                turmsProperties.getMonitor(),
                 turmsProperties.getPlugin(),
                 turmsProperties.getSecurity(),
-                turmsProperties.getServerAvailability(),
                 turmsProperties.getUserStatus());
     }
 
@@ -83,13 +82,12 @@ public class SharedClusterProperties {
         if (commonProperties != null) {
             turmsProperties = new TurmsProperties(
                     commonProperties.getCluster(),
+                    commonProperties.getHealthCheck(),
                     commonProperties.getIp(),
                     commonProperties.getLocation(),
                     commonProperties.getLogging(),
-                    commonProperties.getMonitor(),
                     commonProperties.getPlugin(),
                     commonProperties.getSecurity(),
-                    commonProperties.getServerAvailability(),
                     commonProperties.getUserStatus(),
                     gatewayProperties,
                     serviceProperties);

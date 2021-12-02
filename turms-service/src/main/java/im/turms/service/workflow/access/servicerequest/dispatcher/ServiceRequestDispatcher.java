@@ -25,7 +25,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.ThrowableInfo;
-import im.turms.server.common.manager.ServerStatusManager;
+import im.turms.server.common.healthcheck.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
 import im.turms.server.common.service.blocklist.BlocklistService;

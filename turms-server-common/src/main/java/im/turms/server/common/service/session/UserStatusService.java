@@ -86,7 +86,7 @@ public class UserStatusService {
      * +-------------+-------------------------+-------------------------+
      * </pre>
      * "s" is the fixed hash key of the user status value,
-     * and its value is the user status value.
+     * and its value is the user status value represented in number.
      * <p>
      * The number (e.g. 1,2,3) represents the online device type,
      * and its value is the node ID that the client connects to.

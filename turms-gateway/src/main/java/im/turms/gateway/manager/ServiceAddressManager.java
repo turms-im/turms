@@ -17,10 +17,10 @@
 
 package im.turms.gateway.manager;
 
-import im.turms.server.common.manager.PublicIpManager;
-import im.turms.server.common.manager.address.AddressCollection;
-import im.turms.server.common.manager.address.AddressCollector;
-import im.turms.server.common.manager.address.BaseServiceAddressManager;
+import im.turms.server.common.address.AddressCollection;
+import im.turms.server.common.address.AddressCollector;
+import im.turms.server.common.address.BaseServiceAddressManager;
+import im.turms.server.common.address.PublicIpManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.AdvertiseStrategy;
@@ -36,6 +36,7 @@ import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.web.server.Ssl;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import java.net.UnknownHostException;
 
 /**
@@ -48,8 +49,11 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
     private DiscoveryProperties gatewayApiDiscoveryProperties;
 
     private String metricsApiAddress;
+    @Nullable
     private String wsAddress;
+    @Nullable
     private String tcpAddress;
+    @Nullable
     private String udpAddress;
 
     public ServiceAddressManager(
@@ -85,16 +89,19 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
         return metricsApiAddress;
     }
 
+    @Nullable
     @Override
     public String getWsAddress() {
         return wsAddress;
     }
 
+    @Nullable
     @Override
     public String getTcpAddress() {
         return tcpAddress;
     }
 
+    @Nullable
     @Override
     public String getUdpAddress() {
         return udpAddress;

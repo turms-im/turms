@@ -2,7 +2,7 @@ package integration.access;
 
 import im.turms.gateway.access.common.function.ConnectionHandler;
 import im.turms.gateway.access.tcp.factory.TcpServerFactory;
-import im.turms.server.common.manager.ServerStatusManager;
+import im.turms.server.common.healthcheck.ServerStatusManager;
 import im.turms.server.common.property.env.gateway.TcpProperties;
 import im.turms.server.common.service.blocklist.BlocklistService;
 import lombok.extern.log4j.Log4j2;

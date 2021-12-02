@@ -17,7 +17,6 @@
 
 package im.turms.server.common.metrics;
 
-import im.turms.server.common.lang.StrJoiner;
 import im.turms.server.common.util.ReflectionUtil;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.Tag;

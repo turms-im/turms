@@ -19,6 +19,7 @@ package im.turms.server.common.cluster.service.discovery;
 
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.UpdateDescription;
+import im.turms.server.common.address.BaseServiceAddressManager;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.node.NodeVersion;
 import im.turms.server.common.cluster.service.ClusterService;
@@ -32,7 +33,6 @@ import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.manager.address.BaseServiceAddressManager;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.env.common.cluster.DiscoveryProperties;

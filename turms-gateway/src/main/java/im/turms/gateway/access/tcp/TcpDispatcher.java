@@ -22,7 +22,7 @@ import im.turms.gateway.access.common.controller.UserRequestDispatcher;
 import im.turms.gateway.access.tcp.factory.TcpServerFactory;
 import im.turms.gateway.logging.ApiLoggingContext;
 import im.turms.gateway.service.mediator.ServiceMediator;
-import im.turms.server.common.manager.ServerStatusManager;
+import im.turms.server.common.healthcheck.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.TcpProperties;
 import im.turms.server.common.service.blocklist.BlocklistService;

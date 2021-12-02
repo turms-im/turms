@@ -20,11 +20,10 @@ package im.turms.server.common.property;
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.env.common.IpProperties;
 import im.turms.server.common.property.env.common.LoggingProperties;
-import im.turms.server.common.property.env.common.MonitorProperties;
 import im.turms.server.common.property.env.common.PluginProperties;
-import im.turms.server.common.property.env.common.ServerAvailabilityProperties;
 import im.turms.server.common.property.env.common.UserStatusProperties;
 import im.turms.server.common.property.env.common.cluster.ClusterProperties;
+import im.turms.server.common.property.env.common.healthcheck.HealthCheckProperties;
 import im.turms.server.common.property.env.common.location.LocationProperties;
 import im.turms.server.common.property.env.common.security.SecurityProperties;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
@@ -61,6 +60,10 @@ public class TurmsProperties {
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
+    private HealthCheckProperties healthCheck = new HealthCheckProperties();
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
     private IpProperties ip = new IpProperties();
 
     @JsonView(MutablePropertiesView.class)
@@ -73,19 +76,11 @@ public class TurmsProperties {
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
-    private MonitorProperties monitor = new MonitorProperties();
-
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
     private PluginProperties plugin = new PluginProperties();
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private SecurityProperties security = new SecurityProperties();
-
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
-    private ServerAvailabilityProperties serverAvailability = new ServerAvailabilityProperties();
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty

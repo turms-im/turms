@@ -32,7 +32,6 @@ import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.manager.TrivialTaskManager;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -40,13 +39,14 @@ import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.TimeType;
+import im.turms.server.common.task.TrivialTaskManager;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.service.bo.ServicePermission;
 import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
-import im.turms.service.plugin.extension.ExpiredMessageAutoDeletionNotificationHandler;
 import im.turms.service.plugin.TurmsPluginManager;
+import im.turms.service.plugin.extension.ExpiredMessageAutoDeletionNotificationHandler;
 import im.turms.service.util.ProtoModelUtil;
 import im.turms.service.workflow.dao.domain.message.Message;
 import im.turms.service.workflow.service.impl.conversation.ConversationService;
@@ -390,37 +390,36 @@ public class MessageService {
                 .flatMap(expiredMessageIds -> {
                     if (expiredMessageIds.isEmpty()) {
                         return Mono.empty();
-                    } else {
-                        Mono<List<Long>> messageIdsToDeleteMono = Mono.just(expiredMessageIds);
-                        List<ExpiredMessageAutoDeletionNotificationHandler> handlerList =
-                                turmsPluginManager.getExpiredMessageAutoDeletionNotificationHandlerList();
-                        if (pluginEnabled && !handlerList.isEmpty()) {
-                            Filter messagesFilter = Filter.newBuilder(1)
-                                    .in(DaoConstant.ID_FIELD_NAME, expiredMessageIds);
-                            messageIdsToDeleteMono = mongoClient.findMany(Message.class, messagesFilter)
-                                    .collectList()
-                                    .flatMap(messages -> {
-                                        Mono<List<Message>> mono = Mono.just(messages);
-                                        for (ExpiredMessageAutoDeletionNotificationHandler handler : handlerList) {
-                                            mono = mono.flatMap(handler::getMessagesToDelete);
-                                        }
-                                        return mono;
-                                    })
-                                    .map(messages -> {
-                                        List<Long> messageIds = new ArrayList<>(messages.size());
-                                        for (Message message : messages) {
-                                            messageIds.add(message.getId());
-                                        }
-                                        return messageIds;
-                                    });
-                        }
-                        return messageIdsToDeleteMono
-                                .flatMap(messageIds -> {
-                                    Filter messagesFilter = Filter.newBuilder(1)
-                                            .in(DaoConstant.ID_FIELD_NAME, messageIds);
-                                    return mongoClient.deleteMany(Message.class, messagesFilter).then();
+                    }
+                    Mono<List<Long>> messageIdsToDeleteMono = Mono.just(expiredMessageIds);
+                    List<ExpiredMessageAutoDeletionNotificationHandler> handlerList =
+                            turmsPluginManager.getExpiredMessageAutoDeletionNotificationHandlerList();
+                    if (pluginEnabled && !handlerList.isEmpty()) {
+                        Filter messagesFilter = Filter.newBuilder(1)
+                                .in(DaoConstant.ID_FIELD_NAME, expiredMessageIds);
+                        messageIdsToDeleteMono = mongoClient.findMany(Message.class, messagesFilter)
+                                .collectList()
+                                .flatMap(messages -> {
+                                    Mono<List<Message>> mono = Mono.just(messages);
+                                    for (ExpiredMessageAutoDeletionNotificationHandler handler : handlerList) {
+                                        mono = mono.flatMap(handler::getMessagesToDelete);
+                                    }
+                                    return mono;
+                                })
+                                .map(messages -> {
+                                    List<Long> messageIds = new ArrayList<>(messages.size());
+                                    for (Message message : messages) {
+                                        messageIds.add(message.getId());
+                                    }
+                                    return messageIds;
                                 });
                     }
+                    return messageIdsToDeleteMono
+                            .flatMap(messageIds -> {
+                                Filter messagesFilter = Filter.newBuilder(1)
+                                        .in(DaoConstant.ID_FIELD_NAME, messageIds);
+                                return mongoClient.deleteMany(Message.class, messagesFilter).then();
+                            });
                 });
     }
 
@@ -439,9 +438,8 @@ public class MessageService {
                     .set(Message.Fields.DELETION_DATE, new Date());
             return mongoClient.updateMany(Message.class, filterMessage, update)
                     .map(OperationResultUtil::update2delete);
-        } else {
-            return mongoClient.deleteMany(Message.class, filterMessage);
         }
+        return mongoClient.deleteMany(Message.class, filterMessage);
     }
 
     public Mono<UpdateResult> updateMessages(
@@ -475,29 +473,28 @@ public class MessageService {
                 .setIfNotNull(Message.Fields.RECALL_DATE, recallDate);
         if (recallDate == null) {
             return mongoClient.updateMany(session, Message.class, filter, update);
-        } else {
-            return mongoClient.findMany(Message.class, filter)
-                    .map(message -> {
-                        byte[] messageType = {BuiltinSystemMessageType.RECALL_MESSAGE};
-                        byte[] messageId = Longs.toByteArray(message.getId());
-                        return authAndSaveAndSendMessage(true,
-                                null,
-                                message.getIsGroupMessage(),
-                                true,
-                                null,
-                                List.of(messageType, messageId),
-                                null,
-                                message.getTargetId(),
-                                null,
-                                null);
-                    })
-                    .collect(CollectorUtil.toList(messageIds.size()))
-                    .flatMap(messageMonos -> {
-                        int size = messageMonos.size();
-                        return Mono.when(messageMonos)
-                                .thenReturn(UpdateResult.acknowledged(size, (long) size, null));
-                    });
         }
+        return mongoClient.findMany(Message.class, filter)
+                .map(message -> {
+                    byte[] messageType = {BuiltinSystemMessageType.RECALL_MESSAGE};
+                    byte[] messageId = Longs.toByteArray(message.getId());
+                    return authAndSaveAndSendMessage(true,
+                            null,
+                            message.getIsGroupMessage(),
+                            true,
+                            null,
+                            List.of(messageType, messageId),
+                            null,
+                            message.getTargetId(),
+                            null,
+                            null);
+                })
+                .collect(CollectorUtil.toList(messageIds.size()))
+                .flatMap(messageMonos -> {
+                    int size = messageMonos.size();
+                    return Mono.when(messageMonos)
+                            .thenReturn(UpdateResult.acknowledged(size, (long) size, null));
+                });
     }
 
     public Mono<UpdateResult> updateMessage(
@@ -598,12 +595,11 @@ public class MessageService {
                 .flatMap(totalDeliveredMessages -> {
                     if (totalDeliveredMessages == 0) {
                         return Mono.just(0L);
-                    } else {
-                        return countUsersWhoSentMessage(dateRange, areGroupMessages, areSystemMessages)
-                                .map(totalUsers -> totalUsers == 0
-                                        ? Long.MAX_VALUE
-                                        : totalDeliveredMessages / totalUsers);
                     }
+                    return countUsersWhoSentMessage(dateRange, areGroupMessages, areSystemMessages)
+                            .map(totalUsers -> totalUsers == 0
+                                    ? Long.MAX_VALUE
+                                    : totalDeliveredMessages / totalUsers);
                 });
     }
 

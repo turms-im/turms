@@ -18,7 +18,6 @@
 package im.turms.server.common.access.http.dto.response;
 
 import com.mongodb.client.result.UpdateResult;
-import lombok.Data;
 
 /**
  * @author James Chen
@@ -26,12 +25,13 @@ import lombok.Data;
  * it's meaningful to use UpdateResultDTO instead of TurmsStatusCode.OK for the result of update operations
  * because a update operation is usually considered as successful even if the no documents changed (no documents matched)
  */
-@Data
-public class UpdateResultDTO {
-    private final Long matchedCount;
-    private final Long modifiedCount;
+public record UpdateResultDTO(
+        Long matchedCount,
+        Long modifiedCount
+) {
 
     public static UpdateResultDTO get(UpdateResult result) {
         return new UpdateResultDTO(result.getMatchedCount(), result.getModifiedCount());
     }
+
 }

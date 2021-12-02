@@ -84,22 +84,21 @@ public final class AhoCorasickCodec {
 
     @SneakyThrows
     public static AhoCorasickDoubleArrayTrie deserialize(String file) {
-        try (FileInputStream stream = new FileInputStream(file)) {
-            try (ObjectInputStream inputStream = new ObjectInputStream(stream)) {
-                // version
-                int version = inputStream.readInt();
-                if (version != 1) {
-                    throw new RuntimeException("Unknown version: " + version);
-                }
-                int[] fail = (int[]) inputStream.readObject();
-                int[][] output = (int[][]) inputStream.readObject();
-
-                int[] base = (int[]) inputStream.readObject();
-                int[] check = (int[]) inputStream.readObject();
-                int capacity = inputStream.readInt();
-                DoubleArrayTrie trie = new DoubleArrayTrie(base, check, capacity);
-                return new AhoCorasickDoubleArrayTrie(fail, output, trie);
+        try (FileInputStream stream = new FileInputStream(file);
+             ObjectInputStream inputStream = new ObjectInputStream(stream)) {
+            // version
+            int version = inputStream.readInt();
+            if (version != 1) {
+                throw new RuntimeException("Unknown version: " + version);
             }
+            int[] fail = (int[]) inputStream.readObject();
+            int[][] output = (int[][]) inputStream.readObject();
+
+            int[] base = (int[]) inputStream.readObject();
+            int[] check = (int[]) inputStream.readObject();
+            int capacity = inputStream.readInt();
+            DoubleArrayTrie trie = new DoubleArrayTrie(base, check, capacity);
+            return new AhoCorasickDoubleArrayTrie(fail, output, trie);
         }
     }
 

@@ -15,9 +15,8 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.manager.address;
+package im.turms.server.common.address;
 
-import im.turms.server.common.manager.PublicIpManager;
 import im.turms.server.common.property.constant.AdvertiseStrategy;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
