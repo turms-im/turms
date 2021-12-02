@@ -42,8 +42,9 @@ public final class Member {
 
     public static final String ID_CLUSTER_ID = "_id.clusterId";
     public static final String ID_NODE_ID = "_id.nodeId";
-    public static final String STATUS_IS_HEALTHY = Fields.status + "." + MemberStatus.Fields.isHealthy;
+    public static final String STATUS_HAS_JOINED_CLUSTER = Fields.status + "." + MemberStatus.Fields.hasJoinedCluster;
     public static final String STATUS_IS_ACTIVE = Fields.status + "." + MemberStatus.Fields.isActive;
+    public static final String STATUS_IS_HEALTHY = Fields.status + "." + MemberStatus.Fields.isHealthy;
     public static final String STATUS_LAST_HEARTBEAT_DATE = Fields.status + "." + MemberStatus.Fields.lastHeartbeatDate;
 
     @Id
@@ -57,9 +58,9 @@ public final class Member {
     private final NodeType nodeType;
 
     /**
-     * For a seed member, it won't be removed from the config server even if TTL (60s) passed
+     * For a seed member, it won't be removed from the config server when the TTL (60s) expires
      * (TTL should be always longer than the heartbeat timeout).
-     * Otherwise, the record will be removed automatically if TTL passed.
+     * Otherwise, the record will be removed automatically when the TTL expires.
      */
     private boolean isSeed;
 
@@ -145,7 +146,8 @@ public final class Member {
             String tcpAddress,
             String udpAddress,
             boolean hasJoinedCluster,
-            boolean isActive) {
+            boolean isActive,
+            boolean isHealthy) {
         this(new Key(clusterId, nodeId),
                 zone,
                 nodeType,
@@ -161,7 +163,7 @@ public final class Member {
                 wsAddress,
                 tcpAddress,
                 udpAddress,
-                new MemberStatus(hasJoinedCluster, isActive, new Date()));
+                new MemberStatus(hasJoinedCluster, isActive, isHealthy, new Date()));
     }
 
     public void updateIfNotNull(
@@ -178,6 +180,7 @@ public final class Member {
             // Status
             Boolean hasJoinedCluster,
             Boolean isActive,
+            Boolean isHealthy,
             Date lastHeartbeatDate) {
         if (zone != null) {
             this.zone = zone;
@@ -211,10 +214,13 @@ public final class Member {
         }
         // Status
         if (hasJoinedCluster != null) {
-            status.setHealthy(hasJoinedCluster);
+            status.setHasJoinedCluster(hasJoinedCluster);
         }
         if (isActive != null) {
             status.setActive(isActive);
+        }
+        if (isHealthy != null) {
+            status.setHealthy(isHealthy);
         }
         if (lastHeartbeatDate != null) {
             status.setLastHeartbeatDate(lastHeartbeatDate);
@@ -259,10 +265,16 @@ public final class Member {
     @Data
     @FieldNameConstants
     public static class MemberStatus {
+
         /**
          * True if the last heartbeat has not timed out.
-         * isHealthy only works as an indicator for node status,
-         * and it can still handle client requests even if a node isn't healthy.
+         * hasJoinedCluster only works as an indicator for node status,
+         * and it can still handle client requests even if it's false.
+         */
+        private boolean hasJoinedCluster;
+
+        /**
+         * The node will stop serving if false
          */
         private boolean isHealthy;
 

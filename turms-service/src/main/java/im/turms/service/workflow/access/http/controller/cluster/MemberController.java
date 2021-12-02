@@ -84,6 +84,9 @@ public class MemberController {
     public Mono<ResponseEntity<ResponseDTO<Void>>> addMember(@RequestBody AddMemberDTO addMemberDTO) {
         String clusterId = node.getDiscoveryService().getLocalMember().getClusterId();
         NodeType nodeType = addMemberDTO.nodeType();
+        if (nodeType != NodeType.SERVICE && addMemberDTO.isLeaderEligible()) {
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Only turms-service servers can be the leader"));
+        }
         Member member = new Member(
                 clusterId,
                 addMemberDTO.nodeId(),
@@ -91,7 +94,7 @@ public class MemberController {
                 nodeType,
                 NodeVersion.parse(addMemberDTO.version()),
                 addMemberDTO.isSeed(),
-                nodeType == NodeType.SERVICE && addMemberDTO.isLeaderEligible(),
+                addMemberDTO.isLeaderEligible(),
                 addMemberDTO.registrationDate(),
                 addMemberDTO.priority(),
                 addMemberDTO.memberHost(),
@@ -102,7 +105,8 @@ public class MemberController {
                 addMemberDTO.tcpAddress(),
                 addMemberDTO.udpAddress(),
                 false,
-                addMemberDTO.isActive());
+                addMemberDTO.isActive(),
+                addMemberDTO.isHealthy());
         return node.getDiscoveryService()
                 .registerMember(member)
                 .thenReturn(ResponseFactory.OK);

@@ -36,7 +36,7 @@ public final class CpuHealthChecker extends HealthChecker {
     private final int cpuCheckRetries;
     private final float unhealthyLoadThreshold;
 
-    private boolean isCpuHealthy = true;
+    private boolean isCpuHealthy;
     private int currentUnhealthyTimes;
 
     public CpuHealthChecker(CpuHealthCheckProperties properties) {
@@ -49,8 +49,10 @@ public final class CpuHealthChecker extends HealthChecker {
         if (cpuLoad < 0) {
             log.warn("CPU health checker cannot work because the \"recent cpu usage\" for the whole operating environment is unavailable");
             isCpuHealthCheckAvailable = false;
+            isCpuHealthy = true;
         }
         this.isCpuHealthCheckAvailable = isCpuHealthCheckAvailable;
+        updateHealthStatus();
     }
 
     @Override

@@ -109,11 +109,11 @@ public class DiscoveryService implements ClusterService {
     private List<Member> activeSortedGatewayMembers = Collections.emptyList();
 
     @Getter
-    private List<String> otherActiveConnectedServiceMemberIds = Collections.emptyList();
+    private List<Member> otherActiveConnectedServiceMembers = Collections.emptyList();
     @Getter
-    private List<String> otherActiveConnectedGatewayMemberIds = Collections.emptyList();
+    private List<Member> otherActiveConnectedGatewayMembers = Collections.emptyList();
     @Getter
-    private List<String> otherActiveConnectedMemberIds = Collections.emptyList();
+    private List<Member> otherActiveConnectedMembers = Collections.emptyList();
 
     private final List<MembersChangeListener> membersChangeListeners = new LinkedList<>();
 
@@ -125,6 +125,7 @@ public class DiscoveryService implements ClusterService {
             NodeVersion nodeVersion,
             boolean isLeaderEligible,
             boolean isActive,
+            boolean isHealthy,
             int memberBindPort,
             DiscoveryProperties discoveryProperties,
             BaseServiceAddressManager serviceAddressManager,
@@ -147,7 +148,8 @@ public class DiscoveryService implements ClusterService {
                 serviceAddressManager.getTcpAddress(),
                 serviceAddressManager.getUdpAddress(),
                 false,
-                isActive);
+                isActive,
+                isHealthy);
         this.discoveryProperties = discoveryProperties;
         this.sharedConfigService = sharedConfigService;
         this.localNodeStatusManager = new LocalNodeStatusManager(
@@ -326,6 +328,7 @@ public class DiscoveryService implements ClusterService {
         // Status
         Boolean hasJoinedCluster = null;
         Boolean isActive = null;
+        Boolean isHealthy = null;
         Date lastHeartbeatDate = null;
         // Info
         String zone = null;
@@ -347,12 +350,16 @@ public class DiscoveryService implements ClusterService {
                 lastHeartbeatDate = new Date(value.asDateTime().getValue());
                 continue;
             }
-            if (fieldName.endsWith(Member.MemberStatus.Fields.isHealthy)) {
+            if (fieldName.endsWith(Member.MemberStatus.Fields.hasJoinedCluster)) {
                 hasJoinedCluster = value.asBoolean().getValue();
                 continue;
             }
             if (fieldName.endsWith(Member.MemberStatus.Fields.isActive)) {
                 isActive = value.asBoolean().getValue();
+                continue;
+            }
+            if (fieldName.endsWith(Member.MemberStatus.Fields.isHealthy)) {
+                isHealthy = value.asBoolean().getValue();
                 continue;
             }
             // Check info
@@ -409,6 +416,7 @@ public class DiscoveryService implements ClusterService {
                 udpAddress,
                 hasJoinedCluster,
                 isActive,
+                isHealthy,
                 lastHeartbeatDate);
     }
 
@@ -468,27 +476,26 @@ public class DiscoveryService implements ClusterService {
             return;
         }
         boolean isServiceMember = member.getNodeType() == NodeType.SERVICE;
-        List<String> memberList = isServiceMember
-                ? otherActiveConnectedServiceMemberIds
-                : otherActiveConnectedGatewayMemberIds;
+        List<Member> memberList = isServiceMember
+                ? otherActiveConnectedServiceMembers
+                : otherActiveConnectedGatewayMembers;
         int size = isAdd
                 ? memberList.size() + 1
                 : memberList.size();
-        List<String> tempOtherActiveConnectedMemberIds = new ArrayList<>(size);
-        tempOtherActiveConnectedMemberIds.addAll(memberList);
-        String nodeId = member.getNodeId();
+        List<Member> tempOtherActiveConnectedMembers = new ArrayList<>(size);
+        tempOtherActiveConnectedMembers.addAll(memberList);
         if (isAdd) {
-            tempOtherActiveConnectedMemberIds.add(nodeId);
+            tempOtherActiveConnectedMembers.add(member);
         } else {
-            tempOtherActiveConnectedMemberIds.remove(nodeId);
+            tempOtherActiveConnectedMembers.remove(member);
         }
         if (isServiceMember) {
-            otherActiveConnectedServiceMemberIds = tempOtherActiveConnectedMemberIds;
+            otherActiveConnectedServiceMembers = tempOtherActiveConnectedMembers;
         } else {
-            otherActiveConnectedGatewayMemberIds = tempOtherActiveConnectedMemberIds;
+            otherActiveConnectedGatewayMembers = tempOtherActiveConnectedMembers;
         }
-        otherActiveConnectedMemberIds = ListUtils.union(otherActiveConnectedServiceMemberIds,
-                otherActiveConnectedGatewayMemberIds);
+        otherActiveConnectedMembers = ListUtils.union(otherActiveConnectedServiceMembers,
+                otherActiveConnectedGatewayMembers);
     }
 
     /**

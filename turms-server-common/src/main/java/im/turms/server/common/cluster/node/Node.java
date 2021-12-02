@@ -28,6 +28,7 @@ import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.context.TurmsApplicationContext;
+import im.turms.server.common.healthcheck.HealthCheckManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.cluster.ClusterProperties;
@@ -87,7 +88,8 @@ public class Node {
             NodeType nodeType,
             TurmsApplicationContext turmsContext,
             TurmsPropertiesManager turmsPropertiesManager,
-            BaseServiceAddressManager serviceAddressManager) {
+            BaseServiceAddressManager serviceAddressManager,
+            HealthCheckManager healthCheckManager) {
         // Prepare node information
         this.context = context;
         this.nodeType = nodeType;
@@ -130,6 +132,7 @@ public class Node {
                 nodeVersion,
                 nodeType == NodeType.SERVICE && nodeProperties.isLeaderEligible(),
                 nodeProperties.isActiveByDefault(),
+                healthCheckManager.isHealthy(),
                 connectionService.getServer().getPort(),
                 discoveryProperties,
                 serviceAddressManager,

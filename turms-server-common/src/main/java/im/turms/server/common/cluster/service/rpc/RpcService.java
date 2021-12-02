@@ -228,7 +228,7 @@ public class RpcService implements ClusterService {
      */
     public <T> Mono<T> requestResponse(RpcRequest<T> request) {
         //TODO: Provide richer load balancing strategies
-        List<String> otherMembers = getOtherActiveConnectedMembersToRespond(request);
+        List<Member> otherMembers = getOtherActiveConnectedMembersToRespond(request);
         int size = otherMembers.size();
         if (size == 0) {
             request.release();
@@ -236,7 +236,24 @@ public class RpcService implements ClusterService {
         }
         // use System.currentTimeMillis() instead of "RandomUtil.nextPositiveInt()" for better performance
         int index = (int) (System.currentTimeMillis() % size);
-        String memberNodeId = otherMembers.get(index);
+        Member member = otherMembers.get(index);
+        // fast path
+        if (!member.getStatus().isHealthy()) {
+            // slow path
+            int retry = 0;
+            boolean isUnhealthy;
+            do {
+                retry++;
+                index = (index + retry) % size;
+                member = otherMembers.get(index);
+                isUnhealthy = !member.getStatus().isHealthy();
+            } while (isUnhealthy && retry < size);
+            if (isUnhealthy) {
+                request.release();
+                return Mono.error(RpcException.get(RpcErrorCode.HEALTHY_MEMBER_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE));
+            }
+        }
+        String memberNodeId = member.getNodeId();
         RpcEndpoint client;
         try {
             client = getOrCreateEndpoint(memberNodeId);
@@ -249,7 +266,8 @@ public class RpcService implements ClusterService {
         return requestResponse(client, request, defaultRequestTimeoutDuration)
                 .onErrorResume(throwable -> {
                     if (ExceptionUtil.isDisconnectedClientError(throwable)) {
-                        for (String newMemberId : getOtherActiveConnectedMembersToRespond(request)) {
+                        for (Member newMember : getOtherActiveConnectedMembersToRespond(request)) {
+                            String newMemberId = newMember.getNodeId();
                             if (!newMemberId.equals(memberNodeId)) {
                                 return requestResponse(newMemberId, request, defaultRequestTimeoutDuration);
                             }
@@ -330,8 +348,8 @@ public class RpcService implements ClusterService {
     public <T> Flux<T> requestResponsesFromOtherMembers(@NotNull RpcRequest<T> request,
                                                         @NotNull Duration timeout,
                                                         boolean rejectIfMissingAnyConnection) {
-        List<String> memberIds = getOtherActiveConnectedMembersToRespond(request);
-        return requestResponsesFromOtherMembers(memberIds, request, timeout, rejectIfMissingAnyConnection);
+        List<Member> members = getOtherActiveConnectedMembersToRespond(request);
+        return requestResponsesFromOtherMembers(members, request, timeout, rejectIfMissingAnyConnection);
     }
 
     /**
@@ -346,7 +364,7 @@ public class RpcService implements ClusterService {
     }
 
     /**
-     * @return 1. an non-empty publisher that publishes an empty map if all peers respond with an empty payload;
+     * @return 1. a non-empty publisher that publishes an empty map if all peers respond with an empty payload;
      * 2. a non-empty publisher that publishes a non-empty map if any peer responds with an non-empty valid payload;
      * 3. error for other cases (e.g. no peer exists).
      * The key is the member node ID, and the value is the response
@@ -354,8 +372,8 @@ public class RpcService implements ClusterService {
     public <T> Mono<Map<String, T>> requestResponsesAsMapFromOtherMembers(@NotNull RpcRequest<T> request,
                                                                           @NotNull Duration timeout,
                                                                           boolean rejectIfMissingAnyConnection) {
-        List<String> memberIds = getOtherActiveConnectedMembersToRespond(request);
-        return requestResponsesAsMap(memberIds, request, timeout, rejectIfMissingAnyConnection);
+        List<Member> members = getOtherActiveConnectedMembersToRespond(request);
+        return requestResponsesAsMap(members, request, timeout, rejectIfMissingAnyConnection);
     }
 
     // Internal implementations
@@ -397,7 +415,7 @@ public class RpcService implements ClusterService {
                 .onErrorMap(t -> mapThrowable(t, request));
     }
 
-    public <T> Flux<T> requestResponsesFromOtherMembers(List<String> memberIds,
+    public <T> Flux<T> requestResponsesFromOtherMembers(List<Member> members,
                                                         @NotNull RpcRequest<T> request,
                                                         @NotNull Duration timeout,
                                                         boolean rejectIfMissingAnyConnection) {
@@ -406,7 +424,7 @@ public class RpcService implements ClusterService {
         } catch (Exception e) {
             return Flux.error(e);
         }
-        if (memberIds.isEmpty()) {
+        if (members.isEmpty()) {
             return Flux.error(RpcException.get(RpcErrorCode.MEMBER_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         if (rejectIfMissingAnyConnection && !connectionService.isHasConnectedToAllMembers()) {
@@ -416,8 +434,9 @@ public class RpcService implements ClusterService {
         return Flux.deferContextual(context -> {
             addTraceIdToRequestFromContext(context, request);
             ByteBuf requestBody = codecService.serializeWithoutCodecId(request);
-            List<Mono<T>> results = new ArrayList<>(memberIds.size());
-            for (String memberId : memberIds) {
+            List<Mono<T>> results = new ArrayList<>(members.size());
+            for (Member member : members) {
+                String memberId = member.getNodeId();
                 RpcEndpoint client;
                 try {
                     client = getOrCreateEndpoint(memberId);
@@ -445,7 +464,7 @@ public class RpcService implements ClusterService {
         });
     }
 
-    private <T> Mono<Map<String, T>> requestResponsesAsMap(List<String> memberIds,
+    private <T> Mono<Map<String, T>> requestResponsesAsMap(List<Member> members,
                                                            @NotNull RpcRequest<T> request,
                                                            @NotNull Duration timeout,
                                                            boolean rejectIfMissingAnyConnection) {
@@ -454,7 +473,7 @@ public class RpcService implements ClusterService {
         } catch (Exception e) {
             return Mono.error(e);
         }
-        if (memberIds.isEmpty()) {
+        if (members.isEmpty()) {
             return Mono.error(RpcException.get(RpcErrorCode.MEMBER_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         if (rejectIfMissingAnyConnection && !discoveryService.getLocalNodeStatusManager().getLocalMember().getStatus().isActive()) {
@@ -464,9 +483,10 @@ public class RpcService implements ClusterService {
         return Mono.deferContextual(context -> {
             addTraceIdToRequestFromContext(context, request);
             ByteBuf requestBody = codecService.serializeWithoutCodecId(request);
-            int size = memberIds.size();
+            int size = members.size();
             List<Mono<Pair<String, T>>> results = new ArrayList<>(size);
-            for (String memberId : memberIds) {
+            for (Member member : members) {
+                String memberId = member.getNodeId();
                 RpcEndpoint client;
                 try {
                     client = getOrCreateEndpoint(memberId);
@@ -515,11 +535,11 @@ public class RpcService implements ClusterService {
 
     // Validate node type
 
-    private List<String> getOtherActiveConnectedMembersToRespond(RpcRequest<?> request) {
+    private List<Member> getOtherActiveConnectedMembersToRespond(RpcRequest<?> request) {
         return switch (request.nodeTypeToRespond()) {
-            case BOTH -> discoveryService.getOtherActiveConnectedMemberIds();
-            case GATEWAY -> discoveryService.getOtherActiveConnectedGatewayMemberIds();
-            case SERVICE -> discoveryService.getOtherActiveConnectedServiceMemberIds();
+            case BOTH -> discoveryService.getOtherActiveConnectedMembers();
+            case GATEWAY -> discoveryService.getOtherActiveConnectedGatewayMembers();
+            case SERVICE -> discoveryService.getOtherActiveConnectedServiceMembers();
         };
     }
 

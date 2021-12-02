@@ -41,6 +41,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author James Chen
@@ -63,6 +64,9 @@ public class LocalNodeStatusManager {
     private final long heartbeatIntervalMillis;
     private ScheduledFuture<?> heartbeatFuture;
     private final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory("discovery-heartbeat"));
+
+    // Health
+    private final AtomicBoolean isHealthStatusUpdating = new AtomicBoolean();
 
     public LocalNodeStatusManager(
             DiscoveryService discoveryService,
@@ -193,8 +197,9 @@ public class LocalNodeStatusManager {
                 member.getWsAddress(),
                 member.getTcpAddress(),
                 member.getUdpAddress(),
-                member.getStatus().isHealthy(),
+                member.getStatus().isHasJoinedCluster(),
                 member.getStatus().isActive(),
+                member.getStatus().isHealthy(),
                 member.getStatus().getLastHeartbeatDate());
         if (isLeaderEligibleChanged) {
             if (isLeaderEligible) {
@@ -203,6 +208,21 @@ public class LocalNodeStatusManager {
                 unregisterLocalMemberLeadership().subscribe();
             }
         }
+    }
+
+    public void updateHealthStatus(boolean isHealthy) {
+        if (localMember.getStatus().isHealthy() == isHealthy
+                && !isHealthStatusUpdating.compareAndSet(false, true)) {
+            return;
+        }
+        Filter filter = Filter.newBuilder(2)
+                .eq(Member.ID_NODE_ID, localMember.getNodeId())
+                .eq(Member.ID_CLUSTER_ID, localMember.getClusterId());
+        Update update = Update.newBuilder(1)
+                .set(Member.STATUS_IS_HEALTHY, isHealthy);
+        sharedConfigService.updateOne(Member.class, filter, update)
+                .doFinally(signal -> isHealthStatusUpdating.set(false))
+                .subscribe();
     }
 
     private Mono<Boolean> renewLocalLeader(Date renewDate) {
@@ -265,7 +285,7 @@ public class LocalNodeStatusManager {
                 .in(Member.ID_NODE_ID, unavailableMemberNodeIds)
                 .eq(Member.ID_CLUSTER_ID, localMember.getClusterId());
         Update update = Update.newBuilder(1)
-                .set(Member.STATUS_IS_HEALTHY, false);
+                .set(Member.STATUS_HAS_JOINED_CLUSTER, false);
         return sharedConfigService.updateMany(Member.class, filter, update).then();
     }
 
@@ -274,7 +294,7 @@ public class LocalNodeStatusManager {
                 .in(Member.ID_NODE_ID, availableMemberNodeIds)
                 .eq(Member.ID_CLUSTER_ID, localMember.getClusterId());
         Update update = Update.newBuilder(1)
-                .set(Member.STATUS_IS_HEALTHY, true);
+                .set(Member.STATUS_HAS_JOINED_CLUSTER, true);
         return sharedConfigService.updateMany(Member.class, filter, update).then();
     }
 

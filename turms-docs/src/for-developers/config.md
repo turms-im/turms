@@ -69,17 +69,16 @@ Turms属性分为三大类配置：Turms Service配置、Turms Gateway配置，�
 
 ### Common通用配置
 
-| 类                           | 字段名             | 描述                                                         |
-| ---------------------------- | ------------------ | ------------------------------------------------------------ |
-| ClusterProperties            | cluster            | 集群相关配置。包括配置当前运行节点信息、服务发现注册信息、配置中心信息、RPC参数 |
-| IpProperties                 | ip                 | 公网IP探测相关配置                                           |
-| LocationProperties           | location           | 用户坐标相关配置                                             |
-| LoggingProperties            | logging            | 基础日志配置                                                 |
-| MonitorProperties            | monitor            | 节点状态监控配置                                             |
-| PluginProperties             | plugin             | 插件相关配置                                                 |
-| SecurityProperties           | security           | 用户与管理员密码加密相关配置                                 |
-| ServerAvailabilityProperties | serverAvailability | 服务端可用性判定配置                                         |
-| UserStatusProperties         | userStatus         | 用户会话（连接）状态相关配置                                 |
+| 类                    | 字段名      | 描述                                                         |
+| --------------------- | ----------- | ------------------------------------------------------------ |
+| ClusterProperties     | cluster     | 集群相关配置。包括配置当前运行节点信息、服务发现注册信息、配置中心信息、RPC参数 |
+| HealthCheckProperties | healthCheck | 监控节点健康状态                                             |
+| IpProperties          | ip          | 公网IP探测相关配置                                           |
+| LocationProperties    | location    | 用户坐标相关配置                                             |
+| LoggingProperties     | logging     | 基础日志配置                                                 |
+| PluginProperties      | plugin      | 插件相关配置                                                 |
+| SecurityProperties    | security    | 用户与管理员密码加密相关配置                                 |
+| UserStatusProperties  | userStatus  | 用户会话（连接）状态相关配置                                 |
 
 ## 补充
 
@@ -92,5 +91,5 @@ Turms属性分为三大类配置：Turms Service配置、Turms Gateway配置，�
 | turms-service               | 8510（HTTP）       | 提供admin API与metrics API                    |
 | turms-gateway               | 9510（HTTP）       | 提供metrics API                               |
 | turms-gateway               | 10510（WebSocket） | 与客户端交互                                  |
-| turms-gateway               | 11510（TCP）       | 与客户端交互（客户端暂不支持）                |
-| turms-gateway               | 12510（UDP）       | 与客户端交互（客户端暂不支持）                |
+| turms-gateway               | 11510（TCP）       | 与客户端交互（Swift客户端暂不支持）           |
+| turms-gateway               | 12510（UDP）       | 与客户端交互（客户端均暂不支持）              |

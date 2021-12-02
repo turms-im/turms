@@ -31,7 +31,8 @@ public enum RpcErrorCode {
 
     // No member to run on
     MEMBER_NOT_FOUND(2),
-    CONNECTION_NOT_FOUND(3),
+    HEALTHY_MEMBER_NOT_FOUND(3),
+    CONNECTION_NOT_FOUND(4),
 
     // Codec
     CORRUPTED_HEADER(10),

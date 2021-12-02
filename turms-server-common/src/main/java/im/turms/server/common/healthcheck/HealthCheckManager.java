@@ -17,9 +17,11 @@
 
 package im.turms.server.common.healthcheck;
 
+import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.healthcheck.HealthCheckProperties;
 import io.netty.util.concurrent.DefaultThreadFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -31,10 +33,12 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class HealthCheckManager {
 
+    private final Node node;
     private final CpuHealthChecker cpuHealthChecker;
     private final MemoryHealthChecker memoryHealthChecker;
 
-    public HealthCheckManager(TurmsPropertiesManager propertiesManager) {
+    public HealthCheckManager(@Lazy Node node, TurmsPropertiesManager propertiesManager) {
+        this.node = node;
         HealthCheckProperties properties = propertiesManager.getLocalProperties().getHealthCheck();
         cpuHealthChecker = new CpuHealthChecker(properties.getCpu());
         memoryHealthChecker = new MemoryHealthChecker(properties.getMemory());
@@ -52,6 +56,7 @@ public class HealthCheckManager {
                 .scheduleWithFixedDelay(() -> {
                     cpuHealthChecker.updateHealthStatus();
                     memoryHealthChecker.updateHealthStatus();
+                    node.getDiscoveryService().getLocalNodeStatusManager().updateHealthStatus(isHealthy());
                 }, 0, intervalSeconds, TimeUnit.SECONDS);
     }
 

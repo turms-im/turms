@@ -40,6 +40,7 @@ public record AddMemberDTO(
         String wsAddress,
         String tcpAddress,
         String udpAddress,
-        boolean isActive
+        boolean isActive,
+        boolean isHealthy
 ) {
 }
