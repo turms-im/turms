@@ -137,7 +137,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.PrivateConversation private_conversations = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.conversation.PrivateConversationOrBuilder>
+  public java.util.List<? extends im.turms.common.model.bo.conversation.PrivateConversationOrBuilder> 
       getPrivateConversationsOrBuilderList() {
     return privateConversations_;
   }
@@ -177,7 +177,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.GroupConversation group_conversations = 2;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.conversation.GroupConversationOrBuilder>
+  public java.util.List<? extends im.turms.common.model.bo.conversation.GroupConversationOrBuilder> 
       getGroupConversationsOrBuilderList() {
     return groupConversations_;
   }
@@ -537,7 +537,7 @@ private static final long serialVersionUID = 0L;
             privateConversationsBuilder_ = null;
             privateConversations_ = other.privateConversations_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            privateConversationsBuilder_ =
+            privateConversationsBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getPrivateConversationsFieldBuilder() : null;
           } else {
@@ -563,7 +563,7 @@ private static final long serialVersionUID = 0L;
             groupConversationsBuilder_ = null;
             groupConversations_ = other.groupConversations_;
             bitField0_ = (bitField0_ & ~0x00000002);
-            groupConversationsBuilder_ =
+            groupConversationsBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getGroupConversationsFieldBuilder() : null;
           } else {
@@ -796,7 +796,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.PrivateConversation private_conversations = 1;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.conversation.PrivateConversationOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.conversation.PrivateConversationOrBuilder> 
          getPrivateConversationsOrBuilderList() {
       if (privateConversationsBuilder_ != null) {
         return privateConversationsBuilder_.getMessageOrBuilderList();
@@ -822,12 +822,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.PrivateConversation private_conversations = 1;</code>
      */
-    public java.util.List<im.turms.common.model.bo.conversation.PrivateConversation.Builder>
+    public java.util.List<im.turms.common.model.bo.conversation.PrivateConversation.Builder> 
          getPrivateConversationsBuilderList() {
       return getPrivateConversationsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.conversation.PrivateConversation, im.turms.common.model.bo.conversation.PrivateConversation.Builder, im.turms.common.model.bo.conversation.PrivateConversationOrBuilder>
+        im.turms.common.model.bo.conversation.PrivateConversation, im.turms.common.model.bo.conversation.PrivateConversation.Builder, im.turms.common.model.bo.conversation.PrivateConversationOrBuilder> 
         getPrivateConversationsFieldBuilder() {
       if (privateConversationsBuilder_ == null) {
         privateConversationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
@@ -1036,7 +1036,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupConversation group_conversations = 2;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.conversation.GroupConversationOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.conversation.GroupConversationOrBuilder> 
          getGroupConversationsOrBuilderList() {
       if (groupConversationsBuilder_ != null) {
         return groupConversationsBuilder_.getMessageOrBuilderList();
@@ -1062,12 +1062,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupConversation group_conversations = 2;</code>
      */
-    public java.util.List<im.turms.common.model.bo.conversation.GroupConversation.Builder>
+    public java.util.List<im.turms.common.model.bo.conversation.GroupConversation.Builder> 
          getGroupConversationsBuilderList() {
       return getGroupConversationsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.conversation.GroupConversation, im.turms.common.model.bo.conversation.GroupConversation.Builder, im.turms.common.model.bo.conversation.GroupConversationOrBuilder>
+        im.turms.common.model.bo.conversation.GroupConversation, im.turms.common.model.bo.conversation.GroupConversation.Builder, im.turms.common.model.bo.conversation.GroupConversationOrBuilder> 
         getGroupConversationsFieldBuilder() {
       if (groupConversationsBuilder_ == null) {
         groupConversationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<

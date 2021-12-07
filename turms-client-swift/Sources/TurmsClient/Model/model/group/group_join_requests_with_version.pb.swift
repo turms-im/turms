@@ -71,9 +71,9 @@ extension GroupJoinRequestsWithVersion: SwiftProtobuf.Message, SwiftProtobuf._Me
     if !self.groupJoinRequests.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.groupJoinRequests, fieldNumber: 1)
     }
-    if let v = self._lastUpdatedDate {
+    try { if let v = self._lastUpdatedDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

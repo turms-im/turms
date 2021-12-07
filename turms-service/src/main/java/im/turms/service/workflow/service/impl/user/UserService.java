@@ -43,14 +43,17 @@ import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidProfileAccess;
 import im.turms.service.workflow.service.impl.conversation.ConversationService;
 import im.turms.service.workflow.service.impl.group.GroupMemberService;
+import im.turms.service.workflow.service.impl.message.MessageService;
 import im.turms.service.workflow.service.impl.statistics.MetricsService;
 import im.turms.service.workflow.service.impl.user.onlineuser.SessionService;
 import im.turms.service.workflow.service.impl.user.relationship.UserRelationshipGroupService;
 import im.turms.service.workflow.service.impl.user.relationship.UserRelationshipService;
 import im.turms.service.workflow.service.util.DomainConstraintUtil;
 import io.micrometer.core.instrument.Counter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -69,6 +72,7 @@ import java.util.Set;
  */
 @Component
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
+@Log4j2
 public class UserService {
 
     private final GroupMemberService groupMemberService;
@@ -77,6 +81,7 @@ public class UserService {
     private final UserVersionService userVersionService;
     private final SessionService sessionService;
     private final ConversationService conversationService;
+    private final MessageService messageService;
 
     private final Node node;
     private final PasswordManager passwordManager;
@@ -95,6 +100,7 @@ public class UserService {
             UserRelationshipGroupService userRelationshipGroupService,
             SessionService sessionService,
             ConversationService conversationService,
+            @Lazy MessageService messageService,
             MetricsService metricsService) {
         this.node = node;
         this.mongoClient = mongoClient;
@@ -106,6 +112,7 @@ public class UserService {
         this.userRelationshipGroupService = userRelationshipGroupService;
         this.sessionService = sessionService;
         this.conversationService = conversationService;
+        this.messageService = messageService;
 
         registeredUsersCounter = metricsService.getRegistry().counter(MetricsConstant.REGISTERED_USERS_COUNTER_NAME);
         deletedUsersCounter = metricsService.getRegistry().counter(MetricsConstant.DELETED_USERS_COUNTER_NAME);
@@ -130,37 +137,33 @@ public class UserService {
         if (isGroupMessage) {
             return groupMemberService.isAllowedToSendMessage(targetId, requesterId)
                     .map(ServicePermission::get);
-        } else {
-            if (requesterId.equals(targetId)) {
-                return node.getSharedProperties().getService().getMessage().isAllowSendMessagesToOneself()
-                        ? Mono.just(ServicePermission.OK)
-                        : Mono.just(ServicePermission.get(TurmsStatusCode.SENDING_MESSAGES_TO_ONESELF_IS_DISABLED));
-            } else {
-                if (node.getSharedProperties().getService().getMessage().isAllowSendMessagesToStranger()) {
-                    if (node.getSharedProperties().getService().getMessage().isCheckIfTargetActiveAndNotDeleted()) {
-                        return isActiveAndNotDeleted(targetId)
-                                .flatMap(isActiveAndNotDeleted -> {
-                                    if (!isActiveAndNotDeleted) {
-                                        return Mono.just(ServicePermission.get(TurmsStatusCode.MESSAGE_RECIPIENT_NOT_ACTIVE));
-                                    }
-                                    return userRelationshipService.hasNoRelationshipOrNotBlocked(targetId, requesterId)
-                                            .map(isNotBlocked -> isNotBlocked
-                                                    ? ServicePermission.OK
-                                                    : ServicePermission.get(TurmsStatusCode.PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED));
-                                });
-                    }
-                    return userRelationshipService.hasNoRelationshipOrNotBlocked(targetId, requesterId)
-                            .map(isNotBlocked -> isNotBlocked
-                                    ? ServicePermission.OK
-                                    : ServicePermission.get(TurmsStatusCode.PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED));
-                } else {
-                    return userRelationshipService.hasRelationshipAndNotBlocked(targetId, requesterId)
-                            .map(isRelatedAndNotBlocked -> isRelatedAndNotBlocked
-                                    ? ServicePermission.OK
-                                    : ServicePermission.get(TurmsStatusCode.MESSAGE_SENDER_NOT_IN_CONTACTS_OR_BLOCKED));
-                }
-            }
+        } else if (requesterId.equals(targetId)) {
+            return node.getSharedProperties().getService().getMessage().isAllowSendMessagesToOneself()
+                    ? Mono.just(ServicePermission.OK)
+                    : Mono.just(ServicePermission.get(TurmsStatusCode.SENDING_MESSAGES_TO_ONESELF_IS_DISABLED));
         }
+        if (node.getSharedProperties().getService().getMessage().isAllowSendMessagesToStranger()) {
+            if (node.getSharedProperties().getService().getMessage().isCheckIfTargetActiveAndNotDeleted()) {
+                return isActiveAndNotDeleted(targetId)
+                        .flatMap(isActiveAndNotDeleted -> {
+                            if (!isActiveAndNotDeleted) {
+                                return Mono.just(ServicePermission.get(TurmsStatusCode.MESSAGE_RECIPIENT_NOT_ACTIVE));
+                            }
+                            return userRelationshipService.hasNoRelationshipOrNotBlocked(targetId, requesterId)
+                                    .map(isNotBlocked -> isNotBlocked
+                                            ? ServicePermission.OK
+                                            : ServicePermission.get(TurmsStatusCode.PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED));
+                        });
+            }
+            return userRelationshipService.hasNoRelationshipOrNotBlocked(targetId, requesterId)
+                    .map(isNotBlocked -> isNotBlocked
+                            ? ServicePermission.OK
+                            : ServicePermission.get(TurmsStatusCode.PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED));
+        }
+        return userRelationshipService.hasRelationshipAndNotBlocked(targetId, requesterId)
+                .map(isRelatedAndNotBlocked -> isRelatedAndNotBlocked
+                        ? ServicePermission.OK
+                        : ServicePermission.get(TurmsStatusCode.MESSAGE_SENDER_NOT_IN_CONTACTS_OR_BLOCKED));
     }
 
     public Mono<User> addUser(
@@ -335,6 +338,8 @@ public class UserService {
                                         .then(userRelationshipGroupService.deleteAllRelationshipGroups(userIds, session, false))
                                         .then(conversationService.deletePrivateConversations(userIds, session))
                                         .then(userVersionService.delete(userIds, session).onErrorResume(t -> Mono.empty()))
+                                        .then(messageService.deleteSequenceIds(false, userIds)
+                                                .doOnError(t -> log.error("Failed to remove the message sequence IDs for the user IDs: {}", userIds, t)))
                                         .thenReturn(result);
                             }))
                     .retryWhen(DaoConstant.TRANSACTION_RETRY);

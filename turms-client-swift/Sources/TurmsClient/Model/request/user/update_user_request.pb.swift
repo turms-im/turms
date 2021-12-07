@@ -100,18 +100,18 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._password {
+    try { if let v = self._password {
       try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }
-    if let v = self._name {
+    } }()
+    try { if let v = self._name {
       try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    }
-    if let v = self._intro {
+    } }()
+    try { if let v = self._intro {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
-    if let v = self._profileAccessStrategy {
+    } }()
+    try { if let v = self._profileAccessStrategy {
       try visitor.visitSingularEnumField(value: v, fieldNumber: 4)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

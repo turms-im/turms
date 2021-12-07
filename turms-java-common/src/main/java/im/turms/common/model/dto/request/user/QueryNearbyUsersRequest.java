@@ -265,10 +265,10 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (latitude_ != 0F) {
+    if (java.lang.Float.floatToRawIntBits(latitude_) != 0) {
       output.writeFloat(1, latitude_);
     }
-    if (longitude_ != 0F) {
+    if (java.lang.Float.floatToRawIntBits(longitude_) != 0) {
       output.writeFloat(2, longitude_);
     }
     if (((bitField0_ & 0x00000001) != 0)) {
@@ -295,11 +295,11 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (latitude_ != 0F) {
+    if (java.lang.Float.floatToRawIntBits(latitude_) != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeFloatSize(1, latitude_);
     }
-    if (longitude_ != 0F) {
+    if (java.lang.Float.floatToRawIntBits(longitude_) != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeFloatSize(2, longitude_);
     }
@@ -721,7 +721,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setLatitude(float value) {
-
+      
       latitude_ = value;
       onChanged();
       return this;
@@ -731,7 +731,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearLatitude() {
-
+      
       latitude_ = 0F;
       onChanged();
       return this;
@@ -752,7 +752,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setLongitude(float value) {
-
+      
       longitude_ = value;
       onChanged();
       return this;
@@ -762,7 +762,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearLongitude() {
-
+      
       longitude_ = 0F;
       onChanged();
       return this;

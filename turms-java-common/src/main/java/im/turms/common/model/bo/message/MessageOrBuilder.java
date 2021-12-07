@@ -134,4 +134,15 @@ public interface MessageOrBuilder extends
    * @return The records at the given index.
    */
   com.google.protobuf.ByteString getRecords(int index);
+
+  /**
+   * <code>optional int32 sequence_id = 10;</code>
+   * @return Whether the sequenceId field is set.
+   */
+  boolean hasSequenceId();
+  /**
+   * <code>optional int32 sequence_id = 10;</code>
+   * @return The sequenceId.
+   */
+  int getSequenceId();
 }

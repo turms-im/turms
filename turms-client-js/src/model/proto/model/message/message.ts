@@ -14,6 +14,7 @@ export interface Message {
   isSystemMessage?: boolean | undefined;
   recipientId?: string | undefined;
   records: Uint8Array[];
+  sequenceId?: number | undefined;
 }
 
 const baseMessage: object = {};
@@ -49,6 +50,9 @@ export const Message = {
     }
     for (const v of message.records) {
       writer.uint32(74).bytes(v!);
+    }
+    if (message.sequenceId !== undefined) {
+      writer.uint32(80).int32(message.sequenceId);
     }
     return writer;
   },
@@ -87,6 +91,9 @@ export const Message = {
           break;
         case 9:
           message.records.push(reader.bytes());
+          break;
+        case 10:
+          message.sequenceId = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);

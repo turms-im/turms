@@ -87,15 +87,15 @@ extension UpdateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     if self.messageID != 0 {
       try visitor.visitSingularInt64Field(value: self.messageID, fieldNumber: 1)
     }
-    if let v = self._text {
+    try { if let v = self._text {
       try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.records.isEmpty {
       try visitor.visitRepeatedBytesField(value: self.records, fieldNumber: 3)
     }
-    if let v = self._recallDate {
+    try { if let v = self._recallDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

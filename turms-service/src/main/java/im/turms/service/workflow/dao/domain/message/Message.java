@@ -108,6 +108,9 @@ public final class Message {
     @OptionalIndexedForExtendedFeature
     private final Long referenceId;
 
+    @Field(Fields.SEQUENCE_ID)
+    private final Integer sequenceId;
+
     public Long groupId() {
         return isGroupMessage != null && isGroupMessage ? targetId : null;
     }
@@ -125,6 +128,7 @@ public final class Message {
         public static final String RECORDS = "rec";
         public static final String BURN_AFTER = "bf";
         public static final String REFERENCE_ID = "rid";
+        public static final String SEQUENCE_ID = "sqid";
 
         private Fields() {
         }

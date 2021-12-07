@@ -64,9 +64,9 @@ extension QueryJoinedGroupIdsRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._lastUpdatedDate {
+    try { if let v = self._lastUpdatedDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

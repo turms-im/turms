@@ -87,15 +87,15 @@ extension UpdateGroupJoinQuestionRequest: SwiftProtobuf.Message, SwiftProtobuf._
     if self.questionID != 0 {
       try visitor.visitSingularInt64Field(value: self.questionID, fieldNumber: 1)
     }
-    if let v = self._question {
+    try { if let v = self._question {
       try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.answers.isEmpty {
       try visitor.visitRepeatedStringField(value: self.answers, fieldNumber: 3)
     }
-    if let v = self._score {
+    try { if let v = self._score {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

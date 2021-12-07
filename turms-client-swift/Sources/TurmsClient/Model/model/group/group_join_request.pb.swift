@@ -148,30 +148,30 @@ extension GroupJoinRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._id {
+    try { if let v = self._id {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    }
-    if let v = self._creationDate {
+    } }()
+    try { if let v = self._creationDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    }
-    if let v = self._content {
+    } }()
+    try { if let v = self._content {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
-    if let v = self._status {
+    } }()
+    try { if let v = self._status {
       try visitor.visitSingularEnumField(value: v, fieldNumber: 4)
-    }
-    if let v = self._expirationDate {
+    } }()
+    try { if let v = self._expirationDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
-    }
-    if let v = self._groupID {
+    } }()
+    try { if let v = self._groupID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
-    }
-    if let v = self._requesterID {
+    } }()
+    try { if let v = self._requesterID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 7)
-    }
-    if let v = self._responderID {
+    } }()
+    try { if let v = self._responderID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 8)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

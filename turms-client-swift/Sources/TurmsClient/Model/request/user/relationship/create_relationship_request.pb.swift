@@ -78,9 +78,9 @@ extension CreateRelationshipRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if self.blocked != false {
       try visitor.visitSingularBoolField(value: self.blocked, fieldNumber: 2)
     }
-    if let v = self._groupIndex {
+    try { if let v = self._groupIndex {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 3)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

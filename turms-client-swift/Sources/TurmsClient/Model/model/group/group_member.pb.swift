@@ -140,27 +140,27 @@ extension GroupMember: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._groupID {
+    try { if let v = self._groupID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    }
-    if let v = self._userID {
+    } }()
+    try { if let v = self._userID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    }
-    if let v = self._name {
+    } }()
+    try { if let v = self._name {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
-    if let v = self._role {
+    } }()
+    try { if let v = self._role {
       try visitor.visitSingularEnumField(value: v, fieldNumber: 4)
-    }
-    if let v = self._joinDate {
+    } }()
+    try { if let v = self._joinDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
-    }
-    if let v = self._muteEndDate {
+    } }()
+    try { if let v = self._muteEndDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
-    }
-    if let v = self._userStatus {
+    } }()
+    try { if let v = self._userStatus {
       try visitor.visitSingularEnumField(value: v, fieldNumber: 7)
-    }
+    } }()
     if !self.usingDeviceTypes.isEmpty {
       try visitor.visitPackedEnumField(value: self.usingDeviceTypes, fieldNumber: 8)
     }

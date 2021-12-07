@@ -83,12 +83,12 @@ extension DeleteResourceRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     if self.contentType != .profile {
       try visitor.visitSingularEnumField(value: self.contentType, fieldNumber: 1)
     }
-    if let v = self._keyStr {
+    try { if let v = self._keyStr {
       try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    }
-    if let v = self._keyNum {
+    } }()
+    try { if let v = self._keyNum {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

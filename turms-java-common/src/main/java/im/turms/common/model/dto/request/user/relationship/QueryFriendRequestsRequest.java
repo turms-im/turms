@@ -487,7 +487,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setAreSentByMe(boolean value) {
-
+      
       areSentByMe_ = value;
       onChanged();
       return this;
@@ -497,7 +497,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearAreSentByMe() {
-
+      
       areSentByMe_ = false;
       onChanged();
       return this;

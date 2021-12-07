@@ -130,7 +130,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.group.GroupJoinQuestionOrBuilder>
+  public java.util.List<? extends im.turms.common.model.bo.group.GroupJoinQuestionOrBuilder> 
       getGroupJoinQuestionsOrBuilderList() {
     return groupJoinQuestions_;
   }
@@ -505,7 +505,7 @@ private static final long serialVersionUID = 0L;
             groupJoinQuestionsBuilder_ = null;
             groupJoinQuestions_ = other.groupJoinQuestions_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            groupJoinQuestionsBuilder_ =
+            groupJoinQuestionsBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getGroupJoinQuestionsFieldBuilder() : null;
           } else {
@@ -741,7 +741,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.group.GroupJoinQuestionOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.group.GroupJoinQuestionOrBuilder> 
          getGroupJoinQuestionsOrBuilderList() {
       if (groupJoinQuestionsBuilder_ != null) {
         return groupJoinQuestionsBuilder_.getMessageOrBuilderList();
@@ -767,12 +767,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
      */
-    public java.util.List<im.turms.common.model.bo.group.GroupJoinQuestion.Builder>
+    public java.util.List<im.turms.common.model.bo.group.GroupJoinQuestion.Builder> 
          getGroupJoinQuestionsBuilderList() {
       return getGroupJoinQuestionsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.group.GroupJoinQuestion, im.turms.common.model.bo.group.GroupJoinQuestion.Builder, im.turms.common.model.bo.group.GroupJoinQuestionOrBuilder>
+        im.turms.common.model.bo.group.GroupJoinQuestion, im.turms.common.model.bo.group.GroupJoinQuestion.Builder, im.turms.common.model.bo.group.GroupJoinQuestionOrBuilder> 
         getGroupJoinQuestionsFieldBuilder() {
       if (groupJoinQuestionsBuilder_ == null) {
         groupJoinQuestionsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<

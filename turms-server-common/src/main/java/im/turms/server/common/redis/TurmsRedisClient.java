@@ -50,6 +50,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.AbstractMap;
+import java.util.Collection;
 import java.util.Map;
 
 import static io.lettuce.core.protocol.CommandType.GEORADIUSBYMEMBER;
@@ -117,6 +118,14 @@ public class TurmsRedisClient {
 
     public void destroy() {
         nativeClient.shutdown();
+    }
+
+    public Mono<Long> del(Collection<ByteBuf> keys) {
+        return commands.del(keys);
+    }
+
+    public Mono<Long> incr(ByteBuf key) {
+        return commands.incr(key);
     }
 
     // Hashes

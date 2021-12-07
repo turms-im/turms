@@ -129,7 +129,7 @@ private static final long serialVersionUID = 0L;
         java.lang.Long, java.lang.String> defaultEntry =
             com.google.protobuf.MapEntry
             .<java.lang.Long, java.lang.String>newDefaultInstance(
-                im.turms.common.model.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOuterClass.internal_static_im_turms_proto_CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry_descriptor,
+                im.turms.common.model.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOuterClass.internal_static_im_turms_proto_CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry_descriptor, 
                 com.google.protobuf.WireFormat.FieldType.INT64,
                 0L,
                 com.google.protobuf.WireFormat.FieldType.STRING,
@@ -156,7 +156,7 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean containsQuestionIdAndAnswer(
       long key) {
-
+    
     return internalGetQuestionIdAndAnswer().getMap().containsKey(key);
   }
   /**
@@ -183,7 +183,7 @@ private static final long serialVersionUID = 0L;
   public java.lang.String getQuestionIdAndAnswerOrDefault(
       long key,
       java.lang.String defaultValue) {
-
+    
     java.util.Map<java.lang.Long, java.lang.String> map =
         internalGetQuestionIdAndAnswer().getMap();
     return map.containsKey(key) ? map.get(key) : defaultValue;
@@ -195,7 +195,7 @@ private static final long serialVersionUID = 0L;
 
   public java.lang.String getQuestionIdAndAnswerOrThrow(
       long key) {
-
+    
     java.util.Map<java.lang.Long, java.lang.String> map =
         internalGetQuestionIdAndAnswer().getMap();
     if (!map.containsKey(key)) {
@@ -573,7 +573,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public boolean containsQuestionIdAndAnswer(
         long key) {
-
+      
       return internalGetQuestionIdAndAnswer().getMap().containsKey(key);
     }
     /**
@@ -600,7 +600,7 @@ private static final long serialVersionUID = 0L;
     public java.lang.String getQuestionIdAndAnswerOrDefault(
         long key,
         java.lang.String defaultValue) {
-
+      
       java.util.Map<java.lang.Long, java.lang.String> map =
           internalGetQuestionIdAndAnswer().getMap();
       return map.containsKey(key) ? map.get(key) : defaultValue;
@@ -612,7 +612,7 @@ private static final long serialVersionUID = 0L;
 
     public java.lang.String getQuestionIdAndAnswerOrThrow(
         long key) {
-
+      
       java.util.Map<java.lang.Long, java.lang.String> map =
           internalGetQuestionIdAndAnswer().getMap();
       if (!map.containsKey(key)) {
@@ -632,7 +632,7 @@ private static final long serialVersionUID = 0L;
 
     public Builder removeQuestionIdAndAnswer(
         long key) {
-
+      
       internalGetMutableQuestionIdAndAnswer().getMutableMap()
           .remove(key);
       return this;
@@ -651,8 +651,11 @@ private static final long serialVersionUID = 0L;
     public Builder putQuestionIdAndAnswer(
         long key,
         java.lang.String value) {
+      
+      if (value == null) {
+  throw new NullPointerException("map value");
+}
 
-      if (value == null) { throw new java.lang.NullPointerException(); }
       internalGetMutableQuestionIdAndAnswer().getMutableMap()
           .put(key, value);
       return this;

@@ -119,21 +119,21 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     if !self.name.isEmpty {
       try visitor.visitSingularStringField(value: self.name, fieldNumber: 1)
     }
-    if let v = self._intro {
+    try { if let v = self._intro {
       try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    }
-    if let v = self._announcement {
+    } }()
+    try { if let v = self._announcement {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
-    if let v = self._minimumScore {
+    } }()
+    try { if let v = self._minimumScore {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
-    }
-    if let v = self._groupTypeID {
+    } }()
+    try { if let v = self._groupTypeID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
-    }
-    if let v = self._muteEndDate {
+    } }()
+    try { if let v = self._muteEndDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

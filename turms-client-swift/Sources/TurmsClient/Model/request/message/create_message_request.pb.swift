@@ -142,30 +142,30 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._messageID {
+    try { if let v = self._messageID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    }
-    if let v = self._isSystemMessage {
+    } }()
+    try { if let v = self._isSystemMessage {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 2)
-    }
-    if let v = self._groupID {
+    } }()
+    try { if let v = self._groupID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
-    }
-    if let v = self._recipientID {
+    } }()
+    try { if let v = self._recipientID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
-    }
-    if let v = self._deliveryDate {
+    } }()
+    try { if let v = self._deliveryDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
-    }
-    if let v = self._text {
+    } }()
+    try { if let v = self._text {
       try visitor.visitSingularStringField(value: v, fieldNumber: 6)
-    }
+    } }()
     if !self.records.isEmpty {
       try visitor.visitRepeatedBytesField(value: self.records, fieldNumber: 7)
     }
-    if let v = self._burnAfter {
+    try { if let v = self._burnAfter {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 8)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

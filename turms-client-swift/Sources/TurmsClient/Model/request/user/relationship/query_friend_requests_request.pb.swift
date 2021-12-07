@@ -71,9 +71,9 @@ extension QueryFriendRequestsRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
     if self.areSentByMe != false {
       try visitor.visitSingularBoolField(value: self.areSentByMe, fieldNumber: 1)
     }
-    if let v = self._lastUpdatedDate {
+    try { if let v = self._lastUpdatedDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

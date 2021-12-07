@@ -94,15 +94,15 @@ extension CreateGroupMemberRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
     if self.userID != 0 {
       try visitor.visitSingularInt64Field(value: self.userID, fieldNumber: 2)
     }
-    if let v = self._name {
+    try { if let v = self._name {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
+    } }()
     if self.role != .owner {
       try visitor.visitSingularEnumField(value: self.role, fieldNumber: 4)
     }
-    if let v = self._muteEndDate {
+    try { if let v = self._muteEndDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

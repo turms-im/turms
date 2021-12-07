@@ -87,15 +87,15 @@ extension QueryGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
     if self.groupID != 0 {
       try visitor.visitSingularInt64Field(value: self.groupID, fieldNumber: 1)
     }
-    if let v = self._lastUpdatedDate {
+    try { if let v = self._lastUpdatedDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.memberIds.isEmpty {
       try visitor.visitPackedInt64Field(value: self.memberIds, fieldNumber: 3)
     }
-    if let v = self._withStatus {
+    try { if let v = self._withStatus {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 4)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

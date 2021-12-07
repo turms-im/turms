@@ -78,9 +78,9 @@ extension QueryGroupJoinQuestionsRequest: SwiftProtobuf.Message, SwiftProtobuf._
     if self.withAnswers != false {
       try visitor.visitSingularBoolField(value: self.withAnswers, fieldNumber: 2)
     }
-    if let v = self._lastUpdatedDate {
+    try { if let v = self._lastUpdatedDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

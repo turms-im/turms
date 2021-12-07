@@ -499,7 +499,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setOwnerId(long value) {
-
+      
       ownerId_ = value;
       onChanged();
       return this;
@@ -509,7 +509,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearOwnerId() {
-
+      
       ownerId_ = 0L;
       onChanged();
       return this;
@@ -530,7 +530,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setTargetId(long value) {
-
+      
       targetId_ = value;
       onChanged();
       return this;
@@ -540,7 +540,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearTargetId() {
-
+      
       targetId_ = 0L;
       onChanged();
       return this;
@@ -561,7 +561,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setReadDate(long value) {
-
+      
       readDate_ = value;
       onChanged();
       return this;
@@ -571,7 +571,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearReadDate() {
-
+      
       readDate_ = 0L;
       onChanged();
       return this;

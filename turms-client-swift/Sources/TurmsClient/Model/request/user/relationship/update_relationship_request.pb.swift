@@ -95,15 +95,15 @@ extension UpdateRelationshipRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if self.userID != 0 {
       try visitor.visitSingularInt64Field(value: self.userID, fieldNumber: 1)
     }
-    if let v = self._blocked {
+    try { if let v = self._blocked {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 2)
-    }
-    if let v = self._newGroupIndex {
+    } }()
+    try { if let v = self._newGroupIndex {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 3)
-    }
-    if let v = self._deleteGroupIndex {
+    } }()
+    try { if let v = self._deleteGroupIndex {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

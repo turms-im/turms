@@ -130,7 +130,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.group.GroupMemberOrBuilder>
+  public java.util.List<? extends im.turms.common.model.bo.group.GroupMemberOrBuilder> 
       getGroupMembersOrBuilderList() {
     return groupMembers_;
   }
@@ -505,7 +505,7 @@ private static final long serialVersionUID = 0L;
             groupMembersBuilder_ = null;
             groupMembers_ = other.groupMembers_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            groupMembersBuilder_ =
+            groupMembersBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getGroupMembersFieldBuilder() : null;
           } else {
@@ -741,7 +741,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.group.GroupMemberOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.group.GroupMemberOrBuilder> 
          getGroupMembersOrBuilderList() {
       if (groupMembersBuilder_ != null) {
         return groupMembersBuilder_.getMessageOrBuilderList();
@@ -767,12 +767,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
-    public java.util.List<im.turms.common.model.bo.group.GroupMember.Builder>
+    public java.util.List<im.turms.common.model.bo.group.GroupMember.Builder> 
          getGroupMembersBuilderList() {
       return getGroupMembersFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.group.GroupMember, im.turms.common.model.bo.group.GroupMember.Builder, im.turms.common.model.bo.group.GroupMemberOrBuilder>
+        im.turms.common.model.bo.group.GroupMember, im.turms.common.model.bo.group.GroupMember.Builder, im.turms.common.model.bo.group.GroupMemberOrBuilder> 
         getGroupMembersFieldBuilder() {
       if (groupMembersBuilder_ == null) {
         groupMembersBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<

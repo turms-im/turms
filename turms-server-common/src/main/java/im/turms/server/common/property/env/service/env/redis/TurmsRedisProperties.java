@@ -17,16 +17,29 @@
 
 package im.turms.server.common.property.env.service.env.redis;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import im.turms.server.common.property.env.common.CommonRedisProperties;
+import im.turms.server.common.redis.RedisProperties;
+import im.turms.server.common.redis.SimpleRedisProperties;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.data.annotation.Transient;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class TurmsRedisProperties extends CommonRedisProperties {
+
+    @JsonIgnore
+    @NestedConfigurationProperty
+    @Transient
+    private RedisProperties sequenceId = new RedisProperties();
+
 }

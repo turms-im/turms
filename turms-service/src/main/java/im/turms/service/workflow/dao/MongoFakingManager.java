@@ -283,6 +283,7 @@ public final class MongoFakingManager {
                     targetId,
                     null,
                     30,
+                    null,
                     null);
             id = nextId();
             Message groupMessage = new Message(
@@ -298,6 +299,7 @@ public final class MongoFakingManager {
                     1L,
                     null,
                     30,
+                    null,
                     null);
             messageRelatedObjs.add(privateMessage);
             messageRelatedObjs.add(groupMessage);

@@ -126,21 +126,21 @@ extension QueryNearbyUsersRequest: SwiftProtobuf.Message, SwiftProtobuf._Message
     if self.longitude != 0 {
       try visitor.visitSingularFloatField(value: self.longitude, fieldNumber: 2)
     }
-    if let v = self._distance {
+    try { if let v = self._distance {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 3)
-    }
-    if let v = self._maxNumber {
+    } }()
+    try { if let v = self._maxNumber {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
-    }
-    if let v = self._withCoordinates {
+    } }()
+    try { if let v = self._withCoordinates {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 5)
-    }
-    if let v = self._withDistance {
+    } }()
+    try { if let v = self._withDistance {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 6)
-    }
-    if let v = self._withInfo {
+    } }()
+    try { if let v = self._withInfo {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 7)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

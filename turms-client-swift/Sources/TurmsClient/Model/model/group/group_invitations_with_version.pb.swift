@@ -71,9 +71,9 @@ extension GroupInvitationsWithVersion: SwiftProtobuf.Message, SwiftProtobuf._Mes
     if !self.groupInvitations.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.groupInvitations, fieldNumber: 1)
     }
-    if let v = self._lastUpdatedDate {
+    try { if let v = self._lastUpdatedDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

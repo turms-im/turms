@@ -88,15 +88,15 @@ extension QueryGroupInvitationsRequest: SwiftProtobuf.Message, SwiftProtobuf._Me
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._groupID {
+    try { if let v = self._groupID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    }
-    if let v = self._areSentByMe {
+    } }()
+    try { if let v = self._areSentByMe {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 2)
-    }
-    if let v = self._lastUpdatedDate {
+    } }()
+    try { if let v = self._lastUpdatedDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

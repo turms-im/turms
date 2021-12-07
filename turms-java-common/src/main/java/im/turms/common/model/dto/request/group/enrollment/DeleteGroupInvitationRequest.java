@@ -431,7 +431,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setInvitationId(long value) {
-
+      
       invitationId_ = value;
       onChanged();
       return this;
@@ -441,7 +441,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearInvitationId() {
-
+      
       invitationId_ = 0L;
       onChanged();
       return this;

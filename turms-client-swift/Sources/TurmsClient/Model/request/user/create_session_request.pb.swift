@@ -118,21 +118,21 @@ extension CreateSessionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     if self.userID != 0 {
       try visitor.visitSingularInt64Field(value: self.userID, fieldNumber: 2)
     }
-    if let v = self._password {
+    try { if let v = self._password {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
-    if let v = self._userStatus {
+    } }()
+    try { if let v = self._userStatus {
       try visitor.visitSingularEnumField(value: v, fieldNumber: 4)
-    }
+    } }()
     if self.deviceType != .desktop {
       try visitor.visitSingularEnumField(value: self.deviceType, fieldNumber: 5)
     }
-    if let v = self._deviceDetails {
+    try { if let v = self._deviceDetails {
       try visitor.visitSingularStringField(value: v, fieldNumber: 6)
-    }
-    if let v = self._location {
+    } }()
+    try { if let v = self._location {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

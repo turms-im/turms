@@ -157,7 +157,7 @@ private static final long serialVersionUID = 0L;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
-      com.google.protobuf.ByteString bs =
+      com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
       keyStr_ = s;
@@ -173,7 +173,7 @@ private static final long serialVersionUID = 0L;
       getKeyStrBytes() {
     java.lang.Object ref = keyStr_;
     if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b =
+      com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
       keyStr_ = b;
@@ -573,7 +573,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setContentTypeValue(int value) {
-
+      
       contentType_ = value;
       onChanged();
       return this;
@@ -597,7 +597,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
         throw new NullPointerException();
       }
-
+      
       contentType_ = value.getNumber();
       onChanged();
       return this;
@@ -607,7 +607,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearContentType() {
-
+      
       contentType_ = 0;
       onChanged();
       return this;
@@ -645,7 +645,7 @@ private static final long serialVersionUID = 0L;
         getKeyStrBytes() {
       java.lang.Object ref = keyStr_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         keyStr_ = b;

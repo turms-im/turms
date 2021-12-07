@@ -74,6 +74,7 @@ public final class ProtoModelUtil {
         Long senderId = message.getSenderId();
         Long targetId = message.getTargetId();
         Long groupId = message.groupId();
+        Integer sequenceId = message.getSequenceId();
         if (messageId != null) {
             builder.setId(messageId);
         }
@@ -102,6 +103,9 @@ public final class ProtoModelUtil {
             for (byte[] record : records) {
                 builder.addRecords(ByteString.copyFrom(record));
             }
+        }
+        if (sequenceId != null) {
+            builder.setSequenceId(sequenceId);
         }
         return builder;
     }

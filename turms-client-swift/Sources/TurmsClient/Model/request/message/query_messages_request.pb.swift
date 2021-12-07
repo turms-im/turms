@@ -135,24 +135,24 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     if !self.ids.isEmpty {
       try visitor.visitPackedInt64Field(value: self.ids, fieldNumber: 1)
     }
-    if let v = self._size {
+    try { if let v = self._size {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
-    }
-    if let v = self._areGroupMessages {
+    } }()
+    try { if let v = self._areGroupMessages {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 3)
-    }
-    if let v = self._areSystemMessages {
+    } }()
+    try { if let v = self._areSystemMessages {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 4)
-    }
-    if let v = self._fromID {
+    } }()
+    try { if let v = self._fromID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
-    }
-    if let v = self._deliveryDateAfter {
+    } }()
+    try { if let v = self._deliveryDateAfter {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
-    }
-    if let v = self._deliveryDateBefore {
+    } }()
+    try { if let v = self._deliveryDateBefore {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 7)
-    }
+    } }()
     if self.withTotal != false {
       try visitor.visitSingularBoolField(value: self.withTotal, fieldNumber: 8)
     }

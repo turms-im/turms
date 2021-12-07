@@ -27,7 +27,7 @@ public interface MessagesWithTotalListOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
    */
-  java.util.List<im.turms.common.model.bo.message.MessagesWithTotal>
+  java.util.List<im.turms.common.model.bo.message.MessagesWithTotal> 
       getMessagesWithTotalListList();
   /**
    * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
@@ -40,7 +40,7 @@ public interface MessagesWithTotalListOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
    */
-  java.util.List<? extends im.turms.common.model.bo.message.MessagesWithTotalOrBuilder>
+  java.util.List<? extends im.turms.common.model.bo.message.MessagesWithTotalOrBuilder> 
       getMessagesWithTotalListOrBuilderList();
   /**
    * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>

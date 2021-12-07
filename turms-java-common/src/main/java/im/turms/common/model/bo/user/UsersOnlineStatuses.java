@@ -124,7 +124,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.user.UserStatusDetailOrBuilder>
+  public java.util.List<? extends im.turms.common.model.bo.user.UserStatusDetailOrBuilder> 
       getUserStatusesOrBuilderList() {
     return userStatuses_;
   }
@@ -455,7 +455,7 @@ private static final long serialVersionUID = 0L;
             userStatusesBuilder_ = null;
             userStatuses_ = other.userStatuses_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            userStatusesBuilder_ =
+            userStatusesBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getUserStatusesFieldBuilder() : null;
           } else {
@@ -688,7 +688,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.user.UserStatusDetailOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.user.UserStatusDetailOrBuilder> 
          getUserStatusesOrBuilderList() {
       if (userStatusesBuilder_ != null) {
         return userStatusesBuilder_.getMessageOrBuilderList();
@@ -714,12 +714,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
-    public java.util.List<im.turms.common.model.bo.user.UserStatusDetail.Builder>
+    public java.util.List<im.turms.common.model.bo.user.UserStatusDetail.Builder> 
          getUserStatusesBuilderList() {
       return getUserStatusesFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.user.UserStatusDetail, im.turms.common.model.bo.user.UserStatusDetail.Builder, im.turms.common.model.bo.user.UserStatusDetailOrBuilder>
+        im.turms.common.model.bo.user.UserStatusDetail, im.turms.common.model.bo.user.UserStatusDetail.Builder, im.turms.common.model.bo.user.UserStatusDetailOrBuilder> 
         getUserStatusesFieldBuilder() {
       if (userStatusesBuilder_ == null) {
         userStatusesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<

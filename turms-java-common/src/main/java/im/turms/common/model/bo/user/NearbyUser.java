@@ -721,7 +721,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setUserId(long value) {
-
+      
       userId_ = value;
       onChanged();
       return this;
@@ -735,7 +735,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearUserId() {
-
+      
       userId_ = 0L;
       onChanged();
       return this;
@@ -945,7 +945,7 @@ private static final long serialVersionUID = 0L;
      * <code>optional .im.turms.proto.UserInfo info = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.bo.user.UserInfo, im.turms.common.model.bo.user.UserInfo.Builder, im.turms.common.model.bo.user.UserInfoOrBuilder>
+        im.turms.common.model.bo.user.UserInfo, im.turms.common.model.bo.user.UserInfo.Builder, im.turms.common.model.bo.user.UserInfoOrBuilder> 
         getInfoFieldBuilder() {
       if (infoBuilder_ == null) {
         infoBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1120,7 +1120,7 @@ private static final long serialVersionUID = 0L;
      * <code>optional .im.turms.proto.UserLocation location = 5;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.bo.user.UserLocation, im.turms.common.model.bo.user.UserLocation.Builder, im.turms.common.model.bo.user.UserLocationOrBuilder>
+        im.turms.common.model.bo.user.UserLocation, im.turms.common.model.bo.user.UserLocation.Builder, im.turms.common.model.bo.user.UserLocationOrBuilder> 
         getLocationFieldBuilder() {
       if (locationBuilder_ == null) {
         locationBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

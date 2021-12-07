@@ -99,6 +99,15 @@ public struct Message {
 
   public var records: [Data] = []
 
+  public var sequenceID: Int32 {
+    get {return _sequenceID ?? 0}
+    set {_sequenceID = newValue}
+  }
+  /// Returns true if `sequenceID` has been explicitly set.
+  public var hasSequenceID: Bool {return self._sequenceID != nil}
+  /// Clears the value of `sequenceID`. Subsequent reads from it will return its default value.
+  public mutating func clearSequenceID() {self._sequenceID = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -111,6 +120,7 @@ public struct Message {
   fileprivate var _groupID: Int64? = nil
   fileprivate var _isSystemMessage: Bool? = nil
   fileprivate var _recipientID: Int64? = nil
+  fileprivate var _sequenceID: Int32? = nil
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -129,6 +139,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     7: .standard(proto: "is_system_message"),
     8: .standard(proto: "recipient_id"),
     9: .same(proto: "records"),
+    10: .standard(proto: "sequence_id"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -146,39 +157,43 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
       case 7: try { try decoder.decodeSingularBoolField(value: &self._isSystemMessage) }()
       case 8: try { try decoder.decodeSingularInt64Field(value: &self._recipientID) }()
       case 9: try { try decoder.decodeRepeatedBytesField(value: &self.records) }()
+      case 10: try { try decoder.decodeSingularInt32Field(value: &self._sequenceID) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._id {
+    try { if let v = self._id {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    }
-    if let v = self._deliveryDate {
+    } }()
+    try { if let v = self._deliveryDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    }
-    if let v = self._modificationDate {
+    } }()
+    try { if let v = self._modificationDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
-    }
-    if let v = self._text {
+    } }()
+    try { if let v = self._text {
       try visitor.visitSingularStringField(value: v, fieldNumber: 4)
-    }
-    if let v = self._senderID {
+    } }()
+    try { if let v = self._senderID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
-    }
-    if let v = self._groupID {
+    } }()
+    try { if let v = self._groupID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
-    }
-    if let v = self._isSystemMessage {
+    } }()
+    try { if let v = self._isSystemMessage {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 7)
-    }
-    if let v = self._recipientID {
+    } }()
+    try { if let v = self._recipientID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 8)
-    }
+    } }()
     if !self.records.isEmpty {
       try visitor.visitRepeatedBytesField(value: self.records, fieldNumber: 9)
     }
+    try { if let v = self._sequenceID {
+      try visitor.visitSingularInt32Field(value: v, fieldNumber: 10)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -192,6 +207,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     if lhs._isSystemMessage != rhs._isSystemMessage {return false}
     if lhs._recipientID != rhs._recipientID {return false}
     if lhs.records != rhs.records {return false}
+    if lhs._sequenceID != rhs._sequenceID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

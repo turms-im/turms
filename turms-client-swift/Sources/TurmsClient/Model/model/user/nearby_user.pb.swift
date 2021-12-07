@@ -110,18 +110,18 @@ extension NearbyUser: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
     if self.userID != 0 {
       try visitor.visitSingularInt64Field(value: self.userID, fieldNumber: 1)
     }
-    if let v = self._deviceType {
+    try { if let v = self._deviceType {
       try visitor.visitSingularEnumField(value: v, fieldNumber: 2)
-    }
-    if let v = self._info {
+    } }()
+    try { if let v = self._info {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
-    if let v = self._distance {
+    } }()
+    try { if let v = self._distance {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
-    }
-    if let v = self._location {
+    } }()
+    try { if let v = self._location {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

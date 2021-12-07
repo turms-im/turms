@@ -33,7 +33,7 @@ public final class MessageOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_Message_descriptor;
-  static final
+  static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_Message_fieldAccessorTable;
 
@@ -46,17 +46,18 @@ public final class MessageOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\033model/message/message.proto\022\016im.turms." +
-      "proto\"\336\002\n\007Message\022\017\n\002id\030\001 \001(\003H\000\210\001\001\022\032\n\rde" +
+      "proto\"\210\003\n\007Message\022\017\n\002id\030\001 \001(\003H\000\210\001\001\022\032\n\rde" +
       "livery_date\030\002 \001(\003H\001\210\001\001\022\036\n\021modification_d" +
       "ate\030\003 \001(\003H\002\210\001\001\022\021\n\004text\030\004 \001(\tH\003\210\001\001\022\026\n\tsen" +
       "der_id\030\005 \001(\003H\004\210\001\001\022\025\n\010group_id\030\006 \001(\003H\005\210\001\001" +
       "\022\036\n\021is_system_message\030\007 \001(\010H\006\210\001\001\022\031\n\014reci" +
-      "pient_id\030\010 \001(\003H\007\210\001\001\022\017\n\007records\030\t \003(\014B\005\n\003" +
-      "_idB\020\n\016_delivery_dateB\024\n\022_modification_d" +
-      "ateB\007\n\005_textB\014\n\n_sender_idB\013\n\t_group_idB" +
-      "\024\n\022_is_system_messageB\017\n\r_recipient_idB\'" +
-      "\n im.turms.common.model.bo.messageP\001\272\002\000b" +
-      "\006proto3"
+      "pient_id\030\010 \001(\003H\007\210\001\001\022\017\n\007records\030\t \003(\014\022\030\n\013" +
+      "sequence_id\030\n \001(\005H\010\210\001\001B\005\n\003_idB\020\n\016_delive" +
+      "ry_dateB\024\n\022_modification_dateB\007\n\005_textB\014" +
+      "\n\n_sender_idB\013\n\t_group_idB\024\n\022_is_system_" +
+      "messageB\017\n\r_recipient_idB\016\n\014_sequence_id" +
+      "B\'\n im.turms.common.model.bo.messageP\001\272\002" +
+      "\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -67,7 +68,7 @@ public final class MessageOuterClass {
     internal_static_im_turms_proto_Message_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_Message_descriptor,
-        new java.lang.String[] { "Id", "DeliveryDate", "ModificationDate", "Text", "SenderId", "GroupId", "IsSystemMessage", "RecipientId", "Records", "Id", "DeliveryDate", "ModificationDate", "Text", "SenderId", "GroupId", "IsSystemMessage", "RecipientId", });
+        new java.lang.String[] { "Id", "DeliveryDate", "ModificationDate", "Text", "SenderId", "GroupId", "IsSystemMessage", "RecipientId", "Records", "SequenceId", "Id", "DeliveryDate", "ModificationDate", "Text", "SenderId", "GroupId", "IsSystemMessage", "RecipientId", "SequenceId", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

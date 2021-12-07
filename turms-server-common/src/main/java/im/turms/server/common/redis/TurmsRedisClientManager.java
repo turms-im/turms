@@ -34,8 +34,12 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.IdentityHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.BiFunction;
 
 /**
  * @author James Chen
@@ -64,6 +68,36 @@ public class TurmsRedisClientManager {
                 log.error("Failed to shutdown a connection", e);
             }
         }
+    }
+
+    public <T> Mono<Void> execute(Set<Long> shardKeys, BiFunction<TurmsRedisClient, Collection<Long>, Mono<T>> execute) {
+        int size = shardKeys.size();
+        if (size == 0) {
+            return Mono.empty();
+        } else if (size == 1) {
+            return execute.apply(getClient(shardKeys.iterator().next()), shardKeys)
+                    .then();
+        }
+        Map<TurmsRedisClient, Collection<Long>> clients = new IdentityHashMap<>();
+        for (Long shardKey : shardKeys) {
+            TurmsRedisClient client = getClient(shardKey);
+            Collection<Long> collection = clients.computeIfAbsent(client, k -> new LinkedList<>());
+            collection.add(shardKey);
+        }
+        Set<Map.Entry<TurmsRedisClient, Collection<Long>>> entries = clients.entrySet();
+        List<Mono<Void>> results = new ArrayList<>(entries.size());
+        for (Map.Entry<TurmsRedisClient, Collection<Long>> entry : entries) {
+            results.add(execute.apply(entry.getKey(), entry.getValue()).then());
+        }
+        return Mono.when(results);
+    }
+
+    public Mono<Long> del(Long shardKey, Collection<ByteBuf> keys) {
+        return getClient(shardKey).del(keys);
+    }
+
+    public Mono<Long> incr(Long shardKey, ByteBuf key) {
+        return getClient(shardKey).incr(key);
     }
 
     // Hashes

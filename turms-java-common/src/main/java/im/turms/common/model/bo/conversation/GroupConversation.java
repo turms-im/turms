@@ -145,7 +145,7 @@ private static final long serialVersionUID = 0L;
         java.lang.Long, java.lang.Long> defaultEntry =
             com.google.protobuf.MapEntry
             .<java.lang.Long, java.lang.Long>newDefaultInstance(
-                im.turms.common.model.bo.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_MemberIdAndReadDateEntry_descriptor,
+                im.turms.common.model.bo.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_MemberIdAndReadDateEntry_descriptor, 
                 com.google.protobuf.WireFormat.FieldType.INT64,
                 0L,
                 com.google.protobuf.WireFormat.FieldType.INT64,
@@ -172,7 +172,7 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean containsMemberIdAndReadDate(
       long key) {
-
+    
     return internalGetMemberIdAndReadDate().getMap().containsKey(key);
   }
   /**
@@ -199,7 +199,7 @@ private static final long serialVersionUID = 0L;
   public long getMemberIdAndReadDateOrDefault(
       long key,
       long defaultValue) {
-
+    
     java.util.Map<java.lang.Long, java.lang.Long> map =
         internalGetMemberIdAndReadDate().getMap();
     return map.containsKey(key) ? map.get(key) : defaultValue;
@@ -211,7 +211,7 @@ private static final long serialVersionUID = 0L;
 
   public long getMemberIdAndReadDateOrThrow(
       long key) {
-
+    
     java.util.Map<java.lang.Long, java.lang.Long> map =
         internalGetMemberIdAndReadDate().getMap();
     if (!map.containsKey(key)) {
@@ -589,7 +589,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setGroupId(long value) {
-
+      
       groupId_ = value;
       onChanged();
       return this;
@@ -599,7 +599,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearGroupId() {
-
+      
       groupId_ = 0L;
       onChanged();
       return this;
@@ -638,7 +638,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public boolean containsMemberIdAndReadDate(
         long key) {
-
+      
       return internalGetMemberIdAndReadDate().getMap().containsKey(key);
     }
     /**
@@ -665,7 +665,7 @@ private static final long serialVersionUID = 0L;
     public long getMemberIdAndReadDateOrDefault(
         long key,
         long defaultValue) {
-
+      
       java.util.Map<java.lang.Long, java.lang.Long> map =
           internalGetMemberIdAndReadDate().getMap();
       return map.containsKey(key) ? map.get(key) : defaultValue;
@@ -677,7 +677,7 @@ private static final long serialVersionUID = 0L;
 
     public long getMemberIdAndReadDateOrThrow(
         long key) {
-
+      
       java.util.Map<java.lang.Long, java.lang.Long> map =
           internalGetMemberIdAndReadDate().getMap();
       if (!map.containsKey(key)) {
@@ -697,7 +697,7 @@ private static final long serialVersionUID = 0L;
 
     public Builder removeMemberIdAndReadDate(
         long key) {
-
+      
       internalGetMutableMemberIdAndReadDate().getMutableMap()
           .remove(key);
       return this;
@@ -716,8 +716,8 @@ private static final long serialVersionUID = 0L;
     public Builder putMemberIdAndReadDate(
         long key,
         long value) {
-
-
+      
+      
       internalGetMutableMemberIdAndReadDate().getMutableMap()
           .put(key, value);
       return this;

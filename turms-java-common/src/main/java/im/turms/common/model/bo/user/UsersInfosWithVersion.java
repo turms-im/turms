@@ -130,7 +130,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.user.UserInfoOrBuilder>
+  public java.util.List<? extends im.turms.common.model.bo.user.UserInfoOrBuilder> 
       getUserInfosOrBuilderList() {
     return userInfos_;
   }
@@ -505,7 +505,7 @@ private static final long serialVersionUID = 0L;
             userInfosBuilder_ = null;
             userInfos_ = other.userInfos_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            userInfosBuilder_ =
+            userInfosBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getUserInfosFieldBuilder() : null;
           } else {
@@ -741,7 +741,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.user.UserInfoOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.user.UserInfoOrBuilder> 
          getUserInfosOrBuilderList() {
       if (userInfosBuilder_ != null) {
         return userInfosBuilder_.getMessageOrBuilderList();
@@ -767,12 +767,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
      */
-    public java.util.List<im.turms.common.model.bo.user.UserInfo.Builder>
+    public java.util.List<im.turms.common.model.bo.user.UserInfo.Builder> 
          getUserInfosBuilderList() {
       return getUserInfosFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.user.UserInfo, im.turms.common.model.bo.user.UserInfo.Builder, im.turms.common.model.bo.user.UserInfoOrBuilder>
+        im.turms.common.model.bo.user.UserInfo, im.turms.common.model.bo.user.UserInfo.Builder, im.turms.common.model.bo.user.UserInfoOrBuilder> 
         getUserInfosFieldBuilder() {
       if (userInfosBuilder_ == null) {
         userInfosBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<

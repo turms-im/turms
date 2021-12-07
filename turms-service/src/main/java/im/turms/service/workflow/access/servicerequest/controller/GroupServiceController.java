@@ -374,10 +374,10 @@ public class GroupServiceController {
                         if (node.getSharedProperties().getService().getNotification().isNotifyOwnerAndManagersAfterReceivingJoinRequest()) {
                             return groupMemberService.queryGroupManagersAndOwnerId(request.getGroupId())
                                     .collect(Collectors.toSet())
-                                    .map(recipientsIds -> recipientsIds.isEmpty()
+                                    .map(recipientIds -> recipientIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
                                             : RequestHandlerResultFactory
-                                            .get(joinRequest.getId(), recipientsIds, false, clientRequest.turmsRequest()));
+                                            .get(joinRequest.getId(), recipientIds, false, clientRequest.turmsRequest()));
                         } else {
                             return Mono.just(RequestHandlerResultFactory.OK);
                         }

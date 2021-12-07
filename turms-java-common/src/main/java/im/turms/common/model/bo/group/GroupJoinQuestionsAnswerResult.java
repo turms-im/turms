@@ -565,7 +565,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setScore(int value) {
-
+      
       score_ = value;
       onChanged();
       return this;
@@ -575,7 +575,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearScore() {
-
+      
       score_ = 0;
       onChanged();
       return this;
@@ -675,7 +675,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setJoined(boolean value) {
-
+      
       joined_ = value;
       onChanged();
       return this;
@@ -685,7 +685,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearJoined() {
-
+      
       joined_ = false;
       onChanged();
       return this;

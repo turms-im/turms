@@ -28,6 +28,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import javax.validation.constraints.Min;
 
@@ -39,6 +40,10 @@ import javax.validation.constraints.Min;
 @Data
 @NoArgsConstructor
 public class MessageProperties {
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private SequenceIdProperties sequenceId = new SequenceIdProperties();
 
     @Description("The time type for the delivery time of message")
     @GlobalProperty

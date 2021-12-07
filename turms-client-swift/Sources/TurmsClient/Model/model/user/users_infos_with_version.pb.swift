@@ -71,9 +71,9 @@ extension UsersInfosWithVersion: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     if !self.userInfos.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.userInfos, fieldNumber: 1)
     }
-    if let v = self._lastUpdatedDate {
+    try { if let v = self._lastUpdatedDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

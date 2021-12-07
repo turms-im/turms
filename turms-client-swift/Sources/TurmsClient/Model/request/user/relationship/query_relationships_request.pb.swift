@@ -95,15 +95,15 @@ extension QueryRelationshipsRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if !self.userIds.isEmpty {
       try visitor.visitPackedInt64Field(value: self.userIds, fieldNumber: 1)
     }
-    if let v = self._blocked {
+    try { if let v = self._blocked {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 2)
-    }
-    if let v = self._groupIndex {
+    } }()
+    try { if let v = self._groupIndex {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 3)
-    }
-    if let v = self._lastUpdatedDate {
+    } }()
+    try { if let v = self._lastUpdatedDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

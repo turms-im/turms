@@ -117,6 +117,11 @@ private static final long serialVersionUID = 0L;
             records_.add(input.readBytes());
             break;
           }
+          case 80: {
+            bitField0_ |= 0x00000100;
+            sequenceId_ = input.readInt32();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -230,7 +235,7 @@ private static final long serialVersionUID = 0L;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
-      com.google.protobuf.ByteString bs =
+      com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
       text_ = s;
@@ -246,7 +251,7 @@ private static final long serialVersionUID = 0L;
       getTextBytes() {
     java.lang.Object ref = text_;
     if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b =
+      com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
       text_ = b;
@@ -359,6 +364,25 @@ private static final long serialVersionUID = 0L;
     return records_.get(index);
   }
 
+  public static final int SEQUENCE_ID_FIELD_NUMBER = 10;
+  private int sequenceId_;
+  /**
+   * <code>optional int32 sequence_id = 10;</code>
+   * @return Whether the sequenceId field is set.
+   */
+  @java.lang.Override
+  public boolean hasSequenceId() {
+    return ((bitField0_ & 0x00000100) != 0);
+  }
+  /**
+   * <code>optional int32 sequence_id = 10;</code>
+   * @return The sequenceId.
+   */
+  @java.lang.Override
+  public int getSequenceId() {
+    return sequenceId_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -399,6 +423,9 @@ private static final long serialVersionUID = 0L;
     }
     for (int i = 0; i < records_.size(); i++) {
       output.writeBytes(9, records_.get(i));
+    }
+    if (((bitField0_ & 0x00000100) != 0)) {
+      output.writeInt32(10, sequenceId_);
     }
     unknownFields.writeTo(output);
   }
@@ -448,6 +475,10 @@ private static final long serialVersionUID = 0L;
       }
       size += dataSize;
       size += 1 * getRecordsList().size();
+    }
+    if (((bitField0_ & 0x00000100) != 0)) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(10, sequenceId_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -506,6 +537,11 @@ private static final long serialVersionUID = 0L;
     }
     if (!getRecordsList()
         .equals(other.getRecordsList())) return false;
+    if (hasSequenceId() != other.hasSequenceId()) return false;
+    if (hasSequenceId()) {
+      if (getSequenceId()
+          != other.getSequenceId()) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -559,6 +595,10 @@ private static final long serialVersionUID = 0L;
     if (getRecordsCount() > 0) {
       hash = (37 * hash) + RECORDS_FIELD_NUMBER;
       hash = (53 * hash) + getRecordsList().hashCode();
+    }
+    if (hasSequenceId()) {
+      hash = (37 * hash) + SEQUENCE_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getSequenceId();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -711,6 +751,8 @@ private static final long serialVersionUID = 0L;
       bitField0_ = (bitField0_ & ~0x00000080);
       records_ = java.util.Collections.emptyList();
       bitField0_ = (bitField0_ & ~0x00000100);
+      sequenceId_ = 0;
+      bitField0_ = (bitField0_ & ~0x00000200);
       return this;
     }
 
@@ -776,6 +818,10 @@ private static final long serialVersionUID = 0L;
         bitField0_ = (bitField0_ & ~0x00000100);
       }
       result.records_ = records_;
+      if (((from_bitField0_ & 0x00000200) != 0)) {
+        result.sequenceId_ = sequenceId_;
+        to_bitField0_ |= 0x00000100;
+      }
       result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
@@ -860,6 +906,9 @@ private static final long serialVersionUID = 0L;
           records_.addAll(other.records_);
         }
         onChanged();
+      }
+      if (other.hasSequenceId()) {
+        setSequenceId(other.getSequenceId());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1040,7 +1089,7 @@ private static final long serialVersionUID = 0L;
         getTextBytes() {
       java.lang.Object ref = text_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         text_ = b;
@@ -1328,6 +1377,45 @@ private static final long serialVersionUID = 0L;
     public Builder clearRecords() {
       records_ = java.util.Collections.emptyList();
       bitField0_ = (bitField0_ & ~0x00000100);
+      onChanged();
+      return this;
+    }
+
+    private int sequenceId_ ;
+    /**
+     * <code>optional int32 sequence_id = 10;</code>
+     * @return Whether the sequenceId field is set.
+     */
+    @java.lang.Override
+    public boolean hasSequenceId() {
+      return ((bitField0_ & 0x00000200) != 0);
+    }
+    /**
+     * <code>optional int32 sequence_id = 10;</code>
+     * @return The sequenceId.
+     */
+    @java.lang.Override
+    public int getSequenceId() {
+      return sequenceId_;
+    }
+    /**
+     * <code>optional int32 sequence_id = 10;</code>
+     * @param value The sequenceId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSequenceId(int value) {
+      bitField0_ |= 0x00000200;
+      sequenceId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional int32 sequence_id = 10;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearSequenceId() {
+      bitField0_ = (bitField0_ & ~0x00000200);
+      sequenceId_ = 0;
       onChanged();
       return this;
     }

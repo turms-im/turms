@@ -80,12 +80,12 @@ extension UpdateConversationRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._targetID {
+    try { if let v = self._targetID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    }
-    if let v = self._groupID {
+    } }()
+    try { if let v = self._groupID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    }
+    } }()
     if self.readDate != 0 {
       try visitor.visitSingularInt64Field(value: self.readDate, fieldNumber: 3)
     }

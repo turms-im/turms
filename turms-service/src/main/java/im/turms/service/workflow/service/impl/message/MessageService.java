@@ -37,8 +37,11 @@ import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
+import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.TimeType;
+import im.turms.server.common.property.env.service.business.message.SequenceIdProperties;
+import im.turms.server.common.redis.TurmsRedisClientManager;
 import im.turms.server.common.task.TrivialTaskManager;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectorUtil;
@@ -54,6 +57,8 @@ import im.turms.service.workflow.service.impl.group.GroupMemberService;
 import im.turms.service.workflow.service.impl.statistics.MetricsService;
 import im.turms.service.workflow.service.impl.user.UserService;
 import io.micrometer.core.instrument.Counter;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.tuple.Pair;
@@ -75,7 +80,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -98,7 +102,12 @@ import static im.turms.service.constant.MetricsConstant.SENT_MESSAGES_COUNTER_NA
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class MessageService {
 
+    private static final byte[] GROUP_CONVERSATION_SEQUENCE_ID_PREFIX = new byte[]{'g', 'i'};
+    private static final byte[] PRIVATE_CONVERSATION_SEQUENCE_ID_PREFIX = new byte[]{'p', 'i'};
+
     private final TurmsMongoClient mongoClient;
+    @Nullable
+    private final TurmsRedisClientManager redisClientManager;
     private final Node node;
     private final ConversationService conversationService;
     private final OutboundMessageService outboundMessageService;
@@ -106,6 +115,10 @@ public class MessageService {
     private final UserService userService;
     private final TurmsPluginManager turmsPluginManager;
     private final boolean pluginEnabled;
+
+    private final boolean useSequenceIdForGroupConversation;
+    private final boolean useSequenceIdForPrivateConversation;
+
     @Getter
     private TimeType timeType;
     private final Cache<Long, Message> sentMessageCache;
@@ -114,25 +127,34 @@ public class MessageService {
 
     @Autowired
     public MessageService(
-            @Qualifier("messageMongoClient") TurmsMongoClient mongoClient,
+            TurmsMongoClient messageMongoClient,
+            @Nullable @Autowired(required = false) @Qualifier("sequenceIdRedisClientManager") TurmsRedisClientManager sequenceIdRedisClientManager,
+
             Node node,
+
             TurmsPropertiesManager turmsPropertiesManager,
             ConversationService conversationService,
             GroupMemberService groupMemberService,
             UserService userService,
             OutboundMessageService outboundMessageService,
+            MetricsService metricsService,
+
             TurmsPluginManager turmsPluginManager,
-            TrivialTaskManager taskManager,
-            MetricsService metricsService) {
-        this.mongoClient = mongoClient;
+            TrivialTaskManager taskManager) {
+        this.mongoClient = messageMongoClient;
+        this.redisClientManager = sequenceIdRedisClientManager;
         this.node = node;
         this.conversationService = conversationService;
         this.groupMemberService = groupMemberService;
         this.userService = userService;
         this.outboundMessageService = outboundMessageService;
         this.turmsPluginManager = turmsPluginManager;
-        pluginEnabled = node.getSharedProperties().getPlugin().isEnabled();
-        timeType = node.getSharedProperties().getService().getMessage().getTimeType();
+        TurmsProperties sharedProperties = node.getSharedProperties();
+        pluginEnabled = sharedProperties.getPlugin().isEnabled();
+        SequenceIdProperties sequenceIdProperties = sharedProperties.getService().getMessage().getSequenceId();
+        useSequenceIdForGroupConversation = sequenceIdProperties.isUseSequenceIdForGroupConversation();
+        useSequenceIdForPrivateConversation = sequenceIdProperties.isUseSequenceIdForPrivateConversation();
+        timeType = sharedProperties.getService().getMessage().getTimeType();
         int relayedMessageCacheMaxSize = turmsPropertiesManager.getLocalProperties().getService().getMessage().getSentMessageCacheMaxSize();
         if (relayedMessageCacheMaxSize > 0 && turmsPropertiesManager.getLocalProperties().getService().getMessage().isMessagePersistent()) {
             this.sentMessageCache = Caffeine
@@ -342,31 +364,66 @@ public class MessageService {
         if (!node.getSharedProperties().getService().getMessage().isRecordsPersistent()) {
             records = null;
         }
-        Message message = new Message(
-                messageId,
-                isGroupMessage,
-                isSystemMessage,
-                deliveryDate,
-                null,
-                null,
-                null,
-                text,
-                senderId,
-                targetId,
-                records,
-                burnAfter,
-                referenceId);
-        Mono<Message> saveMessage = mongoClient.insert(message)
-                .thenReturn(message);
+        Mono<Long> sequenceId = null;
+        if (isGroupMessage) {
+            if (useSequenceIdForGroupConversation) {
+                sequenceId = fetchSequenceId(true, targetId);
+            }
+        } else if (useSequenceIdForPrivateConversation) {
+            sequenceId = fetchSequenceId(false, targetId);
+        }
+        Mono<Message> saveMessage;
+        if (sequenceId == null) {
+            Message message = new Message(
+                    messageId,
+                    isGroupMessage,
+                    isSystemMessage,
+                    deliveryDate,
+                    null,
+                    null,
+                    null,
+                    text,
+                    senderId,
+                    targetId,
+                    records,
+                    burnAfter,
+                    referenceId,
+                    null);
+            saveMessage = mongoClient.insert(message)
+                    .thenReturn(message);
+        } else {
+            Long finalMessageId = messageId;
+            Date finalDeliveryDate = deliveryDate;
+            List<byte[]> finalRecords = records;
+            saveMessage = sequenceId
+                    .flatMap(seqId -> {
+                        Message message = new Message(
+                                finalMessageId,
+                                isGroupMessage,
+                                isSystemMessage,
+                                finalDeliveryDate,
+                                null,
+                                null,
+                                null,
+                                text,
+                                senderId,
+                                targetId,
+                                finalRecords,
+                                burnAfter,
+                                referenceId,
+                                seqId.intValue());
+                        return mongoClient.insert(message)
+                                .thenReturn(message);
+                    });
+        }
         if (node.getSharedProperties().getService().getConversation().getReadReceipt().isUpdateReadDateAfterMessageSent()) {
             Mono<Void> upsertConversation = isGroupMessage
                     ? conversationService.upsertGroupConversationReadDate(targetId, senderId, deliveryDate)
                     : conversationService.upsertPrivateConversationReadDate(senderId, targetId, deliveryDate);
             return saveMessage
                     .doOnNext(ignored -> upsertConversation.subscribe());
-        } else {
-            return saveMessage;
         }
+        return saveMessage;
     }
 
     public Flux<Long> queryExpiredMessageIds(@NotNull Integer timeToLiveHours) {
@@ -686,7 +743,7 @@ public class MessageService {
                         : Mono.just(message.getTargetId()));
     }
 
-    // message - recipientsIds
+    // message - recipientIds
     public Mono<Pair<Message, Set<Long>>> authAndSaveMessage(
             @Nullable Long messageId,
             @NotNull Long senderId,
@@ -711,18 +768,14 @@ public class MessageService {
                     if (code != OK) {
                         return Mono.error(TurmsBusinessException.get(code, permission.reason()));
                     }
-                    Mono<Set<Long>> recipientIdsMono;
-                    if (isGroupMessage) {
-                        recipientIdsMono = groupMemberService.getMemberIdsByGroupId(targetId)
-                                .collect(Collectors.toSet());
-                    } else {
-                        recipientIdsMono = Mono.just(Collections.singleton(targetId));
-                    }
-                    return recipientIdsMono.flatMap(recipientsIds -> {
+                    Mono<Set<Long>> recipientIdsMono = isGroupMessage
+                            ? groupMemberService.getMemberIdsByGroupId(targetId).collect(Collectors.toSet())
+                            : Mono.just(Set.of(targetId));
+                    return recipientIdsMono.flatMap(recipientIds -> {
                         if (!node.getSharedProperties().getService().getMessage().isMessagePersistent()) {
-                            return recipientsIds.isEmpty()
+                            return recipientIds.isEmpty()
                                     ? Mono.empty()
-                                    : Mono.just(Pair.of(null, recipientsIds));
+                                    : Mono.just(Pair.of(null, recipientIds));
                         }
                         Mono<Message> saveMono = saveMessage(messageId, senderId, targetId, isGroupMessage,
                                 isSystemMessage, text, records, burnAfter, deliveryDate, null, referenceId);
@@ -730,7 +783,7 @@ public class MessageService {
                             if (message.getId() != null && sentMessageCache != null) {
                                 cacheSentMessage(message);
                             }
-                            return Pair.of(message, recipientsIds);
+                            return Pair.of(message, recipientIds);
                         });
                     });
                 });
@@ -845,6 +898,7 @@ public class MessageService {
                 message.getTargetId(),
                 null,
                 null,
+                null,
                 null));
     }
 
@@ -879,6 +933,40 @@ public class MessageService {
                 }
             }
         }
+    }
+
+    // Sequence ID
+
+    public Mono<Void> deleteSequenceIds(boolean isGroupConversation, Set<Long> targetIds) {
+        if (redisClientManager == null) {
+            return Mono.empty();
+        }
+        return redisClientManager.execute(targetIds, (client, keyList) -> {
+            List<ByteBuf> keys = new ArrayList<>(keyList.size());
+            for (Long targetId : keyList) {
+                byte[] prefix = isGroupConversation
+                        ? GROUP_CONVERSATION_SEQUENCE_ID_PREFIX
+                        : PRIVATE_CONVERSATION_SEQUENCE_ID_PREFIX;
+                ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(prefix.length + Long.BYTES)
+                        .writeBytes(prefix)
+                        .writeLong(targetId);
+                keys.add(buffer);
+            }
+            return client.del(keys);
+        });
+    }
+
+    private Mono<Long> fetchSequenceId(boolean isGroupConversation, Long targetId) {
+        if (redisClientManager == null) {
+            return Mono.empty();
+        }
+        byte[] prefix = isGroupConversation
+                ? GROUP_CONVERSATION_SEQUENCE_ID_PREFIX
+                : PRIVATE_CONVERSATION_SEQUENCE_ID_PREFIX;
+        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(prefix.length + Long.BYTES)
+                .writeBytes(prefix)
+                .writeLong(targetId);
+        return redisClientManager.incr(targetId, buffer);
     }
 
     private static class BuiltinSystemMessageType {

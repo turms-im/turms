@@ -20,9 +20,11 @@ package im.turms.server.common.redis;
 import im.turms.server.common.property.env.common.CommonRedisProperties;
 import im.turms.server.common.redis.codec.context.RedisCodecContext;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.context.annotation.Bean;
 
 import javax.annotation.PreDestroy;
+import java.util.LinkedList;
 import java.util.List;
 
 import static im.turms.server.common.redis.codec.context.RedisCodecContextPool.GEO_USER_ID_CODEC_CONTEXT;
@@ -44,6 +46,9 @@ public abstract class CommonRedisConfig {
 
     private final TurmsRedisClient ipBlocklistRedisClient;
     private final TurmsRedisClient userIdBlocklistRedisClient;
+
+    private final List<TurmsRedisClientManager> registeredClientManagers = new LinkedList<>();
+    private final List<TurmsRedisClient> registeredClients = new LinkedList<>();
 
     protected CommonRedisConfig(CommonRedisProperties redisProperties, boolean treatUserIdAndDeviceTypeAsUniqueUser) {
         sessionRedisClientManager = newSessionRedisClientManager(redisProperties.getSession());
@@ -72,16 +77,24 @@ public abstract class CommonRedisConfig {
         return new TurmsRedisClient(uri, RedisCodecContext.builder().build());
     }
 
+    public void registerClientManagers(List<TurmsRedisClientManager> clientManagers) {
+        registeredClientManagers.addAll(clientManagers);
+    }
+
+    public void registerClients(List<TurmsRedisClient> clients) {
+        registeredClients.addAll(clients);
+    }
+
     @PreDestroy
     public void destroy() {
-        for (TurmsRedisClientManager manager : List.of(sessionRedisClientManager, locationRedisClientManager)) {
+        for (TurmsRedisClientManager manager : ListUtils.union(registeredClientManagers, List.of(sessionRedisClientManager, locationRedisClientManager))) {
             try {
                 manager.destroy();
             } catch (Exception e) {
                 log.error("Failed to destroy a redis client", e);
             }
         }
-        for (TurmsRedisClient client : List.of(ipBlocklistRedisClient, userIdBlocklistRedisClient)) {
+        for (TurmsRedisClient client : ListUtils.union(registeredClients, List.of(ipBlocklistRedisClient, userIdBlocklistRedisClient))) {
             try {
                 client.destroy();
             } catch (Exception e) {

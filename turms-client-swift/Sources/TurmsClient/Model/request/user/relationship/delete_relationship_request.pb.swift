@@ -83,12 +83,12 @@ extension DeleteRelationshipRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if self.userID != 0 {
       try visitor.visitSingularInt64Field(value: self.userID, fieldNumber: 1)
     }
-    if let v = self._groupIndex {
+    try { if let v = self._groupIndex {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
-    }
-    if let v = self._targetGroupIndex {
+    } }()
+    try { if let v = self._targetGroupIndex {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 3)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

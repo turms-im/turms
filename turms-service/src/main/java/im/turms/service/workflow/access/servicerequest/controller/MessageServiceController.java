@@ -130,8 +130,8 @@ public class MessageServiceController {
             return messageAndRelatedUserIdsMono.map(pair -> {
                 Message message = pair.getLeft();
                 Long messageId = message != null ? message.getId() : null;
-                Set<Long> recipientsIds = pair.getRight();
-                boolean hasDataForRecipients = recipientsIds != null && !recipientsIds.isEmpty();
+                Set<Long> recipientIds = pair.getRight();
+                boolean hasDataForRecipients = recipientIds != null && !recipientIds.isEmpty();
                 if (messageId != null) {
                     if (!hasDataForRecipients) {
                         return RequestHandlerResultFactory.get(messageId);
@@ -155,7 +155,7 @@ public class MessageServiceController {
                     }
                     return RequestHandlerResultFactory.get(
                             messageId,
-                            recipientsIds,
+                            recipientIds,
                             node.getSharedProperties().getService().getMessage().isSendMessageToOtherSenderOnlineDevices(),
                             dataForRecipients);
                 } else if (hasDataForRecipients) {
@@ -166,7 +166,7 @@ public class MessageServiceController {
                                 .build();
                     }
                     return RequestHandlerResultFactory.get(
-                            recipientsIds,
+                            recipientIds,
                             dataForRecipients);
                 } else {
                     return RequestHandlerResultFactory.get(TurmsStatusCode.OK);

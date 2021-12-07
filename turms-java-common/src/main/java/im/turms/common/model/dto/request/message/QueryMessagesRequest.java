@@ -1147,7 +1147,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setWithTotal(boolean value) {
-
+      
       withTotal_ = value;
       onChanged();
       return this;
@@ -1157,7 +1157,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearWithTotal() {
-
+      
       withTotal_ = false;
       onChanged();
       return this;

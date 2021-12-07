@@ -90,12 +90,12 @@ extension DeleteGroupMemberRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
     if self.memberID != 0 {
       try visitor.visitSingularInt64Field(value: self.memberID, fieldNumber: 2)
     }
-    if let v = self._successorID {
+    try { if let v = self._successorID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
-    }
-    if let v = self._quitAfterTransfer {
+    } }()
+    try { if let v = self._quitAfterTransfer {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 4)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

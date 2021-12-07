@@ -130,7 +130,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.Group groups = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.group.GroupOrBuilder>
+  public java.util.List<? extends im.turms.common.model.bo.group.GroupOrBuilder> 
       getGroupsOrBuilderList() {
     return groups_;
   }
@@ -505,7 +505,7 @@ private static final long serialVersionUID = 0L;
             groupsBuilder_ = null;
             groups_ = other.groups_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            groupsBuilder_ =
+            groupsBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getGroupsFieldBuilder() : null;
           } else {
@@ -741,7 +741,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.Group groups = 1;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.group.GroupOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.group.GroupOrBuilder> 
          getGroupsOrBuilderList() {
       if (groupsBuilder_ != null) {
         return groupsBuilder_.getMessageOrBuilderList();
@@ -767,12 +767,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.Group groups = 1;</code>
      */
-    public java.util.List<im.turms.common.model.bo.group.Group.Builder>
+    public java.util.List<im.turms.common.model.bo.group.Group.Builder> 
          getGroupsBuilderList() {
       return getGroupsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.group.Group, im.turms.common.model.bo.group.Group.Builder, im.turms.common.model.bo.group.GroupOrBuilder>
+        im.turms.common.model.bo.group.Group, im.turms.common.model.bo.group.Group.Builder, im.turms.common.model.bo.group.GroupOrBuilder> 
         getGroupsFieldBuilder() {
       if (groupsBuilder_ == null) {
         groupsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<

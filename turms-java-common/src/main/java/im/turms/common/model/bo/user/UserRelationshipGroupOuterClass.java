@@ -33,7 +33,7 @@ public final class UserRelationshipGroupOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_UserRelationshipGroup_descriptor;
-  static final
+  static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_UserRelationshipGroup_fieldAccessorTable;
 

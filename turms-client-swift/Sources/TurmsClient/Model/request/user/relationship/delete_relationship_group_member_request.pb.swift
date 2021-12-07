@@ -78,9 +78,9 @@ extension DeleteRelationshipGroupMemberRequest: SwiftProtobuf.Message, SwiftProt
     if self.groupIndex != 0 {
       try visitor.visitSingularInt32Field(value: self.groupIndex, fieldNumber: 2)
     }
-    if let v = self._targetGroupIndex {
+    try { if let v = self._targetGroupIndex {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 3)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

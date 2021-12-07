@@ -172,36 +172,36 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._id {
+    try { if let v = self._id {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    }
-    if let v = self._typeID {
+    } }()
+    try { if let v = self._typeID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    }
-    if let v = self._creatorID {
+    } }()
+    try { if let v = self._creatorID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
-    }
-    if let v = self._ownerID {
+    } }()
+    try { if let v = self._ownerID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
-    }
-    if let v = self._name {
+    } }()
+    try { if let v = self._name {
       try visitor.visitSingularStringField(value: v, fieldNumber: 5)
-    }
-    if let v = self._intro {
+    } }()
+    try { if let v = self._intro {
       try visitor.visitSingularStringField(value: v, fieldNumber: 6)
-    }
-    if let v = self._announcement {
+    } }()
+    try { if let v = self._announcement {
       try visitor.visitSingularStringField(value: v, fieldNumber: 7)
-    }
-    if let v = self._creationDate {
+    } }()
+    try { if let v = self._creationDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 8)
-    }
-    if let v = self._muteEndDate {
+    } }()
+    try { if let v = self._muteEndDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 9)
-    }
-    if let v = self._active {
+    } }()
+    try { if let v = self._active {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 10)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

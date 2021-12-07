@@ -124,7 +124,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.Message messages = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.message.MessageOrBuilder>
+  public java.util.List<? extends im.turms.common.model.bo.message.MessageOrBuilder> 
       getMessagesOrBuilderList() {
     return messages_;
   }
@@ -455,7 +455,7 @@ private static final long serialVersionUID = 0L;
             messagesBuilder_ = null;
             messages_ = other.messages_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            messagesBuilder_ =
+            messagesBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getMessagesFieldBuilder() : null;
           } else {
@@ -688,7 +688,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.Message messages = 1;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.message.MessageOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.message.MessageOrBuilder> 
          getMessagesOrBuilderList() {
       if (messagesBuilder_ != null) {
         return messagesBuilder_.getMessageOrBuilderList();
@@ -714,12 +714,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.Message messages = 1;</code>
      */
-    public java.util.List<im.turms.common.model.bo.message.Message.Builder>
+    public java.util.List<im.turms.common.model.bo.message.Message.Builder> 
          getMessagesBuilderList() {
       return getMessagesFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.message.Message, im.turms.common.model.bo.message.Message.Builder, im.turms.common.model.bo.message.MessageOrBuilder>
+        im.turms.common.model.bo.message.Message, im.turms.common.model.bo.message.Message.Builder, im.turms.common.model.bo.message.MessageOrBuilder> 
         getMessagesFieldBuilder() {
       if (messagesBuilder_ == null) {
         messagesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<

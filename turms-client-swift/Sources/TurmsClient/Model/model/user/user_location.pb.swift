@@ -102,15 +102,15 @@ extension UserLocation: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     if self.longitude != 0 {
       try visitor.visitSingularFloatField(value: self.longitude, fieldNumber: 2)
     }
-    if let v = self._name {
+    try { if let v = self._name {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
-    if let v = self._address {
+    } }()
+    try { if let v = self._address {
       try visitor.visitSingularStringField(value: v, fieldNumber: 4)
-    }
-    if let v = self._timestamp {
+    } }()
+    try { if let v = self._timestamp {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

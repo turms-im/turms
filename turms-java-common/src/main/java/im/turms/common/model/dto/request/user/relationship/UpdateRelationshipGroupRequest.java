@@ -132,7 +132,7 @@ private static final long serialVersionUID = 0L;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
-      com.google.protobuf.ByteString bs =
+      com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
       newName_ = s;
@@ -148,7 +148,7 @@ private static final long serialVersionUID = 0L;
       getNewNameBytes() {
     java.lang.Object ref = newName_;
     if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b =
+      com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
       newName_ = b;
@@ -175,7 +175,7 @@ private static final long serialVersionUID = 0L;
     if (groupIndex_ != 0) {
       output.writeInt32(1, groupIndex_);
     }
-    if (!getNewNameBytes().isEmpty()) {
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(newName_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, newName_);
     }
     unknownFields.writeTo(output);
@@ -191,7 +191,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(1, groupIndex_);
     }
-    if (!getNewNameBytes().isEmpty()) {
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(newName_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, newName_);
     }
     size += unknownFields.getSerializedSize();
@@ -492,7 +492,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setGroupIndex(int value) {
-
+      
       groupIndex_ = value;
       onChanged();
       return this;
@@ -502,7 +502,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearGroupIndex() {
-
+      
       groupIndex_ = 0;
       onChanged();
       return this;
@@ -533,7 +533,7 @@ private static final long serialVersionUID = 0L;
         getNewNameBytes() {
       java.lang.Object ref = newName_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         newName_ = b;
@@ -552,7 +552,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
     throw new NullPointerException();
   }
-
+  
       newName_ = value;
       onChanged();
       return this;
@@ -562,7 +562,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearNewName() {
-
+      
       newName_ = getDefaultInstance().getNewName();
       onChanged();
       return this;
@@ -578,7 +578,7 @@ private static final long serialVersionUID = 0L;
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+      
       newName_ = value;
       onChanged();
       return this;

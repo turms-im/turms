@@ -465,7 +465,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setIsGroupMessage(boolean value) {
-
+      
       isGroupMessage_ = value;
       onChanged();
       return this;
@@ -475,7 +475,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearIsGroupMessage() {
-
+      
       isGroupMessage_ = false;
       onChanged();
       return this;
@@ -496,7 +496,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setToId(long value) {
-
+      
       toId_ = value;
       onChanged();
       return this;
@@ -506,7 +506,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearToId() {
-
+      
       toId_ = 0L;
       onChanged();
       return this;

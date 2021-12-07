@@ -4805,7 +4805,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.CreateSessionRequest, im.turms.common.model.dto.request.user.CreateSessionRequest.Builder, im.turms.common.model.dto.request.user.CreateSessionRequestOrBuilder>
+        im.turms.common.model.dto.request.user.CreateSessionRequest, im.turms.common.model.dto.request.user.CreateSessionRequest.Builder, im.turms.common.model.dto.request.user.CreateSessionRequestOrBuilder> 
         getCreateSessionRequestFieldBuilder() {
       if (createSessionRequestBuilder_ == null) {
         if (!(kindCase_ == 3)) {
@@ -4946,7 +4946,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.DeleteSessionRequest delete_session_request = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.DeleteSessionRequest, im.turms.common.model.dto.request.user.DeleteSessionRequest.Builder, im.turms.common.model.dto.request.user.DeleteSessionRequestOrBuilder>
+        im.turms.common.model.dto.request.user.DeleteSessionRequest, im.turms.common.model.dto.request.user.DeleteSessionRequest.Builder, im.turms.common.model.dto.request.user.DeleteSessionRequestOrBuilder> 
         getDeleteSessionRequestFieldBuilder() {
       if (deleteSessionRequestBuilder_ == null) {
         if (!(kindCase_ == 4)) {
@@ -5123,7 +5123,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.conversation.QueryConversationsRequest, im.turms.common.model.dto.request.conversation.QueryConversationsRequest.Builder, im.turms.common.model.dto.request.conversation.QueryConversationsRequestOrBuilder>
+        im.turms.common.model.dto.request.conversation.QueryConversationsRequest, im.turms.common.model.dto.request.conversation.QueryConversationsRequest.Builder, im.turms.common.model.dto.request.conversation.QueryConversationsRequestOrBuilder> 
         getQueryConversationsRequestFieldBuilder() {
       if (queryConversationsRequestBuilder_ == null) {
         if (!(kindCase_ == 5)) {
@@ -5264,7 +5264,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UpdateConversationRequest update_conversation_request = 6;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.conversation.UpdateConversationRequest, im.turms.common.model.dto.request.conversation.UpdateConversationRequest.Builder, im.turms.common.model.dto.request.conversation.UpdateConversationRequestOrBuilder>
+        im.turms.common.model.dto.request.conversation.UpdateConversationRequest, im.turms.common.model.dto.request.conversation.UpdateConversationRequest.Builder, im.turms.common.model.dto.request.conversation.UpdateConversationRequestOrBuilder> 
         getUpdateConversationRequestFieldBuilder() {
       if (updateConversationRequestBuilder_ == null) {
         if (!(kindCase_ == 6)) {
@@ -5405,7 +5405,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 7;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.conversation.UpdateTypingStatusRequest, im.turms.common.model.dto.request.conversation.UpdateTypingStatusRequest.Builder, im.turms.common.model.dto.request.conversation.UpdateTypingStatusRequestOrBuilder>
+        im.turms.common.model.dto.request.conversation.UpdateTypingStatusRequest, im.turms.common.model.dto.request.conversation.UpdateTypingStatusRequest.Builder, im.turms.common.model.dto.request.conversation.UpdateTypingStatusRequestOrBuilder> 
         getUpdateTypingStatusRequestFieldBuilder() {
       if (updateTypingStatusRequestBuilder_ == null) {
         if (!(kindCase_ == 7)) {
@@ -5582,7 +5582,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.message.CreateMessageRequest, im.turms.common.model.dto.request.message.CreateMessageRequest.Builder, im.turms.common.model.dto.request.message.CreateMessageRequestOrBuilder>
+        im.turms.common.model.dto.request.message.CreateMessageRequest, im.turms.common.model.dto.request.message.CreateMessageRequest.Builder, im.turms.common.model.dto.request.message.CreateMessageRequestOrBuilder> 
         getCreateMessageRequestFieldBuilder() {
       if (createMessageRequestBuilder_ == null) {
         if (!(kindCase_ == 8)) {
@@ -5723,7 +5723,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 9;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.message.QueryMessagesRequest, im.turms.common.model.dto.request.message.QueryMessagesRequest.Builder, im.turms.common.model.dto.request.message.QueryMessagesRequestOrBuilder>
+        im.turms.common.model.dto.request.message.QueryMessagesRequest, im.turms.common.model.dto.request.message.QueryMessagesRequest.Builder, im.turms.common.model.dto.request.message.QueryMessagesRequestOrBuilder> 
         getQueryMessagesRequestFieldBuilder() {
       if (queryMessagesRequestBuilder_ == null) {
         if (!(kindCase_ == 9)) {
@@ -5864,7 +5864,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UpdateMessageRequest update_message_request = 10;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.message.UpdateMessageRequest, im.turms.common.model.dto.request.message.UpdateMessageRequest.Builder, im.turms.common.model.dto.request.message.UpdateMessageRequestOrBuilder>
+        im.turms.common.model.dto.request.message.UpdateMessageRequest, im.turms.common.model.dto.request.message.UpdateMessageRequest.Builder, im.turms.common.model.dto.request.message.UpdateMessageRequestOrBuilder> 
         getUpdateMessageRequestFieldBuilder() {
       if (updateMessageRequestBuilder_ == null) {
         if (!(kindCase_ == 10)) {
@@ -6041,7 +6041,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.member.CreateGroupMemberRequest, im.turms.common.model.dto.request.group.member.CreateGroupMemberRequest.Builder, im.turms.common.model.dto.request.group.member.CreateGroupMemberRequestOrBuilder>
+        im.turms.common.model.dto.request.group.member.CreateGroupMemberRequest, im.turms.common.model.dto.request.group.member.CreateGroupMemberRequest.Builder, im.turms.common.model.dto.request.group.member.CreateGroupMemberRequestOrBuilder> 
         getCreateGroupMemberRequestFieldBuilder() {
       if (createGroupMemberRequestBuilder_ == null) {
         if (!(kindCase_ == 11)) {
@@ -6182,7 +6182,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest, im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest.Builder, im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequestOrBuilder>
+        im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest, im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest.Builder, im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequestOrBuilder> 
         getDeleteGroupMemberRequestFieldBuilder() {
       if (deleteGroupMemberRequestBuilder_ == null) {
         if (!(kindCase_ == 12)) {
@@ -6323,7 +6323,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryGroupMembersRequest query_group_members_request = 13;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.member.QueryGroupMembersRequest, im.turms.common.model.dto.request.group.member.QueryGroupMembersRequest.Builder, im.turms.common.model.dto.request.group.member.QueryGroupMembersRequestOrBuilder>
+        im.turms.common.model.dto.request.group.member.QueryGroupMembersRequest, im.turms.common.model.dto.request.group.member.QueryGroupMembersRequest.Builder, im.turms.common.model.dto.request.group.member.QueryGroupMembersRequestOrBuilder> 
         getQueryGroupMembersRequestFieldBuilder() {
       if (queryGroupMembersRequestBuilder_ == null) {
         if (!(kindCase_ == 13)) {
@@ -6464,7 +6464,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UpdateGroupMemberRequest update_group_member_request = 14;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest, im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest.Builder, im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequestOrBuilder>
+        im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest, im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest.Builder, im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequestOrBuilder> 
         getUpdateGroupMemberRequestFieldBuilder() {
       if (updateGroupMemberRequestBuilder_ == null) {
         if (!(kindCase_ == 14)) {
@@ -6641,7 +6641,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.QueryUserProfileRequest, im.turms.common.model.dto.request.user.QueryUserProfileRequest.Builder, im.turms.common.model.dto.request.user.QueryUserProfileRequestOrBuilder>
+        im.turms.common.model.dto.request.user.QueryUserProfileRequest, im.turms.common.model.dto.request.user.QueryUserProfileRequest.Builder, im.turms.common.model.dto.request.user.QueryUserProfileRequestOrBuilder> 
         getQueryUserProfileRequestFieldBuilder() {
       if (queryUserProfileRequestBuilder_ == null) {
         if (!(kindCase_ == 100)) {
@@ -6782,7 +6782,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.QueryNearbyUsersRequest, im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.Builder, im.turms.common.model.dto.request.user.QueryNearbyUsersRequestOrBuilder>
+        im.turms.common.model.dto.request.user.QueryNearbyUsersRequest, im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.Builder, im.turms.common.model.dto.request.user.QueryNearbyUsersRequestOrBuilder> 
         getQueryNearbyUsersRequestFieldBuilder() {
       if (queryNearbyUsersRequestBuilder_ == null) {
         if (!(kindCase_ == 101)) {
@@ -6923,7 +6923,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest, im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.Builder, im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequestOrBuilder>
+        im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest, im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.Builder, im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequestOrBuilder> 
         getQueryUserOnlineStatusesRequestFieldBuilder() {
       if (queryUserOnlineStatusesRequestBuilder_ == null) {
         if (!(kindCase_ == 102)) {
@@ -7064,7 +7064,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.UpdateUserLocationRequest, im.turms.common.model.dto.request.user.UpdateUserLocationRequest.Builder, im.turms.common.model.dto.request.user.UpdateUserLocationRequestOrBuilder>
+        im.turms.common.model.dto.request.user.UpdateUserLocationRequest, im.turms.common.model.dto.request.user.UpdateUserLocationRequest.Builder, im.turms.common.model.dto.request.user.UpdateUserLocationRequestOrBuilder> 
         getUpdateUserLocationRequestFieldBuilder() {
       if (updateUserLocationRequestBuilder_ == null) {
         if (!(kindCase_ == 103)) {
@@ -7205,7 +7205,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest, im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.Builder, im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder>
+        im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest, im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.Builder, im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder> 
         getUpdateUserOnlineStatusRequestFieldBuilder() {
       if (updateUserOnlineStatusRequestBuilder_ == null) {
         if (!(kindCase_ == 104)) {
@@ -7346,7 +7346,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.UpdateUserRequest, im.turms.common.model.dto.request.user.UpdateUserRequest.Builder, im.turms.common.model.dto.request.user.UpdateUserRequestOrBuilder>
+        im.turms.common.model.dto.request.user.UpdateUserRequest, im.turms.common.model.dto.request.user.UpdateUserRequest.Builder, im.turms.common.model.dto.request.user.UpdateUserRequestOrBuilder> 
         getUpdateUserRequestFieldBuilder() {
       if (updateUserRequestBuilder_ == null) {
         if (!(kindCase_ == 105)) {
@@ -7523,7 +7523,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.relationship.CreateFriendRequestRequest, im.turms.common.model.dto.request.user.relationship.CreateFriendRequestRequest.Builder, im.turms.common.model.dto.request.user.relationship.CreateFriendRequestRequestOrBuilder>
+        im.turms.common.model.dto.request.user.relationship.CreateFriendRequestRequest, im.turms.common.model.dto.request.user.relationship.CreateFriendRequestRequest.Builder, im.turms.common.model.dto.request.user.relationship.CreateFriendRequestRequestOrBuilder> 
         getCreateFriendRequestRequestFieldBuilder() {
       if (createFriendRequestRequestBuilder_ == null) {
         if (!(kindCase_ == 200)) {
@@ -7664,7 +7664,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.CreateRelationshipGroupRequest create_relationship_group_request = 201;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest, im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest.Builder, im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequestOrBuilder>
+        im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest, im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest.Builder, im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequestOrBuilder> 
         getCreateRelationshipGroupRequestFieldBuilder() {
       if (createRelationshipGroupRequestBuilder_ == null) {
         if (!(kindCase_ == 201)) {
@@ -7805,7 +7805,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.CreateRelationshipRequest create_relationship_request = 202;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.relationship.CreateRelationshipRequest, im.turms.common.model.dto.request.user.relationship.CreateRelationshipRequest.Builder, im.turms.common.model.dto.request.user.relationship.CreateRelationshipRequestOrBuilder>
+        im.turms.common.model.dto.request.user.relationship.CreateRelationshipRequest, im.turms.common.model.dto.request.user.relationship.CreateRelationshipRequest.Builder, im.turms.common.model.dto.request.user.relationship.CreateRelationshipRequestOrBuilder> 
         getCreateRelationshipRequestFieldBuilder() {
       if (createRelationshipRequestBuilder_ == null) {
         if (!(kindCase_ == 202)) {
@@ -7946,7 +7946,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequest, im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder, im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequestOrBuilder>
+        im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequest, im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder, im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequestOrBuilder> 
         getDeleteRelationshipGroupRequestFieldBuilder() {
       if (deleteRelationshipGroupRequestBuilder_ == null) {
         if (!(kindCase_ == 203)) {
@@ -8087,7 +8087,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest, im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest.Builder, im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequestOrBuilder>
+        im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest, im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest.Builder, im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequestOrBuilder> 
         getDeleteRelationshipRequestFieldBuilder() {
       if (deleteRelationshipRequestBuilder_ == null) {
         if (!(kindCase_ == 204)) {
@@ -8228,7 +8228,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest, im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest.Builder, im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequestOrBuilder>
+        im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest, im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest.Builder, im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequestOrBuilder> 
         getQueryFriendRequestsRequestFieldBuilder() {
       if (queryFriendRequestsRequestBuilder_ == null) {
         if (!(kindCase_ == 205)) {
@@ -8369,7 +8369,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest, im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest.Builder, im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder>
+        im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest, im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest.Builder, im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder> 
         getQueryRelatedUserIdsRequestFieldBuilder() {
       if (queryRelatedUserIdsRequestBuilder_ == null) {
         if (!(kindCase_ == 206)) {
@@ -8510,7 +8510,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest, im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest.Builder, im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequestOrBuilder>
+        im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest, im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest.Builder, im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequestOrBuilder> 
         getQueryRelationshipGroupsRequestFieldBuilder() {
       if (queryRelationshipGroupsRequestBuilder_ == null) {
         if (!(kindCase_ == 207)) {
@@ -8651,7 +8651,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest, im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest.Builder, im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequestOrBuilder>
+        im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest, im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest.Builder, im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequestOrBuilder> 
         getQueryRelationshipsRequestFieldBuilder() {
       if (queryRelationshipsRequestBuilder_ == null) {
         if (!(kindCase_ == 208)) {
@@ -8792,7 +8792,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest, im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest.Builder, im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequestOrBuilder>
+        im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest, im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest.Builder, im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequestOrBuilder> 
         getUpdateFriendRequestRequestFieldBuilder() {
       if (updateFriendRequestRequestBuilder_ == null) {
         if (!(kindCase_ == 209)) {
@@ -8933,7 +8933,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.relationship.UpdateRelationshipGroupRequest, im.turms.common.model.dto.request.user.relationship.UpdateRelationshipGroupRequest.Builder, im.turms.common.model.dto.request.user.relationship.UpdateRelationshipGroupRequestOrBuilder>
+        im.turms.common.model.dto.request.user.relationship.UpdateRelationshipGroupRequest, im.turms.common.model.dto.request.user.relationship.UpdateRelationshipGroupRequest.Builder, im.turms.common.model.dto.request.user.relationship.UpdateRelationshipGroupRequestOrBuilder> 
         getUpdateRelationshipGroupRequestFieldBuilder() {
       if (updateRelationshipGroupRequestBuilder_ == null) {
         if (!(kindCase_ == 210)) {
@@ -9074,7 +9074,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest, im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest.Builder, im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequestOrBuilder>
+        im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest, im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest.Builder, im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequestOrBuilder> 
         getUpdateRelationshipRequestFieldBuilder() {
       if (updateRelationshipRequestBuilder_ == null) {
         if (!(kindCase_ == 211)) {
@@ -9251,7 +9251,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.CreateGroupRequest, im.turms.common.model.dto.request.group.CreateGroupRequest.Builder, im.turms.common.model.dto.request.group.CreateGroupRequestOrBuilder>
+        im.turms.common.model.dto.request.group.CreateGroupRequest, im.turms.common.model.dto.request.group.CreateGroupRequest.Builder, im.turms.common.model.dto.request.group.CreateGroupRequestOrBuilder> 
         getCreateGroupRequestFieldBuilder() {
       if (createGroupRequestBuilder_ == null) {
         if (!(kindCase_ == 300)) {
@@ -9392,7 +9392,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.DeleteGroupRequest delete_group_request = 301;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.DeleteGroupRequest, im.turms.common.model.dto.request.group.DeleteGroupRequest.Builder, im.turms.common.model.dto.request.group.DeleteGroupRequestOrBuilder>
+        im.turms.common.model.dto.request.group.DeleteGroupRequest, im.turms.common.model.dto.request.group.DeleteGroupRequest.Builder, im.turms.common.model.dto.request.group.DeleteGroupRequestOrBuilder> 
         getDeleteGroupRequestFieldBuilder() {
       if (deleteGroupRequestBuilder_ == null) {
         if (!(kindCase_ == 301)) {
@@ -9533,7 +9533,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.QueryGroupRequest, im.turms.common.model.dto.request.group.QueryGroupRequest.Builder, im.turms.common.model.dto.request.group.QueryGroupRequestOrBuilder>
+        im.turms.common.model.dto.request.group.QueryGroupRequest, im.turms.common.model.dto.request.group.QueryGroupRequest.Builder, im.turms.common.model.dto.request.group.QueryGroupRequestOrBuilder> 
         getQueryGroupRequestFieldBuilder() {
       if (queryGroupRequestBuilder_ == null) {
         if (!(kindCase_ == 302)) {
@@ -9674,7 +9674,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryJoinedGroupIdsRequest query_joined_group_ids_request = 303;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.QueryJoinedGroupIdsRequest, im.turms.common.model.dto.request.group.QueryJoinedGroupIdsRequest.Builder, im.turms.common.model.dto.request.group.QueryJoinedGroupIdsRequestOrBuilder>
+        im.turms.common.model.dto.request.group.QueryJoinedGroupIdsRequest, im.turms.common.model.dto.request.group.QueryJoinedGroupIdsRequest.Builder, im.turms.common.model.dto.request.group.QueryJoinedGroupIdsRequestOrBuilder> 
         getQueryJoinedGroupIdsRequestFieldBuilder() {
       if (queryJoinedGroupIdsRequestBuilder_ == null) {
         if (!(kindCase_ == 303)) {
@@ -9815,7 +9815,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryJoinedGroupInfosRequest query_joined_group_infos_request = 304;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.QueryJoinedGroupInfosRequest, im.turms.common.model.dto.request.group.QueryJoinedGroupInfosRequest.Builder, im.turms.common.model.dto.request.group.QueryJoinedGroupInfosRequestOrBuilder>
+        im.turms.common.model.dto.request.group.QueryJoinedGroupInfosRequest, im.turms.common.model.dto.request.group.QueryJoinedGroupInfosRequest.Builder, im.turms.common.model.dto.request.group.QueryJoinedGroupInfosRequestOrBuilder> 
         getQueryJoinedGroupInfosRequestFieldBuilder() {
       if (queryJoinedGroupInfosRequestBuilder_ == null) {
         if (!(kindCase_ == 304)) {
@@ -9956,7 +9956,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UpdateGroupRequest update_group_request = 305;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.UpdateGroupRequest, im.turms.common.model.dto.request.group.UpdateGroupRequest.Builder, im.turms.common.model.dto.request.group.UpdateGroupRequestOrBuilder>
+        im.turms.common.model.dto.request.group.UpdateGroupRequest, im.turms.common.model.dto.request.group.UpdateGroupRequest.Builder, im.turms.common.model.dto.request.group.UpdateGroupRequestOrBuilder> 
         getUpdateGroupRequestFieldBuilder() {
       if (updateGroupRequestBuilder_ == null) {
         if (!(kindCase_ == 305)) {
@@ -10133,7 +10133,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest, im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder, im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequestOrBuilder>
+        im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest, im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder, im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequestOrBuilder> 
         getCreateGroupBlockedUserRequestFieldBuilder() {
       if (createGroupBlockedUserRequestBuilder_ == null) {
         if (!(kindCase_ == 400)) {
@@ -10274,7 +10274,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest, im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.Builder, im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequestOrBuilder>
+        im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest, im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.Builder, im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequestOrBuilder> 
         getDeleteGroupBlockedUserRequestFieldBuilder() {
       if (deleteGroupBlockedUserRequestBuilder_ == null) {
         if (!(kindCase_ == 401)) {
@@ -10415,7 +10415,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.Builder, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOrBuilder>
+        im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.Builder, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOrBuilder> 
         getQueryGroupBlockedUserIdsRequestFieldBuilder() {
       if (queryGroupBlockedUserIdsRequestBuilder_ == null) {
         if (!(kindCase_ == 402)) {
@@ -10556,7 +10556,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.Builder, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequestOrBuilder>
+        im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.Builder, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequestOrBuilder> 
         getQueryGroupBlockedUserInfosRequestFieldBuilder() {
       if (queryGroupBlockedUserInfosRequestBuilder_ == null) {
         if (!(kindCase_ == 403)) {
@@ -10733,7 +10733,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest, im.turms.common.model.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.Builder, im.turms.common.model.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOrBuilder>
+        im.turms.common.model.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest, im.turms.common.model.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.Builder, im.turms.common.model.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOrBuilder> 
         getCheckGroupJoinQuestionsAnswersRequestFieldBuilder() {
       if (checkGroupJoinQuestionsAnswersRequestBuilder_ == null) {
         if (!(kindCase_ == 500)) {
@@ -10874,7 +10874,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.CreateGroupInvitationRequest create_group_invitation_request = 501;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest, im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest.Builder, im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequestOrBuilder>
+        im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest, im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest.Builder, im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequestOrBuilder> 
         getCreateGroupInvitationRequestFieldBuilder() {
       if (createGroupInvitationRequestBuilder_ == null) {
         if (!(kindCase_ == 501)) {
@@ -11015,7 +11015,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.CreateGroupJoinRequestRequest create_group_join_request_request = 502;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinRequestRequest, im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinRequestRequest.Builder, im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinRequestRequestOrBuilder>
+        im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinRequestRequest, im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinRequestRequest.Builder, im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinRequestRequestOrBuilder> 
         getCreateGroupJoinRequestRequestFieldBuilder() {
       if (createGroupJoinRequestRequestBuilder_ == null) {
         if (!(kindCase_ == 502)) {
@@ -11156,7 +11156,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinQuestionRequest, im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.Builder, im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinQuestionRequestOrBuilder>
+        im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinQuestionRequest, im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.Builder, im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinQuestionRequestOrBuilder> 
         getCreateGroupJoinQuestionRequestFieldBuilder() {
       if (createGroupJoinQuestionRequestBuilder_ == null) {
         if (!(kindCase_ == 503)) {
@@ -11297,7 +11297,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.DeleteGroupInvitationRequest delete_group_invitation_request = 504;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest, im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest.Builder, im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequestOrBuilder>
+        im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest, im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest.Builder, im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequestOrBuilder> 
         getDeleteGroupInvitationRequestFieldBuilder() {
       if (deleteGroupInvitationRequestBuilder_ == null) {
         if (!(kindCase_ == 504)) {
@@ -11438,7 +11438,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.DeleteGroupJoinRequestRequest delete_group_join_request_request = 505;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinRequestRequest, im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.Builder, im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinRequestRequestOrBuilder>
+        im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinRequestRequest, im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.Builder, im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinRequestRequestOrBuilder> 
         getDeleteGroupJoinRequestRequestFieldBuilder() {
       if (deleteGroupJoinRequestRequestBuilder_ == null) {
         if (!(kindCase_ == 505)) {
@@ -11579,7 +11579,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest, im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.Builder, im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinQuestionRequestOrBuilder>
+        im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest, im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.Builder, im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinQuestionRequestOrBuilder> 
         getDeleteGroupJoinQuestionRequestFieldBuilder() {
       if (deleteGroupJoinQuestionRequestBuilder_ == null) {
         if (!(kindCase_ == 506)) {
@@ -11720,7 +11720,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryGroupInvitationsRequest query_group_invitations_request = 507;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequest, im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequest.Builder, im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequestOrBuilder>
+        im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequest, im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequest.Builder, im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequestOrBuilder> 
         getQueryGroupInvitationsRequestFieldBuilder() {
       if (queryGroupInvitationsRequestBuilder_ == null) {
         if (!(kindCase_ == 507)) {
@@ -11861,7 +11861,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryGroupJoinRequestsRequest query_group_join_requests_request = 508;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequest, im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequest.Builder, im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequestOrBuilder>
+        im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequest, im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequest.Builder, im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequestOrBuilder> 
         getQueryGroupJoinRequestsRequestFieldBuilder() {
       if (queryGroupJoinRequestsRequestBuilder_ == null) {
         if (!(kindCase_ == 508)) {
@@ -12002,7 +12002,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QueryGroupJoinQuestionsRequest query_group_join_questions_request = 509;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest, im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest.Builder, im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinQuestionsRequestOrBuilder>
+        im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest, im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest.Builder, im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinQuestionsRequestOrBuilder> 
         getQueryGroupJoinQuestionsRequestFieldBuilder() {
       if (queryGroupJoinQuestionsRequestBuilder_ == null) {
         if (!(kindCase_ == 509)) {
@@ -12143,7 +12143,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest, im.turms.common.model.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder, im.turms.common.model.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOrBuilder>
+        im.turms.common.model.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest, im.turms.common.model.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder, im.turms.common.model.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOrBuilder> 
         getUpdateGroupJoinQuestionRequestFieldBuilder() {
       if (updateGroupJoinQuestionRequestBuilder_ == null) {
         if (!(kindCase_ == 510)) {
@@ -12320,7 +12320,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.storage.DeleteResourceRequest, im.turms.common.model.dto.request.storage.DeleteResourceRequest.Builder, im.turms.common.model.dto.request.storage.DeleteResourceRequestOrBuilder>
+        im.turms.common.model.dto.request.storage.DeleteResourceRequest, im.turms.common.model.dto.request.storage.DeleteResourceRequest.Builder, im.turms.common.model.dto.request.storage.DeleteResourceRequestOrBuilder> 
         getDeleteResourceRequestFieldBuilder() {
       if (deleteResourceRequestBuilder_ == null) {
         if (!(kindCase_ == 1000)) {
@@ -12461,7 +12461,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequest, im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequest.Builder, im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequestOrBuilder>
+        im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequest, im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequest.Builder, im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequestOrBuilder> 
         getQuerySignedGetUrlRequestFieldBuilder() {
       if (querySignedGetUrlRequestBuilder_ == null) {
         if (!(kindCase_ == 1001)) {
@@ -12602,7 +12602,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequest, im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequest.Builder, im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequestOrBuilder>
+        im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequest, im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequest.Builder, im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequestOrBuilder> 
         getQuerySignedPutUrlRequestFieldBuilder() {
       if (querySignedPutUrlRequestBuilder_ == null) {
         if (!(kindCase_ == 1002)) {

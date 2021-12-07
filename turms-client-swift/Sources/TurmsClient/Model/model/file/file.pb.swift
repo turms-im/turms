@@ -109,12 +109,12 @@ extension File: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase,
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._description_p {
+    try { if let v = self._description_p {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._data {
+    } }()
+    try { if let v = self._data {
       try visitor.visitSingularBytesField(value: v, fieldNumber: 2)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -152,12 +152,12 @@ extension File.Description: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     if !self.url.isEmpty {
       try visitor.visitSingularStringField(value: self.url, fieldNumber: 1)
     }
-    if let v = self._size {
+    try { if let v = self._size {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
-    }
-    if let v = self._format {
+    } }()
+    try { if let v = self._format {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

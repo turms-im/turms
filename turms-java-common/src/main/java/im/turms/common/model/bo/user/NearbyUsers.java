@@ -124,7 +124,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.user.NearbyUserOrBuilder>
+  public java.util.List<? extends im.turms.common.model.bo.user.NearbyUserOrBuilder> 
       getNearbyUsersOrBuilderList() {
     return nearbyUsers_;
   }
@@ -455,7 +455,7 @@ private static final long serialVersionUID = 0L;
             nearbyUsersBuilder_ = null;
             nearbyUsers_ = other.nearbyUsers_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            nearbyUsersBuilder_ =
+            nearbyUsersBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getNearbyUsersFieldBuilder() : null;
           } else {
@@ -688,7 +688,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.user.NearbyUserOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.user.NearbyUserOrBuilder> 
          getNearbyUsersOrBuilderList() {
       if (nearbyUsersBuilder_ != null) {
         return nearbyUsersBuilder_.getMessageOrBuilderList();
@@ -714,12 +714,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
      */
-    public java.util.List<im.turms.common.model.bo.user.NearbyUser.Builder>
+    public java.util.List<im.turms.common.model.bo.user.NearbyUser.Builder> 
          getNearbyUsersBuilderList() {
       return getNearbyUsersFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.user.NearbyUser, im.turms.common.model.bo.user.NearbyUser.Builder, im.turms.common.model.bo.user.NearbyUserOrBuilder>
+        im.turms.common.model.bo.user.NearbyUser, im.turms.common.model.bo.user.NearbyUser.Builder, im.turms.common.model.bo.user.NearbyUserOrBuilder> 
         getNearbyUsersFieldBuilder() {
       if (nearbyUsersBuilder_ == null) {
         nearbyUsersBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<

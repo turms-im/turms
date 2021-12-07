@@ -104,21 +104,21 @@ extension GroupJoinQuestion: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._id {
+    try { if let v = self._id {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    }
-    if let v = self._groupID {
+    } }()
+    try { if let v = self._groupID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    }
-    if let v = self._question {
+    } }()
+    try { if let v = self._question {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
+    } }()
     if !self.answers.isEmpty {
       try visitor.visitRepeatedStringField(value: self.answers, fieldNumber: 4)
     }
-    if let v = self._score {
+    try { if let v = self._score {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 5)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

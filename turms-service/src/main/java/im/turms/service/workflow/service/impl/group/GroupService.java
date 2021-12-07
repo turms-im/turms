@@ -47,10 +47,12 @@ import im.turms.service.workflow.dao.domain.group.GroupMember;
 import im.turms.service.workflow.dao.domain.group.GroupType;
 import im.turms.service.workflow.dao.domain.user.UserPermissionGroup;
 import im.turms.service.workflow.service.impl.conversation.ConversationService;
+import im.turms.service.workflow.service.impl.message.MessageService;
 import im.turms.service.workflow.service.impl.statistics.MetricsService;
 import im.turms.service.workflow.service.impl.user.UserPermissionGroupService;
 import im.turms.service.workflow.service.impl.user.UserVersionService;
 import io.micrometer.core.instrument.Counter;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
@@ -84,6 +86,7 @@ import static im.turms.service.workflow.dao.domain.group.GroupMember.Fields.ID_U
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
+@Log4j2
 public class GroupService {
 
     private final Node node;
@@ -94,6 +97,7 @@ public class GroupService {
     private final UserVersionService userVersionService;
     private final UserPermissionGroupService userPermissionGroupService;
     private final ConversationService conversationService;
+    private final MessageService messageService;
 
     private final Counter createdGroupsCounter;
     private final Counter deletedGroupsCounter;
@@ -107,6 +111,7 @@ public class GroupService {
             GroupVersionService groupVersionService,
             UserPermissionGroupService userPermissionGroupService,
             ConversationService conversationService,
+            MessageService messageService,
             MetricsService metricsService) {
         this.node = node;
         this.mongoClient = mongoClient;
@@ -116,6 +121,7 @@ public class GroupService {
         this.userVersionService = userVersionService;
         this.userPermissionGroupService = userPermissionGroupService;
         this.conversationService = conversationService;
+        this.messageService = messageService;
 
         createdGroupsCounter = metricsService.getRegistry().counter(CREATED_GROUPS_COUNTER_NAME);
         deletedGroupsCounter = metricsService.getRegistry().counter(DELETED_GROUPS_COUNTER_NAME);
@@ -266,9 +272,14 @@ public class GroupService {
                         if (count > 0) {
                             deletedGroupsCounter.increment(count);
                         }
+                        Mono<Void> deleteSequenceIds = groupIds == null
+                                ? Mono.empty()
+                                : messageService.deleteSequenceIds(true, groupIds);
                         return groupMemberService.deleteAllGroupMembers(groupIds, session, false)
                                 .then(conversationService.deleteGroupConversations(groupIds, session))
                                 .then(groupVersionService.delete(groupIds, session))
+                                .then(deleteSequenceIds
+                                        .doOnError(t -> log.error("Failed to remove the message sequence IDs for the group IDs: {}", groupIds, t)))
                                 .thenReturn(result);
                     });
                 })

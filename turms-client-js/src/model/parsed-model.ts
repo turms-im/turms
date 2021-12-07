@@ -76,6 +76,7 @@ export declare namespace ParsedModel {
         groupId?: string;
         recipientId?: string;
         records?: Uint8Array[];
+        sequenceId?: number;
     }
 
     interface MessagesWithTotal {

@@ -27,7 +27,7 @@ public interface ConversationsOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.PrivateConversation private_conversations = 1;</code>
    */
-  java.util.List<im.turms.common.model.bo.conversation.PrivateConversation>
+  java.util.List<im.turms.common.model.bo.conversation.PrivateConversation> 
       getPrivateConversationsList();
   /**
    * <code>repeated .im.turms.proto.PrivateConversation private_conversations = 1;</code>
@@ -40,7 +40,7 @@ public interface ConversationsOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.PrivateConversation private_conversations = 1;</code>
    */
-  java.util.List<? extends im.turms.common.model.bo.conversation.PrivateConversationOrBuilder>
+  java.util.List<? extends im.turms.common.model.bo.conversation.PrivateConversationOrBuilder> 
       getPrivateConversationsOrBuilderList();
   /**
    * <code>repeated .im.turms.proto.PrivateConversation private_conversations = 1;</code>
@@ -51,7 +51,7 @@ public interface ConversationsOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.GroupConversation group_conversations = 2;</code>
    */
-  java.util.List<im.turms.common.model.bo.conversation.GroupConversation>
+  java.util.List<im.turms.common.model.bo.conversation.GroupConversation> 
       getGroupConversationsList();
   /**
    * <code>repeated .im.turms.proto.GroupConversation group_conversations = 2;</code>
@@ -64,7 +64,7 @@ public interface ConversationsOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.GroupConversation group_conversations = 2;</code>
    */
-  java.util.List<? extends im.turms.common.model.bo.conversation.GroupConversationOrBuilder>
+  java.util.List<? extends im.turms.common.model.bo.conversation.GroupConversationOrBuilder> 
       getGroupConversationsOrBuilderList();
   /**
    * <code>repeated .im.turms.proto.GroupConversation group_conversations = 2;</code>

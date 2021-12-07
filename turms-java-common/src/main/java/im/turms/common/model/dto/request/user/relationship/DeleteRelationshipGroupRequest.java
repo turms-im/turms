@@ -485,7 +485,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setGroupIndex(int value) {
-
+      
       groupIndex_ = value;
       onChanged();
       return this;
@@ -495,7 +495,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearGroupIndex() {
-
+      
       groupIndex_ = 0;
       onChanged();
       return this;

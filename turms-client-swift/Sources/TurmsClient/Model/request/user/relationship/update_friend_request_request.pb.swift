@@ -78,9 +78,9 @@ extension UpdateFriendRequestRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
     if self.responseAction != .accept {
       try visitor.visitSingularEnumField(value: self.responseAction, fieldNumber: 2)
     }
-    if let v = self._reason {
+    try { if let v = self._reason {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

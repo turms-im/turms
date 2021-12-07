@@ -90,12 +90,12 @@ extension UpdateUserLocationRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if self.longitude != 0 {
       try visitor.visitSingularFloatField(value: self.longitude, fieldNumber: 2)
     }
-    if let v = self._name {
+    try { if let v = self._name {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
-    if let v = self._address {
+    } }()
+    try { if let v = self._address {
       try visitor.visitSingularStringField(value: v, fieldNumber: 4)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

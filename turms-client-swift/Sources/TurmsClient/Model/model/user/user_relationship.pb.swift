@@ -112,21 +112,21 @@ extension UserRelationship: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._ownerID {
+    try { if let v = self._ownerID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    }
-    if let v = self._relatedUserID {
+    } }()
+    try { if let v = self._relatedUserID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    }
-    if let v = self._blockDate {
+    } }()
+    try { if let v = self._blockDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
-    }
-    if let v = self._groupIndex {
+    } }()
+    try { if let v = self._groupIndex {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
-    }
-    if let v = self._establishmentDate {
+    } }()
+    try { if let v = self._establishmentDate {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

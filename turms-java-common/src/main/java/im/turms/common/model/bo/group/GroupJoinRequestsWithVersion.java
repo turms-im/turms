@@ -130,7 +130,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.group.GroupJoinRequestOrBuilder>
+  public java.util.List<? extends im.turms.common.model.bo.group.GroupJoinRequestOrBuilder> 
       getGroupJoinRequestsOrBuilderList() {
     return groupJoinRequests_;
   }
@@ -505,7 +505,7 @@ private static final long serialVersionUID = 0L;
             groupJoinRequestsBuilder_ = null;
             groupJoinRequests_ = other.groupJoinRequests_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            groupJoinRequestsBuilder_ =
+            groupJoinRequestsBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getGroupJoinRequestsFieldBuilder() : null;
           } else {
@@ -741,7 +741,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.group.GroupJoinRequestOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.group.GroupJoinRequestOrBuilder> 
          getGroupJoinRequestsOrBuilderList() {
       if (groupJoinRequestsBuilder_ != null) {
         return groupJoinRequestsBuilder_.getMessageOrBuilderList();
@@ -767,12 +767,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
      */
-    public java.util.List<im.turms.common.model.bo.group.GroupJoinRequest.Builder>
+    public java.util.List<im.turms.common.model.bo.group.GroupJoinRequest.Builder> 
          getGroupJoinRequestsBuilderList() {
       return getGroupJoinRequestsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.group.GroupJoinRequest, im.turms.common.model.bo.group.GroupJoinRequest.Builder, im.turms.common.model.bo.group.GroupJoinRequestOrBuilder>
+        im.turms.common.model.bo.group.GroupJoinRequest, im.turms.common.model.bo.group.GroupJoinRequest.Builder, im.turms.common.model.bo.group.GroupJoinRequestOrBuilder> 
         getGroupJoinRequestsFieldBuilder() {
       if (groupJoinRequestsBuilder_ == null) {
         groupJoinRequestsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<

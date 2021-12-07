@@ -130,7 +130,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.group.GroupInvitationOrBuilder>
+  public java.util.List<? extends im.turms.common.model.bo.group.GroupInvitationOrBuilder> 
       getGroupInvitationsOrBuilderList() {
     return groupInvitations_;
   }
@@ -505,7 +505,7 @@ private static final long serialVersionUID = 0L;
             groupInvitationsBuilder_ = null;
             groupInvitations_ = other.groupInvitations_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            groupInvitationsBuilder_ =
+            groupInvitationsBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getGroupInvitationsFieldBuilder() : null;
           } else {
@@ -741,7 +741,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.group.GroupInvitationOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.group.GroupInvitationOrBuilder> 
          getGroupInvitationsOrBuilderList() {
       if (groupInvitationsBuilder_ != null) {
         return groupInvitationsBuilder_.getMessageOrBuilderList();
@@ -767,12 +767,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
      */
-    public java.util.List<im.turms.common.model.bo.group.GroupInvitation.Builder>
+    public java.util.List<im.turms.common.model.bo.group.GroupInvitation.Builder> 
          getGroupInvitationsBuilderList() {
       return getGroupInvitationsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.group.GroupInvitation, im.turms.common.model.bo.group.GroupInvitation.Builder, im.turms.common.model.bo.group.GroupInvitationOrBuilder>
+        im.turms.common.model.bo.group.GroupInvitation, im.turms.common.model.bo.group.GroupInvitation.Builder, im.turms.common.model.bo.group.GroupInvitationOrBuilder> 
         getGroupInvitationsFieldBuilder() {
       if (groupInvitationsBuilder_ == null) {
         groupInvitationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<

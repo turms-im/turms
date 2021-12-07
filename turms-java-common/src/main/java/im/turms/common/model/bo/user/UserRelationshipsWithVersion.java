@@ -130,7 +130,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.user.UserRelationshipOrBuilder>
+  public java.util.List<? extends im.turms.common.model.bo.user.UserRelationshipOrBuilder> 
       getUserRelationshipsOrBuilderList() {
     return userRelationships_;
   }
@@ -505,7 +505,7 @@ private static final long serialVersionUID = 0L;
             userRelationshipsBuilder_ = null;
             userRelationships_ = other.userRelationships_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            userRelationshipsBuilder_ =
+            userRelationshipsBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getUserRelationshipsFieldBuilder() : null;
           } else {
@@ -741,7 +741,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.user.UserRelationshipOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.user.UserRelationshipOrBuilder> 
          getUserRelationshipsOrBuilderList() {
       if (userRelationshipsBuilder_ != null) {
         return userRelationshipsBuilder_.getMessageOrBuilderList();
@@ -767,12 +767,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
-    public java.util.List<im.turms.common.model.bo.user.UserRelationship.Builder>
+    public java.util.List<im.turms.common.model.bo.user.UserRelationship.Builder> 
          getUserRelationshipsBuilderList() {
       return getUserRelationshipsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.user.UserRelationship, im.turms.common.model.bo.user.UserRelationship.Builder, im.turms.common.model.bo.user.UserRelationshipOrBuilder>
+        im.turms.common.model.bo.user.UserRelationship, im.turms.common.model.bo.user.UserRelationship.Builder, im.turms.common.model.bo.user.UserRelationshipOrBuilder> 
         getUserRelationshipsFieldBuilder() {
       if (userRelationshipsBuilder_ == null) {
         userRelationshipsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
