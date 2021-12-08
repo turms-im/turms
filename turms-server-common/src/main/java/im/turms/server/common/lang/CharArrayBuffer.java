@@ -18,6 +18,7 @@
 package im.turms.server.common.lang;
 
 import java.nio.CharBuffer;
+import java.util.Arrays;
 
 /**
  * @author James Chen
@@ -29,6 +30,19 @@ public class CharArrayBuffer implements CharSequence {
 
     public CharArrayBuffer(int capacity) {
         buffer = new char[capacity];
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(buffer);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof CharArrayBuffer that) {
+            return Arrays.equals(buffer, that.buffer);
+        }
+        return false;
     }
 
     @Override
@@ -104,6 +118,11 @@ public class CharArrayBuffer implements CharSequence {
         }
         buffer[length] = c;
         length = newLength;
+    }
+
+    public void clear() {
+        Arrays.fill(buffer, (char) 0);
+        length = 0;
     }
 
     private void expand(int newLength) {

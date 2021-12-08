@@ -62,8 +62,9 @@ public class DoubleArrayTrie {
         if (size == 0) {
             return;
         }
-        resize(1 << 16);
-        // For the root state
+        ensureSize(65536);
+        // The index of the root state is 0,
+        // and its value is 1 to point to the first child
         base[0] = 1;
         List<NodeEntry> siblings = new ArrayList<>(size);
         for (CharObjectPair<State> entry : siblingEntries) {
