@@ -34,9 +34,6 @@
       },
       "sm": {
         "bsonType": "bool"
-      },
-      "sqid": {
-        "bsonType": "int"
       }
     }
   }

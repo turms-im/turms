@@ -48,6 +48,7 @@ public class ContainerConfig {
         serviceMongo.getMessage().setUri(mongoUri);
 
         TurmsRedisProperties redis = service.getRedis();
+        redis.getSequenceId().setUriList(List.of(redisUri));
         redis.getSession().setUriList(List.of(redisUri));
         redis.getLocation().setUriList(List.of(redisUri));
         redis.getIpBlocklist().setUri(redisUri);
