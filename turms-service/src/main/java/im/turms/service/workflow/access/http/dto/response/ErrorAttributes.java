@@ -17,10 +17,13 @@
 
 package im.turms.service.workflow.access.http.dto.response;
 
+import im.turms.server.common.access.http.dto.response.ResponseDTO;
+
 import java.util.Date;
 
 /**
  * @author James Chen
+ * @see ResponseDTO
  */
 public record ErrorAttributes(
         Integer status,

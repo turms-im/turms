@@ -34,6 +34,7 @@ import im.turms.service.plugin.extension.AdminActionHandler;
 import im.turms.service.workflow.access.http.permission.RequiredPermission;
 import im.turms.service.workflow.access.http.throttle.AdminApiRateLimitingManager;
 import im.turms.service.workflow.service.impl.admin.AdminService;
+import lombok.AllArgsConstructor;
 import org.springdoc.core.SpringDocConfigProperties;
 import org.springdoc.webflux.api.OpenApiWebfluxResource;
 import org.springdoc.webflux.ui.SwaggerWelcomeWebFlux;
@@ -73,6 +74,8 @@ import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE;
 @Component
 public class ControllerFilter implements WebFilter {
 
+    private static final String X_REQUEST_ID = "X-Request-ID";
+
     private static final String BASIC_AUTH_PREFIX = "Basic ";
     private static final String ATTRIBUTES_ACCOUNT = "account";
 
@@ -107,7 +110,9 @@ public class ControllerFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        allowAnyRequest(exchange.getResponse());
+        HttpHeaders headers = exchange.getResponse().getHeaders();
+        allowAnyRequest(headers);
+        headers.set(X_REQUEST_ID, exchange.getRequest().getId());
         return requestMappingHandlerMapping.getHandler(exchange)
                 .switchIfEmpty(Mono.defer(() -> filterUnhandledRequest(exchange, chain)))
                 .flatMap(o -> {
@@ -183,12 +188,11 @@ public class ControllerFilter implements WebFilter {
     }
 
     /**
-     * 1. We don't expose configs for developers to customize the cors config
+     * 1. We don't expose configs for developers to customize the CORS config
      * because it's better to be done by firewall/ECS/EC2
      * 2. Note that both CORS requests and some normal requests need these headers
      */
-    private void allowAnyRequest(ServerHttpResponse response) {
-        HttpHeaders headers = response.getHeaders();
+    private void allowAnyRequest(HttpHeaders headers) {
         headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
         headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "*");
         headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*");
@@ -236,12 +240,12 @@ public class ControllerFilter implements WebFilter {
         TracingContext tracingContext = new TracingContext();
         RequestLoggingContext loggingContext = new RequestLoggingContext(tracingContext);
         if (isLogEnabled || triggerHandlers) {
+            long requestTime = System.currentTimeMillis();
             ServerHttpRequest request = exchange.getRequest();
             String action = handlerMethod.getMethod().getName();
             String ip = request.getRemoteAddress().getAddress().getHostAddress();
-            long requestTime = System.currentTimeMillis();
             exchange.getAttributes().put(MethodInvokeInterceptor.ATTRIBUTE_INTERCEPTOR,
-                    new ControllerMethodInvokeInterceptor(handlerMethod, requestTime, tracingContext, account, ip, action));
+                    new ControllerMethodInvokeInterceptor(handlerMethod, request.getId(), requestTime, tracingContext, account, ip, action));
         }
         return checkFrequencyAndPass(chain, exchange)
                 .contextWrite(context -> {
@@ -274,6 +278,7 @@ public class ControllerFilter implements WebFilter {
             TracingContext tracingContext,
             String account,
             String ip,
+            String requestId,
             long requestTime,
             int processingTime,
             String action,
@@ -283,21 +288,19 @@ public class ControllerFilter implements WebFilter {
         if (response instanceof Mono<?> responseMono) {
             return responseMono
                     .doOnEach(signal -> {
-                        Throwable t;
-                        if (signal.isOnComplete() || signal.isOnError()) {
-                            t = signal.getThrowable();
-                        } else {
+                        if (!signal.isOnComplete() && !signal.isOnError()) {
                             return;
                         }
                         logAndTriggerHandlers0(handlerMethod,
                                 tracingContext,
                                 account,
                                 ip,
+                                requestId,
                                 requestTime,
                                 action,
                                 args,
                                 processingTime,
-                                t);
+                                signal.getThrowable());
                     });
         } else if (response instanceof Flux) {
             throw new IllegalStateException("Unexpected response type: Flux. Use Mono instead");
@@ -306,6 +309,7 @@ public class ControllerFilter implements WebFilter {
                     tracingContext,
                     account,
                     ip,
+                    requestId,
                     requestTime,
                     action,
                     args,
@@ -320,6 +324,7 @@ public class ControllerFilter implements WebFilter {
             TracingContext tracingContext,
             String account,
             String ip,
+            String requestId,
             long requestTime,
             String action,
             Object[] args,
@@ -354,6 +359,7 @@ public class ControllerFilter implements WebFilter {
             AdminApiLogging.log(
                     account,
                     ip,
+                    requestId,
                     requestTime,
                     action,
                     params,
@@ -362,28 +368,16 @@ public class ControllerFilter implements WebFilter {
         }
     }
 
+    @AllArgsConstructor
     private class ControllerMethodInvokeInterceptor extends MethodInvokeInterceptor {
 
         private final TurmsHandlerMethod handlerMethod;
+        private final String requestId;
         private final long requestTime;
         private final TracingContext tracingContext;
         private final String account;
         private final String ip;
         private final String action;
-
-        ControllerMethodInvokeInterceptor(TurmsHandlerMethod handlerMethod,
-                                          long requestTime,
-                                          TracingContext tracingContext,
-                                          String account,
-                                          String ip,
-                                          String action) {
-            this.handlerMethod = handlerMethod;
-            this.requestTime = requestTime;
-            this.tracingContext = tracingContext;
-            this.account = account;
-            this.ip = ip;
-            this.action = action;
-        }
 
         @Nullable
         @Override
@@ -402,6 +396,7 @@ public class ControllerFilter implements WebFilter {
                     tracingContext,
                     account,
                     ip,
+                    requestId,
                     requestTime,
                     processingTime,
                     action,

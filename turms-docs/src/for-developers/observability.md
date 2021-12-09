@@ -188,16 +188,16 @@ turms-service的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 
 文件名：`turms-service-admin-api.log`
 
-格式：`管理员账号|管理员IP|请求时间|请求API|请求参数|处理结果|处理时间|处理异常信息`。其中：
+格式：`管理员账号|管理员IP|请求ID|请求时间|请求API|请求参数|处理结果|处理时间|处理异常信息`。其中：
 
 * 会话信息：管理员账号、管理员IP
-* 请求信息：请求时间、请求API、请求参数
+* 请求信息：请求ID、请求时间、请求API、请求参数。其中，管理员可以通过HTTP响应中的Header `X-Request-ID`获得`请求ID`，并配合日志来进行故障排查或行为追踪
 * 响应信息：处理结果、处理时间、处理异常信息
 
 示例：
 
 ```spreadsheet
-2021-09-02 07:19:27.219  INFO S wzocsebz 3501287524626242885 Thread-28 : turms|0:0:0:0:0:0:0:1|2021-09-02T07:30:30.414Z|updateUser|1|{ids=[1], updateUserDTO=UpdateUserDTO[password=******, name=null, intro=null, profileAccess=null, permissionGroupId=null, registrationDate=null, isActive=null]}|TRUE|
+2021-09-02 07:19:27.219  INFO S wzocsebz 3501287524626242885 Thread-28 : turms|0:0:0:0:0:0:0:1|db612e82-199|2021-09-02T07:30:30.414Z|updateUser|1|{ids=[1], updateUserDTO=UpdateUserDTO[password=******, name=null, intro=null, profileAccess=null, permissionGroupId=null, registrationDate=null, isActive=null]}|TRUE|
 ```
 
 #### 客户端API访问日志

@@ -31,14 +31,21 @@ public final class AdminApiLogging {
     private AdminApiLogging() {
     }
 
-    public static void log(String account, String ip, long requestTime, String action,
-                           Map<String, Object> params, int processingTime, Throwable throwable) {
+    public static void log(String account,
+                           String ip,
+                           String requestId,
+                           long requestTime,
+                           String action,
+                           Map<String, Object> params,
+                           int processingTime,
+                           Throwable throwable) {
         boolean isSuccessful = throwable == null;
         String msg = String.join(LOG_FIELD_DELIMITER,
                 // Session
                 account,
                 ip,
                 // Request
+                requestId,
                 DateUtil.toISO(requestTime),
                 action,
                 params.toString(),
