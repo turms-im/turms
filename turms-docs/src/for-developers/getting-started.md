@@ -19,7 +19,10 @@ docker-compose -f docker-compose.standalone.yml up --force-recreate
 
 等集群完成搭建后，可以通过 http://localhost:6510 访问turms-admin后台管理系统，并输入账号密码（默认均为`turms`）。如果登录成功，则说明Turms集群搭建成功。
 
-补充：配合`--profile monitoring`（`docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate`），还可以额外自动搭建Prometheus与Grafana服务端。
+补充：
+
+* 配合`--profile monitoring`（`docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate`），还可以额外自动搭建Prometheus与Grafana服务端。
+* Turms的Demo网站就是通过这几条命令自动搭建的
 
 #### 基于Terraform与docker-compose
 
@@ -75,7 +78,7 @@ terraform apply
 
 适用场景：通用，无特别限制场景。但一般只适用于小规模手动部署。
 
-若您网络畅通，第一次完成以下全部操作大概需要花费10~30分钟。当您熟练之后，可在1~3分钟完成各种集群的部署工作。
+若您网络畅通，第一次完成以下全部操作大概需要花费10~30分钟。当您熟练之后，可在1~3分钟完成一整套集群的部署工作。
 
 1. MongoDB集群搭建（用于业务数据存储、服务发现、配置管理）
 
@@ -99,9 +102,12 @@ terraform apply
      pip3 install mtools[mlaunch]
      mlaunch init --replicaset --sharded 1 --nodes 1 --config 1 --hostname localhost --port 27017 --mongos 1
      ```
-     
-     请确保运行正常，否则Turms会抛出`MongoSocketOpenException`异常。
-   
+
+     注意：
+
+     * 如果在Windows环境执行`pip3 install mtools[mlaunch]`命令时，遇到类似`error: Microsoft Visual C++ 14.0 or greater is required. Get it with "Microsoft C++ Build Tools"`的错误，则您需要先在https://visualstudio.microsoft.com/downloads页面下，下载`Visual Studio Installer`，并通过它安装`MSVC build tools`，然后再执行`pip3 install mtools[mlaunch]`指令。
+     * 请确保MongoDB服务端运行正常，否则Turms服务端启动时会抛出`MongoSocketOpenException`异常。
+
   2. 下载、安装并启动Redis服务端（用于实现用户状态管理以及“附近的用户”）。以RHEL/CentOS为例：
 
      ```bash
@@ -119,12 +125,7 @@ terraform apply
    方案一：拉取Turms服务端Docker镜像，并运行：
 
    ```bash
-   # Pull images
-   docker pull ghcr.io/turms-im/turms-admin
-   docker pull ghcr.io/turms-im/turms-gateway
-   docker pull ghcr.io/turms-im/turms-service
-   
-   # Run images
+   # Pull and run images
    docker run -p 6510:6510 ghcr.io/turms-im/turms-admin
    docker run -p 7510:7510 -p 8510:8510 ghcr.io/turms-im/turms-service
    docker run --ulimit nofile=102400:102400 -p 7510:7510 -p 9510:9510 -p 10510:10510 -p 11510:11510 -p 12510:12510 ghcr.io/turms-im/turms-gateway
