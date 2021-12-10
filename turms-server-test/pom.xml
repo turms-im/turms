@@ -27,7 +27,7 @@
 
     <properties>
         <disruptor.version>3.4.4</disruptor.version>
-        <log4j.version>2.14.1</log4j.version>
+        <log4j.version>2.15.0</log4j.version>
         <reactor-core.version>3.4.8</reactor-core.version>
         <reactor-netty.version>1.0.9</reactor-netty.version>
 
