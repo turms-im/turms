@@ -20,10 +20,9 @@ package im.turms.server.common.util;
 import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.CodedOutputStream;
 import com.google.protobuf.MessageLite;
-import com.google.protobuf.TextFormat;
+import im.turms.server.common.proto.ProtoFormatter;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
-import lombok.extern.log4j.Log4j2;
 
 import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
@@ -31,7 +30,6 @@ import java.nio.ByteBuffer;
 /**
  * @author James Chen
  */
-@Log4j2
 public final class ProtoUtil {
 
     private ProtoUtil() {
@@ -56,7 +54,7 @@ public final class ProtoUtil {
         if (message == null) {
             return null;
         }
-        return TextFormat.shortDebugString(message);
+        return ProtoFormatter.toJSON5(message, 128);
     }
 
 }
