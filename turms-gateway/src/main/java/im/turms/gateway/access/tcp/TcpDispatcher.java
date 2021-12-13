@@ -23,11 +23,12 @@ import im.turms.gateway.access.tcp.factory.TcpServerFactory;
 import im.turms.gateway.logging.ApiLoggingContext;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.healthcheck.ServerStatusManager;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.TcpProperties;
 import im.turms.server.common.service.blocklist.BlocklistService;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.netty.DisposableServer;
 
@@ -36,9 +37,10 @@ import javax.annotation.PreDestroy;
 /**
  * @author James Chen
  */
-@Log4j2
 @Component
 public class TcpDispatcher extends UserSessionDispatcher {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TcpDispatcher.class);
 
     private final DisposableServer server;
     @Getter
@@ -64,7 +66,7 @@ public class TcpDispatcher extends UserSessionDispatcher {
                     bindConnectionWithSessionWrapper());
             host = server.host();
             port = server.port();
-            log.info("TCP server started on {}:{}", host, port);
+            LOGGER.info("TCP server started on {}:{}", host, port);
         } else {
             server = null;
             host = null;
@@ -75,7 +77,7 @@ public class TcpDispatcher extends UserSessionDispatcher {
     @PreDestroy
     public void preDestroy() {
         if (server != null) {
-            log.info("Closing TCP server");
+            LOGGER.info("Closing TCP server");
             server.dispose();
         }
     }

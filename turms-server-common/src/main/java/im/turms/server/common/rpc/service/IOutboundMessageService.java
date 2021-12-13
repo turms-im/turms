@@ -30,7 +30,7 @@ import java.util.Set;
 public interface IOutboundMessageService {
 
     boolean sendNotificationToLocalClients(
-            @NotNull TracingContext tracingContext,
+            @NotNull TracingContext context,
             @NotNull ByteBuf notificationData,
             @NotEmpty Set<Long> recipientIds);
 

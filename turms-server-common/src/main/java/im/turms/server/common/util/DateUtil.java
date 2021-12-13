@@ -30,31 +30,83 @@ public final class DateUtil {
 
     private static final ThreadLocal<Calendar> CALENDAR_THREAD_LOCAL = ThreadLocal
             .withInitial(() -> new GregorianCalendar(TimeZone.getTimeZone("UTC")));
-    // "1970-01-01T00:00:00.000Z"
-    public static final int DATE_TIME_LENGTH = 24;
+    // "1970-01-01 00:00:00.000"
+    public static final int DATE_TIME_LENGTH = 23;
 
     private DateUtil() {
     }
 
-    public static String toISO(long timeInMillis) {
+    public static String toStr(long timeInMillis) {
         Calendar calendar = CALENDAR_THREAD_LOCAL.get();
         calendar.setTimeInMillis(timeInMillis);
         StringBuilder sb = new StringBuilder(DATE_TIME_LENGTH);
         sb.append(calendar.get(Calendar.YEAR))
-                .append("-")
+                .append('-')
                 .append(twoDigit(calendar.get(Calendar.MONTH) + 1))
-                .append("-")
+                .append('-')
                 .append(twoDigit(calendar.get(Calendar.DAY_OF_MONTH)))
-                .append("T")
+                .append(' ')
                 .append(twoDigit(calendar.get(Calendar.HOUR_OF_DAY)))
-                .append(":")
+                .append(':')
                 .append(twoDigit(calendar.get(Calendar.MINUTE)))
-                .append(":")
+                .append(':')
                 .append(twoDigit(calendar.get(Calendar.SECOND)))
-                .append(".")
-                .append(threeDigit(calendar.get(Calendar.MILLISECOND)))
-                .append("Z");
+                .append('.')
+                .append(threeDigit(calendar.get(Calendar.MILLISECOND)));
         return sb.toString();
+    }
+
+    public static byte[] toBytes(long timeInMillis) {
+        Calendar calendar = CALENDAR_THREAD_LOCAL.get();
+        calendar.setTimeInMillis(timeInMillis);
+        byte[] bytes = new byte[DATE_TIME_LENGTH];
+
+        byte[] src = Formatter.toCharacterBytes(calendar.get(Calendar.YEAR));
+        System.arraycopy(src, 0, bytes, 0, src.length);
+        int i = src.length;
+
+        bytes[i] = '-';
+        i++;
+
+        src = twoDigitBytes(calendar.get(Calendar.MONTH) + 1);
+        System.arraycopy(src, 0, bytes, i, src.length);
+        i += src.length;
+
+        bytes[i] = '-';
+        i++;
+
+        src = twoDigitBytes(calendar.get(Calendar.DAY_OF_MONTH));
+        System.arraycopy(src, 0, bytes, i, src.length);
+        i += src.length;
+
+        bytes[i] = ' ';
+        i++;
+
+        src = twoDigitBytes(calendar.get(Calendar.HOUR_OF_DAY));
+        System.arraycopy(src, 0, bytes, i, src.length);
+        i += src.length;
+
+        bytes[i] = ':';
+        i++;
+
+        src = twoDigitBytes(calendar.get(Calendar.MINUTE));
+        System.arraycopy(src, 0, bytes, i, src.length);
+        i += src.length;
+
+        bytes[i] = ':';
+        i++;
+
+        src = twoDigitBytes(calendar.get(Calendar.SECOND));
+        System.arraycopy(src, 0, bytes, i, src.length);
+        i += src.length;
+
+        bytes[i] = '.';
+        i++;
+
+        src = threeDigitBytes(calendar.get(Calendar.MILLISECOND));
+        System.arraycopy(src, 0, bytes, i, src.length);
+
+        return bytes;
     }
 
     public static Date max(@Nullable Date date1, @Nullable Date date2) {
@@ -97,6 +149,25 @@ public final class DateUtil {
             return "0" + i;
         }
         return String.valueOf(i);
+    }
+
+    private static byte[] twoDigitBytes(int i) {
+        if (i >= 0 && i < 10) {
+            // TODO: cache
+            return new byte[]{'0', (byte) (i + 48)};
+        }
+        return Formatter.toCharacterBytes(i);
+    }
+
+    private static byte[] threeDigitBytes(int i) {
+        if (i >= 0 && i < 10) {
+            // TODO: cache
+            return new byte[]{'0', '0', (byte) (i + 48)};
+        } else if (i < 100) {
+            // TODO: cache
+            return ArrayUtil.concat(new byte[]{'0'}, Formatter.toCharacterBytes(i));
+        }
+        return Formatter.toCharacterBytes(i);
     }
 
 }

@@ -21,9 +21,10 @@ import im.turms.server.common.address.AddressCollection;
 import im.turms.server.common.address.AddressCollector;
 import im.turms.server.common.address.BaseServiceAddressManager;
 import im.turms.server.common.address.PublicIpManager;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.AddressProperties;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.stereotype.Component;
 
@@ -33,8 +34,9 @@ import java.net.UnknownHostException;
  * @author James Chen
  */
 @Component
-@Log4j2
 public class ServiceAddressManager extends BaseServiceAddressManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceAddressManager.class);
 
     private AddressProperties adminApiAddressProperties;
     private String metricsApiAddress;
@@ -55,7 +57,7 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
                 try {
                     updateCollectorAndAddresses(adminApiServerProperties, newAdminApiDiscoveryProperties);
                 } catch (UnknownHostException e) {
-                    log.error("Failed to update address collector", e);
+                    LOGGER.error("Failed to update address collector", e);
                 }
             }
             if (areAddressPropertiesChange || isMemberHostChanged) {

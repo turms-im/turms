@@ -23,11 +23,11 @@ import com.google.common.collect.SetMultimap;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.logging.RequestLoggingContext;
+import im.turms.server.common.tracing.TracingCloseableContext;
+import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.rpc.request.SendNotificationRequest;
 import im.turms.server.common.service.session.UserStatusService;
-import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.ProtoUtil;
@@ -35,7 +35,6 @@ import im.turms.server.common.util.ReactorUtil;
 import im.turms.service.logging.ApiLoggingContext;
 import im.turms.service.logging.NotificationLogging;
 import io.netty.buffer.ByteBuf;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -57,7 +56,6 @@ import java.util.Set;
  * In other words, it will leak memory if cancellation occurs.
  */
 @Service
-@Log4j2
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class OutboundMessageService {
 
@@ -270,9 +268,9 @@ public class OutboundMessageService {
                         return;
                     }
                     boolean sent = Boolean.TRUE.equals(signal.get());
-                    RequestLoggingContext loggingContext = signal.getContextView()
-                            .getOrDefault(RequestLoggingContext.CTX_KEY_NAME, RequestLoggingContext.DEFAULT);
-                    try (TracingCloseableContext ignored = loggingContext.asCloseable()) {
+                    TracingContext context = signal.getContextView()
+                            .getOrDefault(TracingContext.CTX_KEY_NAME, TracingContext.DEFAULT);
+                    try (TracingCloseableContext ignored = context.asCloseable()) {
                         NotificationLogging.log(sent, notification, recipientCount);
                     }
                 });

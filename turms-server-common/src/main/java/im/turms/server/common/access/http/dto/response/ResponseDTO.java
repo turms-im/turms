@@ -29,6 +29,7 @@ import java.util.Date;
 
 /**
  * @author James Chen
+ * @see im.turms.service.workflow.access.http.dto.response.ErrorAttributes
  */
 @AllArgsConstructor(onConstructor = @__(@JsonCreator))
 @Data

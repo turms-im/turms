@@ -28,14 +28,15 @@ import im.turms.gateway.pojo.dto.SimpleTurmsNotification;
 import im.turms.gateway.pojo.parser.TurmsNotificationParser;
 import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.tracing.TracingContext;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.service.IOutboundMessageService;
-import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectionUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.RefCntAwareByteBuf;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -49,8 +50,9 @@ import java.util.Set;
  * @author James Chen
  */
 @Component
-@Log4j2
 public class OutboundMessageService implements IOutboundMessageService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OutboundMessageService.class);
 
     private final Node node;
     private final ApiLoggingContext apiLoggingContext;
@@ -120,7 +122,7 @@ public class OutboundMessageService implements IOutboundMessageService {
                         userSession.sendNotification(wrappedNotificationData, tracingContext);
                     } catch (Exception e) {
                         if (userSession.isSessionOpen()) {
-                            log.warn("Failed to send a notification to the session: {}", userSession);
+                            LOGGER.warn("Failed to send a notification to the session: {}", userSession);
                         }
                     }
                     // Keep the logic easy, and we don't care about whether the notification is really flushed
@@ -160,7 +162,7 @@ public class OutboundMessageService implements IOutboundMessageService {
             // Note that "parseFrom" won't block because the buffer is fully read
             notification = TurmsNotification.parseFrom(notificationData.nioBuffer());
         } catch (Exception e) {
-            log.error("Failed to parse TurmsNotification", e);
+            LOGGER.error("Failed to parse TurmsNotification", e);
         }
         if (notification == null) {
             return;
@@ -183,7 +185,7 @@ public class OutboundMessageService implements IOutboundMessageService {
         }
         resultMono
                 .onErrorResume(t -> {
-                    log.error("Plugins failed to handle", t);
+                    LOGGER.error("Plugins failed to handle", t);
                     return Mono.empty();
                 })
                 .subscribe();

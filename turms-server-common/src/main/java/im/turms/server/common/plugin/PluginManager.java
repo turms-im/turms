@@ -18,7 +18,6 @@
 package im.turms.server.common.plugin;
 
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor;
 import org.springframework.context.ApplicationContext;
 
@@ -31,7 +30,6 @@ import java.util.zip.ZipFile;
 /**
  * @author James Chen
  */
-@Log4j2
 public class PluginManager {
 
     private final PluginRepository pluginRepository = new PluginRepository();

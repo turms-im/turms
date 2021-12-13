@@ -34,7 +34,8 @@ import im.turms.server.common.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.cluster.service.rpc.dto.RpcResponse;
 import im.turms.server.common.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.logging.RequestLoggingContext;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.env.common.cluster.RpcProperties;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
@@ -44,7 +45,6 @@ import im.turms.server.common.util.MapUtil;
 import io.micrometer.core.instrument.Tag;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.util.Pair;
 import reactor.core.publisher.Flux;
@@ -63,8 +63,9 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author James Chen
  */
-@Log4j2
 public class RpcService implements ClusterService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RpcService.class);
 
     private static final String METRICS_NAME_RPC_REQUEST = "rpc.request";
     private static final String METRICS_TAG_REQUEST_NAME = "name";
@@ -135,7 +136,7 @@ public class RpcService implements ClusterService {
                 } else if (data instanceof RpcResponse response) {
                     onResponseReceived(response);
                 } else {
-                    log.error("Receive an unknown data: " + data);
+                    LOGGER.error("Received an unknown data: " + data);
                 }
             }
 
@@ -143,43 +144,44 @@ public class RpcService implements ClusterService {
                 // Retain to avoid being released by FluxReceive
                 request.retain();
                 ChannelOperations<?, ?> conn = connection.getConnection();
-                RequestLoggingContext loggingContext = new RequestLoggingContext(request.getTracingContext());
-                requestExecutor.runRpcRequest(loggingContext, request, connection, connection.getNodeId())
+                TracingContext ctx = request.getTracingContext();
+                requestExecutor.runRpcRequest(ctx, request, connection, connection.getNodeId())
                         .cast(Object.class)
                         .onErrorResume(RpcException.class, Mono::just)
                         .doOnNext(response -> {
                             if (conn.isDisposed()) {
-                                try (TracingCloseableContext ignored = loggingContext.asCloseable()) {
-                                    log.error("Cannot send response to disposed connection: " + response);
+                                try (TracingCloseableContext ignored = ctx.asCloseable()) {
+                                    LOGGER.error("Cannot send response to disposed connection: " + response);
                                 }
                                 return;
                             }
                             ByteBuf buf;
                             try {
                                 buf = RpcFrameEncoder.INSTANCE.encode(request.getRequestId(), response);
+                                buf.touch(response);
                             } catch (Exception e) {
-                                try (TracingCloseableContext ignored = loggingContext.asCloseable()) {
-                                    log.error("Failed to encode response: {}", response, e);
+                                try (TracingCloseableContext ignored = ctx.asCloseable()) {
+                                    LOGGER.error("Failed to encode response: {}", response, e);
                                 }
                                 return;
                             }
                             if (buf.refCnt() == 0) {
-                                try (TracingCloseableContext ignored = loggingContext.asCloseable()) {
-                                    log.error("The buffer of response is released unexpectedly: " + response);
+                                try (TracingCloseableContext ignored = ctx.asCloseable()) {
+                                    LOGGER.error("The buffer of response is released unexpectedly: " + response);
                                 }
                                 return;
                             }
                             conn.sendObject(buf)
                                     .then()
                                     .onErrorResume(t -> {
-                                        try (TracingCloseableContext ignored = loggingContext.asCloseable()) {
-                                            log.error("Failed to send response", t);
+                                        try (TracingCloseableContext ignored = ctx.asCloseable()) {
+                                            LOGGER.error("Failed to send response", t);
                                         }
                                         return Mono.empty();
                                     })
                                     .subscribe();
                         })
-                        .contextWrite(context -> context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext))
+                        .contextWrite(context -> context.put(TracingContext.CTX_KEY_NAME, ctx))
                         .subscribe();
             }
 
@@ -305,7 +307,7 @@ public class RpcService implements ClusterService {
     public <T> Mono<T> requestResponse(String memberNodeId, RpcRequest<T> request, Duration timeout, @Nullable TurmsConnection connection) {
         try {
             if (discoveryService.getLocalNodeStatusManager().isLocalNodeId(memberNodeId)) {
-                return requestExecutor.runRpcRequest(new RequestLoggingContext(request.getTracingContext()),
+                return requestExecutor.runRpcRequest(new TracingContext(request.getTracingContext()),
                         request,
                         null,
                         memberNodeId);
@@ -517,16 +519,16 @@ public class RpcService implements ClusterService {
     }
 
     private void addTraceIdToRequestFromContext(ContextView contextView, RpcRequest<?> request) {
-        if (request.getTracingContext().hasTraceId()) {
+        long traceId = request.getTracingContext().getTraceId();
+        if (traceId != TracingContext.UNDEFINED_TRACE_ID) {
             return;
         }
-        Long traceId = RequestLoggingContext.readTraceIdFromContext(contextView);
-        if (traceId == null) {
+        traceId = TracingContext.readTraceIdFromContext(contextView);
+        if (traceId == TracingContext.UNDEFINED_TRACE_ID) {
             traceId = RandomUtil.nextPositiveLong();
         }
         request.setTracingContext(new TracingContext(traceId));
     }
-
 
     private Throwable mapThrowable(Throwable throwable, RpcRequest<?> callable) {
         // e.g. ClosedChannelException

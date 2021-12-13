@@ -29,13 +29,13 @@ import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
-import im.turms.server.common.logging.RequestLoggingContext;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.util.ExceptionUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
-import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
@@ -49,8 +49,9 @@ import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_SES
 /**
  * @author James Chen
  */
-@Log4j2
 public abstract class UserSessionDispatcher {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserSessionDispatcher.class);
 
     private final ApiLoggingContext apiLoggingContext;
     protected final ServiceMediator serviceMediator;
@@ -104,10 +105,10 @@ public abstract class UserSessionDispatcher {
                     requestData.retain();
 
                     // Note that handleRequest() should never return MonoError
-                    RequestLoggingContext loggingContext = new RequestLoggingContext();
+                    TracingContext ctx = new TracingContext();
                     userRequestDispatcher.handleRequest(sessionWrapper, requestData)
                             .onErrorResume(throwable -> {
-                                loggingContext.updateMdc();
+                                ctx.updateThreadContext();
                                 handleNotificationError(throwable, sessionWrapper.getUserSession());
                                 return Mono.empty();
                             })
@@ -118,9 +119,9 @@ public abstract class UserSessionDispatcher {
                                 return Mono.from(outbound);
                             })
                             .onErrorResume(throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(),
-                                    sessionWrapper.getUserSession(), loggingContext.getTracingContext()))
-                            .contextWrite(context -> context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext))
-                            .doFinally(signal -> loggingContext.clearMdc())
+                                    sessionWrapper.getUserSession(), ctx))
+                            .contextWrite(context -> context.put(TracingContext.CTX_KEY_NAME, ctx))
+                            .doFinally(signal -> ctx.clearThreadContext())
                             .subscribe();
                 })
                 .then()
@@ -175,7 +176,7 @@ public abstract class UserSessionDispatcher {
                                              TracingContext tracingContext) {
         if (!ExceptionUtil.isDisconnectedClientError(throwable)) {
             try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
-                log.error("Caught an exception from a connection bound with the session: {}",
+                LOGGER.error("Caught an exception from a connection bound with the session: {}",
                         userSession,
                         throwable);
             }
@@ -191,7 +192,7 @@ public abstract class UserSessionDispatcher {
                 .onErrorResume(t -> {
                     // Log because this should be the last error handler here
                     try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
-                        log.error("Caught an exception when setting the local session [{}:{}] offline due to connection error",
+                        LOGGER.error("Caught an exception when setting the local session [{}:{}] offline due to connection error",
                                 userId, deviceType, t);
                     }
                     return Mono.empty();
@@ -205,7 +206,7 @@ public abstract class UserSessionDispatcher {
         }
         CloseReason closeReason = CloseReason.get(throwable);
         if (closeReason.isServerError()) {
-            log.error("Failed to send outbound notification to the session: " + userSession, throwable);
+            LOGGER.error("Failed to send outbound notification to the session: " + userSession, throwable);
         }
         Long userId = userSession.getUserId();
         DeviceType deviceType = userSession.getDeviceType();

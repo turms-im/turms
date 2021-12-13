@@ -44,7 +44,6 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Data;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.data.geo.Point;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -62,7 +61,6 @@ import static io.lettuce.core.protocol.CommandType.GEORADIUSBYMEMBER;
  * because it hasn't flushed the buffers,
  * @see AbstractRedisReactiveCommands
  */
-@Log4j2
 @Data
 public class TurmsRedisClient {
 

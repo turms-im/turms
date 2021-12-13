@@ -25,6 +25,8 @@ import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -35,7 +37,6 @@ import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.workflow.access.http.permission.AdminPermission;
 import im.turms.service.workflow.dao.domain.admin.AdminRole;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.tuple.Triple;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,10 +57,11 @@ import java.util.stream.Collectors;
 /**
  * @author James Chen
  */
-@Log4j2
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class AdminRoleService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdminRoleService.class);
 
     private static final int MIN_ROLE_NAME_LIMIT = 1;
     private static final int MAX_ROLE_NAME_LIMIT = 32;
@@ -96,11 +98,11 @@ public class AdminRoleService {
                             roles.remove(roleId);
                         }
                         case INVALIDATE -> resetRoles();
-                        default -> log.fatal("Detect an illegal operation on AdminRole collection: " + event);
+                        default -> LOGGER.fatal("Detected an illegal operation on AdminRole collection: " + event);
                     }
                 })
                 .onErrorContinue(
-                        (throwable, o) -> log.error("Error while processing the change stream event of AdminRole: {}", o, throwable))
+                        (throwable, o) -> LOGGER.error("Error while processing the change stream event of AdminRole: {}", o, throwable))
                 .subscribe();
 
         // Load

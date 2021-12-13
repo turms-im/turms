@@ -23,10 +23,11 @@ import im.turms.gateway.access.udp.UdpDispatcher;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.dto.CloseReason;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.service.session.UserStatusService;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
@@ -49,8 +50,9 @@ import java.util.Set;
  * online user map to get a snapshot of the online users that need to update
  * online status (go offline or refresh heartbeat)
  */
-@Log4j2
 public class HeartbeatManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HeartbeatManager.class);
 
     private static final int UPDATE_HEARTBEAT_INTERVAL_MILLIS = 500;
     private static final float UPDATE_HEARTBEAT_INTERVAL_FACTOR = UPDATE_HEARTBEAT_INTERVAL_MILLIS / 1000f;
@@ -87,7 +89,7 @@ public class HeartbeatManager {
                 try {
                     updateOnlineUsersTtl();
                 } catch (Exception e) {
-                    log.error(e);
+                    LOGGER.error("Failed to update the TTL of users on Redis", e);
                 }
                 try {
                     Thread.sleep(UPDATE_HEARTBEAT_INTERVAL_MILLIS);
@@ -169,7 +171,7 @@ public class HeartbeatManager {
                             session.getDeviceType(),
                             closeReason)
                     .onErrorResume(t -> {
-                        log.error("Caught an error when disconnecting the local session: {} with the close reason: {}",
+                        LOGGER.error("Caught an error when disconnecting the local session: {} with the close reason: {}",
                                 session, closeReason);
                         return Mono.empty();
                     })

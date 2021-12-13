@@ -19,9 +19,9 @@ package im.turms.service.logging;
 
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.server.common.logging.CustomLogger;
 
-import static im.turms.server.common.logging.CustomLogger.LOG_FIELD_DELIMITER;
+import static im.turms.server.common.logging.CommonLogger.LOG_FIELD_DELIMITER;
+import static im.turms.server.common.logging.CommonLogger.NOTIFICATION_LOGGER;
 
 /**
  * @author James Chen
@@ -49,7 +49,7 @@ public final class NotificationLogging {
                 // Relayed request info
                 String.valueOf(relayedRequest.getRequestId()),
                 relayedRequest.getKindCase().name());
-        CustomLogger.NOTIFICATION_LOGGER.info(message);
+        NOTIFICATION_LOGGER.info(message);
     }
 
 }

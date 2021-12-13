@@ -17,13 +17,12 @@
 
 package im.turms.server.common;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.async.AsyncLogger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.processor.LogProcessorRunner;
 import org.springframework.boot.SpringApplication;
 
-import java.util.concurrent.TimeUnit;
-
-import static org.apache.logging.log4j.LogManager.getLogger;
+import java.time.Duration;
 
 /**
  * @author James Chen
@@ -35,7 +34,7 @@ public abstract class BaseTurmsApplication {
         // Disable the max direct memory limit and buffer counters of Netty
         // so that we can get the used direct memory via BufferPoolMXBean without depending on ByteBufAllocator of Netty
         System.setProperty("io.netty.maxDirectMemory", "0");
-        System.setProperty("log4j2.contextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
+        System.setProperty("spring.main.banner-mode", "off");
     }
 
     protected static void bootstrap(Class<?> applicationClass, String[] args) {
@@ -45,12 +44,16 @@ public abstract class BaseTurmsApplication {
             // Note that org.springframework.boot.SpringApplication.handleRunFailure may not trigger
             // im.turms.service.context.ApplicationContextConfig.handleContextClosedEvent
             // if the context hadn't been initialized.
-
-            Logger log = getLogger(BaseTurmsApplication.class);
-            log.error(e);
-            // Flush
-            AsyncLogger logger = (AsyncLogger) log;
-            logger.getContext().stop(1, TimeUnit.MINUTES);
+            if (LoggerFactory.isInitialized()) {
+                try {
+                    Logger logger = LoggerFactory.getLogger(BaseTurmsApplication.class);
+                    logger.error("Failed to bootstrap", e);
+                } catch (Exception ignored) {
+                    e.printStackTrace();
+                }
+            } else {
+                e.printStackTrace();
+            }
 
             // Make sure turms can exit if SpringApplication failed to bootstrap
             // (e.g. PortInUseException) because there are may still some non-daemon

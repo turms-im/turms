@@ -22,6 +22,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import reactor.netty.channel.AbortedException;
 
+import javax.annotation.Nullable;
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
@@ -43,6 +44,7 @@ public final class ExceptionUtil {
     private ExceptionUtil() {
     }
 
+    @Nullable
     public static <T> T suppress(Supplier<T> supplier) {
         try {
             return supplier.get();

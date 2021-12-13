@@ -1,6 +1,6 @@
 package im.turms.server.common.testing;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.testcontainers.containers.ContainerState;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
@@ -18,7 +18,7 @@ import java.util.Optional;
 /**
  * @author James Chen
  */
-@Log4j2
+@Slf4j
 public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContainer> implements Closeable {
 
     private static final String MONGO_SERVICE_NAME = "mongodb-router_1";

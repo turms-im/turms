@@ -22,7 +22,7 @@ package im.turms.service.constant;
  */
 public final class SecurityConstant {
 
-    public static final String SENSITIVE_VALUE = "******";
+    public static final String SENSITIVE_VALUE = "***";
 
     private SecurityConstant() {
     }

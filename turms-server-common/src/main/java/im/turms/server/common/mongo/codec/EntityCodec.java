@@ -17,10 +17,11 @@
 
 package im.turms.server.common.mongo.codec;
 
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.mongo.MongoContext;
 import im.turms.server.common.mongo.entity.EntityField;
 import im.turms.server.common.mongo.entity.MongoEntity;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ClassUtils;
 import org.bson.BsonReader;
 import org.bson.BsonType;
@@ -39,8 +40,9 @@ import java.util.Map;
  * @author James Chen
  * @see org.bson.codecs.pojo.PojoCodecImpl
  */
-@Log4j2
 public class EntityCodec<T> implements Codec<T> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EntityCodec.class);
 
     private static final String ID_FIELD = "_id";
 
@@ -134,7 +136,7 @@ public class EntityCodec<T> implements Codec<T> {
                     throw new IllegalStateException(message, e);
                 }
             } else {
-                log.warn("Found property {} not present in the entity {}", fieldName, entity.collectionName());
+                LOGGER.warn("Found property {} not present in the entity {}", fieldName, entity.collectionName());
                 reader.skipValue();
             }
         }
@@ -165,7 +167,7 @@ public class EntityCodec<T> implements Codec<T> {
                 }
                 values[field.getCtorParamIndex()] = value;
             } else {
-                log.warn("Found property not present in the entity: " + fieldName);
+                LOGGER.warn("Found property not present in the entity: " + fieldName);
                 reader.skipValue();
             }
         }

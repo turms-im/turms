@@ -1,13 +1,13 @@
 package im.turms.server.common.testing;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.testcontainers.containers.output.BaseConsumer;
 import org.testcontainers.containers.output.OutputFrame;
 
 /**
  * @author James Chen
  */
-@Log4j2
+@Slf4j
 public class ServiceLogConsumer extends BaseConsumer<ServiceLogConsumer> {
 
     private final String serviceName;

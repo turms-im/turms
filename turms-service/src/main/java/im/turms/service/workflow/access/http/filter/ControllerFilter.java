@@ -22,8 +22,6 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.AdminApiLogging;
-import im.turms.server.common.logging.RequestLoggingContext;
-import im.turms.server.common.property.env.service.env.adminapi.AdminApiProperties;
 import im.turms.server.common.property.env.service.env.adminapi.LogProperties;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
@@ -238,7 +236,6 @@ public class ControllerFilter implements WebFilter {
         boolean isLogEnabled = logProperties.isEnabled();
         boolean triggerHandlers = pluginEnabled && !turmsPluginManager.getAdminActionHandlerList().isEmpty();
         TracingContext tracingContext = new TracingContext();
-        RequestLoggingContext loggingContext = new RequestLoggingContext(tracingContext);
         if (isLogEnabled || triggerHandlers) {
             long requestTime = System.currentTimeMillis();
             ServerHttpRequest request = exchange.getRequest();
@@ -249,8 +246,8 @@ public class ControllerFilter implements WebFilter {
         }
         return checkFrequencyAndPass(chain, exchange)
                 .contextWrite(context -> {
-                    exchange.getAttributes().put(RequestLoggingContext.CTX_KEY_NAME, loggingContext);
-                    return context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext);
+                    exchange.getAttributes().put(TracingContext.CTX_KEY_NAME, tracingContext);
+                    return context.put(TracingContext.CTX_KEY_NAME, tracingContext);
                 });
     }
 
@@ -275,7 +272,7 @@ public class ControllerFilter implements WebFilter {
 
     private Mono<?> logAndTriggerHandlers(
             TurmsHandlerMethod handlerMethod,
-            TracingContext tracingContext,
+            TracingContext context,
             String account,
             String ip,
             String requestId,
@@ -292,7 +289,7 @@ public class ControllerFilter implements WebFilter {
                             return;
                         }
                         logAndTriggerHandlers0(handlerMethod,
-                                tracingContext,
+                                context,
                                 account,
                                 ip,
                                 requestId,
@@ -306,7 +303,7 @@ public class ControllerFilter implements WebFilter {
             throw new IllegalStateException("Unexpected response type: Flux. Use Mono instead");
         } else {
             logAndTriggerHandlers0(handlerMethod,
-                    tracingContext,
+                    context,
                     account,
                     ip,
                     requestId,
@@ -321,7 +318,7 @@ public class ControllerFilter implements WebFilter {
 
     private void logAndTriggerHandlers0(
             TurmsHandlerMethod handlerMethod,
-            TracingContext tracingContext,
+            TracingContext context,
             String account,
             String ip,
             String requestId,
@@ -355,7 +352,7 @@ public class ControllerFilter implements WebFilter {
             }
             handleAdminAction.subscribe();
         }
-        try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
+        try (TracingCloseableContext ignored = context.asCloseable()) {
             AdminApiLogging.log(
                     account,
                     ip,

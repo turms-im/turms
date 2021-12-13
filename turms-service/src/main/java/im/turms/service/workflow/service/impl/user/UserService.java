@@ -29,6 +29,8 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -50,7 +52,6 @@ import im.turms.service.workflow.service.impl.user.relationship.UserRelationship
 import im.turms.service.workflow.service.impl.user.relationship.UserRelationshipService;
 import im.turms.service.workflow.service.util.DomainConstraintUtil;
 import io.micrometer.core.instrument.Counter;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
@@ -72,8 +73,9 @@ import java.util.Set;
  */
 @Component
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-@Log4j2
 public class UserService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     private final GroupMemberService groupMemberService;
     private final UserRelationshipService userRelationshipService;
@@ -339,7 +341,7 @@ public class UserService {
                                         .then(conversationService.deletePrivateConversations(userIds, session))
                                         .then(userVersionService.delete(userIds, session).onErrorResume(t -> Mono.empty()))
                                         .then(messageService.deleteSequenceIds(false, userIds)
-                                                .doOnError(t -> log.error("Failed to remove the message sequence IDs for the user IDs: {}", userIds, t)))
+                                                .doOnError(t -> LOGGER.error("Failed to remove the message sequence IDs for the user IDs: {}", userIds, t)))
                                         .thenReturn(result);
                             }))
                     .retryWhen(DaoConstant.TRANSACTION_RETRY);

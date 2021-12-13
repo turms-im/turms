@@ -26,6 +26,8 @@ import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -39,7 +41,6 @@ import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.workflow.access.http.permission.AdminPermission;
 import im.turms.service.workflow.dao.domain.admin.Admin;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -63,10 +64,11 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author James Chen
  */
-@Log4j2
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class AdminService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdminService.class);
 
     private static final String ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK =
             "Only a admin with a lower rank compared to the account can be created, updated, or deleted";
@@ -113,10 +115,10 @@ public class AdminService {
                             adminMap.remove(account);
                         }
                         case INVALIDATE -> adminMap.clear();
-                        default -> log.fatal("Detect an illegal operation on Admin collection: " + event);
+                        default -> LOGGER.fatal("Detected an illegal operation on Admin collection: " + event);
                     }
                 })
-                .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of Admin: {}", o, throwable))
+                .onErrorContinue((throwable, o) -> LOGGER.error("Error while processing the change stream event of Admin: {}", o, throwable))
                 .subscribe();
 
         // Load

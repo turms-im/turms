@@ -18,71 +18,68 @@
 package im.turms.server.common.tracing;
 
 import im.turms.common.util.RandomUtil;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.FieldNameConstants;
-import org.apache.logging.log4j.ThreadContext;
+import im.turms.server.common.logging.core.context.LogThreadContext;
+import lombok.Getter;
+import lombok.Setter;
 import reactor.core.scheduler.Schedulers;
+import reactor.util.context.ContextView;
 
 /**
  * @author James Chen
  */
-@Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@FieldNameConstants
-@ToString(onlyExplicitlyIncluded = true)
 public class TracingContext {
 
+    public static final long UNDEFINED_TRACE_ID = -1;
+
+    public static final TracingContext DEFAULT = new TracingContext();
+    public static final String CTX_KEY_NAME = "REQ";
     public static final String SCHEDULE_HOOK_NAME = "TRACING";
-
-    public static final TracingContext NOOP = new TracingContext(0) {
+    public static final TracingContext NOOP = new TracingContext(UNDEFINED_TRACE_ID) {
         @Override
-        public String getTraceIdStr() {
-            return super.getTraceIdStr();
+        public void updateThreadContext() {
         }
 
         @Override
-        public boolean hasTraceId() {
-            return false;
+        public void clearThreadContext() {
         }
 
         @Override
-        public void updateMdc() {
+        public long getTraceId() {
+            return UNDEFINED_TRACE_ID;
         }
 
         @Override
-        public void clearMdc() {
+        public void setTraceId(long traceId) {
         }
     };
 
     static {
         Schedulers.onScheduleHook(SCHEDULE_HOOK_NAME, task -> {
-            String traceId = ThreadContext.get(Fields.traceId);
-            // Make sure the traceId is removed on the current thread
-            // because the traceId will be misused if the current thread is scheduled to handle other requests
-            if (traceId != null) {
-                ThreadContext.remove(Fields.traceId);
-            }
+            TracingContext context = LogThreadContext.removeAndGet();
+            // Make sure the request context is removed on the current thread
+            // because the request context will be misused if the current thread is scheduled to handle other requests
             return () -> {
-                if (traceId == null) {
+                if (context == null) {
                     task.run();
                 } else {
-                    ThreadContext.put(Fields.traceId, traceId);
+                    LogThreadContext.put(context);
                     try {
                         task.run();
                     } finally {
-                        ThreadContext.remove(Fields.traceId);
+                        LogThreadContext.remove();
                     }
                 }
             };
         });
     }
 
-    @EqualsAndHashCode.Include
-    @ToString.Include
-    private final long traceId;
-    private String traceIdStr;
+    @Getter
+    @Setter
+    private long traceId;
+
+    public TracingContext(TracingContext tracingContext) {
+        this.traceId = tracingContext.traceId;
+    }
 
     public TracingContext(long traceId) {
         this.traceId = traceId;
@@ -93,26 +90,20 @@ public class TracingContext {
         this.traceId = RandomUtil.nextPositiveLong();
     }
 
-    public String getTraceIdStr() {
-        if (traceIdStr == null) {
-            traceIdStr = String.valueOf(traceId);
+    public static long readTraceIdFromContext(ContextView context) {
+        TracingContext ctx = context.getOrDefault(CTX_KEY_NAME, null);
+        if (ctx == null) {
+            return UNDEFINED_TRACE_ID;
         }
-        return traceIdStr;
+        return ctx.traceId;
     }
 
-    public boolean hasTraceId() {
-        return true;
+    public void updateThreadContext() {
+        LogThreadContext.put(this);
     }
 
-    public void updateMdc() {
-        ThreadContext.put(Fields.traceId, getTraceIdStr());
-    }
-
-    public void clearMdc() {
-        String currentTraceId = ThreadContext.get(Fields.traceId);
-        if (currentTraceId != null && currentTraceId.equals(getTraceIdStr())) {
-            ThreadContext.remove(Fields.traceId);
-        }
+    public void clearThreadContext() {
+        LogThreadContext.removeIfEquals(this);
     }
 
     public TracingCloseableContext asCloseable() {

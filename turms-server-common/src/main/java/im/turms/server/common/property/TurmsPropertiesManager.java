@@ -19,9 +19,9 @@ package im.turms.server.common.property;
 
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.context.TurmsApplicationContext;
-import im.turms.server.common.util.PropertiesUtil;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -38,9 +38,10 @@ import java.util.function.Consumer;
  *
  * @author James Chen
  */
-@Log4j2
 @Component
 public class TurmsPropertiesManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TurmsPropertiesManager.class);
 
     public final List<Consumer<TurmsProperties>> propertiesChangeListeners = new LinkedList<>();
 
@@ -63,7 +64,7 @@ public class TurmsPropertiesManager {
         // The property should be passed from "bin/run.sh"
         String configDir = System.getProperty("spring.config.location");
         if (configDir == null || configDir.isBlank()) {
-            log.warn("The property \"spring.config.location\" is empty");
+            LOGGER.warn("The property \"spring.config.location\" is empty");
             configDir = "./config";
         }
         String latestConfigFileName = activeProfile != null
@@ -108,7 +109,7 @@ public class TurmsPropertiesManager {
             localTurmsProperties = newLocalProperties;
             PropertiesUtil.persist(latestConfigFilePath, newPropertiesStr);
         } catch (IOException e) {
-            log.error("Failed to persist new turms properties", e);
+            LOGGER.error("Failed to persist new turms properties", e);
         }
         notifyListeners(newLocalProperties);
     }
@@ -137,7 +138,7 @@ public class TurmsPropertiesManager {
             try {
                 listener.accept(properties);
             } catch (Exception e) {
-                log.error("The properties listener {} failed to handle the new properties", listener.getClass().getName(), e);
+                LOGGER.error("The properties listener {} failed to handle the new properties", listener.getClass().getName(), e);
             }
         }
     }

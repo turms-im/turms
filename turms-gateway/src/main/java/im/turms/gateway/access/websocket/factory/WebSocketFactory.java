@@ -31,7 +31,6 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
-import lombok.extern.log4j.Log4j2;
 import org.reactivestreams.Publisher;
 import org.springframework.boot.web.server.Ssl;
 import reactor.core.publisher.Flux;
@@ -73,7 +72,6 @@ import static io.netty.handler.codec.http.HttpMethod.OPTIONS;
  * spring-reative-websocket can do for us with really clear code
  * @see WebSocketFactory#getHttpRequestHandler
  */
-@Log4j2
 public final class WebSocketFactory {
     /**
      * Note: The average size of turms requests is 16~64 bytes,

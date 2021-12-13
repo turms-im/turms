@@ -17,7 +17,8 @@
 
 package im.turms.server.common.util;
 
-import lombok.extern.log4j.Log4j2;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
@@ -29,8 +30,9 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-@Log4j2
 public final class JsonSizeCalculator {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JsonSizeCalculator.class);
 
     private static final int ESTIMATED_JSON_FIELD_META_SIZE = 8;
 
@@ -55,7 +57,7 @@ public final class JsonSizeCalculator {
                 }
             } else {
                 // We don't support other array types now because we don't use them
-                log.warn("Unknown array type: " + val.getClass());
+                LOGGER.warn("Unknown array type: " + val.getClass());
             }
         } else if (val instanceof Map<?, ?> map) {
             for (Map.Entry<?, ?> entry : map.entrySet()) {

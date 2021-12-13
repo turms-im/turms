@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.util;
+package im.turms.server.common.property;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -33,10 +33,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.util.MapUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;

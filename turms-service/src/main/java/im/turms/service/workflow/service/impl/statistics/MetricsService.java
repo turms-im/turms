@@ -19,14 +19,12 @@ package im.turms.service.workflow.service.impl.statistics;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 /**
  * @author James Chen
  */
 @Service
-@Log4j2
 public class MetricsService {
 
     @Getter

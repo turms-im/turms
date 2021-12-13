@@ -27,8 +27,6 @@ import java.util.Collections;
 import java.util.Set;
 
 import static im.turms.plugin.antispam.property.TextParsingStrategy.NORMALIZATION_TRANSLITERATION;
-import static im.turms.plugin.antispam.property.TextType.CREATE_MESSAGE_REQUEST_TEXT;
-import static im.turms.plugin.antispam.property.UnwantedWordHandleStrategy.MASK_TEXT;
 import static im.turms.plugin.antispam.property.UnwantedWordHandleStrategy.REJECT_REQUEST;
 
 /**

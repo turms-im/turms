@@ -20,15 +20,17 @@ package im.turms.server.common.cluster.service.idgen;
 import im.turms.server.common.cluster.service.ClusterService;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import im.turms.server.common.cluster.service.discovery.DiscoveryService;
-import lombok.extern.log4j.Log4j2;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 
 import java.util.TreeSet;
 
 /**
  * @author James Chen
  */
-@Log4j2
 public class IdService implements ClusterService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(IdService.class);
 
     private static final int FLAKE_ID_GENERATORS_LENGTH = ServiceType.values().length;
 
@@ -80,7 +82,7 @@ public class IdService implements ClusterService {
                 .size();
         if (dataCenterId >= SnowflakeIdGenerator.MAX_DATA_CENTER_ID) {
             int fallbackDataCenterId = dataCenterId % SnowflakeIdGenerator.MAX_DATA_CENTER_ID;
-            log.warn("The data center ID {} is larger than {}, so the ID falls back to {}." +
+            LOGGER.warn("The data center ID {} is larger than {}, so the ID falls back to {}." +
                             " It runs the risk of generating same IDs in the cluster",
                     dataCenterId, SnowflakeIdGenerator.MAX_DATA_CENTER_ID - 1, fallbackDataCenterId);
             dataCenterId = fallbackDataCenterId;
@@ -97,7 +99,7 @@ public class IdService implements ClusterService {
         }
         if (localWorkerId >= SnowflakeIdGenerator.MAX_WORKER_ID) {
             int fallbackWorkerId = localWorkerId % SnowflakeIdGenerator.MAX_WORKER_ID;
-            log.warn("The node ID {} is larger than {}, so the ID falls back to {}." +
+            LOGGER.warn("The node ID {} is larger than {}, so the ID falls back to {}." +
                             " It runs the risk of generating same IDs in the cluster",
                     localWorkerId, SnowflakeIdGenerator.MAX_WORKER_ID - 1, fallbackWorkerId);
             return fallbackWorkerId;

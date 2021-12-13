@@ -20,14 +20,14 @@ package im.turms.plugin.impl;
 import im.turms.common.constant.ContentType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.plugin.TurmsExtension;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.env.service.business.StorageProperties;
 import im.turms.service.plugin.extension.StorageServiceProvider;
 import im.turms.service.workflow.service.impl.group.GroupMemberService;
 import im.turms.service.workflow.service.impl.message.MessageService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.MimeTypeUtils;
 import reactor.core.publisher.Mono;
@@ -72,7 +72,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class MinioStorageServiceProvider extends TurmsExtension implements StorageServiceProvider {
 
-    private static final Logger logger = LogManager.getLogger(MinioStorageServiceProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MinioStorageServiceProvider.class);
 
     private static final int TIMEOUT_SECONDS = 10;
 
@@ -245,7 +245,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                         currentRetryTimes++;
                         int maxAttempts = minioProperties.getRetry().getMaxAttempts();
                         if (maxAttempts > 0 && currentRetryTimes > maxAttempts) {
-                            logger.warn("The MinIO client failed to initialize");
+                            LOGGER.warn("The MinIO client failed to initialize");
                             executor.shutdown();
                             throw new RuntimeException("The MinIO client failed to initialize");
                         }
@@ -257,7 +257,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                     }
                 }, minioProperties.getRetry().getInitialInterval(), minioProperties.getRetry().getInterval(), TimeUnit.SECONDS);
             } else {
-                logger.warn("The MinIO client failed to initialize");
+                LOGGER.warn("The MinIO client failed to initialize");
             }
         }
     }
@@ -286,7 +286,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 .credentialsProvider(credentialsProvider)
                 .region(region)
                 .build();
-        logger.info("The MinIO client is connecting to: {}", endpoint);
+        LOGGER.info("The MinIO client is connecting to: {}", endpoint);
     }
 
     private void initBuckets() throws InterruptedException, ExecutionException, TimeoutException {
@@ -295,13 +295,13 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 boolean exists = bucketExists(type);
                 String bucket = getBucketName(type);
                 if (!exists) {
-                    logger.info("Bucket {} is being created", bucket);
+                    LOGGER.info("Bucket {} is being created", bucket);
                     createBucket(type);
                     putBucketPolicy(type);
                     putBucketLifecycleConfig(type);
-                    logger.info("Bucket {} is created", bucket);
+                    LOGGER.info("Bucket {} is created", bucket);
                 } else {
-                    logger.info("Bucket {} has already existed", bucket);
+                    LOGGER.info("Bucket {} has already existed", bucket);
                 }
             }
         }

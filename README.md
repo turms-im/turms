@@ -99,7 +99,6 @@ Note: The main disadvantage of the current Turms project is that it does not pro
       * During business logic processing, there is no synchronization or lock, only CAS
   * Memory
       * The Turms server allocates heap or direct memory smartly according to its usage to reduce the memory footprint 
-      * If you add `-XX:+AlwaysPreTouch` to the JVM configuration, the Turms server can ensure that it commits all the required heap memory when the server starts, so that no page faults will occur when the Turms server is running to improve efficiency
       * The Turms server refactors parts of MongoDB/Redis client dependencies to ensure that there is no redundant memory allocation in the Turms server, which greatly improves the effective use of memory
   * Cache: The Turms server makes full use of the local memory cache
 ## Subprojects

@@ -26,6 +26,8 @@ import im.turms.common.constant.GroupUpdateStrategy;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.RequestStatus;
 import im.turms.server.common.dao.domain.User;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.property.env.service.env.FakeProperties;
 import im.turms.server.common.security.PasswordManager;
@@ -52,7 +54,6 @@ import im.turms.service.workflow.dao.domain.user.UserRelationshipGroup;
 import im.turms.service.workflow.dao.domain.user.UserRelationshipGroupMember;
 import im.turms.service.workflow.dao.domain.user.UserVersion;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import reactor.core.publisher.Mono;
@@ -67,8 +68,9 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-@Log4j2
 public final class MongoFakingManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MongoFakingManager.class);
 
     private final PasswordManager passwordManager;
 
@@ -139,7 +141,7 @@ public final class MongoFakingManager {
     }
 
     public Mono<Void> fakeData() {
-        log.info("Start faking...");
+        LOGGER.info("Start faking...");
 
         final int adminCount = 10;
 
@@ -377,34 +379,34 @@ public final class MongoFakingManager {
         // but it won't block when running in non-debug mode
         // and there is no blocking method after reviewing the workflow of TurmsMongoClient#insertAll
         Mono<Void> adminMono = adminMongoClient.insertAll(adminRelatedObjs)
-                .doOnSubscribe(s -> log.info("Start faking admin-related data"))
-                .doOnError(error -> log.error("Failed to fake admin-related data", error))
-                .doOnSuccess(unused -> log.info("Admin-related data has been faked"))
+                .doOnSubscribe(s -> LOGGER.info("Start faking admin-related data"))
+                .doOnError(error -> LOGGER.error("Failed to fake admin-related data", error))
+                .doOnSuccess(unused -> LOGGER.info("Admin-related data has been faked"))
                 .subscribeOn(Schedulers.boundedElastic());
         Mono<Void> userMono = userMongoClient.insertAll(userRelatedObjs)
-                .doOnSubscribe(s -> log.info("Start faking user-related data"))
-                .doOnError(error -> log.error("Failed to fake user-related data", error))
-                .doOnSuccess(unused -> log.info("User-related data has been faked"))
+                .doOnSubscribe(s -> LOGGER.info("Start faking user-related data"))
+                .doOnError(error -> LOGGER.error("Failed to fake user-related data", error))
+                .doOnSuccess(unused -> LOGGER.info("User-related data has been faked"))
                 .subscribeOn(Schedulers.boundedElastic());
         Mono<Void> groupMono = groupMongoClient.insertAll(groupRelatedObjs)
-                .doOnSubscribe(s -> log.info("Start faking group-related data"))
-                .doOnError(error -> log.error("Failed to fake group-related data", error))
-                .doOnSuccess(unused -> log.info("Group-related data has been faked"))
+                .doOnSubscribe(s -> LOGGER.info("Start faking group-related data"))
+                .doOnError(error -> LOGGER.error("Failed to fake group-related data", error))
+                .doOnSuccess(unused -> LOGGER.info("Group-related data has been faked"))
                 .subscribeOn(Schedulers.boundedElastic());
         Mono<Void> conversationMono = conversationMongoClient.insertAll(conversationRelatedObjs)
-                .doOnSubscribe(s -> log.info("Start faking conversation-related data"))
-                .doOnError(error -> log.error("Failed to fake conversation-related data", error))
-                .doOnSuccess(unused -> log.info("Conversation-related data has been faked"))
+                .doOnSubscribe(s -> LOGGER.info("Start faking conversation-related data"))
+                .doOnError(error -> LOGGER.error("Failed to fake conversation-related data", error))
+                .doOnSuccess(unused -> LOGGER.info("Conversation-related data has been faked"))
                 .subscribeOn(Schedulers.boundedElastic());
         Mono<Void> messageMono = messageMongoClient.insertAll(messageRelatedObjs)
-                .doOnSubscribe(s -> log.info("Start faking message-related data"))
-                .doOnError(error -> log.error("Failed to fake message-related data", error))
-                .doOnSuccess(unused -> log.info("Message-related data has been faked"))
+                .doOnSubscribe(s -> LOGGER.info("Start faking message-related data"))
+                .doOnError(error -> LOGGER.error("Failed to fake message-related data", error))
+                .doOnSuccess(unused -> LOGGER.info("Message-related data has been faked"))
                 .subscribeOn(Schedulers.boundedElastic());
         return Mono.when(adminMono, userMono, groupMono, conversationMono, messageMono)
                 .then()
-                .doOnSuccess(ignored -> log.info("All data has been faked"))
-                .doOnError(t -> log.error("Failed to fake data", t));
+                .doOnSuccess(ignored -> LOGGER.info("All data has been faked"))
+                .doOnError(t -> LOGGER.error("Failed to fake data", t));
     }
 
     private long nextId() {

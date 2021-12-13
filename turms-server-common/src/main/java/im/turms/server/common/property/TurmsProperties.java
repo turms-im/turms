@@ -19,7 +19,7 @@ package im.turms.server.common.property;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.env.common.IpProperties;
-import im.turms.server.common.property.env.common.LoggingProperties;
+import im.turms.server.common.property.env.common.logging.LoggingProperties;
 import im.turms.server.common.property.env.common.PluginProperties;
 import im.turms.server.common.property.env.common.UserStatusProperties;
 import im.turms.server.common.property.env.common.cluster.ClusterProperties;

@@ -18,9 +18,10 @@
 package im.turms.server.common.plugin;
 
 import im.turms.server.common.context.TurmsApplicationContext;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Nullable;
@@ -31,8 +32,9 @@ import java.util.List;
 /**
  * @author James Chen
  */
-@Log4j2
 public abstract class AbstractTurmsPluginManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTurmsPluginManager.class);
 
     @Getter
     private final boolean enabled;
@@ -67,7 +69,7 @@ public abstract class AbstractTurmsPluginManager {
                 try {
                     pluginManager.stopExtension(extension);
                 } catch (Exception e) {
-                    log.error("Caught an exception when stopping the extension " + extension.getClass().getName(), e);
+                    LOGGER.error("Caught an exception when stopping the extension " + extension.getClass().getName(), e);
                 }
             }
         }

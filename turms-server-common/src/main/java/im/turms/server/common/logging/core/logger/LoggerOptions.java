@@ -15,27 +15,22 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.common;
+package im.turms.server.common.logging.core.logger;
 
-import lombok.AllArgsConstructor;
+import im.turms.server.common.logging.core.model.LogLevel;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
 @Builder(toBuilder = true)
 @Data
-@NoArgsConstructor
-public class LoggingProperties {
-
-    public static final boolean ENABLE_CONSOLE_APPENDER_DEFAULT_VALUE = false;
-    public static final boolean ENABLE_FILE_APPENDER_DEFAULT_VALUE = true;
-
-    private boolean enableConsoleAppender = ENABLE_CONSOLE_APPENDER_DEFAULT_VALUE;
-
-    private boolean enableFileAppender = ENABLE_FILE_APPENDER_DEFAULT_VALUE;
-
+public final class LoggerOptions {
+    private final Class<?> loggerClass;
+    private final String loggerName;
+    private final LogLevel level;
+    private final String filePath;
+    private final boolean shouldParse;
+//    private final boolean shouldEscape;
 }

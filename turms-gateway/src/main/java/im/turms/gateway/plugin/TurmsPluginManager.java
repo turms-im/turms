@@ -24,7 +24,6 @@ import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.plugin.AbstractTurmsPluginManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +34,6 @@ import java.util.List;
  */
 @Component
 @Getter
-@Log4j2
 public class TurmsPluginManager extends AbstractTurmsPluginManager {
 
     private List<NotificationHandler> notificationHandlerList;

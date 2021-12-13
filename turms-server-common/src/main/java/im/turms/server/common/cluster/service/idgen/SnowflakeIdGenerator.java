@@ -19,7 +19,6 @@ package im.turms.server.common.cluster.service.idgen;
 
 
 import im.turms.common.util.RandomUtil;
-import lombok.extern.log4j.Log4j2;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -47,7 +46,6 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author James Chen
  */
-@Log4j2
 public class SnowflakeIdGenerator {
 
     /**

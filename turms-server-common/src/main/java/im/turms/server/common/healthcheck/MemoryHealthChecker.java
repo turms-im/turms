@@ -20,10 +20,11 @@ package im.turms.server.common.healthcheck;
 import com.sun.management.HotSpotDiagnosticMXBean;
 import com.sun.management.OperatingSystemMXBean;
 import com.sun.management.VMOption;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.model.LogLevel;
 import im.turms.server.common.property.env.common.healthcheck.MemoryHealthCheckProperties;
 import io.netty.util.internal.PlatformDependent;
-import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.Level;
 
 import java.lang.management.BufferPoolMXBean;
 import java.lang.management.ManagementFactory;
@@ -45,8 +46,9 @@ import java.util.Optional;
  * @see jdk.internal.access.JavaNioAccess#getDirectBufferPool
  * @see io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
  */
-@Log4j2
 public final class MemoryHealthChecker extends HealthChecker {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MemoryHealthChecker.class);
 
     private final OperatingSystemMXBean operatingSystemBean;
 
@@ -126,7 +128,7 @@ public final class MemoryHealthChecker extends HealthChecker {
         }
         int estimatedMaxNonHeapMemory = 256 * 1024 * 1024;
         if (maxAvailableMemory > maxAvailableDirectMemory + maxHeapMemory + estimatedMaxNonHeapMemory) {
-            log.warn("The max available memory %s is larger than the total of the available direct memory %s, the max heap memory %s, and the estimated max non-heap memory %s, "
+            LOGGER.warn("The max available memory %s is larger than the total of the available direct memory %s, the max heap memory %s, and the estimated max non-heap memory %s, "
                     .formatted(asMbString(maxAvailableMemory), asMbString(maxAvailableDirectMemory), asMbString(maxHeapMemory), asMbString(estimatedMaxNonHeapMemory))
                     + "which indicates that some memory will never be used by the server");
         }
@@ -161,13 +163,15 @@ public final class MemoryHealthChecker extends HealthChecker {
         usedAvailableMemory = usedDirectMemory + usedHeapMemory + usedNonHeapMemory;
         freeSystemMemory = operatingSystemBean.getFreeMemorySize();
         usedSystemMemory = totalPhysicalMemorySize - freeSystemMemory;
+
+        tryLog();
     }
 
     private void tryLog() {
         boolean isHealthy = isHealthy();
-        Level logLevel = isHealthy ? Level.DEBUG : Level.WARN;
-        if (log.isEnabled(logLevel)) {
-            log.log(logLevel, "Used system memory: {}/{}; "
+        LogLevel logLevel = isHealthy ? LogLevel.DEBUG : LogLevel.WARN;
+        if (LOGGER.isEnabled(logLevel)) {
+            LOGGER.log(logLevel, "Used system memory: {}/{}; "
                             + "Used available memory: {}/{}; "
                             + "Used direct memory: {}/{}/{}; "
                             + "Used heap memory: {}/{}; "
@@ -192,20 +196,20 @@ public final class MemoryHealthChecker extends HealthChecker {
         if (directMemoryWarningThresholdPercentage > 0 && directMemoryWarningThresholdPercentage < usedMemoryPercentage
                 && minMemoryWarningIntervalMillis < (now - lastDirectMemoryWarningTimestamp)) {
             lastDirectMemoryWarningTimestamp = now;
-            log.warn("The used direct memory has exceeded the warning threshold: {}/{}/{}/{}",
+            LOGGER.warn("The used direct memory has exceeded the warning threshold: {}/{}/{}/{}",
                     asMbString(usedDirectMemory), asMbString(maxDirectMemory), usedMemoryPercentage, directMemoryWarningThresholdPercentage);
         }
         usedMemoryPercentage = 100F * usedHeapMemory / maxHeapMemory;
         if (heapMemoryWarningThresholdPercentage > 0 && heapMemoryWarningThresholdPercentage < usedMemoryPercentage
                 && minMemoryWarningIntervalMillis < (now - lastHeapMemoryWarningTimestamp)) {
             lastHeapMemoryWarningTimestamp = now;
-            log.warn("The used heap memory has exceeded the warning threshold: {}/{}/{}/{}",
+            LOGGER.warn("The used heap memory has exceeded the warning threshold: {}/{}/{}/{}",
                     asMbString(usedHeapMemory), asMbString(maxHeapMemory), usedMemoryPercentage, heapMemoryWarningThresholdPercentage);
         }
         if (!isHealthy && heapMemoryGcThresholdPercentage > 0 && heapMemoryGcThresholdPercentage < usedMemoryPercentage
                 && minHeapMemoryGcIntervalMillis < (now - lastHeapMemoryGcTimestamp)) {
             lastHeapMemoryGcTimestamp = now;
-            log.info("Trying to start GC because the available memory has exceeded and the used heap memory has exceeded the GC threshold: {}/{}/{}/{}",
+            LOGGER.info("Trying to start GC because the available memory has exceeded and the used heap memory has exceeded the GC threshold: {}/{}/{}/{}",
                     asMbString(usedHeapMemory), asMbString(maxHeapMemory), usedMemoryPercentage, heapMemoryGcThresholdPercentage);
             System.gc();
         }

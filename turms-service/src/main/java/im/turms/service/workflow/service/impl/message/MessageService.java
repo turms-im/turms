@@ -32,6 +32,8 @@ import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -60,7 +62,6 @@ import io.micrometer.core.instrument.Counter;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -98,9 +99,10 @@ import static im.turms.service.constant.MetricsConstant.SENT_MESSAGES_COUNTER_NA
  * @author James Chen
  */
 @Service
-@Log4j2
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class MessageService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageService.class);
 
     private static final byte[] GROUP_CONVERSATION_SEQUENCE_ID_PREFIX = new byte[]{'g', 'i'};
     private static final byte[] PRIVATE_CONVERSATION_SEQUENCE_ID_PREFIX = new byte[]{'p', 'i'};
@@ -857,7 +859,7 @@ public class MessageService {
                         // No need to let the client wait to send notifications to recipients
                         sendMessage(message, pair.getRight())
                                 .onErrorResume(t -> {
-                                    log.error("Failed to send message", t);
+                                    LOGGER.error("Failed to send message", t);
                                     return Mono.empty();
                                 })
                                 .subscribe();

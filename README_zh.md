@@ -104,7 +104,6 @@ Turms基于读扩散消息模型进行架构设计，对业务数据变化感知
      - 业务逻辑处理过程中，无同步加锁操作，只有CAS操作
    - 内存
      - 在划分内存空间时，合理且充分地循环利用堆内存与直接内存
-     - 如果您在JVM配置中添加了`-XX:+AlwaysPreTouch`，即可保证Turms在服务端启动时向系统commit所有需要的堆内存，保证Turms服务端在运作时不会发生缺页异常，以提升运行效率
      - Turms通过重写MongoDB/Redis客户端依赖的部分实现，保证了Turms服务端中无冗余的内存分配，极大地提高了内存的有效使用率
    - 缓存：Turms服务端各功能模块充分利用本地内存缓存
 
@@ -119,7 +118,7 @@ Turms基于读扩散消息模型进行架构设计，对业务数据变化感知
 | <span style="white-space:nowrap;">turms-client-kotlin</span> | 同上                                                         |
 | <span style="white-space:nowrap;">turms-client-swift</span>  | 同上                                                         |
 | <span style="white-space:nowrap;">turms-plugin</span>        | 当指定事件（如用户上下线、消息接收与转发等）被触发时，turms-gateway和turms-service会调用对应的自定义插件以方便开发者实现各种各样定制化功能 |
-| <span style="white-space:nowrap;">turms-plugin-antispam</span> | 基于双数组Trie的AC自动机算法实现（检测的时间复杂度为O(n)，n为目标字符串code points的长度） |
+| <span style="white-space:nowrap;">turms-plugin-antispam</span> | 基于双数组Trie的AC自动机算法实现的反垃圾机制（检测的时间复杂度为O(n)，n为目标字符串code points的长度） |
 | <span style="white-space:nowrap;">turms-plugin-minio</span>  | 基于turms-plugin实现的存储服务插件。用于与MinIO服务端进行交互 |
 | <span style="white-space:nowrap;">turms-data（TODO）</span>  | 尚未发布。基于Flink生态的独立数据分析系统，负责业务数据统计与分析，为turms的管理员统计API与turms-admin运营报表提供底层数据支持 |
 

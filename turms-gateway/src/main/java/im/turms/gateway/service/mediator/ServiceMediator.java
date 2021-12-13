@@ -36,7 +36,6 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.exception.TurmsBusinessException;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -53,7 +52,6 @@ import java.util.List;
  * @author James Chen
  */
 @Component
-@Log4j2
 public class ServiceMediator {
 
     private static final long ADMIN_ID = 0;

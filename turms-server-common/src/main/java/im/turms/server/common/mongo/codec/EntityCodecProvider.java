@@ -18,7 +18,6 @@
 package im.turms.server.common.mongo.codec;
 
 import lombok.Data;
-import lombok.extern.log4j.Log4j2;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -31,7 +30,6 @@ import java.util.Map;
  * @see org.bson.codecs.pojo.PojoCodecProvider
  */
 @Data
-@Log4j2
 public class EntityCodecProvider implements CodecProvider {
 
     private final Map<Class<?>, EntityCodec<?>> codecs = new IdentityHashMap<>(64);

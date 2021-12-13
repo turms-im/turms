@@ -28,7 +28,6 @@ import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
 import im.turms.server.common.service.blocklist.BlocklistService;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -39,7 +38,6 @@ import javax.validation.constraints.NotNull;
  * @author James Chen
  */
 @Service
-@Log4j2
 public class InboundRequestService {
 
     private static final ServiceResponse REQUEST_RESPONSE_NO_CONTENT = new ServiceResponse(null, TurmsStatusCode.NO_CONTENT, null);

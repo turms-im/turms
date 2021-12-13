@@ -30,10 +30,7 @@ import lombok.Data;
  * <p>
  * Note that there is a built-in immutable group type:
  * <pre>
- * {
- *     id: 0,
- *     name: "DEFAULT"
- * }
+ * { id: 0, name: "DEFAULT" }
  * </pre>
  *
  * @author James Chen

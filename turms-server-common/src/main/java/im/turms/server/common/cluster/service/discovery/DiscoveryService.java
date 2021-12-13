@@ -33,13 +33,14 @@ import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.env.common.cluster.DiscoveryProperties;
 import im.turms.server.common.util.CollectorUtil;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.ListUtils;
 import org.bson.BsonValue;
 import reactor.core.publisher.Flux;
@@ -72,8 +73,9 @@ import java.util.concurrent.TimeUnit;
  *
  * @author James Chen
  */
-@Log4j2
 public class DiscoveryService implements ClusterService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DiscoveryService.class);
 
     private static final Duration CRUD_TIMEOUT_DURATION = Duration.ofSeconds(10);
     private static final Comparator<Member> MEMBER_PRIORITY_COMPARATOR = DiscoveryService::compareMemberPriority;
@@ -274,7 +276,7 @@ public class DiscoveryService implements ClusterService {
                         }
                     }
                 })
-                .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of Leader: {}", o, throwable))
+                .onErrorContinue((throwable, o) -> LOGGER.error("Error while processing the change stream event of Leader: {}", o, throwable))
                 .subscribe();
     }
 
@@ -318,7 +320,7 @@ public class DiscoveryService implements ClusterService {
                     updateActiveMembers(allKnownMembers.values());
                     connectionService.updateHasConnectedToAllMembers(allKnownMembers.keySet());
                 })
-                .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of Member: {}", o, throwable))
+                .onErrorContinue((throwable, o) -> LOGGER.error("Error while processing the change stream event of Member: {}", o, throwable))
                 .subscribe();
     }
 

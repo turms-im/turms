@@ -31,6 +31,8 @@ import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -52,7 +54,6 @@ import im.turms.service.workflow.service.impl.statistics.MetricsService;
 import im.turms.service.workflow.service.impl.user.UserPermissionGroupService;
 import im.turms.service.workflow.service.impl.user.UserVersionService;
 import io.micrometer.core.instrument.Counter;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
@@ -86,8 +87,9 @@ import static im.turms.service.workflow.dao.domain.group.GroupMember.Fields.ID_U
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-@Log4j2
 public class GroupService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GroupService.class);
 
     private final Node node;
     private final TurmsMongoClient mongoClient;
@@ -279,7 +281,7 @@ public class GroupService {
                                 .then(conversationService.deleteGroupConversations(groupIds, session))
                                 .then(groupVersionService.delete(groupIds, session))
                                 .then(deleteSequenceIds
-                                        .doOnError(t -> log.error("Failed to remove the message sequence IDs for the group IDs: {}", groupIds, t)))
+                                        .doOnError(t -> LOGGER.error("Failed to remove the message sequence IDs for the group IDs: {}", groupIds, t)))
                                 .thenReturn(result);
                     });
                 })

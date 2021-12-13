@@ -22,6 +22,8 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.util.RandomUtil;
 import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.server.common.dto.CloseReason;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.throttle.TokenBucket;
 import im.turms.server.common.throttle.TokenBucketContext;
 import im.turms.server.common.tracing.TracingContext;
@@ -29,7 +31,6 @@ import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.data.geo.Point;
 
 import javax.annotation.Nullable;
@@ -42,8 +43,9 @@ import java.util.function.BiConsumer;
  * @author James Chen
  */
 @Data
-@Log4j2
 public final class UserSession {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserSession.class);
 
     private final int id = RandomUtil.nextPositiveInt();
 
@@ -117,7 +119,7 @@ public final class UserSession {
             if (connection != null) {
                 connection.close(closeReason);
             } else {
-                log.warn("The connection is missing for the user session: {}", this);
+                LOGGER.warn("The connection is missing for the user session: {}", this);
             }
         }
     }

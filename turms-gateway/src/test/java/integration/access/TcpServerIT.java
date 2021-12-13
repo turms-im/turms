@@ -5,7 +5,6 @@ import im.turms.gateway.access.tcp.factory.TcpServerFactory;
 import im.turms.server.common.healthcheck.ServerStatusManager;
 import im.turms.server.common.property.env.gateway.TcpProperties;
 import im.turms.server.common.service.blocklist.BlocklistService;
-import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.OngoingStubbing;
 import reactor.core.publisher.Mono;
@@ -20,7 +19,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@Log4j2
 class TcpServerIT {
 
     private static final ConnectionHandler NEVER_CLOSE = (connection, isWebSocketConnection, in, out, onClose) -> Mono.never();
@@ -47,7 +45,7 @@ class TcpServerIT {
 
         int i = 0;
         for (Boolean isActive : isActiveReturnValues) {
-            log.debug("The client with index {} is connecting...", i);
+            System.out.printf("The client with index %d is connecting...", i);
             Connection connection = TcpClient.create()
                     .host(server.host())
                     .port(server.port())

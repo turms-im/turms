@@ -28,6 +28,9 @@ import im.turms.server.common.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.cluster.service.discovery.MemberConnectionListener;
 import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.rpc.RpcService;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.model.LogLevel;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.property.env.common.cluster.connection.ConnectionClientProperties;
 import im.turms.server.common.property.env.common.cluster.connection.ConnectionProperties;
 import im.turms.server.common.property.env.common.cluster.connection.ConnectionServerProperties;
@@ -36,8 +39,6 @@ import im.turms.server.common.util.SslUtil;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.Level;
 import org.springframework.boot.web.server.Ssl;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
@@ -84,8 +85,9 @@ import static im.turms.server.common.constant.CommonMetricsConstant.NODE_TCP_CLI
  * 2. It's more nature for users to call "rpcService.requestResponse()" instead of "connectionService.requestResponse()",
  * which makes it too general in functionality
  */
-@Log4j2
 public class ConnectionService implements ClusterService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionService.class);
 
     private final Ssl clientSsl;
     private final long keepaliveIntervalMillis;
@@ -135,7 +137,7 @@ public class ConnectionService implements ClusterService {
         keepaliveThread = new DefaultThreadFactory("turms-cluster-connection-keepalive", true)
                 .newThread(() -> {
                     sendKeepaliveToConnectionsForever();
-                    log.warn("Keepalive thread has been stopped");
+                    LOGGER.warn("Keepalive thread has been stopped");
                 });
         keepaliveThread.start();
         server = setupServer();
@@ -148,7 +150,7 @@ public class ConnectionService implements ClusterService {
             try {
                 server.dispose();
             } catch (Exception e) {
-                log.error("Failed to stop the local server", e);
+                LOGGER.error("Failed to stop the local server", e);
             }
         }
         ClosingHandshakeRequest request = new ClosingHandshakeRequest(CLOSE_STATUS_CODE_SERVER_SHUTTING_DOWN);
@@ -164,7 +166,7 @@ public class ConnectionService implements ClusterService {
             } else {
                 rpcService.requestResponse(nodeId, request)
                         .onErrorResume(t -> {
-                            log.error("Failed to send a closing handshake request", t);
+                            LOGGER.error("Failed to send a closing handshake request", t);
                             return Mono.empty();
                         })
                         .doOnTerminate(conn::dispose)
@@ -247,7 +249,7 @@ public class ConnectionService implements ClusterService {
 
     private void connectMemberUntilSucceedOrRemoved0(Member member) {
         String nodeId = member.getNodeId();
-        log.info("[Client] Connecting to member: {}[{}:{}]. Retry times: {}",
+        LOGGER.info("[Client] Connecting to member: {}[{}:{}]. Retry times: {}",
                 nodeId,
                 member.getMemberHost(),
                 member.getMemberPort(),
@@ -258,12 +260,12 @@ public class ConnectionService implements ClusterService {
                             new TurmsConnection(nodeId, (ChannelOperations<?, ?>) conn, true, newMemberConnectionListeners());
                     onMemberConnectionAdded(member, connection);
                     String localNodeId = discoveryService.getLocalMember().getNodeId();
-                    log.info("[Client] Sending a open handshake request to member: {}[{}:{}]",
+                    LOGGER.info("[Client] Sending a open handshake request to member: {}[{}:{}]",
                             nodeId, member.getMemberHost(), member.getMemberPort());
                     rpcService.requestResponse(nodeId, new OpeningHandshakeRequest(localNodeId), null, connection)
                             .doOnSuccess(unused -> onMemberConnectionHandshakeCompleted(member, connection, true))
                             .onErrorResume(throwable -> {
-                                log.error("[Client] Failed to complete handshake with member: {}[{}:{}]. Closing connection to reconnect",
+                                LOGGER.error("[Client] Failed to complete handshake with member: {}[{}:{}]. Closing connection to reconnect",
                                         nodeId, member.getMemberHost(), member.getMemberPort(), throwable);
                                 // To keep logic simple, just disconnect to
                                 // connect and start a handshake again.
@@ -278,7 +280,7 @@ public class ConnectionService implements ClusterService {
                         return Mono.empty();
                     }
                     int retryTimes = connectionRetryTimesMap.getOrDefault(nodeId, 0);
-                    log.error("[Client] Failed to connect to member: {}[{}:{}]. Retry times: {}",
+                    LOGGER.error("[Client] Failed to connect to member: {}[{}:{}]. Retry times: {}",
                             nodeId, member.getMemberHost(), member.getMemberPort(), retryTimes, throwable);
                     retryTimes++;
                     connectionRetryTimesMap.put(nodeId, retryTimes);
@@ -313,7 +315,7 @@ public class ConnectionService implements ClusterService {
                 try {
                     sendKeepalive(iterator);
                 } catch (Exception e) {
-                    log.error("Caught an exception when sending keepalive", e);
+                    LOGGER.error("Caught an exception when sending keepalive", e);
                 }
             }
             try {
@@ -339,7 +341,7 @@ public class ConnectionService implements ClusterService {
         long now = System.currentTimeMillis();
         long elapsedTime = now - connection.getLastKeepaliveTimestamp();
         if (elapsedTime > keepaliveTimeoutMillis) {
-            log.warn("Reconnecting to the member {} due to keepalive timeout", nodeId);
+            LOGGER.warn("Reconnecting to the member {} due to keepalive timeout", nodeId);
             // onConnectionClosed() will reconnect the member
             disconnectConnection(connection);
             iterator.remove();
@@ -352,12 +354,12 @@ public class ConnectionService implements ClusterService {
             rpcService.requestResponse(nodeId, new KeepaliveRequest())
                     .doOnSuccess(unused -> connection.setLastKeepaliveTimestamp(System.currentTimeMillis()))
                     .onErrorResume(t -> {
-                        log.warn("Failed to send a keepalive request to the member " + nodeId, t);
+                        LOGGER.warn("Failed to send a keepalive request to the member " + nodeId, t);
                         return Mono.empty();
                     })
                     .subscribe();
         } catch (Exception e) {
-            log.error("Failed to send a keepalive request to the member " + nodeId, e);
+            LOGGER.error("Failed to send a keepalive request to the member " + nodeId, e);
         }
     }
 
@@ -410,14 +412,14 @@ public class ConnectionService implements ClusterService {
     private void onMemberConnectionAdded(@Nullable Member member, TurmsConnection connection) {
         String endpointType = connection.isLocalNodeClient() ? "Client" : "Server";
         String memberIdAndAddress = getMemberIdAndAddress(member);
-        log.info("[{}] Connected to member{}",
+        LOGGER.info("[{}] Connected to member{}",
                 endpointType,
                 member == null ? "" : ": " + memberIdAndAddress);
         for (MemberConnectionListener listener : connection.getListeners()) {
             try {
                 listener.onConnectionOpen(connection);
             } catch (Exception e) {
-                log.error("Caught an error when invoking onConnectionOpen listeners", e);
+                LOGGER.error("Caught an error when invoking onConnectionOpen listeners", e);
             }
         }
         ChannelOperations<?, ?> conn = connection.getConnection();
@@ -427,7 +429,7 @@ public class ConnectionService implements ClusterService {
                         try {
                             listener.onDataReceived(value);
                         } catch (Exception e) {
-                            log.error("Caught an error when invoking onDataReceived listeners", e);
+                            LOGGER.error("Caught an error when invoking onDataReceived listeners", e);
                         }
                     }
                 })
@@ -435,7 +437,7 @@ public class ConnectionService implements ClusterService {
                     if (ExceptionUtil.isDisconnectedClientError(t) && connection.isClosing()) {
                         return Mono.empty();
                     }
-                    log.error("[{}] Failed to listen to the connection to the member{}",
+                    LOGGER.error("[{}] Failed to listen to the connection to the member{}",
                             endpointType,
                             member == null ? "" : ": " + memberIdAndAddress,
                             t);
@@ -457,8 +459,8 @@ public class ConnectionService implements ClusterService {
         String nodeId = connection.getNodeId();
         Member member = discoveryService.getMember(nodeId);
         String memberIdAndAddress = member == null ? "" : ": " + getMemberIdAndAddress(member);
-        Level logLevel = connection.isClosing() ? Level.INFO : Level.WARN;
-        log.log(logLevel, "[{}] The connection to the member{} has been closed{}",
+        LogLevel logLevel = connection.isClosing() ? LogLevel.INFO : LogLevel.WARN;
+        LOGGER.log(logLevel, "[{}] The connection to the member{} has been closed{}",
                 nodeType,
                 memberIdAndAddress,
                 connection.isClosing() ? "" : " unexpectedly",
@@ -467,7 +469,7 @@ public class ConnectionService implements ClusterService {
             try {
                 listener.onConnectionClosed();
             } catch (Exception e) {
-                log.error("Caught an error when invoking onConnectionClosed listeners", e);
+                LOGGER.error("Caught an error when invoking onConnectionClosed listeners", e);
             }
         }
         boolean isKnownMember = discoveryService.isKnownMember(nodeId);
@@ -486,14 +488,14 @@ public class ConnectionService implements ClusterService {
                     : !isKnownMember
                     ? "the member is unknown"
                     : "the local node is closing";
-            log.info("[{}] Stop to connect the member{} because {}",
+            LOGGER.info("[{}] Stop to connect the member{} because {}",
                     nodeType, memberIdAndAddress, reason);
         }
     }
 
     private void onMemberConnectionHandshakeCompleted(Member member, TurmsConnection connection, boolean isLocalNodeClient) {
         String nodeId = member.getNodeId();
-        log.info("[{}] Completed the handshake with member: {}[{}:{}]",
+        LOGGER.info("[{}] Completed the handshake with member: {}[{}:{}]",
                 isLocalNodeClient ? "Client" : "Server",
                 nodeId,
                 member.getMemberHost(),
@@ -506,7 +508,7 @@ public class ConnectionService implements ClusterService {
             try {
                 listener.onOpeningHandshakeCompleted(member);
             } catch (Exception e) {
-                log.error("Caught an error when invoking onOpeningHandshakeCompleted listeners", e);
+                LOGGER.error("Caught an error when invoking onOpeningHandshakeCompleted listeners", e);
             }
         }
     }

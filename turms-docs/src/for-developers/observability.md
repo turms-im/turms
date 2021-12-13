@@ -135,7 +135,20 @@ Turms与其他常规服务端一样，将可观测性的具体实现分为三类
 
 每条日志都对应着Turms服务端运行时发生的事件，用于追踪系统的运行状态与生成高纬度的统计数据。Turms中的日志分类两大类，即`应用日志`与`业务日志`。应用运行日志本身数量不多，占用空间不大，遵循精与准原则。但为业务分析而设计的客户端API访问日志则不同，它是大部分统计数据的基础数据，是企业的重要资产，因此Turms默认对其进行100%采样，存储消耗巨大。
 
-注意：Turms的所有日志、度量与链路追踪的数据格式设计，都是兼顾“简单快捷，方便快速查询”与“精准采样，方便日志服务分析”设计的，但Turms本身不提供任何日志分析功能。
+注意
+
+* Turms的所有日志、度量与链路追踪的数据格式设计，都是兼顾“简单快捷，方便快速查询”与“精准采样，方便日志服务分析”设计的，但Turms本身不提供任何日志分析功能
+* Turms的日志时间戳与日志切割都是根据UTC时间，而非系统默认时间
+
+### 定制实现原因
+
+1. 第三方Logging实现过于冗余，性能低下且内存占用高
+2. 避免第三方Logging的开发人员由于缺乏安全常识，写出类似[Remote code injection in Log4j](https://github.com/advisories/GHSA-jfh8-c2jp-5v3q)的Critical bug
+3. Turms的日志实现通过“几乎什么功能都没实现”，并且实现了的功能也照着几乎最高性能标准实现（之后我们会避免使用Java低效的`String`与`StringBuilder`，达到更高的性能），因此该实现的吞吐量能比log4j2 async logger高数倍，同时内存开销小数倍
+4. Turms打印日志的过程也非常精简，大概只实现了标准日志库的百分之几的功能，具体包括：
+   * 调用`log`接口
+   * `log`接口内部通过`PooledByteBufAllocator.DEFAULT`分配一块堆外内存，并遍历一遍message，将非占位符直接写入该内存，跳过占位符并写入具体参数，最后将这块内存放到日志处理的MPSC队列中（基于jctools的`MpscUnboundedArrayQueue`）
+   * 日志处理线程检测到有新的日志（即`ByteBuffer`对象）时，会将该堆外内存写入NIO包的`FileChannel`（可以是控制台、也可以是文件）中，该对象在Linux系统下，会最终调用`pwrite`直接将堆外内存写入文件描述符中
 
 ### 不使用JSON格式的原因
 
@@ -197,7 +210,7 @@ turms-service的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 示例：
 
 ```spreadsheet
-2021-09-02 07:19:27.219  INFO S wzocsebz 3501287524626242885 Thread-28 : turms|0:0:0:0:0:0:0:1|db612e82-199|2021-09-02T07:30:30.414Z|updateUser|1|{ids=[1], updateUserDTO=UpdateUserDTO[password=******, name=null, intro=null, profileAccess=null, permissionGroupId=null, registrationDate=null, isActive=null]}|TRUE|
+2021-09-02 07:19:27.219  INFO S wzocsebz 3501287524626242885 Thread-28 : turms|0:0:0:0:0:0:0:1|db612e82-199|2021-09-02 07:30:30.414|updateUser|1|{ids=[1], updateUserDTO=UpdateUserDTO[password=******, name=null, intro=null, profileAccess=null, permissionGroupId=null, registrationDate=null, isActive=null]}|TRUE|
 ```
 
 #### 客户端API访问日志
@@ -217,9 +230,9 @@ turms-service的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 示例：
 
 ```spreadsheet
-2021-08-17 13:21:10.082  INFO G ocnpinxk 4073578036035627538 gateway-tcp-worker-18-2 : 1669286372|100|DESKTOP|1|0:0:0:0:0:0:0:1|6275734689527119988|CREATE_GROUP_MEMBER_REQUEST|32|2021-08-17T13:21:10.079Z|1201||21|3
-2021-08-17 13:21:10.086  INFO G ocnpinxk 8485909300068121199 gateway-tcp-worker-18-1 : 315622910|101|DESKTOP|1|0:0:0:0:0:0:0:1|8981788720014999664|QUERY_GROUP_JOIN_REQUESTS_REQUEST|17|2021-08-17T13:21:10.082Z|1201||21|4
-2021-08-17 13:21:10.087  INFO G ocnpinxk 195568170846055794  gateway-tcp-worker-18-2 : 1669286372|100|DESKTOP|1|0:0:0:0:0:0:0:1|7875023820838742819|CREATE_GROUP_JOIN_QUESTION_REQUEST|181|2021-08-17T13:21:10.083Z|1201||21|4
+2021-08-17 13:21:10.082  INFO G ocnpinxk 4073578036035627538 gateway-tcp-worker-18-2 : 1669286372|100|DESKTOP|1|0:0:0:0:0:0:0:1|6275734689527119988|CREATE_GROUP_MEMBER_REQUEST|32|2021-08-17 13:21:10.079|1201||21|3
+2021-08-17 13:21:10.086  INFO G ocnpinxk 8485909300068121199 gateway-tcp-worker-18-1 : 315622910|101|DESKTOP|1|0:0:0:0:0:0:0:1|8981788720014999664|QUERY_GROUP_JOIN_REQUESTS_REQUEST|17|2021-08-17 13:21:10.082|1201||21|4
+2021-08-17 13:21:10.087  INFO G ocnpinxk 195568170846055794  gateway-tcp-worker-18-2 : 1669286372|100|DESKTOP|1|0:0:0:0:0:0:0:1|7875023820838742819|CREATE_GROUP_JOIN_QUESTION_REQUEST|181|2021-08-17 13:21:10.083|1201||21|4
 ```
 
 ##### turms-service服务端
@@ -235,9 +248,9 @@ turms-service的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 示例：
 
 ```spreadsheet
-2021-08-17 13:25:11.809  INFO S lkumxlpd 1650561895646191481 Thread-13 : 101|DESKTOP|::1|6798130843268792999|QUERY_MESSAGES_REQUEST|28|2021-08-17T13:25:11.807Z|1001||2
-2021-08-17 13:25:11.809  INFO S lkumxlpd 2979813149711907727 Thread-9 : 100|DESKTOP|::1|5095384146247218867|QUERY_GROUP_JOIN_QUESTIONS_REQUEST|17|2021-08-17T13:25:11.807Z|1002||2
-2021-08-17 13:25:11.809  INFO S lkumxlpd 7231219143674352809 ver-worker-14-1 : 101|DESKTOP|::1|358075665001342897|QUERY_SIGNED_GET_URL_REQUEST|40|2021-08-17T13:25:11.809Z|6000||0
+2021-08-17 13:25:11.809  INFO S lkumxlpd 1650561895646191481 Thread-13 : 101|DESKTOP|::1|6798130843268792999|QUERY_MESSAGES_REQUEST|28|2021-08-17 13:25:11.807|1001||2
+2021-08-17 13:25:11.809  INFO S lkumxlpd 2979813149711907727 Thread-9 : 100|DESKTOP|::1|5095384146247218867|QUERY_GROUP_JOIN_QUESTIONS_REQUEST|17|2021-08-17 13:25:11.807|1002||2
+2021-08-17 13:25:11.809  INFO S lkumxlpd 7231219143674352809 ver-worker-14-1 : 101|DESKTOP|::1|358075665001342897|QUERY_SIGNED_GET_URL_REQUEST|40|2021-08-17 13:25:11.809|6000||0
 ```
 
 补充：

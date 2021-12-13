@@ -63,7 +63,7 @@ class WebSocketAccessST extends BasePerformanceTest {
                 .turmsGatewayJvmOptions(List.of(
                         "-Xms=1g",
                         "-Xmx=1g",
-                        "turms.monitor.updateMemoryIntervalSeconds=1"
+                        "turms.healthCheck.checkIntervalSeconds=1"
                 ))
                 .build());
         container.start();

@@ -22,14 +22,13 @@ import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.property.PropertiesUtil;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.util.PropertiesUtil;
 import im.turms.service.workflow.access.http.permission.RequiredPermission;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,7 +48,6 @@ import static im.turms.service.workflow.access.http.permission.AdminPermission.C
 /**
  * @author James Chen
  */
-@Log4j2
 @RestController
 @RequestMapping("/cluster/settings")
 public class SettingController {

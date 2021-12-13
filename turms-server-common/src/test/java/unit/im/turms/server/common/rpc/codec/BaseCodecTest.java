@@ -20,8 +20,8 @@ package unit.im.turms.server.common.rpc.codec;
 import im.turms.server.common.cluster.service.codec.codec.Codec;
 import im.turms.server.common.cluster.service.codec.codec.CodecPool;
 import im.turms.server.common.cluster.service.rpc.dto.RpcRequest;
-import im.turms.server.common.rpc.codec.request.RpcRequestCodec;
 import im.turms.server.common.tracing.TracingContext;
+import im.turms.server.common.rpc.codec.request.RpcRequestCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
@@ -35,12 +35,12 @@ public abstract class BaseCodecTest {
     }
 
     public <T extends RpcRequest<?>> T writeRequestAndReadBuffer(RpcRequestCodec<T> codec, T request) {
-        TracingContext tracingContext = new TracingContext();
-        request.setTracingContext(tracingContext);
+        TracingContext context = new TracingContext();
+        request.setTracingContext(context);
 
         T parsedRequest = writeDataAndReadBuffer(codec, request);
 
-        assertThat(parsedRequest.getTracingContext().getTraceId()).isEqualTo(tracingContext.getTraceId());
+        assertThat(parsedRequest.getTracingContext().getTraceId()).isEqualTo(context.getTraceId());
 
         return parsedRequest;
     }

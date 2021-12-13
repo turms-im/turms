@@ -45,9 +45,9 @@ public class TcpHandlerConfig {
 
         // Outbound
         connection.addHandlerLast("varintLengthFieldPrepender", CodecFactory.getVarintLengthFieldPrepender());
-        // For advanced operations, they encode messages to buffers themselves,
+        // For advanced operations, they encode objects to buffers themselves,
         // "protobufFrameEncoder" will just ignore them. But some simple
-        // operations pass TurmsNotification instances down, so we need to encode them.
+        // operations will pass TurmsNotification instances down, so we still need to encode them.
         connection.addHandlerLast("protobufFrameEncoder", CodecFactory.getProtobufFrameEncoder());
     }
 

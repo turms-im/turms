@@ -44,7 +44,6 @@ import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.dao.domain.User;
 import im.turms.service.workflow.dao.domain.message.Message;
 import io.lettuce.core.GeoCoordinates;
-import lombok.extern.log4j.Log4j2;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -55,7 +54,6 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-@Log4j2
 public final class ProtoModelUtil {
 
     private ProtoModelUtil() {

@@ -17,20 +17,21 @@
 
 package im.turms.server.common.tracing;
 
-import java.io.Closeable;
-
 /**
  * @author James Chen
  */
-public record TracingCloseableContext(TracingContext tracingContext) implements Closeable {
+public class TracingCloseableContext implements AutoCloseable {
 
-    public TracingCloseableContext {
-        tracingContext.updateMdc();
+    private final TracingContext context;
+
+    public TracingCloseableContext(TracingContext context) {
+        this.context = context;
+        context.updateThreadContext();
     }
 
     @Override
     public void close() {
-        tracingContext.clearMdc();
+        context.clearThreadContext();
     }
 
 }

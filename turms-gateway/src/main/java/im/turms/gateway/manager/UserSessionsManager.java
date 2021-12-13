@@ -23,12 +23,13 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.lang.ConcurrentEnumMap;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.throttle.TokenBucketContext;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.HashedWheelTimer;
 import lombok.Data;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.data.geo.Point;
 import org.springframework.util.Assert;
 
@@ -42,8 +43,9 @@ import java.util.Set;
  * @author James Chen
  */
 @Data
-@Log4j2
 public final class UserSessionsManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserSessionsManager.class);
 
     /**
      * The count of pending timeouts should be roughly the same as the count of online sessions
@@ -113,7 +115,7 @@ public final class UserSessionsManager {
             userSession.sendNotification(byteBuffer);
             return true;
         } catch (Exception e) {
-            log.error("Failed to send the session notification", e);
+            LOGGER.error("Failed to send the session notification", e);
             return false;
         }
     }

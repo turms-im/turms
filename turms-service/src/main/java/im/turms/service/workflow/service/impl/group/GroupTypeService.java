@@ -31,6 +31,8 @@ import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -40,7 +42,6 @@ import im.turms.server.common.util.AssertUtil;
 import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.workflow.dao.domain.group.GroupType;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
@@ -58,10 +59,11 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author James Chen
  */
-@Log4j2
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class GroupTypeService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GroupTypeService.class);
 
     private final Node node;
     private final Map<Long, GroupType> groupTypeMap = new ConcurrentHashMap<>(16);
@@ -101,11 +103,11 @@ public class GroupTypeService {
                             groupTypeMap.remove(groupTypeId);
                         }
                         case INVALIDATE -> groupTypeMap.keySet().removeIf(id -> !id.equals(DaoConstant.DEFAULT_GROUP_TYPE_ID));
-                        default -> log.fatal("Detect an illegal operation on GroupType collection: " + event);
+                        default -> LOGGER.fatal("Detected an illegal operation on GroupType collection: " + event);
                     }
                 })
                 .onErrorContinue(
-                        (throwable, o) -> log.error("Error while processing the change stream event of GroupType: {}", o, throwable))
+                        (throwable, o) -> LOGGER.error("Error while processing the change stream event of GroupType: {}", o, throwable))
                 .subscribe();
         mongoTemplate.findAll(GroupType.class)
                 .doOnNext(groupType -> groupTypeMap.put(groupType.getId(), groupType))

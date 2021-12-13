@@ -27,6 +27,8 @@ import im.turms.server.common.cluster.service.connection.ConnectionService;
 import im.turms.server.common.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.rpc.RpcService;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
@@ -34,7 +36,6 @@ import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.service.ServiceProperties;
-import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -48,8 +49,9 @@ import static im.turms.server.common.cluster.service.config.domain.property.Shar
 /**
  * @author James Chen
  */
-@Log4j2
 public class SharedPropertyService implements ClusterService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SharedPropertyService.class);
 
     private final String clusterId;
     private final NodeType nodeType;
@@ -97,7 +99,7 @@ public class SharedPropertyService implements ClusterService {
                                 notifyListeners(sharedClusterProperties.getTurmsProperties());
                             }
                             case INVALIDATE -> {
-                                log.warn("The shared properties has been removed from database unexpectedly");
+                                LOGGER.warn("The shared properties has been removed from database unexpectedly");
                                 initializeSharedProperties().subscribe();
                             }
                             default -> {
@@ -106,7 +108,7 @@ public class SharedPropertyService implements ClusterService {
                     }
                 })
                 .onErrorContinue(
-                        (throwable, o) -> log.error("Error while processing the change stream event of SharedProperties: {}", o, throwable))
+                        (throwable, o) -> LOGGER.error("Error while processing the change stream event of SharedProperties: {}", o, throwable))
                 .subscribe();
         initializeSharedProperties().block(Duration.ofMinutes(1));
     }
@@ -116,7 +118,7 @@ public class SharedPropertyService implements ClusterService {
      * there is not an efficient way to update nested objects of a document in MongoDB.
      */
     public Mono<Void> updateSharedProperties(TurmsProperties turmsProperties) {
-        log.info("Share new turms properties to all members");
+        LOGGER.info("Share new turms properties to all members");
         SharedClusterProperties clusterProperties = getClusterProperties(sharedClusterProperties, turmsProperties);
         Date now = new Date();
         Filter filter = Filter.newBuilder(2)
@@ -131,10 +133,10 @@ public class SharedPropertyService implements ClusterService {
             update.set(SharedClusterProperties.Fields.serviceProperties, clusterProperties.getServiceProperties());
         }
         return sharedConfigService.upsert(filter, update, clusterProperties)
-                .doOnError(e -> log.error("Failed to share new turms properties", e))
+                .doOnError(e -> LOGGER.error("Failed to share new turms properties", e))
                 .then(Mono.defer(() -> {
                     sharedClusterProperties = clusterProperties;
-                    log.info("Turms properties have been shared");
+                    LOGGER.info("Turms properties have been shared");
                     return Mono.empty();
                 }));
     }
@@ -148,13 +150,13 @@ public class SharedPropertyService implements ClusterService {
             try {
                 listener.accept(properties);
             } catch (Exception e) {
-                log.error("The properties listener {} failed to handle the new properties", listener.getClass().getName(), e);
+                LOGGER.error("The properties listener {} failed to handle the new properties", listener.getClass().getName(), e);
             }
         }
     }
 
     private Mono<SharedClusterProperties> initializeSharedProperties() {
-        log.info("Trying to get shared properties");
+        LOGGER.info("Trying to get shared properties");
         TurmsProperties localProperties = turmsPropertiesManager.getLocalProperties();
         SharedClusterProperties clusterProperties = new SharedClusterProperties(clusterId, localProperties, new Date());
         if (nodeType == NodeType.GATEWAY) {
@@ -167,7 +169,7 @@ public class SharedPropertyService implements ClusterService {
                 .onErrorResume(DuplicateKeyException.class, e -> findAndUpdatePropertiesByNodeType(clusterProperties))
                 .doOnSuccess(properties -> {
                     sharedClusterProperties = properties;
-                    log.info("Shared properties were retrieved successfully");
+                    LOGGER.info("Shared properties were retrieved successfully");
                 });
     }
 

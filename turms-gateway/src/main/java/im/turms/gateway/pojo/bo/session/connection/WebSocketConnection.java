@@ -20,12 +20,13 @@ package im.turms.gateway.pojo.bo.session.connection;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.factory.NotificationFactory;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.util.ExceptionUtil;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketCloseStatus;
-import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 import reactor.netty.http.websocket.WebsocketOutbound;
@@ -35,8 +36,9 @@ import java.net.InetSocketAddress;
 /**
  * @author James Chen
  */
-@Log4j2
 public class WebSocketConnection extends NetConnection {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketConnection.class);
 
     private final Connection connection;
     private final WebsocketOutbound out;
@@ -65,12 +67,12 @@ public class WebSocketConnection extends NetConnection {
                     .then()
                     .doOnError(throwable -> {
                         if (!ExceptionUtil.isDisconnectedClientError(throwable)) {
-                            log.error("Failed to send the close notification", throwable);
+                            LOGGER.error("Failed to send the close notification", throwable);
                         }
                     })
                     .retryWhen(RETRY_SEND_CLOSE_NOTIFICATION)
                     .onErrorResume(throwable -> {
-                        log.error("Failed to send the close notification with retries exhausted: " +
+                        LOGGER.error("Failed to send the close notification with retries exhausted: " +
                                 RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, throwable);
                         return Mono.empty();
                     })
@@ -84,7 +86,7 @@ public class WebSocketConnection extends NetConnection {
         out.sendClose(WebSocketCloseStatus.NORMAL_CLOSURE.code(), null)
                 .onErrorResume(throwable -> {
                     if (!ExceptionUtil.isDisconnectedClientError(throwable)) {
-                        log.error("Failed to close the connection", throwable);
+                        LOGGER.error("Failed to close the connection", throwable);
                     }
                     return Mono.empty();
                 })

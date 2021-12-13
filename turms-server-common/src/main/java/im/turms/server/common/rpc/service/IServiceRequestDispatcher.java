@@ -27,6 +27,6 @@ import reactor.core.publisher.Mono;
  */
 public interface IServiceRequestDispatcher {
 
-    Mono<ServiceResponse> dispatch(TracingContext tracingContext, ServiceRequest serviceRequest);
+    Mono<ServiceResponse> dispatch(TracingContext context, ServiceRequest serviceRequest);
 
 }

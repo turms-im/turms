@@ -23,9 +23,7 @@ import im.turms.server.common.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.lang.Null;
-import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.tracing.TracingContext;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
@@ -34,7 +32,6 @@ import javax.annotation.Nullable;
 /**
  * @author James Chen
  */
-@Log4j2
 public class RpcRequestExecutor {
 
     private final ApplicationContext context;
@@ -47,15 +44,14 @@ public class RpcRequestExecutor {
      * @implNote 1. We record request time/response here because the RPC request may run on the local machine
      * 2.The method itself will call {@link RpcRequest#release()}
      */
-    public <T> Mono<T> runRpcRequest(RequestLoggingContext loggingContext,
+    public <T> Mono<T> runRpcRequest(TracingContext tracingContext,
                                      RpcRequest<T> rpcRequest,
                                      @Nullable TurmsConnection connection,
                                      String fromNodeId) {
         rpcRequest.touch(rpcRequest);
-        TracingContext tracingContext = loggingContext.getTracingContext();
         try {
-            tracingContext.updateMdc();
-            rpcRequest.init(context, connection, fromNodeId);
+            tracingContext.updateThreadContext();
+            rpcRequest.init(this.context, connection, fromNodeId);
             Mono<T> result;
             // It's the responsibility of the implementations of call() or callAsync()
             // to release by 1 if the request has a bound buffer
@@ -75,7 +71,7 @@ public class RpcRequestExecutor {
                     .onErrorMap(e -> e instanceof RpcException
                             ? e
                             : RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString(), e))
-                    .doFinally(signalType -> tracingContext.clearMdc());
+                    .doFinally(signalType -> tracingContext.clearThreadContext());
         } catch (RpcException e) {
             rpcRequest.release();
             return Mono.error(e);
@@ -86,9 +82,7 @@ public class RpcRequestExecutor {
             rpcRequest.release();
             return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString(), e));
         } finally {
-            if (tracingContext != null) {
-                tracingContext.clearMdc();
-            }
+            tracingContext.clearThreadContext();
         }
     }
 

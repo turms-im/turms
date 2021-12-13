@@ -33,4 +33,5 @@ turms:
       # For testing purposes
       enabled: true
   logging:
-    enable-console-appender: true
+    console:
+      enabled: true

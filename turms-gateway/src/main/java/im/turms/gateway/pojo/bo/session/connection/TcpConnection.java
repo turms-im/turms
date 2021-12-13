@@ -20,8 +20,9 @@ package im.turms.gateway.pojo.bo.session.connection;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.factory.NotificationFactory;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.util.ExceptionUtil;
-import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 import reactor.netty.channel.ChannelOperations;
 
@@ -30,8 +31,9 @@ import java.net.InetSocketAddress;
 /**
  * @author James Chen
  */
-@Log4j2
 public class TcpConnection extends NetConnection {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TcpConnection.class);
 
     private final ChannelOperations<?, ?> connection;
 
@@ -58,12 +60,12 @@ public class TcpConnection extends NetConnection {
                     .then()
                     .doOnError(throwable -> {
                         if (!ExceptionUtil.isDisconnectedClientError(throwable)) {
-                            log.error("Failed to send the close notification", throwable);
+                            LOGGER.error("Failed to send the close notification", throwable);
                         }
                     })
                     .retryWhen(RETRY_SEND_CLOSE_NOTIFICATION)
                     .onErrorResume(throwable -> {
-                        log.error("Failed to send the close notification with retries exhausted: " +
+                        LOGGER.error("Failed to send the close notification with retries exhausted: " +
                                 RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, throwable);
                         return Mono.empty();
                     })
@@ -78,7 +80,7 @@ public class TcpConnection extends NetConnection {
             connection.dispose();
         } catch (Exception e) {
             if (!ExceptionUtil.isDisconnectedClientError(e)) {
-                log.error("Failed to close the connection", e);
+                LOGGER.error("Failed to close the connection", e);
             }
         }
     }

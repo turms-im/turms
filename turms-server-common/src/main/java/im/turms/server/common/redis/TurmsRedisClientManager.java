@@ -19,6 +19,8 @@ package im.turms.server.common.redis;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.redis.codec.context.RedisCodecContext;
 import im.turms.server.common.redis.script.RedisScript;
 import im.turms.server.common.redis.sharding.ShardingAlgorithm;
@@ -27,7 +29,6 @@ import io.lettuce.core.GeoArgs;
 import io.lettuce.core.GeoCoordinates;
 import io.lettuce.core.GeoWithin;
 import io.netty.buffer.ByteBuf;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.data.geo.Point;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -44,8 +45,9 @@ import java.util.function.BiFunction;
 /**
  * @author James Chen
  */
-@Log4j2
 public class TurmsRedisClientManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TurmsRedisClientManager.class);
 
     private final List<TurmsRedisClient> clients;
     private final ShardingAlgorithm shardingAlgorithm;
@@ -65,7 +67,7 @@ public class TurmsRedisClientManager {
             try {
                 client.destroy();
             } catch (Exception e) {
-                log.error("Failed to shutdown a connection", e);
+                LOGGER.error("Failed to shutdown a connection", e);
             }
         }
     }

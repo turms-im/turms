@@ -18,19 +18,18 @@
 package im.turms.service.workflow.access.http.config;
 
 import im.turms.server.common.cluster.node.NodeType;
-import im.turms.server.common.logging.RequestLoggingContext;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.util.ExceptionUtil;
 import im.turms.service.workflow.access.http.dto.response.ErrorAttributes;
 import im.turms.service.workflow.access.http.dto.response.ErrorAttributesFactory;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.log.LogMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.HttpMessageReader;
@@ -60,9 +59,10 @@ import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE;
  * @see org.springframework.web.server.handler.ResponseStatusExceptionHandler
  */
 @Configuration
-@Log4j2
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TurmsErrorWebExceptionHandler.class);
 
     private final ServerResponse.Context context;
     private final List<HttpMessageReader<?>> messageReaders;
@@ -101,13 +101,10 @@ public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
         return responseMono.flatMap(response -> {
             if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
                 ServerRequest request = ServerRequest.create(exchange, this.messageReaders);
-                RequestLoggingContext loggingContext = exchange.getAttribute(RequestLoggingContext.CTX_KEY_NAME);
-                TracingContext tracingContext = loggingContext == null
-                        ? TracingContext.NOOP
-                        : loggingContext.getTracingContext();
-                try (TracingCloseableContext ctx = tracingContext.asCloseable()) {
-                    log.error(LogMessage.of(() -> "%s 500 Server Error for %s"
-                                    .formatted(request.exchange().getLogPrefix(), formatRequest(request))),
+                TracingContext context = exchange.getAttributeOrDefault(TracingContext.CTX_KEY_NAME, TracingContext.NOOP);
+                try (TracingCloseableContext ignored = context.asCloseable()) {
+                    LOGGER.error("%s 500 Server Error for %s"
+                                    .formatted(request.exchange().getLogPrefix(), formatRequest(request)),
                             throwable);
                 }
             }

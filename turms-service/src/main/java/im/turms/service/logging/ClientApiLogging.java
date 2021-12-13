@@ -20,11 +20,11 @@ package im.turms.service.logging;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
-import im.turms.server.common.logging.CustomLogger;
 import im.turms.server.common.util.DateUtil;
 import im.turms.service.workflow.access.servicerequest.dto.ClientRequest;
 
-import static im.turms.server.common.logging.CustomLogger.LOG_FIELD_DELIMITER;
+import static im.turms.server.common.logging.CommonLogger.CLIENT_API_LOGGER;
+import static im.turms.server.common.logging.CommonLogger.LOG_FIELD_DELIMITER;
 
 /**
  * @author James Chen
@@ -58,15 +58,15 @@ public final class ClientApiLogging {
                 request.requestId().toString(),
                 request.turmsRequest().getKindCase().name(),
                 String.valueOf(requestSize),
-                DateUtil.toISO(requestTime),
+                DateUtil.toStr(requestTime),
                 // response information
                 String.valueOf(response.code().getBusinessCode()),
                 responseType,
                 String.valueOf(processingTime));
         if (response.code().isServerError()) {
-            CustomLogger.CLIENT_API_LOGGER.error(message);
+            CLIENT_API_LOGGER.error(message);
         } else {
-            CustomLogger.CLIENT_API_LOGGER.info(message);
+            CLIENT_API_LOGGER.info(message);
         }
     }
 

@@ -22,6 +22,8 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.lang.ByteArrayWrapper;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.redis.TurmsRedisClient;
 import im.turms.server.common.redis.script.RedisScript;
 import im.turms.server.common.util.ByteBufUtil;
@@ -29,12 +31,12 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -75,8 +77,9 @@ import java.util.function.Consumer;
  * 3. "blocklist:ip:log": List. Used to perform delta sync
  * 4. "blocklist:ip:log_id": Counter. Used to perform delta sync
  */
-@Log4j2
 public class BlocklistServiceManager<T> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BlocklistServiceManager.class);
 
     /**
      * 2021-08-27T00:00:00.00Z
@@ -173,7 +176,7 @@ public class BlocklistServiceManager<T> {
                     try {
                         syncLocalBlocklist().subscribe();
                     } catch (Exception e) {
-                        log.error("Caught an error when synchronizing blocklist");
+                        LOGGER.error("Caught an error when synchronizing blocklist");
                     }
                 }, syncIntervalMillis, syncIntervalMillis, TimeUnit.MILLISECONDS);
     }
@@ -536,7 +539,7 @@ public class BlocklistServiceManager<T> {
         try {
             onTargetBlocked.accept(id);
         } catch (Exception e) {
-            log.error("onTargetBlocked failed to handle the blocked target: " + id);
+            LOGGER.error("onTargetBlocked failed to handle the blocked target: " + id);
         }
     }
 

@@ -19,6 +19,8 @@ package im.turms.service.workflow.dao.config;
 
 import com.google.common.collect.Maps;
 import im.turms.server.common.dao.domain.User;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.MongoCollectionOptions;
 import im.turms.server.common.property.TurmsPropertiesManager;
@@ -47,7 +49,6 @@ import im.turms.service.workflow.dao.domain.user.UserRelationship;
 import im.turms.service.workflow.dao.domain.user.UserRelationshipGroup;
 import im.turms.service.workflow.dao.domain.user.UserRelationshipGroupMember;
 import im.turms.service.workflow.dao.domain.user.UserVersion;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -58,9 +59,10 @@ import java.util.Map;
  * @author James Chen
  * @see org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
  */
-@Log4j2
 @Configuration
 public class MongoConfig {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MongoConfig.class);
 
     private static final int SERVICE_TYPES_NUMBER = 5;
     private static final Map<String, TurmsMongoClient> CLIENT_MAP = Maps.newHashMapWithExpectedSize(SERVICE_TYPES_NUMBER);
@@ -71,7 +73,7 @@ public class MongoConfig {
             try {
                 client.destroy();
             } catch (Exception ignored) {
-                log.error("Failed to destroy a mongo client");
+                LOGGER.error("Failed to destroy a mongo client");
             }
         }
     }

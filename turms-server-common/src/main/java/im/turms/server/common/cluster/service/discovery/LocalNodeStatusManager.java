@@ -20,13 +20,14 @@ package im.turms.server.common.cluster.service.discovery;
 import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.cluster.service.config.domain.discovery.Leader;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import reactor.core.publisher.Mono;
 
@@ -46,8 +47,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author James Chen
  */
-@Log4j2
 public class LocalNodeStatusManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocalNodeStatusManager.class);
 
     private final DiscoveryService discoveryService;
     private final SharedConfigService sharedConfigService;
@@ -92,31 +94,31 @@ public class LocalNodeStatusManager {
     }
 
     public Mono<Void> registerLocalMember(boolean suppressDuplicateMemberError) {
-        log.info("Registering the local member");
+        LOGGER.info("Registering the local member");
         return discoveryService.registerMember(localMember)
                 .doOnSuccess(ignored -> {
                     isLocalNodeRegistered = true;
-                    log.info("Registered the local member successfully");
+                    LOGGER.info("Registered the local member successfully");
                 })
                 .onErrorResume(t -> {
                     if (suppressDuplicateMemberError && t instanceof DuplicateKeyException) {
-                        log.info("Cancelled the local member registration because it has been registered");
+                        LOGGER.info("Cancelled the local member registration because it has been registered");
                         return Mono.empty();
                     } else {
-                        log.error("Failed to register the local member", t);
+                        LOGGER.error("Failed to register the local member", t);
                         return Mono.error(t);
                     }
                 });
     }
 
     public Mono<Void> unregisterLocalMember() {
-        log.info("Unregistering the local member");
+        LOGGER.info("Unregistering the local member");
         return discoveryService.unregisterMembers(Set.of(localMember.getNodeId()))
                 .then(unregisterLocalMemberLeadership())
-                .doOnError(e -> log.error("Failed to unregister the local member", e))
+                .doOnError(e -> LOGGER.error("Failed to unregister the local member", e))
                 .doOnSuccess(ignored -> {
                     isLocalNodeRegistered = false;
-                    log.info("Unregistered the local member successfully");
+                    LOGGER.info("Unregistered the local member successfully");
                 });
     }
 
@@ -172,12 +174,12 @@ public class LocalNodeStatusManager {
                         .timeout(heartbeatInterval)
                         .doOnSuccess(ignored -> localMember.getStatus().setLastHeartbeatDate(now))
                         .onErrorResume(e -> {
-                            log.error("Failed to send heartbeat request", e);
+                            LOGGER.error("Failed to send heartbeat request", e);
                             return Mono.empty();
                         })
                         .subscribe();
             } catch (Exception e) {
-                log.error("Failed to send heartbeat request", e);
+                LOGGER.error("Failed to send heartbeat request", e);
             }
         }, heartbeatIntervalMillis, heartbeatIntervalMillis, TimeUnit.MILLISECONDS);
     }

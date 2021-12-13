@@ -43,6 +43,8 @@ import com.mongodb.reactivestreams.client.MongoDatabase;
 import com.mongodb.reactivestreams.client.internal.MongoCollectionUtil;
 import com.mongodb.reactivestreams.client.internal.MongoOperationPublisher;
 import com.mongodb.reactivestreams.client.internal.TurmsFindPublisherImpl;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.BsonPool;
 import im.turms.server.common.mongo.MongoContext;
 import im.turms.server.common.mongo.entity.MongoEntity;
@@ -51,7 +53,6 @@ import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.CollectorUtil;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BsonDocument;
 import org.bson.BsonDocumentWriter;
@@ -81,8 +82,9 @@ import java.util.stream.Collectors;
  * 2. The publishers of mongo-java-driver are cold
  * and the publishers of TurmsMongoOperations are also cold
  */
-@Log4j2
 public class TurmsMongoOperations implements MongoOperationsSupport {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TurmsMongoOperations.class);
 
     private static final EncoderContext DEFAULT_ENCODER_CONTEXT = EncoderContext.builder().build();
 
@@ -383,14 +385,14 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         String collectionName = context.getEntity(clazz).collectionName();
         return Flux.from(source)
                 .then()
-                .doOnError(throwable -> log.error("Failed to index the collection {}", collectionName, throwable))
+                .doOnError(throwable -> LOGGER.error("Failed to index the collection {}", collectionName, throwable))
                 .doOnSuccess(ignored -> {
                     List<BsonDocument> indexDocs = indexModels
                             .stream()
                             .map(indexModel -> indexModel.getKeys().toBsonDocument())
                             .collect(CollectorUtil.toList(indexModels.size()));
                     String indexes = StringUtils.join(indexDocs, ", ");
-                    log.info("Indexing the collection {} successfully: [{}]", collectionName, indexes);
+                    LOGGER.info("Indexed the collection {} successfully: [{}]", collectionName, indexes);
                 });
     }
 
@@ -407,8 +409,8 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     public Mono<Void> enableSharding(MongoDatabase databaseToShard, MongoDatabase adminDatabase) {
         String dbName = databaseToShard.getName();
         Mono<Document> enableSharding = Mono.from(adminDatabase.runCommand(new Document("enableSharding", dbName)))
-                .doOnError(throwable -> log.error("Failed to enable sharding the database {}", dbName, throwable))
-                .doOnSuccess(ignored -> log.info("Enable sharding the database {} successfully", dbName));
+                .doOnError(throwable -> LOGGER.error("Failed to enable sharding the database {}", dbName, throwable))
+                .doOnSuccess(ignored -> LOGGER.info("Enabled sharding the database {} successfully", dbName));
         return enableSharding.then();
     }
 
@@ -423,9 +425,9 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         Document command = new Document("shardCollection", namespace).append("key", shardKey);
         Mono<Document> shardCollection = Mono.from(adminDatabase.runCommand(command))
                 .doOnError(throwable ->
-                        log.error("Failed to shard the collection {} with the shard key {}", namespace, shardKey.toJson(), throwable))
+                        LOGGER.error("Failed to shard the collection {} with the shard key {}", namespace, shardKey.toJson(), throwable))
                 .doOnSuccess(ignored ->
-                        log.info("Shard the collection {} with the shard key {} successfully", namespace, shardKey.toJson()));
+                        LOGGER.info("Sharded the collection {} with the shard key {} successfully", namespace, shardKey.toJson()));
         return shardCollection.then();
     }
 

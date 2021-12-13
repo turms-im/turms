@@ -18,10 +18,10 @@
 package im.turms.gateway.logging;
 
 import im.turms.gateway.pojo.dto.SimpleTurmsNotification;
-import im.turms.server.common.logging.CustomLogger;
 import im.turms.server.common.util.StringUtil;
 
-import static im.turms.server.common.logging.CustomLogger.LOG_FIELD_DELIMITER;
+import static im.turms.server.common.logging.CommonLogger.LOG_FIELD_DELIMITER;
+import static im.turms.server.common.logging.CommonLogger.NOTIFICATION_LOGGER;
 
 /**
  * @author James Chen
@@ -44,7 +44,7 @@ public final class NotificationLogging {
                 String.valueOf(size),
                 // Relayed request info
                 notification.relayedRequestType().name());
-        CustomLogger.NOTIFICATION_LOGGER.info(message);
+        NOTIFICATION_LOGGER.info(message);
     }
 
 }

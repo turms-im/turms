@@ -27,6 +27,8 @@ import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -36,7 +38,6 @@ import im.turms.server.common.util.AssertUtil;
 import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.workflow.dao.domain.user.UserPermissionGroup;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
@@ -54,10 +55,11 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author James Chen
  */
-@Log4j2
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class UserPermissionGroupService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserPermissionGroupService.class);
 
     private final Map<Long, UserPermissionGroup> userPermissionGroupMap = new ConcurrentHashMap<>(16);
     private final TurmsMongoClient mongoTemplate;
@@ -93,10 +95,10 @@ public class UserPermissionGroupService {
                             userPermissionGroupMap.remove(groupTypeId);
                         }
                         case INVALIDATE -> userPermissionGroupMap.clear();
-                        default -> log.fatal("Detect an illegal operation on UserPermissionGroup collection: " + event);
+                        default -> LOGGER.fatal("Detected an illegal operation on UserPermissionGroup collection: " + event);
                     }
                 })
-                .onErrorContinue((throwable, o) -> log
+                .onErrorContinue((throwable, o) -> LOGGER
                         .error("Error while processing the change stream event of UserPermissionGroup: {}", o, throwable))
                 .subscribe();
     }

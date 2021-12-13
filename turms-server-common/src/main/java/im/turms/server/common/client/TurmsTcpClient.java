@@ -25,7 +25,8 @@ import im.turms.common.model.dto.request.user.DeleteSessionRequest;
 import im.turms.common.util.RandomUtil;
 import im.turms.server.common.access.tcp.codec.CodecFactory;
 import im.turms.server.common.constant.TurmsStatusCode;
-import lombok.extern.log4j.Log4j2;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import reactor.core.publisher.Mono;
 import reactor.netty.channel.ChannelOperations;
 import reactor.netty.resources.LoopResources;
@@ -36,8 +37,9 @@ import javax.annotation.Nullable;
 /**
  * @author James Chen
  */
-@Log4j2
 public class TurmsTcpClient extends TurmsClient {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TurmsTcpClient.class);
 
     private ChannelOperations<?, ?> connection;
     private long userId;
@@ -79,7 +81,7 @@ public class TurmsTcpClient extends TurmsClient {
                     connection
                             .receiveObject()
                             .onErrorResume(t -> {
-                                log.error("The turms client is closed unexpectedly", t);
+                                LOGGER.error("The turms client is closed unexpectedly", t);
                                 return Mono.empty();
                             })
                             .cast(TurmsNotification.class)

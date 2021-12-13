@@ -24,10 +24,11 @@ import im.turms.gateway.logging.ApiLoggingContext;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.healthcheck.ServerStatusManager;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.WebSocketProperties;
 import im.turms.server.common.service.blocklist.BlocklistService;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.netty.DisposableServer;
 
@@ -37,8 +38,9 @@ import javax.annotation.PreDestroy;
  * @author James Chen
  */
 @Component
-@Log4j2
 public class WebSocketDispatcher extends UserSessionDispatcher {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketDispatcher.class);
 
     private final DisposableServer server;
 
@@ -59,7 +61,7 @@ public class WebSocketDispatcher extends UserSessionDispatcher {
                     blocklistService,
                     serverStatusManager,
                     bindConnectionWithSessionWrapper());
-            log.info("WebSocket server started on {}:{}", server.host(), server.port());
+            LOGGER.info("WebSocket server started on {}:{}", server.host(), server.port());
         } else {
             server = null;
         }
@@ -68,7 +70,7 @@ public class WebSocketDispatcher extends UserSessionDispatcher {
     @PreDestroy
     public void preDestroy() {
         if (server != null) {
-            log.info("Closing WebSocket server");
+            LOGGER.info("Closing WebSocket server");
             server.dispose();
         }
     }

@@ -20,7 +20,6 @@ package im.turms.gateway.service.impl.observability;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Metrics;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-@Log4j2
 public class MetricsService {
 
     @Getter

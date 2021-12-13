@@ -18,9 +18,10 @@
 package im.turms.server.common.cluster.service.connection;
 
 import im.turms.server.common.access.common.resource.LoopResourcesFactory;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.util.SslUtil;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.web.server.Ssl;
 import reactor.netty.ChannelBindException;
 import reactor.netty.DisposableServer;
@@ -36,8 +37,9 @@ import static im.turms.server.common.constant.CommonMetricsConstant.NODE_TCP_SER
 /**
  * @author James Chen
  */
-@Log4j2
 public class ConnectionServer {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionServer.class);
 
     private final String host;
     private final int proposedPort;
@@ -83,14 +85,14 @@ public class ConnectionServer {
                     tcpServer.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true));
                 }
                 server = tcpServer.bindNow(Duration.ofSeconds(60));
-                log.info("The local server {}:{} has been set up", host, currentPort);
+                LOGGER.info("The local server {}:{} has been set up", host, currentPort);
                 break;
             } catch (Exception e) { // e.g. port in use
                 if (e instanceof ChannelBindException &&
                         portAutoIncrement && currentPort <= proposedPort + portCount) {
-                    log.warn("Failed to bind on the port {}. Trying to bind on the next port {}", currentPort++, currentPort);
+                    LOGGER.warn("Failed to bind on the port {}. Trying to bind on the next port {}", currentPort++, currentPort);
                 } else {
-                    log.error("Failed to set up the local discovery server", e);
+                    LOGGER.error("Failed to set up the local discovery server", e);
                     throw e;
                 }
             }

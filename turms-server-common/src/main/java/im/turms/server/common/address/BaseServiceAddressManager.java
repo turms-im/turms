@@ -17,10 +17,11 @@
 
 package im.turms.server.common.address;
 
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.constant.AdvertiseStrategy;
 import im.turms.server.common.property.env.common.AddressProperties;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.web.server.Ssl;
 
@@ -34,8 +35,9 @@ import java.util.function.Consumer;
 /**
  * @author James Chen
  */
-@Log4j2
 public abstract class BaseServiceAddressManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseServiceAddressManager.class);
 
     protected final PublicIpManager publicIpManager;
 
@@ -92,7 +94,7 @@ public abstract class BaseServiceAddressManager {
                 memberAddressProperties = newAddressProperties;
                 return true;
             } catch (UnknownHostException e) {
-                log.error(e);
+                LOGGER.error("Failed to update the member host", e);
             }
         }
         return false;
@@ -128,7 +130,7 @@ public abstract class BaseServiceAddressManager {
             try {
                 listener.accept(addresses);
             } catch (Exception e) {
-                log.error("Failed to run onAddressesChangedListener", e);
+                LOGGER.error("Failed to run onAddressesChangedListener", e);
             }
         }
     }

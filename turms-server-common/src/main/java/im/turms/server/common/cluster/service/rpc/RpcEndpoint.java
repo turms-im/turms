@@ -21,11 +21,12 @@ import im.turms.server.common.cluster.service.connection.TurmsConnection;
 import im.turms.server.common.cluster.service.rpc.codec.RpcFrameEncoder;
 import im.turms.server.common.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.cluster.service.rpc.dto.RpcResponse;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.util.MapUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.IllegalReferenceCountException;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 import reactor.netty.channel.ChannelOperations;
@@ -38,8 +39,9 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * @author James Chen
  */
-@Log4j2
 public final class RpcEndpoint {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RpcEndpoint.class);
 
     private static final int EXPECTED_MAX_QPS = 1000;
     private static final int EXPECTED_AVERAGE_RTT = 10;
@@ -120,7 +122,7 @@ public final class RpcEndpoint {
     private <T> void resolveRequest(int requestId, T response, Throwable error) {
         Sinks.One<T> sink = (Sinks.One<T>) pendingRequestMap.remove(requestId);
         if (sink == null) {
-            log.warn("No sink of the request with ID {} is found for the response: " + response, requestId);
+            LOGGER.warn("No sink of the request with ID {} is found for the response: " + response, requestId);
             return;
         }
         if (error == null) {

@@ -19,7 +19,6 @@ package im.turms.server.common.address;
 
 import im.turms.server.common.property.constant.AdvertiseStrategy;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -32,7 +31,6 @@ import java.time.Duration;
 /**
  * @author James Chen
  */
-@Log4j2
 public class AddressCollector {
 
     private static final Duration IP_DETECTION_TIMEOUT = Duration.ofSeconds(15);

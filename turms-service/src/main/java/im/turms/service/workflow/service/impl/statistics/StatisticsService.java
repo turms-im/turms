@@ -20,10 +20,11 @@ package im.turms.service.workflow.service.impl.statistics;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.rpc.RpcErrorCode;
 import im.turms.server.common.cluster.service.rpc.exception.RpcException;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.request.CountOnlineUsersRequest;
 import im.turms.server.common.task.TrivialTaskManager;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -37,8 +38,9 @@ import java.util.Map;
  */
 
 @Service
-@Log4j2
 public class StatisticsService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsService.class);
 
     private final Node node;
 
@@ -58,10 +60,10 @@ public class StatisticsService {
                             node.getSharedProperties().getService().getStatistics().isLogOnlineUsersNumber()) {
                         countOnlineUsers()
                                 .onErrorResume(t -> {
-                                    log.error("Failed to count online users", t);
+                                    LOGGER.error("Failed to count online users", t);
                                     return Mono.empty();
                                 })
-                                .doOnNext(count -> log.info(ONLINE_USERS_NUMBER_LOGGING_FORMAT, count))
+                                .doOnNext(count -> LOGGER.info(ONLINE_USERS_NUMBER_LOGGING_FORMAT, count))
                                 .subscribe();
                     }
                 });

@@ -21,6 +21,8 @@ import im.turms.server.common.address.AddressCollection;
 import im.turms.server.common.address.AddressCollector;
 import im.turms.server.common.address.BaseServiceAddressManager;
 import im.turms.server.common.address.PublicIpManager;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.AdvertiseStrategy;
@@ -30,7 +32,6 @@ import im.turms.server.common.property.env.gateway.DiscoveryProperties;
 import im.turms.server.common.property.env.gateway.TcpProperties;
 import im.turms.server.common.property.env.gateway.UdpProperties;
 import im.turms.server.common.property.env.gateway.WebSocketProperties;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.web.server.Ssl;
@@ -43,8 +44,9 @@ import java.net.UnknownHostException;
  * @author James Chen
  */
 @Component
-@Log4j2
 public class ServiceAddressManager extends BaseServiceAddressManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceAddressManager.class);
 
     private DiscoveryProperties gatewayApiDiscoveryProperties;
 
@@ -69,7 +71,7 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
                 try {
                     updateCollectorAndAddresses(metricsApiProperties, properties);
                 } catch (Exception e) {
-                    log.error("Failed to update address collector", e);
+                    LOGGER.error("Failed to update address collector", e);
                 }
             }
             if (areAddressPropertiesChange || isMemberHostChanged) {

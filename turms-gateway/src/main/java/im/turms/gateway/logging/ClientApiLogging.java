@@ -20,13 +20,13 @@ package im.turms.gateway.logging;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.server.common.logging.CustomLogger;
 import im.turms.server.common.util.DateUtil;
 import im.turms.server.common.util.StringUtil;
 
 import javax.annotation.Nullable;
 
-import static im.turms.server.common.logging.CustomLogger.LOG_FIELD_DELIMITER;
+import static im.turms.server.common.logging.CommonLogger.CLIENT_API_LOGGER;
+import static im.turms.server.common.logging.CommonLogger.LOG_FIELD_DELIMITER;
 
 /**
  * @author James Chen
@@ -65,13 +65,13 @@ public final class ClientApiLogging {
                 String.valueOf(requestId),
                 requestType.name(),
                 String.valueOf(requestSize),
-                DateUtil.toISO(requestTime),
+                DateUtil.toStr(requestTime),
                 // response information
                 String.valueOf(response.getCode()),
                 response.hasData() ? response.getData().getKindCase().name() : "",
                 String.valueOf(response.getSerializedSize()),
                 String.valueOf(processingTime));
-        CustomLogger.CLIENT_API_LOGGER.info(message);
+        CLIENT_API_LOGGER.info(message);
     }
 
     public static void log(@Nullable Integer sessionId,
@@ -96,13 +96,13 @@ public final class ClientApiLogging {
                 String.valueOf(requestId),
                 requestType.name(),
                 String.valueOf(requestSize),
-                DateUtil.toISO(requestTime),
+                DateUtil.toStr(requestTime),
                 // response information
                 String.valueOf(responseCode),
                 "", // Response data type
                 "0", // Response serialized size
                 String.valueOf(processingTime));
-        CustomLogger.CLIENT_API_LOGGER.info(message);
+        CLIENT_API_LOGGER.info(message);
     }
 
     public static void log(@Nullable Integer sessionId,
@@ -129,13 +129,13 @@ public final class ClientApiLogging {
                 String.valueOf(requestId),
                 requestType,
                 String.valueOf(requestSize),
-                DateUtil.toISO(requestTime),
+                DateUtil.toStr(requestTime),
                 // response information
                 String.valueOf(responseCode),
                 StringUtil.toString(responseDataType),
                 String.valueOf(responseSize),
                 String.valueOf(processingTime));
-        CustomLogger.CLIENT_API_LOGGER.info(message);
+        CLIENT_API_LOGGER.info(message);
     }
 
 }

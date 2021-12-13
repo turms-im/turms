@@ -31,6 +31,8 @@ import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.metrics.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.UdpProperties;
@@ -38,7 +40,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.DatagramPacket;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -52,9 +53,10 @@ import java.net.InetSocketAddress;
 /**
  * @author James Chen
  */
-@Log4j2
 @Component
 public class UdpDispatcher {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UdpDispatcher.class);
 
     public static UdpDispatcher instance;
     private static final int REQUEST_LENGTH = Long.BYTES + Byte.BYTES * 2 + Integer.BYTES;
@@ -97,7 +99,7 @@ public class UdpDispatcher {
                     })
                     .bind()
                     .block();
-            log.info("UDP server started on {}:{}", host, port);
+            LOGGER.info("UDP server started on {}:{}", host, port);
         } else {
             notificationSink = null;
             connection = null;
@@ -150,11 +152,11 @@ public class UdpDispatcher {
         if (throwable instanceof TurmsBusinessException exception) {
             TurmsStatusCode code = exception.getCode();
             if (code.isServerError()) {
-                log.error("Failed to handle incoming package", throwable);
+                LOGGER.error("Failed to handle incoming package", throwable);
             }
             return code;
         } else {
-            log.error("Failed to handle incoming package", throwable);
+            LOGGER.error("Failed to handle incoming package", throwable);
             return TurmsStatusCode.SERVER_INTERNAL_ERROR;
         }
     }

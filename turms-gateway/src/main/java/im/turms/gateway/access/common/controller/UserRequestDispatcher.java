@@ -35,16 +35,16 @@ import im.turms.server.common.exception.ThrowableInfo;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.factory.NotificationFactory;
 import im.turms.server.common.healthcheck.ServerStatusManager;
-import im.turms.server.common.logging.RequestLoggingContext;
-import im.turms.server.common.service.blocklist.BlocklistService;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.service.blocklist.BlocklistService;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.EmptyByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.buffer.UnpooledByteBufAllocator;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -58,8 +58,9 @@ import static im.turms.server.common.constant.CommonMetricsConstant.CLIENT_REQUE
  * @author James Chen
  */
 @Component
-@Log4j2
 public class UserRequestDispatcher {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserRequestDispatcher.class);
 
     private static final ByteBuf HEARTBEAT_RESPONSE_SUCCESS = new EmptyByteBuf(UnpooledByteBufAllocator.DEFAULT);
     private static final ByteBuf HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT;
@@ -153,8 +154,8 @@ public class UserRequestDispatcher {
                 .onErrorResume(throwable -> {
                     ThrowableInfo info = ThrowableInfo.get(throwable);
                     if (info.code().isServerError()) {
-                        tracingContext.updateMdc();
-                        log.error("Failed to handle the service request: {}", request, throwable);
+                        tracingContext.updateThreadContext();
+                        LOGGER.error("Failed to handle the service request: {}", request, throwable);
                     }
                     return Mono.just(NotificationFactory.create(info, request.requestId()));
                 })
@@ -192,8 +193,8 @@ public class UserRequestDispatcher {
                     return ProtoUtil.getDirectByteBuffer(notification);
                 })
                 .contextWrite(context -> {
-                    RequestLoggingContext loggingContext = context.get(RequestLoggingContext.CTX_KEY_NAME);
-                    loggingContext.setTracingContext(tracingContext);
+                    TracingContext ctx = context.get(TracingContext.CTX_KEY_NAME);
+                    ctx.setTraceId(tracingContext.getTraceId());
                     return context;
                 });
     }
@@ -221,7 +222,7 @@ public class UserRequestDispatcher {
             }
             // Handle the request to get a response
             TurmsRequest.KindCase requestType = request.type();
-            tracingContext.updateMdc();
+            tracingContext.updateThreadContext();
             return switch (requestType) {
                 case CREATE_SESSION_REQUEST -> sessionController
                         .handleCreateSessionRequest(sessionWrapper, request.createSessionRequest())
@@ -238,7 +239,7 @@ public class UserRequestDispatcher {
             return Mono.just(notification);
         } finally {
             serviceRequestBuffer.release();
-            tracingContext.clearMdc();
+            tracingContext.clearThreadContext();
         }
     }
 

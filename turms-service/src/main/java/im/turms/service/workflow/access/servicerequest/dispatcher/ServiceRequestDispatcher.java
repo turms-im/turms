@@ -26,11 +26,13 @@ import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.ThrowableInfo;
 import im.turms.server.common.healthcheck.ServerStatusManager;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.tracing.TracingCloseableContext;
+import im.turms.server.common.tracing.TracingContext;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
 import im.turms.server.common.service.blocklist.BlocklistService;
-import im.turms.server.common.tracing.TracingCloseableContext;
-import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.service.logging.ApiLoggingContext;
 import im.turms.service.logging.ClientApiLogging;
@@ -42,7 +44,6 @@ import im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResultF
 import im.turms.service.workflow.access.servicerequest.dto.ServiceResponseFactory;
 import im.turms.service.workflow.service.impl.message.OutboundMessageService;
 import io.netty.buffer.ByteBuf;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -66,9 +67,10 @@ import static im.turms.server.common.constant.CommonMetricsConstant.CLIENT_REQUE
 /**
  * @author James Chen
  */
-@Log4j2
 @Service
 public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRequestDispatcher.class);
 
     private final ApiLoggingContext apiLoggingContext;
     private final BlocklistService blocklistService;
@@ -138,20 +140,20 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
      * 3. The method ensures turmsRequestBuffer in serviceRequest will be released by 1
      */
     @Override
-    public Mono<ServiceResponse> dispatch(TracingContext tracingContext, ServiceRequest serviceRequest) {
+    public Mono<ServiceResponse> dispatch(TracingContext context, ServiceRequest serviceRequest) {
         ByteBuf requestBuffer = serviceRequest.getTurmsRequestBuffer();
         try {
             requestBuffer.touch(serviceRequest);
-            return dispatch0(tracingContext, serviceRequest);
+            return dispatch0(context, serviceRequest);
         } catch (Exception e) {
-            log.error("Failed to handle the request: {}", serviceRequest, e);
+            LOGGER.error("Failed to handle the request: {}", serviceRequest, e);
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
         } finally {
             requestBuffer.release();
         }
     }
 
-    private Mono<ServiceResponse> dispatch0(TracingContext tracingContext, ServiceRequest serviceRequest) {
+    private Mono<ServiceResponse> dispatch0(TracingContext context, ServiceRequest serviceRequest) {
         long requestTime = System.currentTimeMillis();
         // 1. Validate ServiceResponse
         Long userId = serviceRequest.getUserId();
@@ -239,8 +241,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                         }
                         notifyRelatedUsersOfAction(requestResult, userId, deviceType)
                                 .onErrorResume(t -> {
-                                    try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
-                                        log.error("Failed to notify related users of the action", t);
+                                    try (TracingCloseableContext ignored = context.asCloseable()) {
+                                        LOGGER.error("Failed to notify related users of the action", t);
                                     }
                                     return Mono.empty();
                                 })
@@ -250,13 +252,13 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     .onErrorResume(t -> {
                         ThrowableInfo info = ThrowableInfo.get(t);
                         if (info.code().isServerError()) {
-                            // We update MDC and not clear because we know the downstream will clear
-                            tracingContext.updateMdc();
+                            // We update the thread context and not clear because we know the downstream will clear
+                            context.updateThreadContext();
                             // Note we log the whole request instead of the request ID for troubleshooting
                             // because CommonClientApiLogging only logs a brief description,
                             // which isn't enough for debugging, but it's enough for statistics
                             // and user behavior analysis, so we don't plan to change it
-                            log.error("Caught an internal server error when handling the request: " + lastClientRequest, t);
+                            LOGGER.error("Caught an internal server error when handling the request: " + lastClientRequest, t);
                         }
                         return Mono.just(RequestHandlerResultFactory.get(info.code(), info.reason()));
                     })
@@ -267,7 +269,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                 handlerResult.reason());
                         // 6. Log
                         if (response.code().isServerError() || apiLoggingContext.shouldLogRequest(requestType)) {
-                            tracingContext.updateMdc();
+                            context.updateThreadContext();
                             ClientApiLogging
                                     .log(lastClientRequest,
                                             serviceRequest,

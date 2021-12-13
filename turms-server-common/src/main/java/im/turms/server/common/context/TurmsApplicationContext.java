@@ -18,9 +18,10 @@
 package im.turms.server.common.context;
 
 import im.turms.server.common.cluster.node.NodeType;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import io.lettuce.core.RedisException;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.event.ContextClosedEvent;
@@ -39,8 +40,9 @@ import java.util.TimeZone;
  */
 @Component
 @Getter
-@Log4j2
 public class TurmsApplicationContext {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TurmsApplicationContext.class);
 
     private static final String BUILD_INFO_PROPS_PATH = "classpath:META-INF/build-info.properties";
     private static final String DEFAULT_VERSION = "0.0.0";
@@ -81,7 +83,7 @@ public class TurmsApplicationContext {
         isProduction = !isDevOrLocalTest && !isInProfiles(testEnvs, activeProfiles);
         version = getVersion(isProduction, buildProperties);
 
-        log.info("The local node with version {} is running in a {} environment",
+        LOGGER.info("The local node with version {} is running in a {} environment",
                 version,
                 isProduction ? "production" : "non-production");
 
@@ -130,7 +132,7 @@ public class TurmsApplicationContext {
         if (buildProperties == null) {
             // We allow build-info.properties not exist in non-production
             // environments for a better development experience
-            log.warn("Cannot find " + BUILD_INFO_PROPS_PATH +
+            LOGGER.warn("Cannot find " + BUILD_INFO_PROPS_PATH +
                     ", fall back to the default version " + DEFAULT_VERSION +
                     " in non-production environments." +
                     " Fix it by running \"mvn compile\"");
@@ -149,7 +151,7 @@ public class TurmsApplicationContext {
                 // Log the exception only in non-production env, so we can try to optimize the code of
                 // client to close the connection with a 4-way handshake on the client side
                 if (!this.isProduction) {
-                    log.warn(t);
+                    LOGGER.warn("Failed to read from a forcibly closed connection", t);
                 }
             } else {
                 if (isClosing) {
@@ -157,7 +159,7 @@ public class TurmsApplicationContext {
                         return;
                     }
                 }
-                log.error("Unhandled exception", t);
+                LOGGER.error("Unhandled exception", t);
             }
         });
     }

@@ -25,7 +25,6 @@ import im.turms.server.common.cluster.service.codec.exception.CodecNotFoundExcep
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.util.IllegalReferenceCountException;
-import lombok.extern.log4j.Log4j2;
 
 /**
  * Note that to get a better performance and serialize data with the least bytes,
@@ -37,7 +36,6 @@ import lombok.extern.log4j.Log4j2;
  *
  * @author James Chen
  */
-@Log4j2
 public class CodecService implements ClusterService {
 
     public CodecService() {

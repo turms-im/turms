@@ -21,6 +21,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.dao.domain.User;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.mongo.BsonPool;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
@@ -49,7 +51,6 @@ import im.turms.service.workflow.dao.domain.user.UserRelationship;
 import im.turms.service.workflow.dao.domain.user.UserRelationshipGroup;
 import im.turms.service.workflow.dao.domain.user.UserRelationshipGroupMember;
 import im.turms.service.workflow.dao.domain.user.UserVersion;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.time.DateUtils;
 import org.bson.Document;
 import org.springframework.stereotype.Component;
@@ -68,9 +69,10 @@ import static im.turms.server.common.property.env.service.env.database.MultiTemp
 /**
  * @author James Chen
  */
-@Log4j2
 @Component(IMongoCollectionInitializer.BEAN_NAME)
 public class MongoCollectionInitializer implements IMongoCollectionInitializer {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MongoCollectionInitializer.class);
 
     private final TurmsMongoClient adminMongoClient;
     private final TurmsMongoClient userMongoClient;
@@ -122,21 +124,21 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     private void initCollections() {
         Duration timeout = Duration.ofMinutes(1);
         if (!context.isProduction() && fakingManager.isClearAllCollectionsBeforeFaking()) {
-            log.info("Start dropping databases...");
+            LOGGER.info("Start dropping databases...");
             dropAllDatabases().block(timeout);
-            log.info("All collections are cleared");
+            LOGGER.info("All collections are cleared");
         }
-        log.info("Start creating collections...");
+        LOGGER.info("Start creating collections...");
         createCollectionsIfNotExist()
-                .doOnError(t -> log.error("Failed to create collections", t))
-                .doOnSuccess(ignored -> log.info("All collections are created"))
+                .doOnError(t -> LOGGER.error("Failed to create collections", t))
+                .doOnSuccess(ignored -> LOGGER.info("All collections are created"))
                 .flatMap(exists -> {
                     if (exists && !fakingManager.isFakeIfCollectionExists()) {
                         return Mono.empty();
                     }
                     return Mono.defer(() -> ensureZones()
                             .then(Mono.defer(this::ensureIndexesAndShard)
-                                    .doOnError(t -> log.error("Failed to ensure indexes and shard", t)))
+                                    .doOnError(t -> LOGGER.error("Failed to ensure indexes and shard", t)))
                             .then(Mono.defer(() -> !context.isProduction() && fakingManager.isFakingEnabled()
                                     ? fakingManager.fakeData()
                                     : Mono.empty())));
@@ -252,7 +254,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
             return Mono.empty();
         }
         String collectionName = entity.collectionName();
-        log.info("Adding the shards of the {} collection to zones...", collectionName);
+        LOGGER.info("Adding the shards of the {} collection to zones...", collectionName);
         Map<String, TemperatureProperties> temperatures = new LinkedHashMap<>(8);
         temperatures.put(collectionName + "_hot", temperatureProperties.getHot());
         temperatures.put(collectionName + "_warm", temperatureProperties.getWarm());
@@ -283,8 +285,8 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                         : DateUtils.addDays(startDate, -currentDay);
                 ensureZones = ensureZones
                         .then(Mono.defer(() -> mongoClient.addShardToZone(shard, zoneName)
-                                        .doOnError(t -> log.error("Failed to add a shard {} to the zone {}", shard, zoneName, t)))
-                                .doOnSuccess(unused -> log.info("Added a shard {} to the zone {}", shard, zoneName)))
+                                        .doOnError(t -> LOGGER.error("Failed to add a shard {} to the zone {}", shard, zoneName, t)))
+                                .doOnSuccess(unused -> LOGGER.info("Added a shard {} to the zone {}", shard, zoneName)))
                         .then(Mono.defer(() -> {
                             // TODO: support the shard key consisting of multiple fields
                             Document minimum = new Document(creationDateFieldName, min);
@@ -293,12 +295,12 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                                             zoneName,
                                             minimum,
                                             maximum)
-                                    .doOnError(t -> log.error("Failed to update the zone {} with the key ranges: {} -->> {}",
+                                    .doOnError(t -> LOGGER.error("Failed to update the zone {} with the key ranges: {} -->> {}",
                                             zoneName,
                                             minimum.toJson(),
                                             maximum.toJson(),
                                             t))
-                                    .doOnSuccess(unused -> log.info("Updated the zone {} with the key ranges: {} -->> {}",
+                                    .doOnSuccess(unused -> LOGGER.info("Updated the zone {} with the key ranges: {} -->> {}",
                                             zoneName,
                                             minimum.toJson(),
                                             maximum.toJson()));
@@ -307,7 +309,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
             currentDay += days;
         }
         return ensureZones
-                .doOnSuccess(unused -> log.info("Added the shards of the {} collection to zones", collectionName));
+                .doOnSuccess(unused -> LOGGER.info("Added the shards of the {} collection to zones", collectionName));
     }
 
 }

@@ -19,18 +19,17 @@ package im.turms.server.common.context;
 
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.node.NodeType;
-import im.turms.server.common.log4j.plugin.TurmsContextLookup;
-import im.turms.server.common.property.env.common.LoggingProperties;
-import org.apache.logging.log4j.core.async.AsyncLoggerContext;
-import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.config.LoggerConfig;
-import org.apache.logging.log4j.core.config.Order;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.model.LogLevel;
+import im.turms.server.common.property.env.common.logging.ConsoleLoggingProperties;
+import im.turms.server.common.property.env.common.logging.FileLoggingProperties;
+import im.turms.server.common.property.env.common.logging.LoggingProperties;
+import io.netty.buffer.PooledByteBufAllocator;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.context.logging.LoggingApplicationListener;
 import org.springframework.context.ApplicationListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
-
-import static org.apache.logging.log4j.LogManager.getContext;
 
 /**
  * @author James Chen
@@ -43,49 +42,53 @@ public class ApplicationEnvironmentEventListener implements ApplicationListener<
      */
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
-        configContextForLogging(event);
+        configureContextForLogging(event);
     }
 
-    private void configContextForLogging(ApplicationEnvironmentPreparedEvent event) {
+    private void configureContextForLogging(ApplicationEnvironmentPreparedEvent event) {
         ConfigurableEnvironment env = event.getEnvironment();
-
         // Though it's more reasonable to init the node type/ID in im.turms.server.common.cluster.node.Node,
         // we need to ensure the local node info is logged even if the local node hasn't been inited.
         // So we initialize the node info here
         String applicationClassName = event.getSpringApplication().getMainApplicationClass().getSimpleName();
-        TurmsContextLookup.setNodeType(applicationClassName.equals("TurmsGatewayApplication")
+        NodeType nodeType = applicationClassName.equals("TurmsGatewayApplication")
                 ? NodeType.GATEWAY
-                : NodeType.SERVICE);
+                : NodeType.SERVICE;
         Node.initNodeId(env.getProperty("turms.cluster.node.id", String.class));
 
-        boolean enableConsoleAppender = env.getProperty("turms.logging.enable-console-appender",
-                Boolean.class,
-                LoggingProperties.ENABLE_CONSOLE_APPENDER_DEFAULT_VALUE);
-        boolean enableFileAppender = env.getProperty("turms.logging.enable-file-appender",
-                Boolean.class,
-                LoggingProperties.ENABLE_FILE_APPENDER_DEFAULT_VALUE);
+        PooledByteBufAllocator.DEFAULT.metric().usedDirectMemory();
 
-        AsyncLoggerContext context = (AsyncLoggerContext) getContext(false);
-        Configuration config = context.getConfiguration();
-        LoggerConfig loggerConfig = config.getRootLogger();
+        ConsoleLoggingProperties consoleLoggingProperties = ConsoleLoggingProperties.builder()
+                .enabled(env.getProperty("turms.logging.console.enabled",
+                        Boolean.class,
+                        ConsoleLoggingProperties.DEFAULT_VALUE_ENABLED))
+                .level(env.getProperty("turms.logging.console.level",
+                        LogLevel.class,
+                        ConsoleLoggingProperties.DEFAULT_VALUE_LEVEL))
+                .build();
+        FileLoggingProperties fileLoggingProperties = FileLoggingProperties.builder()
+                .enabled(env.getProperty("turms.logging.file.enabled",
+                        Boolean.class,
+                        FileLoggingProperties.DEFAULT_VALUE_ENABLED))
+                .level(env.getProperty("turms.logging.file.level",
+                        LogLevel.class,
+                        FileLoggingProperties.DEFAULT_VALUE_LEVEL))
+                .filePath(env.getProperty("turms.logging.file.filePath",
+                        String.class,
+                        FileLoggingProperties.DEFAULT_VALUE_FILE_PATH))
+                .maxFiles(env.getProperty("turms.logging.file.maxFiles",
+                        Integer.class,
+                        FileLoggingProperties.DEFAULT_VALUE_MAX_FILES))
+                .maxFileSizeMb(env.getProperty("turms.logging.file.maxFileSizeMb",
+                        Integer.class,
+                        FileLoggingProperties.DEFAULT_VALUE_FILE_SIZE_MB))
+                .build();
+        LoggingProperties loggingProperties = new LoggingProperties().toBuilder()
+                .console(consoleLoggingProperties)
+                .file(fileLoggingProperties)
+                .build();
 
-        if (!enableConsoleAppender || !enableFileAppender) {
-            if (!enableConsoleAppender) {
-                removeAppender(loggerConfig, "Console");
-            }
-            if (!enableFileAppender) {
-                removeAppender(loggerConfig, "Routing");
-            }
-            context.updateLoggers();
-        }
-    }
-
-    private void removeAppender(LoggerConfig loggerConfig, String appenderName) {
-        if (loggerConfig.getAppenders().containsKey(appenderName)) {
-            loggerConfig.removeAppender(appenderName);
-        } else {
-            throw new IllegalStateException("Cannot find appender %s".formatted(appenderName));
-        }
+        LoggerFactory.init(nodeType, Node.getNodeId(), loggingProperties);
     }
 
 }

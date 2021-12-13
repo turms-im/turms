@@ -29,12 +29,13 @@ import im.turms.server.common.client.TurmsClient;
 import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.fake.RandomProtobufGenerator;
 import im.turms.server.common.fake.RandomRequestFactory;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.FakeProperties;
 import im.turms.server.common.util.ExceptionUtil;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.util.concurrent.DefaultThreadFactory;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -54,9 +55,10 @@ import java.util.Set;
  * @author James Chen
  */
 @Component
-@Log4j2
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class ClientFakingManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientFakingManager.class);
 
     private final List<TurmsClient> clients;
     private final FakeProperties fakeProperties;
@@ -77,7 +79,7 @@ public class ClientFakingManager {
         if (!tcpDispatcher.isEnabled()) {
             throw new IllegalStateException("Cannot run clients because the TCP server is disabled");
         }
-        log.info("Preparing clients");
+        LOGGER.info("Preparing clients");
         // Though the local TCP server has just been set up,
         // we wait to ensure it's ready for connections.
         // Otherwise, clients will fail to connect due to "Connection reset"
@@ -88,7 +90,7 @@ public class ClientFakingManager {
 
     @PostConstruct
     private void init() {
-        log.info("Start sending random requests from clients");
+        LOGGER.info("Start sending random requests from clients");
         startSendingRandomRequests(clients,
                 fakeProperties.getFirstUserId(),
                 fakeProperties.getUserCount(),
@@ -154,7 +156,7 @@ public class ClientFakingManager {
                         }
                         client.sendRequest(builder)
                                 .onErrorResume(t -> {
-                                    log.error("Caught an internal error when sending request: {}",
+                                    LOGGER.error("Caught an internal error when sending request: {}",
                                             ProtoUtil.toLogString(builder.build()),
                                             t);
                                     if (ExceptionUtil.isDisconnectedClientError(t)) {
@@ -164,7 +166,7 @@ public class ClientFakingManager {
                                 })
                                 .subscribe();
                     } catch (Exception e) {
-                        log.error("Caught an internal error when sending request", e);
+                        LOGGER.error("Caught an internal error when sending request", e);
                     }
                     sentRequestCount++;
                 }
@@ -177,14 +179,14 @@ public class ClientFakingManager {
                     break;
                 }
             }
-            log.warn("All fake clients has been closed");
+            LOGGER.warn("All fake clients has been closed");
         });
         thread.start();
     }
 
     private void removeCurrentClient(Iterator<TurmsClient> clientIterator, TurmsClient client) {
         clientIterator.remove();
-        log.warn("The session {} has been closed and removed", client.getSessionId());
+        LOGGER.warn("The session {} has been closed and removed", client.getSessionId());
     }
 
 }

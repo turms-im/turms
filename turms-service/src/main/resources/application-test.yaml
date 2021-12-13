@@ -17,7 +17,8 @@ spring:
 
 turms:
   logging:
-    enable-console-appender: true
+    console:
+      enabled: true
   service:
     client-api:
       logging:

@@ -30,7 +30,6 @@ import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.env.service.env.database.TurmsMongoProperties;
-import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -40,7 +39,6 @@ import java.util.List;
 /**
  * @author James Chen
  */
-@Log4j2
 public class SharedConfigService implements ClusterService {
 
     // Note that 60s is the minimum TTL supported by the TTL index of MongoDB

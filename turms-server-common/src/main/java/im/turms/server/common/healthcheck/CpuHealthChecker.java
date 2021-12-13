@@ -18,17 +18,18 @@
 package im.turms.server.common.healthcheck;
 
 import com.sun.management.OperatingSystemMXBean;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.property.env.common.healthcheck.CpuHealthCheckProperties;
-import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.Level;
 
 import java.lang.management.ManagementFactory;
 
 /**
  * @author James Chen
  */
-@Log4j2
 public final class CpuHealthChecker extends HealthChecker {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CpuHealthChecker.class);
 
     private final OperatingSystemMXBean operatingSystemBean;
 
@@ -47,7 +48,7 @@ public final class CpuHealthChecker extends HealthChecker {
 
         boolean isCpuHealthCheckAvailable = true;
         if (cpuLoad < 0) {
-            log.warn("CPU health checker cannot work because the \"recent cpu usage\" for the whole operating environment is unavailable");
+            LOGGER.warn("CPU health checker cannot work because the \"recent cpu usage\" for the whole operating environment is unavailable");
             isCpuHealthCheckAvailable = false;
             isCpuHealthy = true;
         }
@@ -76,12 +77,12 @@ public final class CpuHealthChecker extends HealthChecker {
         }
 
         // Log
-        log.log(Level.DEBUG, "CPU load: {}", cpuLoad);
+        LOGGER.debug( "CPU load: {}", cpuLoad);
         if (wasCpuHealthy != isCpuHealthy) {
             if (isCpuHealthy) {
-                log.info("The CPU has become healthy. The current CPU load: {}", cpuLoad);
+                LOGGER.info("The CPU has become healthy. The current CPU load: {}", cpuLoad);
             } else {
-                log.info("The CPU has become unhealthy. The current CPU load: {}", cpuLoad);
+                LOGGER.info("The CPU has become unhealthy. The current CPU load: {}", cpuLoad);
             }
         }
     }
