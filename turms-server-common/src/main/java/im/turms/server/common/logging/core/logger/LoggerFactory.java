@@ -97,6 +97,19 @@ public class LoggerFactory {
         new LogProcessorRunner(QUEUE).start();
     }
 
+    private static synchronized void initForTest() {
+        NodeType nodeType = NodeType.GATEWAY;
+        try {
+            Class.forName("im.turms.service.TurmsServiceApplication");
+            nodeType = NodeType.SERVICE;
+        } catch (ClassNotFoundException ignored) {
+        }
+        init(nodeType, "node-id-test", LoggingProperties.builder()
+                .console(new ConsoleLoggingProperties().toBuilder().level(LogLevel.DEBUG).enabled(true).build())
+                .file(new FileLoggingProperties().toBuilder().level(LogLevel.DEBUG).enabled(true).build())
+                .build());
+    }
+
     public static Logger getLogger(String name) {
         return getLogger(LoggerOptions.builder()
                 .loggerName(name)
@@ -139,6 +152,9 @@ public class LoggerFactory {
                 appenders = DEFAULT_APPENDERS;
             }
             return new AsyncLogger(loggerName, options.isShouldParse(), appenders, layout, QUEUE);
+        } else if (isJUnitTest()) {
+            initForTest();
+            return getLogger(options);
         }
         // Spring will access this method via SLF4J before we can initialize LoggerFactory
         // (because we need to wait Spring to parse the properties file for logging)
@@ -153,9 +169,21 @@ public class LoggerFactory {
     }
 
     private static String getFilePath(String path) {
+        if (path == null) {
+            return ".";
+        }
         return path
                 .replace("@HOME", homeDir)
                 .replace("@SERVICE_TYPE_NAME", serverTypeName);
+    }
+
+    private static boolean isJUnitTest() {
+        for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+            if (element.getClassName().startsWith("org.junit.")) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

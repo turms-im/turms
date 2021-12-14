@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 public class TemplateLayout {
 
     static final byte[] AT = "at ".getBytes(StandardCharsets.UTF_8);
+    static final byte[] CAUSED_BY = "caused by: ".getBytes(StandardCharsets.UTF_8);
     static final byte[] COLON = ": ".getBytes(StandardCharsets.UTF_8);
     static final byte[] CYCLIC_EXCEPTION = ">>(Cyclic Exception?)>>".getBytes(StandardCharsets.UTF_8);
     static final byte[] NATIVE = "native".getBytes(StandardCharsets.UTF_8);
@@ -150,7 +151,7 @@ public class TemplateLayout {
                             int depth) {
         buffer.writeByte('\n');
         appendTabs(indent - 1, buffer);
-        buffer.writeBytes(SUPPRESSED);
+        buffer.writeBytes(CAUSED_BY);
         appendException(cause, buffer, indent, depth + 1);
     }
 
