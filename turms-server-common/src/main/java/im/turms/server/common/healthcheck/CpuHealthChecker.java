@@ -18,8 +18,8 @@
 package im.turms.server.common.healthcheck;
 
 import com.sun.management.OperatingSystemMXBean;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.env.common.healthcheck.CpuHealthCheckProperties;
 
 import java.lang.management.ManagementFactory;
@@ -70,14 +70,16 @@ public final class CpuHealthChecker extends HealthChecker {
         double cpuLoad = operatingSystemBean.getCpuLoad();
         if (cpuLoad > unhealthyLoadThreshold) {
             currentUnhealthyTimes++;
-            isCpuHealthy = currentUnhealthyTimes > cpuCheckRetries;
+            if (currentUnhealthyTimes > cpuCheckRetries) {
+                isCpuHealthy = false;
+            }
         } else {
             currentUnhealthyTimes = 0;
             isCpuHealthy = true;
         }
 
         // Log
-        LOGGER.debug( "CPU load: {}", cpuLoad);
+        LOGGER.debug("CPU load: {}", cpuLoad);
         if (wasCpuHealthy != isCpuHealthy) {
             if (isCpuHealthy) {
                 LOGGER.info("The CPU has become healthy. The current CPU load: {}", cpuLoad);
