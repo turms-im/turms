@@ -19,6 +19,9 @@ package im.turms.service.logging;
 
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.util.ByteBufUtil;
+import im.turms.server.common.util.Formatter;
+import io.netty.buffer.ByteBuf;
 
 import static im.turms.server.common.logging.CommonLogger.LOG_FIELD_DELIMITER;
 import static im.turms.server.common.logging.CommonLogger.NOTIFICATION_LOGGER;
@@ -38,18 +41,18 @@ public final class NotificationLogging {
      */
     public static void log(boolean sent, TurmsNotification notification, int recipientCount) {
         TurmsRequest relayedRequest = notification.getRelayedRequest();
-        String message = String.join(LOG_FIELD_DELIMITER,
+        ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
                 // User info
-                String.valueOf(notification.getRequesterId()),
+                Formatter.toCharacterBytes(notification.getRequesterId()),
                 // Notification info
                 sent ? "SENT" : "UNSENT",
-                String.valueOf(recipientCount),
-                notification.hasCloseStatus() ? String.valueOf(notification.getCloseStatus()) : "",
-                String.valueOf(notification.getSerializedSize()),
+                Formatter.toCharacterBytes(recipientCount),
+                notification.hasCloseStatus() ? Formatter.toCharacterBytes(notification.getCloseStatus()) : null,
+                Formatter.toCharacterBytes(notification.getSerializedSize()),
                 // Relayed request info
-                String.valueOf(relayedRequest.getRequestId()),
+                Formatter.toCharacterBytes(relayedRequest.getRequestId()),
                 relayedRequest.getKindCase().name());
-        NOTIFICATION_LOGGER.info(message);
+        NOTIFICATION_LOGGER.info(buffer);
     }
 
 }

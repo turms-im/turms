@@ -155,4 +155,29 @@ public final class ByteBufUtil {
         }
     }
 
+    public static ByteBuf join(int estimatedSize, int delimiter, Object... elements) {
+        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(estimatedSize);
+        for (int i = 0, length = elements.length; i < length; i++) {
+            Object element = elements[i];
+            if (element instanceof Integer num) {
+                buffer.writeBytes(Formatter.toCharacterBytes(num));
+            } else if (element instanceof Long num) {
+                buffer.writeBytes(Formatter.toCharacterBytes(num));
+            } else if (element instanceof CharSequence c) {
+                buffer.writeCharSequence(c, StandardCharsets.UTF_8);
+            } else if (element instanceof byte[] bytes) {
+                buffer.writeBytes(bytes);
+            } else if (element instanceof Character c) {
+                buffer.writeChar(c);
+            } else if (element != null) {
+                buffer.release();
+                throw new IllegalArgumentException("Unsupported type: " + element.getClass().getName());
+            }
+            if (i != length - 1) {
+                buffer.writeByte(delimiter);
+            }
+        }
+        return buffer;
+    }
+
 }

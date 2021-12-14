@@ -18,6 +18,7 @@
 package im.turms.server.common.logging.core.logger;
 
 import im.turms.server.common.logging.core.model.LogLevel;
+import io.netty.buffer.ByteBuf;
 import lombok.Setter;
 
 import javax.annotation.Nullable;
@@ -91,6 +92,11 @@ public class WrappedLogger implements Logger {
     }
 
     @Override
+    public void info(ByteBuf message) {
+        logger.info(message);
+    }
+
+    @Override
     public void warn(String message) {
         logger.warn(message);
     }
@@ -108,6 +114,11 @@ public class WrappedLogger implements Logger {
     @Override
     public void error(String message, Object... args) {
         logger.error(message, args);
+    }
+
+    @Override
+    public void error(ByteBuf message) {
+        logger.error(message);
     }
 
     @Override

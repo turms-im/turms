@@ -142,12 +142,13 @@ Turms与其他常规服务端一样，将可观测性的具体实现分为三类
 
 ### 定制实现原因
 
-1. 第三方Logging实现过于冗余，性能低下且内存占用高
-2. 避免第三方Logging的开发人员由于缺乏安全常识，写出类似[Remote code injection in Log4j](https://github.com/advisories/GHSA-jfh8-c2jp-5v3q)的Critical bug
-3. Turms的日志实现通过“几乎什么功能都没实现”，并且实现了的功能也照着几乎最高性能标准实现（之后我们会避免使用Java低效的`String`与`StringBuilder`，达到更高的性能），因此该实现的吞吐量能比log4j2 async logger高数倍，同时内存开销小数倍
-4. Turms打印日志的过程也非常精简，大概只实现了标准日志库的百分之几的功能，具体包括：
-   * 调用`log`接口
-   * `log`接口内部通过`PooledByteBufAllocator.DEFAULT`分配一块堆外内存，并遍历一遍message，将非占位符直接写入该内存，跳过占位符并写入具体参数，最后将这块内存放到日志处理的MPSC队列中（基于jctools的`MpscUnboundedArrayQueue`）
+1. Turms默认且非常推荐对客户端API进行100%采样，需要Logging的实现高效
+2. 第三方Logging实现过于冗余，性能低下且内存占用高
+3. 避免第三方Logging的开发人员由于缺乏安全常识，写出类似[Remote code injection in Log4j](https://github.com/advisories/GHSA-jfh8-c2jp-5v3q)的Critical bug
+4. Turms的日志实现通过“几乎什么功能都没实现”，并且实现了的功能也照着几乎最高性能标准实现（之后我们会避免使用Java低效的`String`与`StringBuilder`，达到更高的性能），因此该实现的吞吐量能比log4j2 async logger高数倍，同时内存开销小数倍
+5. Turms打印日志的过程也非常精简，大概只实现了标准日志库的百分之几的功能，具体包括：
+   * 调用`im.turms.server.common.logging.core.logger.AsyncLogger#doLog`函数
+   * `doLog`函数内部通过`PooledByteBufAllocator.DEFAULT`分配一块堆外内存，并遍历一遍message，将非占位符直接写入该内存，跳过占位符并写入具体参数，最后将这块内存放到日志处理的MPSC队列中（基于jctools的`MpscUnboundedArrayQueue`）
    * 日志处理线程检测到有新的日志（即`ByteBuffer`对象）时，会将该堆外内存写入NIO包的`FileChannel`（可以是控制台、也可以是文件）中，该对象在Linux系统下，会最终调用`pwrite`直接将堆外内存写入文件描述符中
 
 ### 不使用JSON格式的原因

@@ -18,6 +18,7 @@
 package im.turms.server.common.logging.core.logger;
 
 import im.turms.server.common.logging.core.model.LogLevel;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
 
@@ -49,6 +50,8 @@ public interface Logger {
 
     void info(String message, Object... args);
 
+    void info(ByteBuf message);
+
     void warn(String message);
 
     void warn(String message, Object... args);
@@ -56,6 +59,8 @@ public interface Logger {
     void error(String message, @Nullable Throwable throwable);
 
     void error(String message, Object... args);
+
+    void error(ByteBuf message);
 
     void fatal(String message, Throwable throwable);
 

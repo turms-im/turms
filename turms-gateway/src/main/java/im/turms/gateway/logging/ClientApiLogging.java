@@ -20,8 +20,11 @@ package im.turms.gateway.logging;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.util.ByteBufUtil;
 import im.turms.server.common.util.DateUtil;
+import im.turms.server.common.util.Formatter;
 import im.turms.server.common.util.StringUtil;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
 
@@ -54,24 +57,24 @@ public final class ClientApiLogging {
                            long requestTime,
                            TurmsNotification response,
                            long processingTime) {
-        String message = String.join(LOG_FIELD_DELIMITER,
+        ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
                 // session information
-                StringUtil.toString(sessionId),
-                StringUtil.toString(userId),
+                sessionId,
+                userId,
                 StringUtil.toString(deviceType),
-                StringUtil.toString(version),
+                version,
                 ip,
                 // request information
-                String.valueOf(requestId),
+                Formatter.toCharacterBytes(requestId),
                 requestType.name(),
-                String.valueOf(requestSize),
+                Formatter.toCharacterBytes(requestSize),
                 DateUtil.toStr(requestTime),
                 // response information
-                String.valueOf(response.getCode()),
-                response.hasData() ? response.getData().getKindCase().name() : "",
-                String.valueOf(response.getSerializedSize()),
-                String.valueOf(processingTime));
-        CLIENT_API_LOGGER.info(message);
+                Formatter.toCharacterBytes(response.getCode()),
+                response.hasData() ? response.getData().getKindCase().name() : null,
+                Formatter.toCharacterBytes(response.getSerializedSize()),
+                Formatter.toCharacterBytes(processingTime));
+        CLIENT_API_LOGGER.info(buffer);
     }
 
     public static void log(@Nullable Integer sessionId,
@@ -85,24 +88,24 @@ public final class ClientApiLogging {
                            long requestTime,
                            int responseCode,
                            long processingTime) {
-        String message = String.join(LOG_FIELD_DELIMITER,
+        ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
                 // session information
-                StringUtil.toString(sessionId),
-                StringUtil.toString(userId),
+                sessionId,
+                userId,
                 StringUtil.toString(deviceType),
-                StringUtil.toString(version),
+                version,
                 ip,
                 // request information
-                String.valueOf(requestId),
+                Formatter.toCharacterBytes(requestId),
                 requestType.name(),
-                String.valueOf(requestSize),
+                Formatter.toCharacterBytes(requestSize),
                 DateUtil.toStr(requestTime),
                 // response information
-                String.valueOf(responseCode),
-                "", // Response data type
-                "0", // Response serialized size
-                String.valueOf(processingTime));
-        CLIENT_API_LOGGER.info(message);
+                Formatter.toCharacterBytes(responseCode),
+                null, // Response data type
+                '0', // Response serialized size
+                Formatter.toCharacterBytes(processingTime));
+        CLIENT_API_LOGGER.info(buffer);
     }
 
     public static void log(@Nullable Integer sessionId,
@@ -118,24 +121,24 @@ public final class ClientApiLogging {
                            @Nullable String responseDataType,
                            int responseSize,
                            long processingTime) {
-        String message = String.join(LOG_FIELD_DELIMITER,
+        ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
                 // session information
-                StringUtil.toString(sessionId),
-                StringUtil.toString(userId),
+                sessionId,
+                userId,
                 StringUtil.toString(deviceType),
-                StringUtil.toString(version),
+                version,
                 ip,
                 // request information
-                String.valueOf(requestId),
+                Formatter.toCharacterBytes(requestId),
                 requestType,
-                String.valueOf(requestSize),
+                Formatter.toCharacterBytes(requestSize),
                 DateUtil.toStr(requestTime),
                 // response information
-                String.valueOf(responseCode),
-                StringUtil.toString(responseDataType),
-                String.valueOf(responseSize),
-                String.valueOf(processingTime));
-        CLIENT_API_LOGGER.info(message);
+                Formatter.toCharacterBytes(responseCode),
+                responseDataType,
+                Formatter.toCharacterBytes(responseSize),
+                Formatter.toCharacterBytes(processingTime));
+        CLIENT_API_LOGGER.info(buffer);
     }
 
 }

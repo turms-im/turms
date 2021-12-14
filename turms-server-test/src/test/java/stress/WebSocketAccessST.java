@@ -28,7 +28,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakeException;
-import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import perf.BasePerformanceTest;
 import reactor.core.publisher.Mono;
@@ -50,7 +49,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 /**
  * @author James Chen
  */
-@Log4j2
 class WebSocketAccessST extends BasePerformanceTest {
 
     private static final int CONCURRENT_CLIENT_COUNT = 100_000;
@@ -82,7 +80,7 @@ class WebSocketAccessST extends BasePerformanceTest {
 
             AtomicReference<Throwable> unexpectedError = new AtomicReference<>();
 
-            log.info("starting logging in...");
+            System.out.println("starting logging in...");
 
             // Note that we do not close the clients on the client side
             // until the test succeeds or fails
@@ -108,9 +106,9 @@ class WebSocketAccessST extends BasePerformanceTest {
                             if (t instanceof IOException) {
                                 // It's an unexpected error and the client or the server should
                                 // increase the maximum allowed TCP connections
-                                log.error("Failed to connect. This may be a TCP related error", t);
+                                System.err.println("Failed to connect. This may be a TCP related error: " + t);
                             } else {
-                                log.error("Failed to connect. Unknown error", t);
+                                System.err.println("Failed to connect. Unknown error: " + t);
                             }
                             return Mono.empty();
                         })
@@ -124,7 +122,7 @@ class WebSocketAccessST extends BasePerformanceTest {
                                         // the error is mainly caused due to the problem of client itself
                                         unexpectedError.set(t);
                                         tryHandleCurrentClient(pendingClientLatch, isCurrentClientHandled, connectedButNotLoggedInClient);
-                                        log.error("Failed to receive messages. This may be a client error", t);
+                                        System.err.println("Failed to receive messages. This may be a client error: " + t);
                                     })
                                     .doOnNext(byteBuf -> {
                                         try {
@@ -136,9 +134,9 @@ class WebSocketAccessST extends BasePerformanceTest {
                                             }
                                         } catch (InvalidProtocolBufferException e) {
                                             unexpectedError.set(e);
-                                            log.error("Failed to parse data to TurmsNotification. " +
-                                                            "Make sure the client version is consistent with the server version",
-                                                    e);
+                                            System.err.println("Failed to parse data to TurmsNotification. " +
+                                                    "Make sure the client version is consistent with the server version: "
+                                                    + e);
                                         }
                                     })
                                     .subscribe();
@@ -158,7 +156,7 @@ class WebSocketAccessST extends BasePerformanceTest {
                             return in.receiveCloseStatus()
                                     .doOnError(t -> {
                                         tryHandleCurrentClient(pendingClientLatch, isCurrentClientHandled, connectedButNotLoggedInClient);
-                                        log.error("An connection error occurs", t);
+                                        System.err.println("An connection error occurs: " + t);
                                     })
                                     .doOnSuccess(status -> {
                                         tryHandleCurrentClient(pendingClientLatch, isCurrentClientHandled, connectedButNotLoggedInClient);
@@ -167,7 +165,7 @@ class WebSocketAccessST extends BasePerformanceTest {
                         })
                         .subscribe();
             }
-            log.info("all clients has sent login requests");
+            System.out.println("all clients has sent login requests");
 
             boolean handleAllRequests = pendingClientLatch.await(1, TimeUnit.MINUTES);
             assertThat(handleAllRequests)
@@ -180,10 +178,10 @@ class WebSocketAccessST extends BasePerformanceTest {
 
             assertTurmsGatewayAvailable(gatewayAdminHost, gatewayAdminPort);
         }
-        log.info("Logged in clients: {}; " +
-                        "Connected but not logged in clients: {}; " +
-                        "Not Connected clients: {}; " +
-                        "Pending clients: {}",
+        System.out.printf("Logged in clients: %d; " +
+                        "Connected but not logged in clients: %d; " +
+                        "Not Connected clients: %d; " +
+                        "Pending clients: %d",
                 loggedInClient.get(),
                 connectedButNotLoggedInClient.get(),
                 notConnectedClient.get(),

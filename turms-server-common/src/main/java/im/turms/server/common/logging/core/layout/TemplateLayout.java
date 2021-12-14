@@ -17,12 +17,22 @@
 
 package im.turms.server.common.logging.core.layout;
 
+import im.turms.server.common.util.Formatter;
 import io.netty.buffer.ByteBuf;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author James Chen
  */
 public class TemplateLayout {
+
+    static final byte[] AT = "at ".getBytes(StandardCharsets.UTF_8);
+    static final byte[] COLON = ": ".getBytes(StandardCharsets.UTF_8);
+    static final byte[] CYCLIC_EXCEPTION = ">>(Cyclic Exception?)>>".getBytes(StandardCharsets.UTF_8);
+    static final byte[] NATIVE = "native".getBytes(StandardCharsets.UTF_8);
+    static final byte[] SUPPRESSED = "suppressed: ".getBytes(StandardCharsets.UTF_8);
+    static final byte[] UNKNOWN = "unknown".getBytes(StandardCharsets.UTF_8);
 
     static final int DEPTH_LIMIT = 16;
     static final int WHITESPACE = ' ';
@@ -41,26 +51,26 @@ public class TemplateLayout {
         buffer.writeBytes(bytes);
     }
 
-    public StringBuilder appendException(Throwable e, StringBuilder entry) {
-        entry.append('\n');
-        return appendException(e, entry, 1, 1);
+    public void appendException(Throwable e, ByteBuf buffer) {
+        buffer.writeByte('\n');
+        appendException(e, buffer, 1, 1);
     }
 
-    private StringBuilder appendException(Throwable e,
-                                          StringBuilder builder,
-                                          int indent,
-                                          int depth) {
+    private void appendException(Throwable e,
+                                 ByteBuf buffer,
+                                 int indent,
+                                 int depth) {
         if (depth > DEPTH_LIMIT) {
-            builder.append(">>(Cyclic Exception?)>>");
-            return builder;
+            buffer.writeBytes(CYCLIC_EXCEPTION);
+            return;
         }
 
-        builder.append(e.getClass().getName());
+        buffer.writeCharSequence(e.getClass().getName(), StandardCharsets.UTF_8);
 
         String message = e.getMessage();
         if (message != null) {
-            builder.append(": ")
-                    .append(message);
+            buffer.writeBytes(COLON)
+                    .writeCharSequence(message, StandardCharsets.UTF_8);
         }
 
         StackTraceElement[] stacks = e.getStackTrace();
@@ -72,80 +82,81 @@ public class TemplateLayout {
         boolean isCauseNotNull = cause != null;
 
         if (isStacksNotEmpty || isSuppressesNotEmpty || isCauseNotNull) {
-            builder.append('\n');
+            buffer.writeByte('\n');
+        } else {
+            return;
         }
 
         if (isStacksNotEmpty) {
-            appendStack(stacks, builder, indent);
+            appendStack(stacks, buffer, indent);
         }
 
         if (isSuppressesNotEmpty) {
-            appendSuppresses(suppresses, builder, indent, depth);
+            appendSuppresses(suppresses, buffer, indent, depth);
         }
 
         if (isCauseNotNull) {
-            appendCause(cause, builder, indent, depth);
+            appendCause(cause, buffer, indent, depth);
         }
-        return builder;
     }
 
     private void appendStack(StackTraceElement[] stack,
-                             StringBuilder builder,
+                             ByteBuf buffer,
                              int indent) {
         for (StackTraceElement element : stack) {
-            appendTabs(indent, builder);
+            appendTabs(indent, buffer);
 
-            builder.append("at ");
-            builder.append(element.getClassName());
-            builder.append('.');
-            builder.append(element.getMethodName());
-            builder.append('(');
+            buffer.writeBytes(AT);
+            buffer.writeCharSequence(element.getClassName(), StandardCharsets.UTF_8);
+            buffer.writeByte('.');
+            buffer.writeCharSequence(element.getMethodName(), StandardCharsets.UTF_8);
+            buffer.writeByte('(');
 
             if (element.isNativeMethod()) {
-                builder.append("native");
+                buffer.writeBytes(NATIVE);
             } else {
                 String fileName = element.getFileName();
                 int lineNumber = element.getLineNumber();
                 if (fileName == null) {
-                    builder.append("unknown");
+                    buffer.writeBytes(UNKNOWN);
                 } else {
-                    builder.append(fileName);
+                    buffer.writeCharSequence(fileName, StandardCharsets.UTF_8);
                     if (lineNumber >= 0) {
-                        builder.append(':');
-                        builder.append(lineNumber);
+                        buffer.writeByte(':');
+                        buffer.writeBytes(Formatter.toCharacterBytes(lineNumber));
                     }
                 }
             }
-            builder.append(')');
-            builder.append('\n');
+            buffer.writeByte(')');
+            buffer.writeByte('\n');
         }
     }
 
     public void appendSuppresses(Throwable[] suppresses,
-                                 StringBuilder entry,
+                                 ByteBuf buffer,
                                  int indent,
                                  int depth) {
         for (Throwable suppress : suppresses) {
-            entry.append('\n');
-            appendTabs(indent, entry);
-            entry.append("suppressed: ");
-            appendException(suppress, entry, indent + 1, depth + 1);
+            buffer.writeByte('\n');
+            appendTabs(indent, buffer);
+            buffer.writeBytes(SUPPRESSED);
+            appendException(suppress, buffer, indent + 1, depth + 1);
         }
     }
 
     public void appendCause(Throwable cause,
-                            StringBuilder entry,
+                            ByteBuf buffer,
                             int indent,
                             int depth) {
-        entry.append('\n');
-        appendTabs(indent - 1, entry);
-        entry.append("caused by: ");
-        appendException(cause, entry, indent, depth + 1);
+        buffer.writeByte('\n');
+        appendTabs(indent - 1, buffer);
+        buffer.writeBytes(SUPPRESSED);
+        appendException(cause, buffer, indent, depth + 1);
     }
 
-    public void appendTabs(int tabs, StringBuilder builder) {
+    public void appendTabs(int tabs, ByteBuf buffer) {
         for (int i = 0; i < tabs; i++) {
-            builder.append('\t');
+            buffer.writeByte('\t');
         }
     }
 

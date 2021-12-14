@@ -51,7 +51,7 @@ public class RpcRequestExecutor {
         rpcRequest.touch(rpcRequest);
         try {
             tracingContext.updateThreadContext();
-            rpcRequest.init(this.context, connection, fromNodeId);
+            rpcRequest.init(context, connection, fromNodeId);
             Mono<T> result;
             // It's the responsibility of the implementations of call() or callAsync()
             // to release by 1 if the request has a bound buffer

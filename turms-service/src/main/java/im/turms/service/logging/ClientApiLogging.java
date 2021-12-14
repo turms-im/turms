@@ -20,8 +20,11 @@ package im.turms.service.logging;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
+import im.turms.server.common.util.ByteBufUtil;
 import im.turms.server.common.util.DateUtil;
+import im.turms.server.common.util.Formatter;
 import im.turms.service.workflow.access.servicerequest.dto.ClientRequest;
+import io.netty.buffer.ByteBuf;
 
 import static im.turms.server.common.logging.CommonLogger.CLIENT_API_LOGGER;
 import static im.turms.server.common.logging.CommonLogger.LOG_FIELD_DELIMITER;
@@ -49,24 +52,24 @@ public final class ClientApiLogging {
                            long processingTime) {
         TurmsNotification.Data dataForRequester = response.dataForRequester();
         String responseType = dataForRequester == null ? "" : dataForRequester.getKindCase().name();
-        String message = String.join(LOG_FIELD_DELIMITER,
+        ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
                 // session information
-                request.userId().toString(),
+                Formatter.toCharacterBytes(request.userId()),
                 request.deviceType().name(),
                 serviceRequest.getIpStr(),
                 // request information
-                request.requestId().toString(),
+                Formatter.toCharacterBytes(request.requestId()),
                 request.turmsRequest().getKindCase().name(),
-                String.valueOf(requestSize),
+                Formatter.toCharacterBytes(requestSize),
                 DateUtil.toStr(requestTime),
                 // response information
-                String.valueOf(response.code().getBusinessCode()),
+                Formatter.toCharacterBytes(response.code().getBusinessCode()),
                 responseType,
-                String.valueOf(processingTime));
+                Formatter.toCharacterBytes(processingTime));
         if (response.code().isServerError()) {
-            CLIENT_API_LOGGER.error(message);
+            CLIENT_API_LOGGER.error(buffer);
         } else {
-            CLIENT_API_LOGGER.info(message);
+            CLIENT_API_LOGGER.info(buffer);
         }
     }
 

@@ -141,6 +141,11 @@ public final class AsyncLogger implements Logger {
     }
 
     @Override
+    public void info(ByteBuf message) {
+        doLog(LogLevel.INFO, message);
+    }
+
+    @Override
     public void warn(String message) {
         doLog(LogLevel.WARN, message, null, null);
     }
@@ -161,6 +166,11 @@ public final class AsyncLogger implements Logger {
     }
 
     @Override
+    public void error(ByteBuf message) {
+        doLog(LogLevel.ERROR, message);
+    }
+
+    @Override
     public void fatal(String message, Throwable throwable) {
         doLog(LogLevel.FATAL, message, null, throwable);
     }
@@ -172,6 +182,15 @@ public final class AsyncLogger implements Logger {
 
     private void doLog(LogLevel level, CharSequence message, @Nullable Object[] args, @Nullable Throwable throwable) {
         ByteBuf buffer = layout.format(shouldParse, nameForLog, level, message, args, throwable);
+        boolean offer = queue.offer(new LogRecord(this, level, System.currentTimeMillis(), buffer));
+        // Should never happen because the queue is unlimited
+        if (!offer) {
+            buffer.release();
+        }
+    }
+
+    private void doLog(LogLevel level, ByteBuf message) {
+        ByteBuf buffer = layout.format(nameForLog, level, message);
         boolean offer = queue.offer(new LogRecord(this, level, System.currentTimeMillis(), buffer));
         // Should never happen because the queue is unlimited
         if (!offer) {

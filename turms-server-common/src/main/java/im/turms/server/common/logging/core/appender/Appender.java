@@ -19,9 +19,12 @@ package im.turms.server.common.logging.core.appender;
 
 import im.turms.server.common.logging.core.model.LogLevel;
 import im.turms.server.common.logging.core.model.LogRecord;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.CompositeByteBuf;
 import lombok.Data;
 import lombok.SneakyThrows;
 
+import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 /**
@@ -52,7 +55,16 @@ public abstract class Appender implements AutoCloseable {
     @SneakyThrows
     public int append(LogRecord record) {
         if (record.level().isLoggable(level)) {
-            return channel.write(record.data().nioBuffer());
+            ByteBuf buffer = record.data();
+            if (buffer instanceof CompositeByteBuf buf) {
+                int written = 0;
+                for (ByteBuffer nioBuffer : buf.nioBuffers()) {
+                    written += channel.write(nioBuffer);
+                }
+                return written;
+            } else {
+                return channel.write(buffer.nioBuffer());
+            }
         }
         return 0;
     }

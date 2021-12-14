@@ -25,6 +25,7 @@ import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.DateUtil;
 import im.turms.server.common.util.Formatter;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import org.springframework.util.StringUtils;
 
@@ -69,21 +70,62 @@ public class TurmsTemplateLayout extends TemplateLayout {
         this.nodeId = nodeId.getBytes(StandardCharsets.UTF_8);
     }
 
+    public ByteBuf format(@Nullable byte[] className, LogLevel level, ByteBuf msg) {
+        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(ESTIMATED_PATTERN_TEXT_LENGTH);
+        byte[] timestamp = DateUtil.toBytes(System.currentTimeMillis());
+
+        String threadName = Thread.currentThread().getName();
+
+        // Write template text
+
+        buffer.writeBytes(timestamp)
+                .writeByte(WHITESPACE)
+                .writeBytes(LEVELS[level.ordinal()])
+                .writeByte(WHITESPACE)
+                .writeByte(nodeType)
+                .writeByte(WHITESPACE)
+                .writeBytes(nodeId)
+                .writeByte(WHITESPACE);
+        TracingContext context = LogThreadContext.get();
+        // trace ID
+        if (context == null) {
+            pad(buffer, TRACE_ID_LENGTH);
+        } else {
+            long traceId = context.getTraceId();
+            if (traceId != TracingContext.UNDEFINED_TRACE_ID) {
+                padStart(buffer, Formatter.toCharacterBytes(traceId), TRACE_ID_LENGTH);
+            }
+        }
+        // thread name
+        buffer.writeByte(WHITESPACE)
+                .writeBytes(threadName.getBytes(StandardCharsets.UTF_8));
+        // class name
+        if (className != null) {
+            buffer.writeByte(WHITESPACE)
+                    .writeBytes(className);
+        }
+        buffer.writeBytes(COLON_SEPARATOR);
+        // eol
+        msg.writeByte('\n');
+
+        return PooledByteBufAllocator.DEFAULT.compositeBuffer(2)
+                .addComponent(true, buffer)
+                .addComponent(true, msg);
+    }
+
     /**
      * @implNote Note that we do NOT escape or remove non-printable characters
      */
     public ByteBuf format(boolean shouldParse, @Nullable byte[] className, LogLevel level, CharSequence msg, Object[] args, Throwable throwable) {
-        int expectedLength = msg.length() + ESTIMATED_PATTERN_TEXT_LENGTH;
+        int estimatedThrowableLength = throwable == null
+                ? 0
+                : throwable.getCause() == null ? 64 : 256;
+        int estimatedLength = msg.length() + ESTIMATED_PATTERN_TEXT_LENGTH + estimatedThrowableLength;
         if (args != null && shouldParse) {
-            expectedLength += args.length * 8;
+            estimatedLength += args.length * 8;
         }
-        if (throwable != null) {
-            expectedLength += 256;
-        }
-        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(expectedLength);
+        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(estimatedLength);
         byte[] timestamp = DateUtil.toBytes(System.currentTimeMillis());
-
-//        buffer.writeBytes(bytes);
 
         String threadName = Thread.currentThread().getName();
 
@@ -120,8 +162,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
         appendMessage(shouldParse, msg, args, buffer);
         // exception
         if (throwable != null) {
-            StringBuilder exception = appendException(throwable, new StringBuilder(256));
-            buffer.writeCharSequence(exception, StandardCharsets.UTF_8);
+            appendException(throwable, buffer);
         }
         // eol
         buffer.writeByte('\n');

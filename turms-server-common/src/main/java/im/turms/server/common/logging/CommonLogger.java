@@ -27,7 +27,7 @@ import im.turms.server.common.logging.core.model.LogLevel;
  */
 public final class CommonLogger {
 
-    public static final String LOG_FIELD_DELIMITER = "|";
+    public static final int LOG_FIELD_DELIMITER = '|';
 
     // TODO: make configurable
 

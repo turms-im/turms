@@ -18,7 +18,11 @@
 package im.turms.gateway.logging;
 
 import im.turms.gateway.pojo.dto.SimpleTurmsNotification;
-import im.turms.server.common.util.StringUtil;
+import im.turms.server.common.util.ByteBufUtil;
+import im.turms.server.common.util.Formatter;
+import io.netty.buffer.ByteBuf;
+
+import java.nio.charset.StandardCharsets;
 
 import static im.turms.server.common.logging.CommonLogger.LOG_FIELD_DELIMITER;
 import static im.turms.server.common.logging.CommonLogger.NOTIFICATION_LOGGER;
@@ -29,22 +33,25 @@ import static im.turms.server.common.logging.CommonLogger.NOTIFICATION_LOGGER;
  */
 public final class NotificationLogging {
 
+    private static final byte[] SENT = "SENT".getBytes(StandardCharsets.UTF_8);
+    private static final byte[] UNSENT = "UNSENT".getBytes(StandardCharsets.UTF_8);
+
     private NotificationLogging() {
     }
 
     public static void log(boolean sent, SimpleTurmsNotification notification, int size, int recipientCount) {
         Integer closeStatus = notification.closeStatus();
-        String message = String.join(LOG_FIELD_DELIMITER,
+        ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
                 // User info
-                String.valueOf(notification.requesterId()),
+                Formatter.toCharacterBytes(notification.requesterId()),
                 // Notification info
-                sent ? "SENT" : "UNSENT",
-                String.valueOf(recipientCount),
-                StringUtil.toString(closeStatus),
-                String.valueOf(size),
+                sent ? SENT : UNSENT,
+                Formatter.toCharacterBytes(recipientCount),
+                closeStatus,
+                Formatter.toCharacterBytes(size),
                 // Relayed request info
                 notification.relayedRequestType().name());
-        NOTIFICATION_LOGGER.info(message);
+        NOTIFICATION_LOGGER.info(buffer);
     }
 
 }

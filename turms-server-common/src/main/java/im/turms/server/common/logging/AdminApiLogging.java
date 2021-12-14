@@ -17,7 +17,10 @@
 
 package im.turms.server.common.logging;
 
+import im.turms.server.common.util.ByteBufUtil;
 import im.turms.server.common.util.DateUtil;
+import im.turms.server.common.util.Formatter;
+import io.netty.buffer.ByteBuf;
 
 import java.util.Map;
 
@@ -41,7 +44,8 @@ public final class AdminApiLogging {
                            int processingTime,
                            Throwable throwable) {
         boolean isSuccessful = throwable == null;
-        String msg = String.join(LOG_FIELD_DELIMITER,
+        int estimatedSize = 64 + (throwable == null ? 0 : 128);
+        ByteBuf buffer = ByteBufUtil.join(estimatedSize, LOG_FIELD_DELIMITER,
                 // Session
                 account,
                 ip,
@@ -52,9 +56,9 @@ public final class AdminApiLogging {
                 params.toString(),
                 // Response
                 isSuccessful ? "TRUE" : "FALSE",
-                String.valueOf(processingTime),
+                Formatter.toCharacterBytes(processingTime),
                 isSuccessful ? "" : throwable.toString());
-        ADMIN_API_LOGGER.info(msg);
+        ADMIN_API_LOGGER.info(buffer);
     }
 
 }

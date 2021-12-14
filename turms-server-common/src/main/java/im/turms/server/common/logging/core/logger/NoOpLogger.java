@@ -18,6 +18,7 @@
 package im.turms.server.common.logging.core.logger;
 
 import im.turms.server.common.logging.core.model.LogLevel;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
 
@@ -87,6 +88,10 @@ public class NoOpLogger implements Logger {
     }
 
     @Override
+    public void info(ByteBuf message) {
+    }
+
+    @Override
     public void warn(String message) {
     }
 
@@ -100,6 +105,10 @@ public class NoOpLogger implements Logger {
 
     @Override
     public void error(String message, Object... args) {
+    }
+
+    @Override
+    public void error(ByteBuf message) {
     }
 
     @Override

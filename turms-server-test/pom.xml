@@ -27,14 +27,13 @@
 
     <properties>
         <disruptor.version>3.4.4</disruptor.version>
-        <log4j.version>2.14.1</log4j.version>
-        <reactor-core.version>3.4.8</reactor-core.version>
-        <reactor-netty.version>1.0.9</reactor-netty.version>
+        <reactor-core.version>3.4.12</reactor-core.version>
+        <reactor-netty.version>1.0.13</reactor-netty.version>
 
         <!-- Test -->
-        <assertj.version>3.19.0</assertj.version>
+        <assertj.version>3.21.0</assertj.version>
         <jmh.version>1.33</jmh.version>
-        <junit.version>5.7.1</junit.version>
+        <junit.version>5.8.2</junit.version>
 
         <!-- Plugin -->
         <lombok.version>1.18.22</lombok.version>
@@ -54,18 +53,6 @@
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
             <version>${disruptor.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-jul</artifactId>
-            <version>${log4j.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
