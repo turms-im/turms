@@ -71,11 +71,8 @@ public final class ExceptionUtil {
     }
 
     public static boolean isStatusCode(Throwable throwable, TurmsStatusCode statusCode) {
-        if (throwable instanceof TurmsBusinessException e) {
-            return e.getCode() == statusCode;
-        } else {
-            return false;
-        }
+        return throwable instanceof TurmsBusinessException e
+                && e.getCode() == statusCode;
     }
 
 }

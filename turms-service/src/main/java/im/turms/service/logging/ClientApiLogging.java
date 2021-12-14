@@ -31,7 +31,6 @@ import static im.turms.server.common.logging.CommonLogger.LOG_FIELD_DELIMITER;
 
 /**
  * @author James Chen
- * @implNote Don't use StringBuilder because String#join is more efficient
  */
 public final class ClientApiLogging {
 
@@ -54,18 +53,18 @@ public final class ClientApiLogging {
         String responseType = dataForRequester == null ? "" : dataForRequester.getKindCase().name();
         ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
                 // session information
-                Formatter.toCharacterBytes(request.userId()),
+                Formatter.toCharBytes(request.userId()),
                 request.deviceType().name(),
                 serviceRequest.getIpStr(),
                 // request information
-                Formatter.toCharacterBytes(request.requestId()),
+                Formatter.toCharBytes(request.requestId()),
                 request.turmsRequest().getKindCase().name(),
-                Formatter.toCharacterBytes(requestSize),
-                DateUtil.toStr(requestTime),
+                Formatter.toCharBytes(requestSize),
+                DateUtil.toBytes(requestTime),
                 // response information
-                Formatter.toCharacterBytes(response.code().getBusinessCode()),
+                Formatter.toCharBytes(response.code().getBusinessCode()),
                 responseType,
-                Formatter.toCharacterBytes(processingTime));
+                Formatter.toCharBytes(processingTime));
         if (response.code().isServerError()) {
             CLIENT_API_LOGGER.error(buffer);
         } else {

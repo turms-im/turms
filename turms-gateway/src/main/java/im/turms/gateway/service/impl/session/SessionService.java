@@ -225,9 +225,8 @@ public class SessionService implements ISessionService {
         if (session.getId() == sessionId) {
             return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, Collections.singleton(deviceType), closeReason, new Date(),
                     manager);
-        } else {
-            return Mono.just(false);
         }
+        return Mono.just(false);
     }
 
     public Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes(
@@ -409,7 +408,7 @@ public class SessionService implements ISessionService {
         AssertUtil.notNull(userId, "userId");
         AssertUtil.notNull(deviceType, "deviceType");
         UserSessionsManager userSessionsManager = sessionsManagerByUserId.get(userId);
-        return userSessionsManager != null ? userSessionsManager.getSession(deviceType) : null;
+        return userSessionsManager == null ? null : userSessionsManager.getSession(deviceType);
     }
 
     public int countLocalOnlineUsers() {

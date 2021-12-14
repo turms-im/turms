@@ -51,14 +51,14 @@ public class Formatter {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
     };
 
-    public static byte[] toCharacterBytes(int i) {
+    public static byte[] toCharBytes(int i) {
         int size = intStringSize(i);
         byte[] bytes = new byte[size];
         getIntChars(i, size, bytes);
         return bytes;
     }
 
-    public static byte[] toCharacterBytes(long i) {
+    public static byte[] toCharBytes(long i) {
         int size = longStringSize(i);
         byte[] bytes = new byte[size];
         getLongChars(i, size, bytes);

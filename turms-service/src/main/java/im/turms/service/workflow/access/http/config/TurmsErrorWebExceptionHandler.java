@@ -119,12 +119,11 @@ public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
             return true;
         }
         String message = NestedExceptionUtils.getMostSpecificCause(throwable).getMessage();
-        if (message != null) {
-            message = message.toLowerCase();
-            return message.contains("broken pipe") || message.contains("connection reset by peer");
-        } else {
+        if (message == null) {
             return false;
         }
+        message = message.toLowerCase();
+        return message.contains("broken pipe") || message.contains("connection reset by peer");
     }
 
     private String formatRequest(ServerRequest request) {

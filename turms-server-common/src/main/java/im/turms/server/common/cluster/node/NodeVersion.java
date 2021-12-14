@@ -62,9 +62,8 @@ public class NodeVersion implements Comparable<NodeVersion> {
     public int compareTo(NodeVersion that) {
         if (version > that.version) {
             return 1;
-        } else {
-            return version == that.version ? 0 : -1;
         }
+        return version == that.version ? 0 : -1;
     }
 
     @Override

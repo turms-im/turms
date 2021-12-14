@@ -34,6 +34,7 @@ import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectionUtil;
+import im.turms.server.common.util.DateUtil;
 import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidUserRelationshipKey;
@@ -95,12 +96,7 @@ public class UserRelationshipService {
                 .or(Filter.newBuilder(1).in(UserRelationship.Fields.ID_OWNER_ID, userIds),
                         Filter.newBuilder(1).in(UserRelationship.Fields.ID_RELATED_USER_ID, userIds));
         if (updateRelationshipsVersion) {
-            if (session != null) {
-                return mongoClient.deleteMany(session, UserRelationship.class, filter)
-                        .flatMap(result -> userVersionService.updateRelationshipsVersion(userIds, session)
-                                .onErrorResume(t -> Mono.empty())
-                                .thenReturn(result));
-            } else {
+            if (session == null) {
                 return mongoClient
                         .inTransaction(newSession -> mongoClient.deleteMany(newSession, UserRelationship.class, filter)
                                 .flatMap(result -> userVersionService.updateRelationshipsVersion(userIds, newSession)
@@ -108,9 +104,12 @@ public class UserRelationshipService {
                                         .thenReturn(result)))
                         .retryWhen(TRANSACTION_RETRY);
             }
-        } else {
-            return mongoClient.deleteMany(session, UserRelationship.class, filter);
+            return mongoClient.deleteMany(session, UserRelationship.class, filter)
+                    .flatMap(result -> userVersionService.updateRelationshipsVersion(userIds, session)
+                            .onErrorResume(t -> Mono.empty())
+                            .thenReturn(result));
         }
+        return mongoClient.deleteMany(session, UserRelationship.class, filter);
     }
 
     public Mono<DeleteResult> deleteOneSidedRelationships(@NotEmpty Set<UserRelationship.@ValidUserRelationshipKey Key> keys) {
@@ -148,25 +147,24 @@ public class UserRelationshipService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (session != null) {
-            UserRelationship.Key key = new UserRelationship.Key(ownerId, relatedUserId);
-            Filter filter = Filter.newBuilder(1)
-                    .eq(DaoConstant.ID_FIELD_NAME, key);
-            return mongoClient.deleteMany(UserRelationship.class, filter)
-                    .then(userRelationshipGroupService.deleteRelatedUserFromAllRelationshipGroups(
-                            ownerId, relatedUserId, session, false))
-                    .then(userVersionService.updateSpecificVersion(
-                                    ownerId,
-                                    session,
-                                    UserVersion.Fields.RELATIONSHIP_GROUPS_MEMBERS,
-                                    UserVersion.Fields.RELATIONSHIPS)
-                            .onErrorResume(t -> Mono.empty()))
-                    .then();
-        } else {
+        if (session == null) {
             return mongoClient
                     .inTransaction(newSession -> deleteOneSidedRelationship(ownerId, relatedUserId, newSession))
                     .retryWhen(TRANSACTION_RETRY);
         }
+        UserRelationship.Key key = new UserRelationship.Key(ownerId, relatedUserId);
+        Filter filter = Filter.newBuilder(1)
+                .eq(DaoConstant.ID_FIELD_NAME, key);
+        return mongoClient.deleteMany(UserRelationship.class, filter)
+                .then(userRelationshipGroupService.deleteRelatedUserFromAllRelationshipGroups(
+                        ownerId, relatedUserId, session, false))
+                .then(userVersionService.updateSpecificVersion(
+                                ownerId,
+                                session,
+                                UserVersion.Fields.RELATIONSHIP_GROUPS_MEMBERS,
+                                UserVersion.Fields.RELATIONSHIPS)
+                        .onErrorResume(t -> Mono.empty()))
+                .then();
     }
 
     public Mono<Void> deleteTwoSidedRelationships(
@@ -196,21 +194,20 @@ public class UserRelationshipService {
         }
         return userVersionService.queryRelationshipsLastUpdatedDate(ownerId)
                 .flatMap(date -> {
-                    if (lastUpdatedDate == null || lastUpdatedDate.before(date)) {
-                        return queryRelatedUserIds(Set.of(ownerId), Set.of(groupIndex), isBlocked)
-                                .collect(Collectors.toSet())
-                                .map(ids -> {
-                                    if (ids.isEmpty()) {
-                                        throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
-                                    }
-                                    return Int64ValuesWithVersion.newBuilder()
-                                            .setLastUpdatedDate(date.getTime())
-                                            .addAllValues(ids)
-                                            .build();
-                                });
-                    } else {
+                    if (DateUtil.isAfterOrSame(lastUpdatedDate, date)) {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE));
                     }
+                    return queryRelatedUserIds(Set.of(ownerId), Set.of(groupIndex), isBlocked)
+                            .collect(Collectors.toSet())
+                            .map(ids -> {
+                                if (ids.isEmpty()) {
+                                    throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
+                                }
+                                return Int64ValuesWithVersion.newBuilder()
+                                        .setLastUpdatedDate(date.getTime())
+                                        .addAllValues(ids)
+                                        .build();
+                            });
                 })
                 .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE)));
     }
@@ -223,32 +220,30 @@ public class UserRelationshipService {
             @Nullable Date lastUpdatedDate) {
         return userVersionService.queryRelationshipsLastUpdatedDate(ownerId)
                 .flatMap(date -> {
-                    if (lastUpdatedDate == null || lastUpdatedDate.before(date)) {
-                        return queryRelationships(
-                                Set.of(ownerId),
-                                relatedUserIds,
-                                groupIndex != null ? Set.of(groupIndex) : null,
-                                isBlocked,
-                                null,
-                                null,
-                                null)
-                                .collect(Collectors.toSet())
-                                .map(relationships -> {
-                                    if (relationships.isEmpty()) {
-                                        throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
-                                    }
-                                    UserRelationshipsWithVersion.Builder builder = UserRelationshipsWithVersion.newBuilder()
-                                            .setLastUpdatedDate(date.getTime());
-                                    for (UserRelationship relationship : relationships) {
-                                        im.turms.common.model.bo.user.UserRelationship userRelationship =
-                                                ProtoModelUtil.relationship2proto(relationship).build();
-                                        builder.addUserRelationships(userRelationship);
-                                    }
-                                    return builder.build();
-                                });
-                    } else {
+                    if (DateUtil.isAfterOrSame(lastUpdatedDate, date)) {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE));
                     }
+                    return queryRelationships(
+                            Set.of(ownerId),
+                            relatedUserIds,
+                            groupIndex == null ? null : Set.of(groupIndex),
+                            isBlocked,
+                            null,
+                            null,
+                            null)
+                            .collect(Collectors.toSet())
+                            .map(relationships -> {
+                                if (relationships.isEmpty()) {
+                                    throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
+                                }
+                                UserRelationshipsWithVersion.Builder builder = UserRelationshipsWithVersion.newBuilder()
+                                        .setLastUpdatedDate(date.getTime());
+                                for (UserRelationship relationship : relationships) {
+                                    var userRelationship = ProtoModelUtil.relationship2proto(relationship).build();
+                                    builder.addUserRelationships(userRelationship);
+                                }
+                                return builder.build();
+                            });
                 })
                 .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE)));
     }
@@ -281,11 +276,11 @@ public class UserRelationshipService {
                         tuple.getT1().retainAll(tuple.getT2());
                         return tuple.getT1();
                     });
-        } else if (groupIndexes != null) {
-            return userRelationshipGroupService.queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null);
-        } else {
+        }
+        if (groupIndexes == null) {
             return queryRelatedUserIds(ownerIds, isBlocked);
         }
+        return userRelationshipGroupService.queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null);
     }
 
     private Flux<UserRelationship> queryRelationships(
@@ -329,9 +324,8 @@ public class UserRelationshipService {
                     });
         } else if (queryByGroupIndexes) {
             return queryMembersRelationships(ownerIds, groupIndexes, page, size);
-        } else {
-            return queryRelationships(ownerIds, relatedUserIds, isBlocked, establishmentDateRange, page, size);
         }
+        return queryRelationships(ownerIds, relatedUserIds, isBlocked, establishmentDateRange, page, size);
     }
 
     public Flux<UserRelationship> queryMembersRelationships(
@@ -375,9 +369,8 @@ public class UserRelationshipService {
                     });
         } else if (queryByGroupIndexes) {
             return countMembersRelationships(ownerIds, groupIndexes);
-        } else {
-            return countRelationships(ownerIds, relatedUserIds, isBlocked);
         }
+        return countRelationships(ownerIds, relatedUserIds, isBlocked);
     }
 
     private Mono<Long> countMembersRelationships(
@@ -414,17 +407,16 @@ public class UserRelationshipService {
             return Mono.error(e);
         }
         Date now = new Date();
-        if (session != null) {
-            return upsertOneSidedRelationship(
-                    userOneId, userTwoId, null,
-                    DEFAULT_RELATIONSHIP_GROUP_INDEX, null, now, true, session)
-                    .then(upsertOneSidedRelationship(userTwoId, userOneId, null,
-                            DEFAULT_RELATIONSHIP_GROUP_INDEX, null, now, true, session))
-                    .thenReturn(true);
-        } else {
+        if (session == null) {
             return mongoClient.inTransaction(newSession -> friendTwoUsers(userOneId, userTwoId, newSession))
                     .retryWhen(TRANSACTION_RETRY);
         }
+        return upsertOneSidedRelationship(
+                userOneId, userTwoId, null,
+                DEFAULT_RELATIONSHIP_GROUP_INDEX, null, now, true, session)
+                .then(upsertOneSidedRelationship(userTwoId, userOneId, null,
+                        DEFAULT_RELATIONSHIP_GROUP_INDEX, null, now, true, session))
+                .thenReturn(true);
     }
 
     // TODO: break down
@@ -447,7 +439,7 @@ public class UserRelationshipService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        establishmentDate = establishmentDate != null ? establishmentDate : new Date();
+        establishmentDate = establishmentDate == null ? new Date() : establishmentDate;
         UserRelationship userRelationship = new UserRelationship(ownerId, relatedUserId, blockDate, establishmentDate);
         List<Mono<?>> monos = new ArrayList<>(3);
         if (upsert) {
@@ -466,7 +458,7 @@ public class UserRelationshipService {
                 monos.add(add);
             }
             if (deleteGroupIndex != null) {
-                Integer targetGroupIndex = newGroupIndex != null ? newGroupIndex : DEFAULT_RELATIONSHIP_GROUP_INDEX;
+                Integer targetGroupIndex = newGroupIndex == null ? DEFAULT_RELATIONSHIP_GROUP_INDEX : newGroupIndex;
                 Mono<UpdateResult> delete = userRelationshipGroupService
                         .moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, targetGroupIndex);
                 monos.add(delete);

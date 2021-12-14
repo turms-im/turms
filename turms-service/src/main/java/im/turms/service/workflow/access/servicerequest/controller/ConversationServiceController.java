@@ -67,7 +67,21 @@ public class ConversationServiceController {
                     .getQueryConversationsRequest();
             List<Long> targetIds = request.getTargetIdsList();
             Mono<TurmsNotification.Data> dataFlux;
-            if (!targetIds.isEmpty()) {
+            if (targetIds.isEmpty()) {
+                List<Long> groupIds = request.getGroupIdsList();
+                if (groupIds.isEmpty()) {
+                    return Mono.just(RequestHandlerResultFactory.NO_CONTENT);
+                }
+                dataFlux = conversationService.queryGroupConversations(groupIds)
+                        .map(conversation -> ProtoModelUtil.groupConversations2proto(conversation).build())
+                        .collect(CollectorUtil.toList(targetIds.size()))
+                        .map(conversations -> TurmsNotification.Data
+                                .newBuilder()
+                                .setConversations(Conversations.newBuilder()
+                                        .addAllGroupConversations(conversations)
+                                        .build())
+                                .build());
+            } else {
                 dataFlux = conversationService.queryPrivateConversations(clientRequest.userId(), targetIds)
                         .map(conversation -> ProtoModelUtil.privateConversation2proto(conversation).build())
                         .collect(CollectorUtil.toList(targetIds.size()))
@@ -77,21 +91,6 @@ public class ConversationServiceController {
                                         .addAllPrivateConversations(conversations)
                                         .build())
                                 .build());
-            } else {
-                List<Long> groupIds = request.getGroupIdsList();
-                if (groupIds.isEmpty()) {
-                    return Mono.just(RequestHandlerResultFactory.NO_CONTENT);
-                } else {
-                    dataFlux = conversationService.queryGroupConversations(groupIds)
-                            .map(conversation -> ProtoModelUtil.groupConversations2proto(conversation).build())
-                            .collect(CollectorUtil.toList(targetIds.size()))
-                            .map(conversations -> TurmsNotification.Data
-                                    .newBuilder()
-                                    .setConversations(Conversations.newBuilder()
-                                            .addAllGroupConversations(conversations)
-                                            .build())
-                                    .build());
-                }
             }
             return dataFlux.map(RequestHandlerResultFactory::get);
         };

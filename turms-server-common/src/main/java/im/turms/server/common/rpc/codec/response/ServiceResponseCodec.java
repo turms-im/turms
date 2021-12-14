@@ -67,9 +67,9 @@ public class ServiceResponseCodec implements Codec<ServiceResponse> {
     @Override
     public ByteBuf byteBufToComposite(ServiceResponse data) {
         TurmsNotification.Data dataForRequester = data.dataForRequester();
-        return dataForRequester != null
-                ? ProtoUtil.getDirectByteBuffer(dataForRequester)
-                : null;
+        return dataForRequester == null
+                ? null
+                : ProtoUtil.getDirectByteBuffer(dataForRequester);
     }
 
     @Override

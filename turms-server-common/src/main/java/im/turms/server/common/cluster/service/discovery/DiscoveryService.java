@@ -185,9 +185,8 @@ public class DiscoveryService implements ClusterService {
             // Don't use 0 to make sure that the order is consistent in every node
             // and it should never happen
             return m1.getNodeId().hashCode() < m2.getNodeId().hashCode() ? -1 : 1;
-        } else {
-            return m1Priority < m2Priority ? -1 : 1;
         }
+        return m1Priority < m2Priority ? -1 : 1;
     }
 
     @Override

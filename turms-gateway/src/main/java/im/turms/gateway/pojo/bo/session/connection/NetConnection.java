@@ -57,11 +57,9 @@ public abstract class NetConnection {
     }
 
     public static NetConnection create(Connection connection) {
-        if (connection instanceof HttpOperations) {
-            return new WebSocketConnection(connection, true);
-        } else {
-            return new TcpConnection((ChannelOperations<?, ?>) connection, true);
-        }
+        return connection instanceof HttpOperations
+                ? new WebSocketConnection(connection, true)
+                : new TcpConnection((ChannelOperations<?, ?>) connection, true);
     }
 
     public abstract InetSocketAddress getAddress();

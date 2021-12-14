@@ -90,11 +90,9 @@ public final class TurmsCharSequenceEncoder extends AbstractEncoder<CharSequence
     }
 
     private Charset getCharset(@Nullable MimeType mimeType) {
-        if (mimeType != null && mimeType.getCharset() != null) {
-            return mimeType.getCharset();
-        } else {
-            return DEFAULT_CHARSET;
-        }
+        return mimeType == null || mimeType.getCharset() == null
+                ? DEFAULT_CHARSET
+                : mimeType.getCharset();
     }
 
 }

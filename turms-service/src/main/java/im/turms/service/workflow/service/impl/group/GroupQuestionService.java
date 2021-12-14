@@ -252,17 +252,16 @@ public class GroupQuestionService {
         return queryGroupId(questionId)
                 .flatMap(groupId -> groupMemberService.isOwnerOrManager(requesterId, groupId)
                         .flatMap(authenticated -> {
-                            if (authenticated != null && authenticated) {
-                                Filter filter = Filter.newBuilder(1)
-                                        .eq(DaoConstant.ID_FIELD_NAME, questionId);
-                                return mongoClient.deleteMany(GroupJoinQuestion.class, filter)
-                                        .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
-                                                .onErrorResume(t -> Mono.empty())
-                                                .then());
-                            } else {
+                            if (!authenticated) {
                                 return Mono
                                         .error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_DELETE_GROUP_QUESTION));
                             }
+                            Filter filter = Filter.newBuilder(1)
+                                    .eq(DaoConstant.ID_FIELD_NAME, questionId);
+                            return mongoClient.deleteMany(GroupJoinQuestion.class, filter)
+                                    .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
+                                            .onErrorResume(t -> Mono.empty())
+                                            .then());
                         }));
     }
 
@@ -326,8 +325,7 @@ public class GroupQuestionService {
                                 GroupJoinQuestionsWithVersion.Builder builder = GroupJoinQuestionsWithVersion.newBuilder();
                                 builder.setLastUpdatedDate(version.getTime());
                                 for (GroupJoinQuestion question : groupJoinQuestions) {
-                                    im.turms.common.model.bo.group.GroupJoinQuestion.Builder questionBuilder =
-                                            ProtoModelUtil.groupJoinQuestion2proto(question);
+                                    var questionBuilder = ProtoModelUtil.groupJoinQuestion2proto(question);
                                     builder.addGroupJoinQuestions(questionBuilder.build());
                                 }
                                 return builder.build();
@@ -355,21 +353,20 @@ public class GroupQuestionService {
         return queryGroupId(questionId)
                 .flatMap(groupId -> groupMemberService.isOwnerOrManager(requesterId, groupId)
                         .flatMap(authenticated -> {
-                            if (authenticated != null && authenticated) {
-                                Filter filter = Filter.newBuilder(1)
-                                        .eq(DaoConstant.ID_FIELD_NAME, questionId);
-                                Update update = Update.newBuilder(3)
-                                        .setIfNotNull(GroupJoinQuestion.Fields.QUESTION, question)
-                                        .setIfNotNull(GroupJoinQuestion.Fields.ANSWERS, answers)
-                                        .setIfNotNull(GroupJoinQuestion.Fields.SCORE, score);
-                                return mongoClient.updateOne(GroupJoinQuestion.class, filter, update)
-                                        .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
-                                                .onErrorResume(t -> Mono.empty())
-                                                .thenReturn(result));
-                            } else {
+                            if (authenticated == null || !authenticated) {
                                 return Mono
                                         .error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_QUESTION));
                             }
+                            Filter filter = Filter.newBuilder(1)
+                                    .eq(DaoConstant.ID_FIELD_NAME, questionId);
+                            Update update = Update.newBuilder(3)
+                                    .setIfNotNull(GroupJoinQuestion.Fields.QUESTION, question)
+                                    .setIfNotNull(GroupJoinQuestion.Fields.ANSWERS, answers)
+                                    .setIfNotNull(GroupJoinQuestion.Fields.SCORE, score);
+                            return mongoClient.updateOne(GroupJoinQuestion.class, filter, update)
+                                    .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
+                                            .onErrorResume(t -> Mono.empty())
+                                            .thenReturn(result));
                         }));
     }
 

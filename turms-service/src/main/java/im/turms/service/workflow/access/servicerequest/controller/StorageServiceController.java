@@ -52,17 +52,16 @@ public class StorageServiceController {
         return clientRequest -> {
             QuerySignedGetUrlRequest querySignedGetUrlRequest = clientRequest.turmsRequest().getQuerySignedGetUrlRequest();
             ContentType contentType = querySignedGetUrlRequest.getContentType();
-            if (contentType != ContentType.UNRECOGNIZED) {
-                String keyStr = querySignedGetUrlRequest.hasKeyStr() ? querySignedGetUrlRequest.getKeyStr() : null;
-                Long keyNum = querySignedGetUrlRequest.hasKeyNum() ? querySignedGetUrlRequest.getKeyNum() : null;
-                return storageService.queryPresignedGetUrl(clientRequest.userId(), contentType, keyStr, keyNum)
-                        .map(url -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
-                                .setUrl(url)
-                                .build()));
-            } else {
+            if (contentType == ContentType.UNRECOGNIZED) {
                 return Mono
                         .error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
             }
+            String keyStr = querySignedGetUrlRequest.hasKeyStr() ? querySignedGetUrlRequest.getKeyStr() : null;
+            Long keyNum = querySignedGetUrlRequest.hasKeyNum() ? querySignedGetUrlRequest.getKeyNum() : null;
+            return storageService.queryPresignedGetUrl(clientRequest.userId(), contentType, keyStr, keyNum)
+                    .map(url -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
+                            .setUrl(url)
+                            .build()));
         };
     }
 
@@ -71,18 +70,17 @@ public class StorageServiceController {
         return clientRequest -> {
             QuerySignedPutUrlRequest querySignedPutUrlRequest = clientRequest.turmsRequest().getQuerySignedPutUrlRequest();
             ContentType contentType = querySignedPutUrlRequest.getContentType();
-            if (contentType != ContentType.UNRECOGNIZED) {
-                long contentLength = querySignedPutUrlRequest.getContentLength();
-                String keyStr = querySignedPutUrlRequest.hasKeyStr() ? querySignedPutUrlRequest.getKeyStr() : null;
-                Long keyNum = querySignedPutUrlRequest.hasKeyNum() ? querySignedPutUrlRequest.getKeyNum() : null;
-                return storageService.queryPresignedPutUrl(clientRequest.userId(), contentType, keyStr, keyNum, contentLength)
-                        .map(url -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
-                                .setUrl(url)
-                                .build()));
-            } else {
+            if (contentType == ContentType.UNRECOGNIZED) {
                 return Mono
                         .error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
             }
+            long contentLength = querySignedPutUrlRequest.getContentLength();
+            String keyStr = querySignedPutUrlRequest.hasKeyStr() ? querySignedPutUrlRequest.getKeyStr() : null;
+            Long keyNum = querySignedPutUrlRequest.hasKeyNum() ? querySignedPutUrlRequest.getKeyNum() : null;
+            return storageService.queryPresignedPutUrl(clientRequest.userId(), contentType, keyStr, keyNum, contentLength)
+                    .map(url -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
+                            .setUrl(url)
+                            .build()));
         };
     }
 
@@ -91,15 +89,14 @@ public class StorageServiceController {
         return clientRequest -> {
             DeleteResourceRequest deleteResourceRequest = clientRequest.turmsRequest().getDeleteResourceRequest();
             ContentType contentType = deleteResourceRequest.getContentType();
-            if (contentType != ContentType.UNRECOGNIZED) {
-                String keyStr = deleteResourceRequest.hasKeyStr() ? deleteResourceRequest.getKeyStr() : null;
-                Long keyNum = deleteResourceRequest.hasKeyNum() ? deleteResourceRequest.getKeyNum() : null;
-                return storageService.deleteResource(clientRequest.userId(), contentType, keyStr, keyNum)
-                        .thenReturn(RequestHandlerResultFactory.OK);
-            } else {
+            if (contentType == ContentType.UNRECOGNIZED) {
                 return Mono
                         .error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
             }
+            String keyStr = deleteResourceRequest.hasKeyStr() ? deleteResourceRequest.getKeyStr() : null;
+            Long keyNum = deleteResourceRequest.hasKeyNum() ? deleteResourceRequest.getKeyNum() : null;
+            return storageService.deleteResource(clientRequest.userId(), contentType, keyStr, keyNum)
+                    .thenReturn(RequestHandlerResultFactory.OK);
         };
     }
 

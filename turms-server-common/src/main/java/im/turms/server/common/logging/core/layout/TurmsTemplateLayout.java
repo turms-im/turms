@@ -25,7 +25,6 @@ import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.DateUtil;
 import im.turms.server.common.util.Formatter;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import org.springframework.util.StringUtils;
 
@@ -93,7 +92,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
         } else {
             long traceId = context.getTraceId();
             if (traceId != TracingContext.UNDEFINED_TRACE_ID) {
-                padStart(buffer, Formatter.toCharacterBytes(traceId), TRACE_ID_LENGTH);
+                padStart(buffer, Formatter.toCharBytes(traceId), TRACE_ID_LENGTH);
             }
         }
         // thread name
@@ -146,7 +145,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
         } else {
             long traceId = context.getTraceId();
             if (traceId != TracingContext.UNDEFINED_TRACE_ID) {
-                padStart(buffer, Formatter.toCharacterBytes(traceId), TRACE_ID_LENGTH);
+                padStart(buffer, Formatter.toCharBytes(traceId), TRACE_ID_LENGTH);
             }
         }
         // thread name

@@ -65,15 +65,15 @@ public final class ClientApiLogging {
                 version,
                 ip,
                 // request information
-                Formatter.toCharacterBytes(requestId),
+                Formatter.toCharBytes(requestId),
                 requestType.name(),
-                Formatter.toCharacterBytes(requestSize),
-                DateUtil.toStr(requestTime),
+                Formatter.toCharBytes(requestSize),
+                DateUtil.toBytes(requestTime),
                 // response information
-                Formatter.toCharacterBytes(response.getCode()),
+                Formatter.toCharBytes(response.getCode()),
                 response.hasData() ? response.getData().getKindCase().name() : null,
-                Formatter.toCharacterBytes(response.getSerializedSize()),
-                Formatter.toCharacterBytes(processingTime));
+                Formatter.toCharBytes(response.getSerializedSize()),
+                Formatter.toCharBytes(processingTime));
         CLIENT_API_LOGGER.info(buffer);
     }
 
@@ -96,15 +96,15 @@ public final class ClientApiLogging {
                 version,
                 ip,
                 // request information
-                Formatter.toCharacterBytes(requestId),
+                Formatter.toCharBytes(requestId),
                 requestType.name(),
-                Formatter.toCharacterBytes(requestSize),
-                DateUtil.toStr(requestTime),
+                Formatter.toCharBytes(requestSize),
+                DateUtil.toBytes(requestTime),
                 // response information
-                Formatter.toCharacterBytes(responseCode),
+                Formatter.toCharBytes(responseCode),
                 null, // Response data type
                 '0', // Response serialized size
-                Formatter.toCharacterBytes(processingTime));
+                Formatter.toCharBytes(processingTime));
         CLIENT_API_LOGGER.info(buffer);
     }
 
@@ -129,15 +129,15 @@ public final class ClientApiLogging {
                 version,
                 ip,
                 // request information
-                Formatter.toCharacterBytes(requestId),
+                Formatter.toCharBytes(requestId),
                 requestType,
-                Formatter.toCharacterBytes(requestSize),
-                DateUtil.toStr(requestTime),
+                Formatter.toCharBytes(requestSize),
+                DateUtil.toBytes(requestTime),
                 // response information
-                Formatter.toCharacterBytes(responseCode),
+                Formatter.toCharBytes(responseCode),
                 responseDataType,
-                Formatter.toCharacterBytes(responseSize),
-                Formatter.toCharacterBytes(processingTime));
+                Formatter.toCharBytes(responseSize),
+                Formatter.toCharBytes(processingTime));
         CLIENT_API_LOGGER.info(buffer);
     }
 

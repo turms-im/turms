@@ -51,12 +51,12 @@ public final class AdminApiLogging {
                 ip,
                 // Request
                 requestId,
-                DateUtil.toStr(requestTime),
+                DateUtil.toBytes(requestTime),
                 action,
                 params.toString(),
                 // Response
                 isSuccessful ? "TRUE" : "FALSE",
-                Formatter.toCharacterBytes(processingTime),
+                Formatter.toCharBytes(processingTime),
                 isSuccessful ? "" : throwable.toString());
         ADMIN_API_LOGGER.info(buffer);
     }

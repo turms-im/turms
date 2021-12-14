@@ -27,8 +27,8 @@ import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -199,12 +199,11 @@ public class UserPermissionGroupService {
             return Mono.error(e);
         }
         UserPermissionGroup userPermissionGroup = userPermissionGroupMap.get(groupId);
-        if (userPermissionGroup != null) {
-            return Mono.just(userPermissionGroup);
-        } else {
+        if (userPermissionGroup == null) {
             return mongoTemplate.findById(UserPermissionGroup.class, groupId)
                     .doOnNext(type -> userPermissionGroupMap.put(groupId, type));
         }
+        return Mono.just(userPermissionGroup);
     }
 
     public Mono<UserPermissionGroup> queryUserPermissionGroupByUserId(@NotNull Long userId) {

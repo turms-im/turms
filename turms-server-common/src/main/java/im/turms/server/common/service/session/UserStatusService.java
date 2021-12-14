@@ -139,7 +139,7 @@ public class UserStatusService {
         return getUserSessionsStatus(userId)
                 .flatMap(sessionsStatus -> {
                     String nodeId = sessionsStatus.onlineDeviceTypeAndNodeIdMap().get(deviceType);
-                    return nodeId != null ? Mono.just(nodeId) : Mono.empty();
+                    return nodeId == null ? Mono.empty() : Mono.just(nodeId);
                 });
     }
 

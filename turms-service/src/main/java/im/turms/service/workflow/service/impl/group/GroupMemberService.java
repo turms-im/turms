@@ -159,9 +159,8 @@ public class GroupMemberService {
                                             : Mono.error(TurmsBusinessException.get(TurmsStatusCode.ADD_BLOCKED_USER_TO_INACTIVE_GROUP));
                                 } else if (isGroupActive) {
                                     return addGroupMember(groupId, userId, groupMemberRole, name, new Date(), muteEndDate, session);
-                                } else {
-                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ADD_USER_TO_INACTIVE_GROUP));
                                 }
+                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ADD_USER_TO_INACTIVE_GROUP));
                             });
                 });
     }
@@ -190,12 +189,11 @@ public class GroupMemberService {
                     .flatMap(isOwner -> isOwner
                             ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.OWNER_QUITS_WITHOUT_SPECIFYING_SUCCESSOR))
                             : deleteGroupMembers(groupId, deleteMemberId, null, true).then());
-        } else {
-            return isOwnerOrManager(requesterId, groupId)
-                    .flatMap(isOwnerOrManager -> isOwnerOrManager
-                            ? deleteGroupMembers(Set.of(new GroupMember.Key(groupId, deleteMemberId)), null, true).then()
-                            : Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_REMOVE_GROUP_MEMBER)));
         }
+        return isOwnerOrManager(requesterId, groupId)
+                .flatMap(isOwnerOrManager -> isOwnerOrManager
+                        ? deleteGroupMembers(Set.of(new GroupMember.Key(groupId, deleteMemberId)), null, true).then()
+                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_REMOVE_GROUP_MEMBER)));
     }
 
     public Mono<DeleteResult> deleteGroupMembers(
@@ -290,9 +288,8 @@ public class GroupMemberService {
                             updateMono = groupVersionService.updateMembersVersion(groupIds);
                         }
                         return updateMono.onErrorResume(t -> Mono.empty()).thenReturn(result);
-                    } else {
-                        return Mono.just(result);
                     }
+                    return Mono.just(result);
                 });
     }
 
@@ -375,11 +372,10 @@ public class GroupMemberService {
                             TurmsStatusCode code = isAllowedToInviteUserWithSpecifiedRole(inviterRole, newMemberRole, strategy);
                             if (code == TurmsStatusCode.OK) {
                                 return Mono.just(Pair.of(ServicePermission.OK, strategy));
-                            } else {
-                                String reason = "The inviter with the role %s isn't allowed to send an invitation under the strategy %s"
-                                        .formatted(inviterRole, strategy);
-                                return Mono.just(Pair.of(ServicePermission.get(code, reason), strategy));
                             }
+                            String reason = "The inviter with the role %s isn't allowed to send an invitation under the strategy %s"
+                                    .formatted(inviterRole, strategy);
+                            return Mono.just(Pair.of(ServicePermission.get(code, reason), strategy));
                         })
                         .defaultIfEmpty(Pair.of(ServicePermission.get(TurmsStatusCode.ADD_USER_TO_INACTIVE_GROUP), null)))
                 .defaultIfEmpty(Pair.of(ServicePermission.get(TurmsStatusCode.GROUP_INVITER_NOT_MEMBER), null));
@@ -393,12 +389,11 @@ public class GroupMemberService {
                 .flatMap(isGroupMember -> {
                     if (isGroupMember) {
                         return Mono.just(TurmsStatusCode.GROUP_INVITEE_ALREADY_GROUP_MEMBER);
-                    } else {
-                        return isBlocked(groupId, inviteeId)
-                                .map(isBlocked -> isBlocked
-                                        ? TurmsStatusCode.INVITEE_HAS_BEEN_BLOCKED
-                                        : TurmsStatusCode.OK);
                     }
+                    return isBlocked(groupId, inviteeId)
+                            .map(isBlocked -> isBlocked
+                                    ? TurmsStatusCode.INVITEE_HAS_BEEN_BLOCKED
+                                    : TurmsStatusCode.OK);
                 });
     }
 
@@ -420,16 +415,15 @@ public class GroupMemberService {
                 .flatMap(isGroupMuted -> {
                     if (isGroupMuted) {
                         return Mono.just(TurmsStatusCode.SEND_MESSAGE_TO_MUTED_GROUP);
-                    } else {
-                        if (!node.getSharedProperties().getService().getMessage().isCheckIfTargetActiveAndNotDeleted()) {
-                            return Mono.just(TurmsStatusCode.OK);
-                        }
-                        return groupService.isGroupActiveAndNotDeleted(groupId)
-                                .flatMap(isActive -> isActive
-                                        ? isMemberMuted(groupId, senderId)
-                                        .map(muted -> muted ? TurmsStatusCode.MUTED_MEMBER_SEND_MESSAGE : TurmsStatusCode.OK)
-                                        : Mono.just(TurmsStatusCode.SEND_MESSAGE_TO_INACTIVE_GROUP));
                     }
+                    if (!node.getSharedProperties().getService().getMessage().isCheckIfTargetActiveAndNotDeleted()) {
+                        return Mono.just(TurmsStatusCode.OK);
+                    }
+                    return groupService.isGroupActiveAndNotDeleted(groupId)
+                            .flatMap(isActive -> isActive
+                                    ? isMemberMuted(groupId, senderId)
+                                    .map(muted -> muted ? TurmsStatusCode.MUTED_MEMBER_SEND_MESSAGE : TurmsStatusCode.OK)
+                                    : Mono.just(TurmsStatusCode.SEND_MESSAGE_TO_INACTIVE_GROUP));
                 });
     }
 
@@ -452,9 +446,8 @@ public class GroupMemberService {
                                                         .map(isBlocked -> isBlocked
                                                                 ? TurmsStatusCode.GROUP_MESSAGE_SENDER_HAS_BEEN_BLOCKED
                                                                 : TurmsStatusCode.OK);
-                                            } else {
-                                                return Mono.just(TurmsStatusCode.SEND_MESSAGE_TO_INACTIVE_GROUP);
                                             }
+                                            return Mono.just(TurmsStatusCode.SEND_MESSAGE_TO_INACTIVE_GROUP);
                                         });
                             });
                 })
@@ -664,14 +657,12 @@ public class GroupMemberService {
                     GroupMembersWithVersion.Builder builder = GroupMembersWithVersion.newBuilder();
                     if (withStatus) {
                         return fillMembersBuilderWithStatus(members, builder);
-                    } else {
-                        for (GroupMember member : members) {
-                            im.turms.common.model.bo.group.GroupMember groupMember = ProtoModelUtil
-                                    .groupMember2proto(member).build();
-                            builder.addGroupMembers(groupMember);
-                        }
-                        return Mono.just(builder.build());
                     }
+                    for (GroupMember member : members) {
+                        var groupMember = ProtoModelUtil.groupMember2proto(member).build();
+                        builder.addGroupMembers(groupMember);
+                    }
+                    return Mono.just(builder.build());
                 });
     }
 
@@ -697,16 +688,14 @@ public class GroupMemberService {
                                 GroupMembersWithVersion.Builder builder = GroupMembersWithVersion.newBuilder();
                                 if (withStatus) {
                                     return fillMembersBuilderWithStatus(members, builder);
-                                } else {
-                                    for (GroupMember member : members) {
-                                        im.turms.common.model.bo.group.GroupMember groupMember = ProtoModelUtil
-                                                .groupMember2proto(member).build();
-                                        builder.addGroupMembers(groupMember);
-                                    }
-                                    return Mono.just(builder
-                                            .setLastUpdatedDate(version.getTime())
-                                            .build());
                                 }
+                                for (GroupMember member : members) {
+                                    var groupMember = ProtoModelUtil.groupMember2proto(member).build();
+                                    builder.addGroupMembers(groupMember);
+                                }
+                                return Mono.just(builder
+                                        .setLastUpdatedDate(version.getTime())
+                                        .build());
                             });
                 })
                 .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE)));
@@ -783,11 +772,11 @@ public class GroupMemberService {
         }
         return Mono.zip(monoList, objects -> objects)
                 .map(results -> {
-                    int memberNumber = members.size();
-                    for (int i = 0; i < memberNumber; i++) {
+                    int memberCount = members.size();
+                    for (int i = 0; i < memberCount; i++) {
                         GroupMember member = members.get(i);
                         UserSessionsStatus info = (UserSessionsStatus) results[i];
-                        im.turms.common.model.bo.group.GroupMember groupMember = ProtoModelUtil
+                        var groupMember = ProtoModelUtil
                                 .userOnlineInfo2groupMember(
                                         member.getKey().getUserId(),
                                         info,
@@ -822,12 +811,10 @@ public class GroupMemberService {
                     || requesterRole.getNumber() < newMemberRole.getNumber();
             if (isRequesterRoleHigherThanNewMemberRole) {
                 return TurmsStatusCode.OK;
-            } else {
-                return TurmsStatusCode.ADD_NEW_MEMBER_WITH_ROLE_HIGHER_THAN_REQUESTER;
             }
-        } else {
-            return isAllowToAddRole;
+            return TurmsStatusCode.ADD_NEW_MEMBER_WITH_ROLE_HIGHER_THAN_REQUESTER;
         }
+        return isAllowToAddRole;
     }
 
 }

@@ -180,7 +180,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        id = id != null ? id : node.nextLargeGapId(ServiceType.USER_FRIEND_REQUEST);
+        id = id == null ? node.nextLargeGapId(ServiceType.USER_FRIEND_REQUEST) : id;
         Date now = new Date();
         if (creationDate == null) {
             creationDate = now;
@@ -226,7 +226,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
                             ? hasPendingFriendRequest(requesterId, recipientId)
                             : hasPendingOrDeclinedOrIgnoredOrExpiredRequest(requesterId, recipientId);
                     return requestExistsMono.flatMap(requestExists -> {
-                        String finalContent = content != null ? content : "";
+                        String finalContent = content == null ? "" : content;
                         return requestExists
                                 ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.CREATE_EXISTING_FRIEND_REQUEST))
                                 : createFriendRequest(null, requesterId, recipientId, finalContent,

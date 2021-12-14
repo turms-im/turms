@@ -29,20 +29,17 @@ public final class OperationResultUtil {
     }
 
     public static DeleteResult update2delete(UpdateResult result) {
-        if (result.wasAcknowledged()) {
-            return DeleteResult.acknowledged(result.getModifiedCount());
-        } else {
-            return DeleteResult.unacknowledged();
-        }
+        return result.wasAcknowledged()
+                ? DeleteResult.acknowledged(result.getModifiedCount())
+                : DeleteResult.unacknowledged();
     }
 
     public static UpdateResult delete2update(DeleteResult result) {
         if (result.wasAcknowledged()) {
             long deletedCount = result.getDeletedCount();
             return UpdateResult.acknowledged(deletedCount, deletedCount, null);
-        } else {
-            return UpdateResult.unacknowledged();
         }
+        return UpdateResult.unacknowledged();
     }
 
     public static DeleteResult merge(DeleteResult r1, DeleteResult r2) {

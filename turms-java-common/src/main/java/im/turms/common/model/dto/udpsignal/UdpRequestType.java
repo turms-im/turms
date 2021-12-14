@@ -34,9 +34,8 @@ public enum UdpRequestType {
         int index = number - 1;
         if (index > -1 && index < ALL.length) {
             return ALL[index];
-        } else {
-            return null;
         }
+        return null;
     }
 
 }

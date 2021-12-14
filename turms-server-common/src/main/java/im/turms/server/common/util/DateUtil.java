@@ -61,7 +61,7 @@ public final class DateUtil {
         calendar.setTimeInMillis(timeInMillis);
         byte[] bytes = new byte[DATE_TIME_LENGTH];
 
-        byte[] src = Formatter.toCharacterBytes(calendar.get(Calendar.YEAR));
+        byte[] src = Formatter.toCharBytes(calendar.get(Calendar.YEAR));
         System.arraycopy(src, 0, bytes, 0, src.length);
         int i = src.length;
 
@@ -156,7 +156,7 @@ public final class DateUtil {
             // TODO: cache
             return new byte[]{'0', (byte) (i + 48)};
         }
-        return Formatter.toCharacterBytes(i);
+        return Formatter.toCharBytes(i);
     }
 
     private static byte[] threeDigitBytes(int i) {
@@ -165,9 +165,9 @@ public final class DateUtil {
             return new byte[]{'0', '0', (byte) (i + 48)};
         } else if (i < 100) {
             // TODO: cache
-            return ArrayUtil.concat(new byte[]{'0'}, Formatter.toCharacterBytes(i));
+            return ArrayUtil.concat(new byte[]{'0'}, Formatter.toCharBytes(i));
         }
-        return Formatter.toCharacterBytes(i);
+        return Formatter.toCharBytes(i);
     }
 
 }

@@ -130,9 +130,8 @@ public class LocalNodeStatusManager {
             return sharedConfigService.insert(localLeader)
                     .then()
                     .onErrorResume(DuplicateKeyException.class, t -> Mono.empty());
-        } else {
-            return Mono.empty();
         }
+        return Mono.empty();
     }
 
     private Mono<Void> unregisterLocalMemberLeadership() {

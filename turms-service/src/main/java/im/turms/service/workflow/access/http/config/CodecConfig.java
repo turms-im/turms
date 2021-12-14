@@ -95,8 +95,7 @@ public class CodecConfig {
                     }
                     Class<?> jsonView = null;
                     FilterProvider filters = null;
-                    if (value instanceof MappingJacksonValue) {
-                        MappingJacksonValue container = (MappingJacksonValue) value;
+                    if (value instanceof MappingJacksonValue container) {
                         value = container.getValue();
                         jsonView = container.getSerializationView();
                         filters = container.getFilters();
@@ -141,7 +140,7 @@ public class CodecConfig {
                     if (jsonView == null && hints != null) {
                         jsonView = (Class<?>) hints.get(Jackson2CodecSupport.JSON_VIEW_HINT);
                     }
-                    ObjectWriter writer = jsonView != null ? mapper.writerWithView(jsonView) : mapper.writer();
+                    ObjectWriter writer = jsonView == null ? mapper.writer() : mapper.writerWithView(jsonView);
                     if (javaType.isContainerType()) {
                         writer = writer.forType(javaType);
                     }

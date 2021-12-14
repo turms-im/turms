@@ -47,9 +47,8 @@ public final class RequestStatusUtil {
                 responseDate = Objects.requireNonNullElseGet(now, Date::new);
             }
             return responseDate;
-        } else {
-            return null;
         }
+        return null;
     }
 
     public static <T extends Expirable> T transformExpiredDoc(T request, int expireAfterSeconds) {
@@ -64,15 +63,16 @@ public final class RequestStatusUtil {
     public static void updateResponseDateBasedOnStatus(@NotNull Update update,
                                                        @Nullable RequestStatus status,
                                                        @Nullable Date responseDate) {
-        if (status != null) {
-            if (RequestStatusUtil.isProcessedByResponder(status)) {
-                if (responseDate == null) {
-                    responseDate = new Date();
-                }
-                update.set(GroupInvitation.Fields.RESPONSE_DATE, responseDate);
-            } else {
-                update.unset(GroupInvitation.Fields.RESPONSE_DATE);
+        if (status == null) {
+            return;
+        }
+        if (RequestStatusUtil.isProcessedByResponder(status)) {
+            if (responseDate == null) {
+                responseDate = new Date();
             }
+            update.set(GroupInvitation.Fields.RESPONSE_DATE, responseDate);
+        } else {
+            update.unset(GroupInvitation.Fields.RESPONSE_DATE);
         }
     }
 

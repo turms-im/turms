@@ -99,17 +99,11 @@ public final class ResponseFactory {
     }
 
     public static <T> ResponseEntity<ResponseDTO<Collection<T>>> okIfTruthy(Collection<T> data) {
-        if (data != null) {
-            if (data.isEmpty()) {
-                return ResponseEntity.status(TurmsStatusCode.NO_CONTENT.getHttpStatusCode())
-                        .body(new ResponseDTO<>(TurmsStatusCode.NO_CONTENT, null));
-            } else {
-                return ResponseEntity.ok(new ResponseDTO<>(TurmsStatusCode.OK, data));
-            }
-        } else {
+        if (data == null || data.isEmpty()) {
             return ResponseEntity.status(TurmsStatusCode.NO_CONTENT.getHttpStatusCode())
                     .body(new ResponseDTO<>(TurmsStatusCode.NO_CONTENT, null));
         }
+        return ResponseEntity.ok(new ResponseDTO<>(TurmsStatusCode.OK, data));
     }
 
 }

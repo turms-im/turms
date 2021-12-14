@@ -176,15 +176,14 @@ public class SessionLocationService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (locationEnabled) {
-            Object member = treatUserIdAndDeviceTypeAsUniqueUser
-                    ? new UserSessionId(userId, deviceType)
-                    : userId;
-            return locationRedisClientManager.geopos(userId, RedisEntryId.LOCATION_BUFFER, member)
-                    .singleOrEmpty();
-        } else {
+        if (!locationEnabled) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
+        Object member = treatUserIdAndDeviceTypeAsUniqueUser
+                ? new UserSessionId(userId, deviceType)
+                : userId;
+        return locationRedisClientManager.geopos(userId, RedisEntryId.LOCATION_BUFFER, member)
+                .singleOrEmpty();
     }
 
 }

@@ -140,7 +140,7 @@ public class UserServiceController {
                             return RequestHandlerResultFactory.NO_CONTENT;
                         }
                         NearbyUsers.Builder builder = NearbyUsers.newBuilder();
-                        for (im.turms.server.common.bo.location.NearbyUser nearbyUser : nearbyUsers) {
+                        for (var nearbyUser : nearbyUsers) {
                             builder.addNearbyUsers(ProtoModelUtil.nearbyUser2proto(nearbyUser));
                         }
                         return RequestHandlerResultFactory.get(TurmsNotification.Data
@@ -226,22 +226,21 @@ public class UserServiceController {
                     .isNotifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated();
             if (!notifyMembers && !notifyRelatedUser) {
                 return updateMono.thenReturn(RequestHandlerResultFactory.OK);
-            } else {
-                Mono<Set<Long>> queryMemberIds = notifyMembers
-                        ? groupMemberService.queryMemberIdsInUsersJoinedGroups(Set.of(clientRequest.userId()))
-                        : Mono.just(Collections.emptySet());
-                Mono<Set<Long>> queryRelatedUserIds = notifyRelatedUser
-                        ? userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.userId()), false)
-                        .collect(Collectors.toSet())
-                        : Mono.just(Collections.emptySet());
-                return queryMemberIds.zipWith(queryRelatedUserIds)
-                        .map(results -> {
-                            results.getT1().addAll(results.getT2());
-                            return results.getT1().isEmpty()
-                                    ? RequestHandlerResultFactory.OK
-                                    : RequestHandlerResultFactory.get(results.getT1(), clientRequest.turmsRequest());
-                        });
             }
+            Mono<Set<Long>> queryMemberIds = notifyMembers
+                    ? groupMemberService.queryMemberIdsInUsersJoinedGroups(Set.of(clientRequest.userId()))
+                    : Mono.just(Collections.emptySet());
+            Mono<Set<Long>> queryRelatedUserIds = notifyRelatedUser
+                    ? userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.userId()), false)
+                    .collect(Collectors.toSet())
+                    : Mono.just(Collections.emptySet());
+            return queryMemberIds.zipWith(queryRelatedUserIds)
+                    .map(results -> {
+                        results.getT1().addAll(results.getT2());
+                        return results.getT1().isEmpty()
+                                ? RequestHandlerResultFactory.OK
+                                : RequestHandlerResultFactory.get(results.getT1(), clientRequest.turmsRequest());
+                    });
         };
     }
 
@@ -270,9 +269,8 @@ public class UserServiceController {
                                     .map(relatedUserIds -> relatedUserIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
                                             : RequestHandlerResultFactory.get(relatedUserIds, clientRequest.turmsRequest()));
-                        } else {
-                            return Mono.just(RequestHandlerResultFactory.OK);
                         }
+                        return Mono.just(RequestHandlerResultFactory.OK);
                     }));
         };
     }

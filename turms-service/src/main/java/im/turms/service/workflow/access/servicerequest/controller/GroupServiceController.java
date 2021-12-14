@@ -160,9 +160,8 @@ public class GroupServiceController {
                                     .map(memberIds -> memberIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
                                             : RequestHandlerResultFactory.get(memberIds, clientRequest.turmsRequest()));
-                        } else {
-                            return Mono.just(RequestHandlerResultFactory.OK);
                         }
+                        return Mono.just(RequestHandlerResultFactory.OK);
                     }));
         };
     }
@@ -254,9 +253,8 @@ public class GroupServiceController {
                             .map(memberIds -> memberIds.isEmpty()
                                     ? RequestHandlerResultFactory.OK
                                     : RequestHandlerResultFactory.get(memberIds, clientRequest.turmsRequest()));
-                } else {
-                    return Mono.just(RequestHandlerResultFactory.OK);
                 }
+                return Mono.just(RequestHandlerResultFactory.OK);
             }));
         };
     }
@@ -378,9 +376,8 @@ public class GroupServiceController {
                                             ? RequestHandlerResultFactory.OK
                                             : RequestHandlerResultFactory
                                             .get(joinRequest.getId(), recipientIds, false, clientRequest.turmsRequest()));
-                        } else {
-                            return Mono.just(RequestHandlerResultFactory.OK);
                         }
+                        return Mono.just(RequestHandlerResultFactory.OK);
                     });
         };
     }
@@ -392,17 +389,16 @@ public class GroupServiceController {
                     .getCreateGroupJoinQuestionRequest();
             if (request.getAnswersCount() == 0) {
                 return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The answers must not be empty"));
-            } else {
-                Set<String> answers = CollectionUtil.newSet(request.getAnswersList());
-                int score = request.getScore();
-                return score >= 0
-                        ? groupQuestionService
-                        .authAndCreateGroupJoinQuestion(clientRequest.userId(), request.getGroupId(), request.getQuestion(), answers,
-                                score)
-                        .map(question -> RequestHandlerResultFactory.get(question.getId()))
-                        : Mono.just(
-                        RequestHandlerResultFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The score must be greater than or equal to 0"));
             }
+            Set<String> answers = CollectionUtil.newSet(request.getAnswersList());
+            int score = request.getScore();
+            return score >= 0
+                    ? groupQuestionService
+                    .authAndCreateGroupJoinQuestion(clientRequest.userId(), request.getGroupId(), request.getQuestion(), answers,
+                            score)
+                    .map(question -> RequestHandlerResultFactory.get(question.getId()))
+                    : Mono.just(
+                    RequestHandlerResultFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The score must be greater than or equal to 0"));
         };
     }
 
@@ -438,9 +434,8 @@ public class GroupServiceController {
                                             .map(ids -> ids.isEmpty()
                                                     ? RequestHandlerResultFactory.OK
                                                     : RequestHandlerResultFactory.get(ids, clientRequest.turmsRequest())));
-                        } else {
-                            return Mono.just(RequestHandlerResultFactory.OK);
                         }
+                        return Mono.just(RequestHandlerResultFactory.OK);
                     }));
         };
     }
@@ -464,16 +459,7 @@ public class GroupServiceController {
                     .getQueryGroupInvitationsRequest();
             Long groupId = request.hasGroupId() ? request.getGroupId() : null;
             Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate()) : null;
-            if (groupId != null) {
-                return groupInvitationService.queryGroupInvitationsWithVersion(
-                                clientRequest.userId(),
-                                groupId,
-                                lastUpdatedDate)
-                        .map(groupInvitationsWithVersion -> RequestHandlerResultFactory.get(
-                                TurmsNotification.Data.newBuilder()
-                                        .setGroupInvitationsWithVersion(groupInvitationsWithVersion)
-                                        .build()));
-            } else {
+            if (groupId == null) {
                 return groupInvitationService.queryUserGroupInvitationsWithVersion(
                                 clientRequest.userId(),
                                 request.hasAreSentByMe() && request.getAreSentByMe(),
@@ -483,6 +469,14 @@ public class GroupServiceController {
                                 .setGroupInvitationsWithVersion(groupInvitationsWithVersion)
                                 .build()));
             }
+            return groupInvitationService.queryGroupInvitationsWithVersion(
+                            clientRequest.userId(),
+                            groupId,
+                            lastUpdatedDate)
+                    .map(groupInvitationsWithVersion -> RequestHandlerResultFactory.get(
+                            TurmsNotification.Data.newBuilder()
+                                    .setGroupInvitationsWithVersion(groupInvitationsWithVersion)
+                                    .build()));
         };
     }
 
@@ -605,17 +599,16 @@ public class GroupServiceController {
                                 TurmsNotification.Data.newBuilder()
                                         .setGroupMembersWithVersion(groupMembersWithVersion)
                                         .build()));
-            } else {
-                return groupMemberService.authAndQueryGroupMembersWithVersion(
-                                clientRequest.userId(),
-                                request.getGroupId(),
-                                lastUpdatedDate,
-                                withStatus)
-                        .map(groupMembersWithVersion -> RequestHandlerResultFactory.get(
-                                TurmsNotification.Data.newBuilder()
-                                        .setGroupMembersWithVersion(groupMembersWithVersion)
-                                        .build()));
             }
+            return groupMemberService.authAndQueryGroupMembersWithVersion(
+                            clientRequest.userId(),
+                            request.getGroupId(),
+                            lastUpdatedDate,
+                            withStatus)
+                    .map(groupMembersWithVersion -> RequestHandlerResultFactory.get(
+                            TurmsNotification.Data.newBuilder()
+                                    .setGroupMembersWithVersion(groupMembersWithVersion)
+                                    .build()));
         };
     }
 

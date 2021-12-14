@@ -84,11 +84,8 @@ public abstract class CommonApiLoggingContext {
         if (sampleRate <= 0) {
             return false;
         }
-        if (sampleRate < 1.0f) {
-            return ThreadLocalRandom.current().nextFloat() < sampleRate;
-        } else {
-            return true;
-        }
+        return sampleRate >= 1.0f
+                || ThreadLocalRandom.current().nextFloat() < sampleRate;
     }
 
     private Set<LoggingRequestProperties> getRequestProperties(LoggingCategoryProperties categoryProperties) {

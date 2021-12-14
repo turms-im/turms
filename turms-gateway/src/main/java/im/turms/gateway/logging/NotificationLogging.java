@@ -43,12 +43,12 @@ public final class NotificationLogging {
         Integer closeStatus = notification.closeStatus();
         ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
                 // User info
-                Formatter.toCharacterBytes(notification.requesterId()),
+                Formatter.toCharBytes(notification.requesterId()),
                 // Notification info
                 sent ? SENT : UNSENT,
-                Formatter.toCharacterBytes(recipientCount),
+                Formatter.toCharBytes(recipientCount),
                 closeStatus,
-                Formatter.toCharacterBytes(size),
+                Formatter.toCharBytes(size),
                 // Relayed request info
                 notification.relayedRequestType().name());
         NOTIFICATION_LOGGER.info(buffer);

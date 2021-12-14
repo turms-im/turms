@@ -138,7 +138,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SEND_JOIN_REQUEST_TO_INACTIVE_GROUP));
                     }
                     long id = node.nextLargeGapId(ServiceType.GROUP_JOIN_REQUEST);
-                    String finalContent = content != null ? content : "";
+                    String finalContent = content == null ? "" : content;
                     GroupJoinRequest groupJoinRequest = new GroupJoinRequest(
                             id,
                             finalContent,
@@ -222,10 +222,10 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
         Mono<Date> versionMono = searchRequestsByGroupId ?
                 groupMemberService.isOwnerOrManager(requesterId, groupId)
                         .flatMap(authenticated -> {
-                            if (authenticated != null && authenticated) {
-                                return groupVersionService.queryGroupJoinRequestsVersion(groupId);
+                            if (!authenticated) {
+                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_REQUEST));
                             }
-                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_REQUEST));
+                            return groupVersionService.queryGroupJoinRequestsVersion(groupId);
                         })
                 : userVersionService.queryGroupJoinRequestsVersion(requesterId);
         return versionMono
@@ -400,7 +400,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
             return Mono.error(e);
         }
         Date now = new Date();
-        id = id != null ? id : node.nextLargeGapId(ServiceType.GROUP_JOIN_REQUEST);
+        id = id == null ? node.nextLargeGapId(ServiceType.GROUP_JOIN_REQUEST) : id;
         if (content == null) {
             content = "";
         }
@@ -430,11 +430,12 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
     }
 
     private void validJoinRequestContentLength(@Nullable String content) {
-        if (content != null) {
-            int contentLimit = node.getSharedProperties().getService().getGroup().getGroupJoinRequestContentLimit();
-            if (contentLimit > 0) {
-                AssertUtil.max(content.length(), "content", contentLimit);
-            }
+        if (content == null) {
+            return;
+        }
+        int contentLimit = node.getSharedProperties().getService().getGroup().getGroupJoinRequestContentLimit();
+        if (contentLimit > 0) {
+            AssertUtil.max(content.length(), "content", contentLimit);
         }
     }
 

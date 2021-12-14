@@ -123,7 +123,7 @@ public class TemplateLayout {
                     buffer.writeCharSequence(fileName, StandardCharsets.UTF_8);
                     if (lineNumber >= 0) {
                         buffer.writeByte(':');
-                        buffer.writeBytes(Formatter.toCharacterBytes(lineNumber));
+                        buffer.writeBytes(Formatter.toCharBytes(lineNumber));
                     }
                 }
             }

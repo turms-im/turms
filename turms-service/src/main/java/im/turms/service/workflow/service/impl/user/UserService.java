@@ -29,8 +29,8 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -184,24 +184,14 @@ public class UserService {
             return Mono.error(e);
         }
         Date now = new Date();
-        id = id != null ? id : node.nextLargeGapId(ServiceType.USER);
-        byte[] password = rawPassword != null
-                ? passwordManager.encodeUserPassword(rawPassword)
-                : null;
-        name = name != null ? name : "";
-        intro = intro != null ? intro : "";
-        profileAccess = profileAccess != null
-                ? profileAccess
-                : ProfileAccessStrategy.ALL;
-        permissionGroupId = permissionGroupId != null
-                ? permissionGroupId
-                : DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID;
-        isActive = isActive != null
-                ? isActive
-                : node.getSharedProperties().getService().getUser().isActivateUserWhenAdded();
-        Date date = registrationDate != null
-                ? registrationDate
-                : now;
+        id = id == null ? node.nextLargeGapId(ServiceType.USER) : id;
+        byte[] password = rawPassword == null ? null : passwordManager.encodeUserPassword(rawPassword);
+        name = name == null ? "" : name;
+        intro = intro == null ? "" : intro;
+        profileAccess = profileAccess == null ? ProfileAccessStrategy.ALL : profileAccess;
+        permissionGroupId = permissionGroupId == null ? DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID : permissionGroupId;
+        isActive = isActive == null ? node.getSharedProperties().getService().getUser().isActivateUserWhenAdded() : isActive;
+        Date date = registrationDate == null ? now : registrationDate;
         User user = new User(
                 id,
                 password,
@@ -464,10 +454,9 @@ public class UserService {
                 isActive)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        byte[] password = null;
-        if (rawPassword != null && !rawPassword.isEmpty()) {
-            password = passwordManager.encodeUserPassword(rawPassword);
-        }
+        byte[] password = rawPassword == null || rawPassword.isEmpty()
+                ? null
+                : passwordManager.encodeUserPassword(rawPassword);
         Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, userIds);
         Update update = Update.newBuilder(8)

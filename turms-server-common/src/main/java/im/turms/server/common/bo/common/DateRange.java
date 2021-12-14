@@ -35,19 +35,15 @@ public record DateRange(Date start, Date end) {
     }
 
     public static DateRange of(Date start, Date end) {
-        if (start != null || end != null) {
-            return new DateRange(start, end);
-        } else {
-            return null;
-        }
+        return start == null && end == null
+                ? null
+                : new DateRange(start, end);
     }
 
     public DateRange intersect(DateRange range) {
-        if (range == null || equals(range)) {
-            return this;
-        }
-        return new DateRange(DateUtil.max(start, range.start()),
-                DateUtil.min(end, range.end()));
+        return range == null || equals(range)
+                ? this
+                : new DateRange(DateUtil.max(start, range.start()), DateUtil.min(end, range.end()));
     }
 
     public DateRange move(long millis) {

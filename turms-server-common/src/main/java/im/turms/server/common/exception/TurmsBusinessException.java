@@ -85,11 +85,9 @@ public final class TurmsBusinessException extends StacklessException {
     }
 
     public static TurmsBusinessException get(@NotNull TurmsStatusCode code, @Nullable String reason) {
-        if (reason != null && !reason.isEmpty()) {
-            return new TurmsBusinessException(code, reason);
-        } else {
-            return get(code);
-        }
+        return reason == null || reason.isEmpty()
+                ? get(code)
+                : new TurmsBusinessException(code, reason);
     }
 
     public static TurmsBusinessException get(@NotNull TurmsStatusCode code, @Nullable Throwable cause) {
@@ -104,11 +102,9 @@ public final class TurmsBusinessException extends StacklessException {
     }
 
     private static String formatMessage(@NotNull TurmsStatusCode code, @Nullable String reason) {
-        if (reason != null) {
-            return "code: " + code.getBusinessCode() + ", reason: " + reason;
-        } else {
-            return "code: " + code.getBusinessCode();
-        }
+        return reason == null
+                ? "code: " + code.getBusinessCode()
+                : "code: " + code.getBusinessCode() + ", reason: " + reason;
     }
 
 }

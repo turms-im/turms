@@ -86,19 +86,18 @@ public class UserOnlineInfoController {
     @RequiredPermission(AdminPermission.STATISTICS_USER_QUERY)
     public Mono<ResponseEntity<ResponseDTO<OnlineUserNumberDTO>>> countOnlineUsers(
             @RequestParam(required = false, defaultValue = "false") Boolean countByNodes) {
-        if (countByNodes != null && countByNodes) {
-            return ResponseFactory.okIfTruthy(statisticsService.countOnlineUsersByNodes()
-                    .map(nodeIdAndNumberMap -> {
-                        int sum = 0;
-                        for (int onlineUserNumber : nodeIdAndNumberMap.values()) {
-                            sum += onlineUserNumber;
-                        }
-                        return new OnlineUserNumberDTO(sum, nodeIdAndNumberMap);
-                    }));
-        } else {
+        if (countByNodes == null || !countByNodes) {
             return ResponseFactory.okIfTruthy(statisticsService.countOnlineUsers()
                     .map(total -> new OnlineUserNumberDTO(total, null)));
         }
+        return ResponseFactory.okIfTruthy(statisticsService.countOnlineUsersByNodes()
+                .map(nodeIdAndNumberMap -> {
+                    int sum = 0;
+                    for (int onlineUserNumber : nodeIdAndNumberMap.values()) {
+                        sum += onlineUserNumber;
+                    }
+                    return new OnlineUserNumberDTO(sum, nodeIdAndNumberMap);
+                }));
     }
 
     @GetMapping("/statuses")
@@ -115,9 +114,8 @@ public class UserOnlineInfoController {
                                     .flatMap(exists -> exists
                                             ? Mono.just(info)
                                             : Mono.empty());
-                        } else {
-                            return Mono.just(info);
                         }
+                        return Mono.just(info);
                     });
             userSessionStatusMonos.add(userOnlineInfoMno);
         }
@@ -170,9 +168,9 @@ public class UserOnlineInfoController {
         Mono<Boolean> updateMono;
         UserStatus onlineStatus = updateOnlineStatusDTO.onlineStatus();
         if (onlineStatus == UserStatus.OFFLINE) {
-            updateMono = deviceTypes != null
-                    ? sessionService.disconnect(ids, deviceTypes, SessionCloseStatus.DISCONNECTED_BY_ADMIN)
-                    : sessionService.disconnect(ids, SessionCloseStatus.DISCONNECTED_BY_ADMIN);
+            updateMono = deviceTypes == null
+                    ? sessionService.disconnect(ids, SessionCloseStatus.DISCONNECTED_BY_ADMIN)
+                    : sessionService.disconnect(ids, deviceTypes, SessionCloseStatus.DISCONNECTED_BY_ADMIN);
         } else {
             updateMono = userStatusService.updateOnlineUsersStatus(ids, onlineStatus);
         }

@@ -49,13 +49,12 @@ public class StringCodec implements Codec<String> {
     @Override
     public String read(ByteBuf input) {
         int length = input.readShort();
-        if (length > 0) {
-            byte[] bytes = new byte[length];
-            input.readBytes(bytes);
-            return new String(bytes, StandardCharsets.UTF_8);
-        } else {
+        if (length <= 0) {
             return "";
         }
+        byte[] bytes = new byte[length];
+        input.readBytes(bytes);
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     @Override

@@ -31,8 +31,8 @@ import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -244,12 +244,9 @@ public class GroupTypeService {
             return Mono.error(e);
         }
         GroupType groupType = groupTypeMap.get(groupTypeId);
-        if (groupType != null) {
-            return Mono.just(groupType);
-        } else {
-            return mongoTemplate.findById(GroupType.class, groupTypeId)
-                    .doOnNext(type -> groupTypeMap.put(groupTypeId, type));
-        }
+        return groupType == null
+                ? mongoTemplate.findById(GroupType.class, groupTypeId).doOnNext(type -> groupTypeMap.put(groupTypeId, type))
+                : Mono.just(groupType);
     }
 
     public Mono<Boolean> groupTypeExists(@NotNull Long groupTypeId) {

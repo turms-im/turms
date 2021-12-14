@@ -147,14 +147,13 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
                                     return Mono.error(TurmsBusinessException.get(code));
                                 }
                                 GroupInvitationStrategy strategy = pair.getRight();
-                                if (strategy.requiresApproval()) {
-                                    String finalContent = content != null ? content : "";
-                                    return createGroupInvitation(null, groupId, inviterId, inviteeId, finalContent,
-                                            RequestStatus.PENDING, null, null);
-                                } else {
+                                if (!strategy.requiresApproval()) {
                                     return Mono.error(TurmsBusinessException.get(TurmsStatusCode.REDUNDANT_GROUP_INVITATION,
                                             "The invitation is redundant under the strategy " + strategy));
                                 }
+                                String finalContent = content == null ? "" : content;
+                                return createGroupInvitation(null, groupId, inviterId, inviteeId, finalContent,
+                                        RequestStatus.PENDING, null, null);
                             });
                 });
     }
@@ -179,7 +178,7 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        id = id != null ? id : node.nextLargeGapId(ServiceType.GROUP_INVITATION);
+        id = id == null ? node.nextLargeGapId(ServiceType.GROUP_INVITATION) : id;
         if (content == null) {
             content = "";
         }
@@ -247,13 +246,12 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
                                         .set(GroupInvitation.Fields.STATUS, RequestStatus.CANCELED);
                                 return mongoClient.updateOne(GroupInvitation.class, filter, update)
                                         .flatMap(result -> {
-                                            if (result.getModifiedCount() > 0) {
-                                                return groupVersionService.updateGroupInvitationsVersion(invitation.getGroupId())
-                                                        .onErrorResume(t -> Mono.empty())
-                                                        .then();
-                                            } else {
+                                            if (result.getModifiedCount() <= 0) {
                                                 return Mono.empty();
                                             }
+                                            return groupVersionService.updateGroupInvitationsVersion(invitation.getGroupId())
+                                                    .onErrorResume(t -> Mono.empty())
+                                                    .then();
                                         });
                             });
                 });

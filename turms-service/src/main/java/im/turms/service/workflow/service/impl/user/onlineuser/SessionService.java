@@ -99,22 +99,21 @@ public class SessionService {
         int size = deviceTypes.size();
         if (size == 1) {
             return disconnect(userId, deviceTypes.iterator().next(), closeStatus);
-        } else {
-            return userStatusService.getNodeIdAndDeviceMapByUserId(userId)
-                    .flatMap(nodeIdAndDeviceTypeMap -> {
-                        Set<Map.Entry<String, Collection<DeviceType>>> entries = nodeIdAndDeviceTypeMap.asMap().entrySet();
-                        List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
-                        for (Map.Entry<String, Collection<DeviceType>> entry : entries) {
-                            Set<DeviceType> types = CollectionUtil.intersection(deviceTypes, entry.getValue());
-                            if (!types.isEmpty()) {
-                                SetUserOfflineRequest request = new SetUserOfflineRequest(userId, types, closeStatus);
-                                monos.add(node.getRpcService().requestResponse(entry.getKey(), request));
-                            }
-                        }
-                        return ReactorUtil.atLeastOneTrue(monos);
-                    })
-                    .defaultIfEmpty(false);
         }
+        return userStatusService.getNodeIdAndDeviceMapByUserId(userId)
+                .flatMap(nodeIdAndDeviceTypeMap -> {
+                    Set<Map.Entry<String, Collection<DeviceType>>> entries = nodeIdAndDeviceTypeMap.asMap().entrySet();
+                    List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
+                    for (Map.Entry<String, Collection<DeviceType>> entry : entries) {
+                        Set<DeviceType> types = CollectionUtil.intersection(deviceTypes, entry.getValue());
+                        if (!types.isEmpty()) {
+                            SetUserOfflineRequest request = new SetUserOfflineRequest(userId, types, closeStatus);
+                            monos.add(node.getRpcService().requestResponse(entry.getKey(), request));
+                        }
+                    }
+                    return ReactorUtil.atLeastOneTrue(monos);
+                })
+                .defaultIfEmpty(false);
     }
 
     /**
@@ -143,18 +142,17 @@ public class SessionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        switch (userIds.size()) {
-            case 0:
-                return Mono.just(true);
-            case 1:
-                return disconnect(userIds.iterator().next(), closeStatus);
-            default:
+        return switch (userIds.size()) {
+            case 0 -> Mono.just(true);
+            case 1 -> disconnect(userIds.iterator().next(), closeStatus);
+            default -> {
                 List<Mono<Boolean>> monos = new ArrayList<>(userIds.size());
                 for (Long userId : userIds) {
                     monos.add(disconnect(userId, closeStatus));
                 }
-                return ReactorUtil.atLeastOneTrue(monos);
-        }
+                yield ReactorUtil.atLeastOneTrue(monos);
+            }
+        };
     }
 
     public Mono<Boolean> disconnect(@NotNull Set<Long> userIds,
@@ -168,21 +166,19 @@ public class SessionService {
         }
         if (deviceTypes == null || deviceTypes.isEmpty()) {
             return disconnect(userIds, closeStatus);
-        } else {
-            int size = userIds.size();
-            switch (size) {
-                case 0:
-                    return Mono.just(true);
-                case 1:
-                    return disconnect(userIds.iterator().next(), deviceTypes, closeStatus);
-                default:
-                    List<Mono<Boolean>> monos = new ArrayList<>(size);
-                    for (Long userId : userIds) {
-                        monos.add(disconnect(userId, deviceTypes, closeStatus));
-                    }
-                    return ReactorUtil.atLeastOneTrue(monos);
-            }
         }
+        int size = userIds.size();
+        return switch (size) {
+            case 0 -> Mono.just(true);
+            case 1 -> disconnect(userIds.iterator().next(), deviceTypes, closeStatus);
+            default -> {
+                List<Mono<Boolean>> monos = new ArrayList<>(size);
+                for (Long userId : userIds) {
+                    monos.add(disconnect(userId, deviceTypes, closeStatus));
+                }
+                yield ReactorUtil.atLeastOneTrue(monos);
+            }
+        };
     }
 
 }

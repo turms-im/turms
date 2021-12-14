@@ -106,9 +106,8 @@ public class SettingController {
             } catch (IOException e) {
                 throw TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, e);
             }
-        } else {
-            return ResponseFactory.okIfTruthy(metadata);
         }
+        return ResponseFactory.okIfTruthy(metadata);
     }
 
 }

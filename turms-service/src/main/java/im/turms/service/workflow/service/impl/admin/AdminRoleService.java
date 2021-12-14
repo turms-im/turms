@@ -25,8 +25,8 @@ import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -134,9 +134,8 @@ public class AdminRoleService {
                                 .flatMap(hasPermissions -> hasPermissions
                                         ? addAdminRole(roleId, name, permissions, rank)
                                         : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_NO_PERMISSION)));
-                    } else {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ROLE_WITH_HIGHER_RANK));
                     }
+                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ROLE_WITH_HIGHER_RANK));
                 });
     }
 
@@ -226,17 +225,15 @@ public class AdminRoleService {
         return isAdminHigherThanRole(requesterAccount, highestRoleId)
                 .flatMap(isHigher -> {
                     if (isHigher) {
-                        if (permissions != null) {
-                            return adminHasPermissions(requesterAccount, permissions)
-                                    .flatMap(hasPermissions -> hasPermissions
-                                            ? updateAdminRole(roleIds, newName, permissions, rank)
-                                            : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_NO_PERMISSION)));
-                        } else {
+                        if (permissions == null) {
                             return updateAdminRole(roleIds, newName, null, rank);
                         }
-                    } else {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ROLE_WITH_HIGHER_RANK));
+                        return adminHasPermissions(requesterAccount, permissions)
+                                .flatMap(hasPermissions -> hasPermissions
+                                        ? updateAdminRole(roleIds, newName, permissions, rank)
+                                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_NO_PERMISSION)));
                     }
+                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ROLE_WITH_HIGHER_RANK));
                 });
     }
 
@@ -303,7 +300,7 @@ public class AdminRoleService {
                 .inIfNotNull(AdminRole.Fields.PERMISSIONS, includedPermissions)
                 .inIfNotNull(AdminRole.Fields.RANK, ranks);
         return mongoClient.count(AdminRole.class, filter)
-                // Add 1 because of the nested root role
+                // Add 1 because of the builtin root role
                 .map(number -> number + 1);
     }
 
@@ -336,14 +333,13 @@ public class AdminRoleService {
         }
         if (roleId.equals(DaoConstant.ADMIN_ROLE_ROOT_ID)) {
             return Mono.just(getRootRole().getRank());
-        } else {
-            Filter filter = Filter.newBuilder(1)
-                    .eq(DaoConstant.ID_FIELD_NAME, roleId);
-            QueryOptions options = QueryOptions.newBuilder(2)
-                    .include(AdminRole.Fields.RANK);
-            return mongoClient.findOne(AdminRole.class, filter, options)
-                    .map(AdminRole::getRank);
         }
+        Filter filter = Filter.newBuilder(1)
+                .eq(DaoConstant.ID_FIELD_NAME, roleId);
+        QueryOptions options = QueryOptions.newBuilder(2)
+                .include(AdminRole.Fields.RANK);
+        return mongoClient.findOne(AdminRole.class, filter, options)
+                .map(AdminRole::getRank);
     }
 
     public Flux<Integer> queryRanksByRoles(@NotEmpty Set<Long> roleIds) {
@@ -355,17 +351,16 @@ public class AdminRoleService {
         boolean containsRoot = roleIds.contains(DaoConstant.ADMIN_ROLE_ROOT_ID);
         if (containsRoot && roleIds.size() == 1) {
             return Flux.just(getRootRole().getRank());
-        } else {
-            Filter query = Filter.newBuilder(1)
-                    .in(DaoConstant.ID_FIELD_NAME, roleIds);
-            QueryOptions options = QueryOptions.newBuilder(1)
-                    .include(AdminRole.Fields.RANK);
-            Flux<AdminRole> roleFlux = mongoClient.findMany(AdminRole.class, query, options);
-            if (containsRoot) {
-                roleFlux = roleFlux.concatWithValues(getRootRole());
-            }
-            return roleFlux.map(AdminRole::getRank);
         }
+        Filter query = Filter.newBuilder(1)
+                .in(DaoConstant.ID_FIELD_NAME, roleIds);
+        QueryOptions options = QueryOptions.newBuilder(1)
+                .include(AdminRole.Fields.RANK);
+        Flux<AdminRole> roleFlux = mongoClient.findMany(AdminRole.class, query, options);
+        if (containsRoot) {
+            roleFlux = roleFlux.concatWithValues(getRootRole());
+        }
+        return roleFlux.map(AdminRole::getRank);
     }
 
     public Mono<Boolean> isAdminHigherThanRole(
@@ -419,7 +414,7 @@ public class AdminRoleService {
                 .flatMap(rank -> queryRanksByAccounts(accounts)
                         .collect(Collectors.toSet())
                         .map(ranks -> {
-                            for (Integer targetRank : ranks) {
+                            for (int targetRank : ranks) {
                                 if (targetRank >= rank) {
                                     return Triple.of(false, rank, ranks);
                                 }
@@ -457,10 +452,9 @@ public class AdminRoleService {
             return Mono.error(e);
         }
         AdminRole role = roles.get(roleId);
-        return role != null
-                ? Mono.just(role.getPermissions())
-                : queryAndCacheRole(roleId)
-                .map(AdminRole::getPermissions);
+        return role == null
+                ? queryAndCacheRole(roleId).map(AdminRole::getPermissions)
+                : Mono.just(role.getPermissions());
     }
 
     public Mono<Boolean> hasPermission(@NotNull Long roleId, @NotNull AdminPermission permission) {

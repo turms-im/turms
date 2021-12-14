@@ -160,9 +160,9 @@ public final class ByteBufUtil {
         for (int i = 0, length = elements.length; i < length; i++) {
             Object element = elements[i];
             if (element instanceof Integer num) {
-                buffer.writeBytes(Formatter.toCharacterBytes(num));
+                buffer.writeBytes(Formatter.toCharBytes(num));
             } else if (element instanceof Long num) {
-                buffer.writeBytes(Formatter.toCharacterBytes(num));
+                buffer.writeBytes(Formatter.toCharBytes(num));
             } else if (element instanceof CharSequence c) {
                 buffer.writeCharSequence(c, StandardCharsets.UTF_8);
             } else if (element instanceof byte[] bytes) {

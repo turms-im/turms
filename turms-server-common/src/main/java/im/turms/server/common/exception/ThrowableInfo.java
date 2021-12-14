@@ -40,9 +40,8 @@ public record ThrowableInfo(
             // passing down DuplicateKeyException
             return new ThrowableInfo(TurmsStatusCode.RECORD_CONTAINS_DUPLICATE_KEY,
                     e.getMessage());
-        } else {
-            return new ThrowableInfo(TurmsStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
         }
+        return new ThrowableInfo(TurmsStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
     }
 
 }

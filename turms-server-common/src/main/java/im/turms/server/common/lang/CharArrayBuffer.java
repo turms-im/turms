@@ -94,7 +94,7 @@ public class CharArrayBuffer implements CharSequence {
     }
 
     public void append(String str) {
-        String s = str != null ? str : "null";
+        String s = str == null ? "null" : str;
         int strLength = s.length();
         int newLength = length + strLength;
         if (newLength > buffer.length) {

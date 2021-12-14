@@ -66,9 +66,9 @@ public class UserPermissionGroupController {
     public Mono<ResponseEntity<ResponseDTO<UserPermissionGroup>>> addUserPermissionGroup(
             @RequestBody AddUserPermissionGroupDTO addUserPermissionGroupDTO) {
         Set<Long> creatableGroupTypesIds = addUserPermissionGroupDTO.creatableGroupTypeIds();
-        creatableGroupTypesIds = creatableGroupTypesIds != null ? creatableGroupTypesIds : Collections.emptySet();
+        creatableGroupTypesIds = creatableGroupTypesIds == null ? Collections.emptySet() : creatableGroupTypesIds;
         Map<Long, Integer> groupTypeLimits = addUserPermissionGroupDTO.groupTypeLimits();
-        groupTypeLimits = groupTypeLimits != null ? groupTypeLimits : Collections.emptyMap();
+        groupTypeLimits = groupTypeLimits == null ? Collections.emptyMap() : groupTypeLimits;
         Mono<UserPermissionGroup> userPermissionGroupMono = userPermissionGroupService.addUserPermissionGroup(
                 addUserPermissionGroupDTO.id(),
                 creatableGroupTypesIds,

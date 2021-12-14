@@ -43,14 +43,14 @@ public final class NotificationLogging {
         TurmsRequest relayedRequest = notification.getRelayedRequest();
         ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
                 // User info
-                Formatter.toCharacterBytes(notification.getRequesterId()),
+                Formatter.toCharBytes(notification.getRequesterId()),
                 // Notification info
                 sent ? "SENT" : "UNSENT",
-                Formatter.toCharacterBytes(recipientCount),
-                notification.hasCloseStatus() ? Formatter.toCharacterBytes(notification.getCloseStatus()) : null,
-                Formatter.toCharacterBytes(notification.getSerializedSize()),
+                Formatter.toCharBytes(recipientCount),
+                notification.hasCloseStatus() ? Formatter.toCharBytes(notification.getCloseStatus()) : null,
+                Formatter.toCharBytes(notification.getSerializedSize()),
                 // Relayed request info
-                Formatter.toCharacterBytes(relayedRequest.getRequestId()),
+                Formatter.toCharBytes(relayedRequest.getRequestId()),
                 relayedRequest.getKindCase().name());
         NOTIFICATION_LOGGER.info(buffer);
     }

@@ -26,8 +26,8 @@ import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -193,18 +193,18 @@ public class AdminService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        account = account != null
-                ? account
-                : RandomStringUtils.randomAlphabetic(16);
+        account = account == null
+                ? RandomStringUtils.randomAlphabetic(16)
+                : account;
         byte[] password = StringUtils.hasText(rawPassword)
                 ? passwordManager.encodeAdminPassword(rawPassword)
                 : passwordManager.encodeAdminPassword(RandomStringUtils.randomAlphabetic(10));
         name = StringUtils.hasText(name)
                 ? name
                 : RandomStringUtils.randomAlphabetic(8);
-        registrationDate = registrationDate != null
-                ? registrationDate
-                : new Date();
+        registrationDate = registrationDate == null
+                ? new Date()
+                : registrationDate;
         Admin admin = new Admin(account, password, name, roleId, registrationDate);
         AdminInfo adminInfo = new AdminInfo(admin, rawPassword);
         String finalAccount = account;
@@ -236,8 +236,7 @@ public class AdminService {
         }
         return roleIds.size() == accounts.size()
                 ? Flux.fromIterable(roleIds)
-                : queryAdmins(accounts, null, null, null)
-                .map(Admin::getRoleId);
+                : queryAdmins(accounts, null, null, null).map(Admin::getRoleId);
     }
 
     public Mono<Boolean> isAdminAuthorized(
@@ -292,20 +291,19 @@ public class AdminService {
         AdminInfo adminInfo = adminMap.get(account);
         if (adminInfo != null && adminInfo.getRawPassword() != null) {
             return Mono.just(adminInfo.getRawPassword().equals(rawPassword));
-        } else {
-            return queryAdmin(account)
-                    .map(admin -> {
-                        boolean isValidPassword = passwordManager.matchesAdminPassword(rawPassword, admin.getPassword());
-                        if (isValidPassword) {
-                            AdminInfo info = adminMap.get(admin.getAccount());
-                            if (info != null) {
-                                info.setRawPassword(rawPassword);
-                            }
-                        }
-                        return isValidPassword;
-                    })
-                    .defaultIfEmpty(false);
         }
+        return queryAdmin(account)
+                .map(admin -> {
+                    boolean isValidPassword = passwordManager.matchesAdminPassword(rawPassword, admin.getPassword());
+                    if (isValidPassword) {
+                        AdminInfo info = adminMap.get(admin.getAccount());
+                        if (info != null) {
+                            info.setRawPassword(rawPassword);
+                        }
+                    }
+                    return isValidPassword;
+                })
+                .defaultIfEmpty(false);
     }
 
     public Mono<Admin> queryAdmin(@NotNull String account) {
@@ -315,12 +313,11 @@ public class AdminService {
             return Mono.error(e);
         }
         AdminInfo adminInfo = adminMap.get(account);
-        if (adminInfo != null) {
-            return Mono.just(adminInfo.getAdmin());
-        } else {
+        if (adminInfo == null) {
             return mongoClient.findById(Admin.class, account)
                     .doOnNext(admin -> adminMap.put(account, new AdminInfo(admin, null)));
         }
+        return Mono.just(adminInfo.getAdmin());
     }
 
     public Flux<Admin> queryAdmins(
@@ -390,30 +387,25 @@ public class AdminService {
         }
         boolean onlyUpdateRequesterInfo = targetAccounts.size() == 1 && targetAccounts.iterator().next().equals(requesterAccount);
         if (onlyUpdateRequesterInfo) {
-            if (roleId == null) {
-                return updateAdmins(targetAccounts, rawPassword, name, null);
-            } else {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, "It's forbidden to update one's own role ID"));
-            }
-        } else {
-            return adminRoleService.isAdminHigherThanAdmins(requesterAccount, targetAccounts)
-                    .flatMap(triple -> {
-                        if (triple.getLeft()) {
-                            if (roleId != null) {
-                                return adminRoleService.queryRankByRole(roleId)
-                                        .flatMap(targetRoleRank -> triple.getMiddle() > targetRoleRank
-                                                ? updateAdmins(targetAccounts, rawPassword, name, roleId)
-                                                : Mono.error(TurmsBusinessException
-                                                .get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK)));
-                            } else {
-                                return updateAdmins(targetAccounts, rawPassword, name, null);
-                            }
-                        } else {
-                            return Mono
-                                    .error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK));
-                        }
-                    });
+            return roleId == null
+                    ? updateAdmins(targetAccounts, rawPassword, name, null)
+                    : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, "It's forbidden to update one's own role ID"));
         }
+        return adminRoleService.isAdminHigherThanAdmins(requesterAccount, targetAccounts)
+                .flatMap(triple -> {
+                    if (!triple.getLeft()) {
+                        return Mono
+                                .error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK));
+                    }
+                    if (roleId == null) {
+                        return updateAdmins(targetAccounts, rawPassword, name, null);
+                    }
+                    return adminRoleService.queryRankByRole(roleId)
+                            .flatMap(targetRoleRank -> triple.getMiddle() > targetRoleRank
+                                    ? updateAdmins(targetAccounts, rawPassword, name, roleId)
+                                    : Mono.error(TurmsBusinessException
+                                    .get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK)));
+                });
     }
 
     public Mono<UpdateResult> updateAdmins(
@@ -435,21 +427,22 @@ public class AdminService {
         }
         Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, targetAccounts);
-        byte[] password = rawPassword != null
-                ? passwordManager.encodeAdminPassword(rawPassword)
-                : null;
+        byte[] password = rawPassword == null
+                ? null
+                : passwordManager.encodeAdminPassword(rawPassword);
         Update update = Update.newBuilder(3)
                 .setIfNotNull(Admin.Fields.PASSWORD, password)
                 .setIfNotNull(Admin.Fields.NAME, name)
                 .setIfNotNull(Admin.Fields.ROLE_ID, roleId);
         return mongoClient.updateMany(Admin.class, filter, update)
                 .map(result -> {
-                    if (rawPassword != null) {
-                        for (String account : targetAccounts) {
-                            AdminInfo adminInfo = adminMap.get(account);
-                            if (adminInfo != null) {
-                                adminInfo.setRawPassword(rawPassword);
-                            }
+                    if (rawPassword == null) {
+                        return result;
+                    }
+                    for (String account : targetAccounts) {
+                        AdminInfo adminInfo = adminMap.get(account);
+                        if (adminInfo != null) {
+                            adminInfo.setRawPassword(rawPassword);
                         }
                     }
                     return result;

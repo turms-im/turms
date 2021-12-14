@@ -110,23 +110,21 @@ public class GroupBlocklistService {
                                 true,
                                 false,
                                 false);
-                        if (session != null) {
-                            return groupMemberService.deleteGroupMembers(groupId, userIdToBlock, session, false)
-                                    .then(mongoClient.insert(session, blockedUser))
-                                    .then(updateVersion.then().onErrorResume(throwable -> Mono.empty()));
-                        } else {
+                        if (session == null) {
                             return mongoClient
-                                    .inTransaction(
-                                            newSession -> groupMemberService.deleteGroupMembers(groupId, userIdToBlock, newSession, false)
+                                    .inTransaction(newSession ->
+                                            groupMemberService.deleteGroupMembers(groupId, userIdToBlock, newSession, false)
                                                     .then(mongoClient.insert(newSession, blockedUser))
                                                     .then(updateVersion.then().onErrorResume(throwable -> Mono.empty())))
                                     .retryWhen(DaoConstant.TRANSACTION_RETRY);
                         }
-                    } else {
-                        Mono<Boolean> updateVersion = groupVersionService.updateBlocklistVersion(groupId);
-                        return mongoClient.insert(session, blockedUser)
+                        return groupMemberService.deleteGroupMembers(groupId, userIdToBlock, session, false)
+                                .then(mongoClient.insert(session, blockedUser))
                                 .then(updateVersion.then().onErrorResume(throwable -> Mono.empty()));
                     }
+                    Mono<Boolean> updateVersion = groupVersionService.updateBlocklistVersion(groupId);
+                    return mongoClient.insert(session, blockedUser)
+                            .then(updateVersion.then().onErrorResume(throwable -> Mono.empty()));
                 });
     }
 
@@ -146,20 +144,19 @@ public class GroupBlocklistService {
         return groupMemberService
                 .isOwnerOrManager(requesterId, groupId)
                 .flatMap(authenticated -> {
-                    if (authenticated) {
-                        GroupBlockedUser.Key key = new GroupBlockedUser.Key(groupId, userIdToUnblock);
-                        Filter filter = Filter.newBuilder(1)
-                                .eq(DaoConstant.ID_FIELD_NAME, key);
-                        Mono<DeleteResult> removeMono = mongoClient.deleteMany(session, GroupBlockedUser.class, filter);
-                        if (updateBlocklistVersion) {
-                            return removeMono.flatMap(result -> groupVersionService.updateBlocklistVersion(groupId)
-                                    .onErrorResume(throwable -> Mono.empty())
-                                    .then());
-                        }
-                        return removeMono.then();
-                    } else {
+                    if (!authenticated) {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_REMOVE_BLOCKED_USER));
                     }
+                    GroupBlockedUser.Key key = new GroupBlockedUser.Key(groupId, userIdToUnblock);
+                    Filter filter = Filter.newBuilder(1)
+                            .eq(DaoConstant.ID_FIELD_NAME, key);
+                    Mono<DeleteResult> removeMono = mongoClient.deleteMany(session, GroupBlockedUser.class, filter);
+                    if (updateBlocklistVersion) {
+                        return removeMono.flatMap(result -> groupVersionService.updateBlocklistVersion(groupId)
+                                .onErrorResume(throwable -> Mono.empty())
+                                .then());
+                    }
+                    return removeMono.then();
                 });
     }
 
@@ -258,9 +255,8 @@ public class GroupBlocklistService {
                             .flatMapMany(ids -> {
                                 if (ids.isEmpty()) {
                                     throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
-                                } else {
-                                    return userService.queryUsersProfiles(ids, false);
                                 }
+                                return userService.queryUsersProfiles(ids, false);
                             })
                             .collect(Collectors.toSet())
                             .map(users -> {

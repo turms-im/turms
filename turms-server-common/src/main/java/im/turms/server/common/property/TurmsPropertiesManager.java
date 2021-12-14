@@ -19,8 +19,8 @@ package im.turms.server.common.property;
 
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.context.TurmsApplicationContext;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import lombok.Setter;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -67,9 +67,9 @@ public class TurmsPropertiesManager {
             LOGGER.warn("The property \"spring.config.location\" is empty");
             configDir = "./config";
         }
-        String latestConfigFileName = activeProfile != null
-                ? "application-%s-latest.yaml".formatted(activeProfile)
-                : "application-latest.yaml";
+        String latestConfigFileName = activeProfile == null
+                ? "application-latest.yaml"
+                : "application-%s-latest.yaml".formatted(activeProfile);
         latestConfigFilePath = Path.of("%s/%s".formatted(configDir, latestConfigFileName));
     }
 

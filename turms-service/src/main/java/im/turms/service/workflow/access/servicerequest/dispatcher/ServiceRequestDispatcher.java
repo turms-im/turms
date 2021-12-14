@@ -306,10 +306,9 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     .forwardNotification(notificationForRecipients, notificationByteBuf, recipients);
             return Mono.when(notifyRequesterMono, notifyRecipientsMono)
                     .doFinally(signal -> notificationByteBuf.release());
-        } else {
-            return outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, recipients)
-                    .then();
         }
+        return outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, recipients)
+                .then();
     }
 
 }

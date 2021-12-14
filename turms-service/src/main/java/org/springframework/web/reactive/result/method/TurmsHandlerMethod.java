@@ -89,7 +89,7 @@ public class TurmsHandlerMethod extends InvocableHandlerMethod {
                     }
                 }
             } catch (IllegalArgumentException ex) {
-                String text = ex.getMessage() != null ? ex.getMessage() : "Illegal argument";
+                String text = ex.getMessage() == null ? "Illegal argument" : ex.getMessage();
                 return Mono.error(new IllegalStateException(formatInvokeError(text, args), ex));
             } catch (InvocationTargetException ex) {
                 return Mono.error(ex.getTargetException());

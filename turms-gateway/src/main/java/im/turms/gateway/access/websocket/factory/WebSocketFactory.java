@@ -69,7 +69,7 @@ import static io.netty.handler.codec.http.HttpMethod.OPTIONS;
  * and troubleshoot with spring-reactive-websocket.
  * <p>
  * On the other hand, we can just use tens of code to do what
- * spring-reative-websocket can do for us with really clear code
+ * spring-reactive-websocket can do for us with really clear code
  * @see WebSocketFactory#getHttpRequestHandler
  */
 public final class WebSocketFactory {

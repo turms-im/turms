@@ -82,7 +82,7 @@ public class GroupController {
         Long ownerId = addGroupDTO.ownerId();
         Mono<Group> createdGroup = groupService.authAndCreateGroup(
                 addGroupDTO.creatorId(),
-                ownerId != null ? ownerId : addGroupDTO.creatorId(),
+                ownerId == null ? addGroupDTO.creatorId() : ownerId,
                 addGroupDTO.name(),
                 addGroupDTO.intro(),
                 addGroupDTO.announcement(),
@@ -232,9 +232,8 @@ public class GroupController {
             @RequestParam Set<Long> ids,
             @RequestBody UpdateGroupDTO updateGroupDTO) {
         Long successorId = updateGroupDTO.successorId();
-        Mono<UpdateResult> updateMono = successorId != null
-                ? groupService.checkAndTransferGroupOwnership(ids, successorId, updateGroupDTO.quitAfterTransfer(), null)
-                : groupService.updateGroupsInformation(ids,
+        Mono<UpdateResult> updateMono = successorId == null
+                ? groupService.updateGroupsInformation(ids,
                 updateGroupDTO.typeId(),
                 updateGroupDTO.creatorId(),
                 updateGroupDTO.ownerId(),
@@ -246,7 +245,8 @@ public class GroupController {
                 updateGroupDTO.creationDate(),
                 updateGroupDTO.deletionDate(),
                 updateGroupDTO.muteEndDate(),
-                null);
+                null)
+                : groupService.checkAndTransferGroupOwnership(ids, successorId, updateGroupDTO.quitAfterTransfer(), null);
         return ResponseFactory.updateResult(updateMono);
     }
 

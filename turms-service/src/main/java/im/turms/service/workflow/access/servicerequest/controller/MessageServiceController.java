@@ -129,10 +129,22 @@ public class MessageServiceController {
             }
             return messageAndRelatedUserIdsMono.map(pair -> {
                 Message message = pair.getLeft();
-                Long messageId = message != null ? message.getId() : null;
+                Long messageId = message == null ? null : message.getId();
                 Set<Long> recipientIds = pair.getRight();
                 boolean hasDataForRecipients = recipientIds != null && !recipientIds.isEmpty();
-                if (messageId != null) {
+                if (messageId == null) {
+                    if (hasDataForRecipients) {
+                        TurmsRequest dataForRecipients = clientRequest.turmsRequest();
+                        if (messageService.getTimeType() == TimeType.LOCAL_SERVER_TIME) {
+                            dataForRecipients = clientRequest.turmsRequest().toBuilder()
+                                    .setCreateMessageRequest(request.toBuilder().setDeliveryDate(System.currentTimeMillis()))
+                                    .build();
+                        }
+                        return RequestHandlerResultFactory.get(
+                                recipientIds,
+                                dataForRecipients);
+                    }
+                } else {
                     if (!hasDataForRecipients) {
                         return RequestHandlerResultFactory.get(messageId);
                     }
@@ -158,19 +170,8 @@ public class MessageServiceController {
                             recipientIds,
                             node.getSharedProperties().getService().getMessage().isSendMessageToOtherSenderOnlineDevices(),
                             dataForRecipients);
-                } else if (hasDataForRecipients) {
-                    TurmsRequest dataForRecipients = clientRequest.turmsRequest();
-                    if (messageService.getTimeType() == TimeType.LOCAL_SERVER_TIME) {
-                        dataForRecipients = clientRequest.turmsRequest().toBuilder()
-                                .setCreateMessageRequest(request.toBuilder().setDeliveryDate(System.currentTimeMillis()))
-                                .build();
-                    }
-                    return RequestHandlerResultFactory.get(
-                            recipientIds,
-                            dataForRecipients);
-                } else {
-                    return RequestHandlerResultFactory.get(TurmsStatusCode.OK);
                 }
+                return RequestHandlerResultFactory.get(TurmsStatusCode.OK);
             });
         };
     }
@@ -305,9 +306,8 @@ public class MessageServiceController {
                                     .map(recipientIds -> recipientIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
                                             : RequestHandlerResultFactory.get(recipientIds, clientRequest.turmsRequest()));
-                        } else {
-                            return Mono.just(RequestHandlerResultFactory.OK);
                         }
+                        return Mono.just(RequestHandlerResultFactory.OK);
                     }));
         };
     }
