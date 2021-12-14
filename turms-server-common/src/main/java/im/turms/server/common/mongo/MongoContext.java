@@ -20,6 +20,9 @@ package im.turms.server.common.mongo;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.model.geojson.codecs.GeoJsonCodecProvider;
+import com.mongodb.connection.ServerDescription;
+import com.mongodb.event.ClusterDescriptionChangedEvent;
+import com.mongodb.event.ClusterListener;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
@@ -48,6 +51,7 @@ import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author James Chen
@@ -66,7 +70,7 @@ public class MongoContext {
     private final Map<Class<?>, MongoEntity<?>> entityMap = new IdentityHashMap<>(64);
     private final Map<Class<?>, MongoCollection<?>> collectionMap = new IdentityHashMap<>(64);
 
-    public MongoContext(String connectionString) {
+    public MongoContext(String connectionString, Consumer<List<ServerDescription>> onServerDescriptionChange) {
         if (connectionString == null) {
             throw new IllegalArgumentException("The connection string cannot not be null");
         }
@@ -87,6 +91,12 @@ public class MongoContext {
         ConnectionString connectionSettings = new ConnectionString(connectionString);
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connectionSettings)
+                .applyToClusterSettings(builder -> builder.addClusterListener(new ClusterListener() {
+                    @Override
+                    public void clusterDescriptionChanged(ClusterDescriptionChangedEvent event) {
+                        onServerDescriptionChange.accept(event.getNewDescription().getServerDescriptions());
+                    }
+                }))
                 .codecRegistry(codecRegistry)
                 .build();
         client = MongoClients.create(settings);

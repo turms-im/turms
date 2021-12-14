@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package unit.im.turms.gateway.dao.config;
+package integration.im.turms.gateway.dao.config;
 
 import im.turms.gateway.dao.config.MongoConfig;
 import im.turms.server.common.mongo.TurmsMongoClient;
@@ -24,6 +24,7 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.gateway.MongoProperties;
 import im.turms.server.common.property.env.service.env.database.TurmsMongoProperties;
+import im.turms.server.common.testing.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +34,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author James Chen
  */
-class MongoConfigTests {
+class MongoConfigIT extends BaseIntegrationTest {
 
     @Test
     void userMongoClient_shouldReturnNotNullInstance() {
@@ -41,7 +42,7 @@ class MongoConfigTests {
         TurmsProperties properties = new TurmsProperties().toBuilder()
                 .gateway(new GatewayProperties().toBuilder()
                         .mongo(new MongoProperties().toBuilder()
-                                .user(new TurmsMongoProperties())
+                                .user(new TurmsMongoProperties(getMongoUri()))
                                 .build())
                         .build())
                 .build();

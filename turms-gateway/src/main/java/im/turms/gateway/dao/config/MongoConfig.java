@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PreDestroy;
+import java.time.Duration;
 
 /**
  * @author James Chen
@@ -48,7 +49,8 @@ public class MongoConfig {
     @ConditionalOnProperty("turms.gateway.session.enable-authentication")
     public TurmsMongoClient userMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
         TurmsMongoProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getMongo().getUser();
-        userMongoClient = TurmsMongoClient.of(properties);
+        userMongoClient = TurmsMongoClient.of(properties)
+                .block(Duration.ofMinutes(1));
         userMongoClient.registerEntitiesByClasses(User.class);
         return userMongoClient;
     }

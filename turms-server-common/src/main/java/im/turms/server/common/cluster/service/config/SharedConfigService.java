@@ -48,7 +48,8 @@ public class SharedConfigService implements ClusterService {
     private final TurmsMongoClient mongoClient;
 
     public SharedConfigService(TurmsMongoProperties properties) {
-        mongoClient = TurmsMongoClient.of(properties);
+        mongoClient = TurmsMongoClient.of(properties)
+                .block(Duration.ofMinutes(1));
         List<Class<?>> classes = List.of(SharedClusterProperties.class, Leader.class, Member.class);
         mongoClient.registerEntitiesByClasses(classes);
         mongoClient.ensureIndexesAndShard(classes).block(Duration.ofMinutes(1));

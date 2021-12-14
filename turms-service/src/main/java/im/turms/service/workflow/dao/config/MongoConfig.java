@@ -53,6 +53,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PreDestroy;
+import java.time.Duration;
 import java.util.Map;
 
 /**
@@ -139,7 +140,8 @@ public class MongoConfig {
     }
 
     private synchronized TurmsMongoClient getMongoClient(TurmsMongoProperties properties) {
-        return CLIENT_MAP.computeIfAbsent(properties.getUri(), key -> TurmsMongoClient.of(properties));
+        return CLIENT_MAP.computeIfAbsent(properties.getUri(), key -> TurmsMongoClient.of(properties)
+                .block(Duration.ofMinutes(1)));
     }
 
 }

@@ -17,7 +17,12 @@
 
 package im.turms.server.common.mongo;
 
+import com.mongodb.connection.ServerConnectionState;
+import com.mongodb.connection.ServerDescription;
+import com.mongodb.internal.operation.ServerVersionHelper;
 import com.mongodb.reactivestreams.client.MongoCollection;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.entity.MongoEntity;
 import im.turms.server.common.mongo.operation.MongoCollectionOptions;
 import im.turms.server.common.mongo.operation.MongoOperationsSupport;
@@ -26,6 +31,8 @@ import im.turms.server.common.property.env.service.env.database.TurmsMongoProper
 import im.turms.server.common.util.CollectorUtil;
 import lombok.experimental.Delegate;
 import org.springframework.data.util.Pair;
+import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,6 +43,8 @@ import java.util.List;
  */
 public final class TurmsMongoClient implements MongoOperationsSupport {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TurmsMongoClient.class);
+
     private final MongoContext context;
     @Delegate
     private final TurmsMongoOperations operations;
@@ -44,12 +53,29 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
         return context.getEntities();
     }
 
-    public static TurmsMongoClient of(TurmsMongoProperties properties) {
-        return new TurmsMongoClient(properties);
+    public static Mono<TurmsMongoClient> of(TurmsMongoProperties properties) {
+        Sinks.One<Void> connect = Sinks.one();
+        TurmsMongoClient client = new TurmsMongoClient(properties, connect);
+        return connect.asMono().thenReturn(client);
     }
 
-    private TurmsMongoClient(TurmsMongoProperties properties) {
-        context = new MongoContext(properties.getUri());
+    private TurmsMongoClient(TurmsMongoProperties properties, Sinks.One<Void> connect) {
+        context = new MongoContext(properties.getUri(), descriptions -> {
+            for (ServerDescription description : descriptions) {
+                if (description.getState() == ServerConnectionState.CONNECTING) {
+                    return;
+                }
+            }
+            try {
+                verifyServerVersion(descriptions);
+                connect.tryEmitValue(null);
+            } catch (Exception e) {
+                Sinks.EmitResult result = connect.tryEmitError(e);
+                if (result.isFailure()) {
+                    LOGGER.fatal("Connected to a MongoDB server with a version less than 4.0, which cannot work well with turms servers");
+                }
+            }
+        });
         operations = new TurmsMongoOperations(context);
     }
 
@@ -79,6 +105,16 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
         return pairs.stream()
                 .map(Pair::getFirst)
                 .collect(CollectorUtil.toList(pairs.size()));
+    }
+
+    private void verifyServerVersion(List<ServerDescription> descriptions) {
+        for (ServerDescription description : descriptions) {
+            if (description.getMaxWireVersion() < ServerVersionHelper.FOUR_DOT_ZERO_WIRE_VERSION) {
+                throw new IllegalStateException("The version of MongoDB server should be at least 4.0. " +
+                        "Note that Turms cannot work with Amazon DocumentDB. " +
+                        "The description of the unsupported server: " + description.getShortDescription());
+            }
+        }
     }
 
 }

@@ -46,6 +46,7 @@ import org.bson.Document;
 import org.junit.jupiter.api.Test;
 import reactor.test.StepVerifier;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -87,7 +88,8 @@ class MongoDataGeneratorIT extends SpringAwareIntegrationTest {
 
     static {
         TurmsMongoProperties mongoProperties = new TurmsMongoProperties(getMongoUri());
-        MONGO_CLIENT = TurmsMongoClient.of(mongoProperties);
+        MONGO_CLIENT = TurmsMongoClient.of(mongoProperties)
+                .block(Duration.ofMinutes(1));
         MONGO_CLIENT.registerEntitiesByClasses(MODEL_CLASSES);
     }
 
