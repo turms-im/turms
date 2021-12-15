@@ -19,7 +19,6 @@ package im.turms.gateway.access.common;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.gateway.access.common.controller.UserRequestDispatcher;
 import im.turms.gateway.access.common.function.ConnectionHandler;
 import im.turms.gateway.access.common.model.UserSessionWrapper;
 import im.turms.gateway.logging.ApiLoggingContext;
@@ -55,16 +54,16 @@ public abstract class UserSessionDispatcher {
 
     private final ApiLoggingContext apiLoggingContext;
     protected final ServiceMediator serviceMediator;
-    protected final UserRequestDispatcher userRequestDispatcher;
+    protected final ClientRequestDispatcher clientRequestDispatcher;
     protected final int closeIdleConnectionAfterSeconds;
 
     protected UserSessionDispatcher(ApiLoggingContext apiLoggingContext,
                                     ServiceMediator serviceMediator,
-                                    UserRequestDispatcher userRequestDispatcher,
+                                    ClientRequestDispatcher clientRequestDispatcher,
                                     int closeIdleConnectionAfterSeconds) {
         this.apiLoggingContext = apiLoggingContext;
         this.serviceMediator = serviceMediator;
-        this.userRequestDispatcher = userRequestDispatcher;
+        this.clientRequestDispatcher = clientRequestDispatcher;
         this.closeIdleConnectionAfterSeconds = closeIdleConnectionAfterSeconds;
     }
 
@@ -106,7 +105,7 @@ public abstract class UserSessionDispatcher {
 
                     // Note that handleRequest() should never return MonoError
                     TracingContext ctx = new TracingContext();
-                    userRequestDispatcher.handleRequest(sessionWrapper, requestData)
+                    clientRequestDispatcher.handleRequest(sessionWrapper, requestData)
                             .onErrorResume(throwable -> {
                                 ctx.updateThreadContext();
                                 handleNotificationError(throwable, sessionWrapper.getUserSession());

@@ -15,11 +15,12 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.access.common.controller;
+package im.turms.gateway.access.common;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.gateway.access.common.controller.SessionController;
 import im.turms.gateway.access.common.model.UserSessionWrapper;
 import im.turms.gateway.access.tcp.dto.RequestHandlerResult;
 import im.turms.gateway.access.tcp.util.TurmsNotificationUtil;
@@ -35,11 +36,11 @@ import im.turms.server.common.exception.ThrowableInfo;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.factory.NotificationFactory;
 import im.turms.server.common.healthcheck.ServerStatusManager;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.service.blocklist.BlocklistService;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
-import im.turms.server.common.logging.core.logger.Logger;
-import im.turms.server.common.service.blocklist.BlocklistService;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.EmptyByteBuf;
@@ -58,9 +59,9 @@ import static im.turms.server.common.constant.CommonMetricsConstant.CLIENT_REQUE
  * @author James Chen
  */
 @Component
-public class UserRequestDispatcher {
+public class ClientRequestDispatcher {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserRequestDispatcher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientRequestDispatcher.class);
 
     private static final ByteBuf HEARTBEAT_RESPONSE_SUCCESS = new EmptyByteBuf(UnpooledByteBufAllocator.DEFAULT);
     private static final ByteBuf HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT;
@@ -82,17 +83,21 @@ public class UserRequestDispatcher {
 
     private final BlocklistService blocklistService;
 
+    private final IpRequestThrottler ipRequestThrottler;
+
     private final SessionController sessionController;
     private final ServiceMediator serviceMediator;
     private final ServerStatusManager serverStatusManager;
 
-    public UserRequestDispatcher(ApiLoggingContext apiLoggingContext,
-                                 BlocklistService blocklistService,
-                                 SessionController sessionController,
-                                 ServiceMediator serviceMediator,
-                                 ServerStatusManager serverStatusManager) {
+    public ClientRequestDispatcher(ApiLoggingContext apiLoggingContext,
+                                   BlocklistService blocklistService,
+                                   IpRequestThrottler ipRequestThrottler,
+                                   SessionController sessionController,
+                                   ServiceMediator serviceMediator,
+                                   ServerStatusManager serverStatusManager) {
         this.apiLoggingContext = apiLoggingContext;
         this.blocklistService = blocklistService;
+        this.ipRequestThrottler = ipRequestThrottler;
         this.sessionController = sessionController;
         this.serviceMediator = serviceMediator;
         this.serverStatusManager = serverStatusManager;
@@ -223,6 +228,19 @@ public class UserRequestDispatcher {
             // Handle the request to get a response
             TurmsRequest.KindCase requestType = request.type();
             tracingContext.updateThreadContext();
+
+            // Rate limiting
+            long now = System.currentTimeMillis();
+            if (!ipRequestThrottler.tryAcquireToken(sessionWrapper.getIp(), now)) {
+                blocklistService.tryBlockIpForFrequentRequest(sessionWrapper.getRawIp());
+                UserSession userSession = sessionWrapper.getUserSession();
+                if (userSession != null) {
+                    blocklistService.tryBlockUserIdForFrequentRequest(userSession.getUserId());
+                }
+                TurmsNotification notification = NotificationFactory.create(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT, requestId);
+                return Mono.just(notification);
+            }
+
             return switch (requestType) {
                 case CREATE_SESSION_REQUEST -> sessionController
                         .handleCreateSessionRequest(sessionWrapper, request.createSessionRequest())

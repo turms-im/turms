@@ -27,11 +27,9 @@ import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
-import im.turms.server.common.service.blocklist.BlocklistService;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -43,14 +41,11 @@ public class InboundRequestService {
     private static final ServiceResponse REQUEST_RESPONSE_NO_CONTENT = new ServiceResponse(null, TurmsStatusCode.NO_CONTENT, null);
 
     private final Node node;
-    private final BlocklistService blocklistService;
     private final SessionService sessionService;
 
     public InboundRequestService(Node node,
-                                 BlocklistService blocklistService,
                                  SessionService sessionService) {
         this.node = node;
-        this.blocklistService = blocklistService;
         this.sessionService = sessionService;
     }
 
@@ -86,16 +81,6 @@ public class InboundRequestService {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION));
         }
 
-        // Rate limiting
-        Long requestId = serviceRequest.getRequestId();
-        long now = System.currentTimeMillis();
-        if (!session.tryAcquireToken(now)) {
-            blocklistService.tryBlockIpForFrequentRequest(serviceRequest.getIp());
-            blocklistService.tryBlockUserIdForFrequentRequest(userId);
-            TurmsNotification notification = getNotificationFromStatusCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT, requestId);
-            return Mono.just(notification);
-        }
-
         // Update heartbeat
         sessionService.updateHeartbeatTimestamp(session);
 
@@ -103,24 +88,12 @@ public class InboundRequestService {
         serviceRequest.getTurmsRequestBuffer().retain();
         return sendServiceRequest(serviceRequest)
                 .defaultIfEmpty(REQUEST_RESPONSE_NO_CONTENT)
-                .map(response -> getNotificationFromResponse(response, requestId));
+                .map(response -> getNotificationFromResponse(response, serviceRequest.getRequestId()));
     }
 
     private Mono<ServiceResponse> sendServiceRequest(ServiceRequest serviceRequest) {
         HandleServiceRequest request = new HandleServiceRequest(serviceRequest);
         return node.getRpcService().requestResponse(request);
-    }
-
-    private TurmsNotification getNotificationFromStatusCode(@NotNull TurmsStatusCode statusCode, @Nullable Long requestId) {
-        int codeBusinessCode = statusCode.getBusinessCode();
-        TurmsNotification.Builder builder = TurmsNotification.newBuilder()
-                .setCode(codeBusinessCode);
-        if (requestId != null) {
-            builder.setRequestId(requestId);
-        }
-        return builder
-                .setCode(codeBusinessCode)
-                .build();
     }
 
     private TurmsNotification getNotificationFromResponse(@NotNull ServiceResponse response, long requestId) {

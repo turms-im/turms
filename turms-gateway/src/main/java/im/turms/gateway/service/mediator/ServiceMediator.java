@@ -82,7 +82,7 @@ public class ServiceMediator {
 
     public Mono<UserSession> processLoginRequest(
             int version,
-            @NotNull byte[] ip,
+            @NotNull String ip,
             @NotNull Long userId,
             @Nullable String password,
             @NotNull DeviceType deviceType,

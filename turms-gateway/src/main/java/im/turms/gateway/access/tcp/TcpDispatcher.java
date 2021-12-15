@@ -18,7 +18,7 @@
 package im.turms.gateway.access.tcp;
 
 import im.turms.gateway.access.common.UserSessionDispatcher;
-import im.turms.gateway.access.common.controller.UserRequestDispatcher;
+import im.turms.gateway.access.common.ClientRequestDispatcher;
 import im.turms.gateway.access.tcp.factory.TcpServerFactory;
 import im.turms.gateway.logging.ApiLoggingContext;
 import im.turms.gateway.service.mediator.ServiceMediator;
@@ -53,8 +53,8 @@ public class TcpDispatcher extends UserSessionDispatcher {
                          BlocklistService blocklistService,
                          ServiceMediator serviceMediator,
                          ServerStatusManager serverStatusManager,
-                         UserRequestDispatcher userRequestDispatcher) {
-        super(apiLoggingContext, serviceMediator, userRequestDispatcher,
+                         ClientRequestDispatcher clientRequestDispatcher) {
+        super(apiLoggingContext, serviceMediator, clientRequestDispatcher,
                 propertiesManager.getLocalProperties().getGateway().getTcp().getCloseIdleConnectionAfterSeconds());
         TcpProperties tcpProperties = propertiesManager.getLocalProperties().getGateway().getTcp();
         enabled = tcpProperties.isEnabled();

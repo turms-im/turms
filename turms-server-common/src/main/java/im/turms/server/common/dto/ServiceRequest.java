@@ -40,12 +40,12 @@ public final class ServiceRequest {
     private final DeviceType deviceType;
     // request information
     /**
-     * Null in turms but not null in turms-gateway
+     * Null in turms-service but not null in turms-gateway
      */
     @Nullable
     private final Long requestId;
     /**
-     * Null in turms but not null in turms-gateway
+     * Null in turms-service but not null in turms-gateway
      */
     @Nullable
     private final TurmsRequest.KindCase type;
@@ -53,9 +53,9 @@ public final class ServiceRequest {
     /**
      * @implNote Note that turms-gateway doesn't parse and validate the request because
      * 1. For better performance (zero copy)
-     * 2. Decouple the business logic so that turms servers can change the structure of DTOs
+     * 2. Decouple the business logic so that turms-service servers can change the structure of DTOs
      * without the need to upgrade and restart turms-gateway servers
-     * turms servers should validate it by themselves
+     * turms-service servers should validate it by themselves
      */
     private final ByteBuf turmsRequestBuffer;
 

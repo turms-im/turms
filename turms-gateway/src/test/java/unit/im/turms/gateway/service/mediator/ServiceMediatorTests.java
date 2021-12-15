@@ -34,7 +34,6 @@ import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.gateway.SessionProperties;
-import im.turms.server.common.throttle.TokenBucketContext;
 import im.turms.server.common.util.ExceptionUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -59,7 +58,7 @@ import static org.mockito.Mockito.when;
 class ServiceMediatorTests {
 
     private final int version = 1;
-    private final byte[] ip = new byte[] {127, 0, 0, 1};
+    private final String ip = "127.0.0.1";
     private final Long userId = 1L;
     private final DeviceType deviceType = DeviceType.ANDROID;
 
@@ -162,8 +161,8 @@ class ServiceMediatorTests {
     @Test
     void processHeartbeatRequest_shouldSucceed() {
         ServiceMediator mediator = newServiceMediator();
-        assertThatNoException().isThrownBy(() ->
-                mediator.processHeartbeatRequest(new UserSession(version, userId, deviceType, null, new TokenBucketContext())));
+        assertThatNoException()
+                .isThrownBy(() -> mediator.processHeartbeatRequest(new UserSession(version, userId, deviceType, null)));
     }
 
     @Test
@@ -199,13 +198,18 @@ class ServiceMediatorTests {
                 .thenReturn(properties);
 
         TurmsPluginManager pluginManager = mock(TurmsPluginManager.class);
-        when(pluginManager.isEnabled()).thenReturn(true);
-        when(pluginManager.getUserAuthenticatorList()).thenReturn(Collections.emptyList());
-        when(pluginManager.getUserOnlineStatusChangeHandlerList()).thenReturn(Collections.emptyList());
+        when(pluginManager.isEnabled())
+                .thenReturn(true);
+        when(pluginManager.getUserAuthenticatorList())
+                .thenReturn(Collections.emptyList());
+        when(pluginManager.getUserOnlineStatusChangeHandlerList())
+                .thenReturn(Collections.emptyList());
 
         UserService userService = mock(UserService.class);
-        when(userService.isActiveAndNotDeleted(any())).thenReturn(Mono.just(isActiveAndNotDeleted));
-        when(userService.authenticate(any(), any())).thenReturn(Mono.just(isAuthenticated));
+        when(userService.isActiveAndNotDeleted(any()))
+                .thenReturn(Mono.just(isActiveAndNotDeleted));
+        when(userService.authenticate(any(), any()))
+                .thenReturn(Mono.just(isAuthenticated));
 
         SessionService sessionService = mock(SessionService.class);
         UserSession userSession = mock(UserSession.class);

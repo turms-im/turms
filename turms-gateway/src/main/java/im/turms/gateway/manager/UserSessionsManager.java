@@ -23,9 +23,8 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.lang.ConcurrentEnumMap;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
-import im.turms.server.common.throttle.TokenBucketContext;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.HashedWheelTimer;
@@ -55,19 +54,16 @@ public final class UserSessionsManager {
 
     private final Long userId;
     private UserStatus userStatus;
-    private final TokenBucketContext tokenBucketContext;
     /**
      * The online session map of a user
      */
     private final Map<DeviceType, UserSession> sessionMap = new ConcurrentEnumMap<>(SESSION_MAP_TEMPLATE);
 
-    public UserSessionsManager(Long userId, UserStatus userStatus, TokenBucketContext tokenBucketContext) {
+    public UserSessionsManager(Long userId, UserStatus userStatus) {
         Assert.notNull(userId, "userId must not be null");
         Assert.notNull(userStatus, "userStatus must not be null");
-        Assert.notNull(tokenBucketContext, "tokenBucketContext must not be null");
         this.userId = userId;
         this.userStatus = userStatus;
-        this.tokenBucketContext = tokenBucketContext;
     }
 
     /**
@@ -80,8 +76,7 @@ public final class UserSessionsManager {
                 version,
                 userId,
                 loggingInDeviceType,
-                position,
-                tokenBucketContext);
+                position);
         boolean added = sessionMap.putIfAbsent(loggingInDeviceType, userSession) == null;
         return added ? userSession : null;
     }
@@ -103,7 +98,7 @@ public final class UserSessionsManager {
         if (userSession == null) {
             return false;
         }
-        im.turms.common.model.bo.user.UserSession session = im.turms.common.model.bo.user.UserSession.newBuilder()
+        var session = im.turms.common.model.bo.user.UserSession.newBuilder()
                 .setSessionId(Integer.toString(userSession.getId()))
                 .setServerId(serverId)
                 .build();

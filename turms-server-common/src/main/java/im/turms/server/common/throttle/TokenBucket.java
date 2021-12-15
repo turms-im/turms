@@ -33,6 +33,7 @@ public class TokenBucket {
 
     @Getter
     private volatile int tokens;
+    @Getter
     private volatile long lastRefillTime;
 
     /**
@@ -90,6 +91,10 @@ public class TokenBucket {
         } else {
             refill(time);
         }
+    }
+
+    public boolean isTokensMoreThanOrEqualsToInitialTokens() {
+        return tokens >= context.initialTokens;
     }
 
 }

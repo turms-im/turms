@@ -18,7 +18,7 @@
 package im.turms.gateway.access.websocket;
 
 import im.turms.gateway.access.common.UserSessionDispatcher;
-import im.turms.gateway.access.common.controller.UserRequestDispatcher;
+import im.turms.gateway.access.common.ClientRequestDispatcher;
 import im.turms.gateway.access.websocket.factory.WebSocketFactory;
 import im.turms.gateway.logging.ApiLoggingContext;
 import im.turms.gateway.service.mediator.ServiceMediator;
@@ -51,8 +51,8 @@ public class WebSocketDispatcher extends UserSessionDispatcher {
             TurmsPropertiesManager propertiesManager,
             ServerStatusManager serverStatusManager,
             ServiceMediator serviceMediator,
-            UserRequestDispatcher userRequestDispatcher) {
-        super(apiLoggingContext, serviceMediator, userRequestDispatcher,
+            ClientRequestDispatcher clientRequestDispatcher) {
+        super(apiLoggingContext, serviceMediator, clientRequestDispatcher,
                 node.getSharedProperties().getGateway().getWebsocket().getCloseIdleConnectionAfterSeconds());
         WebSocketProperties webSocketProperties = propertiesManager.getLocalProperties().getGateway().getWebsocket();
         if (webSocketProperties.isEnabled()) {

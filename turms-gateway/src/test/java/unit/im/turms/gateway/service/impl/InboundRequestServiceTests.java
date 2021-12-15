@@ -15,7 +15,6 @@ import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
-import im.turms.server.common.service.blocklist.BlocklistService;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,6 @@ import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -45,14 +43,14 @@ class InboundRequestServiceTests {
     @Test
     void constructor_shouldReturnInstance() {
         Node node = mockNode(false);
-        InboundRequestService inboundRequestService = new InboundRequestService(node, null, null);
+        InboundRequestService inboundRequestService = new InboundRequestService(node, null);
 
         assertThat(inboundRequestService).isNotNull();
     }
 
     @Test
     void processServiceRequest_shouldThrow_ifUserIsOffline() {
-        InboundRequestService inboundRequestService = newInboundRequestService(false, false, true);
+        InboundRequestService inboundRequestService = newInboundRequestService(false, true);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
@@ -62,19 +60,8 @@ class InboundRequestServiceTests {
     }
 
     @Test
-    void processServiceRequest_shouldReturnError_ifRequestTooFrequent() {
-        InboundRequestService inboundRequestService = newInboundRequestService(true, true, true);
-        Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
-
-        StepVerifier.create(result)
-                .expectNextMatches(
-                        notification -> notification.getCode() == TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT.getBusinessCode())
-                .verifyComplete();
-    }
-
-    @Test
     void processServiceRequest_shouldReturnError_ifFailedToHandleRequest() {
-        InboundRequestService inboundRequestService = newInboundRequestService(true, false, false);
+        InboundRequestService inboundRequestService = newInboundRequestService(true, false);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
@@ -83,7 +70,7 @@ class InboundRequestServiceTests {
 
     @Test
     void processServiceRequest_shouldReturnOk_ifHandleRequestSuccessfully() {
-        InboundRequestService inboundRequestService = newInboundRequestService(true, false, true);
+        InboundRequestService inboundRequestService = newInboundRequestService(true, true);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
@@ -93,30 +80,23 @@ class InboundRequestServiceTests {
 
     private InboundRequestService newInboundRequestService(
             boolean sessionExists,
-            boolean isFrequent,
             boolean handleRequestSuccessfully) {
         // Node
         Node node = mockNode(handleRequestSuccessfully);
-
         when(node.getSharedProperties())
                 .thenReturn(new TurmsProperties());
-
-        // BlocklistService
-        BlocklistService blocklistService = mock(BlocklistService.class);
 
         // SessionService
         UserSession session = null;
         if (sessionExists) {
             session = mock(UserSession.class);
-            when(session.tryAcquireToken(anyLong()))
-                    .thenReturn(!isFrequent);
         }
 
         SessionService sessionService = mock(SessionService.class);
         when(sessionService.getLocalUserSession(any(), any()))
                 .thenReturn(session);
 
-        return new InboundRequestService(node, blocklistService, sessionService);
+        return new InboundRequestService(node, sessionService);
     }
 
     private ServiceRequest newServiceRequest() {

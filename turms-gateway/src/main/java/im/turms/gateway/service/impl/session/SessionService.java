@@ -35,6 +35,8 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
@@ -43,7 +45,6 @@ import im.turms.server.common.rpc.request.SetUserOfflineRequest;
 import im.turms.server.common.rpc.service.ISessionService;
 import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.server.common.service.session.UserStatusService;
-import im.turms.server.common.throttle.TokenBucketContext;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.DeviceTypeUtil;
 import im.turms.server.common.util.MapUtil;
@@ -53,7 +54,6 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
@@ -63,10 +63,12 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 import static im.turms.gateway.constant.MetricsConstant.LOGGED_IN_USERS_COUNTER_NAME;
 import static im.turms.gateway.constant.MetricsConstant.ONLINE_USERS_GAUGE_NAME;
@@ -76,6 +78,8 @@ import static im.turms.gateway.constant.MetricsConstant.ONLINE_USERS_GAUGE_NAME;
  */
 @Service
 public class SessionService implements ISessionService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SessionService.class);
 
     private final Node node;
     private final TurmsPropertiesManager turmsPropertiesManager;
@@ -89,14 +93,10 @@ public class SessionService implements ISessionService {
     private final boolean pluginEnabled;
     private int closeIdleSessionAfterSeconds;
 
-    /**
-     * Share the context with all instances of token buckets
-     * so that we can apply new properties easily
-     */
-    private final TokenBucketContext requestTokenBucketContext;
-
     private final Map<Long, UserSessionsManager> sessionsManagerByUserId;
-    private final Map<byte[], UserSession> sessionByIp;
+    private final Map<String, UserSession> sessionByIp;
+
+    private final List<Consumer<UserSession>> onSessionClosedListeners = new LinkedList<>();
 
     private final Counter loggedInUsersCounter;
 
@@ -119,11 +119,8 @@ public class SessionService implements ISessionService {
         sessionByIp = new ConcurrentHashMap<>(4096);
         pluginEnabled = turmsProperties.getPlugin().isEnabled();
 
-        GatewayProperties gatewayProperties = turmsProperties.getGateway();
-        SessionProperties sessionProperties = gatewayProperties.getSession();
+        SessionProperties sessionProperties = turmsProperties.getGateway().getSession();
         closeIdleSessionAfterSeconds = sessionProperties.getCloseIdleSessionAfterSeconds();
-
-        requestTokenBucketContext = new TokenBucketContext(gatewayProperties.getClientApi().getRateLimiting());
 
         heartbeatManager = new HeartbeatManager(this,
                 userStatusService,
@@ -141,8 +138,6 @@ public class SessionService implements ISessionService {
             heartbeatManager.setCloseIdleSessionAfterSeconds(newSessionProperties.getCloseIdleSessionAfterSeconds());
             heartbeatManager.setMinHeartbeatIntervalMillis(newSessionProperties.getMinHeartbeatIntervalSeconds() * 1000);
             heartbeatManager.setSwitchProtocolAfterMillis(newSessionProperties.getSwitchProtocolAfterSeconds() * 1000);
-
-            requestTokenBucketContext.updateRequestTokenBucket(newGatewayProperties.getClientApi().getRateLimiting());
         });
 
         MeterRegistry registry = metricsService.getRegistry();
@@ -246,6 +241,11 @@ public class SessionService implements ISessionService {
         return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, deviceTypes, closeReason, disconnectionDate, manager);
     }
 
+    /**
+     * @implNote The method will be called definitely when a session is closed
+     * no matter it's closed by the client or the server.
+     * And the method will clean up sessions in both local and Redis
+     */
     private Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes0(
             @NotNull Long userId,
             @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
@@ -262,26 +262,28 @@ public class SessionService implements ISessionService {
         // Don't close the session (connection) first and then remove the session status in Redis
         // because it will make trouble if a client logins again while the session status in Redis hasn't been removed
         return userStatusService.removeStatusByUserIdAndDeviceTypes(userId, deviceTypes)
-                .flatMap(ignored -> {
-                    // Update the session information in Redis
-                    List<Mono<UserSession>> disconnectMonos = new ArrayList<>(deviceTypes.size());
+                .doOnSuccess(ignored -> {
                     for (DeviceType deviceType : deviceTypes) {
                         UserSession session = manager.getSession(deviceType);
-                        if (session != null && sessionLocationService.isLocationEnabled()) {
-                            disconnectMonos.add(sessionLocationService.removeUserLocation(userId, deviceType)
-                                    .thenReturn(session));
+                        if (session == null) {
+                            continue;
+                        }
+                        manager.setDeviceOffline(session.getDeviceType(), closeReason);
+                        String ip = session.getIp();
+                        if (ip != null) {
+                            sessionByIp.remove(ip);
+                        }
+                        triggerOnSessionClosedListeners(session);
+                        if (sessionLocationService.isLocationEnabled()) {
+                            sessionLocationService.removeUserLocation(session.getUserId(), session.getDeviceType())
+                                    .onErrorResume(t -> {
+                                        LOGGER.error("Failed to remove the user [{}:{}] location", session.getUserId(), session.getDeviceType(), t);
+                                        return Mono.empty();
+                                    })
+                                    .subscribe();
                         }
                     }
-                    return Flux.merge(disconnectMonos)
-                            .doOnNext(session -> {
-                                manager.setDeviceOffline(session.getDeviceType(), closeReason);
-                                byte[] ip = session.getIp();
-                                if (ip != null) {
-                                    sessionByIp.remove(ip);
-                                }
-                                removeSessionsManagerIfEmpty(closeReason, manager, userId);
-                            })
-                            .then(Mono.just(true));
+                    removeSessionsManagerIfEmpty(closeReason, manager, userId);
                 });
     }
 
@@ -334,7 +336,7 @@ public class SessionService implements ISessionService {
      */
     public Mono<UserSession> tryRegisterOnlineUser(
             int version,
-            @NotNull byte[] ip,
+            @NotNull String ip,
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
@@ -461,7 +463,7 @@ public class SessionService implements ISessionService {
 
     private Mono<UserSession> addOnlineDeviceIfAbsent(
             int version,
-            @NotNull byte[] ip,
+            @NotNull String ip,
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
@@ -475,7 +477,7 @@ public class SessionService implements ISessionService {
                     UserStatus finalUserStatus = null == userStatus ? UserStatus.AVAILABLE : userStatus;
                     UserSessionsManager manager =
                             sessionsManagerByUserId.computeIfAbsent(userId, key ->
-                                    new UserSessionsManager(key, finalUserStatus, requestTokenBucketContext));
+                                    new UserSessionsManager(key, finalUserStatus));
                     UserSession session = manager.addSessionIfAbsent(version, deviceType, position);
                     // This should never happen
                     if (null == session) {
@@ -529,6 +531,22 @@ public class SessionService implements ISessionService {
             }
         }
         return sharedSessionsStatus;
+    }
+
+    // Listener
+
+    public void addOnSessionClosedListeners(Consumer<UserSession> onSessionClosed) {
+        onSessionClosedListeners.add(onSessionClosed);
+    }
+
+    private void triggerOnSessionClosedListeners(UserSession session) {
+        for (Consumer<UserSession> onSessionClosedListener : onSessionClosedListeners) {
+            try {
+                onSessionClosedListener.accept(session);
+            } catch (Exception e) {
+                LOGGER.error("Caught an error when triggering a onSessionClosed listener", e);
+            }
+        }
     }
 
 }

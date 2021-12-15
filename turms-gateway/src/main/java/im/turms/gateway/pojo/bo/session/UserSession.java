@@ -24,8 +24,6 @@ import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
-import im.turms.server.common.throttle.TokenBucket;
-import im.turms.server.common.throttle.TokenBucketContext;
 import im.turms.server.common.tracing.TracingContext;
 import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
@@ -75,11 +73,6 @@ public final class UserSession {
     private long lastHeartbeatUpdateTimestampMillis;
 
     /**
-     * Rate limiting
-     */
-    private final TokenBucket requestTokenBucket;
-
-    /**
      * Note that it's acceptable that the session is still open even if the connection is closed
      * because the client can send heartbeats over UDP to keep the session open
      *
@@ -96,8 +89,7 @@ public final class UserSession {
     public UserSession(int version,
                        Long userId,
                        DeviceType loggingInDeviceType,
-                       @Nullable Point loginLocation,
-                       TokenBucketContext tokenBucketContext) {
+                       @Nullable Point loginLocation) {
         Date now = new Date();
         this.version = version;
         this.userId = userId;
@@ -105,7 +97,6 @@ public final class UserSession {
         this.loginDate = now;
         this.loginLocation = loginLocation;
         this.lastHeartbeatRequestTimestampMillis = now.getTime();
-        requestTokenBucket = new TokenBucket(tokenBucketContext);
     }
 
     /**
@@ -136,11 +127,12 @@ public final class UserSession {
         return deviceType != DeviceType.BROWSER;
     }
 
-    public byte[] getIp() {
+    @Nullable
+    public String getIp() {
         if (connection == null) {
             return null;
         }
-        return connection.getAddress().getAddress().getAddress();
+        return connection.getAddress().getAddress().getHostAddress();
     }
 
     public void sendNotification(ByteBuf byteBuf) {
@@ -151,10 +143,6 @@ public final class UserSession {
     public void sendNotification(ByteBuf byteBuf, TracingContext tracingContext) {
         // Note that we do not check if the consumer is null
         notificationConsumer.accept(byteBuf, tracingContext);
-    }
-
-    public boolean tryAcquireToken(long time) {
-        return requestTokenBucket.tryAcquire(time);
     }
 
     public boolean acquireDeleteSessionRequestLoggingLock() {

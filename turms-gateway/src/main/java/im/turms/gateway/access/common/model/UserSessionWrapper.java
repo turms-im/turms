@@ -25,6 +25,7 @@ import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
 import lombok.Data;
 
+import javax.annotation.Nullable;
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -43,7 +44,13 @@ public class UserSessionWrapper {
     private final Timeout connectionTimeoutTask;
     private final Consumer<UserSession> onSessionEstablished;
     private NetConnection connection;
+    @Nullable
     private UserSession userSession;
+
+    @Nullable
+    private byte[] rawIpCache;
+    @Nullable
+    private String ipCache;
 
     public UserSessionWrapper(NetConnection connection,
                               InetSocketAddress address,
@@ -58,14 +65,20 @@ public class UserSessionWrapper {
     }
 
     public byte[] getRawIp() {
-        return address.getAddress().getAddress();
+        if (rawIpCache == null) {
+            rawIpCache = address.getAddress().getAddress();
+        }
+        return rawIpCache;
     }
 
     /**
      * @implNote Don't use getHostString() to avoid getting a hostname
      */
     public String getIp() {
-        return address.getAddress().getHostAddress();
+        if (ipCache == null) {
+            ipCache = address.getAddress().getHostAddress();
+        }
+        return ipCache;
     }
 
     public void setUserSession(UserSession userSession) {
