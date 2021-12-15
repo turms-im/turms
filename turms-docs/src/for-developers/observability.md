@@ -140,16 +140,38 @@ Turms与其他常规服务端一样，将可观测性的具体实现分为三类
 * Turms的所有日志、度量与链路追踪的数据格式设计，都是兼顾“简单快捷，方便快速查询”与“精准采样，方便日志服务分析”设计的，但Turms本身不提供任何日志分析功能
 * Turms的日志时间戳与日志切割都是根据UTC时间，而非系统默认时间
 
-### 定制实现原因
+### 自研实现
+
+#### 原因
 
 1. Turms默认且非常推荐对客户端API进行100%采样，需要Logging的实现高效
 2. 第三方Logging实现过于冗余，性能低下且内存占用高
 3. 避免第三方Logging的开发人员由于缺乏安全常识，写出类似[Remote code injection in Log4j](https://github.com/advisories/GHSA-jfh8-c2jp-5v3q)的Critical bug
-4. Turms的日志实现通过“几乎什么功能都没实现”，并且实现了的功能也照着几乎最高性能标准实现（之后我们会避免使用Java低效的`String`与`StringBuilder`，达到更高的性能），因此该实现的吞吐量能比log4j2 async logger高数倍，同时内存开销小数倍
-5. Turms打印日志的过程也非常精简，大概只实现了标准日志库的百分之几的功能，具体包括：
+4. Turms的日志实现通过“几乎什么功能都没实现”，并且实现了的功能也照着几乎最高性能标准实现（我们直接将Java的基础数据写入`DirectByteBuf`，并直接写入文件描述符，不存在字符串拷贝），因此该实现的吞吐量能比log4j2 async logger高数倍，同时内存开销小数倍
+
+#### 具体实现
+
+Turms日志实现非常精简，大概只实现了标准日志库的百分之几的核心功能，打印日志的主要步骤为：
+
+对于常规日志：
+
    * 调用`im.turms.server.common.logging.core.logger.AsyncLogger#doLog`函数
    * `doLog`函数内部通过`PooledByteBufAllocator.DEFAULT`分配一块堆外内存，并遍历一遍message，将非占位符直接写入该内存，跳过占位符并写入具体参数，最后将这块内存放到日志处理的MPSC队列中（基于jctools的`MpscUnboundedArrayQueue`）
    * 日志处理线程检测到有新的日志（即`ByteBuffer`对象）时，会将该堆外内存写入NIO包的`FileChannel`（可以是控制台、也可以是文件）中，该对象在Linux系统下，会最终调用`pwrite`直接将堆外内存写入文件描述符中
+
+对于各种API日志（如客户端API日志），我们采用了更为定制的实现，即：
+
+* 调用方直接将API信息（如客户端IP、请求大小等）写入`DirectByteBuf`中，并将这个Buffer传递给`AsyncLogger#doLog`函数
+* `doLog`函数将日志通用的模板信息（如时间戳、节点ID等）写入另一个`DirectByteBuf`，并与上述的`DirectByteBuf`，拼接成一个`CompositeByteBuf`
+* 日志处理线程检测到有新的日志（即`CompositeByteBuf`对象）时，会将该堆外内存写入NIO包的`FileChannel`（可以是控制台、也可以是文件）中，该对象在Linux系统下，会最终调用`pwrite`直接将堆外内存写入文件描述符中
+
+理所当然的，Turms写日志的性能能达到极致。
+
+补充
+
+* 虽然还有更高效的写法，即跨过Java实现，不使用NIO包的`FileChannel`，而是直接调用底层JNI实现，如在Linux操作系统下，直接通过Linux的`pwrite`将DirectByteBuffer写入文件描述符中。但考虑到代码的可维护性，且Java默认不开放这些底层函数，故不采纳该写法
+* 上述中提到的内存都是通过`PooledByteBufAllocator.DEFAULT`分配的，且没限制内存使用上限；同时“敢”用`MpscUnboundedArrayQueue`存储日志，而没限制最大容量。这是因为Turms服务端自己有一套内存管理机制，它能保证内存使用的上限，同时又让使用了的内存逐步释放（TODO：写完贴地址）
+* Turms不支持且未来也不会支持：添加控制台文本样式。因为给控制台文本加样式需要使用`ANSI escape codes`，而日志文件不需要存储这些字符，因此若要实现该功能，我们需要给控制台与日志文件各自维护一个ByteBuf，一条日志需要消耗双倍的内存，故不考虑该实现
 
 ### 不使用JSON格式的原因
 
