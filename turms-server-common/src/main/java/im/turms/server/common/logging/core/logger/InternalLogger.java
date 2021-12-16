@@ -29,6 +29,13 @@ public class InternalLogger extends WrappedLogger {
     private InternalLogger() {
     }
 
+    public static void printException(Throwable throwable) {
+        try {
+            throwable.printStackTrace();
+        } catch (Exception ignored) {
+        }
+    }
+
     public synchronized void init() {
         if (initialized) {
             return;

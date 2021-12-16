@@ -181,20 +181,43 @@ public final class AsyncLogger implements Logger {
     }
 
     private void doLog(LogLevel level, CharSequence message, @Nullable Object[] args, @Nullable Throwable throwable) {
-        ByteBuf buffer = layout.format(shouldParse, nameForLog, level, message, args, throwable);
-        boolean offer = queue.offer(new LogRecord(this, level, System.currentTimeMillis(), buffer));
-        // Should never happen because the queue is unlimited
-        if (!offer) {
-            buffer.release();
+        ByteBuf buffer = null;
+        try {
+            buffer = layout.format(shouldParse, nameForLog, level, message, args, throwable);
+            boolean offer = queue.offer(new LogRecord(this, level, System.currentTimeMillis(), buffer));
+            // Should never happen because the queue is unlimited
+            if (!offer) {
+                buffer.release();
+            }
+        } catch (Exception e) {
+            if (buffer != null && buffer.refCnt() > 0) {
+                try {
+                    buffer.release();
+                } catch (Exception ignored) {
+                }
+            }
+            InternalLogger.printException(e);
         }
     }
 
     private void doLog(LogLevel level, ByteBuf message) {
-        ByteBuf buffer = layout.format(nameForLog, level, message);
-        boolean offer = queue.offer(new LogRecord(this, level, System.currentTimeMillis(), buffer));
-        // Should never happen because the queue is unlimited
-        if (!offer) {
-            buffer.release();
+        ByteBuf buffer = null;
+        try {
+            buffer = layout.format(nameForLog, level, message);
+            boolean offer = queue.offer(new LogRecord(this, level, System.currentTimeMillis(), buffer));
+            // Should never happen because the queue is unlimited
+            if (!offer) {
+                buffer.release();
+            }
+        } catch (Exception e) {
+            if (buffer != null && buffer.refCnt() > 0) {
+                try {
+                    buffer.release();
+                } catch (Exception ignored) {
+                }
+            }
+            InternalLogger.printException(e);
         }
     }
+
 }

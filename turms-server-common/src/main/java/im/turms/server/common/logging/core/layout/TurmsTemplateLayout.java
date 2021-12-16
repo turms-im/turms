@@ -115,7 +115,12 @@ public class TurmsTemplateLayout extends TemplateLayout {
     /**
      * @implNote Note that we do NOT escape or remove non-printable characters
      */
-    public ByteBuf format(boolean shouldParse, @Nullable byte[] className, LogLevel level, CharSequence msg, Object[] args, Throwable throwable) {
+    public ByteBuf format(boolean shouldParse,
+                          @Nullable byte[] className,
+                          LogLevel level,
+                          CharSequence msg,
+                          Object[] args,
+                          Throwable throwable) {
         int estimatedThrowableLength = throwable == null
                 ? 0
                 : throwable.getCause() == null ? 64 : 256;
@@ -124,6 +129,24 @@ public class TurmsTemplateLayout extends TemplateLayout {
             estimatedLength += args.length * 8;
         }
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(estimatedLength);
+        try {
+            return format0(buffer, shouldParse, className, level, msg, args, throwable);
+        } catch (Exception e) {
+            try {
+                buffer.release();
+            } catch (Exception ignored) {
+            }
+            throw e;
+        }
+    }
+
+    private ByteBuf format0(ByteBuf buffer,
+                            boolean shouldParse,
+                            @Nullable byte[] className,
+                            LogLevel level,
+                            CharSequence msg,
+                            Object[] args,
+                            Throwable throwable) {
         byte[] timestamp = DateUtil.toBytes(System.currentTimeMillis());
 
         String threadName = Thread.currentThread().getName();

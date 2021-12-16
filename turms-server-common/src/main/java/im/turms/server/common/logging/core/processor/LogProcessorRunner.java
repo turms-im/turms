@@ -19,6 +19,7 @@ package im.turms.server.common.logging.core.processor;
 
 import im.turms.server.common.logging.core.appender.Appender;
 import im.turms.server.common.logging.core.idle.BackoffIdleStrategy;
+import im.turms.server.common.logging.core.logger.InternalLogger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.model.LogRecord;
 import io.netty.util.concurrent.DefaultThreadFactory;
@@ -47,13 +48,13 @@ public final class LogProcessorRunner {
                         try {
                             appender.append(record);
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            InternalLogger.printException(e);
                         }
                     }
                     try {
                         record.data().release();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        InternalLogger.printException(e);
                     }
                 }
                 idleStrategy.idle();
@@ -63,7 +64,7 @@ public final class LogProcessorRunner {
                 try {
                     appender.close();
                 } catch (Throwable e) {
-                    e.printStackTrace();
+                    InternalLogger.printException(e);
                 }
             }
         };
