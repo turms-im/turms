@@ -17,17 +17,20 @@
 
 package im.turms.gateway.access.common.handler;
 
+import im.turms.gateway.pojo.bo.session.UserSession;
+import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.healthcheck.ServerStatusManager;
 import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.service.blocklist.BlocklistService;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.http.websocketx.CorruptedWebSocketFrameException;
+import io.netty.handler.codec.CorruptedFrameException;
 import io.netty.util.internal.OutOfDirectMemoryError;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.Queue;
 
 /**
  * @author James Chen
@@ -37,10 +40,14 @@ public class ServiceAvailabilityHandler extends ChannelInboundHandlerAdapter {
 
     private final BlocklistService blocklistService;
     private final ServerStatusManager serverStatusManager;
+    private final SessionService sessionService;
 
-    public ServiceAvailabilityHandler(BlocklistService blocklistService, ServerStatusManager serverStatusManager) {
+    public ServiceAvailabilityHandler(BlocklistService blocklistService,
+                                      ServerStatusManager serverStatusManager,
+                                      SessionService sessionService) {
         this.blocklistService = blocklistService;
         this.serverStatusManager = serverStatusManager;
+        this.sessionService = sessionService;
     }
 
     @Override
@@ -60,9 +67,19 @@ public class ServiceAvailabilityHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        if (cause instanceof CorruptedWebSocketFrameException) {
+        // CorruptedFrameException can be caused by:
+        // 1. Illegal WebSocket frame or the frame is too large
+        // 2. The varint-length header declares that it will send a large payload
+        if (cause instanceof CorruptedFrameException) {
             InetSocketAddress address = (InetSocketAddress) ctx.channel().remoteAddress();
-            blocklistService.tryBlockIpForCorruptedFrame(new ByteArrayWrapper(address.getAddress().getAddress()));
+            ByteArrayWrapper ip = new ByteArrayWrapper(address.getAddress().getAddress());
+            blocklistService.tryBlockIpForCorruptedFrame(ip);
+            Queue<UserSession> sessions = sessionService.getLocalUserSession(ip);
+            if (sessions != null) {
+                for (UserSession session : sessions) {
+                    blocklistService.tryBlockUserIdForCorruptedFrame(session.getUserId());
+                }
+            }
         } else if (cause instanceof OutOfDirectMemoryError) {
             ctx.close();
         }

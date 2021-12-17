@@ -17,16 +17,18 @@
 
 package im.turms.gateway.access.websocket;
 
-import im.turms.gateway.access.common.UserSessionDispatcher;
 import im.turms.gateway.access.common.ClientRequestDispatcher;
+import im.turms.gateway.access.common.UserSessionDispatcher;
 import im.turms.gateway.access.websocket.factory.WebSocketFactory;
 import im.turms.gateway.logging.ApiLoggingContext;
+import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.healthcheck.ServerStatusManager;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.gateway.WebSocketProperties;
 import im.turms.server.common.service.blocklist.BlocklistService;
 import org.springframework.stereotype.Component;
@@ -51,16 +53,20 @@ public class WebSocketDispatcher extends UserSessionDispatcher {
             TurmsPropertiesManager propertiesManager,
             ServerStatusManager serverStatusManager,
             ServiceMediator serviceMediator,
+            SessionService sessionService,
             ClientRequestDispatcher clientRequestDispatcher) {
         super(apiLoggingContext, serviceMediator, clientRequestDispatcher,
                 node.getSharedProperties().getGateway().getWebsocket().getCloseIdleConnectionAfterSeconds());
-        WebSocketProperties webSocketProperties = propertiesManager.getLocalProperties().getGateway().getWebsocket();
+        GatewayProperties gatewayProperties = propertiesManager.getLocalProperties().getGateway();
+        WebSocketProperties webSocketProperties = gatewayProperties.getWebsocket();
         if (webSocketProperties.isEnabled()) {
             server = WebSocketFactory.create(
                     webSocketProperties,
                     blocklistService,
                     serverStatusManager,
-                    bindConnectionWithSessionWrapper());
+                    sessionService,
+                    bindConnectionWithSessionWrapper(),
+                    gatewayProperties.getClientApi().getMaxRequestSizeBytes());
             LOGGER.info("WebSocket server started on {}:{}", server.host(), server.port());
         } else {
             server = null;

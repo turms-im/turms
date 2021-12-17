@@ -20,6 +20,7 @@ package im.turms.gateway.access.websocket.factory;
 import im.turms.gateway.access.common.function.ConnectionHandler;
 import im.turms.gateway.access.common.handler.ServiceAvailabilityHandler;
 import im.turms.gateway.constant.MetricsConstant;
+import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.healthcheck.ServerStatusManager;
 import im.turms.server.common.metrics.TurmsMicrometerChannelMetricsRecorder;
@@ -73,13 +74,6 @@ import static io.netty.handler.codec.http.HttpMethod.OPTIONS;
  * @see WebSocketFactory#getHttpRequestHandler
  */
 public final class WebSocketFactory {
-    /**
-     * Note: The average size of turms requests is 16~64 bytes,
-     */
-    private static final int MAX_FRAME_PAYLOAD_LENGTH = 64 * 1024;
-    private static final WebsocketServerSpec SERVER_SPEC = WebsocketServerSpec.builder()
-            .maxFramePayloadLength(MAX_FRAME_PAYLOAD_LENGTH)
-            .build();
 
     private WebSocketFactory() {
     }
@@ -87,8 +81,13 @@ public final class WebSocketFactory {
     public static DisposableServer create(WebSocketProperties webSocketProperties,
                                           BlocklistService blocklistService,
                                           ServerStatusManager serverStatusManager,
-                                          ConnectionHandler handler) {
-        ServiceAvailabilityHandler serviceAvailabilityHandler = new ServiceAvailabilityHandler(blocklistService, serverStatusManager);
+                                          SessionService sessionService,
+                                          ConnectionHandler handler,
+                                          int maxFramePayloadLength) {
+        ServiceAvailabilityHandler serviceAvailabilityHandler = new ServiceAvailabilityHandler(blocklistService, serverStatusManager, sessionService);
+        WebsocketServerSpec serverSpec = WebsocketServerSpec.builder()
+                .maxFramePayloadLength(maxFramePayloadLength)
+                .build();
         // Don't set SO_SNDBUF and SO_RCVBUF because of
         // the reasons mentioned in https://developer.aliyun.com/article/724580
         HttpServer server = HttpServer.create()
@@ -102,7 +101,7 @@ public final class WebSocketFactory {
                 .childOption(TCP_NODELAY, true)
                 .runOn(LoopResourcesFactory.createForServer("gateway-ws"))
                 .metrics(true, () -> new TurmsMicrometerChannelMetricsRecorder(MetricsConstant.CLIENT_NETWORK, "websocket"))
-                .handle(getHttpRequestHandler(handler))
+                .handle(getHttpRequestHandler(handler, serverSpec))
                 .doOnChannelInit((connectionObserver, channel, remoteAddress) ->
                         channel.pipeline().addFirst("serviceAvailabilityHandler", serviceAvailabilityHandler));
         Ssl ssl = webSocketProperties.getSsl();
@@ -117,7 +116,9 @@ public final class WebSocketFactory {
     /**
      * @see ReactorNettyRequestUpgradeStrategy#upgrade
      */
-    private static BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>> getHttpRequestHandler(ConnectionHandler handler) {
+    private static BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>> getHttpRequestHandler(
+            ConnectionHandler handler,
+            WebsocketServerSpec serverSpec) {
         // Return MonoNever to keep the connection alive
         // Return MonoEmpty to close the connection
         return (request, response) -> {
@@ -142,8 +143,9 @@ public final class WebSocketFactory {
             }
             // 3. Upgrade to WebSocket
             // reactor.netty.http.server.HttpServer.HttpServerHandle.onStateChange
+            int maxFramePayloadLength = serverSpec.maxFramePayloadLength();
             return response.sendWebsocket((in, out) -> {
-                Flux<ByteBuf> inbound = in.aggregateFrames(MAX_FRAME_PAYLOAD_LENGTH)
+                Flux<ByteBuf> inbound = in.aggregateFrames(maxFramePayloadLength)
                         .receiveFrames()
                         // Note that:
                         // 1. PingWebSocketFrame will be handled by Netty itself
@@ -154,7 +156,7 @@ public final class WebSocketFactory {
                 Mono<Void> onClose = in.receiveCloseStatus().then();
                 // BinaryWebSocketFrame will be created by reactor.netty.http.server.WebsocketServerOperations.send
                 return handler.handle((Connection) in, true, inbound, out, onClose);
-            }, SERVER_SPEC);
+            }, serverSpec);
         };
     }
 

@@ -18,6 +18,7 @@
 package im.turms.gateway.access.tcp.handler;
 
 import im.turms.gateway.access.common.handler.ServiceAvailabilityHandler;
+import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.access.tcp.codec.CodecFactory;
 import im.turms.server.common.healthcheck.ServerStatusManager;
 import im.turms.server.common.service.blocklist.BlocklistService;
@@ -30,9 +31,14 @@ import reactor.netty.Connection;
 public class TcpHandlerConfig {
 
     private final ServiceAvailabilityHandler serviceAvailabilityHandler;
+    private final int maxFrameLength;
 
-    public TcpHandlerConfig(BlocklistService blocklistService, ServerStatusManager serverStatusManager) {
-        serviceAvailabilityHandler = new ServiceAvailabilityHandler(blocklistService, serverStatusManager);
+    public TcpHandlerConfig(BlocklistService blocklistService,
+                            ServerStatusManager serverStatusManager,
+                            SessionService sessionService,
+                            int maxFrameLength) {
+        this.maxFrameLength = maxFrameLength;
+        serviceAvailabilityHandler = new ServiceAvailabilityHandler(blocklistService, serverStatusManager, sessionService);
     }
 
     public void configureChannel(Channel channel) {
@@ -41,7 +47,7 @@ public class TcpHandlerConfig {
 
     public void configureConnection(Connection connection) {
         // Inbound
-        connection.addHandlerLast("varintLengthBasedFrameDecoder", CodecFactory.getVarintLengthBasedFrameDecoder());
+        connection.addHandlerLast("varintLengthBasedFrameDecoder", CodecFactory.getExtendedVarintLengthBasedFrameDecoder(maxFrameLength));
 
         // Outbound
         connection.addHandlerLast("varintLengthFieldPrepender", CodecFactory.getVarintLengthFieldPrepender());

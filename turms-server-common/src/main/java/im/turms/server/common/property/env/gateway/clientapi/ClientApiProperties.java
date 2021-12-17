@@ -40,6 +40,11 @@ public class ClientApiProperties {
             "2. turms-gateway never return the information of stack traces no matter it is true or false.")
     private boolean returnReasonForServerError;
 
+    @Description("The client session will be closed and may be blocked if it tries " +
+            "to send a request larger than the size. " +
+            "Note: The average size of turms requests is 16~64 bytes")
+    private int maxRequestSizeBytes = 16 * 1024;
+
     @NestedConfigurationProperty
     private ClientApiLoggingProperties logging = new ClientApiLoggingProperties();
 

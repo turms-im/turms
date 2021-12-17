@@ -64,6 +64,9 @@ public class BlocklistProperties {
     public static class UserIdAutoBlockProperties {
 
         @NestedConfigurationProperty
+        private AutoBlockItemProperties corruptedFrame = new AutoBlockItemProperties();
+
+        @NestedConfigurationProperty
         private AutoBlockItemProperties corruptedRequest = new AutoBlockItemProperties();
 
         @NestedConfigurationProperty

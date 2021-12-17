@@ -20,6 +20,7 @@ package im.turms.gateway.access.tcp.factory;
 import im.turms.gateway.access.common.function.ConnectionHandler;
 import im.turms.gateway.access.tcp.handler.TcpHandlerConfig;
 import im.turms.gateway.constant.MetricsConstant;
+import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.healthcheck.ServerStatusManager;
 import im.turms.server.common.metrics.TurmsMicrometerChannelMetricsRecorder;
@@ -51,8 +52,10 @@ public final class TcpServerFactory {
     public static DisposableServer create(TcpProperties tcpProperties,
                                           BlocklistService blocklistService,
                                           ServerStatusManager serverStatusManager,
-                                          ConnectionHandler handler) {
-        TcpHandlerConfig handlerConfig = new TcpHandlerConfig(blocklistService, serverStatusManager);
+                                          SessionService sessionService,
+                                          ConnectionHandler handler,
+                                          int maxFrameLength) {
+        TcpHandlerConfig handlerConfig = new TcpHandlerConfig(blocklistService, serverStatusManager, sessionService, maxFrameLength);
         TcpServer server = TcpServer.create()
                 .host(tcpProperties.getHost())
                 .port(tcpProperties.getPort())

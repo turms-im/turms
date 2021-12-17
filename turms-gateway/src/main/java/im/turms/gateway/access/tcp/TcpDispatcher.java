@@ -17,15 +17,17 @@
 
 package im.turms.gateway.access.tcp;
 
-import im.turms.gateway.access.common.UserSessionDispatcher;
 import im.turms.gateway.access.common.ClientRequestDispatcher;
+import im.turms.gateway.access.common.UserSessionDispatcher;
 import im.turms.gateway.access.tcp.factory.TcpServerFactory;
 import im.turms.gateway.logging.ApiLoggingContext;
+import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.healthcheck.ServerStatusManager;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.gateway.TcpProperties;
 import im.turms.server.common.service.blocklist.BlocklistService;
 import lombok.Getter;
@@ -53,17 +55,22 @@ public class TcpDispatcher extends UserSessionDispatcher {
                          BlocklistService blocklistService,
                          ServiceMediator serviceMediator,
                          ServerStatusManager serverStatusManager,
+                         SessionService sessionService,
                          ClientRequestDispatcher clientRequestDispatcher) {
         super(apiLoggingContext, serviceMediator, clientRequestDispatcher,
                 propertiesManager.getLocalProperties().getGateway().getTcp().getCloseIdleConnectionAfterSeconds());
-        TcpProperties tcpProperties = propertiesManager.getLocalProperties().getGateway().getTcp();
+        GatewayProperties gatewayProperties = propertiesManager.getLocalProperties().getGateway();
+        TcpProperties tcpProperties = gatewayProperties.getTcp();
+        int maxRequestSizeBytes = gatewayProperties.getClientApi().getMaxRequestSizeBytes();
         enabled = tcpProperties.isEnabled();
         if (enabled) {
             server = TcpServerFactory.create(
                     tcpProperties,
                     blocklistService,
                     serverStatusManager,
-                    bindConnectionWithSessionWrapper());
+                    sessionService,
+                    bindConnectionWithSessionWrapper(),
+                    maxRequestSizeBytes);
             host = server.host();
             port = server.port();
             LOGGER.info("TCP server started on {}:{}", host, port);

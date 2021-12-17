@@ -439,6 +439,11 @@ public class SessionService implements ISessionService {
         return userSessionsManager == null ? null : userSessionsManager.getSession(deviceType);
     }
 
+    @Nullable
+    public Queue<UserSession> getLocalUserSession(ByteArrayWrapper ip) {
+        return sessionsByIp.get(ip);
+    }
+
     public int countLocalOnlineUsers() {
         return sessionsManagerByUserId.size();
     }

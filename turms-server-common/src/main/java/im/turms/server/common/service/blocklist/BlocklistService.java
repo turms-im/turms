@@ -67,6 +67,7 @@ public class BlocklistService {
     private final AutoBlockManager<ByteArrayWrapper> ipAutoBlockManagerForCorruptedRequest;
     private final AutoBlockManager<ByteArrayWrapper> ipAutoBlockManagerForFrequentRequest;
 
+    private final AutoBlockManager<Long> userIdAutoBlockManagerForCorruptedFrame;
     private final AutoBlockManager<Long> userIdAutoBlockManagerForCorruptedRequest;
     private final AutoBlockManager<Long> userIdAutoBlockManagerForFrequentRequest;
 
@@ -139,8 +140,10 @@ public class BlocklistService {
             BlocklistProperties.UserIdAutoBlockProperties autoBlock = userIdBlocklistProperties.getAutoBlock();
             userIdAutoBlockManagerForCorruptedRequest = new AutoBlockManager<>(autoBlock.getCorruptedRequest(), this::blockUserId);
             if (isGateway) {
+                userIdAutoBlockManagerForCorruptedFrame = new AutoBlockManager<>(autoBlock.getCorruptedFrame(), this::blockUserId);
                 userIdAutoBlockManagerForFrequentRequest = new AutoBlockManager<>(autoBlock.getFrequentRequest(), this::blockUserId);
             } else {
+                userIdAutoBlockManagerForCorruptedFrame = null;
                 userIdAutoBlockManagerForFrequentRequest = null;
             }
             userIdBlocklistServiceManager = new BlocklistServiceManager<>(false, maxLogQueueSize,
@@ -154,11 +157,13 @@ public class BlocklistService {
                         }
                         userIdAutoBlockManagerForCorruptedRequest.unblockClient(userId);
                         if (isGateway) {
+                            userIdAutoBlockManagerForCorruptedFrame.unblockClient(userId);
                             userIdAutoBlockManagerForFrequentRequest.unblockClient(userId);
                         }
                     });
         } else {
             userIdBlocklistServiceManager = null;
+            userIdAutoBlockManagerForCorruptedFrame = null;
             userIdAutoBlockManagerForCorruptedRequest = null;
             userIdAutoBlockManagerForFrequentRequest = null;
         }
@@ -238,6 +243,12 @@ public class BlocklistService {
     public void tryBlockIpForFrequentRequest(ByteArrayWrapper ip) {
         if (isIpBlocklistEnabled) {
             ipAutoBlockManagerForFrequentRequest.tryBlockClient(ip);
+        }
+    }
+
+    public void tryBlockUserIdForCorruptedFrame(Long userId) {
+        if (isUserIdBlocklistEnabled) {
+            userIdAutoBlockManagerForCorruptedFrame.tryBlockClient(userId);
         }
     }
 

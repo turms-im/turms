@@ -34,6 +34,10 @@ public final class CodecFactory {
         return new ProtobufVarint32FrameDecoder();
     }
 
+    public static ExtendedProtobufVarint32FrameDecoder getExtendedVarintLengthBasedFrameDecoder(int maxFrameLength) {
+        return new ExtendedProtobufVarint32FrameDecoder(maxFrameLength);
+    }
+
     public static ProtobufVarint32LengthFieldPrepender getVarintLengthFieldPrepender() {
         return VARINT_LENGTH_FIELD_PREPENDER;
     }
