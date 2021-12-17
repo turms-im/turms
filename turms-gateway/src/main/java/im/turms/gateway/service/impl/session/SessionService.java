@@ -35,6 +35,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsProperties;
@@ -63,11 +64,14 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
 import static im.turms.gateway.constant.MetricsConstant.LOGGED_IN_USERS_COUNTER_NAME;
@@ -93,8 +97,8 @@ public class SessionService implements ISessionService {
     private final boolean pluginEnabled;
     private int closeIdleSessionAfterSeconds;
 
-    private final Map<Long, UserSessionsManager> sessionsManagerByUserId;
-    private final Map<String, UserSession> sessionByIp;
+    private final ConcurrentHashMap<Long, UserSessionsManager> sessionsManagerByUserId;
+    private final ConcurrentHashMap<ByteArrayWrapper, ConcurrentLinkedQueue<UserSession>> sessionsByIp;
 
     private final List<Consumer<UserSession>> onSessionClosedListeners = new LinkedList<>();
 
@@ -116,7 +120,7 @@ public class SessionService implements ISessionService {
         this.userSimultaneousLoginService = userSimultaneousLoginService;
         TurmsProperties turmsProperties = node.getSharedProperties();
         sessionsManagerByUserId = new ConcurrentHashMap<>(4096);
-        sessionByIp = new ConcurrentHashMap<>(4096);
+        sessionsByIp = new ConcurrentHashMap<>(4096);
         pluginEnabled = turmsProperties.getPlugin().isEnabled();
 
         SessionProperties sessionProperties = turmsProperties.getGateway().getSession();
@@ -165,14 +169,36 @@ public class SessionService implements ISessionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        UserSession session = sessionByIp.get(ip);
-        if (session == null) {
+        Queue<UserSession> sessions = sessionsByIp.get(new ByteArrayWrapper(ip));
+        Iterator<UserSession> iterator = sessions.iterator();
+        if (!iterator.hasNext()) {
             return Mono.just(false);
         }
-        return setLocalSessionOfflineByUserIdAndDeviceTypes(session.getUserId(),
+        UserSession userSession = iterator.next();
+        Mono<Boolean> first = setLocalSessionOfflineByUserIdAndDeviceTypes(userSession.getUserId(),
                 DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
                 closeReason,
                 new Date());
+        // Fast path
+        if (!iterator.hasNext()) {
+            return first;
+        }
+        // Slow path
+        // Use ArrayList instead of LinkedList because it's really heavy
+        List<Mono<Boolean>> list = new ArrayList<>(4);
+        list.add(first);
+        userSession = iterator.next();
+        list.add(setLocalSessionOfflineByUserIdAndDeviceTypes(userSession.getUserId(),
+                DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
+                closeReason,
+                new Date()));
+        while (iterator.hasNext()) {
+            list.add(setLocalSessionOfflineByUserIdAndDeviceTypes(iterator.next().getUserId(),
+                    DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
+                    closeReason,
+                    new Date()));
+        }
+        return ReactorUtil.atLeastOneTrue(list);
     }
 
     /**
@@ -269,9 +295,11 @@ public class SessionService implements ISessionService {
                             continue;
                         }
                         manager.setDeviceOffline(session.getDeviceType(), closeReason);
-                        String ip = session.getIp();
+                        ByteArrayWrapper ip = session.getIp();
                         if (ip != null) {
-                            sessionByIp.remove(ip);
+                            sessionsByIp.computeIfPresent(ip, (key, sessions) -> sessions.remove(session)
+                                    ? (sessions.size() > 0 ? sessions : null)
+                                    : sessions);
                         }
                         triggerOnSessionClosedListeners(session);
                         if (sessionLocationService.isLocationEnabled()) {
@@ -336,7 +364,7 @@ public class SessionService implements ISessionService {
      */
     public Mono<UserSession> tryRegisterOnlineUser(
             int version,
-            @NotNull String ip,
+            @NotNull ByteArrayWrapper ip,
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
@@ -463,7 +491,7 @@ public class SessionService implements ISessionService {
 
     private Mono<UserSession> addOnlineDeviceIfAbsent(
             int version,
-            @NotNull String ip,
+            @NotNull ByteArrayWrapper ip,
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
@@ -482,20 +510,33 @@ public class SessionService implements ISessionService {
                     // This should never happen
                     if (null == session) {
                         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE));
-                        sessionByIp.remove(ip);
+                        sessionsByIp.computeIfPresent(ip, (key, sessions) -> {
+                            boolean removed = sessions.removeIf(userSession ->
+                                    userSession.getUserId().equals(userId)
+                                            && userSession.getDeviceType().equals(deviceType));
+                            return removed
+                                    ? (sessions.size() > 0 ? sessions : null)
+                                    : sessions;
+                        });
                         session = manager.addSessionIfAbsent(version, deviceType, position);
                         if (null == session) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR));
                         }
                     }
-                    sessionByIp.put(ip, session);
+                    UserSession finalSession = session;
+                    sessionsByIp.compute(ip, (key, sessions) -> {
+                        if (sessions == null) {
+                            sessions = new ConcurrentLinkedQueue<>();
+                        }
+                        sessions.add(finalSession);
+                        return sessions;
+                    });
                     Date now = new Date();
                     if (null != position && sessionLocationService.isLocationEnabled()) {
                         return sessionLocationService.upsertUserLocation(userId, deviceType, position, now)
                                 .thenReturn(session);
-                    } else {
-                        return Mono.just(session);
                     }
+                    return Mono.just(session);
                 });
     }
 

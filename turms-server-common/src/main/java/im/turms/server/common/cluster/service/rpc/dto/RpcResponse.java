@@ -19,12 +19,14 @@ package im.turms.server.common.cluster.service.rpc.dto;
 
 import im.turms.server.common.cluster.service.rpc.exception.RpcException;
 
+import javax.annotation.Nullable;
+
 /**
  * @author James Chen
  */
 public record RpcResponse(
         int requestId,
-        Object result,
-        RpcException exception
+        @Nullable Object result,
+        @Nullable RpcException exception
 ) {
 }

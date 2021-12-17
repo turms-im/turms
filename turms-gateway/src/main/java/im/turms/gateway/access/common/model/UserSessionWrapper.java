@@ -21,6 +21,7 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.server.common.dto.CloseReason;
+import im.turms.server.common.lang.ByteArrayWrapper;
 import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
 import lombok.Data;
@@ -47,10 +48,14 @@ public class UserSessionWrapper {
     @Nullable
     private UserSession userSession;
 
+    /**
+     * Use {@link ByteArrayWrapper} instead of {@code byte[]} because
+     * {@link ByteArrayWrapper} will be used as the key of Map in multiple places
+     */
     @Nullable
-    private byte[] rawIpCache;
+    private ByteArrayWrapper ip;
     @Nullable
-    private String ipCache;
+    private String ipStr;
 
     public UserSessionWrapper(NetConnection connection,
                               InetSocketAddress address,
@@ -64,35 +69,31 @@ public class UserSessionWrapper {
                 : null;
     }
 
-    public byte[] getRawIp() {
-        if (rawIpCache == null) {
-            rawIpCache = address.getAddress().getAddress();
+    public ByteArrayWrapper getIp() {
+        if (ip == null) {
+            ip = new ByteArrayWrapper(address.getAddress().getAddress());
         }
-        return rawIpCache;
+        return ip;
     }
 
     /**
      * @implNote Don't use getHostString() to avoid getting a hostname
      */
-    public String getIp() {
-        if (ipCache == null) {
-            ipCache = address.getAddress().getHostAddress();
+    public String getIpStr() {
+        if (ipStr == null) {
+            ipStr = address.getAddress().getHostAddress();
         }
-        return ipCache;
+        return ipStr;
     }
 
     public void setUserSession(UserSession userSession) {
         this.userSession = userSession;
-        userSession.setConnection(connection);
+        userSession.setConnection(connection, getIp());
         onSessionEstablished.accept(userSession);
     }
 
     public boolean hasUserSession() {
         return userSession != null;
-    }
-
-    public void closeConnection() {
-        connection.close();
     }
 
     private Timeout addIdleConnectionTimeoutTask(int closeIdleConnectionAfter) {

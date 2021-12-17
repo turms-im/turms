@@ -18,6 +18,7 @@
 package im.turms.gateway.access.common.handler;
 
 import im.turms.server.common.healthcheck.ServerStatusManager;
+import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.service.blocklist.BlocklistService;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -61,7 +62,7 @@ public class ServiceAvailabilityHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         if (cause instanceof CorruptedWebSocketFrameException) {
             InetSocketAddress address = (InetSocketAddress) ctx.channel().remoteAddress();
-            blocklistService.tryBlockIpForCorruptedFrame(address.getAddress().getAddress());
+            blocklistService.tryBlockIpForCorruptedFrame(new ByteArrayWrapper(address.getAddress().getAddress()));
         } else if (cause instanceof OutOfDirectMemoryError) {
             ctx.close();
         }

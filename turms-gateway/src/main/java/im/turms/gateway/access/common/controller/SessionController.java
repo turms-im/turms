@@ -89,7 +89,7 @@ public class SessionController {
                 deviceType,
                 userStatus,
                 position,
-                sessionWrapper.getIp(),
+                sessionWrapper.getIpStr(),
                 deviceDetails);
         Timeout idleConnectionTimeout = sessionWrapper.getConnectionTimeoutTask();
         DeviceType finalDeviceType = deviceType;

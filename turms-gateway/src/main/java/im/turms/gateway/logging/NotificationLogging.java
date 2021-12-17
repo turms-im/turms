@@ -29,7 +29,6 @@ import static im.turms.server.common.logging.CommonLogger.NOTIFICATION_LOGGER;
 
 /**
  * @author James Chen
- * @implNote Don't use StringBuilder because String#join is more efficient
  */
 public final class NotificationLogging {
 

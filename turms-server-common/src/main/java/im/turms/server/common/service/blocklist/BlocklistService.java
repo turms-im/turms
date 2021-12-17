@@ -223,21 +223,21 @@ public class BlocklistService {
         return userIdBlocklistServiceManager.blockClients(userIds, blockMinutes);
     }
 
-    public void tryBlockIpForCorruptedFrame(byte[] ip) {
+    public void tryBlockIpForCorruptedFrame(ByteArrayWrapper ip) {
         if (isIpBlocklistEnabled) {
-            ipAutoBlockManagerForCorruptedFrame.tryBlockClient(new ByteArrayWrapper(ip));
+            ipAutoBlockManagerForCorruptedFrame.tryBlockClient(ip);
         }
     }
 
-    public void tryBlockIpForCorruptedRequest(byte[] ip) {
+    public void tryBlockIpForCorruptedRequest(ByteArrayWrapper ip) {
         if (isIpBlocklistEnabled) {
-            ipAutoBlockManagerForCorruptedRequest.tryBlockClient(new ByteArrayWrapper(ip));
+            ipAutoBlockManagerForCorruptedRequest.tryBlockClient(ip);
         }
     }
 
-    public void tryBlockIpForFrequentRequest(byte[] ip) {
+    public void tryBlockIpForFrequentRequest(ByteArrayWrapper ip) {
         if (isIpBlocklistEnabled) {
-            ipAutoBlockManagerForFrequentRequest.tryBlockClient(new ByteArrayWrapper(ip));
+            ipAutoBlockManagerForFrequentRequest.tryBlockClient(ip);
         }
     }
 

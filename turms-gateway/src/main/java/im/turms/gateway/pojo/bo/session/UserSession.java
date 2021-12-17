@@ -22,6 +22,7 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.util.RandomUtil;
 import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.server.common.dto.CloseReason;
+import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.tracing.TracingContext;
@@ -82,9 +83,11 @@ public final class UserSession {
     /**
      * Used to avoid logging DeleteSessionRequest twice in a session
      */
-    private AtomicBoolean isDeleteSessionLockAcquired = new AtomicBoolean(false);
+    private final AtomicBoolean isDeleteSessionLockAcquired = new AtomicBoolean(false);
     @Nullable
     private NetConnection connection;
+    @Nullable
+    private ByteArrayWrapper ip;
 
     public UserSession(int version,
                        Long userId,
@@ -97,6 +100,11 @@ public final class UserSession {
         this.loginDate = now;
         this.loginLocation = loginLocation;
         this.lastHeartbeatRequestTimestampMillis = now.getTime();
+    }
+
+    public void setConnection(NetConnection connection, ByteArrayWrapper ip) {
+        this.connection = connection;
+        this.ip = ip;
     }
 
     /**
@@ -125,14 +133,6 @@ public final class UserSession {
 
     public boolean supportsSwitchingToUdp() {
         return deviceType != DeviceType.BROWSER;
-    }
-
-    @Nullable
-    public String getIp() {
-        if (connection == null) {
-            return null;
-        }
-        return connection.getAddress().getAddress().getHostAddress();
     }
 
     public void sendNotification(ByteBuf byteBuf) {

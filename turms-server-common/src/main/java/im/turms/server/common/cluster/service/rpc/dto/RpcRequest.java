@@ -38,14 +38,14 @@ import javax.annotation.Nullable;
  * @param <T> The data type of the response
  * @author James Chen
  * @implNote 1. We use inheritance instead of composition because:
- * Some properties are provided for request impls indeed (e.g. fromNodeId),
+ * Some properties are only provided for request impls (e.g. fromNodeId),
  * if we use composition, we need to pass RpcRequest to request impls,
  * which brings circular references (bad practice), or extract these
  * properties into an independent class like RequestContext, which brings redundant overhead.
  * So we still use inheritance to keep the code simple (flat classes)
  * <p>
- * 2. We implement {@link ReferenceCounted} so RpcRequest can be released correctly by
- * the middle {@link io.netty.channel.ChannelInboundHandler} that we cannot control when decoding.
+ * 2. We implement {@link ReferenceCounted} so that RpcRequest can be released correctly by the
+ * middle {@link io.netty.channel.ChannelInboundHandler} that we cannot control when decoding.
  * For example, the following method will try to release RpcRequest and just return
  * without calling our own downstream RPC acceptor if the connection has been closed
  * {@link reactor.netty.channel.FluxReceive#onInboundNext(java.lang.Object)}

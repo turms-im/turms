@@ -36,6 +36,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.lang.ByteArrayWrapper;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -82,7 +83,7 @@ public class ServiceMediator {
 
     public Mono<UserSession> processLoginRequest(
             int version,
-            @NotNull String ip,
+            @NotNull ByteArrayWrapper ip,
             @NotNull Long userId,
             @Nullable String password,
             @NotNull DeviceType deviceType,

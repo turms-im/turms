@@ -187,7 +187,7 @@ public class LocalNodeStatusManager {
         boolean isLeaderEligible = member.isLeaderEligible();
         boolean wasLeaderEligible = localMember.isLeaderEligible();
         boolean isLeaderEligibleChanged = isLeaderEligible != wasLeaderEligible;
-        this.localMember.updateIfNotNull(
+        localMember.updateIfNotNull(
                 member.getZone(),
                 member.isSeed(),
                 member.isLeaderEligible(),

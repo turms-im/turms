@@ -112,7 +112,7 @@ public class BlocklistServiceManager<T> {
     private final Consumer<T> onTargetBlocked;
 
     /**
-     * Used to check if a user is blocked or not
+     * Used to check if a user is blocked or not fastly
      */
     private final ConcurrentHashMap<T, Long> blocklist;
     /**
@@ -121,7 +121,7 @@ public class BlocklistServiceManager<T> {
      * about if there are a lot of blocked clients
      *
      * @implNote It's acceptable to store the same IP/User ID with different
-     * block times in the skiplist because it's how the skiplist works
+     * block times in the skip list because it's how the skip list works
      */
     private final ConcurrentSkipListSet<BlockedClient> blockedClientSkipList;
 

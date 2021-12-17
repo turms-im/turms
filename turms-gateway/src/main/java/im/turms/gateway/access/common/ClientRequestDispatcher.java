@@ -133,7 +133,7 @@ public class ClientRequestDispatcher {
             if (session != null) {
                 blocklistService.tryBlockUserIdForCorruptedRequest(session.getUserId());
             }
-            blocklistService.tryBlockIpForCorruptedRequest(sessionWrapper.getRawIp());
+            blocklistService.tryBlockIpForCorruptedRequest(sessionWrapper.getIp());
             notificationMono = Mono.error(TurmsBusinessException.get(TurmsStatusCode.INVALID_REQUEST, e.getMessage()));
         }
         request = req;
@@ -186,7 +186,7 @@ public class ClientRequestDispatcher {
                                     userId,
                                     deviceType,
                                     version,
-                                    sessionWrapper.getIp(),
+                                    sessionWrapper.getIpStr(),
                                     request.requestId(),
                                     type,
                                     requestSize,
@@ -232,7 +232,7 @@ public class ClientRequestDispatcher {
             // Rate limiting
             long now = System.currentTimeMillis();
             if (!ipRequestThrottler.tryAcquireToken(sessionWrapper.getIp(), now)) {
-                blocklistService.tryBlockIpForFrequentRequest(sessionWrapper.getRawIp());
+                blocklistService.tryBlockIpForFrequentRequest(sessionWrapper.getIp());
                 UserSession userSession = sessionWrapper.getUserSession();
                 if (userSession != null) {
                     blocklistService.tryBlockUserIdForFrequentRequest(userSession.getUserId());
@@ -282,7 +282,7 @@ public class ClientRequestDispatcher {
                 sessionId = userSession.getId();
                 deviceType = userSession.getDeviceType();
             }
-            ClientApiLogging.log(sessionId, userId, deviceType, version, sessionWrapper.getIp(),
+            ClientApiLogging.log(sessionId, userId, deviceType, version, sessionWrapper.getIpStr(),
                     0, "HEARTBEAT", 0, System.currentTimeMillis(),
                     data == HEARTBEAT_RESPONSE_SUCCESS ? 1 : 0, null, 0, 0);
         }

@@ -33,7 +33,6 @@ import static im.turms.server.common.logging.CommonLogger.LOG_FIELD_DELIMITER;
 
 /**
  * @author James Chen
- * @implNote Don't use StringBuilder because String#join is more efficient
  */
 public final class ClientApiLogging {
 

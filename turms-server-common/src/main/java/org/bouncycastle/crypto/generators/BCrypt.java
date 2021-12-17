@@ -1,9 +1,5 @@
 package org.bouncycastle.crypto.generators;
 
-/**
- * @author James Chen
- */
-
 import org.bouncycastle.util.Pack;
 
 import java.util.Arrays;

@@ -31,6 +31,7 @@ import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
+import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.gateway.SessionProperties;
@@ -58,7 +59,7 @@ import static org.mockito.Mockito.when;
 class ServiceMediatorTests {
 
     private final int version = 1;
-    private final String ip = "127.0.0.1";
+    private final ByteArrayWrapper ip = new ByteArrayWrapper(new byte[]{127, 0, 0, 1});
     private final Long userId = 1L;
     private final DeviceType deviceType = DeviceType.ANDROID;
 

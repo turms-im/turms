@@ -26,13 +26,14 @@ import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.ThrowableInfo;
 import im.turms.server.common.healthcheck.ServerStatusManager;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
-import im.turms.server.common.tracing.TracingCloseableContext;
-import im.turms.server.common.tracing.TracingContext;
+import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
 import im.turms.server.common.service.blocklist.BlocklistService;
+import im.turms.server.common.tracing.TracingCloseableContext;
+import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.service.logging.ApiLoggingContext;
 import im.turms.service.logging.ClientApiLogging;
@@ -177,7 +178,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             CodedInputStream stream = CodedInputStream.newInstance(turmsRequestBuffer.nioBuffer());
             requestBuilder = TurmsRequest.newBuilder().mergeFrom(stream);
         } catch (IOException e) {
-            blocklistService.tryBlockIpForCorruptedRequest(serviceRequest.getIp());
+            blocklistService.tryBlockIpForCorruptedRequest(new ByteArrayWrapper(serviceRequest.getIp()));
             blocklistService.tryBlockUserIdForCorruptedRequest(serviceRequest.getUserId());
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.INVALID_REQUEST, e.getMessage()));
         }

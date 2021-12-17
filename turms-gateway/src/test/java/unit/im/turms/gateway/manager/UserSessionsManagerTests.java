@@ -23,6 +23,7 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.server.common.dto.CloseReason;
+import im.turms.server.common.lang.ByteArrayWrapper;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
@@ -61,7 +62,7 @@ class UserSessionsManagerTests {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
         manager.addSessionIfAbsent(version, deviceType, null);
         NetConnection connection = mock(NetConnection.class);
-        manager.getSession(deviceType).setConnection(connection);
+        manager.getSession(deviceType).setConnection(connection, new ByteArrayWrapper(new byte[]{}));
 
         assertThat(manager.getSessionMap()).hasSize(1);
         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.SERVER_CLOSED));

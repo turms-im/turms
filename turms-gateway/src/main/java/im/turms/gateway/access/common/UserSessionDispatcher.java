@@ -156,7 +156,7 @@ public abstract class UserSessionDispatcher {
                                 userId,
                                 deviceType,
                                 userSession.getVersion(),
-                                sessionWrapper.getIp(),
+                                sessionWrapper.getIpStr(),
                                 0,
                                 DELETE_SESSION_REQUEST,
                                 0,

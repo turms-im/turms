@@ -19,6 +19,7 @@ package im.turms.gateway.access.common;
 
 import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.env.gateway.clientapi.ClientApiProperties;
@@ -54,7 +55,7 @@ public class IpRequestThrottler {
      * for each client request and needs to store a lot of items.
      * So just using and iterating ConcurrentHashMap is enough
      */
-    private final Map<String, TokenBucket> ipRequestTokenBucketMap = new ConcurrentHashMap<>(256);
+    private final Map<ByteArrayWrapper, TokenBucket> ipRequestTokenBucketMap = new ConcurrentHashMap<>(256);
 
     public IpRequestThrottler(Node node, SessionService sessionService) {
         sessionService.addOnSessionClosedListeners(session -> {
@@ -92,11 +93,11 @@ public class IpRequestThrottler {
     }
 
     private void removeExpiredRequestTokenBuckets() throws InterruptedException {
-        Iterator<Map.Entry<String, TokenBucket>> iterator = ipRequestTokenBucketMap.entrySet().iterator();
+        Iterator<Map.Entry<ByteArrayWrapper, TokenBucket>> iterator = ipRequestTokenBucketMap.entrySet().iterator();
         int processed = 0;
         long startTime = System.currentTimeMillis();
         while (iterator.hasNext()) {
-            Map.Entry<String, TokenBucket> entry = iterator.next();
+            Map.Entry<ByteArrayWrapper, TokenBucket> entry = iterator.next();
             TokenBucket bucket = entry.getValue();
             long lastAccessTime = bucket.getLastRefillTime();
             if ((lastAccessTime - startTime) > IDLE_ENTRY_TTL && bucket.isTokensMoreThanOrEqualsToInitialTokens()) {
@@ -114,7 +115,7 @@ public class IpRequestThrottler {
         }
     }
 
-    public boolean tryAcquireToken(String ip, long timestamp) {
+    public boolean tryAcquireToken(ByteArrayWrapper ip, long timestamp) {
         TokenBucket bucket = ipRequestTokenBucketMap.computeIfAbsent(ip, key -> new TokenBucket(requestTokenBucketContext));
         return bucket.tryAcquire(timestamp);
     }
