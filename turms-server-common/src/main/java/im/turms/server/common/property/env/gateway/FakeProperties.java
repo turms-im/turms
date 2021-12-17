@@ -44,7 +44,7 @@ public class FakeProperties {
             "to connect to turms-gateway. " +
             "So please ensure you has set turms.service.fake.userCount to a number larger than or equals to (firstUserId + userCount)")
     @Min(0)
-    private int userCount = 100;
+    private int userCount = 10;
 
     @Description("The number of requests to send per interval. " +
             "If requestIntervalMillis is 1000, requestCountPerInterval is TPS in fact")

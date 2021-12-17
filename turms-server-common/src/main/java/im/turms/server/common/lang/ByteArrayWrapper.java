@@ -17,12 +17,22 @@
 
 package im.turms.server.common.lang;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 
 /**
  * @author James Chen
  */
-public record ByteArrayWrapper(byte[] bytes) implements Comparable<ByteArrayWrapper> {
+public final class ByteArrayWrapper implements Comparable<ByteArrayWrapper> {
+
+    @Getter
+    private final byte[] bytes;
+    private int hashCode = -1;
+
+    public ByteArrayWrapper(byte[] bytes) {
+        this.bytes = bytes;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -34,7 +44,10 @@ public record ByteArrayWrapper(byte[] bytes) implements Comparable<ByteArrayWrap
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(bytes);
+        if (hashCode == -1) {
+            hashCode = Arrays.hashCode(bytes);
+        }
+        return hashCode;
     }
 
     @Override

@@ -207,7 +207,10 @@ public class RpcService implements ClusterService {
             return endpoint;
         }
         endpoint = createEndpoint(nodeId, connection);
-        endpointPool.put(nodeId, endpoint);
+        RpcEndpoint previous = endpointPool.putIfAbsent(nodeId, endpoint);
+        if (previous != null) {
+            return previous;
+        }
         return endpoint;
     }
 
@@ -215,7 +218,6 @@ public class RpcService implements ClusterService {
         if (connection == null) {
             connection = connectionService.getMemberConnection(nodeId);
             if (connection == null) {
-                // This should never happen
                 throw new IllegalStateException("The connection to the member " + nodeId
                         + " doesn't exist");
             }
@@ -237,7 +239,7 @@ public class RpcService implements ClusterService {
             return Mono.error(RpcException.get(RpcErrorCode.MEMBER_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         // use System.currentTimeMillis() instead of "RandomUtil.nextPositiveInt()" for better performance
-        int index = (int) (System.currentTimeMillis() % size);
+        int index = (int) System.currentTimeMillis() % size;
         Member member = otherMembers.get(index);
         // fast path
         if (!member.getStatus().isHealthy()) {
@@ -270,7 +272,7 @@ public class RpcService implements ClusterService {
                     if (ExceptionUtil.isDisconnectedClientError(throwable)) {
                         for (Member newMember : getOtherActiveConnectedMembersToRespond(request)) {
                             String newMemberId = newMember.getNodeId();
-                            if (!newMemberId.equals(memberNodeId)) {
+                            if (!newMemberId.equals(memberNodeId) && newMember.getStatus().isHealthy()) {
                                 return requestResponse(newMemberId, request, defaultRequestTimeoutDuration);
                             }
                         }
@@ -344,7 +346,7 @@ public class RpcService implements ClusterService {
 
     /**
      * @return 1. an empty publisher if all peers respond with an empty payload;
-     * 2. a non-empty publisher if the peer responds with an non-empty valid payload;
+     * 2. a non-empty publisher if the peer responds with a non-empty valid payload;
      * 3. error for other cases (e.g. no peer exists).
      */
     public <T> Flux<T> requestResponsesFromOtherMembers(@NotNull RpcRequest<T> request,

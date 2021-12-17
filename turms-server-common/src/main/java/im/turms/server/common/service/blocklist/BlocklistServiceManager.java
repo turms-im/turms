@@ -22,8 +22,8 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.lang.ByteArrayWrapper;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.redis.TurmsRedisClient;
 import im.turms.server.common.redis.script.RedisScript;
 import im.turms.server.common.util.ByteBufUtil;
@@ -36,7 +36,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -510,7 +509,7 @@ public class BlocklistServiceManager<T> {
 
     private ByteBuf encodeId(T id) {
         return isIpBlocklist
-                ? Unpooled.wrappedBuffer(((ByteArrayWrapper) id).bytes())
+                ? Unpooled.wrappedBuffer(((ByteArrayWrapper) id).getBytes())
                 : BUFFER_ALLOCATOR.directBuffer().writeLong((long) id);
     }
 

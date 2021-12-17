@@ -121,7 +121,7 @@ public class BlocklistService {
                     evictAllBlockedClients, evictExpiredBlockedClients, getBlocklistLogsScript,
                     ip -> {
                         if (sessionService != null) {
-                            sessionService.setLocalSessionsOfflineByIp(ip.bytes(), CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED));
+                            sessionService.setLocalSessionsOfflineByIp(ip.getBytes(), CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED));
                         }
                         ipAutoBlockManagerForCorruptedRequest.unblockClient(ip);
                         if (isGateway) {

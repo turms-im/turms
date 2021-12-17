@@ -42,7 +42,7 @@ public class BlockedClientSerializer {
             if (id instanceof Long userId) {
                 gen.writeNumberField("id", userId);
             } else {
-                gen.writeStringField("id", InetAddressUtil.ipBytesToString(((ByteArrayWrapper) id).bytes()));
+                gen.writeStringField("id", InetAddressUtil.ipBytesToString(((ByteArrayWrapper) id).getBytes()));
             }
             gen.writeStringField("blockEndTime", DateUtil.toStr(value.blockEndTime()));
             gen.writeEndObject();

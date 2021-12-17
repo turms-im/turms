@@ -29,9 +29,6 @@ turms:
         uri: mongodb://localhost:27017/turms-dev
     fake:
       enabled: true
-    tcp:
-      # For testing purposes
-      enabled: true
   logging:
     console:
       enabled: true

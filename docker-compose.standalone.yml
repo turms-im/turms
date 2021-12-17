@@ -138,7 +138,7 @@ services:
       redis:
         condition: service_healthy
       # Wait for turms to ensure turms-gateway can fetch data from DB safely after turms has inited collections
-      turms:
+      turms-service:
         condition: service_healthy
     environment:
       TURMS_GATEWAY_JVM_OPTS: >

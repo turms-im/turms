@@ -174,8 +174,7 @@ public class SessionService implements ISessionService {
         if (!iterator.hasNext()) {
             return Mono.just(false);
         }
-        UserSession userSession = iterator.next();
-        Mono<Boolean> first = setLocalSessionOfflineByUserIdAndDeviceTypes(userSession.getUserId(),
+        Mono<Boolean> first = setLocalSessionOfflineByUserIdAndDeviceTypes(iterator.next().getUserId(),
                 DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
                 closeReason,
                 new Date());
@@ -187,8 +186,7 @@ public class SessionService implements ISessionService {
         // Use ArrayList instead of LinkedList because it's really heavy
         List<Mono<Boolean>> list = new ArrayList<>(4);
         list.add(first);
-        userSession = iterator.next();
-        list.add(setLocalSessionOfflineByUserIdAndDeviceTypes(userSession.getUserId(),
+        list.add(setLocalSessionOfflineByUserIdAndDeviceTypes(iterator.next().getUserId(),
                 DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
                 closeReason,
                 new Date()));
@@ -298,7 +296,7 @@ public class SessionService implements ISessionService {
                         ByteArrayWrapper ip = session.getIp();
                         if (ip != null) {
                             sessionsByIp.computeIfPresent(ip, (key, sessions) -> sessions.remove(session)
-                                    ? (sessions.size() > 0 ? sessions : null)
+                                    ? (sessions.isEmpty() ? null : sessions)
                                     : sessions);
                         }
                         triggerOnSessionClosedListeners(session);
@@ -515,7 +513,7 @@ public class SessionService implements ISessionService {
                                     userSession.getUserId().equals(userId)
                                             && userSession.getDeviceType().equals(deviceType));
                             return removed
-                                    ? (sessions.size() > 0 ? sessions : null)
+                                    ? (sessions.isEmpty() ? null : sessions)
                                     : sessions;
                         });
                         session = manager.addSessionIfAbsent(version, deviceType, position);

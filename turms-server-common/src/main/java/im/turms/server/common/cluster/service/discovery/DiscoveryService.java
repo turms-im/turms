@@ -324,8 +324,11 @@ public class DiscoveryService implements ClusterService {
     }
 
     private void onMemberUpdated(String nodeId, UpdateDescription updateDescription) {
-        // TODO: edge case for member not found
         Member memberToUpdate = allKnownMembers.get(nodeId);
+        if (memberToUpdate == null) {
+            LOGGER.error("Cannot update the information of the member {} because its information is missing unexpectedly", nodeId);
+            return;
+        }
         // Status
         Boolean hasJoinedCluster = null;
         Boolean isActive = null;
