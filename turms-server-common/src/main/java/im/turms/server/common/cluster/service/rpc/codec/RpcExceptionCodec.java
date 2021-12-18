@@ -22,11 +22,10 @@ import im.turms.server.common.cluster.service.codec.codec.CodecId;
 import im.turms.server.common.cluster.service.rpc.RpcErrorCode;
 import im.turms.server.common.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.util.StringUtil;
 import io.netty.buffer.ByteBuf;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author James Chen
@@ -44,7 +43,10 @@ public class RpcExceptionCodec implements Codec<RpcException> {
                 .writeShort(data.getStatusCode().getBusinessCode());
         String description = data.getDescription();
         if (description != null) {
-            out.writeBytes(description.getBytes(StandardCharsets.UTF_8));
+            byte[] bytes = StringUtil.getBytes(description);
+            byte coder = StringUtil.getCoder(description);
+            out.writeBytes(bytes)
+                    .writeByte(coder);
         }
     }
 
@@ -58,7 +60,7 @@ public class RpcExceptionCodec implements Codec<RpcException> {
 
     @Override
     public int initialCapacity(RpcException data) {
-        return Short.BYTES * 2 + StringUtils.length(data.getDescription());
+        return Short.BYTES * 2 + StringUtil.getLength(data.getDescription()) + 1;
     }
 
     private static RpcErrorCode parseErrorCode(ByteBuf in) {
@@ -98,9 +100,9 @@ public class RpcExceptionCodec implements Codec<RpcException> {
             return null;
         }
         try {
-            byte[] bytes = new byte[length];
+            byte[] bytes = new byte[length - 1];
             in.readBytes(bytes);
-            return new String(bytes, StandardCharsets.UTF_8);
+            return StringUtil.newString(bytes, in.readByte());
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to parse description", e);
         }

@@ -17,6 +17,8 @@
 
 package io.lettuce.core.protocol;
 
+import im.turms.server.common.util.Formatter;
+import im.turms.server.common.util.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.Unpooled;
@@ -61,7 +63,7 @@ public final class CommandArgsUtil {
         }
         for (CommandArgs.SingularArgument arg : args.singularArguments) {
             if (arg instanceof CommandArgs.IntegerArgument argument) {
-                writeStringArg(out, Long.toString(argument.val));
+                writeBytesArg(out, Formatter.toCharBytes(argument.val));
             } else if (arg instanceof CommandArgs.KeyArgument<?, ?> argument) {
                 ByteBuf key = (ByteBuf) argument.key;
                 writeByteBuf(out, key);
@@ -94,7 +96,7 @@ public final class CommandArgsUtil {
             return Unpooled.directBuffer(1)
                     .writeByte((byte) ('0' + value));
         }
-        byte[] bytes = Long.toString(value).getBytes(StandardCharsets.US_ASCII);
+        byte[] bytes = Formatter.toCharBytes(value);
         return Unpooled.directBuffer(bytes.length).writeBytes(bytes);
     }
 
@@ -145,7 +147,7 @@ public final class CommandArgsUtil {
     }
 
     private static void writeStringArg(CompositeByteBuf out, String value) {
-        writeBytesArg(out, value.getBytes(StandardCharsets.US_ASCII));
+        writeBytesArg(out, StringUtil.getBytes(value));
     }
 
 }

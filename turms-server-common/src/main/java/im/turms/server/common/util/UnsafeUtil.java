@@ -15,20 +15,31 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.redis;
+package im.turms.server.common.util;
 
-import im.turms.server.common.util.ByteBufUtil;
-import io.netty.buffer.ByteBuf;
+import sun.misc.Unsafe;
+
+import java.lang.reflect.Field;
 
 /**
  * @author James Chen
  */
-public final class RedisEntryId {
+public class UnsafeUtil {
 
-    private RedisEntryId() {
+    /**
+     * Though {@link jdk.internal.misc.Unsafe} is more powerful,
+     * we don't want to "add-exports" everywhere, which makes the development more difficult
+     */
+    public static final Unsafe UNSAFE;
+
+    static {
+        try {
+            Field field = Unsafe.class.getDeclaredField("theUnsafe");
+            field.setAccessible(true);
+            UNSAFE = (Unsafe) field.get(null);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
     }
-
-    public static final byte SESSIONS_STATUS = 's';
-    public static final ByteBuf LOCATION_BUFFER = ByteBufUtil.getUnreleasableDirectBuffer(new byte[]{'l'});
 
 }

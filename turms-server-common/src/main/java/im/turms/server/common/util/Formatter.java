@@ -114,13 +114,9 @@ public class Formatter {
         }
 
         // We know there are at most two digits left at this point.
-        q = i / 10;
-        r = (q * 10) - i;
-        buf[--charPos] = (byte) ('0' + r);
-
-        // Whatever left is the remaining digit.
-        if (q < 0) {
-            buf[--charPos] = (byte) ('0' - q);
+        buf[--charPos] = DigitOnes[-i];
+        if (i < -9) {
+            buf[--charPos] = DigitTens[-i];
         }
 
         if (negative) {
@@ -141,7 +137,7 @@ public class Formatter {
         // Get 2 digits/iteration using longs until quotient fits into an int
         while (i <= Integer.MIN_VALUE) {
             q = i / 100;
-            r = (int)((q * 100) - i);
+            r = (int) ((q * 100) - i);
             i = q;
             buf[--charPos] = DigitOnes[r];
             buf[--charPos] = DigitTens[r];
@@ -149,27 +145,23 @@ public class Formatter {
 
         // Get 2 digits/iteration using ints
         int q2;
-        int i2 = (int)i;
+        int i2 = (int) i;
         while (i2 <= -100) {
             q2 = i2 / 100;
-            r  = (q2 * 100) - i2;
+            r = (q2 * 100) - i2;
             i2 = q2;
             buf[--charPos] = DigitOnes[r];
             buf[--charPos] = DigitTens[r];
         }
 
         // We know there are at most two digits left at this point.
-        q2 = i2 / 10;
-        r  = (q2 * 10) - i2;
-        buf[--charPos] = (byte)('0' + r);
-
-        // Whatever left is the remaining digit.
-        if (q2 < 0) {
-            buf[--charPos] = (byte)('0' - q2);
+        buf[--charPos] = DigitOnes[-i2];
+        if (i2 < -9) {
+            buf[--charPos] = DigitTens[-i2];
         }
 
         if (negative) {
-            buf[--charPos] = (byte)'-';
+            buf[--charPos] = (byte) '-';
         }
     }
 

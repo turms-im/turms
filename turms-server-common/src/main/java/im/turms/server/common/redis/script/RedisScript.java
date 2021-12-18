@@ -18,6 +18,7 @@
 package im.turms.server.common.redis.script;
 
 import im.turms.server.common.util.ByteBufUtil;
+import im.turms.server.common.util.StringUtil;
 import io.lettuce.core.ScriptOutputType;
 import io.lettuce.core.codec.Base16;
 import io.lettuce.core.protocol.BaseRedisCommandBuilder;
@@ -55,18 +56,18 @@ public record RedisScript(
         try {
             byte[] bytes = resource.getInputStream().readAllBytes();
             if (!CollectionUtils.isEmpty(placeholders)) {
-                String s = new String(bytes, StandardCharsets.UTF_8);
+                String s = new String(bytes, StandardCharsets.US_ASCII);
                 for (Map.Entry<String, Object> entry : placeholders.entrySet()) {
                     s = s.replace(entry.getKey(), entry.getValue().toString());
                 }
-                bytes = s.getBytes(StandardCharsets.UTF_8);
+                bytes = StringUtil.getBytes(s);
             }
             if (bytes.length > MAX_SCRIPT_SIZE) {
                 String error = "The script cannot be larger than " + MAX_SCRIPT_SIZE + ": " + resource.getPath();
                 throw new IllegalStateException(error);
             }
             return new RedisScript(ByteBufUtil.getUnreleasableDirectBuffer(bytes),
-                    ByteBufUtil.getUnreleasableDirectBuffer(Base16.digest(bytes).getBytes()),
+                    ByteBufUtil.getUnreleasableDirectBuffer(StringUtil.getBytes(Base16.digest(bytes))),
                     outputType);
         } catch (IOException e) {
             throw new IllegalStateException(e);

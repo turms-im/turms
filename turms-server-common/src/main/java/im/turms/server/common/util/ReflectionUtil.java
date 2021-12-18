@@ -17,9 +17,12 @@
 
 package im.turms.server.common.util;
 
+import sun.misc.Unsafe;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -27,6 +30,15 @@ import java.lang.reflect.Method;
  * @author James Chen
  */
 public final class ReflectionUtil {
+
+    private static final Unsafe UNSAFE = UnsafeUtil.UNSAFE;
+    /**
+     * "UNSAFE.objectFieldOffset(AccessibleObject.class.getDeclaredField("override"))" won't work
+     * because the field cannot be found.
+     * So we get the offset via:
+     * "jdk.internal.misc.Unsafe#objectFieldOffset(AccessibleObject.class, "override")"
+     */
+    private static final long OVERRIDE_OFFSET = 12;
 
     private ReflectionUtil() {
     }
@@ -86,6 +98,13 @@ public final class ReflectionUtil {
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    /**
+     * The method can ignore the access control of modules
+     */
+    public static void setAccessible(AccessibleObject object) {
+        UNSAFE.putBoolean(object, OVERRIDE_OFFSET, true);
     }
 
 }

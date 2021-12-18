@@ -24,6 +24,7 @@ import im.turms.server.common.logging.core.model.LogLevel;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.DateUtil;
 import im.turms.server.common.util.Formatter;
+import im.turms.server.common.util.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import org.springframework.util.StringUtils;
@@ -55,9 +56,9 @@ public class TurmsTemplateLayout extends TemplateLayout {
             maxLength = Math.max(level.name().length(), maxLength);
         }
         for (int i = 0; i < levels.length; i++) {
-            LEVELS[i] = Strings.padStart(levels[i].name(), maxLength, ' ')
-                    .toUpperCase()
-                    .getBytes(StandardCharsets.US_ASCII);
+            String level = Strings.padStart(levels[i].name(), maxLength, ' ')
+                    .toUpperCase();
+            LEVELS[i] = StringUtil.getBytes(level);
         }
     }
 
@@ -97,7 +98,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
         }
         // thread name
         buffer.writeByte(WHITESPACE)
-                .writeBytes(threadName.getBytes(StandardCharsets.UTF_8));
+                .writeBytes(StringUtil.getBytes(threadName));
         // class name
         if (className != null) {
             buffer.writeByte(WHITESPACE)
@@ -173,7 +174,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
         }
         // thread name
         buffer.writeByte(WHITESPACE)
-                .writeBytes(threadName.getBytes(StandardCharsets.UTF_8));
+                .writeBytes(StringUtil.getBytes(threadName));
         // class name
         if (className != null) {
             buffer.writeByte(WHITESPACE)
@@ -192,17 +193,18 @@ public class TurmsTemplateLayout extends TemplateLayout {
     }
 
     private void appendMessage(boolean shouldParse, CharSequence msg, Object[] args, ByteBuf buffer) {
+        String message = msg.toString();
         if (!shouldParse) {
-            buffer.writeCharSequence(msg, StandardCharsets.UTF_8);
+            buffer.writeBytes(StringUtil.getBytes(message));
             return;
         }
         int argCount = args == null ? 0 : args.length;
         if (argCount == 0) {
-            buffer.writeCharSequence(msg, StandardCharsets.UTF_8);
+            buffer.writeBytes(StringUtil.getBytes(message));
             return;
         }
         int argIndex = 0;
-        byte[] bytes = msg.toString().getBytes();
+        byte[] bytes = StringUtil.getBytes(message);
         int length = bytes.length;
         for (int i = 0; i < length; i++) {
             byte b = bytes[i];
@@ -223,19 +225,19 @@ public class TurmsTemplateLayout extends TemplateLayout {
     public static byte[] formatClassName(String name) {
         byte[] rawBytes = name.getBytes(StandardCharsets.US_ASCII);
         if (rawBytes.length == CLASS_NAME_LENGTH) {
-            return name.getBytes(StandardCharsets.US_ASCII);
+            return rawBytes;
         }
         if (rawBytes.length > CLASS_NAME_LENGTH) {
             String[] parts = StringUtils.tokenizeToStringArray(name, ".");
             String className = parts[parts.length - 1];
             int classNameLength = className.length();
             if (classNameLength >= CLASS_NAME_LENGTH) {
-                return className.substring(0, CLASS_NAME_LENGTH).getBytes(StandardCharsets.US_ASCII);
+                return StringUtil.getBytes(className.substring(0, CLASS_NAME_LENGTH));
             }
             byte[] result = new byte[CLASS_NAME_LENGTH];
             int writeIndex = CLASS_NAME_LENGTH;
             for (int i = parts.length - 1; i >= 0; i--) {
-                byte[] part = parts[i].getBytes(StandardCharsets.US_ASCII);
+                byte[] part = StringUtil.getBytes(parts[i]);
                 if (i == parts.length - 1) {
                     writeIndex -= part.length;
                     System.arraycopy(part, 0, result, writeIndex, part.length);
@@ -250,8 +252,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
             Arrays.fill(result, 0, writeIndex, (byte) ' ');
             return result;
         }
-        return Strings.padStart(name, CLASS_NAME_LENGTH, ' ')
-                .getBytes(StandardCharsets.US_ASCII);
+        return StringUtil.getBytes(Strings.padStart(name, CLASS_NAME_LENGTH, ' '));
     }
 
 }

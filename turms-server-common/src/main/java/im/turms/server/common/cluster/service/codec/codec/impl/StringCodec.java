@@ -19,9 +19,8 @@ package im.turms.server.common.cluster.service.codec.codec.impl;
 
 import im.turms.server.common.cluster.service.codec.codec.Codec;
 import im.turms.server.common.cluster.service.codec.codec.CodecId;
+import im.turms.server.common.util.StringUtil;
 import io.netty.buffer.ByteBuf;
-
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author James Chen
@@ -35,11 +34,13 @@ public class StringCodec implements Codec<String> {
 
     @Override
     public void write(ByteBuf output, String data) {
-        byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
+        byte[] bytes = StringUtil.getBytes(data);
+        byte coder = StringUtil.getCoder(data);
         if (bytes.length < Short.MAX_VALUE) {
             output.writeShort(bytes.length);
             if (bytes.length > 0) {
-                output.writeBytes(bytes);
+                output.writeBytes(bytes)
+                        .writeByte(coder);
             }
         } else {
             throw new IllegalArgumentException("The bytes length of the string cannot be greater than " + Short.MAX_VALUE);
@@ -54,12 +55,13 @@ public class StringCodec implements Codec<String> {
         }
         byte[] bytes = new byte[length];
         input.readBytes(bytes);
-        return new String(bytes, StandardCharsets.UTF_8);
+        byte coder = input.readByte();
+        return StringUtil.newString(bytes, coder);
     }
 
     @Override
     public int initialCapacity(String data) {
-        return data.length();
+        return Short.BYTES + StringUtil.getLength(data) + 1;
     }
 
 }

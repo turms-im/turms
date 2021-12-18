@@ -20,9 +20,8 @@ package im.turms.server.common.cluster.service.connection.codec;
 import im.turms.server.common.cluster.service.codec.codec.CodecId;
 import im.turms.server.common.cluster.service.connection.request.OpeningHandshakeRequest;
 import im.turms.server.common.rpc.codec.request.RpcRequestCodec;
+import im.turms.server.common.util.StringUtil;
 import io.netty.buffer.ByteBuf;
-
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author James Chen
@@ -36,23 +35,22 @@ public class OpeningHandshakeRequestCodec extends RpcRequestCodec<OpeningHandsha
 
     @Override
     public int initialCapacityForRequest(OpeningHandshakeRequest data) {
-        // 1. Don't get the length from bytes because it
-        // introduces new unnecessary heap memory
-        // 2. nodeId consists of only letters and digits
-        return data.getNodeId().length();
+        return StringUtil.getLength(data.getNodeId()) + 1;
     }
 
     @Override
     protected void writeRequestData(ByteBuf output, OpeningHandshakeRequest data) {
-        byte[] bytes = data.getNodeId().getBytes(StandardCharsets.UTF_8);
-        output.writeBytes(bytes);
+        String nodeId = data.getNodeId();
+        output.writeBytes(StringUtil.getBytes(nodeId))
+                .writeByte(StringUtil.getCoder(nodeId));
     }
 
     @Override
     public OpeningHandshakeRequest readRequestData(ByteBuf input) {
-        byte[] bytes = new byte[input.readableBytes()];
+        int length = input.readableBytes();
+        byte[] bytes = new byte[length - 1];
         input.readBytes(bytes);
-        String nodeId = new String(bytes, StandardCharsets.UTF_8);
+        String nodeId = StringUtil.newString(bytes, input.readByte());
         return new OpeningHandshakeRequest(nodeId);
     }
 

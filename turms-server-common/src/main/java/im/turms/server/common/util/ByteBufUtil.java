@@ -163,8 +163,8 @@ public final class ByteBufUtil {
                 buffer.writeBytes(Formatter.toCharBytes(num));
             } else if (element instanceof Long num) {
                 buffer.writeBytes(Formatter.toCharBytes(num));
-            } else if (element instanceof CharSequence c) {
-                buffer.writeCharSequence(c, StandardCharsets.UTF_8);
+            } else if (element instanceof String s) {
+                buffer.writeBytes(StringUtil.getBytes(s));
             } else if (element instanceof byte[] bytes) {
                 buffer.writeBytes(bytes);
             } else if (element instanceof Character c) {

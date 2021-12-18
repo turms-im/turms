@@ -25,6 +25,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.util.CodecUtil;
 import im.turms.server.common.util.ProtoUtil;
+import im.turms.server.common.util.StringUtil;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -60,7 +61,7 @@ public class ServiceResponseCodec implements Codec<ServiceResponse> {
     @Override
     public int initialCapacity(ServiceResponse data) {
         String reason = data.reason();
-        int reasonLength = reason == null ? 0 : reason.length();
+        int reasonLength = reason == null ? 0 : StringUtil.getLength(reason) + 1;
         return Short.BYTES * 2 + reasonLength;
     }
 

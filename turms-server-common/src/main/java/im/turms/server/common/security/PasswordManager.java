@@ -20,11 +20,11 @@ package im.turms.server.common.security;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.PasswordEncodingAlgorithm;
+import im.turms.server.common.util.StringUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import javax.annotation.Nullable;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 /**
@@ -60,12 +60,12 @@ public class PasswordManager {
 
     public byte[] encodeAdminPassword(String rawPassword) {
         Assert.notNull(rawPassword, "rawPassword must not be null");
-        return encodePassword(adminPasswordEncodingAlgorithm, rawPassword.getBytes(StandardCharsets.UTF_8));
+        return encodePassword(adminPasswordEncodingAlgorithm, StringUtil.getBytes(rawPassword));
     }
 
     public byte[] encodeUserPassword(String rawPassword) {
         Assert.notNull(rawPassword, "rawPassword must not be null");
-        return encodePassword(userPasswordEncodingAlgorithm, rawPassword.getBytes(StandardCharsets.UTF_8));
+        return encodePassword(userPasswordEncodingAlgorithm, StringUtil.getBytes(rawPassword));
     }
 
     public boolean matchesAdminPassword(@Nullable String rawPassword, @Nullable byte[] encodedPassword) {
@@ -89,7 +89,7 @@ public class PasswordManager {
         } else if (rawPassword == null) {
             return false;
         }
-        byte[] raw = rawPassword.getBytes(StandardCharsets.UTF_8);
+        byte[] raw = StringUtil.getBytes(rawPassword);
         return switch (strategy) {
             case BCRYPT -> bCryptPasswordEncoder.matches(raw, encodedPassword);
             case SALTED_SHA256 -> sha256PasswordEncoder.matches(raw, encodedPassword);

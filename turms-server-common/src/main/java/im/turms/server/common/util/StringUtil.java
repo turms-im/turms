@@ -17,16 +17,79 @@
 
 package im.turms.server.common.util;
 
+import lombok.SneakyThrows;
+import sun.misc.Unsafe;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Constructor;
+
 /**
  * @author James Chen
  */
 public final class StringUtil {
 
+    public static final byte LATIN1 = 0;
+    public static final byte UTF16 = 1;
+
+    private static final Unsafe UNSAFE = UnsafeUtil.UNSAFE;
+    private static final long STRING_VALUE_OFFSET;
+    private static final long STRING_CODER_OFFSET;
+    private static final MethodHandle NEW_STRING;
+
+    static {
+        try {
+            Constructor<String> constructor = String.class.getDeclaredConstructor(byte[].class, byte.class);
+            ReflectionUtil.setAccessible(constructor);
+            NEW_STRING = MethodHandles.lookup().unreflectConstructor(constructor);
+            STRING_VALUE_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("value"));
+            STRING_CODER_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("coder"));
+
+            String test = (String) NEW_STRING.invokeExact(new byte[]{}, LATIN1);
+        } catch (Throwable e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     private StringUtil() {
+    }
+
+    public static byte[] getBytes(String s) {
+        try {
+            return (byte[]) UNSAFE.getObject(s, STRING_VALUE_OFFSET);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static byte getCoder(String s) {
+        try {
+            return UNSAFE.getByte(s, STRING_CODER_OFFSET);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static int getLength(String s) {
+        return getBytes(s).length;
     }
 
     public static String toString(Object val) {
         return val == null ? "" : val.toString();
+    }
+
+    public static boolean isLatin1(String s) {
+        try {
+            byte coder = UNSAFE.getByte(s, STRING_CODER_OFFSET);
+            return coder == LATIN1;
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @SneakyThrows
+    public static String newString(byte[] bytes, byte coder) {
+        return (String) NEW_STRING.invokeExact(bytes, coder);
     }
 
 }

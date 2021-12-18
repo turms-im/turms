@@ -22,8 +22,6 @@ import im.turms.server.common.util.ByteBufUtil;
 import im.turms.server.common.util.Formatter;
 import io.netty.buffer.ByteBuf;
 
-import java.nio.charset.StandardCharsets;
-
 import static im.turms.server.common.logging.CommonLogger.LOG_FIELD_DELIMITER;
 import static im.turms.server.common.logging.CommonLogger.NOTIFICATION_LOGGER;
 
@@ -32,8 +30,8 @@ import static im.turms.server.common.logging.CommonLogger.NOTIFICATION_LOGGER;
  */
 public final class NotificationLogging {
 
-    private static final byte[] SENT = "SENT".getBytes(StandardCharsets.UTF_8);
-    private static final byte[] UNSENT = "UNSENT".getBytes(StandardCharsets.UTF_8);
+    private static final byte[] SENT = new byte[]{'S', 'E', 'N', 'T'};
+    private static final byte[] UNSENT = new byte[]{'U', 'N', 'S', 'E', 'N', 'T'};
 
     private NotificationLogging() {
     }

@@ -23,7 +23,6 @@ import im.turms.server.common.cluster.service.codec.codec.CodecPool;
 import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -76,9 +75,13 @@ public final class CodecUtil {
         if (str == null) {
             output.writeShort(0);
         } else {
-            byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
-            output.writeShort(bytes.length);
-            output.writeBytes(bytes);
+            byte[] bytes = StringUtil.getBytes(str);
+            int length = bytes.length;
+            output.writeShort(length);
+            if (length > 0) {
+                output.writeBytes(bytes)
+                        .writeByte(StringUtil.getCoder(str));
+            }
         }
     }
 
@@ -86,11 +89,10 @@ public final class CodecUtil {
         int length = input.readShort();
         if (length == 0) {
             return null;
-        } else {
-            byte[] bytes = new byte[length];
-            input.readBytes(bytes);
-            return new String(bytes, StandardCharsets.UTF_8);
         }
+        byte[] bytes = new byte[length];
+        input.readBytes(bytes);
+        return StringUtil.newString(bytes, input.readByte());
     }
 
     public static void writeStrings(ByteBuf output, Collection<String> strings) {

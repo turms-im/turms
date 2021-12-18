@@ -18,6 +18,7 @@
 package im.turms.server.common.logging.core.layout;
 
 import im.turms.server.common.util.Formatter;
+import im.turms.server.common.util.StringUtil;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.StandardCharsets;
@@ -27,13 +28,13 @@ import java.nio.charset.StandardCharsets;
  */
 public class TemplateLayout {
 
-    static final byte[] AT = "at ".getBytes(StandardCharsets.UTF_8);
-    static final byte[] CAUSED_BY = "caused by: ".getBytes(StandardCharsets.UTF_8);
-    static final byte[] COLON = ": ".getBytes(StandardCharsets.UTF_8);
-    static final byte[] CYCLIC_EXCEPTION = ">>(Cyclic Exception?)>>".getBytes(StandardCharsets.UTF_8);
-    static final byte[] NATIVE = "native".getBytes(StandardCharsets.UTF_8);
-    static final byte[] SUPPRESSED = "suppressed: ".getBytes(StandardCharsets.UTF_8);
-    static final byte[] UNKNOWN = "unknown".getBytes(StandardCharsets.UTF_8);
+    static final byte[] AT = "at ".getBytes(StandardCharsets.US_ASCII);
+    static final byte[] CAUSED_BY = "caused by: ".getBytes(StandardCharsets.US_ASCII);
+    static final byte[] COLON = ": ".getBytes(StandardCharsets.US_ASCII);
+    static final byte[] CYCLIC_EXCEPTION = ">>(Cyclic Exception?)>>".getBytes(StandardCharsets.US_ASCII);
+    static final byte[] NATIVE = "native".getBytes(StandardCharsets.US_ASCII);
+    static final byte[] SUPPRESSED = "suppressed: ".getBytes(StandardCharsets.US_ASCII);
+    static final byte[] UNKNOWN = "unknown".getBytes(StandardCharsets.US_ASCII);
 
     static final int DEPTH_LIMIT = 16;
     static final int WHITESPACE = ' ';
@@ -66,12 +67,12 @@ public class TemplateLayout {
             return;
         }
 
-        buffer.writeCharSequence(e.getClass().getName(), StandardCharsets.UTF_8);
+        buffer.writeBytes(StringUtil.getBytes(e.getClass().getName()));
 
         String message = e.getMessage();
         if (message != null) {
             buffer.writeBytes(COLON)
-                    .writeCharSequence(message, StandardCharsets.UTF_8);
+                    .writeBytes(StringUtil.getBytes(message));
         }
 
         StackTraceElement[] stacks = e.getStackTrace();
@@ -108,9 +109,9 @@ public class TemplateLayout {
             appendTabs(indent, buffer);
 
             buffer.writeBytes(AT);
-            buffer.writeCharSequence(element.getClassName(), StandardCharsets.UTF_8);
+            buffer.writeBytes(StringUtil.getBytes(element.getClassName()));
             buffer.writeByte('.');
-            buffer.writeCharSequence(element.getMethodName(), StandardCharsets.UTF_8);
+            buffer.writeBytes(StringUtil.getBytes(element.getMethodName()));
             buffer.writeByte('(');
 
             if (element.isNativeMethod()) {
@@ -121,7 +122,7 @@ public class TemplateLayout {
                 if (fileName == null) {
                     buffer.writeBytes(UNKNOWN);
                 } else {
-                    buffer.writeCharSequence(fileName, StandardCharsets.UTF_8);
+                    buffer.writeBytes(StringUtil.getBytes(fileName));
                     if (lineNumber >= 0) {
                         buffer.writeByte(':');
                         buffer.writeBytes(Formatter.toCharBytes(lineNumber));

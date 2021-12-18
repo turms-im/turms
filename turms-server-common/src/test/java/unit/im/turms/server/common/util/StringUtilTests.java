@@ -15,20 +15,26 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.redis;
+package unit.im.turms.server.common.util;
 
-import im.turms.server.common.util.ByteBufUtil;
-import io.netty.buffer.ByteBuf;
+import im.turms.server.common.util.StringUtil;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author James Chen
  */
-public final class RedisEntryId {
+class StringUtilTests {
 
-    private RedisEntryId() {
+    @Test
+    void test() {
+        String expected = "myテスト字符串";
+        byte[] bytes = StringUtil.getBytes(expected);
+        byte coder = StringUtil.getCoder(expected);
+        String actual = StringUtil.newString(bytes, coder);
+
+        assertThat(actual).isEqualTo(expected);
     }
-
-    public static final byte SESSIONS_STATUS = 's';
-    public static final ByteBuf LOCATION_BUFFER = ByteBufUtil.getUnreleasableDirectBuffer(new byte[]{'l'});
 
 }

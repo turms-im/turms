@@ -17,12 +17,10 @@
 
 package im.turms.server.common;
 
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
-import im.turms.server.common.logging.core.processor.LogProcessorRunner;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.util.StringUtil;
 import org.springframework.boot.SpringApplication;
-
-import java.time.Duration;
 
 /**
  * @author James Chen
@@ -39,6 +37,7 @@ public abstract class BaseTurmsApplication {
 
     protected static void bootstrap(Class<?> applicationClass, String[] args) {
         try {
+            validateEnv();
             SpringApplication.run(applicationClass, args);
         } catch (Exception e) {
             // Note that org.springframework.boot.SpringApplication.handleRunFailure may not trigger
@@ -59,6 +58,14 @@ public abstract class BaseTurmsApplication {
             // (e.g. PortInUseException) because there are may still some non-daemon
             // threads preventing from exiting after the context has been closed
             System.exit(1);
+        }
+    }
+
+    private static void validateEnv() {
+        try {
+            StringUtil.getBytes("testテスト");
+        } catch (Exception e) {
+            throw new IllegalStateException("The current JDK cannot work with turms server", e);
         }
     }
 
