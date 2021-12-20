@@ -21,6 +21,7 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.model.geojson.codecs.GeoJsonCodecProvider;
 import com.mongodb.connection.ServerDescription;
+import com.mongodb.connection.netty.NettyStreamFactoryFactory;
 import com.mongodb.event.ClusterDescriptionChangedEvent;
 import com.mongodb.event.ClusterListener;
 import com.mongodb.reactivestreams.client.MongoClient;
@@ -33,6 +34,10 @@ import im.turms.server.common.mongo.entity.MongoEntityFactory;
 import im.turms.server.common.mongo.operation.MongoCollectionOptions;
 import im.turms.server.common.mongo.util.SerializationUtil;
 import im.turms.server.common.util.CollectorUtil;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Getter;
 import org.bson.codecs.BsonCodecProvider;
 import org.bson.codecs.BsonValueCodecProvider;
@@ -69,6 +74,7 @@ public class MongoContext {
     private final CodecRegistry codecRegistry;
     private final Map<Class<?>, MongoEntity<?>> entityMap = new IdentityHashMap<>(64);
     private final Map<Class<?>, MongoCollection<?>> collectionMap = new IdentityHashMap<>(64);
+    private final NioEventLoopGroup eventLoopGroup;
 
     public MongoContext(String connectionString, Consumer<List<ServerDescription>> onServerDescriptionChange) {
         if (connectionString == null) {
@@ -89,6 +95,8 @@ public class MongoContext {
                 CodecRegistries.fromProviders(mongoCodecProvider));
         mongoCodecProvider.setRegistry(codecRegistry);
         ConnectionString connectionSettings = new ConnectionString(connectionString);
+        eventLoopGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(),
+                new DefaultThreadFactory("turms-mongo-event-loop"));
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connectionSettings)
                 .applyToClusterSettings(builder -> builder.addClusterListener(new ClusterListener() {
@@ -98,6 +106,14 @@ public class MongoContext {
                     }
                 }))
                 .codecRegistry(codecRegistry)
+                // Do NOT use the default implementation of com.mongodb.connection.AsynchronousSocketChannelStreamFactory,
+                // which use a heap buffer pool "bufferProvider" for BsonWriter for NIO.
+                // They should go back to school to learn how to code efficiently.
+                .streamFactoryFactory(NettyStreamFactoryFactory.builder()
+                        .allocator(PooledByteBufAllocator.DEFAULT)
+                        .eventLoopGroup(eventLoopGroup)
+                        .socketChannelClass(NioSocketChannel.class)
+                        .build())
                 .build();
         client = MongoClients.create(settings);
         database = client.getDatabase(connectionSettings.getDatabase());
@@ -108,6 +124,7 @@ public class MongoContext {
 
     public void destroy() {
         client.close();
+        eventLoopGroup.shutdownGracefully().awaitUninterruptibly();
     }
 
     public <T> Codec<T> getCodec(Class<T> clazz) {
