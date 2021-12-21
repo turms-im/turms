@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,9 @@
 package im.turms.plugin.antispam;
 
 import im.turms.plugin.antispam.ac.AhoCorasickDoubleArrayTrie;
+import im.turms.server.common.util.StringUtil;
+
+import java.util.Arrays;
 
 /**
  * @author James Chen
@@ -31,62 +34,79 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
         this.textPreprocessor = textPreprocessor;
     }
 
-    public String mask(String str, char mask) {
+    public String mask(String str, byte mask) {
         char code;
         Object newChars;
         int firstCharIndex = 0;
         int currentState = 0;
         int nextState;
-        // TODO: use bytes for better performance
-        char[] maskedChars = null;
+        byte[] maskedBytes = null;
         int length = str.length();
+        byte coder = StringUtil.getCoder(str);
         for (int i = 0; i < length; i++) {
             code = str.charAt(i);
             newChars = textPreprocessor.process(code);
+            if (currentState == ROOT_STATUS) {
+                firstCharIndex = i;
+            }
             if (newChars instanceof char[] chars) {
                 for (char c : chars) {
                     nextState = transition(currentState, c);
-                    while (nextState == -1) {
+                    while (nextState == STATUS_NOT_FOUND) {
                         currentState = fail[currentState];
-                        if (currentState == 0) {
+                        if (currentState == ROOT_STATUS) {
                             firstCharIndex = i;
                         }
                         nextState = transition(currentState, c);
                     }
                     currentState = nextState;
                     if (output[currentState] != null) {
-                        if (maskedChars == null) {
-                            maskedChars = str.toCharArray();
+                        if (maskedBytes == null) {
+                            byte[] bytes = StringUtil.getBytes(str);
+                            maskedBytes = Arrays.copyOf(bytes, bytes.length);
                         }
                         for (int j = firstCharIndex; j <= i; j++) {
-                            maskedChars[j] = mask;
+                            if (coder == StringUtil.LATIN1) {
+                                maskedBytes[j] = mask;
+                            } else {
+                                int k = j << 1;
+                                maskedBytes[k] = mask;
+                                maskedBytes[k + 1] = 0;
+                            }
                         }
                     }
                 }
             } else if (newChars instanceof Character c) {
                 nextState = transition(currentState, c);
-                while (nextState == -1) {
+                while (nextState == STATUS_NOT_FOUND) {
                     currentState = fail[currentState];
-                    if (currentState == 0) {
+                    if (currentState == ROOT_STATUS) {
                         firstCharIndex = i;
                     }
                     nextState = transition(currentState, c);
                 }
                 currentState = nextState;
                 if (output[currentState] != null) {
-                    if (maskedChars == null) {
-                        maskedChars = str.toCharArray();
+                    if (maskedBytes == null) {
+                        byte[] bytes = StringUtil.getBytes(str);
+                        maskedBytes = Arrays.copyOf(bytes, bytes.length);
                     }
                     for (int j = firstCharIndex; j <= i; j++) {
-                        maskedChars[j] = mask;
+                        if (coder == StringUtil.LATIN1) {
+                            maskedBytes[j] = mask;
+                        } else {
+                            int k = j << 1;
+                            maskedBytes[k] = mask;
+                            maskedBytes[k + 1] = 0;
+                        }
                     }
                 }
             }
         }
-        if (maskedChars == null) {
+        if (maskedBytes == null) {
             return null;
         }
-        return new String(maskedChars);
+        return StringUtil.newString(maskedBytes, coder);
     }
 
     public boolean containsUnwantedWords(String text) {

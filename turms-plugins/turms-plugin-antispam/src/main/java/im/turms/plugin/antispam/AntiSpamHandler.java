@@ -48,7 +48,7 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
 
     private final boolean enabled;
     private final UnwantedWordHandleStrategy unwantedWordHandleStrategy;
-    private final char mask;
+    private final byte mask;
 
     private final SpamDetector spamDetector;
     private final TextPreprocessor textPreprocessor;

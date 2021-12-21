@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,7 @@ import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.group.CreateGroupRequest;
 import im.turms.plugin.antispam.ac.Store;
 import im.turms.plugin.antispam.property.AntiSpamProperties;
+import im.turms.plugin.antispam.property.TextParsingStrategy;
 import im.turms.plugin.antispam.property.UnwantedWordHandleStrategy;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
@@ -47,7 +48,8 @@ class AntiSpamHandlerTests {
 
     @Test
     void shouldRejectRequest() {
-        AntiSpamHandler handler = createHandler(UnwantedWordHandleStrategy.REJECT_REQUEST);
+        AntiSpamHandler handler = createHandler(UnwantedWordHandleStrategy.REJECT_REQUEST,
+                TextParsingStrategy.NORMALIZATION_TRANSLITERATION);
         TurmsRequest.Builder builder = TurmsRequest
                 .newBuilder()
                 .setCreateGroupRequest(CreateGroupRequest.newBuilder()
@@ -64,32 +66,74 @@ class AntiSpamHandlerTests {
     }
 
     @Test
-    void shouldMask() {
-        String text = "Hello敏感词句.,asd#(&𤳵/()12%&123敏gan词321";
-        AntiSpamHandler handler = createHandler(UnwantedWordHandleStrategy.MASK_TEXT);
+    void shouldMask_forLatin1Text() {
+        String original = "Oh no, loving you is not right. But no, don't take me home tonight. Oh yes, so baby won't you hold me tight";
+        String expected = "*****, ***********************. ******, don't take me home tonight. ******, so baby won't you hold me tight";
+        AntiSpamHandler handler = createHandler(UnwantedWordHandleStrategy.MASK_TEXT, TextParsingStrategy.NORMALIZATION);
         TurmsRequest.Builder builder = TurmsRequest
                 .newBuilder()
                 .setCreateGroupRequest(CreateGroupRequest.newBuilder()
-                        .setName(text));
+                        .setName(original));
         ClientRequest clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, 1L, builder, null);
         Mono<ClientRequest> result = handler.transform(clientRequest);
         StepVerifier.create(result)
                 .expectNextMatches(request -> {
                     CreateGroupRequest createGroupRequest = request.turmsRequest().getCreateGroupRequest();
-                    assertThat(createGroupRequest.getName()).isEqualTo("Hello****.,asd#(&𤳵/()12%&********321");
+                    assertThat(createGroupRequest.getName()).isEqualTo(expected);
+                    return true;
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void shouldMask_forUTF16TextWithAscii() {
+        String original = "Hello敏感词句.,asd#(&𤳵/()12%&123敏gan词321";
+        String expected = "Hello****.,asd#(&𤳵/()12%&********321";
+        AntiSpamHandler handler = createHandler(UnwantedWordHandleStrategy.MASK_TEXT, TextParsingStrategy.NORMALIZATION_TRANSLITERATION);
+        TurmsRequest.Builder builder = TurmsRequest
+                .newBuilder()
+                .setCreateGroupRequest(CreateGroupRequest.newBuilder()
+                        .setName(original));
+        ClientRequest clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, 1L, builder, null);
+        Mono<ClientRequest> result = handler.transform(clientRequest);
+        StepVerifier.create(result)
+                .expectNextMatches(request -> {
+                    CreateGroupRequest createGroupRequest = request.turmsRequest().getCreateGroupRequest();
+                    assertThat(createGroupRequest.getName()).isEqualTo(expected);
+                    return true;
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void shouldMask_forUTF16TextWithoutAscii() {
+        String original = "薬指のリングより　人目忍ぶ恋選んだ　強い女に見えても　心の中いつも　切なさに　揺れてる";
+        String expected = "**の***より　********　***に***も　*の*いつも　***に　***る";
+        AntiSpamHandler handler = createHandler(UnwantedWordHandleStrategy.MASK_TEXT, TextParsingStrategy.NORMALIZATION);
+        TurmsRequest.Builder builder = TurmsRequest
+                .newBuilder()
+                .setCreateGroupRequest(CreateGroupRequest.newBuilder()
+                        .setName(original));
+        ClientRequest clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, 1L, builder, null);
+        Mono<ClientRequest> result = handler.transform(clientRequest);
+        StepVerifier.create(result)
+                .expectNextMatches(request -> {
+                    CreateGroupRequest createGroupRequest = request.turmsRequest().getCreateGroupRequest();
+                    assertThat(createGroupRequest.getName()).isEqualTo(expected);
                     return true;
                 })
                 .verifyComplete();
     }
 
     @SneakyThrows
-    AntiSpamHandler createHandler(UnwantedWordHandleStrategy handleStrategy) {
+    AntiSpamHandler createHandler(UnwantedWordHandleStrategy handleStrategy, TextParsingStrategy strategy) {
         try {
             List<String> terms = Store.UNWANTED_TERMS.stream().map(String::new).toList();
             String text = String.join("\n", terms);
             Files.writeString(path, text, StandardCharsets.UTF_8);
             AntiSpamProperties properties = new AntiSpamProperties()
                     .toBuilder()
+                    .textParsingStrategy(strategy)
                     .unwantedWordHandleStrategy(handleStrategy)
                     .build();
             properties.getDictParsing().setTextFilePath(path.toString());

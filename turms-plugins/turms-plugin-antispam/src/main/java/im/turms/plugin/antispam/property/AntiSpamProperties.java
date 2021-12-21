@@ -47,7 +47,7 @@ public class AntiSpamProperties {
 
     private UnwantedWordHandleStrategy unwantedWordHandleStrategy = REJECT_REQUEST;
 
-    private char mask = '*';
+    private byte mask = '*';
 
     private Set<TextType> textTypes = Set.of(TextType.values());
 

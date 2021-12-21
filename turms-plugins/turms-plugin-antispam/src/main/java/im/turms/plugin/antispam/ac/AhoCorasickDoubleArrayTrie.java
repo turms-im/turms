@@ -29,6 +29,9 @@ import java.util.Queue;
  */
 public class AhoCorasickDoubleArrayTrie {
 
+    public static final int ROOT_STATUS = 0;
+    public static final int STATUS_NOT_FOUND = -1;
+
     public final int[] fail;
     public final int[][] output;
     public final DoubleArrayTrie dat;
@@ -55,7 +58,7 @@ public class AhoCorasickDoubleArrayTrie {
     }
 
     public boolean matches(char[] text) {
-        int currentState = 0;
+        int currentState = ROOT_STATUS;
         for (char code : text) {
             currentState = findNextState(currentState, code);
             int[] emits = output[currentState];
@@ -68,7 +71,7 @@ public class AhoCorasickDoubleArrayTrie {
 
     protected int findNextState(int currentState, char code) {
         int nextState = transition(currentState, code);
-        while (nextState == -1) {
+        while (nextState == STATUS_NOT_FOUND) {
             currentState = fail[currentState];
             nextState = transition(currentState, code);
         }
@@ -81,7 +84,7 @@ public class AhoCorasickDoubleArrayTrie {
         if (nextState < dat.capacity && offset == dat.check[nextState]) {
             return nextState;
         }
-        return indexInDat == 0 ? 0 : -1;
+        return indexInDat == ROOT_STATUS ? ROOT_STATUS : STATUS_NOT_FOUND;
     }
 
     protected void constructOutputAndFailure(Trie trie) {
