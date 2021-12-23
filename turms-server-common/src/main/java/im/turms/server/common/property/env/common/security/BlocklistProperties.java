@@ -74,6 +74,7 @@ public class BlocklistProperties {
 
     }
 
+    @AllArgsConstructor
     @Data
     @NoArgsConstructor
     @SuperBuilder(toBuilder = true)

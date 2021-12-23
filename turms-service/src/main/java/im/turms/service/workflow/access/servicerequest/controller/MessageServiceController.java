@@ -107,8 +107,9 @@ public class MessageServiceController {
                         targetId);
             } else {
                 List<byte[]> records = null;
-                if (request.getRecordsCount() != 0) {
-                    records = new ArrayList<>(request.getRecordsCount());
+                int recordCount = request.getRecordsCount();
+                if (recordCount > 0) {
+                    records = new ArrayList<>(recordCount);
                     for (ByteString byteString : request.getRecordsList()) {
                         records.add(byteString.toByteArray());
                     }

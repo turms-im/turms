@@ -89,6 +89,7 @@ public class BlocklistServiceManager<T> {
      */
     private static final int MAX_BLOCK_TIME_MINUTES = Integer.MAX_VALUE / 60;
     private static final int LOG_ENTRY_ELEMENTS_COUNT = 3;
+    private static final int BLOCK_ACTION_FLAG = 1;
 
     private static final ByteBufAllocator BUFFER_ALLOCATOR = PooledByteBufAllocator.DEFAULT;
     private static final ByteBuf BLOCKLIST_KEY_FOR_IP = ByteBufUtil.getUnreleasableDirectBuffer((byte) 'i');
@@ -193,8 +194,8 @@ public class BlocklistServiceManager<T> {
         if (blockMinutes <= 0) {
             return Mono.empty();
         }
-        long now = System.currentTimeMillis() / 1000;
-        long blockEndTimeMillis = (now + blockMinutes * 60L) * 1000L;
+        long now = System.currentTimeMillis();
+        long blockEndTimeMillis = now + blockMinutes * 60L * 1000L;
         for (T targetId : targetIds) {
             BlockedClient blockedClient = new BlockedClient(targetId, blockEndTimeMillis);
             blocklist.put(targetId, blockEndTimeMillis);
@@ -458,7 +459,7 @@ public class BlocklistServiceManager<T> {
         List<BlockClientLog> logs = new ArrayList<>(elementCount / LOG_ENTRY_ELEMENTS_COUNT);
         for (int i = 0; i < elementCount; i += LOG_ENTRY_ELEMENTS_COUNT) {
             byte[] bytes = ((ByteBuf) elements.get(i)).array();
-            boolean isBlockAction = bytes[0] == 1;
+            boolean isBlockAction = bytes[0] == BLOCK_ACTION_FLAG;
             Object targetId = decodeTargetId((ByteBuf) elements.get(i + 1));
             if (isBlockAction) {
                 long timestamp = decodeBlockEndTime((long) elements.get(i + 2));

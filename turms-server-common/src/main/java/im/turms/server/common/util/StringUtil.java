@@ -54,6 +54,10 @@ public final class StringUtil {
     private StringUtil() {
     }
 
+    /**
+     * Get the internal bytes of String without copying,
+     * and the caller need to ensure it won't modify the byte array
+     */
     public static byte[] getBytes(String s) {
         try {
             return (byte[]) UNSAFE.getObject(s, STRING_VALUE_OFFSET);
@@ -85,6 +89,10 @@ public final class StringUtil {
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static boolean isLatin1(byte coder) {
+        return coder == LATIN1;
     }
 
     @SneakyThrows

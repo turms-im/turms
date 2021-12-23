@@ -225,9 +225,6 @@ public class ClientRequestDispatcher {
                 TurmsNotification notification = NotificationFactory.create(TurmsStatusCode.SERVER_UNAVAILABLE, requestId);
                 return Mono.just(notification);
             }
-            // Handle the request to get a response
-            TurmsRequest.KindCase requestType = request.type();
-            tracingContext.updateThreadContext();
 
             // Rate limiting
             long now = System.currentTimeMillis();
@@ -241,6 +238,9 @@ public class ClientRequestDispatcher {
                 return Mono.just(notification);
             }
 
+            // Handle the request to get a response
+            TurmsRequest.KindCase requestType = request.type();
+            tracingContext.updateThreadContext();
             return switch (requestType) {
                 case CREATE_SESSION_REQUEST -> sessionController
                         .handleCreateSessionRequest(sessionWrapper, request.createSessionRequest())

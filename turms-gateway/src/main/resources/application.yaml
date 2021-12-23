@@ -34,8 +34,6 @@ turms:
         key-store-password: imturms
         key-alias: turms
     tcp:
-      # Disable TCP currently until clients support TCP
-      enabled: false
       port: 11510
       ssl:
         enabled: false # Enable SSL if needed

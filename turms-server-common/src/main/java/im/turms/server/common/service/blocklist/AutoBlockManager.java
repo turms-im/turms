@@ -34,6 +34,8 @@ import java.util.function.BiConsumer;
  */
 public class AutoBlockManager<T> {
 
+    private static final int UNSET_BLOCK_LEVEL = -1;
+
     private final BiConsumer<T, Integer> onClientBlocked;
 
     private final boolean isEnabled;
@@ -60,9 +62,11 @@ public class AutoBlockManager<T> {
         if (!isEnabled) {
             return;
         }
-        long now = System.currentTimeMillis();
-        BlockStatus status = blockStatusMap.computeIfAbsent(id, key -> new BlockStatus(-1, null, 0, now));
-        synchronized (status) {
+        blockStatusMap.compute(id, (key, status) -> {
+            long now = System.currentTimeMillis();
+            if (status == null) {
+                status = new BlockStatus(UNSET_BLOCK_LEVEL, null, 0, now);
+            }
             // Update status
             long previousBlockTriggerTime = status.lastBlockTriggerTime;
             status.lastBlockTriggerTime = now;
@@ -75,7 +79,7 @@ public class AutoBlockManager<T> {
                 }
             }
             status.triggerTimes = times + 1;
-            boolean isBlocked = status.currentLevel != -1;
+            boolean isBlocked = status.currentLevel != UNSET_BLOCK_LEVEL;
             if (isBlocked) {
                 if (status.triggerTimes >= status.currentLevelProperties.getGoNextLevelTriggerTimes() && status.currentLevel < maxLevel) {
                     status.currentLevel++;
@@ -91,7 +95,8 @@ public class AutoBlockManager<T> {
             } else {
                 status.triggerTimes++;
             }
-        }
+            return status;
+        });
     }
 
     public void unblockClient(T id) {

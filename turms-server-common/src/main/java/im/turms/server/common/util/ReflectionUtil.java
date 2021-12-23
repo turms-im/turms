@@ -34,7 +34,7 @@ public final class ReflectionUtil {
     private static final Unsafe UNSAFE = UnsafeUtil.UNSAFE;
     /**
      * "UNSAFE.objectFieldOffset(AccessibleObject.class.getDeclaredField("override"))" won't work
-     * because the field cannot be found.
+     * because Java hides these fields: https://bugs.openjdk.java.net/browse/JDK-8210522
      * So we get the offset via:
      * "jdk.internal.misc.Unsafe#objectFieldOffset(AccessibleObject.class, "override")"
      */
@@ -101,7 +101,7 @@ public final class ReflectionUtil {
     }
 
     /**
-     * The method can ignore the access control of modules
+     * The method can ignore the access control of the module system
      */
     public static void setAccessible(AccessibleObject object) {
         UNSAFE.putBoolean(object, OVERRIDE_OFFSET, true);

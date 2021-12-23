@@ -129,7 +129,7 @@ public class RollingFileAppender extends Appender {
 
     /**
      * Note that it's fine to close file channel and open a new one not atomically
-     * because there is always one thread will call roll()
+     * because there is always only one thread will call roll() and append()
      */
     @SneakyThrows
     private void roll() {
