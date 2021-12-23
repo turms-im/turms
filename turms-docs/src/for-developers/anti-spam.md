@@ -79,6 +79,7 @@ Turms不支持且未来也不会支持图片、视频与语音的反垃圾检测
 | textParsingStrategy              | NORMALIZATION_TRANSLITERATION | 词典文本与用户输入文本的解析策略：<br />NORMALIZATION：对输入文本进行标准化。如："⑩HELLO(你{}好./" -> "10hello你好"<br />NORMALIZATION_TRANSLITERATION：对输入文本进行标准化并音译。如："⑩HELLO(你{}好./" -> "10hellonihao" |
 | unwantedWordHandleStrategy       | REJECT_REQUEST                | 非法文本处理策略：<br />REJECT_REQUEST：向客户端返回“MESSAGE_IS_ILLEGAL”错误状态码<br />MASK_TEXT：替换非法字符，并继续正常处理请求 |
 | mask                             | '*'                           | 当“unwantedWordHandleStrategy”为“MASK_TEXT”时，所采用的掩码  |
+| maxNumberOfUnwantedWordsToReturn | 0                             | 当处理策略为`REJECT_REQUEST`且该值大于0时，被检测为非法文本的字符串，将以ASCII`0x1E`（Record Separator）字符作为分隔符，通过异常的描述字符串来表示。该异常文本最终会被客户端接收 |
 | textTypes                        | 所有其他用户可见的文本        | 配置哪些请求的哪些文本字段需要进行检测                       |
 | silentIllegalTextTypes           | 空                            | 配置当检测到这些请求的这些文本字段包含非法字符时，服务端会“OK”状态码响应客户端，但服务端实际并没有继续处理该请求。<br />在实际业务场景中，该值除了通常为空外，还通常为`CREATE_MESSAGE_REQUEST_TEXT`，用于静默拒绝发送用户消息 |
 

@@ -49,6 +49,8 @@ public class AntiSpamProperties {
 
     private byte mask = '*';
 
+    private int maxNumberOfUnwantedWordsToReturn;
+
     private Set<TextType> textTypes = Set.of(TextType.values());
 
     private Set<TextType> silentIllegalTextTypes = Collections.emptySet();

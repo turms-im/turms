@@ -49,6 +49,7 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
     private final boolean enabled;
     private final UnwantedWordHandleStrategy unwantedWordHandleStrategy;
     private final byte mask;
+    private final int maxNumberOfUnwantedWordsToReturn;
 
     private final SpamDetector spamDetector;
     private final TextPreprocessor textPreprocessor;
@@ -61,6 +62,7 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
         textPreprocessor = new TextPreprocessor(properties.getTextParsingStrategy());
         unwantedWordHandleStrategy = properties.getUnwantedWordHandleStrategy();
         mask = properties.getMask();
+        maxNumberOfUnwantedWordsToReturn = properties.getMaxNumberOfUnwantedWordsToReturn();
         spamDetector = enabled
                 ? new SpamDetector(textPreprocessor, buildTrie(properties.getDictParsing(), textPreprocessor))
                 : null;
@@ -72,6 +74,7 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
         textPreprocessor = new TextPreprocessor(properties.getTextParsingStrategy());
         unwantedWordHandleStrategy = properties.getUnwantedWordHandleStrategy();
         mask = properties.getMask();
+        maxNumberOfUnwantedWordsToReturn = properties.getMaxNumberOfUnwantedWordsToReturn();
         spamDetector = enabled
                 ? new SpamDetector(textPreprocessor, buildTrie(properties.getDictParsing(), textPreprocessor))
                 : null;
@@ -112,14 +115,23 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
             }
             switch (unwantedWordHandleStrategy) {
                 case REJECT_REQUEST -> {
-                    if (spamDetector.containsUnwantedWords(text)) {
-                        return field.shouldRejectSilently()
-                                ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.OK))
-                                : Mono.error(TurmsBusinessException.get(TurmsStatusCode.MESSAGE_IS_ILLEGAL));
+                    if (field.shouldRejectSilently()) {
+                        if (spamDetector.containsUnwantedWords(text)) {
+                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.OK));
+                        }
+                    } else {
+                        if (maxNumberOfUnwantedWordsToReturn > 0) {
+                            String words = spamDetector.findUnwantedWords(text, maxNumberOfUnwantedWordsToReturn);
+                            if (words != null) {
+                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.MESSAGE_IS_ILLEGAL, words));
+                            }
+                        } else if (spamDetector.containsUnwantedWords(text)) {
+                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.MESSAGE_IS_ILLEGAL));
+                        }
                     }
                 }
                 case MASK_TEXT -> {
-                    String maskedStr = spamDetector.mask(text, this.mask);
+                    String maskedStr = spamDetector.mask(text, mask);
                     if (maskedStr != null) {
                         req.setField(fieldDescriptor, maskedStr);
                     }

@@ -18,6 +18,7 @@
 package im.turms.plugin.antispam;
 
 import im.turms.plugin.antispam.ac.AhoCorasickDoubleArrayTrie;
+import im.turms.server.common.lang.FastStringBuilder;
 import im.turms.server.common.util.StringUtil;
 
 import java.util.Arrays;
@@ -26,6 +27,8 @@ import java.util.Arrays;
  * @author James Chen
  */
 public class SpamDetector extends AhoCorasickDoubleArrayTrie {
+
+    public static final byte UNWANTED_WORD_DELIMITER = 0x1E; // "Record Separator"
 
     private final TextPreprocessor textPreprocessor;
 
@@ -130,6 +133,84 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
             }
         }
         return false;
+    }
+
+    /**
+     * @param maxNumberOfUnwantedWordsToReturn should be greater than 0
+     */
+    public String findUnwantedWords(String text, int maxNumberOfUnwantedWordsToReturn) {
+        char code;
+        Object newChars;
+        int firstByteIndex = 0;
+        int currentState = 0;
+        int nextState;
+        FastStringBuilder builder = null;
+        int length = text.length();
+        byte[] textInternalBytes = null;
+        byte coder = StringUtil.getCoder(text);
+        boolean isLatin1 = StringUtil.isLatin1(coder);
+        for (int i = 0; i < length; i++) {
+            code = text.charAt(i);
+            newChars = textPreprocessor.process(code);
+            if (currentState == ROOT_STATUS) {
+                firstByteIndex = isLatin1 ? i : i * 2;
+            }
+            if (newChars instanceof char[] chars) {
+                for (char c : chars) {
+                    nextState = transition(currentState, c);
+                    while (nextState == STATUS_NOT_FOUND) {
+                        currentState = fail[currentState];
+                        if (currentState == ROOT_STATUS) {
+                            firstByteIndex = isLatin1 ? i : i * 2;
+                        }
+                        nextState = transition(currentState, c);
+                    }
+                    currentState = nextState;
+                    if (output[currentState] != null) {
+                        if (builder == null) {
+                            builder = new FastStringBuilder();
+                            textInternalBytes = StringUtil.getBytes(text);
+                        }
+                        if (isLatin1) {
+                            builder.append(textInternalBytes, firstByteIndex, i + 1 - firstByteIndex);
+                        } else {
+                            builder.append(textInternalBytes, firstByteIndex, (i + 1) * 2 - firstByteIndex);
+                        }
+                        if (builder.entryCount() >= maxNumberOfUnwantedWordsToReturn) {
+                            return builder.build(coder, UNWANTED_WORD_DELIMITER);
+                        }
+                    }
+                }
+            } else if (newChars instanceof Character c) {
+                nextState = transition(currentState, c);
+                while (nextState == STATUS_NOT_FOUND) {
+                    currentState = fail[currentState];
+                    if (currentState == ROOT_STATUS) {
+                        firstByteIndex = isLatin1 ? i : i * 2;
+                    }
+                    nextState = transition(currentState, c);
+                }
+                currentState = nextState;
+                if (output[currentState] != null) {
+                    if (builder == null) {
+                        builder = new FastStringBuilder();
+                        textInternalBytes = StringUtil.getBytes(text);
+                    }
+                    if (isLatin1) {
+                        builder.append(textInternalBytes, firstByteIndex, i + 1 - firstByteIndex);
+                    } else {
+                        builder.append(textInternalBytes, firstByteIndex, (i + 1) * 2 - firstByteIndex);
+                    }
+                    if (builder.entryCount() >= maxNumberOfUnwantedWordsToReturn) {
+                        return builder.build(coder, UNWANTED_WORD_DELIMITER);
+                    }
+                }
+            }
+        }
+        if (builder == null) {
+            return null;
+        }
+        return builder.build(coder, UNWANTED_WORD_DELIMITER);
     }
 
 }
