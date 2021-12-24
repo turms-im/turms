@@ -23,7 +23,6 @@ import im.turms.server.common.mongo.entity.annotation.Field;
 import im.turms.server.common.mongo.entity.annotation.Id;
 import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
-import im.turms.server.common.mongo.entity.annotation.WithTemperature;
 import im.turms.service.workflow.dao.index.OptionalIndexedForColdData;
 import im.turms.service.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.Data;
@@ -42,7 +41,8 @@ import java.util.List;
 @Document(Message.COLLECTION_NAME)
 @CompoundIndex({Message.Fields.DELIVERY_DATE, Message.Fields.TARGET_ID})
 @Sharded(shardKey = Message.Fields.DELIVERY_DATE)
-@WithTemperature(creationDateFieldName = Message.Fields.DELIVERY_DATE)
+// Hide these feature until we deliver a complete solution for it in the next major release
+//@WithTemperature(creationDateFieldName = Message.Fields.DELIVERY_DATE)
 public final class Message {
 
     public static final String COLLECTION_NAME = "message";
