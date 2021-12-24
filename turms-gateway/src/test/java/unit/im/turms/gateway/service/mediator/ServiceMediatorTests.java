@@ -35,7 +35,7 @@ import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.gateway.SessionProperties;
-import im.turms.server.common.util.ExceptionUtil;
+import im.turms.server.common.util.ThrowableUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
@@ -78,7 +78,7 @@ class ServiceMediatorTests {
         Mono<UserSession> result = mediator.processLoginRequest(Integer.MAX_VALUE, ip, userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
-                .expectErrorMatches(throwable -> ExceptionUtil.isStatusCode(throwable, TurmsStatusCode.UNSUPPORTED_CLIENT_VERSION))
+                .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable, TurmsStatusCode.UNSUPPORTED_CLIENT_VERSION))
                 .verify();
     }
 
@@ -88,7 +88,7 @@ class ServiceMediatorTests {
         Mono<UserSession> result = mediator.processLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
-                .expectErrorMatches(throwable -> ExceptionUtil.isStatusCode(throwable, TurmsStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE))
+                .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable, TurmsStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE))
                 .verify();
     }
 
@@ -98,7 +98,7 @@ class ServiceMediatorTests {
         Mono<UserSession> result = mediator.processLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
-                .expectErrorMatches(throwable -> ExceptionUtil.isStatusCode(throwable, TurmsStatusCode.LOGIN_AUTHENTICATION_FAILED))
+                .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable, TurmsStatusCode.LOGIN_AUTHENTICATION_FAILED))
                 .verify();
     }
 
@@ -108,7 +108,7 @@ class ServiceMediatorTests {
         Mono<UserSession> result = mediator.processLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
-                .expectErrorMatches(throwable -> ExceptionUtil.isStatusCode(throwable, TurmsStatusCode.LOGGING_IN_USER_NOT_ACTIVE))
+                .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable, TurmsStatusCode.LOGGING_IN_USER_NOT_ACTIVE))
                 .verify();
     }
 

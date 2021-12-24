@@ -40,7 +40,7 @@ import im.turms.server.common.property.env.common.cluster.RpcProperties;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.CollectorUtil;
-import im.turms.server.common.util.ExceptionUtil;
+import im.turms.server.common.util.ThrowableUtil;
 import im.turms.server.common.util.MapUtil;
 import io.micrometer.core.instrument.Tag;
 import io.netty.buffer.ByteBuf;
@@ -269,7 +269,7 @@ public class RpcService implements ClusterService {
         request.retain();
         return requestResponse(client, request, defaultRequestTimeoutDuration)
                 .onErrorResume(throwable -> {
-                    if (ExceptionUtil.isDisconnectedClientError(throwable)) {
+                    if (ThrowableUtil.isDisconnectedClientError(throwable)) {
                         for (Member newMember : getOtherActiveConnectedMembersToRespond(request)) {
                             String newMemberId = newMember.getNodeId();
                             if (!newMemberId.equals(memberNodeId) && newMember.getStatus().isHealthy()) {

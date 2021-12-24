@@ -24,23 +24,23 @@ import java.util.concurrent.locks.LockSupport;
  */
 public final class BackoffIdleStrategy {
 
-    static final int WORKING = 0;
-    static final int SPINNING = 1;
-    static final int YIELDING = 2;
-    static final int PARKING = 3;
+    private static final int WORKING = 0;
+    private static final int SPINNING = 1;
+    private static final int YIELDING = 2;
+    private static final int PARKING = 3;
 
-    final long maxSpins;
-    final long maxYields;
-    final long minParkPeriodNs;
-    final long maxParkPeriodNs;
+    private final long maxSpins;
+    private final long maxYields;
+    private final long minParkPeriodNs;
+    private final long maxParkPeriodNs;
 
-    int state = WORKING;
-    long value;
+    private int state = WORKING;
+    private long value;
 
     public BackoffIdleStrategy(long maxSpins, long maxYields, long minParkPeriodNs, long maxParkPeriodNs) {
         if (minParkPeriodNs < 1 || maxParkPeriodNs < minParkPeriodNs) {
-            throw new IllegalArgumentException("Min park period " + minParkPeriodNs +
-                    " < 1 or max park period " + maxParkPeriodNs + " < min");
+            throw new IllegalArgumentException("Min park period %d < 1 or max park period %d < min"
+                    .formatted(minParkPeriodNs, maxParkPeriodNs));
         }
         this.maxSpins = maxSpins;
         this.maxYields = maxYields;

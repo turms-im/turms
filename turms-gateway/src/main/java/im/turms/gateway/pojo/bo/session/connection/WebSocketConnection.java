@@ -22,7 +22,7 @@ import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.factory.NotificationFactory;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
-import im.turms.server.common.util.ExceptionUtil;
+import im.turms.server.common.util.ThrowableUtil;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
@@ -66,7 +66,7 @@ public class WebSocketConnection extends NetConnection {
             out.sendObject(Mono.just(new BinaryWebSocketFrame(message)), byteBuf -> true)
                     .then()
                     .doOnError(throwable -> {
-                        if (!ExceptionUtil.isDisconnectedClientError(throwable)) {
+                        if (!ThrowableUtil.isDisconnectedClientError(throwable)) {
                             LOGGER.error("Failed to send the close notification", throwable);
                         }
                     })
@@ -85,7 +85,7 @@ public class WebSocketConnection extends NetConnection {
     public void close() {
         out.sendClose(WebSocketCloseStatus.NORMAL_CLOSURE.code(), null)
                 .onErrorResume(throwable -> {
-                    if (!ExceptionUtil.isDisconnectedClientError(throwable)) {
+                    if (!ThrowableUtil.isDisconnectedClientError(throwable)) {
                         LOGGER.error("Failed to close the connection", throwable);
                     }
                     return Mono.empty();

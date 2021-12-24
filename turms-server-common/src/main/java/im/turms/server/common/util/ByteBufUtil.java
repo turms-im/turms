@@ -142,6 +142,16 @@ public final class ByteBufUtil {
         return new RefCntCorrectorByteBuf(buf);
     }
 
+    public static void safeEnsureReleased(ByteBuf buffer) {
+        try {
+            int refCnt = buffer.refCnt();
+            if (refCnt > 0) {
+                buffer.release(refCnt);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
     public static void ensureReleased(ByteBuf buffer) {
         int refCnt = buffer.refCnt();
         if (refCnt > 0) {

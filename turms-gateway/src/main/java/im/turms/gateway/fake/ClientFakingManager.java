@@ -29,12 +29,12 @@ import im.turms.server.common.client.TurmsClient;
 import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.fake.RandomProtobufGenerator;
 import im.turms.server.common.fake.RandomRequestFactory;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.FakeProperties;
-import im.turms.server.common.util.ExceptionUtil;
 import im.turms.server.common.util.ProtoUtil;
+import im.turms.server.common.util.ThrowableUtil;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -159,7 +159,7 @@ public class ClientFakingManager {
                                     LOGGER.error("Caught an internal error when sending request: {}",
                                             ProtoUtil.toLogString(builder.build()),
                                             t);
-                                    if (ExceptionUtil.isDisconnectedClientError(t)) {
+                                    if (ThrowableUtil.isDisconnectedClientError(t)) {
                                         removeCurrentClient(clientIterator, client);
                                     }
                                     return Mono.empty();

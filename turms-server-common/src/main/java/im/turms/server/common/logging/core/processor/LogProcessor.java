@@ -30,12 +30,12 @@ import java.util.List;
 /**
  * @author James Chen
  */
-public final class LogProcessorRunner {
+public final class LogProcessor {
 
     private final Thread thread;
     private volatile boolean active;
 
-    public LogProcessorRunner(MpscUnboundedArrayQueue<LogRecord> recordQueue) {
+    public LogProcessor(MpscUnboundedArrayQueue<LogRecord> recordQueue) {
         Runnable processor = () -> {
             BackoffIdleStrategy idleStrategy = new BackoffIdleStrategy(128, 128, 1024000, 1024000);
             LogRecord record;
@@ -68,7 +68,7 @@ public final class LogProcessorRunner {
                 }
             }
         };
-        thread = new DefaultThreadFactory("turms-log-process")
+        thread = new DefaultThreadFactory("turms-log-processor")
                 .newThread(processor);
         active = true;
         Runtime.getRuntime()

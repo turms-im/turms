@@ -23,6 +23,7 @@ import sun.misc.Unsafe;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author James Chen
@@ -45,7 +46,7 @@ public final class StringUtil {
             STRING_VALUE_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("value"));
             STRING_CODER_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("coder"));
 
-            String test = (String) NEW_STRING.invokeExact(new byte[]{}, LATIN1);
+            String test = StringUtil.newString(StringUtil.getBytes(""), StringUtil.getCoder(""));
         } catch (Throwable e) {
             throw new IllegalStateException(e);
         }
@@ -56,11 +57,25 @@ public final class StringUtil {
 
     /**
      * Get the internal bytes of String without copying,
-     * and the caller need to ensure it won't modify the byte array
+     * and the caller needs to ensure it won't modify the byte array
      */
     public static byte[] getBytes(String s) {
         try {
             return (byte[]) UNSAFE.getObject(s, STRING_VALUE_OFFSET);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * @implNote The method assumes the string do NOT contain any extended control character
+     * if it's encoded in LATIN1
+     * @see <a href="https://cs.stanford.edu/people/miles/iso8859.html">iso8859</a>
+     */
+    public static byte[] getUTF8Bytes(String s) {
+        try {
+            byte coder = getCoder(s);
+            return coder == LATIN1 ? getBytes(s) : s.getBytes(StandardCharsets.UTF_8);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }

@@ -18,16 +18,15 @@
 package im.turms.service.workflow.access.http.config;
 
 import im.turms.server.common.cluster.node.NodeType;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
-import im.turms.server.common.logging.core.logger.Logger;
-import im.turms.server.common.util.ExceptionUtil;
+import im.turms.server.common.util.ThrowableUtil;
 import im.turms.service.workflow.access.http.dto.response.ErrorAttributes;
 import im.turms.service.workflow.access.http.dto.response.ErrorAttributesFactory;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.NestedExceptionUtils;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -86,7 +85,7 @@ public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
 
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, Throwable throwable) {
-        if (exchange.getResponse().isCommitted() || isDisconnectedClientError(throwable)) {
+        if (exchange.getResponse().isCommitted() || ThrowableUtil.isDisconnectedClientError(throwable)) {
             return Mono.error(throwable);
         }
         ErrorAttributes errorAttributes = ErrorAttributesFactory.parse(throwable);
@@ -112,18 +111,6 @@ public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
             exchange.getResponse().getHeaders().setContentType(response.headers().getContentType());
             return response.writeTo(exchange, context);
         });
-    }
-
-    private boolean isDisconnectedClientError(Throwable throwable) {
-        if (ExceptionUtil.isDisconnectedClientError(throwable)) {
-            return true;
-        }
-        String message = NestedExceptionUtils.getMostSpecificCause(throwable).getMessage();
-        if (message == null) {
-            return false;
-        }
-        message = message.toLowerCase();
-        return message.contains("broken pipe") || message.contains("connection reset by peer");
     }
 
     private String formatRequest(ServerRequest request) {

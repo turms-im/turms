@@ -22,7 +22,7 @@ import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.factory.NotificationFactory;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
-import im.turms.server.common.util.ExceptionUtil;
+import im.turms.server.common.util.ThrowableUtil;
 import reactor.core.publisher.Mono;
 import reactor.netty.channel.ChannelOperations;
 
@@ -59,7 +59,7 @@ public class TcpConnection extends NetConnection {
                     .sendObject(closeNotification)
                     .then()
                     .doOnError(throwable -> {
-                        if (!ExceptionUtil.isDisconnectedClientError(throwable)) {
+                        if (!ThrowableUtil.isDisconnectedClientError(throwable)) {
                             LOGGER.error("Failed to send the close notification", throwable);
                         }
                     })
@@ -79,7 +79,7 @@ public class TcpConnection extends NetConnection {
         try {
             connection.dispose();
         } catch (Exception e) {
-            if (!ExceptionUtil.isDisconnectedClientError(e)) {
+            if (!ThrowableUtil.isDisconnectedClientError(e)) {
                 LOGGER.error("Failed to close the connection", e);
             }
         }

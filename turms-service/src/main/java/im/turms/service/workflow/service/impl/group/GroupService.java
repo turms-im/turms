@@ -40,7 +40,7 @@ import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.DateUtil;
-import im.turms.server.common.util.ExceptionUtil;
+import im.turms.server.common.util.ThrowableUtil;
 import im.turms.service.bo.ServicePermission;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.util.ProtoModelUtil;
@@ -405,7 +405,7 @@ public class GroupService {
                     long modified = 0;
                     for (Signal<Void> signal : signals) {
                         if (signal.isOnError()) {
-                            if (!ExceptionUtil.isStatusCode(signal.getThrowable(), TurmsStatusCode.TRANSFER_NON_EXISTING_GROUP)) {
+                            if (!ThrowableUtil.isStatusCode(signal.getThrowable(), TurmsStatusCode.TRANSFER_NON_EXISTING_GROUP)) {
                                 matched++;
                             }
                         } else if (signal.isOnComplete()) {

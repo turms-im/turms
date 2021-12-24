@@ -22,9 +22,11 @@ import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.logging.core.context.LogThreadContext;
 import im.turms.server.common.logging.core.model.LogLevel;
 import im.turms.server.common.tracing.TracingContext;
+import im.turms.server.common.util.ByteBufUtil;
 import im.turms.server.common.util.DateUtil;
 import im.turms.server.common.util.Formatter;
 import im.turms.server.common.util.StringUtil;
+import im.turms.server.common.util.ThrowableUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import org.springframework.util.StringUtils;
@@ -72,45 +74,13 @@ public class TurmsTemplateLayout extends TemplateLayout {
 
     public ByteBuf format(@Nullable byte[] className, LogLevel level, ByteBuf msg) {
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(ESTIMATED_PATTERN_TEXT_LENGTH);
-        byte[] timestamp = DateUtil.toBytes(System.currentTimeMillis());
-
-        String threadName = Thread.currentThread().getName();
-
-        // Write template text
-
-        buffer.writeBytes(timestamp)
-                .writeByte(WHITESPACE)
-                .writeBytes(LEVELS[level.ordinal()])
-                .writeByte(WHITESPACE)
-                .writeByte(nodeType)
-                .writeByte(WHITESPACE)
-                .writeBytes(nodeId)
-                .writeByte(WHITESPACE);
-        TracingContext context = LogThreadContext.get();
-        // trace ID
-        if (context == null) {
-            pad(buffer, TRACE_ID_LENGTH);
-        } else {
-            long traceId = context.getTraceId();
-            if (traceId != TracingContext.UNDEFINED_TRACE_ID) {
-                padStart(buffer, Formatter.toCharBytes(traceId), TRACE_ID_LENGTH);
-            }
+        try {
+            return format0(buffer, className, level, msg);
+        } catch (Exception e) {
+            ByteBufUtil.safeEnsureReleased(buffer);
+            ByteBufUtil.safeEnsureReleased(msg);
+            throw e;
         }
-        // thread name
-        buffer.writeByte(WHITESPACE)
-                .writeBytes(StringUtil.getBytes(threadName));
-        // class name
-        if (className != null) {
-            buffer.writeByte(WHITESPACE)
-                    .writeBytes(className);
-        }
-        buffer.writeBytes(COLON_SEPARATOR);
-        // eol
-        msg.writeByte('\n');
-
-        return PooledByteBufAllocator.DEFAULT.compositeBuffer(2)
-                .addComponent(true, buffer)
-                .addComponent(true, msg);
     }
 
     /**
@@ -122,9 +92,11 @@ public class TurmsTemplateLayout extends TemplateLayout {
                           CharSequence msg,
                           Object[] args,
                           Throwable throwable) {
-        int estimatedThrowableLength = throwable == null
-                ? 0
-                : throwable.getCause() == null ? 64 : 256;
+        int estimatedThrowableLength = 0;
+        if (throwable != null) {
+            int causes = ThrowableUtil.countCauses(throwable);
+            estimatedThrowableLength = causes == 0 ? 64 : causes * 1024;
+        }
         int estimatedLength = msg.length() + ESTIMATED_PATTERN_TEXT_LENGTH + estimatedThrowableLength;
         if (args != null && shouldParse) {
             estimatedLength += args.length * 8;
@@ -133,10 +105,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
         try {
             return format0(buffer, shouldParse, className, level, msg, args, throwable);
         } catch (Exception e) {
-            try {
-                buffer.release();
-            } catch (Exception ignored) {
-            }
+            ByteBufUtil.safeEnsureReleased(buffer);
             throw e;
         }
     }
@@ -192,6 +161,51 @@ public class TurmsTemplateLayout extends TemplateLayout {
         return buffer;
     }
 
+    private ByteBuf format0(ByteBuf buffer,
+                            @Nullable byte[] className,
+                            LogLevel level,
+                            ByteBuf msg) {
+        byte[] timestamp = DateUtil.toBytes(System.currentTimeMillis());
+
+        String threadName = Thread.currentThread().getName();
+
+        // Write template text
+
+        buffer.writeBytes(timestamp)
+                .writeByte(WHITESPACE)
+                .writeBytes(LEVELS[level.ordinal()])
+                .writeByte(WHITESPACE)
+                .writeByte(nodeType)
+                .writeByte(WHITESPACE)
+                .writeBytes(nodeId)
+                .writeByte(WHITESPACE);
+        TracingContext context = LogThreadContext.get();
+        // trace ID
+        if (context == null) {
+            pad(buffer, TRACE_ID_LENGTH);
+        } else {
+            long traceId = context.getTraceId();
+            if (traceId != TracingContext.UNDEFINED_TRACE_ID) {
+                padStart(buffer, Formatter.toCharBytes(traceId), TRACE_ID_LENGTH);
+            }
+        }
+        // thread name
+        buffer.writeByte(WHITESPACE)
+                .writeBytes(StringUtil.getBytes(threadName));
+        // class name
+        if (className != null) {
+            buffer.writeByte(WHITESPACE)
+                    .writeBytes(className);
+        }
+        buffer.writeBytes(COLON_SEPARATOR);
+        // eol
+        msg.writeByte('\n');
+
+        return PooledByteBufAllocator.DEFAULT.compositeBuffer(2)
+                .addComponent(true, buffer)
+                .addComponent(true, msg);
+    }
+
     private void appendMessage(boolean shouldParse, CharSequence msg, Object[] args, ByteBuf buffer) {
         String message = msg.toString();
         if (!shouldParse) {
@@ -211,7 +225,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
             if (b == '{' && i < length - 1 && bytes[i + 1] == '}') {
                 if (argIndex < argCount) {
                     Object arg = args[argIndex++];
-                    buffer.writeCharSequence(arg.toString(), StandardCharsets.UTF_8);
+                    buffer.writeBytes(StringUtil.getUTF8Bytes(arg.toString()));
                 } else {
                     buffer.writeBytes(NULL);
                 }
@@ -222,6 +236,9 @@ public class TurmsTemplateLayout extends TemplateLayout {
         }
     }
 
+    /**
+     * @return a class name in a byte array with the exact length of {@link CLASS_NAME_LENGTH}
+     */
     public static byte[] formatClassName(String name) {
         byte[] rawBytes = name.getBytes(StandardCharsets.US_ASCII);
         if (rawBytes.length == CLASS_NAME_LENGTH) {

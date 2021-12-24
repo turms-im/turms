@@ -32,7 +32,7 @@ import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.logging.core.logger.Logger;
-import im.turms.server.common.util.ExceptionUtil;
+import im.turms.server.common.util.ThrowableUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import reactor.core.publisher.Flux;
@@ -173,7 +173,7 @@ public abstract class UserSessionDispatcher {
                                              NetConnection connection,
                                              @Nullable UserSession userSession,
                                              TracingContext tracingContext) {
-        if (!ExceptionUtil.isDisconnectedClientError(throwable)) {
+        if (!ThrowableUtil.isDisconnectedClientError(throwable)) {
             try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
                 LOGGER.error("Caught an exception from a connection bound with the session: {}",
                         userSession,

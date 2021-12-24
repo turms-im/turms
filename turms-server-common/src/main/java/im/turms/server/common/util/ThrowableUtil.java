@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 /**
  * @author James Chen
  */
-public final class ExceptionUtil {
+public final class ThrowableUtil {
 
     private static final Set<Class<?>> DISCONNECTED_CLIENT_EXCEPTIONS = Set.of(
             AbortedException.class,
@@ -41,7 +41,15 @@ public final class ExceptionUtil {
             TlsChannelImpl.EofException.class
     );
 
-    private ExceptionUtil() {
+    private ThrowableUtil() {
+    }
+
+    public static int countCauses(Throwable t) {
+        int i = 0;
+        while ((t = t.getCause()) != null) {
+            i++;
+        }
+        return i;
     }
 
     @Nullable

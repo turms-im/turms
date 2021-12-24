@@ -54,19 +54,18 @@ public abstract class Appender implements AutoCloseable {
 
     @SneakyThrows
     public int append(LogRecord record) {
-        if (record.level().isLoggable(level)) {
-            ByteBuf buffer = record.data();
-            if (buffer instanceof CompositeByteBuf buf) {
-                int written = 0;
-                for (ByteBuffer nioBuffer : buf.nioBuffers()) {
-                    written += channel.write(nioBuffer);
-                }
-                return written;
-            } else {
-                return channel.write(buffer.nioBuffer());
-            }
+        if (!record.level().isLoggable(level)) {
+            return 0;
         }
-        return 0;
+        ByteBuf buffer = record.data();
+        if (buffer instanceof CompositeByteBuf buf) {
+            int written = 0;
+            for (ByteBuffer nioBuffer : buf.nioBuffers()) {
+                written += channel.write(nioBuffer);
+            }
+            return written;
+        }
+        return channel.write(buffer.nioBuffer());
     }
 
 }

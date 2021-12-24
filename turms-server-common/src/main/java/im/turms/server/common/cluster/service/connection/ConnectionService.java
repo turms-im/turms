@@ -28,14 +28,14 @@ import im.turms.server.common.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.cluster.service.discovery.MemberConnectionListener;
 import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.rpc.RpcService;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.model.LogLevel;
-import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.property.env.common.cluster.connection.ConnectionClientProperties;
 import im.turms.server.common.property.env.common.cluster.connection.ConnectionProperties;
 import im.turms.server.common.property.env.common.cluster.connection.ConnectionServerProperties;
-import im.turms.server.common.util.ExceptionUtil;
 import im.turms.server.common.util.SslUtil;
+import im.turms.server.common.util.ThrowableUtil;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Getter;
@@ -434,7 +434,7 @@ public class ConnectionService implements ClusterService {
                     }
                 })
                 .onErrorResume(t -> {
-                    if (ExceptionUtil.isDisconnectedClientError(t) && connection.isClosing()) {
+                    if (ThrowableUtil.isDisconnectedClientError(t) && connection.isClosing()) {
                         return Mono.empty();
                     }
                     LOGGER.error("[{}] Failed to listen to the connection to the member{}",

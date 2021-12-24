@@ -21,6 +21,7 @@ import im.turms.server.common.logging.core.appender.Appender;
 import im.turms.server.common.logging.core.layout.TurmsTemplateLayout;
 import im.turms.server.common.logging.core.model.LogLevel;
 import im.turms.server.common.logging.core.model.LogRecord;
+import im.turms.server.common.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import org.jctools.queues.MpscUnboundedArrayQueue;
@@ -190,12 +191,7 @@ public final class AsyncLogger implements Logger {
                 buffer.release();
             }
         } catch (Exception e) {
-            if (buffer != null && buffer.refCnt() > 0) {
-                try {
-                    buffer.release();
-                } catch (Exception ignored) {
-                }
-            }
+            ByteBufUtil.safeEnsureReleased(buffer);
             InternalLogger.printException(e);
         }
     }
@@ -210,12 +206,10 @@ public final class AsyncLogger implements Logger {
                 buffer.release();
             }
         } catch (Exception e) {
-            if (buffer != null && buffer.refCnt() > 0) {
-                try {
-                    buffer.release();
-                } catch (Exception ignored) {
-                }
+            if (buffer != null) {
+                ByteBufUtil.safeEnsureReleased(buffer);
             }
+            ByteBufUtil.safeEnsureReleased(message);
             InternalLogger.printException(e);
         }
     }

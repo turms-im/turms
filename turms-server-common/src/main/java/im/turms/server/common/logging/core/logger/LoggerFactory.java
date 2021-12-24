@@ -24,7 +24,7 @@ import im.turms.server.common.logging.core.appender.RollingFileAppender;
 import im.turms.server.common.logging.core.layout.TurmsTemplateLayout;
 import im.turms.server.common.logging.core.model.LogLevel;
 import im.turms.server.common.logging.core.model.LogRecord;
-import im.turms.server.common.logging.core.processor.LogProcessorRunner;
+import im.turms.server.common.logging.core.processor.LogProcessor;
 import im.turms.server.common.property.env.common.logging.ConsoleLoggingProperties;
 import im.turms.server.common.property.env.common.logging.FileLoggingProperties;
 import im.turms.server.common.property.env.common.logging.LoggingProperties;
@@ -94,7 +94,7 @@ public class LoggerFactory {
             pair.getSecond().setLogger(getLogger(pair.getFirst()));
         }
 
-        new LogProcessorRunner(QUEUE).start();
+        new LogProcessor(QUEUE).start();
     }
 
     private static synchronized void initForTest() {
@@ -104,9 +104,15 @@ public class LoggerFactory {
             nodeType = NodeType.SERVICE;
         } catch (ClassNotFoundException ignored) {
         }
+
+        // We use "INFO" level for tests because:
+        // 1. If "DEBUG", in fact we never view these logs because they are too many to view.
+        // 2. In some tests, Netty will try to init its internal logger and log DEBUG messages when Netty initializing
+        // while our logger will require Netty to init so that we can log, so there is a circular dependency.
+        // Use "INFO" can just avoid Netty trying to log
         init(nodeType, "node-id-test", LoggingProperties.builder()
-                .console(new ConsoleLoggingProperties().toBuilder().level(LogLevel.DEBUG).enabled(true).build())
-                .file(new FileLoggingProperties().toBuilder().level(LogLevel.DEBUG).enabled(true).build())
+                .console(new ConsoleLoggingProperties().toBuilder().level(LogLevel.INFO).enabled(true).build())
+                .file(new FileLoggingProperties().toBuilder().level(LogLevel.INFO).enabled(true).build())
                 .build());
     }
 

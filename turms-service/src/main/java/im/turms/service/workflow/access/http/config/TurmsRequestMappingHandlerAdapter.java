@@ -33,13 +33,12 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import reactor.core.publisher.Mono;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
- * The main purpose of this class is to add custom handlers around the method invoke
- * ({@link WebFilter} isn't what we want as we need the final parsed parameters)
- * to avoid using AOP, which is an awful design with a terrible performance.
+ * The main purpose of this class is to add our custom handlers around the method invoke
+ * because {@link WebFilter} isn't what we want as we need the final parsed parameters
+ * and avoid using AOP, which is an awful design with a terrible performance.
  *
  * @author James Chen
  * @implNote Replace the bean {@link WebFluxConfigurationSupport#requestMappingHandlerAdapter}
@@ -47,7 +46,6 @@ import java.util.function.Function;
 public class TurmsRequestMappingHandlerAdapter extends RequestMappingHandlerAdapter {
 
     private ConfigurableApplicationContext context;
-    private final ConcurrentHashMap<HandlerMethod, TurmsHandlerMethod> handlerMethodCache = new ConcurrentHashMap<>(128);
     private TurmsControllerMethodResolver methodResolver;
 
     @Override

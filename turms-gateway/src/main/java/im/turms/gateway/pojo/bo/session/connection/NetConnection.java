@@ -21,7 +21,7 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.udpsignal.UdpNotificationType;
 import im.turms.gateway.access.udp.UdpDispatcher;
 import im.turms.server.common.dto.CloseReason;
-import im.turms.server.common.util.ExceptionUtil;
+import im.turms.server.common.util.ThrowableUtil;
 import lombok.Data;
 import reactor.netty.Connection;
 import reactor.netty.channel.ChannelOperations;
@@ -41,7 +41,7 @@ import java.time.Duration;
 public abstract class NetConnection {
     protected static final RetryBackoffSpec RETRY_SEND_CLOSE_NOTIFICATION = Retry
             .backoff(2, Duration.ofSeconds(3))
-            .filter(throwable -> !ExceptionUtil.isDisconnectedClientError(throwable));
+            .filter(throwable -> !ThrowableUtil.isDisconnectedClientError(throwable));
 
     @Nullable
     private InetSocketAddress udpAddress;

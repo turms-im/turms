@@ -21,7 +21,7 @@ import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.service.connection.TurmsConnection;
 import im.turms.server.common.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.tracing.TracingContext;
-import im.turms.server.common.util.ExceptionUtil;
+import im.turms.server.common.util.ThrowableUtil;
 import io.micrometer.core.instrument.Tag;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -107,7 +107,7 @@ public abstract class RpcRequest<T> implements ReferenceCounted {
         try {
             return applicationContext.getBean(clazz);
         } catch (NoSuchBeanDefinitionException e) {
-            NodeType nodeType = ExceptionUtil.suppress(() -> applicationContext.getBean(NodeType.class));
+            NodeType nodeType = ThrowableUtil.suppress(() -> applicationContext.getBean(NodeType.class));
             String message = "Failed to get the bean. The request type %s may be sent to the wrong server %s"
                     .formatted(name(), nodeType);
             throw new IllegalStateException(message, e);
