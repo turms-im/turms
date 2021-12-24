@@ -19,6 +19,7 @@ package im.turms.plugin.antispam.property;
 
 import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.Data;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
@@ -38,5 +39,8 @@ public class DictionaryParsingProperties {
     @Description("Path to the binary dictionary file. "
             + "Used to build a trie from binary to avoiding building a trie from scratch")
     private String binFilePath;
+
+    @NestedConfigurationProperty
+    private ExtendedWordProperties extendedWord = new ExtendedWordProperties();
 
 }

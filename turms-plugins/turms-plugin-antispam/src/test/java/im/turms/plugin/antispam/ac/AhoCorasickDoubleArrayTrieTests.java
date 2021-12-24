@@ -17,6 +17,7 @@
 
 package im.turms.plugin.antispam.ac;
 
+import im.turms.plugin.antispam.dictionary.Word;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -30,10 +31,10 @@ class AhoCorasickDoubleArrayTrieTests {
 
     @Test
     void test() {
-        List<char[]> terms = Store.UNWANTED_TERMS;
-        AhoCorasickDoubleArrayTrie trie = new AhoCorasickDoubleArrayTrie(terms);
-        for (char[] term : terms) {
-            assertThat(trie.matches(term)).isTrue();
+        List<Word> words = Store.UNWANTED_WORDS;
+        AhoCorasickDoubleArrayTrie trie = new AhoCorasickDoubleArrayTrie(words);
+        for (Word word : words) {
+            assertThat(trie.matches(word.getWord())).isTrue();
         }
         assertThat(trie.matches("人".toCharArray())).isFalse();
         assertThat(trie.matches("恋".toCharArray())).isFalse();

@@ -53,7 +53,7 @@ class AntiSpamHandlerTests {
         TurmsRequest.Builder builder = TurmsRequest
                 .newBuilder()
                 .setCreateGroupRequest(CreateGroupRequest.newBuilder()
-                        .setName(new String(Store.UNWANTED_TERMS.get(0)))
+                        .setName(new String(Store.UNWANTED_WORDS.get(0).getWord()))
                         .build());
         ClientRequest clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, 1L, builder, null);
         Mono<ClientRequest> result = handler.transform(clientRequest);
@@ -87,7 +87,7 @@ class AntiSpamHandlerTests {
     }
 
     @Test
-    void shouldReturnUnwantedWord_forLatin1Text() {
+    void shouldReturnUnwantedWords_forLatin1Text() {
         String original = "Oh no, loving you is not right. But no, don't take me home tonight. Oh yes, so baby won't you hold me tight";
         List<String> words = List.of(
                 "Oh no",
@@ -98,7 +98,7 @@ class AntiSpamHandlerTests {
     }
 
     @Test
-    void shouldReturnUnwantedWord_forUTF16TextWithAscii() {
+    void shouldReturnUnwantedWords_forUTF16TextWithAscii() {
         String original = "Hello敏感词句.,asd#(&𤳵/()12%&123敏gan词321";
         List<String> words = List.of(
                 "敏感词",
@@ -109,7 +109,7 @@ class AntiSpamHandlerTests {
     }
 
     @Test
-    void shouldReturnUnwantedWord_forUTF16TextWithoutAscii() {
+    void shouldReturnUnwantedWords_forUTF16TextWithoutAscii() {
         String original = "薬指のリングより　人目忍ぶ恋選んだ　強い女に見えても　心の中いつも　切なさに　揺れてる";
         List<String> words = List.of(
                 "薬指",
@@ -165,7 +165,7 @@ class AntiSpamHandlerTests {
     @SneakyThrows
     AntiSpamHandler createHandler(UnwantedWordHandleStrategy handleStrategy, TextParsingStrategy strategy, boolean shouldReturnUnwantedWords) {
         try {
-            List<String> terms = Store.UNWANTED_TERMS.stream().map(String::new).toList();
+            List<String> terms = Store.UNWANTED_WORDS.stream().map(word -> new String(word.getWord())).toList();
             String text = String.join("\n", terms);
             Files.writeString(path, text, StandardCharsets.UTF_8);
             AntiSpamProperties properties = new AntiSpamProperties()

@@ -17,6 +17,7 @@
 
 package im.turms.plugin.antispam.ac;
 
+import im.turms.plugin.antispam.dictionary.Word;
 import org.eclipse.collections.api.iterator.MutableCharIterator;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
@@ -36,14 +37,16 @@ public class AhoCorasickDoubleArrayTrie {
     public final int[][] output;
     public final DoubleArrayTrie dat;
 
-    // Reserved for future use
-//    public final TermInfo[] terms;
+    // TODO: we store the words and will support querying for admin API later
+    public final Word[] words;
 
-    public AhoCorasickDoubleArrayTrie(List<char[]> terms) {
+    public AhoCorasickDoubleArrayTrie(List<Word> words) {
         Trie trie = new Trie();
         int i = 0;
-        for (char[] term : terms) {
-            trie.addTerm(term, i++);
+        this.words = new Word[words.size()];
+        for (Word word : words) {
+            this.words[i] = word;
+            trie.addWord(word.getWord(), i++);
         }
         dat = new DoubleArrayTrie(trie);
         fail = new int[dat.capacity];
@@ -51,10 +54,11 @@ public class AhoCorasickDoubleArrayTrie {
         constructOutputAndFailure(trie);
     }
 
-    public AhoCorasickDoubleArrayTrie(int[] fail, int[][] output, DoubleArrayTrie dat) {
+    public AhoCorasickDoubleArrayTrie(int[] fail, int[][] output, DoubleArrayTrie dat, Word[] words) {
         this.fail = fail;
         this.output = output;
         this.dat = dat;
+        this.words = words;
     }
 
     public boolean matches(char[] text) {

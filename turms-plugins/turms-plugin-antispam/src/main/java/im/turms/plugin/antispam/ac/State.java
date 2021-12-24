@@ -39,6 +39,9 @@ public class State {
      * with the suffix of the current state
      */
     State failure;
+    /**
+     * points to the index of {@link AhoCorasickDoubleArrayTrie#words}
+     */
     IntHashSet emits;
     int largestTermIndex;
     int indexInDat;

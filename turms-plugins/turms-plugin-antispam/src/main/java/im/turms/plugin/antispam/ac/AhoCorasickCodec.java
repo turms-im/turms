@@ -19,6 +19,7 @@ package im.turms.plugin.antispam.ac;
 
 import im.turms.plugin.antispam.TextPreprocessor;
 import im.turms.plugin.antispam.dictionary.DictionaryParser;
+import im.turms.plugin.antispam.dictionary.Word;
 import im.turms.plugin.antispam.property.TextParsingStrategy;
 import lombok.SneakyThrows;
 
@@ -42,8 +43,10 @@ public final class AhoCorasickCodec {
         String charsetName = parseArg(args, 1);
         String skipInvalidCharacterStr = parseArg(args, 2);
         String wordParsingStrategyStr = parseArg(args, 3);
+        String enableExtendedWordStr = parseArg(args, 4);
 
         boolean skipInvalidCharacter = false;
+        boolean enableExtendedWord = true;
         TextParsingStrategy parsingStrategy = TextParsingStrategy.NORMALIZATION_TRANSLITERATION;
         if (dictPath == null) {
             throw new RuntimeException("The dictionary path must be specified");
@@ -58,9 +61,12 @@ public final class AhoCorasickCodec {
         if (wordParsingStrategyStr != null) {
             parsingStrategy = TextParsingStrategy.valueOf(wordParsingStrategyStr);
         }
+        if (enableExtendedWordStr != null) {
+            enableExtendedWord = Boolean.parseBoolean(enableExtendedWordStr);
+        }
         Path path = Path.of(dictPath);
         DictionaryParser parser = new DictionaryParser(new TextPreprocessor(parsingStrategy));
-        List<char[]> words = parser.parse(path, charsetName, skipInvalidCharacter);
+        List<Word> words = parser.parse(path, charsetName, skipInvalidCharacter, enableExtendedWord);
         AhoCorasickDoubleArrayTrie trie = new AhoCorasickDoubleArrayTrie(words);
         serialize(trie, path.getParent().resolve("words.bin").toString());
     }
@@ -74,6 +80,7 @@ public final class AhoCorasickCodec {
 
                 outputStream.writeObject(trie.fail);
                 outputStream.writeObject(trie.output);
+                outputStream.writeObject(trie.words);
 
                 outputStream.writeObject(trie.dat.base);
                 outputStream.writeObject(trie.dat.check);
@@ -93,12 +100,13 @@ public final class AhoCorasickCodec {
             }
             int[] fail = (int[]) inputStream.readObject();
             int[][] output = (int[][]) inputStream.readObject();
+            Word[] words = (Word[]) inputStream.readObject();
 
             int[] base = (int[]) inputStream.readObject();
             int[] check = (int[]) inputStream.readObject();
             int capacity = inputStream.readInt();
             DoubleArrayTrie trie = new DoubleArrayTrie(base, check, capacity);
-            return new AhoCorasickDoubleArrayTrie(fail, output, trie);
+            return new AhoCorasickDoubleArrayTrie(fail, output, trie, words);
         }
     }
 

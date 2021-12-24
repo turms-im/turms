@@ -15,21 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.plugin.antispam.ac;
+package im.turms.plugin.antispam.property;
+
+import lombok.Data;
 
 /**
  * @author James Chen
  */
-public class Trie {
+@Data
+public class ExtendedWordProperties {
 
-    final State rootState = new State(0);
-
-    void addWord(char[] word, int wordIndex) {
-        State state = rootState;
-        for (char character : word) {
-            state = state.addState(character);
-        }
-        state.addEmit(wordIndex);
-    }
+    private boolean enabled = true;
 
 }

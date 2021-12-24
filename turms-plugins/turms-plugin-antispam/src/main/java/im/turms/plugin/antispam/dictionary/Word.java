@@ -15,21 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.plugin.antispam.ac;
+package im.turms.plugin.antispam.dictionary;
+
+import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * @author James Chen
  */
-public class Trie {
-
-    final State rootState = new State(0);
-
-    void addWord(char[] word, int wordIndex) {
-        State state = rootState;
-        for (char character : word) {
-            state = state.addState(character);
-        }
-        state.addEmit(wordIndex);
-    }
-
+//@ValueBased
+@Data
+public class Word implements Serializable {
+    private final char[] word;
 }

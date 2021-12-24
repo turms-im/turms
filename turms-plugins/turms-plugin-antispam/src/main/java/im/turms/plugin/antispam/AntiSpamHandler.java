@@ -23,6 +23,7 @@ import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.plugin.antispam.ac.AhoCorasickCodec;
 import im.turms.plugin.antispam.ac.AhoCorasickDoubleArrayTrie;
 import im.turms.plugin.antispam.dictionary.DictionaryParser;
+import im.turms.plugin.antispam.dictionary.Word;
 import im.turms.plugin.antispam.property.AntiSpamProperties;
 import im.turms.plugin.antispam.property.DictionaryParsingProperties;
 import im.turms.plugin.antispam.property.TextType;
@@ -119,15 +120,13 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
                         if (spamDetector.containsUnwantedWords(text)) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.OK));
                         }
-                    } else {
-                        if (maxNumberOfUnwantedWordsToReturn > 0) {
-                            String words = spamDetector.findUnwantedWords(text, maxNumberOfUnwantedWordsToReturn);
-                            if (words != null) {
-                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.MESSAGE_IS_ILLEGAL, words));
-                            }
-                        } else if (spamDetector.containsUnwantedWords(text)) {
-                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.MESSAGE_IS_ILLEGAL));
+                    } else if (maxNumberOfUnwantedWordsToReturn > 0) {
+                        String words = spamDetector.findUnwantedWords(text, maxNumberOfUnwantedWordsToReturn);
+                        if (words != null) {
+                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.MESSAGE_IS_ILLEGAL, words));
                         }
+                    } else if (spamDetector.containsUnwantedWords(text)) {
+                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.MESSAGE_IS_ILLEGAL));
                     }
                 }
                 case MASK_TEXT -> {
@@ -153,9 +152,10 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
             throw new RuntimeException("The binary file path and the text file path cannot be both blank");
         }
         DictionaryParser parser = new DictionaryParser(textPreprocessor);
-        List<char[]> words = parser.parse(Path.of(textFilePath),
+        List<Word> words = parser.parse(Path.of(textFilePath),
                 dictParsing.getTextFileCharset(),
-                dictParsing.isSkipInvalidCharacter());
+                dictParsing.isSkipInvalidCharacter(),
+                dictParsing.getExtendedWord().isEnabled());
         return new AhoCorasickDoubleArrayTrie(words);
     }
 

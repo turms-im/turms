@@ -33,7 +33,7 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
     private final TextPreprocessor textPreprocessor;
 
     public SpamDetector(TextPreprocessor textPreprocessor, AhoCorasickDoubleArrayTrie trie) {
-        super(trie.fail, trie.output, trie.dat);
+        super(trie.fail, trie.output, trie.dat, trie.words);
         this.textPreprocessor = textPreprocessor;
     }
 

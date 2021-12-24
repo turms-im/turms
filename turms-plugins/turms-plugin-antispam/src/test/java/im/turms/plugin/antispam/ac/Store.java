@@ -17,6 +17,8 @@
 
 package im.turms.plugin.antispam.ac;
 
+import im.turms.plugin.antispam.dictionary.Word;
+
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -25,7 +27,7 @@ import java.util.stream.Stream;
  */
 public final class Store {
 
-    public static final List<char[]> UNWANTED_TERMS = Stream.of(
+    public static final List<Word> UNWANTED_WORDS = Stream.of(
                     "123",
 
                     "敏感词",
@@ -49,7 +51,7 @@ public final class Store {
                     "loving you is not right",
 
                     "𤳵")
-            .map(String::toCharArray)
+            .map(s -> new Word(s.toCharArray()))
             .toList();
 
     private Store() {

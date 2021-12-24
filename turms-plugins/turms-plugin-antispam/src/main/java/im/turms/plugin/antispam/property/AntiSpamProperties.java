@@ -22,6 +22,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.util.Collections;
 import java.util.Set;
@@ -41,6 +42,7 @@ public class AntiSpamProperties {
 
     private boolean enabled = true;
 
+    @NestedConfigurationProperty
     private DictionaryParsingProperties dictParsing = new DictionaryParsingProperties();
 
     private TextParsingStrategy textParsingStrategy = NORMALIZATION_TRANSLITERATION;
