@@ -112,6 +112,11 @@ private static final long serialVersionUID = 0L;
             burnAfter_ = input.readInt32();
             break;
           }
+          case 72: {
+            bitField0_ |= 0x00000080;
+            preMessageId_ = input.readInt64();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -345,6 +350,25 @@ private static final long serialVersionUID = 0L;
     return burnAfter_;
   }
 
+  public static final int PRE_MESSAGE_ID_FIELD_NUMBER = 9;
+  private long preMessageId_;
+  /**
+   * <code>optional int64 pre_message_id = 9;</code>
+   * @return Whether the preMessageId field is set.
+   */
+  @java.lang.Override
+  public boolean hasPreMessageId() {
+    return ((bitField0_ & 0x00000080) != 0);
+  }
+  /**
+   * <code>optional int64 pre_message_id = 9;</code>
+   * @return The preMessageId.
+   */
+  @java.lang.Override
+  public long getPreMessageId() {
+    return preMessageId_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -382,6 +406,9 @@ private static final long serialVersionUID = 0L;
     }
     if (((bitField0_ & 0x00000040) != 0)) {
       output.writeInt32(8, burnAfter_);
+    }
+    if (((bitField0_ & 0x00000080) != 0)) {
+      output.writeInt64(9, preMessageId_);
     }
     unknownFields.writeTo(output);
   }
@@ -427,6 +454,10 @@ private static final long serialVersionUID = 0L;
     if (((bitField0_ & 0x00000040) != 0)) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(8, burnAfter_);
+    }
+    if (((bitField0_ & 0x00000080) != 0)) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(9, preMessageId_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -480,6 +511,11 @@ private static final long serialVersionUID = 0L;
       if (getBurnAfter()
           != other.getBurnAfter()) return false;
     }
+    if (hasPreMessageId() != other.hasPreMessageId()) return false;
+    if (hasPreMessageId()) {
+      if (getPreMessageId()
+          != other.getPreMessageId()) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -527,6 +563,11 @@ private static final long serialVersionUID = 0L;
     if (hasBurnAfter()) {
       hash = (37 * hash) + BURN_AFTER_FIELD_NUMBER;
       hash = (53 * hash) + getBurnAfter();
+    }
+    if (hasPreMessageId()) {
+      hash = (37 * hash) + PRE_MESSAGE_ID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getPreMessageId());
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -677,6 +718,8 @@ private static final long serialVersionUID = 0L;
       bitField0_ = (bitField0_ & ~0x00000040);
       burnAfter_ = 0;
       bitField0_ = (bitField0_ & ~0x00000080);
+      preMessageId_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000100);
       return this;
     }
 
@@ -737,6 +780,10 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000080) != 0)) {
         result.burnAfter_ = burnAfter_;
         to_bitField0_ |= 0x00000040;
+      }
+      if (((from_bitField0_ & 0x00000100) != 0)) {
+        result.preMessageId_ = preMessageId_;
+        to_bitField0_ |= 0x00000080;
       }
       result.bitField0_ = to_bitField0_;
       onBuilt();
@@ -819,6 +866,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.hasBurnAfter()) {
         setBurnAfter(other.getBurnAfter());
+      }
+      if (other.hasPreMessageId()) {
+        setPreMessageId(other.getPreMessageId());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1268,6 +1318,45 @@ private static final long serialVersionUID = 0L;
     public Builder clearBurnAfter() {
       bitField0_ = (bitField0_ & ~0x00000080);
       burnAfter_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private long preMessageId_ ;
+    /**
+     * <code>optional int64 pre_message_id = 9;</code>
+     * @return Whether the preMessageId field is set.
+     */
+    @java.lang.Override
+    public boolean hasPreMessageId() {
+      return ((bitField0_ & 0x00000100) != 0);
+    }
+    /**
+     * <code>optional int64 pre_message_id = 9;</code>
+     * @return The preMessageId.
+     */
+    @java.lang.Override
+    public long getPreMessageId() {
+      return preMessageId_;
+    }
+    /**
+     * <code>optional int64 pre_message_id = 9;</code>
+     * @param value The preMessageId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setPreMessageId(long value) {
+      bitField0_ |= 0x00000100;
+      preMessageId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional int64 pre_message_id = 9;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearPreMessageId() {
+      bitField0_ = (bitField0_ & ~0x00000100);
+      preMessageId_ = 0L;
       onChanged();
       return this;
     }

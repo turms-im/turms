@@ -133,4 +133,15 @@ public interface CreateMessageRequestOrBuilder extends
    * @return The burnAfter.
    */
   int getBurnAfter();
+
+  /**
+   * <code>optional int64 pre_message_id = 9;</code>
+   * @return Whether the preMessageId field is set.
+   */
+  boolean hasPreMessageId();
+  /**
+   * <code>optional int64 pre_message_id = 9;</code>
+   * @return The preMessageId.
+   */
+  long getPreMessageId();
 }

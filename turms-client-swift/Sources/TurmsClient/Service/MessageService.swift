@@ -44,7 +44,8 @@ public class MessageService {
         deliveryDate: Date? = nil,
         text: String? = nil,
         records: [Data]? = nil,
-        burnAfter: Int32? = nil) -> Promise<Int64> {
+        burnAfter: Int32? = nil,
+        preMessageId: Int64? = nil) -> Promise<Int64> {
         if Validator.areAllNil(text, records) {
             return Promise(error: TurmsBusinessError(TurmsStatusCode.illegalArgument, "text and records must not all be null"))
         }
@@ -67,6 +68,9 @@ public class MessageService {
                     }
                     if let v = burnAfter {
                         $0.burnAfter = v
+                    }
+                    if let v = preMessageId {
+                        $0.preMessageID = v
                     }
                 }
             }

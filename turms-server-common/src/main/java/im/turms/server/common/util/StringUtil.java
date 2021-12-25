@@ -68,7 +68,7 @@ public final class StringUtil {
     }
 
     /**
-     * @implNote The method assumes the string do NOT contain any extended control character
+     * @implNote The method assumes the string does NOT contain any extended control character
      * if it's encoded in LATIN1
      * @see <a href="https://cs.stanford.edu/people/miles/iso8859.html">iso8859</a>
      */

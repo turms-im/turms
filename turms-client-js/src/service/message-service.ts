@@ -64,7 +64,8 @@ export default class MessageService {
         deliveryDate?: Date,
         text?: string,
         records?: Uint8Array[],
-        burnAfter?: number): Promise<string> {
+        burnAfter?: number,
+        preMessageId?: string): Promise<string> {
         if (RequestUtil.isFalsy(targetId)) {
             return TurmsBusinessError.notFalsyPromise('targetId');
         }
@@ -81,7 +82,8 @@ export default class MessageService {
                 deliveryDate: RequestUtil.getDateTimeStr(deliveryDate),
                 text,
                 records: records || [],
-                burnAfter
+                burnAfter,
+                preMessageId
             }
         }).then(n => NotificationUtil.getFirstIdOrThrow(n));
     }

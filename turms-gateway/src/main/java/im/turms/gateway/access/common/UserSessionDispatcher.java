@@ -28,10 +28,10 @@ import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
+import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
-import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.util.ThrowableUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
@@ -124,9 +124,8 @@ public abstract class UserSessionDispatcher {
                             .subscribe();
                 })
                 .then()
-                .onErrorResume(
-                        throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(),
-                                sessionWrapper.getUserSession(), TracingContext.NOOP));
+                .onErrorResume(throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(),
+                        sessionWrapper.getUserSession(), TracingContext.NOOP));
     }
 
     private Mono<Void> tryRemoveSessionInfoOnConnectionClosed(Mono<Void> onClose, UserSessionWrapper sessionWrapper) {

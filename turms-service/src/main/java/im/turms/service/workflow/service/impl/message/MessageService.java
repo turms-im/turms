@@ -342,7 +342,8 @@ public class MessageService {
             @Nullable @Min(0) Integer burnAfter,
             @Nullable @PastOrPresent Date deliveryDate,
             @Nullable @PastOrPresent Date recallDate,
-            @Nullable Long referenceId) {
+            @Nullable Long referenceId,
+            @Nullable Long preMessageId) {
         try {
             AssertUtil.notNull(senderId, "senderId");
             AssertUtil.notNull(targetId, "targetId");
@@ -365,6 +366,9 @@ public class MessageService {
         }
         if (!node.getSharedProperties().getService().getMessage().isRecordsPersistent()) {
             records = null;
+        }
+        if (!node.getSharedProperties().getService().getMessage().isPreMessageIdPersistent()) {
+            preMessageId = null;
         }
         Mono<Long> sequenceId = null;
         if (isGroupMessage) {
@@ -390,13 +394,15 @@ public class MessageService {
                     records,
                     burnAfter,
                     referenceId,
-                    null);
+                    null,
+                    preMessageId);
             saveMessage = mongoClient.insert(message)
                     .thenReturn(message);
         } else {
             Long finalMessageId = messageId;
             Date finalDeliveryDate = deliveryDate;
             List<byte[]> finalRecords = records;
+            Long finalPreMessageId = preMessageId;
             saveMessage = sequenceId
                     .flatMap(seqId -> {
                         Message message = new Message(
@@ -413,7 +419,8 @@ public class MessageService {
                                 finalRecords,
                                 burnAfter,
                                 referenceId,
-                                seqId.intValue());
+                                seqId.intValue(),
+                                finalPreMessageId);
                         return mongoClient.insert(message)
                                 .thenReturn(message);
                     });
@@ -545,6 +552,7 @@ public class MessageService {
                             List.of(messageType, messageId),
                             null,
                             message.getTargetId(),
+                            null,
                             null,
                             null);
                 })
@@ -756,7 +764,8 @@ public class MessageService {
             @Nullable List<byte[]> records,
             @Nullable @Min(0) Integer burnAfter,
             @Nullable @PastOrPresent Date deliveryDate,
-            @Nullable Long referenceId) {
+            @Nullable Long referenceId,
+            @Nullable Long preMessageId) {
         try {
             AssertUtil.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
             validRecordsLength(records);
@@ -780,7 +789,7 @@ public class MessageService {
                                     : Mono.just(Pair.of(null, recipientIds));
                         }
                         Mono<Message> saveMono = saveMessage(messageId, senderId, targetId, isGroupMessage,
-                                isSystemMessage, text, records, burnAfter, deliveryDate, null, referenceId);
+                                isSystemMessage, text, records, burnAfter, deliveryDate, null, referenceId, preMessageId);
                         return saveMono.map(message -> {
                             if (message.getId() != null && sentMessageCache != null) {
                                 cacheSentMessage(message);
@@ -811,7 +820,8 @@ public class MessageService {
                         message.getRecords(),
                         message.getBurnAfter(),
                         message.getDeliveryDate(),
-                        referenceId));
+                        referenceId,
+                        null));
     }
 
     public Mono<Void> authAndSaveAndSendMessage(
@@ -824,7 +834,8 @@ public class MessageService {
             @Nullable Long senderId,
             @NotNull Long targetId,
             @Nullable @Min(0) Integer burnAfter,
-            @Nullable Long referenceId) {
+            @Nullable Long referenceId,
+            @Nullable Long preMessageId) {
         try {
             AssertUtil.notNull(isGroupMessage, "isGroupMessage");
             AssertUtil.notNull(isSystemMessage, "isSystemMessage");
@@ -845,8 +856,8 @@ public class MessageService {
         }
         Date deliveryDate = new Date();
         Mono<Pair<Message, Set<Long>>> saveMono = referenceId == null
-                ? authAndSaveMessage(messageId, senderId, targetId, isGroupMessage, isSystemMessage, text, records, burnAfter, deliveryDate,
-                null)
+                ? authAndSaveMessage(messageId, senderId, targetId, isGroupMessage, isSystemMessage,
+                text, records, burnAfter, deliveryDate, null, preMessageId)
                 : authAndCloneAndSaveMessage(senderId, referenceId, isGroupMessage, isSystemMessage, targetId);
         return saveMono
                 .doOnNext(pair -> {
@@ -898,6 +909,7 @@ public class MessageService {
                 null,
                 message.getSenderId(),
                 message.getTargetId(),
+                null,
                 null,
                 null,
                 null,

@@ -87,7 +87,8 @@ public class MessageController {
                 createMessageDTO.senderId(),
                 createMessageDTO.targetId(),
                 createMessageDTO.burnAfter(),
-                createMessageDTO.referenceId());
+                createMessageDTO.referenceId(),
+                createMessageDTO.preMessageId());
         return sendMono.thenReturn(ResponseFactory.OK);
     }
 

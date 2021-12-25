@@ -252,8 +252,7 @@ public class UserRelationshipServiceController {
         return clientRequest -> {
             QueryRelationshipsRequest request = clientRequest.turmsRequest()
                     .getQueryRelationshipsRequest();
-            Set<Long> ids = request.getUserIdsCount() != 0 ?
-                    CollectionUtil.newSet(request.getUserIdsList()) : null;
+            Set<Long> ids = request.getUserIdsCount() == 0 ? null : CollectionUtil.newSet(request.getUserIdsList());
             int groupIndex = request.hasGroupIndex() ? request.getGroupIndex() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
             Boolean isBlocked = request.hasBlocked() ? request.getBlocked() : null;
             Date lastUpdatedDate = request.hasLastUpdatedDate() ?

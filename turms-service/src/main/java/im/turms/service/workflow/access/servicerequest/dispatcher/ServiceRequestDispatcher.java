@@ -25,6 +25,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.ThrowableInfo;
+import im.turms.server.common.healthcheck.HealthCheckManager;
 import im.turms.server.common.healthcheck.ServerStatusManager;
 import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.logging.core.logger.Logger;
@@ -133,8 +134,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     /**
      * @implNote 1. Flow Control:
      * turms-gateway is responsible for the rate limiting of client requests
-     * and (TODO) we will implement backpressure between serves in https://github.com/turms-im/turms/issues/761
-     * so we don't check the request rate here.
+     * and {@link HealthCheckManager} ensures that when dispatch() is called
+     * the status of the local node is healthy, so we don't need to check the request rate here.
      * <p>
      * 2. The method should never return MonoError, and it should be considered as a bug if it occurs
      * because the method itself should map all kinds of Throwable to a ServiceResponse instance.
@@ -253,7 +254,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     .onErrorResume(t -> {
                         ThrowableInfo info = ThrowableInfo.get(t);
                         if (info.code().isServerError()) {
-                            // We update the thread context and not clear because we know the downstream will clear
+                            // We update the thread context but don't clear because we know the downstream will clear
                             context.updateThreadContext();
                             // Note we log the whole request instead of the request ID for troubleshooting
                             // because CommonClientApiLogging only logs a brief description,

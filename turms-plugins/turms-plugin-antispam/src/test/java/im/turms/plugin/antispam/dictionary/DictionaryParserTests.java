@@ -53,7 +53,7 @@ class DictionaryParserTests {
         List<Word> words = getParsedWords(true);
         Date epoch = new Date(0);
 
-        assertThat(words.size()).isEqualTo(4);
+        assertThat(words).hasSize(4);
         assertThat((ExtendedWord) words.get(0))
                 .isEqualTo(ExtendedWord.builder()
                         .setWord("你好".toCharArray())
@@ -86,7 +86,7 @@ class DictionaryParserTests {
     void parse_disableExtendedWord() {
         List<Word> words = getParsedWords(false);
 
-        assertThat(words.size()).isEqualTo(4);
+        assertThat(words).hasSize(4);
         assertThat(words.get(0))
                 .isEqualTo(new Word("你好".toCharArray()));
         assertThat(words.get(1))

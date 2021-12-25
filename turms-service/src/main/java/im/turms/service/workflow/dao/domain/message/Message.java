@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * @author James Chen
  * @implNote The shard key is DELIVERY_DATE instead of TARGET_ID.
- * Being Sharded by TARGET_ID, most CRUD operations are efficient for small scale applications,
+ * Being sharded by TARGET_ID, most CRUD operations are efficient for small scale applications,
  * but Turms is designed for medium and large scale applications,
  * so we use DELIVERY_DATE as the shard key to support multi-temperature messages.
  */
@@ -41,7 +41,7 @@ import java.util.List;
 @Document(Message.COLLECTION_NAME)
 @CompoundIndex({Message.Fields.DELIVERY_DATE, Message.Fields.TARGET_ID})
 @Sharded(shardKey = Message.Fields.DELIVERY_DATE)
-// Hide these feature until we deliver a complete solution for it in the next major release
+// Hide this feature until we deliver a complete solution for it in the next major release
 //@WithTemperature(creationDateFieldName = Message.Fields.DELIVERY_DATE)
 public final class Message {
 
@@ -111,6 +111,9 @@ public final class Message {
     @Field(Fields.SEQUENCE_ID)
     private final Integer sequenceId;
 
+    @Field(Fields.PRE_MESSAGE_ID)
+    private final Long preMessageId;
+
     public Long groupId() {
         return isGroupMessage != null && isGroupMessage ? targetId : null;
     }
@@ -129,6 +132,7 @@ public final class Message {
         public static final String BURN_AFTER = "bf";
         public static final String REFERENCE_ID = "rid";
         public static final String SEQUENCE_ID = "sqid";
+        public static final String PRE_MESSAGE_ID = "pmid";
 
         private Fields() {
         }

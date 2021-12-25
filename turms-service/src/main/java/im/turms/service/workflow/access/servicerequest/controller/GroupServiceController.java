@@ -218,12 +218,7 @@ public class GroupServiceController {
             UpdateGroupRequest request = clientRequest.turmsRequest().getUpdateGroupRequest();
             Long successorId = request.hasSuccessorId() ? request.getSuccessorId() : null;
             Mono<Void> updateMono;
-            if (successorId != null) {
-                boolean quitAfterTransfer = request.hasQuitAfterTransfer() && request.getQuitAfterTransfer();
-                updateMono = groupService
-                        .authAndTransferGroupOwnership(clientRequest.userId(), request.getGroupId(), successorId, quitAfterTransfer,
-                                null);
-            } else {
+            if (successorId == null) {
                 Integer minimumScore = request.hasMinimumScore() ? request.getMinimumScore() : null;
                 Long groupTypeId = request.hasGroupTypeId() ? request.getGroupTypeId() : null;
                 String groupName = request.hasGroupName() ? request.getGroupName() : null;
@@ -245,6 +240,11 @@ public class GroupServiceController {
                         null,
                         muteEndDate,
                         null);
+            } else {
+                boolean quitAfterTransfer = request.hasQuitAfterTransfer() && request.getQuitAfterTransfer();
+                updateMono = groupService
+                        .authAndTransferGroupOwnership(clientRequest.userId(), request.getGroupId(), successorId, quitAfterTransfer,
+                                null);
             }
             return updateMono.then(Mono.defer(() -> {
                 if (node.getSharedProperties().getService().getNotification().isNotifyMembersAfterGroupUpdated()) {
@@ -269,8 +269,8 @@ public class GroupServiceController {
                             request.getGroupId(),
                             request.getUserId(),
                             null)
-                    .then(Mono
-                            .fromCallable(() -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterBlockedByGroup()
+                    .then(Mono.fromCallable(() ->
+                            node.getSharedProperties().getService().getNotification().isNotifyUserAfterBlockedByGroup()
                                     ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.turmsRequest())
                                     : RequestHandlerResultFactory.OK));
         };
@@ -287,8 +287,8 @@ public class GroupServiceController {
                             request.getUserId(),
                             null,
                             true)
-                    .then(Mono.fromCallable(
-                            () -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterUnblockedByGroup()
+                    .then(Mono.fromCallable(() ->
+                            node.getSharedProperties().getService().getNotification().isNotifyUserAfterUnblockedByGroup()
                                     ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.turmsRequest())
                                     : RequestHandlerResultFactory.OK));
         };
@@ -617,7 +617,7 @@ public class GroupServiceController {
         return clientRequest -> {
             UpdateGroupMemberRequest request = clientRequest.turmsRequest().getUpdateGroupMemberRequest();
             String name = request.hasName() ? request.getName() : null;
-            GroupMemberRole role = request.getRole() != GroupMemberRole.UNRECOGNIZED ? request.getRole() : null;
+            GroupMemberRole role = request.getRole() == GroupMemberRole.UNRECOGNIZED ? null : request.getRole();
             Date muteEndDate = request.hasMuteEndDate() ? new Date(request.getMuteEndDate()) : null;
             return groupMemberService.authAndUpdateGroupMember(
                             clientRequest.userId(),

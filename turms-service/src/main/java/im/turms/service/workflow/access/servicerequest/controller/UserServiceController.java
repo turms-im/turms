@@ -214,9 +214,9 @@ public class UserServiceController {
             Set<DeviceType> deviceTypes = request.getDeviceTypesCount() > 0 ? Sets.newHashSet(request.getDeviceTypesList()) : null;
             Mono<Boolean> updateMono;
             if (userStatus == UserStatus.OFFLINE) {
-                updateMono = deviceTypes != null
-                        ? sessionService.disconnect(clientRequest.userId(), deviceTypes, SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE)
-                        : sessionService.disconnect(clientRequest.userId(), SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE);
+                updateMono = deviceTypes == null
+                        ? sessionService.disconnect(clientRequest.userId(), SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE)
+                        : sessionService.disconnect(clientRequest.userId(), deviceTypes, SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE);
             } else {
                 updateMono = userStatusService.updateOnlineUserStatusIfPresent(clientRequest.userId(), userStatus);
             }

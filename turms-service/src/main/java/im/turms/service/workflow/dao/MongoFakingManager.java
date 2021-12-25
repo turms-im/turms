@@ -26,8 +26,8 @@ import im.turms.common.constant.GroupUpdateStrategy;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.RequestStatus;
 import im.turms.server.common.dao.domain.User;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.property.env.service.env.FakeProperties;
 import im.turms.server.common.security.PasswordManager;
@@ -286,6 +286,7 @@ public final class MongoFakingManager {
                     null,
                     30,
                     null,
+                    null,
                     null);
             id = nextId();
             Message groupMessage = new Message(
@@ -301,6 +302,7 @@ public final class MongoFakingManager {
                     1L,
                     null,
                     30,
+                    null,
                     null,
                     null);
             messageRelatedObjs.add(privateMessage);

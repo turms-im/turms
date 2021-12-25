@@ -31,6 +31,7 @@ public record CreateMessageDTO(
         Long senderId,
         Long targetId,
         Integer burnAfter,
-        Long referenceId
+        Long referenceId,
+        Long preMessageId
 ) {
 }

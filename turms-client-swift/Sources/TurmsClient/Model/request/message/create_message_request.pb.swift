@@ -92,6 +92,15 @@ public struct CreateMessageRequest {
   /// Clears the value of `burnAfter`. Subsequent reads from it will return its default value.
   public mutating func clearBurnAfter() {self._burnAfter = nil}
 
+  public var preMessageID: Int64 {
+    get {return _preMessageID ?? 0}
+    set {_preMessageID = newValue}
+  }
+  /// Returns true if `preMessageID` has been explicitly set.
+  public var hasPreMessageID: Bool {return self._preMessageID != nil}
+  /// Clears the value of `preMessageID`. Subsequent reads from it will return its default value.
+  public mutating func clearPreMessageID() {self._preMessageID = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -103,6 +112,7 @@ public struct CreateMessageRequest {
   fileprivate var _deliveryDate: Int64? = nil
   fileprivate var _text: String? = nil
   fileprivate var _burnAfter: Int32? = nil
+  fileprivate var _preMessageID: Int64? = nil
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -120,6 +130,7 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     6: .same(proto: "text"),
     7: .same(proto: "records"),
     8: .standard(proto: "burn_after"),
+    9: .standard(proto: "pre_message_id"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -136,6 +147,7 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
       case 6: try { try decoder.decodeSingularStringField(value: &self._text) }()
       case 7: try { try decoder.decodeRepeatedBytesField(value: &self.records) }()
       case 8: try { try decoder.decodeSingularInt32Field(value: &self._burnAfter) }()
+      case 9: try { try decoder.decodeSingularInt64Field(value: &self._preMessageID) }()
       default: break
       }
     }
@@ -166,6 +178,9 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     try { if let v = self._burnAfter {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 8)
     } }()
+    try { if let v = self._preMessageID {
+      try visitor.visitSingularInt64Field(value: v, fieldNumber: 9)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -178,6 +193,7 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     if lhs._text != rhs._text {return false}
     if lhs.records != rhs.records {return false}
     if lhs._burnAfter != rhs._burnAfter {return false}
+    if lhs._preMessageID != rhs._preMessageID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

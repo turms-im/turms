@@ -54,7 +54,7 @@ export default class ConnectionService extends BaseService {
     }
 
     /**
-     * Try to close the connection gracefully manually
+     * Try to close the connection gracefully
      * because there is no guarantee that the browser will do this for us
      */
     private _closeConnectionBeforeUnload(): void {

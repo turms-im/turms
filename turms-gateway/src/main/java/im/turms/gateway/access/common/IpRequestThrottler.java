@@ -100,7 +100,7 @@ public class IpRequestThrottler {
             Map.Entry<ByteArrayWrapper, TokenBucket> entry = iterator.next();
             TokenBucket bucket = entry.getValue();
             long lastAccessTime = bucket.getLastRefillTime();
-            if ((lastAccessTime - startTime) > IDLE_ENTRY_TTL && bucket.isTokensMoreThanOrEqualsToInitialTokens()) {
+            if ((startTime - lastAccessTime) > IDLE_ENTRY_TTL && bucket.isTokensMoreThanOrEqualsToInitialTokens()) {
                 iterator.remove();
             }
             processed++;

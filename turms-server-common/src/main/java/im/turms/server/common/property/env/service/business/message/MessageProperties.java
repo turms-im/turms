@@ -78,6 +78,11 @@ public class MessageProperties {
     @JsonView(MutablePropertiesView.class)
     private boolean recordsPersistent;
 
+    @Description("Whether to persist the \"preMessageId\" of messages in databases")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
+    private boolean preMessageIdPersistent;
+
     @JsonView(MutablePropertiesView.class)
     @Description("A message will become expired after the TTL has elapsed")
     @Min(0)

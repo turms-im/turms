@@ -109,7 +109,7 @@ public class LoggerFactory {
         // 1. If "DEBUG", in fact we never view these logs because they are too many to view.
         // 2. In some tests, Netty will try to init its internal logger and log DEBUG messages when Netty initializing
         // while our logger will require Netty to init so that we can log, so there is a circular dependency.
-        // Use "INFO" can just avoid Netty trying to log
+        // Use "INFO" can just avoid Netty trying to log when initializing
         init(nodeType, "node-id-test", LoggingProperties.builder()
                 .console(new ConsoleLoggingProperties().toBuilder().level(LogLevel.INFO).enabled(true).build())
                 .file(new FileLoggingProperties().toBuilder().level(LogLevel.INFO).enabled(true).build())

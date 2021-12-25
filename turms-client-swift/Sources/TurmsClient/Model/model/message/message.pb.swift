@@ -108,6 +108,15 @@ public struct Message {
   /// Clears the value of `sequenceID`. Subsequent reads from it will return its default value.
   public mutating func clearSequenceID() {self._sequenceID = nil}
 
+  public var preMessageID: Int32 {
+    get {return _preMessageID ?? 0}
+    set {_preMessageID = newValue}
+  }
+  /// Returns true if `preMessageID` has been explicitly set.
+  public var hasPreMessageID: Bool {return self._preMessageID != nil}
+  /// Clears the value of `preMessageID`. Subsequent reads from it will return its default value.
+  public mutating func clearPreMessageID() {self._preMessageID = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -121,6 +130,7 @@ public struct Message {
   fileprivate var _isSystemMessage: Bool? = nil
   fileprivate var _recipientID: Int64? = nil
   fileprivate var _sequenceID: Int32? = nil
+  fileprivate var _preMessageID: Int32? = nil
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -140,6 +150,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     8: .standard(proto: "recipient_id"),
     9: .same(proto: "records"),
     10: .standard(proto: "sequence_id"),
+    11: .standard(proto: "pre_message_id"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -158,6 +169,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
       case 8: try { try decoder.decodeSingularInt64Field(value: &self._recipientID) }()
       case 9: try { try decoder.decodeRepeatedBytesField(value: &self.records) }()
       case 10: try { try decoder.decodeSingularInt32Field(value: &self._sequenceID) }()
+      case 11: try { try decoder.decodeSingularInt32Field(value: &self._preMessageID) }()
       default: break
       }
     }
@@ -194,6 +206,9 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     try { if let v = self._sequenceID {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 10)
     } }()
+    try { if let v = self._preMessageID {
+      try visitor.visitSingularInt32Field(value: v, fieldNumber: 11)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -208,6 +223,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     if lhs._recipientID != rhs._recipientID {return false}
     if lhs.records != rhs.records {return false}
     if lhs._sequenceID != rhs._sequenceID {return false}
+    if lhs._preMessageID != rhs._preMessageID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

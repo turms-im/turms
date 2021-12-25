@@ -62,7 +62,7 @@ public final class ProtoModelUtil {
     // Transformation
 
     public static im.turms.common.model.bo.message.Message.Builder message2proto(Message message) {
-        im.turms.common.model.bo.message.Message.Builder builder = im.turms.common.model.bo.message.Message.newBuilder();
+        var builder = im.turms.common.model.bo.message.Message.newBuilder();
         Long messageId = message.getId();
         Boolean isSystemMessage = message.getIsSystemMessage();
         Date deliveryDate = message.getDeliveryDate();
@@ -73,6 +73,7 @@ public final class ProtoModelUtil {
         Long targetId = message.getTargetId();
         Long groupId = message.groupId();
         Integer sequenceId = message.getSequenceId();
+        Long preMessageId = message.getPreMessageId();
         if (messageId != null) {
             builder.setId(messageId);
         }
@@ -104,6 +105,9 @@ public final class ProtoModelUtil {
         }
         if (sequenceId != null) {
             builder.setSequenceId(sequenceId);
+        }
+        if (preMessageId != null) {
+            builder.setPreMessageId(preMessageId);
         }
         return builder;
     }

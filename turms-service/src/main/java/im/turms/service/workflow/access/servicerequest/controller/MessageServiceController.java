@@ -116,6 +116,7 @@ public class MessageServiceController {
                 }
                 Integer burnAfter = request.hasBurnAfter() ? request.getBurnAfter() : null;
                 Date deliveryDate = new Date(request.getDeliveryDate());
+                Long preMessageId = request.hasPreMessageId() ? request.getPreMessageId() : null;
                 messageAndRelatedUserIdsMono = messageService.authAndSaveMessage(
                         null,
                         clientRequest.userId(),
@@ -126,7 +127,8 @@ public class MessageServiceController {
                         records,
                         burnAfter,
                         deliveryDate,
-                        null);
+                        null,
+                        preMessageId);
             }
             return messageAndRelatedUserIdsMono.map(pair -> {
                 Message message = pair.getLeft();

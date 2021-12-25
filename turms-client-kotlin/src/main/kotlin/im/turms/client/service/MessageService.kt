@@ -56,7 +56,8 @@ class MessageService(private val turmsClient: TurmsClient) {
         deliveryDate: Date = Date(),
         text: String? = null,
         records: List<ByteBuffer>? = null,
-        burnAfter: Int? = null
+        burnAfter: Int? = null,
+        preMessageId: Long? = null
     ): Long {
         if (text == null && records == null) {
             throw TurmsBusinessException(TurmsStatusCode.ILLEGAL_ARGUMENT, "text and records must not all be null")
@@ -73,6 +74,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                     text?.let { this.text = it }
                     records?.let { this.addAllRecords(it.map { buffer -> ByteString.copyFrom(buffer) }) }
                     burnAfter?.let { this.burnAfter = it }
+                    preMessageId?.let { this.preMessageId = it }
                 }
             ).data.ids.getValues(0)
     }

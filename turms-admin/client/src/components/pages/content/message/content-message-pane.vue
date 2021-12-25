@@ -127,6 +127,11 @@ export default {
                             id: 'referenceId',
                             type: 'INPUT',
                             rules: this.$validator.create({onlyNumber: true})
+                        },
+                        {
+                            id: 'preMessageId',
+                            type: 'INPUT',
+                            rules: this.$validator.create({onlyNumber: true})
                         }
                     ]
                 },

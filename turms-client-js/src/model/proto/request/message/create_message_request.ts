@@ -17,6 +17,7 @@ export interface CreateMessageRequest {
   text?: string | undefined;
   records: Uint8Array[];
   burnAfter?: number | undefined;
+  preMessageId?: string | undefined;
 }
 
 const baseCreateMessageRequest: object = {};
@@ -49,6 +50,9 @@ export const CreateMessageRequest = {
     }
     if (message.burnAfter !== undefined) {
       writer.uint32(64).int32(message.burnAfter);
+    }
+    if (message.preMessageId !== undefined) {
+      writer.uint32(72).int64(message.preMessageId);
     }
     return writer;
   },
@@ -87,6 +91,9 @@ export const CreateMessageRequest = {
           break;
         case 8:
           message.burnAfter = reader.int32();
+          break;
+        case 9:
+          message.preMessageId = longToString(reader.int64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
