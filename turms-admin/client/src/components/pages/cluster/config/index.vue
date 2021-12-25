@@ -1,8 +1,8 @@
 <template>
-    <skeleton v-if="!initialized && loading" />
+    <skeleton v-if="!initialized" />
     <a-spin
         v-else
-        :spinning="initialized && loading"
+        :spinning="loading"
     >
         <div
             class="cluster-config"
@@ -118,17 +118,14 @@ export default {
                             text: this.$util.splitByCapitals(this.$util.upperFirst(title)),
                             key: title
                         };
-                    } else {
-                        return [];
                     }
+                    return [];
                 });
         }
     },
     watch: {
         admin() {
-            if (this.admin) {
-                this.fetchData();
-            }
+            this.initDataOnLogin();
         },
         currentConfig: {
             handler() {
@@ -138,11 +135,14 @@ export default {
         }
     },
     mounted() {
-        if (this.admin) {
-            this.fetchData();
-        }
+        this.initDataOnLogin();
     },
     methods: {
+        initDataOnLogin() {
+            if (this.admin) {
+                this.fetchData();
+            }
+        },
         updateDiff() {
             const diffs = (diff(this.currentConfig, this.defaultConfig) || [])
                 .filter(difference => difference.path[difference.path.length - 1] === 'value');
@@ -156,7 +156,7 @@ export default {
         requestRefresh() {
             this.fetchData();
         },
-        fetchData() {
+        fetchData(retryTimes = 0) {
             this.loading = true;
             return this.fetchConfig()
                 .then(response => {
@@ -164,15 +164,22 @@ export default {
                     this.currentConfig = this.$util.copy(this.defaultConfig);
                     if (this.initialized) {
                         this.$message.success(this.$t('refreshedDataSuccessfully'));
-                    } else {
-                        this.initialized = true;
                     }
                 })
-                .catch(error => {
-                    this.$error(this.$t('failedToFetchData'), error);
+                .catch(async error => {
+                    if (this.initialized) {
+                        this.$error(this.$t('failedToFetchData'), error);
+                    } else {
+                        this.$error(this.$t('failedToFetchDataWithRetry', {
+                            number: ++retryTimes
+                        }), error);
+                        await this.$sleep(10 * 1000);
+                        await this.fetchData(retryTimes);
+                    }
                 })
                 .finally(() => {
                     this.loading = false;
+                    this.initialized = true;
                 });
         },
         fetchConfig() {

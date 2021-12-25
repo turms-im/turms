@@ -131,6 +131,7 @@ const en_US = {
     'failedToDisconnect': 'Failed to disconnect',
     'failedToExport': 'Failed to export',
     'failedToFetchData': 'Failed to fetch',
+    'failedToFetchDataWithRetry': 'Failed to fetch. Retry times: {number}',
     'failedToRefreshData': 'Failed to refresh',
     'fetchDataSuccessfully': 'Data has been fetched',
     'fieldHasBlank': 'The field cannot have blank characters',

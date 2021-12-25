@@ -131,6 +131,7 @@ const zh_CN = {
     'failedToDisconnect': '下线目标设备失败',
     'failedToExport': '导出数据失败',
     'failedToFetchData': '获取数据失败',
+    'failedToFetchDataWithRetry': '获取数据失败。当前重试次数：{number}',
     'failedToRefreshData': '数据刷新失败',
     'fetchDataSuccessfully': '获取数据成功',
     'fieldHasBlank': '字段不能有空白符',
