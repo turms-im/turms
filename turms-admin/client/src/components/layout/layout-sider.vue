@@ -131,25 +131,31 @@ export default {
                 title: 'about'
             }
         ];
-        const selectedKeys = ['/content/user'];
-        this.onMenuItemSelected(selectedKeys[0]);
-        return {
-            menuItems,
-            openKeys: ['/content'],
-            selectedKeys
-        };
-    },
-    mounted() {
+        let openKey;
+        let selectedKey;
         const fullPath = window.location.pathname || '';
         const paths = fullPath.split('/')
             .filter(path => path);
-        if (paths.length >= 2) {
-            this.openKeys = ['/' + paths[0]];
-        }
         if (paths.length) {
-            this.selectedKeys = [fullPath];
-            this.onMenuItemSelected(fullPath);
+            const fullPathExists = menuItems
+                .find(item => item.key === fullPath || item.children?.find(sub => sub.key === fullPath));
+            if (fullPathExists) {
+                selectedKey = fullPath;
+                if (paths.length >= 2) {
+                    openKey = `/${paths[0]}`;
+                }
+            }
         }
+        if (!selectedKey) {
+            openKey = menuItems[0].key;
+            selectedKey = menuItems[0].children?.[0]?.key || openKey;
+        }
+        this.onMenuItemSelected(selectedKey);
+        return {
+            menuItems,
+            openKeys: openKey ? [openKey] : [],
+            selectedKeys: [selectedKey]
+        };
     },
     methods: {
         openChange(subMenu) {
