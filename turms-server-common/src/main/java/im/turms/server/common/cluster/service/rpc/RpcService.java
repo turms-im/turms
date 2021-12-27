@@ -32,6 +32,7 @@ import im.turms.server.common.cluster.service.rpc.codec.RpcFrameDecoder;
 import im.turms.server.common.cluster.service.rpc.codec.RpcFrameEncoder;
 import im.turms.server.common.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.cluster.service.rpc.dto.RpcResponse;
+import im.turms.server.common.cluster.service.rpc.exception.ConnectionNotFound;
 import im.turms.server.common.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.logging.core.logger.Logger;
@@ -218,7 +219,7 @@ public class RpcService implements ClusterService {
         if (connection == null) {
             connection = connectionService.getMemberConnection(nodeId);
             if (connection == null) {
-                throw new IllegalStateException("The connection to the member " + nodeId
+                throw new ConnectionNotFound("The connection to the member " + nodeId
                         + " doesn't exist");
             }
         }

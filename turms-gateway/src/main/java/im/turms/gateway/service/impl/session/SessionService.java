@@ -31,6 +31,7 @@ import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.observability.MetricsService;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.cluster.service.rpc.exception.ConnectionNotFound;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.dto.CloseReason;
@@ -476,7 +477,20 @@ public class SessionService implements ISessionService {
             for (String nodeId : nodeIds) {
                 Set<DeviceType> deviceTypes = nodeIdAndDeviceTypesMap.get(nodeId);
                 SetUserOfflineRequest request = new SetUserOfflineRequest(userId, deviceTypes, SessionCloseStatus.DISCONNECTED_BY_CLIENT);
-                disconnectionRequests.add(node.getRpcService().requestResponse(nodeId, request));
+                disconnectionRequests.add(node.getRpcService().requestResponse(nodeId, request)
+                        .onErrorResume(ConnectionNotFound.class, t -> {
+                            // The connection may not exist because there is a network problem between the current node
+                            // and the target node, or the target node is dead (if it's an unknown node).
+
+                            // For the first case (network problem) or we are not sure whether the target node is really dead,
+                            // we keep returning the expected INTERNAL_SERVER_ERROR to client until its TTL expires.
+                            if (node.getDiscoveryService().isKnownMember(nodeId)) {
+                                return Mono.error(t);
+                            }
+                            // For the second case (dead target node), we consider the user sessions already offline,
+                            // so we return true for the logging in client to log in for better user experience.
+                            return Mono.just(true);
+                        }));
             }
             return ReactorUtil.areAllTrue(disconnectionRequests);
         }
