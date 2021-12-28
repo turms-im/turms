@@ -23,7 +23,6 @@ import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.common.model.bo.user.UserRelationshipGroupsWithVersion;
 import im.turms.common.util.RandomUtil;
 import im.turms.server.common.bo.common.DateRange;
-import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
@@ -68,7 +67,6 @@ import java.util.Set;
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class UserRelationshipGroupService {
 
-    private final Node node;
     private final TurmsMongoClient mongoClient;
     private final UserVersionService userVersionService;
     private final UserRelationshipService userRelationshipService;
@@ -77,12 +75,10 @@ public class UserRelationshipGroupService {
      * @param userRelationshipService is lazy because: UserRelationshipService -> UserRelationshipGroupService -> UserRelationshipService
      */
     public UserRelationshipGroupService(
-            Node node,
             @Qualifier("userMongoClient") TurmsMongoClient mongoClient,
             UserVersionService userVersionService,
             @Lazy UserRelationshipService userRelationshipService) {
         this.mongoClient = mongoClient;
-        this.node = node;
         this.userVersionService = userVersionService;
         this.userRelationshipService = userRelationshipService;
     }

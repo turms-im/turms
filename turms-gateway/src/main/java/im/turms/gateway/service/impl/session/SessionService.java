@@ -479,8 +479,8 @@ public class SessionService implements ISessionService {
                 SetUserOfflineRequest request = new SetUserOfflineRequest(userId, deviceTypes, SessionCloseStatus.DISCONNECTED_BY_CLIENT);
                 disconnectionRequests.add(node.getRpcService().requestResponse(nodeId, request)
                         .onErrorResume(ConnectionNotFound.class, t -> {
-                            // The connection may not exist because there is a network problem between the current node
-                            // and the target node, or the target node is dead (if it's an unknown node).
+                            // The connection may not exist because there is a network problem between the local node
+                            // and the target node, or the target node is dead (if it's an unknown node) without clearing its sessions in Redis.
 
                             // For the first case (network problem) or we are not sure whether the target node is really dead,
                             // we keep returning the expected INTERNAL_SERVER_ERROR to client until its TTL expires.
@@ -520,9 +520,8 @@ public class SessionService implements ISessionService {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
                     }
                     UserStatus finalUserStatus = null == userStatus ? UserStatus.AVAILABLE : userStatus;
-                    UserSessionsManager manager =
-                            sessionsManagerByUserId.computeIfAbsent(userId, key ->
-                                    new UserSessionsManager(key, finalUserStatus));
+                    UserSessionsManager manager = sessionsManagerByUserId
+                            .computeIfAbsent(userId, key -> new UserSessionsManager(key, finalUserStatus));
                     UserSession session = manager.addSessionIfAbsent(version, deviceType, position);
                     // This should never happen
                     if (null == session) {

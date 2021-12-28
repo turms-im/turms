@@ -12,6 +12,7 @@ import im.turms.server.common.redis.RedisProperties;
 import im.turms.server.common.redis.TurmsRedisClientManager;
 import im.turms.server.common.service.session.UserStatusService;
 import im.turms.server.common.testing.BaseIntegrationTest;
+import io.lettuce.core.protocol.LongKeyGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -223,7 +225,22 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Order(ORDER_UPDATE_ONLINE_USERS_TTL)
     @Test
     void updateOnlineUsersTtl_shouldReturnNonExistingUserId() {
-        List<Long> users = List.of(USER_1_ID, USER_2_ID, NON_EXISTING_USER_ID);
+        List<Long> userIds = List.of(USER_1_ID, USER_2_ID, NON_EXISTING_USER_ID);
+        Iterator<Long> iterator = userIds.iterator();
+        LongKeyGenerator users = new LongKeyGenerator() {
+            @Override
+            public int expectedSize() {
+                return userIds.size();
+            }
+
+            @Override
+            public long next() {
+                if (iterator.hasNext()) {
+                    return iterator.next();
+                }
+                return -1;
+            }
+        };
         Mono<Void> updateMono = USER_STATUS_SERVICE
                 .updateOnlineUsersTtl(users, 30);
         StepVerifier

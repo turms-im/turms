@@ -106,8 +106,8 @@ public class GroupTypeService {
                         default -> LOGGER.fatal("Detected an illegal operation on GroupType collection: " + event);
                     }
                 })
-                .onErrorContinue(
-                        (throwable, o) -> LOGGER.error("Error while processing the change stream event of GroupType: {}", o, throwable))
+                .onErrorContinue((throwable, o) ->
+                        LOGGER.error("Error while processing the change stream event of GroupType: {}", o, throwable))
                 .subscribe();
         mongoTemplate.findAll(GroupType.class)
                 .doOnNext(groupType -> groupTypeMap.put(groupType.getId(), groupType))

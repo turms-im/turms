@@ -109,7 +109,7 @@ public class Node {
             nodeVersion = NodeVersion.parse(version);
             LOGGER.info("The local node version is {}", version);
         } catch (Exception e) {
-            LOGGER.error("Failed to get the Turms version of the current node", e);
+            LOGGER.error("Failed to get the Turms version of the local node", e);
             throw e;
         }
 

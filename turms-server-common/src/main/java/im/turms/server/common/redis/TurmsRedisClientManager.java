@@ -17,18 +17,22 @@
 
 package im.turms.server.common.redis;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.redis.codec.context.RedisCodecContext;
 import im.turms.server.common.redis.script.RedisScript;
 import im.turms.server.common.redis.sharding.ShardingAlgorithm;
+import im.turms.server.common.service.session.UserStatusService;
 import im.turms.server.common.util.ByteBufUtil;
 import io.lettuce.core.GeoArgs;
 import io.lettuce.core.GeoCoordinates;
 import io.lettuce.core.GeoWithin;
+import io.lettuce.core.protocol.CommandArgsUtil;
+import io.lettuce.core.protocol.CustomKeyBuffer;
+import io.lettuce.core.protocol.LongKeyGenerator;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+import lombok.AllArgsConstructor;
 import org.springframework.data.geo.Point;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -142,40 +146,81 @@ public class TurmsRedisClientManager {
         return getClient(shardKey).eval(script, buffers);
     }
 
-    public Mono<Void> eval(Collection<Long> shardKeys, RedisScript script, ByteBuf[] keys) {
+    /**
+     * In fact, the method is designed for {@link UserStatusService#updateOnlineUsersTtl} currently
+     *
+     * @param keyGenerator The size of keys should not be larger than 1,048,576(1024*1024), or Redis will throw
+     */
+    public Mono<Void> eval(LongKeyGenerator keyGenerator, RedisScript script, short firstKey) {
+        int expectedKeySize = Math.max(keyGenerator.expectedSize(), 1);
         int clientSize = clients.size();
+        long key;
+        // fast path
         if (clientSize == 1) {
+            key = keyGenerator.next();
+            if (key == -1) {
+                return Mono.empty();
+            }
+            ByteBuf keysBuffer = PooledByteBufAllocator.DEFAULT
+                    .directBuffer(expectedKeySize * (Long.BYTES + 16));
+            CommandArgsUtil.writeRawShortArg(keysBuffer, firstKey);
             TurmsRedisClient client = clients.get(0);
-            return client.eval(script, keys)
+            int keyCount = 1;
+            do {
+                keyCount++;
+                CommandArgsUtil.writeRawLongArg(keysBuffer, key);
+                key = keyGenerator.next();
+            } while (key != -1);
+            return client.eval(script, keyCount, new CustomKeyBuffer(keysBuffer))
                     .then();
         }
-        ListMultimap<TurmsRedisClient, Long> map = ArrayListMultimap.create(clientSize, shardKeys.size() / clientSize);
-        for (Long shardKey : shardKeys) {
-            map.put(getClient(shardKey), shardKey);
+        // slow path
+        int keysPerClient = Math.max(expectedKeySize / clientSize, 1);
+        Map<TurmsRedisClient, BufferEntry> keyForClients = new IdentityHashMap<>(clientSize);
+        while ((key = keyGenerator.next()) != -1) {
+            TurmsRedisClient client = getClient(key);
+            BufferEntry entry = keyForClients.get(client);
+            ByteBuf buffer;
+            if (entry == null) {
+                buffer = PooledByteBufAllocator.DEFAULT
+                        .directBuffer(keysPerClient * (Long.BYTES + 16));
+                CommandArgsUtil.writeRawShortArg(buffer, firstKey);
+                entry = new BufferEntry(buffer, 1);
+                keyForClients.put(client, entry);
+            } else {
+                buffer = entry.buffer;
+                entry.incrementKeyCount();
+            }
+            CommandArgsUtil.writeRawLongArg(buffer, key);
         }
-        Map<TurmsRedisClient, Collection<Long>> clientAndUserIds = map.asMap();
-        int resultSize = clientAndUserIds.keySet().size();
-        List<Mono<?>> list = new ArrayList<>(resultSize);
-        for (ByteBuf key : keys) {
-            key.retain(resultSize);
+        int targetClientSize = keyForClients.size();
+        if (targetClientSize == 0) {
+            return Mono.empty();
         }
-        for (Map.Entry<TurmsRedisClient, Collection<Long>> entry : clientAndUserIds.entrySet()) {
+        List<Mono<?>> list = new ArrayList<>(targetClientSize);
+        for (Map.Entry<TurmsRedisClient, BufferEntry> entry : keyForClients.entrySet()) {
+            BufferEntry bufferEntry = entry.getValue();
             Mono<?> result = entry.getKey()
-                    .eval(script, keys);
+                    .eval(script, bufferEntry.keyCount, new CustomKeyBuffer(bufferEntry.buffer));
             list.add(result);
         }
-        return Mono.when(list)
-                .doFinally(type -> {
-                    for (ByteBuf key : keys) {
-                        key.release();
-                    }
-                });
+        return Mono.when(list);
     }
 
     // Internal
 
     private TurmsRedisClient getClient(Long shardKey) {
         return clients.get(shardingAlgorithm.doSharding(shardKey, clients.size()));
+    }
+
+    @AllArgsConstructor
+    private static class BufferEntry {
+        final ByteBuf buffer;
+        int keyCount;
+
+        void incrementKeyCount() {
+            keyCount++;
+        }
     }
 
 }

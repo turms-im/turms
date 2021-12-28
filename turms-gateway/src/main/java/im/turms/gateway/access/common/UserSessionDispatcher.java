@@ -130,9 +130,8 @@ public abstract class UserSessionDispatcher {
 
     private Mono<Void> tryRemoveSessionInfoOnConnectionClosed(Mono<Void> onClose, UserSessionWrapper sessionWrapper) {
         return onClose
-                .onErrorResume(
-                        throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(),
-                                sessionWrapper.getUserSession(), TracingContext.NOOP))
+                .onErrorResume(throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(),
+                        sessionWrapper.getUserSession(), TracingContext.NOOP))
                 .doFinally(signal -> {
                     UserSession userSession = sessionWrapper.getUserSession();
                     if (userSession == null) {

@@ -26,8 +26,6 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * Use the hash-based sharding because the groupId increases monotonically.
- *
  * @author James Chen
  */
 @Data

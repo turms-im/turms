@@ -37,6 +37,7 @@ import im.turms.server.common.util.ByteBufUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.DeviceTypeUtil;
 import io.lettuce.core.ScriptOutputType;
+import io.lettuce.core.protocol.LongKeyGenerator;
 import io.netty.buffer.ByteBuf;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,6 @@ import javax.validation.constraints.NotNull;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -222,14 +222,14 @@ public class UserStatusService {
                 .timeout(operationTimeout);
     }
 
-    public Mono<Void> updateOnlineUsersTtl(@NotNull Collection<Long> userIds, @NotNull int timeoutSeconds) {
+    public Mono<Void> updateOnlineUsersTtl(@NotNull LongKeyGenerator userIdGenerator, @NotNull int timeoutSeconds) {
         try {
-            AssertUtil.notNull(userIds, "userIds");
+            AssertUtil.notNull(userIdGenerator, "userIdGenerator");
             AssertUtil.notNull(timeoutSeconds, "timeoutSeconds");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return sessionRedisClientManager.eval(userIds, updateUsersTtlScript, serializeUpdateUsersTtlScript(timeoutSeconds, userIds));
+        return sessionRedisClientManager.eval(userIdGenerator, updateUsersTtlScript, (short) timeoutSeconds);
     }
 
     /**
@@ -340,25 +340,6 @@ public class UserStatusService {
             args[4] = (byte) userStatus.getNumber();
         }
         return sessionRedisClientManager.eval(userId, addOnlineUserScript, args);
-    }
-
-    private ByteBuf[] serializeUpdateUsersTtlScript(int ttl, Collection<Long> userIds) {
-        int userCount = userIds.size();
-        ByteBuf[] buffers = new ByteBuf[1 + userCount];
-        buffers[0] = ByteBufUtil.obj2Buffer((short) ttl);
-        int i = 1;
-        for (Long userId : userIds) {
-            try {
-                buffers[i] = ByteBufUtil.getPooledLongBuffer(userId);
-            } catch (Exception e) {
-                for (int j = 0; j < i; j++) {
-                    buffers[j].release();
-                }
-                throw new RuntimeException(e);
-            }
-            i++;
-        }
-        return buffers;
     }
 
 }

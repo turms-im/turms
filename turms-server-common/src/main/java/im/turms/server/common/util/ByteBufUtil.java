@@ -49,6 +49,17 @@ public final class ByteBufUtil {
     private ByteBufUtil() {
     }
 
+    /**
+     * The method is used for debugging purposes
+     */
+    public static String getString(ByteBuf buffer) {
+        buffer.markReaderIndex();
+        byte[] bytes = new byte[buffer.readableBytes()];
+        buffer.readBytes(bytes);
+        buffer.resetReaderIndex();
+        return new String(bytes);
+    }
+
     public static ByteBuf getPooledPreferredByteBuffer(int value) {
         if (0 <= value && value < BYTE_CACHE_SIZE) {
             return BYTE_CACHE[value];

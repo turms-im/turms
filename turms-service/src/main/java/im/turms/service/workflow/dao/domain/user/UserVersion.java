@@ -26,10 +26,9 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * Use the hash-based sharding because the userId increases monotonically.
- *
  * @author James Chen
- * @implNote Use range index instead of the hashed index to avoid create two indexes on the key
+ * @implNote Use the range index instead of the hashed index to avoid creating two indexes on the key
+ * because MongoDB will create a default range index on the key if we use a hashed index
  */
 @Data
 @Document(UserVersion.COLLECTION_NAME)

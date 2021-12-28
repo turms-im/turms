@@ -28,8 +28,8 @@ public class TurmsWrappedByteBuf extends WrappedByteBuf {
 
     private SwappedByteBuf swappedBuf;
 
-    TurmsWrappedByteBuf(ByteBuf buf) {
-        super(buf instanceof TurmsWrappedByteBuf ? buf.unwrap() : buf);
+    public TurmsWrappedByteBuf(ByteBuf buf) {
+        super(buf);
     }
 
     @Override

@@ -130,11 +130,14 @@ public final class MongoEntityFactory {
         }
         String[] keys = sharded.shardKey();
         if (keys.length == 0) {
-            keys = new String[] {"_id"};
+            keys = new String[]{"_id"};
         }
         if (sharded.shardingStrategy().equals(ShardingStrategy.HASH)) {
             if (keys.length > 1) {
                 throw new IllegalStateException("The hash sharding strategy can have only one shard key: " + clazz.getName());
+            } else if (keys[0].equals("_id")) {
+                throw new IllegalStateException("Should not create an hashed index on the key. " +
+                        "If so, MongoDB will create a default range index on the key: " + clazz.getName());
             } else {
                 return new BsonDocument(keys[0], BsonPool.BSON_STRING_HASHED);
             }

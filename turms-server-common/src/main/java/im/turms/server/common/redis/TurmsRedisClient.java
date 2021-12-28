@@ -56,9 +56,9 @@ import static io.lettuce.core.protocol.CommandType.GEORADIUSBYMEMBER;
 
 /**
  * @author James Chen
- * @implNote For Redis commands, we must ensure the key/val buffers are released in "doFinally"
+ * @implNote For Redis commands, we MUST ensure the key/val buffers are released in "doFinally"
  * by ourselves because if a command is cancelled or fails, Lettuce won't release these buffers
- * because it hasn't flushed the buffers,
+ * because it hasn't flushed the buffers.
  * @see AbstractRedisReactiveCommands
  */
 @Data
@@ -207,16 +207,23 @@ public class TurmsRedisClient {
     // Scripting
 
     public <T> Mono<T> eval(RedisScript script, ByteBuf... keys) {
+        return eval(script, keys.length, keys);
+    }
+
+    /**
+     * @param keyLength the real key length
+     */
+    public <T> Mono<T> eval(RedisScript script, int keyLength, ByteBuf... keys) {
         for (int i = 0; i < keys.length; i++) {
             keys[i] = ByteBufUtil.ensureByteBufRefCnfCorrect(keys[i])
                     .retain();
         }
         return (Mono<T>) commands
-                .createFlux(() -> commandBuilder.evalsha(script.digest(), script.outputType(), keys))
+                .createFlux(() -> commandBuilder.evalsha(script.digest(), script.outputType(), keys, keyLength))
                 .onErrorResume(e -> {
                     if (exceptionContainsNoScriptException(e)) {
-                        return commands.createFlux(
-                                () -> commandBuilder.eval(script.script(), script.outputType(), keys));
+                        return commands
+                                .createFlux(() -> commandBuilder.eval(script.script(), script.outputType(), keys, keyLength));
                     }
                     return Flux.error(e);
                 })

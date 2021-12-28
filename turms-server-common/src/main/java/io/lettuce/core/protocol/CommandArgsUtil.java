@@ -21,10 +21,9 @@ import im.turms.server.common.util.Formatter;
 import im.turms.server.common.util.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.CompositeByteBuf;
+import io.netty.buffer.TurmsWrappedByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.buffer.UnpooledByteBufAllocator;
-
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author James Chen
@@ -38,15 +37,17 @@ public final class CommandArgsUtil {
     public static final ByteBuf COMMAND_TYPE_FLAG;
     public static final ByteBuf CRLF;
 
+    public static final byte BULK_STRINGS_FLAG_BYTE = '$';
+    public static final byte COMMAND_TYPE_FLAG_BYTE = '*';
+    public static final byte[] CRLF_BYTES = new byte[]{'\r', '\n'};
+
     private static final int ARGUMENT_LENGTH_CACHE_SIZE = 64;
     private static final ByteBuf[] ARGUMENT_LENGTH_CACHE;
 
-
     static {
-        BULK_STRINGS_FLAG = Unpooled.unreleasableBuffer(Unpooled.directBuffer(1).writeByte('$'));
-        COMMAND_TYPE_FLAG = Unpooled.unreleasableBuffer(Unpooled.directBuffer(1).writeByte('*'));
-        byte[] crlf = "\r\n".getBytes(StandardCharsets.US_ASCII);
-        CRLF = Unpooled.unreleasableBuffer(Unpooled.directBuffer(crlf.length).writeBytes(crlf));
+        BULK_STRINGS_FLAG = Unpooled.unreleasableBuffer(Unpooled.directBuffer(1).writeByte(BULK_STRINGS_FLAG_BYTE));
+        COMMAND_TYPE_FLAG = Unpooled.unreleasableBuffer(Unpooled.directBuffer(1).writeByte(COMMAND_TYPE_FLAG_BYTE));
+        CRLF = Unpooled.unreleasableBuffer(Unpooled.directBuffer(CRLF_BYTES.length).writeBytes(CRLF_BYTES));
 
         ARGUMENT_LENGTH_CACHE = new ByteBuf[ARGUMENT_LENGTH_CACHE_SIZE];
         for (int i = 0; i < ARGUMENT_LENGTH_CACHE_SIZE; i++) {
@@ -66,7 +67,11 @@ public final class CommandArgsUtil {
                 writeBytesArg(out, Formatter.toCharBytes(argument.val));
             } else if (arg instanceof CommandArgs.KeyArgument<?, ?> argument) {
                 ByteBuf key = (ByteBuf) argument.key;
-                writeByteBuf(out, key);
+                if (key instanceof TurmsWrappedByteBuf buf && buf.unwrap() instanceof CustomKeyBuffer) {
+                    out.addComponent(true, key);
+                } else {
+                    writeByteBuf(out, key);
+                }
             } else if (arg instanceof CommandArgs.DoubleArgument argument) {
                 writeStringArg(out, Double.toString(argument.val));
             } else if (arg instanceof CommandArgs.CharArrayArgument argument) {
@@ -80,6 +85,11 @@ public final class CommandArgsUtil {
                 writeByteBuf(out, val);
             }
         }
+    }
+
+    public static long getLongArgument(CommandArgs<?, ?> args, int i) {
+        CommandArgs.IntegerArgument argument = (CommandArgs.IntegerArgument) args.singularArguments.get(i);
+        return argument.val;
     }
 
     // Argument Meta Data Encoding
@@ -102,6 +112,22 @@ public final class CommandArgsUtil {
 
     // Argument Encoding
 
+    public static void writeRawLongArg(ByteBuf out, long value) {
+        out.writeByte(BULK_STRINGS_FLAG_BYTE)
+                .writeBytes(getArgLength(Long.BYTES).nioBuffer())
+                .writeBytes(CRLF_BYTES)
+                .writeLong(value)
+                .writeBytes(CRLF_BYTES);
+    }
+
+    public static void writeRawShortArg(ByteBuf out, short value) {
+        out.writeByte(BULK_STRINGS_FLAG_BYTE)
+                .writeBytes(getArgLength(Short.BYTES).nioBuffer())
+                .writeBytes(CRLF_BYTES)
+                .writeShort(value)
+                .writeBytes(CRLF_BYTES);
+    }
+
     public static void writeBytesArg(CompositeByteBuf out, byte[] value) {
         int charLength = value.length;
         out.addComponent(true, BULK_STRINGS_FLAG)
@@ -111,6 +137,9 @@ public final class CommandArgsUtil {
                 .addComponent(true, CRLF);
     }
 
+    /**
+     * e.g. "$4\r\n????\r\n"
+     */
     public static ByteBuf writeBytesArg(byte[] value) {
         int charLength = value.length;
         return UnpooledByteBufAllocator.DEFAULT.compositeBuffer(5)

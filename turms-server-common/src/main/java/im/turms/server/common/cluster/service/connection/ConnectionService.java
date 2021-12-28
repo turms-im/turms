@@ -457,7 +457,7 @@ public class ConnectionService implements ClusterService {
         boolean isLocalNodeClient = connection.isLocalNodeClient();
         String nodeType = isLocalNodeClient ? "Client" : "Server";
         String nodeId = connection.getNodeId();
-        Member member = discoveryService.getMember(nodeId);
+        Member member = nodeId == null ? null : discoveryService.getMember(nodeId);
         String memberIdAndAddress = member == null ? "" : ": " + getMemberIdAndAddress(member);
         LogLevel logLevel = connection.isClosing() ? LogLevel.INFO : LogLevel.WARN;
         LOGGER.log(logLevel, "[{}] The connection to the member{} has been closed{}",
@@ -472,7 +472,7 @@ public class ConnectionService implements ClusterService {
                 LOGGER.error("Caught an error when invoking onConnectionClosed listeners", e);
             }
         }
-        boolean isKnownMember = discoveryService.isKnownMember(nodeId);
+        boolean isKnownMember = nodeId != null && discoveryService.isKnownMember(nodeId);
         boolean isClosing = discoveryService.getLocalNodeStatusManager().isClosing();
         if (isLocalNodeClient && isKnownMember && !isClosing) {
             Mono.delay(reconnectInterval)

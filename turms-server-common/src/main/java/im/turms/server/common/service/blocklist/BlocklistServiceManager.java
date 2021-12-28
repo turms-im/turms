@@ -196,19 +196,17 @@ public class BlocklistServiceManager<T> {
         }
         long now = System.currentTimeMillis();
         long blockEndTimeMillis = now + blockMinutes * 60L * 1000L;
-        for (T targetId : targetIds) {
-            BlockedClient blockedClient = new BlockedClient(targetId, blockEndTimeMillis);
-            blocklist.put(targetId, blockEndTimeMillis);
-            blockedClientSkipList.add(blockedClient);
-            triggerOnTargetBlocked(targetId);
-        }
         int size = targetIds.size();
         ByteBuf[] args = new ByteBuf[size + 2];
         args[0] = getBlocklistKey();
         args[1] = encodeBlockEndTime(blockEndTimeMillis);
         int i = 2;
-        for (T id : targetIds) {
-            args[i] = encodeId(id);
+        for (T targetId : targetIds) {
+            BlockedClient blockedClient = new BlockedClient(targetId, blockEndTimeMillis);
+            blocklist.put(targetId, blockEndTimeMillis);
+            blockedClientSkipList.add(blockedClient);
+            triggerOnTargetBlocked(targetId);
+            args[i] = encodeId(targetId);
             i++;
         }
         Mono<List<Object>> blockUsers = redisClient.eval(blockClientsScript, args);
@@ -381,6 +379,7 @@ public class BlocklistServiceManager<T> {
         if (checkSyncStatus && isSyncing.compareAndSet(false, true)) {
             return Mono.empty();
         }
+        LOGGER.info("Starting resetting and synchronizing blocked clients");
         blocklist.clear();
         blockedClientSkipList.clear();
         localTimestamp = UNINITIALIZED_ID;
@@ -401,6 +400,8 @@ public class BlocklistServiceManager<T> {
                         addBlockedClient(blockedClient, now);
                     }
                 })
+                .doOnSuccess(ignored -> LOGGER.info("Reset and synchronized blocked clients"))
+                .doOnError(t -> LOGGER.error("Failed to reset and synchronize blocked clients", t))
                 .doFinally(signalType -> {
                     if (checkSyncStatus) {
                         isSyncing.set(false);

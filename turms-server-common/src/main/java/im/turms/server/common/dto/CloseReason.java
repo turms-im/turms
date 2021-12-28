@@ -22,6 +22,8 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.ThrowableInfo;
 
 import javax.annotation.Nullable;
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * @author James Chen
@@ -32,8 +34,16 @@ public record CloseReason(
         @Nullable String reason
 ) {
 
+    private static final Map<SessionCloseStatus, CloseReason> POOL = new EnumMap<>(SessionCloseStatus.class);
+
+    static {
+        for (SessionCloseStatus closeStatus : SessionCloseStatus.values()) {
+            POOL.put(closeStatus, new CloseReason(closeStatus, null, null));
+        }
+    }
+
     public static CloseReason get(SessionCloseStatus closeStatus) {
-        return new CloseReason(closeStatus, null, null);
+        return POOL.get(closeStatus);
     }
 
     public static CloseReason get(Throwable throwable) {

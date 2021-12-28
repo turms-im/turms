@@ -63,7 +63,7 @@ public class ClientRequestDispatcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientRequestDispatcher.class);
 
-    private static final ByteBuf HEARTBEAT_RESPONSE_SUCCESS = new EmptyByteBuf(UnpooledByteBufAllocator.DEFAULT);
+    private static final ByteBuf HEARTBEAT_RESPONSE_SUCCESS = Unpooled.EMPTY_BUFFER;
     private static final ByteBuf HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT;
     private static final ByteBuf HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE;
 
@@ -122,13 +122,13 @@ public class ClientRequestDispatcher {
         long requestTime = System.currentTimeMillis();
         int requestSize = serviceRequestBuffer.readableBytes();
         SimpleTurmsRequest request;
-        SimpleTurmsRequest req;
+        SimpleTurmsRequest tempRequest;
         Mono<TurmsNotification> notificationMono = null;
         try {
-            req = TurmsRequestParser.parseSimpleRequest(serviceRequestBuffer.nioBuffer());
+            tempRequest = TurmsRequestParser.parseSimpleRequest(serviceRequestBuffer.nioBuffer());
         } catch (Exception e) {
             serviceRequestBuffer.release();
-            req = UNRECOGNIZED_REQUEST;
+            tempRequest = UNRECOGNIZED_REQUEST;
             UserSession session = sessionWrapper.getUserSession();
             if (session != null) {
                 blocklistService.tryBlockUserIdForCorruptedRequest(session.getUserId());
@@ -136,7 +136,7 @@ public class ClientRequestDispatcher {
             blocklistService.tryBlockIpForCorruptedRequest(sessionWrapper.getIp());
             notificationMono = Mono.error(TurmsBusinessException.get(TurmsStatusCode.INVALID_REQUEST, e.getMessage()));
         }
-        request = req;
+        request = tempRequest;
         TurmsRequest.KindCase requestType = request.type();
         TracingContext tracingContext = supportsTracing(requestType) ? new TracingContext() : TracingContext.NOOP;
         // Check if we can log to avoid logging DeleteSessionRequest twice

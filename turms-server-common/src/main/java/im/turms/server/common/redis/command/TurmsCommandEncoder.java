@@ -20,6 +20,7 @@ package im.turms.server.common.redis.command;
 import io.lettuce.core.protocol.CommandArgs;
 import io.lettuce.core.protocol.CommandArgsUtil;
 import io.lettuce.core.protocol.CommandEncoder;
+import io.lettuce.core.protocol.CommandType;
 import io.lettuce.core.protocol.ProtocolKeyword;
 import io.lettuce.core.protocol.RedisCommand;
 import io.netty.buffer.ByteBuf;
@@ -52,22 +53,19 @@ public class TurmsCommandEncoder extends ChannelOutboundHandlerAdapter {
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         CompositeByteBuf out;
         if (msg instanceof RedisCommand<?, ?, ?> command) {
-            CommandArgs<?, ?> args = command.getArgs();
-            int componentCount = COMMAND_BYTEBUF_COMPONENT_COUNT
-                    + (args == null ? 0 : args.count()) * CommandArgsUtil.ARG_BYTEBUF_COMPONENT_COUNT;
+            int argsCount = countArgs(command);
+            int componentCount = COMMAND_BYTEBUF_COMPONENT_COUNT + argsCount * CommandArgsUtil.ARG_BYTEBUF_COMPONENT_COUNT;
             out = UnpooledByteBufAllocator.DEFAULT.compositeDirectBuffer(componentCount);
-            encode(out, command);
+            encode(out, command, argsCount);
         } else if (msg instanceof Collection) {
             Collection<RedisCommand<?, ?, ?>> commands = (Collection<RedisCommand<?, ?, ?>>) msg;
             int componentCount = 0;
             for (RedisCommand<?, ?, ?> command : commands) {
-                CommandArgs<?, ?> args = command.getArgs();
-                componentCount += COMMAND_BYTEBUF_COMPONENT_COUNT
-                        + (args == null ? 0 : args.count()) * CommandArgsUtil.ARG_BYTEBUF_COMPONENT_COUNT;
+                componentCount += COMMAND_BYTEBUF_COMPONENT_COUNT + countArgs(command) * CommandArgsUtil.ARG_BYTEBUF_COMPONENT_COUNT;
             }
             out = UnpooledByteBufAllocator.DEFAULT.compositeDirectBuffer(componentCount);
             for (RedisCommand<?, ?, ?> command : commands) {
-                encode(out, command);
+                encode(out, command, countArgs(command));
             }
         } else {
             throw new IllegalArgumentException("Unknown message: " + msg.getClass().getName());
@@ -75,13 +73,11 @@ public class TurmsCommandEncoder extends ChannelOutboundHandlerAdapter {
         ctx.write(out, promise);
     }
 
-    private void encode(CompositeByteBuf out, RedisCommand<?, ?, ?> command) {
+    private void encode(CompositeByteBuf out, RedisCommand<?, ?, ?> command, int argsCount) {
         try {
             out.markWriterIndex();
             CommandArgs<?, ?> args = command.getArgs();
-            int length = args == null
-                    ? 1 // one for the command type
-                    : 1 + args.count();
+            int length = 1 + argsCount; // one for the command type
             out.addComponent(true, CommandArgsUtil.COMMAND_TYPE_FLAG)
                     .addComponent(true, CommandArgsUtil.getArgLength(length))
                     .addComponent(true, CommandArgsUtil.CRLF)
@@ -97,6 +93,21 @@ public class TurmsCommandEncoder extends ChannelOutboundHandlerAdapter {
         }
     }
 
+    private int countArgs(RedisCommand<?, ?, ?> command) {
+        int count = 0;
+        CommandArgs<?, ?> args = command.getArgs();
+        if (args != null) {
+            count += command.getType() == CommandType.EVAL || command.getType() == CommandType.EVALSHA
+                    // Add 2, one for script, another for the length of keys
+                    ? (int) CommandArgsUtil.getLongArgument(args, 1) + 2
+                    : args.count();
+        }
+        return count;
+    }
+
+    /**
+     * e.g. "$7\r\nEVALSHA\r\n"
+     */
     private ByteBuf getProtocolKeywordBuffer(ProtocolKeyword keyword) {
         ByteBuf buf = protocolKeywordBufferMap.get(keyword);
         if (buf == null) {

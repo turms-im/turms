@@ -225,7 +225,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
             if (b == '{' && i < length - 1 && bytes[i + 1] == '}') {
                 if (argIndex < argCount) {
                     Object arg = args[argIndex++];
-                    buffer.writeBytes(StringUtil.getUTF8Bytes(arg.toString()));
+                    buffer.writeBytes(StringUtil.getUTF8Bytes(String.valueOf(arg)));
                 } else {
                     buffer.writeBytes(NULL);
                 }

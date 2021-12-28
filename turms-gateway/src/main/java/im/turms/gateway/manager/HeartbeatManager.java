@@ -26,13 +26,13 @@ import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.service.session.UserStatusService;
+import io.lettuce.core.protocol.LongKeyGenerator;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Setter;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,7 +54,9 @@ public class HeartbeatManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HeartbeatManager.class);
 
-    private static final int UPDATE_HEARTBEAT_INTERVAL_MILLIS = 500;
+    private static final CloseReason HEARTBEAT_TIMEOUT = CloseReason.get(SessionCloseStatus.HEARTBEAT_TIMEOUT);
+
+    private static final int UPDATE_HEARTBEAT_INTERVAL_MILLIS = 1000;
     private static final float UPDATE_HEARTBEAT_INTERVAL_FACTOR = UPDATE_HEARTBEAT_INTERVAL_MILLIS / 1000f;
 
     private final SessionService sessionService;
@@ -118,31 +120,43 @@ public class HeartbeatManager {
 
     private void updateOnlineUsersTtl() {
         Set<Map.Entry<Long, UserSessionsManager>> entries = sessionsManagerByUserId.entrySet();
-        long now = System.currentTimeMillis();
-        List<Long> users = collectOnlineUsersAndUpdateStatus(entries, now);
-        userStatusService.updateOnlineUsersTtl(users, closeIdleSessionAfterSeconds)
+        LongKeyGenerator userIds = collectOnlineUsersAndUpdateStatus(entries);
+        userStatusService.updateOnlineUsersTtl(userIds, closeIdleSessionAfterSeconds)
+                .doOnError(t -> LOGGER.error("Failed to update online users", t))
                 .subscribe();
     }
 
-    private List<Long> collectOnlineUsersAndUpdateStatus(Set<Map.Entry<Long, UserSessionsManager>> entries, long now) {
+    private LongKeyGenerator collectOnlineUsersAndUpdateStatus(Set<Map.Entry<Long, UserSessionsManager>> entries) {
         int onlineUserCount = entries.size();
         int expectedUserCountToRefreshPerInterval = (int) (UPDATE_HEARTBEAT_INTERVAL_FACTOR * onlineUserCount / expectedFractionPerSecond);
-        List<Long> userIdToUpdateHeartbeat = new ArrayList<>(expectedUserCountToRefreshPerInterval);
-        for (Map.Entry<Long, UserSessionsManager> entry : entries) {
-            Map<DeviceType, UserSession> sessionMap = entry.getValue().getSessionMap();
-            for (Map.Entry<DeviceType, UserSession> sessionEntry : sessionMap.entrySet()) {
-                Long userId = handleSession(sessionEntry.getValue(), now);
-                if (userId != null) {
-                    userIdToUpdateHeartbeat.add(userId);
-                    break;
-                }
+        Iterator<Map.Entry<Long, UserSessionsManager>> iterator = entries.iterator();
+        return new LongKeyGenerator() {
+            final long now = System.currentTimeMillis();
+
+            @Override
+            public int expectedSize() {
+                return expectedUserCountToRefreshPerInterval;
             }
-        }
-        return userIdToUpdateHeartbeat;
+
+            @Override
+            public long next() {
+                while (iterator.hasNext()) {
+                    Map.Entry<Long, UserSessionsManager> entry = iterator.next();
+                    Map<DeviceType, UserSession> sessionMap = entry.getValue().getSessionMap();
+                    for (Map.Entry<DeviceType, UserSession> sessionEntry : sessionMap.entrySet()) {
+                        Long userId = closeOrUpdateSession(sessionEntry.getValue(), now);
+                        if (userId != null) {
+                            return userId;
+                        }
+                    }
+                }
+                return -1;
+            }
+        };
     }
 
     @Nullable
-    private Long handleSession(UserSession session, long now) {
+    private Long closeOrUpdateSession(UserSession session, long now) {
         if (!session.isOpen()) {
             return null;
         }
@@ -165,14 +179,13 @@ public class HeartbeatManager {
         }
         int heartbeatElapsedTime = (int) (now - lastHeartbeatRequestTimestamp);
         if (closeIdleSessionAfterMillis > 0 && heartbeatElapsedTime > closeIdleSessionAfterMillis) {
-            CloseReason closeReason = CloseReason.get(SessionCloseStatus.HEARTBEAT_TIMEOUT);
             sessionService.setLocalSessionOfflineByUserIdAndDeviceType(
                             session.getUserId(),
                             session.getDeviceType(),
-                            closeReason)
+                            HEARTBEAT_TIMEOUT)
                     .onErrorResume(t -> {
                         LOGGER.error("Caught an error when disconnecting the local session: {} with the close reason: {}",
-                                session, closeReason);
+                                session, HEARTBEAT_TIMEOUT);
                         return Mono.empty();
                     })
                     .subscribe();
