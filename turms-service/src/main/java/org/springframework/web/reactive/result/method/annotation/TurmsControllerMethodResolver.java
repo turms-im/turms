@@ -23,6 +23,7 @@ import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.http.codec.HttpMessageReader;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
+import org.springframework.web.reactive.result.method.InvocableHandlerMethod;
 import org.springframework.web.reactive.result.method.TurmsHandlerMethod;
 
 import java.lang.invoke.MethodHandle;
@@ -50,9 +51,14 @@ public class TurmsControllerMethodResolver extends ControllerMethodResolver {
     }
 
     @Override
-    public TurmsHandlerMethod getRequestMappingMethod(HandlerMethod handlerMethod) {
-        TurmsHandlerMethod method = (TurmsHandlerMethod) handlerMethod;
-        method.setArgumentResolvers(requestMappingResolvers);
-        return method;
+    public InvocableHandlerMethod getRequestMappingMethod(HandlerMethod handlerMethod) {
+        // For our own endpoints
+        if (handlerMethod instanceof TurmsHandlerMethod method) {
+            method.setArgumentResolvers(requestMappingResolvers);
+            return method;
+        }
+        // For actuator endpoints
+        return super.getRequestMappingMethod(handlerMethod);
     }
+
 }

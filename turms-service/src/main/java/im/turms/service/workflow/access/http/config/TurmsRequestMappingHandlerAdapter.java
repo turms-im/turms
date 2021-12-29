@@ -36,7 +36,7 @@ import reactor.core.publisher.Mono;
 import java.util.function.Function;
 
 /**
- * The main purpose of this class is to add our custom handlers around the method invoke
+ * The class is used to add our custom handlers around the method invoke
  * because {@link WebFilter} isn't what we want as we need the final parsed parameters
  * and avoid using AOP, which is an awful design with a terrible performance.
  *
@@ -72,7 +72,7 @@ public class TurmsRequestMappingHandlerAdapter extends RequestMappingHandlerAdap
         TurmsInitBinderBindingContext bindingContext = new TurmsInitBinderBindingContext(
                 getWebBindingInitializer(), methodResolver.getInitBinderMethods(handlerMethod));
 
-        TurmsHandlerMethod invocableMethod = methodResolver.getRequestMappingMethod(handlerMethod);
+        InvocableHandlerMethod invocableMethod = methodResolver.getRequestMappingMethod(handlerMethod);
 
         Function<Throwable, Mono<HandlerResult>> exceptionHandler =
                 ex -> handleException(ex, handlerMethod, bindingContext, exchange);
