@@ -18,13 +18,17 @@
 package im.turms.server.common.metrics;
 
 import im.turms.server.common.lang.StrJoiner;
+import im.turms.server.common.util.ByteBufUtil;
 import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.StringUtil;
 import io.micrometer.core.instrument.Measurement;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.Tag;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 
 import javax.annotation.Nullable;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,6 +41,8 @@ import java.util.Set;
  * @author James Chen
  */
 public final class CsvReporter {
+
+    private static final byte[] TITLE = "Name,Tags,Type,Value,Unit\n".getBytes(StandardCharsets.US_ASCII);
 
     private static final Comparator<IdAndMeasure> MEASUREMENT_COMPARATOR = (o1, o2) -> {
         Meter.Id id1 = o1.id;
@@ -64,29 +70,37 @@ public final class CsvReporter {
     private CsvReporter() {
     }
 
-    public static String scrape(MetricsPool pool, Set<String> names) {
+    public static ByteBuf scrape(MetricsPool pool, Set<String> names) {
         List<IdAndMeasure> measures = getSortedMeasurements(pool.findAllMeters(), names);
-        StrJoiner joiner = new StrJoiner(measures.size() * 10);
-        joiner.add("Name,Tags,Type,Value,Unit\n");
-        for (Iterator<IdAndMeasure> iterator = measures.iterator(); iterator.hasNext(); ) {
-            IdAndMeasure entry = iterator.next();
-            Meter.Id meterId = entry.id;
-            String tags = getTagsAsString(meterId);
-            Measurement measurement = entry.measurement;
-            joiner.add(meterId.getName())
-                    .add(",")
-                    .add(tags)
-                    .add(",")
-                    .add(meterId.getType().name())
-                    .add(",")
-                    .add(String.valueOf(measurement.getValue()))
-                    .add(",")
-                    .add(StringUtil.toString(meterId.getBaseUnit()));
-            if (iterator.hasNext()) {
-                joiner.add("\n");
+        ByteBuf buffer = null;
+        try {
+            buffer = PooledByteBufAllocator.DEFAULT.directBuffer(measures.size() * 64);
+            buffer.writeBytes(TITLE);
+            for (Iterator<IdAndMeasure> iterator = measures.iterator(); iterator.hasNext(); ) {
+                IdAndMeasure entry = iterator.next();
+                Meter.Id meterId = entry.id;
+                String tags = getTagsAsString(meterId);
+                Measurement measurement = entry.measurement;
+                buffer.writeBytes(StringUtil.getBytes(meterId.getName()))
+                        .writeByte(',')
+                        .writeBytes(StringUtil.getBytes(tags))
+                        .writeByte(',')
+                        .writeBytes(StringUtil.getBytes(meterId.getType().name()))
+                        .writeByte(',')
+                        .writeBytes(StringUtil.getBytes(String.valueOf(measurement.getValue())))
+                        .writeByte(',')
+                        .writeBytes(StringUtil.getBytes(StringUtil.toString(meterId.getBaseUnit())));
+                if (iterator.hasNext()) {
+                    buffer.writeByte('\n');
+                }
             }
+        } catch (Exception e) {
+            if (buffer != null) {
+                ByteBufUtil.safeEnsureReleased(buffer);
+            }
+            throw new IllegalStateException("Failed to scrape", e);
         }
-        return joiner.toString();
+        return buffer;
     }
 
     private static List<IdAndMeasure> getSortedMeasurements(Collection<Meter> meters, @Nullable Set<String> names) {

@@ -128,8 +128,9 @@ public class MetricsController {
     }
 
     @GetMapping("/csv")
-    public ResponseEntity<String> getCsv(@RequestParam(required = false) Set<String> names) {
-        String csv = CsvReporter.scrape(pool, names);
+    @ApiResponse(content = @Content(schema = @Schema(implementation = String.class)))
+    public ResponseEntity<ByteBuf> getCsv(@RequestParam(required = false) Set<String> names) {
+        ByteBuf csv = CsvReporter.scrape(pool, names);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"turms-metrics.csv\"")
                 .contentType(MEDIA_TYPE_CSV)
