@@ -5,14 +5,23 @@ import ContentConversation from '../components/pages/content/conversation/index'
 import ContentMessage from '../components/pages/content/message/index';
 import Blocklist from '../components/pages/blocklist/index';
 import AccessControl from '../components/pages/access/index';
-import ClusterManagement from '../components/pages/cluster/config';
+import ClusterConfig from '../components/pages/cluster/config';
+import ClusterDashboard from '../components/pages/cluster/dashboard';
 import ClientTerminal from '../components/pages/terminal';
 import About from '../components/pages/about/index';
 
 const routes = [
     {
         path: '/',
-        redirect: '/content/user'
+        redirect: '/cluster/dashboard'
+    },
+    {
+        path: '/cluster/config',
+        component: ClusterConfig
+    },
+    {
+        path: '/cluster/dashboard',
+        component: ClusterDashboard
     },
     // TODO: We hide the statistics pages because the server side isn't ready for it.
     //  And we will integrate Flink to do the job later.
@@ -55,10 +64,6 @@ const routes = [
     {
         path: '/access',
         component: AccessControl
-    },
-    {
-        path: '/cluster',
-        component: ClusterManagement
     },
     {
         path: '/terminal',

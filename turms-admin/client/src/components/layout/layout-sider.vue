@@ -79,6 +79,23 @@ export default {
             //     ]
             // },
             {
+                key: '/cluster',
+                iconType: 'cluster',
+                title: 'clusterManagement',
+                children: [
+                    {
+                        key: '/cluster/dashboard',
+                        iconType: 'dashboard',
+                        title: 'clusterDashboard'
+                    },
+                    {
+                        key: '/cluster/config',
+                        iconType: 'setting',
+                        title: 'clusterConfig'
+                    }
+                ]
+            },
+            {
                 key: '/content',
                 iconType: 'profile',
                 title: 'contentManagement',
@@ -114,11 +131,6 @@ export default {
                 key: '/access',
                 iconType: 'safety',
                 title: 'accessControl'
-            },
-            {
-                key: '/cluster',
-                iconType: 'cluster',
-                title: 'clusterManagement'
             },
             {
                 key: '/terminal',

@@ -30,7 +30,7 @@ export default {
     mounted() {
         window.addEventListener('resize', this.onResize);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         window.removeEventListener('resize', this.onResize);
     },
     methods: {

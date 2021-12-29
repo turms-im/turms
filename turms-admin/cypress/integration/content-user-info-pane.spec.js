@@ -4,7 +4,7 @@ describe('Content - User Info Pane', () => {
             statusCode: 200,
             fixture: 'users'
         });
-        cy.login();
+        cy.login('/content/user');
     });
 
     describe('Data Table', () => {

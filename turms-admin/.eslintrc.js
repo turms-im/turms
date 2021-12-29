@@ -31,10 +31,7 @@ module.exports = {
         }],
         'vue/max-attributes-per-line': ['error', {
             'singleline': 1,
-            'multiline': {
-                'max': 1,
-                'allowFirstLine': false
-            }
+            'multiline': 1
         }],
         'vue/name-property-casing': ['error', 'kebab-case'],
         'vue/html-closing-bracket-spacing': ['error'],

@@ -150,6 +150,8 @@
         ]
     },
     "apis": {
+        "clusterMember": "/cluster/members",
+
         "admin": "/admins",
         "adminRole": "/admins/roles",
 
@@ -157,6 +159,7 @@
         "blocklistUser": "/blocked-clients/users",
 
         "user": "/users",
+        "userOnline": "/users/online-infos/count",
         "userStatus": "/users/online-infos/statuses",
         "userPermissionGroup": "/users/permission-groups",
         "userRelationship": "/users/relationships",

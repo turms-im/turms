@@ -42,8 +42,8 @@ export default {
                     placeholder: 'inviteeId'
                 },
                 {
-                    id: 'status',
                     type: 'SELECT',
+                    name: 'statuses',
                     options: {
                         base: [{
                             id: 'ALL',
