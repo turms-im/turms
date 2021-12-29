@@ -1,34 +1,19 @@
 ####################################################################
 # Stage 0 : BUILD
 ####################################################################
-FROM node:16-alpine as builder
+# Do NOT use alpine because if we use alpine:
+# 1. We need to try which phython packages we use and install them one by one
+# 2. We need to install python packages in every build
+# 3. "node:16-slim" is small and can make life easier
+FROM node:16-slim as builder
 COPY . .
 
 # build in China
-#RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
-#RUN apk add --no-cache python3 make g++ \
-#    pkgconfig \
-#    pixman-dev \
-#    cairo-dev \
-#    pango-dev \
-#    jpeg-dev \
-#    giflib-dev \
-#    librsvg-dev \
-#    && cd ./turms-admin \
+#RUN cd ./turms-admin \
 #    && npm i --no-optional --force --registry=https://registry.npm.taobao.org \
 #    && npm run build
 
-# python3: required by node-gyp
-# *-dev: required by node-canvas
-RUN apk add --no-cache python3 make g++ \
-    pkgconfig \
-    pixman-dev \
-    cairo-dev \
-    pango-dev \
-    jpeg-dev \
-    giflib-dev \
-    librsvg-dev \
-    && cd ./turms-admin \
+RUN cd ./turms-admin \
     && npm i --no-optional --force \
     && npm run build
 
