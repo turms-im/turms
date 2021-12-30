@@ -21,6 +21,8 @@ import com.mongodb.client.model.IndexModel;
 import org.bson.BsonDocument;
 import org.springframework.data.mapping.PreferredConstructor;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +36,7 @@ public record MongoEntity<T>(
         // Collection
         String collectionName,
         // Shard key, zone and index
-        BsonDocument shardKey,
+        ShardKey shardKey,
         Zone zone,
         IndexModel compoundIndex,
         List<IndexModel> indexes,
@@ -45,4 +47,13 @@ public record MongoEntity<T>(
     public <F> EntityField<F> getField(String fieldName) {
         return (EntityField<F>) fieldMap.get(fieldName);
     }
+
+    @Nullable
+    public BsonDocument getShardKeyBson() {
+        if (shardKey == null) {
+            return null;
+        }
+        return shardKey.document();
+    }
+
 }

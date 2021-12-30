@@ -59,7 +59,7 @@ public final class MongoEntityFactory {
     public <T> MongoEntity<T> parse(Class<T> clazz) {
         PreferredConstructor<T, ?> constructor = PreferredConstructorDiscoverer.discover(clazz);
         EntityFieldsInfo entityFieldsInfo = parseFields(clazz, constructor, clazz.getDeclaredMethods());
-        BsonDocument shardKey = parseShardKey(clazz);
+        ShardKey shardKey = parseShardKey(clazz);
         return new MongoEntity<>(
                 clazz,
                 constructor,
@@ -73,7 +73,7 @@ public final class MongoEntityFactory {
         );
     }
 
-    private <T> Zone parseZone(Class<T> clazz, BsonDocument shardKey) {
+    private <T> Zone parseZone(Class<T> clazz, ShardKey shardKey) {
         WithTemperature temperature = clazz.getAnnotation(WithTemperature.class);
         if (temperature == null) {
             return null;
@@ -83,7 +83,7 @@ public final class MongoEntityFactory {
             throw new IllegalStateException(
                     "The creationDateFieldName of @WithTemperature must not be blank for the class " + clazz.getName());
         }
-        if (!shardKey.containsKey(creationDateFieldName)) {
+        if (!shardKey.document().containsKey(creationDateFieldName)) {
             throw new IllegalStateException(
                     "The creationDateFieldName of @WithTemperature must be a part of the shard key of the class " + clazz.getName());
         }
@@ -123,15 +123,18 @@ public final class MongoEntityFactory {
     /**
      * @implNote The method doesn't the support shard keys that contains a hashed key supported in 4.4
      */
-    private BsonDocument parseShardKey(Class<?> clazz) {
+    @Nullable
+    private ShardKey parseShardKey(Class<?> clazz) {
         Sharded sharded = clazz.getAnnotation(Sharded.class);
         if (sharded == null) {
             return null;
         }
         String[] keys = sharded.shardKey();
         if (keys.length == 0) {
+            // default shard key
             keys = new String[]{"_id"};
         }
+        BsonDocument document;
         if (sharded.shardingStrategy().equals(ShardingStrategy.HASH)) {
             if (keys.length > 1) {
                 throw new IllegalStateException("The hash sharding strategy can have only one shard key: " + clazz.getName());
@@ -139,15 +142,26 @@ public final class MongoEntityFactory {
                 throw new IllegalStateException("Should not create an hashed index on the key. " +
                         "If so, MongoDB will create a default range index on the key: " + clazz.getName());
             } else {
-                return new BsonDocument(keys[0], BsonPool.BSON_STRING_HASHED);
+                document = new BsonDocument(keys[0], BsonPool.BSON_STRING_HASHED);
             }
         } else {
-            BsonDocument document = new BsonDocument();
+            document = new BsonDocument();
             for (String key : keys) {
                 document.append(key, BsonPool.BSON_INT32_1);
             }
-            return document;
         }
+        List<ShardKey.Path> paths = new ArrayList<>(2);
+        for (String shardKey : document.keySet()) {
+            // Note that we split the shard key one level at most (e.g. "_id.whatever")
+            // because we don't have other cases currently
+            String[] path = StringUtils.split(shardKey, ".");
+            if (path == null) {
+                paths.add(new ShardKey.Path(shardKey, new String[]{shardKey}));
+            } else {
+                paths.add(new ShardKey.Path(shardKey, path));
+            }
+        }
+        return new ShardKey(document, paths);
     }
 
     private <T> EntityFieldsInfo parseFields(Class<?> clazz, PreferredConstructor<T, ?> constructor, Method[] allClassMethods) {

@@ -48,14 +48,17 @@ import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.BsonPool;
 import im.turms.server.common.mongo.MongoContext;
 import im.turms.server.common.mongo.entity.MongoEntity;
+import im.turms.server.common.mongo.entity.ShardKey;
 import im.turms.server.common.mongo.exception.MongoExceptionTranslator;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.CollectorUtil;
+import im.turms.server.common.util.MapUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BsonDocument;
 import org.bson.BsonDocumentWriter;
+import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
@@ -211,21 +214,59 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     }
 
     @Override
-    public <T> Mono<Void> upsert(ClientSession session, T o) {
-        Class<T> clazz = (Class<T>) o.getClass();
-        MongoEntity<T> entity = (MongoEntity<T>) context.getEntity(o.getClass());
+    public <T> Mono<Void> upsert(ClientSession session, T record) {
+        Class<T> clazz = (Class<T>) record.getClass();
+        MongoEntity<T> entity = (MongoEntity<T>) context.getEntity(record.getClass());
         MongoCollection<T> collection = context.getCollection(clazz);
-        Bson filter = entity.shardKey();
-        if (filter == null) {
-            filter = EMPTY_FILTER;
-        }
-        Bson update = encodeEntityForUpdateOps(o);
+        BsonDocument recordDoc = encodeEntity(record);
+        ShardKey shardKey = entity.shardKey();
+        BsonDocument filter = shardKey == null
+                ? EMPTY_FILTER
+                : applyShardKey(shardKey, recordDoc);
+        BsonDocument update = encodeEntityForUpdateOps(recordDoc);
         Publisher<UpdateResult> result = session == null
                 ? collection.updateOne(filter, update, DEFAULT_UPSERT_OPTIONS)
                 : collection.updateOne(session, filter, update, DEFAULT_UPSERT_OPTIONS);
         return Mono.from(result)
                 .onErrorMap(translator::translate)
                 .then();
+    }
+
+    /**
+     * apply the shard key to the filter so that mongos know to which
+     * MongoDB the command needs to be sent for better performance
+     */
+    private BsonDocument applyShardKey(ShardKey shardKey, BsonDocument record) {
+        List<ShardKey.Path> paths = shardKey.paths();
+        BsonDocument filter = new BsonDocument(MapUtil.getCapability(paths.size()));
+        for (ShardKey.Path shardKeyPath : paths) {
+            String[] path = shardKeyPath.path();
+            // fast path
+            if (path.length == 1) {
+                BsonValue shardKeyValue = record.get(path[0]);
+                if (shardKeyValue != null) {
+                    filter.append(path[0], shardKeyValue);
+                }
+            } else {
+                // slow path
+                BsonDocument currentPath = record;
+                for (int i = 0, pathLength = path.length; i < pathLength; i++) {
+                    String p = path[i];
+                    BsonValue shardKeyValue = currentPath.get(p);
+                    if (shardKeyValue == null) {
+                        break;
+                    }
+                    if (i == pathLength - 1) {
+                        filter.append(shardKeyPath.fullPath(), shardKeyValue);
+                    } else if (shardKeyValue.isDocument()) {
+                        currentPath = shardKeyValue.asDocument();
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        return filter;
     }
 
     @Override
@@ -416,7 +457,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
 
     @Override
     public Mono<Void> shard(MongoDatabase databaseToShard, MongoDatabase adminDatabase, MongoEntity<?> entity) {
-        BsonDocument shardKey = entity.shardKey();
+        BsonDocument shardKey = entity.getShardKeyBson();
         if (shardKey == null) {
             return Mono.empty();
         }
@@ -543,19 +584,17 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
 
     // Helper
 
-    private <T> Bson encodeEntityForUpdateOps(T value) {
+    private <T> BsonDocument encodeEntity(T value) {
         Codec<T> codec = (Codec<T>) context.getCodec(value.getClass());
         BsonDocument document = new BsonDocument();
         BsonDocumentWriter writer = new BsonDocumentWriter(document);
-        writer.writeStartDocument();
-        writer.writeName("$set");
         codec.encode(writer, value, DEFAULT_ENCODER_CONTEXT);
-        writer.writeEndDocument();
-
-        BsonDocument entityDoc = document.get("$set").asDocument();
-        entityDoc.remove("_id");
-
         return document;
+    }
+
+    private <T> BsonDocument encodeEntityForUpdateOps(BsonDocument record) {
+        record.remove("_id");
+        return new BsonDocument("$set", record);
     }
 
     private <T> TurmsFindPublisherImpl<T> find(MongoCollection<T> collection,
