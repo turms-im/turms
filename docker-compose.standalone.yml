@@ -124,12 +124,14 @@ services:
 
   turms-admin:
     image: "ghcr.io/turms-im/turms-admin"
+    pull_policy: always
     ports:
       - "6510:6510"
     <<: *logging
 
   turms-gateway:
     image: "ghcr.io/turms-im/turms-gateway"
+    pull_policy: always
     depends_on:
       loki:
         condition: service_started
@@ -191,6 +193,7 @@ services:
 
   turms-service:
     image: "ghcr.io/turms-im/turms-service"
+    pull_policy: always
     depends_on:
       loki:
         condition: service_started
@@ -251,7 +254,7 @@ services:
    # optional services for observability - metrics
 
   grafana:
-    image: grafana/grafana:8.2.2
+    image: grafana/grafana:8.3.3
     depends_on:
       - prometheus
     environment:
@@ -266,7 +269,7 @@ services:
       - ./ops/grafana/provisioning/:/etc/grafana/provisioning/
 
   prometheus:
-    image: prom/prometheus:v2.30.3
+    image: prom/prometheus:v2.32.1
     ports:
       - "9090:9090"
     profiles:
@@ -276,14 +279,17 @@ services:
       - ./ops/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
   node-exporter:
-    image: prom/node-exporter:v1.2.2
+    image: prom/node-exporter:v1.3.1
     ports:
       - "9100:9100"
     profiles:
       - monitoring
 
   cadvisor:
-    image: google/cadvisor:v0.33.0
+    # If your server is in China and suffers from the network problem,
+    # try "gcr.lank8s.cn/cadvisor/cadvisor:v0.43.0"
+    # or just comment out "cadvisor"
+    image: gcr.io/cadvisor/cadvisor:v0.43.0
     ports:
       - "8080:8080"
     profiles:
@@ -293,9 +299,10 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
 
   mongo-exporter:
-    image: bitnami/mongodb-exporter:0.20.8
+    image: bitnami/mongodb-exporter:0.30.0
     environment:
       MONGODB_URI: "mongodb://root:turms@mongodb-router:27017"
     ports:
@@ -304,7 +311,7 @@ services:
       - monitoring
 
   redis-exporter:
-    image: oliver006/redis_exporter:v1.29.0
+    image: oliver006/redis_exporter:v1.33.0
     depends_on:
       - redis
     environment:
@@ -317,7 +324,7 @@ services:
   # Services for observability - logging
 
   loki:
-    image: grafana/loki:2.3.0
+    image: grafana/loki:2.4.1
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
