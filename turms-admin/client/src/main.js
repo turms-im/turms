@@ -4,7 +4,6 @@ import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import axios from 'axios';
 import moment from 'moment';
 import _ from 'lodash';
-import qs from 'querystring';
 import resources from './configs/resources';
 import App from './App.vue';
 
@@ -48,7 +47,6 @@ createApp(App)
                 zhCN
             };
             globalProperties.$moment = moment;
-            globalProperties.$qs = qs;
             globalProperties.$rs = resources;
             // Don't use "_" because of https://github.com/vuejs/vue-next/issues/2546
             globalProperties.$_ = {

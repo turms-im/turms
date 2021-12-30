@@ -23,9 +23,6 @@ export default {
         DashboardOverview,
         DashboardServerDetails
     },
-    layoutContent: {
-        useDefault: true
-    },
     data() {
         return {
             members: [],

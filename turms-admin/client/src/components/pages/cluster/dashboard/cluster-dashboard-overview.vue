@@ -217,7 +217,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .cluster-dashboard-overview {
     &__table {
         margin-top: 12px;

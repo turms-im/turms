@@ -1,6 +1,7 @@
 import Calculate from './calculate';
 import CommonUtil from './common-util';
 import LayoutUtil from './layout-util';
+import Querystring from './querystring';
 import RequestUtil from './request-util';
 import UiUtil from './ui-util';
 import Validator from './validator';
@@ -10,6 +11,7 @@ export default {
         app.config.globalProperties.$cal = Calculate;
         app.config.globalProperties.$util = CommonUtil;
         app.config.globalProperties.$layout = LayoutUtil;
+        app.config.globalProperties.$qs = Querystring;
         app.config.globalProperties.$rq = RequestUtil;
         app.config.globalProperties.$ui = UiUtil;
         app.config.globalProperties.$validator = Validator;
