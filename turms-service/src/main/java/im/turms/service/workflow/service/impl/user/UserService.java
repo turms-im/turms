@@ -204,7 +204,7 @@ public class UserService {
                 isActive,
                 now);
         Long finalId = id;
-        return mongoClient.inTransaction(session -> mongoClient.upsert(session, user)
+        return mongoClient.inTransaction(session -> mongoClient.insert(session, user)
                         .then(userRelationshipGroupService.createRelationshipGroup(finalId, 0, "", now, session))
                         .then(userVersionService.upsertEmptyUserVersion(user.getId(), date, session).onErrorResume(t -> Mono.empty()))
                         .thenReturn(user))
