@@ -39,6 +39,10 @@ export default {
 
 <style lang="scss">
 
+.ant-message-notice-content {
+    max-width: 500px;
+}
+
 td {
     word-break: break-all;
 }

@@ -38,7 +38,10 @@ function loadAntd(app) {
         if (error.response?.data?.code) {
             desc = `(${error.response.status}, ${error.response.data.code}) ${error.response.data.reason}`;
         }
-        this.$message.error(`${msg}: ${desc}`);
+        this.$message.error({
+            content: `${msg}: ${desc}`,
+            duration: 6
+        });
     };
     app.use(Button);
     app.use(Checkbox);
