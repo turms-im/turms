@@ -18,16 +18,22 @@ Turms与其他常规服务端一样，将可观测性的具体实现分为三类
 
 云服务厂商也都有提供该类度量，并且其度量点通常更丰富，存储、展示与分析等功能也是开箱即用。Turms提供以下重要度量主要是尽一个服务端应尽的责任，满足不上云用户以及部分用户的定制化需求。对于能使用云服务的用户，应该优先考虑使用云服务。
 
-| 类别                | 名称                   | 类型      | 含义                     |
-| ------------------- | ---------------------- | --------- | ------------------------ |
-| Uptime（运行时间）  | process.uptime         | TimeGauge | 进程已运行时长           |
-|                     | process.start.time     | TimeGauge | 进程启动时间             |
-| Processor（处理器） | system.cpu.count       | Gauge     | 进程可用CPU核数          |
-|                     | system.load.average.1m | Gauge     | 最近一分钟系统CPU负载    |
-|                     | system.cpu.usage       | Gauge     | 最近系统CPU使用率        |
-|                     | process.cpu.usage      | Gauge     | 最近进程CPU使用率        |
-| FileDescriptor      | process.files.open     | Gauge     | 打开的文件描述符数       |
-|                     | process.files.max      | Gauge     | 可打开的最大文件描述符数 |
+| 类别                | 名称                     | 类型      | 含义                     |
+| ------------------- | ------------------------ | --------- | ------------------------ |
+| Uptime（运行时间）  | process.uptime           | TimeGauge | 进程已运行时长           |
+|                     | process.start.time       | TimeGauge | 进程启动时间             |
+| Processor（处理器） | system.cpu.count         | Gauge     | 进程可用CPU核数          |
+|                     | system.load.average.1m   | Gauge     | 最近一分钟系统CPU负载    |
+|                     | system.cpu.usage         | Gauge     | 最近系统CPU使用率        |
+|                     | process.cpu.usage        | Gauge     | 最近进程CPU使用率        |
+| Memory（内存）      | system.memory.total      | Gauge     | 系统物理内存大小         |
+|                     | system.memory.free       | Gauge     | 系统可用物理内存大小     |
+|                     | system.memory.swap.total | Gauge     | 系统Swap内存大小         |
+|                     | system.memory.swap.free  | Gauge     | 系统可用Swap内存大小     |
+| Storage（存储）     | disk.total               | Gauge     | 总存储容量               |
+|                     | disk.free                | Gauge     | 可用存储容量             |
+| FileDescriptor      | process.files.open       | Gauge     | 打开的文件描述符数       |
+|                     | process.files.max        | Gauge     | 可打开的最大文件描述符数 |
 
 ### 应用度量
 

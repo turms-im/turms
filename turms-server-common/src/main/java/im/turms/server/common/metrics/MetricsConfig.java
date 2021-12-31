@@ -23,6 +23,7 @@ import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics;
 import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics;
 import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics;
 import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics;
+import io.micrometer.core.instrument.binder.system.DiskSpaceMetrics;
 import io.micrometer.core.instrument.binder.system.FileDescriptorMetrics;
 import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
 import io.micrometer.core.instrument.binder.system.UptimeMetrics;
@@ -34,6 +35,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -68,7 +70,9 @@ public class MetricsConfig {
                 // System
                 new UptimeMetrics(),
                 new ProcessorMetrics(),
+                new SystemMemoryMetrics(),
                 new FileDescriptorMetrics(),
+                new DiskSpaceMetrics(new File(".")),
                 // JVM
                 new JvmGcMetrics(),
                 new JvmMemoryMetrics(),
