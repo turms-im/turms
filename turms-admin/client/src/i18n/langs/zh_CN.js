@@ -329,6 +329,7 @@ const zh_CN = {
     'requestStatus': '请求处理状态',
     'requesterId': '请求者ID',
     'resetToDefault': '重置默认',
+    'resourceUtilization': '资源利用',
     'responderId': '处理者ID',
     'responseDate': '处理时间',
     'responseDateRange': {

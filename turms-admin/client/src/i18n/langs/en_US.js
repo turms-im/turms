@@ -329,6 +329,7 @@ const en_US = {
     'requestStatus': 'Request Status',
     'requesterId': 'Requester ID',
     'resetToDefault': 'Reset',
+    'resourceUtilization': 'Resource Utilization',
     'responderId': 'Responder ID',
     'responseDate': 'Response Date',
     'responseDateRange': {

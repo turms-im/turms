@@ -26,6 +26,12 @@ export default [
     {
         dataIndex: 'lastHeartbeatDate'
     },
+    // Resource Utilization
+    {
+        title: 'resourceUtilization',
+        dataIndex: 'resources',
+        width: 380
+    },
     // Info
     {
         dataIndex: 'nodeType',
