@@ -9,17 +9,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Set up QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: Build turms-admin image
         # FIXME: We use the root context currently because turms-admin requires turms-client-js,
         # which doesn't have a publish workflow for now.
-        run: DOCKER_BUILDKIT=1 docker build --rm=false -t "ghcr.io/turms-im/turms-admin:latest" -f turms-admin/Dockerfile .
+        run: DOCKER_BUILDKIT=1 docker buildx build --platform linux/amd64,linux/arm64 --rm=false -t "ghcr.io/turms-im/turms-admin:latest" -f turms-admin/Dockerfile .
 
       - name: Docker login
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
         run: docker login ghcr.io -u $GITHUB_ACTOR -p $GITHUB_TOKEN
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Publish turms-admin
-        if: ${{ github.ref == 'refs/heads/master' }}
-        run: docker push "ghcr.io/turms-im/turms-admin:latest"
+        if: ${{ github.ref == 'refs/heads/master' && github.github.event_name == 'push' }}
+        run: DOCKER_BUILDKIT=1 docker buildx build --platform linux/amd64,linux/arm64 --tag "ghcr.io/turms-im/turms-admin:latest" --push .

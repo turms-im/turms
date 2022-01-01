@@ -9,15 +9,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Set up QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: Build turms-gateway image
-        run: DOCKER_BUILDKIT=1 docker build --rm=false -t "ghcr.io/turms-im/turms-gateway:latest" -f turms-gateway/Dockerfile .
+        run: DOCKER_BUILDKIT=1 docker buildx build --platform linux/amd64,linux/arm64 --rm=false -t "ghcr.io/turms-im/turms-gateway:latest" -f turms-gateway/Dockerfile .
 
       - name: Docker login
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/master' && github.github.event_name == 'push' }}
         run: docker login ghcr.io -u $GITHUB_ACTOR -p $GITHUB_TOKEN
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Publish turms-gateway
-        if: ${{ github.ref == 'refs/heads/master' }}
-        run: docker push "ghcr.io/turms-im/turms-gateway:latest"
+        if: ${{ github.ref == 'refs/heads/master' && github.github.event_name == 'push' }}
+        run: DOCKER_BUILDKIT=1 docker buildx build --platform linux/amd64,linux/arm64 --tag "ghcr.io/turms-im/turms-gateway:latest" --push .
