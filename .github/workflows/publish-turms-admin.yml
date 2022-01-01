@@ -29,5 +29,5 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Publish turms-admin
-        if: ${{ github.ref == 'refs/heads/master' && github.github.event_name == 'push' }}
-        run: DOCKER_BUILDKIT=1 docker buildx build --platform linux/amd64,linux/arm64 --tag "ghcr.io/turms-im/turms-admin:latest" --push .
+        if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+        run: DOCKER_BUILDKIT=1 docker buildx build --platform linux/amd64,linux/arm64 --tag "ghcr.io/turms-im/turms-admin:latest" --push -f turms-admin/Dockerfile .

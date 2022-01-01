@@ -21,11 +21,11 @@ jobs:
         run: DOCKER_BUILDKIT=1 docker buildx build --platform linux/amd64,linux/arm64 --rm=false -t "ghcr.io/turms-im/turms-service:latest" -f turms-service/Dockerfile .
 
       - name: Docker login
-        if: ${{ github.ref == 'refs/heads/master' && github.github.event_name == 'push' }}
+        if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
         run: docker login ghcr.io -u $GITHUB_ACTOR -p $GITHUB_TOKEN
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Publish turms-service
-        if: ${{ github.ref == 'refs/heads/master' && github.github.event_name == 'push' }}
-        run: DOCKER_BUILDKIT=1 docker buildx build --platform linux/amd64,linux/arm64 --tag "ghcr.io/turms-im/turms-service:latest" --push .
+        if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+        run: DOCKER_BUILDKIT=1 docker buildx build --platform linux/amd64,linux/arm64 --tag "ghcr.io/turms-im/turms-service:latest" --push -f turms-service/Dockerfile .
