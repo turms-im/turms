@@ -19,7 +19,26 @@ docker-compose -f docker-compose.standalone.yml up --force-recreate
 
 等集群完成搭建后，可以通过 http://localhost:6510 访问turms-admin后台管理系统，并输入账号密码（默认均为`turms`）。如果登录成功，则说明Turms集群搭建成功。
 
-注意：AWS提供了高性价比的`t4g`系列EC2实例，但由于t4g系列实例使用了ARM处理器，因此在该EC2实例上的很多应用都无法运行或者以异常方式运行。`docker-compose.standalone.yml`中使用到的`bitnami/mongodb-sharded`就无法运行在ARM处理器上，如果通过`docker-compose`试图运行，则会获得`exec user process caused: exec format error`错误。**因此，AWS的`t4g`系列EC2实例暂时不支持运行`docker-compose.standalone.yml`**
+注意：AWS提供了高性价比的`t4g`系列EC2实例，但由于t4g系列实例使用了ARM处理器，因此很多应用都无法运行在该类EC2实例上，如`bitnami`所提供的镜像就均无法运行在该类实例上。如果您想要在ARM处理器上运行`docker-compose.standalone.yml`，您需要先执行下方指令，在本地编译并安装Loki插件，然后就可以运行`docker-compose.standalone.yml`了：
+
+```bash
+# Install Go
+sudo add-apt-repository ppa:longsleep/golang-backports
+sudo apt update
+sudo apt install golang-go
+
+# Install Loki
+sudo docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+
+# Build and Enable Loki
+git clone https://github.com/grafana/loki.git
+cd loki
+git checkout "tags/v2.4.1" -b setup
+sudo GOOS=linux GOARCH=arm GOARM=7 go build ./clients/cmd/docker-driver
+# Replace "<ALPHA_NUMERIC_FOLDER>" with the real path on your machine
+sudo mv docker-driver /var/lib/docker/plugins/<ALPHA_NUMERIC_FOLDER>/rootfs/bin
+sudo docker plugin enable loki
+```
 
 补充：
 
