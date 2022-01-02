@@ -19,9 +19,12 @@ docker-compose -f docker-compose.standalone.yml up --force-recreate
 
 等集群完成搭建后，可以通过 http://localhost:6510 访问turms-admin后台管理系统，并输入账号密码（默认均为`turms`）。如果登录成功，则说明Turms集群搭建成功。
 
+注意：AWS提供了高性价比的`t4g`系列EC2实例，但由于t4g系列实例使用了ARM处理器，因此在该EC2实例上的很多应用都无法运行或者以异常方式运行。`docker-compose.standalone.yml`中使用到的`bitnami/mongodb-sharded`就无法运行在ARM处理器上，如果通过`docker-compose`试图运行，则会获得`exec user process caused: exec format error`错误。**因此，AWS的`t4g`系列EC2实例暂时不支持运行`docker-compose.standalone.yml`**
+
 补充：
 
 * 配合`--profile monitoring`（`docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate`），还可以额外自动搭建Prometheus与Grafana服务端。
+* Turms服务端在默认生产环境下，不会向控制台打印日志，只会打印日志文件
 * Turms的Demo网站就是通过这几条命令自动搭建的
 
 #### 基于Terraform与docker-compose
