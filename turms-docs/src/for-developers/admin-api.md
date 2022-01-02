@@ -8,7 +8,7 @@ Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接
 
 ## 接口设计准则
 
-为了让接口能够顾名思义，保证开发者能一目了然，turms的管理接口设计在参考[RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer)设计上做了进一步优化与统一，具体遵循以下准则：
+为了让接口能够顾名思义，保证开发者能一目了然，Turms的Admin API接口设计在[RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer)风格的基础上做了进一步优化与统一，具体遵循以下准则：
 
 * URL的路径部分代表目标资源（如`/users/relationships`），或是资源的表现形式（如`/users/relationships/page`表示以分页的形式返回资源。一个URI有且仅可能返回一种格式的Response）
 * POST方法用于Create资源，DELETE方法用于Delete资源，PUT方法用于Update资源，GET方法用于Query资源，以及比较特殊的HEAD方法用于Check资源（类似于GET，但无Response body，仅通过HTTP状态码交互）
@@ -21,11 +21,17 @@ Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接
 
 * 作为内容统计管理系统与集群监控管理系统的[turms-admin](https://github.com/turms-im/turms/tree/develop/turms-admin)使用
 
-注意：管理接口不是给终端用户使用的，而是您团队内部进行调用的。因此您通常不需要给Turms服务端开放外网IP与端口。
+注意：管理接口不是给终端用户使用的，而是您团队内部进行调用的。因此通常情况下，您不需要给turms-service服务端开放外网IP与端口。
 
 ## 类别
 
 ### 非业务相关类
+
+#### 监控类
+
+| **种类**     | **Controller**    | 路径     |
+| :----------- | :---------------- | -------- |
+| 度量信息管理 | MetricsController | /metrics |
 
 #### 管理员类
 
