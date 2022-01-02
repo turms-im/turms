@@ -75,12 +75,12 @@
                         class="cluster-dashboard-overview__metrics-container"
                     >
                         <tr
-                            v-for="metric in (record?.resources || [])"
+                            v-for="metric in (record.resources || [])"
                             :key="metric.title"
                             class="cluster-dashboard-overview__metric"
                         >
                             <th class="cluster-dashboard-overview__metric-name">
-                                {{ metric.title }}
+                                {{ $t(metric.title) }}
                             </th>
                             <td>{{ `${metric.used?.toFixed(2) ?? '-'} / ${metric.max?.toFixed(2) ?? '-'} ${metric.unit}` }}</td>
                             <td> <progress-bar :progress="metric.usedPercentage" /> </td>
@@ -230,7 +230,7 @@ export default {
         updateMembersInfo() {
             return this.$http.get(this.$rs.apis.clusterMember)
                 .then(async response => {
-                    this.members = JSON.parse(JSON.stringify(response.data.data))
+                    const members = JSON.parse(JSON.stringify(response.data.data))
                         .map(item => ({
                             ...item,
                             ...item.key,
@@ -238,13 +238,17 @@ export default {
                             key: JSON.stringify(item.key), // as the row key
                             memberAddress: `${item.memberHost}:${item.memberPort}`
                         }));
-                    const metricsRequests = this.members
+                    const metricsRequests = members
                         .map(member => this.fetchResourceUtilization(member));
                     try {
                         await Promise.allSettled(metricsRequests);
-                        // eslint-disable-next-line no-empty
                     } catch (e) {
+                        // If we have fetched the member info,
+                        // but failed to fetch the metrics,
+                        // just display the info without metrics
+                        console.error('Failed to fetch metrics', e);
                     }
+                    this.members = members;
                     this.$emit('updateMembersInfo', this.members);
                 });
         },
@@ -255,7 +259,8 @@ export default {
             params.append('names', METRICS_NAMES.SYSTEM_MEMORY_FREE);
             params.append('names', METRICS_NAMES.STORAGE_TOTAL);
             params.append('names', METRICS_NAMES.STORAGE_FREE);
-            return this.$http.get(`${member.adminApiAddress}${this.$rs.apis.metrics}`, {params})
+            const baseUrl = new URL(member.metricsApiAddress).origin;
+            return this.$http.get(`${baseUrl}${this.$rs.apis.metrics}`, {params})
                 .then(response => {
                     const data = response.data.data || [];
                     const metrics = data
@@ -275,19 +280,19 @@ export default {
                     const freeStorage = metrics[METRICS_NAMES.STORAGE_FREE];
                     const usedStorage = totalStorage - freeStorage;
                     member.resources = [{
-                        title: 'CPU',
+                        title: 'cpu',
                         max: 100,
                         used: cpuUsage,
                         usedPercentage: cpuUsage,
                         unit: '%'
                     }, {
-                        title: 'Memory',
+                        title: 'memory',
                         max: this.formatBytesToGiB(totalMemory),
                         used: this.formatBytesToGiB(usedMemory),
                         usedPercentage: totalMemory ? usedMemory / totalMemory * 100 : null,
                         unit: 'GiB'
                     }, {
-                        title: 'Storage',
+                        title: 'storage',
                         max: this.formatBytesToGiB(totalStorage),
                         used: this.formatBytesToGiB(usedStorage),
                         usedPercentage: totalStorage ? usedStorage / totalStorage * 100 : null,
