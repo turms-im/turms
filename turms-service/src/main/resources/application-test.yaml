@@ -1,9 +1,3 @@
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-
 logging:
   level:
     im:

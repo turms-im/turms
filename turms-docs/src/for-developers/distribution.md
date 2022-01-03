@@ -37,7 +37,7 @@ turms-gateway与turms-service服务端的发布目录结构如下：
 
 强烈建议您使用Docker镜像部署Turms服务端。
 
-目前Turms服务端Docker镜像版本号均为“latest”，即暂不提供带具体版本号的镜像。具体镜像拉取地址如下：
+目前Turms服务端Docker镜像版本号均为`latest`，即暂不提供带具体版本号的镜像。具体拉取镜像的命令如下：
 
 ```shell
 docker pull ghcr.io/turms-im/turms-admin:latest

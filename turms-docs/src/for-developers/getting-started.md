@@ -14,7 +14,7 @@
 git clone --depth 1 https://github.com/turms-im/turms.git
 cd turms
 docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
-# Or "ENV=dev docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d" to run with sidecar services in dev profile
+# Or "ENV=dev,demo docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d" to run with sidecar services in dev profile
 docker-compose -f docker-compose.standalone.yml up --force-recreate
 ```
 
@@ -46,7 +46,7 @@ sudo docker plugin enable loki
 * 配合`--profile monitoring`（`docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate`），还可以额外自动搭建Prometheus与Grafana服务端。
 * Turms服务端默认使用生产环境配置，不会向控制台打印日志，只会打印日志文件，因此您通过`docker logs <TURMS_CONTAINER_ID>`是无法查看到Turms服务端的运行日志的。为了方便排查问题，您可以在本地开发测试时，把环境变量设置为`ENV=dev`，然后再次启动`docker-compose.standalone.yml`。在dev环境下，Turms会向控制台打印日志，并自动生成测试用的Fake数据，与模拟真实客户端TCP连接与请求
 * 如果您通过上述指令，无法启动`docker-compose.standalone.yml`。则确保服务器的`docker-compose`版本为`1.29.x`，`docker`版本为`19.x.x`或`20.x.x`
-* Turms的Playground环境与网站每次都是通过`ENV=dev docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`这一条命令自动搭建的
+* Turms的Playground环境与网站每次都是通过`ENV=dev,demo docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`这一条命令自动搭建的
 
 #### 基于Terraform与docker-compose
 

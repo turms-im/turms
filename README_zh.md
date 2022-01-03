@@ -26,7 +26,7 @@ Turms是一套全球范围内最为先进的、为同时在线用户数为100K~1
 
 您可以使用任意turms-client-(java/js/swift)客户端，向turms-gateway服务端发送请求，并与其他用户进行交互。
 
-另外，Playground由一条指令全自动搭建：`ENV=dev docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`
+另外，Playground由一条指令全自动搭建：`ENV=dev,demo docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`
 
 ## Quick Start
 

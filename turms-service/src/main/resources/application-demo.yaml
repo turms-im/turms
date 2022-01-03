@@ -1,0 +1,7 @@
+# Should run with the "dev" profile
+
+turms:
+  service:
+    admin-api:
+      address:
+        advertise-strategy: public_address

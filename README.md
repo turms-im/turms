@@ -24,7 +24,7 @@ Please refer to [Turms Documentation](https://turms-im.github.io/docs) (no Engli
 
 You can use any turms-client-(java/js/swift) implementation to send requests to turms-gateway and interact with other users.
 
-In addition, Playground is set up automatically by just one command: `ENV=dev docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`
+In addition, Playground is set up automatically by just one command: `ENV=dev,demo docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`
 
 ## Quick Start
 Running the following commands to setup a minimum viable cluster (including turms-gateway, turms-service and turms-admin) and its dependent servers (MongoDB sharded cluster and Redis) automatically:

@@ -1,0 +1,6 @@
+# Should run with the "dev" profile
+
+turms:
+  gateway:
+    metrics-api-address:
+      advertise-strategy: public_address
