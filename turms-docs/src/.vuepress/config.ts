@@ -56,6 +56,8 @@ export default defineUserConfig<DefaultThemeOptions>({
                     '/for-developers/admin-api.md',
                     '/for-developers/client-api.md',
                     '/for-developers/status-code.md',
+                    // Admin
+                    '/for-developers/turms-admin.md',
                     // Redevelopment
                     '/for-developers/cluster.md',
                     '/for-developers/system-resource-management.md',
