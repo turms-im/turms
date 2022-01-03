@@ -19,6 +19,7 @@ package im.turms.server.common.address;
 
 import com.google.common.net.InetAddresses;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import io.netty.handler.codec.http.HttpStatusClass;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
@@ -49,17 +50,19 @@ public class PublicIpManager {
         for (String checkerAddress : ipDetectorAddresses) {
             Mono<String> ipMono = getClient().get()
                     .uri(checkerAddress)
-                    .responseContent()
-                    .aggregate()
-                    .asString();
+                    .responseSingle((response, body) -> response.status().codeClass().equals(HttpStatusClass.SUCCESS)
+                            ? body.asString()
+                            : Mono.empty());
             monos.add(ipMono);
         }
         return Mono.firstWithValue(monos)
+                .onErrorMap(t -> new IllegalStateException("Cannot find the public IP of the local node", t))
                 .map(ip -> {
-                    if (InetAddresses.isInetAddress(ip.trim())) {
+                    ip = ip.trim();
+                    if (InetAddresses.isInetAddress(ip)) {
                         return ip;
                     } else {
-                        throw new IllegalStateException("The IP is invalid: " + ip);
+                        throw new IllegalStateException("The public IP is invalid: " + ip);
                     }
                 });
     }
