@@ -81,24 +81,22 @@ public class AddressCollector {
                 }
             }
             case PUBLIC_ADDRESS -> publicIpManager.getPublicIp().block(IP_DETECTION_TIMEOUT);
-            default -> throw new IllegalArgumentException("Unexpected value: " + advertiseStrategy.name());
         };
     }
 
     private AddressGroup queryAddressGroup() throws UnknownHostException {
         String host = queryHost();
-        if (host != null) {
-            String address = attachPortToIp ? attachPortToHost(host) : host;
-            String httpProtocol = isSslEnabled ? "https" : "http";
-            String wsProtocol = isSslEnabled ? "wss" : "ws";
-            return new AddressGroup(
-                    host,
-                    address,
-                    "%s://%s".formatted(httpProtocol, address),
-                    "%s://%s".formatted(wsProtocol, address));
-        } else {
+        if (host == null) {
             throw new UnknownHostException("The address of the current server cannot be found");
         }
+        String address = attachPortToIp ? attachPortToHost(host) : host;
+        String httpProtocol = isSslEnabled ? "https" : "http";
+        String wsProtocol = isSslEnabled ? "wss" : "ws";
+        return new AddressGroup(
+                host,
+                address,
+                "%s://%s".formatted(httpProtocol, address),
+                "%s://%s".formatted(wsProtocol, address));
     }
 
     public String getHost() {

@@ -56,7 +56,7 @@ public class PublicIpManager {
         }
         return Mono.firstWithValue(monos)
                 .map(ip -> {
-                    if (InetAddresses.isInetAddress(ip)) {
+                    if (InetAddresses.isInetAddress(ip.trim())) {
                         return ip;
                     } else {
                         throw new IllegalStateException("The IP is invalid: " + ip);
