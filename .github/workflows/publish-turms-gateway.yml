@@ -26,6 +26,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-      - name: Publish turms-gateway
+      - name: Publish turms-gateway (Use cache)
         if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
         run: DOCKER_BUILDKIT=1 docker buildx build --platform linux/amd64,linux/arm64 --tag "ghcr.io/turms-im/turms-gateway:latest" --push -f turms-gateway/Dockerfile .

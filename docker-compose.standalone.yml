@@ -18,6 +18,9 @@
 
 version: "3.9"
 
+# Disable loki because it has a critical bug:
+# https://github.com/grafana/loki/issues/2361
+
 x-logging: &logging
   logging:
     driver: loki
@@ -61,8 +64,8 @@ services:
   # MongoDB
   mongodb-config:
     image: mongo:4.4.10-focal
-    depends_on:
-      - loki
+#    depends_on:
+#      - loki
     entrypoint: [ "mongod", "--port", "27017", "--configsvr", "--replSet", "rs-config", "--bind_ip_all" ]
     healthcheck:
       test: [ "CMD", "mongo", "--quiet", "--eval", "db.runCommand(\"ping\").ok" ]
@@ -70,12 +73,12 @@ services:
       timeout: 5s
       retries: 5
     mem_limit: 2g
-    <<: *logging-mongo
+#    <<: *logging-mongo
 
   mongodb-shard:
     image: mongo:4.4.10-focal
-    depends_on:
-      - loki
+#    depends_on:
+#      - loki
     entrypoint: [ "mongod", "--port", "27017", "--shardsvr", "--replSet", "rs-shard", "--bind_ip_all" ]
     healthcheck:
       test: [ "CMD", "mongo", "--quiet", "--eval", "db.runCommand(\"ping\").ok" ]
@@ -83,12 +86,12 @@ services:
       timeout: 5s
       retries: 5
     mem_limit: 2g
-    <<: *logging-mongo
+#    <<: *logging-mongo
 
   mongodb-router:
     image: mongo:4.4.10-focal
-    depends_on:
-      - loki
+#    depends_on:
+#      - loki
     entrypoint: [ "mongos", "--port", "27017", "--configdb", "rs-config/mongodb-config:27017", "--bind_ip_all" ]
     healthcheck:
       test: [ "CMD", "mongo", "--quiet", "--eval", "db.runCommand(\"ping\").ok" ]
@@ -98,10 +101,10 @@ services:
     ports:
       - "27017:27017"
     mem_limit: 2g
-    <<: *logging-mongo
+#    <<: *logging-mongo
 
   mongodb-setup:
-    image: mongo:4.4.10-focal
+    image: "mongo:4.4.10-focal"
     depends_on:
       mongodb-config:
         condition: service_healthy
@@ -123,8 +126,8 @@ services:
   # Redis
   redis:
     image: redis:6.2-alpine
-    depends_on:
-      - loki
+#    depends_on:
+#      - loki
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
@@ -132,7 +135,7 @@ services:
       retries: 5
     ports:
       - "6379:6379"
-    <<: *logging
+#    <<: *logging
 
   # turms servers
 
@@ -141,14 +144,14 @@ services:
     pull_policy: always
     ports:
       - "6510:6510"
-    <<: *logging
+#    <<: *logging
 
   turms-gateway:
     image: "ghcr.io/turms-im/turms-gateway"
     pull_policy: always
     depends_on:
-      loki:
-        condition: service_started
+#      loki:
+#        condition: service_started
       mongodb-router:
         condition: service_healthy
       mongodb-setup:
@@ -205,14 +208,14 @@ services:
 #      - "./container/turms-gateway/jfr:/opt/turms/turms-gateway/jfr"
 #      - "./container/turms-gateway/log:/opt/turms/turms-gateway/log"
 #      - "./container/turms-gateway/config:/opt/turms/turms-gateway/config" # Includes "application.yaml" and "jvm.options"
-    <<: *logging-turms
+#    <<: *logging-turms
 
   turms-service:
     image: "ghcr.io/turms-im/turms-service"
     pull_policy: always
     depends_on:
-      loki:
-        condition: service_started
+#      loki:
+#        condition: service_started
       mongodb-router:
         condition: service_healthy
       mongodb-setup:
@@ -230,6 +233,7 @@ services:
         -Djava.rmi.server.hostname=localhost
 
         -Dspring.profiles.active=${ENV}
+        -Dturms.security.password.initial-root-password=${INITIAL_ROOT_PASSWORD:-turms}
 
         -Dturms.cluster.connection.server.port-auto-increment=false
 
@@ -267,9 +271,9 @@ services:
     #      - "./container/turms-service/jfr:/opt/turms/turms-service/jfr"
     #      - "./container/turms-service/log:/opt/turms/turms-service/log"
     #      - "./container/turms-service/config:/opt/turms/turms-service/config" # Includes "application.yaml" and "jvm.options"
-    <<: *logging-turms
+#    <<: *logging-turms
 
-   # optional services for observability - metrics
+  # optional services for observability - metrics
 
   grafana:
     image: grafana/grafana:8.3.3
@@ -343,9 +347,8 @@ services:
 
   # Services for observability - logging
 
-  loki:
-    image: grafana/loki:2.4.1
-    ports:
-      - "3100:3100"
-    command: -config.file=/etc/loki/local-config.yaml
-
+#  loki:
+#    image: grafana/loki:2.4.1
+#    ports:
+#      - "3100:3100"
+#    command: -config.file=/etc/loki/local-config.yaml
