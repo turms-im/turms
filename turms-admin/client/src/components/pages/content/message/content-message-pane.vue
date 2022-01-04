@@ -95,13 +95,11 @@ export default {
                     fields: [
                         {
                             id: 'isGroupMessage',
-                            type: 'SWITCH',
-                            rules: this.$validator.create({required: true})
+                            type: 'SWITCH'
                         },
                         {
                             id: 'isSystemMessage',
-                            type: 'SWITCH',
-                            rules: this.$validator.create({required: true})
+                            type: 'SWITCH'
                         },
                         {
                             id: 'senderId',

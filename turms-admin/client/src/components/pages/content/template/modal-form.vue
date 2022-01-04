@@ -39,14 +39,14 @@
                         :date-id="field.id"
                     />
                     <a-input-number
-                        v-if="field.type === 'INPUT-NUMBER'"
+                        v-else-if="field.type === 'INPUT-NUMBER'"
                         v-model:value="formState[field.id]"
                         class="content-modal-form__item"
                         :max="field.max"
                         :min="field.min"
                     />
                     <a-date-picker
-                        v-if="field.type === 'DATE'"
+                        v-else-if="field.type === 'DATE'"
                         v-model:value="formState[field.id]"
                         class="content-modal-form__item content-modal-form__date-picker"
                         type="date"
@@ -56,14 +56,14 @@
                         :date-id="field.id"
                     />
                     <a-switch
-                        v-if="field.type === 'SWITCH'"
-                        v-model:value="formState[field.id]"
+                        v-else-if="field.type === 'SWITCH'"
+                        v-model:checked="formState[field.id]"
                         class="content-modal-form__item"
                         :default-checked="field.defaultChecked"
                         :date-id="field.id"
                     />
                     <a-textarea
-                        v-if="field.type === 'TEXTAREA'"
+                        v-else-if="field.type === 'TEXTAREA'"
                         v-model:value="formState[field.id]"
                         class="content-modal-form__item"
                         :rows="field.rows"
@@ -71,7 +71,7 @@
                         :date-id="field.id"
                     />
                     <a-select
-                        v-if="field.type === 'SELECT'"
+                        v-else-if="field.type === 'SELECT'"
                         v-model:value="formState[field.id]"
                         class="content-modal-form__item"
                         :allow-clear="true"
@@ -96,7 +96,7 @@
                         </a-select-option>
                     </a-select>
                     <a-tree
-                        v-if="field.type === 'TREE'"
+                        v-else-if="field.type === 'TREE'"
                         v-model:checkedKeys="formState[field.id]"
                         :date-id="field.id"
                         class="content-modal-form__item"
@@ -206,6 +206,8 @@ export default {
                     value: '',
                     key: Date.now()
                 }];
+            } else if (item.type === 'SWITCH') {
+                formState[item.id] = false;
             }
         }
         return {
@@ -289,16 +291,19 @@ export default {
         handleCancel() {
             this.hide();
         },
-        handleSubmit() {
-            this.$refs.form.validate()
-                .then(() => {
-                    const record = this.parseRecord(this.formState);
-                    if (this.type === 'CREATE') {
-                        this.requestCreateNewRecord(record);
-                    } else {
-                        this.requestUpdateRecord(record);
-                    }
-                });
+        async handleSubmit() {
+            try {
+                await this.$refs.form.validate();
+            } catch (e) {
+                // Suppress the error to avoid some browsers logging something like "Uncaught (in promise)"
+                return;
+            }
+            const record = this.parseRecord(this.formState);
+            if (this.type === 'CREATE') {
+                this.requestCreateNewRecord(record);
+            } else {
+                this.requestUpdateRecord(record);
+            }
         },
         isDateDisabled(current, allowFuture, allowPast = true) {
             if (!current) {

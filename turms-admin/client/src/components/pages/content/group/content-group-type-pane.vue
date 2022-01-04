@@ -38,23 +38,19 @@ export default {
                         },
                         {
                             id: 'guestSpeakable',
-                            type: 'SWITCH',
-                            rules: this.$validator.create({required: true})
+                            type: 'SWITCH'
                         },
                         {
                             id: 'selfInfoUpdatable',
-                            type: 'SWITCH',
-                            rules: this.$validator.create({required: true})
+                            type: 'SWITCH'
                         },
                         {
                             id: 'enableReadReceipt',
-                            type: 'SWITCH',
-                            rules: this.$validator.create({required: true})
+                            type: 'SWITCH'
                         },
                         {
                             id: 'messageEditable',
-                            type: 'SWITCH',
-                            rules: this.$validator.create({required: true})
+                            type: 'SWITCH'
                         },
                         {
                             id: 'invitationStrategy',
