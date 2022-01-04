@@ -30,7 +30,26 @@ import java.util.Set;
  */
 public final class CollectionUtil {
 
+    private static final Class<?> IMMUTABLE_COLLECTION_CLASS;
+
+    static {
+        IMMUTABLE_COLLECTION_CLASS = Set.of().getClass().getSuperclass().getSuperclass();
+        if (!IMMUTABLE_COLLECTION_CLASS.getName().equals("java.util.ImmutableCollections$AbstractImmutableCollection")) {
+            throw new IllegalStateException("Cannot find the class AbstractImmutableCollection");
+        }
+    }
+
     private CollectionUtil() {
+    }
+
+    public static <T> Set<T> add(Set<T> set, T value) {
+        if (IMMUTABLE_COLLECTION_CLASS.isInstance(set)) {
+            Set<T> newSet = newSetWithExpectedSize(set.size() + 1);
+            newSet.addAll(set);
+            set = newSet;
+        }
+        set.add(value);
+        return set;
     }
 
     public static int getSize(Iterable<?> iterable) {

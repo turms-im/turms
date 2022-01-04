@@ -46,6 +46,7 @@ import im.turms.server.common.property.env.service.business.message.SequenceIdPr
 import im.turms.server.common.redis.TurmsRedisClientManager;
 import im.turms.server.common.task.TrivialTaskManager;
 import im.turms.server.common.util.AssertUtil;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.service.bo.ServicePermission;
 import im.turms.service.constant.DaoConstant;
@@ -890,7 +891,7 @@ public class MessageService {
                 .setRequestId(DaoConstant.ADMIN_REQUEST_ID)
                 .build();
         if (node.getSharedProperties().getService().getMessage().isSendMessageToOtherSenderOnlineDevices()) {
-            recipientIds.add(message.getSenderId());
+            recipientIds = CollectionUtil.add(recipientIds, message.getSenderId());
         }
         return outboundMessageService.forwardNotification(
                 notification,

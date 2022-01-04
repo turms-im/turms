@@ -19,8 +19,11 @@ package im.turms.server.common;
 
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.StringUtil;
 import org.springframework.boot.SpringApplication;
+
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -29,6 +32,7 @@ public abstract class BaseTurmsApplication {
 
     static {
         // Hard code these properties to ensure they work as expected
+
         // Disable the max direct memory limit and buffer counters of Netty
         // so that we can get the used direct memory via BufferPoolMXBean without depending on ByteBufAllocator of Netty
         System.setProperty("io.netty.maxDirectMemory", "0");
@@ -64,6 +68,7 @@ public abstract class BaseTurmsApplication {
     private static void validateEnv() {
         try {
             StringUtil.getBytes("testテスト");
+            CollectionUtil.add(Set.of(), 1);
         } catch (Exception e) {
             throw new IllegalStateException("The current JDK cannot work with turms server", e);
         }
