@@ -17,8 +17,8 @@
 
 package im.turms.server.common.redis;
 
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.env.common.CommonRedisProperties;
 import im.turms.server.common.redis.codec.context.RedisCodecContext;
 import org.apache.commons.collections4.ListUtils;

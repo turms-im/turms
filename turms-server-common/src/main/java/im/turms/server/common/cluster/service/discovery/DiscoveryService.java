@@ -174,7 +174,8 @@ public class DiscoveryService implements ClusterService {
                     .setIfNotNull(Member.Fields.wsAddress, wsAddress)
                     .setIfNotNull(Member.Fields.tcpAddress, tcpAddress)
                     .setIfNotNull(Member.Fields.udpAddress, udpAddress);
-            localNodeStatusManager.upsertLocalNodeInfo(update).subscribe();
+            localNodeStatusManager.upsertLocalNodeInfo(update)
+                    .subscribe(null, t -> LOGGER.error("Caught an error while upserting the local node info", t));
         });
     }
 
@@ -195,9 +196,14 @@ public class DiscoveryService implements ClusterService {
 
         // Members
         listenMembersChangeEvent();
-        List<Member> memberList = queryMembers()
-                .collect(CollectorUtil.toList())
-                .block(CRUD_TIMEOUT_DURATION);
+        List<Member> memberList;
+        try {
+            memberList = queryMembers()
+                    .collect(CollectorUtil.toList())
+                    .block(CRUD_TIMEOUT_DURATION);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to find members", e);
+        }
         Member localMember = localNodeStatusManager.getLocalMember();
         for (Member member : memberList) {
             if (localMember.isSameNode(member)) {
@@ -211,8 +217,17 @@ public class DiscoveryService implements ClusterService {
         onMemberAddedOrReplaced(localMember);
         updateActiveMembers(allKnownMembers.values());
 
-        localNodeStatusManager.registerLocalMember(false).block(CRUD_TIMEOUT_DURATION);
-        localNodeStatusManager.tryBecomeFirstLeader().block();
+        try {
+            localNodeStatusManager.registerLocalMember(false).block(CRUD_TIMEOUT_DURATION);
+        } catch (Exception e) {
+            throw new IllegalStateException("Caught an error while registering the local node", e);
+        }
+        try {
+            localNodeStatusManager.tryBecomeFirstLeader().block();
+        } catch (Exception e) {
+            throw new IllegalStateException("Caught an error while trying to become the first leader", e);
+        }
+
         localNodeStatusManager.startHeartbeat();
     }
 
@@ -268,14 +283,16 @@ public class DiscoveryService implements ClusterService {
                                 Mono.delay(Duration.ofSeconds(delay))
                                         .subscribe(ignored -> {
                                             if (leader == null) {
-                                                localNodeStatusManager.tryBecomeFirstLeader().subscribe();
+                                                localNodeStatusManager.tryBecomeFirstLeader()
+                                                        .subscribe(null, t -> LOGGER.error("Caught an error while trying to become the first leader", t));
                                             }
                                         });
                             }
                         }
                     }
                 })
-                .onErrorContinue((throwable, o) -> LOGGER.error("Error while processing the change stream event of Leader: {}", o, throwable))
+                .onErrorContinue((throwable, o) -> LOGGER
+                        .error("Caught an error while processing the change stream event of Leader: {}", o, throwable))
                 .subscribe();
     }
 
@@ -311,7 +328,7 @@ public class DiscoveryService implements ClusterService {
                                 if (!localNodeStatusManager.isClosing()) {
                                     // Ignore the error because the node may have been registered by its heartbeat timer
                                     localNodeStatusManager.registerLocalMember(true)
-                                            .subscribe();
+                                            .subscribe(null, t -> LOGGER.error("Caught an error while registering the local member", t));
                                 }
                             }
                         }
@@ -319,7 +336,8 @@ public class DiscoveryService implements ClusterService {
                     updateActiveMembers(allKnownMembers.values());
                     connectionService.updateHasConnectedToAllMembers(allKnownMembers.keySet());
                 })
-                .onErrorContinue((throwable, o) -> LOGGER.error("Error while processing the change stream event of Member: {}", o, throwable))
+                .onErrorContinue((throwable, o) -> LOGGER
+                        .error("Caught an error while processing the change stream event of Member: {}", o, throwable))
                 .subscribe();
     }
 
@@ -516,7 +534,12 @@ public class DiscoveryService implements ClusterService {
         localNodeStatusManager.setClosing(true);
         scheduler.shutdownNow();
         if (localNodeStatusManager.isLocalNodeRegistered()) {
-            localNodeStatusManager.unregisterLocalMember().block(CRUD_TIMEOUT_DURATION);
+            try {
+                localNodeStatusManager.unregisterLocalMember()
+                        .block(CRUD_TIMEOUT_DURATION);
+            } catch (Exception e) {
+                throw new IllegalStateException("Caught an error while unregistering the local node", e);
+            }
         }
     }
 

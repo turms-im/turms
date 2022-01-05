@@ -17,8 +17,8 @@
 
 package im.turms.server.common.mongo.codec;
 
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.MongoContext;
 import im.turms.server.common.mongo.entity.EntityField;
 import im.turms.server.common.mongo.entity.MongoEntity;

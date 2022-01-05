@@ -337,7 +337,8 @@ public class UserService {
                     .retryWhen(DaoConstant.TRANSACTION_RETRY);
         }
         return deleteOrUpdateMono
-                .doOnNext(ignored -> sessionService.disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED).subscribe());
+                .doOnNext(ignored -> sessionService.disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED)
+                        .subscribe(null, t -> LOGGER.error("Caught an error while closing the session of the user IDs: " + userIds, t)));
     }
 
     public Mono<Boolean> userExists(@NotNull Long userId, boolean queryDeletedRecords) {

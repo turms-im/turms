@@ -44,7 +44,7 @@ public class DiscoveryProperties {
 
     @JsonView(MutablePropertiesView.class)
     @Description("The advertise strategy is used to help clients or load balancing servers to access the local node. " +
-            "Note: For security, do NOT use PUBLIC_ADDRESS in the production environment " +
+            "Note: For security, do NOT use PUBLIC_ADDRESS in production " +
             "to prevent from exposing the origin IP address for DDoS attack.")
     private AdvertiseStrategy advertiseStrategy = AdvertiseStrategy.LOCAL_ADDRESS;
 

@@ -101,15 +101,15 @@ public class AdminRoleService {
                         default -> LOGGER.fatal("Detected an illegal operation on AdminRole collection: " + event);
                     }
                 })
-                .onErrorContinue(
-                        (throwable, o) -> LOGGER.error("Error while processing the change stream event of AdminRole: {}", o, throwable))
+                .onErrorContinue((throwable, o) -> LOGGER
+                        .error("Caught an error while processing the change stream event of AdminRole: {}", o, throwable))
                 .subscribe();
 
         // Load
         resetRoles();
         mongoClient.findAll(AdminRole.class)
                 .doOnNext(role -> roles.put(role.getId(), role))
-                .subscribe();
+                .subscribe(null, t -> LOGGER.error("Caught an error while find all admin roles", t));
     }
 
     public Mono<AdminRole> authAndAddAdminRole(

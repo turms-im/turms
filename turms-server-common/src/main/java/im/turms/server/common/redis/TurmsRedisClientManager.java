@@ -151,7 +151,7 @@ public class TurmsRedisClientManager {
      *
      * @param keyGenerator The size of keys should not be larger than 1,048,576(1024*1024), or Redis will throw
      */
-    public Mono<Void> eval(LongKeyGenerator keyGenerator, RedisScript script, short firstKey) {
+    public Mono<Void> eval(RedisScript script, short firstKey, LongKeyGenerator keyGenerator) {
         int expectedKeySize = Math.max(keyGenerator.expectedSize(), 1);
         int clientSize = clients.size();
         long key;

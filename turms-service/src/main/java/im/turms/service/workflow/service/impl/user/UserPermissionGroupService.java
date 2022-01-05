@@ -99,7 +99,7 @@ public class UserPermissionGroupService {
                     }
                 })
                 .onErrorContinue((throwable, o) -> LOGGER
-                        .error("Error while processing the change stream event of UserPermissionGroup: {}", o, throwable))
+                        .error("Caught an error while processing the change stream event of UserPermissionGroup: {}", o, throwable))
                 .subscribe();
     }
 

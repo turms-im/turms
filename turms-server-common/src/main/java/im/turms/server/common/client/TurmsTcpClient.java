@@ -25,8 +25,8 @@ import im.turms.common.model.dto.request.user.DeleteSessionRequest;
 import im.turms.common.util.RandomUtil;
 import im.turms.server.common.access.tcp.codec.CodecFactory;
 import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import reactor.core.publisher.Mono;
 import reactor.netty.channel.ChannelOperations;
 import reactor.netty.resources.LoopResources;
@@ -80,13 +80,9 @@ public class TurmsTcpClient extends TurmsClient {
 
                     connection
                             .receiveObject()
-                            .onErrorResume(t -> {
-                                LOGGER.error("The turms client is closed unexpectedly", t);
-                                return Mono.empty();
-                            })
                             .cast(TurmsNotification.class)
-                            .doOnNext(this::handleResponse)
-                            .subscribe();
+                            .subscribe(this::handleResponse,
+                                    t -> LOGGER.error("The turms client is closed unexpectedly", t));
                 })
                 .then();
     }
@@ -101,12 +97,11 @@ public class TurmsTcpClient extends TurmsClient {
                         .setPassword(password)
                         .build()))
                 .flatMap(n -> {
-                    if (n.getCode() == TurmsStatusCode.OK.getBusinessCode()) {
-                        this.userId = userId;
-                        this.deviceType = deviceType;
-                    } else {
+                    if (n.getCode() != TurmsStatusCode.OK.getBusinessCode()) {
                         return Mono.error(new IllegalStateException("Failed to login: " + n));
                     }
+                    this.userId = userId;
+                    this.deviceType = deviceType;
                     return Mono.just(n);
                 });
     }

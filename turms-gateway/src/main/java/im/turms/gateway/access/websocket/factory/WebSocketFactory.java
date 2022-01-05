@@ -108,9 +108,13 @@ public final class WebSocketFactory {
         if (ssl.isEnabled()) {
             server.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true), true);
         }
-        return server
-                .bind()
-                .block();
+        try {
+            return server
+                    .bind()
+                    .block();
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to bind the WebSocket server", e);
+        }
     }
 
     /**

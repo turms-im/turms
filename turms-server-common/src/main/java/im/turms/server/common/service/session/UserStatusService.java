@@ -164,9 +164,9 @@ public class UserStatusService {
         return fetchUserSessionsStatus(userId)
                 .flatMap(sessionsStatus -> {
                     Map<DeviceType, String> deviceTypeAndNodeIdMap = sessionsStatus.onlineDeviceTypeAndNodeIdMap();
-                    return deviceTypeAndNodeIdMap != null && !deviceTypeAndNodeIdMap.isEmpty()
-                            ? Mono.just(deviceTypeAndNodeIdMap)
-                            : Mono.empty();
+                    return deviceTypeAndNodeIdMap == null || deviceTypeAndNodeIdMap.isEmpty()
+                            ? Mono.empty()
+                            : Mono.just(deviceTypeAndNodeIdMap);
                 });
     }
 
@@ -216,8 +216,8 @@ public class UserStatusService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Mono<Boolean> result =
-                sessionRedisClientManager.eval(userId, updateOnlineUserStatusIfPresent, userId, (byte) userStatus.getNumber());
+        Mono<Boolean> result = sessionRedisClientManager
+                .eval(userId, updateOnlineUserStatusIfPresent, userId, (byte) userStatus.getNumber());
         return result
                 .timeout(operationTimeout);
     }
@@ -229,7 +229,7 @@ public class UserStatusService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return sessionRedisClientManager.eval(userIdGenerator, updateUsersTtlScript, (short) timeoutSeconds);
+        return sessionRedisClientManager.eval(updateUsersTtlScript, (short) timeoutSeconds, userIdGenerator);
     }
 
     /**

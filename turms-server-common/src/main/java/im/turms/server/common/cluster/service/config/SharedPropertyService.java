@@ -27,8 +27,8 @@ import im.turms.server.common.cluster.service.connection.ConnectionService;
 import im.turms.server.common.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.rpc.RpcService;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
@@ -100,17 +100,22 @@ public class SharedPropertyService implements ClusterService {
                             }
                             case INVALIDATE -> {
                                 LOGGER.warn("The shared properties has been removed from database unexpectedly");
-                                initializeSharedProperties().subscribe();
+                                initializeSharedProperties()
+                                        .subscribe(null, t -> LOGGER.error("Caught an error while initializing the shared properties", t));
                             }
                             default -> {
                             }
                         }
                     }
                 })
-                .onErrorContinue(
-                        (throwable, o) -> LOGGER.error("Error while processing the change stream event of SharedProperties: {}", o, throwable))
+                .onErrorContinue((throwable, o) -> LOGGER
+                        .error("Caught an error while processing the change stream event of SharedProperties: {}", o, throwable))
                 .subscribe();
-        initializeSharedProperties().block(Duration.ofMinutes(1));
+        try {
+            initializeSharedProperties().block(Duration.ofMinutes(1));
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to initialize the shared properties", e);
+        }
     }
 
     /**

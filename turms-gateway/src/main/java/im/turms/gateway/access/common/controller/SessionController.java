@@ -29,6 +29,8 @@ import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import io.netty.util.Timeout;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Controller;
@@ -40,6 +42,8 @@ import reactor.core.publisher.Mono;
 @Controller
 public class SessionController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SessionController.class);
+
     private final ServiceMediator serviceMediator;
 
     public SessionController(ServiceMediator serviceMediator) {
@@ -49,9 +53,10 @@ public class SessionController {
     public Mono<TurmsNotification> handleDeleteSessionRequest(UserSessionWrapper sessionWrapper) {
         UserSession session = sessionWrapper.getUserSession();
         if (session != null) {
+            Long userId = session.getUserId();
             serviceMediator
-                    .setLocalUserDeviceOffline(session.getUserId(), session.getDeviceType(), SessionCloseStatus.DISCONNECTED_BY_CLIENT)
-                    .subscribe();
+                    .setLocalUserDeviceOffline(userId, session.getDeviceType(), SessionCloseStatus.DISCONNECTED_BY_CLIENT)
+                    .subscribe(null, t -> LOGGER.error("Caught an error while closing the session of the user ID: " + userId, t));
         }
         return Mono.empty();
     }
@@ -99,7 +104,8 @@ public class SessionController {
                     sessionWrapper.setUserSession(session);
                     UserSessionsManager userSessionsManager = serviceMediator.getUserSessionsManager(userId);
                     serviceMediator.onSessionEstablished(userSessionsManager, session.getDeviceType());
-                    serviceMediator.triggerGoOnlinePlugins(userSessionsManager, session).subscribe();
+                    serviceMediator.triggerGoOnlinePlugins(userSessionsManager, session)
+                            .subscribe(null, t -> LOGGER.error("Caught an error while triggering the plugins of goOnline()", t));
                     return Mono.just(new RequestHandlerResult(TurmsStatusCode.OK));
                 } else {
                     return serviceMediator.setLocalUserDeviceOffline(userId, finalDeviceType, SessionCloseStatus.LOGIN_TIMEOUT)

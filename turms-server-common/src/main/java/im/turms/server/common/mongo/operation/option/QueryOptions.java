@@ -41,6 +41,8 @@ public final class QueryOptions {
 
     private QueryOptions(int expectedSize) {
         document = new BsonDocument(MapUtil.getCapability(expectedSize));
+        // "find" must be the first entry, and it will be replaced with the collection name in
+        // im.turms.server.common.mongo.operation.option.QueryOptions.asDocument
         document.put("find", COLLECTION_NAME_PLACEHOLDER);
     }
 

@@ -165,12 +165,8 @@ public class ConnectionService implements ClusterService {
                 conn.dispose();
             } else {
                 rpcService.requestResponse(nodeId, request)
-                        .onErrorResume(t -> {
-                            LOGGER.error("Failed to send a closing handshake request", t);
-                            return Mono.empty();
-                        })
                         .doOnTerminate(conn::dispose)
-                        .subscribe();
+                        .subscribe(null, t -> LOGGER.error("Failed to send a closing handshake request", t));
             }
         }
         connectionPool.clear();
@@ -264,16 +260,14 @@ public class ConnectionService implements ClusterService {
                             nodeId, member.getMemberHost(), member.getMemberPort());
                     rpcService.requestResponse(nodeId, new OpeningHandshakeRequest(localNodeId), null, connection)
                             .doOnSuccess(unused -> onMemberConnectionHandshakeCompleted(member, connection, true))
-                            .onErrorResume(throwable -> {
+                            .subscribe(null, t -> {
                                 LOGGER.error("[Client] Failed to complete handshake with member: {}[{}:{}]. Closing connection to reconnect",
-                                        nodeId, member.getMemberHost(), member.getMemberPort(), throwable);
+                                        nodeId, member.getMemberHost(), member.getMemberPort(), t);
                                 // To keep logic simple, just disconnect to
                                 // connect and start a handshake again.
                                 // After disposed, the listener to onDispose will reconnect
                                 disconnectConnection(connection);
-                                return Mono.empty();
-                            })
-                            .subscribe();
+                            });
                 })
                 .onErrorResume(throwable -> {
                     if (!discoveryService.isKnownMember(nodeId)) {
@@ -352,12 +346,8 @@ public class ConnectionService implements ClusterService {
         }
         try {
             rpcService.requestResponse(nodeId, new KeepaliveRequest())
-                    .doOnSuccess(unused -> connection.setLastKeepaliveTimestamp(System.currentTimeMillis()))
-                    .onErrorResume(t -> {
-                        LOGGER.warn("Failed to send a keepalive request to the member " + nodeId, t);
-                        return Mono.empty();
-                    })
-                    .subscribe();
+                    .subscribe(unused -> connection.setLastKeepaliveTimestamp(System.currentTimeMillis()),
+                            t -> LOGGER.warn("Failed to send a keepalive request to the member " + nodeId, t));
         } catch (Exception e) {
             LOGGER.error("Failed to send a keepalive request to the member " + nodeId, e);
         }
@@ -419,7 +409,7 @@ public class ConnectionService implements ClusterService {
             try {
                 listener.onConnectionOpen(connection);
             } catch (Exception e) {
-                LOGGER.error("Caught an error when invoking onConnectionOpen listeners", e);
+                LOGGER.error("Caught an error while invoking onConnectionOpen listeners", e);
             }
         }
         ChannelOperations<?, ?> conn = connection.getConnection();
@@ -429,7 +419,7 @@ public class ConnectionService implements ClusterService {
                         try {
                             listener.onDataReceived(value);
                         } catch (Exception e) {
-                            LOGGER.error("Caught an error when invoking onDataReceived listeners", e);
+                            LOGGER.error("Caught an error while invoking onDataReceived listeners", e);
                         }
                     }
                 })
@@ -445,12 +435,8 @@ public class ConnectionService implements ClusterService {
                 })
                 .subscribe();
         conn.onDispose()
-                .doOnSuccess(ignored -> onConnectionClosed(connection, null))
-                .onErrorResume(throwable -> {
-                    onConnectionClosed(connection, throwable);
-                    return Mono.empty();
-                })
-                .subscribe();
+                .subscribe(ignored -> onConnectionClosed(connection, null),
+                        t -> onConnectionClosed(connection, t));
     }
 
     private void onConnectionClosed(TurmsConnection connection, @Nullable Throwable throwable) {
@@ -469,7 +455,7 @@ public class ConnectionService implements ClusterService {
             try {
                 listener.onConnectionClosed();
             } catch (Exception e) {
-                LOGGER.error("Caught an error when invoking onConnectionClosed listeners", e);
+                LOGGER.error("Caught an error while invoking onConnectionClosed listeners", e);
             }
         }
         boolean isKnownMember = nodeId != null && discoveryService.isKnownMember(nodeId);
@@ -508,7 +494,7 @@ public class ConnectionService implements ClusterService {
             try {
                 listener.onOpeningHandshakeCompleted(member);
             } catch (Exception e) {
-                LOGGER.error("Caught an error when invoking onOpeningHandshakeCompleted listeners", e);
+                LOGGER.error("Caught an error while invoking onOpeningHandshakeCompleted listeners", e);
             }
         }
     }

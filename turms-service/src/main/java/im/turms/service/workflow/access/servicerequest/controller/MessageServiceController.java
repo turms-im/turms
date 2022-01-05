@@ -33,6 +33,8 @@ import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.constant.TimeType;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.service.bo.MessageFromKey;
@@ -67,6 +69,8 @@ import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_MES
  */
 @Controller
 public class MessageServiceController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageServiceController.class);
 
     private final Node node;
     private final PageUtil pageUtil;
@@ -274,7 +278,10 @@ public class MessageServiceController {
                                         ? conversationService.upsertGroupConversationReadDate(messages.get(0).groupId(), userId, new Date())
                                         : conversationService
                                         .upsertPrivateConversationReadDate(userId, messages.get(0).getTargetId(), new Date());
-                                mono.subscribe();
+                                mono.subscribe(null, t -> LOGGER.error("Caught an error while upserting the {} conversation read date: {}",
+                                        areGroupMessages ? "group" : "private",
+                                        areGroupMessages ? messages.get(0).groupId() : messages.get(0).getTargetId(),
+                                        t));
                             });
                         }
                         return resultMono;

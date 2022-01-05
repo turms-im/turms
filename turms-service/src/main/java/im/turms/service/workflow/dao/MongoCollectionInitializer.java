@@ -125,11 +125,15 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         Duration timeout = Duration.ofMinutes(1);
         if (!context.isProduction() && fakingManager.isClearAllCollectionsBeforeFaking()) {
             LOGGER.info("Start dropping databases...");
-            dropAllDatabases().block(timeout);
+            try {
+                dropAllDatabases().block(timeout);
+            } catch (Exception e) {
+                throw new IllegalStateException("Caught an error while dropping databases", e);
+            }
             LOGGER.info("All collections are cleared");
         }
         LOGGER.info("Start creating collections...");
-        createCollectionsIfNotExist()
+        Mono<Void> createCollections = createCollectionsIfNotExist()
                 .doOnError(t -> LOGGER.error("Failed to create collections", t))
                 .doOnSuccess(ignored -> LOGGER.info("All collections are created"))
                 .flatMap(exists -> {
@@ -142,8 +146,12 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                             .then(Mono.defer(() -> !context.isProduction() && fakingManager.isFakingEnabled()
                                     ? fakingManager.fakeData()
                                     : Mono.empty())));
-                })
-                .block(timeout);
+                });
+        try {
+            createCollections.block(timeout);
+        } catch (Exception e) {
+            throw new IllegalStateException("Caught an error while creating collections", e);
+        }
     }
 
     /**

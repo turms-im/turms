@@ -17,8 +17,8 @@
 
 package im.turms.server.common.address;
 
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.constant.AdvertiseStrategy;
 import im.turms.server.common.property.env.common.AddressProperties;

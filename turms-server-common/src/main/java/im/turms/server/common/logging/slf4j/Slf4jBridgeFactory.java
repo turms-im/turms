@@ -17,8 +17,8 @@
 
 package im.turms.server.common.logging.slf4j;
 
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import org.slf4j.ILoggerFactory;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,9 +30,9 @@ public final class Slf4jBridgeFactory implements ILoggerFactory {
 
     @Override
     public org.slf4j.Logger getLogger(String name) {
-        return loggerMap.computeIfAbsent(name, n -> {
-            Logger logger = LoggerFactory.getLogger(name);
-            return new Slf4jBridge(name, logger);
+        return loggerMap.computeIfAbsent(name, loggerName -> {
+            Logger logger = LoggerFactory.getLogger(loggerName);
+            return new Slf4jBridge(loggerName, logger);
         });
     }
 

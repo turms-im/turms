@@ -17,8 +17,8 @@
 
 package im.turms.server.common.util;
 
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;

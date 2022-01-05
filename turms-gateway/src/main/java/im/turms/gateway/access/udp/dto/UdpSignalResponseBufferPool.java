@@ -20,8 +20,6 @@ package im.turms.gateway.access.udp.dto;
 import im.turms.common.model.dto.udpsignal.UdpNotificationType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.EmptyByteBuf;
 import io.netty.buffer.Unpooled;
 
 import java.util.EnumMap;
@@ -41,12 +39,11 @@ public final class UdpSignalResponseBufferPool {
     public static ByteBuf get(TurmsStatusCode code) {
         return CODE_POOL.computeIfAbsent(code, key -> {
             if (key == TurmsStatusCode.OK) {
-                return new EmptyByteBuf(ByteBufAllocator.DEFAULT);
-            } else {
-                ByteBuf buffer = Unpooled.directBuffer(Short.BYTES);
-                buffer.writeShort(key.getBusinessCode());
-                return Unpooled.unreleasableBuffer(buffer);
+                return Unpooled.EMPTY_BUFFER;
             }
+            return Unpooled.unreleasableBuffer(Unpooled
+                    .directBuffer(Short.BYTES)
+                    .writeShort(key.getBusinessCode()));
         });
     }
 

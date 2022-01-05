@@ -37,9 +37,14 @@ import java.util.Arrays;
 
 /**
  * @author James Chen
- * @implNote Note that we do NOT escape or remove non-printable characters for logging
- * because it has a significant impact on performance. The caller of logger should ensure
- * won't pass malicious texts especially the user input texts
+ * @implNote 1. Note that we do NOT escape or remove non-printable characters for logging
+ * because it has an impact on performance. The caller of logger should ensure
+ * won't pass malicious texts especially the user input texts.
+ * 2. The template is designed for ascii-only text because:
+ * a. We won't convert String to the consistent UTF-8 bytes because it needs to copy memory
+ * b. We encourage caller to pass ascii-only texts only.
+ * In other words, if the message, args, or exception includes non-ascii text,
+ * the logger will just print error codes
  */
 public class TurmsTemplateLayout extends TemplateLayout {
 

@@ -19,8 +19,8 @@ package im.turms.service.workflow.dao.config;
 
 import com.google.common.collect.Maps;
 import im.turms.server.common.dao.domain.User;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.MongoCollectionOptions;
 import im.turms.server.common.property.TurmsPropertiesManager;
@@ -140,8 +140,14 @@ public class MongoConfig {
     }
 
     private synchronized TurmsMongoClient getMongoClient(TurmsMongoProperties properties) {
-        return CLIENT_MAP.computeIfAbsent(properties.getUri(), key -> TurmsMongoClient.of(properties)
-                .block(Duration.ofMinutes(1)));
+        return CLIENT_MAP.computeIfAbsent(properties.getUri(), key -> {
+            try {
+                return TurmsMongoClient.of(properties)
+                        .block(Duration.ofMinutes(1));
+            } catch (Exception e) {
+                throw new IllegalStateException("Failed to create the mongo client", e);
+            }
+        });
     }
 
 }

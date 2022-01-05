@@ -242,14 +242,12 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                             return;
                         }
                         notifyRelatedUsersOfAction(requestResult, userId, deviceType)
-                                .onErrorResume(t -> {
+                                .contextWrite(signal.getContextView())
+                                .subscribe(null, t -> {
                                     try (TracingCloseableContext ignored = context.asCloseable()) {
                                         LOGGER.error("Failed to notify related users of the action", t);
                                     }
-                                    return Mono.empty();
-                                })
-                                .contextWrite(signal.getContextView())
-                                .subscribe();
+                                });
                     })
                     .onErrorResume(t -> {
                         ThrowableInfo info = ThrowableInfo.get(t);

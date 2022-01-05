@@ -168,15 +168,20 @@ public class BlocklistServiceManager<T> {
         });
         blocklist = new ConcurrentHashMap<>(1024);
 
-        resetAndSyncAllBlockedClients(false)
-                .block(Duration.ofSeconds(60));
+        try {
+            resetAndSyncAllBlockedClients(false)
+                    .block(Duration.ofSeconds(60));
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to reset and sync blocked clients", e);
+        }
 
         threadPoolExecutor
                 .scheduleAtFixedRate(() -> {
                     try {
-                        syncLocalBlocklist().subscribe();
+                        syncLocalBlocklist()
+                                .subscribe(null, t -> LOGGER.error("Caught an error while synchronizing blocklist"));
                     } catch (Exception e) {
-                        LOGGER.error("Caught an error when synchronizing blocklist");
+                        LOGGER.error("Caught an error while synchronizing blocklist");
                     }
                 }, syncIntervalMillis, syncIntervalMillis, TimeUnit.MILLISECONDS);
     }
@@ -352,7 +357,8 @@ public class BlocklistServiceManager<T> {
         }
         evictLocalExpiredBlockedClients();
         if (node.isLocalNodeLeader()) {
-            redisClient.eval(evictExpiredBlockedClients).subscribe();
+            redisClient.eval(evictExpiredBlockedClients)
+                    .subscribe(null, t -> LOGGER.error("Caught an error while evicting expired blocked clients", t));
         }
         return fetchLogIdAndLogs(false)
                 .doFinally(signalType -> isSyncing.set(false));

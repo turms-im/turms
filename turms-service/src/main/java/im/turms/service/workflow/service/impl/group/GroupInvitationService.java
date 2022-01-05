@@ -28,6 +28,8 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -75,6 +77,8 @@ import static im.turms.service.constant.DaoConstant.ID_FIELD_NAME;
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class GroupInvitationService extends ExpirableModelService<GroupInvitation> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GroupInvitationService.class);
+
     private final Node node;
     private final TurmsMongoClient mongoClient;
     private final GroupMemberService groupMemberService;
@@ -108,7 +112,8 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
                             .isDeleteExpiredGroupInvitationsWhenCronTriggered();
                     Date expirationDate = getModelExpirationDate();
                     if (isLocalNodeLeader && deleteExpiredRequestsWhenCronTriggered && expirationDate != null) {
-                        removeAllExpiredGroupInvitations(expirationDate).subscribe();
+                        removeAllExpiredGroupInvitations(expirationDate)
+                                .subscribe(null, t -> LOGGER.error("Caught an error while deleting expired group invitations", t));
                     }
                 });
     }

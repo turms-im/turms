@@ -65,7 +65,7 @@ public class AddressCollector {
     }
 
     private String attachPortToHost(String host) {
-        return "%s:%d".formatted(host, port);
+        return host + ":" + port;
     }
 
     private String queryHost() throws UnknownHostException {
@@ -80,7 +80,13 @@ public class AddressCollector {
                     throw new IllegalStateException(e);
                 }
             }
-            case PUBLIC_ADDRESS -> publicIpManager.getPublicIp().block(IP_DETECTION_TIMEOUT);
+            case PUBLIC_ADDRESS -> {
+                try {
+                    yield publicIpManager.getPublicIp().block(IP_DETECTION_TIMEOUT);
+                } catch (Exception e) {
+                    throw new IllegalStateException("Failed to get the public IP", e);
+                }
+            }
         };
     }
 

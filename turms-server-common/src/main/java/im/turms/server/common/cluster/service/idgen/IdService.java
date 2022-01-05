@@ -20,8 +20,8 @@ package im.turms.server.common.cluster.service.idgen;
 import im.turms.server.common.cluster.service.ClusterService;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import im.turms.server.common.cluster.service.discovery.DiscoveryService;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 
 import java.util.TreeSet;
 

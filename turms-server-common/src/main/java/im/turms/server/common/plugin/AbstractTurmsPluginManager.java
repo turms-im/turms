@@ -18,8 +18,8 @@
 package im.turms.server.common.plugin;
 
 import im.turms.server.common.context.TurmsApplicationContext;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import lombok.Getter;
 import org.springframework.context.ApplicationContext;

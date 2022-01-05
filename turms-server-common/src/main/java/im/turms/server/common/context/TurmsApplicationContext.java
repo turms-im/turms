@@ -79,7 +79,7 @@ public class TurmsApplicationContext {
 
         activeEnvProfile = getActiveEnvProfile(activeProfiles, devEnvs, localTestEnvs, testEnvs, prodEnvs);
         isDevOrLocalTest = isInProfiles(devEnvs, activeProfiles) || isInProfiles(localTestEnvs, activeProfiles);
-        // Prefer isProduction to be true to avoid getting trouble in production environment
+        // Prefer isProduction to be true to avoid getting trouble in production
         isProduction = !isDevOrLocalTest && !isInProfiles(testEnvs, activeProfiles);
         version = getVersion(isProduction, buildProperties);
 
@@ -146,7 +146,7 @@ public class TurmsApplicationContext {
             // throwable is always the instance of ErrorCallbackNotImplemented
             Throwable cause = t.getCause();
             if (isReadFromForciblyClosedConnectionException(cause)) {
-                // Ignore the exception in production env because it should not have side effects,
+                // Ignore the exception in production because it should not have side effects,
                 // and we cannot avoid the exception completely because of its root cause.
                 // Log the exception only in non-production env, so we can try to optimize the code of
                 // client to close the connection with a 4-way handshake on the client side

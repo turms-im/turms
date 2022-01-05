@@ -29,7 +29,6 @@ import im.turms.server.common.service.session.UserStatusService;
 import io.lettuce.core.protocol.LongKeyGenerator;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Setter;
-import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import java.util.Iterator;
@@ -122,8 +121,7 @@ public class HeartbeatManager {
         Set<Map.Entry<Long, UserSessionsManager>> entries = sessionsManagerByUserId.entrySet();
         LongKeyGenerator userIds = collectOnlineUsersAndUpdateStatus(entries);
         userStatusService.updateOnlineUsersTtl(userIds, closeIdleSessionAfterSeconds)
-                .doOnError(t -> LOGGER.error("Failed to update online users", t))
-                .subscribe();
+                .subscribe(null, t -> LOGGER.error("Failed to update online users", t));
     }
 
     private LongKeyGenerator collectOnlineUsersAndUpdateStatus(Set<Map.Entry<Long, UserSessionsManager>> entries) {
@@ -183,12 +181,8 @@ public class HeartbeatManager {
                             session.getUserId(),
                             session.getDeviceType(),
                             HEARTBEAT_TIMEOUT)
-                    .onErrorResume(t -> {
-                        LOGGER.error("Caught an error when disconnecting the local session: {} with the close reason: {}",
-                                session, HEARTBEAT_TIMEOUT);
-                        return Mono.empty();
-                    })
-                    .subscribe();
+                    .subscribe(null, t -> LOGGER.error("Caught an error while disconnecting the local session: {} with the close reason: {}",
+                            session, HEARTBEAT_TIMEOUT));
         }
         session.setLastHeartbeatUpdateTimestampMillis(now);
         return session.getUserId();

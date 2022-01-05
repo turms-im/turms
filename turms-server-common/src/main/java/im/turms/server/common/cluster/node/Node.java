@@ -29,8 +29,8 @@ import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.healthcheck.HealthCheckManager;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.cluster.ClusterProperties;
@@ -59,7 +59,7 @@ public class Node {
     private static final Logger LOGGER = LoggerFactory.getLogger(Node.class);
 
     /**
-     * For best performance for im.turms.server.common.log4j.plugin.TurmsContextLookup
+     * For best performance for {@link im.turms.server.common.context.ApplicationEnvironmentEventListener#configureContextForLogging}
      * to access, we use static.
      */
     @Getter
@@ -109,8 +109,7 @@ public class Node {
             nodeVersion = NodeVersion.parse(version);
             LOGGER.info("The local node version is {}", version);
         } catch (Exception e) {
-            LOGGER.error("Failed to get the Turms version of the local node", e);
-            throw e;
+            throw new IllegalStateException("Failed to get the version of the local node", e);
         }
 
         String clusterId = clusterProperties.getId();
@@ -166,7 +165,7 @@ public class Node {
         }
         if (StringUtils.isBlank(id)) {
             id = RandomStringUtils.randomAlphabetic(8).toLowerCase();
-            LOGGER.warn("A random node ID {} has been used. You should better set a node ID manually in the production environment",
+            LOGGER.warn("A random node ID {} has been used. You should better set a node ID manually in production",
                     id);
         } else {
             if (id.length() > NodeProperties.NODE_ID_MAX_LENGTH) {

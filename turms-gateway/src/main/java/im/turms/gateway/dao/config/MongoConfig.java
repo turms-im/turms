@@ -49,8 +49,12 @@ public class MongoConfig {
     @ConditionalOnProperty("turms.gateway.session.enable-authentication")
     public TurmsMongoClient userMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
         TurmsMongoProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getMongo().getUser();
-        userMongoClient = TurmsMongoClient.of(properties)
-                .block(Duration.ofMinutes(1));
+        try {
+            userMongoClient = TurmsMongoClient.of(properties)
+                    .block(Duration.ofMinutes(1));
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to create the user mongo client", e);
+        }
         userMongoClient.registerEntitiesByClasses(User.class);
         return userMongoClient;
     }

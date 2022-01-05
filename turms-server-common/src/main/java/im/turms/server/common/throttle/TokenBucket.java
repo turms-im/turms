@@ -65,8 +65,9 @@ public class TokenBucket {
         if (periods <= 0) {
             return false;
         }
-        // We expect tokensPerPeriod is always greater than 0
-        // so tokenCount can be always greater than or equals to 0
+        // Try to refill.
+        // We expect tokensPerPeriod is always greater than 0,
+        // so tokenCount can be always greater than or equals to 0.
         tokenCount = Math.min(periods * context.tokensPerPeriod - 1, context.capacity);
         if (TOKENS_UPDATER.compareAndSet(this, 0, tokenCount)) {
             lastRefillTime = time;

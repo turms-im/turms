@@ -26,6 +26,8 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.lang.ByteArrayWrapper;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.security.BlocklistProperties;
 import im.turms.server.common.redis.TurmsRedisClient;
@@ -54,6 +56,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  */
 @Service
 public class BlocklistService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BlocklistService.class);
 
     public static int maxLogQueueSize = 100_000;
 
@@ -196,7 +200,7 @@ public class BlocklistService {
             throw TurmsBusinessException.get(TurmsStatusCode.IP_BLOCKLIST_IS_DISABLED);
         }
         ipBlocklistServiceManager.blockClients(Set.of(address), blockMinutes)
-                .subscribe();
+                .subscribe(null, t -> LOGGER.error("Caught an error while blocking clients", t));
     }
 
     public Mono<Void> blockIpStrings(Set<String> ips, int blockMinutes) {
@@ -218,7 +222,7 @@ public class BlocklistService {
             throw TurmsBusinessException.get(TurmsStatusCode.USER_ID_BLOCKLIST_IS_DISABLED);
         }
         userIdBlocklistServiceManager.blockClients(Set.of(userId), blockMinutes)
-                .subscribe();
+                .subscribe(null, t -> LOGGER.error("Caught an error while deleting expired group invitations", t));
     }
 
     public Mono<Void> blockUserIds(Set<Long> userIds, int blockMinutes) {

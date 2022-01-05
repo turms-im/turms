@@ -21,8 +21,8 @@ import im.turms.server.common.cluster.service.connection.TurmsConnection;
 import im.turms.server.common.cluster.service.rpc.codec.RpcFrameEncoder;
 import im.turms.server.common.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.cluster.service.rpc.dto.RpcResponse;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.util.MapUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.IllegalReferenceCountException;
@@ -95,11 +95,7 @@ public final class RpcEndpoint {
             // sendObject() will release the buffer no matter it succeeds or fails
             conn.sendObject(buffer)
                     .then()
-                    .onErrorResume(t -> {
-                        resolveRequest(requestId, null, t);
-                        return Mono.empty();
-                    })
-                    .subscribe();
+                    .subscribe(null, t -> resolveRequest(requestId, null, t));
             break;
         }
         return sink.asMono();

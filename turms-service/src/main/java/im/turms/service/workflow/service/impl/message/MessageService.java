@@ -182,7 +182,8 @@ public class MessageService {
                                 .getMessage()
                                 .getMessageExpireAfterHours();
                         if (expireAfterHours > 0) {
-                            deleteExpiredMessagesAndStatuses(expireAfterHours).subscribe();
+                            deleteExpiredMessages(expireAfterHours)
+                                    .subscribe(null, t -> LOGGER.error("Caught an error while deleting expired messages", t));
                         }
                     }
                 });
@@ -431,7 +432,11 @@ public class MessageService {
                     ? conversationService.upsertGroupConversationReadDate(targetId, senderId, deliveryDate)
                     : conversationService.upsertPrivateConversationReadDate(senderId, targetId, deliveryDate);
             return saveMessage
-                    .doOnNext(ignored -> upsertConversation.subscribe());
+                    .doOnNext(ignored -> upsertConversation
+                            .subscribe(null, t -> LOGGER.error("Caught an error while upserting the {} conversation: {}",
+                                    isGroupMessage ? "group" : "private",
+                                    targetId,
+                                    t)));
         }
         return saveMessage;
     }
@@ -451,7 +456,7 @@ public class MessageService {
                 .map(Message::getId);
     }
 
-    public Mono<Void> deleteExpiredMessagesAndStatuses(@NotNull Integer timeToLiveHours) {
+    public Mono<Void> deleteExpiredMessages(@NotNull Integer timeToLiveHours) {
         return queryExpiredMessageIds(timeToLiveHours)
                 .collectList()
                 .flatMap(expiredMessageIds -> {
@@ -870,11 +875,7 @@ public class MessageService {
                     if (send) {
                         // No need to let the client wait to send notifications to recipients
                         sendMessage(message, pair.getRight())
-                                .onErrorResume(t -> {
-                                    LOGGER.error("Failed to send message", t);
-                                    return Mono.empty();
-                                })
-                                .subscribe();
+                                .subscribe(null, t -> LOGGER.error("Failed to send message", t));
                     }
                 })
                 .then();

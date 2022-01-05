@@ -20,10 +20,9 @@ package im.turms.gateway.pojo.bo.session.connection;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.factory.NotificationFactory;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.util.ThrowableUtil;
-import reactor.core.publisher.Mono;
 import reactor.netty.channel.ChannelOperations;
 
 import java.net.InetSocketAddress;
@@ -64,13 +63,9 @@ public class TcpConnection extends NetConnection {
                         }
                     })
                     .retryWhen(RETRY_SEND_CLOSE_NOTIFICATION)
-                    .onErrorResume(throwable -> {
-                        LOGGER.error("Failed to send the close notification with retries exhausted: " +
-                                RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, throwable);
-                        return Mono.empty();
-                    })
                     .doFinally(signal -> close())
-                    .subscribe();
+                    .subscribe(null, t -> LOGGER.error("Failed to send the close notification with retries exhausted: " +
+                            RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, t));
         }
     }
 

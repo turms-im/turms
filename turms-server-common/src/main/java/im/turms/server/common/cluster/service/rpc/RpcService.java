@@ -41,8 +41,8 @@ import im.turms.server.common.property.env.common.cluster.RpcProperties;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.CollectorUtil;
-import im.turms.server.common.util.ThrowableUtil;
 import im.turms.server.common.util.MapUtil;
+import im.turms.server.common.util.ThrowableUtil;
 import io.micrometer.core.instrument.Tag;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
@@ -174,13 +174,11 @@ public class RpcService implements ClusterService {
                             }
                             conn.sendObject(buf)
                                     .then()
-                                    .onErrorResume(t -> {
+                                    .subscribe(null, t -> {
                                         try (TracingCloseableContext ignored = ctx.asCloseable()) {
                                             LOGGER.error("Failed to send response", t);
                                         }
-                                        return Mono.empty();
-                                    })
-                                    .subscribe();
+                                    });
                         })
                         .contextWrite(context -> context.put(TracingContext.CTX_KEY_NAME, ctx))
                         .subscribe();

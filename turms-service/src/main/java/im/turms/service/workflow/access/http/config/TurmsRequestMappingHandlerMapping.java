@@ -19,6 +19,7 @@ package im.turms.service.workflow.access.http.config;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.reactive.result.method.RequestMappingInfoHandlerMapping;
 import org.springframework.web.reactive.result.method.TurmsHandlerMethod;
@@ -31,6 +32,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author James Chen
+ * @implNote Note that actuator endpoints won't use our own handler method
+ * because their endpoints use their own implementation and are not annotated by {@link RequestMapping}
  */
 public class TurmsRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
 

@@ -36,14 +36,14 @@ public class StringCodec implements Codec<String> {
     public void write(ByteBuf output, String data) {
         byte[] bytes = StringUtil.getBytes(data);
         byte coder = StringUtil.getCoder(data);
-        if (bytes.length < Short.MAX_VALUE) {
-            output.writeShort(bytes.length);
-            if (bytes.length > 0) {
-                output.writeBytes(bytes)
-                        .writeByte(coder);
-            }
-        } else {
+        int length = bytes.length;
+        if (length > Short.MAX_VALUE) {
             throw new IllegalArgumentException("The bytes length of the string cannot be greater than " + Short.MAX_VALUE);
+        }
+        output.writeShort(length);
+        if (length > 0) {
+            output.writeBytes(bytes)
+                    .writeByte(coder);
         }
     }
 

@@ -24,7 +24,6 @@ import im.turms.server.common.logging.core.model.LogLevel;
 import im.turms.server.common.property.env.common.logging.ConsoleLoggingProperties;
 import im.turms.server.common.property.env.common.logging.FileLoggingProperties;
 import im.turms.server.common.property.env.common.logging.LoggingProperties;
-import io.netty.buffer.PooledByteBufAllocator;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.context.logging.LoggingApplicationListener;
 import org.springframework.context.ApplicationListener;
@@ -55,8 +54,6 @@ public class ApplicationEnvironmentEventListener implements ApplicationListener<
                 ? NodeType.GATEWAY
                 : NodeType.SERVICE;
         Node.initNodeId(env.getProperty("turms.cluster.node.id", String.class));
-
-        PooledByteBufAllocator.DEFAULT.metric().usedDirectMemory();
 
         ConsoleLoggingProperties consoleLoggingProperties = ConsoleLoggingProperties.builder()
                 .enabled(env.getProperty("turms.logging.console.enabled",

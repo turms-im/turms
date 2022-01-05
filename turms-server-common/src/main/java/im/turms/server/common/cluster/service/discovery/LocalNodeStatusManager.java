@@ -20,8 +20,8 @@ package im.turms.server.common.cluster.service.discovery;
 import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.cluster.service.config.domain.discovery.Leader;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
@@ -171,12 +171,8 @@ public class LocalNodeStatusManager {
                 }
                 Mono.when(monos)
                         .timeout(heartbeatInterval)
-                        .doOnSuccess(ignored -> localMember.getStatus().setLastHeartbeatDate(now))
-                        .onErrorResume(e -> {
-                            LOGGER.error("Failed to send heartbeat request", e);
-                            return Mono.empty();
-                        })
-                        .subscribe();
+                        .subscribe(ignored -> localMember.getStatus().setLastHeartbeatDate(now),
+                                t -> LOGGER.error("Failed to send heartbeat request", t));
             } catch (Exception e) {
                 LOGGER.error("Failed to send heartbeat request", e);
             }
@@ -204,9 +200,11 @@ public class LocalNodeStatusManager {
                 member.getStatus().getLastHeartbeatDate());
         if (isLeaderEligibleChanged) {
             if (isLeaderEligible) {
-                tryBecomeFirstLeader().subscribe();
+                tryBecomeFirstLeader()
+                        .subscribe(null, t -> LOGGER.error("Caught an error while trying to become the first leader", t));
             } else {
-                unregisterLocalMemberLeadership().subscribe();
+                unregisterLocalMemberLeadership()
+                        .subscribe(null, t -> LOGGER.error("Caught an error while unregistering the leadership of the local node", t));
             }
         }
     }
@@ -223,7 +221,7 @@ public class LocalNodeStatusManager {
                 .set(Member.STATUS_IS_HEALTHY, isHealthy);
         sharedConfigService.updateOne(Member.class, filter, update)
                 .doFinally(signal -> isHealthStatusUpdating.set(false))
-                .subscribe();
+                .subscribe(null, t -> LOGGER.error("Caught an error while updating the health status of the local node", t));
     }
 
     private Mono<Boolean> renewLocalLeader(Date renewDate) {

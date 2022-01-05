@@ -51,7 +51,9 @@ public final class GroupJoinQuestion {
     @Field(Fields.ANSWERS)
     private final Set<String> answers;
 
-    // Note that score can be a negative number
+    /**
+     * Note that a score can be negative
+     */
     @Field(Fields.SCORE)
     private final Integer score;
 

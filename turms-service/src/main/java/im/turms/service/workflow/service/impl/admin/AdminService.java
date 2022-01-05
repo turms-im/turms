@@ -118,7 +118,8 @@ public class AdminService {
                         default -> LOGGER.fatal("Detected an illegal operation on Admin collection: " + event);
                     }
                 })
-                .onErrorContinue((throwable, o) -> LOGGER.error("Error while processing the change stream event of Admin: {}", o, throwable))
+                .onErrorContinue((throwable, o) -> LOGGER
+                        .error("Caught an error while processing the change stream event of Admin: {}", o, throwable))
                 .subscribe();
 
         // Load
@@ -139,10 +140,10 @@ public class AdminService {
                                 ROOT_ADMIN_ACCOUNT,
                                 new Date(),
                                 false)
-                                .subscribe();
+                                .subscribe(null, t -> LOGGER.error("Caught an error while adding the root admin", t));
                     }
                 })
-                .subscribe();
+                .subscribe(null, t -> LOGGER.error("Caught an error while finding all admins", t));
     }
 
     public Mono<Admin> authAndAddAdmin(

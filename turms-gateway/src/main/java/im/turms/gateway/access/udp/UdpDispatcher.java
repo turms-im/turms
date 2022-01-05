@@ -31,8 +31,8 @@ import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.metrics.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.UdpProperties;
@@ -76,7 +76,7 @@ public class UdpDispatcher {
             notificationSink = Sinks.many().unicast().onBackpressureBuffer();
             int port = udpProperties.getPort();
             String host = udpProperties.getHost();
-            connection = UdpServer.create()
+            UdpServer udpServer = UdpServer.create()
                     .host(host)
                     .port(port)
                     .option(ChannelOption.SO_REUSEADDR, true)
@@ -94,11 +94,14 @@ public class UdpDispatcher {
                         Flux<DatagramPacket> outputFlux = responseFlux.mergeWith(notificationFlux);
                         outbound.sendObject(outputFlux, o -> true)
                                 .then()
-                                .subscribe();
+                                .subscribe(null, t -> LOGGER.error("Caught an error while sending object", t));
                         return Flux.never();
-                    })
-                    .bind()
-                    .block();
+                    });
+            try {
+                connection = udpServer.bind().block();
+            } catch (Exception e) {
+                throw new IllegalStateException("Failed to bind the UDP server", e);
+            }
             LOGGER.info("UDP server started on {}:{}", host, port);
         } else {
             notificationSink = null;

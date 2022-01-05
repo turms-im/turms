@@ -84,8 +84,12 @@ public class ClientFakingManager {
         // we wait to ensure it's ready for connections.
         // Otherwise, clients will fail to connect due to "Connection reset"
         Thread.sleep(1000);
-        clients = prepareClients(fakeProperties.getFirstUserId(), fakeProperties.getUserCount())
-                .block(Duration.ofSeconds(15));
+        try {
+            clients = prepareClients(fakeProperties.getFirstUserId(), fakeProperties.getUserCount())
+                    .block(Duration.ofSeconds(15));
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to prepare clients", e);
+        }
     }
 
     @PostConstruct
@@ -155,16 +159,14 @@ public class ClientFakingManager {
                             }
                         }
                         client.sendRequest(builder)
-                                .onErrorResume(t -> {
+                                .subscribe(null, t -> {
                                     LOGGER.error("Caught an internal error when sending request: {}",
                                             ProtoUtil.toLogString(builder.build()),
                                             t);
                                     if (ThrowableUtil.isDisconnectedClientError(t)) {
                                         removeCurrentClient(clientIterator, client);
                                     }
-                                    return Mono.empty();
-                                })
-                                .subscribe();
+                                });
                     } catch (Exception e) {
                         LOGGER.error("Caught an internal error when sending request", e);
                     }
@@ -174,7 +176,8 @@ public class ClientFakingManager {
                     Thread.sleep(Math.max(1, requestIntervalMillis));
                 } catch (InterruptedException e) {
                     for (TurmsClient client : clients) {
-                        client.logout().subscribe();
+                        client.logout()
+                                .subscribe(null, t -> LOGGER.error("Caught an error while the client with the user ID [{}] logging out", client.getUserId(), t));
                     }
                     break;
                 }

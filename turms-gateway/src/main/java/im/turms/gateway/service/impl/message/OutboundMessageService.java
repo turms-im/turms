@@ -28,11 +28,11 @@ import im.turms.gateway.pojo.dto.SimpleTurmsNotification;
 import im.turms.gateway.pojo.parser.TurmsNotificationParser;
 import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
-import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.service.IOutboundMessageService;
+import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectionUtil;
 import io.netty.buffer.ByteBuf;
@@ -184,11 +184,7 @@ public class OutboundMessageService implements IOutboundMessageService {
             resultMono = Mono.when(monos);
         }
         resultMono
-                .onErrorResume(t -> {
-                    LOGGER.error("Plugins failed to handle", t);
-                    return Mono.empty();
-                })
-                .subscribe();
+                .subscribe(null, t -> LOGGER.error("Plugins failed to handle", t));
     }
 
 }

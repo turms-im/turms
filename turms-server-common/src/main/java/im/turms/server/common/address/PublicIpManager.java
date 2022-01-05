@@ -52,19 +52,17 @@ public class PublicIpManager {
                     .uri(checkerAddress)
                     .responseSingle((response, body) -> response.status().codeClass().equals(HttpStatusClass.SUCCESS)
                             ? body.asString()
+                            .flatMap(ip -> {
+                                ip = ip.trim();
+                                return InetAddresses.isInetAddress(ip)
+                                        ? Mono.just(ip)
+                                        : Mono.empty();
+                            })
                             : Mono.empty());
             monos.add(ipMono);
         }
         return Mono.firstWithValue(monos)
-                .onErrorMap(t -> new IllegalStateException("Cannot find the public IP of the local node", t))
-                .map(ip -> {
-                    ip = ip.trim();
-                    if (InetAddresses.isInetAddress(ip)) {
-                        return ip;
-                    } else {
-                        throw new IllegalStateException("The public IP is invalid: " + ip);
-                    }
-                });
+                .onErrorMap(t -> new IllegalStateException("Cannot find the public IP of the local node", t));
     }
 
     private synchronized HttpClient getClient() {

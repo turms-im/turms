@@ -22,7 +22,6 @@ import org.bson.BsonDocument;
 import org.springframework.data.mapping.PreferredConstructor;
 
 import javax.annotation.Nullable;
-import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.Map;
 

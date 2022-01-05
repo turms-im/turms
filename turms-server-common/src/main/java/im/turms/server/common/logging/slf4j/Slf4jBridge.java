@@ -17,8 +17,8 @@
 
 package im.turms.server.common.logging.slf4j;
 
-import im.turms.server.common.logging.core.model.LogLevel;
 import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.model.LogLevel;
 import org.slf4j.helpers.MarkerIgnoringBase;
 
 public class Slf4jBridge extends MarkerIgnoringBase {

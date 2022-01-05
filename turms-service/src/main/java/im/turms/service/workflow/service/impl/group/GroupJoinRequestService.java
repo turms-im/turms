@@ -27,6 +27,8 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -70,6 +72,8 @@ import java.util.Set;
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequest> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GroupJoinRequestService.class);
+
     private final Node node;
     private final TurmsMongoClient mongoClient;
     private final GroupService groupService;
@@ -107,7 +111,8 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
                             .isDeleteExpiredRequestsWhenCronTriggered();
                     Date expirationDate = getModelExpirationDate();
                     if (isLocalNodeLeader && deleteExpiredRequestsWhenCronTriggered && expirationDate != null) {
-                        removeAllExpiredGroupJoinRequests(expirationDate).subscribe();
+                        removeAllExpiredGroupJoinRequests(expirationDate)
+                                .subscribe(null, t -> LOGGER.error("Caught an error while deleting expired messages", t));
                     }
                 });
     }

@@ -48,11 +48,20 @@ public class SharedConfigService implements ClusterService {
     private final TurmsMongoClient mongoClient;
 
     public SharedConfigService(TurmsMongoProperties properties) {
-        mongoClient = TurmsMongoClient.of(properties)
-                .block(Duration.ofMinutes(1));
+        try {
+            mongoClient = TurmsMongoClient.of(properties)
+                    .block(Duration.ofMinutes(1));
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to create the shared config service", e);
+        }
         List<Class<?>> classes = List.of(SharedClusterProperties.class, Leader.class, Member.class);
         mongoClient.registerEntitiesByClasses(classes);
-        mongoClient.ensureIndexesAndShard(classes).block(Duration.ofMinutes(1));
+        try {
+            mongoClient.ensureIndexesAndShard(classes).block(Duration.ofMinutes(1));
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to ensure the indexes are created for the classes: " + classes.stream()
+                    .map(Class::getName).toList(), e);
+        }
     }
 
     @Override

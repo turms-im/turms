@@ -22,6 +22,8 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.AdminApiLogging;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.env.service.env.adminapi.LogProperties;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
@@ -71,6 +73,8 @@ import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE;
  */
 @Component
 public class ControllerFilter implements WebFilter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ControllerFilter.class);
 
     private static final String X_REQUEST_ID = "X-Request-ID";
 
@@ -157,7 +161,8 @@ public class ControllerFilter implements WebFilter {
     }
 
     /**
-     * metrics APIs and swagger resources APIs don't have HandlerMethod instances
+     * Actuator APIs and swagger resources APIs don't have HandlerMethod instances.
+     * By the way, we have removed metrics endpoint of actuator because of its terrible performance
      */
     private Mono<Void> filterUnhandledRequest(ServerWebExchange exchange, WebFilterChain chain) {
         ServerHttpResponse response = exchange.getResponse();
@@ -350,7 +355,9 @@ public class ControllerFilter implements WebFilter {
                 handleAdminAction = handleAdminAction
                         .then(Mono.defer(() -> handler.handleAdminAction(adminAction)));
             }
-            handleAdminAction.subscribe();
+            handleAdminAction
+                    .subscribe(null, t ->
+                            LOGGER.error("Caught an error while triggering the plugins for handleAdminAction()", t));
         }
         try (TracingCloseableContext ignored = context.asCloseable()) {
             AdminApiLogging.log(
