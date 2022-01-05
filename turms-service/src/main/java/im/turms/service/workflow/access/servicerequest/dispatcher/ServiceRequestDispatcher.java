@@ -258,7 +258,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                             // because CommonClientApiLogging only logs a brief description,
                             // which isn't enough for debugging, but it's enough for statistics
                             // and user behavior analysis, so we don't plan to change it
-                            LOGGER.error("Caught an internal server error when handling the request: " + lastClientRequest, t);
+                            LOGGER.error("Caught an internal server error while handling the request: " + lastClientRequest, t);
                         }
                         return Mono.just(RequestHandlerResultFactory.get(info.code(), info.reason()));
                     })

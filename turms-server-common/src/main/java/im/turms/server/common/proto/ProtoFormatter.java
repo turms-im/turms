@@ -37,7 +37,7 @@ public class ProtoFormatter {
     }
 
     private static final char[] SENSITIVE_VALUE = "'*'".toCharArray();
-    private static final Map<MessageOrBuilder, List<Map.Entry<Descriptors.FieldDescriptor, Object>>> FIELD_CACHE
+    private static final Map<Descriptors.Descriptor, List<Map.Entry<Descriptors.FieldDescriptor, Object>>> FIELD_CACHE
             = new ConcurrentHashMap<>();
 
     public static String toJSON5(MessageOrBuilder message, int initialCapacity) {
@@ -90,10 +90,11 @@ public class ProtoFormatter {
 
     private static void printMessage(MessageOrBuilder message, StringBuilder builder)
             throws IOException {
-        List<Map.Entry<Descriptors.FieldDescriptor, Object>> fields = FIELD_CACHE.get(message);
+        Descriptors.Descriptor descriptor = message.getDescriptorForType();
+        List<Map.Entry<Descriptors.FieldDescriptor, Object>> fields = FIELD_CACHE.get(descriptor);
         if (fields == null) {
             fields = new ArrayList<>(message.getAllFields().entrySet());
-            FIELD_CACHE.put(message, fields);
+            FIELD_CACHE.put(descriptor, fields);
         }
         int count = fields.size();
         for (int i = 0; i < count; i++) {

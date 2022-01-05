@@ -52,12 +52,13 @@ public class SessionController {
 
     public Mono<TurmsNotification> handleDeleteSessionRequest(UserSessionWrapper sessionWrapper) {
         UserSession session = sessionWrapper.getUserSession();
-        if (session != null) {
-            Long userId = session.getUserId();
-            serviceMediator
-                    .setLocalUserDeviceOffline(userId, session.getDeviceType(), SessionCloseStatus.DISCONNECTED_BY_CLIENT)
-                    .subscribe(null, t -> LOGGER.error("Caught an error while closing the session of the user ID: " + userId, t));
+        if (session == null) {
+            return Mono.empty();
         }
+        Long userId = session.getUserId();
+        serviceMediator
+                .setLocalUserDeviceOffline(userId, session.getDeviceType(), SessionCloseStatus.DISCONNECTED_BY_CLIENT)
+                .subscribe(null, t -> LOGGER.error("Caught an error while closing the session of the user ID: " + userId, t));
         return Mono.empty();
     }
 

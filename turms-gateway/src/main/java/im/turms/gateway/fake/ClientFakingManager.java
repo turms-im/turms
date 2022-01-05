@@ -160,7 +160,7 @@ public class ClientFakingManager {
                         }
                         client.sendRequest(builder)
                                 .subscribe(null, t -> {
-                                    LOGGER.error("Caught an internal error when sending request: {}",
+                                    LOGGER.error("Caught an internal error while sending request: {}",
                                             ProtoUtil.toLogString(builder.build()),
                                             t);
                                     if (ThrowableUtil.isDisconnectedClientError(t)) {
@@ -168,7 +168,7 @@ public class ClientFakingManager {
                                     }
                                 });
                     } catch (Exception e) {
-                        LOGGER.error("Caught an internal error when sending request", e);
+                        LOGGER.error("Caught an internal error while sending request", e);
                     }
                     sentRequestCount++;
                 }

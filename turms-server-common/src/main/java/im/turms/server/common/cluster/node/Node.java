@@ -59,8 +59,11 @@ public class Node {
     private static final Logger LOGGER = LoggerFactory.getLogger(Node.class);
 
     /**
-     * For best performance for {@link im.turms.server.common.context.ApplicationEnvironmentEventListener#configureContextForLogging}
-     * to access, we use static.
+     * We use static because:
+     * 1. The logger {@link im.turms.server.common.context.ApplicationEnvironmentEventListener#configureContextForLogging}
+     * needs the node ID to initialize for logging before the node instance is created.
+     * 2. To avoid initialize the node ID twice, one for logger, another for the node instance
+     * because there is a risk that the logger and the node uses different node IDs.
      */
     @Getter
     private static String nodeId;
