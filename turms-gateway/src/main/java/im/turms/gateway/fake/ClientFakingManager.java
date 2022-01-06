@@ -26,6 +26,7 @@ import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.gateway.access.tcp.TcpDispatcher;
 import im.turms.server.common.client.TurmsClient;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.fake.RandomProtobufGenerator;
 import im.turms.server.common.fake.RandomRequestFactory;
@@ -33,6 +34,7 @@ import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.FakeProperties;
+import im.turms.server.common.proto.ProtoFormatter;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.server.common.util.ThrowableUtil;
 import io.netty.util.concurrent.DefaultThreadFactory;
@@ -41,15 +43,16 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.netty.resources.LoopResources;
+import reactor.util.retry.Retry;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author James Chen
@@ -60,66 +63,85 @@ public class ClientFakingManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientFakingManager.class);
 
-    private final List<TurmsClient> clients;
+    private final boolean enabled;
     private final FakeProperties fakeProperties;
     private final TcpDispatcher tcpDispatcher;
     private Thread thread;
 
     public ClientFakingManager(TcpDispatcher tcpDispatcher,
                                TurmsApplicationContext context,
-                               TurmsPropertiesManager propertiesManager) throws InterruptedException {
+                               TurmsPropertiesManager propertiesManager) {
         this.tcpDispatcher = tcpDispatcher;
         fakeProperties = propertiesManager.getLocalProperties()
                 .getGateway()
                 .getFake();
-        if (!fakeProperties.isEnabled() || context.isProduction()) {
-            clients = Collections.emptyList();
-            return;
-        }
+        enabled = !context.isProduction()
+                && fakeProperties.isEnabled()
+                && fakeProperties.getUserCount() > 0
+                && fakeProperties.getRequestCountPerInterval() > 0;
         if (!tcpDispatcher.isEnabled()) {
             throw new IllegalStateException("Cannot run clients because the TCP server is disabled");
-        }
-        LOGGER.info("Preparing clients");
-        // Though the local TCP server has just been set up,
-        // we wait to ensure it's ready for connections.
-        // Otherwise, clients will fail to connect due to "Connection reset"
-        Thread.sleep(1000);
-        try {
-            clients = prepareClients(fakeProperties.getFirstUserId(), fakeProperties.getUserCount())
-                    .block(Duration.ofSeconds(15));
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to prepare clients", e);
         }
     }
 
     @PostConstruct
     private void init() {
-        LOGGER.info("Start sending random requests from clients");
-        startSendingRandomRequests(clients,
-                fakeProperties.getFirstUserId(),
-                fakeProperties.getUserCount(),
-                fakeProperties.getRequestIntervalMillis(),
-                fakeProperties.getRequestCountPerInterval());
+        if (enabled) {
+            prepareClients(fakeProperties.getFirstUserId(), fakeProperties.getUserCount())
+                    .doOnSuccess(clients -> startSendingRandomRequests(clients,
+                            fakeProperties.getFirstUserId(),
+                            fakeProperties.getUserCount(),
+                            fakeProperties.getRequestIntervalMillis(),
+                            fakeProperties.getRequestCountPerInterval()))
+                    .subscribe(null, t -> LOGGER.error("Failed to prepare clients", t));
+        }
     }
 
     @PreDestroy
     private void shutdown() {
-        thread.interrupt();
+        if (thread != null) {
+            thread.interrupt();
+        }
     }
 
+    /**
+     * The main reason to prepare clients in an async way is
+     * to recover from "Connection reset" to retry to connect
+     * without blocking the server
+     */
     private Mono<List<TurmsClient>> prepareClients(long firstUserId, int userCount) {
+        LOGGER.info("Preparing clients");
         LoopResources loopResources = LoopResources.create("turms-client");
         List<Mono<TurmsNotification>> results = new ArrayList<>(userCount);
-        List<TurmsClient> clients = new ArrayList<>(userCount);
+        ConcurrentLinkedQueue<TurmsClient> clients = new ConcurrentLinkedQueue<>();
         for (int i = 0; i < userCount; i++) {
             TurmsClient client = TurmsClient.tcp();
-            clients.add(client);
             long userId = firstUserId + i;
             Mono<TurmsNotification> loginResult = client.connect(tcpDispatcher.getHost(), tcpDispatcher.getPort(), loopResources)
-                    .then(Mono.defer(() -> client.login(userId, DeviceType.DESKTOP, "123")));
+                    .retryWhen(Retry.backoff(5, Duration.ofSeconds(15))
+                            // e.g. "Connection reset"
+                            .filter(ThrowableUtil::isDisconnectedClientError))
+                    .then(Mono.defer(() -> client.login(userId, DeviceType.DESKTOP, "123")))
+                    .doOnSuccess(notification -> {
+                        if (TurmsStatusCode.isSuccessCode(notification.getCode())) {
+                            clients.add(client);
+                        } else {
+                            LOGGER.error("The session {} failed to login: {}", client.getSessionId(),
+                                    ProtoFormatter.toJSON5(notification, 128));
+                        }
+                    })
+                    .onErrorResume(t -> {
+                        LOGGER.error("The session {} failed to login", client.getSessionId(), t);
+                        return Mono.empty();
+                    });
             results.add(loginResult);
         }
-        return Mono.when(results).thenReturn(clients);
+        return Mono.when(results)
+                .then(Mono.fromCallable(() -> {
+                    ArrayList<TurmsClient> list = new ArrayList<>(clients);
+                    LOGGER.info("Prepared clients. Expected: {}. Prepared: {}", userCount, list.size());
+                    return list;
+                }));
     }
 
     private void startSendingRandomRequests(List<TurmsClient> clients,
@@ -127,13 +149,11 @@ public class ClientFakingManager {
                                             int userCount,
                                             int requestIntervalMillis,
                                             int requestCountPerInterval) {
-        if (clients.isEmpty() || thread != null) {
-            return;
-        }
+        LOGGER.info("Start sending random requests from clients");
         Range<Long> userIdRange = Range.closedOpen(firstUserId, firstUserId + userCount);
         int jitter = userCount / 10;
-        Range<Long> fakedNumberRange =
-                Range.closedOpen(Math.max(0, userIdRange.lowerEndpoint() - jitter), userIdRange.upperEndpoint() + jitter);
+        Range<Long> fakedNumberRange = Range
+                .closedOpen(Math.max(0, userIdRange.lowerEndpoint() - jitter), userIdRange.upperEndpoint() + jitter);
         DefaultThreadFactory threadFactory = new DefaultThreadFactory("turms-client-manager", true);
         thread = threadFactory.newThread(() -> {
             Iterator<TurmsClient> clientIterator = Iterators.cycle(clients);
@@ -148,21 +168,11 @@ public class ClientFakingManager {
                             removeCurrentClient(clientIterator, client);
                             continue;
                         }
-                        RandomProtobufGenerator.GeneratorOptions options = new RandomProtobufGenerator
-                                .GeneratorOptions(1, 1, fakedNumberRange);
-                        TurmsRequest.Builder builder = RandomRequestFactory.create(excludedRequestNames, options);
-                        if (builder.hasUpdateUserOnlineStatusRequest()) {
-                            UpdateUserOnlineStatusRequest updateStatusRequest = builder.getUpdateUserOnlineStatusRequest();
-                            if (updateStatusRequest.getUserStatus() == UserStatus.OFFLINE) {
-                                builder.setUpdateUserOnlineStatusRequest(updateStatusRequest.toBuilder()
-                                        .setUserStatus(UserStatus.INVISIBLE));
-                            }
-                        }
-                        client.sendRequest(builder)
+                        TurmsRequest.Builder request = generateRandomRequest(excludedRequestNames, fakedNumberRange);
+                        client.sendRequest(request)
                                 .subscribe(null, t -> {
                                     LOGGER.error("Caught an internal error while sending request: {}",
-                                            ProtoUtil.toLogString(builder.build()),
-                                            t);
+                                            ProtoUtil.toLogString(request), t);
                                     if (ThrowableUtil.isDisconnectedClientError(t)) {
                                         removeCurrentClient(clientIterator, client);
                                     }
@@ -187,8 +197,22 @@ public class ClientFakingManager {
         thread.start();
     }
 
-    private void removeCurrentClient(Iterator<TurmsClient> clientIterator, TurmsClient client) {
-        clientIterator.remove();
+    private TurmsRequest.Builder generateRandomRequest(Set<String> excludedRequestNames, Range<Long> fakedNumberRange) {
+        RandomProtobufGenerator.GeneratorOptions options = new RandomProtobufGenerator
+                .GeneratorOptions(1, 1, fakedNumberRange);
+        TurmsRequest.Builder builder = RandomRequestFactory.create(excludedRequestNames, options);
+        if (builder.hasUpdateUserOnlineStatusRequest()) {
+            UpdateUserOnlineStatusRequest updateStatusRequest = builder.getUpdateUserOnlineStatusRequest();
+            if (updateStatusRequest.getUserStatus() == UserStatus.OFFLINE) {
+                builder.setUpdateUserOnlineStatusRequest(updateStatusRequest.toBuilder()
+                        .setUserStatus(UserStatus.INVISIBLE));
+            }
+        }
+        return builder;
+    }
+
+    private void removeCurrentClient(Iterator<TurmsClient> clients, TurmsClient client) {
+        clients.remove();
         LOGGER.warn("The session {} has been closed and removed", client.getSessionId());
     }
 

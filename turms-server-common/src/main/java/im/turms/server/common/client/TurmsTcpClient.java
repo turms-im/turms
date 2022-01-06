@@ -27,6 +27,7 @@ import im.turms.server.common.access.tcp.codec.CodecFactory;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.proto.ProtoFormatter;
 import reactor.core.publisher.Mono;
 import reactor.netty.channel.ChannelOperations;
 import reactor.netty.resources.LoopResources;
@@ -98,7 +99,7 @@ public class TurmsTcpClient extends TurmsClient {
                         .build()))
                 .flatMap(n -> {
                     if (n.getCode() != TurmsStatusCode.OK.getBusinessCode()) {
-                        return Mono.error(new IllegalStateException("Failed to login: " + n));
+                        return Mono.error(new IllegalStateException("Failed to login: " + ProtoFormatter.toJSON5(n, 128)));
                     }
                     this.userId = userId;
                     this.deviceType = deviceType;

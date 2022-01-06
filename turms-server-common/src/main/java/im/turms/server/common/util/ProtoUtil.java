@@ -17,9 +17,9 @@
 
 package im.turms.server.common.util;
 
-import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.CodedOutputStream;
 import com.google.protobuf.MessageLite;
+import com.google.protobuf.MessageOrBuilder;
 import im.turms.server.common.proto.ProtoFormatter;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -50,7 +50,7 @@ public final class ProtoUtil {
     }
 
     @Nullable
-    public static String toLogString(AbstractMessage message) {
+    public static String toLogString(MessageOrBuilder message) {
         if (message == null) {
             return null;
         }

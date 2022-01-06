@@ -20,6 +20,7 @@ package im.turms.server.common.util;
 import com.mongodb.internal.connection.tlschannel.impl.TlsChannelImpl;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import org.apache.commons.lang3.StringUtils;
 import reactor.netty.channel.AbortedException;
 
 import javax.annotation.Nullable;
@@ -71,9 +72,9 @@ public final class ThrowableUtil {
             if (message == null) {
                 return false;
             }
-            return message.contains("An existing connection was forcibly closed")
-                    || message.contains("Connection reset")
-                    || message.contains("Broken pipe");
+            return StringUtils.containsIgnoreCase(message, "An existing connection was forcibly closed")
+                    || StringUtils.containsIgnoreCase(message, "Connection reset")
+                    || StringUtils.containsIgnoreCase(message, "Broken pipe");
         }
         return false;
     }
