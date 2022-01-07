@@ -137,3 +137,31 @@ Considering the positioning of Turms, we do not plan to provide client demo with
 
 * It is easy for developers to verify the business features supported by Turms. If you just want to test the business features of Turms, you can run the Turms server without even typing a line of code. Only ten lines of code can realize the login, sending messages, sending friends' requests and other business features, or modify properties to customize various requirements.
 * The design and implementation of the demo are closely related to the specific business scenarios, specific programming language, specific technical architecture, and specific OS while Turms has been committed to efficiently meeting various complex and challenging instant messaging scenarios, and we don't want to publish a demo that limits the imagination of developers. And developing and maintaining a demo is also very time-consuming and will slow down the progress of the development of Turms.
+
+## License
+
+The Turms project is licensed under the `Apache License 2.0` license, so we don't care whether users plan to make profits from the Turms project. We only require users to comply with the `Apache License 2.0` license in your works, such as documents, videos, codes, etc., to mention the information of the Turms project, such as:
+
+```
+Original Project Name：turms-im/turms
+Original Project：https://github.com/turms-im/turms
+Original Project Documentation：https://turms-im.github.io/docs
+```
+
+### Q & A
+
+1. How is the Turms project profitable?
+
+   We do not need to be profitable currently. Of course, we do not exclude profit, but we will not deliberately to write bad documents or to do a bad job in order to earn consulting, training and other expenses. Another thing to mention is that there are indeed many (closed) open source projects that earn service support fees by deliberately writing bad documents and doing a bad job.
+
+2. If profit-making organizations, such as training institutions or companies, cite Turms' documents, or even sell Turms projects as SaaS services, do these profit-making organizations need to pay attention to anything?
+
+   We don't care whether your team plans to make a profit from the Turms project. Your team only needs to comply with the `Apache License 2.0` license and mention the Turms project information as mentioned above.
+
+3. The Turms project is suitable for making SaaS services, so why doesn't the Turms project adopt the AGPL or SSPL license?
+
+   We currently do not need to make a profit, and we do not plan to make a profit. We only require users to comply with the `Apache License 2.0` license.
+
+4. If the Turms project is not profitable, what is the quality of its project?
+
+   Our documentation and source code have answered this question for us, and in the open source community, there is no open source IM project that can compete with the Turms project in medium and large IM application scenarios. Another thing to mention is that commercial projects do not mean high quality, and even the quality of documentation and code for many commercial projects is shocking.
