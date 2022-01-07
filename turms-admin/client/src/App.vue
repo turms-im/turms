@@ -38,6 +38,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "styles/main";
 
 .ant-message-notice-content {
     max-width: 500px;
