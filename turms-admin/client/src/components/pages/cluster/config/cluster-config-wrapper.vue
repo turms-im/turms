@@ -23,34 +23,34 @@ export default {
 
 <style lang="scss" scoped>
 .cluster-config-wrapper {
-    border: 1px solid #ebedf0;
-    border-radius: 0 0 2px 2px;
+    position: relative;
     display: inline-block;
     width: 100%;
-    position: relative;
-    margin: 0 0 16px;
     padding: 26px 32px;
+    margin: 0 0 16px;
     font-size: 14px;
-    color: #314659;
     line-height: 2;
+    color: #314659;
+    border: 1px solid #ebedf0;
+    border-radius: 0 0 2px 2px;
 
     h4 {
         position: absolute;
         top: -14px;
+        width: auto;
         padding: 1px 8px;
         margin-left: -8px;
-        color: #777;
-        border-radius: 2px 2px 0 0;
-        background: #fff;
         font-size: 14px;
-        width: auto;
+        color: #777;
+        background: #fff;
+        border-radius: 2px 2px 0 0;
     }
 
     p {
-        font-size: 12px;
-        margin: 0.5em 0;
-        padding-right: 25px;
         width: 100%;
+        padding-right: 25px;
+        margin: 0.5em 0;
+        font-size: 12px;
         word-break: break-word;
     }
 }

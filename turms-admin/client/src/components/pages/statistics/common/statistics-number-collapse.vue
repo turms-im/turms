@@ -261,8 +261,8 @@ export default {
     margin-top: 8px;
 
     & &__item {
-        margin-left: 16px;
         margin-bottom: 18px;
+        margin-left: 16px;
     }
 
     & &__select {

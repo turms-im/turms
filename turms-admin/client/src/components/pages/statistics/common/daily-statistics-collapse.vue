@@ -117,8 +117,8 @@ export default {
 <style lang="scss" scoped>
 .daily-statistics-collapse__header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     padding-right: 18px;
 
     &__item {

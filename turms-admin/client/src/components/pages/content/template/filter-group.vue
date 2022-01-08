@@ -151,7 +151,6 @@ export default {
 </script>
 
 <style>
-
 .search-filter {
     margin-right: 18px !important;
     margin-bottom: 18px !important;

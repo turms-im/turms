@@ -35,6 +35,7 @@ module.exports = {
         }],
         'vue/name-property-casing': ['error', 'kebab-case'],
         'vue/html-closing-bracket-spacing': ['error'],
+        'vue/multi-word-component-names': 0,
         'vue/no-static-inline-styles': ['error'],
         'vue/no-v-model-argument': 0,
         'vue/no-mutating-props': 0,

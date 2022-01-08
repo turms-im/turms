@@ -42,14 +42,13 @@ export default {
 </script>
 
 <style lang="scss">
-
 .progress-bar {
-    background: #d1e1eb;
     height: 1.2rem;
+    background: #d1e1eb;
 
     &__progress {
-        background: #4adf73;
         height: 100%;
+        background: #4adf73;
     }
 }
 

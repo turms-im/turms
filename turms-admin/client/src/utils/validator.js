@@ -60,7 +60,7 @@ export default class Validator {
             validator: (rule, value) => {
                 return IpRegex({exact: true}).test(value)
                     ? Promise.resolve()
-                    : Promise.reject(Validator.getMessage(messageId))
+                    : Promise.reject(Validator.getMessage(messageId));
             }
         };
     }

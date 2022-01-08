@@ -141,8 +141,8 @@ export default {
     }
 
     &__info {
-        line-height: 2;
         margin-right: 12px;
+        line-height: 2;
     }
 
     &__name {
@@ -172,8 +172,8 @@ export default {
 
     &__rollback {
         margin-left: 16px;
-        cursor: pointer;
         color: #314659;
+        cursor: pointer;
     }
 }
 </style>

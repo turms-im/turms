@@ -146,7 +146,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .content-action-group {
     display: flex;
     flex-wrap: wrap;

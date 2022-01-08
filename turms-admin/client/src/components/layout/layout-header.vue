@@ -147,11 +147,11 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-    color: whitesmoke;
-    padding-right: 50px;
     display: flex;
-    justify-content: flex-end;
     align-items: center;
+    justify-content: flex-end;
+    padding-right: 50px;
+    color: whitesmoke;
 
     .header__admin {
         display: flex;
@@ -165,14 +165,14 @@ export default {
     }
 
     .header__language-select {
-        margin-left: 36px;
         width: 96px;
+        margin-left: 36px;
     }
 
     .header__change-server,
     .header__logout {
-        font-size: 24px;
         margin-left: 36px;
+        font-size: 24px;
         cursor: pointer;
     }
 }

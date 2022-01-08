@@ -94,14 +94,14 @@ export default {
 
     .statistics-card__footer {
         display: flex;
-        text-align: center;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
+        text-align: center;
     }
 
     .statistics-card__footer-icon {
-        font-size: 20px;
         margin-right: 8px;
+        font-size: 20px;
     }
 
     .statistics-card__footer-icon__up {

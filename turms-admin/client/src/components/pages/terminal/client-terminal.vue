@@ -168,8 +168,8 @@ export default {
 <style lang="scss">
 .client-terminal-container {
     display: flex;
-    height: 100%;
     width: 100%;
+    height: 100%;
 
     &__input,
     &__notification {
@@ -186,6 +186,5 @@ export default {
             padding: 8px;
         }
     }
-
 }
 </style>

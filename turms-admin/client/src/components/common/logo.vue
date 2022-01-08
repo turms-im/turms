@@ -11,9 +11,9 @@ export default {
 <style scoped>
 .logo {
     height: 42px;
+    margin: 12px;
     background-image: url("../../assets/img/logo.svg");
     background-repeat: no-repeat;
     background-position: center;
-    margin: 12px;
 }
 </style>

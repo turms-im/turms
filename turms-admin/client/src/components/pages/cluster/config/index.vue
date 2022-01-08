@@ -245,10 +245,10 @@ export default {
     }
 
     &__action-group {
-        display: flex;
         position: fixed;
-        bottom: 36px;
         right: 48px;
+        bottom: 36px;
+        display: flex;
 
         &__item {
             margin-left: 12px;

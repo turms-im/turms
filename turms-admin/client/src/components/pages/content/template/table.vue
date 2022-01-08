@@ -163,7 +163,6 @@ export default {
 </script>
 
 <style>
-
 .content-table__close-icon {
     color: #cf1322;
 }

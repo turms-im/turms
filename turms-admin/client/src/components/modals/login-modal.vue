@@ -182,7 +182,7 @@ export default {
     margin-top: 24px;
 
     &__input-icon {
-        color: rgba(0, 0, 0, 0.25);
+        color: rgb(0 0 0 / 25%);
     }
 
     &__submit {
@@ -192,6 +192,6 @@ export default {
 
 .login-modal__logo {
     height: 84px;
-    margin: 0 0 24px 0;
+    margin: 0 0 24px;
 }
 </style>
