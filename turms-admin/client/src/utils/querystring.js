@@ -4,14 +4,15 @@ export default class Querystring {
         if (!params) {
             return '';
         }
-        params = Object.entries(params)
-            .reduce((pre, [key, val]) => {
-                if (val != null) {
-                    pre[key] = val;
+        const searchParams = new URLSearchParams();
+        Object.entries(params)
+            .forEach(([key, val]) => {
+                if (val == null || !val.length) {
+                    return;
                 }
-                return pre;
-            }, {});
-        return new URLSearchParams(params).toString();
+                searchParams.append(key, val);
+            });
+        return searchParams.toString();
     }
     
 }

@@ -1,4 +1,5 @@
 import {
+    Breadcrumb,
     Button,
     Card,
     Checkbox,
@@ -43,6 +44,7 @@ function loadAntd(app) {
             duration: 6
         });
     };
+    app.use(Breadcrumb);
     app.use(Button);
     app.use(Checkbox);
     app.use(Card);

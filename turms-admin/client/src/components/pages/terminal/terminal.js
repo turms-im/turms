@@ -250,7 +250,7 @@ export default class Terminal extends XTerm {
                 if (event.ctrlKey) {
                     const selection = this.getSelection();
                     if (selection) {
-                        document.execCommand('copy');
+                        await navigator.clipboard.writeText(selection);
                     } else {
                         this.currentLine = '';
                         this.cursor = 0;
