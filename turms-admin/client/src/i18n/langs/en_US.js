@@ -257,6 +257,7 @@ const en_US = {
     'memberId': 'Member ID',
     'memberInfoUpdateStrategy': 'Member Info Update Strategy',
     'memory': 'Memory',
+    'message': 'Message',
     'messageClass': 'Message',
     'messageEditable': 'Message Editable',
     'messageId': 'Message ID',

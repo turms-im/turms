@@ -40,13 +40,17 @@ public class SystemMemoryMetrics implements MeterBinder {
     @Override
     public void bindTo(MeterRegistry registry) {
         Gauge.builder("system.memory.total", () -> totalMemoryBytes)
+                .baseUnit("bytes")
                 .register(registry);
         Gauge.builder("system.memory.free", operatingSystemMXBean::getFreeMemorySize)
+                .baseUnit("bytes")
                 .register(registry);
 
         Gauge.builder("system.memory.swap.total", operatingSystemMXBean::getTotalSwapSpaceSize)
+                .baseUnit("bytes")
                 .register(registry);
         Gauge.builder("system.memory.swap.free", operatingSystemMXBean::getFreeSwapSpaceSize)
+                .baseUnit("bytes")
                 .register(registry);
     }
 

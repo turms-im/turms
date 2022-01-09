@@ -6,7 +6,14 @@
 </template>
 <script>
 
-import { Chart, registerGeometry, registerComponentController, registerEngine, registerInteraction, registerAction } from '@antv/g2/lib/core';
+import {
+    Chart,
+    registerAction,
+    registerComponentController,
+    registerEngine,
+    registerGeometry,
+    registerInteraction
+} from '@antv/g2/lib/core';
 import Area from '@antv/g2/lib/geometry/area';
 import Line from '@antv/g2/lib/geometry/line';
 import Axis from '@antv/g2/lib/chart/controller/axis';
@@ -50,7 +57,7 @@ export default {
         },
         height: {
             type: Number,
-            default: 151
+            default: 150
         }
     },
     watch: {
@@ -73,7 +80,6 @@ export default {
                 showCrosshairs: true,
                 shared: true
             });
-        
         chart.area()
             .adjust('stack')
             .position(this.position)

@@ -43,7 +43,6 @@
                             allow-clear
                             :placeholder="$t('metrics')"
                             :max-tag-count="1"
-                            @change="onSelectedMetricsChanged"
                         />
                     </template>
                     <a-card
@@ -54,7 +53,7 @@
                     >
                         <area-chart
                             :data="chartData.metrics"
-                            :scale="chartScale"
+                            :scale="chartData.scale"
                             position="timestamp*value"
                         />
                     </a-card>
@@ -69,6 +68,11 @@ import AreaChart from '../../../../common/chart-area';
 import Skeleton from '../../../../common/skeleton';
 import METRICS from '../metrics';
 import SERVER_DETAILS_ITEMS from './server-details-items';
+
+const DATA_FORMATTER = {
+    'bytes': value => `${(value / 1024 / 1024 / 1024).toFixed(2)}GiB`,
+    '‱': value => `${(value * 100).toFixed(2)}%`
+};
 
 export default {
     name: 'cluster-dashboard-server-details',
@@ -87,25 +91,16 @@ export default {
         }
     },
     data: function () {
-        const selectedMetric = METRICS.commonMetricsGroups[0].groups?.[0].metrics[0]
-            || METRICS.commonMetricsGroups[0].metrics[0];
+        const selectedMetrics = METRICS.commonMetricsGroups[0].groups
+            .flatMap(group => group.metrics);
         return {
-            selectedMetrics: [ selectedMetric ],
-            selectedExactMetrics: [],
-            chartScale: {
-                timestamp: {
-                    range: [0, 1]
-                },
-                value: {
-                    nice: true
-                }
-            }
+            selectedMetrics
         };
     },
     computed: {
         detailItems() {
             return SERVER_DETAILS_ITEMS.flatMap(item => {
-                const value = this.nodeInfo[item.dataIndex];
+                const value = item.formatter?.(this.nodeInfo) ?? this.nodeInfo[item.dataIndex];
                 if (value == null) {
                     return [];
                 }
@@ -130,12 +125,26 @@ export default {
                     if (!metric) {
                         return;
                     }
-                    const metricList = groupMetrics[group] || [];
+                    const data = groupMetrics[group] || {};
+                    groupMetrics[group] = data;
+                    const metricList = data.metrics || [];
                     const measurements = this.parseMeasurements(metric.name, timestamp, metric.measurements);
-                    groupMetrics[group] = metricList.concat(measurements);
+                    data.metrics = metricList.concat(measurements);
+                    if (!data.scale) {
+                        data.scale = {
+                            timestamp: {
+                                range: [0, 1]
+                            },
+                            value: {
+                                nice: true,
+                                formatter: (val) => DATA_FORMATTER[metric.baseUnit]?.(val) ?? (metric.baseUnit ? `${val} ${metric.baseUnit}` : val)
+                            }
+                        };
+                    }
                 });
             });
-            return Object.entries(groupMetrics).map(([group, metrics]) => ({ group, metrics }));
+            return Object.entries(groupMetrics)
+                .map(([group, {metrics, scale}]) => ({ group, metrics, scale }));
         },
         metaMetrics() {
             const specificMetrics = this.nodeInfo.nodeType.toUpperCase() === 'GATEWAY'
@@ -157,13 +166,11 @@ export default {
                 result[group] = list;
                 return result;
             }, {});
-            return Object.entries(groups).map(([group, metrics]) => ({ group, metrics }));
+            return Object.entries(groups)
+                .map(([group, metrics]) => ({ group, metrics }));
         }
     },
     methods: {
-        onSelectedMetricsChanged() {
-            console.info(arguments);
-        },
         parseMetricsTree(metrics) {
             if (metrics instanceof Array || metrics.groups) {
                 const groups = metrics.groups || metrics;
@@ -204,7 +211,6 @@ export default {
                     if (entries.length > 1) {
                         newName += `:${key}`;
                     }
-                    // TODO: format value: percentage, bytes, max/min/value
                     return {
                         timestamp,
                         type: newName,

@@ -38,7 +38,8 @@ export default [
         dataIndex: 'priority'
     },
     {
-        dataIndex: 'memberAddress'
+        dataIndex: 'memberAddress',
+        formatter: (item) => `${item.memberHost}:${item.memberPort}`
     },
     {
         dataIndex: 'metricsApiAddress'

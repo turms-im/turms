@@ -7,7 +7,7 @@ export default class Querystring {
         const searchParams = new URLSearchParams();
         Object.entries(params)
             .forEach(([key, val]) => {
-                if (val == null || !val.length) {
+                if (val == null || val.length === 0) {
                     return;
                 }
                 searchParams.append(key, val);

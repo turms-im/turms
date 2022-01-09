@@ -1,5 +1,5 @@
 <template>
-    <a-layout-header class="header">
+    <a-layout-header class="layout-header">
         <a-modal
             :confirm-loading="isChanging"
             :mask-closable="false"
@@ -9,7 +9,7 @@
             @ok="changeServer"
             @cancel="closeChangeServerModal"
         >
-            <div class="header__current-server-url">
+            <div class="layout-header__current-server-url">
                 {{ $t('currentServerUrl') }}: {{ globalUrl }}
             </div>
             <custom-input
@@ -18,26 +18,26 @@
             />
         </a-modal>
         <a-popover :title="$t('adminInfo')">
-            <div class="header__admin">
+            <div class="layout-header__admin">
                 {{ admin.name }}
             </div>
             <template #content>
-                <div class="header__admin-info">
+                <div class="layout-header__admin-info">
                     {{ `${$t('account')}: ${admin.account}` }}
                 </div>
-                <div class="header__admin-info">
+                <div class="layout-header__admin-info">
                     {{ `${$t('name')}: ${admin.name}` }}
                 </div>
-                <div class="header__admin-info">
+                <div class="layout-header__admin-info">
                     {{ `${$t('roleId')}: ${admin.roleId}` }}
                 </div>
-                <div class="header__admin-info">
+                <div class="layout-header__admin-info">
                     {{ `${$t('registrationDate')}: ${$moment(admin.registrationDate).format()}` }}
                 </div>
             </template>
         </a-popover>
         <div
-            class="header__change-server"
+            class="layout-header__change-server"
             @click="openChangeServerModal"
         >
             <icon type="database" />
@@ -46,13 +46,13 @@
             :title="$t('confirmLogout')"
             @confirm="logout"
         >
-            <div class="header__logout">
+            <div class="layout-header__logout">
                 <icon type="logout" />
             </div>
         </a-popconfirm>
         <a-select
             v-model:value="locale"
-            class="header__language-select"
+            class="layout-header__language-select"
             size="small"
         >
             <a-select-option
@@ -145,39 +145,40 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.header {
+<style lang="scss">
+#app .layout-header {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     padding-right: 50px;
-    color: whitesmoke;
+    color: #f5f5f5ff;
 
-    .header__admin {
+    &__admin {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
         justify-content: center;
 
-        .header__admin-info {
+        &-info {
             line-height: 28px;
         }
     }
 
-    .header__language-select {
+    &__language-select {
         width: 96px;
         margin-left: 36px;
     }
 
-    .header__change-server,
-    .header__logout {
+    &__change-server,
+    &__logout {
         margin-left: 36px;
         font-size: 24px;
         cursor: pointer;
     }
+
+    &__current-server-url {
+        margin-bottom: 16px;
+    }
 }
 
-.header__current-server-url {
-    margin-bottom: 16px;
-}
 </style>

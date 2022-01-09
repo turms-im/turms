@@ -257,6 +257,7 @@ const zh_CN = {
     'memberId': '群成员ID',
     'memberInfoUpdateStrategy': '群成员信息更新策略',
     'memory': '内存',
+    'message': '消息',
     'messageClass': '消息类',
     'messageEditable': '允许编辑消息',
     'messageId': '消息ID',

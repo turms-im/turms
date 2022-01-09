@@ -21,7 +21,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .cluster-config-wrapper {
     position: relative;
     display: inline-block;

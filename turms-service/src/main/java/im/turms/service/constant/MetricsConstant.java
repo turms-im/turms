@@ -41,7 +41,6 @@ public final class MetricsConstant {
 
     // Message
 
-    public static final String ACKNOWLEDGED_MESSAGES_COUNTER_NAME = "msg.acknowledged";
-    public static final String SENT_MESSAGES_COUNTER_NAME = "msg.sent";
+    public static final String SENT_MESSAGES_COUNTER_NAME = "message.sent";
 
 }

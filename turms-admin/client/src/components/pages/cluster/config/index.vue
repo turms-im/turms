@@ -235,7 +235,7 @@ export default {
     }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .cluster-config {
     display: flex;
     flex-direction: column;

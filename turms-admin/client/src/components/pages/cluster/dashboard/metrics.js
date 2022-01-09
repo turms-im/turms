@@ -99,19 +99,39 @@ export default {
         }],
     turmsServiceMetricsGroups: [{
         id: 'business',
-        metrics: [
-            'user.registered',
-            'user.deleted',
-            'group.created',
-            'group.deleted',
-            'msg.sent'
+        groups: [
+            {
+                id: 'user',
+                metrics: [
+                    'user.registered',
+                    'user.deleted'
+                ]
+            },
+            {
+                id: 'group',
+                metrics: [
+                    'group.created',
+                    'group.deleted'
+                ]
+            },
+            {
+                id: 'message',
+                metrics: [
+                    'message.sent'
+                ]
+            }
         ]
     }],
     turmsGatewayMetricsGroups: [{
         id: 'business',
-        metrics: [
-            'user.online',
-            'user.logged_in'
+        groups: [
+            {
+                id: 'user',
+                metrics: [
+                    'user.online',
+                    'user.logged_in'
+                ]
+            }
         ]
     }]
 };
