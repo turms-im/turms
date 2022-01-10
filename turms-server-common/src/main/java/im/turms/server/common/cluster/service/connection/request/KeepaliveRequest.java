@@ -65,7 +65,7 @@ public class KeepaliveRequest extends RpcRequest<Null> {
     @Override
     public Null call() {
         node.getConnectionService().keepalive(getFromNodeId());
-        return Null.INSTANCE;
+        return null;
     }
 
 }

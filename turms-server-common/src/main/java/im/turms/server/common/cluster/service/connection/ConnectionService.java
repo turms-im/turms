@@ -346,8 +346,9 @@ public class ConnectionService implements ClusterService {
         }
         try {
             rpcService.requestResponse(nodeId, new KeepaliveRequest())
-                    .subscribe(unused -> connection.setLastKeepaliveTimestamp(System.currentTimeMillis()),
-                            t -> LOGGER.warn("Failed to send a keepalive request to the member " + nodeId, t));
+                    .subscribe(null,
+                            t -> LOGGER.warn("Failed to send a keepalive request to the member " + nodeId, t),
+                            () -> connection.setLastKeepaliveTimestamp(System.currentTimeMillis()));
         } catch (Exception e) {
             LOGGER.error("Failed to send a keepalive request to the member " + nodeId, e);
         }

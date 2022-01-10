@@ -302,9 +302,9 @@ public class DiscoveryService implements ClusterService {
         sharedConfigService.subscribe(Member.class, FullDocument.DEFAULT)
                 .doOnNext(event -> {
                     Member changedMember = event.getFullDocument();
-                    String clusterId = changedMember != null
-                            ? changedMember.getClusterId()
-                            : ChangeStreamUtil.getStringFromId(event.getDocumentKey(), Member.Key.Fields.clusterId);
+                    String clusterId = changedMember == null
+                            ? ChangeStreamUtil.getStringFromId(event.getDocumentKey(), Member.Key.Fields.clusterId)
+                            : changedMember.getClusterId();
                     String nodeId = ChangeStreamUtil.getStringFromId(event.getDocumentKey(), Member.Key.Fields.nodeId);
                     if (!clusterId.equals(localNodeStatusManager.getLocalMember().getClusterId())) {
                         return;

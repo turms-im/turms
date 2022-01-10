@@ -35,6 +35,7 @@ import im.turms.server.common.cluster.service.rpc.dto.RpcResponse;
 import im.turms.server.common.cluster.service.rpc.exception.ConnectionNotFound;
 import im.turms.server.common.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.lang.Null;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.env.common.cluster.RpcProperties;
@@ -149,6 +150,7 @@ public class RpcService implements ClusterService {
                 requestExecutor.runRpcRequest(ctx, request, connection, connection.getNodeId())
                         .cast(Object.class)
                         .onErrorResume(RpcException.class, Mono::just)
+                        .defaultIfEmpty(Null.INSTANCE)
                         .doOnNext(response -> {
                             if (conn.isDisposed()) {
                                 try (TracingCloseableContext ignored = ctx.asCloseable()) {

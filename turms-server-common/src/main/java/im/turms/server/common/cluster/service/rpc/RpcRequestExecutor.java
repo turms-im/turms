@@ -22,7 +22,6 @@ import im.turms.server.common.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.lang.Null;
 import im.turms.server.common.tracing.TracingContext;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
@@ -41,6 +40,7 @@ public class RpcRequestExecutor {
     }
 
     /**
+     * @return {@link reactor.core.publisher.MonoEmpty} if the result of RPC request is null
      * @implNote 1. We record request time/response here because the RPC request may run on the local machine
      * 2.The method itself will call {@link RpcRequest#release()}
      */
@@ -59,12 +59,9 @@ public class RpcRequestExecutor {
                 result = rpcRequest.callAsync();
             } else {
                 T data = rpcRequest.call();
-                // Convert null to Null.INSTANCE
-                // so that we don't need to adapt the whole data flow for null
-                if (data == null) {
-                    data = (T) Null.INSTANCE;
-                }
-                result = Mono.just(data);
+                result = data == null
+                        ? Mono.empty()
+                        : Mono.just(data);
             }
             // TODO: slow log
             return result
