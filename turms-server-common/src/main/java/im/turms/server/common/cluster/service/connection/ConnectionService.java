@@ -435,8 +435,9 @@ public class ConnectionService implements ClusterService {
                 })
                 .subscribe();
         conn.onDispose()
-                .subscribe(ignored -> onConnectionClosed(connection, null),
-                        t -> onConnectionClosed(connection, t));
+                .subscribe(null,
+                        t -> onConnectionClosed(connection, t),
+                        () -> onConnectionClosed(connection, null));
     }
 
     private void onConnectionClosed(TurmsConnection connection, @Nullable Throwable throwable) {

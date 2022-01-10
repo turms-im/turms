@@ -171,8 +171,9 @@ public class LocalNodeStatusManager {
                 }
                 Mono.when(monos)
                         .timeout(heartbeatInterval)
-                        .subscribe(ignored -> localMember.getStatus().setLastHeartbeatDate(now),
-                                t -> LOGGER.error("Failed to send heartbeat request", t));
+                        .subscribe(null,
+                                t -> LOGGER.error("Failed to send heartbeat request", t),
+                                () -> localMember.getStatus().setLastHeartbeatDate(now));
             } catch (Exception e) {
                 LOGGER.error("Failed to send heartbeat request", e);
             }
