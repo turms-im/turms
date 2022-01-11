@@ -112,6 +112,10 @@ public class NoOpLogger implements Logger {
     }
 
     @Override
+    public void fatal(String message, Object... args) {
+    }
+
+    @Override
     public void fatal(String message, Throwable throwable) {
     }
 

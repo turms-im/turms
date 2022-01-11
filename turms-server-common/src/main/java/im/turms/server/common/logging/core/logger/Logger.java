@@ -62,6 +62,8 @@ public interface Logger {
 
     void error(ByteBuf message);
 
+    void fatal(String message, Object... args);
+
     void fatal(String message, Throwable throwable);
 
     void fatal(String message);

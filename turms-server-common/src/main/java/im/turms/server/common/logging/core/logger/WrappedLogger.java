@@ -122,6 +122,11 @@ public class WrappedLogger implements Logger {
     }
 
     @Override
+    public void fatal(String message, Object... args) {
+        logger.fatal(message, args);
+    }
+
+    @Override
     public void fatal(String message, Throwable throwable) {
         logger.fatal(message, throwable);
     }
