@@ -26,17 +26,11 @@ export default defineUserConfig<DefaultThemeOptions>({
         sidebar: [
             {
                 text: '介绍',
-                children: [
-                    {
-                        text: '介绍',
-                        link: '/intro/'
-                    },
-                    '/intro/features.md',
-                    '/intro/redevelopment.md'
-                ]
+                link: '/README.md',
             },
             {
                 text: '业务功能',
+                collapsible: true,
                 children: [
                     '/features/',
                     '/features/simultaneous-login.md',
@@ -46,30 +40,55 @@ export default defineUserConfig<DefaultThemeOptions>({
                 ]
             },
             {
-                text: '开发者文档',
+                text: '服务端知识',
+                collapsible: true,
                 children: [
-                    // Practical knowledge
-                    '/for-developers/getting-started.md',
-                    '/for-developers/distribution.md',
-                    '/for-developers/config.md',
-                    // Manual
+                    {
+                        text: '部署',
+                        children: [
+                            '/for-developers/getting-started.md',
+                            '/for-developers/distribution.md',
+                            '/for-developers/config.md'
+                        ]
+                    },
+                    {
+                        text: '设计',
+                        children: [
+                            '/for-developers/architecture.md',
+                            '/for-developers/schema.md',
+                            '/for-developers/status-aware.md'
+                        ]
+                    },
+                    {
+                        text: '开发',
+                        children: [
+                            '/for-developers/redevelopment.md',
+                            '/for-developers/rules.md',
+                            '/for-developers/plugin.md'
+                            // TODO: 1. Config Development; 2. Testing
+                        ]
+                    },
+                    {
+                        text: '主要模块',
+                        children: [
+                            '/for-developers/cluster.md',
+                            '/for-developers/system-resource-management.md',
+                            '/for-developers/observability.md',
+                            '/for-developers/security.md',
+                            '/for-developers/anti-spam.md',
+                            '/for-developers/data-analytics.md'
+                        ]
+                    }
+                ]
+            },
+            '/for-developers/client-api.md',
+            '/for-developers/turms-admin.md',
+            {
+                text: '手册',
+                collapsible: true,
+                children: [
                     '/for-developers/admin-api.md',
-                    '/for-developers/client-api.md',
-                    '/for-developers/status-code.md',
-                    // Admin
-                    '/for-developers/turms-admin.md',
-                    // Redevelopment
-                    '/for-developers/cluster.md',
-                    '/for-developers/system-resource-management.md',
-                    '/for-developers/custom-plugin.md',
-                    // Theory
-                    '/for-developers/architecture.md',
-                    '/for-developers/schema.md',
-                    '/for-developers/observability.md',
-                    '/for-developers/security.md',
-                    '/for-developers/anti-spam.md',
-                    '/for-developers/status-aware.md',
-                    '/for-developers/data-analytics.md'
+                    '/for-developers/status-code.md'
                 ]
             }
         ]
