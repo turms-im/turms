@@ -64,7 +64,8 @@ export default defineUserConfig<DefaultThemeOptions>({
                         children: [
                             '/for-developers/redevelopment.md',
                             '/for-developers/rules.md',
-                            '/for-developers/plugin.md'
+                            '/for-developers/plugin.md',
+                            '/for-developers/code.md'
                             // TODO: 1. Config Development; 2. Testing
                         ]
                     },
