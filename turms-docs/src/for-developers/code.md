@@ -12,6 +12,10 @@
 
 阅读下文前，建议读者先行阅读[客户端访问服务端标准流程](https://turms-im.github.io/docs/for-developers/architecture.html#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AE%BF%E9%97%AE%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B)，先从架构角度理解其背后的设计思路，这样在读源码的时候就不容易“迷路”。
 
+请求模型：`im.turms.common.model.dto.request.TurmsRequest`
+
+响应与通知模型：`im.turms.common.model.dto.notification.TurmsNotification`
+
 ### turms-gateway
 
 简介：用于维护与客户端的网络连接，维护应用层会话，并将大部分的业务请求下发给turms-service服务端。
@@ -37,11 +41,11 @@
    其中，`configureConnection`函数来自：`im.turms.gateway.access.tcp.handler.TcpHandlerConfig`
 
    ```java
-void configureConnection(Connection connection) {
+   void configureConnection(Connection connection) {
        connection.addHandlerLast("varintLengthBasedFrameDecoder", CodecFactory.getExtendedVarintLengthBasedFrameDecoder(maxFrameLength));
        connection.addHandlerLast("varintLengthFieldPrepender", CodecFactory.getVarintLengthFieldPrepender());
        connection.addHandlerLast("protobufFrameEncoder", CodecFactory.getProtobufFrameEncoder());
-}
+   }
    ```
 
 3. 对于WebSocket连接，则先监听并校验HTTP Upgrade请求，然后再Upgrade成WebSocket连接
@@ -179,7 +183,114 @@ return switch (requestType) {
 
 ## 通知下发
 
-TODO
+通知模型：`im.turms.common.model.dto.notification.TurmsNotification`
+
+`通知`有且仅会被turms-service生成，turms-gateway不会自行生成`通知`。
+
+### turms-service
+
+在上文中，我们讲到turms-service在处理完客户端请求的业务逻辑后，会返回一个`im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResult`对象，该对象也包含了：通知数据与一组需要接收通知的用户ID。该对象会被先传递到`im.turms.service.workflow.access.servicerequest.dispatcher.ServiceRequestDispatcher#dispatch0`函数里的下述回调中：
+
+```java
+.doOnEach(signal -> {
+    if (!signal.isOnNext()) {
+        return;
+    }
+    RequestHandlerResult requestResult = signal.get();
+    if (requestResult == null || requestResult.code() != TurmsStatusCode.OK) {
+        return;
+    }
+    notifyRelatedUsersOfAction(requestResult, userId, deviceType)
+            .contextWrite(signal.getContextView())
+            .subscribe(null, t -> {
+                try (TracingCloseableContext ignored = context.asCloseable()) {
+                    LOGGER.error("Failed to notify related users of the action", t);
+                }
+            });
+})
+```
+
+其中，`notifyRelatedUsersOfAction`函数会异步发送`通知`，其代码实现如下：
+
+```java
+Mono<Void> notifyRelatedUsersOfAction(
+        RequestHandlerResult result,
+        Long requesterId,
+        DeviceType requesterDevice) {
+    TurmsRequest dataForRecipients = result.dataForRecipients();
+    Set<Long> recipients = result.recipients();
+    if (dataForRecipients == null || recipients.isEmpty()) {
+        return Mono.empty();
+    }
+    TurmsNotification notificationForRecipients = TurmsNotification
+            .newBuilder()
+            .setRelayedRequest(dataForRecipients)
+            .setRequesterId(requesterId)
+            .build();
+    ByteBuf notificationByteBuf = ProtoUtil.getDirectByteBuffer(notificationForRecipients);
+    if (result.forwardDataForRecipientsToOtherSenderOnlineDevices()) {
+        notificationByteBuf.retain(2);
+        Mono<Boolean> notifyRequesterMono = outboundMessageService
+                .forwardNotification(notificationForRecipients, notificationByteBuf, requesterId, requesterDevice);
+        Mono<Boolean> notifyRecipientsMono = outboundMessageService
+                .forwardNotification(notificationForRecipients, notificationByteBuf, recipients);
+        return Mono.when(notifyRequesterMono, notifyRecipientsMono)
+                .doFinally(signal -> notificationByteBuf.release());
+    }
+    return outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, recipients)
+            .then();
+}
+```
+
+我们主要看`outboundMessageService.forwardNotification`函数，该函数首先会通过`im.turms.server.common.service.session.UserStatusService#getDeviceAndNodeIdMapByUserId`函数从缓存或者Redis服务端中拉取通知接收用户ID所在的turms-gateway服务端节点ID，拿到这些节点ID后，再通过`im.turms.service.workflow.service.impl.message.OutboundMessageService#forwardClientMessageToNodes`函数，将`通知`通过RPC实现，转发给这些节点，让其进行具体的通知下发操作。具体代码实现如下：
+
+```java
+Mono<Boolean> forwardNotification(
+        TurmsNotification notificationForLogging,
+        ByteBuf notificationData,
+        Long recipientId,
+        DeviceType excludedDeviceType) {
+    return userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
+            .doOnError(t -> notificationData.release())
+            .flatMap(deviceTypeAndNodeIdMap -> {
+                Set<String> nodeIds = CollectionUtil.newSetWithExpectedSize(deviceTypeAndNodeIdMap.size());
+                for (Map.Entry<DeviceType, String> entry : deviceTypeAndNodeIdMap.entrySet()) {
+                    DeviceType deviceType = entry.getKey();
+                    if (deviceType != excludedDeviceType) {
+                        nodeIds.add(entry.getValue());
+                    }
+                }
+                if (nodeIds.isEmpty()) {
+                    notificationData.release();
+                    return Mono.just(false);
+                }
+                Mono<Boolean> mono = forwardClientMessageToNodes(notificationData, nodeIds, recipientId);
+                return tryLogNotification(mono, notificationForLogging, 1);
+            })
+            .switchIfEmpty(Mono.fromCallable(() -> {
+                notificationData.release();
+                return false;
+            }));
+}
+```
+
+### turms-gateway
+
+`通知`经过RPC的转发，turms-gateway首先会在`im.turms.gateway.service.impl.message.OutboundMessageService#sendNotificationToLocalClients`函数中获得turms-service发来的`通知`字节数据。该函数会调用`userSession.sendNotification(wrappedNotificationData, tracingContext)`将通知数据发送给该批用户的会话。而`sendNotification`函数则会调用我们已经提及过的，在`im.turms.gateway.access.common.UserSessionDispatcher#bindConnectionWithSessionWrapper`的回调，并通过`out.sendObject`完成通知的字节数据下发。具体代码如下：
+
+```java
+UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, address, closeIdleConnectionAfterSeconds,
+        userSession -> userSession.setNotificationConsumer((turmsNotificationBuffer, tracingContext) -> {
+            turmsNotificationBuffer.touch(turmsNotificationBuffer);
+            NettyOutbound outbound = isWebSocketConnection
+                    ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
+                    : out.sendObject(turmsNotificationBuffer);
+            Mono.from(outbound)
+                    .subscribe(null, t -> handleConnectionError(t, netConnection, userSession, tracingContext));
+        }));
+```
+
+至此，通知发送完毕。
 
 ## 集群实现
 
