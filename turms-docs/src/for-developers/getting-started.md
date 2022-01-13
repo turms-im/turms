@@ -20,7 +20,7 @@ docker-compose -f docker-compose.standalone.yml up --force-recreate
 
 等集群完成搭建后，可以通过 http://localhost:6510 访问turms-admin后台管理系统，并输入账号密码（默认均为`turms`）。如果登录成功，则说明Turms集群搭建成功。
 
-注意：AWS提供了高性价比的`t4g`系列EC2实例，但由于t4g系列实例使用了ARM处理器，因此很多应用都无法运行在该类EC2实例上，如`bitnami`所提供的镜像就均无法运行在该类实例上。~~如果您想要在ARM处理器上运行`docker-compose.standalone.yml`，您需要先执行下方指令，在本地编译并安装Loki插件，然后才能运行`docker-compose.standalone.yml`~~由于`Loki`自身有个Critical级别的Bug（https://github.com/grafana/loki/issues/2361），即当日志无法送达Loki服务端时，直接Freeze我们的服务，因此我们暂时移除了Loki服务，您目前不需要执行下述命令，也可直接运行`docker-compose.standalone.yml`：
+注意：AWS提供了高性价比的`t4g`系列EC2实例，但由于t4g系列实例使用了ARM处理器，因此很多应用都无法运行在该类EC2实例上，如`bitnami`所提供的镜像就均无法运行在该类实例上。~~如果您想要在ARM处理器上运行`docker-compose.standalone.yml`，您需要先执行下方指令，在本地编译并安装Loki插件，然后才能运行`docker-compose.standalone.yml`~~ 由于`Loki`自身有个Critical级别的Bug（https://github.com/grafana/loki/issues/2361），即当日志无法送达Loki服务端时，直接Freeze我们的服务，因此我们暂时移除了Loki服务，您目前不需要执行下述命令，也可直接运行`docker-compose.standalone.yml`：
 
 ```bash
 # Install Go

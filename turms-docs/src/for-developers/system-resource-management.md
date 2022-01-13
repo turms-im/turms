@@ -20,7 +20,7 @@ JVM HotSpot虚拟机的内存区域可以划分为：
   * 直接内存（Direct Memory）：Direct Buffer Pool
   * JVM内部内存（JVM Specific Memory）：本地方法栈、元空间、Code Cache等
 
-  特别注意：通过JDK函数`java.lang.management.MemoryMXBean#getNonHeapMemoryUsage`获得的`NonHeapMemory`并不包括`Direct Buffer Pool`（直接内存缓存池）。具体而言，该函数在JDK 17中所指的内存空间为：
+  特别注意：通过函数`java.lang.management.MemoryMXBean#getNonHeapMemoryUsage`获得的`NonHeapMemory`并不包括`Direct Buffer Pool`（直接内存缓存池）。具体而言，该函数在JDK 17中所指的内存空间为：
 
   * CodeHeap 'non-nmethods'
   * CodeHeap 'non-profiled nmethods'
@@ -32,7 +32,7 @@ JVM HotSpot虚拟机的内存区域可以划分为：
 
 ### 可控内存（Managed Memory）的使用
 
-Turms服务端可控内存指的是`堆内存（Heap Memory）`与`直接内存（Direct Memory）`这两块区域。
+Turms服务端的可控内存指的是`堆内存（Heap Memory）`与`直接内存（Direct Memory）`这两块区域。
 
 #### 堆内存
 
@@ -55,7 +55,10 @@ JVM默认的堆配置如下：
 * `InitialRAMPercentage`与`MaxRAMPercentage`设成一样的值主要是为了尽可能保证内存的连续性，避免服务端因为内存扩容与缩容，反复进行GC与`stop-the-world`操作。
 * 堆内存没有配置为接近100%的值，这是为了把剩余的物理内存让给JVM自身的堆外内存（如占最大头的直接内存、CodeCache、Metaspace等）、系统内核（如维护TCP连接时的缓冲区）与边车服务（如：日志采集服务）使用。
 
-另外，推荐生产环境不要给Turms服务端分配超过32GB内存，一是为了启动JVM的指针压缩技术，二是避免单个服务端承载太多负荷，在停机时减缓惊群效应，提升用户体验。
+另外，推荐生产环境不要给Turms服务端分配超过32GB内存。因为：
+
+* 开启JVM的指针压缩技术，以减少不必要的内存占用
+* 避免单个服务端承载太多负荷，在停机时减缓惊群效应，提升用户体验
 
 #### 直接内存
 
