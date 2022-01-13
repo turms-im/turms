@@ -1,5 +1,6 @@
-import { defineUserConfig } from 'vuepress'
-import type { DefaultThemeOptions } from 'vuepress'
+import { defineUserConfig } from 'vuepress';
+import type { DefaultThemeOptions } from 'vuepress';
+const { path } = require('@vuepress/utils');
 
 export default defineUserConfig<DefaultThemeOptions>({
     title: 'Turms Documentation',
@@ -15,6 +16,9 @@ export default defineUserConfig<DefaultThemeOptions>({
                 },
                 maxSuggestions: 10
             }
+        ],
+        [
+            path.resolve(__dirname, '../plugins/mermaid'),
         ]
     ],
     themeConfig: {
