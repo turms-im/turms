@@ -34,7 +34,7 @@
 
 1. 拉取Turms仓库：`git clone https://github.com/turms-im/turms.git`
 
-2. 由于Turms各子项目的proto模型文件放在一个独立的仓库之中，因此您还需要通过以下命令来拉取submodule中的代码。
+2. 由于Turms各子项目的proto模型文件放在一个独立的仓库之中，因此您还需要在Turms项目的根目录下，通过以下命令来拉取submodule中的代码。
 
 ```
 git submodule update --init --recursive
@@ -45,4 +45,35 @@ git submodule foreach git pull origin master
 
 ## 搭建开发环境
 
-TODO
+除了Turms服务端外，Turms其他子项目的搭建都非常常规与简单，故不累述。
+
+Turms服务端开发环境的搭建其实也非常简单，具体步骤包括：
+
+1. 安装[JDK 17](https://adoptium.net/)以开发Turms服务端
+
+2. 下载、安装并启动Redis服务端。以RHEL/CentOS为例：
+
+   ```bash
+   yum install epel-release
+   yum update
+   yum install redis
+   systemctl start redis
+   systemctl enable redis
+   ```
+
+   对于Windows平台，可在 [tporadowski/redis](https://github.com/tporadowski/redis/releases) 下载Windows版本供本地开发测试用。
+
+3. 下载、安装并启动MongoDB分片集群
+
+   * 下载[MongoDB 4.4](https://www.mongodb.com/try/download/community)
+   * 启动MongoDB分片集群：推荐安装`mtools`以全自动搭建MongoDB分片集群，其安装指令为：`pip3 install mtools[mlaunch]`。在安装完`mtools`后，只需运行`mlaunch init --replicaset --sharded 1 --nodes 1 --config 1 --hostname localhost --port 27017 --mongos 1`这一条指令，并等待数秒，即可完成MongoDB分片集群的搭建
+
+4. 确认Redis服务端与MongoDB分片集群都正常运行后，即可启动Turms服务端
+
+补充：
+
+* 对于Redis、MongoDB的启动，可以设置成开机自启服务，这样就不用每次重启电脑后再手动搭建了。另外，就算是手动搭建，其实开发者多操作几次，基本也可以在10~30秒完成Redis与MongoDB分片集群的搭建，搭建与启动流程非常简单。
+* 在进行服务端开发时，推荐将`turms-gateway`与`turms-service`两个项目下的`application.yaml`中的`spring.profiles.active=prod`改为`dev`。这是因为：
+  * 在默认生产环境配置下，Turms服务端是不会在控制台打印日志的，因此不方便开发者进行调试
+  * `dev`环境下，turms-service会自动向MongoDB数据库生成Fake数据，并且turms-gateway也会自动创建基于TCP的Fake客户端，这些客户端会随机地（请求类型随机、请求参数随机）向turms-gateway发送真实客户端请求，以方便开发者测试。
+* 如果您想替换MongoDB服务端的端口，您只需在Turms项目下全局替换`27017`为您的目标端口即可。

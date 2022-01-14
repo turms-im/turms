@@ -88,7 +88,10 @@ Java自身是一个很保守的语言，其大生态也非常保守。其设计�
 
 补充：
 
-* 如果移除Spring框架，就能让Controller层的实现变得非常清晰、且实现高效（我们可以直接将Response数据写入DirectByteBuf，避免无意义的堆内存拷贝），也能让代码变得非常可控。具体而言，Turms的日志实现需要读取用户配置，而读取用户配置要先等Spring加载完用户配置，而Spring在加载用户配置之前又会打日志，因此这里有个循环依赖的问题，而我们不得不通过一些迂回手段去避免Spring加载完配置前打印日志。
+* 如果移除Spring框架，就能让Controller层的实现变得非常清晰、且实现高效（我们可以直接将Response数据写入DirectByteBuf，避免无意义的堆内存拷贝），也能让代码变得非常可控。举例来说：
+
+  1. Turms的日志实现需要读取用户配置，而读取用户配置要先等Spring加载完用户配置，而Spring在加载用户配置之前又会打日志，因此这里有个循环依赖的问题，而我们不得不通过一些迂回手段去避免Spring加载完配置前打印日志。
+  2. 我们预期Valhalla项目能在2023年的Java 20/21版本中，发布[Value Objects](https://openjdk.java.net/jeps/8277163)、[Primitive Classes](https://openjdk.java.net/jeps/401)、[Classes for the Basic Primitives](https://openjdk.java.net/jeps/402)这三个将Java发展到新纪元的特性，但Valhalla项目的Side Effect巨大，而Spring作为Java生态的基石之一，几乎不可能敢如此激进地支持Valhalla项目，因此如果我们还需要等待Spring支持Valhalla项目，那基本是遥遥无期了。相反的，如果我们移除了Spring，由于Turms所有重要模块基本都自研，且我们追踪Valhalla的发展数年，很熟悉其设计，集成Valhalla项目大致只需1~2周时间。
 
   但我们之所以目前还没移除Spring框架，是因为从零写一套Controller/JSON序列化/自动生成Swagger API文档/Actuator/IoC/配置读取实现并适配，估计需要两周至三周时间，而这么长的时间足够我们做IM系统中很多更为重要的优化与特性，且Admin API相比客户端API并不是那么在意性能与可维护性，因此目前只是对Spring相关的低效实现进行了重构，等重要的IM系统优化都完成后再来移除整个Spring。
 
