@@ -14,7 +14,7 @@ public struct TurmsBusinessError: Error {
     }
 
     init(_ notification: TurmsNotification) {
-        self.code = notification.code
+        self.code = Int(notification.code)
         self.reason = notification.hasReason ? notification.reason : nil
     }
 

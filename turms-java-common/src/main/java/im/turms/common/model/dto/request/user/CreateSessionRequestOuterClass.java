@@ -36,6 +36,11 @@ public final class CreateSessionRequestOuterClass {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_CreateSessionRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -48,17 +53,19 @@ public final class CreateSessionRequestOuterClass {
       "\n)request/user/create_session_request.pr" +
       "oto\022\016im.turms.proto\032\032constant/device_typ" +
       "e.proto\032\032constant/user_status.proto\032\036mod" +
-      "el/user/user_location.proto\"\305\002\n\024CreateSe" +
+      "el/user/user_location.proto\"\234\003\n\024CreateSe" +
       "ssionRequest\022\017\n\007version\030\001 \001(\005\022\017\n\007user_id" +
       "\030\002 \001(\003\022\025\n\010password\030\003 \001(\tH\000\210\001\001\0224\n\013user_st" +
       "atus\030\004 \001(\0162\032.im.turms.proto.UserStatusH\001" +
       "\210\001\001\022/\n\013device_type\030\005 \001(\0162\032.im.turms.prot" +
-      "o.DeviceType\022\033\n\016device_details\030\006 \001(\tH\002\210\001" +
-      "\001\0223\n\010location\030\007 \001(\0132\034.im.turms.proto.Use" +
-      "rLocationH\003\210\001\001B\013\n\t_passwordB\016\n\014_user_sta" +
-      "tusB\021\n\017_device_detailsB\013\n\t_locationB-\n&i" +
-      "m.turms.common.model.dto.request.userP\001\272" +
-      "\002\000b\006proto3"
+      "o.DeviceType\022O\n\016device_details\030\006 \003(\01327.i" +
+      "m.turms.proto.CreateSessionRequest.Devic" +
+      "eDetailsEntry\0223\n\010location\030\007 \001(\0132\034.im.tur" +
+      "ms.proto.UserLocationH\002\210\001\001\0324\n\022DeviceDeta" +
+      "ilsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001" +
+      "B\013\n\t_passwordB\016\n\014_user_statusB\013\n\t_locati" +
+      "onB-\n&im.turms.common.model.dto.request." +
+      "userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -72,7 +79,13 @@ public final class CreateSessionRequestOuterClass {
     internal_static_im_turms_proto_CreateSessionRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_CreateSessionRequest_descriptor,
-        new java.lang.String[] { "Version", "UserId", "Password", "UserStatus", "DeviceType", "DeviceDetails", "Location", "Password", "UserStatus", "DeviceDetails", "Location", });
+        new java.lang.String[] { "Version", "UserId", "Password", "UserStatus", "DeviceType", "DeviceDetails", "Location", "Password", "UserStatus", "Location", });
+    internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_descriptor =
+      internal_static_im_turms_proto_CreateSessionRequest_descriptor.getNestedTypes().get(0);
+    internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
     im.turms.common.constant.DeviceTypeOuterClass.getDescriptor();
     im.turms.common.constant.UserStatusOuterClass.getDescriptor();
     im.turms.common.model.bo.user.UserLocationOuterClass.getDescriptor();

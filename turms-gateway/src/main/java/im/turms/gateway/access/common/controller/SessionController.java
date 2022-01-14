@@ -36,6 +36,8 @@ import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 /**
  * @author James Chen
  */
@@ -80,9 +82,7 @@ public class SessionController {
             deviceType = DeviceType.UNKNOWN;
         }
         // TODO: Log deviceDetails in API logs
-        String deviceDetails = createSessionRequest.hasDeviceDetails()
-                ? createSessionRequest.getDeviceDetails()
-                : null;
+        Map<String, String> deviceDetails = createSessionRequest.getDeviceDetailsMap();
         Point position = null;
         if (createSessionRequest.hasLocation()) {
             UserLocation location = createSessionRequest.getLocation();
@@ -93,10 +93,10 @@ public class SessionController {
                 userId,
                 password,
                 deviceType,
+                deviceDetails,
                 userStatus,
                 position,
-                sessionWrapper.getIpStr(),
-                deviceDetails);
+                sessionWrapper.getIpStr());
         Timeout idleConnectionTimeout = sessionWrapper.getConnectionTimeoutTask();
         DeviceType finalDeviceType = deviceType;
         return processLoginRequestMono.flatMap(session -> {

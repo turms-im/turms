@@ -49,14 +49,7 @@ public struct CreateSessionRequest {
 
   public var deviceType: DeviceType = .desktop
 
-  public var deviceDetails: String {
-    get {return _deviceDetails ?? String()}
-    set {_deviceDetails = newValue}
-  }
-  /// Returns true if `deviceDetails` has been explicitly set.
-  public var hasDeviceDetails: Bool {return self._deviceDetails != nil}
-  /// Clears the value of `deviceDetails`. Subsequent reads from it will return its default value.
-  public mutating func clearDeviceDetails() {self._deviceDetails = nil}
+  public var deviceDetails: Dictionary<String,String> = [:]
 
   public var location: UserLocation {
     get {return _location ?? UserLocation()}
@@ -73,7 +66,6 @@ public struct CreateSessionRequest {
 
   fileprivate var _password: String? = nil
   fileprivate var _userStatus: UserStatus? = nil
-  fileprivate var _deviceDetails: String? = nil
   fileprivate var _location: UserLocation? = nil
 }
 
@@ -104,7 +96,7 @@ extension CreateSessionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
       case 3: try { try decoder.decodeSingularStringField(value: &self._password) }()
       case 4: try { try decoder.decodeSingularEnumField(value: &self._userStatus) }()
       case 5: try { try decoder.decodeSingularEnumField(value: &self.deviceType) }()
-      case 6: try { try decoder.decodeSingularStringField(value: &self._deviceDetails) }()
+      case 6: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: &self.deviceDetails) }()
       case 7: try { try decoder.decodeSingularMessageField(value: &self._location) }()
       default: break
       }
@@ -127,9 +119,9 @@ extension CreateSessionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     if self.deviceType != .desktop {
       try visitor.visitSingularEnumField(value: self.deviceType, fieldNumber: 5)
     }
-    try { if let v = self._deviceDetails {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 6)
-    } }()
+    if !self.deviceDetails.isEmpty {
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: self.deviceDetails, fieldNumber: 6)
+    }
     try { if let v = self._location {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
     } }()
@@ -142,7 +134,7 @@ extension CreateSessionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     if lhs._password != rhs._password {return false}
     if lhs._userStatus != rhs._userStatus {return false}
     if lhs.deviceType != rhs.deviceType {return false}
-    if lhs._deviceDetails != rhs._deviceDetails {return false}
+    if lhs.deviceDetails != rhs.deviceDetails {return false}
     if lhs._location != rhs._location {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true

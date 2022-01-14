@@ -34,7 +34,9 @@ import org.springframework.data.geo.Point;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 
@@ -52,6 +54,10 @@ public final class UserSession {
 
     private final Long userId;
     private final DeviceType deviceType;
+    /**
+     * Mainly used for push notification and statistics
+     */
+    private final Map<String, String> deviceDetails;
     private final Date loginDate;
     @Nullable
     private Point loginLocation;
@@ -92,6 +98,7 @@ public final class UserSession {
     public UserSession(int version,
                        Long userId,
                        DeviceType loggingInDeviceType,
+                       @Nullable Map<String, String> deviceDetails,
                        @Nullable Point loginLocation) {
         Date now = new Date();
         this.version = version;
@@ -100,6 +107,7 @@ public final class UserSession {
         this.loginDate = now;
         this.loginLocation = loginLocation;
         this.lastHeartbeatRequestTimestampMillis = now.getTime();
+        this.deviceDetails = deviceDetails == null ? Collections.emptyMap() : deviceDetails;
     }
 
     public void setConnection(NetConnection connection, ByteArrayWrapper ip) {

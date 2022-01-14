@@ -86,7 +86,7 @@ sequenceDiagram
 
    对于WebSocket服务端，在`im.turms.gateway.access.websocket.factory.WebSocketFactory#create`函数下，通过`handler.handle((Connection) in, true, inbound, out, onClose)`绑定。
 
-2. 上述`handler.handle`会调用下述的`im.turms.gateway.access.common.UserSessionDispatcher#bindConnectionWithSessionWrapper`回调函数，用于协调处理输入字节流与输出字节流的逻辑，而从全局视角来看，这些字节数据本质上就是上层业务层的`请求与响应`、`通知，因此这部分代码是服务端与客户端交互的重点，我们之后还会回看这块代码。其源码如下：
+2. 上述`handler.handle`会调用下述的`im.turms.gateway.access.common.UserSessionDispatcher#bindConnectionWithSessionWrapper`回调函数，用于协调处理输入字节流与输出字节流的逻辑，而从全局视角来看，这些字节数据本质上就是上层业务层的`请求`、`响应`与`通知`，因此这部分代码是服务端与客户端交互的重点，我们之后还会回看这块代码。其源码如下：
 
    ```java
    ConnectionHandler bindConnectionWithSessionWrapper() {
@@ -102,7 +102,7 @@ sequenceDiagram
                        Mono.from(outbound)
                                .subscribe(null, t -> handleConnectionError(t, netConnection, userSession, tracingContext));
                    }));
-           respondWithRequests(connection, isWebSocketConnection, in, out, sessionWrapper);
+           respondToRequests(connection, isWebSocketConnection, in, out, sessionWrapper);
            return tryRemoveSessionInfoOnConnectionClosed(onClose, sessionWrapper);
        };
    }
@@ -110,14 +110,14 @@ sequenceDiagram
 
    其中，`userSession.setNotificationConsumer`用于设置监听`通知`的回调函数，该回调函数会将接收到的`通知`字节数据，发送给客户端。这个回调函数也是重点，因为我们之后讲到的turms-service给turms-gateway发送`通知`的流程，其最终会回到这里。
 
-   而`respondWithRequests`函数则用于监听`请求`输入字节流，并对返回对应的`响应`输出字节流，该函数源码如下：
+   而`respondToRequests`函数则用于监听`请求`输入字节流，并对返回对应的`响应`输出字节流，该函数源码如下：
 
    ```java
-   void respondWithRequests(Connection connection,
-                            boolean isWebSocketConnection,
-                            Flux<ByteBuf> in,
-                            NettyOutbound out,
-                            UserSessionWrapper sessionWrapper) {
+   void respondToRequests(Connection connection,
+                          boolean isWebSocketConnection,
+                          Flux<ByteBuf> in,
+                          NettyOutbound out,
+                          UserSessionWrapper sessionWrapper) {
        in
                .doOnNext(requestData -> {
                    if (connection.isDisposed()) {
@@ -148,7 +148,7 @@ sequenceDiagram
    }
    ```
 
-   其中，`respondWithRequests`在`clientRequestDispatcher.handleRequest(sessionWrapper, requestData)`处，将`请求`的字节流`ByteBuf`，递交给下游的业务逻辑层进行处理；在`.flatMap(turmsNotificationBuffer -> {`回调处，将请求的`响应`字节流进行输出。
+   其中，`respondToRequests`在`clientRequestDispatcher.handleRequest(sessionWrapper, requestData)`处，将`请求`的字节流`ByteBuf`，递交给下游的业务逻辑层进行处理；在`.flatMap(turmsNotificationBuffer -> {`回调处，将请求的`响应`字节流进行输出。
 
    至此，网络层的数据已经传达到了下游业务层，网络层`接收请求`的工作结束了，接下来就都是业务层相关操作。
 
@@ -197,7 +197,7 @@ return switch (requestType) {
 
    各Controller通过上述的`handle`函数，拿到了传来的`im.turms.service.workflow.access.servicerequest.dto.ClientRequest`对象后，就开始执行相关的业务逻辑，并向MongoDB服务端发送各种CRUD请求。业务逻辑处理并非本篇重点，这里就不展开讲解了。等Controller层处理完相关业务逻辑，就会返回一个`im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResult`对象。简单来说，该对象描述了：要发回给客户端的`响应`，与要发给其他用户的`通知`（如发送群聊消息，对于消息的接收客户端，这些发送给它们的输出字节流就是`通知`）。
 
-   对于`响应`，会借由上述的RPC操作，将字节数据发回给turms-gateway，而turms-gateway再通过上述已经提及过的`respondWithRequests`函数里的`.flatMap(turmsNotificationBuffer -> {`，最终将响应字节数据发送给客户端。
+   对于`响应`，会借由上述的RPC操作，将字节数据发回给turms-gateway，而turms-gateway再通过上述已经提及过的`respondToRequests`函数里的`.flatMap(turmsNotificationBuffer -> {`，最终将响应字节数据发送给客户端。
 
 至此，一个请求就被处理完了。
 

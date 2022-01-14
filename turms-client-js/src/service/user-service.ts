@@ -18,6 +18,7 @@ export interface UserInfo {
     userId?: string;
     password?: string;
     deviceType?: DeviceType;
+    deviceDetails?: Record<string, string>;
     onlineStatus?: UserStatus;
     location?: UserLocation;
 }
@@ -26,6 +27,7 @@ export interface LoginOptions {
     userId: string;
     password?: string;
     deviceType?: DeviceType;
+    deviceDetails?: Record<string, string>;
     onlineStatus?: UserStatus;
     location?: UserLocation;
     storePassword?: boolean;
@@ -101,6 +103,7 @@ export default class UserService {
         userId: string,
         password?: string,
         deviceType?: string | DeviceType,
+        deviceDetails?: Record<string, string>,
         onlineStatus?: string | UserStatus,
         location?: GeolocationPosition | UserLocation,
         storePassword?: boolean): Promise<void>
@@ -111,6 +114,7 @@ export default class UserService {
         userIdOrOptions: string | LoginOptions,
         password?: string,
         deviceType?: string | DeviceType,
+        deviceDetails?: Record<string, string>,
         onlineStatus?: string | UserStatus,
         location?: GeolocationPosition | UserLocation,
         storePassword = false): Promise<void> {
@@ -118,6 +122,7 @@ export default class UserService {
         if (typeof userIdOrOptions === 'object') {
             password = userIdOrOptions.password;
             deviceType = userIdOrOptions.deviceType;
+            deviceDetails = userIdOrOptions.deviceDetails;
             onlineStatus = userIdOrOptions.onlineStatus;
             location = userIdOrOptions.location;
             storePassword = userIdOrOptions.storePassword;
@@ -133,6 +138,7 @@ export default class UserService {
         } catch (e) {
             return Promise.reject(e);
         }
+        userInfo.deviceDetails = deviceDetails;
         try {
             userInfo.onlineStatus = UserService._parseUserStatus(onlineStatus) || UserStatus.AVAILABLE;
         } catch (e) {
@@ -156,6 +162,7 @@ export default class UserService {
                             userId,
                             password,
                             deviceType: userInfo.deviceType,
+                            deviceDetails: userInfo.deviceDetails,
                             userStatus: userInfo.onlineStatus,
                             location: userInfo.location
                         }

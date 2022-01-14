@@ -108,7 +108,7 @@ public struct Message {
   /// Clears the value of `sequenceID`. Subsequent reads from it will return its default value.
   public mutating func clearSequenceID() {self._sequenceID = nil}
 
-  public var preMessageID: Int32 {
+  public var preMessageID: Int64 {
     get {return _preMessageID ?? 0}
     set {_preMessageID = newValue}
   }
@@ -130,7 +130,7 @@ public struct Message {
   fileprivate var _isSystemMessage: Bool? = nil
   fileprivate var _recipientID: Int64? = nil
   fileprivate var _sequenceID: Int32? = nil
-  fileprivate var _preMessageID: Int32? = nil
+  fileprivate var _preMessageID: Int64? = nil
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -169,7 +169,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
       case 8: try { try decoder.decodeSingularInt64Field(value: &self._recipientID) }()
       case 9: try { try decoder.decodeRepeatedBytesField(value: &self.records) }()
       case 10: try { try decoder.decodeSingularInt32Field(value: &self._sequenceID) }()
-      case 11: try { try decoder.decodeSingularInt32Field(value: &self._preMessageID) }()
+      case 11: try { try decoder.decodeSingularInt64Field(value: &self._preMessageID) }()
       default: break
       }
     }
@@ -207,7 +207,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 10)
     } }()
     try { if let v = self._preMessageID {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 11)
+      try visitor.visitSingularInt64Field(value: v, fieldNumber: 11)
     } }()
     try unknownFields.traverse(visitor: &visitor)
   }

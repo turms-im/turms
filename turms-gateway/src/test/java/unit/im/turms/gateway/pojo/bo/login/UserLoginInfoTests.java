@@ -25,6 +25,8 @@ import lombok.Getter;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.geo.Point;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -38,23 +40,22 @@ class UserLoginInfoTests {
     private final Long userId = 1L;
     private final String password = "123";
     private final DeviceType loggingInDeviceType = DeviceType.ANDROID;
+    private final Map<String, String> deviceDetails = Map.of("id", "ABC123456789");
     private final UserStatus userStatus = UserStatus.BUSY;
     private final Point location = new Point(1L, 1L);
     private final String ip = "1.1.1.1";
-    private final String deviceDetails =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36";
 
     @Test
     void constructor_shouldReturnInstance() {
         UserLoginInfo userLoginInfo =
-                new UserLoginInfo(version, userId, password, loggingInDeviceType, userStatus, location, ip, deviceDetails);
+                new UserLoginInfo(version, userId, password, loggingInDeviceType, deviceDetails, userStatus, location, ip);
         assertThat(userLoginInfo).isNotNull();
     }
 
     @Test
     void getters_shouldGetValues() {
         UserLoginInfo userLoginInfo =
-                new UserLoginInfo(version, userId, password, loggingInDeviceType, userStatus, location, ip, deviceDetails);
+                new UserLoginInfo(version, userId, password, loggingInDeviceType, deviceDetails, userStatus, location, ip);
         assertThat(userLoginInfo.version()).isEqualTo(version);
         assertThat(userLoginInfo.userId()).isEqualTo(userId);
         assertThat(userLoginInfo.password()).isEqualTo(password);

@@ -45,6 +45,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A mediator between the underlying technical implementation (i.e. the TCP/UDP/WebSocket access layer)
@@ -87,19 +88,19 @@ public class ServiceMediator {
             @NotNull Long userId,
             @Nullable String password,
             @NotNull DeviceType deviceType,
+            @Nullable Map<String, String> deviceDetails,
             @Nullable UserStatus userStatus,
             @Nullable Point position,
-            @Nullable String ipStr,
-            @Nullable String deviceDetails) {
+            @Nullable String ipStr) {
         if (version != 1) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNSUPPORTED_CLIENT_VERSION, "The supported versions are: 1"));
         }
         if (userSimultaneousLoginService.isForbiddenDeviceType(deviceType)) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE));
         }
-        return authenticate(version, userId, password, deviceType, userStatus, position, ipStr, deviceDetails)
+        return authenticate(version, userId, password, deviceType, deviceDetails, userStatus, position, ipStr)
                 .flatMap(statusCode -> statusCode == TurmsStatusCode.OK
-                        ? sessionService.tryRegisterOnlineUser(version, ip, userId, deviceType, userStatus, position)
+                        ? sessionService.tryRegisterOnlineUser(version, ip, userId, deviceType, deviceDetails, userStatus, position)
                         : Mono.error(TurmsBusinessException.get(statusCode)));
     }
 
@@ -177,10 +178,10 @@ public class ServiceMediator {
             @NotNull Long userId,
             @Nullable String password,
             @NotNull DeviceType deviceType,
+            @Nullable Map<String, String> deviceDetails,
             @Nullable UserStatus userStatus,
             @Nullable Point position,
-            @Nullable String ip,
-            @Nullable String deviceDetails) {
+            @Nullable String ip) {
         if (userId == ADMIN_ID) {
             return Mono.just(TurmsStatusCode.LOGIN_AUTHENTICATION_FAILED);
         }
@@ -197,10 +198,10 @@ public class ServiceMediator {
                         userId,
                         password,
                         deviceType,
+                        deviceDetails,
                         userStatus,
                         position,
-                        ip,
-                        deviceDetails);
+                        ip);
                 for (UserAuthenticator authenticator : authenticatorList) {
                     Mono<Boolean> authenticateMono = authenticator.authenticate(userLoginInfo);
                     authenticate = authenticate.switchIfEmpty(authenticateMono);

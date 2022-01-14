@@ -70,12 +70,16 @@ public final class UserSessionsManager {
      * @return new session if added
      */
     @Nullable
-    public UserSession addSessionIfAbsent(int version, DeviceType loggingInDeviceType, @Nullable Point position) {
+    public UserSession addSessionIfAbsent(int version,
+                                          DeviceType loggingInDeviceType,
+                                          Map<String, String> deviceDetails,
+                                          @Nullable Point position) {
         Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
         UserSession userSession = new UserSession(
                 version,
                 userId,
                 loggingInDeviceType,
+                deviceDetails,
                 position);
         boolean added = sessionMap.putIfAbsent(loggingInDeviceType, userSession) == null;
         return added ? userSession : null;

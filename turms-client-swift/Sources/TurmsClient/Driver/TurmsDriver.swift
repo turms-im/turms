@@ -26,7 +26,7 @@ public class TurmsDriver {
         connectionService.addOnDisconnectedListener { [weak self] info in
             self?.onConnectionDisconnected()
         }
-        connectionService.addOnMessageListener { [weak self] in
+        connectionService.addMessageListener { [weak self] in
             self?.onMessage($0)
         }
     }

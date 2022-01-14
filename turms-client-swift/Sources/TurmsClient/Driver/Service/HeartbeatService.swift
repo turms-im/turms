@@ -62,7 +62,7 @@ class HeartbeatService: BaseService {
     }
 
     func rejectHeartbeatPromisesIfFail(_ notification: TurmsNotification) -> Bool {
-        if notification.hasRequestID, notification.requestID == HEARTBEAT_FAILURE_REQUEST_ID {
+        if notification.hasRequestID, notification.requestID == HeartbeatService.HEARTBEAT_FAILURE_REQUEST_ID {
             rejectHeartbeatPromises(TurmsBusinessError(notification))
             return true
         }

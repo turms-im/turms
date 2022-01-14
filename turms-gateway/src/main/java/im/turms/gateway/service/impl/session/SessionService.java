@@ -363,6 +363,7 @@ public class SessionService implements ISessionService {
             @NotNull ByteArrayWrapper ip,
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
+            @Nullable Map<String, String> deviceDetails,
             @Nullable UserStatus userStatus,
             @Nullable Point position) {
         try {
@@ -389,7 +390,7 @@ public class SessionService implements ISessionService {
                     // Check the current sessions status
                     UserStatus existingUserStatus = sessionsStatus.userStatus();
                     if (existingUserStatus == UserStatus.OFFLINE) {
-                        return addOnlineDeviceIfAbsent(version, ip, userId, deviceType, userStatus, position);
+                        return addOnlineDeviceIfAbsent(version, ip, userId, deviceType, deviceDetails, userStatus, position);
                     }
                     boolean conflicts = sessionsStatus.getLoggedInDeviceTypes().contains(deviceType);
                     if (conflicts) {
@@ -418,7 +419,7 @@ public class SessionService implements ISessionService {
                     }
                     return disconnectConflictedDeviceTypes(userId, deviceType, sessionsStatus)
                             .flatMap(wasSuccessful -> wasSuccessful
-                                    ? addOnlineDeviceIfAbsent(version, ip, userId, deviceType, userStatus, position)
+                                    ? addOnlineDeviceIfAbsent(version, ip, userId, deviceType, deviceDetails, userStatus, position)
                                     : Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
                 });
     }
@@ -509,6 +510,7 @@ public class SessionService implements ISessionService {
             @NotNull ByteArrayWrapper ip,
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
+            @Nullable Map<String, String> deviceDetails,
             @Nullable UserStatus userStatus,
             @Nullable Point position) {
         // Try to update the global user status
@@ -520,7 +522,7 @@ public class SessionService implements ISessionService {
                     UserStatus finalUserStatus = null == userStatus ? UserStatus.AVAILABLE : userStatus;
                     UserSessionsManager manager = sessionsManagerByUserId
                             .computeIfAbsent(userId, key -> new UserSessionsManager(key, finalUserStatus));
-                    UserSession session = manager.addSessionIfAbsent(version, deviceType, position);
+                    UserSession session = manager.addSessionIfAbsent(version, deviceType, deviceDetails, position);
                     // This should never happen
                     if (null == session) {
                         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE));
@@ -532,7 +534,7 @@ public class SessionService implements ISessionService {
                                     ? (sessions.isEmpty() ? null : sessions)
                                     : sessions;
                         });
-                        session = manager.addSessionIfAbsent(version, deviceType, position);
+                        session = manager.addSessionIfAbsent(version, deviceType, deviceDetails, position);
                         if (null == session) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR));
                         }

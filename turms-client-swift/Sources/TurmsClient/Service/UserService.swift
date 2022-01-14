@@ -43,6 +43,7 @@ public class UserService {
         userId: Int64,
         password: String? = nil,
         deviceType: DeviceType? = nil,
+        deviceDetails: [String:String]? = nil,
         onlineStatus: UserStatus? = nil,
         location: Location? = nil,
         storePassword: Bool = false) -> Promise<Void> {
@@ -66,6 +67,9 @@ public class UserService {
                     }
                     if let v = deviceType {
                         $0.deviceType = v
+                    }
+                    if let v = deviceDetails {
+                        $0.deviceDetails = v
                     }
                     if let v = onlineStatus {
                         $0.userStatus = v

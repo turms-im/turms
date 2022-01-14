@@ -13,8 +13,13 @@ export interface CreateSessionRequest {
   password?: string | undefined;
   userStatus?: UserStatus | undefined;
   deviceType: DeviceType;
-  deviceDetails?: string | undefined;
+  deviceDetails: { [key: string]: string };
   location?: UserLocation | undefined;
+}
+
+export interface CreateSessionRequest_DeviceDetailsEntry {
+  key: string;
+  value: string;
 }
 
 const baseCreateSessionRequest: object = {
@@ -43,9 +48,12 @@ export const CreateSessionRequest = {
     if (message.deviceType !== 0) {
       writer.uint32(40).int32(message.deviceType);
     }
-    if (message.deviceDetails !== undefined) {
-      writer.uint32(50).string(message.deviceDetails);
-    }
+    Object.entries(message.deviceDetails).forEach(([key, value]) => {
+      CreateSessionRequest_DeviceDetailsEntry.encode(
+        { key: key as any, value },
+        writer.uint32(50).fork()
+      ).ldelim();
+    });
     if (message.location !== undefined) {
       UserLocation.encode(message.location, writer.uint32(58).fork()).ldelim();
     }
@@ -59,6 +67,7 @@ export const CreateSessionRequest = {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseCreateSessionRequest } as CreateSessionRequest;
+    message.deviceDetails = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -78,10 +87,62 @@ export const CreateSessionRequest = {
           message.deviceType = reader.int32() as any;
           break;
         case 6:
-          message.deviceDetails = reader.string();
+          const entry6 = CreateSessionRequest_DeviceDetailsEntry.decode(
+            reader,
+            reader.uint32()
+          );
+          if (entry6.value !== undefined) {
+            message.deviceDetails[entry6.key] = entry6.value;
+          }
           break;
         case 7:
           message.location = UserLocation.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+};
+
+const baseCreateSessionRequest_DeviceDetailsEntry: object = {
+  key: "",
+  value: "",
+};
+
+export const CreateSessionRequest_DeviceDetailsEntry = {
+  encode(
+    message: CreateSessionRequest_DeviceDetailsEntry,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== "") {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== "") {
+      writer.uint32(18).string(message.value);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CreateSessionRequest_DeviceDetailsEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseCreateSessionRequest_DeviceDetailsEntry,
+    } as CreateSessionRequest_DeviceDetailsEntry;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = reader.string();
           break;
         default:
           reader.skipType(tag & 7);

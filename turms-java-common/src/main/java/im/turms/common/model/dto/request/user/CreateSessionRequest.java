@@ -36,7 +36,6 @@ private static final long serialVersionUID = 0L;
     password_ = "";
     userStatus_ = 0;
     deviceType_ = 0;
-    deviceDetails_ = "";
   }
 
   @java.lang.Override
@@ -99,14 +98,21 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 50: {
-            java.lang.String s = input.readStringRequireUtf8();
-            bitField0_ |= 0x00000004;
-            deviceDetails_ = s;
+            if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+              deviceDetails_ = com.google.protobuf.MapField.newMapField(
+                  DeviceDetailsDefaultEntryHolder.defaultEntry);
+              mutable_bitField0_ |= 0x00000004;
+            }
+            com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+            deviceDetails__ = input.readMessage(
+                DeviceDetailsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+            deviceDetails_.getMutableMap().put(
+                deviceDetails__.getKey(), deviceDetails__.getValue());
             break;
           }
           case 58: {
             im.turms.common.model.bo.user.UserLocation.Builder subBuilder = null;
-            if (((bitField0_ & 0x00000008) != 0)) {
+            if (((bitField0_ & 0x00000004) != 0)) {
               subBuilder = location_.toBuilder();
             }
             location_ = input.readMessage(im.turms.common.model.bo.user.UserLocation.parser(), extensionRegistry);
@@ -114,7 +120,7 @@ private static final long serialVersionUID = 0L;
               subBuilder.mergeFrom(location_);
               location_ = subBuilder.buildPartial();
             }
-            bitField0_ |= 0x00000008;
+            bitField0_ |= 0x00000004;
             break;
           }
           default: {
@@ -141,6 +147,18 @@ private static final long serialVersionUID = 0L;
     return im.turms.common.model.dto.request.user.CreateSessionRequestOuterClass.internal_static_im_turms_proto_CreateSessionRequest_descriptor;
   }
 
+  @SuppressWarnings({"rawtypes"})
+  @java.lang.Override
+  protected com.google.protobuf.MapField internalGetMapField(
+      int number) {
+    switch (number) {
+      case 6:
+        return internalGetDeviceDetails();
+      default:
+        throw new RuntimeException(
+            "Invalid map field number: " + number);
+    }
+  }
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
@@ -264,49 +282,84 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int DEVICE_DETAILS_FIELD_NUMBER = 6;
-  private volatile java.lang.Object deviceDetails_;
-  /**
-   * <code>optional string device_details = 6;</code>
-   * @return Whether the deviceDetails field is set.
-   */
-  @java.lang.Override
-  public boolean hasDeviceDetails() {
-    return ((bitField0_ & 0x00000004) != 0);
+  private static final class DeviceDetailsDefaultEntryHolder {
+    static final com.google.protobuf.MapEntry<
+        java.lang.String, java.lang.String> defaultEntry =
+            com.google.protobuf.MapEntry
+            .<java.lang.String, java.lang.String>newDefaultInstance(
+                im.turms.common.model.dto.request.user.CreateSessionRequestOuterClass.internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_descriptor, 
+                com.google.protobuf.WireFormat.FieldType.STRING,
+                "",
+                com.google.protobuf.WireFormat.FieldType.STRING,
+                "");
+  }
+  private com.google.protobuf.MapField<
+      java.lang.String, java.lang.String> deviceDetails_;
+  private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+  internalGetDeviceDetails() {
+    if (deviceDetails_ == null) {
+      return com.google.protobuf.MapField.emptyMapField(
+          DeviceDetailsDefaultEntryHolder.defaultEntry);
+    }
+    return deviceDetails_;
+  }
+
+  public int getDeviceDetailsCount() {
+    return internalGetDeviceDetails().getMap().size();
   }
   /**
-   * <code>optional string device_details = 6;</code>
-   * @return The deviceDetails.
+   * <code>map&lt;string, string&gt; device_details = 6;</code>
    */
+
   @java.lang.Override
-  public java.lang.String getDeviceDetails() {
-    java.lang.Object ref = deviceDetails_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      deviceDetails_ = s;
-      return s;
-    }
+  public boolean containsDeviceDetails(
+      java.lang.String key) {
+    if (key == null) { throw new NullPointerException("map key"); }
+    return internalGetDeviceDetails().getMap().containsKey(key);
   }
   /**
-   * <code>optional string device_details = 6;</code>
-   * @return The bytes for deviceDetails.
+   * Use {@link #getDeviceDetailsMap()} instead.
    */
   @java.lang.Override
-  public com.google.protobuf.ByteString
-      getDeviceDetailsBytes() {
-    java.lang.Object ref = deviceDetails_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      deviceDetails_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
+  @java.lang.Deprecated
+  public java.util.Map<java.lang.String, java.lang.String> getDeviceDetails() {
+    return getDeviceDetailsMap();
+  }
+  /**
+   * <code>map&lt;string, string&gt; device_details = 6;</code>
+   */
+  @java.lang.Override
+
+  public java.util.Map<java.lang.String, java.lang.String> getDeviceDetailsMap() {
+    return internalGetDeviceDetails().getMap();
+  }
+  /**
+   * <code>map&lt;string, string&gt; device_details = 6;</code>
+   */
+  @java.lang.Override
+
+  public java.lang.String getDeviceDetailsOrDefault(
+      java.lang.String key,
+      java.lang.String defaultValue) {
+    if (key == null) { throw new NullPointerException("map key"); }
+    java.util.Map<java.lang.String, java.lang.String> map =
+        internalGetDeviceDetails().getMap();
+    return map.containsKey(key) ? map.get(key) : defaultValue;
+  }
+  /**
+   * <code>map&lt;string, string&gt; device_details = 6;</code>
+   */
+  @java.lang.Override
+
+  public java.lang.String getDeviceDetailsOrThrow(
+      java.lang.String key) {
+    if (key == null) { throw new NullPointerException("map key"); }
+    java.util.Map<java.lang.String, java.lang.String> map =
+        internalGetDeviceDetails().getMap();
+    if (!map.containsKey(key)) {
+      throw new java.lang.IllegalArgumentException();
     }
+    return map.get(key);
   }
 
   public static final int LOCATION_FIELD_NUMBER = 7;
@@ -317,7 +370,7 @@ private static final long serialVersionUID = 0L;
    */
   @java.lang.Override
   public boolean hasLocation() {
-    return ((bitField0_ & 0x00000008) != 0);
+    return ((bitField0_ & 0x00000004) != 0);
   }
   /**
    * <code>optional .im.turms.proto.UserLocation location = 7;</code>
@@ -364,10 +417,13 @@ private static final long serialVersionUID = 0L;
     if (deviceType_ != im.turms.common.constant.DeviceType.DESKTOP.getNumber()) {
       output.writeEnum(5, deviceType_);
     }
+    com.google.protobuf.GeneratedMessageV3
+      .serializeStringMapTo(
+        output,
+        internalGetDeviceDetails(),
+        DeviceDetailsDefaultEntryHolder.defaultEntry,
+        6);
     if (((bitField0_ & 0x00000004) != 0)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, deviceDetails_);
-    }
-    if (((bitField0_ & 0x00000008) != 0)) {
       output.writeMessage(7, getLocation());
     }
     unknownFields.writeTo(output);
@@ -398,10 +454,17 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(5, deviceType_);
     }
-    if (((bitField0_ & 0x00000004) != 0)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, deviceDetails_);
+    for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+         : internalGetDeviceDetails().getMap().entrySet()) {
+      com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+      deviceDetails__ = DeviceDetailsDefaultEntryHolder.defaultEntry.newBuilderForType()
+          .setKey(entry.getKey())
+          .setValue(entry.getValue())
+          .build();
+      size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(6, deviceDetails__);
     }
-    if (((bitField0_ & 0x00000008) != 0)) {
+    if (((bitField0_ & 0x00000004) != 0)) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(7, getLocation());
     }
@@ -434,11 +497,8 @@ private static final long serialVersionUID = 0L;
       if (userStatus_ != other.userStatus_) return false;
     }
     if (deviceType_ != other.deviceType_) return false;
-    if (hasDeviceDetails() != other.hasDeviceDetails()) return false;
-    if (hasDeviceDetails()) {
-      if (!getDeviceDetails()
-          .equals(other.getDeviceDetails())) return false;
-    }
+    if (!internalGetDeviceDetails().equals(
+        other.internalGetDeviceDetails())) return false;
     if (hasLocation() != other.hasLocation()) return false;
     if (hasLocation()) {
       if (!getLocation()
@@ -470,9 +530,9 @@ private static final long serialVersionUID = 0L;
     }
     hash = (37 * hash) + DEVICE_TYPE_FIELD_NUMBER;
     hash = (53 * hash) + deviceType_;
-    if (hasDeviceDetails()) {
+    if (!internalGetDeviceDetails().getMap().isEmpty()) {
       hash = (37 * hash) + DEVICE_DETAILS_FIELD_NUMBER;
-      hash = (53 * hash) + getDeviceDetails().hashCode();
+      hash = (53 * hash) + internalGetDeviceDetails().hashCode();
     }
     if (hasLocation()) {
       hash = (37 * hash) + LOCATION_FIELD_NUMBER;
@@ -585,6 +645,28 @@ private static final long serialVersionUID = 0L;
       return im.turms.common.model.dto.request.user.CreateSessionRequestOuterClass.internal_static_im_turms_proto_CreateSessionRequest_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 6:
+          return internalGetDeviceDetails();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMutableMapField(
+        int number) {
+      switch (number) {
+        case 6:
+          return internalGetMutableDeviceDetails();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
@@ -622,8 +704,7 @@ private static final long serialVersionUID = 0L;
       bitField0_ = (bitField0_ & ~0x00000002);
       deviceType_ = 0;
 
-      deviceDetails_ = "";
-      bitField0_ = (bitField0_ & ~0x00000004);
+      internalGetMutableDeviceDetails().clear();
       if (locationBuilder_ == null) {
         location_ = null;
       } else {
@@ -669,17 +750,15 @@ private static final long serialVersionUID = 0L;
       }
       result.userStatus_ = userStatus_;
       result.deviceType_ = deviceType_;
-      if (((from_bitField0_ & 0x00000004) != 0)) {
-        to_bitField0_ |= 0x00000004;
-      }
-      result.deviceDetails_ = deviceDetails_;
+      result.deviceDetails_ = internalGetDeviceDetails();
+      result.deviceDetails_.makeImmutable();
       if (((from_bitField0_ & 0x00000008) != 0)) {
         if (locationBuilder_ == null) {
           result.location_ = location_;
         } else {
           result.location_ = locationBuilder_.build();
         }
-        to_bitField0_ |= 0x00000008;
+        to_bitField0_ |= 0x00000004;
       }
       result.bitField0_ = to_bitField0_;
       onBuilt();
@@ -747,11 +826,8 @@ private static final long serialVersionUID = 0L;
       if (other.deviceType_ != 0) {
         setDeviceTypeValue(other.getDeviceTypeValue());
       }
-      if (other.hasDeviceDetails()) {
-        bitField0_ |= 0x00000004;
-        deviceDetails_ = other.deviceDetails_;
-        onChanged();
-      }
+      internalGetMutableDeviceDetails().mergeFrom(
+          other.internalGetDeviceDetails());
       if (other.hasLocation()) {
         mergeLocation(other.getLocation());
       }
@@ -1045,86 +1121,134 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object deviceDetails_ = "";
-    /**
-     * <code>optional string device_details = 6;</code>
-     * @return Whether the deviceDetails field is set.
-     */
-    public boolean hasDeviceDetails() {
-      return ((bitField0_ & 0x00000004) != 0);
-    }
-    /**
-     * <code>optional string device_details = 6;</code>
-     * @return The deviceDetails.
-     */
-    public java.lang.String getDeviceDetails() {
-      java.lang.Object ref = deviceDetails_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        deviceDetails_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
+    private com.google.protobuf.MapField<
+        java.lang.String, java.lang.String> deviceDetails_;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    internalGetDeviceDetails() {
+      if (deviceDetails_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            DeviceDetailsDefaultEntryHolder.defaultEntry);
       }
+      return deviceDetails_;
     }
-    /**
-     * <code>optional string device_details = 6;</code>
-     * @return The bytes for deviceDetails.
-     */
-    public com.google.protobuf.ByteString
-        getDeviceDetailsBytes() {
-      java.lang.Object ref = deviceDetails_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        deviceDetails_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    internalGetMutableDeviceDetails() {
+      onChanged();;
+      if (deviceDetails_ == null) {
+        deviceDetails_ = com.google.protobuf.MapField.newMapField(
+            DeviceDetailsDefaultEntryHolder.defaultEntry);
       }
+      if (!deviceDetails_.isMutable()) {
+        deviceDetails_ = deviceDetails_.copy();
+      }
+      return deviceDetails_;
+    }
+
+    public int getDeviceDetailsCount() {
+      return internalGetDeviceDetails().getMap().size();
     }
     /**
-     * <code>optional string device_details = 6;</code>
-     * @param value The deviceDetails to set.
-     * @return This builder for chaining.
+     * <code>map&lt;string, string&gt; device_details = 6;</code>
      */
-    public Builder setDeviceDetails(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-      deviceDetails_ = value;
-      onChanged();
-      return this;
+
+    @java.lang.Override
+    public boolean containsDeviceDetails(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetDeviceDetails().getMap().containsKey(key);
     }
     /**
-     * <code>optional string device_details = 6;</code>
-     * @return This builder for chaining.
+     * Use {@link #getDeviceDetailsMap()} instead.
      */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String> getDeviceDetails() {
+      return getDeviceDetailsMap();
+    }
+    /**
+     * <code>map&lt;string, string&gt; device_details = 6;</code>
+     */
+    @java.lang.Override
+
+    public java.util.Map<java.lang.String, java.lang.String> getDeviceDetailsMap() {
+      return internalGetDeviceDetails().getMap();
+    }
+    /**
+     * <code>map&lt;string, string&gt; device_details = 6;</code>
+     */
+    @java.lang.Override
+
+    public java.lang.String getDeviceDetailsOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetDeviceDetails().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;string, string&gt; device_details = 6;</code>
+     */
+    @java.lang.Override
+
+    public java.lang.String getDeviceDetailsOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetDeviceDetails().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
     public Builder clearDeviceDetails() {
-      bitField0_ = (bitField0_ & ~0x00000004);
-      deviceDetails_ = getDefaultInstance().getDeviceDetails();
-      onChanged();
+      internalGetMutableDeviceDetails().getMutableMap()
+          .clear();
       return this;
     }
     /**
-     * <code>optional string device_details = 6;</code>
-     * @param value The bytes for deviceDetails to set.
-     * @return This builder for chaining.
+     * <code>map&lt;string, string&gt; device_details = 6;</code>
      */
-    public Builder setDeviceDetailsBytes(
-        com.google.protobuf.ByteString value) {
+
+    public Builder removeDeviceDetails(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      internalGetMutableDeviceDetails().getMutableMap()
+          .remove(key);
+      return this;
+    }
+    /**
+     * Use alternate mutation accessors instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String>
+    getMutableDeviceDetails() {
+      return internalGetMutableDeviceDetails().getMutableMap();
+    }
+    /**
+     * <code>map&lt;string, string&gt; device_details = 6;</code>
+     */
+    public Builder putDeviceDetails(
+        java.lang.String key,
+        java.lang.String value) {
+      if (key == null) { throw new NullPointerException("map key"); }
       if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      bitField0_ |= 0x00000004;
-      deviceDetails_ = value;
-      onChanged();
+  throw new NullPointerException("map value");
+}
+
+      internalGetMutableDeviceDetails().getMutableMap()
+          .put(key, value);
+      return this;
+    }
+    /**
+     * <code>map&lt;string, string&gt; device_details = 6;</code>
+     */
+
+    public Builder putAllDeviceDetails(
+        java.util.Map<java.lang.String, java.lang.String> values) {
+      internalGetMutableDeviceDetails().getMutableMap()
+          .putAll(values);
       return this;
     }
 

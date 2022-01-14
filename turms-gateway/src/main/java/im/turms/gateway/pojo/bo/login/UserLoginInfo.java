@@ -21,6 +21,8 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import org.springframework.data.geo.Point;
 
+import java.util.Map;
+
 /**
  * @author James Chen
  */
@@ -29,8 +31,8 @@ public record UserLoginInfo(
         Long userId,
         String password,
         DeviceType loggingInDeviceType,
+        Map<String, String> deviceDetails,
         UserStatus userStatus,
         Point location,
-        String ip,
-        String deviceDetails) {
+        String ip) {
 }

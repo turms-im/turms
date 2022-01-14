@@ -102,6 +102,7 @@ class UserService(private val turmsClient: TurmsClient) {
         userId: Long,
         password: String? = null,
         deviceType: DeviceType = SystemUtil.deviceType,
+        deviceDetails: Map<String, String>? = null,
         onlineStatus: UserStatus = UserStatus.AVAILABLE,
         location: UserLocation? = null,
         storePassword: Boolean = false
@@ -121,6 +122,7 @@ class UserService(private val turmsClient: TurmsClient) {
             this.userId = userId
             password?.let { this.password = it }
             deviceType.let { this.deviceType = it }
+            deviceDetails?.let { this.putAllDeviceDetails(it) }
             onlineStatus.let { this.userStatus = it }
             location?.let {
                 this.location = im.turms.common.model.bo.user.UserLocation.newBuilder().apply {

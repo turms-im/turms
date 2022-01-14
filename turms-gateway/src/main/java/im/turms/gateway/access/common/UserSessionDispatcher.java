@@ -81,16 +81,16 @@ public abstract class UserSessionDispatcher {
                         Mono.from(outbound)
                                 .subscribe(null, t -> handleConnectionError(t, netConnection, userSession, tracingContext));
                     }));
-            respondWithRequests(connection, isWebSocketConnection, in, out, sessionWrapper);
+            respondToRequests(connection, isWebSocketConnection, in, out, sessionWrapper);
             return tryRemoveSessionInfoOnConnectionClosed(onClose, sessionWrapper);
         };
     }
 
-    private void respondWithRequests(Connection connection,
-                                     boolean isWebSocketConnection,
-                                     Flux<ByteBuf> in,
-                                     NettyOutbound out,
-                                     UserSessionWrapper sessionWrapper) {
+    private void respondToRequests(Connection connection,
+                                   boolean isWebSocketConnection,
+                                   Flux<ByteBuf> in,
+                                   NettyOutbound out,
+                                   UserSessionWrapper sessionWrapper) {
         in
                 .doOnNext(requestData -> {
                     if (connection.isDisposed()) {

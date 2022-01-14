@@ -79,14 +79,15 @@ public final class NotificationFactory {
     }
 
     private static void trySetReason(TurmsNotification.Builder builder, String reason, TurmsStatusCode code) {
-        if (reason != null) {
-            if (TurmsStatusCode.isServerError(code.getBusinessCode())) {
-                if (returnReasonForServerError) {
-                    builder.setReason(reason);
-                }
-            } else {
+        if (reason == null) {
+            return;
+        }
+        if (TurmsStatusCode.isServerError(code.getBusinessCode())) {
+            if (returnReasonForServerError) {
                 builder.setReason(reason);
             }
+        } else {
+            builder.setReason(reason);
         }
     }
 
