@@ -28,9 +28,11 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
     private static final String REDIS_SERVICE_NAME = "redis_1";
     private static final int REDIS_SERVICE_PORT = 6379;
 
+    private static final String TURMS_SERVICE = "turms-service";
     private static final String TURMS_SERVICE_SERVICE_NAME = "turms-service_1";
     private static final int TURMS_SERVICE_ADMIN_PORT = 8510;
 
+    private static final String TURMS_GATEWAY = "turms-gateway";
     private static final String TURMS_GATEWAY_SERVICE_NAME = "turms-gateway_1";
     private static final int TURMS_GATEWAY_SERVICE_ADMIN_PORT = 9510;
     private static final int TURMS_GATEWAY_SERVICE_WS_PORT = 10510;
@@ -84,26 +86,17 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
             Map<String, Object> config = yaml.load(resource);
             Map<String, Object> services = (Map<String, Object>) config.get("services");
             if (options.isSetupTurmsGateway()) {
-                String jvmOptions = parseJvmOptions(options.getTurmsGatewayJvmOptions());
-                if (!jvmOptions.isBlank()) {
-                    Map<String, Object> turms = (Map<String, Object>) services.get("turms-gateway");
-                    String turmsGatewayJvmOpts = (String) turms.get("TURMS_GATEWAY_JVM_OPTS");
-                    turmsGatewayJvmOpts += jvmOptions;
-                    turms.put("TURMS_GATEWAY_JVM_OPTS", turmsGatewayJvmOpts);
+                appendCustomJvmOptions(options.getTurmsGatewayJvmOptions(), services, TURMS_GATEWAY, "TURMS_GATEWAY_JVM_OPTS");
+                if (!options.isSetupTurmsService()) {
+                    removeDependency(services, TURMS_GATEWAY, TURMS_SERVICE);
                 }
             } else {
-                services.remove("turms-gateway");
+                services.remove(TURMS_GATEWAY);
             }
             if (options.isSetupTurmsService()) {
-                String jvmOptions = parseJvmOptions(options.getTurmsServiceJvmOptions());
-                if (!jvmOptions.isBlank()) {
-                    Map<String, Object> turms = (Map<String, Object>) services.get("turms-service");
-                    String turmsServiceJvmOpts = (String) turms.get("TURMS_SERVICE_JVM_OPTS");
-                    turmsServiceJvmOpts += jvmOptions;
-                    turms.put("TURMS_SERVICE_JVM_OPTS", turmsServiceJvmOpts);
-                }
+                appendCustomJvmOptions(options.getTurmsGatewayJvmOptions(), services, TURMS_SERVICE, "TURMS_SERVICE_JVM_OPTS");
             } else {
-                services.remove("turms-service");
+                services.remove(TURMS_SERVICE);
             }
             if (!options.isSetupTurmsAdmin()) {
                 services.remove("turms-admin");
@@ -114,6 +107,21 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static void appendCustomJvmOptions(List<String> customJvmOptions,
+                                               Map<String, Object> services,
+                                               String serviceName,
+                                               String variableName) {
+        String jvmOptions = parseJvmOptions(customJvmOptions);
+        if (jvmOptions.isBlank()) {
+            return;
+        }
+        Map<String, Object> service = (Map<String, Object>) services.get(serviceName);
+        Map<String, Object> env = (Map<String, Object>) service.get("environment");
+        String turmsGatewayJvmOpts = (String) env.getOrDefault(variableName, "");
+        turmsGatewayJvmOpts += jvmOptions;
+        env.put(variableName, turmsGatewayJvmOpts);
     }
 
     private static String parseJvmOptions(List<String> jvmOptions) {
@@ -130,6 +138,12 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
             }
         }
         return builder.toString();
+    }
+
+    private static void removeDependency(Map<String, Object> services, String serviceName, String dependencyName) {
+        Map<String, Object> service = (Map<String, Object>) services.get(serviceName);
+        Map<String, Object> dependencies = (Map<String, Object>) service.get("depends_on");
+        dependencies.remove(dependencyName);
     }
 
     // Mongo
