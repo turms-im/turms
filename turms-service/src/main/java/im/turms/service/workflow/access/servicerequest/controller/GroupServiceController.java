@@ -155,7 +155,7 @@ public class GroupServiceController {
             return groupService.authAndDeleteGroup(clientRequest.userId(), request.getGroupId())
                     .then(Mono.defer(() -> {
                         if (node.getSharedProperties().getService().getNotification().isNotifyMembersAfterGroupDeleted()) {
-                            return groupService.queryGroupMemberIds(request.getGroupId())
+                            return groupMemberService.queryGroupMemberIds(request.getGroupId())
                                     .collect(Collectors.toSet())
                                     .map(memberIds -> memberIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK

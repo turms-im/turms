@@ -239,8 +239,7 @@ public class UserRelationshipService {
                                 UserRelationshipsWithVersion.Builder builder = UserRelationshipsWithVersion.newBuilder()
                                         .setLastUpdatedDate(date.getTime());
                                 for (UserRelationship relationship : relationships) {
-                                    var userRelationship = ProtoModelUtil.relationship2proto(relationship).build();
-                                    builder.addUserRelationships(userRelationship);
+                                    builder.addUserRelationships(ProtoModelUtil.relationship2proto(relationship));
                                 }
                                 return builder.build();
                             });
@@ -459,7 +458,7 @@ public class UserRelationshipService {
             }
             if (deleteGroupIndex != null) {
                 Integer targetGroupIndex = newGroupIndex == null ? DEFAULT_RELATIONSHIP_GROUP_INDEX : newGroupIndex;
-                Mono<UpdateResult> delete = userRelationshipGroupService
+                Mono<Void> delete = userRelationshipGroupService
                         .moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, targetGroupIndex);
                 monos.add(delete);
             }

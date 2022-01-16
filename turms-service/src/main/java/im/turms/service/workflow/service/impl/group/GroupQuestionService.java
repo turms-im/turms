@@ -325,8 +325,7 @@ public class GroupQuestionService {
                                 GroupJoinQuestionsWithVersion.Builder builder = GroupJoinQuestionsWithVersion.newBuilder();
                                 builder.setLastUpdatedDate(version.getTime());
                                 for (GroupJoinQuestion question : groupJoinQuestions) {
-                                    var questionBuilder = ProtoModelUtil.groupJoinQuestion2proto(question);
-                                    builder.addGroupJoinQuestions(questionBuilder.build());
+                                    builder.addGroupJoinQuestions(ProtoModelUtil.groupJoinQuestion2proto(question));
                                 }
                                 return builder.build();
                             });

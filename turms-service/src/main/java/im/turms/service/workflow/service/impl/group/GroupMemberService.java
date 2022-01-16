@@ -505,6 +505,21 @@ public class GroupMemberService {
                 .defaultIfEmpty(false);
     }
 
+    public Flux<Long> queryUserJoinedGroupIds(@NotNull Long userId) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
+        Filter filter = Filter.newBuilder(1)
+                .eq(GroupMember.Fields.ID_USER_ID, userId);
+        QueryOptions options = QueryOptions.newBuilder(1)
+                .include(GroupMember.Fields.ID_GROUP_ID);
+        return mongoClient
+                .findMany(GroupMember.class, filter, options)
+                .map(groupMember -> groupMember.getKey().getGroupId());
+    }
+
     public Flux<Long> queryUsersJoinedGroupIds(
             @NotEmpty Set<Long> userIds,
             @Nullable Integer page,
@@ -659,8 +674,7 @@ public class GroupMemberService {
                         return fillMembersBuilderWithStatus(members, builder);
                     }
                     for (GroupMember member : members) {
-                        var groupMember = ProtoModelUtil.groupMember2proto(member).build();
-                        builder.addGroupMembers(groupMember);
+                        builder.addGroupMembers(ProtoModelUtil.groupMember2proto(member));
                     }
                     return Mono.just(builder.build());
                 });
@@ -690,8 +704,7 @@ public class GroupMemberService {
                                     return fillMembersBuilderWithStatus(members, builder);
                                 }
                                 for (GroupMember member : members) {
-                                    var groupMember = ProtoModelUtil.groupMember2proto(member).build();
-                                    builder.addGroupMembers(groupMember);
+                                    builder.addGroupMembers(ProtoModelUtil.groupMember2proto(member));
                                 }
                                 return Mono.just(builder
                                         .setLastUpdatedDate(version.getTime())

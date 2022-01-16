@@ -76,6 +76,8 @@ public interface MongoOperationsSupport {
 
     Mono<Void> insertAll(List<?> values);
 
+    Mono<Void> insertAllOfSameType(List<?> values);
+
     <T> Mono<UpdateResult> updateOne(Class<T> clazz, Filter filter, Update update);
 
     <T> Mono<UpdateResult> updateOne(ClientSession session, Class<T> clazz, Filter filter, Update update);

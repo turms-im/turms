@@ -266,8 +266,7 @@ public class GroupBlocklistService {
                                 UsersInfosWithVersion.Builder builder = UsersInfosWithVersion.newBuilder();
                                 builder.setLastUpdatedDate(version.getTime());
                                 for (User user : users) {
-                                    UserInfo userInfo = ProtoModelUtil.userProfile2proto(user).build();
-                                    builder.addUserInfos(userInfo);
+                                    builder.addUserInfos(ProtoModelUtil.userProfile2proto(user));
                                 }
                                 return builder.build();
                             });

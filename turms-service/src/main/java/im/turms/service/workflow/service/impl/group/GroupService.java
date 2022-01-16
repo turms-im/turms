@@ -45,7 +45,6 @@ import im.turms.service.bo.ServicePermission;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.util.ProtoModelUtil;
 import im.turms.service.workflow.dao.domain.group.Group;
-import im.turms.service.workflow.dao.domain.group.GroupMember;
 import im.turms.service.workflow.dao.domain.group.GroupType;
 import im.turms.service.workflow.dao.domain.user.UserPermissionGroup;
 import im.turms.service.workflow.service.impl.conversation.ConversationService;
@@ -79,8 +78,6 @@ import static im.turms.service.constant.DaoConstant.ID_FIELD_NAME;
 import static im.turms.service.constant.DaoConstant.TRANSACTION_RETRY;
 import static im.turms.service.constant.MetricsConstant.CREATED_GROUPS_COUNTER_NAME;
 import static im.turms.service.constant.MetricsConstant.DELETED_GROUPS_COUNTER_NAME;
-import static im.turms.service.workflow.dao.domain.group.GroupMember.Fields.ID_GROUP_ID;
-import static im.turms.service.workflow.dao.domain.group.GroupMember.Fields.ID_USER_ID;
 
 /**
  * @author James Chen
@@ -187,7 +184,7 @@ public class GroupService {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_TO_DELETE_GROUP));
                     }
                     if (node.getSharedProperties().getService().getNotification().isNotifyMembersAfterGroupDeleted()) {
-                        return queryGroupMemberIds(groupId)
+                        return groupMemberService.queryGroupMemberIds(groupId)
                                 .collect(Collectors.toSet())
                                 .flatMap(memberIds -> deleteGroupsAndGroupMembers(Set.of(groupId), null))
                                 .then();
@@ -651,23 +648,8 @@ public class GroupService {
         return mongoClient.findMany(Group.class, filter);
     }
 
-    public Flux<Long> queryJoinedGroupIds(@NotNull Long memberId) {
-        try {
-            AssertUtil.notNull(memberId, "memberId");
-        } catch (TurmsBusinessException e) {
-            return Flux.error(e);
-        }
-        Filter filter = Filter.newBuilder(1)
-                .eq(ID_USER_ID, memberId);
-        QueryOptions options = QueryOptions.newBuilder(1)
-                .include(ID_GROUP_ID);
-        return mongoClient
-                .findMany(GroupMember.class, filter, options)
-                .map(groupMember -> groupMember.getKey().getGroupId());
-    }
-
     public Flux<Group> queryJoinedGroups(@NotNull Long memberId) {
-        return queryJoinedGroupIds(memberId)
+        return groupMemberService.queryUserJoinedGroupIds(memberId)
                 .collectList()
                 .flatMapMany(groupIds -> groupIds.isEmpty()
                         ? Flux.empty()
@@ -683,7 +665,7 @@ public class GroupService {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE));
                     }
-                    return queryJoinedGroupIds(memberId)
+                    return groupMemberService.queryUserJoinedGroupIds(memberId)
                             .collectList()
                             .map(ids -> {
                                 if (ids.isEmpty()) {
@@ -888,20 +870,6 @@ public class GroupService {
 
     public Mono<Long> count() {
         return mongoClient.countAll(Group.class);
-    }
-
-    public Flux<Long> queryGroupMemberIds(@NotNull Long groupId) {
-        try {
-            AssertUtil.notNull(groupId, "groupId");
-        } catch (TurmsBusinessException e) {
-            return Flux.error(e);
-        }
-        Filter filter = Filter.newBuilder(1)
-                .eq(ID_GROUP_ID, groupId);
-        QueryOptions options = QueryOptions.newBuilder(1)
-                .include(ID_USER_ID);
-        return mongoClient.findMany(GroupMember.class, filter, options)
-                .map(member -> member.getKey().getUserId());
     }
 
     public Mono<Boolean> isGroupMuted(@NotNull Long groupId) {

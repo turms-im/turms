@@ -320,6 +320,18 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         return Mono.when(sources);
     }
 
+    @Override
+    public Mono<Void> insertAllOfSameType(List<?> values) {
+        if (values.isEmpty()) {
+            return Mono.empty();
+        }
+        MongoCollection collection = context.getCollection(values.get(0).getClass());
+        Publisher<InsertManyResult> source = collection.insertMany(values, DEFAULT_INSERT_MANY_OPTIONS);
+        return Mono.from(source)
+                .onErrorMap(translator::translate)
+                .then();
+    }
+
     /**
      * Update
      */
