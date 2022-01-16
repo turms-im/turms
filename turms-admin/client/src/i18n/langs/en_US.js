@@ -134,6 +134,7 @@ const en_US = {
         'start': 'Expiration Start Date'
     },
     'expired': 'Expired',
+    'export': 'Export',
     'exportAllRecordsSuccessfully': 'All records have been exported',
     'exportData': 'Export',
     'exportLimitedRecordsSuccessfully': 'The first {number} records have been exported',

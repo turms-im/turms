@@ -26,6 +26,7 @@ import {
     CodeOutlined,
     DashboardOutlined,
     DatabaseOutlined,
+    ExportOutlined,
     InfoCircleOutlined,
     LinkOutlined,
     LockOutlined,
@@ -37,6 +38,7 @@ import {
     SafetyOutlined,
     SettingOutlined,
     StopOutlined,
+    SyncOutlined,
     TeamOutlined,
     UserOutlined
 } from '@ant-design/icons-vue';
@@ -55,6 +57,7 @@ export default {
         CodeOutlined,
         DashboardOutlined,
         DatabaseOutlined,
+        ExportOutlined,
         InfoCircleOutlined,
         LinkOutlined,
         LockOutlined,
@@ -66,6 +69,7 @@ export default {
         SafetyOutlined,
         SettingOutlined,
         StopOutlined,
+        SyncOutlined,
         TeamOutlined,
         UserOutlined
     },

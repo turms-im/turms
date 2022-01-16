@@ -8,7 +8,11 @@
         />
         <dashboard-actions
             :node-id="selectedNodeId"
+            :exporting="exporting"
+            :refreshing="updating"
+            @export="exportMembers"
             @goBack="goBack"
+            @refresh="updateDashboard"
         />
         <dashboard-server-details
             v-if="selectedNodeInfo"
@@ -30,6 +34,8 @@ import DashboardHeader from './cluster-dashboard-header';
 import DashboardActions from './cluster-dashboard-actions';
 import DashboardOverview from './overview/cluster-dashboard-overview';
 import DashboardServerDetails from './server-details/cluster-dashboard-server-details';
+import exportExcel from '../../../../utils/excel-export-util';
+import SERVER_DETAILS_ITEMS from './server-details/server-details-items';
 import Skeleton from '../../../common/skeleton';
 import ResourceRequestMixin from './resource-request-mixin';
 import METRICS from './metrics';
@@ -59,6 +65,7 @@ export default {
             metrics: {},
             selectedNodeId: '',
             initialized: false,
+            exporting: false,
             updating: false,
             lastUpdatedTime: '',
             onlineUsers: 0
@@ -91,6 +98,32 @@ export default {
     methods: {
         goBack() {
             this.selectedNodeId = null;
+        },
+        exportMembers() {
+            // TODO: Support exporting metrics
+            if (this.exporting) {
+                return;
+            }
+            const headers = SERVER_DETAILS_ITEMS
+                .map(item => ({
+                    header: this.$t(item.title || item.dataIndex),
+                    key: item.dataIndex,
+                    width: 15
+                }));
+            const rows = this.members;
+            this.exporting = true;
+            const hide = this.$message.loading(this.$t('exportingDataAsExcel'), 0);
+            exportExcel('turms-nodes', this.$t('overview'), headers, rows)
+                .then(() => {
+                    this.$message.success(this.$t('exportSuccessfully'));
+                })
+                .catch(() => {
+                    this.$message.error(this.$t('failedToExport'));
+                })
+                .finally(() => {
+                    setTimeout(hide);
+                    this.exporting = false;
+                });
         },
         selectNodeId(id) {
             this.selectedNodeId = id;

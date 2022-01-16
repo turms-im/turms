@@ -134,6 +134,7 @@ const zh_CN = {
         'start': '过期开始时间'
     },
     'expired': '已过期',
+    'export': '导出',
     'exportAllRecordsSuccessfully': '已导出所有记录',
     'exportData': '导出数据',
     'exportLimitedRecordsSuccessfully': '已导出前{number}条记录',
