@@ -38,8 +38,12 @@ createApp(App)
             const globalProperties = app.config.globalProperties;
             globalProperties.$http = axios.create({
                 timeout: 60 * 1000,
-                transformResponse: [function (data) {
-                    return data ? JSONbig.parse(data) : data;
+                transformResponse: [data => {
+                    try {
+                        return data && JSONbig.parse(data);
+                    } catch (e) {
+                        return data;
+                    }
                 }]
             });
             globalProperties.$locales = {

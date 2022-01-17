@@ -76,5 +76,9 @@ export default [
     {
         dataIndex: 'leaderEligible',
         needFilters: true
+    },
+    {
+        dataIndex: 'operation',
+        fixed: 'right'
     }
 ];

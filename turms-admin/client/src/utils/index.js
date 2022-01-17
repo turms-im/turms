@@ -1,5 +1,6 @@
 import Calculate from './calculate';
 import CommonUtil from './common-util';
+import FileSaver from './file-saver';
 import LayoutUtil from './layout-util';
 import Querystring from './querystring';
 import RequestUtil from './request-util';
@@ -10,6 +11,7 @@ export default {
     install: (app) => {
         app.config.globalProperties.$cal = Calculate;
         app.config.globalProperties.$util = CommonUtil;
+        app.config.globalProperties.$fs = FileSaver;
         app.config.globalProperties.$layout = LayoutUtil;
         app.config.globalProperties.$qs = Querystring;
         app.config.globalProperties.$rq = RequestUtil;

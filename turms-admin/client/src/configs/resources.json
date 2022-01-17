@@ -151,6 +151,9 @@
     },
     "apis": {
         "clusterMember": "/cluster/members",
+
+        "heapdump": "/actuator/heapdump",
+        "threaddump": "/actuator/threaddump",
         "metrics": "/metrics",
 
         "admin": "/admins",

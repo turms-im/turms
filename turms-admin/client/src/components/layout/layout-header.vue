@@ -67,11 +67,8 @@
 </template>
 
 <script>
-import axios from 'axios';
 import CustomInput from '../common/custom-input';
 import Icon from '../common/icon';
-
-const JSONbig = require('json-bigint');
 
 export default {
     name: 'layout-header',
@@ -124,7 +121,6 @@ export default {
             const url = this.url.replace(/\/$/, '');
             this.$http.head(`${url}/admins`)
                 .then(() => {
-                    axios.defaults.transformResponse = [(data) => data && JSONbig.parse(data)];
                     const token = btoa(`${this.$store.getters.admin.account}:${this.$store.getters.admin.password}`);
                     this.$http.defaults.headers.common.Authorization = `Basic ${token}`;
                     this.$http.defaults.baseURL = url;

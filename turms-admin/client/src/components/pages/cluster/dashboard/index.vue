@@ -25,6 +25,8 @@
             :members="members"
             @selectNodeId="selectNodeId"
             @updateMembersInfo="updateMembersInfo"
+            @generateHeapDump="generateHeapDump"
+            @generateThreadDump="generateThreadDump"
         />
     </template>
 </template>
@@ -170,6 +172,41 @@ export default {
         updateMembersInfo() {
             return this.fetchMembersInfo()
                 .then(members => this.members = members);
+        },
+        generateHeapDump(member) {
+            if (this.generatingHeapDump) {
+                return;
+            }
+            this.generatingHeapDump = true;
+            this.$loading({
+                promise: this.fetchHeapDump(member),
+                loading: 'generatingHeapDump',
+                success: 'generatedHeapDump',
+                error: 'failedToGenerateHeapDump',
+                successCb: data => this.$fs.saveAs({
+                    fileName: `Heap Dump - ${member.nodeId}.hprof`,
+                    data
+                }),
+                finallyCb: () => this.generatingHeapDump = false
+            });
+        },
+        generateThreadDump(member) {
+            if (this.generatingThreadDump) {
+                return;
+            }
+            this.generatingThreadDump = true;
+            this.$loading({
+                promise: this.fetchThreadDump(member),
+                loading: 'generatingThreadDump',
+                success: 'generatedThreadDump',
+                error: 'failedToGenerateThreadDump',
+                successCb: data => this.$fs.saveAs({
+                    fileName: `Thread Dump - ${member.nodeId}`,
+                    data,
+                    type: 'text/plain;charset=utf-8'
+                }),
+                finallyCb: () => this.generatingThreadDump = false
+            });
         },
         isMemberGateway(member) {
             return member.nodeType.toUpperCase() === 'GATEWAY';

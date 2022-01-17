@@ -79,7 +79,7 @@ export default {
     justify-content: space-between;
 
     &__action {
-        // FIXME: Set a fixed width, otherwise the buttons will jiggle when toggle loading.
+        // FIXME: Set a fixed width, otherwise the buttons will jiggle when toggling loading.
         // This seems a bug of ant-design-vue, try it again after upgrading to v3.0
         width: 96px;
         margin-left: 12px;

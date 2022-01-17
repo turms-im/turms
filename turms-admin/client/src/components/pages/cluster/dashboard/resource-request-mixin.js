@@ -6,9 +6,9 @@ const RESOURCE_UTILIZATION_METRICS_NAMES = {
     STORAGE_FREE: 'disk.free'
 };
 
-const formatBytesToGiB = (bytes) => {
-    return bytes / 1024 / 1024 / 1024;
-};
+const formatBytesToGiB = bytes => bytes / 1024 / 1024 / 1024;
+
+const getMemberAdminBaseUrl = member => new URL(member.metricsApiAddress).origin;
 
 export default {
     methods: {
@@ -44,7 +44,7 @@ export default {
             const params = this.$qs.encode({
                 'names': metrics
             });
-            const baseUrl = new URL(member.metricsApiAddress).origin;
+            const baseUrl = getMemberAdminBaseUrl(member);
             return this.$http.get(`${baseUrl}${this.$rs.apis.metrics}?${params}`)
                 .then(response => response.data || {});
         },
@@ -58,7 +58,7 @@ export default {
                     RESOURCE_UTILIZATION_METRICS_NAMES.STORAGE_FREE
                 ]
             });
-            const baseUrl = new URL(member.metricsApiAddress).origin;
+            const baseUrl = getMemberAdminBaseUrl(member);
             return this.$http.get(`${baseUrl}${this.$rs.apis.metrics}?${params}`)
                 .then(response => {
                     const data = response.data.data || [];
@@ -98,6 +98,24 @@ export default {
                         unit: 'GiB'
                     }];
                 });
+        },
+        fetchHeapDump(member) {
+            const baseUrl = getMemberAdminBaseUrl(member);
+            return this.$http.get(`${baseUrl}${this.$rs.apis.heapdump}`, {
+                headers: {
+                    Accept: 'application/octet-stream'
+                },
+                responseType: 'blob'
+            }).then(response => response.data);
+        },
+        fetchThreadDump(member) {
+            const baseUrl = getMemberAdminBaseUrl(member);
+            return this.$http.get(`${baseUrl}${this.$rs.apis.threaddump}`, {
+                headers: {
+                    Accept: 'text/plain;charset=UTF-8'
+                },
+                responseType: 'blob'
+            }).then(response => response.data);
         }
     }
 };

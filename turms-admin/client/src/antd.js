@@ -44,6 +44,28 @@ function loadAntd(app) {
             duration: 6
         });
     };
+    app.config.globalProperties.$loading = function ({promise, loading, success, error, successCb, finallyCb}) {
+        if (!promise) {
+            return;
+        }
+        const hide = this.$message.loading(this.$t(loading), 0);
+        promise
+            .then(data => {
+                this.$message.success(this.$t(success));
+                successCb(data);
+            })
+            .catch(e => {
+                if (e) {
+                    this.$error(this.$t(error), e);
+                } else {
+                    this.$message.error(this.$t(error));
+                }
+            })
+            .finally(() => {
+                setTimeout(hide);
+                finallyCb?.();
+            });
+    };
     app.use(Breadcrumb);
     app.use(Button);
     app.use(Checkbox);

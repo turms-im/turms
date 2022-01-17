@@ -57,6 +57,33 @@
                         </tr>
                     </table>
                 </template>
+                <template v-else-if="column.dataIndex === 'operation'">
+                    <a-dropdown
+                        :key="column.dataIndex"
+                        :trigger="['click']"
+                    >
+                        <a
+                            class="ant-dropdown-link"
+                        >
+                            {{ $t('operation') }}
+                            <icon type="down" />
+                        </a>
+                        <template #overlay>
+                            <a-menu>
+                                <a-menu-item>
+                                    <a @click="generateThreadDump(record.nodeId)">
+                                        {{ $t('generateThreadDump') }}
+                                    </a>
+                                </a-menu-item>
+                                <a-menu-item>
+                                    <a @click="generateHeapDump(record.nodeId)">
+                                        {{ $t('generateHeapDump') }}
+                                    </a>
+                                </a-menu-item>
+                            </a-menu>
+                        </template>
+                    </a-dropdown>
+                </template>
                 <template v-else>
                     <span :key="column.dataIndex">{{ text }}</span>
                 </template>
@@ -118,6 +145,14 @@ export default {
         }
     },
     methods: {
+        generateHeapDump(nodeId) {
+            const member = this.members.find(m => m.nodeId === nodeId);
+            this.$emit('generateHeapDump', member);
+        },
+        generateThreadDump(nodeId) {
+            const member = this.members.find(m => m.nodeId === nodeId);
+            this.$emit('generateThreadDump', member);
+        },
         selectNodeId(nodeId) {
             this.$emit('selectNodeId', nodeId);
         }
