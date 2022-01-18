@@ -138,7 +138,7 @@ public class LocalNodeStatusManager {
         Filter query = Filter.newBuilder(2)
                 .eq("_id", localMember.getClusterId())
                 .eq(Leader.Fields.nodeId, localMember.getNodeId());
-        return sharedConfigService.remove(Leader.class, query).then();
+        return sharedConfigService.removeOne(Leader.class, query).then();
     }
 
     public boolean isLocalNodeId(String nodeId) {

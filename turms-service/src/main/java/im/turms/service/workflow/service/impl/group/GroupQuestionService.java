@@ -258,7 +258,7 @@ public class GroupQuestionService {
                             }
                             Filter filter = Filter.newBuilder(1)
                                     .eq(DaoConstant.ID_FIELD_NAME, questionId);
-                            return mongoClient.deleteMany(GroupJoinQuestion.class, filter)
+                            return mongoClient.deleteOne(GroupJoinQuestion.class, filter)
                                     .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
                                             .onErrorResume(t -> Mono.empty())
                                             .then());

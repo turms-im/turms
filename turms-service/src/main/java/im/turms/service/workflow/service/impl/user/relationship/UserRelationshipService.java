@@ -155,7 +155,7 @@ public class UserRelationshipService {
         UserRelationship.Key key = new UserRelationship.Key(ownerId, relatedUserId);
         Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, key);
-        return mongoClient.deleteMany(UserRelationship.class, filter)
+        return mongoClient.deleteOne(UserRelationship.class, filter)
                 .then(userRelationshipGroupService.deleteRelatedUserFromAllRelationshipGroups(
                         ownerId, relatedUserId, session, false))
                 .then(userVersionService.updateSpecificVersion(

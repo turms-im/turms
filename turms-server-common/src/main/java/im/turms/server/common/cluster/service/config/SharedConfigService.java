@@ -128,4 +128,8 @@ public class SharedConfigService implements ClusterService {
         return mongoClient.deleteMany(clazz, filter);
     }
 
+    public Mono<DeleteResult> removeOne(Class<?> clazz, Filter filter) {
+        return mongoClient.deleteOne(clazz, filter);
+    }
+
 }

@@ -324,7 +324,7 @@ public class UserRelationshipGroupService {
                     }
                     return mongoClient.insertAllOfSameType(newMembers);
                 })
-                .then(mongoClient.deleteMany(UserRelationshipGroup.class, filterGroup))
+                .then(mongoClient.deleteOne(UserRelationshipGroup.class, filterGroup))
                 .then(userVersionService.updateRelationshipGroupsVersion(ownerId).onErrorResume(t -> Mono.empty()))
                 .then();
     }
@@ -417,7 +417,7 @@ public class UserRelationshipGroupService {
                 .Key(ownerId, targetGroupIndex, relatedUserId);
         // Don't use transaction for better performance
         return mongoClient.insert(new UserRelationshipGroupMember(newKey, new Date()))
-                .then(mongoClient.deleteMany(UserRelationshipGroupMember.class, filter))
+                .then(mongoClient.deleteOne(UserRelationshipGroupMember.class, filter))
                 .then(userVersionService.updateRelationshipGroupsVersion(ownerId).onErrorResume(t -> Mono.empty()))
                 .then();
     }

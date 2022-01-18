@@ -150,7 +150,7 @@ public class GroupBlocklistService {
                     GroupBlockedUser.Key key = new GroupBlockedUser.Key(groupId, userIdToUnblock);
                     Filter filter = Filter.newBuilder(1)
                             .eq(DaoConstant.ID_FIELD_NAME, key);
-                    Mono<DeleteResult> removeMono = mongoClient.deleteMany(session, GroupBlockedUser.class, filter);
+                    Mono<DeleteResult> removeMono = mongoClient.deleteOne(session, GroupBlockedUser.class, filter);
                     if (updateBlocklistVersion) {
                         return removeMono.flatMap(result -> groupVersionService.updateBlocklistVersion(groupId)
                                 .onErrorResume(throwable -> Mono.empty())

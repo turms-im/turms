@@ -97,15 +97,11 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     private static final BsonDocument FILTER_ALL_DOCUMENT = EMPTY_FILTER;
     private static final Scheduler WATCH_SCHEDULER = Schedulers.newSingle("turms-mongo-watch", false);
 
-    /**
-     * Session
-     */
+    // Session
     private static final ClientSessionOptions DEFAULT_SESSION_OPTIONS = ClientSessionOptions.builder().build();
     private static final TransactionOptions DEFAULT_TRANSACTION_OPTIONS = TransactionOptions.builder().build();
 
-    /**
-     * CRUD
-     */
+    // CRUD
     private static final CountOptions DEFAULT_COUNT_OPTIONS = new CountOptions();
     private static final DeleteOptions DEFAULT_DELETE_OPTIONS = new DeleteOptions();
     private static final InsertManyOptions DEFAULT_INSERT_MANY_OPTIONS = new InsertManyOptions();
@@ -121,9 +117,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         this.context = context;
     }
 
-    /**
-     * Query
-     */
+    // Query
 
     @Override
     public <T> Mono<T> findById(Class<T> clazz, Object id) {
@@ -186,9 +180,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         return Mono.from(publisher).hasElement();
     }
 
-    /**
-     * Count
-     */
+    // Count
 
     @Override
     public <T> Mono<Long> count(Class<T> clazz, Filter filter) {
@@ -204,9 +196,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         return Mono.from(source);
     }
 
-    /**
-     * Upsert
-     */
+    // Upsert
 
     @Override
     public <T> Mono<Void> upsert(T o) {
@@ -214,7 +204,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     }
 
     @Override
-    public <T> Mono<Void> upsert(ClientSession session, T record) {
+    public <T> Mono<Void> upsert(@Nullable ClientSession session, T record) {
         Class<T> clazz = (Class<T>) record.getClass();
         MongoEntity<T> entity = (MongoEntity<T>) context.getEntity(record.getClass());
         MongoCollection<T> collection = context.getCollection(clazz);
@@ -236,20 +226,20 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
      * apply the shard key to the filter so that mongos know to which
      * MongoDB the command needs to be sent for better performance
      */
-    private BsonDocument applyShardKey(ShardKey shardKey, BsonDocument record) {
+    private BsonDocument applyShardKey(ShardKey shardKey, BsonDocument document) {
         List<ShardKey.Path> paths = shardKey.paths();
         BsonDocument filter = new BsonDocument(MapUtil.getCapability(paths.size()));
         for (ShardKey.Path shardKeyPath : paths) {
             String[] path = shardKeyPath.path();
             // fast path
             if (path.length == 1) {
-                BsonValue shardKeyValue = record.get(path[0]);
+                BsonValue shardKeyValue = document.get(path[0]);
                 if (shardKeyValue != null) {
                     filter.append(path[0], shardKeyValue);
                 }
             } else {
                 // slow path
-                BsonDocument currentPath = record;
+                BsonDocument currentPath = document;
                 for (int i = 0, pathLength = path.length; i < pathLength; i++) {
                     String p = path[i];
                     BsonValue shardKeyValue = currentPath.get(p);
@@ -278,9 +268,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 .then();
     }
 
-    /**
-     * Insert
-     */
+    // Insert
 
     @Override
     public <T> Mono<Void> insert(T value) {
@@ -332,9 +320,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 .then();
     }
 
-    /**
-     * Update
-     */
+    // Update
 
     @Override
     public <T> Mono<UpdateResult> updateOne(Class<T> clazz, Filter filter, Update update) {
@@ -342,7 +328,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     }
 
     @Override
-    public <T> Mono<UpdateResult> updateOne(ClientSession session, Class<T> clazz, Filter filter, Update update) {
+    public <T> Mono<UpdateResult> updateOne(@Nullable ClientSession session, Class<T> clazz, Filter filter, Update update) {
         MongoCollection<T> collection = context.getCollection(clazz);
         Publisher<UpdateResult> source = session == null
                 ? collection.updateOne(filter, update, DEFAULT_UPDATE_OPTIONS)
@@ -356,7 +342,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     }
 
     @Override
-    public <T> Mono<UpdateResult> updateMany(ClientSession session, Class<T> clazz, Filter filter, Update update) {
+    public <T> Mono<UpdateResult> updateMany(@Nullable ClientSession session, Class<T> clazz, Filter filter, Update update) {
         MongoCollection<T> collection = context.getCollection(clazz);
         Publisher<UpdateResult> source = session == null
                 ? collection.updateMany(filter, update, DEFAULT_UPDATE_OPTIONS)
@@ -364,12 +350,24 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         return Mono.from(source);
     }
 
-    /**
-     * Delete
-     */
+    // Delete
 
     @Override
-    public <T> Mono<DeleteResult> deleteMany(ClientSession session, Class<T> clazz, Filter filter) {
+    public <T> Mono<DeleteResult> deleteOne(@Nullable ClientSession session, Class<T> clazz, Filter filter) {
+        MongoCollection<T> collection = context.getCollection(clazz);
+        Publisher<DeleteResult> source = session == null
+                ? collection.deleteOne(filter, DEFAULT_DELETE_OPTIONS)
+                : collection.deleteOne(session, filter, DEFAULT_DELETE_OPTIONS);
+        return Mono.from(source);
+    }
+
+    @Override
+    public <T> Mono<DeleteResult> deleteOne(Class<T> clazz, Filter filter) {
+        return deleteOne(null, clazz, filter);
+    }
+
+    @Override
+    public <T> Mono<DeleteResult> deleteMany(@Nullable ClientSession session, Class<T> clazz, Filter filter) {
         MongoCollection<T> collection = context.getCollection(clazz);
         Publisher<DeleteResult> source = session == null
                 ? collection.deleteMany(filter, DEFAULT_DELETE_OPTIONS)
@@ -389,9 +387,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         return Mono.from(source);
     }
 
-    /**
-     * Change Stream
-     */
+    // Change Stream
 
     @Override
     public <T> Flux<ChangeStreamDocument<T>> watch(Class<T> clazz, FullDocument fullDocument) {
@@ -399,13 +395,14 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         Publisher<ChangeStreamDocument<T>> source = collection.watch(clazz)
                 .fullDocument(fullDocument);
         // Use single thread for onNext calls to ensure they happen in sequence
-        // without the need of "synchronized"
+        // without the need of "synchronized" one by one
+
+        // The code is a little hacky because only using one thread bases on the fact
+        // that we know all our usages are really fast
         return Flux.from(source).publishOn(WATCH_SCHEDULER);
     }
 
-    /**
-     * Aggregation
-     */
+    // Aggregation
 
     @Override
     public <T> Mono<Long> countDistinct(Class<T> clazz,
@@ -424,9 +421,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 .defaultIfEmpty(0L);
     }
 
-    /**
-     * Index
-     */
+    // Index
 
     @Override
     public <T> Mono<Void> ensureIndexes(Class<T> clazz, List<IndexModel> indexModels) {
@@ -604,9 +599,9 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         return document;
     }
 
-    private <T> BsonDocument encodeEntityForUpdateOps(BsonDocument record) {
-        record.remove("_id");
-        return new BsonDocument("$set", record);
+    private BsonDocument encodeEntityForUpdateOps(BsonDocument document) {
+        document.remove("_id");
+        return new BsonDocument("$set", document);
     }
 
     private <T> TurmsFindPublisherImpl<T> find(MongoCollection<T> collection,

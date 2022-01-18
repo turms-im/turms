@@ -80,13 +80,17 @@ public interface MongoOperationsSupport {
 
     <T> Mono<UpdateResult> updateOne(Class<T> clazz, Filter filter, Update update);
 
-    <T> Mono<UpdateResult> updateOne(ClientSession session, Class<T> clazz, Filter filter, Update update);
+    <T> Mono<UpdateResult> updateOne(@Nullable ClientSession session, Class<T> clazz, Filter filter, Update update);
 
     <T> Mono<UpdateResult> updateMany(Class<T> clazz, Filter filter, Update update);
 
-    <T> Mono<UpdateResult> updateMany(ClientSession session, Class<T> clazz, Filter filter, Update update);
+    <T> Mono<UpdateResult> updateMany(@Nullable ClientSession session, Class<T> clazz, Filter filter, Update update);
 
-    <T> Mono<DeleteResult> deleteMany(ClientSession session, Class<T> clazz, Filter filter);
+    <T> Mono<DeleteResult> deleteOne(@Nullable ClientSession session, Class<T> clazz, Filter filter);
+
+    <T> Mono<DeleteResult> deleteOne(Class<T> clazz, Filter filter);
+
+    <T> Mono<DeleteResult> deleteMany(@Nullable ClientSession session, Class<T> clazz, Filter filter);
 
     <T> Mono<DeleteResult> deleteMany(Class<T> clazz, Filter filter);
 
