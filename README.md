@@ -63,8 +63,7 @@ Note: The main disadvantage of the current Turms project is that it does not pro
 
 ### Business Features
 
-1. Support a complete set of [IM features](https://turms-im.github.io/docs/features). Turms supports almost all IM features supported by commercial instant messaging products and no restrictions on business features. For example, Turms supports advanced features as unwanted words filtering (using Aho-Corasick automaton with double array trie).
-    (The data analysis feature will be supported when turms-data is released in the future. Please refer to [Turms Data Analysis](https://turms-im.github.io/docs/for-developers/data-analytics.html ) for details)
+1. Support a complete set of [IM features](https://turms-im.github.io/docs/features). Turms supports almost all IM features supported by commercial instant messaging products and no restrictions on business features. And Turms also supports advanced features such as unwanted words filtering (using Aho-Corasick automaton with double array trie).
 2. (Extensibility) Turms supports two approaches to extend: configuration properties and custom plugins. Of course, you can also modify the source code. For example, the plugin turms-plugin-minio based on turms-plugin is used to interact with MinIO server.
 2. (Flexibility) Turms provides hundreds of configuration properties for developers to meet various requirements. And most of the properties can be updated at the cluster level when the cluster is running without performance loss.
 
@@ -75,9 +74,9 @@ Note: The main disadvantage of the current Turms project is that it does not pro
 3. (Deployability) Support container deployment to facilitate integration (CI/CD) with cloud services. Turms provides three solutions for container deployment out of the box: docker image, docker-compose script, and Terraform module
 4. (Observability) Support relatively complete features of observability for business analysis and troubleshoot
 5. (Scalability) Support medium to large scale instant messaging applications, and there is no need to refactor even if the application becomes large from medium-scale (There is still a lot of optimization work to be done for large applications, but Turms servers are easy to upgrade)
-6. (Security) Support throttling API requests and blocking user/IP to resist most CC attacks
+6. (Security) Support API throttling and global user/IP blocklist to resist most CC attacks
 7. (Simplicity) The Turms architecture is lightweight, which makes Turms easy to learn and redevelop. Please refer to [Turms Architecture Design](https://turms-im.github.io/docs/for-developers/architecture.html) for details)
-8. Turms depends on the MongoDB sharded cluster to support request routing (such as read-write separation) for medium to large scale applications
+8. Turms depends on the MongoDB sharded cluster to support request routing (such as read-write separation) and tiered storage for medium to large scale applications
 
 ### Other Features
 
@@ -95,8 +94,8 @@ Note: The main disadvantage of the current Turms project is that it does not pro
     * I/O: The Turms server is a reactive application. All network I/O operations (e.g. database call, Redis call, service discovery call, RPC) are based on Netty to achieve non-blocking I/O. Therefore, the Turms server can make full use of system resources (while traditional servers can't)
     * Encoding: Protobuf is used to encode the traffic data between Turms servers and turms clients; Custom encoding without any redundant data is used to encode the RPC requests and responses between Turms servers to ensure extreme efficiency
   * Thread
-      * The Turms server has an excellent thread model, and its thread number is constant, which is independent of the number of online users and the number of requests. Since the default number of threads in the access layer of the Turms server is the same as that of the CPU processors, the Turms server can make full use of the CPU cache, and greatly reduce the cost of thread context switching compared with traditional servers
-      * During business logic processing, there is no synchronization or lock, only CAS
+      * The Turms server has an excellent thread model, and its peak thread number is constant, which is independent of the number of online users and the number of requests. Since the default number of threads in the access layer of the Turms server is the same as that of the CPU processors, the Turms server can make full use of the CPU cache, and greatly reduce the cost of thread context switching and thread contention compared with traditional servers
+      * During business logic processing, there are almost no locks, only CAS operations
   * Memory
       * The Turms server allocates heap or direct memory smartly according to its usage to reduce the memory footprint 
       * The Turms server refactors parts of MongoDB/Redis client dependencies to ensure that there is no redundant memory allocation in the Turms server, which greatly improves the effective use of memory
@@ -123,6 +122,8 @@ The architecture design of Turms is derived from commercial instant messaging ar
 ![](https://raw.githubusercontent.com/turms-im/assets/master/turms/reference-architecture.png)
 
 ## Product Comparison
+
+Although there are many open source IM projects in the world, there is only one open source IM project designed for medium and large IM application scenarios: Turms.
 
 |                       | [Rocket.Chat](https://github.com/RocketChat/Rocket.Chat)     | Closed source IM cloud                                       | Turms                                                        |
 | --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |

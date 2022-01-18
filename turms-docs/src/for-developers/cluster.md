@@ -191,9 +191,7 @@ RPC响应的组成部分：
 
 turms-gateway服务端对turms-service服务端的背压实现比较取巧，具体而言：每个节点都会根据当前节点的CPU与内存负载状态，判断当前节点的健康状态，并通过“服务注册中心”向其他节点同步该健康信息。turms-gateway会根据已知的turms-service节点列表中，找出“isHealthy”为True的节点，向其发送RPC请求。如果turms-gateway发现当前所有turms-service的“isHealthy”均为False，则不再进行RPC下发，而是直接抛出异常。
 
-#### 失败重试
-
-跟多着上百个微服务的项目相比，Turms的服务端构成极其简单，因此不需要所谓的`服务降级`操作。
+#### 失败转移（Failover）
 
 对于无特定目标的RPC请求，如果一个Turms服务端向另一个Turms服务端发送了RPC请求，并且对端响应异常时，发送方会自动再向另一个Turms服务端发送该RPC请求。举例而言，如果客户端发送了一个请求给turms-gateway，turms-gateway会先随机挑选了一个turms-service来处理该用户请求，如果该turms-service响应异常，则turms-gateway会自动再搜寻另一个turms-service来处理该用户请求。
 

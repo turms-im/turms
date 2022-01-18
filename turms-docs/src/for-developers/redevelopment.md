@@ -45,7 +45,7 @@ git submodule foreach git pull origin master
 
 ## 搭建开发环境
 
-除了Turms服务端外，Turms其他子项目的搭建都非常常规与简单，故不累述。
+除了Turms服务端外，Turms其他子项目的搭建都非常常规与简单，故不赘述。
 
 Turms服务端开发环境的搭建其实也非常简单，具体步骤包括：
 
