@@ -215,7 +215,8 @@ sequenceDiagram
     participant G as turms-gateway
     actor R as Recipient
     S->>+G: SendNotificationRequest
-    G->>-R: TurmsNotification
+    G--)R: TurmsNotification
+    G-->>-S: hasSentNotificationToOneRecipient
 ```
 
 ### turms-service
@@ -325,6 +326,141 @@ UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, addres
 
 ## 集群实现
 
+在阅读下述源码前，建议读者先阅读[集群的设计与实现](https://turms-im.github.io/docs/for-developers/cluster.html)，理解集群服务的基本设计与职责。
+
+### 服务注册与发现
+
+TODO
+
+### 网络连接服务
+
+TODO
+
 ### RPC
+
+本文将继续以在上文`客户端请求处理流程`提到的RPC请求示例进行讲解，即：turms-gateway向turms-service发送`HandleServiceRequest`这一RPC请求。
+
+#### HandleServiceRequest的RPC发送端
+
+##### UML顺序图
+
+```mermaid
+sequenceDiagram
+    participant I as InboundRequestService
+    participant R as RpcService
+    participant D as DiscoveryService
+    participant C as CodecService
+    participant E as RpcEndpoint
+    participant F as RpcFrameEncoder
+    participant O as ChannelOperations
+    I->>R: sendServiceRequest
+    R->>D: getOtherActiveConnectedMembers
+    D-->>R: otherActiveConnectedMembers(List<Member>)
+    R->>C: serializeWithoutCodecId
+    C-->>R: requestBody (ByteBuf)
+    R->>E: sendRequest
+    E->>F: encodeRequest
+    F-->>E: requestBuffer(ByteBuf)
+    E->>O: sendObject
+```
+
+##### 业务层
+
+接着上文，turms-gateway会通过`im.turms.gateway.service.impl.message.InboundRequestService#sendServiceRequest`函数向turms-service发送`HandleServiceRequest`，而该函数会调用RPC服务的`im.turms.server.common.cluster.service.rpc.RpcService#requestResponse`函数，将RPC请求的处理逻辑代理给下游RPC服务执行，具体代码如下：
+
+```java
+Mono<ServiceResponse> sendServiceRequest(ServiceRequest serviceRequest) {
+    HandleServiceRequest request = new HandleServiceRequest(serviceRequest);
+    return node.getRpcService().requestResponse(request);
+}
+```
+
+##### RPC层——逻辑层
+
+由于函数调用方并没有指定`HandleServiceRequest`请求的RPC接收节点，因此`requestResponse`函数会首先通过`im.turms.server.common.cluster.service.rpc.RpcService#getOtherActiveConnectedMembersToRespond`函数，获得一批可以处理该RPC请求的节点，在判断完这些节点的健康状态后，如果不存在健康的节点，则抛异常，否则再将这RPC请求通过`im.turms.server.common.cluster.service.codec.CodecService#serializeWithoutCodecId`编码成字节数据，并通过`endpoint.sendRequest(request, requestBody)`这一函数，将字节数据交由下游的网络层进行发送。`requestResponse0`的具体源码如下：
+
+```java
+<T> Mono<T> requestResponse0(RpcEndpoint endpoint,
+                             RpcRequest<T> request,
+                             @Nullable Duration timeout) {
+    try {
+        assertCurrentNodeIsAllowedToSend(request);
+    } catch (Exception e) {
+        request.release();
+        return Mono.error(e);
+    }
+    if (timeout == null) {
+        timeout = defaultRequestTimeoutDuration;
+    }
+    Mono<T> mono = Mono
+            .deferContextual(context -> {
+                addTraceIdToRequestFromContext(context, request);
+                ByteBuf requestBody;
+                try {
+                    requestBody = codecService.serializeWithoutCodecId(request);
+                } catch (Exception e) {
+                    request.release();
+                    return Mono.error(new IllegalStateException("Failed to encode the
+                }
+                return endpoint.sendRequest(request, requestBody);
+            })
+            .timeout(timeout)
+            .name(METRICS_NAME_RPC_REQUEST)
+            .tag(METRICS_TAG_REQUEST_NAME, request.name())
+            .tag(METRICS_TAG_REQUEST_TARGET_NODE_ID, endpoint.getNodeId());
+    Tag tag = request.tag();
+    if (tag != null) {
+        mono = mono.tag(tag.getKey(), tag.getValue());
+    }
+    return mono
+            .metrics()
+            .onErrorMap(t -> mapThrowable(t, request));
+}
+```
+
+##### RPC层——网络层
+
+RPC请求在被上游RPC逻辑层编码成字节数据后，会被传递给`im.turms.server.common.cluster.service.rpc.RpcEndpoint#sendRequest`函数，该函数会通过`RpcFrameEncoder.INSTANCE.encodeRequest(request, requestBody)`再给该字节数据append上`请求类型ID`与`请求ID`这两个字节数据，以让RPC对端能够根据`请求类型ID`进行解码，并通过`请求ID`返回对应的响应，并最终发送字节流数据给RPC对端。`sendRequest`具体代码实现如下：
+
+```java
+<T> Mono<T> sendRequest(RpcRequest<T> request, ByteBuf requestBody) {
+    ChannelOperations<?, ?> conn = connection.getConnection();
+    if (requestBody.refCnt() == 0) {
+        return Mono.error(new IllegalReferenceCountException("The request body has been released"));
+    }
+    if (conn.isDisposed()) {
+        requestBody.release();
+        return Mono.error(new ClosedChannelException());
+    }
+    Sinks.One<T> sink = Sinks.one();
+    while (true) {
+        int requestId = generateRandomId();
+        Sinks.One<?> previous = pendingRequestMap.putIfAbsent(requestId, sink);
+        if (previous != null) {
+            continue;
+        }
+        request.setRequestId(requestId);
+        ByteBuf buffer;
+        try {
+            buffer = RpcFrameEncoder.INSTANCE.encodeRequest(request, requestBody);
+        } catch (Exception e) {
+            requestBody.release();
+            resolveRequest(requestId, null, new IllegalStateException("Failed to encode request", e));
+            break;
+        }
+        conn.sendObject(buffer)
+                .then()
+                .subscribe(null, t -> resolveRequest(requestId, null, t));
+        break;
+    }
+    return sink.asMono();
+}
+```
+
+至此，RPC发送端的处理流程就结束了。
+
+特别一提的是：之所以`请求ID`没有在上游就被编码，这是因为部分RPC请求有可能被发送给多个RPC接收端，如群消息就经常被转发给多个turms-gateway服务端，而通过分别编码，就可以让上游传来的字节数据被共享，无需内存拷贝，极大地提升内存使用率，这也是为什么Turms要自研RPC服务的原因之一。
+
+##### HandleServiceRequest的RPC接收端
 
 TODO

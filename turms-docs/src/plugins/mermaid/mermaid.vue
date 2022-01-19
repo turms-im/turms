@@ -21,8 +21,7 @@ export default {
     data: () => ({
         svg: '',
         mermaid: null,
-        zoomed: false,
-        darkModeObserver: null
+        zoomed: false
     }),
     async mounted() {
         this.mermaid = (await import('mermaid')).default;
