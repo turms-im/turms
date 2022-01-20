@@ -35,7 +35,7 @@
         <eclipse-collections.version>11.0.0</eclipse-collections.version>
         <flight-recorder-starter.version>2.2.1</flight-recorder-starter.version>
         <jctools-core.version>3.3.0</jctools-core.version>
-        <springdoc.version>1.5.13</springdoc.version>
+        <springdoc.version>1.6.4</springdoc.version>
     </properties>
 
     <dependencies>

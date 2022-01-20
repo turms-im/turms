@@ -13,7 +13,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
-        <protobuf.version>3.19.0</protobuf.version>
+        <protobuf.version>3.19.3</protobuf.version>
         <jsr305.version>3.0.2</jsr305.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
