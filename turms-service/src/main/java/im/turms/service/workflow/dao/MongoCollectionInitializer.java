@@ -30,6 +30,8 @@ import im.turms.server.common.mongo.entity.MongoEntity;
 import im.turms.server.common.mongo.entity.Zone;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.service.env.database.MultiTemperatureProperties;
+import im.turms.server.common.property.env.service.ServiceProperties;
+import im.turms.server.common.property.env.service.env.database.MongoProperties;
 import im.turms.server.common.security.PasswordManager;
 import im.turms.server.common.util.ReactorUtil;
 import im.turms.service.workflow.dao.domain.admin.Admin;
@@ -57,11 +59,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 
+import java.lang.reflect.Field;
 import java.time.Duration;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 import static im.turms.server.common.property.env.service.env.database.MultiTemperatureProperties.TemperatureProperties;
@@ -84,6 +88,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     private final TurmsApplicationContext context;
     private final MongoFakingManager fakingManager;
     private final MultiTemperatureProperties messageTemperatureProperties;
+    private final MongoProperties mongoProperties;
 
     public MongoCollectionInitializer(
             TurmsMongoClient adminMongoClient,
@@ -105,15 +110,17 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 conversationMongoClient,
                 messageMongoClient);
         this.context = context;
-        fakingManager = new MongoFakingManager(turmsPropertiesManager.getLocalProperties().getService().getFake(),
+        ServiceProperties serviceProperties = turmsPropertiesManager.getLocalProperties().getService();
+        fakingManager = new MongoFakingManager(serviceProperties.getFake(),
                 passwordManager,
                 adminMongoClient,
                 userMongoClient,
                 groupMongoClient,
                 conversationMongoClient,
                 messageMongoClient);
-        messageTemperatureProperties = turmsPropertiesManager.getLocalProperties()
-                .getService()
+        mongoProperties = serviceProperties
+                .getMongo();
+        messageTemperatureProperties = serviceProperties
                 .getMongo()
                 .getMessage()
                 .getTemperature();
@@ -229,10 +236,51 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         for (TurmsMongoClient client : clients) {
             entityMap.putAll(client, client.getRegisteredEntities());
         }
+        BiPredicate<String, Object> isCustomIndexEnabled = (fieldName, optionalIndex) -> {
+            try {
+                Field field = optionalIndex.getClass().getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return (boolean) field.get(optionalIndex);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                String message = "Cannot find the field %s in the optional index properties %s"
+                        .formatted(fieldName, optionalIndex.getClass().getName());
+                throw new IllegalStateException(message, e);
+            }
+        };
+        BiPredicate<Class<?>, Field> isIndexEnabled = (entityClass, field) -> {
+            String fieldName = field.getName();
+            // TODO: pattern matching
+            if (entityClass == Admin.class) {
+                return isCustomIndexEnabled.test(fieldName, mongoProperties.getAdmin().getOptionalIndex().getAdmin());
+            } else if (entityClass == Group.class) {
+                return isCustomIndexEnabled.test(fieldName, mongoProperties.getGroup().getOptionalIndex().getGroup());
+            } else if (entityClass == GroupBlockedUser.class) {
+                return isCustomIndexEnabled.test(fieldName, mongoProperties.getGroup().getOptionalIndex().getGroupBlockedUser());
+            } else if (entityClass == GroupInvitation.class) {
+                return isCustomIndexEnabled.test(fieldName, mongoProperties.getGroup().getOptionalIndex().getGroupInvitation());
+            } else if (entityClass == GroupJoinRequest.class) {
+                return isCustomIndexEnabled.test(fieldName, mongoProperties.getGroup().getOptionalIndex().getGroupJoinRequest());
+            } else if (entityClass == GroupMember.class) {
+                return isCustomIndexEnabled.test(fieldName, mongoProperties.getGroup().getOptionalIndex().getGroupMember());
+            } else if (entityClass == Message.class) {
+                return isCustomIndexEnabled.test(fieldName, mongoProperties.getMessage().getOptionalIndex().getMessage());
+            } else if (entityClass == UserFriendRequest.class) {
+                return isCustomIndexEnabled.test(fieldName, mongoProperties.getUser().getOptionalIndex().getUserFriendRequest());
+            } else if (entityClass == UserRelationship.class) {
+                return isCustomIndexEnabled.test(fieldName, mongoProperties.getUser().getOptionalIndex().getUserRelationship());
+            } else if (entityClass == UserRelationshipGroupMember.class) {
+                return isCustomIndexEnabled.test(fieldName, mongoProperties.getUser().getOptionalIndex().getUserRelationshipGroupMember());
+            } else {
+                String message = "Cannot check if the custom index is enabled because the class %s is unknown"
+                        .formatted(entityClass.getName());
+                throw new IllegalStateException(message);
+            }
+        };
         return Mono.when(entityMap.asMap().entrySet().stream()
                 .map(entry -> entry.getKey().ensureIndexesAndShard(entry.getValue().stream()
-                        .map(MongoEntity::entityClass)
-                        .collect(Collectors.toList())))
+                                .map(MongoEntity::entityClass)
+                                .collect(Collectors.toList()),
+                        isIndexEnabled))
                 .toList());
     }
 

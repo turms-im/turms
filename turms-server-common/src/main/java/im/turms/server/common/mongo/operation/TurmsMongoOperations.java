@@ -47,6 +47,7 @@ import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.BsonPool;
 import im.turms.server.common.mongo.MongoContext;
+import im.turms.server.common.mongo.entity.Index;
 import im.turms.server.common.mongo.entity.MongoEntity;
 import im.turms.server.common.mongo.entity.ShardKey;
 import im.turms.server.common.mongo.exception.MongoExceptionTranslator;
@@ -70,11 +71,13 @@ import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -398,7 +401,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         // without the need of "synchronized" one by one
 
         // The code is a little hacky because only using one thread bases on the fact
-        // that we know all our usages are really fast
+        // that we know all our usages are so fast that they can run in a thread
         return Flux.from(source).publishOn(WATCH_SCHEDULER);
     }
 
@@ -479,28 +482,39 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         return shardCollection.then();
     }
 
+    @Override
+    public Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes) {
+        return ensureIndexesAndShard(classes, null);
+    }
+
     /**
      * @implNote Send requests to ensure indexes and shard collections synchronously
      * to avoid mongo servers throwing "LockBusy" error (error code 46)
      */
     @Override
-    public Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes) {
+    public Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes,
+                                            @Nullable BiPredicate<Class<?>, Field> customIndexFilter) {
         Mono<Void> ensureIndexes = Mono.empty();
         for (Class<?> clazz : classes) {
             MongoEntity<?> entity = context.getEntity(clazz);
-            List<IndexModel> indexes = entity.indexes();
+            List<Index> indexModels = entity.indexes();
+            List<IndexModel> indexes = new ArrayList<>(indexModels.size());
             IndexModel compoundIndex = entity.compoundIndex();
-            int indexSize = indexes.size();
             if (compoundIndex != null) {
-                List<IndexModel> temp = new ArrayList<>(indexSize + 1);
-                temp.addAll(indexes);
-                temp.add(compoundIndex);
-                indexes = temp;
+                indexes.add(compoundIndex);
+            }
+            for (Index index : indexModels) {
+                if (index.indexed().optional()) {
+                    if (customIndexFilter != null && customIndexFilter.test(clazz, index.field())) {
+                        indexes.add(index.model());
+                    }
+                } else {
+                    indexes.add(index.model());
+                }
             }
             if (!indexes.isEmpty()) {
-                List<IndexModel> finalIndexes = indexes;
                 ensureIndexes = ensureIndexes
-                        .then(Mono.defer(() -> ensureIndexes(entity.entityClass(), finalIndexes)));
+                        .then(Mono.defer(() -> ensureIndexes(entity.entityClass(), indexes)));
             }
         }
         return ensureIndexes

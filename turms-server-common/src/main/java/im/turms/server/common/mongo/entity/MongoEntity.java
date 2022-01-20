@@ -38,7 +38,7 @@ public record MongoEntity<T>(
         ShardKey shardKey,
         Zone zone,
         IndexModel compoundIndex,
-        List<IndexModel> indexes,
+        List<Index> indexes,
         // Field
         String idFieldName,
         Map<String, EntityField<?>> fieldMap

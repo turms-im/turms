@@ -23,12 +23,14 @@ import im.turms.server.common.mongo.entity.annotation.Field;
 import im.turms.server.common.mongo.entity.annotation.Id;
 import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
-import im.turms.service.workflow.dao.index.OptionalIndexedForColdData;
-import im.turms.service.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
+
+import static im.turms.server.common.mongo.entity.IndexType.HASH;
+import static im.turms.server.common.mongo.entity.annotation.IndexedReason.EXPIRABLE;
+import static im.turms.server.common.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 
 /**
  * @author James Chen
@@ -75,8 +77,7 @@ public final class Message {
     private final Date modificationDate;
 
     @Field(Fields.DELETION_DATE)
-    @OptionalIndexedForColdData
-    @Indexed
+    @Indexed(optional = true, reason = EXPIRABLE)
     private final Date deletionDate;
 
     @Field(Fields.RECALL_DATE)
@@ -86,7 +87,7 @@ public final class Message {
     private final String text;
 
     @Field(Fields.SENDER_ID)
-    @OptionalIndexedForExtendedFeature
+    @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE)
     private final Long senderId;
 
     /**
@@ -105,7 +106,7 @@ public final class Message {
     private final Integer burnAfter;
 
     @Field(Fields.REFERENCE_ID)
-    @OptionalIndexedForExtendedFeature
+    @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE)
     private final Long referenceId;
 
     @Field(Fields.SEQUENCE_ID)

@@ -17,18 +17,19 @@
 
 package im.turms.service.workflow.dao.domain.group;
 
-import im.turms.server.common.mongo.entity.IndexType;
 import im.turms.server.common.mongo.entity.annotation.Document;
 import im.turms.server.common.mongo.entity.annotation.Field;
 import im.turms.server.common.mongo.entity.annotation.Id;
 import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
-import im.turms.service.workflow.dao.index.OptionalIndexedForColdData;
-import im.turms.service.workflow.dao.index.OptionalIndexedForDifferentAmount;
-import im.turms.service.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.Data;
 
 import java.util.Date;
+
+import static im.turms.server.common.mongo.entity.IndexType.HASH;
+import static im.turms.server.common.mongo.entity.annotation.IndexedReason.EXPIRABLE;
+import static im.turms.server.common.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
+import static im.turms.server.common.mongo.entity.annotation.IndexedReason.SMALL_COLLECTION;
 
 /**
  * @author James Chen
@@ -44,19 +45,18 @@ public final class Group {
     private final Long id;
 
     @Field(Fields.TYPE_ID)
-    @OptionalIndexedForDifferentAmount
+    @Indexed(optional = true, value = HASH, reason = SMALL_COLLECTION)
     private final Long typeId;
 
     @Field(Fields.CREATOR_ID)
-    @OptionalIndexedForExtendedFeature
+    @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE)
     private final Long creatorId;
 
     /**
      * Used by countOwnedGroups to limit the maximum number of groups that a user can have
      */
     @Field(Fields.OWNER_ID)
-    @OptionalIndexedForExtendedFeature
-    @Indexed(IndexType.HASH)
+    @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE)
     private final Long ownerId;
 
     @Field(Fields.NAME)
@@ -72,16 +72,15 @@ public final class Group {
     private final Integer minimumScore;
 
     @Field(Fields.CREATION_DATE)
-    @OptionalIndexedForExtendedFeature
+    @Indexed(optional = true, reason = EXTENDED_FEATURE)
     private final Date creationDate;
 
     @Field(Fields.DELETION_DATE)
-    @OptionalIndexedForColdData
-    @Indexed
+    @Indexed(optional = true, reason = EXPIRABLE)
     private final Date deletionDate;
 
     @Field(Fields.MUTE_END_DATE)
-    @OptionalIndexedForExtendedFeature
+    @Indexed(optional = true, reason = EXTENDED_FEATURE)
     private final Date muteEndDate;
 
     @Field(Fields.IS_ACTIVE)

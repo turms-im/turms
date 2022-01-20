@@ -24,13 +24,15 @@ import im.turms.server.common.mongo.entity.annotation.Field;
 import im.turms.server.common.mongo.entity.annotation.Id;
 import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
-import im.turms.service.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+
+import static im.turms.server.common.mongo.entity.IndexType.HASH;
+import static im.turms.server.common.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 
 /**
  * @author James Chen
@@ -50,7 +52,7 @@ public final class UserRelationshipGroupMember {
     private final Key key;
 
     @Field(Fields.JOIN_DATE)
-    @OptionalIndexedForExtendedFeature
+    @Indexed(optional = true, reason = EXTENDED_FEATURE)
     private final Date joinDate;
 
     public UserRelationshipGroupMember(
@@ -73,11 +75,11 @@ public final class UserRelationshipGroupMember {
          * Not need to index because its low selectivity
          */
         @Field(Fields.GROUP_INDEX)
-        @OptionalIndexedForExtendedFeature
+        @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE)
         private final Integer groupIndex;
 
         @Field(Fields.RELATED_USER_ID)
-        @OptionalIndexedForExtendedFeature
+        @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE)
         private final Long relatedUserId;
 
         public static final class Fields {

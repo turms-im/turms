@@ -23,6 +23,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
@@ -33,5 +34,12 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class ConversationMongoProperties extends TurmsMongoProperties {
-    private WriteConcern conversationWriteConcern = WriteConcern.ACKNOWLEDGED;
+
+    @NestedConfigurationProperty
+    private WriteConcernProperties writeConcern = new WriteConcernProperties();
+
+    @Data
+    public static class WriteConcernProperties {
+        private WriteConcern conversation = WriteConcern.MAJORITY;
+    }
 }

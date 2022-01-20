@@ -30,8 +30,8 @@ import static im.turms.server.common.logging.CommonLogger.NOTIFICATION_LOGGER;
  */
 public final class NotificationLogging {
 
-    private static final byte[] SENT = new byte[]{'S', 'E', 'N', 'T'};
-    private static final byte[] UNSENT = new byte[]{'U', 'N', 'S', 'E', 'N', 'T'};
+    private static final byte[] SENT = {'S', 'E', 'N', 'T'};
+    private static final byte[] UNSENT = {'U', 'N', 'S', 'E', 'N', 'T'};
 
     private NotificationLogging() {
     }

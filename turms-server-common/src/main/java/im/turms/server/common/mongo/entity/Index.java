@@ -15,18 +15,19 @@
  * limitations under the License.
  */
 
-package im.turms.service.workflow.dao.index;
+package im.turms.server.common.mongo.entity;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import com.mongodb.client.model.IndexModel;
+import im.turms.server.common.mongo.entity.annotation.Indexed;
+
+import java.lang.reflect.Field;
 
 /**
- * Not indexed by default because the domain marked as OptionalIndexedForDifferentAmount
- * usually has only a few (or some) documents and has a low index selectivity.
- * <p>
- * No need to add an index unless your application really has a lot of records
- * and you are sure that it has a medium or high index selectivity.
+ * @author James Chen
  */
-@Retention(RetentionPolicy.SOURCE)
-public @interface OptionalIndexedForDifferentAmount {
+public record Index(
+        Field field,
+        Indexed indexed,
+        IndexModel model
+) {
 }

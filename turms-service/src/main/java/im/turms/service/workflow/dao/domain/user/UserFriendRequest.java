@@ -22,13 +22,16 @@ import im.turms.server.common.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.mongo.entity.annotation.Document;
 import im.turms.server.common.mongo.entity.annotation.Field;
 import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
 import im.turms.service.workflow.dao.domain.Expirable;
-import im.turms.service.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
+
+import static im.turms.server.common.mongo.entity.IndexType.HASH;
+import static im.turms.server.common.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 
 /**
  * @author James Chen
@@ -69,18 +72,18 @@ public class UserFriendRequest implements Expirable {
     private final Date creationDate;
 
     @Field(Fields.RESPONSE_DATE)
-    @OptionalIndexedForExtendedFeature
+    @Indexed(optional = true, reason = EXTENDED_FEATURE)
     private final Date responseDate;
 
     /**
      * Used by queryFriendRequestsByRequesterId
      */
     @Field(Fields.REQUESTER_ID)
-    @OptionalIndexedForExtendedFeature
+    @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE)
     private final Long requesterId;
 
     @Field(Fields.RECIPIENT_ID)
-    @OptionalIndexedForExtendedFeature
+    @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE)
     private final Long recipientId;
 
     public static final class Fields {

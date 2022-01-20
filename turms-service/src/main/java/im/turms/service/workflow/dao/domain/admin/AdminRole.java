@@ -21,7 +21,6 @@ import im.turms.server.common.mongo.entity.annotation.Document;
 import im.turms.server.common.mongo.entity.annotation.Field;
 import im.turms.server.common.mongo.entity.annotation.Id;
 import im.turms.service.workflow.access.http.permission.AdminPermission;
-import im.turms.service.workflow.dao.index.OptionalIndexedForDifferentAmount;
 import lombok.Data;
 
 import java.util.Set;
@@ -52,14 +51,12 @@ public final class AdminRole {
     private final String name;
 
     @Field(Fields.PERMISSIONS)
-    @OptionalIndexedForDifferentAmount
     private final Set<AdminPermission> permissions;
 
     /**
      * Only the higher-ranking admins can add/delete/update lower-ranking admins' information.
      */
     @Field(Fields.RANK)
-    @OptionalIndexedForDifferentAmount
     private final Integer rank;
 
     public static final class Fields {

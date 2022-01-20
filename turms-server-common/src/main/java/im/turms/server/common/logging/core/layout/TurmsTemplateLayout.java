@@ -50,8 +50,8 @@ public class TurmsTemplateLayout extends TemplateLayout {
 
     private static final int ESTIMATED_PATTERN_TEXT_LENGTH = 128;
     private static final byte[][] LEVELS;
-    private static final byte[] NULL = new byte[]{'n', 'u', 'l', 'l'};
-    private static final byte[] COLON_SEPARATOR = new byte[]{' ', ':', ' '};
+    private static final byte[] NULL = {'n', 'u', 'l', 'l'};
+    private static final byte[] COLON_SEPARATOR = {' ', ':', ' '};
     private static final int TRACE_ID_LENGTH = 19;
     private static final int CLASS_NAME_LENGTH = 40;
 

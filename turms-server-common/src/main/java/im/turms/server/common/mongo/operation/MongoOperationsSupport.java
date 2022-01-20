@@ -33,8 +33,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 /**
@@ -109,6 +111,9 @@ public interface MongoOperationsSupport {
     Mono<Void> shard(MongoDatabase databaseToShard, MongoDatabase adminDatabase, MongoEntity<?> entity);
 
     Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes);
+
+    Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes,
+                                     @Nullable BiPredicate<Class<?>, Field> customIndexFilter);
 
     Mono<Void> addShardToZone(String shardName, String zoneName);
 

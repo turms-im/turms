@@ -105,8 +105,8 @@ public class MessageService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageService.class);
 
-    private static final byte[] GROUP_CONVERSATION_SEQUENCE_ID_PREFIX = new byte[]{'g', 'i'};
-    private static final byte[] PRIVATE_CONVERSATION_SEQUENCE_ID_PREFIX = new byte[]{'p', 'i'};
+    private static final byte[] GROUP_CONVERSATION_SEQUENCE_ID_PREFIX = {'g', 'i'};
+    private static final byte[] PRIVATE_CONVERSATION_SEQUENCE_ID_PREFIX = {'p', 'i'};
 
     private final TurmsMongoClient mongoClient;
     @Nullable

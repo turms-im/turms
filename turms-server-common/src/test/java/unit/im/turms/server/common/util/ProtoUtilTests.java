@@ -35,7 +35,7 @@ class ProtoUtilTests {
     void getDirectByteBuffer_shouldBeParsedToOriginalRequest() throws InvalidProtocolBufferException {
         int messageId = 9999;
         String text = "Test Text";
-        byte[] record = new byte[] {1, 2, 3, 4, 10, 11};
+        byte[] record = {1, 2, 3, 4, 10, 11};
         CreateMessageRequest request = CreateMessageRequest
                 .newBuilder()
                 .setMessageId(messageId)

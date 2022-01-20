@@ -39,7 +39,7 @@ public final class CommandArgsUtil {
 
     public static final byte BULK_STRINGS_FLAG_BYTE = '$';
     public static final byte COMMAND_TYPE_FLAG_BYTE = '*';
-    public static final byte[] CRLF_BYTES = new byte[]{'\r', '\n'};
+    public static final byte[] CRLF_BYTES = {'\r', '\n'};
 
     private static final int ARGUMENT_LENGTH_CACHE_SIZE = 64;
     private static final ByteBuf[] ARGUMENT_LENGTH_CACHE;

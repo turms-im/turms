@@ -35,9 +35,31 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @NoArgsConstructor
 public class MessageMongoProperties extends TurmsMongoProperties {
 
-    private WriteConcern messageWriteConcern = WriteConcern.ACKNOWLEDGED;
+    @NestedConfigurationProperty
+    private OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
 
     @NestedConfigurationProperty
     private MultiTemperatureProperties temperature = new MultiTemperatureProperties();
+
+    @NestedConfigurationProperty
+    private WriteConcernProperties writeConcern = new WriteConcernProperties();
+
+    @Data
+    public static class WriteConcernProperties {
+        private WriteConcern message = WriteConcern.ACKNOWLEDGED;
+    }
+
+    @Data
+    public static class OptionalIndexProperties {
+        @NestedConfigurationProperty
+        private MessageOptionalIndexProperties message = new MessageOptionalIndexProperties();
+    }
+
+    @Data
+    public static class MessageOptionalIndexProperties {
+        private boolean deletionDate = true;
+        private boolean senderId;
+        private boolean referenceId;
+    }
 
 }

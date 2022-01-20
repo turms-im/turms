@@ -20,13 +20,16 @@ package im.turms.service.workflow.dao.domain.admin;
 import im.turms.server.common.mongo.entity.annotation.Document;
 import im.turms.server.common.mongo.entity.annotation.Field;
 import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.property.env.common.security.SecurityProperties;
-import im.turms.service.workflow.dao.index.OptionalIndexedForDifferentAmount;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
+
+import static im.turms.server.common.mongo.entity.IndexType.HASH;
+import static im.turms.server.common.mongo.entity.annotation.IndexedReason.SMALL_COLLECTION;
 
 /**
  * @author James Chen
@@ -53,11 +56,11 @@ public final class Admin {
     private final String name;
 
     @Field(Fields.ROLE_ID)
-    @OptionalIndexedForDifferentAmount
+    @Indexed(optional = true, value = HASH, reason = SMALL_COLLECTION)
     private final Long roleId;
 
     @Field(Fields.REGISTRATION_DATE)
-    @OptionalIndexedForDifferentAmount
+    @Indexed(optional = true, reason = SMALL_COLLECTION)
     private final Date registrationDate;
 
     public static final class Fields {

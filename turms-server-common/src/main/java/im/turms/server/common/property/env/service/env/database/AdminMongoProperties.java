@@ -23,6 +23,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
@@ -33,6 +34,29 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class AdminMongoProperties extends TurmsMongoProperties {
-    private WriteConcern adminWriteConcern = WriteConcern.MAJORITY;
-    private WriteConcern adminRoleWriteConcern = WriteConcern.MAJORITY;
+
+    @NestedConfigurationProperty
+    private OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
+
+    @NestedConfigurationProperty
+    private WriteConcernProperties writeConcern = new WriteConcernProperties();
+
+    @Data
+    public static class OptionalIndexProperties {
+        @NestedConfigurationProperty
+        private AdminOptionalIndexProperties admin = new AdminOptionalIndexProperties();
+    }
+
+    @Data
+    public static class AdminOptionalIndexProperties {
+        private boolean roleId;
+        private boolean registrationDate;
+    }
+
+    @Data
+    public static class WriteConcernProperties {
+        private WriteConcern admin = WriteConcern.MAJORITY;
+        private WriteConcern adminRole = WriteConcern.MAJORITY;
+    }
+
 }

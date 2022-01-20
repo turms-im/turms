@@ -23,6 +23,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
@@ -33,12 +34,53 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class UserMongoProperties extends TurmsMongoProperties {
-    private WriteConcern userWriteConcern = WriteConcern.ACKNOWLEDGED;
-    private WriteConcern userFriendRequestWriteConcern = WriteConcern.ACKNOWLEDGED;
-    private WriteConcern userMaxDailyOnlineUserWriteConcern = WriteConcern.ACKNOWLEDGED;
-    private WriteConcern userPermissionGroupWriteConcern = WriteConcern.ACKNOWLEDGED;
-    private WriteConcern userRelationshipWriteConcern = WriteConcern.ACKNOWLEDGED;
-    private WriteConcern userRelationshipGroupWriteConcern = WriteConcern.ACKNOWLEDGED;
-    private WriteConcern userRelationshipGroupMemberWriteConcern = WriteConcern.ACKNOWLEDGED;
-    private WriteConcern userVersionWriteConcern = WriteConcern.ACKNOWLEDGED;
+
+    @NestedConfigurationProperty
+    private OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
+
+    @NestedConfigurationProperty
+    private WriteConcernProperties writeConcern = new WriteConcernProperties();
+
+    @Data
+    public static class WriteConcernProperties {
+        private WriteConcern user = WriteConcern.ACKNOWLEDGED;
+        private WriteConcern userFriendRequest = WriteConcern.ACKNOWLEDGED;
+        private WriteConcern userMaxDailyOnlineUser = WriteConcern.ACKNOWLEDGED;
+        private WriteConcern userPermissionGroup = WriteConcern.ACKNOWLEDGED;
+        private WriteConcern userRelationship = WriteConcern.ACKNOWLEDGED;
+        private WriteConcern userRelationshipGroup = WriteConcern.ACKNOWLEDGED;
+        private WriteConcern userRelationshipGroupMember = WriteConcern.ACKNOWLEDGED;
+        private WriteConcern userVersion = WriteConcern.ACKNOWLEDGED;
+    }
+
+    @Data
+    public static class OptionalIndexProperties {
+        @NestedConfigurationProperty
+        private UserFriendRequestOptionalIndexProperties userFriendRequest = new UserFriendRequestOptionalIndexProperties();
+
+        @NestedConfigurationProperty
+        private UserRelationshipOptionalIndexProperties userRelationship = new UserRelationshipOptionalIndexProperties();
+
+        @NestedConfigurationProperty
+        private UserRelationshipGroupMemberOptionalIndexProperties userRelationshipGroupMember = new UserRelationshipGroupMemberOptionalIndexProperties();
+    }
+
+    @Data
+    public static class UserFriendRequestOptionalIndexProperties {
+        private boolean responseDate;
+        private boolean requesterId;
+        private boolean recipientId;
+    }
+
+    @Data
+    public static class UserRelationshipOptionalIndexProperties {
+        private boolean establishmentDate;
+    }
+
+    @Data
+    public static class UserRelationshipGroupMemberOptionalIndexProperties {
+        private boolean joinDate;
+        private boolean groupIndex;
+        private boolean relatedUserId;
+    }
 }

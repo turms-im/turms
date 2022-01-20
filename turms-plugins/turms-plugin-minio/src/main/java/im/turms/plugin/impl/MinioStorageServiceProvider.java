@@ -235,30 +235,30 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             initBuckets();
             isServing = true;
         } catch (Exception e) {
-            if (minioProperties.getRetry().isEnabled()) {
-                ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-                executor.scheduleAtFixedRate(new Runnable() {
-                    int currentRetryTimes;
-
-                    @Override
-                    public void run() {
-                        currentRetryTimes++;
-                        int maxAttempts = minioProperties.getRetry().getMaxAttempts();
-                        if (maxAttempts > 0 && currentRetryTimes > maxAttempts) {
-                            LOGGER.warn("The MinIO client failed to initialize");
-                            executor.shutdown();
-                            throw new RuntimeException("The MinIO client failed to initialize");
-                        }
-                        try {
-                            initBuckets();
-                            isServing = true;
-                        } catch (Exception ignored) {
-                        }
-                    }
-                }, minioProperties.getRetry().getInitialInterval(), minioProperties.getRetry().getInterval(), TimeUnit.SECONDS);
-            } else {
+            if (!minioProperties.getRetry().isEnabled()) {
                 LOGGER.warn("The MinIO client failed to initialize");
+                return;
             }
+            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+            executor.scheduleAtFixedRate(new Runnable() {
+                int currentRetryTimes;
+
+                @Override
+                public void run() {
+                    currentRetryTimes++;
+                    int maxAttempts = minioProperties.getRetry().getMaxAttempts();
+                    if (maxAttempts > 0 && currentRetryTimes > maxAttempts) {
+                        LOGGER.warn("The MinIO client failed to initialize");
+                        executor.shutdown();
+                        return;
+                    }
+                    try {
+                        initBuckets();
+                        isServing = true;
+                    } catch (Exception ignored) {
+                    }
+                }
+            }, minioProperties.getRetry().getInitialInterval(), minioProperties.getRetry().getInterval(), TimeUnit.SECONDS);
         }
     }
 
@@ -457,7 +457,6 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                     throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null");
                 }
                 yield groupMemberService.isOwnerOrManager(requesterId, keyNum);
-
             }
             case ATTACHMENT -> Mono.just(false);
             default -> throw new IllegalStateException("Unexpected value: " + contentType);

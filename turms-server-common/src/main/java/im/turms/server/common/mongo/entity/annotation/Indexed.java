@@ -32,7 +32,15 @@ import java.lang.annotation.Target;
 public @interface Indexed {
     IndexType value() default IndexType.RANGE;
 
+    boolean optional() default false;
+
     long expireAfterSeconds() default 0;
 
     String partialFilter() default "";
+
+    /**
+     * This annotation has no effect, and is only used for users to know
+     * why the field is indexed or isn't indexed by default
+     */
+    IndexedReason reason() default IndexedReason.NO;
 }

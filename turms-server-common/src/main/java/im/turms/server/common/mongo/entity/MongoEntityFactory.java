@@ -168,7 +168,7 @@ public final class MongoEntityFactory {
         Field[] fields = clazz.getDeclaredFields();
         String idField = null;
         Map<String, EntityField<?>> entityFields = null;
-        List<IndexModel> entityIndexes = null;
+        List<Index> entityIndexes = null;
         Map<String, MethodHandle> setterMethods = parseSetterMethods(allClassMethods);
         for (Field field : fields) {
             int modifiers = field.getModifiers();
@@ -198,12 +198,12 @@ public final class MongoEntityFactory {
                 }
             }
             // Indexes
-            List<IndexModel> indexModels = parseIndexes(field);
-            if (!indexModels.isEmpty()) {
+            List<Index> indexes = parseIndexes(field);
+            if (!indexes.isEmpty()) {
                 if (entityIndexes == null) {
                     entityIndexes = new ArrayList<>(8);
                 }
-                entityIndexes.addAll(indexModels);
+                entityIndexes.addAll(indexes);
             }
             // Getter and Setter
             MethodHandle getter = ReflectionUtil.getGetter(field);
@@ -270,23 +270,25 @@ public final class MongoEntityFactory {
     /**
      * @return The indexes of the current field with its nested fields
      */
-    private List<IndexModel> parseIndexes(Field field) {
-        List<IndexModel> indexes = null;
-        IndexModel index = parseIndex(null, field);
+    private List<Index> parseIndexes(Field field) {
+        List<Index> indexes = null;
+        Indexed indexed = field.getAnnotation(Indexed.class);
+        IndexModel index = parseIndex(null, field, indexed);
         if (index != null) {
             indexes = new ArrayList<>(1);
-            indexes.add(index);
+            indexes.add(new Index(field, indexed, index));
         }
         String fieldName = field.isAnnotationPresent(Id.class)
                 ? "_id"
                 : parseFieldName(field);
         for (Field subField : field.getType().getDeclaredFields()) {
-            IndexModel subIndex = parseIndex(fieldName, subField);
+            Indexed subFieldIndexed = subField.getAnnotation(Indexed.class);
+            IndexModel subIndex = parseIndex(fieldName, subField, subFieldIndexed);
             if (subIndex != null) {
                 if (indexes == null) {
                     indexes = new ArrayList<>(1);
                 }
-                indexes.add(subIndex);
+                indexes.add(new Index(subField, subFieldIndexed, subIndex));
             }
         }
         return indexes == null
@@ -298,8 +300,7 @@ public final class MongoEntityFactory {
      * @return The index of the current field without its nested fields
      */
     @Nullable
-    private IndexModel parseIndex(String parentFieldName, Field field) {
-        Indexed indexed = field.getAnnotation(Indexed.class);
+    private IndexModel parseIndex(String parentFieldName, Field field, @Nullable Indexed indexed) {
         if (indexed == null) {
             return null;
         }
@@ -328,7 +329,7 @@ public final class MongoEntityFactory {
         @Nullable
         private final String idFieldName;
         private final Map<String, EntityField<?>> fields;
-        private final List<IndexModel> indexes;
+        private final List<Index> indexes;
     }
 
 }

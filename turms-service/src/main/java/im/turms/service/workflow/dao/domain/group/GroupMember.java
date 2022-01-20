@@ -25,7 +25,6 @@ import im.turms.server.common.mongo.entity.annotation.Field;
 import im.turms.server.common.mongo.entity.annotation.Id;
 import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
-import im.turms.service.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,6 +34,8 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
+
+import static im.turms.server.common.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 
 /**
  * @author James Chen
@@ -58,11 +59,11 @@ public final class GroupMember {
     private final GroupMemberRole role;
 
     @Field(Fields.JOIN_DATE)
-    @OptionalIndexedForExtendedFeature
+    @Indexed(optional = true, reason = EXTENDED_FEATURE)
     private final Date joinDate;
 
     @Field(Fields.MUTE_END_DATE)
-    @OptionalIndexedForExtendedFeature
+    @Indexed(optional = true, reason = EXTENDED_FEATURE)
     private final Date muteEndDate;
 
     public GroupMember(

@@ -21,8 +21,8 @@ import im.turms.server.common.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.mongo.entity.annotation.Document;
 import im.turms.server.common.mongo.entity.annotation.Field;
 import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
-import im.turms.service.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +30,9 @@ import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.util.Date;
 import java.util.List;
+
+import static im.turms.server.common.mongo.entity.IndexType.HASH;
+import static im.turms.server.common.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 
 /**
  * @author James Chen
@@ -47,11 +50,11 @@ public final class GroupBlockedUser {
     private final Key key;
 
     @Field(Fields.BLOCK_DATE)
-    @OptionalIndexedForExtendedFeature
+    @Indexed(optional = true, reason = EXTENDED_FEATURE)
     private final Date blockDate;
 
     @Field(Fields.REQUESTER_ID)
-    @OptionalIndexedForExtendedFeature
+    @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE)
     private final Long requesterId;
 
     public GroupBlockedUser(Long groupId, Long userId, Date blockDate, Long requesterId) {

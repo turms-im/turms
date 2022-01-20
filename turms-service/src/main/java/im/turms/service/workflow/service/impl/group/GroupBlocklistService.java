@@ -21,7 +21,6 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.common.model.bo.common.Int64ValuesWithVersion;
-import im.turms.common.model.bo.user.UserInfo;
 import im.turms.common.model.bo.user.UsersInfosWithVersion;
 import im.turms.common.util.Validator;
 import im.turms.server.common.bo.common.DateRange;

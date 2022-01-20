@@ -23,6 +23,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
@@ -33,12 +34,77 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class GroupMongoProperties extends TurmsMongoProperties {
-    private WriteConcern groupWriteConcern = WriteConcern.ACKNOWLEDGED;
-    private WriteConcern groupBlockedUserWriteConcern = WriteConcern.ACKNOWLEDGED;
-    private WriteConcern groupInvitationWriteConcern = WriteConcern.ACKNOWLEDGED;
-    private WriteConcern groupJoinQuestionWriteConcern = WriteConcern.ACKNOWLEDGED;
-    private WriteConcern groupJoinRequestWriteConcern = WriteConcern.ACKNOWLEDGED;
-    private WriteConcern groupMemberWriteConcern = WriteConcern.ACKNOWLEDGED;
-    private WriteConcern groupTypeWriteConcern = WriteConcern.MAJORITY;
-    private WriteConcern groupVersionWriteConcern = WriteConcern.ACKNOWLEDGED;
+
+    @NestedConfigurationProperty
+    private OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
+
+    @NestedConfigurationProperty
+    private WriteConcernProperties writeConcern = new WriteConcernProperties();
+
+    @Data
+    public static class OptionalIndexProperties {
+        @NestedConfigurationProperty
+        private GroupOptionalIndexProperties group = new GroupOptionalIndexProperties();
+
+        @NestedConfigurationProperty
+        private GroupBlockedUserOptionalIndexProperties groupBlockedUser = new GroupBlockedUserOptionalIndexProperties();
+
+        @NestedConfigurationProperty
+        private GroupInvitationOptionalIndexProperties groupInvitation = new GroupInvitationOptionalIndexProperties();
+
+        @NestedConfigurationProperty
+        private GroupJoinRequestOptionalIndexProperties groupJoinRequest = new GroupJoinRequestOptionalIndexProperties();
+
+        @NestedConfigurationProperty
+        private GroupMemberOptionalIndexProperties groupMember = new GroupMemberOptionalIndexProperties();
+    }
+
+    @Data
+    public static class GroupOptionalIndexProperties {
+        private boolean typeId;
+        private boolean creatorId;
+        private boolean ownerId = true;
+        private boolean creationDate;
+        private boolean deletionDate = true;
+        private boolean muteEndDate;
+    }
+
+    @Data
+    public static class GroupBlockedUserOptionalIndexProperties {
+        private boolean blockDate;
+        private boolean requesterId;
+    }
+
+    @Data
+    public static class GroupInvitationOptionalIndexProperties {
+        private boolean groupId = true;
+        private boolean inviterId;
+        private boolean responseDate;
+    }
+
+    @Data
+    public static class GroupJoinRequestOptionalIndexProperties {
+        private boolean creationDate;
+        private boolean responseDate;
+        private boolean groupId = true;
+        private boolean responderId;
+    }
+
+    @Data
+    public static class GroupMemberOptionalIndexProperties {
+        private boolean joinDate;
+        private boolean muteEndDate;
+    }
+
+    @Data
+    public static class WriteConcernProperties {
+        private WriteConcern group = WriteConcern.ACKNOWLEDGED;
+        private WriteConcern groupBlockedUser = WriteConcern.ACKNOWLEDGED;
+        private WriteConcern groupInvitation = WriteConcern.ACKNOWLEDGED;
+        private WriteConcern groupJoinQuestion = WriteConcern.ACKNOWLEDGED;
+        private WriteConcern groupJoinRequest = WriteConcern.ACKNOWLEDGED;
+        private WriteConcern groupMember = WriteConcern.ACKNOWLEDGED;
+        private WriteConcern groupType = WriteConcern.MAJORITY;
+        private WriteConcern groupVersion = WriteConcern.ACKNOWLEDGED;
+    }
 }
