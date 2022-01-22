@@ -36,7 +36,10 @@ public class ApiLoggingContext extends CommonApiLoggingContext {
     private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingNotificationProperties;
 
     public ApiLoggingContext(TurmsPropertiesManager propertiesManager) {
-        ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties().getService().getClientApi().getLogging();
+        ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties()
+                .getService()
+                .getClientApi()
+                .getLogging();
         supportedLoggingRequestProperties = getSupportedLoggingRequestProperties(
                 loggingProperties.getIncludedRequestCategories(),
                 loggingProperties.getIncludedRequests(),

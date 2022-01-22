@@ -71,6 +71,8 @@ public class MongoContext {
     private final MongoDatabase database;
     @Getter
     private final MongoDatabase adminDatabase;
+    @Getter
+    private final MongoDatabase configDatabase;
     private final CodecRegistry codecRegistry;
     private final Map<Class<?>, MongoEntity<?>> entityMap = new IdentityHashMap<>(64);
     private final Map<Class<?>, MongoCollection<?>> collectionMap = new IdentityHashMap<>(64);
@@ -118,6 +120,7 @@ public class MongoContext {
         client = MongoClients.create(settings);
         database = client.getDatabase(connectionSettings.getDatabase());
         adminDatabase = client.getDatabase("admin");
+        configDatabase = client.getDatabase("config");
 
         SerializationUtil.codecRegistry = codecRegistry;
     }

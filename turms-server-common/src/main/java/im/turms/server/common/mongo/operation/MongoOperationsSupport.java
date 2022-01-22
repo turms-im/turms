@@ -23,7 +23,6 @@ import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
-import com.mongodb.reactivestreams.client.MongoDatabase;
 import im.turms.server.common.mongo.entity.MongoEntity;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
@@ -106,9 +105,11 @@ public interface MongoOperationsSupport {
 
     <T> Flux<Document> listIndexes(Class<T> clazz);
 
-    Mono<Void> enableSharding(MongoDatabase databaseToShard, MongoDatabase adminDatabase);
+    Mono<Void> deleteTags(String collectionName);
 
-    Mono<Void> shard(MongoDatabase databaseToShard, MongoDatabase adminDatabase, MongoEntity<?> entity);
+    Mono<Void> enableSharding();
+
+    Mono<Void> shard(MongoEntity<?> entity);
 
     Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes);
 
@@ -131,4 +132,11 @@ public interface MongoOperationsSupport {
     Mono<Boolean> validate(Class<?> clazz, String jsonSchema);
 
     <T> Mono<T> inTransaction(Function<ClientSession, Mono<T>> execute);
+
+    Mono<Void> disableBalancing(String collectionName);
+
+    Mono<Void> enableBalancing(String collectionName);
+
+    Mono<Boolean> isBalancerRunning();
+
 }

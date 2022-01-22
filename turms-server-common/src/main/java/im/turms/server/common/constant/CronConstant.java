@@ -36,6 +36,8 @@ public final class CronConstant {
 
     public static final String DEFAULT_EXPIRED_MESSAGES_CLEANUP_CRON = "0 45 2 * * *";
 
+    public static final String DEFAULT_TIERED_STORAGE_TIER_RANGE_UPDATING_CRON = "0 0 3 * * *";
+
     public static final String EXPIRED_BLOCKED_CLIENT_CLEANUP_CRON = "0 0 1/6 * * *";
 
     public static final String EXPIRED_ADMIN_API_ACCESS_INFO_CLEANUP_CRON = "0 0/30 * * * *";

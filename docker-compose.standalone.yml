@@ -79,7 +79,7 @@ services:
     image: mongo:4.4.10-focal
 #    depends_on:
 #      - loki
-    entrypoint: [ "mongod", "--port", "27017", "--shardsvr", "--replSet", "rs-shard", "--bind_ip_all" ]
+    entrypoint: [ "mongod", "--port", "27017", "--shardsvr", "--replSet", "shard01", "--bind_ip_all" ]
     healthcheck:
       test: [ "CMD", "mongo", "--quiet", "--eval", "db.runCommand(\"ping\").ok" ]
       interval: 10s
@@ -118,9 +118,9 @@ services:
       - -c
       - |
         mongo --host mongodb-config:27017 --eval "rs.initiate({_id: 'rs-config', configsvr: true, version: 1, members: [ { _id: 0, host : 'mongodb-config:27017' } ] })"
-        mongo --host mongodb-shard:27017 --eval "rs.initiate({_id: 'rs-shard', version: 1, members: [ { _id: 0, host : 'mongodb-shard:27017' } ] })"
+        mongo --host mongodb-shard:27017 --eval "rs.initiate({_id: 'shard01', version: 1, members: [ { _id: 0, host : 'mongodb-shard:27017' } ] })"
         sleep 10
-        mongo --host mongodb-router:27017 --eval "sh.addShard('rs-shard/mongodb-shard:27017')"
+        mongo --host mongodb-router:27017 --eval "sh.addShard('shard01/mongodb-shard:27017')"
     restart: "no"
 
   # Redis

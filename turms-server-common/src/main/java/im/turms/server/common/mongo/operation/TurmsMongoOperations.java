@@ -39,7 +39,6 @@ import com.mongodb.reactivestreams.client.ClientSession;
 import com.mongodb.reactivestreams.client.FindPublisher;
 import com.mongodb.reactivestreams.client.ListIndexesPublisher;
 import com.mongodb.reactivestreams.client.MongoCollection;
-import com.mongodb.reactivestreams.client.MongoDatabase;
 import com.mongodb.reactivestreams.client.internal.MongoCollectionUtil;
 import com.mongodb.reactivestreams.client.internal.MongoOperationPublisher;
 import com.mongodb.reactivestreams.client.internal.TurmsFindPublisherImpl;
@@ -57,8 +56,10 @@ import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.MapUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
 import org.bson.BsonDocumentWriter;
+import org.bson.BsonString;
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.codecs.Codec;
@@ -87,6 +88,7 @@ import java.util.stream.Collectors;
  * we don't check whether arguments are legal or not and so on
  * 2. The publishers of mongo-java-driver are cold
  * and the publishers of TurmsMongoOperations are also cold
+ * Reference: https://github.com/mongodb/mongo/blob/master/src/mongo/shell/utils_sh.js
  */
 public class TurmsMongoOperations implements MongoOperationsSupport {
 
@@ -436,14 +438,14 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         String collectionName = context.getEntity(clazz).collectionName();
         return Flux.from(source)
                 .then()
-                .doOnError(throwable -> LOGGER.error("Failed to index the collection {}", collectionName, throwable))
+                .onErrorMap(t -> new IllegalStateException("Failed to index the collection " + collectionName, t))
                 .doOnSuccess(ignored -> {
                     List<BsonDocument> indexDocs = indexModels
                             .stream()
                             .map(indexModel -> indexModel.getKeys().toBsonDocument())
                             .collect(CollectorUtil.toList(indexModels.size()));
                     String indexes = StringUtils.join(indexDocs, ", ");
-                    LOGGER.info("Indexed the collection {} successfully: [{}]", collectionName, indexes);
+                    LOGGER.info("Indexed the collection {}: [{}]", collectionName, indexes);
                 });
     }
 
@@ -457,28 +459,36 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     // Shard
 
     @Override
-    public Mono<Void> enableSharding(MongoDatabase databaseToShard, MongoDatabase adminDatabase) {
-        String dbName = databaseToShard.getName();
-        Mono<Document> enableSharding = Mono.from(adminDatabase.runCommand(new Document("enableSharding", dbName)))
-                .doOnError(throwable -> LOGGER.error("Failed to enable sharding the database {}", dbName, throwable))
-                .doOnSuccess(ignored -> LOGGER.info("Enabled sharding the database {} successfully", dbName));
-        return enableSharding.then();
+    public Mono<Void> deleteTags(String collectionName) {
+        String namespace = getNamespace(collectionName);
+        BsonDocument filter = new BsonDocument("ns", new BsonString(namespace));
+        Publisher<DeleteResult> source = context.getConfigDatabase().getCollection("tags").deleteMany(filter);
+        return Flux.from(source)
+                .then();
     }
 
     @Override
-    public Mono<Void> shard(MongoDatabase databaseToShard, MongoDatabase adminDatabase, MongoEntity<?> entity) {
+    public Mono<Void> enableSharding() {
+        String dbName = context.getDatabase().getName();
+        Publisher<Document> source = context.getAdminDatabase().runCommand(new Document("enableSharding", dbName));
+        return Mono.from(source)
+                .onErrorMap(t -> new IllegalStateException("Failed to enable sharding the database " + dbName, t))
+                .doOnSuccess(ignored -> LOGGER.info("Enabled sharding the database {}", dbName))
+                .then();
+    }
+
+    @Override
+    public Mono<Void> shard(MongoEntity<?> entity) {
         BsonDocument shardKey = entity.getShardKeyBson();
         if (shardKey == null) {
             return Mono.empty();
         }
-        String dbName = databaseToShard.getName();
-        String namespace = "%s.%s".formatted(dbName, entity.collectionName());
+        String namespace = getNamespace(entity.collectionName());
         Document command = new Document("shardCollection", namespace).append("key", shardKey);
-        Mono<Document> shardCollection = Mono.from(adminDatabase.runCommand(command))
-                .doOnError(throwable ->
-                        LOGGER.error("Failed to shard the collection {} with the shard key {}", namespace, shardKey.toJson(), throwable))
+        Mono<Document> shardCollection = Mono.from(context.getAdminDatabase().runCommand(command))
+                .onErrorMap(t -> new IllegalStateException("Failed to shard the collection %s with the shard key %s".formatted(namespace, shardKey.toJson()), t))
                 .doOnSuccess(ignored ->
-                        LOGGER.info("Sharded the collection {} with the shard key {} successfully", namespace, shardKey.toJson()));
+                        LOGGER.info("Sharded the collection {} with the shard key {}", namespace, shardKey.toJson()));
         return shardCollection.then();
     }
 
@@ -497,34 +507,34 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         Mono<Void> ensureIndexes = Mono.empty();
         for (Class<?> clazz : classes) {
             MongoEntity<?> entity = context.getEntity(clazz);
-            List<Index> indexModels = entity.indexes();
-            List<IndexModel> indexes = new ArrayList<>(indexModels.size());
+            List<Index> indexes = entity.indexes();
+            List<IndexModel> indexModels = new ArrayList<>(indexes.size());
             IndexModel compoundIndex = entity.compoundIndex();
             if (compoundIndex != null) {
-                indexes.add(compoundIndex);
+                indexModels.add(compoundIndex);
             }
-            for (Index index : indexModels) {
+            for (Index index : indexes) {
                 if (index.indexed().optional()) {
                     if (customIndexFilter != null && customIndexFilter.test(clazz, index.field())) {
-                        indexes.add(index.model());
+                        indexModels.add(index.model());
                     }
                 } else {
-                    indexes.add(index.model());
+                    indexModels.add(index.model());
                 }
             }
-            if (!indexes.isEmpty()) {
+            if (!indexModels.isEmpty()) {
                 ensureIndexes = ensureIndexes
-                        .then(Mono.defer(() -> ensureIndexes(entity.entityClass(), indexes)));
+                        .then(Mono.defer(() -> ensureIndexes(entity.entityClass(), indexModels)));
             }
         }
         return ensureIndexes
-                .then(Mono.defer(() -> enableSharding(context.getDatabase(), context.getAdminDatabase())))
+                .then(enableSharding())
                 .then(Mono.defer(() -> {
                     Mono<Void> shardEntities = Mono.empty();
                     for (Class<?> clazz : classes) {
                         MongoEntity<?> entity = context.getEntity(clazz);
                         shardEntities = shardEntities
-                                .then(Mono.defer(() -> shard(context.getDatabase(), context.getAdminDatabase(), entity)));
+                                .then(Mono.defer(() -> shard(entity)));
                     }
                     return shardEntities;
                 }));
@@ -534,8 +544,8 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
 
     @Override
     public Mono<Void> addShardToZone(String shardName, String zoneName) {
-        Document command = new Document("addShardToZone", shardName)
-                .append("zone", zoneName);
+        BsonDocument command = new BsonDocument("addShardToZone", new BsonString(shardName))
+                .append("zone", new BsonString(zoneName));
         Publisher<Document> source = context.getAdminDatabase().runCommand(command);
         return Mono.from(source).then();
     }
@@ -545,7 +555,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                                          String zoneName,
                                          Document minimum,
                                          Document maximum) {
-        Document command = new Document("updateZoneKeyRange", context.getDatabase().getName() + "." + collectionName)
+        Document command = new Document("updateZoneKeyRange", getNamespace(collectionName))
                 .append("min", minimum)
                 .append("max", maximum)
                 .append("zone", zoneName);
@@ -603,6 +613,34 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 ClientSession::commitTransaction);
     }
 
+    // Balancer
+
+    @Override
+    public Mono<Void> disableBalancing(String collectionName) {
+        String namespace = getNamespace(collectionName);
+        BsonDocument filter = new BsonDocument("_id", new BsonString(namespace));
+        BsonDocument update = new BsonDocument("$set", new BsonDocument("noBalance", BsonBoolean.TRUE));
+        Publisher<UpdateResult> disableBalancing = context.getConfigDatabase().getCollection("collections")
+                .updateOne(filter, update, DEFAULT_UPDATE_OPTIONS);
+        return Mono.from(disableBalancing).then();
+    }
+
+    @Override
+    public Mono<Void> enableBalancing(String collectionName) {
+        String namespace = getNamespace(collectionName);
+        BsonDocument filter = new BsonDocument("_id", new BsonString(namespace));
+        BsonDocument update = new BsonDocument("$set", new BsonDocument("noBalance", BsonBoolean.FALSE));
+        Publisher<UpdateResult> enableBalancing = context.getConfigDatabase().getCollection("collections")
+                .updateOne(filter, update, DEFAULT_UPDATE_OPTIONS);
+        return Mono.from(enableBalancing).then();
+    }
+
+    @Override
+    public Mono<Boolean> isBalancerRunning() {
+        Publisher<Document> balancerStatus = context.getAdminDatabase().runCommand(new BsonDocument("balancerStatus", BsonPool.BSON_INT32_1));
+        return Mono.from(balancerStatus).map(document -> document.getBoolean("inBalancerRound"));
+    }
+
     // Helper
 
     private <T> BsonDocument encodeEntity(T value) {
@@ -623,6 +661,10 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                                                @Nullable QueryOptions options) {
         MongoOperationPublisher<T> publisher = getPublisher(collection);
         return new TurmsFindPublisherImpl<>(null, publisher, filter, options);
+    }
+
+    private String getNamespace(String collectionName) {
+        return context.getDatabase().getName() + "." + collectionName;
     }
 
     private <T> MongoOperationPublisher<T> getPublisher(MongoCollection<T> collection) {

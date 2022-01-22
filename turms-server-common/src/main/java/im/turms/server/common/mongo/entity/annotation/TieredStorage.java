@@ -24,13 +24,13 @@ import java.lang.annotation.Target;
 
 /**
  * @author James Chen
- * @implNote Note that the multi-temperature data also has a monotonic shard key.
+ * @implNote Note that the collections supporting tiered storage have a monotonic shard key.
  * In other words, all operations will be routed to hot shards (Note that there
  * can be multiple shards for hot data) instead of all shards evenly distributed.
- * The imbalance is what we want to support multi-temperature data
+ * The imbalance is what we want to support tiered storage.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface WithTemperature {
+public @interface TieredStorage {
     String creationDateFieldName();
 }

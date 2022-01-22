@@ -174,7 +174,7 @@ public class SharedPropertyService implements ClusterService {
                 .onErrorResume(DuplicateKeyException.class, e -> findAndUpdatePropertiesByNodeType(clusterProperties))
                 .doOnSuccess(properties -> {
                     sharedClusterProperties = properties;
-                    LOGGER.info("Shared properties were retrieved successfully");
+                    LOGGER.info("Shared properties were retrieved");
                 });
     }
 

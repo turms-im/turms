@@ -34,11 +34,11 @@ public abstract class BaseTurmsApplication {
     static {
         // Hard code these properties to ensure they work as expected
 
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         // Disable the max direct memory limit and buffer counters of Netty
         // so that we can get the used direct memory via BufferPoolMXBean without depending on ByteBufAllocator of Netty
         System.setProperty("io.netty.maxDirectMemory", "0");
         System.setProperty("spring.main.banner-mode", "off");
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
     protected static void bootstrap(Class<?> applicationClass, String[] args) {

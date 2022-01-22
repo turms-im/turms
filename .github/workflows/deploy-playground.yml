@@ -29,7 +29,7 @@ jobs:
             sudo docker-compose -f docker-compose.standalone.yml down
             sudo docker system prune -a -f
             sudo docker system prune --volumes -f
-            rm -rf /var/log/journal
+            sudo rm -rf /var/log/journal
             sudo git pull
             sudo git reset --hard
             sudo ENV=dev,demo docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d

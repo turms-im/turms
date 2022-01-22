@@ -39,7 +39,7 @@ public class MessageMongoProperties extends TurmsMongoProperties {
     private OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
 
     @NestedConfigurationProperty
-    private MultiTemperatureProperties temperature = new MultiTemperatureProperties();
+    private TieredStorageProperties tieredStorage = new TieredStorageProperties();
 
     @NestedConfigurationProperty
     private WriteConcernProperties writeConcern = new WriteConcernProperties();

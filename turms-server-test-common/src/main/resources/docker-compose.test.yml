@@ -9,7 +9,7 @@ services:
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-router
       - MONGODB_SHARDING_MODE=mongos
-      - MONGODB_CFG_PRIMARY_HOST=mongodb-cfg
+      - MONGODB_CFG_PRIMARY_HOST=mongodb-config
       - MONGODB_CFG_REPLICA_SET_NAME=cfgreplicaset
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
       - MONGODB_ROOT_PASSWORD=turms
@@ -30,10 +30,10 @@ services:
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
       - MONGODB_REPLICA_SET_NAME=shard01
 
-  mongodb-cfg:
+  mongodb-config:
     image: "bitnami/mongodb-sharded:4.4.10"
     environment:
-      - MONGODB_ADVERTISED_HOSTNAME=mongodb-cfg
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb-config
       - MONGODB_SHARDING_MODE=configsvr
       - MONGODB_ROOT_PASSWORD=turms
       - MONGODB_REPLICA_SET_MODE=primary

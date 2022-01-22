@@ -19,6 +19,7 @@ package im.turms.service.workflow.dao;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.logging.core.logger.Logger;
@@ -29,10 +30,11 @@ import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.entity.MongoEntity;
 import im.turms.server.common.mongo.entity.Zone;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.service.env.database.MultiTemperatureProperties;
 import im.turms.server.common.property.env.service.ServiceProperties;
 import im.turms.server.common.property.env.service.env.database.MongoProperties;
+import im.turms.server.common.property.env.service.env.database.TieredStorageProperties;
 import im.turms.server.common.security.PasswordManager;
+import im.turms.server.common.task.TrivialTaskManager;
 import im.turms.server.common.util.ReactorUtil;
 import im.turms.service.workflow.dao.domain.admin.Admin;
 import im.turms.service.workflow.dao.domain.admin.AdminRole;
@@ -53,22 +55,27 @@ import im.turms.service.workflow.dao.domain.user.UserRelationship;
 import im.turms.service.workflow.dao.domain.user.UserRelationshipGroup;
 import im.turms.service.workflow.dao.domain.user.UserRelationshipGroupMember;
 import im.turms.service.workflow.dao.domain.user.UserVersion;
-import org.apache.commons.lang3.time.DateUtils;
+import org.bson.BsonTimestamp;
 import org.bson.Document;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
 import java.time.Duration;
-import java.util.Date;
-import java.util.LinkedHashMap;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
-import static im.turms.server.common.property.env.service.env.database.MultiTemperatureProperties.TemperatureProperties;
+import static im.turms.server.common.property.env.service.env.database.TieredStorageProperties.StorageTierProperties;
 
 /**
  * @author James Chen
@@ -87,18 +94,23 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
 
     private final TurmsApplicationContext context;
     private final MongoFakingManager fakingManager;
-    private final MultiTemperatureProperties messageTemperatureProperties;
+    private final TieredStorageProperties messageTieredStorageProperties;
     private final MongoProperties mongoProperties;
 
+    private final Node node;
+
     public MongoCollectionInitializer(
+            @Lazy Node node,
             TurmsMongoClient adminMongoClient,
             TurmsMongoClient userMongoClient,
             TurmsMongoClient groupMongoClient,
             TurmsMongoClient conversationMongoClient,
             TurmsMongoClient messageMongoClient,
             PasswordManager passwordManager,
+            TrivialTaskManager taskManager,
             TurmsApplicationContext context,
             TurmsPropertiesManager turmsPropertiesManager) {
+        this.node = node;
         this.adminMongoClient = adminMongoClient;
         this.userMongoClient = userMongoClient;
         this.groupMongoClient = groupMongoClient;
@@ -120,12 +132,26 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 messageMongoClient);
         mongoProperties = serviceProperties
                 .getMongo();
-        messageTemperatureProperties = serviceProperties
+        messageTieredStorageProperties = serviceProperties
                 .getMongo()
                 .getMessage()
-                .getTemperature();
+                .getTieredStorage();
 
         initCollections();
+
+        TieredStorageProperties.AutoRangeUpdaterProperties autoRangeUpdater = serviceProperties.getMongo()
+                .getMessage().getTieredStorage().getAutoRangeUpdater();
+        if (autoRangeUpdater.isEnabled()) {
+            taskManager.reschedule("tieredStorageZoneUpdater", autoRangeUpdater.getCron(), () -> {
+                if (this.node.isLocalNodeLeader() && this.node.getSharedProperties()
+                        .getService().getMongo().getMessage().getTieredStorage().getAutoRangeUpdater().isEnabled()) {
+                    LOGGER.info("Updating the zone range for tiered storage");
+                    ensureZones()
+                            .subscribe(unused -> LOGGER.info("Updated the zone range for tiered storage"),
+                                    t -> LOGGER.error("Failed to update the zone range for tiered storage", t));
+                }
+            });
+        }
     }
 
     private void initCollections() {
@@ -141,7 +167,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         }
         LOGGER.info("Start creating collections...");
         Mono<Void> createCollections = createCollectionsIfNotExist()
-                .doOnError(t -> LOGGER.error("Failed to create collections", t))
+                .onErrorMap(t -> new IllegalStateException("Failed to create collections", t))
                 .doOnSuccess(ignored -> LOGGER.info("All collections are created"))
                 .flatMap(exists -> {
                     if (exists && !fakingManager.isFakeIfCollectionExists()) {
@@ -149,7 +175,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                     }
                     return Mono.defer(() -> ensureZones()
                             .then(Mono.defer(this::ensureIndexesAndShard)
-                                    .doOnError(t -> LOGGER.error("Failed to ensure indexes and shard", t)))
+                                    .onErrorMap(t -> new IllegalStateException("Failed to ensure indexes and shard", t)))
                             .then(Mono.defer(() -> !context.isProduction() && fakingManager.isFakingEnabled()
                                     ? fakingManager.fakeData()
                                     : Mono.empty())));
@@ -286,62 +312,99 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
 
     private Mono<Void> ensureZones() {
         Mono<Void> ensureZones = Mono.empty();
-        var map = Map.of(messageTemperatureProperties, messageMongoClient);
+        var map = Map.of(messageTieredStorageProperties, messageMongoClient);
         for (var entry : map.entrySet()) {
-            MultiTemperatureProperties properties = entry.getKey();
+            TieredStorageProperties properties = entry.getKey();
             if (!properties.isEnabled()) {
                 continue;
             }
             TurmsMongoClient client = entry.getValue();
             for (MongoEntity<?> entity : client.getRegisteredEntities()) {
+                String collectionName = entity.collectionName();
                 ensureZones = ensureZones
-                        .then(Mono.defer(() -> ensureZones(properties, client, entity)));
+                        .then(client.isBalancerRunning())
+                        .flatMap(isBalancerRunning -> {
+                            if (isBalancerRunning) {
+                                return Mono.error(new IllegalStateException("Failed to ensure zones because the balancer is running"));
+                            }
+                            return client.disableBalancing(collectionName)
+                                    .then(Mono.defer(() -> {
+                                        LOGGER.info("Deleting the existing tags for the collection " + collectionName);
+                                        return client.deleteTags(collectionName)
+                                                .doOnSuccess(unused -> LOGGER.info("Deleted the existing tags for the collection " + collectionName))
+                                                .onErrorMap(t -> new IllegalStateException("Failed to the existing tags for the collection " + collectionName));
+                                    }))
+                                    .then(Mono.defer(() -> {
+                                        LOGGER.info("Adding the shards of the collection {} to zones...", collectionName);
+                                        return validateAndEnsureZones(entry.getKey(), client, entity)
+                                                .doOnSuccess(unused -> LOGGER.info("Added the shards of the collection {} to zones", collectionName));
+                                    }));
+                        })
+                        .then(client.enableBalancing(collectionName));
             }
         }
-
         return ensureZones;
     }
 
-    private Mono<Void> ensureZones(MultiTemperatureProperties temperatureProperties,
-                                   TurmsMongoClient mongoClient,
-                                   MongoEntity<?> entity) {
+    private Mono<Void> validateAndEnsureZones(TieredStorageProperties storageProperties,
+                                              TurmsMongoClient mongoClient,
+                                              MongoEntity<?> entity) {
         Zone zone = entity.zone();
         if (zone == null) {
             return Mono.empty();
         }
         String collectionName = entity.collectionName();
-        LOGGER.info("Adding the shards of the {} collection to zones...", collectionName);
-        Map<String, TemperatureProperties> temperatures = new LinkedHashMap<>(8);
-        temperatures.put(collectionName + "_hot", temperatureProperties.getHot());
-        temperatures.put(collectionName + "_warm", temperatureProperties.getWarm());
-        temperatures.put(collectionName + "_cold", temperatureProperties.getCold());
-        temperatures.put(collectionName + "_frozen", temperatureProperties.getFrozen());
+        Set<Map.Entry<String, StorageTierProperties>> tierEntries = storageProperties.getTiers().entrySet();
+        if (tierEntries.isEmpty()) {
+            return Mono.empty();
+        }
+        int tierSize = tierEntries.size();
+        List<Pair<String, StorageTierProperties>> tiers = new ArrayList<>(tierSize);
+        int i = 0;
+        for (Map.Entry<String, StorageTierProperties> tierEntry : tierEntries) {
+            StorageTierProperties properties = tierEntry.getValue();
+            int days = properties.getDays();
+            if (days <= 0 && i != tierSize - 1) {
+                return Mono.error(new IllegalArgumentException("The days of non-latest tiered storage properties must be more than 0"));
+            }
+            if (properties.isEnabled()) {
+                tiers.add(Pair.of(tierEntry.getKey(), tierEntry.getValue()));
+            }
+            i++;
+        }
+        if (tiers.isEmpty()) {
+            return Mono.empty();
+        }
+        return ensureZones(mongoClient, tiers, collectionName, zone);
+    }
 
+    private Mono<Void> ensureZones(TurmsMongoClient mongoClient,
+                                   List<Pair<String, StorageTierProperties>> tiers,
+                                   String collectionName,
+                                   Zone zone) {
         Mono<Void> ensureZones = Mono.empty();
-        Date startDate = new Date();
+        LocalDateTime startDate = LocalDate.now().atStartOfDay();
         int currentDay = 0;
         String creationDateFieldName = zone.creationDateFieldName();
-        for (Map.Entry<String, TemperatureProperties> entry : temperatures.entrySet()) {
-            String zoneName = entry.getKey();
-            TemperatureProperties properties = entry.getValue();
+        for (int i = 0, tierSize = tiers.size(); i < tierSize; i++) {
+            Pair<String, StorageTierProperties> entry = tiers.get(i);
+            String zoneName = entry.getFirst();
+            StorageTierProperties properties = entry.getSecond();
             int days = properties.getDays();
-            if (days <= 0) {
-                throw new IllegalArgumentException("The days of temperature properties must be more than 0");
-            }
+            Object min = i == tierSize - 1
+                    ? BsonPool.MIN_KEY
+                    : new BsonTimestamp(startDate.minusDays(currentDay + days).toEpochSecond(ZoneOffset.UTC));
+            Object max = i == 0
+                    ? BsonPool.MAX_KEY
+                    : new BsonTimestamp(startDate.minusDays(currentDay).toEpochSecond(ZoneOffset.UTC));
             List<String> shards = properties.getShards();
             for (String shard : shards) {
                 if (!StringUtils.hasText(shard)) {
                     continue;
                 }
-                Object min = zoneName.endsWith("frozen")
-                        ? BsonPool.MIN_KEY
-                        : DateUtils.addDays(startDate, -(currentDay + days));
-                Object max = zoneName.endsWith("hot")
-                        ? BsonPool.MAX_KEY
-                        : DateUtils.addDays(startDate, -currentDay);
                 ensureZones = ensureZones
                         .then(Mono.defer(() -> mongoClient.addShardToZone(shard, zoneName)
-                                        .doOnError(t -> LOGGER.error("Failed to add a shard {} to the zone {}", shard, zoneName, t)))
+                                        .onErrorMap(t -> new IllegalStateException("Failed to add a shard %s to the zone %s".formatted(shard, zoneName), t)))
                                 .doOnSuccess(unused -> LOGGER.info("Added a shard {} to the zone {}", shard, zoneName)))
                         .then(Mono.defer(() -> {
                             // TODO: support the shard key consisting of multiple fields
@@ -351,10 +414,10 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                                             zoneName,
                                             minimum,
                                             maximum)
-                                    .doOnError(t -> LOGGER.error("Failed to update the zone {} with the key ranges: {} -->> {}",
+                                    .onErrorMap(t -> new IllegalStateException("Failed to update the zone %s with the key ranges: %s -->> %s".formatted(
                                             zoneName,
                                             minimum.toJson(),
-                                            maximum.toJson(),
+                                            maximum.toJson()),
                                             t))
                                     .doOnSuccess(unused -> LOGGER.info("Updated the zone {} with the key ranges: {} -->> {}",
                                             zoneName,
@@ -364,8 +427,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
             }
             currentDay += days;
         }
-        return ensureZones
-                .doOnSuccess(unused -> LOGGER.info("Added the shards of the {} collection to zones", collectionName));
+        return ensureZones;
     }
 
 }

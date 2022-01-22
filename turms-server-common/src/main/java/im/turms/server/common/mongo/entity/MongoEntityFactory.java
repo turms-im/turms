@@ -27,7 +27,7 @@ import im.turms.server.common.mongo.entity.annotation.Id;
 import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.PropertySetter;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
-import im.turms.server.common.mongo.entity.annotation.WithTemperature;
+import im.turms.server.common.mongo.entity.annotation.TieredStorage;
 import im.turms.server.common.util.ReflectionUtil;
 import lombok.Data;
 import org.bson.BsonDocument;
@@ -74,18 +74,18 @@ public final class MongoEntityFactory {
     }
 
     private <T> Zone parseZone(Class<T> clazz, ShardKey shardKey) {
-        WithTemperature temperature = clazz.getAnnotation(WithTemperature.class);
-        if (temperature == null) {
+        TieredStorage storage = clazz.getAnnotation(TieredStorage.class);
+        if (storage == null) {
             return null;
         }
-        String creationDateFieldName = temperature.creationDateFieldName();
+        String creationDateFieldName = storage.creationDateFieldName();
         if (!StringUtils.hasText(creationDateFieldName)) {
             throw new IllegalStateException(
-                    "The creationDateFieldName of @WithTemperature must not be blank for the class " + clazz.getName());
+                    "The creationDateFieldName of @TieredStorage must not be blank for the class " + clazz.getName());
         }
         if (!shardKey.document().containsKey(creationDateFieldName)) {
             throw new IllegalStateException(
-                    "The creationDateFieldName of @WithTemperature must be a part of the shard key of the class " + clazz.getName());
+                    "The creationDateFieldName of @TieredStorage must be a part of the shard key of the class " + clazz.getName());
         }
         return new Zone(creationDateFieldName);
     }

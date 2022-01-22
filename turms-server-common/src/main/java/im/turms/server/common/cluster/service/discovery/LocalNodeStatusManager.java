@@ -98,7 +98,7 @@ public class LocalNodeStatusManager {
         return discoveryService.registerMember(localMember)
                 .doOnSuccess(ignored -> {
                     isLocalNodeRegistered = true;
-                    LOGGER.info("Registered the local member successfully");
+                    LOGGER.info("Registered the local member");
                 })
                 .onErrorResume(t -> {
                     if (suppressDuplicateMemberError && t instanceof DuplicateKeyException) {
@@ -118,7 +118,7 @@ public class LocalNodeStatusManager {
                 .doOnError(e -> LOGGER.error("Failed to unregister the local member", e))
                 .doOnSuccess(ignored -> {
                     isLocalNodeRegistered = false;
-                    LOGGER.info("Unregistered the local member successfully");
+                    LOGGER.info("Unregistered the local member");
                 });
     }
 
