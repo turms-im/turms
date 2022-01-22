@@ -1,0 +1,35 @@
+name: Deploy Playground
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    branches:
+      - master
+    workflows:
+      - "Publish turms-admin"
+      - "Publish turms-gateway"
+      - "Publish turms-service"
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: ${{ !github.event.workflow_run || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-20.04
+    steps:
+      - name: SSH
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.PLAYGROUND_SSH_HOST }}
+          username: ${{ secrets.PLAYGROUND_SSH_USERNAME }}
+          key: ${{ secrets.PLAYGROUND_SSH_KEY }}
+          script_stop: true
+          script: |
+            cd /opt/turms
+            sudo docker-compose -f docker-compose.standalone.yml down
+            sudo docker system prune -a -f
+            sudo docker system prune --volumes -f
+            rm -rf /var/log/journal
+            sudo git pull
+            sudo git reset --hard
+            sudo ENV=dev,demo docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d
