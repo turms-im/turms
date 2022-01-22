@@ -145,7 +145,7 @@ Turms服务端中的插件实现相对灵活，既允许插件使用独立类环
 
 TODO
 
-## 插件Debug步骤（基于Intellij IDEA）
+## 插件Debug步骤（基于IntelliJ IDEA）
 
 1. 在您插件项目下，按`Ctrl + F9`来自动编译并打包您的插件JAR包到`<您插件项目根目录>/target`目录下
 

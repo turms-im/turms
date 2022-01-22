@@ -49,6 +49,46 @@ Turms的自动封禁机制采用分级制度，默认提供3个等级，这3个�
 
 另外Turms目前采用的因果一致性实现是：封禁与解封动作的先后顺序以在Redis的封禁logs队列的插入顺序为基准，各服务端基于该队列的logs顺序，进行因果同步，保证封禁客户端数据的最终一致性。
 
+##### 为什么不使用Bloom Filter
+
+基于Bloom Filter实现黑名单功能的理论方案广为人知，但其实Bloom Filter在这场景下有非常多的陷阱，具体而言：
+
+* Bloom Filter支持的功能特性与工程实践都很受限。诸如：
+
+  * 在分布式环境，如何判断“封禁操作”与“解封操作”的先后顺序
+  * 如何给不同的封禁用户设定不同的封禁时长（如五分钟/半个钟）
+  * 如何给附加的被封禁用户附加信息，比如附加被拉黑原因
+  * 节点间黑名单列表如何同步，如何做增量同步
+  * 如何实现“取消拉黑操作”，代价是什么
+
+  综上，Bloom Filter在分布式环境下，连黑名单系统最为基础的功能都无法实现，就算Bloom Filter配合其他工程实践勉强实现，那Bloom Filter自身的优势也就不存在了。
+
+* 被拉黑用户数据量本身很小，Bloom Filter无法发挥其优势。而且如果只是判断用户是否被拉黑，我们按100万的被封禁的用户ID来看，一共也才需要61.4MiB内存（特别一提的是：等未来Valhalla项目发布了，那时大约只需占46MiB）。这里以具体代码为例：
+
+  ```java
+  public static void main(String[] args) {
+      int number = 1_000_000;
+      var map = ConcurrentHashMap.newKeySet((int)(number / 0.75F + 1.0F));
+      for (int i = 0; i < number; i++) {
+          map.add(new Long(i));
+      }
+      System.out.println(GraphLayout.parseInstance(map).toFootprint());
+  }
+  ```
+  其内存占用的输出如下（基于`org.openjdk.jol.jol-core`库实现计算）：
+  ```text
+       COUNT       AVG       SUM   DESCRIPTION
+           1   8388624   8388624   [Ljava.util.concurrent.ConcurrentHashMap$Node;
+           1        16        16   java.lang.Boolean
+     1000000        24  24000000   java.lang.Long
+           1        64        64   java.util.concurrent.ConcurrentHashMap
+           1        24        24   java.util.concurrent.ConcurrentHashMap$KeySetView
+     1000000        32  32000000   java.util.concurrent.ConcurrentHashMap$Node
+     2000004            64388728   (total)
+  ```
+
+* 存在误差
+
 ### 客户端接口防刷限流
 
 turms-gateway的限流实现采用的是主流算法`令牌桶算法`（如AWS的API Gateway提供流量整型实现就用的是令牌桶算法）。

@@ -35,9 +35,9 @@
 
 * 当客户端需要与turms-gateway服务端建立TCP连接时，客户端可以通过`DNS服务`来查询接入层服务端域名对应的IP地址，而该IP地址指向`SLB/ELB服务`（通常基于LVS与Nginx）、`全球加速服务`、或`turms-gateway`，具体如何搭配要根据您实际应用的需求与规模而定。该DNS服务端可以配置一个或多个公网IP地址（生产环境中切勿配置真实IP地址，以缓解DDoS攻击），并通过轮询或其他策略返回给客户端一个IP地址。补充：
 
-  * 无论Turms客户端使用的是TCP协议，还是上层的WebSocket协议，turms-gateway的上游服务（DNS/SLB等）都应该根据客户端IP地址进行TCP连接的负载均衡。
+  * 无论Turms客户端使用的是纯TCP协议，还是上层的WebSocket协议，turms-gateway的上游服务（DNS/SLB等）都应该根据客户端IP地址进行TCP连接的负载均衡。
 
-  * 并且，强烈建议您开启SLB服务的`Sticky Session`功能，让会话始终与一个turms-gateway服务端进行连接。这么做的好处是能缓解很大一部分DDoS攻击。因为turms-gateway提供客户端自动封禁机制，能够迅速检测并封禁本地有异常行为的IP或用户，但turms-gateway服务端之间同步封禁客户端数据默认时间间隔约10~15秒，因此如果关闭了`Sticky Session`功能，黑客就能利用封禁数据同步间隔这段时间，切换与turms-gateway的TCP连接，进行DDoS攻击。
+  * 强烈建议您开启SLB服务的`Sticky Session`功能，让会话始终与一个turms-gateway服务端进行连接。这么做的好处是能缓解很大一部分DDoS攻击。因为turms-gateway提供客户端自动封禁机制，能够迅速检测并封禁本地有异常行为的IP或用户，但turms-gateway服务端之间同步封禁客户端数据默认时间间隔约10~15秒，因此如果关闭了`Sticky Session`功能，黑客就能利用封禁数据同步间隔这段时间，切换与turms-gateway的TCP连接，进行DDoS攻击。
 
   * 通常情况下，您应该将SSL证书放在turms-gateway的上游服务端，即上游的SLB服务或Nginx服务端等。
 
