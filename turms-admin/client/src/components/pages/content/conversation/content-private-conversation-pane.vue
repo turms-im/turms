@@ -9,6 +9,7 @@
         :table="table"
         :pageable="pageable"
         :transform="transform"
+        :use-table-data-for-export="true"
     />
 </template>
 

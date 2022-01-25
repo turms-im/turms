@@ -51,7 +51,9 @@ function loadAntd(app) {
         const hide = this.$message.loading(this.$t(loading), 0);
         promise
             .then(data => {
-                this.$message.success(this.$t(success));
+                if (success) {
+                    this.$message.success(this.$t(success));
+                }
                 successCb(data);
             })
             .catch(e => {

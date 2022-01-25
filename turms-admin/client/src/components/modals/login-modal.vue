@@ -19,7 +19,10 @@
             @finishFailed="onValidationFailed"
         >
             <a-form-item name="url">
-                <a-input v-model:value="form.url">
+                <a-input
+                    v-model:value="form.url"
+                    class="login-modal__url"
+                >
                     <template #prefix>
                         <span class="login-form__input-icon">
                             <icon type="link" />
@@ -32,6 +35,7 @@
                     ref="accountInput"
                     v-model:value="form.account"
                     autocomplete="username"
+                    class="login-modal__account"
                     :placeholder="$t('adminAccount')"
                 >
                     <template #prefix>
@@ -45,6 +49,7 @@
                 <a-input
                     v-model:value="form.password"
                     autocomplete="current-password"
+                    class="login-modal__password"
                     :placeholder="$t('adminPassword')"
                     type="password"
                 >
@@ -126,7 +131,7 @@ export default {
             }
         },
         onValidationFailed(e) {
-            this.$message.error(`${this.$t('loginFailed')}`, e);
+            this.$error(this.$t('loginFailed'), e);
         },
         async _getHttpUrl(candidate) {
             const startsWithHttp = /^https?:/i.test(candidate);

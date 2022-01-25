@@ -13,23 +13,23 @@ describe('Home page', () => {
 
         it('should focus account by default', () => {
             cy.focused()
-                .should('have.id', 'account');
+                .should('have.id', 'form_item_account');
         });
 
         it('should have default URL value', () => {
-            cy.get('#url')
+            cy.get('#form_item_url')
                 .should('have.value', 'http://localhost:8510');
         });
 
         it('account input should accept input', () => {
-            cy.get('#account')
+            cy.get('#form_item_account')
                 .should('be.empty')
                 .type(account)
                 .should('have.value', account);
         });
 
         it('password input should accept input', () => {
-            cy.get('#password')
+            cy.get('#form_item_password')
                 .should('be.empty')
                 .type(pwd)
                 .should('have.value', pwd);
@@ -37,8 +37,8 @@ describe('Home page', () => {
 
         context('Form submission', () => {
             beforeEach(() => {
-                cy.get('#account').type(account);
-                cy.get('#password').type(pwd);
+                cy.get('.login-modal__account').type(account);
+                cy.get('.login-modal__password').type(pwd);
             });
 
             it('should show an error message on a failed submission', () => {
@@ -60,7 +60,7 @@ describe('Home page', () => {
                 });
                 cy.get('.login-form')
                     .should('be.visible');
-                cy.get('#password')
+                cy.get('#form_item_password')
                     .focus()
                     .type('{enter}');
                 cy.get('.login-form')

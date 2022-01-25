@@ -1,34 +1,18 @@
-<template>
-    <a-button
-        class="content-template-export"
-        :disabled="disabled"
-        :loading="exporting"
-        type="primary"
-        @click="fetchAndExport"
-    >
-        {{ $t('exportData') }}
-    </a-button>
-</template>
-<script>
 import exportExcel from '../../../../utils/excel-export-util';
 
 export default {
-    name: 'content-export',
     props: {
-        resourceUrl: {
-            type: String,
-            required: true
-        },
         queryParams: {
             type: Object,
             required: true
         },
-        disabled: {
-            type: Boolean
-        },
-        fileName: {
+        exportFileName: {
             type: String,
             required: true
+        },
+        recordsToExport: {
+            type: Array,
+            default: null
         },
         transform: {
             type: Function,
@@ -48,9 +32,11 @@ export default {
                 return;
             }
             this.exporting = true;
-            const hide = this.$message.loading(this.$t('exportingDataAsExcel'), 0);
-            this.fetchData()
-                .then(() => {
+            this.$loading({
+                promise: this.fetchData(),
+                loading: 'exportingDataAsExcel',
+                error: 'failedToExport',
+                successCb: () => {
                     if (!this.records.length) {
                         this.$message.info(this.$t('noRecordsToExport'));
                         return;
@@ -63,16 +49,16 @@ export default {
                                 this.$message.success(this.$t('exportLimitedRecordsSuccessfully', {number: this.records.length}));
                             }
                         });
-                })
-                .catch(e => {
-                    this.$message.error(this.$t('failedToExport', e));
-                })
-                .finally(() => {
-                    setTimeout(hide);
-                    this.exporting = false;
-                });
+                },
+                finallyCb: () => this.exporting = false
+            });
         },
         fetchData() {
+            if (this.recordsToExport) {
+                this.records = this.parseResponseRecords(this.recordsToExport);
+                this.total = this.recordsToExport.length;
+                return Promise.resolve();
+            }
             const queryParams = {
                 ... this.queryParams,
                 page: 0,
@@ -92,7 +78,7 @@ export default {
                     width: this.$rs.excel.width
                 }));
             const rows = this.records;
-            return exportExcel(this.fileName, this.fileName, headers, rows);
+            return exportExcel(this.exportFileName, this.exportFileName, headers, rows);
         },
         parseResponseRecords(records) {
             records = this.transform ? this.transform(records) : records;
@@ -112,4 +98,3 @@ export default {
         }
     }
 };
-</script>

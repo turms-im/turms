@@ -27,13 +27,15 @@
             </a-button>
         </a-popconfirm>
         <div class="content-action-group__action">
-            <export
-                :resource-url="resourceUrl"
-                :query-params="queryParams"
+            <a-button
+                class="content-action-group__export"
                 :disabled="!hasRecords"
-                :file-name="exportFileName"
-                :transform="transform"
-            />
+                :loading="exporting"
+                type="primary"
+                @click="fetchAndExport"
+            >
+                {{ $t('exportData') }}
+            </a-button>
         </div>
         <modal-form
             v-if="actions.length"
@@ -53,15 +55,15 @@
 </template>
 
 <script>
-import Export from './export';
+import ExportMixin from './export-mixin';
 import ModalForm from './modal-form';
 
 export default {
     name: 'action-group',
     components: {
-        Export,
         ModalForm
     },
+    mixins: [ExportMixin],
     props: {
         actions: {
             type: Array,
@@ -72,14 +74,6 @@ export default {
             required: true
         },
         queryKey: {
-            type: String,
-            required: true
-        },
-        queryParams: {
-            type: Object,
-            required: true
-        },
-        exportFileName: {
             type: String,
             required: true
         },
@@ -98,10 +92,6 @@ export default {
         hasRecords: {
             type: Boolean,
             required: true
-        },
-        transform: {
-            type: Function,
-            default: null
         }
     },
     emits: ['onRecordCreated', 'onRecordsUpdated', 'requestDelete'],

@@ -16,10 +16,11 @@
             :has-records="!!records.length"
             :query-key="queryKey"
             :query-params="queryParams"
+            :records-to-export="useTableDataForExport ? records : null"
             :resource-url="url + '/page'"
             :selected-record-keys="selectedRecordKeys"
             :submit-url="url"
-            :transform="transform"
+            :transform="transformExportData"
             @onRecordCreated="onRecordCreated"
             @onRecordsUpdated="onRecordsUpdated"
             @requestDelete="requestDelete"
@@ -118,6 +119,15 @@ export default {
             type: Function,
             required: false,
             default: null
+        },
+        transformExportData: {
+            type: Function,
+            required: false,
+            default: null
+        },
+        useTableDataForExport: {
+            type: Boolean,
+            default: false
         }
     },
     emits: ['onDataInited', 'onRecordsDeleted', 'onRecordsUpdated'],
