@@ -167,5 +167,16 @@ terraform apply
 
 **提醒**
 
-* turms-service服务端在启动时，会自动检测数据库中是否已存在一个角色为`ROOT`，且账号为`turms`的超级管理员账号。如果不存在，则turms-service服务端会自动创建一个角色为`ROOT`、名称与密码均为`turms`的管理员账号。在生产环境中，请务必记得要修改默认密码。
+* turms-service服务端在启动时，会自动检测数据库中是否已存在一个角色为`ROOT`，且账号为`turms`的超级管理员账号。如果不存在，则turms-service服务端会自动创建一个角色为`ROOT`、名称为`turms`与密码为`turms.security.password.initial-root-password`（默认为：`turms`）的管理员账号。在生产环境中，请务必记得要修改默认密码。
 * 上述操作主要用于您初次体验Turms集群使用，若您需将Turms部署在生产环境当中，请务必查阅Wiki手册，了解各种配置参数的意义，以最小的资源消耗，来定制属于您自己的业务需求与业务组合。
+
+## Turms服务端启动的大致流程
+
+1. 连接并校验mongos与Redis服务端。
+2. 检测MongoDB是否已建表，如果已经建好表了，则跳过这步。如果没有就进行：建表、添加索引、添加分片键、添加Zones用于冷热数据分离存储。如果开启了MongoDB的Fake数据，则turms-service会自动向MongoDB生成Fake数据，用于开发测试。
+3. 对于turms-service服务端，它会检测MongoDB中是否已存在一个角色为`ROOT`，且账号为`turms`的超级管理员账号。如果不存在，则会向MongoDB创建一个角色为`ROOT`、名称为`turms`与密码为`turms.security.password.initial-root-password`（默认为：`turms`）的管理员账号。
+4. 注册本地Node节点到服务注册中心，如果注册成功，则拉取并应用集群全局配置，并搭建RPC服务端，用于接收RPC客户端连接。如果失败，则抛异常并退出进程。
+5. 开启Admin HTTP服务端，用于接收管理员API请求。另外，对于turms-gateway，还要开启网关服务端（如TCP/WebSocket），用于接收客户端连接与请求。
+6. 对于turms-gateway，如果开启了Fake客户端，则生成真实的客户端连接并随机发送真实客户端请求（请求类型随机、请求参数随机），用于开发测试。
+
+至此，服务端启动完毕。
