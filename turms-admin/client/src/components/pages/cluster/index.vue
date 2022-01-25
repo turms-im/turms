@@ -1,5 +1,8 @@
 <template>
-    <a-tabs default-active-key="1">
+    <a-tabs
+        default-active-key="1"
+        :animated="true"
+    >
         <a-tab-pane
             key="1"
             :tab="$t('clusterConfig')"

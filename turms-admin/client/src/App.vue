@@ -6,6 +6,9 @@
 
 <script>
 import Layout from './components/layout/index';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es-us';
+import 'dayjs/locale/zh-cn';
 
 export default {
     name: 'app',
@@ -14,13 +17,11 @@ export default {
     },
     computed: {
         locale() {
-            const locales = Object.values(this.$locales);
-            for (const locale of locales) {
-                if (this.$store.getters.locale === locale.locale) {
-                    return locale;
-                }
-            }
-            return locales.enUS;
+            const currentLocale = Object.values(this.$locales)
+                .find(locale => this.$store.getters.locale === locale.locale)
+                || this.$locales.enUS;
+            dayjs.locale(currentLocale.locale);
+            return currentLocale;
         }
     },
     watch: {

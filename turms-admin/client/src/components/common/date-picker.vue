@@ -2,7 +2,7 @@
     <a-date-picker
         :allow-clear="false"
         :disabled-date="disabledDate"
-        :show-time="{ defaultValue: $moment('00:00:00', 'HH:mm:ss') }"
+        :show-time="{ defaultValue: $date('00:00:00', 'HH:mm:ss') }"
         format="YYYY-MM-DD HH:mm:ss"
     />
 </template>
@@ -13,7 +13,7 @@ export default {
     data() {
         return {
             disabledDate(current) {
-                return current && current > this.$moment().endOf('day');
+                return current && current > this.$date().endOf('day');
             }
         };
     }

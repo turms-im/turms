@@ -131,37 +131,37 @@ export default {
         disabledEndDate(currentDate) {
             if (this.isMonthMode) {
                 //TODO: check this bug
-                return currentDate.month() >= this.$moment().month();
+                return currentDate.month() >= this.$date().month();
             } else {
                 if (this.includeToday) {
-                    return this.$moment().isBefore(currentDate, 'days');
+                    return this.$date().isBefore(currentDate, 'days');
                 } else {
-                    return this.$moment().isSameOrBefore(currentDate, 'days');
+                    return this.$date().isSameOrBefore(currentDate, 'days');
                 }
             }
         },
         getLastMonthRange(number) {
-            const startMonth = this.$moment().startOf('day').subtract(number, 'months');
-            const endMonth = this.$moment().startOf('day').subtract(1, 'months');
+            const startMonth = this.$date().startOf('day').subtract(number, 'months');
+            const endMonth = this.$date().startOf('day').subtract(1, 'months');
             return [startMonth, endMonth];
         },
         getJanuaryToLastMonthRange() {
-            const january = this.$moment().startOf('year');
-            if (this.$moment().month() === 0) {
+            const january = this.$date().startOf('year');
+            if (this.$date().month() === 0) {
                 return [january, january];
             } else {
-                return [january, this.$moment().startOf('day').subtract(1, 'months')];
+                return [january, this.$date().startOf('day').subtract(1, 'months')];
             }
         },
         getLastMonthToTodayRange() {
             return [
-                this.$moment().startOf('day').subtract(1, 'months'),
-                this.$moment().startOf('day')
+                this.$date().startOf('day').subtract(1, 'months'),
+                this.$date().startOf('day')
             ];
         },
         getFirstToToday() {
-            const first = this.$moment().startOf('month');
-            const today = this.$moment().startOf('day');
+            const first = this.$date().startOf('month');
+            const today = this.$date().startOf('day');
             if (1 === today.daysInMonth()) {
                 return [first, first];
             } else {
@@ -170,16 +170,16 @@ export default {
         },
         getLastMonthToYesterdayRange() {
             return [
-                this.$moment().startOf('day').subtract(1, 'days').subtract(1, 'months'),
-                this.$moment().startOf('day').subtract(1, 'days')
+                this.$date().startOf('day').subtract(1, 'days').subtract(1, 'months'),
+                this.$date().startOf('day').subtract(1, 'days')
             ];
         },
         getFirstToYesterday() {
-            const first = this.$moment().startOf('month');
-            if (1 === this.$moment().daysInMonth()) {
+            const first = this.$date().startOf('month');
+            if (1 === this.$date().daysInMonth()) {
                 return [first, first];
             } else {
-                return [first, this.$moment().startOf('day').subtract(1, 'days')];
+                return [first, this.$date().startOf('day').subtract(1, 'days')];
             }
         }
     }

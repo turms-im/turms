@@ -32,7 +32,7 @@
                     {{ `${$t('roleId')}: ${admin.roleId}` }}
                 </div>
                 <div class="layout-header__admin-info">
-                    {{ `${$t('registrationDate')}: ${$moment(admin.registrationDate).format()}` }}
+                    {{ `${$t('registrationDate')}: ${$date(admin.registrationDate).format()}` }}
                 </div>
             </template>
         </a-popover>

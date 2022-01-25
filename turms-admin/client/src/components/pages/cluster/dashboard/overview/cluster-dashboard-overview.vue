@@ -12,8 +12,7 @@
             size="small"
         >
             <template
-                v-for="column in columns"
-                #[column.dataIndex]="{ text, record }"
+                #bodyCell="{ column, text, record }"
             >
                 <template v-if="column.dataIndex === 'nodeId'">
                     <a
@@ -115,27 +114,27 @@ export default {
                 column = {
                     ...column,
                     title: this.$t(column.title || column.dataIndex),
-                    sorter: this.members.length > 1 ? this.$util.sort : null,
-                    // To ensure boolean values can display
-                    slots: {customRender: column.dataIndex}
+                    sorter: this.members.length > 1 ? this.$util.sort : null
                 };
                 if (column.needFilters) {
-                    const filters = this.members.flatMap(item => {
-                        const value = item[column.dataIndex];
-                        if (value == null) {
-                            return [];
-                        }
-                        if (typeof value === 'boolean') {
+                    let filters = this.members
+                        .flatMap(item => {
+                            const value = item[column.dataIndex];
+                            if (value == null) {
+                                return [];
+                            }
+                            if (typeof value === 'boolean') {
+                                return {
+                                    text: this.$t(value ? 'yes' : 'no'),
+                                    value
+                                };
+                            }
                             return {
-                                text: this.$t(value ? 'yes' : 'no'),
+                                text: value,
                                 value
                             };
-                        }
-                        return {
-                            text: value,
-                            value
-                        };
-                    });
+                        });
+                    filters = this.$_.uniq(filters, v => v.value);
                     if (filters.length > 1) {
                         column.filters = filters;
                     }

@@ -104,7 +104,7 @@ export default {
         rows() {
             const rows = [];
             const row = {};
-            row[1] = this.$moment(this.date).format('Y-MM-DD');
+            row[1] = this.$date(this.date).format('Y-MM-DD');
             for (const [i, card] of this.cards) {
                 row[i + 2] = card.content;
             }

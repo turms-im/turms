@@ -14,8 +14,7 @@
         @change="onTableChanged"
     >
         <template
-            v-for="column in columns"
-            #[column.dataIndex]="{ text, record }"
+            #bodyCell="{ column, text, record }"
         >
             <div
                 v-if="column.type === 'TREE'"
@@ -133,7 +132,7 @@ export default {
             if (value instanceof Array) {
                 value = value.join(',');
             } else if (column.dataIndex.endsWith('Date') && value) {
-                value = this.$moment(value).format();
+                value = this.$date(value).format();
             }
             return value;
         },

@@ -269,9 +269,9 @@ export default {
             if (allowFuture && allowPast) {
                 return;
             }
-            const present = this.$moment();
-            const currentStartOfDate = this.$moment(current).startOf('day').toDate().getTime();
-            const presentStartOfDate = this.$moment().startOf('day').toDate().getTime();
+            const present = this.$date();
+            const currentStartOfDate = this.$date(current).startOf('day').toDate().getTime();
+            const presentStartOfDate = this.$date().startOf('day').toDate().getTime();
             if (currentStartOfDate !== presentStartOfDate) {
                 return;
             }
@@ -309,8 +309,8 @@ export default {
             if (!current) {
                 return true;
             }
-            current = this.$moment(current).startOf('day').toDate().getTime();
-            const present = this.$moment().startOf('day').toDate().getTime();
+            current = this.$date(current).startOf('day').toDate().getTime();
+            const present = this.$date().startOf('day').toDate().getTime();
             if (current === present) {
                 return false;
             }
@@ -343,7 +343,7 @@ export default {
                     } else {
                         delete record[key];
                     }
-                } else if (this.$moment.isMoment(value)) {
+                } else if (this.$date.isDayjs(value)) {
                     record[key] = value.toISOString();
                 }
             });

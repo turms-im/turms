@@ -62,13 +62,13 @@ export default {
                 if (this.isMonthMode) {
                     format = 'Y-MM';
                 } else {
-                    const year1 = this.$moment(records[0].date).year();
-                    const year2 = this.$moment(records[records.length - 1].date).year();
+                    const year1 = this.$date(records[0].date).year();
+                    const year2 = this.$date(records[records.length - 1].date).year();
                     const isSameYear = year1 === year2;
                     format = isSameYear ? 'MM-DD' : 'Y-MM-DD';
                 }
                 for (const record of records) {
-                    record.date = this.$moment(record.date).format(format);
+                    record.date = this.$date(record.date).format(format);
                 }
                 if (this.chart) {
                     this.chart.changeData(records);

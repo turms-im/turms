@@ -135,7 +135,7 @@ export default {
                 return;
             }
             this.updating = true;
-            this.lastUpdatedTime = this.$moment().format('YYYY-MM-DD HH:mm:ss');
+            this.lastUpdatedTime = this.$date().format('YYYY-MM-DD HH:mm:ss');
             Promise.all([this.updateOnlineUsers(), this.updateMembersInfo()])
                 .then(() => {
                     this.initialized = true;

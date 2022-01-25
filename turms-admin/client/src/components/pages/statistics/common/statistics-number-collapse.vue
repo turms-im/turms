@@ -135,8 +135,8 @@ export default {
         fileName() {
             if (this.dateRange.length) {
                 const format = this.dateMode === 'day' ? 'Y-MM-DD' : 'Y-MM';
-                const startDate = this.$moment(this.dateRange[0]).format(format);
-                const endDate = this.$moment(this.dateRange[1]).format(format);
+                const startDate = this.$date(this.dateRange[0]).format(format);
+                const endDate = this.$date(this.dateRange[1]).format(format);
                 return `turms-statistics-${this.name}(${startDate}~${endDate})`;
             } else {
                 return `turms-statistics-${this.name}`;
@@ -179,8 +179,8 @@ export default {
             this.isLoading = true;
             const hide = this.$message.loading(this.$t('refreshingData'), 0);
             if (this.dateRange.length === 2) {
-                const startDate = this.$moment(this.dateRange[0]).startOf(this.dateMode);
-                const endDate = this.$moment(this.dateRange[1]).add(1, `${this.dateMode}s`).startOf(this.dateMode);
+                const startDate = this.$date(this.dateRange[0]).startOf(this.dateMode);
+                const endDate = this.$date(this.dateRange[1]).add(1, `${this.dateMode}s`).startOf(this.dateMode);
                 const params = this.$rq.generateDateRangeParams(
                     this.resources,
                     startDate.utcOffset(-new Date().getTimezoneOffset()).format(),
@@ -213,7 +213,7 @@ export default {
                             const row = {};
                             for (const header of headers) {
                                 if (header.key === 'date') {
-                                    row['date'] = this.$moment(record.date)
+                                    row['date'] = this.$date(record.date)
                                         .format(format);
                                 } else {
                                     row[header.key] = record[header.key];

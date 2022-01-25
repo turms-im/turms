@@ -119,7 +119,7 @@ export default {
             // We loop over "this.metrics" instead of "this.selectedGroups"
             // for better performance when "this.metrics" is large
             list.forEach(({timestamp, metrics}) => {
-                timestamp = this.$moment(timestamp).format('HH:mm:ss');
+                timestamp = this.$date(timestamp).format('HH:mm:ss');
                 this.selectedGroups.forEach(({group, metrics: selectedMetrics}) => {
                     const metric = metrics.find(record => selectedMetrics.includes(record.name));
                     if (!metric) {

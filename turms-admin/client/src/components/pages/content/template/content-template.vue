@@ -150,9 +150,6 @@ export default {
                     dataIndex: column.key,
                     default: column.default,
                     type: column.type,
-                    slots: {
-                        customRender: column.key
-                    },
                     width: column.width,
                     sorter
                 };

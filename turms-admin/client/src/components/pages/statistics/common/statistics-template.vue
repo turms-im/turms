@@ -6,7 +6,7 @@
             :title="title"
             :cards="parsedCards"
             :refresh-func="updateCount"
-            :date="$moment().add(-1, 'days').startOf('day').format()"
+            :date="$date().add(-1, 'days').startOf('day').format()"
         />
         <statistics-number-collapse
             ref="numberPanel"
@@ -67,8 +67,8 @@ export default {
         }
     },
     data() {
-        const yesterday = this.$moment()
-            .subtract('1', 'days')
+        const yesterday = this.$date()
+            .subtract(1, 'days')
             .format('YYYY-MM-DD');
         const title = `昨日${this.nameLabel}数统计 ${yesterday}`;
         const parsedCards = this.cards.map(card => {
@@ -129,9 +129,9 @@ export default {
             if (!this.$store.getters.admin) {
                 return Promise.reject();
             }
-            const todayStart = this.$moment().startOf('day').format();
-            const yesterdayStart = this.$moment().add(-1, 'days').startOf('day').format();
-            const dayBeforeYesterdayStart = this.$moment().add(-2, 'days').startOf('day').format();
+            const todayStart = this.$date().startOf('day').format();
+            const yesterdayStart = this.$date().add(-1, 'days').startOf('day').format();
+            const dayBeforeYesterdayStart = this.$date().add(-2, 'days').startOf('day').format();
             const promises = [
                 this.fetchAllCounts(yesterdayStart, todayStart),
                 this.fetchAllCounts(dayBeforeYesterdayStart, yesterdayStart)

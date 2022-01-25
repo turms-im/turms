@@ -7,7 +7,7 @@
         <div
             class="cluster-config"
         >
-            <a-tabs>
+            <a-tabs :animated="true">
                 <a-tab-pane
                     v-for="title in tabTitles"
                     :key="title.key"

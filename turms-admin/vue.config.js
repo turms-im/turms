@@ -24,13 +24,7 @@ module.exports = {
             process: 'process/browser'
         });
         config.plugins.push(processProvidePlugin);
-        if (IS_PROD) {
-            const contextReplacementPlugin = new webpack.ContextReplacementPlugin(
-                /moment[/\\]locale$/,
-                /en|zh-cn/
-            );
-            config.plugins.push(contextReplacementPlugin);
-        } else {
+        if (!IS_PROD) {
             config.devtool = 'source-map';
         }
         config.module.rules.push({

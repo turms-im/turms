@@ -2,7 +2,7 @@ import {createApp} from 'vue';
 import enUS from 'ant-design-vue/es/locale/en_US';
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import axios from 'axios';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import _ from 'lodash';
 import resources from './configs/resources';
 import App from './App.vue';
@@ -50,12 +50,13 @@ createApp(App)
                 enUS,
                 zhCN
             };
-            globalProperties.$moment = moment;
+            globalProperties.$date = dayjs;
             globalProperties.$rs = resources;
             // Don't use "_" because of https://github.com/vuejs/vue-next/issues/2546
             globalProperties.$_ = {
                 get: _.get,
-                set: _.set
+                set: _.set,
+                uniq: _.uniq
             };
             globalProperties.$sleep = async (millis) => await new Promise(resolve => setTimeout(resolve, millis));
         }
