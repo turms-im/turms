@@ -24,6 +24,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.mongo.entity.MongoEntity;
+import im.turms.server.common.mongo.model.Tag;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
@@ -104,6 +105,8 @@ public interface MongoOperationsSupport {
     <T> Mono<Void> ensureIndexes(Class<T> clazz, List<IndexModel> indexModels);
 
     <T> Flux<Document> listIndexes(Class<T> clazz);
+
+    Mono<List<Tag>> findTags(String collectionName);
 
     Mono<Void> deleteTags(String collectionName);
 

@@ -49,7 +49,9 @@ import im.turms.server.common.mongo.MongoContext;
 import im.turms.server.common.mongo.entity.Index;
 import im.turms.server.common.mongo.entity.MongoEntity;
 import im.turms.server.common.mongo.entity.ShardKey;
+import im.turms.server.common.mongo.exception.CorruptedDocumentException;
 import im.turms.server.common.mongo.exception.MongoExceptionTranslator;
+import im.turms.server.common.mongo.model.Tag;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
@@ -457,6 +459,25 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     }
 
     // Shard
+
+    @Override
+    public Mono<List<Tag>> findTags(String collectionName) {
+        String namespace = getNamespace(collectionName);
+        BsonDocument filter = new BsonDocument("ns", new BsonString(namespace));
+        Publisher<Document> source = context.getConfigDatabase().getCollection("tags").find(filter);
+        return Flux.from(source)
+                .map(document -> {
+                    try {
+                        return new Tag(document.getString("ns"),
+                                document.getString("tag"),
+                                document.get("max", Document.class),
+                                document.get("min", Document.class));
+                    } catch (Exception e) {
+                        throw new CorruptedDocumentException("Failed to decode a tag from the document: " + document, e);
+                    }
+                })
+                .collectList();
+    }
 
     @Override
     public Mono<Void> deleteTags(String collectionName) {
