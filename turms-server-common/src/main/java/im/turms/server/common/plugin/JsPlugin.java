@@ -17,14 +17,16 @@
 
 package im.turms.server.common.plugin;
 
+import org.graalvm.polyglot.Context;
+
 import java.util.List;
 
 /**
  * @author James Chen
  */
-public record PluginWrapper(
-        PluginDescriptor descriptor,
-        TurmsPlugin plugin,
+public record JsPlugin(
+        Context context,
+        JsPluginDescriptor descriptor,
         List<TurmsExtension> extensions
 ) {
 }

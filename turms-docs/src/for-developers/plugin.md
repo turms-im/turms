@@ -20,7 +20,7 @@ Turms服务端支持基于Java或JavaScript语言的插件实现。
 | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | 语言版本 | Java 17                                                      | ECMAScript 2020                                              |
 | 优点     | 适合实现逻辑复杂的功能。<br />比如Turms项目的官方插件`turms-plugin-antispam`敏感词过滤插件 | 只需新建一个JavaScript文件，就可以直接编写自定义逻辑，无需编译，无需打包；<br />方便支持热更新 |
-| 缺点     | 如果只是实现一点自定义逻辑，依旧需要先搭个插件项目，然后基于构建工具将代码打包成Jar包，流程繁琐 | 如果需要实现复杂的逻辑，则不如基于Java插件实现；<br />内存开销比Java插件大 |
+| 缺点     | 如果只是实现一点自定义逻辑，依旧需要先搭个插件项目，然后基于构建工具将代码打包成Jar包，流程繁琐 | 如果需要实现复杂的逻辑，则不如基于Java插件实现；<br />内存开销比Java插件大；<br />解释执行，运行效率低 |
 | 总评     | 更适合做实现复杂、偏重且实现相对固定的插件。<br />该类插件更像是一个“工程” | 更适合小巧轻量、需要支持热更新的插件。<br />该类插件更像是一个“小补丁” |
 
 ### Java版本
@@ -79,12 +79,12 @@ Turms服务端支持基于Java或JavaScript语言的插件实现。
      3. 在`resources`目录下，新建一个名称为`plugin.properties`的文件，并添加以下插件描述信息（具体的参数值是您自定义插件的信息）
      
         ```properties
-        plugin.id=com.mydomain.MyPlugin
-        plugin.class=com.mydomain.MyPlugin
-        plugin.version=0.0.1
-        plugin.provider=com.mydomain
-        plugin.license=MIT
-        plugin.description=
+        id=com.mydomain.MyPlugin
+        class=com.mydomain.MyPlugin
+        version=0.0.1
+        provider=com.mydomain
+        license=MIT
+        description=
         ```
         其中：
      
@@ -173,7 +173,7 @@ Turms服务端中的插件实现相对灵活，既允许插件使用独立类环
 
 4. 通过IDEA启动turms-service或turms-gateway服务端，服务端将自动加载`<您插件项目根目录>/target`内的插件JAR包，并且当服务端执行到您插件源码的断点时，IDEA会暂停服务端运行供您调试
 
-### JavaScript版本（TODO：即将实现，预览文档先行）
+### JavaScript版本
 
 为了实现Java插件需要搭一个工程环境，而实现JavaScript插件只需要新建一个JavaScript文件。
 
@@ -184,29 +184,31 @@ Turms服务端中的插件实现相对灵活，既允许插件使用独立类环
 ```javascript
 function getPluginDescriptor() {
     return {
-        id: "com.mydomain.MyPlugin",
-        version: "0.0.1",
-        provider: "com.mydomain",
-        license: "MIT",
-        description: ""
-    }
+        id: 'com.mydomain.myplugin',
+        version: '0.0.1',
+        provider: 'com.mydomain',
+        license: 'MIT',
+        description: ''
+    };
 }
 
-class MyStorageServiceProvider extends TurmsExtension {
+class MyTurmsExtension extends TurmsExtension {
     getExtensionPoints() {
-        return ["StorageServiceProvider"];
+        return ['im.turms.plugin.MyExtensionPoint'];
     }
-    
-    onStarted() {
-        const properties = this.loadProperties("my-plugin");
-        // your business logic
+
+    testBool() {
+        return true;
     }
-    
-    // your business logic. e.g.:
-    // async deleteResource(requesterId, contentType, keyStr, keyNum) {
-    //     const mySdk = await load("http://my-sdk.js");
-    //     await mySdk.delete(requesterId, contentType, keyStr, keyNum);
-    // }
+
+    async testNotification(builders) {
+        const builder = builders.get(0);
+        const notification = builder.setCode(123)
+            .setReason('reason')
+            .build();
+        const List = Java.type('java.util.List');
+        return await List.of(notification);
+    }
 }
 ```
 
@@ -214,22 +216,23 @@ class MyStorageServiceProvider extends TurmsExtension {
 
 * `getPluginDescriptor`函数必须存在，且是固定的函数名，它返回的对象是插件的描述信息：
 * `id`字段用于区分插件。无格式要求，但是必须不为空。
-    
+  
 * 其他字段起描述作用，暂无实际作用，均可为空。
 
 
-* `MyStorageServiceProvider`类是开发者自定义的`TurmsExtension`拓展，其中`getExtensionPoints`函数必须存在，用于返回该拓展实现了的插件拓展点名称。如果开发者指定了拓展点，但并没有提供实现函数，Turms服务端会跳过执行，并不会报错。
+* `MyTurmsExtension`类是开发者自定义的`TurmsExtension`拓展，其中`getExtensionPoints`函数必须存在，用于返回该拓展实现了的插件拓展点名称。如果开发者指定了拓展点，但并没有提供对应的实现函数，则Turms服务端在执行插件回调函数时，会跳过该插件，并不会报错。
 
 注意事项：
 
 * Turms服务端只会检测`plugins`目录下，以`js`结尾的文件是否为插件实现，因此如果您将插件JAR包放到`lib`目录下，则这些插件将不会被识别与使用。
 * Turms不对插件进行访问控制，您需要自行确保插件中没有恶意代码。注意：恶意插件不仅可以调用函数直接强制关闭Turms服务端，甚至可以直接控制操作系统。
-* JavaScript插件也能像Java插件那样访问Turms服务端的Java类与实例，只是不推荐用JavaScript写复杂的插件
+* 上下文环境以插件为单位，即每个插件都有它独立的上下文环境，并且一个插件的所有函数公用一个上下文环境。换言之，下次执行的函数可以查看上次执行的函数对上下文环境的改动。
+* JavaScript插件也能像Java插件那样访问Turms服务端的Java类与实例，甚至直接调用`System.exit()`，只是不推荐用JavaScript写复杂的插件
 * 不支持调用`Node.js`模块。
 
 #### 主要全局对象
 
-* `load`函数是Graalvm的[全局函数](https://www.graalvm.org/22.0/reference-manual/js/JavaScriptCompatibility/#global-properties)，用于加载外部JavaScript资源。
+* `load`函数是GraalVM的[全局函数](https://www.graalvm.org/22.0/reference-manual/js/JavaScriptCompatibility/#global-properties)，用于加载外部JavaScript资源。
 * `turms`对象。该对象挂载了：
   * `log`对象，用于日志打印
   * `fetch`函数，用于发送HTTP请求

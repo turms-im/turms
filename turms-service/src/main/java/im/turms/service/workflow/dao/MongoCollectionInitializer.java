@@ -364,7 +364,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                                                     LOGGER.info("Deleted the existing tags for the collection " + collectionName);
                                                     LOGGER.info("Adding the shards of the collection {} to zones...", collectionName);
                                                     return ensureZones(client, tiers, collectionName, entity.zone())
-                                                            .doOnSuccess(u -> LOGGER.info("Added the shards of the collection {} to zones",
+                                                            .doOnSuccess(unused -> LOGGER.info("Added the shards of the collection {} to zones",
                                                                     collectionName));
                                                 }));
                                     }))
@@ -380,7 +380,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                                    String collectionName,
                                    Zone zone) {
         Mono<Void> ensureZones = Mono.empty();
-        Instant startDate = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC);
+        Instant creationDateBoundary = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC);
         String creationDateFieldName = zone.creationDateFieldName();
         for (int i = 0, tierSize = tiers.size(); i < tierSize; i++) {
             Pair<String, StorageTierProperties> entry = tiers.get(i);
@@ -391,12 +391,12 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
             if (i == 0) {
                 max = BsonPool.MAX_KEY;
             } else {
-                max = new BsonDateTime(startDate.toEpochMilli());
-                startDate = startDate.minus(days, ChronoUnit.DAYS);
+                max = new BsonDateTime(creationDateBoundary.toEpochMilli());
+                creationDateBoundary = creationDateBoundary.minus(days, ChronoUnit.DAYS);
             }
             Object min = i == tierSize - 1
                     ? BsonPool.MIN_KEY
-                    : new BsonDateTime(startDate.toEpochMilli());
+                    : new BsonDateTime(creationDateBoundary.toEpochMilli());
             List<String> shards = properties.getShards();
             for (String shard : shards) {
                 if (!StringUtils.hasText(shard)) {
@@ -476,9 +476,8 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                     return true;
                 } else if (date instanceof MinKey) {
                     return propertiesPairs.size() != 1;
-                } else if (date instanceof Date d) {
-                    long creationDateLower = d.getTime();
-                    elapsedTime = now - creationDateLower;
+                } else if (date instanceof Date creationDateLower) {
+                    elapsedTime = now - creationDateLower.getTime();
                 } else {
                     return true;
                 }

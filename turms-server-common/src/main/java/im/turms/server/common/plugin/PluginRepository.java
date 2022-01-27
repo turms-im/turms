@@ -29,22 +29,28 @@ import java.util.Map;
  */
 public class PluginRepository {
 
-    private final Map<String, PluginWrapper> wrapperMap = new HashMap<>(16);
+    private final Map<String, Plugin> pluginMap = new HashMap<>(16);
     private final ArrayListMultimap<Class<? extends ExtensionPoint>, ExtensionPoint> extensionPointMap =
-            ArrayListMultimap.create(10, 3);
+            ArrayListMultimap.create(8, 2);
 
-    public void register(PluginWrapper wrapper) {
-        for (TurmsExtension extension : wrapper.extensions()) {
-            for (Class<?> interfaceClass : extension.getClass().getInterfaces()) {
-                if (!ExtensionPoint.class.isAssignableFrom(interfaceClass)) {
+    public void register(Plugin plugin) {
+        for (TurmsExtension extension : plugin.extensions()) {
+            Class<?>[] interfaceClasses;
+            ExtensionPoint extensionPoint;
+            if (extension instanceof JsTurmsExtensionAdaptor jsTurmsExtensionAdaptor) {
+                interfaceClasses = jsTurmsExtensionAdaptor.getExtensionPointClasses().toArray(Class[]::new);
+                extensionPoint = (ExtensionPoint) jsTurmsExtensionAdaptor.getProxy();
+            } else {
+                interfaceClasses = extension.getClass().getInterfaces();
+                extensionPoint = (ExtensionPoint) extension;
+            }
+            for (Class<?> interfaceClass : interfaceClasses) {
+                if (!ExtensionPoint.class.isAssignableFrom(interfaceClass)
+                        || interfaceClass == ExtensionPoint.class) {
                     continue;
                 }
-                if (interfaceClass == ExtensionPoint.class) {
-                    throw new RuntimeException("Extension cannot implement ExtensionPoint directly," +
-                            "and should implement its subclasses defined in Turms");
-                }
                 Class<? extends ExtensionPoint> clazz = (Class<? extends ExtensionPoint>) interfaceClass;
-                extensionPointMap.put(clazz, (ExtensionPoint) extension);
+                extensionPointMap.put(clazz, extensionPoint);
             }
         }
     }
@@ -53,8 +59,8 @@ public class PluginRepository {
         return (List<T>) extensionPointMap.get(clazz);
     }
 
-    public Collection<PluginWrapper> getWrappers() {
-        return wrapperMap.values();
+    public Collection<Plugin> getPlugins() {
+        return pluginMap.values();
     }
 
 }

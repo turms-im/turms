@@ -27,6 +27,7 @@ import org.springframework.context.ApplicationContext;
 import javax.annotation.Nullable;
 import javax.annotation.PreDestroy;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -64,8 +65,8 @@ public abstract class AbstractTurmsPluginManager {
         if (pluginManager == null) {
             return;
         }
-        for (PluginWrapper wrapper : pluginManager.getWrappers()) {
-            for (TurmsExtension extension : wrapper.extensions()) {
+        for (Plugin plugin : pluginManager.getPlugins()) {
+            for (TurmsExtension extension : plugin.extensions()) {
                 try {
                     pluginManager.stopExtension(extension);
                 } catch (Exception e) {
@@ -73,11 +74,15 @@ public abstract class AbstractTurmsPluginManager {
                 }
             }
         }
+        pluginManager.destroy();
     }
 
     protected abstract void afterPluginsInitialized();
 
     protected <T extends ExtensionPoint> List<T> getAndStartExtensionPoints(Class<T> clazz) {
+        if (pluginManager == null) {
+            return Collections.emptyList();
+        }
         List<T> extensionPoints = pluginManager.getExtensionPoints(clazz);
         for (T point : extensionPoints) {
             TurmsExtension extension = (TurmsExtension) point;
@@ -88,6 +93,9 @@ public abstract class AbstractTurmsPluginManager {
 
     @Nullable
     protected <T extends ExtensionPoint> T getAndStartFirstExtensionPoint(Class<T> clazz) {
+        if (pluginManager == null) {
+            return null;
+        }
         List<T> extensions = pluginManager.getExtensionPoints(clazz);
         if (extensions.isEmpty()) {
             return null;
@@ -98,6 +106,9 @@ public abstract class AbstractTurmsPluginManager {
     }
 
     public <T> T loadProperties(Class<T> propertiesClass) {
+        if (pluginManager == null) {
+            return null;
+        }
         return pluginManager.loadProperties(propertiesClass);
     }
 

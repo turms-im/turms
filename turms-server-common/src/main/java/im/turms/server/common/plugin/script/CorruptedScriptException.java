@@ -15,18 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.plugin;
-
-import lombok.Data;
+package im.turms.server.common.plugin.script;
 
 /**
  * @author James Chen
  */
-@Data
-public class PluginDescriptor {
-    private final String id;
-    private final String version;
-    private final String provider;
-    private final String license;
-    private final String description;
+public class CorruptedScriptException extends RuntimeException {
+    public CorruptedScriptException(String message) {
+        super(message);
+    }
+
+    public CorruptedScriptException(String message, Exception cause) {
+        super(message, cause);
+    }
 }

@@ -19,14 +19,25 @@ package im.turms.server.common.plugin;
 
 import lombok.Data;
 
+import java.net.URL;
+
 /**
  * @author James Chen
  */
 @Data
-public class PluginDescriptor {
-    private final String id;
-    private final String version;
-    private final String provider;
-    private final String license;
-    private final String description;
+public class JavaPluginDescriptor extends PluginDescriptor {
+    private final String entryClass;
+    private final URL jarUrl;
+
+    public JavaPluginDescriptor(String id,
+                                String version,
+                                String provider,
+                                String license,
+                                String description,
+                                String entryClass,
+                                URL jarUrl) {
+        super(id, version, provider, license, description);
+        this.entryClass = entryClass;
+        this.jarUrl = jarUrl;
+    }
 }

@@ -34,6 +34,7 @@
     <properties>
         <eclipse-collections.version>11.0.0</eclipse-collections.version>
         <flight-recorder-starter.version>2.2.1</flight-recorder-starter.version>
+        <graalvm.version>22.0.0</graalvm.version>
         <jctools-core.version>3.3.0</jctools-core.version>
         <springdoc.version>1.6.4</springdoc.version>
     </properties>
@@ -58,6 +59,13 @@
             <groupId>org.jctools</groupId>
             <artifactId>jctools-core</artifactId>
             <version>${jctools-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.graalvm.js</groupId>
+            <artifactId>js</artifactId>
+            <version>${graalvm.version}</version>
+            <!-- Disable by default because the jar is really large -->
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>

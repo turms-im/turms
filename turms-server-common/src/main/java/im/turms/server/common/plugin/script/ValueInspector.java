@@ -15,18 +15,22 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.plugin;
+package im.turms.server.common.plugin.script;
 
-import lombok.Data;
+import org.graalvm.polyglot.Value;
 
 /**
  * @author James Chen
  */
-@Data
-public class PluginDescriptor {
-    private final String id;
-    private final String version;
-    private final String provider;
-    private final String license;
-    private final String description;
+public class ValueInspector {
+
+    private ValueInspector() {
+    }
+
+    public static Value returnIfFunction(Value value) {
+        return value == null || !value.canExecute()
+                ? value
+                : null;
+    }
+
 }

@@ -15,18 +15,29 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.plugin;
+package im.turms.server.common.plugin.script;
 
-import lombok.Data;
+import lombok.Getter;
 
 /**
  * @author James Chen
  */
-@Data
-public class PluginDescriptor {
-    private final String id;
-    private final String version;
-    private final String provider;
-    private final String license;
-    private final String description;
+@Getter
+public class ScriptExecutionException extends RuntimeException {
+
+    private final ScriptExceptionSource source;
+
+    public ScriptExecutionException(String message, Throwable cause, ScriptExceptionSource source) {
+        super(message, cause);
+        this.source = source;
+    }
+
+    public ScriptExecutionException(String message, ScriptExceptionSource source) {
+        this(message, null, source);
+    }
+
+    public ScriptExecutionException(Throwable cause, ScriptExceptionSource source) {
+        this(null, cause, source);
+    }
+
 }

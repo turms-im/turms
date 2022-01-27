@@ -37,7 +37,7 @@ import static org.mockito.Mockito.mock;
 /**
  * @author James Chen
  */
-class PluginManagerTests {
+class JavaPluginManagerTests {
 
     private static final String JAR_NAME = "MyPluginForTest.jar";
     private static final Path JAR_FILE;
@@ -109,7 +109,7 @@ class PluginManagerTests {
         MyExtensionPoint myExtensionPoint = getMyExtensionPoint();
         TurmsExtension myExtension = (TurmsExtension) myExtensionPoint;
         boolean testMethodRetVal = (boolean) myExtension.getClass()
-                .getDeclaredMethod("test")
+                .getDeclaredMethod("testBool")
                 .invoke(myExtension);
         assertThat(testMethodRetVal)
                 .isTrue();

@@ -17,8 +17,6 @@
 
 package im.turms.server.common.plugin;
 
-import org.springframework.util.StringUtils;
-
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -35,26 +34,24 @@ import java.util.zip.ZipFile;
 /**
  * @author James Chen
  */
-public class PluginDescriptorLoader {
+public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
+
+    static final String PLUGIN_CLASS = "class";
 
     private static final String PROPERTIES_FILE_NAME = "plugin.properties";
 
-    private static final String PLUGIN_ID = "plugin.id";
-    private static final String PLUGIN_CLASS = "plugin.class";
-    private static final String PLUGIN_VERSION = "plugin.version";
-    private static final String PLUGIN_PROVIDER = "plugin.provider";
-    private static final String PLUGIN_LICENSE = "plugin.license";
-    private static final String PLUGIN_DESCRIPTION = "plugin.description";
+    private JavaPluginDescriptorFactory() {
+    }
 
-    public List<PluginDescriptor> load(List<ZipFile> files) {
+    public static List<JavaPluginDescriptor> load(List<ZipFile> files) {
         if (files.isEmpty()) {
             return Collections.emptyList();
         }
-        List<PluginDescriptor> descriptors = new ArrayList<>(files.size());
+        List<JavaPluginDescriptor> descriptors = new ArrayList<>(files.size());
         for (ZipFile file : files) {
             String name = file.getName();
             try (file) {
-                PluginDescriptor pluginDescriptor;
+                JavaPluginDescriptor pluginDescriptor;
                 try {
                     pluginDescriptor = tryCreatePluginDescriptor(file, Path.of(name).toUri().toURL());
                     if (pluginDescriptor != null) {
@@ -71,7 +68,7 @@ public class PluginDescriptorLoader {
     }
 
     @Nullable
-    private PluginDescriptor tryCreatePluginDescriptor(ZipFile file, URL jarUrl) {
+    private static JavaPluginDescriptor tryCreatePluginDescriptor(ZipFile file, URL jarUrl) {
         Enumeration<? extends ZipEntry> entries = file.entries();
         while (entries.hasMoreElements()) {
             ZipEntry zipEntry = entries.nextElement();
@@ -88,32 +85,19 @@ public class PluginDescriptorLoader {
                         .formatted(PROPERTIES_FILE_NAME, jarUrl.toString()), e);
             }
             try {
-                return createPluginDescriptor(properties, jarUrl);
+                Map map = properties;
+                String clazz = readPropertiesString(map, PLUGIN_CLASS, true);
+                PluginDescriptor pluginDescriptor = createPluginDescriptor(map);
+                return new JavaPluginDescriptor(pluginDescriptor.getId(),
+                        pluginDescriptor.getVersion(),
+                        pluginDescriptor.getProvider(),
+                        pluginDescriptor.getLicense(),
+                        pluginDescriptor.getDescription(),
+                        clazz,
+                        jarUrl);
             } catch (Exception e) {
                 throw new IllegalStateException("Cannot parse the jar " + jarUrl.toString(), e);
             }
-        }
-        return null;
-    }
-
-    private PluginDescriptor createPluginDescriptor(Properties properties, URL jarUrl) {
-        String id = readPropertiesString(properties, PLUGIN_ID, true);
-        String clazz = readPropertiesString(properties, PLUGIN_CLASS, true);
-        String version = readPropertiesString(properties, PLUGIN_VERSION, false);
-        String provider = readPropertiesString(properties, PLUGIN_PROVIDER, false);
-        String license = readPropertiesString(properties, PLUGIN_LICENSE, false);
-        String description = readPropertiesString(properties, PLUGIN_DESCRIPTION, false);
-        return new PluginDescriptor(id, clazz, version, provider, license, description, jarUrl);
-    }
-
-    @Nullable
-    private String readPropertiesString(Properties properties, String key, boolean required) {
-        String value = properties.getProperty(key);
-        if (StringUtils.hasText(value)) {
-            return value;
-        }
-        if (required) {
-            throw new IllegalArgumentException("Field \"%s\" cannot be blank".formatted(key));
         }
         return null;
     }

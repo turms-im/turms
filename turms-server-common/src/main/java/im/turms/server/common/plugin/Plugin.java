@@ -17,16 +17,13 @@
 
 package im.turms.server.common.plugin;
 
-import lombok.Data;
+import java.util.List;
 
 /**
  * @author James Chen
  */
-@Data
-public class PluginDescriptor {
-    private final String id;
-    private final String version;
-    private final String provider;
-    private final String license;
-    private final String description;
+public record Plugin(
+        PluginDescriptor descriptor,
+        List<TurmsExtension> extensions
+) {
 }

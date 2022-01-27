@@ -23,10 +23,12 @@ import lombok.Data;
  * @author James Chen
  */
 @Data
-public class PluginDescriptor {
-    private final String id;
-    private final String version;
-    private final String provider;
-    private final String license;
-    private final String description;
+public class JsPluginDescriptor extends PluginDescriptor {
+    public JsPluginDescriptor(String id,
+                              String version,
+                              String provider,
+                              String license,
+                              String description) {
+        super(id, version, provider, license, description);
+    }
 }

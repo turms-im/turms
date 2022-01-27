@@ -17,10 +17,14 @@
 
 package unit.im.turms.server.common.plugin;
 
+import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.plugin.MyExtensionPoint;
 import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.plugin.TurmsExtension;
 import org.springframework.boot.SpringApplication;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 /**
  * @author James Chen
@@ -32,8 +36,13 @@ public class MyExtension extends TurmsExtension implements MyExtensionPoint {
     public SpringApplication application = new SpringApplication();
 
     @Override
-    public boolean test() {
+    public boolean testBool() {
         return true;
+    }
+
+    @Override
+    public Mono<List<TurmsNotification>> testNotification(List<TurmsNotification.Builder> builders) {
+        return Mono.empty();
     }
 
 }

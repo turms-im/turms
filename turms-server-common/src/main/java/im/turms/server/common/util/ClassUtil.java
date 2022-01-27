@@ -15,18 +15,34 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.plugin;
+package im.turms.server.common.util;
 
-import lombok.Data;
+import javax.annotation.Nullable;
 
 /**
  * @author James Chen
  */
-@Data
-public class PluginDescriptor {
-    private final String id;
-    private final String version;
-    private final String provider;
-    private final String license;
-    private final String description;
+public final class ClassUtil {
+
+    private ClassUtil() {
+    }
+
+    @Nullable
+    public static Class<?> forName(String className) {
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
+    }
+
+    public static boolean exists(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
 }
