@@ -19,6 +19,8 @@ package im.turms.server.common.plugin;
 
 import im.turms.server.common.plugin.script.CorruptedScriptException;
 import im.turms.server.common.plugin.script.JsContext;
+import im.turms.server.common.plugin.script.ValueInspector;
+import im.turms.server.common.util.MapUtil;
 import lombok.Data;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
@@ -50,15 +52,12 @@ public class JsPluginFactory {
             "TurmsExtension",
             GET_PLUGIN_DESCRIPTOR
     );
-    private static final Set<String> BUILTIN_CLASS_MEMBER_KEYS = Set.of(
-            IS_TURMS_EXTENSION
-    );
     //language=JS
-    private static final String PLUGIN_CONTEXT = """
+    private static final Source PLUGIN_CONTEXT = parseScript("""
             class TurmsExtension {
                 static isTurmsExtension = true;
             }
-            """;
+            """);
 
     private JsPluginFactory() {
     }
@@ -79,29 +78,29 @@ public class JsPluginFactory {
                 .allowHostClassLookup(className -> true)
                 .engine(engine)
                 .build();
-        Source source = parseScript(PLUGIN_CONTEXT + script);
+        Source source = parseScript(script);
+        context.eval(PLUGIN_CONTEXT);
         context.eval(source);
-        Value jsBindings = context
-                .getBindings(JS_LANGUAGE_TYPE);
-        JsPluginDescriptor descriptor = JsPluginDescriptorFactory.parsePluginDescriptor(jsBindings, script);
-        Set<String> memberKeys = jsBindings.getMemberKeys();
+        Value bindings = context.getBindings(JS_LANGUAGE_TYPE);
+        JsPluginDescriptor descriptor = JsPluginDescriptorFactory.parsePluginDescriptor(bindings, script);
+        List<TurmsExtension> extensions = createExtensions(bindings, bindings.getMemberKeys());
+        new JsContext(descriptor.getId()).bind(context, bindings);
+        return new JsPlugin(context, descriptor, extensions);
+    }
+
+    private static List<TurmsExtension> createExtensions(Value bindings, Set<String> memberKeys) {
         List<TurmsExtension> extensions = new ArrayList<>(memberKeys.size() - BUILTIN_ROOT_MEMBER_KEYS.size());
         for (String memberKey : memberKeys) {
             if (BUILTIN_ROOT_MEMBER_KEYS.contains(memberKey)) {
                 continue;
             }
-            Value extensionClass = jsBindings.getMember(memberKey);
+            Value extensionClass = bindings.getMember(memberKey);
             Value isTurmsExtension = extensionClass.getMember(IS_TURMS_EXTENSION);
-            if (extensionClass.canInstantiate() &&
-                    isTurmsExtension != null
-                    && isTurmsExtension.isBoolean()
-                    && isTurmsExtension.asBoolean()) {
+            if (extensionClass.canInstantiate() && ValueInspector.getBool(isTurmsExtension)) {
                 extensions.add(createExtension(extensionClass));
             }
         }
-        new JsContext(descriptor.getId())
-                .bind(context, jsBindings);
-        return new JsPlugin(context, descriptor, extensions);
+        return extensions;
     }
 
     private static JsTurmsExtensionAdaptor createExtension(Value extensionClass) {
@@ -112,47 +111,59 @@ public class JsPluginFactory {
                     .formatted(GET_EXTENSION_POINTS);
             throw new CorruptedScriptException(message);
         }
-        Value extensionPoints = getExtensionPoints.execute();
-        if (!extensionPoints.hasArrayElements()) {
-            String message = "The method \"%s\" should return the name of extension points"
-                    .formatted(GET_EXTENSION_POINTS);
-            throw new CorruptedScriptException(message);
-        }
+        Value extensionPointStrings = getExtensionPoints.execute();
         Map<Class<? extends ExtensionPoint>, Map<String, Value>> functions = new IdentityHashMap<>();
-        Value iterator = extensionPoints.getIterator();
-        List<Class<? extends ExtensionPoint>> extensionPointClasses = new ArrayList<>((int) extensionPoints.getArraySize());
-        while (iterator.hasIteratorNextElement()) {
-            Value element = iterator.getIteratorNextElement();
-            if (!element.isString()) {
-                String message = "The name of extension points should be a string";
-                throw new CorruptedScriptException(message);
-            }
-            String extensionPointClassName = element.asString();
-            Class<? extends ExtensionPoint> extensionPointClass;
-            try {
-                extensionPointClass = (Class<? extends ExtensionPoint>) Class
-                        .forName(extensionPointClassName);
-            } catch (Exception e) {
-                String message = "Cannot find the class of the extension point \"%s\""
-                        .formatted(extensionPointClassName);
-                throw new CorruptedScriptException(message, e);
-            }
-            for (Method method : extensionPointClass.getDeclaredMethods()) {
-                Map<String, Value> functionMap = functions
-                        .computeIfAbsent(extensionPointClass, clazz -> new HashMap<>(8));
-                String methodName = method.getName();
-                Value function = extension.getMember(methodName);
-                if (function.canExecute()) {
-                    functionMap.put(methodName, function);
-                }
-            }
-            extensionPointClasses.add(extensionPointClass);
-        }
+        List<Class<? extends ExtensionPoint>> extensionPointClasses = parseExtensionPointClasses(
+                extension,
+                extensionPointStrings,
+                functions);
         Object extensionPointProxy = Proxy.newProxyInstance(JsPluginFactory.class.getClassLoader(),
                 extensionPointClasses.toArray(new Class[0]),
                 new JsExtensionPointInvocationHandler(functions));
         return new JsTurmsExtensionAdaptor(extensionPointProxy, extensionPointClasses, extension);
     }
 
+    private static List<Class<? extends ExtensionPoint>> parseExtensionPointClasses(Value extension,
+                                                                                    Value extensionPointStrings,
+                                                                                    Map<Class<? extends ExtensionPoint>, Map<String, Value>> functions) {
+        if (!extensionPointStrings.hasArrayElements()) {
+            String message = "The method \"%s\" should return the name of extension points"
+                    .formatted(GET_EXTENSION_POINTS);
+            throw new CorruptedScriptException(message);
+        }
+        Value iterator = extensionPointStrings.getIterator();
+        List<Class<? extends ExtensionPoint>> extensionPointClasses = new ArrayList<>((int) extensionPointStrings.getArraySize());
+        while (iterator.hasIteratorNextElement()) {
+            Class<? extends ExtensionPoint> extensionPointClass = parseExtensionPointClass(iterator.getIteratorNextElement());
+            Method[] methods = extensionPointClass.getMethods();
+            for (Method method : methods) {
+                Map<String, Value> functionMap = functions
+                        .computeIfAbsent(extensionPointClass, clazz -> new HashMap<>(MapUtil.getCapability(methods.length)));
+                String methodName = method.getName();
+                Value function = extension.getMember(methodName);
+                if (function != null && function.canExecute()) {
+                    functionMap.put(methodName, function);
+                }
+            }
+            extensionPointClasses.add(extensionPointClass);
+        }
+        return extensionPointClasses;
+    }
+
+    private static Class<? extends ExtensionPoint> parseExtensionPointClass(Value classString) {
+        if (!classString.isString()) {
+            String message = "The name of extension points should be a string";
+            throw new CorruptedScriptException(message);
+        }
+        String extensionPointClassName = classString.asString();
+        try {
+            return (Class<? extends ExtensionPoint>) Class
+                    .forName(extensionPointClassName);
+        } catch (Exception e) {
+            String message = "Cannot find the class of the extension point \"%s\""
+                    .formatted(extensionPointClassName);
+            throw new CorruptedScriptException(message, e);
+        }
+    }
 
 }

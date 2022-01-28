@@ -40,8 +40,7 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
 
     private final Map<Class<? extends ExtensionPoint>, Map<String, Value>> functions;
 
-    public JsExtensionPointInvocationHandler(
-            Map<Class<? extends ExtensionPoint>, Map<String, Value>> functions) {
+    public JsExtensionPointInvocationHandler(Map<Class<? extends ExtensionPoint>, Map<String, Value>> functions) {
         this.functions = functions;
     }
 
@@ -51,14 +50,33 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
             return method.invoke(proxy, args);
         }
         Map<String, Value> functionMap = functions.get(method.getDeclaringClass());
-        boolean isAsync = method.getReturnType().isAssignableFrom(Mono.class);
+        // We only check Mono because we never use Flux
+        // for the interfaces of extension points
+        Class<?> returnType = method.getReturnType();
+        boolean isAsync = returnType.isAssignableFrom(Mono.class);
         if (functionMap == null) {
             return isAsync ? Mono.empty() : null;
         }
         Value scriptFunction = functionMap.get(method.getName());
+        if (scriptFunction == null) {
+            if (isAsync) {
+                // Keep it simple because we have only
+                // the return type of Mono currently
+                return Mono.empty();
+            } else if (void.class == returnType) {
+                return null;
+            } else {
+                String message = "Cannot find a default return value for the return type: " + returnType.getName();
+                throw new ScriptExecutionException(message, ScriptExceptionSource.HOST);
+            }
+        }
         Value returnValue = args == null
                 ? scriptFunction.execute()
                 : scriptFunction.execute(args);
+        return parseReturnValue(isAsync, returnValue);
+    }
+
+    private Object parseReturnValue(boolean isAsync, Value returnValue) {
         if (returnValue.getMetaObject().getMetaSimpleName().equals("Promise")) {
             return Mono.create(sink -> {
                 try {
@@ -71,12 +89,12 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
                             sink.success(o);
                         }
                     };
-                    Consumer<Object> reject = error -> sink.error(translateException(error));
+                    Consumer<Object> reject = error -> sink.error(ValueDecoder.translateException(error));
                     returnValue
                             .invokeMember("then", resolve)
                             .invokeMember("catch", reject);
-                } catch (Exception ex) {
-                    sink.error(translateException(ex));
+                } catch (Exception e) {
+                    sink.error(new ScriptExecutionException("Failed to run the promise", e, ScriptExceptionSource.HOST));
                 }
             });
         }
@@ -85,20 +103,6 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
             return Mono.just(val);
         } else {
             return val;
-        }
-    }
-
-    private ScriptExecutionException translateException(Object exception) {
-        if (exception instanceof ScriptExecutionException e) {
-            return e;
-        } else if (exception instanceof Throwable t) {
-            return new ScriptExecutionException(t, ScriptExceptionSource.HOST);
-        } else {
-            Value errorValue = Value.asValue(exception);
-            if (errorValue.isException()) {
-                return new ScriptExecutionException(errorValue.throwException(), ScriptExceptionSource.SCRIPT);
-            }
-            return new ScriptExecutionException(errorValue.toString(), ScriptExceptionSource.SCRIPT);
         }
     }
 

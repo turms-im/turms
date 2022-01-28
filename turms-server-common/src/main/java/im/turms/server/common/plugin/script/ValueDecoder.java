@@ -17,6 +17,7 @@
 
 package im.turms.server.common.plugin.script;
 
+import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Value;
 
 import javax.annotation.Nullable;
@@ -99,4 +100,24 @@ public class ValueDecoder {
         }
         throw new IllegalArgumentException("Unknown value: " + value);
     }
+
+    public static ScriptExecutionException translateException(Object exception) {
+        if (exception instanceof ScriptExecutionException e) {
+            return e;
+        } else if (exception instanceof PolyglotException e) {
+            ScriptExceptionSource source = e.isHostException()
+                    ? ScriptExceptionSource.HOST
+                    : ScriptExceptionSource.SCRIPT;
+            return new ScriptExecutionException(e, source);
+        } else if (exception instanceof Throwable t) {
+            return new ScriptExecutionException(t, ScriptExceptionSource.HOST);
+        } else {
+            Value errorValue = Value.asValue(exception);
+            if (errorValue.isException()) {
+                return new ScriptExecutionException(errorValue.throwException(), ScriptExceptionSource.SCRIPT);
+            }
+            return new ScriptExecutionException(errorValue.toString(), ScriptExceptionSource.SCRIPT);
+        }
+    }
+
 }

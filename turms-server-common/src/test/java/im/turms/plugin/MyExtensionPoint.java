@@ -17,11 +17,7 @@
 
 package im.turms.plugin;
 
-import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.plugin.ExtensionPoint;
-import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 /**
  * @author James Chen
@@ -29,7 +25,5 @@ import java.util.List;
 public interface MyExtensionPoint extends ExtensionPoint {
 
     boolean testBool();
-
-    Mono<List<TurmsNotification>> testNotification(List<TurmsNotification.Builder> builders);
 
 }

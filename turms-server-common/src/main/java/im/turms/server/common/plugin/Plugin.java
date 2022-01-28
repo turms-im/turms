@@ -20,6 +20,16 @@ package im.turms.server.common.plugin;
 import java.util.List;
 
 /**
+ * {@link TurmsPlugin} is the plugin class for plugin developers,
+ * while {@link Plugin} is the plugin class for us and internal development.
+ * <p>
+ * From the perspective of the developers of Turms,
+ * It's more accurate to call {@link TurmsPlugin} "CustomPlugin" or "JavaPlugin".
+ * But from the perspective of Java plugin developers, both "JavaPlugin" and "CustomPlugin" are fluffy
+ * because it's obvious that they are developing a java custom plugin while "TurmsPlugin" can ensure developers
+ * know that they are developing a plugin for Turms to distinguish with other plugin classes
+ * in their classpath.
+ *
  * @author James Chen
  */
 public record Plugin(

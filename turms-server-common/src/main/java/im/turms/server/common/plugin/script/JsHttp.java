@@ -35,6 +35,11 @@ import java.util.Map;
 public class JsHttp {
 
     private static final HttpClient HTTP_CLIENT = HttpClient.create();
+    private static final FetchOptions OPTIONS = new FetchOptions();
+
+    public Thenable fetch(String uri) {
+        return fetch(uri, OPTIONS);
+    }
 
     public Thenable fetch(String uri, FetchOptions options) {
         return (resolve, reject) -> {
@@ -74,7 +79,7 @@ public class JsHttp {
 
     @AllArgsConstructor
     @NoArgsConstructor
-    public class FetchOptions {
+    public static class FetchOptions {
         public String method;
         public Map<String, String> headers;
         public String body;
@@ -82,7 +87,7 @@ public class JsHttp {
 
     @AllArgsConstructor
     @NoArgsConstructor
-    public class FetchResponse {
+    public static class FetchResponse {
         public int status;
         public HttpHeaders headers;
         public String data;

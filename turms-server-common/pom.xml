@@ -64,7 +64,9 @@
             <groupId>org.graalvm.js</groupId>
             <artifactId>js</artifactId>
             <version>${graalvm.version}</version>
-            <!-- Disable by default because the jar is really large -->
+            <!-- Disable by default because the jars are really large (50MB+),
+            developers should remove the scope to use it in their application
+            if they want -->
             <scope>provided</scope>
         </dependency>
         <dependency>

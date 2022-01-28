@@ -18,7 +18,8 @@
 package unit.im.turms.server.common.plugin;
 
 import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.plugin.MyExtensionPoint;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.plugin.PluginManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
@@ -26,10 +27,17 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author James Chen
@@ -37,14 +45,16 @@ import static org.mockito.Mockito.mock;
 class JsPluginManagerTests {
 
     @Test
-    void test() {
-        ApplicationContext context = mock(ApplicationContext.class);
-        PluginManager manager = new PluginManager(Path.of("./src/test/resources"), context);
-        List<MyExtensionPoint> list = manager.getExtensionPoints(MyExtensionPoint.class);
-        assertThat(list).hasSize(1);
-        MyExtensionPoint extensionPoint = list.get(0);
+    void testBool_forPlainValue() {
+        MyExtensionPointForJs extensionPoint = createExtensionPoint();
         assertThat(extensionPoint.testBool()).isTrue();
-        Mono<List<TurmsNotification>> actual = extensionPoint.testNotification(List.of(TurmsNotification.newBuilder()));
+    }
+
+    @Test
+    void testNotification_forComplexObject() {
+        MyExtensionPointForJs extensionPoint = createExtensionPoint();
+        Mono<List<TurmsNotification>> actual = extensionPoint
+                .testNotification(List.of(TurmsNotification.newBuilder()));
         StepVerifier.create(actual)
                 .expectNextMatches(notifications -> {
                     assertThat(notifications).hasSize(1);
@@ -56,4 +66,39 @@ class JsPluginManagerTests {
                 })
                 .verifyComplete();
     }
+
+    @Test
+    void testFetch() {
+        MyExtensionPointForJs extensionPoint = createExtensionPoint();
+        String actual = extensionPoint.testFetch()
+                .block(Duration.ofSeconds(15));
+        assertThat(actual).isEqualTo("turms-im/turms");
+    }
+
+    @Test
+    void testLog() {
+        mockStatic(LoggerFactory.class);
+        Logger logger = mock(Logger.class);
+        when(logger.isEnabled(any())).thenReturn(true);
+        when(LoggerFactory.getLogger(anyString())).thenReturn(logger);
+        MyExtensionPointForJs extensionPoint = createExtensionPoint();
+        extensionPoint.testLog();
+
+        verify(logger, times(0)).info("A log from plugin.js");
+    }
+
+    @Test
+    void testNotImplemented_shouldNotThrow() {
+        MyExtensionPointForJs extensionPoint = createExtensionPoint();
+        extensionPoint.testNotImplemented();
+    }
+
+    private MyExtensionPointForJs createExtensionPoint() {
+        ApplicationContext context = mock(ApplicationContext.class);
+        PluginManager manager = new PluginManager(Path.of("./src/test/resources"), context);
+        List<MyExtensionPointForJs> list = manager.getExtensionPoints(MyExtensionPointForJs.class);
+        assertThat(list).hasSize(1);
+        return list.get(0);
+    }
+
 }

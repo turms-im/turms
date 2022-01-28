@@ -17,23 +17,25 @@
 
 package unit.im.turms.server.common.plugin;
 
-import im.turms.plugin.MyExtensionPoint;
-import im.turms.server.common.cluster.service.rpc.RpcService;
-import im.turms.server.common.plugin.TurmsExtension;
-import org.springframework.boot.SpringApplication;
+import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.server.common.plugin.ExtensionPoint;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 /**
  * @author James Chen
  */
-public class MyExtension extends TurmsExtension implements MyExtensionPoint {
+public interface MyExtensionPointForJs extends ExtensionPoint {
 
-    // Used for tests
-    public Class<RpcService> rpcServiceClass = RpcService.class;
-    public SpringApplication application = new SpringApplication();
+    boolean testBool();
 
-    @Override
-    public boolean testBool() {
-        return true;
-    }
+    Mono<List<TurmsNotification>> testNotification(List<TurmsNotification.Builder> builders);
+
+    Mono<String> testFetch();
+
+    void testLog();
+
+    void testNotImplemented();
 
 }
