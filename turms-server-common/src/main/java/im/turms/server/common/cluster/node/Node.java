@@ -67,6 +67,7 @@ public class Node {
      */
     @Getter
     private static String nodeId;
+    @Getter
     private final NodeType nodeType;
 
     /**

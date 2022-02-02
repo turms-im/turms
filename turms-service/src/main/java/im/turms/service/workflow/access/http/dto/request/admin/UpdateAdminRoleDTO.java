@@ -17,7 +17,7 @@
 
 package im.turms.service.workflow.access.http.dto.request.admin;
 
-import im.turms.service.workflow.access.http.permission.AdminPermission;
+import im.turms.server.common.access.http.permission.AdminPermission;
 
 import java.util.Set;
 

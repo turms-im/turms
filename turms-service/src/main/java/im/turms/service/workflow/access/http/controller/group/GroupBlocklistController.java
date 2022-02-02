@@ -22,11 +22,11 @@ import im.turms.server.common.access.http.dto.response.PaginationDTO;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.access.http.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.http.permission.RequiredPermission;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.util.CollectionUtil;
 import im.turms.service.workflow.access.http.dto.request.group.AddGroupBlockedUserDTO;
 import im.turms.service.workflow.access.http.dto.request.group.UpdateGroupBlockedUserDTO;
-import im.turms.service.workflow.access.http.permission.RequiredPermission;
 import im.turms.service.workflow.access.http.util.PageUtil;
 import im.turms.service.workflow.dao.domain.group.GroupBlockedUser;
 import im.turms.service.workflow.service.impl.group.GroupBlocklistService;
@@ -46,10 +46,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
-import static im.turms.service.workflow.access.http.permission.AdminPermission.GROUP_BLOCKLIST_CREATE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.GROUP_BLOCKLIST_DELETE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.GROUP_BLOCKLIST_QUERY;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.GROUP_BLOCKLIST_UPDATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.GROUP_BLOCKLIST_CREATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.GROUP_BLOCKLIST_DELETE;
+import static im.turms.server.common.access.http.permission.AdminPermission.GROUP_BLOCKLIST_QUERY;
+import static im.turms.server.common.access.http.permission.AdminPermission.GROUP_BLOCKLIST_UPDATE;
 
 /**
  * @author James Chen

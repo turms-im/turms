@@ -27,6 +27,7 @@ import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -34,7 +35,6 @@ import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.DateUtil;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidGroupBlockedUserKey;
 import im.turms.service.util.ProtoModelUtil;
@@ -54,6 +54,8 @@ import javax.validation.constraints.PastOrPresent;
 import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static im.turms.service.constant.DaoConstant.TRANSACTION_RETRY;
 
 /**
  * @author James Chen
@@ -115,7 +117,7 @@ public class GroupBlocklistService {
                                             groupMemberService.deleteGroupMembers(groupId, userIdToBlock, newSession, false)
                                                     .then(mongoClient.insert(newSession, blockedUser))
                                                     .then(updateVersion.then().onErrorResume(throwable -> Mono.empty())))
-                                    .retryWhen(DaoConstant.TRANSACTION_RETRY);
+                                    .retryWhen(TRANSACTION_RETRY);
                         }
                         return groupMemberService.deleteGroupMembers(groupId, userIdToBlock, session, false)
                                 .then(mongoClient.insert(session, blockedUser))
@@ -148,7 +150,7 @@ public class GroupBlocklistService {
                     }
                     GroupBlockedUser.Key key = new GroupBlockedUser.Key(groupId, userIdToUnblock);
                     Filter filter = Filter.newBuilder(1)
-                            .eq(DaoConstant.ID_FIELD_NAME, key);
+                            .eq(DomainFieldName.ID, key);
                     Mono<DeleteResult> removeMono = mongoClient.deleteOne(session, GroupBlockedUser.class, filter);
                     if (updateBlocklistVersion) {
                         return removeMono.flatMap(result -> groupVersionService.updateBlocklistVersion(groupId)
@@ -311,7 +313,7 @@ public class GroupBlocklistService {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, keys);
+                .in(DomainFieldName.ID, keys);
         Update update = Update
                 .newBuilder(2)
                 .setIfNotNull(GroupBlockedUser.Fields.BLOCK_DATE, blockDate)
@@ -329,7 +331,7 @@ public class GroupBlocklistService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, keys);
+                .in(DomainFieldName.ID, keys);
         return mongoClient.deleteMany(GroupBlockedUser.class, filter);
     }
 

@@ -27,6 +27,7 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -36,7 +37,6 @@ import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.DateUtil;
 import im.turms.service.bo.GroupQuestionIdAndAnswer;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidGroupQuestionIdAndAnswer;
 import im.turms.service.util.ProtoModelUtil;
@@ -96,7 +96,7 @@ public class GroupQuestionService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(3)
-                .eq(DaoConstant.ID_FIELD_NAME, questionId)
+                .eq(DomainFieldName.ID, questionId)
                 .in(GroupJoinQuestion.Fields.ANSWERS, answer)
                 .eqIfNotNull(GroupJoinQuestion.Fields.GROUP_ID, groupId);
         QueryOptions options = QueryOptions.newBuilder(2)
@@ -234,7 +234,7 @@ public class GroupQuestionService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(DaoConstant.ID_FIELD_NAME, questionId);
+                .eq(DomainFieldName.ID, questionId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(GroupJoinQuestion.Fields.GROUP_ID);
         return mongoClient.findOne(GroupJoinQuestion.class, filter, options)
@@ -257,7 +257,7 @@ public class GroupQuestionService {
                                         .error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_DELETE_GROUP_QUESTION));
                             }
                             Filter filter = Filter.newBuilder(1)
-                                    .eq(DaoConstant.ID_FIELD_NAME, questionId);
+                                    .eq(DomainFieldName.ID, questionId);
                             return mongoClient.deleteOne(GroupJoinQuestion.class, filter)
                                     .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
                                             .onErrorResume(t -> Mono.empty())
@@ -272,7 +272,7 @@ public class GroupQuestionService {
             @Nullable Integer size,
             boolean withAnswers) {
         Filter filter = Filter.newBuilder(2)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .inIfNotNull(DomainFieldName.ID, ids)
                 .inIfNotNull(GroupJoinQuestion.Fields.GROUP_ID, groupIds);
         QueryOptions options = QueryOptions.newBuilder(withAnswers ? 2 : 3)
                 .paginateIfNotNull(page, size);
@@ -284,14 +284,14 @@ public class GroupQuestionService {
 
     public Mono<Long> countGroupJoinQuestions(@Nullable Set<Long> ids, @Nullable Set<Long> groupIds) {
         Filter filter = Filter.newBuilder(2)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .inIfNotNull(DomainFieldName.ID, ids)
                 .inIfNotNull(GroupJoinQuestion.Fields.GROUP_ID, groupIds);
         return mongoClient.count(GroupJoinQuestion.class, filter);
     }
 
     public Mono<DeleteResult> deleteGroupJoinQuestions(@Nullable Set<Long> ids) {
         Filter filter = Filter.newBuilder(1)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids);
+                .inIfNotNull(DomainFieldName.ID, ids);
         return mongoClient.deleteMany(GroupJoinQuestion.class, filter);
     }
 
@@ -357,7 +357,7 @@ public class GroupQuestionService {
                                         .error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_QUESTION));
                             }
                             Filter filter = Filter.newBuilder(1)
-                                    .eq(DaoConstant.ID_FIELD_NAME, questionId);
+                                    .eq(DomainFieldName.ID, questionId);
                             Update update = Update.newBuilder(3)
                                     .setIfNotNull(GroupJoinQuestion.Fields.QUESTION, question)
                                     .setIfNotNull(GroupJoinQuestion.Fields.ANSWERS, answers)
@@ -385,7 +385,7 @@ public class GroupQuestionService {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, ids);
+                .in(DomainFieldName.ID, ids);
         Update update = Update.newBuilder(4)
                 .setIfNotNull(GroupJoinQuestion.Fields.GROUP_ID, groupId)
                 .setIfNotNull(GroupJoinQuestion.Fields.QUESTION, question)

@@ -88,10 +88,6 @@ public class PluginManager {
         return pluginRepository.getPlugins();
     }
 
-    public void stopExtension(TurmsExtension extension) {
-        extension.stop();
-    }
-
     @SneakyThrows
     public <T> T loadProperties(Class<T> propertiesClass) {
         T properties = propertiesClass.getDeclaredConstructor().newInstance();

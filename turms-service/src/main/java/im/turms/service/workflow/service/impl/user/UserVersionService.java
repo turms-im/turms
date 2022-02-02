@@ -21,6 +21,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -39,8 +40,6 @@ import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
-
-import static im.turms.service.constant.DaoConstant.ID_FIELD_NAME;
 
 /**
  * @author James Chen
@@ -64,7 +63,7 @@ public class UserVersionService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(ID_FIELD_NAME, userId);
+                .eq(DomainFieldName.ID, userId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.RELATIONSHIPS);
         return mongoClient.findOne(UserVersion.class, filter, options)
@@ -78,7 +77,7 @@ public class UserVersionService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(ID_FIELD_NAME, userId);
+                .eq(DomainFieldName.ID, userId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.SENT_GROUP_INVITATIONS);
         return mongoClient.findOne(UserVersion.class, filter, options)
@@ -92,7 +91,7 @@ public class UserVersionService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(ID_FIELD_NAME, userId);
+                .eq(DomainFieldName.ID, userId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.RECEIVED_GROUP_INVITATIONS);
         return mongoClient.findOne(UserVersion.class, filter, options)
@@ -106,7 +105,7 @@ public class UserVersionService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(ID_FIELD_NAME, userId);
+                .eq(DomainFieldName.ID, userId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.GROUP_JOIN_REQUESTS);
         return mongoClient.findOne(UserVersion.class, filter, options)
@@ -120,7 +119,7 @@ public class UserVersionService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(ID_FIELD_NAME, userId);
+                .eq(DomainFieldName.ID, userId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.RELATIONSHIP_GROUPS);
         return mongoClient.findOne(UserVersion.class, filter, options)
@@ -134,7 +133,7 @@ public class UserVersionService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(ID_FIELD_NAME, userId);
+                .eq(DomainFieldName.ID, userId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.JOINED_GROUPS);
         return mongoClient.findOne(UserVersion.class, filter, options)
@@ -148,7 +147,7 @@ public class UserVersionService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(ID_FIELD_NAME, userId);
+                .eq(DomainFieldName.ID, userId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.SENT_FRIEND_REQUESTS);
         return mongoClient.findOne(UserVersion.class, filter, options)
@@ -162,7 +161,7 @@ public class UserVersionService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(ID_FIELD_NAME, userId);
+                .eq(DomainFieldName.ID, userId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.RECEIVED_FRIEND_REQUESTS);
         return mongoClient.findOne(UserVersion.class, filter, options)
@@ -251,7 +250,7 @@ public class UserVersionService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(ID_FIELD_NAME, userIds);
+                .in(DomainFieldName.ID, userIds);
         Date now = new Date();
         Update update = Update.newBuilder(fields.length);
         for (String field : fields) {
@@ -271,7 +270,7 @@ public class UserVersionService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(ID_FIELD_NAME, userIds);
+                .in(DomainFieldName.ID, userIds);
         return mongoClient.deleteMany(session, UserVersion.class, filter);
     }
 

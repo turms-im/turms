@@ -21,6 +21,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.context.TurmsApplicationContext;
+import im.turms.server.common.dao.domain.Admin;
+import im.turms.server.common.dao.domain.AdminRole;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
@@ -37,8 +39,6 @@ import im.turms.server.common.property.env.service.env.database.TieredStoragePro
 import im.turms.server.common.security.PasswordManager;
 import im.turms.server.common.task.TrivialTaskManager;
 import im.turms.server.common.util.ReactorUtil;
-import im.turms.service.workflow.dao.domain.admin.Admin;
-import im.turms.service.workflow.dao.domain.admin.AdminRole;
 import im.turms.service.workflow.dao.domain.conversation.GroupConversation;
 import im.turms.service.workflow.dao.domain.conversation.PrivateConversation;
 import im.turms.service.workflow.dao.domain.group.Group;

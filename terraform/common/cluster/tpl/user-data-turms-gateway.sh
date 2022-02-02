@@ -46,8 +46,11 @@ docker run -d --name turms-gateway --ulimit nofile=1000000 \
   -Dturms.cluster.discovery.address.advertise-strategy=advertise_address
   -Dturms.cluster.discovery.address.advertise-host=$${HOST}
   -Dturms.cluster.shared-config.mongo.uri=${CONFIG_MONGODB_URI}
-  -Dturms.service.mongo.user.uri=${USER_MONGODB_URI}
-  -Dturms.service.redis.session.uri-list[0]=${SESSION_REDIS_URI}
-  -Dturms.service.redis.location.uri-list[0]=${LOCATION_REDIS_URI}
+  -Dturms.gateway.mongo.admin.uri=${ADMIN_MONGODB_URI}
+  -Dturms.gateway.mongo.user.uri=${USER_MONGODB_URI}
+  -Dturms.gateway.redis.session.uri-list[0]=${SESSION_REDIS_URI}
+  -Dturms.gateway.redis.location.uri-list[0]=${LOCATION_REDIS_URI}
+  -Dturms.gateway.redis.ip-blocklist.uri=${IP_BLOCKLIST_REDIS_URI}
+  -Dturms.gateway.redis.user-blocklist.uri=${USER_BLOCKLIST_REDIS_URI}
   ${CUSTOM_JVM_OPTS}" \
   ghcr.io/turms-im/turms-gateway

@@ -17,49 +17,19 @@
 
 package im.turms.service.workflow.access.http.throttle;
 
+import im.turms.server.common.access.http.throttle.BaseAdminApiRateLimitingManager;
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.constant.CronConstant;
-import im.turms.server.common.property.env.service.env.adminapi.AdminApiRateLimitingProperties;
 import im.turms.server.common.task.TrivialTaskManager;
-import im.turms.server.common.throttle.TokenBucket;
-import im.turms.server.common.throttle.TokenBucketContext;
 import org.springframework.stereotype.Component;
-
-import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author James Chen
  */
 @Component
-public class AdminApiRateLimitingManager {
-
-    private final Map<String, TokenBucket> ipTokenBucketMap = new ConcurrentHashMap<>(32);
-    private final TokenBucketContext tokenBucketContext;
+public class AdminApiRateLimitingManager extends BaseAdminApiRateLimitingManager {
 
     public AdminApiRateLimitingManager(TrivialTaskManager taskManager, Node node) {
-        AdminApiRateLimitingProperties properties = node.getSharedProperties().getService().getAdminApi().getRateLimiting();
-        tokenBucketContext = new TokenBucketContext(properties);
-        taskManager.reschedule("expiredAdminApiAccessInfoCleaner", CronConstant.EXPIRED_ADMIN_API_ACCESS_INFO_CLEANUP_CRON,
-                () -> {
-                    Iterator<Map.Entry<String, TokenBucket>> iterator = ipTokenBucketMap.entrySet().iterator();
-                    long now = System.currentTimeMillis();
-                    while (iterator.hasNext()) {
-                        Map.Entry<String, TokenBucket> entry = iterator.next();
-                        TokenBucket bucket = entry.getValue();
-                        bucket.refill(now);
-                        // We assume idle sessions will have the max number of tokens "capacity" finally
-                        if (bucket.getTokens() == tokenBucketContext.getCapacity()) {
-                            iterator.remove();
-                        }
-                    }
-                });
-    }
-
-    public boolean tryAcquireTokenByIp(String ip) {
-        TokenBucket bucket = ipTokenBucketMap.computeIfAbsent(ip, key -> new TokenBucket(tokenBucketContext));
-        return bucket.tryAcquire(System.currentTimeMillis());
+        super(taskManager, node.getSharedProperties().getService().getAdminApi().getRateLimiting());
     }
 
 }

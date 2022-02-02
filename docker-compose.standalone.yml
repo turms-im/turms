@@ -180,6 +180,7 @@ services:
         -Dturms.cluster.discovery.address.advertise-host=turms-gateway
 
         -Dturms.cluster.shared-config.mongo.uri=mongodb://mongodb-router:27017/turms-standalone?authSource=admin
+        -Dturms.gateway.mongo.admin.uri=mongodb://mongodb-router:27017/turms-standalone?authSource=admin
         -Dturms.gateway.mongo.user.uri=mongodb://mongodb-router:27017/turms-standalone?authSource=admin
 
         -Dturms.gateway.redis.session.uri-list[0]=redis://redis:6379
@@ -195,7 +196,7 @@ services:
     ports:
       - "7610:7610" # RPC
       - "8849:8849" # JMX
-      - "9510:9510" # Metrics APIs
+      - "9510:9510" # Metrics APIs + Admin APIs
       - "10510:10510" # WebSocket
       - "11510:11510" # TCP
       - "12510:12510" # UDP

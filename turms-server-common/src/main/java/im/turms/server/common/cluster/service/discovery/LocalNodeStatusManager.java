@@ -22,6 +22,7 @@ import im.turms.server.common.cluster.service.config.domain.discovery.Leader;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
@@ -136,7 +137,7 @@ public class LocalNodeStatusManager {
 
     private Mono<Void> unregisterLocalMemberLeadership() {
         Filter query = Filter.newBuilder(2)
-                .eq("_id", localMember.getClusterId())
+                .eq(DomainFieldName.ID, localMember.getClusterId())
                 .eq(Leader.Fields.nodeId, localMember.getNodeId());
         return sharedConfigService.removeOne(Leader.class, query).then();
     }
@@ -231,7 +232,7 @@ public class LocalNodeStatusManager {
             return Mono.just(false);
         }
         Filter filter = Filter.newBuilder(3)
-                .eq("_id", localMember.getClusterId())
+                .eq(DomainFieldName.ID, localMember.getClusterId())
                 .eq(Leader.Fields.nodeId, localMember.getNodeId())
                 .eq(Leader.Fields.generation, leader.getGeneration());
         Update update = Update.newBuilder(1)

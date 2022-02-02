@@ -20,6 +20,7 @@ package im.turms.server.common.plugin;
 import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.plugin.extension.AdminActionHandler;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import lombok.Getter;
 import org.springframework.context.ApplicationContext;
@@ -41,6 +42,8 @@ public abstract class AbstractTurmsPluginManager {
     private final boolean enabled;
     @Nullable
     private final PluginManager pluginManager;
+    @Getter
+    private List<AdminActionHandler> adminActionHandlerList;
 
     protected AbstractTurmsPluginManager(ApplicationContext context,
                                          TurmsApplicationContext applicationContext,
@@ -53,6 +56,7 @@ public abstract class AbstractTurmsPluginManager {
         Path home = applicationContext.getHome();
         Path pluginDir = getPluginDir(home);
         pluginManager = new PluginManager(pluginDir, context);
+        initializeCommonPlugins();
         afterPluginsInitialized();
     }
 
@@ -68,13 +72,17 @@ public abstract class AbstractTurmsPluginManager {
         for (Plugin plugin : pluginManager.getPlugins()) {
             for (TurmsExtension extension : plugin.extensions()) {
                 try {
-                    pluginManager.stopExtension(extension);
+                    extension.stop();
                 } catch (Exception e) {
                     LOGGER.error("Caught an exception when stopping the extension " + extension.getClass().getName(), e);
                 }
             }
         }
         pluginManager.destroy();
+    }
+
+    private void initializeCommonPlugins() {
+        adminActionHandlerList = getAndStartExtensionPoints(AdminActionHandler.class);
     }
 
     protected abstract void afterPluginsInitialized();

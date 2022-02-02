@@ -30,6 +30,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -62,8 +63,6 @@ import javax.validation.constraints.PastOrPresent;
 import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static im.turms.service.constant.DaoConstant.ID_FIELD_NAME;
 
 /**
  * @author James Chen
@@ -209,7 +208,7 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(ID_FIELD_NAME, invitationId);
+                .eq(DomainFieldName.ID, invitationId);
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(GroupInvitation.Fields.GROUP_ID, GroupInvitation.Fields.STATUS);
         return queryExpirableData(filter, options)
@@ -246,7 +245,7 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
                                             .error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_RECALL_INVITATION));
                                 }
                                 Filter filter = Filter.newBuilder(1)
-                                        .eq(ID_FIELD_NAME, invitationId);
+                                        .eq(DomainFieldName.ID, invitationId);
                                 Update update = Update.newBuilder(1)
                                         .set(GroupInvitation.Fields.STATUS, RequestStatus.CANCELED);
                                 return mongoClient.updateOne(GroupInvitation.class, filter, update)
@@ -382,7 +381,7 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(ID_FIELD_NAME, invitationId);
+                .eq(DomainFieldName.ID, invitationId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(GroupInvitation.Fields.INVITEE_ID);
         return mongoClient.findOne(GroupInvitation.class, filter, options)
@@ -401,7 +400,7 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
             @Nullable Integer page,
             @Nullable Integer size) {
         Filter filter = Filter.newBuilder(10)
-                .inIfNotNull(ID_FIELD_NAME, ids)
+                .inIfNotNull(DomainFieldName.ID, ids)
                 .inIfNotNull(GroupInvitation.Fields.GROUP_ID, groupIds)
                 .inIfNotNull(GroupInvitation.Fields.INVITER_ID, inviterIds)
                 .inIfNotNull(GroupInvitation.Fields.INVITEE_ID, inviteeIds)
@@ -424,7 +423,7 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
             @Nullable DateRange responseDateRange,
             @Nullable DateRange expirationDateRange) {
         Filter filter = Filter.newBuilder(10)
-                .inIfNotNull(ID_FIELD_NAME, ids)
+                .inIfNotNull(DomainFieldName.ID, ids)
                 .inIfNotNull(GroupInvitation.Fields.GROUP_ID, groupIds)
                 .inIfNotNull(GroupInvitation.Fields.INVITER_ID, inviterIds)
                 .inIfNotNull(GroupInvitation.Fields.INVITEE_ID, inviteeIds)
@@ -437,7 +436,7 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
 
     public Mono<DeleteResult> deleteInvitations(@Nullable Set<Long> ids) {
         Filter filter = Filter.newBuilder(1)
-                .inIfNotNull(ID_FIELD_NAME, ids);
+                .inIfNotNull(DomainFieldName.ID, ids);
         return mongoClient.deleteMany(GroupInvitation.class, filter);
     }
 
@@ -462,7 +461,7 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(ID_FIELD_NAME, invitationIds);
+                .in(DomainFieldName.ID, invitationIds);
         Update update = Update
                 .newBuilder(5)
                 .setIfNotNull(GroupInvitation.Fields.INVITER_ID, inviterId)

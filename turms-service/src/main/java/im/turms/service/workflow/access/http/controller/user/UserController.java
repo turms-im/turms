@@ -22,13 +22,13 @@ import im.turms.server.common.access.http.dto.response.PaginationDTO;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.access.http.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.http.permission.RequiredPermission;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.dao.domain.User;
 import im.turms.service.constant.DivideBy;
 import im.turms.service.workflow.access.http.dto.request.user.AddUserDTO;
 import im.turms.service.workflow.access.http.dto.request.user.UpdateUserDTO;
 import im.turms.service.workflow.access.http.dto.request.user.UserStatisticsDTO;
-import im.turms.service.workflow.access.http.permission.RequiredPermission;
 import im.turms.service.workflow.access.http.util.DateTimeUtil;
 import im.turms.service.workflow.access.http.util.PageUtil;
 import im.turms.service.workflow.service.impl.message.MessageService;
@@ -51,10 +51,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import static im.turms.service.workflow.access.http.permission.AdminPermission.USER_CREATE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.USER_DELETE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.USER_QUERY;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.USER_UPDATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.USER_CREATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.USER_DELETE;
+import static im.turms.server.common.access.http.permission.AdminPermission.USER_QUERY;
+import static im.turms.server.common.access.http.permission.AdminPermission.USER_UPDATE;
 
 /**
  * @author James Chen

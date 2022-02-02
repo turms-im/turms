@@ -21,6 +21,7 @@ import com.google.common.base.CaseFormat;
 import com.mongodb.client.model.IndexModel;
 import com.mongodb.client.model.IndexOptions;
 import im.turms.server.common.mongo.BsonPool;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.mongo.entity.annotation.Document;
 import im.turms.server.common.mongo.entity.annotation.Id;
@@ -132,13 +133,13 @@ public final class MongoEntityFactory {
         String[] keys = sharded.shardKey();
         if (keys.length == 0) {
             // default shard key
-            keys = new String[]{"_id"};
+            keys = new String[]{DomainFieldName.ID};
         }
         BsonDocument document;
         if (sharded.shardingStrategy().equals(ShardingStrategy.HASH)) {
             if (keys.length > 1) {
                 throw new IllegalStateException("The hash sharding strategy can have only one shard key: " + clazz.getName());
-            } else if (keys[0].equals("_id")) {
+            } else if (keys[0].equals(DomainFieldName.ID)) {
                 throw new IllegalStateException("Should not create an hashed index on the key. " +
                         "If so, MongoDB will create a default range index on the key: " + clazz.getName());
             } else {
@@ -279,7 +280,7 @@ public final class MongoEntityFactory {
             indexes.add(new Index(field, indexed, index));
         }
         String fieldName = field.isAnnotationPresent(Id.class)
-                ? "_id"
+                ? DomainFieldName.ID
                 : parseFieldName(field);
         for (Field subField : field.getType().getDeclaredFields()) {
             Indexed subFieldIndexed = subField.getAnnotation(Indexed.class);

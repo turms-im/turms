@@ -29,6 +29,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -38,7 +39,6 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.task.TrivialTaskManager;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.DateUtil;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidRequestStatus;
 import im.turms.service.util.ProtoModelUtil;
@@ -168,7 +168,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(DaoConstant.ID_FIELD_NAME, requestId);
+                .eq(DomainFieldName.ID, requestId);
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(GroupJoinRequest.Fields.REQUESTER_ID,
                         GroupJoinRequest.Fields.STATUS,
@@ -201,7 +201,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_JOIN_REQUEST_SENDER_TO_RECALL_REQUEST));
                     }
                     Filter filter = Filter.newBuilder(1)
-                            .eq(DaoConstant.ID_FIELD_NAME, requestId);
+                            .eq(DomainFieldName.ID, requestId);
                     Update update = Update.newBuilder(2)
                             .set(GroupJoinRequest.Fields.STATUS, RequestStatus.CANCELED)
                             .set(GroupJoinRequest.Fields.RESPONDER_ID, requesterId);
@@ -290,7 +290,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(DaoConstant.ID_FIELD_NAME, requestId);
+                .eq(DomainFieldName.ID, requestId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(GroupJoinRequest.Fields.GROUP_ID);
         return mongoClient.findOne(GroupJoinRequest.class, filter, options)
@@ -310,7 +310,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
             @Nullable Integer size) {
         Date expirationDate = getModelExpirationDate();
         Filter filter = Filter.newBuilder(10)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .inIfNotNull(DomainFieldName.ID, ids)
                 .inIfNotNull(GroupJoinRequest.Fields.GROUP_ID, groupIds)
                 .inIfNotNull(GroupJoinRequest.Fields.REQUESTER_ID, requesterIds)
                 .inIfNotNull(GroupJoinRequest.Fields.RESPONDER_ID, responderIds)
@@ -334,7 +334,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
             @Nullable DateRange expirationDateRange) {
         Date expirationDate = getModelExpirationDate();
         Filter filter = Filter.newBuilder(10)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .inIfNotNull(DomainFieldName.ID, ids)
                 .inIfNotNull(GroupJoinRequest.Fields.GROUP_ID, groupIds)
                 .inIfNotNull(GroupJoinRequest.Fields.REQUESTER_ID, requesterIds)
                 .inIfNotNull(GroupJoinRequest.Fields.RESPONDER_ID, responderIds)
@@ -347,7 +347,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
 
     public Mono<DeleteResult> deleteJoinRequests(@Nullable Set<Long> ids) {
         Filter filter = Filter.newBuilder(1)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids);
+                .inIfNotNull(DomainFieldName.ID, ids);
         return mongoClient.deleteMany(GroupJoinRequest.class, filter);
     }
 
@@ -372,7 +372,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, requestIds);
+                .in(DomainFieldName.ID, requestIds);
         Update update = Update
                 .newBuilder(5)
                 .setIfNotNull(GroupJoinRequest.Fields.REQUESTER_ID, requesterId)

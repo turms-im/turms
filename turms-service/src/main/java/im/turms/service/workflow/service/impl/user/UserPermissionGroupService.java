@@ -29,13 +29,13 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.workflow.dao.domain.user.UserPermissionGroup;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,6 +51,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static im.turms.server.common.constant.BusinessConstant.DEFAULT_GROUP_TYPE_ID;
+import static im.turms.server.common.constant.BusinessConstant.DEFAULT_USER_PERMISSION_GROUP_ID;
 
 /**
  * @author James Chen
@@ -75,10 +78,10 @@ public class UserPermissionGroupService {
         this.userService = userService;
 
         userPermissionGroupMap.putIfAbsent(
-                DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID,
+                DEFAULT_USER_PERMISSION_GROUP_ID,
                 new UserPermissionGroup(
-                        DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID,
-                        Set.of(DaoConstant.DEFAULT_GROUP_TYPE_ID),
+                        DEFAULT_USER_PERMISSION_GROUP_ID,
+                        Set.of(DEFAULT_GROUP_TYPE_ID),
                         Integer.MAX_VALUE,
                         Integer.MAX_VALUE,
                         Collections.emptyMap()));
@@ -104,7 +107,7 @@ public class UserPermissionGroupService {
     }
 
     public UserPermissionGroup getDefaultUserPermissionGroup() {
-        return userPermissionGroupMap.get(DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID);
+        return userPermissionGroupMap.get(DEFAULT_USER_PERMISSION_GROUP_ID);
     }
 
     public Flux<UserPermissionGroup> queryUserPermissionGroups(
@@ -163,7 +166,7 @@ public class UserPermissionGroupService {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, groupIds);
+                .in(DomainFieldName.ID, groupIds);
         Update update = Update.newBuilder(4)
                 .setIfNotNull(UserPermissionGroup.Fields.CREATABLE_GROUP_TYPE_IDS, creatableGroupTypeIds)
                 .setIfNotNull(UserPermissionGroup.Fields.OWNED_GROUP_LIMIT, ownedGroupLimit)
@@ -173,12 +176,12 @@ public class UserPermissionGroupService {
     }
 
     public Mono<DeleteResult> deleteUserPermissionGroups(@Nullable Set<Long> groupIds) {
-        if (groupIds != null && groupIds.contains(DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID)) {
+        if (groupIds != null && groupIds.contains(DEFAULT_USER_PERMISSION_GROUP_ID)) {
             return Mono.error(TurmsBusinessException
                     .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The default user permission group cannot be deleted"));
         }
         Filter filter = Filter.newBuilder(1)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, groupIds);
+                .inIfNotNull(DomainFieldName.ID, groupIds);
         return mongoTemplate.deleteMany(UserPermissionGroup.class, filter)
                 .doOnNext(result -> {
                     if (groupIds != null) {
@@ -187,7 +190,7 @@ public class UserPermissionGroupService {
                         }
                     } else {
                         userPermissionGroupMap.keySet()
-                                .removeIf(id -> !id.equals(DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID));
+                                .removeIf(id -> !id.equals(DEFAULT_USER_PERMISSION_GROUP_ID));
                     }
                 });
     }

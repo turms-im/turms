@@ -34,6 +34,7 @@ import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -49,7 +50,6 @@ import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.service.bo.ServicePermission;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.plugin.TurmsPluginManager;
 import im.turms.service.plugin.extension.ExpiredMessageAutoDeletionNotificationHandler;
@@ -87,6 +87,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static im.turms.server.common.constant.BusinessConstant.ADMIN_REQUESTER_ID;
+import static im.turms.server.common.constant.BusinessConstant.ADMIN_REQUEST_ID;
 import static im.turms.server.common.constant.TurmsStatusCode.ILLEGAL_ARGUMENT;
 import static im.turms.server.common.constant.TurmsStatusCode.MESSAGE_RECALL_TIMEOUT;
 import static im.turms.server.common.constant.TurmsStatusCode.NOT_SENDER_TO_UPDATE_MESSAGE;
@@ -203,7 +205,7 @@ public class MessageService {
             }
         }
         Filter filter = Filter.newBuilder(2)
-                .eq(DaoConstant.ID_FIELD_NAME, messageId)
+                .eq(DomainFieldName.ID, messageId)
                 .eq(Message.Fields.SENDER_ID, senderId);
         return mongoClient.exists(Message.class, filter);
     }
@@ -222,7 +224,7 @@ public class MessageService {
             }
         }
         Filter filter = Filter.newBuilder(3)
-                .eq(DaoConstant.ID_FIELD_NAME, messageId)
+                .eq(DomainFieldName.ID, messageId)
                 .eq(Message.Fields.TARGET_ID, recipientId)
                 .eq(Message.Fields.IS_GROUP_MESSAGE, false);
         return mongoClient.exists(Message.class, filter);
@@ -250,7 +252,7 @@ public class MessageService {
         }
         if (messageMono == null) {
             Filter filter = Filter.newBuilder(1)
-                    .eq(DaoConstant.ID_FIELD_NAME, messageId);
+                    .eq(DomainFieldName.ID, messageId);
             QueryOptions options = QueryOptions.newBuilder(2)
                     .include(Message.Fields.DELIVERY_DATE);
             messageMono = mongoClient.findOne(Message.class, filter, options);
@@ -301,7 +303,7 @@ public class MessageService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(DaoConstant.ID_FIELD_NAME, messageId);
+                .eq(DomainFieldName.ID, messageId);
         return mongoClient.findOne(Message.class, filter);
     }
 
@@ -329,7 +331,7 @@ public class MessageService {
             boolean isAsc = deliveryDateRange != null && deliveryDateRange.start() != null;
             options.sort(isAsc, Message.Fields.DELIVERY_DATE);
         }
-        filter.inIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds);
+        filter.inIfNotNull(DomainFieldName.ID, messageIds);
         return mongoClient.findMany(Message.class, filter, options);
     }
 
@@ -451,7 +453,7 @@ public class MessageService {
         Filter filter = Filter.newBuilder(1)
                 .lt(Message.Fields.DELIVERY_DATE, beforeDate);
         QueryOptions options = QueryOptions.newBuilder(1)
-                .include(DaoConstant.ID_FIELD_NAME);
+                .include(DomainFieldName.ID);
         return mongoClient.findMany(Message.class, filter, options)
                 .map(Message::getId);
     }
@@ -468,7 +470,7 @@ public class MessageService {
                             turmsPluginManager.getExpiredMessageAutoDeletionNotificationHandlerList();
                     if (pluginEnabled && !handlerList.isEmpty()) {
                         Filter messagesFilter = Filter.newBuilder(1)
-                                .in(DaoConstant.ID_FIELD_NAME, expiredMessageIds);
+                                .in(DomainFieldName.ID, expiredMessageIds);
                         messageIdsToDeleteMono = mongoClient.findMany(Message.class, messagesFilter)
                                 .collectList()
                                 .flatMap(messages -> {
@@ -489,7 +491,7 @@ public class MessageService {
                     return messageIdsToDeleteMono
                             .flatMap(messageIds -> {
                                 Filter messagesFilter = Filter.newBuilder(1)
-                                        .in(DaoConstant.ID_FIELD_NAME, messageIds);
+                                        .in(DomainFieldName.ID, messageIds);
                                 return mongoClient.deleteMany(Message.class, messagesFilter).then();
                             });
                 });
@@ -499,7 +501,7 @@ public class MessageService {
             @Nullable Set<Long> messageIds,
             @Nullable Boolean deleteLogically) {
         Filter filterMessage = Filter.newBuilder(1)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds);
+                .inIfNotNull(DomainFieldName.ID, messageIds);
         if (deleteLogically == null) {
             deleteLogically = node.getSharedProperties()
                     .getService().getMessage()
@@ -535,7 +537,7 @@ public class MessageService {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, messageIds);
+                .in(DomainFieldName.ID, messageIds);
         Update update = Update.newBuilder(6)
                 .setIfNotNull(Message.Fields.MODIFICATION_DATE, new Date())
                 .setIfNotNull(Message.Fields.TEXT, text)
@@ -601,7 +603,7 @@ public class MessageService {
                 .inIfNotNull(Message.Fields.TARGET_ID, targetIds)
                 .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, deliveryDateRange)
                 .addBetweenIfNotNull(Message.Fields.DELETION_DATE, deletionDateRange)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds);
+                .inIfNotNull(DomainFieldName.ID, messageIds);
         return mongoClient.count(Message.class, filter);
     }
 
@@ -750,7 +752,7 @@ public class MessageService {
             return Flux.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(DaoConstant.ID_FIELD_NAME, messageId);
+                .eq(DomainFieldName.ID, messageId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(Message.Fields.TARGET_ID, Message.Fields.IS_GROUP_MESSAGE);
         return mongoClient.findOne(Message.class, filter, options)
@@ -855,7 +857,7 @@ public class MessageService {
         }
         if (senderId == null) {
             if (isSystemMessage) {
-                senderId = DaoConstant.ADMIN_REQUESTER_ID;
+                senderId = ADMIN_REQUESTER_ID;
             } else {
                 return Mono.error(TurmsBusinessException.get(ILLEGAL_ARGUMENT, "senderId must not be null for user messages"));
             }
@@ -889,7 +891,7 @@ public class MessageService {
         TurmsNotification notification = TurmsNotification
                 .newBuilder()
                 .setRelayedRequest(request)
-                .setRequestId(DaoConstant.ADMIN_REQUEST_ID)
+                .setRequestId(ADMIN_REQUEST_ID)
                 .build();
         if (node.getSharedProperties().getService().getMessage().isSendMessageToOtherSenderOnlineDevices()) {
             recipientIds = CollectionUtil.add(recipientIds, message.getSenderId());

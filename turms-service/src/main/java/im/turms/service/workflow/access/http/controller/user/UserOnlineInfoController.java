@@ -22,6 +22,8 @@ import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
+import im.turms.server.common.access.http.permission.AdminPermission;
+import im.turms.server.common.access.http.permission.RequiredPermission;
 import im.turms.server.common.bo.location.NearbyUser;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.service.session.SessionLocationService;
@@ -30,8 +32,6 @@ import im.turms.server.common.util.CollectorUtil;
 import im.turms.service.workflow.access.http.dto.request.user.OnlineUserNumberDTO;
 import im.turms.service.workflow.access.http.dto.request.user.UpdateOnlineStatusDTO;
 import im.turms.service.workflow.access.http.dto.response.UserLocationDTO;
-import im.turms.service.workflow.access.http.permission.AdminPermission;
-import im.turms.service.workflow.access.http.permission.RequiredPermission;
 import im.turms.service.workflow.service.impl.statistics.StatisticsService;
 import im.turms.service.workflow.service.impl.user.UserService;
 import im.turms.service.workflow.service.impl.user.onlineuser.SessionService;
@@ -139,9 +139,9 @@ public class UserOnlineInfoController {
 
     @GetMapping("/locations")
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<List<UserLocationDTO>>>> queryUserLocations(@RequestParam Set<Long> ids,
-                                                                                       @RequestParam(required = false)
-                                                                                               DeviceType deviceType) {
+    public Mono<ResponseEntity<ResponseDTO<List<UserLocationDTO>>>> queryUserLocations(
+            @RequestParam Set<Long> ids,
+            @RequestParam(required = false) DeviceType deviceType) {
         List<Mono<Pair<Long, Point>>> monos = new ArrayList<>(ids.size());
         for (Long userId : ids) {
             monos.add(sessionLocationService.getUserLocation(userId, deviceType)

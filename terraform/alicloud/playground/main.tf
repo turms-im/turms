@@ -23,7 +23,7 @@ locals {
     "6510/6510",
     # turms-service: Metrics APIs + Admin APIs
     "8510/8510",
-    # turms-gateway: Metrics APIs
+    # turms-gateway: Metrics APIs + Admin APIs
     "9510/9510",
     # turms-gateway: WebSocket
     "10510/10510",

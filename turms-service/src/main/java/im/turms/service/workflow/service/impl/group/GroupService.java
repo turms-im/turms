@@ -33,6 +33,7 @@ import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -73,8 +74,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static im.turms.service.constant.DaoConstant.DEFAULT_GROUP_TYPE_ID;
-import static im.turms.service.constant.DaoConstant.ID_FIELD_NAME;
+import static im.turms.server.common.constant.BusinessConstant.DEFAULT_GROUP_TYPE_ID;
 import static im.turms.service.constant.DaoConstant.TRANSACTION_RETRY;
 import static im.turms.service.constant.MetricsConstant.CREATED_GROUPS_COUNTER_NAME;
 import static im.turms.service.constant.MetricsConstant.DELETED_GROUPS_COUNTER_NAME;
@@ -254,7 +254,7 @@ public class GroupService {
         return mongoClient
                 .inTransaction(session -> {
                     Filter filter = Filter.newBuilder(1)
-                            .inIfNotNull(ID_FIELD_NAME, groupIds);
+                            .inIfNotNull(DomainFieldName.ID, groupIds);
                     Mono<DeleteResult> updateOrRemoveMono;
                     if (finalShouldDeleteLogically) {
                         Update update = Update.newBuilder(1)
@@ -299,7 +299,7 @@ public class GroupService {
                 .defaultIfEmpty(Collections.emptySet())
                 .flatMapMany(groupIds -> {
                     Filter filter = Filter.newBuilder(11)
-                            .inIfNotNull(ID_FIELD_NAME, groupIds)
+                            .inIfNotNull(DomainFieldName.ID, groupIds)
                             .inIfNotNull(Group.Fields.TYPE_ID, typeIds)
                             .inIfNotNull(Group.Fields.CREATOR_ID, creatorIds)
                             .inIfNotNull(Group.Fields.OWNER_ID, ownerIds)
@@ -320,7 +320,7 @@ public class GroupService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(ID_FIELD_NAME, groupId);
+                .eq(DomainFieldName.ID, groupId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(Group.Fields.TYPE_ID);
         return mongoClient.findOne(Group.class, filter, options)
@@ -334,7 +334,7 @@ public class GroupService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(ID_FIELD_NAME, groupId);
+                .eq(DomainFieldName.ID, groupId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(Group.Fields.MINIMUM_SCORE);
         return mongoClient.findOne(Group.class, filter, options)
@@ -366,7 +366,7 @@ public class GroupService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(ID_FIELD_NAME, groupId);
+                .eq(DomainFieldName.ID, groupId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(Group.Fields.OWNER_ID);
         return mongoClient.findOne(Group.class, filter, options)
@@ -475,7 +475,7 @@ public class GroupService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(ID_FIELD_NAME, groupId);
+                .eq(DomainFieldName.ID, groupId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(Group.Fields.TYPE_ID);
         return mongoClient.findOne(Group.class, filter, options)
@@ -545,7 +545,7 @@ public class GroupService {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(ID_FIELD_NAME, groupIds);
+                .in(DomainFieldName.ID, groupIds);
         Update update = Update.newBuilder(11)
                 .setIfNotNull(Group.Fields.TYPE_ID, typeId)
                 .setIfNotNull(Group.Fields.CREATOR_ID, creatorId)
@@ -644,7 +644,7 @@ public class GroupService {
             return Flux.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(ID_FIELD_NAME, groupIds);
+                .in(DomainFieldName.ID, groupIds);
         return mongoClient.findMany(Group.class, filter);
     }
 
@@ -850,7 +850,7 @@ public class GroupService {
                 .defaultIfEmpty(Collections.emptySet())
                 .flatMap(groupIds -> {
                     Filter filter = Filter.newBuilder(11)
-                            .inIfNotNull(ID_FIELD_NAME, groupIds)
+                            .inIfNotNull(DomainFieldName.ID, groupIds)
                             .inIfNotNull(Group.Fields.TYPE_ID, typeIds)
                             .inIfNotNull(Group.Fields.CREATOR_ID, creatorIds)
                             .inIfNotNull(Group.Fields.OWNER_ID, ownerIds)
@@ -879,7 +879,7 @@ public class GroupService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(2)
-                .eq(ID_FIELD_NAME, groupId)
+                .eq(DomainFieldName.ID, groupId)
                 .gt(Group.Fields.MUTE_END_DATE, new Date());
         return mongoClient.exists(Group.class, filter);
     }
@@ -891,7 +891,7 @@ public class GroupService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(3)
-                .eq(ID_FIELD_NAME, groupId)
+                .eq(DomainFieldName.ID, groupId)
                 .eq(Group.Fields.IS_ACTIVE, true)
                 .eq(Group.Fields.DELETION_DATE, null);
         return mongoClient.exists(Group.class, filter);

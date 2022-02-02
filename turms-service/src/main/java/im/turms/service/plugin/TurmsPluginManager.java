@@ -20,7 +20,6 @@ package im.turms.service.plugin;
 import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.plugin.AbstractTurmsPluginManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.service.plugin.extension.AdminActionHandler;
 import im.turms.service.plugin.extension.ClientRequestHandler;
 import im.turms.service.plugin.extension.ClientRequestTransformer;
 import im.turms.service.plugin.extension.ExpiredMessageAutoDeletionNotificationHandler;
@@ -38,7 +37,6 @@ import java.util.List;
 @Getter
 public class TurmsPluginManager extends AbstractTurmsPluginManager {
 
-    private List<AdminActionHandler> adminActionHandlerList;
     private List<ClientRequestHandler> clientRequestHandlerList;
     private List<ClientRequestTransformer> clientRequestTransformerList;
     private List<ExpiredMessageAutoDeletionNotificationHandler> expiredMessageAutoDeletionNotificationHandlerList;
@@ -52,7 +50,6 @@ public class TurmsPluginManager extends AbstractTurmsPluginManager {
 
     @Override
     protected void afterPluginsInitialized() {
-        adminActionHandlerList = getAndStartExtensionPoints(AdminActionHandler.class);
         clientRequestHandlerList = getAndStartExtensionPoints(ClientRequestHandler.class);
         clientRequestTransformerList = getAndStartExtensionPoints(ClientRequestTransformer.class);
         expiredMessageAutoDeletionNotificationHandlerList = getAndStartExtensionPoints(ExpiredMessageAutoDeletionNotificationHandler.class);

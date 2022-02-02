@@ -53,5 +53,7 @@ docker run -d --name turms-service --ulimit nofile=100000 \
   -Dturms.service.mongo.message.uri=${MESSAGE_MONGODB_URI}
   -Dturms.service.redis.session.uri-list[0]=${SESSION_REDIS_URI}
   -Dturms.service.redis.location.uri-list[0]=${LOCATION_REDIS_URI}
+  -Dturms.service.redis.ip-blocklist.uri=${IP_BLOCKLIST_REDIS_URI}
+  -Dturms.service.redis.user-blocklist.uri=${USER_BLOCKLIST_REDIS_URI}
   ${CUSTOM_JVM_OPTS}" \
   ghcr.io/turms-im/turms-service

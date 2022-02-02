@@ -17,9 +17,9 @@
 
 package im.turms.gateway.service.impl.session;
 
-import im.turms.gateway.constant.DomainFieldName;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
@@ -61,7 +61,7 @@ public class UserService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(DomainFieldName.ID_FIELD_NAME, userId);
+                .eq(DomainFieldName.ID, userId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(User.Fields.PASSWORD);
         return mongoClient.findOne(User.class, filter, options)
@@ -76,7 +76,7 @@ public class UserService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(3)
-                .eq(DomainFieldName.ID_FIELD_NAME, userId)
+                .eq(DomainFieldName.ID, userId)
                 .eq(User.Fields.IS_ACTIVE, true)
                 .eq(User.Fields.DELETION_DATE, null);
         return mongoClient.exists(User.class, filter);

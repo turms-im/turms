@@ -64,6 +64,10 @@ variable "config_mongodb_hosts" {}
 
 variable "config_mongodb_account_password" {}
 
+variable "admin_mongodb_hosts" {}
+
+variable "admin_mongodb_account_password" {}
+
 variable "user_mongodb_hosts" {}
 
 variable "user_mongodb_account_password" {}
@@ -81,3 +85,15 @@ variable "location_redis_host" {}
 variable "location_redis_account_name" {}
 
 variable "location_redis_account_password" {}
+
+variable "ip_blocklist_redis_host" {}
+
+variable "ip_blocklist_redis_account_name" {}
+
+variable "ip_blocklist_redis_account_password" {}
+
+variable "user_blocklist_redis_host" {}
+
+variable "user_blocklist_redis_account_name" {}
+
+variable "user_blocklist_redis_account_password" {}

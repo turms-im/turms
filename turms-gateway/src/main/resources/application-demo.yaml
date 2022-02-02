@@ -2,5 +2,6 @@
 
 turms:
   gateway:
-    metrics-api-address:
-      advertise-strategy: public_address
+    admin-api:
+      address:
+        advertise-strategy: public_address

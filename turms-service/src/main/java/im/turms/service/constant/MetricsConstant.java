@@ -25,10 +25,6 @@ public final class MetricsConstant {
     private MetricsConstant() {
     }
 
-    // Admin API
-
-    public static final String ADMIN_API_NAME = "admin.api";
-
     // User
 
     public static final String REGISTERED_USERS_COUNTER_NAME = "user.registered";

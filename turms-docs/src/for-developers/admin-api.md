@@ -2,9 +2,9 @@
 
 Turms的API文档基于[Springdoc](https://github.com/springdoc/springdoc-openapi)依赖实现，并采用[OpenAPI 3.0](https://swagger.io/specification)标准。
 
-Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接口一样使用8510端口（turms-gateway没有OpenAPI接口）。如果您需要查阅API接口文档，您可以在启动turms服务端后，访问 http://localhost:8510/swagger-ui.html 查阅API接口。如果您需要API接口的JSON数据，可访问 http://localhost:8510/v3/api-docs 获取。
+默认配置下，Turms服务端开启OpenAPI的UI与Admin API接口，并且turms-gateway使用9510端口，turms-service使用8510端口。如果您需要查阅API接口文档，您可以在启动Turms服务端后，访问 http://localhost:端口号/swagger-ui.html 查阅API接口。如果您需要API接口的JSON数据，可访问 http://localhost:端口号/v3/api-docs 获取。
 
-注意：在将Turms服务端部署到生产环境时，切记要在安全组中，将Turms的8510端口设置为“仅内网访问”，以抵御不必要的公网攻击。
+注意：在将Turms服务端部署到生产环境时，通常不需要将Turms服务端的Admin API端口开放给公网，以避免不必要的攻击。
 
 ## 接口设计准则
 
@@ -29,11 +29,15 @@ Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接
 
 #### 监控类
 
-| **种类**     | **Controller**    | 路径     |
-| :----------- | :---------------- | -------- |
-| 度量信息管理 | MetricsController | /metrics |
+下表所有端口同时存在于turms-gateway与turms-serivce服务端。
+
+| **种类**     | **Controller**    | 路径     |      |
+| :----------- | :---------------- | -------- | ---- |
+| 度量信息管理 | MetricsController | /metrics |      |
 
 #### 管理员类
+
+下表所有端口仅存在于turms-service服务端，turms-gateway服务端没有这些端口。
 
 | **种类**       | **Controller**      | 路径          | **补充**                                                     |
 | :------------- | :------------------ | ------------- | ------------------------------------------------------------ |
@@ -42,6 +46,8 @@ Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接
 
 #### 集群类
 
+下表所有端口仅存在于turms-service服务端，turms-gateway服务端没有这些端口。
+
 | **种类**     | **Controller**   | 路径             |
 | :----------- | :--------------- | ---------------- |
 | 集群节点管理 | MemberController | /cluster/members |
@@ -49,12 +55,16 @@ Turms在生产环境下默认开启OpenAPI的UI与API接口，并与Admin API接
 
 #### 黑名单类
 
+下表所有端口仅存在于turms-service服务端，turms-gateway服务端没有这些端口。
+
 | **种类**       | **Controller**          | 路径                   |
 | :------------- | :---------------------- | ---------------------- |
 | IP黑名单管理   | IpBlocklistController   | /blocked-clients/ips   |
 | 用户黑名单管理 | UserBlocklistController | /blocked-clients/users |
 
 ### 业务相关类
+
+下表所有端口仅存在于turms-service服务端，turms-gateway服务端没有这些端口。
 
 #### 用户类
 

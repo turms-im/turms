@@ -24,6 +24,7 @@ import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.exception.DuplicateKeyException;
@@ -32,7 +33,6 @@ import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.env.service.business.conversation.ReadReceiptProperties;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectionUtil;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.workflow.dao.domain.conversation.GroupConversation;
 import im.turms.service.workflow.dao.domain.conversation.PrivateConversation;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -111,7 +111,7 @@ public class ConversationService {
         boolean allowMoveReadDateForward =
                 node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward();
         Filter filter = Filter.newBuilder(allowMoveReadDateForward ? 1 : 2)
-                .eq(DaoConstant.ID_FIELD_NAME, groupId);
+                .eq(DomainFieldName.ID, groupId);
         if (!allowMoveReadDateForward) {
             // Only update if no existing date or the existing date is before readDate
             filter.ltOrNull(fieldKey, finalReadDate);
@@ -149,7 +149,7 @@ public class ConversationService {
             Long groupId = entry.getKey();
             Collection<Long> memberIds = entry.getValue();
             Filter filter = Filter.newBuilder(1)
-                    .eq(DaoConstant.ID_FIELD_NAME, groupId);
+                    .eq(DomainFieldName.ID, groupId);
             Update update = Update.newBuilder(memberIds.size());
             for (Long memberId : memberIds) {
                 String fieldKey = GroupConversation.Fields.MEMBER_ID_AND_READ_DATE + "." + memberId;
@@ -189,7 +189,7 @@ public class ConversationService {
         boolean allowMoveReadDateForward =
                 node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward();
         Filter filter = Filter.newBuilder(allowMoveReadDateForward ? 1 : 2)
-                .in(DaoConstant.ID_FIELD_NAME, keys);
+                .in(DomainFieldName.ID, keys);
         if (!allowMoveReadDateForward) {
             // Only update if no existing date or the existing date is before readDate
             filter.ltOrNull(PrivateConversation.Fields.READ_DATE, finalReadDate);
@@ -213,7 +213,7 @@ public class ConversationService {
             return Flux.empty();
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, groupIds);
+                .in(DomainFieldName.ID, groupIds);
         return mongoClient.findMany(GroupConversation.class, filter);
     }
 
@@ -259,7 +259,7 @@ public class ConversationService {
             return Flux.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, keys);
+                .in(DomainFieldName.ID, keys);
         return mongoClient.findMany(PrivateConversation.class, filter);
     }
 
@@ -270,7 +270,7 @@ public class ConversationService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, keys);
+                .in(DomainFieldName.ID, keys);
         return mongoClient.deleteMany(PrivateConversation.class, filter);
     }
 
@@ -292,7 +292,7 @@ public class ConversationService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, groupIds);
+                .in(DomainFieldName.ID, groupIds);
         return mongoClient.deleteMany(session, GroupConversation.class, filter);
     }
 

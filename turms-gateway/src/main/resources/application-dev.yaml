@@ -25,6 +25,8 @@ turms:
           - category: all
       return-reason-for-server-error: true
     mongo:
+      admin:
+        uri: mongodb://localhost:27017/turms-dev
       user:
         uri: mongodb://localhost:27017/turms-dev
     fake:

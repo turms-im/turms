@@ -23,12 +23,12 @@ import im.turms.server.common.access.http.dto.response.PaginationDTO;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.access.http.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.http.permission.RequiredPermission;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.service.constant.DivideBy;
 import im.turms.service.workflow.access.http.dto.request.group.AddGroupDTO;
 import im.turms.service.workflow.access.http.dto.request.group.GroupStatisticsDTO;
 import im.turms.service.workflow.access.http.dto.request.group.UpdateGroupDTO;
-import im.turms.service.workflow.access.http.permission.RequiredPermission;
 import im.turms.service.workflow.access.http.util.DateTimeUtil;
 import im.turms.service.workflow.access.http.util.PageUtil;
 import im.turms.service.workflow.dao.domain.group.Group;
@@ -52,10 +52,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import static im.turms.service.workflow.access.http.permission.AdminPermission.GROUP_CREATE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.GROUP_DELETE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.GROUP_QUERY;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.GROUP_UPDATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.GROUP_CREATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.GROUP_DELETE;
+import static im.turms.server.common.access.http.permission.AdminPermission.GROUP_QUERY;
+import static im.turms.server.common.access.http.permission.AdminPermission.GROUP_UPDATE;
 
 /**
  * @author James Chen

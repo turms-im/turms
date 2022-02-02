@@ -19,6 +19,7 @@ package im.turms.server.common.mongo.codec;
 
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.MongoContext;
 import im.turms.server.common.mongo.entity.EntityField;
 import im.turms.server.common.mongo.entity.MongoEntity;
@@ -36,6 +37,8 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
 
+import static im.turms.server.common.mongo.DomainFieldName.ID;
+
 /**
  * @author James Chen
  * @see org.bson.codecs.pojo.PojoCodecImpl
@@ -43,8 +46,6 @@ import java.util.Map;
 public class EntityCodec<T> implements Codec<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityCodec.class);
-
-    private static final String ID_FIELD = "_id";
 
     private final CodecRegistry registry;
     private final Class<T> entityClass;
@@ -82,7 +83,7 @@ public class EntityCodec<T> implements Codec<T> {
                 Object fieldValue = field.get(value);
                 if (fieldValue != null) {
                     if (field.isIdField()) {
-                        writer.writeName(ID_FIELD);
+                        writer.writeName(DomainFieldName.ID);
                     } else {
                         writer.writeName(field.getName());
                     }
@@ -112,7 +113,7 @@ public class EntityCodec<T> implements Codec<T> {
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String fieldName = reader.readName();
-            EntityField field = ID_FIELD.equals(fieldName)
+            EntityField field = DomainFieldName.ID.equals(fieldName)
                     ? entity.getField(entity.idFieldName())
                     : entity.getField(fieldName);
             if (field != null) {
@@ -149,7 +150,7 @@ public class EntityCodec<T> implements Codec<T> {
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String fieldName = reader.readName();
-            EntityField<?> field = ID_FIELD.equals(fieldName)
+            EntityField<?> field = DomainFieldName.ID.equals(fieldName)
                     ? entity.getField(entity.idFieldName())
                     : entity.getField(fieldName);
             if (field != null) {

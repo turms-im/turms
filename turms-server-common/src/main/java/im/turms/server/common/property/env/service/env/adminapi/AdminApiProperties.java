@@ -18,7 +18,7 @@
 package im.turms.server.common.property.env.service.env.adminapi;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.property.env.common.AddressProperties;
+import im.turms.server.common.property.env.common.adminapi.CommonAdminApiProperties;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
@@ -26,7 +26,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import javax.validation.constraints.Min;
 
@@ -37,11 +36,7 @@ import javax.validation.constraints.Min;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class AdminApiProperties {
-
-    @Description("Whether to enable the APIs for administrators")
-    @GlobalProperty
-    private boolean enabled = true;
+public class AdminApiProperties extends CommonAdminApiProperties {
 
     @Description("Whether to allow administrators to delete data without any filter. " +
             "Better false to prevent administrators from deleting all data by accident")
@@ -92,17 +87,5 @@ public class AdminApiProperties {
     @JsonView(MutablePropertiesView.class)
     @Min(0)
     private int defaultAvailableRecordsPerRequest = 10;
-
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
-    private AddressProperties address = new AddressProperties();
-
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
-    private AdminApiRateLimitingProperties rateLimiting = new AdminApiRateLimitingProperties();
-
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
-    private LogProperties log = new LogProperties();
 
 }

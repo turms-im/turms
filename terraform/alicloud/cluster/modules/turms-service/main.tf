@@ -15,8 +15,10 @@ locals {
   conversation_mongodb_uri = "mongodb://root:${var.conversation_mongodb_account_password}@${join(",", var.conversation_mongodb_hosts)}/turms?authSource=admin"
   message_mongodb_uri      = "mongodb://root:${var.message_mongodb_account_password}@${join(",", var.message_mongodb_hosts)}/turms?authSource=admin"
 
-  session_redis_uri  = "redis://${var.session_redis_account_name}:${var.session_redis_account_password}@${var.session_redis_host}"
-  location_redis_uri = "redis://${var.location_redis_account_name}:${var.location_redis_account_password}@${var.location_redis_host}"
+  session_redis_uri        = "redis://${var.session_redis_account_name}:${var.session_redis_account_password}@${var.session_redis_host}"
+  location_redis_uri       = "redis://${var.location_redis_account_name}:${var.location_redis_account_password}@${var.location_redis_host}"
+  ip_blocklist_redis_uri   = "redis://${var.ip_blocklist_redis_account_name}:${var.ip_blocklist_redis_account_password}@${var.ip_blocklist_redis_host}"
+  user_blocklist_redis_uri = "redis://${var.user_blocklist_redis_account_name}:${var.user_blocklist_redis_account_password}@${var.user_blocklist_redis_host}"
 }
 
 #=============== Security
@@ -89,8 +91,10 @@ resource "alicloud_instance" "default" {
     CONVERSATION_MONGODB_URI = local.conversation_mongodb_uri
     MESSAGE_MONGODB_URI      = local.message_mongodb_uri
 
-    SESSION_REDIS_URI  = local.session_redis_uri
-    LOCATION_REDIS_URI = local.location_redis_uri
+    SESSION_REDIS_URI        = local.session_redis_uri
+    LOCATION_REDIS_URI       = local.location_redis_uri
+    IP_BLOCKLIST_REDIS_URI   = local.ip_blocklist_redis_uri
+    USER_BLOCKLIST_REDIS_URI = local.user_blocklist_redis_uri
   })
 }
 

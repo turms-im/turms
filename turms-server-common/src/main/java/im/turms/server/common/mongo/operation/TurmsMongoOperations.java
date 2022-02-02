@@ -45,6 +45,7 @@ import com.mongodb.reactivestreams.client.internal.TurmsFindPublisherImpl;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.BsonPool;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.MongoContext;
 import im.turms.server.common.mongo.entity.Index;
 import im.turms.server.common.mongo.entity.MongoEntity;
@@ -98,7 +99,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
 
     private static final EncoderContext DEFAULT_ENCODER_CONTEXT = EncoderContext.builder().build();
 
-    private static final BsonDocument ID_ONLY = new BsonDocument("_id", BsonPool.BSON_INT32_1);
+    private static final BsonDocument ID_ONLY = new BsonDocument(DomainFieldName.ID, BsonPool.BSON_INT32_1);
     private static final Filter FILTER_ALL = Filter.newBuilder(0);
     private static final BsonDocument EMPTY_FILTER = new BsonDocument();
     private static final BsonDocument FILTER_ALL_DOCUMENT = EMPTY_FILTER;
@@ -129,7 +130,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public <T> Mono<T> findById(Class<T> clazz, Object id) {
         MongoCollection<T> collection = context.getCollection(clazz);
-        FindPublisher<T> source = find(collection, new Document("_id", id), null);
+        FindPublisher<T> source = find(collection, new Document(DomainFieldName.ID, id), null);
         return Mono.from(source);
     }
 
@@ -639,7 +640,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public Mono<Void> disableBalancing(String collectionName) {
         String namespace = getNamespace(collectionName);
-        BsonDocument filter = new BsonDocument("_id", new BsonString(namespace));
+        BsonDocument filter = new BsonDocument(DomainFieldName.ID, new BsonString(namespace));
         BsonDocument update = new BsonDocument("$set", new BsonDocument("noBalance", BsonBoolean.TRUE));
         Publisher<UpdateResult> disableBalancing = context.getConfigDatabase().getCollection("collections")
                 .updateOne(filter, update, DEFAULT_UPDATE_OPTIONS);
@@ -649,7 +650,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public Mono<Void> enableBalancing(String collectionName) {
         String namespace = getNamespace(collectionName);
-        BsonDocument filter = new BsonDocument("_id", new BsonString(namespace));
+        BsonDocument filter = new BsonDocument(DomainFieldName.ID, new BsonString(namespace));
         BsonDocument update = new BsonDocument("$set", new BsonDocument("noBalance", BsonBoolean.FALSE));
         Publisher<UpdateResult> enableBalancing = context.getConfigDatabase().getCollection("collections")
                 .updateOne(filter, update, DEFAULT_UPDATE_OPTIONS);
@@ -673,7 +674,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     }
 
     private BsonDocument encodeEntityForUpdateOps(BsonDocument document) {
-        document.remove("_id");
+        document.remove(DomainFieldName.ID);
         return new BsonDocument("$set", document);
     }
 

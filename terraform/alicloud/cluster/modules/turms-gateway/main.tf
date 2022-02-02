@@ -4,7 +4,7 @@ locals {
     "22/22",
     # RPC
     "7510/7510",
-    # Metrics APIs
+    # Metrics APIs + Admin APIs
     "9510/9510",
     # WebSocket
     "10510/10510",
@@ -13,10 +13,13 @@ locals {
   ]
 
   config_mongodb_uri = "mongodb://root:${var.config_mongodb_account_password}@${join(",", var.config_mongodb_hosts)}/turms?authSource=admin"
+  admin_mongodb_uri  = "mongodb://root:${var.admin_mongodb_account_password}@${join(",", var.admin_mongodb_hosts)}/turms?authSource=admin"
   user_mongodb_uri   = "mongodb://root:${var.user_mongodb_account_password}@${join(",", var.user_mongodb_hosts)}/turms?authSource=admin"
 
-  session_redis_uri  = "redis://${var.session_redis_account_name}:${var.session_redis_account_password}@${var.session_redis_host}"
-  location_redis_uri = "redis://${var.location_redis_account_name}:${var.location_redis_account_password}@${var.location_redis_host}"
+  session_redis_uri        = "redis://${var.session_redis_account_name}:${var.session_redis_account_password}@${var.session_redis_host}"
+  location_redis_uri       = "redis://${var.location_redis_account_name}:${var.location_redis_account_password}@${var.location_redis_host}"
+  ip_blocklist_redis_uri   = "redis://${var.ip_blocklist_redis_account_name}:${var.ip_blocklist_redis_account_password}@${var.ip_blocklist_redis_host}"
+  user_blocklist_redis_uri = "redis://${var.user_blocklist_redis_account_name}:${var.user_blocklist_redis_account_password}@${var.user_blocklist_redis_host}"
 }
 
 #=============== Security
@@ -83,10 +86,13 @@ resource "alicloud_instance" "default" {
     CUSTOM_JVM_OPTS = var.turms_gateway_jvm_options
 
     CONFIG_MONGODB_URI = local.config_mongodb_uri
+    ADMIN_MONGODB_URI  = local.admin_mongodb_uri
     USER_MONGODB_URI   = local.user_mongodb_uri
 
-    SESSION_REDIS_URI  = local.session_redis_uri
-    LOCATION_REDIS_URI = local.location_redis_uri
+    SESSION_REDIS_URI        = local.session_redis_uri
+    LOCATION_REDIS_URI       = local.location_redis_uri
+    IP_BLOCKLIST_REDIS_URI   = local.ip_blocklist_redis_uri
+    USER_BLOCKLIST_REDIS_URI = local.user_blocklist_redis_uri
   })
 }
 

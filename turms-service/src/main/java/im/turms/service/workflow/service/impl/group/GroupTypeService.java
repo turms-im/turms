@@ -33,13 +33,13 @@ import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.workflow.dao.domain.group.GroupType;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -55,6 +55,9 @@ import javax.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static im.turms.server.common.constant.BusinessConstant.DEFAULT_GROUP_TYPE_ID;
+import static im.turms.server.common.constant.BusinessConstant.DEFAULT_GROUP_TYPE_NAME;
 
 /**
  * @author James Chen
@@ -79,10 +82,10 @@ public class GroupTypeService {
 
     public void initGroupTypes() {
         groupTypeMap.putIfAbsent(
-                DaoConstant.DEFAULT_GROUP_TYPE_ID,
+                DEFAULT_GROUP_TYPE_ID,
                 new GroupType(
-                        DaoConstant.DEFAULT_GROUP_TYPE_ID,
-                        DaoConstant.DEFAULT_GROUP_TYPE_NAME,
+                        DEFAULT_GROUP_TYPE_ID,
+                        DEFAULT_GROUP_TYPE_NAME,
                         500,
                         GroupInvitationStrategy.OWNER_MANAGER_MEMBER_REQUIRING_APPROVAL,
                         GroupJoinStrategy.DECLINE_ANY_REQUEST,
@@ -102,7 +105,7 @@ public class GroupTypeService {
                             long groupTypeId = ChangeStreamUtil.getIdAsLong(event.getDocumentKey());
                             groupTypeMap.remove(groupTypeId);
                         }
-                        case INVALIDATE -> groupTypeMap.keySet().removeIf(id -> !id.equals(DaoConstant.DEFAULT_GROUP_TYPE_ID));
+                        case INVALIDATE -> groupTypeMap.keySet().removeIf(id -> !id.equals(DEFAULT_GROUP_TYPE_ID));
                         default -> LOGGER.fatal("Detected an illegal operation on GroupType collection: " + event);
                     }
                 })
@@ -115,7 +118,7 @@ public class GroupTypeService {
     }
 
     public GroupType getDefaultGroupType() {
-        return groupTypeMap.get(DaoConstant.DEFAULT_GROUP_TYPE_ID);
+        return groupTypeMap.get(DEFAULT_GROUP_TYPE_ID);
     }
 
     public Flux<GroupType> queryGroupTypes(
@@ -204,7 +207,7 @@ public class GroupTypeService {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, ids);
+                .in(DomainFieldName.ID, ids);
         Update update = Update.newBuilder(10)
                 .setIfNotNull(GroupType.Fields.NAME, name)
                 .setIfNotNull(GroupType.Fields.GROUP_SIZE_LIMIT, groupSizeLimit)
@@ -220,11 +223,11 @@ public class GroupTypeService {
     }
 
     public Mono<DeleteResult> deleteGroupTypes(@Nullable Set<Long> groupTypeIds) {
-        if (groupTypeIds != null && groupTypeIds.contains(DaoConstant.DEFAULT_GROUP_TYPE_ID)) {
+        if (groupTypeIds != null && groupTypeIds.contains(DEFAULT_GROUP_TYPE_ID)) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The default group type cannot be deleted"));
         }
         Filter filter = Filter.newBuilder(1)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, groupTypeIds);
+                .inIfNotNull(DomainFieldName.ID, groupTypeIds);
         return mongoTemplate.deleteMany(GroupType.class, filter)
                 .doOnNext(result -> {
                     if (groupTypeIds != null) {
@@ -232,7 +235,7 @@ public class GroupTypeService {
                             groupTypeMap.remove(id);
                         }
                     } else {
-                        groupTypeMap.keySet().removeIf(id -> !id.equals(DaoConstant.DEFAULT_GROUP_TYPE_ID));
+                        groupTypeMap.keySet().removeIf(id -> !id.equals(DEFAULT_GROUP_TYPE_ID));
                     }
                 });
     }

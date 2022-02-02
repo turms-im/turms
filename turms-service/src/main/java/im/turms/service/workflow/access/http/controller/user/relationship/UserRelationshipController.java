@@ -22,13 +22,12 @@ import im.turms.server.common.access.http.dto.response.PaginationDTO;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.access.http.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.http.permission.RequiredPermission;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.util.CollectionUtil;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.workflow.access.http.dto.request.user.AddRelationshipDTO;
 import im.turms.service.workflow.access.http.dto.request.user.UpdateRelationshipDTO;
 import im.turms.service.workflow.access.http.dto.request.user.UserRelationshipDTO;
-import im.turms.service.workflow.access.http.permission.RequiredPermission;
 import im.turms.service.workflow.access.http.util.PageUtil;
 import im.turms.service.workflow.dao.domain.user.UserRelationship;
 import im.turms.service.workflow.service.impl.user.relationship.UserRelationshipGroupService;
@@ -50,10 +49,11 @@ import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static im.turms.service.workflow.access.http.permission.AdminPermission.USER_RELATIONSHIP_CREATE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.USER_RELATIONSHIP_DELETE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.USER_RELATIONSHIP_QUERY;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.USER_RELATIONSHIP_UPDATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.USER_RELATIONSHIP_CREATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.USER_RELATIONSHIP_DELETE;
+import static im.turms.server.common.access.http.permission.AdminPermission.USER_RELATIONSHIP_QUERY;
+import static im.turms.server.common.access.http.permission.AdminPermission.USER_RELATIONSHIP_UPDATE;
+import static im.turms.server.common.constant.BusinessConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
 
 /**
  * @author James Chen
@@ -80,7 +80,7 @@ public class UserRelationshipController {
                 addRelationshipDTO.ownerId(),
                 addRelationshipDTO.relatedUserId(),
                 addRelationshipDTO.blockDate(),
-                DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX,
+                DEFAULT_RELATIONSHIP_GROUP_INDEX,
                 null,
                 addRelationshipDTO.establishmentDate(),
                 false,

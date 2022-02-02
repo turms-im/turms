@@ -17,6 +17,9 @@
 
 package im.turms.gateway.dao.config;
 
+import im.turms.server.common.dao.BaseMongoConfig;
+import im.turms.server.common.dao.domain.Admin;
+import im.turms.server.common.dao.domain.AdminRole;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
@@ -26,37 +29,28 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PreDestroy;
-import java.time.Duration;
-
 /**
  * @author James Chen
  * @see org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
  */
 @Configuration
-public class MongoConfig {
+public class MongoConfig extends BaseMongoConfig {
 
-    private TurmsMongoClient userMongoClient;
-
-    @PreDestroy
-    public void destroy() {
-        if (userMongoClient != null) {
-            userMongoClient.destroy();
-        }
+    @Bean
+    public TurmsMongoClient adminMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
+        TurmsMongoProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getMongo().getAdmin();
+        TurmsMongoClient mongoClient = getMongoClient(properties);
+        mongoClient.registerEntitiesByClasses(Admin.class, AdminRole.class);
+        return mongoClient;
     }
 
     @Bean
     @ConditionalOnProperty("turms.gateway.session.enable-authentication")
     public TurmsMongoClient userMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
         TurmsMongoProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getMongo().getUser();
-        try {
-            userMongoClient = TurmsMongoClient.of(properties)
-                    .block(Duration.ofMinutes(1));
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to create the user mongo client", e);
-        }
-        userMongoClient.registerEntitiesByClasses(User.class);
-        return userMongoClient;
+        TurmsMongoClient mongoClient = getMongoClient(properties);
+        mongoClient.registerEntitiesByClasses(User.class);
+        return mongoClient;
     }
 
     @Bean(IMongoCollectionInitializer.BEAN_NAME)

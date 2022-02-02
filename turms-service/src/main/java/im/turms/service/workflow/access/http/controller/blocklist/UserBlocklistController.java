@@ -20,10 +20,10 @@ package im.turms.service.workflow.access.http.controller.blocklist;
 import im.turms.server.common.access.http.dto.response.PaginationDTO;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
+import im.turms.server.common.access.http.permission.RequiredPermission;
 import im.turms.server.common.bo.blocklist.BlockedClient;
 import im.turms.server.common.service.blocklist.BlocklistService;
 import im.turms.service.workflow.access.http.dto.request.blocklist.AddBlockedUserIdsDTO;
-import im.turms.service.workflow.access.http.permission.RequiredPermission;
 import im.turms.service.workflow.access.http.util.PageUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -40,9 +40,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import static im.turms.service.workflow.access.http.permission.AdminPermission.CLIENT_BLOCKLIST_CREATE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.CLIENT_BLOCKLIST_DELETE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.CLIENT_BLOCKLIST_QUERY;
+import static im.turms.server.common.access.http.permission.AdminPermission.CLIENT_BLOCKLIST_CREATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.CLIENT_BLOCKLIST_DELETE;
+import static im.turms.server.common.access.http.permission.AdminPermission.CLIENT_BLOCKLIST_QUERY;
 
 /**
  * @author James Chen

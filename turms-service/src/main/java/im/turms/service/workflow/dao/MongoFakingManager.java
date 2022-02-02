@@ -25,6 +25,9 @@ import im.turms.common.constant.GroupMemberRole;
 import im.turms.common.constant.GroupUpdateStrategy;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.RequestStatus;
+import im.turms.server.common.access.http.permission.AdminPermission;
+import im.turms.server.common.dao.domain.Admin;
+import im.turms.server.common.dao.domain.AdminRole;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
@@ -32,10 +35,6 @@ import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.property.env.service.env.FakeProperties;
 import im.turms.server.common.security.PasswordManager;
 import im.turms.server.common.util.CollectionUtil;
-import im.turms.service.constant.DaoConstant;
-import im.turms.service.workflow.access.http.permission.AdminPermission;
-import im.turms.service.workflow.dao.domain.admin.Admin;
-import im.turms.service.workflow.dao.domain.admin.AdminRole;
 import im.turms.service.workflow.dao.domain.conversation.GroupConversation;
 import im.turms.service.workflow.dao.domain.conversation.PrivateConversation;
 import im.turms.service.workflow.dao.domain.group.Group;
@@ -64,6 +63,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static im.turms.server.common.constant.BusinessConstant.DEFAULT_GROUP_TYPE_ID;
+import static im.turms.server.common.constant.BusinessConstant.DEFAULT_USER_PERMISSION_GROUP_ID;
 
 /**
  * @author James Chen
@@ -186,7 +188,7 @@ public final class MongoFakingManager {
         // Group
         Group group = new Group(
                 1L,
-                DaoConstant.DEFAULT_GROUP_TYPE_ID,
+                DEFAULT_GROUP_TYPE_ID,
                 1L,
                 1L,
                 "Turms Developers Group",
@@ -328,7 +330,7 @@ public final class MongoFakingManager {
                     "user-name",
                     "user-intro",
                     ProfileAccessStrategy.ALL,
-                    DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID,
+                    DEFAULT_USER_PERMISSION_GROUP_ID,
                     userDate,
                     null,
                     true,

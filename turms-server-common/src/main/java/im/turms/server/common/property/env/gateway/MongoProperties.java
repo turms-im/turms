@@ -38,6 +38,11 @@ public class MongoProperties {
     @JsonIgnore
     @Transient
     @NestedConfigurationProperty
+    private TurmsMongoProperties admin = new TurmsMongoProperties();
+
+    @JsonIgnore
+    @Transient
+    @NestedConfigurationProperty
     private TurmsMongoProperties user = new TurmsMongoProperties();
 
 }

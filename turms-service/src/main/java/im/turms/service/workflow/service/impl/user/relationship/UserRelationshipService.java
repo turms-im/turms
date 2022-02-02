@@ -26,6 +26,7 @@ import im.turms.common.util.Validator;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.exception.DuplicateKeyException;
@@ -35,7 +36,6 @@ import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.DateUtil;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidUserRelationshipKey;
 import im.turms.service.util.ProtoModelUtil;
@@ -60,7 +60,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static im.turms.service.constant.DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
+import static im.turms.server.common.constant.BusinessConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
 import static im.turms.service.constant.DaoConstant.TRANSACTION_RETRY;
 
 /**
@@ -128,7 +128,7 @@ public class UserRelationshipService {
         return mongoClient
                 .inTransaction(session -> {
                     Filter filter = Filter.newBuilder(1)
-                            .in(DaoConstant.ID_FIELD_NAME, keys);
+                            .in(DomainFieldName.ID, keys);
                     return mongoClient.deleteMany(session, UserRelationship.class, filter)
                             .flatMap(result -> userRelationshipGroupService.deleteRelatedUsersFromAllRelationshipGroups(keys, session, true)
                                     .then(userVersionService.updateRelationshipsVersion(ownerIds, null).onErrorResume(t -> Mono.empty()))
@@ -154,7 +154,7 @@ public class UserRelationshipService {
         }
         UserRelationship.Key key = new UserRelationship.Key(ownerId, relatedUserId);
         Filter filter = Filter.newBuilder(1)
-                .eq(DaoConstant.ID_FIELD_NAME, key);
+                .eq(DomainFieldName.ID, key);
         return mongoClient.deleteOne(UserRelationship.class, filter)
                 .then(userRelationshipGroupService.deleteRelatedUserFromAllRelationshipGroups(
                         ownerId, relatedUserId, session, false))
@@ -475,7 +475,7 @@ public class UserRelationshipService {
         }
         UserRelationship.Key key = new UserRelationship.Key(ownerId, relatedUserId);
         Filter filter = Filter.newBuilder(2)
-                .eq(DaoConstant.ID_FIELD_NAME, key)
+                .eq(DomainFieldName.ID, key)
                 .ne(UserRelationship.Fields.BLOCK_DATE, null);
         return mongoClient.exists(UserRelationship.class, filter);
     }
@@ -494,7 +494,7 @@ public class UserRelationshipService {
         }
         UserRelationship.Key key = new UserRelationship.Key(ownerId, relatedUserId);
         Filter filter = Filter.newBuilder(2)
-                .eq(DaoConstant.ID_FIELD_NAME, key)
+                .eq(DomainFieldName.ID, key)
                 .eq(UserRelationship.Fields.BLOCK_DATE, null);
         return mongoClient.exists(UserRelationship.class, filter);
     }
@@ -520,7 +520,7 @@ public class UserRelationshipService {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, keys);
+                .in(DomainFieldName.ID, keys);
         Update update = Update.newBuilder(2)
                 .setIfNotNull(UserRelationship.Fields.ESTABLISHMENT_DATE, establishmentDate)
                 .setOrUnsetDate(UserRelationship.Fields.BLOCK_DATE, blockDate);
@@ -547,7 +547,7 @@ public class UserRelationshipService {
         }
         UserRelationship.Key key = new UserRelationship.Key(ownerId, relatedUserId);
         Filter filter = Filter.newBuilder(1)
-                .eq(DaoConstant.ID_FIELD_NAME, key);
+                .eq(DomainFieldName.ID, key);
         return mongoClient.exists(UserRelationship.class, filter);
     }
 

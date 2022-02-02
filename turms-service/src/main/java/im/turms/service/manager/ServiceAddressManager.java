@@ -17,18 +17,13 @@
 
 package im.turms.service.manager;
 
-import im.turms.server.common.address.AddressCollection;
-import im.turms.server.common.address.AddressCollector;
 import im.turms.server.common.address.BaseServiceAddressManager;
 import im.turms.server.common.address.PublicIpManager;
-import im.turms.server.common.logging.core.logger.Logger;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.AddressProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.stereotype.Component;
-
-import java.net.UnknownHostException;
 
 /**
  * @author James Chen
@@ -36,58 +31,16 @@ import java.net.UnknownHostException;
 @Component
 public class ServiceAddressManager extends BaseServiceAddressManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceAddressManager.class);
-
-    private AddressProperties adminApiAddressProperties;
-    private String metricsApiAddress;
-    private String adminApiAddress;
-
     public ServiceAddressManager(
-            TurmsPropertiesManager turmsPropertiesManager,
             ServerProperties adminApiServerProperties,
-            PublicIpManager publicIpManager) throws UnknownHostException {
-        super(publicIpManager, turmsPropertiesManager.getLocalProperties());
-        updateCollectorAndAddresses(adminApiServerProperties,
-                turmsPropertiesManager.getLocalProperties().getService().getAdminApi().getAddress());
-        turmsPropertiesManager.addListeners(properties -> {
-            AddressProperties newAdminApiDiscoveryProperties = properties.getService().getAdminApi().getAddress();
-            boolean areAddressPropertiesChange = !adminApiAddressProperties.equals(newAdminApiDiscoveryProperties);
-            boolean isMemberHostChanged = updateMemberHostIfChanged(properties);
-            if (areAddressPropertiesChange) {
-                try {
-                    updateCollectorAndAddresses(adminApiServerProperties, newAdminApiDiscoveryProperties);
-                } catch (UnknownHostException e) {
-                    LOGGER.error("Failed to update address collector", e);
-                }
-            }
-            if (areAddressPropertiesChange || isMemberHostChanged) {
-                AddressCollection addresses = new AddressCollection(getMemberHost(),
-                        metricsApiAddress,
-                        adminApiAddress,
-                        null,
-                        null,
-                        null);
-                triggerOnAddressesChangedListeners(addresses);
-            }
-        });
+            PublicIpManager publicIpManager,
+            TurmsPropertiesManager turmsPropertiesManager) {
+        super(adminApiServerProperties, publicIpManager, turmsPropertiesManager);
     }
 
     @Override
-    public String getMetricsApiAddress() {
-        return metricsApiAddress;
-    }
-
-    @Override
-    public String getAdminApiAddress() {
-        return adminApiAddress;
-    }
-
-    private void updateCollectorAndAddresses(ServerProperties adminApiServerProperties, AddressProperties newAdminApiAddressProperties)
-            throws UnknownHostException {
-        AddressCollector adminApiAddressesCollector = getAddressCollector(newAdminApiAddressProperties, adminApiServerProperties);
-        metricsApiAddress = adminApiAddressesCollector.getHttpAddress() + "/actuator";
-        adminApiAddress = adminApiAddressesCollector.getHttpAddress();
-        adminApiAddressProperties = newAdminApiAddressProperties;
+    protected AddressProperties getAdminAddressProperties(TurmsProperties properties) {
+        return properties.getService().getAdminApi().getAddress();
     }
 
 }

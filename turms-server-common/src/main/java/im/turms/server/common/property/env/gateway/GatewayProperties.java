@@ -18,7 +18,6 @@
 package im.turms.server.common.property.env.gateway;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.property.env.common.AddressProperties;
 import im.turms.server.common.property.env.gateway.clientapi.ClientApiProperties;
 import im.turms.server.common.property.env.gateway.redis.TurmsRedisProperties;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
@@ -41,7 +40,7 @@ public class GatewayProperties {
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
-    private AddressProperties metricsApiAddress = new AddressProperties();
+    private AdminApiProperties adminApi = new AdminApiProperties();
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty

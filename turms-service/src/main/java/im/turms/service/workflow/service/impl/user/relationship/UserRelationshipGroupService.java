@@ -25,6 +25,7 @@ import im.turms.common.util.RandomUtil;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.exception.DuplicateKeyException;
@@ -35,7 +36,6 @@ import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.DateUtil;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidUserRelationshipGroupKey;
 import im.turms.service.constraint.ValidUserRelationshipKey;
@@ -61,6 +61,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import static im.turms.server.common.constant.BusinessConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
 
 /**
  * @author James Chen
@@ -226,7 +228,7 @@ public class UserRelationshipGroupService {
         }
         UserRelationshipGroup.Key key = new UserRelationshipGroup.Key(ownerId, groupIndex);
         Filter filter = Filter.newBuilder(1)
-                .eq(DaoConstant.ID_FIELD_NAME, key);
+                .eq(DomainFieldName.ID, key);
         Update update = Update.newBuilder(1)
                 .set(UserRelationshipGroup.Fields.NAME, newGroupName);
         return mongoClient.updateOne(UserRelationshipGroup.class, filter, update)
@@ -252,7 +254,7 @@ public class UserRelationshipGroupService {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, keys);
+                .in(DomainFieldName.ID, keys);
         Update update = Update
                 .newBuilder(2)
                 .setIfNotNull(UserRelationshipGroup.Fields.NAME, name)
@@ -293,7 +295,7 @@ public class UserRelationshipGroupService {
             AssertUtil.notNull(ownerId, "ownerId");
             AssertUtil.notNull(deleteGroupIndex, "deleteGroupIndex");
             AssertUtil.notNull(newGroupIndex, "newGroupIndex");
-            AssertUtil.state(!deleteGroupIndex.equals(DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX),
+            AssertUtil.state(!deleteGroupIndex.equals(DEFAULT_RELATIONSHIP_GROUP_INDEX),
                     "The default relationship group cannot be deleted");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
@@ -306,7 +308,7 @@ public class UserRelationshipGroupService {
                 .eq(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, deleteGroupIndex);
         UserRelationshipGroup.Key key = new UserRelationshipGroup.Key(ownerId, deleteGroupIndex);
         Filter filterGroup = Filter.newBuilder(1)
-                .eq(DaoConstant.ID_FIELD_NAME, key);
+                .eq(DomainFieldName.ID, key);
         // Don't use transaction for better performance
         return mongoClient.findMany(UserRelationshipGroupMember.class, filterMember)
                 .collectList()
@@ -378,7 +380,7 @@ public class UserRelationshipGroupService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, keys);
+                .in(DomainFieldName.ID, keys);
         if (updateRelationshipGroupsMembersVersion) {
             return mongoClient.deleteMany(session, UserRelationshipGroupMember.class, filter)
                     .flatMap(result -> {
@@ -412,7 +414,7 @@ public class UserRelationshipGroupService {
         }
         UserRelationshipGroupMember.Key key = new UserRelationshipGroupMember.Key(ownerId, currentGroupIndex, relatedUserId);
         Filter filter = Filter.newBuilder(1)
-                .eq(DaoConstant.ID_FIELD_NAME, key);
+                .eq(DomainFieldName.ID, key);
         UserRelationshipGroupMember.Key newKey = new UserRelationshipGroupMember
                 .Key(ownerId, targetGroupIndex, relatedUserId);
         // Don't use transaction for better performance
@@ -436,7 +438,7 @@ public class UserRelationshipGroupService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, keys);
+                .in(DomainFieldName.ID, keys);
         return mongoClient.deleteMany(UserRelationshipGroup.class, filter);
     }
 

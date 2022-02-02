@@ -17,10 +17,10 @@
 
 package im.turms.service.workflow.dao.config;
 
-import com.google.common.collect.Maps;
+import im.turms.server.common.dao.BaseMongoConfig;
+import im.turms.server.common.dao.domain.Admin;
+import im.turms.server.common.dao.domain.AdminRole;
 import im.turms.server.common.dao.domain.User;
-import im.turms.server.common.logging.core.logger.Logger;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.MongoCollectionOptions;
 import im.turms.server.common.property.TurmsPropertiesManager;
@@ -28,10 +28,7 @@ import im.turms.server.common.property.env.service.env.database.AdminMongoProper
 import im.turms.server.common.property.env.service.env.database.ConversationMongoProperties;
 import im.turms.server.common.property.env.service.env.database.GroupMongoProperties;
 import im.turms.server.common.property.env.service.env.database.MessageMongoProperties;
-import im.turms.server.common.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.property.env.service.env.database.UserMongoProperties;
-import im.turms.service.workflow.dao.domain.admin.Admin;
-import im.turms.service.workflow.dao.domain.admin.AdminRole;
 import im.turms.service.workflow.dao.domain.conversation.GroupConversation;
 import im.turms.service.workflow.dao.domain.conversation.PrivateConversation;
 import im.turms.service.workflow.dao.domain.group.Group;
@@ -52,32 +49,12 @@ import im.turms.service.workflow.dao.domain.user.UserVersion;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PreDestroy;
-import java.time.Duration;
-import java.util.Map;
-
 /**
  * @author James Chen
  * @see org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
  */
 @Configuration
-public class MongoConfig {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MongoConfig.class);
-
-    private static final int SERVICE_TYPES_NUMBER = 5;
-    private static final Map<String, TurmsMongoClient> CLIENT_MAP = Maps.newHashMapWithExpectedSize(SERVICE_TYPES_NUMBER);
-
-    @PreDestroy
-    public void destroy() {
-        for (TurmsMongoClient client : CLIENT_MAP.values()) {
-            try {
-                client.destroy();
-            } catch (Exception ignored) {
-                LOGGER.error("Failed to destroy a mongo client");
-            }
-        }
-    }
+public class MongoConfig extends BaseMongoConfig {
 
     @Bean
     public TurmsMongoClient adminMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
@@ -142,17 +119,6 @@ public class MongoConfig {
         mongoClient.registerEntitiesByOptions(
                 MongoCollectionOptions.of(Message.class, writeConcern.getMessage()));
         return mongoClient;
-    }
-
-    private synchronized TurmsMongoClient getMongoClient(TurmsMongoProperties properties) {
-        return CLIENT_MAP.computeIfAbsent(properties.getUri(), key -> {
-            try {
-                return TurmsMongoClient.of(properties)
-                        .block(Duration.ofMinutes(1));
-            } catch (Exception e) {
-                throw new IllegalStateException("Failed to create the mongo client", e);
-            }
-        });
     }
 
 }

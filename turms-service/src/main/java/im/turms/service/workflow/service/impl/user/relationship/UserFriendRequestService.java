@@ -32,6 +32,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -41,7 +42,6 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.task.TrivialTaskManager;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.DateUtil;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidRequestStatus;
 import im.turms.service.constraint.ValidResponseAction;
@@ -64,6 +64,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.util.Date;
 import java.util.Set;
+
+import static im.turms.service.constant.DaoConstant.TRANSACTION_RETRY;
 
 /**
  * @author James Chen
@@ -254,7 +256,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(3)
-                .eq(DaoConstant.ID_FIELD_NAME, requestId)
+                .eq(DomainFieldName.ID, requestId)
                 .eq(UserFriendRequest.Fields.STATUS, RequestStatus.PENDING)
                 .isNotExpired(UserFriendRequest.Fields.CREATION_DATE, getModelExpirationDate());
         Update update = Update.newBuilder(2)
@@ -292,7 +294,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, requestIds);
+                .in(DomainFieldName.ID, requestIds);
         Update update = Update
                 .newBuilder(5)
                 .setIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterId)
@@ -311,7 +313,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(DaoConstant.ID_FIELD_NAME, requestId);
+                .eq(DomainFieldName.ID, requestId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserFriendRequest.Fields.RECIPIENT_ID);
         return mongoClient.findOne(UserFriendRequest.class, filter, options)
@@ -325,7 +327,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(DaoConstant.ID_FIELD_NAME, requestId);
+                .eq(DomainFieldName.ID, requestId);
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(UserFriendRequest.Fields.REQUESTER_ID,
                         UserFriendRequest.Fields.RECIPIENT_ID);
@@ -355,7 +357,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
                                         session -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.ACCEPTED, reason, session)
                                                 .then(userRelationshipService.friendTwoUsers(request.getRequesterId(), requesterId, session))
                                                 .then())
-                                .retryWhen(DaoConstant.TRANSACTION_RETRY);
+                                .retryWhen(TRANSACTION_RETRY);
                         case IGNORE -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.IGNORED, reason, null)
                                 .then();
                         case DECLINE -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.DECLINED, reason, null)
@@ -425,7 +427,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
 
     public Mono<DeleteResult> deleteFriendRequests(@Nullable Set<Long> ids) {
         Filter filter = Filter.newBuilder(1)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids);
+                .inIfNotNull(DomainFieldName.ID, ids);
         return mongoClient.deleteMany(UserFriendRequest.class, filter);
     }
 
@@ -441,7 +443,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
             @Nullable Integer size) {
         Date expirationDate = getModelExpirationDate();
         Filter filter = Filter.newBuilder(9)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .inIfNotNull(DomainFieldName.ID, ids)
                 .inIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterIds)
                 .inIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientIds)
                 .inIfNotNull(UserFriendRequest.Fields.STATUS, statuses)
@@ -462,7 +464,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
             @Nullable DateRange responseDateRange,
             @Nullable DateRange expirationDateRange) {
         Filter filter = Filter.newBuilder(9)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .inIfNotNull(DomainFieldName.ID, ids)
                 .inIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterIds)
                 .inIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientIds)
                 .inIfNotNull(UserFriendRequest.Fields.STATUS, statuses)

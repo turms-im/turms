@@ -19,6 +19,7 @@ package im.turms.service.workflow.access.http.controller.cluster;
 
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
+import im.turms.server.common.access.http.permission.RequiredPermission;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.node.NodeVersion;
@@ -30,7 +31,6 @@ import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.util.CollectionUtil;
 import im.turms.service.workflow.access.http.dto.request.cluster.AddMemberDTO;
 import im.turms.service.workflow.access.http.dto.request.cluster.UpdateMemberDTO;
-import im.turms.service.workflow.access.http.permission.RequiredPermission;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,12 +45,12 @@ import reactor.core.publisher.Mono;
 import java.util.Collection;
 import java.util.List;
 
-import static im.turms.service.workflow.access.http.permission.AdminPermission.CLUSTER_LEADER_QUERY;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.CLUSTER_LEADER_UPDATE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBER_CREATE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBER_DELETE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBER_QUERY;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBER_UPDATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.CLUSTER_LEADER_QUERY;
+import static im.turms.server.common.access.http.permission.AdminPermission.CLUSTER_LEADER_UPDATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.CLUSTER_MEMBER_CREATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.CLUSTER_MEMBER_DELETE;
+import static im.turms.server.common.access.http.permission.AdminPermission.CLUSTER_MEMBER_QUERY;
+import static im.turms.server.common.access.http.permission.AdminPermission.CLUSTER_MEMBER_UPDATE;
 
 
 /**

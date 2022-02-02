@@ -23,11 +23,11 @@ import im.turms.server.common.access.http.dto.response.PaginationDTO;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.access.http.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.http.permission.RequiredPermission;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.service.workflow.access.http.dto.model.GroupInvitationDTO;
 import im.turms.service.workflow.access.http.dto.request.group.AddGroupInvitationDTO;
 import im.turms.service.workflow.access.http.dto.request.group.UpdateGroupInvitationDTO;
-import im.turms.service.workflow.access.http.permission.RequiredPermission;
 import im.turms.service.workflow.access.http.util.PageUtil;
 import im.turms.service.workflow.service.impl.group.GroupInvitationService;
 import org.springframework.http.ResponseEntity;
@@ -46,10 +46,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
-import static im.turms.service.workflow.access.http.permission.AdminPermission.GROUP_INVITATION_CREATE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.GROUP_INVITATION_DELETE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.GROUP_INVITATION_QUERY;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.GROUP_INVITATION_UPDATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.GROUP_INVITATION_CREATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.GROUP_INVITATION_DELETE;
+import static im.turms.server.common.access.http.permission.AdminPermission.GROUP_INVITATION_QUERY;
+import static im.turms.server.common.access.http.permission.AdminPermission.GROUP_INVITATION_UPDATE;
 
 /**
  * @author James Chen

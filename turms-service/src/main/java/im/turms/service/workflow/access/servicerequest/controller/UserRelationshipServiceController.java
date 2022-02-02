@@ -33,7 +33,6 @@ import im.turms.common.model.dto.request.user.relationship.UpdateRelationshipGro
 import im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.util.CollectionUtil;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.workflow.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.workflow.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResultFactory;
@@ -59,6 +58,7 @@ import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_RELA
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_FRIEND_REQUEST_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_RELATIONSHIP_REQUEST;
+import static im.turms.server.common.constant.BusinessConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
 
 /**
  * @author James Chen
@@ -121,7 +121,7 @@ public class UserRelationshipServiceController {
             // It is unnecessary to check whether requester is in the blocklist of the target user
             // because only a one-sided relationship will be created here
             int groupIndex = request.hasGroupIndex() ?
-                    request.getGroupIndex() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
+                    request.getGroupIndex() : DEFAULT_RELATIONSHIP_GROUP_INDEX;
             Date blockDate = request.getBlocked() ? new Date() : null;
             return userRelationshipService.upsertOneSidedRelationship(
                             clientRequest.userId(),
@@ -146,7 +146,7 @@ public class UserRelationshipServiceController {
             DeleteRelationshipGroupRequest request = clientRequest.turmsRequest().getDeleteRelationshipGroupRequest();
             Integer groupIndex = request.getGroupIndex();
             int targetGroupIndex = request.hasTargetGroupIndex() ?
-                    request.getTargetGroupIndex() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
+                    request.getTargetGroupIndex() : DEFAULT_RELATIONSHIP_GROUP_INDEX;
             if (node.getSharedProperties().getService().getNotification()
                     .isNotifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers()) {
                 return userRelationshipGroupService.queryRelationshipGroupMemberIds(
@@ -213,7 +213,7 @@ public class UserRelationshipServiceController {
     public ClientRequestHandler handleQueryRelatedUserIdsRequest() {
         return clientRequest -> {
             QueryRelatedUserIdsRequest request = clientRequest.turmsRequest().getQueryRelatedUserIdsRequest();
-            int groupIndex = request.hasGroupIndex() ? request.getGroupIndex() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
+            int groupIndex = request.hasGroupIndex() ? request.getGroupIndex() : DEFAULT_RELATIONSHIP_GROUP_INDEX;
             Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate()) : null;
             Boolean isBlocked = request.hasBlocked() ? request.getBlocked() : null;
             return userRelationshipService.queryRelatedUserIdsWithVersion(
@@ -253,7 +253,7 @@ public class UserRelationshipServiceController {
             QueryRelationshipsRequest request = clientRequest.turmsRequest()
                     .getQueryRelationshipsRequest();
             Set<Long> ids = request.getUserIdsCount() == 0 ? null : CollectionUtil.newSet(request.getUserIdsList());
-            int groupIndex = request.hasGroupIndex() ? request.getGroupIndex() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
+            int groupIndex = request.hasGroupIndex() ? request.getGroupIndex() : DEFAULT_RELATIONSHIP_GROUP_INDEX;
             Boolean isBlocked = request.hasBlocked() ? request.getBlocked() : null;
             Date lastUpdatedDate = request.hasLastUpdatedDate() ?
                     new Date(request.getLastUpdatedDate()) : null;

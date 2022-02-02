@@ -73,6 +73,7 @@ services:
         -Dturms.cluster.discovery.address.advertise-host=turms-gateway
 
         -Dturms.cluster.shared-config.mongo.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
+        -Dturms.gateway.mongo.admin.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
         -Dturms.gateway.mongo.user.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
 
         -Dturms.gateway.redis.session.uri-list[0]=redis://redis:6379

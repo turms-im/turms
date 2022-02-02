@@ -97,3 +97,15 @@ variable "location_redis_host" {}
 variable "location_redis_account_name" {}
 
 variable "location_redis_account_password" {}
+
+variable "ip_blocklist_redis_host" {}
+
+variable "ip_blocklist_redis_account_name" {}
+
+variable "ip_blocklist_redis_account_password" {}
+
+variable "user_blocklist_redis_host" {}
+
+variable "user_blocklist_redis_account_name" {}
+
+variable "user_blocklist_redis_account_password" {}

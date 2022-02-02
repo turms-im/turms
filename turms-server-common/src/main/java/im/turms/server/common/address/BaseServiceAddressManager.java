@@ -20,8 +20,10 @@ package im.turms.server.common.address;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsProperties;
+import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.AdvertiseStrategy;
 import im.turms.server.common.property.env.common.AddressProperties;
+import lombok.SneakyThrows;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.web.server.Ssl;
 
@@ -42,18 +44,54 @@ public abstract class BaseServiceAddressManager {
     protected final PublicIpManager publicIpManager;
 
     private final List<Consumer<AddressCollection>> onAddressesChangedListeners = new LinkedList<>();
-    private final String memberBindHost;
+    // member address
     private AddressProperties memberAddressProperties;
+    private final String memberBindHost;
     private String memberHost;
 
-    protected BaseServiceAddressManager(PublicIpManager publicIpManager, TurmsProperties propertiesForMemberBindHost) {
-        this.publicIpManager = publicIpManager;
-        memberBindHost = propertiesForMemberBindHost.getCluster().getConnection().getServer().getHost();
-        updateMemberHostIfChanged(propertiesForMemberBindHost);
-    }
+    // admin address
+    private AddressProperties adminApiAddressProperties;
+    private String metricsApiAddress;
+    private String adminApiAddress;
 
-    public void addOnAddressesChangedListener(Consumer<AddressCollection> listener) {
-        onAddressesChangedListeners.add(listener);
+    protected BaseServiceAddressManager(ServerProperties adminApiServerProperties,
+                                        PublicIpManager publicIpManager,
+                                        TurmsPropertiesManager propertiesManager) {
+        this.publicIpManager = publicIpManager;
+        TurmsProperties turmsProperties = propertiesManager.getLocalProperties();
+        memberBindHost = turmsProperties.getCluster().getConnection().getServer().getHost();
+        updateMemberHostIfChanged(turmsProperties);
+
+        updateAdminApiAddresses(adminApiServerProperties, getAdminAddressProperties(turmsProperties));
+        updateCustomAddresses(adminApiServerProperties, turmsProperties);
+        propertiesManager.addListeners(properties -> {
+            AddressProperties newAdminApiDiscoveryProperties = getAdminAddressProperties(properties);
+            boolean areAdminApiAddressPropertiesChange = !adminApiAddressProperties
+                    .equals(newAdminApiDiscoveryProperties);
+            boolean isMemberHostChanged = updateMemberHostIfChanged(properties);
+            if (areAdminApiAddressPropertiesChange) {
+                try {
+                    updateAdminApiAddresses(adminApiServerProperties, newAdminApiDiscoveryProperties);
+                } catch (Exception e) {
+                    LOGGER.error("Failed to update admin API addresses", e);
+                }
+            }
+            boolean areCustomAddressesChanged = false;
+            try {
+                areCustomAddressesChanged = updateCustomAddresses(adminApiServerProperties, turmsProperties);
+            } catch (Exception e) {
+                LOGGER.error("Failed to update custom addresses", e);
+            }
+            if (areAdminApiAddressPropertiesChange || isMemberHostChanged || areCustomAddressesChanged) {
+                AddressCollection addresses = new AddressCollection(getMemberHost(),
+                        metricsApiAddress,
+                        adminApiAddress,
+                        getWsAddress(),
+                        getTcpAddress(),
+                        getUdpAddress());
+                triggerOnAddressesChangedListeners(addresses);
+            }
+        });
     }
 
     public String getMemberHost() {
@@ -62,12 +100,12 @@ public abstract class BaseServiceAddressManager {
 
     @Nullable
     public String getMetricsApiAddress() {
-        return null;
+        return metricsApiAddress;
     }
 
     @Nullable
     public String getAdminApiAddress() {
-        return null;
+        return adminApiAddress;
     }
 
     @Nullable
@@ -85,47 +123,13 @@ public abstract class BaseServiceAddressManager {
         return null;
     }
 
-    protected boolean updateMemberHostIfChanged(TurmsProperties newProperties) {
-        AddressProperties newAddressProperties = newProperties.getCluster().getDiscovery().getAddress();
-        boolean isAddressPropertiesChanged = !newAddressProperties.equals(memberAddressProperties);
-        if (isAddressPropertiesChanged) {
-            try {
-                memberHost = getAddressCollector(newAddressProperties, memberBindHost, null, null).getHost();
-                memberAddressProperties = newAddressProperties;
-                return true;
-            } catch (UnknownHostException e) {
-                LOGGER.error("Failed to update the member host", e);
-            }
-        }
-        return false;
+    // Listeners
+
+    public void addOnAddressesChangedListener(Consumer<AddressCollection> listener) {
+        onAddressesChangedListeners.add(listener);
     }
 
-    protected AddressCollector getAddressCollector(AddressProperties addressProperties, ServerProperties serverProperties)
-            throws UnknownHostException {
-        InetAddress address = serverProperties.getAddress();
-        Integer port = serverProperties.getPort();
-        if (address == null) {
-            throw new IllegalStateException("The bind host isn't specified");
-        }
-        if (port == null || port <= 0) {
-            throw new UnknownHostException("Invalid service port: " + port);
-        }
-        Ssl ssl = serverProperties.getSsl();
-        boolean isSslEnabled = ssl != null && ssl.isEnabled();
-        return getAddressCollector(addressProperties, address.getHostAddress(), port, isSslEnabled);
-    }
-
-    protected AddressCollector getAddressCollector(AddressProperties addressProperties,
-                                                   String host,
-                                                   Integer port,
-                                                   Boolean isSslEnabled) throws UnknownHostException {
-        AdvertiseStrategy advertiseStrategy = addressProperties.getAdvertiseStrategy();
-        String advertiseHost = addressProperties.getAdvertiseHost();
-        boolean attachPortToHost = addressProperties.isAttachPortToHost();
-        return new AddressCollector(host, advertiseHost, port, isSslEnabled, attachPortToHost, advertiseStrategy, publicIpManager);
-    }
-
-    protected void triggerOnAddressesChangedListeners(AddressCollection addresses) {
+    private void triggerOnAddressesChangedListeners(AddressCollection addresses) {
         for (Consumer<AddressCollection> listener : onAddressesChangedListeners) {
             try {
                 listener.accept(addresses);
@@ -133,6 +137,62 @@ public abstract class BaseServiceAddressManager {
                 LOGGER.error("Failed to run onAddressesChangedListener", e);
             }
         }
+    }
+
+    // Get and Update Addresses
+
+    protected abstract AddressProperties getAdminAddressProperties(TurmsProperties properties);
+
+    protected boolean updateCustomAddresses(ServerProperties adminApiServerProperties,
+                                            TurmsProperties properties) {
+        return false;
+    }
+
+    @SneakyThrows
+    private void updateAdminApiAddresses(ServerProperties adminApiServerProperties,
+                                         AddressProperties newAdminApiAddressProperties) {
+
+        InetAddress address = adminApiServerProperties.getAddress();
+        Integer port = adminApiServerProperties.getPort();
+        if (address == null) {
+            throw new IllegalStateException("The bind host isn't specified");
+        }
+        if (port == null || port <= 0) {
+            throw new UnknownHostException("Invalid service port: " + port);
+        }
+        Ssl ssl = adminApiServerProperties.getSsl();
+        boolean isSslEnabled = ssl != null && ssl.isEnabled();
+        AddressCollector collector = getAddressCollector(newAdminApiAddressProperties, address.getHostAddress(), port, isSslEnabled);
+        metricsApiAddress = collector.getHttpAddress() + "/actuator";
+        adminApiAddress = collector.getHttpAddress();
+        adminApiAddressProperties = newAdminApiAddressProperties;
+    }
+
+    private boolean updateMemberHostIfChanged(TurmsProperties newProperties) {
+        AddressProperties newAddressProperties = newProperties.getCluster().getDiscovery().getAddress();
+        boolean isAddressPropertiesChanged = !newAddressProperties.equals(memberAddressProperties);
+        if (isAddressPropertiesChanged) {
+            try {
+                memberHost = getAddressCollector(newAddressProperties, memberBindHost, null, null)
+                        .getHost();
+                memberAddressProperties = newAddressProperties;
+                return true;
+            } catch (Exception e) {
+                LOGGER.error("Failed to update the member host", e);
+            }
+        }
+        return false;
+    }
+
+    @SneakyThrows
+    private AddressCollector getAddressCollector(AddressProperties addressProperties,
+                                                 String host,
+                                                 Integer port,
+                                                 Boolean isSslEnabled) {
+        AdvertiseStrategy advertiseStrategy = addressProperties.getAdvertiseStrategy();
+        String advertiseHost = addressProperties.getAdvertiseHost();
+        boolean attachPortToHost = addressProperties.isAttachPortToHost();
+        return new AddressCollector(host, advertiseHost, port, isSslEnabled, attachPortToHost, advertiseStrategy, publicIpManager);
     }
 
 }

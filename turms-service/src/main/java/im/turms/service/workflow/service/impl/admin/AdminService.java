@@ -18,16 +18,15 @@
 package im.turms.service.workflow.service.impl.admin;
 
 import com.google.common.collect.Sets;
-import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.common.util.Validator;
-import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
+import im.turms.server.common.bo.admin.AdminInfo;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
+import im.turms.server.common.dao.domain.Admin;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.logging.core.logger.Logger;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -35,19 +34,15 @@ import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.security.PasswordManager;
+import im.turms.server.common.service.admin.BaseAdminService;
 import im.turms.server.common.util.AssertUtil;
-import im.turms.service.bo.AdminInfo;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
-import im.turms.service.workflow.access.http.permission.AdminPermission;
-import im.turms.service.workflow.dao.domain.admin.Admin;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -56,26 +51,22 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static im.turms.server.common.constant.BusinessConstant.ADMIN_ROLE_ROOT_ID;
+import static im.turms.server.common.constant.BusinessConstant.ROOT_ADMIN_ACCOUNT;
 
 /**
  * @author James Chen
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class AdminService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdminService.class);
+public class AdminService extends BaseAdminService {
 
     private static final String ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK =
             "Only a admin with a lower rank compared to the account can be created, updated, or deleted";
-    /**
-     * Use the hard-coded account because it's immutable.
-     */
-    public static final String ROOT_ADMIN_ACCOUNT = "turms";
     private static final int MIN_ACCOUNT_LIMIT = 1;
     private static final int MIN_PASSWORD_LIMIT = 1;
     private static final int MIN_NAME_LIMIT = 1;
@@ -84,6 +75,7 @@ public class AdminService {
     public static final int MAX_NAME_LIMIT = 32;
     private final PasswordManager passwordManager;
     private final TurmsMongoClient mongoClient;
+    private final TurmsPropertiesManager turmsPropertiesManager;
     private final AdminRoleService adminRoleService;
 
     /**
@@ -96,54 +88,29 @@ public class AdminService {
             @Qualifier("adminMongoClient") TurmsMongoClient mongoClient,
             TurmsPropertiesManager turmsPropertiesManager,
             AdminRoleService adminRoleService) {
+        super(passwordManager, mongoClient, adminRoleService);
         this.passwordManager = passwordManager;
         this.mongoClient = mongoClient;
+        this.turmsPropertiesManager = turmsPropertiesManager;
         this.adminRoleService = adminRoleService;
-
-        listenAndLoadAdmins(turmsPropertiesManager.getLocalProperties().getSecurity().getPassword().getInitialRootPassword());
     }
 
-    public void listenAndLoadAdmins(String initialRootPassword) {
-        // Listen
-        mongoClient.watch(Admin.class, FullDocument.UPDATE_LOOKUP)
-                .doOnNext(event -> {
-                    Admin admin = event.getFullDocument();
-                    switch (event.getOperationType()) {
-                        case INSERT, UPDATE, REPLACE -> adminMap.put(admin.getAccount(), new AdminInfo(admin, null));
-                        case DELETE -> {
-                            String account = ChangeStreamUtil.getIdAsString(event.getDocumentKey());
-                            adminMap.remove(account);
-                        }
-                        case INVALIDATE -> adminMap.clear();
-                        default -> LOGGER.fatal("Detected an illegal operation on Admin collection: " + event);
-                    }
-                })
-                .onErrorContinue((throwable, o) -> LOGGER
-                        .error("Caught an error while processing the change stream event of Admin: {}", o, throwable))
-                .subscribe();
-
-        // Load
-        mongoClient.findAll(Admin.class)
-                .collectList()
-                .doOnNext(admins -> {
-                    boolean rootAdminExists = false;
-                    for (Admin admin : admins) {
-                        if (admin.getRoleId().equals(DaoConstant.ADMIN_ROLE_ROOT_ID)) {
-                            rootAdminExists = true;
-                        }
-                        adminMap.put(admin.getAccount(), new AdminInfo(admin, null));
-                    }
-                    if (!rootAdminExists) {
-                        addAdmin(ROOT_ADMIN_ACCOUNT,
-                                initialRootPassword,
-                                DaoConstant.ADMIN_ROLE_ROOT_ID,
-                                ROOT_ADMIN_ACCOUNT,
-                                new Date(),
-                                false)
-                                .subscribe(null, t -> LOGGER.error("Caught an error while adding the root admin", t));
-                    }
-                })
-                .subscribe(null, t -> LOGGER.error("Caught an error while finding all admins", t));
+    public Flux<Long> queryRoleIds(@NotEmpty Set<String> accounts) {
+        try {
+            AssertUtil.notEmpty(accounts, "accounts");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
+        Set<Long> roleIds = Sets.newHashSetWithExpectedSize(accounts.size());
+        for (String account : accounts) {
+            AdminInfo adminInfo = adminMap.get(account);
+            if (adminInfo != null) {
+                roleIds.add(adminInfo.getAdmin().getRoleId());
+            }
+        }
+        return roleIds.size() == accounts.size()
+                ? Flux.fromIterable(roleIds)
+                : queryAdmins(accounts, null, null, null).map(Admin::getRoleId);
     }
 
     public Mono<Admin> authAndAddAdmin(
@@ -164,8 +131,8 @@ public class AdminService {
             AssertUtil.length(name, "name", MIN_NAME_LIMIT, MAX_NAME_LIMIT);
             AssertUtil.pastOrPresent(registrationDate, "registrationDate");
             AssertUtil.notNull(roleId, "roleId");
-            AssertUtil.state(!roleId.equals(DaoConstant.ADMIN_ROLE_ROOT_ID),
-                    "The role ID cannot be the root role ID: " + DaoConstant.ADMIN_ROLE_ROOT_ID);
+            AssertUtil.state(!roleId.equals(ADMIN_ROLE_ROOT_ID),
+                    "The role ID cannot be the root role ID: " + ADMIN_ROLE_ROOT_ID);
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
@@ -218,107 +185,13 @@ public class AdminService {
         }));
     }
 
-    public Mono<Long> queryRoleId(@NotNull String account) {
-        return queryAdmin(account).map(Admin::getRoleId);
-    }
-
-    public Flux<Long> queryRoleIds(@NotEmpty Set<String> accounts) {
-        try {
-            AssertUtil.notEmpty(accounts, "accounts");
-        } catch (TurmsBusinessException e) {
-            return Flux.error(e);
-        }
-        Set<Long> roleIds = Sets.newHashSetWithExpectedSize(accounts.size());
-        for (String account : accounts) {
-            AdminInfo adminInfo = adminMap.get(account);
-            if (adminInfo != null) {
-                roleIds.add(adminInfo.getAdmin().getRoleId());
-            }
-        }
-        return roleIds.size() == accounts.size()
-                ? Flux.fromIterable(roleIds)
-                : queryAdmins(accounts, null, null, null).map(Admin::getRoleId);
-    }
-
-    public Mono<Boolean> isAdminAuthorized(
-            @NotNull String account,
-            @NotNull AdminPermission permission) {
-        try {
-            AssertUtil.notNull(account, "account");
-            AssertUtil.notNull(permission, "permission");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
-        return queryRoleId(account)
-                .flatMap(roleId -> adminRoleService.hasPermission(roleId, permission))
-                .defaultIfEmpty(false);
-    }
-
-    public Mono<Boolean> isAdminAuthorized(
-            @NotNull ServerWebExchange exchange,
-            @NotNull String account,
-            @NotNull AdminPermission permission) {
-        try {
-            AssertUtil.notNull(exchange, "exchange");
-            AssertUtil.notNull(account, "account");
-            AssertUtil.notNull(permission, "permission");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
-        boolean isQueryingSelfInfo;
-        // Even if the account doesn't have the permission ADMIN_QUERY, it can still query its own information
-        if (permission == AdminPermission.ADMIN_QUERY) {
-            List<String> accounts = exchange.getRequest().getQueryParams().get("accounts");
-            isQueryingSelfInfo = accounts != null && accounts.size() == 1 && accounts.get(0).equals(account);
-        } else {
-            isQueryingSelfInfo = false;
-        }
-        return isQueryingSelfInfo
-                ? Mono.just(true)
-                : isAdminAuthorized(account, permission);
-    }
-
-    public Mono<Boolean> authenticate(
-            @NotNull @NoWhitespace String account,
-            @NotNull @NoWhitespace String rawPassword) {
-        try {
-            AssertUtil.notNull(account, "account");
-            AssertUtil.noWhitespace(account, "account");
-            AssertUtil.notNull(rawPassword, "rawPassword");
-            AssertUtil.noWhitespace(rawPassword, "rawPassword");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
-        AdminInfo adminInfo = adminMap.get(account);
-        if (adminInfo != null && adminInfo.getRawPassword() != null) {
-            return Mono.just(adminInfo.getRawPassword().equals(rawPassword));
-        }
-        return queryAdmin(account)
-                .map(admin -> {
-                    boolean isValidPassword = passwordManager.matchesAdminPassword(rawPassword, admin.getPassword());
-                    if (isValidPassword) {
-                        AdminInfo info = adminMap.get(admin.getAccount());
-                        if (info != null) {
-                            info.setRawPassword(rawPassword);
-                        }
-                    }
-                    return isValidPassword;
-                })
-                .defaultIfEmpty(false);
-    }
-
-    public Mono<Admin> queryAdmin(@NotNull String account) {
-        try {
-            AssertUtil.notNull(account, "account");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
-        AdminInfo adminInfo = adminMap.get(account);
-        if (adminInfo == null) {
-            return mongoClient.findById(Admin.class, account)
-                    .doOnNext(admin -> adminMap.put(account, new AdminInfo(admin, null)));
-        }
-        return Mono.just(adminInfo.getAdmin());
+    public Mono<Admin> addRootAdmin() {
+        return addAdmin(ROOT_ADMIN_ACCOUNT,
+                turmsPropertiesManager.getLocalProperties().getSecurity().getPassword().getInitialRootPassword(),
+                ADMIN_ROLE_ROOT_ID,
+                ROOT_ADMIN_ACCOUNT,
+                new Date(),
+                false);
     }
 
     public Flux<Admin> queryAdmins(
@@ -327,7 +200,7 @@ public class AdminService {
             @Nullable Integer page,
             @Nullable Integer size) {
         Filter filter = Filter.newBuilder(2)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, accounts)
+                .inIfNotNull(DomainFieldName.ID, accounts)
                 .inIfNotNull(Admin.Fields.ROLE_ID, roleIds);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);
@@ -357,7 +230,7 @@ public class AdminService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, accounts);
+                .in(DomainFieldName.ID, accounts);
         return mongoClient.deleteMany(Admin.class, filter)
                 .map(result -> {
                     for (String account : accounts) {
@@ -427,7 +300,7 @@ public class AdminService {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, targetAccounts);
+                .in(DomainFieldName.ID, targetAccounts);
         byte[] password = rawPassword == null
                 ? null
                 : passwordManager.encodeAdminPassword(rawPassword);
@@ -452,7 +325,7 @@ public class AdminService {
 
     public Mono<Long> countAdmins(@Nullable Set<String> accounts, @Nullable Set<Long> roleIds) {
         Filter filter = Filter.newBuilder(2)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, accounts)
+                .inIfNotNull(DomainFieldName.ID, accounts)
                 .inIfNotNull(Admin.Fields.ROLE_ID, roleIds);
         return mongoClient.count(Admin.class, filter);
     }

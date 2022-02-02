@@ -31,6 +31,7 @@ import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
@@ -39,7 +40,6 @@ import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.security.PasswordManager;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.service.bo.ServicePermission;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.MetricsConstant;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidProfileAccess;
@@ -67,6 +67,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+
+import static im.turms.server.common.constant.BusinessConstant.DEFAULT_USER_PERMISSION_GROUP_ID;
+import static im.turms.service.constant.DaoConstant.TRANSACTION_RETRY;
 
 /**
  * @author James Chen
@@ -189,7 +192,7 @@ public class UserService {
         name = name == null ? "" : name;
         intro = intro == null ? "" : intro;
         profileAccess = profileAccess == null ? ProfileAccessStrategy.ALL : profileAccess;
-        permissionGroupId = permissionGroupId == null ? DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID : permissionGroupId;
+        permissionGroupId = permissionGroupId == null ? DEFAULT_USER_PERMISSION_GROUP_ID : permissionGroupId;
         isActive = isActive == null ? node.getSharedProperties().getService().getUser().isActivateUserWhenAdded() : isActive;
         Date date = registrationDate == null ? now : registrationDate;
         User user = new User(
@@ -208,7 +211,7 @@ public class UserService {
                         .then(userRelationshipGroupService.createRelationshipGroup(finalId, 0, "", now, session))
                         .then(userVersionService.upsertEmptyUserVersion(user.getId(), date, session).onErrorResume(t -> Mono.empty()))
                         .thenReturn(user))
-                .retryWhen(DaoConstant.TRANSACTION_RETRY)
+                .retryWhen(TRANSACTION_RETRY)
                 .doOnSuccess(ignored -> registeredUsersCounter.increment());
     }
 
@@ -222,7 +225,7 @@ public class UserService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(2)
-                .eq(DaoConstant.ID_FIELD_NAME, targetUserId)
+                .eq(DomainFieldName.ID, targetUserId)
                 .eq(User.Fields.DELETION_DATE, null);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(User.Fields.PROFILE_ACCESS);
@@ -270,10 +273,10 @@ public class UserService {
             return Flux.error(e);
         }
         Filter filter = Filter.newBuilder(2)
-                .in(DaoConstant.ID_FIELD_NAME, userIds)
+                .in(DomainFieldName.ID, userIds)
                 .eqIfFalse(User.Fields.DELETION_DATE, null, queryDeletedRecords);
         QueryOptions options = QueryOptions.newBuilder(1)
-                .include(DaoConstant.ID_FIELD_NAME,
+                .include(DomainFieldName.ID,
                         User.Fields.NAME,
                         User.Fields.INTRO,
                         User.Fields.REGISTRATION_DATE,
@@ -290,7 +293,7 @@ public class UserService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(DaoConstant.ID_FIELD_NAME, userId);
+                .eq(DomainFieldName.ID, userId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(User.Fields.PERMISSION_GROUP_ID);
         return mongoClient.findOne(User.class, filter, options)
@@ -306,7 +309,7 @@ public class UserService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, userIds);
+                .in(DomainFieldName.ID, userIds);
         Mono<DeleteResult> deleteOrUpdateMono;
         if (deleteLogically == null) {
             deleteLogically = node.getSharedProperties().getService().getUser().isDeleteUserLogically();
@@ -334,7 +337,7 @@ public class UserService {
                                                 .doOnError(t -> LOGGER.error("Failed to remove the message sequence IDs for the user IDs: {}", userIds, t)))
                                         .thenReturn(result);
                             }))
-                    .retryWhen(DaoConstant.TRANSACTION_RETRY);
+                    .retryWhen(TRANSACTION_RETRY);
         }
         return deleteOrUpdateMono
                 .doOnNext(ignored -> sessionService.disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED)
@@ -348,7 +351,7 @@ public class UserService {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(2)
-                .eq(DaoConstant.ID_FIELD_NAME, userId)
+                .eq(DomainFieldName.ID, userId)
                 .eqIfFalse(User.Fields.DELETION_DATE, null, queryDeletedRecords);
         return mongoClient.exists(User.class, filter);
     }
@@ -389,7 +392,7 @@ public class UserService {
             @Nullable Integer size,
             boolean queryDeletedRecords) {
         Filter filter = Filter.newBuilder(7)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, userIds)
+                .inIfNotNull(DomainFieldName.ID, userIds)
                 .addBetweenIfNotNull(User.Fields.REGISTRATION_DATE, registrationDateRange)
                 .addBetweenIfNotNull(User.Fields.DELETION_DATE, deletionDateRange)
                 .eqIfNotNull(User.Fields.IS_ACTIVE, isActive)
@@ -424,7 +427,7 @@ public class UserService {
             @Nullable DateRange deletionDateRange,
             @Nullable Boolean isActive) {
         Filter filter = Filter.newBuilder(6)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, userIds)
+                .inIfNotNull(DomainFieldName.ID, userIds)
                 .addBetweenIfNotNull(User.Fields.REGISTRATION_DATE, registrationDateRange)
                 .addBetweenIfNotNull(User.Fields.DELETION_DATE, deletionDateRange)
                 .eqIfNotNull(User.Fields.IS_ACTIVE, isActive);
@@ -459,7 +462,7 @@ public class UserService {
                 ? null
                 : passwordManager.encodeUserPassword(rawPassword);
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, userIds);
+                .in(DomainFieldName.ID, userIds);
         Update update = Update.newBuilder(8)
                 .setIfNotNull(User.Fields.PASSWORD, password)
                 .setIfNotNull(User.Fields.NAME, name)
@@ -478,7 +481,7 @@ public class UserService {
 
     private Mono<Boolean> isActiveAndNotDeleted(@NotNull Long userId) {
         Filter filter = Filter.newBuilder(3)
-                .eq(DaoConstant.ID_FIELD_NAME, userId)
+                .eq(DomainFieldName.ID, userId)
                 .eq(User.Fields.IS_ACTIVE, true)
                 .eq(User.Fields.DELETION_DATE, null);
         return mongoClient.exists(User.class, filter);

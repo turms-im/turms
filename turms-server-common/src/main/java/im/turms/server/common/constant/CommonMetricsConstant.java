@@ -25,6 +25,10 @@ public final class CommonMetricsConstant {
     private CommonMetricsConstant() {
     }
 
+    // Admin API
+
+    public static final String ADMIN_API_NAME = "admin.api";
+
     // Node connection
 
     public static final String NODE_TCP_SERVER_NAME = "turms.node.tcp.server";

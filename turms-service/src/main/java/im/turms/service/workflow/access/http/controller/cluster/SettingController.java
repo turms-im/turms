@@ -19,13 +19,13 @@ package im.turms.service.workflow.access.http.controller.cluster;
 
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
+import im.turms.server.common.access.http.permission.RequiredPermission;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.property.PropertiesUtil;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.service.workflow.access.http.permission.RequiredPermission;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -42,8 +42,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static im.turms.service.workflow.access.http.permission.AdminPermission.CLUSTER_SETTING_QUERY;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.CLUSTER_SETTING_UPDATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.CLUSTER_SETTING_QUERY;
+import static im.turms.server.common.access.http.permission.AdminPermission.CLUSTER_SETTING_UPDATE;
 
 /**
  * @author James Chen

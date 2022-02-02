@@ -24,11 +24,11 @@ import im.turms.server.common.access.http.dto.response.PaginationDTO;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.access.http.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.http.permission.RequiredPermission;
+import im.turms.server.common.dao.domain.Admin;
 import im.turms.service.workflow.access.http.dto.request.admin.AddAdminDTO;
 import im.turms.service.workflow.access.http.dto.request.admin.UpdateAdminDTO;
-import im.turms.service.workflow.access.http.permission.RequiredPermission;
 import im.turms.service.workflow.access.http.util.PageUtil;
-import im.turms.service.workflow.dao.domain.admin.Admin;
 import im.turms.service.workflow.service.impl.admin.AdminService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,10 +48,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
-import static im.turms.service.workflow.access.http.permission.AdminPermission.ADMIN_CREATE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.ADMIN_DELETE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.ADMIN_QUERY;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.ADMIN_UPDATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.ADMIN_CREATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.ADMIN_DELETE;
+import static im.turms.server.common.access.http.permission.AdminPermission.ADMIN_QUERY;
+import static im.turms.server.common.access.http.permission.AdminPermission.ADMIN_UPDATE;
 
 /**
  * @author James Chen

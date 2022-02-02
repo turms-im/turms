@@ -29,6 +29,7 @@ import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
@@ -127,7 +128,7 @@ public class SharedPropertyService implements ClusterService {
         SharedClusterProperties clusterProperties = getClusterProperties(sharedClusterProperties, turmsProperties);
         Date now = new Date();
         Filter filter = Filter.newBuilder(2)
-                .eq("_id", clusterId)
+                .eq(DomainFieldName.ID, clusterId)
                 .lt(SharedClusterProperties.Fields.lastUpdatedTime, now);
         Update update = Update.newBuilder(3)
                 .set(SharedClusterProperties.Fields.commonProperties, clusterProperties.getCommonProperties());
@@ -180,7 +181,7 @@ public class SharedPropertyService implements ClusterService {
 
     private Mono<SharedClusterProperties> findAndUpdatePropertiesByNodeType(SharedClusterProperties clusterProperties) {
         Filter filter = Filter.newBuilder(2)
-                .eq("_id", clusterId);
+                .eq(DomainFieldName.ID, clusterId);
         return sharedConfigService.findOne(SharedClusterProperties.class, filter)
                 .flatMap(properties -> {
                     if (nodeType == NodeType.GATEWAY) {

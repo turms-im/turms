@@ -19,12 +19,12 @@ package integration.im.turms.service.workflow.dao;
 
 import com.google.common.base.CaseFormat;
 import helper.SpringAwareIntegrationTest;
+import im.turms.server.common.dao.domain.Admin;
+import im.turms.server.common.dao.domain.AdminRole;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.util.CollectorUtil;
-import im.turms.service.workflow.dao.domain.admin.Admin;
-import im.turms.service.workflow.dao.domain.admin.AdminRole;
 import im.turms.service.workflow.dao.domain.conversation.GroupConversation;
 import im.turms.service.workflow.dao.domain.conversation.PrivateConversation;
 import im.turms.service.workflow.dao.domain.group.Group;

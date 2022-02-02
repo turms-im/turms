@@ -17,26 +17,25 @@
 
 package im.turms.service.workflow.service.impl.admin;
 
-import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.common.util.Validator;
-import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
+import im.turms.server.common.access.http.permission.AdminPermission;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
+import im.turms.server.common.dao.domain.AdminRole;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
+import im.turms.server.common.service.admin.BaseAdminRoleService;
 import im.turms.server.common.util.AssertUtil;
-import im.turms.service.constant.DaoConstant;
 import im.turms.service.constant.OperationResultConstant;
-import im.turms.service.workflow.access.http.permission.AdminPermission;
-import im.turms.service.workflow.dao.domain.admin.AdminRole;
 import org.apache.commons.lang3.tuple.Triple;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -54,19 +53,21 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import static im.turms.server.common.constant.BusinessConstant.ADMIN_ROLE_ROOT_ID;
+
 /**
  * @author James Chen
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class AdminRoleService {
+public class AdminRoleService extends BaseAdminRoleService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminRoleService.class);
 
     private static final int MIN_ROLE_NAME_LIMIT = 1;
     private static final int MAX_ROLE_NAME_LIMIT = 32;
     private static final AdminRole ROOT_ROLE =
-            new AdminRole(DaoConstant.ADMIN_ROLE_ROOT_ID, "ROOT", AdminPermission.ALL, Integer.MAX_VALUE);
+            new AdminRole(ADMIN_ROLE_ROOT_ID, "ROOT", AdminPermission.ALL, Integer.MAX_VALUE);
 
     private static final String ERROR_UPDATE_ROLE_WITH_HIGHER_RANK =
             "Only a role with a lower rank compared to the one of the account can be created, updated, or deleted";
@@ -81,35 +82,9 @@ public class AdminRoleService {
      */
     public AdminRoleService(@Qualifier("adminMongoClient") TurmsMongoClient mongoClient,
                             @Lazy AdminService adminService) {
+        super(mongoClient);
         this.mongoClient = mongoClient;
         this.adminService = adminService;
-
-        listenAndLoadRoles();
-    }
-
-    public void listenAndLoadRoles() {
-        mongoClient.watch(AdminRole.class, FullDocument.UPDATE_LOOKUP)
-                .doOnNext(event -> {
-                    AdminRole adminRole = event.getFullDocument();
-                    switch (event.getOperationType()) {
-                        case INSERT, UPDATE, REPLACE -> roles.put(adminRole.getId(), adminRole);
-                        case DELETE -> {
-                            long roleId = ChangeStreamUtil.getIdAsLong(event.getDocumentKey());
-                            roles.remove(roleId);
-                        }
-                        case INVALIDATE -> resetRoles();
-                        default -> LOGGER.fatal("Detected an illegal operation on AdminRole collection: " + event);
-                    }
-                })
-                .onErrorContinue((throwable, o) -> LOGGER
-                        .error("Caught an error while processing the change stream event of AdminRole: {}", o, throwable))
-                .subscribe();
-
-        // Load
-        resetRoles();
-        mongoClient.findAll(AdminRole.class)
-                .doOnNext(role -> roles.put(role.getId(), role))
-                .subscribe(null, t -> LOGGER.error("Caught an error while find all admin roles", t));
     }
 
     public Mono<AdminRole> authAndAddAdminRole(
@@ -155,7 +130,7 @@ public class AdminRoleService {
             return Mono.error(e);
         }
         AdminRole adminRole = new AdminRole(roleId, name, permissions, rank);
-        if (adminRole.getId().equals(DaoConstant.ADMIN_ROLE_ROOT_ID)) {
+        if (adminRole.getId().equals(ADMIN_ROLE_ROOT_ID)) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, "The new role ID cannot be the root role ID"));
         }
         return mongoClient.insert(adminRole)
@@ -188,12 +163,12 @@ public class AdminRoleService {
     public Mono<DeleteResult> deleteAdminRoles(@NotEmpty Set<Long> roleIds) {
         try {
             AssertUtil.notEmpty(roleIds, "roleIds");
-            AssertUtil.state(!roleIds.contains(DaoConstant.ADMIN_ROLE_ROOT_ID), "The root admin is reserved and cannot be deleted");
+            AssertUtil.state(!roleIds.contains(ADMIN_ROLE_ROOT_ID), "The root admin is reserved and cannot be deleted");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, roleIds);
+                .in(DomainFieldName.ID, roleIds);
         return mongoClient.deleteMany(AdminRole.class, filter)
                 .map(result -> {
                     for (Long id : roleIds) {
@@ -244,7 +219,7 @@ public class AdminRoleService {
             @Nullable Integer rank) {
         try {
             AssertUtil.notEmpty(roleIds, "roleIds");
-            AssertUtil.state(!roleIds.contains(DaoConstant.ADMIN_ROLE_ROOT_ID), "The root admin is reserved and cannot be updated");
+            AssertUtil.state(!roleIds.contains(ADMIN_ROLE_ROOT_ID), "The root admin is reserved and cannot be updated");
             AssertUtil.noWhitespace(newName, "newName");
             AssertUtil.length(newName, "newName", MIN_ROLE_NAME_LIMIT, MAX_ROLE_NAME_LIMIT);
         } catch (TurmsBusinessException e) {
@@ -254,16 +229,12 @@ public class AdminRoleService {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, roleIds);
+                .in(DomainFieldName.ID, roleIds);
         Update update = Update.newBuilder(3)
                 .setIfNotNull(AdminRole.Fields.NAME, newName)
                 .setIfNotNull(AdminRole.Fields.PERMISSIONS, permissions)
                 .setIfNotNull(AdminRole.Fields.RANK, rank);
         return mongoClient.updateMany(AdminRole.class, filter, update);
-    }
-
-    public AdminRole getRootRole() {
-        return roles.get(DaoConstant.ADMIN_ROLE_ROOT_ID);
     }
 
     public Flux<AdminRole> queryAdminRoles(
@@ -275,7 +246,7 @@ public class AdminRoleService {
             @Nullable Integer size) {
         Filter filter = Filter
                 .newBuilder(4)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .inIfNotNull(DomainFieldName.ID, ids)
                 .inIfNotNull(AdminRole.Fields.NAME, names)
                 .inIfNotNull(AdminRole.Fields.PERMISSIONS, includedPermissions)
                 .inIfNotNull(AdminRole.Fields.RANK, ranks);
@@ -295,7 +266,7 @@ public class AdminRoleService {
             @Nullable Set<AdminPermission> includedPermissions,
             @Nullable Set<Integer> ranks) {
         Filter filter = Filter.newBuilder(4)
-                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .inIfNotNull(DomainFieldName.ID, ids)
                 .inIfNotNull(AdminRole.Fields.NAME, names)
                 .inIfNotNull(AdminRole.Fields.PERMISSIONS, includedPermissions)
                 .inIfNotNull(AdminRole.Fields.RANK, ranks);
@@ -331,11 +302,11 @@ public class AdminRoleService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (roleId.equals(DaoConstant.ADMIN_ROLE_ROOT_ID)) {
+        if (roleId.equals(ADMIN_ROLE_ROOT_ID)) {
             return Mono.just(getRootRole().getRank());
         }
         Filter filter = Filter.newBuilder(1)
-                .eq(DaoConstant.ID_FIELD_NAME, roleId);
+                .eq(DomainFieldName.ID, roleId);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .include(AdminRole.Fields.RANK);
         return mongoClient.findOne(AdminRole.class, filter, options)
@@ -348,12 +319,12 @@ public class AdminRoleService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        boolean containsRoot = roleIds.contains(DaoConstant.ADMIN_ROLE_ROOT_ID);
+        boolean containsRoot = roleIds.contains(ADMIN_ROLE_ROOT_ID);
         if (containsRoot && roleIds.size() == 1) {
             return Flux.just(getRootRole().getRank());
         }
         Filter query = Filter.newBuilder(1)
-                .in(DaoConstant.ID_FIELD_NAME, roleIds);
+                .in(DomainFieldName.ID, roleIds);
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(AdminRole.Fields.RANK);
         Flux<AdminRole> roleFlux = mongoClient.findMany(AdminRole.class, query, options);
@@ -429,7 +400,7 @@ public class AdminRoleService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return roleId.equals(DaoConstant.ADMIN_ROLE_ROOT_ID)
+        return roleId.equals(ADMIN_ROLE_ROOT_ID)
                 ? Mono.just(getRootRole())
                 : mongoClient.findById(AdminRole.class, roleId)
                 .doOnNext(role -> roles.put(roleId, role));
@@ -470,7 +441,7 @@ public class AdminRoleService {
     }
 
     private void resetRoles() {
-        Long rootId = DaoConstant.ADMIN_ROLE_ROOT_ID;
+        Long rootId = ADMIN_ROLE_ROOT_ID;
         roles.keySet().removeIf(id -> !id.equals(rootId));
         roles.put(rootId, ROOT_ROLE);
     }

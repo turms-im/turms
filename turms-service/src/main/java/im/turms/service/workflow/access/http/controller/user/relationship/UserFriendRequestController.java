@@ -23,11 +23,11 @@ import im.turms.server.common.access.http.dto.response.PaginationDTO;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.access.http.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.http.permission.RequiredPermission;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.service.workflow.access.http.dto.model.UserFriendRequestDTO;
 import im.turms.service.workflow.access.http.dto.request.user.AddFriendRequestDTO;
 import im.turms.service.workflow.access.http.dto.request.user.UpdateFriendRequestDTO;
-import im.turms.service.workflow.access.http.permission.RequiredPermission;
 import im.turms.service.workflow.access.http.util.PageUtil;
 import im.turms.service.workflow.service.impl.user.relationship.UserFriendRequestService;
 import org.springframework.http.ResponseEntity;
@@ -46,10 +46,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
-import static im.turms.service.workflow.access.http.permission.AdminPermission.USER_FRIEND_REQUEST_CREATE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.USER_FRIEND_REQUEST_DELETE;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.USER_FRIEND_REQUEST_QUERY;
-import static im.turms.service.workflow.access.http.permission.AdminPermission.USER_FRIEND_REQUEST_UPDATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.USER_FRIEND_REQUEST_CREATE;
+import static im.turms.server.common.access.http.permission.AdminPermission.USER_FRIEND_REQUEST_DELETE;
+import static im.turms.server.common.access.http.permission.AdminPermission.USER_FRIEND_REQUEST_QUERY;
+import static im.turms.server.common.access.http.permission.AdminPermission.USER_FRIEND_REQUEST_UPDATE;
 
 /**
  * @author James Chen
