@@ -6,9 +6,11 @@ on:
     branches:
       - master
     workflows:
+      # Wait until "Publish turms-admin" is completed
+      # because it's always the slowest workflow
       - "Publish turms-admin"
-      - "Publish turms-gateway"
-      - "Publish turms-service"
+#      - "Publish turms-gateway"
+#      - "Publish turms-service"
     types:
       - completed
 
