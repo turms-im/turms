@@ -19,6 +19,7 @@ package im.turms.server.common.util;
 
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -52,8 +53,10 @@ public final class CollectionUtil {
         return set;
     }
 
-    public static int getSize(Iterable<?> iterable) {
-        if (iterable instanceof Collection<?> collection) {
+    public static int getSize(@Nullable Iterable<?> iterable) {
+        if (iterable == null) {
+            return 0;
+        } else if (iterable instanceof Collection<?> collection) {
             return collection.size();
         } else {
             int size = 0;

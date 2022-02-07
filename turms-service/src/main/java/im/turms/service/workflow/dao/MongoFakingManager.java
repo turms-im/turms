@@ -52,6 +52,7 @@ import im.turms.service.workflow.dao.domain.user.UserRelationship;
 import im.turms.service.workflow.dao.domain.user.UserRelationshipGroup;
 import im.turms.service.workflow.dao.domain.user.UserRelationshipGroupMember;
 import im.turms.service.workflow.dao.domain.user.UserVersion;
+import im.turms.service.workflow.service.impl.message.MessageService;
 import lombok.Getter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -276,6 +277,7 @@ public final class MongoFakingManager {
             targetIds.add(targetId);
             Message privateMessage = new Message(
                     id,
+                    MessageService.getConversationId(senderId, targetId, false),
                     false,
                     false,
                     DateUtils.addHours(now, -i),
@@ -293,6 +295,7 @@ public final class MongoFakingManager {
             id = nextId();
             Message groupMessage = new Message(
                     id,
+                    MessageService.getConversationId(senderId, targetId, false),
                     true,
                     false,
                     now,

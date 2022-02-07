@@ -50,6 +50,7 @@ import im.turms.server.common.mongo.MongoContext;
 import im.turms.server.common.mongo.entity.Index;
 import im.turms.server.common.mongo.entity.MongoEntity;
 import im.turms.server.common.mongo.entity.ShardKey;
+import im.turms.server.common.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.mongo.exception.CorruptedDocumentException;
 import im.turms.server.common.mongo.exception.MongoExceptionTranslator;
 import im.turms.server.common.mongo.model.Tag;
@@ -516,7 +517,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
 
     @Override
     public Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes) {
-        return ensureIndexesAndShard(classes, null);
+        return ensureIndexesAndShard(classes, null, null);
     }
 
     /**
@@ -525,15 +526,23 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
      */
     @Override
     public Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes,
+                                            @Nullable BiPredicate<Class<?>, CompoundIndex> customCompoundIndexFilter,
                                             @Nullable BiPredicate<Class<?>, Field> customIndexFilter) {
         Mono<Void> ensureIndexes = Mono.empty();
         for (Class<?> clazz : classes) {
             MongoEntity<?> entity = context.getEntity(clazz);
             List<Index> indexes = entity.indexes();
             List<IndexModel> indexModels = new ArrayList<>(indexes.size());
-            IndexModel compoundIndex = entity.compoundIndex();
-            if (compoundIndex != null) {
-                indexModels.add(compoundIndex);
+            for (im.turms.server.common.mongo.entity.CompoundIndex compoundIndex : entity.compoundIndexes()) {
+                if (customCompoundIndexFilter == null) {
+                    indexModels.add(compoundIndex.model());
+                } else {
+                    boolean isOptional = compoundIndex.index().ifExist().length > 0
+                            || compoundIndex.index().ifNotExist().length > 0;
+                    if (isOptional && customCompoundIndexFilter.test(clazz, compoundIndex.index())) {
+                        indexModels.add(compoundIndex.model());
+                    }
+                }
             }
             for (Index index : indexes) {
                 if (index.indexed().optional()) {

@@ -28,11 +28,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Repeatable(CompoundIndexes.class)
-public @interface CompoundIndex {
-    String[] value() default {};
-
-    String[] ifExist() default {};
-
-    String[] ifNotExist() default {};
+public @interface CompoundIndexes {
+    CompoundIndex[] value() default {};
 }

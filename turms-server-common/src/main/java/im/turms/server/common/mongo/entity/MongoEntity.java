@@ -17,7 +17,6 @@
 
 package im.turms.server.common.mongo.entity;
 
-import com.mongodb.client.model.IndexModel;
 import org.bson.BsonDocument;
 import org.springframework.data.mapping.PreferredConstructor;
 
@@ -37,7 +36,7 @@ public record MongoEntity<T>(
         // Shard key, zone and index
         ShardKey shardKey,
         Zone zone,
-        IndexModel compoundIndex,
+        List<CompoundIndex> compoundIndexes,
         List<Index> indexes,
         // Field
         String idFieldName,

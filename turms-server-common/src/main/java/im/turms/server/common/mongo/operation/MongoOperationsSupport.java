@@ -24,6 +24,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.mongo.entity.MongoEntity;
+import im.turms.server.common.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.mongo.model.Tag;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
@@ -117,6 +118,7 @@ public interface MongoOperationsSupport {
     Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes);
 
     Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes,
+                                     @Nullable BiPredicate<Class<?>, CompoundIndex> customCompoundIndexFilter,
                                      @Nullable BiPredicate<Class<?>, Field> customIndexFilter);
 
     Mono<Void> addShardToZone(String shardName, String zoneName);

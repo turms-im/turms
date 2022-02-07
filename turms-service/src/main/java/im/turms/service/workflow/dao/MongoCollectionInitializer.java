@@ -31,6 +31,7 @@ import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.entity.MongoEntity;
 import im.turms.server.common.mongo.entity.Zone;
+import im.turms.server.common.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.mongo.model.Tag;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.service.ServiceProperties;
@@ -102,6 +103,8 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     private final TieredStorageProperties messageTieredStorageProperties;
     private final MongoProperties mongoProperties;
 
+    private final boolean useConversationId;
+
     private final Node node;
 
     public MongoCollectionInitializer(
@@ -141,11 +144,11 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 .getMongo()
                 .getMessage()
                 .getTieredStorage();
+        useConversationId = serviceProperties.getMessage().isUseConversationId();
 
         initCollections();
 
-        TieredStorageProperties.AutoRangeUpdaterProperties autoRangeUpdater = serviceProperties.getMongo()
-                .getMessage().getTieredStorage().getAutoRangeUpdater();
+        TieredStorageProperties.AutoRangeUpdaterProperties autoRangeUpdater = messageTieredStorageProperties.getAutoRangeUpdater();
         if (autoRangeUpdater.isEnabled()) {
             taskManager.reschedule("tieredStorageZoneUpdater", autoRangeUpdater.getCron(), () -> {
                 if (isQualifiedToRotateZones()) {
@@ -271,6 +274,16 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         for (TurmsMongoClient client : clients) {
             entityMap.putAll(client, client.getRegisteredEntities());
         }
+        BiPredicate<Class<?>, CompoundIndex> customCompoundIndexFilter = (entityClass, index) -> {
+            if (entityClass == Message.class) {
+                if (index.ifExist().length > 0 && index.ifExist()[0].equals(Message.Fields.CONVERSATION_ID)) {
+                    return useConversationId;
+                } else {
+                    return !useConversationId;
+                }
+            }
+            return true;
+        };
         BiPredicate<String, Object> isCustomIndexEnabled = (fieldName, optionalIndex) -> {
             try {
                 Field field = optionalIndex.getClass().getDeclaredField(fieldName);
@@ -282,7 +295,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 throw new IllegalStateException(message, e);
             }
         };
-        BiPredicate<Class<?>, Field> isIndexEnabled = (entityClass, field) -> {
+        BiPredicate<Class<?>, Field> customIndexFilter = (entityClass, field) -> {
             String fieldName = field.getName();
             // TODO: pattern matching
             if (entityClass == Admin.class) {
@@ -315,7 +328,8 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 .map(entry -> entry.getKey().ensureIndexesAndShard(entry.getValue().stream()
                                 .map(MongoEntity::entityClass)
                                 .collect(Collectors.toList()),
-                        isIndexEnabled))
+                        customCompoundIndexFilter,
+                        customIndexFilter))
                 .toList());
     }
 

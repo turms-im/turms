@@ -15,24 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.mongo.entity.annotation;
+package im.turms.server.common.mongo.entity;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.mongodb.client.model.IndexModel;
 
 /**
  * @author James Chen
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Repeatable(CompoundIndexes.class)
-public @interface CompoundIndex {
-    String[] value() default {};
-
-    String[] ifExist() default {};
-
-    String[] ifNotExist() default {};
+public record CompoundIndex(
+        im.turms.server.common.mongo.entity.annotation.CompoundIndex index,
+        IndexModel model
+) {
 }

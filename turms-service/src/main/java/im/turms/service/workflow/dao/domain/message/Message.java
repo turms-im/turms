@@ -42,7 +42,10 @@ import static im.turms.server.common.mongo.entity.annotation.IndexedReason.EXTEN
  */
 @Data
 @Document(Message.COLLECTION_NAME)
-@CompoundIndex({Message.Fields.DELIVERY_DATE, Message.Fields.TARGET_ID})
+@CompoundIndex(value = {Message.Fields.DELIVERY_DATE, Message.Fields.TARGET_ID},
+        ifNotExist = Message.Fields.CONVERSATION_ID)
+@CompoundIndex(value = {Message.Fields.DELIVERY_DATE, Message.Fields.CONVERSATION_ID},
+        ifExist = Message.Fields.CONVERSATION_ID)
 @Sharded(shardKey = Message.Fields.DELIVERY_DATE)
 @TieredStorage(creationDateFieldName = Message.Fields.DELIVERY_DATE)
 public final class Message {
@@ -57,6 +60,9 @@ public final class Message {
      */
     @Id
     private final Long id;
+
+    @Field(Fields.CONVERSATION_ID)
+    private final byte[] conversationId;
 
     /**
      * Not indexed because it has a low index selectivity
@@ -120,6 +126,7 @@ public final class Message {
     }
 
     public static final class Fields {
+        public static final String CONVERSATION_ID = "cid";
         public static final String IS_GROUP_MESSAGE = "gm";
         public static final String IS_SYSTEM_MESSAGE = "sm";
         public static final String DELIVERY_DATE = "dyd";

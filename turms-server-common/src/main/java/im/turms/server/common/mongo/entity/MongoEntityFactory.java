@@ -105,20 +105,24 @@ public final class MongoEntityFactory {
     /**
      * @implNote The method doesn't the support shard keys that contains a hashed key supported in 4.4
      */
-    private <T> IndexModel parseCompoundIndex(Class<T> clazz) {
-        CompoundIndex index = clazz.getAnnotation(CompoundIndex.class);
-        if (index == null) {
-            return null;
+    private <T> List<im.turms.server.common.mongo.entity.CompoundIndex> parseCompoundIndex(Class<T> clazz) {
+        CompoundIndex[] indexes = clazz.getAnnotationsByType(CompoundIndex.class);
+        if (indexes.length == 0) {
+            return Collections.emptyList();
         }
-        String[] fields = index.value();
-        if (fields.length == 0) {
-            throw new IllegalStateException("CompoundIndex doesn't specify which fields to index for the class " + clazz.getName());
+        List<im.turms.server.common.mongo.entity.CompoundIndex> list = new ArrayList<>(indexes.length);
+        for (CompoundIndex index : indexes) {
+            String[] fields = index.value();
+            if (fields.length == 0) {
+                throw new IllegalStateException("CompoundIndex doesn't specify which fields to index for the class " + clazz.getName());
+            }
+            BsonDocument document = new BsonDocument();
+            for (String key : fields) {
+                document.append(key, BsonPool.BSON_INT32_1);
+            }
+            list.add(new im.turms.server.common.mongo.entity.CompoundIndex(index, new IndexModel(document)));
         }
-        BsonDocument document = new BsonDocument();
-        for (String key : fields) {
-            document.append(key, BsonPool.BSON_INT32_1);
-        }
-        return new IndexModel(document);
+        return list;
     }
 
     /**

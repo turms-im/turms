@@ -43,10 +43,12 @@ import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.TimeType;
+import im.turms.server.common.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.property.env.service.business.message.SequenceIdProperties;
 import im.turms.server.common.redis.TurmsRedisClientManager;
 import im.turms.server.common.task.TrivialTaskManager;
 import im.turms.server.common.util.AssertUtil;
+import im.turms.server.common.util.BitUtil;
 import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.service.bo.ServicePermission;
@@ -121,6 +123,8 @@ public class MessageService {
     private final TurmsPluginManager turmsPluginManager;
     private final boolean pluginEnabled;
 
+    private final boolean useConversationId;
+
     private final boolean useSequenceIdForGroupConversation;
     private final boolean useSequenceIdForPrivateConversation;
 
@@ -133,7 +137,8 @@ public class MessageService {
     @Autowired
     public MessageService(
             TurmsMongoClient messageMongoClient,
-            @Nullable @Autowired(required = false) @Qualifier("sequenceIdRedisClientManager") TurmsRedisClientManager sequenceIdRedisClientManager,
+            @Nullable @Autowired(required = false) @Qualifier("sequenceIdRedisClientManager")
+                    TurmsRedisClientManager sequenceIdRedisClientManager,
 
             Node node,
 
@@ -156,10 +161,13 @@ public class MessageService {
         this.turmsPluginManager = turmsPluginManager;
         TurmsProperties sharedProperties = node.getSharedProperties();
         pluginEnabled = sharedProperties.getPlugin().isEnabled();
-        SequenceIdProperties sequenceIdProperties = sharedProperties.getService().getMessage().getSequenceId();
+
+        MessageProperties messageProperties = sharedProperties.getService().getMessage();
+        useConversationId = messageProperties.isUseConversationId();
+        SequenceIdProperties sequenceIdProperties = messageProperties.getSequenceId();
         useSequenceIdForGroupConversation = sequenceIdProperties.isUseSequenceIdForGroupConversation();
         useSequenceIdForPrivateConversation = sequenceIdProperties.isUseSequenceIdForPrivateConversation();
-        timeType = sharedProperties.getService().getMessage().getTimeType();
+        timeType = messageProperties.getTimeType();
         int relayedMessageCacheMaxSize = turmsPropertiesManager.getLocalProperties().getService().getMessage().getSentMessageCacheMaxSize();
         if (relayedMessageCacheMaxSize > 0 && turmsPropertiesManager.getLocalProperties().getService().getMessage().isMessagePersistent()) {
             this.sentMessageCache = Caffeine
@@ -318,13 +326,31 @@ public class MessageService {
             @Nullable DateRange deletionDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Filter filter = Filter.newBuilder(8)
+        boolean enableConversationId = useConversationId && areGroupMessages != null;
+        Filter filter = Filter.newBuilder(enableConversationId ? 9 : 8)
                 .eqIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
                 .eqIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)
                 .inIfNotNull(Message.Fields.SENDER_ID, senderIds)
                 .inIfNotNull(Message.Fields.TARGET_ID, targetIds)
                 .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, deliveryDateRange)
                 .addBetweenIfNotNull(Message.Fields.DELETION_DATE, deletionDateRange);
+        if (enableConversationId) {
+            int conversationIdSize = CollectionUtil.getSize(senderIds) * CollectionUtil.getSize(targetIds);
+            // fast path
+            if (conversationIdSize == 1) {
+                filter.eq(Message.Fields.CONVERSATION_ID,
+                        getConversationId0(senderIds.iterator().next(), targetIds.iterator().next(), areGroupMessages));
+            } else if (conversationIdSize > 0) {
+                // slow path
+                List<byte[]> conversationIds = new ArrayList<>(conversationIdSize);
+                for (long senderId : senderIds) {
+                    for (long targetId : targetIds) {
+                        conversationIds.add(getConversationId0(senderId, targetId, areGroupMessages));
+                    }
+                }
+                filter.in(Message.Fields.CONVERSATION_ID, conversationIds);
+            }
+        }
         QueryOptions options = QueryOptions.newBuilder(closeToDate ? 3 : 2)
                 .paginateIfNotNull(page, size);
         if (closeToDate) {
@@ -382,10 +408,12 @@ public class MessageService {
         } else if (useSequenceIdForPrivateConversation) {
             sequenceId = fetchSequenceId(false, targetId);
         }
+        byte[] conversationId = getConversationId0(senderId, targetId, isGroupMessage);
         Mono<Message> saveMessage;
         if (sequenceId == null) {
             Message message = new Message(
                     messageId,
+                    conversationId,
                     isGroupMessage,
                     isSystemMessage,
                     deliveryDate,
@@ -411,6 +439,7 @@ public class MessageService {
                     .flatMap(seqId -> {
                         Message message = new Message(
                                 finalMessageId,
+                                conversationId,
                                 isGroupMessage,
                                 isSystemMessage,
                                 finalDeliveryDate,
@@ -904,6 +933,7 @@ public class MessageService {
     private void cacheSentMessage(@NotNull Message message) {
         sentMessageCache.put(message.getId(), new Message(
                 message.getId(),
+                null,
                 message.getIsGroupMessage(),
                 message.getIsSystemMessage(),
                 message.getDeliveryDate(),
@@ -985,6 +1015,49 @@ public class MessageService {
                 .writeBytes(prefix)
                 .writeLong(targetId);
         return redisClientManager.incr(targetId, buffer);
+    }
+
+    // conversation ID
+
+    public static byte[] getConversationId(long id1, long id2, boolean isGroupMessage) {
+        // ID is always positive, meaning that the most significant bit of ID is always 0,
+        // so we can use the bit to distinguish group messages and private messages
+        // in 16 bytes without add a new byte to avoid the collision of conversation ID
+        byte b = (byte) (id2 >> 56);
+        if (isGroupMessage) {
+            b = BitUtil.setBit(b, 7);
+        }
+        return new byte[] {
+                (byte) (id1 >> 56),
+                (byte) (id1 >> 48),
+                (byte) (id1 >> 40),
+                (byte) (id1 >> 32),
+                (byte) (id1 >> 24),
+                (byte) (id1 >> 16),
+                (byte) (id1 >> 8),
+                (byte) id1,
+
+                b,
+                (byte) (id2 >> 48),
+                (byte) (id2 >> 40),
+                (byte) (id2 >> 32),
+                (byte) (id2 >> 24),
+                (byte) (id2 >> 16),
+                (byte) (id2 >> 8),
+                (byte) id2
+        };
+    }
+
+    @Nullable
+    private byte[] getConversationId0(long id1, long id2, boolean isGroupMessage) {
+        if (!useConversationId) {
+            return null;
+        }
+        if (id1 < id2) {
+            return getConversationId(id1, id2, isGroupMessage);
+        } else {
+            return getConversationId(id2, id1, isGroupMessage);
+        }
     }
 
     private static class BuiltinSystemMessageType {

@@ -41,6 +41,10 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 public class MessageProperties {
 
+    @Description("Whether to use conversation ID so that " +
+            "a user can query the messages sent by themselves in a conversation quickly")
+    private boolean useConversationId;
+
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private SequenceIdProperties sequenceId = new SequenceIdProperties();
