@@ -17,11 +17,12 @@
 
 package im.turms.server.common.util;
 
+import im.turms.server.common.constant.TimeZoneConstant;
+
 import javax.annotation.Nullable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 /**
  * @author James Chen
@@ -29,7 +30,7 @@ import java.util.TimeZone;
 public final class DateUtil {
 
     private static final ThreadLocal<Calendar> CALENDAR_THREAD_LOCAL = ThreadLocal
-            .withInitial(() -> new GregorianCalendar(TimeZone.getTimeZone("UTC")));
+            .withInitial(() -> new GregorianCalendar(TimeZoneConstant.ZONE));
     // "1970-01-01 00:00:00.000"
     public static final int DATE_TIME_LENGTH = 23;
 

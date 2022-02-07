@@ -20,7 +20,7 @@ package im.turms.server.common.logging.core.logger;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.logging.core.appender.Appender;
 import im.turms.server.common.logging.core.appender.ConsoleAppender;
-import im.turms.server.common.logging.core.appender.RollingFileAppender;
+import im.turms.server.common.logging.core.appender.file.RollingFileAppender;
 import im.turms.server.common.logging.core.layout.TurmsTemplateLayout;
 import im.turms.server.common.logging.core.model.LogLevel;
 import im.turms.server.common.logging.core.model.LogRecord;

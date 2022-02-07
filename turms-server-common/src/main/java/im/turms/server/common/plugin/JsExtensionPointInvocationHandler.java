@@ -50,15 +50,15 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
             return method.invoke(proxy, args);
         }
         Map<String, Value> functionMap = functions.get(method.getDeclaringClass());
+        Class<?> returnType = method.getReturnType();
         // We only check Mono because we never use Flux
         // for the interfaces of extension points
-        Class<?> returnType = method.getReturnType();
         boolean isAsync = returnType.isAssignableFrom(Mono.class);
         if (functionMap == null) {
             return isAsync ? Mono.empty() : null;
         }
-        Value scriptFunction = functionMap.get(method.getName());
-        if (scriptFunction == null) {
+        Value function = functionMap.get(method.getName());
+        if (function == null) {
             if (isAsync) {
                 // Keep it simple because we have only
                 // the return type of Mono currently
@@ -71,8 +71,8 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
             }
         }
         Value returnValue = args == null
-                ? scriptFunction.execute()
-                : scriptFunction.execute(args);
+                ? function.execute()
+                : function.execute(args);
         return parseReturnValue(isAsync, returnValue);
     }
 

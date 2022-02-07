@@ -17,6 +17,7 @@
 
 package im.turms.server.common;
 
+import im.turms.server.common.constant.TimeZoneConstant;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.util.CollectionUtil;
@@ -34,7 +35,7 @@ public abstract class BaseTurmsApplication {
     static {
         // Hard code these properties to ensure they work as expected
 
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        TimeZone.setDefault(TimeZoneConstant.ZONE);
         // Disable the max direct memory limit and buffer counters of Netty
         // so that we can get the used direct memory via BufferPoolMXBean without depending on ByteBufAllocator of Netty
         System.setProperty("io.netty.maxDirectMemory", "0");

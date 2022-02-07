@@ -15,21 +15,20 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.logging.core.appender;
+package im.turms.server.common.constant;
 
-import im.turms.server.common.logging.core.model.LogLevel;
-
-import java.io.FileDescriptor;
-import java.io.FileOutputStream;
+import java.time.ZoneId;
+import java.util.TimeZone;
 
 /**
  * @author James Chen
  */
-public class ConsoleAppender extends Appender {
+public class TimeZoneConstant {
 
-    public ConsoleAppender(LogLevel level) {
-        super(level);
-        channel = new FileOutputStream(FileDescriptor.out).getChannel();
+    private TimeZoneConstant() {
     }
+
+    public static final ZoneId ZONE_ID = ZoneId.of("UTC");
+    public static final TimeZone ZONE = TimeZone.getTimeZone(ZONE_ID);
 
 }

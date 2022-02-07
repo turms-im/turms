@@ -33,15 +33,12 @@ import java.nio.channels.FileChannel;
 @Data
 public abstract class Appender implements AutoCloseable {
 
-    private final String name;
     private final LogLevel level;
 
-    protected int offset;
     protected FileChannel channel;
 
     @SneakyThrows
-    protected Appender(String name, LogLevel level) {
-        this.name = name;
+    protected Appender(LogLevel level) {
         this.level = level;
     }
 

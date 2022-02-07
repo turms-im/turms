@@ -61,7 +61,6 @@ public abstract class BaseServiceAddressManager {
         TurmsProperties turmsProperties = propertiesManager.getLocalProperties();
         memberBindHost = turmsProperties.getCluster().getConnection().getServer().getHost();
         updateMemberHostIfChanged(turmsProperties);
-
         updateAdminApiAddresses(adminApiServerProperties, getAdminAddressProperties(turmsProperties));
         updateCustomAddresses(adminApiServerProperties, turmsProperties);
         propertiesManager.addListeners(properties -> {

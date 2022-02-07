@@ -15,21 +15,13 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.logging.core.appender;
+package im.turms.server.common.logging.core.appender.file;
 
-import im.turms.server.common.logging.core.model.LogLevel;
-
-import java.io.FileDescriptor;
-import java.io.FileOutputStream;
+import java.nio.file.Path;
+import java.time.ZonedDateTime;
 
 /**
  * @author James Chen
  */
-public class ConsoleAppender extends Appender {
-
-    public ConsoleAppender(LogLevel level) {
-        super(level);
-        channel = new FileOutputStream(FileDescriptor.out).getChannel();
-    }
-
+public record LogFile(Path path, ZonedDateTime dateTime, long index) {
 }
