@@ -33,6 +33,10 @@ export default defineUserConfig<DefaultThemeOptions>({
                 link: '/README.md',
             },
             {
+                text: '社区常见问题',
+                link: '/community/README.md',
+            },
+            {
                 text: '业务功能',
                 collapsible: true,
                 children: [
