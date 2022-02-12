@@ -187,8 +187,9 @@ public class Filter implements Bson {
         BsonValue existingDoc = document.get(creationDateFieldName);
         if (existingDoc instanceof BsonDocument doc) {
             BsonDateTime existingDate = doc.getDateTime("$lt");
-            if (expirationDate.getTime() < existingDate.getValue()) {
-                doc.append("$lt", new BsonDateTime(expirationDate.getTime()));
+            long expirationDateTime = expirationDate.getTime();
+            if (expirationDateTime < existingDate.getValue()) {
+                doc.append("$lt", new BsonDateTime(expirationDateTime));
             }
         } else {
             lt(creationDateFieldName, expirationDate);

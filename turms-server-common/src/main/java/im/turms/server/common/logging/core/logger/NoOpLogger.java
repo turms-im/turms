@@ -100,6 +100,10 @@ public class NoOpLogger implements Logger {
     }
 
     @Override
+    public void error(Throwable throwable) {
+    }
+
+    @Override
     public void error(String message, @Nullable Throwable throwable) {
     }
 

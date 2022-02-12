@@ -26,6 +26,7 @@ public abstract class TurmsExtension {
 
     private ApplicationContext context;
     private boolean started;
+    private boolean running;
 
     protected ApplicationContext getContext() {
         return context;
@@ -35,8 +36,24 @@ public abstract class TurmsExtension {
         this.context = context;
     }
 
+    public boolean isStarted() {
+        return started;
+    }
+
+    void setStarted(boolean started) {
+        this.started = started;
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    void setRunning(boolean running) {
+        this.running = running;
+    }
+
     protected <T> T loadProperties(Class<T> propertiesClass) {
-        return context.getBean(AbstractTurmsPluginManager.class).loadProperties(propertiesClass);
+        return context.getBean(PluginManager.class).loadProperties(propertiesClass);
     }
 
     void start() {
@@ -44,19 +61,44 @@ public abstract class TurmsExtension {
             onStarted();
         }
         started = true;
+        running = true;
     }
 
     void stop() {
         if (started) {
             onStopped();
         }
+        running = false;
         started = false;
+    }
+
+    void resume() {
+        if (!started) {
+            return;
+        }
+        if (!running) {
+            onResumed();
+        }
+        running = true;
+    }
+
+    void pause() {
+        if (running) {
+            onPaused();
+        }
+        running = false;
     }
 
     protected void onStarted() {
     }
 
     protected void onStopped() {
+    }
+
+    protected void onResumed() {
+    }
+
+    protected void onPaused() {
     }
 
 }

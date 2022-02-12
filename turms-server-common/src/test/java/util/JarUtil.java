@@ -37,7 +37,7 @@ import java.util.zip.ZipEntry;
  */
 public final class JarUtil {
 
-    private void JarFile() {
+    private JarUtil() {
     }
 
     @SneakyThrows

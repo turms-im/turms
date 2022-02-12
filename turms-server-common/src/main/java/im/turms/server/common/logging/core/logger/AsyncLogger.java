@@ -157,6 +157,11 @@ public final class AsyncLogger implements Logger {
     }
 
     @Override
+    public void error(Throwable throwable) {
+        doLog(LogLevel.ERROR, null, null, throwable);
+    }
+
+    @Override
     public void error(String message, @Nullable Throwable throwable) {
         doLog(LogLevel.ERROR, message, null, throwable);
     }

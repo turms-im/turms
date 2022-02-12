@@ -30,6 +30,7 @@ import im.turms.server.common.healthcheck.ServerStatusManager;
 import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.plugin.PluginManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
 import im.turms.server.common.service.blocklist.BlocklistService;
@@ -38,7 +39,6 @@ import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.service.logging.ApiLoggingContext;
 import im.turms.service.logging.ClientApiLogging;
-import im.turms.service.plugin.TurmsPluginManager;
 import im.turms.service.plugin.extension.ClientRequestTransformer;
 import im.turms.service.workflow.access.servicerequest.dto.ClientRequest;
 import im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResult;
@@ -56,7 +56,6 @@ import reactor.core.publisher.Mono;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -78,22 +77,22 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     private final BlocklistService blocklistService;
     private final ServerStatusManager serverStatusManager;
     private final OutboundMessageService outboundMessageService;
-    private final TurmsPluginManager turmsPluginManager;
+    private final PluginManager pluginManager;
 
     private final Map<TurmsRequest.KindCase, ClientRequestHandler> router;
-    private final boolean pluginEnabled;
 
     public ServiceRequestDispatcher(ApiLoggingContext apiLoggingContext,
                                     ApplicationContext context,
                                     BlocklistService blocklistService,
                                     ServerStatusManager serverStatusManager,
                                     OutboundMessageService outboundMessageService,
-                                    TurmsPropertiesManager turmsPropertiesManager,
-                                    TurmsPluginManager turmsPluginManager) {
+                                    PluginManager pluginManager,
+                                    TurmsPropertiesManager turmsPropertiesManager) {
         this.apiLoggingContext = apiLoggingContext;
         this.blocklistService = blocklistService;
         this.serverStatusManager = serverStatusManager;
         this.outboundMessageService = outboundMessageService;
+        this.pluginManager = pluginManager;
         Set<TurmsRequest.KindCase> disabledEndpoints =
                 turmsPropertiesManager.getLocalProperties().getService().getClientApi().getDisabledEndpoints();
         router = getMappings((ConfigurableApplicationContext) context, disabledEndpoints);
@@ -102,8 +101,6 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 throw new IllegalStateException("No client request handler for the request type: " + kindCase.name());
             }
         }
-        this.turmsPluginManager = turmsPluginManager;
-        pluginEnabled = turmsPropertiesManager.getLocalProperties().getPlugin().isEnabled();
     }
 
     private Map<TurmsRequest.KindCase, ClientRequestHandler> getMappings(ConfigurableApplicationContext context,
@@ -192,13 +189,12 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 requestBuilder.getRequestId(),
                 requestBuilder,
                 null);
-        Mono<ClientRequest> clientRequestMono = Mono.just(clientRequest);
-        if (pluginEnabled) {
-            for (ClientRequestTransformer transformer : turmsPluginManager.getClientRequestTransformerList()) {
-                clientRequestMono = clientRequestMono
-                        .flatMap(req -> Mono.defer(() -> transformer.transform(req)));
-            }
-        }
+        Mono<ClientRequest> clientRequestMono = pluginManager.invokeExtensionPointsSequentially(
+                        ClientRequestTransformer.class,
+                        "transform",
+                        clientRequest,
+                        (transformer, request) -> request.flatMap(transformer::transform))
+                .defaultIfEmpty(clientRequest);
         return clientRequestMono.flatMap(lastClientRequest -> {
             // 3. Validate ClientRequest
             TurmsRequest lastRequest = lastClientRequest.turmsRequest();
@@ -215,18 +211,11 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The request type is unsupported"));
             }
             // 4. Pass the request to the controller and get a response
-            Mono<RequestHandlerResult> result;
-            List<im.turms.service.plugin.extension.ClientRequestHandler> handlers = turmsPluginManager.getClientRequestHandlerList();
-            if (pluginEnabled && !handlers.isEmpty()) {
-                Mono<RequestHandlerResult> requestResultMono = Mono.empty();
-                for (im.turms.service.plugin.extension.ClientRequestHandler clientRequestHandler : handlers) {
-                    requestResultMono = requestResultMono
-                            .switchIfEmpty(Mono.defer(() -> clientRequestHandler.handle(lastClientRequest)));
-                }
-                result = requestResultMono.switchIfEmpty(Mono.defer(() -> handler.handle(lastClientRequest)));
-            } else {
-                result = handler.handle(lastClientRequest);
-            }
+            Mono<RequestHandlerResult> result =
+                    pluginManager.invokeExtensionPointsSequentially(im.turms.service.plugin.extension.ClientRequestHandler.class,
+                            "handle",
+                            (requestHandler, pre) -> pre.switchIfEmpty(Mono.defer(() -> requestHandler.handle(lastClientRequest))));
+            result = result.switchIfEmpty(Mono.defer(() -> handler.handle(lastClientRequest)));
             // 5. Metrics and transform to ServiceResponse
             return result
                     .name(CLIENT_REQUEST_NAME)

@@ -188,7 +188,7 @@ public abstract class UserSessionDispatcher {
         serviceMediator.setLocalUserDeviceOffline(userId, deviceType, closeReason)
                 .subscribe(null, t -> {
                     try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
-                        LOGGER.error("Caught an exception when setting the local session [{}:{}] offline due to connection error",
+                        LOGGER.error("Caught an error while setting the local session [{}:{}] offline due to connection error",
                                 userId, deviceType, t);
                     }
                 });

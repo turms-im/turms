@@ -56,6 +56,8 @@ public interface Logger {
 
     void warn(String message, Object... args);
 
+    void error(Throwable throwable);
+
     void error(String message, @Nullable Throwable throwable);
 
     void error(String message, Object... args);

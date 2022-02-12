@@ -37,8 +37,6 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
 
-import static im.turms.server.common.mongo.DomainFieldName.ID;
-
 /**
  * @author James Chen
  * @see org.bson.codecs.pojo.PojoCodecImpl

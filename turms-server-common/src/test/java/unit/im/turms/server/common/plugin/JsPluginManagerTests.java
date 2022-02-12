@@ -18,9 +18,13 @@
 package unit.im.turms.server.common.plugin;
 
 import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.plugin.PluginManager;
+import im.turms.server.common.property.TurmsProperties;
+import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.property.env.common.PluginProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
@@ -28,6 +32,7 @@ import reactor.test.StepVerifier;
 
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -95,7 +100,18 @@ class JsPluginManagerTests {
 
     private MyExtensionPointForJs createExtensionPoint() {
         ApplicationContext context = mock(ApplicationContext.class);
-        PluginManager manager = new PluginManager(Path.of("./src/test/resources"), context);
+        TurmsApplicationContext applicationContext = mock(TurmsApplicationContext.class);
+        when(applicationContext.getHome())
+                .thenReturn(Path.of("./src/test/resources"));
+        TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
+        when(propertiesManager.getLocalProperties())
+                .thenReturn(new TurmsProperties().toBuilder()
+                        .plugin(new PluginProperties().toBuilder()
+                                .enabled(true)
+                                .dir(".")
+                                .build())
+                        .build());
+        PluginManager manager = new PluginManager(context, applicationContext, propertiesManager, Collections.emptySet());
         List<MyExtensionPointForJs> list = manager.getExtensionPoints(MyExtensionPointForJs.class);
         assertThat(list).hasSize(1);
         return list.get(0);

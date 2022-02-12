@@ -19,9 +19,13 @@ package unit.im.turms.server.common.plugin;
 
 import im.turms.plugin.MyExtensionPoint;
 import im.turms.server.common.cluster.service.rpc.RpcService;
+import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.plugin.PluginClassLoader;
 import im.turms.server.common.plugin.PluginManager;
 import im.turms.server.common.plugin.TurmsExtension;
+import im.turms.server.common.property.TurmsProperties;
+import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.property.env.common.PluginProperties;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
@@ -29,10 +33,12 @@ import org.springframework.context.ApplicationContext;
 import util.JarUtil;
 
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author James Chen
@@ -117,7 +123,18 @@ class JavaPluginManagerTests {
 
     private MyExtensionPoint getMyExtensionPoint() {
         ApplicationContext context = mock(ApplicationContext.class);
-        PluginManager manager = new PluginManager(JAR_FILE.getParent().toAbsolutePath(), context);
+        TurmsApplicationContext applicationContext = mock(TurmsApplicationContext.class);
+        when(applicationContext.getHome())
+                .thenReturn(JAR_FILE.getParent().toAbsolutePath());
+        TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
+        when(propertiesManager.getLocalProperties())
+                .thenReturn(new TurmsProperties().toBuilder()
+                        .plugin(new PluginProperties().toBuilder()
+                                .enabled(true)
+                                .dir(".")
+                                .build())
+                        .build());
+        PluginManager manager = new PluginManager(context, applicationContext, propertiesManager, Collections.emptySet());
         return manager.getExtensionPoints(MyExtensionPoint.class).get(0);
     }
 

@@ -32,7 +32,7 @@ public class ValueInspector {
     }
 
     public static Value returnIfFunction(Value value) {
-        return value == null || !value.canExecute()
+        return value != null && value.canExecute()
                 ? value
                 : null;
     }

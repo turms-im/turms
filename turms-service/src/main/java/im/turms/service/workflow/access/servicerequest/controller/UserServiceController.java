@@ -37,6 +37,7 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.server.common.service.session.UserStatusService;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.service.util.ProtoModelUtil;
 import im.turms.service.workflow.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.workflow.access.servicerequest.dispatcher.ServiceRequestMapping;
@@ -236,10 +237,10 @@ public class UserServiceController {
                     : Mono.just(Collections.emptySet());
             return queryMemberIds.zipWith(queryRelatedUserIds)
                     .map(results -> {
-                        results.getT1().addAll(results.getT2());
-                        return results.getT1().isEmpty()
+                        Set<Long> recipients = CollectionUtil.add(results.getT1(), results.getT2());
+                        return recipients.isEmpty()
                                 ? RequestHandlerResultFactory.OK
-                                : RequestHandlerResultFactory.get(results.getT1(), clientRequest.turmsRequest());
+                                : RequestHandlerResultFactory.get(recipients, clientRequest.turmsRequest());
                     });
         };
     }

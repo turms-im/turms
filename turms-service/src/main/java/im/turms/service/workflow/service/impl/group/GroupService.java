@@ -40,6 +40,7 @@ import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.DateUtil;
 import im.turms.server.common.util.ThrowableUtil;
 import im.turms.service.bo.ServicePermission;
@@ -907,10 +908,7 @@ public class GroupService {
         return groupIds == null
                 ? joinedGroupIdsMono
                 : joinedGroupIdsMono
-                .map(ids -> {
-                    ids.addAll(groupIds);
-                    return ids;
-                });
+                .map(ids -> CollectionUtil.add(ids, groupIds));
     }
 
 }

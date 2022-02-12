@@ -24,7 +24,7 @@ import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.AdminApiLogging;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
-import im.turms.server.common.plugin.AbstractTurmsPluginManager;
+import im.turms.server.common.plugin.PluginManager;
 import im.turms.server.common.plugin.extension.AdminActionHandler;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
@@ -41,7 +41,6 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,7 +50,7 @@ public class EndpointInvokeInterceptor extends MethodInvokeInterceptor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EndpointInvokeInterceptor.class);
 
-    private final AbstractTurmsPluginManager pluginManager;
+    private final PluginManager pluginManager;
     private final boolean allowDeleteWithoutFilter;
 
     private final TurmsHandlerMethod handlerMethod;
@@ -62,7 +61,7 @@ public class EndpointInvokeInterceptor extends MethodInvokeInterceptor {
     private final String ip;
     private final String action;
 
-    public EndpointInvokeInterceptor(AbstractTurmsPluginManager pluginManager,
+    public EndpointInvokeInterceptor(PluginManager pluginManager,
                                      boolean allowDeleteWithoutFilter,
                                      TurmsHandlerMethod handlerMethod,
                                      String requestId,
@@ -182,25 +181,17 @@ public class EndpointInvokeInterceptor extends MethodInvokeInterceptor {
             MethodParameter parameter = handlerMethod.getMethodParameters()[i];
             params.put(parameter.getParameterName(), arg);
         }
-        List<AdminActionHandler> handlers = pluginManager.getAdminActionHandlerList();
-        boolean triggerHandlers = pluginManager.isEnabled() && !handlers.isEmpty();
-        if (triggerHandlers) {
-            Mono<Void> handleAdminAction = Mono.empty();
-            AdminAction adminAction = new AdminAction(
-                    account,
-                    ip,
-                    new Date(requestTime),
-                    action,
-                    params,
-                    processingTime);
-            for (AdminActionHandler handler : handlers) {
-                handleAdminAction = handleAdminAction
-                        .then(Mono.defer(() -> handler.handleAdminAction(adminAction)));
-            }
-            handleAdminAction
-                    .subscribe(null, t ->
-                            LOGGER.error("Caught an error while triggering the plugins for handleAdminAction()", t));
-        }
+        AdminAction adminAction = new AdminAction(
+                account,
+                ip,
+                new Date(requestTime),
+                action,
+                params,
+                processingTime);
+        pluginManager.invokeExtensionPoints(AdminActionHandler.class,
+                        "handleAdminAction",
+                        handler -> handler.handleAdminAction(adminAction))
+                .subscribe(null, LOGGER::error);
         try (TracingCloseableContext ignored = context.asCloseable()) {
             AdminApiLogging.log(
                     account,

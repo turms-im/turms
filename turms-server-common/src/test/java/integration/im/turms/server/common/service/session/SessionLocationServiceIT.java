@@ -3,7 +3,7 @@ package integration.im.turms.server.common.service.session;
 import im.turms.common.constant.DeviceType;
 import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.plugin.AbstractTurmsPluginManager;
+import im.turms.server.common.plugin.PluginManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.location.LocationProperties;
@@ -66,7 +66,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
                         .build())
                 .build());
 
-        AbstractTurmsPluginManager pluginManager = mock(AbstractTurmsPluginManager.class);
+        PluginManager pluginManager = mock(PluginManager.class);
         when(pluginManager.isEnabled()).thenReturn(false);
 
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);

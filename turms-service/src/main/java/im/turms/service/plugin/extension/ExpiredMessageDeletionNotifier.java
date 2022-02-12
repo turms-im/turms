@@ -15,29 +15,23 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.common;
+package im.turms.service.plugin.extension;
 
-import im.turms.server.common.property.metadata.annotation.Description;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import im.turms.server.common.plugin.ExtensionPoint;
+import im.turms.service.workflow.dao.domain.message.Message;
+import reactor.core.publisher.Mono;
+
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 /**
- * Convention over configuration
+ * The plugin is useful when developers needing to persist messages in other places
+ * while deleting them in the databases for turms servers.
  *
  * @author James Chen
  */
-@AllArgsConstructor
-@Builder(toBuilder = true)
-@Data
-@NoArgsConstructor
-public class PluginProperties {
+public interface ExpiredMessageDeletionNotifier extends ExtensionPoint {
 
-    @Description("Whether to enable plugins")
-    private boolean enabled = true;
-
-    @Description("The relative path of plugins")
-    private String dir = "plugins";
+    Mono<List<Message>> getMessagesToDelete(@NotEmpty List<Message> messages);
 
 }

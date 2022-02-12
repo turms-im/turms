@@ -539,7 +539,11 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 } else {
                     boolean isOptional = compoundIndex.index().ifExist().length > 0
                             || compoundIndex.index().ifNotExist().length > 0;
-                    if (isOptional && customCompoundIndexFilter.test(clazz, compoundIndex.index())) {
+                    if (isOptional) {
+                        if (customCompoundIndexFilter.test(clazz, compoundIndex.index())) {
+                            indexModels.add(compoundIndex.model());
+                        }
+                    } else {
                         indexModels.add(compoundIndex.model());
                     }
                 }

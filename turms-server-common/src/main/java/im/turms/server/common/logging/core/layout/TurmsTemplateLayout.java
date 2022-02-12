@@ -94,7 +94,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
     public ByteBuf format(boolean shouldParse,
                           @Nullable byte[] className,
                           LogLevel level,
-                          CharSequence msg,
+                          @Nullable CharSequence msg,
                           Object[] args,
                           Throwable throwable) {
         int estimatedThrowableLength = 0;
@@ -102,7 +102,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
             int causes = ThrowableUtil.countCauses(throwable);
             estimatedThrowableLength = causes == 0 ? 64 : causes * 1024;
         }
-        int estimatedLength = msg.length() + ESTIMATED_PATTERN_TEXT_LENGTH + estimatedThrowableLength;
+        int estimatedLength = (msg == null ? 0 : msg.length()) + ESTIMATED_PATTERN_TEXT_LENGTH + estimatedThrowableLength;
         if (args != null && shouldParse) {
             estimatedLength += args.length * 8;
         }

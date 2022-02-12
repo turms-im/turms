@@ -15,23 +15,24 @@
  * limitations under the License.
  */
 
-package im.turms.service.plugin.extension;
+package im.turms.service.plugin;
 
 import im.turms.server.common.plugin.ExtensionPoint;
-import im.turms.service.workflow.dao.domain.message.Message;
-import reactor.core.publisher.Mono;
+import im.turms.service.plugin.extension.StorageServiceProvider;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import javax.validation.constraints.NotEmpty;
-import java.util.List;
+import java.util.Set;
 
 /**
- * The plugin is useful when developers needing to persist messages in other places
- * while deleting them in the databases for turms servers.
- *
  * @author James Chen
  */
-public interface ExpiredMessageAutoDeletionNotificationHandler extends ExtensionPoint {
+@Configuration
+public class PluginConfiguration {
 
-    Mono<List<Message>> getMessagesToDelete(@NotEmpty List<Message> messages);
+    @Bean
+    public Set<Class<? extends ExtensionPoint>> singletonExtensionPoints() {
+        return Set.of(StorageServiceProvider.class);
+    }
 
 }

@@ -24,7 +24,6 @@ import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.gateway.manager.HeartbeatManager;
 import im.turms.gateway.manager.UserSessionsManager;
-import im.turms.gateway.plugin.TurmsPluginManager;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.observability.MetricsService;
@@ -38,6 +37,7 @@ import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.plugin.PluginManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
@@ -88,14 +88,13 @@ public class SessionService implements ISessionService {
 
     private final Node node;
     private final TurmsPropertiesManager turmsPropertiesManager;
-    private final TurmsPluginManager turmsPluginManager;
     private final HeartbeatManager heartbeatManager;
+    private final PluginManager pluginManager;
 
     private final SessionLocationService sessionLocationService;
     private final UserStatusService userStatusService;
     private final UserSimultaneousLoginService userSimultaneousLoginService;
 
-    private final boolean pluginEnabled;
     private int closeIdleSessionAfterSeconds;
 
     private final ConcurrentHashMap<Long, UserSessionsManager> sessionsManagerByUserId;
@@ -108,7 +107,7 @@ public class SessionService implements ISessionService {
     public SessionService(
             Node node,
             TurmsPropertiesManager turmsPropertiesManager,
-            TurmsPluginManager turmsPluginManager,
+            PluginManager pluginManager,
             SessionLocationService sessionLocationService,
             UserStatusService userStatusService,
             UserSimultaneousLoginService userSimultaneousLoginService,
@@ -116,13 +115,12 @@ public class SessionService implements ISessionService {
         this.node = node;
         this.sessionLocationService = sessionLocationService;
         this.turmsPropertiesManager = turmsPropertiesManager;
-        this.turmsPluginManager = turmsPluginManager;
+        this.pluginManager = pluginManager;
         this.userStatusService = userStatusService;
         this.userSimultaneousLoginService = userSimultaneousLoginService;
         TurmsProperties turmsProperties = node.getSharedProperties();
         sessionsManagerByUserId = new ConcurrentHashMap<>(4096);
         sessionsByIp = new ConcurrentHashMap<>(4096);
-        pluginEnabled = turmsProperties.getPlugin().isEnabled();
 
         SessionProperties sessionProperties = turmsProperties.getGateway().getSession();
         closeIdleSessionAfterSeconds = sessionProperties.getCloseIdleSessionAfterSeconds();
@@ -155,7 +153,7 @@ public class SessionService implements ISessionService {
         heartbeatManager.destroy();
         CloseReason closeReason = CloseReason.get(SessionCloseStatus.SERVER_CLOSED);
         try {
-            clearAllLocalSessions(new Date(), closeReason)
+            clearAllLocalSessions(closeReason)
                     .block(Duration.ofSeconds(60));
         } catch (Exception e) {
             throw new IllegalStateException("Caught an error while clearing local sessions", e);
@@ -181,8 +179,7 @@ public class SessionService implements ISessionService {
         }
         Mono<Boolean> first = setLocalSessionOfflineByUserIdAndDeviceTypes(iterator.next().getUserId(),
                 DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
-                closeReason,
-                new Date());
+                closeReason);
         // Fast path
         if (!iterator.hasNext()) {
             return first;
@@ -193,13 +190,11 @@ public class SessionService implements ISessionService {
         list.add(first);
         list.add(setLocalSessionOfflineByUserIdAndDeviceTypes(iterator.next().getUserId(),
                 DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
-                closeReason,
-                new Date()));
+                closeReason));
         while (iterator.hasNext()) {
             list.add(setLocalSessionOfflineByUserIdAndDeviceTypes(iterator.next().getUserId(),
                     DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
-                    closeReason,
-                    new Date()));
+                    closeReason));
         }
         return ReactorUtil.atLeastOneTrue(list);
     }
@@ -216,7 +211,7 @@ public class SessionService implements ISessionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, Collections.singleton(deviceType), closeReason, new Date());
+        return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, Collections.singleton(deviceType), closeReason);
     }
 
     /**
@@ -224,10 +219,19 @@ public class SessionService implements ISessionService {
      */
     @Override
     public Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes(
-            Long userId,
-            Set<DeviceType> deviceTypes,
-            CloseReason closeReason) {
-        return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, deviceTypes, closeReason, new Date());
+            @NotNull Long userId,
+            @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
+            @NotNull CloseReason closeReason) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
+        UserSessionsManager manager = getUserSessionsManager(userId);
+        if (manager == null) {
+            return Mono.just(false);
+        }
+        return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, deviceTypes, closeReason, manager);
     }
 
     public Mono<Boolean> authAndSetLocalSessionOfflineByUserIdAndDeviceType(@NotNull Long userId,
@@ -250,23 +254,6 @@ public class SessionService implements ISessionService {
             return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, Collections.singleton(deviceType), closeReason, manager);
         }
         return Mono.just(false);
-    }
-
-    public Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes(
-            @NotNull Long userId,
-            @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
-            @NotNull CloseReason closeReason,
-            @NotNull Date disconnectionDate) {
-        try {
-            AssertUtil.notNull(userId, "userId");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
-        UserSessionsManager manager = getUserSessionsManager(userId);
-        if (manager == null) {
-            return Mono.just(false);
-        }
-        return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, deviceTypes, closeReason, manager);
     }
 
     /**
@@ -304,16 +291,16 @@ public class SessionService implements ISessionService {
                         triggerOnSessionClosedListeners(session);
                         if (sessionLocationService.isLocationEnabled()) {
                             sessionLocationService.removeUserLocation(session.getUserId(), session.getDeviceType())
-                                    .subscribe(null, t -> LOGGER.error("Failed to remove the user [{}:{}] location", session.getUserId(), session.getDeviceType(), t));
+                                    .subscribe(null, t -> LOGGER.error("Failed to remove the user [{}:{}] location",
+                                            session.getUserId(), session.getDeviceType(), t));
                         }
                     }
                     removeSessionsManagerIfEmpty(closeReason, manager, userId);
                 });
     }
 
-    public Mono<Void> clearAllLocalSessions(@NotNull Date disconnectionDate, @NotNull CloseReason closeReason) {
+    public Mono<Void> clearAllLocalSessions(@NotNull CloseReason closeReason) {
         try {
-            AssertUtil.notNull(disconnectionDate, "disconnectionDate");
             AssertUtil.notNull(closeReason, "closeReason");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
@@ -323,7 +310,7 @@ public class SessionService implements ISessionService {
         for (Map.Entry<Long, UserSessionsManager> entry : entries) {
             Long userId = entry.getKey();
             Set<DeviceType> loggedInDeviceTypes = entry.getValue().getLoggedInDeviceTypes();
-            Mono<Boolean> mono = setLocalSessionOfflineByUserIdAndDeviceTypes(userId, loggedInDeviceTypes, closeReason, disconnectionDate)
+            Mono<Boolean> mono = setLocalSessionOfflineByUserIdAndDeviceTypes(userId, loggedInDeviceTypes, closeReason)
                     .onErrorResume(t -> Mono.empty());
             monos.add(mono);
         }
@@ -332,7 +319,7 @@ public class SessionService implements ISessionService {
 
     @Override
     public Mono<Boolean> setLocalUserOffline(Long userId, CloseReason closeReason) {
-        return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeReason, new Date());
+        return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeReason);
     }
 
     public void updateHeartbeatTimestamp(UserSession session) {
@@ -562,15 +549,9 @@ public class SessionService implements ISessionService {
         if (manager.getSessionsNumber() == 0) {
             sessionsManagerByUserId.remove(userId);
         }
-        if (pluginEnabled) {
-            List<UserOnlineStatusChangeHandler> handlerList = turmsPluginManager.getUserOnlineStatusChangeHandlerList();
-            if (!handlerList.isEmpty()) {
-                for (UserOnlineStatusChangeHandler handler : handlerList) {
-                    handler.goOffline(manager, closeReason)
-                            .subscribe(null, t -> LOGGER.error("Caught an error while triggering the plugins for goOffline()", t));
-                }
-            }
-        }
+        pluginManager.invokeExtensionPoints(UserOnlineStatusChangeHandler.class, "goOffline",
+                        handler -> handler.goOffline(manager, closeReason))
+                .subscribe(null, LOGGER::error);
     }
 
     private UserSessionsStatus getSessionStatusFromSharedAndLocalInfo(@NotNull Long userId,

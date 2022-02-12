@@ -309,7 +309,7 @@ public class ConnectionService implements ClusterService {
                 try {
                     sendKeepalive(iterator);
                 } catch (Exception e) {
-                    LOGGER.error("Caught an exception when sending keepalive", e);
+                    LOGGER.error("Caught an error while sending keepalive", e);
                 }
             }
             try {

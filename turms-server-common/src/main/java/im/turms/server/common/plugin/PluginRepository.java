@@ -17,21 +17,32 @@
 
 package im.turms.server.common.plugin;
 
-import com.google.common.collect.ArrayListMultimap;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author James Chen
  */
 public class PluginRepository {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PluginRepository.class);
+
     private final Map<String, Plugin> pluginMap = new HashMap<>(16);
-    private final ArrayListMultimap<Class<? extends ExtensionPoint>, ExtensionPoint> extensionPointMap =
-            ArrayListMultimap.create(8, 2);
+    private final Map<Class<? extends ExtensionPoint>, List<ExtensionPoint>> extensionPointMap = new IdentityHashMap<>(8);
+    private final Set<Class<? extends ExtensionPoint>> singletonExtensionPointClasses;
+
+    public PluginRepository(Set<Class<? extends ExtensionPoint>> singletonExtensionPointClasses) {
+        this.singletonExtensionPointClasses = singletonExtensionPointClasses;
+    }
 
     public void register(Plugin plugin) {
         for (TurmsExtension extension : plugin.extensions()) {
@@ -50,13 +61,42 @@ public class PluginRepository {
                     continue;
                 }
                 Class<? extends ExtensionPoint> clazz = (Class<? extends ExtensionPoint>) interfaceClass;
-                extensionPointMap.put(clazz, extensionPoint);
+                extensionPointMap.compute(clazz, (extensionPointClass, extensionPoints) -> {
+                    if (extensionPoints == null) {
+                        extensionPoints = new ArrayList<>(2);
+                    } else if (singletonExtensionPointClasses.contains(extensionPointClass)) {
+                        String message = "The singleton extension point %s in the plugin %s cannot be registered because an extension point has been registered"
+                                .formatted(extensionPointClass.getName(), plugin.descriptor().getId());
+                        LOGGER.warn(message);
+                        return extensionPoints;
+                    }
+                    extensionPoints.add(extensionPoint);
+                    return extensionPoints;
+                });
             }
         }
     }
 
+    public <T extends ExtensionPoint> boolean hasRunningExtensions(Class<T> clazz) {
+        List<? extends ExtensionPoint> extensionPoints = extensionPointMap.get(clazz);
+        if (extensionPoints == null || extensionPoints.isEmpty()) {
+            return false;
+        }
+        for (ExtensionPoint extensionPoint : extensionPoints) {
+            TurmsExtension extension = (TurmsExtension) extensionPoint;
+            if (extension.isRunning()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public <T extends ExtensionPoint> List<T> getExtensionPoints(Class<T> clazz) {
-        return (List<T>) extensionPointMap.get(clazz);
+        List<T> list = (List<T>) extensionPointMap.get(clazz);
+        if (list == null) {
+            return Collections.emptyList();
+        }
+        return list;
     }
 
     public Collection<Plugin> getPlugins() {

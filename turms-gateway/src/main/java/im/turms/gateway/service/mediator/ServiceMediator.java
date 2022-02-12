@@ -22,7 +22,6 @@ import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.manager.UserSessionsManager;
-import im.turms.gateway.plugin.TurmsPluginManager;
 import im.turms.gateway.plugin.extension.UserAuthenticator;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.gateway.pojo.bo.login.UserLoginInfo;
@@ -37,14 +36,14 @@ import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.lang.ByteArrayWrapper;
+import im.turms.server.common.plugin.PluginManager;
+import im.turms.server.common.plugin.SequentialExtensionPointInvoker;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,7 +58,7 @@ public class ServiceMediator {
     private static final long ADMIN_ID = 0;
 
     private final Node node;
-    private final TurmsPluginManager turmsPluginManager;
+    private final PluginManager pluginManager;
     private final UserService userService;
     private final SessionService sessionService;
     private final UserSimultaneousLoginService userSimultaneousLoginService;
@@ -67,13 +66,13 @@ public class ServiceMediator {
 
     public ServiceMediator(
             Node node,
-            TurmsPluginManager turmsPluginManager,
+            PluginManager pluginManager,
             UserService userService,
             SessionService sessionService,
             UserSimultaneousLoginService userSimultaneousLoginService,
             InboundRequestService inboundRequestService) {
         this.node = node;
-        this.turmsPluginManager = turmsPluginManager;
+        this.pluginManager = pluginManager;
         this.userService = userService;
         this.sessionService = sessionService;
         this.userSimultaneousLoginService = userSimultaneousLoginService;
@@ -149,23 +148,8 @@ public class ServiceMediator {
     // Plugin
 
     public Mono<Void> triggerGoOnlinePlugins(@NotNull UserSessionsManager userSessionsManager, @NotNull UserSession userSession) {
-        boolean enabled = turmsPluginManager.isEnabled();
-        List<UserOnlineStatusChangeHandler> handlers = turmsPluginManager.getUserOnlineStatusChangeHandlerList();
-        if (!enabled) {
-            return Mono.empty();
-        }
-        int size = handlers.size();
-        return switch (size) {
-            case 0 -> Mono.empty();
-            case 1 -> handlers.get(0).goOnline(userSessionsManager, userSession);
-            default -> {
-                List<Mono<Void>> monos = new ArrayList<>(size);
-                for (UserOnlineStatusChangeHandler handler : handlers) {
-                    monos.add(handler.goOnline(userSessionsManager, userSession));
-                }
-                yield Mono.when(monos);
-            }
-        };
+        return pluginManager.invokeExtensionPoints(UserOnlineStatusChangeHandler.class, "goOnline",
+                handler -> handler.goOnline(userSessionsManager, userSession));
     }
 
     // Internal implementation
@@ -189,27 +173,24 @@ public class ServiceMediator {
         if (!enableAuthentication) {
             return Mono.just(TurmsStatusCode.OK);
         }
-        if (turmsPluginManager.isEnabled()) {
-            List<UserAuthenticator> authenticatorList = turmsPluginManager.getUserAuthenticatorList();
-            if (!authenticatorList.isEmpty()) {
-                Mono<Boolean> authenticate = Mono.empty();
-                UserLoginInfo userLoginInfo = new UserLoginInfo(
-                        version,
-                        userId,
-                        password,
-                        deviceType,
-                        deviceDetails,
-                        userStatus,
-                        position,
-                        ip);
-                for (UserAuthenticator authenticator : authenticatorList) {
-                    Mono<Boolean> authenticateMono = authenticator.authenticate(userLoginInfo);
-                    authenticate = authenticate.switchIfEmpty(authenticateMono);
-                }
-                return authenticate
-                        .map(authenticated -> authenticated ? TurmsStatusCode.OK : TurmsStatusCode.LOGIN_AUTHENTICATION_FAILED)
-                        .switchIfEmpty(authenticate0(userId, password));
-            }
+        if (pluginManager.hasRunningExtensions(UserAuthenticator.class)) {
+            UserLoginInfo userLoginInfo = new UserLoginInfo(
+                    version,
+                    userId,
+                    password,
+                    deviceType,
+                    deviceDetails,
+                    userStatus,
+                    position,
+                    ip);
+            Mono<TurmsStatusCode> authenticate = pluginManager.invokeExtensionPointsSequentially(
+                            UserAuthenticator.class,
+                            "authenticate",
+                            (SequentialExtensionPointInvoker<UserAuthenticator, Boolean>)
+                                    (authenticator, pre) -> pre.switchIfEmpty(Mono.defer(() -> authenticator.authenticate(userLoginInfo))))
+                    .map(authenticated -> authenticated ? TurmsStatusCode.OK : TurmsStatusCode.LOGIN_AUTHENTICATION_FAILED);
+            return authenticate
+                    .switchIfEmpty(authenticate0(userId, password));
         }
         return authenticate0(userId, password);
     }

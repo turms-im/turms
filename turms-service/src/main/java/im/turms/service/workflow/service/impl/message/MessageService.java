@@ -40,7 +40,7 @@ import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
-import im.turms.server.common.property.TurmsProperties;
+import im.turms.server.common.plugin.PluginManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.TimeType;
 import im.turms.server.common.property.env.service.business.message.MessageProperties;
@@ -53,8 +53,7 @@ import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.service.bo.ServicePermission;
 import im.turms.service.constant.OperationResultConstant;
-import im.turms.service.plugin.TurmsPluginManager;
-import im.turms.service.plugin.extension.ExpiredMessageAutoDeletionNotificationHandler;
+import im.turms.service.plugin.extension.ExpiredMessageDeletionNotifier;
 import im.turms.service.util.ProtoModelUtil;
 import im.turms.service.workflow.dao.domain.message.Message;
 import im.turms.service.workflow.service.impl.conversation.ConversationService;
@@ -120,8 +119,7 @@ public class MessageService {
     private final OutboundMessageService outboundMessageService;
     private final GroupMemberService groupMemberService;
     private final UserService userService;
-    private final TurmsPluginManager turmsPluginManager;
-    private final boolean pluginEnabled;
+    private final PluginManager pluginManager;
 
     private final boolean useConversationId;
 
@@ -149,7 +147,7 @@ public class MessageService {
             OutboundMessageService outboundMessageService,
             MetricsService metricsService,
 
-            TurmsPluginManager turmsPluginManager,
+            PluginManager pluginManager,
             TrivialTaskManager taskManager) {
         this.mongoClient = messageMongoClient;
         this.redisClientManager = sequenceIdRedisClientManager;
@@ -158,11 +156,9 @@ public class MessageService {
         this.groupMemberService = groupMemberService;
         this.userService = userService;
         this.outboundMessageService = outboundMessageService;
-        this.turmsPluginManager = turmsPluginManager;
-        TurmsProperties sharedProperties = node.getSharedProperties();
-        pluginEnabled = sharedProperties.getPlugin().isEnabled();
+        this.pluginManager = pluginManager;
 
-        MessageProperties messageProperties = sharedProperties.getService().getMessage();
+        MessageProperties messageProperties = node.getSharedProperties().getService().getMessage();
         useConversationId = messageProperties.isUseConversationId();
         SequenceIdProperties sequenceIdProperties = messageProperties.getSequenceId();
         useSequenceIdForGroupConversation = sequenceIdProperties.isUseSequenceIdForGroupConversation();
@@ -495,20 +491,16 @@ public class MessageService {
                         return Mono.empty();
                     }
                     Mono<List<Long>> messageIdsToDeleteMono = Mono.just(expiredMessageIds);
-                    List<ExpiredMessageAutoDeletionNotificationHandler> handlerList =
-                            turmsPluginManager.getExpiredMessageAutoDeletionNotificationHandlerList();
-                    if (pluginEnabled && !handlerList.isEmpty()) {
+                    if (pluginManager.hasRunningExtensions(ExpiredMessageDeletionNotifier.class)) {
                         Filter messagesFilter = Filter.newBuilder(1)
                                 .in(DomainFieldName.ID, expiredMessageIds);
                         messageIdsToDeleteMono = mongoClient.findMany(Message.class, messagesFilter)
                                 .collectList()
-                                .flatMap(messages -> {
-                                    Mono<List<Message>> mono = Mono.just(messages);
-                                    for (ExpiredMessageAutoDeletionNotificationHandler handler : handlerList) {
-                                        mono = mono.flatMap(handler::getMessagesToDelete);
-                                    }
-                                    return mono;
-                                })
+                                .flatMap(messages -> pluginManager.invokeExtensionPointsSequentially(
+                                        ExpiredMessageDeletionNotifier.class,
+                                        "getMessagesToDelete",
+                                        messages,
+                                        (notifier, pre) -> pre.flatMap(notifier::getMessagesToDelete)))
                                 .map(messages -> {
                                     List<Long> messageIds = new ArrayList<>(messages.size());
                                     for (Message message : messages) {
@@ -1022,12 +1014,12 @@ public class MessageService {
     public static byte[] getConversationId(long id1, long id2, boolean isGroupMessage) {
         // ID is always positive, meaning that the most significant bit of ID is always 0,
         // so we can use the bit to distinguish group messages and private messages
-        // in 16 bytes without add a new byte to avoid the collision of conversation ID
+        // in 16 bytes without adding a new byte to avoid the collision of conversation ID
         byte b = (byte) (id2 >> 56);
         if (isGroupMessage) {
             b = BitUtil.setBit(b, 7);
         }
-        return new byte[] {
+        return new byte[]{
                 (byte) (id1 >> 56),
                 (byte) (id1 >> 48),
                 (byte) (id1 >> 40),

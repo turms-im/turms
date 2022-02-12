@@ -21,7 +21,6 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.manager.UserSessionsManager;
-import im.turms.gateway.plugin.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.message.InboundRequestService;
 import im.turms.gateway.service.impl.session.SessionService;
@@ -32,6 +31,7 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.lang.ByteArrayWrapper;
+import im.turms.server.common.plugin.PluginManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.gateway.SessionProperties;
@@ -40,8 +40,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -198,13 +196,9 @@ class ServiceMediatorTests {
         when(node.getSharedProperties())
                 .thenReturn(properties);
 
-        TurmsPluginManager pluginManager = mock(TurmsPluginManager.class);
-        when(pluginManager.isEnabled())
-                .thenReturn(true);
-        when(pluginManager.getUserAuthenticatorList())
-                .thenReturn(Collections.emptyList());
-        when(pluginManager.getUserOnlineStatusChangeHandlerList())
-                .thenReturn(Collections.emptyList());
+        PluginManager pluginManager = mock(PluginManager.class);
+        when(pluginManager.invokeExtensionPoints(any(), any(), any()))
+                .thenReturn(Mono.empty());
 
         UserService userService = mock(UserService.class);
         when(userService.isActiveAndNotDeleted(any()))

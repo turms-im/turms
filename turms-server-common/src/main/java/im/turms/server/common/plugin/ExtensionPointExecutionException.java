@@ -15,30 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.plugin.script;
-
-import im.turms.server.common.plugin.ExtensionPointExecutionException;
-import lombok.Getter;
+package im.turms.server.common.plugin;
 
 /**
  * @author James Chen
  */
-@Getter
-public class ScriptExecutionException extends ExtensionPointExecutionException {
+public class ExtensionPointExecutionException extends RuntimeException {
 
-    private final ScriptExceptionSource source;
-
-    public ScriptExecutionException(String message, Throwable cause, ScriptExceptionSource source) {
+    public ExtensionPointExecutionException(String message, Throwable cause) {
         super(message, cause);
-        this.source = source;
-    }
-
-    public ScriptExecutionException(String message, ScriptExceptionSource source) {
-        this(message, null, source);
-    }
-
-    public ScriptExecutionException(Throwable cause, ScriptExceptionSource source) {
-        this(null, cause, source);
     }
 
 }

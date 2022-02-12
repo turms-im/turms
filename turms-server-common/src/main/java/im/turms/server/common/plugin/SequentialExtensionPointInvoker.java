@@ -15,29 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.common;
+package im.turms.server.common.plugin;
 
-import im.turms.server.common.property.metadata.annotation.Description;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import reactor.core.publisher.Mono;
 
 /**
- * Convention over configuration
- *
  * @author James Chen
  */
-@AllArgsConstructor
-@Builder(toBuilder = true)
-@Data
-@NoArgsConstructor
-public class PluginProperties {
+@FunctionalInterface
+public interface SequentialExtensionPointInvoker<T extends ExtensionPoint, R> {
 
-    @Description("Whether to enable plugins")
-    private boolean enabled = true;
-
-    @Description("The relative path of plugins")
-    private String dir = "plugins";
+    Mono<R> invoke(T currentExtensionPoint, Mono<R> previousReturnValue);
 
 }

@@ -23,7 +23,8 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.plugin.AbstractTurmsPluginManager;
+import im.turms.server.common.plugin.PluginManager;
+import im.turms.server.common.plugin.extension.AdminActionHandler;
 import im.turms.server.common.property.env.common.adminapi.CommonAdminApiProperties;
 import im.turms.server.common.property.env.common.adminapi.LogProperties;
 import im.turms.server.common.service.admin.BaseAdminService;
@@ -68,8 +69,7 @@ public class ControllerFilter implements WebFilter {
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
     private final BaseAdminApiRateLimitingManager adminApiRateLimitingManager;
     private final BaseAdminService adminService;
-    private final AbstractTurmsPluginManager turmsPluginManager;
-    private final boolean pluginEnabled;
+    private final PluginManager pluginManager;
     private final boolean enableAdminApi;
     private final boolean isOpenApiEnabled;
 
@@ -81,14 +81,13 @@ public class ControllerFilter implements WebFilter {
             RequestMappingHandlerMapping requestMappingHandlerMapping,
             BaseAdminApiRateLimitingManager adminApiRateLimitingManager,
             BaseAdminService adminService,
-            AbstractTurmsPluginManager turmsPluginManager,
+            PluginManager pluginManager,
             @Autowired(required = false) SpringDocConfigProperties springDocConfigProperties) {
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
         this.adminApiRateLimitingManager = adminApiRateLimitingManager;
         this.adminService = adminService;
         this.node = node;
-        this.turmsPluginManager = turmsPluginManager;
-        pluginEnabled = node.getSharedProperties().getPlugin().isEnabled();
+        this.pluginManager = pluginManager;
         enableAdminApi = getCommonAdminApiProperties().isEnabled();
         isOpenApiEnabled = springDocConfigProperties != null && springDocConfigProperties.getApiDocs().isEnabled();
     }
@@ -222,9 +221,8 @@ public class ControllerFilter implements WebFilter {
             TurmsHandlerMethod handlerMethod) {
         LogProperties logProperties = getCommonAdminApiProperties().getLog();
         boolean isLogEnabled = logProperties.isEnabled();
-        boolean triggerHandlers = pluginEnabled && !turmsPluginManager.getAdminActionHandlerList().isEmpty();
         TracingContext tracingContext = new TracingContext();
-        if (isLogEnabled || triggerHandlers) {
+        if (isLogEnabled || pluginManager.hasRunningExtensions(AdminActionHandler.class)) {
             long requestTime = System.currentTimeMillis();
             ServerHttpRequest request = exchange.getRequest();
             String action = handlerMethod.getMethod().getName();
@@ -232,7 +230,7 @@ public class ControllerFilter implements WebFilter {
             boolean allowDeleteWithoutFilter = node.getNodeType() == NodeType.SERVICE
                     && node.getSharedProperties().getService().getAdminApi().isAllowDeleteWithoutFilter();
             exchange.getAttributes().put(MethodInvokeInterceptor.ATTRIBUTE_INTERCEPTOR,
-                    new EndpointInvokeInterceptor(turmsPluginManager,
+                    new EndpointInvokeInterceptor(pluginManager,
                             allowDeleteWithoutFilter,
                             handlerMethod,
                             request.getId(),

@@ -2,16 +2,16 @@
 
 ## 插件拓展点列表
 
-| 类别                       | 拓展点                                        | 描述                                                         |
-| -------------------------- | --------------------------------------------- | ------------------------------------------------------------ |
-| 管理员类                   | AdminActionHandler                            | 管理员行为Handler。用于监听管理员的API操作                   |
-| 用户类                     | UserAuthenticator                             | 用户登陆认证。当客户端向turms-gateway请求登录时，turms-gateway会调用该插件以实现自定义的登录认证逻辑。通过该插件，您就不需要（可选）将您业务系统中的用户信息同步到Turms当中了 |
-|                            | UserOnlineStatusChangeHandler                 | 用户在线状态变更Handler。当任意一位用户进入上线或离线状态时，turms-gateway会调用该接口 |
-| 请求类                     | ClientRequestHandler                          | 客户端业务请求处理器。用于修改请求参数（甚至可以转变成其他业务请求）与自定义请求实现。当turms收到客户端业务请求时会调用该Handler。通过该插件，您可以实现敏感词过滤等功能 |
-| 通知与消息类               | NotificationHandler                           | 通知Handler。当由于某行为的发生需要通知给相关用户时，turms-gateway会调用该Handler。常用于集成自定义的第三方推送服务 |
-|                            | ExpiredMessageAutoDeletionNotificationHandler | 过期消息自动删除通知处理器。当Turms自动定期删除过期消息时，Turms服务端会调用该接口，告知该插件实现方所有将要被删除的消息。常用于开发者备份消息 |
-| 服务实现类                 | StorageServiceProvider                        | 存储服务Provider。Turms项目本身没有存储服务的具体实现，仅对外暴露了存储服务相关的接口，供该插件实现。（可参考turms-plugin-minio） |
-| 业务模型生命周期类（TODO） |                                               |                                                              |
+| 类别                       | 拓展点                         | 描述                                                         |
+| -------------------------- | ------------------------------ | ------------------------------------------------------------ |
+| 管理员类                   | AdminActionHandler             | 管理员行为Handler。用于监听管理员的API操作                   |
+| 用户类                     | UserAuthenticator              | 用户登陆认证。当客户端向turms-gateway请求登录时，turms-gateway会调用该插件以实现自定义的登录认证逻辑。通过该插件，您就不需要（可选）将您业务系统中的用户信息同步到Turms当中了 |
+|                            | UserOnlineStatusChangeHandler  | 用户在线状态变更Handler。当任意一位用户进入上线或离线状态时，turms-gateway会调用该接口 |
+| 请求类                     | ClientRequestHandler           | 客户端业务请求处理器。用于修改请求参数（甚至可以转变成其他业务请求）与自定义请求实现。当turms收到客户端业务请求时会调用该Handler。通过该插件，您可以实现敏感词过滤等功能 |
+| 通知与消息类               | NotificationHandler            | 通知Handler。当由于某行为的发生需要通知给相关用户时，turms-gateway会调用该Handler。常用于集成自定义的第三方推送服务 |
+|                            | ExpiredMessageDeletionNotifier | 过期消息自动删除通知处理器。当Turms自动定期删除过期消息时，Turms服务端会调用该接口，告知该插件实现方所有将要被删除的消息。常用于开发者备份消息 |
+| 服务实现类                 | StorageServiceProvider         | 存储服务Provider。Turms项目本身没有存储服务的具体实现，仅对外暴露了存储服务相关的接口，供该插件实现。（可参考turms-plugin-minio） |
+| 业务模型生命周期类（TODO） |                                |                                                              |
 
 ## 插件实现
 
@@ -162,10 +162,10 @@ Turms服务端中的插件实现相对灵活，既允许插件使用独立类环
 
 1. 在您插件项目下，按`Ctrl + F9`来自动编译并打包您的插件JAR包到`<您插件项目根目录>/target`目录下
 
-2. 在`turms-server-common`项目下，把在`src/main/java/im/turms/server/common/plugin/AbstractTurmsPluginManager.java`类内的`getPluginDir`函数实现改成：
+2. 在`turms-server-common`项目下，把`im.turms.server.common.plugin.PluginManager`类内的`getPluginDir`函数实现改成：
 
    ```java
-   private Path getPluginDir(Path home) {
+   private Path getPluginDir(Path home, String pluginsDir) {
        return Path.of("<您插件项目根目录>/target");
    }
    ```

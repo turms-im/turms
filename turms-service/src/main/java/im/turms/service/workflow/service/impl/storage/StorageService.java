@@ -20,8 +20,8 @@ package im.turms.service.workflow.service.impl.storage;
 import im.turms.common.constant.ContentType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.plugin.PluginManager;
 import im.turms.server.common.util.AssertUtil;
-import im.turms.service.plugin.TurmsPluginManager;
 import im.turms.service.plugin.extension.StorageServiceProvider;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -34,10 +34,12 @@ import javax.annotation.Nullable;
 @Service
 public class StorageService {
 
-    private final StorageServiceProvider provider;
+    private static final Mono STORAGE_NOT_IMPLEMENTED = Mono.error(TurmsBusinessException.get(TurmsStatusCode.STORAGE_NOT_IMPLEMENTED));
 
-    public StorageService(TurmsPluginManager turmsPluginManager) {
-        provider = turmsPluginManager.getStorageServiceProvider();
+    private final PluginManager pluginManager;
+
+    public StorageService(PluginManager pluginManager) {
+        this.pluginManager = pluginManager;
     }
 
     public Mono<String> queryPresignedGetUrl(Long requesterId,
@@ -50,14 +52,10 @@ public class StorageService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (provider == null) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.STORAGE_NOT_IMPLEMENTED));
-        }
-        try {
-            return provider.queryPresignedGetUrl(requesterId, contentType, keyStr, keyNum);
-        } catch (Exception e) {
-            return Mono.error(e);
-        }
+        return pluginManager.invokeFirstExtensionPoint(StorageServiceProvider.class,
+                "queryPresignedGetUrl",
+                STORAGE_NOT_IMPLEMENTED,
+                provider -> provider.queryPresignedGetUrl(requesterId, contentType, keyStr, keyNum));
     }
 
     public Mono<String> queryPresignedPutUrl(Long requesterId,
@@ -71,14 +69,10 @@ public class StorageService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (provider == null) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.STORAGE_NOT_IMPLEMENTED));
-        }
-        try {
-            return provider.queryPresignedPutUrl(requesterId, contentType, keyStr, keyNum, contentLength);
-        } catch (Exception e) {
-            return Mono.error(e);
-        }
+        return pluginManager.invokeFirstExtensionPoint(StorageServiceProvider.class,
+                "queryPresignedPutUrl",
+                STORAGE_NOT_IMPLEMENTED,
+                provider -> provider.queryPresignedPutUrl(requesterId, contentType, keyStr, keyNum, contentLength));
     }
 
     public Mono<Void> deleteResource(Long requesterId,
@@ -91,14 +85,10 @@ public class StorageService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (provider == null) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.STORAGE_NOT_IMPLEMENTED));
-        }
-        try {
-            return provider.deleteResource(requesterId, contentType, keyStr, keyNum);
-        } catch (Exception e) {
-            return Mono.error(e);
-        }
+        return pluginManager.invokeFirstExtensionPoint(StorageServiceProvider.class,
+                "deleteResource",
+                STORAGE_NOT_IMPLEMENTED,
+                provider -> provider.deleteResource(requesterId, contentType, keyStr, keyNum));
     }
 
 }

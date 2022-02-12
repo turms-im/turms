@@ -21,15 +21,14 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.logging.ApiLoggingContext;
 import im.turms.gateway.logging.NotificationLogging;
 import im.turms.gateway.manager.UserSessionsManager;
-import im.turms.gateway.plugin.TurmsPluginManager;
 import im.turms.gateway.plugin.extension.NotificationHandler;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.dto.SimpleTurmsNotification;
 import im.turms.gateway.pojo.parser.TurmsNotificationParser;
 import im.turms.gateway.service.impl.session.SessionService;
-import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.plugin.PluginManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.service.IOutboundMessageService;
 import im.turms.server.common.tracing.TracingContext;
@@ -38,12 +37,9 @@ import im.turms.server.common.util.CollectionUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.RefCntAwareByteBuf;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -54,23 +50,20 @@ public class OutboundMessageService implements IOutboundMessageService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OutboundMessageService.class);
 
-    private final Node node;
     private final ApiLoggingContext apiLoggingContext;
     private final SessionService sessionService;
-    private final TurmsPluginManager turmsPluginManager;
+    private final PluginManager pluginManager;
 
     private final boolean isNotificationLoggingEnabled;
 
     public OutboundMessageService(
-            Node node,
             ApiLoggingContext apiLoggingContext,
             SessionService sessionService,
-            TurmsPluginManager turmsPluginManager,
+            PluginManager pluginManager,
             TurmsPropertiesManager turmsPropertiesManager) {
-        this.node = node;
         this.apiLoggingContext = apiLoggingContext;
         this.sessionService = sessionService;
-        this.turmsPluginManager = turmsPluginManager;
+        this.pluginManager = pluginManager;
         isNotificationLoggingEnabled = turmsPropertiesManager
                 .getLocalProperties().getGateway().getNotificationLogging().isEnabled();
     }
@@ -92,8 +85,7 @@ public class OutboundMessageService implements IOutboundMessageService {
         AssertUtil.notEmpty(recipientIds, "recipientIds");
         // Prepare data
         boolean hasForwardedMessageToOneRecipient = false;
-        boolean triggerHandlers = node.getSharedProperties().getPlugin().isEnabled()
-                && !turmsPluginManager.getNotificationHandlerList().isEmpty();
+        boolean triggerHandlers = pluginManager.hasRunningExtensions(NotificationHandler.class);
         Set<Long> offlineRecipientIds = triggerHandlers
                 ? CollectionUtil.newSetWithExpectedSize(Math.max(1, recipientIds.size() / 2))
                 : Collections.emptySet();
@@ -112,7 +104,11 @@ public class OutboundMessageService implements IOutboundMessageService {
         // Send notification
         for (Long recipientId : recipientIds) {
             UserSessionsManager userSessionsManager = sessionService.getUserSessionsManager(recipientId);
-            if (userSessionsManager != null) {
+            if (userSessionsManager == null) {
+                if (triggerHandlers) {
+                    offlineRecipientIds.add(recipientId);
+                }
+            } else {
                 for (UserSession userSession : userSessionsManager.getSessionMap().values()) {
                     wrappedNotificationData.retain();
                     // It's the responsibility of the downstream to decrease the reference count of the notification by 1
@@ -128,10 +124,6 @@ public class OutboundMessageService implements IOutboundMessageService {
                     // Keep the logic easy, and we don't care about whether the notification is really flushed
                     hasForwardedMessageToOneRecipient = true;
                     userSession.getConnection().tryNotifyClientToRecover();
-                }
-            } else {
-                if (triggerHandlers) {
-                    offlineRecipientIds.add(recipientId);
                 }
             }
         }
@@ -157,34 +149,18 @@ public class OutboundMessageService implements IOutboundMessageService {
     private void triggerPlugins(@NotNull ByteBuf notificationData,
                                 @NotNull Set<Long> recipientIds,
                                 @NotNull Set<Long> offlineRecipientIds) {
-        TurmsNotification notification = null;
+        TurmsNotification notification;
         try {
             // Note that "parseFrom" won't block because the buffer is fully read
             notification = TurmsNotification.parseFrom(notificationData.nioBuffer());
         } catch (Exception e) {
             LOGGER.error("Failed to parse TurmsNotification", e);
-        }
-        if (notification == null) {
             return;
         }
-        List<NotificationHandler> handlerList = turmsPluginManager.getNotificationHandlerList();
-        int size = handlerList.size();
-        if (size <= 0) {
-            return;
-        }
-        Mono<Void> resultMono;
-        if (size == 1) {
-            resultMono = handlerList.get(0)
-                    .handle(notification, recipientIds, offlineRecipientIds);
-        } else {
-            List<Mono<Void>> monos = new ArrayList<>(size);
-            for (NotificationHandler handler : handlerList) {
-                monos.add(handler.handle(notification, recipientIds, offlineRecipientIds));
-            }
-            resultMono = Mono.when(monos);
-        }
-        resultMono
-                .subscribe(null, t -> LOGGER.error("Plugins failed to handle", t));
+        pluginManager.invokeExtensionPoints(NotificationHandler.class,
+                        "handle",
+                        currentExtensionPoint -> currentExtensionPoint.handle(notification, recipientIds, offlineRecipientIds))
+                .subscribe(null, LOGGER::error);
     }
 
 }

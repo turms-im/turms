@@ -107,6 +107,11 @@ public class WrappedLogger implements Logger {
     }
 
     @Override
+    public void error(Throwable throwable) {
+        logger.error(throwable);
+    }
+
+    @Override
     public void error(String message, @Nullable Throwable throwable) {
         logger.error(message, throwable);
     }
