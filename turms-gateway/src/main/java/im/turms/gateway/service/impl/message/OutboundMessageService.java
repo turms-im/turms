@@ -159,7 +159,7 @@ public class OutboundMessageService implements IOutboundMessageService {
         }
         pluginManager.invokeExtensionPoints(NotificationHandler.class,
                         "handle",
-                        currentExtensionPoint -> currentExtensionPoint.handle(notification, recipientIds, offlineRecipientIds))
+                        handler -> handler.handle(notification, recipientIds, offlineRecipientIds))
                 .subscribe(null, LOGGER::error);
     }
 

@@ -35,5 +35,9 @@ class MyPlugin extends TurmsExtension {
         turms.log.info('A log from plugin.js');
     }
 
+    testError() {
+        throw new Error('An error from plugin.js');
+    }
+
     // testNotImplemented()
 }

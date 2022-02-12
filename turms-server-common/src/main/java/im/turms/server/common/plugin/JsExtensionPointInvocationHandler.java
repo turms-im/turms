@@ -70,9 +70,21 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
                 throw new ScriptExecutionException(message, ScriptExceptionSource.HOST);
             }
         }
-        Value returnValue = args == null
-                ? function.execute()
-                : function.execute(args);
+        Value returnValue;
+        try {
+            returnValue = args == null
+                    ? function.execute()
+                    : function.execute(args);
+        } catch (Exception e) {
+            String message = "Failed to execute the function \"%s\" in the class %s"
+                    .formatted(method.getName(), method.getDeclaringClass().getName());
+            ScriptExecutionException exception = new ScriptExecutionException(message, e, ScriptExceptionSource.SCRIPT);
+            if (isAsync) {
+                return Mono.error(exception);
+            } else {
+                throw exception;
+            }
+        }
         return parseReturnValue(isAsync, returnValue);
     }
 

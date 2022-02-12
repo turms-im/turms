@@ -22,6 +22,7 @@ import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.plugin.PluginManager;
+import im.turms.server.common.plugin.script.ScriptExecutionException;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.PluginProperties;
@@ -36,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -90,6 +92,15 @@ class JsPluginManagerTests {
         extensionPoint.testLog();
 
         verify(logger, times(0)).info("A log from plugin.js");
+    }
+
+    @Test
+    void testError() {
+        MyExtensionPointForJs extensionPoint = createExtensionPoint();
+        assertThatThrownBy(extensionPoint::testError)
+                .isInstanceOf(ScriptExecutionException.class)
+                .getCause()
+                .hasMessageContaining("An error from plugin.js");
     }
 
     @Test

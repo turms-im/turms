@@ -36,6 +36,8 @@ public interface MyExtensionPointForJs extends ExtensionPoint {
 
     void testLog();
 
+    void testError();
+
     void testNotImplemented();
 
 }

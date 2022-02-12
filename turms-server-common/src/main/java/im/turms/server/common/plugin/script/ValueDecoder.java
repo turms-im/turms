@@ -17,6 +17,7 @@
 
 package im.turms.server.common.plugin.script;
 
+import im.turms.server.common.util.MapUtil;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Value;
 
@@ -74,10 +75,8 @@ public class ValueDecoder {
         } else if (value.isDuration()) {
             return value.asDuration();
         } else if (value.isException()) {
-            return value.throwException();
-        } else if (value.isIterator()) {
-            return value;
-        } else if (value.hasArrayElements()) {
+            return translateException(value);
+        } else if (value.isIterator() || value.hasArrayElements()) {
             Value iterator = value.getIterator();
             List<Object> list = new ArrayList<>((int) value.getArraySize());
             while (iterator.hasIteratorNextElement()) {
@@ -87,7 +86,7 @@ public class ValueDecoder {
             return list;
         } else if (value.hasHashEntries()) {
             Value iterator = value.getHashKeysIterator();
-            Map<Object, Object> map = new HashMap<>();
+            Map<Object, Object> map = new HashMap<>(MapUtil.getCapability((int) value.getHashSize()));
             while (iterator.hasIteratorNextElement()) {
                 Value entry = iterator.getIteratorNextElement();
                 map.put(decode(entry), decode(value.getHashValue(entry)));
@@ -111,12 +110,16 @@ public class ValueDecoder {
             return new ScriptExecutionException(e, source);
         } else if (exception instanceof Throwable t) {
             return new ScriptExecutionException(t, ScriptExceptionSource.HOST);
-        } else {
-            Value errorValue = Value.asValue(exception);
-            if (errorValue.isException()) {
-                return new ScriptExecutionException(errorValue.throwException(), ScriptExceptionSource.SCRIPT);
+        } else if (exception instanceof Value value && value.isException()) {
+            Throwable t;
+            try {
+                t = value.throwException();
+            } catch (Exception e) {
+                t = e;
             }
-            return new ScriptExecutionException(errorValue.toString(), ScriptExceptionSource.SCRIPT);
+            return new ScriptExecutionException(t, ScriptExceptionSource.SCRIPT);
+        } else {
+            return new ScriptExecutionException(exception.toString(), ScriptExceptionSource.SCRIPT);
         }
     }
 

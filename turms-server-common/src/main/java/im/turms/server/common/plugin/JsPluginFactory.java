@@ -112,27 +112,24 @@ public class JsPluginFactory {
             throw new CorruptedScriptException(message);
         }
         Value extensionPointStrings = getExtensionPoints.execute();
-        Map<Class<? extends ExtensionPoint>, Map<String, Value>> functions = new IdentityHashMap<>();
-        List<Class<? extends ExtensionPoint>> extensionPointClasses = parseExtensionPointClasses(
-                extension,
-                extensionPointStrings,
-                functions);
+        ExtensionClassInfo info = parseExtensionClassInfo(extension, extensionPointStrings);
         Object extensionPointProxy = Proxy.newProxyInstance(JsPluginFactory.class.getClassLoader(),
-                extensionPointClasses.toArray(new Class[0]),
-                new JsExtensionPointInvocationHandler(functions));
-        return new JsTurmsExtensionAdaptor(extensionPointProxy, extensionPointClasses, extension);
+                info.extensionPointClasses.toArray(new Class[0]),
+                new JsExtensionPointInvocationHandler(info.functions));
+        return new JsTurmsExtensionAdaptor(extensionPointProxy, info.extensionPointClasses, extension);
     }
 
-    private static List<Class<? extends ExtensionPoint>> parseExtensionPointClasses(Value extension,
-                                                                                    Value extensionPointStrings,
-                                                                                    Map<Class<? extends ExtensionPoint>, Map<String, Value>> functions) {
+    private static ExtensionClassInfo parseExtensionClassInfo(Value extension,
+                                                              Value extensionPointStrings) {
         if (!extensionPointStrings.hasArrayElements()) {
             String message = "The method \"%s\" should return the name of extension points"
                     .formatted(GET_EXTENSION_POINTS);
             throw new CorruptedScriptException(message);
         }
+        int size = (int) extensionPointStrings.getArraySize();
+        Map<Class<? extends ExtensionPoint>, Map<String, Value>> functions = new IdentityHashMap<>(size);
         Value iterator = extensionPointStrings.getIterator();
-        List<Class<? extends ExtensionPoint>> extensionPointClasses = new ArrayList<>((int) extensionPointStrings.getArraySize());
+        List<Class<? extends ExtensionPoint>> extensionPointClasses = new ArrayList<>(size);
         while (iterator.hasIteratorNextElement()) {
             Class<? extends ExtensionPoint> extensionPointClass = parseExtensionPointClass(iterator.getIteratorNextElement());
             Method[] methods = extensionPointClass.getMethods();
@@ -147,7 +144,7 @@ public class JsPluginFactory {
             }
             extensionPointClasses.add(extensionPointClass);
         }
-        return extensionPointClasses;
+        return new ExtensionClassInfo(extensionPointClasses, functions);
     }
 
     private static Class<? extends ExtensionPoint> parseExtensionPointClass(Value classString) {
@@ -164,6 +161,12 @@ public class JsPluginFactory {
                     .formatted(extensionPointClassName);
             throw new CorruptedScriptException(message, e);
         }
+    }
+
+    private static record ExtensionClassInfo(
+            List<Class<? extends ExtensionPoint>> extensionPointClasses,
+            Map<Class<? extends ExtensionPoint>, Map<String, Value>> functions
+    ) {
     }
 
 }
