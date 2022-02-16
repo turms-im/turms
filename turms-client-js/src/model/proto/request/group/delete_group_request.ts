@@ -8,7 +8,9 @@ export interface DeleteGroupRequest {
   groupId: string;
 }
 
-const baseDeleteGroupRequest: object = { groupId: "0" };
+function createBaseDeleteGroupRequest(): DeleteGroupRequest {
+  return { groupId: "0" };
+}
 
 export const DeleteGroupRequest = {
   encode(
@@ -24,7 +26,7 @@ export const DeleteGroupRequest = {
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteGroupRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDeleteGroupRequest } as DeleteGroupRequest;
+    const message = createBaseDeleteGroupRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -135,7 +135,65 @@ export interface TurmsRequest {
   querySignedPutUrlRequest?: QuerySignedPutUrlRequest | undefined;
 }
 
-const baseTurmsRequest: object = {};
+function createBaseTurmsRequest(): TurmsRequest {
+  return {
+    requestId: undefined,
+    createSessionRequest: undefined,
+    deleteSessionRequest: undefined,
+    queryConversationsRequest: undefined,
+    updateConversationRequest: undefined,
+    updateTypingStatusRequest: undefined,
+    createMessageRequest: undefined,
+    queryMessagesRequest: undefined,
+    updateMessageRequest: undefined,
+    createGroupMemberRequest: undefined,
+    deleteGroupMemberRequest: undefined,
+    queryGroupMembersRequest: undefined,
+    updateGroupMemberRequest: undefined,
+    queryUserProfileRequest: undefined,
+    queryNearbyUsersRequest: undefined,
+    queryUserOnlineStatusesRequest: undefined,
+    updateUserLocationRequest: undefined,
+    updateUserOnlineStatusRequest: undefined,
+    updateUserRequest: undefined,
+    createFriendRequestRequest: undefined,
+    createRelationshipGroupRequest: undefined,
+    createRelationshipRequest: undefined,
+    deleteRelationshipGroupRequest: undefined,
+    deleteRelationshipRequest: undefined,
+    queryFriendRequestsRequest: undefined,
+    queryRelatedUserIdsRequest: undefined,
+    queryRelationshipGroupsRequest: undefined,
+    queryRelationshipsRequest: undefined,
+    updateFriendRequestRequest: undefined,
+    updateRelationshipGroupRequest: undefined,
+    updateRelationshipRequest: undefined,
+    createGroupRequest: undefined,
+    deleteGroupRequest: undefined,
+    queryGroupRequest: undefined,
+    queryJoinedGroupIdsRequest: undefined,
+    queryJoinedGroupInfosRequest: undefined,
+    updateGroupRequest: undefined,
+    createGroupBlockedUserRequest: undefined,
+    deleteGroupBlockedUserRequest: undefined,
+    queryGroupBlockedUserIdsRequest: undefined,
+    queryGroupBlockedUserInfosRequest: undefined,
+    checkGroupJoinQuestionsAnswersRequest: undefined,
+    createGroupInvitationRequest: undefined,
+    createGroupJoinRequestRequest: undefined,
+    createGroupJoinQuestionRequest: undefined,
+    deleteGroupInvitationRequest: undefined,
+    deleteGroupJoinRequestRequest: undefined,
+    deleteGroupJoinQuestionRequest: undefined,
+    queryGroupInvitationsRequest: undefined,
+    queryGroupJoinRequestsRequest: undefined,
+    queryGroupJoinQuestionsRequest: undefined,
+    updateGroupJoinQuestionRequest: undefined,
+    deleteResourceRequest: undefined,
+    querySignedGetUrlRequest: undefined,
+    querySignedPutUrlRequest: undefined,
+  };
+}
 
 export const TurmsRequest = {
   encode(
@@ -475,7 +533,7 @@ export const TurmsRequest = {
   decode(input: _m0.Reader | Uint8Array, length?: number): TurmsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseTurmsRequest } as TurmsRequest;
+    const message = createBaseTurmsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

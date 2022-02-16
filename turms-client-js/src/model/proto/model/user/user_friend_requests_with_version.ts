@@ -10,7 +10,9 @@ export interface UserFriendRequestsWithVersion {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseUserFriendRequestsWithVersion: object = {};
+function createBaseUserFriendRequestsWithVersion(): UserFriendRequestsWithVersion {
+  return { userFriendRequests: [], lastUpdatedDate: undefined };
+}
 
 export const UserFriendRequestsWithVersion = {
   encode(
@@ -32,10 +34,7 @@ export const UserFriendRequestsWithVersion = {
   ): UserFriendRequestsWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseUserFriendRequestsWithVersion,
-    } as UserFriendRequestsWithVersion;
-    message.userFriendRequests = [];
+    const message = createBaseUserFriendRequestsWithVersion();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

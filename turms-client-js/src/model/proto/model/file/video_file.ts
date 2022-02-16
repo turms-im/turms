@@ -16,7 +16,9 @@ export interface VideoFile_Description {
   format?: string | undefined;
 }
 
-const baseVideoFile: object = {};
+function createBaseVideoFile(): VideoFile {
+  return { description: undefined, data: undefined };
+}
 
 export const VideoFile = {
   encode(
@@ -38,7 +40,7 @@ export const VideoFile = {
   decode(input: _m0.Reader | Uint8Array, length?: number): VideoFile {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseVideoFile } as VideoFile;
+    const message = createBaseVideoFile();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -60,7 +62,9 @@ export const VideoFile = {
   },
 };
 
-const baseVideoFile_Description: object = { url: "" };
+function createBaseVideoFile_Description(): VideoFile_Description {
+  return { url: "", duration: undefined, size: undefined, format: undefined };
+}
 
 export const VideoFile_Description = {
   encode(
@@ -88,7 +92,7 @@ export const VideoFile_Description = {
   ): VideoFile_Description {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseVideoFile_Description } as VideoFile_Description;
+    const message = createBaseVideoFile_Description();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

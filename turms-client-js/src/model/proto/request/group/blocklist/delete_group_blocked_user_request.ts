@@ -9,7 +9,9 @@ export interface DeleteGroupBlockedUserRequest {
   userId: string;
 }
 
-const baseDeleteGroupBlockedUserRequest: object = { groupId: "0", userId: "0" };
+function createBaseDeleteGroupBlockedUserRequest(): DeleteGroupBlockedUserRequest {
+  return { groupId: "0", userId: "0" };
+}
 
 export const DeleteGroupBlockedUserRequest = {
   encode(
@@ -31,9 +33,7 @@ export const DeleteGroupBlockedUserRequest = {
   ): DeleteGroupBlockedUserRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseDeleteGroupBlockedUserRequest,
-    } as DeleteGroupBlockedUserRequest;
+    const message = createBaseDeleteGroupBlockedUserRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

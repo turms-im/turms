@@ -10,7 +10,13 @@ export interface QueryRelatedUserIdsRequest {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseQueryRelatedUserIdsRequest: object = {};
+function createBaseQueryRelatedUserIdsRequest(): QueryRelatedUserIdsRequest {
+  return {
+    blocked: undefined,
+    groupIndex: undefined,
+    lastUpdatedDate: undefined,
+  };
+}
 
 export const QueryRelatedUserIdsRequest = {
   encode(
@@ -35,9 +41,7 @@ export const QueryRelatedUserIdsRequest = {
   ): QueryRelatedUserIdsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQueryRelatedUserIdsRequest,
-    } as QueryRelatedUserIdsRequest;
+    const message = createBaseQueryRelatedUserIdsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -11,10 +11,14 @@ export interface UpdateGroupJoinQuestionRequest {
   score?: number | undefined;
 }
 
-const baseUpdateGroupJoinQuestionRequest: object = {
-  questionId: "0",
-  answers: "",
-};
+function createBaseUpdateGroupJoinQuestionRequest(): UpdateGroupJoinQuestionRequest {
+  return {
+    questionId: "0",
+    question: undefined,
+    answers: [],
+    score: undefined,
+  };
+}
 
 export const UpdateGroupJoinQuestionRequest = {
   encode(
@@ -42,10 +46,7 @@ export const UpdateGroupJoinQuestionRequest = {
   ): UpdateGroupJoinQuestionRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseUpdateGroupJoinQuestionRequest,
-    } as UpdateGroupJoinQuestionRequest;
-    message.answers = [];
+    const message = createBaseUpdateGroupJoinQuestionRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

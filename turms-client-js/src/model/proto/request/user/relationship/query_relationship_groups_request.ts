@@ -8,7 +8,9 @@ export interface QueryRelationshipGroupsRequest {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseQueryRelationshipGroupsRequest: object = {};
+function createBaseQueryRelationshipGroupsRequest(): QueryRelationshipGroupsRequest {
+  return { lastUpdatedDate: undefined };
+}
 
 export const QueryRelationshipGroupsRequest = {
   encode(
@@ -27,9 +29,7 @@ export const QueryRelationshipGroupsRequest = {
   ): QueryRelationshipGroupsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQueryRelationshipGroupsRequest,
-    } as QueryRelationshipGroupsRequest;
+    const message = createBaseQueryRelationshipGroupsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

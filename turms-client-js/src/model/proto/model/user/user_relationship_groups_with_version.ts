@@ -10,7 +10,9 @@ export interface UserRelationshipGroupsWithVersion {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseUserRelationshipGroupsWithVersion: object = {};
+function createBaseUserRelationshipGroupsWithVersion(): UserRelationshipGroupsWithVersion {
+  return { userRelationshipGroups: [], lastUpdatedDate: undefined };
+}
 
 export const UserRelationshipGroupsWithVersion = {
   encode(
@@ -32,10 +34,7 @@ export const UserRelationshipGroupsWithVersion = {
   ): UserRelationshipGroupsWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseUserRelationshipGroupsWithVersion,
-    } as UserRelationshipGroupsWithVersion;
-    message.userRelationshipGroups = [];
+    const message = createBaseUserRelationshipGroupsWithVersion();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

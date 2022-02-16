@@ -20,7 +20,19 @@ export interface CreateMessageRequest {
   preMessageId?: string | undefined;
 }
 
-const baseCreateMessageRequest: object = {};
+function createBaseCreateMessageRequest(): CreateMessageRequest {
+  return {
+    messageId: undefined,
+    isSystemMessage: undefined,
+    groupId: undefined,
+    recipientId: undefined,
+    deliveryDate: undefined,
+    text: undefined,
+    records: [],
+    burnAfter: undefined,
+    preMessageId: undefined,
+  };
+}
 
 export const CreateMessageRequest = {
   encode(
@@ -63,8 +75,7 @@ export const CreateMessageRequest = {
   ): CreateMessageRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseCreateMessageRequest } as CreateMessageRequest;
-    message.records = [];
+    const message = createBaseCreateMessageRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

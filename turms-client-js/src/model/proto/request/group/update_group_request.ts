@@ -16,7 +16,19 @@ export interface UpdateGroupRequest {
   quitAfterTransfer?: boolean | undefined;
 }
 
-const baseUpdateGroupRequest: object = { groupId: "0" };
+function createBaseUpdateGroupRequest(): UpdateGroupRequest {
+  return {
+    groupId: "0",
+    groupName: undefined,
+    intro: undefined,
+    announcement: undefined,
+    minimumScore: undefined,
+    groupTypeId: undefined,
+    muteEndDate: undefined,
+    successorId: undefined,
+    quitAfterTransfer: undefined,
+  };
+}
 
 export const UpdateGroupRequest = {
   encode(
@@ -56,7 +68,7 @@ export const UpdateGroupRequest = {
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateGroupRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUpdateGroupRequest } as UpdateGroupRequest;
+    const message = createBaseUpdateGroupRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

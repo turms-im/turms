@@ -9,7 +9,9 @@ export interface QueryGroupJoinRequestsRequest {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseQueryGroupJoinRequestsRequest: object = {};
+function createBaseQueryGroupJoinRequestsRequest(): QueryGroupJoinRequestsRequest {
+  return { groupId: undefined, lastUpdatedDate: undefined };
+}
 
 export const QueryGroupJoinRequestsRequest = {
   encode(
@@ -31,9 +33,7 @@ export const QueryGroupJoinRequestsRequest = {
   ): QueryGroupJoinRequestsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQueryGroupJoinRequestsRequest,
-    } as QueryGroupJoinRequestsRequest;
+    const message = createBaseQueryGroupJoinRequestsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

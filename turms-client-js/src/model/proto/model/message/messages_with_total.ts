@@ -12,11 +12,9 @@ export interface MessagesWithTotal {
   messages: Message[];
 }
 
-const baseMessagesWithTotal: object = {
-  total: 0,
-  isGroupMessage: false,
-  fromId: "0",
-};
+function createBaseMessagesWithTotal(): MessagesWithTotal {
+  return { total: 0, isGroupMessage: false, fromId: "0", messages: [] };
+}
 
 export const MessagesWithTotal = {
   encode(
@@ -41,8 +39,7 @@ export const MessagesWithTotal = {
   decode(input: _m0.Reader | Uint8Array, length?: number): MessagesWithTotal {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMessagesWithTotal } as MessagesWithTotal;
-    message.messages = [];
+    const message = createBaseMessagesWithTotal();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

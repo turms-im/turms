@@ -10,7 +10,13 @@ export interface QueryGroupInvitationsRequest {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseQueryGroupInvitationsRequest: object = {};
+function createBaseQueryGroupInvitationsRequest(): QueryGroupInvitationsRequest {
+  return {
+    groupId: undefined,
+    areSentByMe: undefined,
+    lastUpdatedDate: undefined,
+  };
+}
 
 export const QueryGroupInvitationsRequest = {
   encode(
@@ -35,9 +41,7 @@ export const QueryGroupInvitationsRequest = {
   ): QueryGroupInvitationsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQueryGroupInvitationsRequest,
-    } as QueryGroupInvitationsRequest;
+    const message = createBaseQueryGroupInvitationsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

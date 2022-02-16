@@ -8,7 +8,9 @@ export interface DeleteGroupInvitationRequest {
   invitationId: string;
 }
 
-const baseDeleteGroupInvitationRequest: object = { invitationId: "0" };
+function createBaseDeleteGroupInvitationRequest(): DeleteGroupInvitationRequest {
+  return { invitationId: "0" };
+}
 
 export const DeleteGroupInvitationRequest = {
   encode(
@@ -27,9 +29,7 @@ export const DeleteGroupInvitationRequest = {
   ): DeleteGroupInvitationRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseDeleteGroupInvitationRequest,
-    } as DeleteGroupInvitationRequest;
+    const message = createBaseDeleteGroupInvitationRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

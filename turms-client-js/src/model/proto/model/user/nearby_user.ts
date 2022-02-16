@@ -18,7 +18,15 @@ export interface NearbyUser {
   location?: UserLocation | undefined;
 }
 
-const baseNearbyUser: object = { userId: "0" };
+function createBaseNearbyUser(): NearbyUser {
+  return {
+    userId: "0",
+    deviceType: undefined,
+    info: undefined,
+    distance: undefined,
+    location: undefined,
+  };
+}
 
 export const NearbyUser = {
   encode(
@@ -46,7 +54,7 @@ export const NearbyUser = {
   decode(input: _m0.Reader | Uint8Array, length?: number): NearbyUser {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseNearbyUser } as NearbyUser;
+    const message = createBaseNearbyUser();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

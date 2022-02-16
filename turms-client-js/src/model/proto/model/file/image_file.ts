@@ -16,7 +16,9 @@ export interface ImageFile_Description {
   fileSize?: number | undefined;
 }
 
-const baseImageFile: object = {};
+function createBaseImageFile(): ImageFile {
+  return { description: undefined, data: undefined };
+}
 
 export const ImageFile = {
   encode(
@@ -38,7 +40,7 @@ export const ImageFile = {
   decode(input: _m0.Reader | Uint8Array, length?: number): ImageFile {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseImageFile } as ImageFile;
+    const message = createBaseImageFile();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -60,7 +62,14 @@ export const ImageFile = {
   },
 };
 
-const baseImageFile_Description: object = { url: "" };
+function createBaseImageFile_Description(): ImageFile_Description {
+  return {
+    url: "",
+    original: undefined,
+    imageSize: undefined,
+    fileSize: undefined,
+  };
+}
 
 export const ImageFile_Description = {
   encode(
@@ -88,7 +97,7 @@ export const ImageFile_Description = {
   ): ImageFile_Description {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseImageFile_Description } as ImageFile_Description;
+    const message = createBaseImageFile_Description();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

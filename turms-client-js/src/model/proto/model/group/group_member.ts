@@ -18,7 +18,18 @@ export interface GroupMember {
   usingDeviceTypes: DeviceType[];
 }
 
-const baseGroupMember: object = { usingDeviceTypes: 0 };
+function createBaseGroupMember(): GroupMember {
+  return {
+    groupId: undefined,
+    userId: undefined,
+    name: undefined,
+    role: undefined,
+    joinDate: undefined,
+    muteEndDate: undefined,
+    userStatus: undefined,
+    usingDeviceTypes: [],
+  };
+}
 
 export const GroupMember = {
   encode(
@@ -57,8 +68,7 @@ export const GroupMember = {
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupMember {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseGroupMember } as GroupMember;
-    message.usingDeviceTypes = [];
+    const message = createBaseGroupMember();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

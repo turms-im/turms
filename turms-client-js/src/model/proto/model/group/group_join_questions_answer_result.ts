@@ -10,11 +10,9 @@ export interface GroupJoinQuestionsAnswerResult {
   joined: boolean;
 }
 
-const baseGroupJoinQuestionsAnswerResult: object = {
-  score: 0,
-  questionIds: "0",
-  joined: false,
-};
+function createBaseGroupJoinQuestionsAnswerResult(): GroupJoinQuestionsAnswerResult {
+  return { score: 0, questionIds: [], joined: false };
+}
 
 export const GroupJoinQuestionsAnswerResult = {
   encode(
@@ -41,10 +39,7 @@ export const GroupJoinQuestionsAnswerResult = {
   ): GroupJoinQuestionsAnswerResult {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseGroupJoinQuestionsAnswerResult,
-    } as GroupJoinQuestionsAnswerResult;
-    message.questionIds = [];
+    const message = createBaseGroupJoinQuestionsAnswerResult();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -10,7 +10,9 @@ export interface GroupJoinRequestsWithVersion {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseGroupJoinRequestsWithVersion: object = {};
+function createBaseGroupJoinRequestsWithVersion(): GroupJoinRequestsWithVersion {
+  return { groupJoinRequests: [], lastUpdatedDate: undefined };
+}
 
 export const GroupJoinRequestsWithVersion = {
   encode(
@@ -32,10 +34,7 @@ export const GroupJoinRequestsWithVersion = {
   ): GroupJoinRequestsWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseGroupJoinRequestsWithVersion,
-    } as GroupJoinRequestsWithVersion;
-    message.groupJoinRequests = [];
+    const message = createBaseGroupJoinRequestsWithVersion();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

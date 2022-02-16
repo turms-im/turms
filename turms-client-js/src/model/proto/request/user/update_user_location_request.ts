@@ -11,7 +11,9 @@ export interface UpdateUserLocationRequest {
   address?: string | undefined;
 }
 
-const baseUpdateUserLocationRequest: object = { latitude: 0, longitude: 0 };
+function createBaseUpdateUserLocationRequest(): UpdateUserLocationRequest {
+  return { latitude: 0, longitude: 0, name: undefined, address: undefined };
+}
 
 export const UpdateUserLocationRequest = {
   encode(
@@ -39,9 +41,7 @@ export const UpdateUserLocationRequest = {
   ): UpdateUserLocationRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseUpdateUserLocationRequest,
-    } as UpdateUserLocationRequest;
+    const message = createBaseUpdateUserLocationRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

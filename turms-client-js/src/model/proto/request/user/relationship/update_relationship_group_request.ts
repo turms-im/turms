@@ -9,10 +9,9 @@ export interface UpdateRelationshipGroupRequest {
   newName: string;
 }
 
-const baseUpdateRelationshipGroupRequest: object = {
-  groupIndex: 0,
-  newName: "",
-};
+function createBaseUpdateRelationshipGroupRequest(): UpdateRelationshipGroupRequest {
+  return { groupIndex: 0, newName: "" };
+}
 
 export const UpdateRelationshipGroupRequest = {
   encode(
@@ -34,9 +33,7 @@ export const UpdateRelationshipGroupRequest = {
   ): UpdateRelationshipGroupRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseUpdateRelationshipGroupRequest,
-    } as UpdateRelationshipGroupRequest;
+    const message = createBaseUpdateRelationshipGroupRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

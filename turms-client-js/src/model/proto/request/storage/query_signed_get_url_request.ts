@@ -11,7 +11,9 @@ export interface QuerySignedGetUrlRequest {
   keyNum?: string | undefined;
 }
 
-const baseQuerySignedGetUrlRequest: object = { contentType: 0 };
+function createBaseQuerySignedGetUrlRequest(): QuerySignedGetUrlRequest {
+  return { contentType: 0, keyStr: undefined, keyNum: undefined };
+}
 
 export const QuerySignedGetUrlRequest = {
   encode(
@@ -36,9 +38,7 @@ export const QuerySignedGetUrlRequest = {
   ): QuerySignedGetUrlRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQuerySignedGetUrlRequest,
-    } as QuerySignedGetUrlRequest;
+    const message = createBaseQuerySignedGetUrlRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

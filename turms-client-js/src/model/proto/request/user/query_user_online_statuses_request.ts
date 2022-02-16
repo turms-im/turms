@@ -8,7 +8,9 @@ export interface QueryUserOnlineStatusesRequest {
   userIds: string[];
 }
 
-const baseQueryUserOnlineStatusesRequest: object = { userIds: "0" };
+function createBaseQueryUserOnlineStatusesRequest(): QueryUserOnlineStatusesRequest {
+  return { userIds: [] };
+}
 
 export const QueryUserOnlineStatusesRequest = {
   encode(
@@ -29,10 +31,7 @@ export const QueryUserOnlineStatusesRequest = {
   ): QueryUserOnlineStatusesRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQueryUserOnlineStatusesRequest,
-    } as QueryUserOnlineStatusesRequest;
-    message.userIds = [];
+    const message = createBaseQueryUserOnlineStatusesRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

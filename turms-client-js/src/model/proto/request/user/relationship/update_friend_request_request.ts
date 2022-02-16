@@ -11,10 +11,9 @@ export interface UpdateFriendRequestRequest {
   reason?: string | undefined;
 }
 
-const baseUpdateFriendRequestRequest: object = {
-  requestId: "0",
-  responseAction: 0,
-};
+function createBaseUpdateFriendRequestRequest(): UpdateFriendRequestRequest {
+  return { requestId: "0", responseAction: 0, reason: undefined };
+}
 
 export const UpdateFriendRequestRequest = {
   encode(
@@ -39,9 +38,7 @@ export const UpdateFriendRequestRequest = {
   ): UpdateFriendRequestRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseUpdateFriendRequestRequest,
-    } as UpdateFriendRequestRequest;
+    const message = createBaseUpdateFriendRequestRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

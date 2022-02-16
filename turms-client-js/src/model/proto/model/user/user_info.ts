@@ -14,7 +14,16 @@ export interface UserInfo {
   profileAccessStrategy?: ProfileAccessStrategy | undefined;
 }
 
-const baseUserInfo: object = {};
+function createBaseUserInfo(): UserInfo {
+  return {
+    id: undefined,
+    name: undefined,
+    intro: undefined,
+    registrationDate: undefined,
+    active: undefined,
+    profileAccessStrategy: undefined,
+  };
+}
 
 export const UserInfo = {
   encode(
@@ -45,7 +54,7 @@ export const UserInfo = {
   decode(input: _m0.Reader | Uint8Array, length?: number): UserInfo {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUserInfo } as UserInfo;
+    const message = createBaseUserInfo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

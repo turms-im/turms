@@ -1,13 +1,12 @@
 import TurmsClient from '../turms-client';
 import TurmsStatusCode from '../model/turms-status-code';
 import TurmsBusinessError from '../model/turms-business-error';
-// @ts-ignore
 import unfetch from 'unfetch';
 import {ContentType} from '../model/proto/constant/content_type';
 
 export default class StorageService {
 
-    private _turmsClient: TurmsClient;
+    private readonly _turmsClient: TurmsClient;
     private _serverUrl = 'http://localhost:9000';
 
     constructor(turmsClient: TurmsClient, storageServerUrl?: string) {
@@ -48,7 +47,7 @@ export default class StorageService {
 
     public uploadProfilePicture(bytes: Uint8Array): Promise<string> {
         return this.queryProfilePictureUrlForUpload(bytes.length)
-            .then(url => this._upload(url, bytes))
+            .then(url => this._upload(url, bytes));
     }
 
     public deleteProfile(): Promise<void> {
@@ -147,7 +146,7 @@ export default class StorageService {
                         const reader = new FileReader();
                         reader.onload = function (e): void {
                             resolve(new Uint8Array(e.target.result as ArrayBuffer));
-                        }
+                        };
                         reader.readAsArrayBuffer(data);
                     });
             } catch (e) {
@@ -161,7 +160,7 @@ export default class StorageService {
             try {
                 unfetch(url, {method: 'PUT', body: bytes}).then(res => {
                     if (res.status === 200) {
-                        resolve(res.url)
+                        resolve(res.url);
                     } else {
                         reject(res);
                     }

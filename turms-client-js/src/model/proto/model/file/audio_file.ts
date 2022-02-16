@@ -16,7 +16,9 @@ export interface AudioFile_Description {
   format?: string | undefined;
 }
 
-const baseAudioFile: object = {};
+function createBaseAudioFile(): AudioFile {
+  return { description: undefined, data: undefined };
+}
 
 export const AudioFile = {
   encode(
@@ -38,7 +40,7 @@ export const AudioFile = {
   decode(input: _m0.Reader | Uint8Array, length?: number): AudioFile {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseAudioFile } as AudioFile;
+    const message = createBaseAudioFile();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -60,7 +62,9 @@ export const AudioFile = {
   },
 };
 
-const baseAudioFile_Description: object = { url: "" };
+function createBaseAudioFile_Description(): AudioFile_Description {
+  return { url: "", duration: undefined, size: undefined, format: undefined };
+}
 
 export const AudioFile_Description = {
   encode(
@@ -88,7 +92,7 @@ export const AudioFile_Description = {
   ): AudioFile_Description {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseAudioFile_Description } as AudioFile_Description;
+    const message = createBaseAudioFile_Description();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -106,9 +106,9 @@ export default class UserService {
         deviceDetails?: Record<string, string>,
         onlineStatus?: string | UserStatus,
         location?: GeolocationPosition | UserLocation,
-        storePassword?: boolean): Promise<void>
+        storePassword?: boolean): Promise<void>;
 
-    login(options: LoginOptions): Promise<void>
+    login(options: LoginOptions): Promise<void>;
 
     login(
         userIdOrOptions: string | LoginOptions,
@@ -149,7 +149,7 @@ export default class UserService {
             const position = location as GeolocationPosition;
             userInfo.location = new UserLocation(position.coords.longitude, position.coords.latitude);
         }
-        this._storePassword = storePassword
+        this._storePassword = storePassword;
         return new Promise((resolve, reject) => {
             const connect = this._turmsClient.driver.isConnected
                 ? Promise.resolve()
@@ -162,7 +162,7 @@ export default class UserService {
                             userId,
                             password,
                             deviceType: userInfo.deviceType,
-                            deviceDetails: userInfo.deviceDetails,
+                            deviceDetails: userInfo.deviceDetails || {},
                             userStatus: userInfo.onlineStatus,
                             location: userInfo.location
                         }
@@ -281,7 +281,7 @@ export default class UserService {
                 return {
                     userInfo,
                     lastUpdatedDate: NotificationUtil.transformDate(usersInfosWithVersion.lastUpdatedDate)
-                }
+                };
             }
         });
     }
@@ -546,7 +546,7 @@ export default class UserService {
 
     private static _parseDeviceType(deviceType: string | DeviceType): DeviceType {
         if (typeof deviceType === 'string') {
-            deviceType = DeviceType[deviceType] as DeviceType
+            deviceType = DeviceType[deviceType] as DeviceType;
             if (RequestUtil.isFalsy(deviceType)) {
                 throw TurmsBusinessError.from(TurmsStatusCode.ILLEGAL_ARGUMENT, 'illegal DeviceType');
             }

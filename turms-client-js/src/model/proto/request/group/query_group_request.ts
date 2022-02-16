@@ -9,7 +9,9 @@ export interface QueryGroupRequest {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseQueryGroupRequest: object = { groupId: "0" };
+function createBaseQueryGroupRequest(): QueryGroupRequest {
+  return { groupId: "0", lastUpdatedDate: undefined };
+}
 
 export const QueryGroupRequest = {
   encode(
@@ -28,7 +30,7 @@ export const QueryGroupRequest = {
   decode(input: _m0.Reader | Uint8Array, length?: number): QueryGroupRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseQueryGroupRequest } as QueryGroupRequest;
+    const message = createBaseQueryGroupRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

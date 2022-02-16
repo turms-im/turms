@@ -11,10 +11,9 @@ export interface UpdateUserOnlineStatusRequest {
   deviceTypes: DeviceType[];
 }
 
-const baseUpdateUserOnlineStatusRequest: object = {
-  userStatus: 0,
-  deviceTypes: 0,
-};
+function createBaseUpdateUserOnlineStatusRequest(): UpdateUserOnlineStatusRequest {
+  return { userStatus: 0, deviceTypes: [] };
+}
 
 export const UpdateUserOnlineStatusRequest = {
   encode(
@@ -38,10 +37,7 @@ export const UpdateUserOnlineStatusRequest = {
   ): UpdateUserOnlineStatusRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseUpdateUserOnlineStatusRequest,
-    } as UpdateUserOnlineStatusRequest;
-    message.deviceTypes = [];
+    const message = createBaseUpdateUserOnlineStatusRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

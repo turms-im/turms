@@ -9,7 +9,9 @@ export interface CreateGroupBlockedUserRequest {
   userId: string;
 }
 
-const baseCreateGroupBlockedUserRequest: object = { groupId: "0", userId: "0" };
+function createBaseCreateGroupBlockedUserRequest(): CreateGroupBlockedUserRequest {
+  return { groupId: "0", userId: "0" };
+}
 
 export const CreateGroupBlockedUserRequest = {
   encode(
@@ -31,9 +33,7 @@ export const CreateGroupBlockedUserRequest = {
   ): CreateGroupBlockedUserRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseCreateGroupBlockedUserRequest,
-    } as CreateGroupBlockedUserRequest;
+    const message = createBaseCreateGroupBlockedUserRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

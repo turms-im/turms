@@ -12,7 +12,15 @@ export interface UserLocation {
   timestamp?: string | undefined;
 }
 
-const baseUserLocation: object = { latitude: 0, longitude: 0 };
+function createBaseUserLocation(): UserLocation {
+  return {
+    latitude: 0,
+    longitude: 0,
+    name: undefined,
+    address: undefined,
+    timestamp: undefined,
+  };
+}
 
 export const UserLocation = {
   encode(
@@ -40,7 +48,7 @@ export const UserLocation = {
   decode(input: _m0.Reader | Uint8Array, length?: number): UserLocation {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUserLocation } as UserLocation;
+    const message = createBaseUserLocation();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -22,11 +22,17 @@ export interface CreateSessionRequest_DeviceDetailsEntry {
   value: string;
 }
 
-const baseCreateSessionRequest: object = {
-  version: 0,
-  userId: "0",
-  deviceType: 0,
-};
+function createBaseCreateSessionRequest(): CreateSessionRequest {
+  return {
+    version: 0,
+    userId: "0",
+    password: undefined,
+    userStatus: undefined,
+    deviceType: 0,
+    deviceDetails: {},
+    location: undefined,
+  };
+}
 
 export const CreateSessionRequest = {
   encode(
@@ -66,8 +72,7 @@ export const CreateSessionRequest = {
   ): CreateSessionRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseCreateSessionRequest } as CreateSessionRequest;
-    message.deviceDetails = {};
+    const message = createBaseCreateSessionRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -107,10 +112,9 @@ export const CreateSessionRequest = {
   },
 };
 
-const baseCreateSessionRequest_DeviceDetailsEntry: object = {
-  key: "",
-  value: "",
-};
+function createBaseCreateSessionRequest_DeviceDetailsEntry(): CreateSessionRequest_DeviceDetailsEntry {
+  return { key: "", value: "" };
+}
 
 export const CreateSessionRequest_DeviceDetailsEntry = {
   encode(
@@ -132,9 +136,7 @@ export const CreateSessionRequest_DeviceDetailsEntry = {
   ): CreateSessionRequest_DeviceDetailsEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseCreateSessionRequest_DeviceDetailsEntry,
-    } as CreateSessionRequest_DeviceDetailsEntry;
+    const message = createBaseCreateSessionRequest_DeviceDetailsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

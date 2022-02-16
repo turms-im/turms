@@ -10,7 +10,9 @@ export interface GroupMembersWithVersion {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseGroupMembersWithVersion: object = {};
+function createBaseGroupMembersWithVersion(): GroupMembersWithVersion {
+  return { groupMembers: [], lastUpdatedDate: undefined };
+}
 
 export const GroupMembersWithVersion = {
   encode(
@@ -32,10 +34,7 @@ export const GroupMembersWithVersion = {
   ): GroupMembersWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseGroupMembersWithVersion,
-    } as GroupMembersWithVersion;
-    message.groupMembers = [];
+    const message = createBaseGroupMembersWithVersion();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

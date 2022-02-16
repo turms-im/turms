@@ -11,12 +11,9 @@ export interface CreateGroupJoinQuestionRequest {
   score: number;
 }
 
-const baseCreateGroupJoinQuestionRequest: object = {
-  groupId: "0",
-  question: "",
-  answers: "",
-  score: 0,
-};
+function createBaseCreateGroupJoinQuestionRequest(): CreateGroupJoinQuestionRequest {
+  return { groupId: "0", question: "", answers: [], score: 0 };
+}
 
 export const CreateGroupJoinQuestionRequest = {
   encode(
@@ -44,10 +41,7 @@ export const CreateGroupJoinQuestionRequest = {
   ): CreateGroupJoinQuestionRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseCreateGroupJoinQuestionRequest,
-    } as CreateGroupJoinQuestionRequest;
-    message.answers = [];
+    const message = createBaseCreateGroupJoinQuestionRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -5,7 +5,7 @@ import NotificationUtil from '../util/notification-util';
 import MessageAddition from '../model/message/message-addition';
 import TurmsBusinessError from '../model/turms-business-error';
 import BuiltinSystemMessageType from '../model/message/builtin-system-message-type';
-import * as Long from 'long'
+import * as Long from 'long';
 import {UserLocation} from '../model/proto/model/user/user_location';
 import {AudioFile} from '../model/proto/model/file/audio_file';
 import {VideoFile} from '../model/proto/model/file/video_file';
@@ -316,6 +316,6 @@ export default class MessageService {
             senderId: requesterId,
             groupId: request.groupId,
             recipientId: request.recipientId
-        }
+        };
     }
 }

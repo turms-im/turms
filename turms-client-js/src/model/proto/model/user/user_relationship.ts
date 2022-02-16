@@ -12,7 +12,15 @@ export interface UserRelationship {
   establishmentDate?: string | undefined;
 }
 
-const baseUserRelationship: object = {};
+function createBaseUserRelationship(): UserRelationship {
+  return {
+    ownerId: undefined,
+    relatedUserId: undefined,
+    blockDate: undefined,
+    groupIndex: undefined,
+    establishmentDate: undefined,
+  };
+}
 
 export const UserRelationship = {
   encode(
@@ -40,7 +48,7 @@ export const UserRelationship = {
   decode(input: _m0.Reader | Uint8Array, length?: number): UserRelationship {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUserRelationship } as UserRelationship;
+    const message = createBaseUserRelationship();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

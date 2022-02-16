@@ -9,7 +9,9 @@ export interface QueryFriendRequestsRequest {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseQueryFriendRequestsRequest: object = { areSentByMe: false };
+function createBaseQueryFriendRequestsRequest(): QueryFriendRequestsRequest {
+  return { areSentByMe: false, lastUpdatedDate: undefined };
+}
 
 export const QueryFriendRequestsRequest = {
   encode(
@@ -31,9 +33,7 @@ export const QueryFriendRequestsRequest = {
   ): QueryFriendRequestsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQueryFriendRequestsRequest,
-    } as QueryFriendRequestsRequest;
+    const message = createBaseQueryFriendRequestsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

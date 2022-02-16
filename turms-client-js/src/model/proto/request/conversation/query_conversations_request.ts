@@ -11,7 +11,9 @@ export interface QueryConversationsRequest {
   groupIds: string[];
 }
 
-const baseQueryConversationsRequest: object = { targetIds: "0", groupIds: "0" };
+function createBaseQueryConversationsRequest(): QueryConversationsRequest {
+  return { targetIds: [], groupIds: [] };
+}
 
 export const QueryConversationsRequest = {
   encode(
@@ -37,11 +39,7 @@ export const QueryConversationsRequest = {
   ): QueryConversationsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQueryConversationsRequest,
-    } as QueryConversationsRequest;
-    message.targetIds = [];
-    message.groupIds = [];
+    const message = createBaseQueryConversationsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

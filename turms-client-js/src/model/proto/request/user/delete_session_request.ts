@@ -6,7 +6,9 @@ export const protobufPackage = "im.turms.proto";
 
 export interface DeleteSessionRequest {}
 
-const baseDeleteSessionRequest: object = {};
+function createBaseDeleteSessionRequest(): DeleteSessionRequest {
+  return {};
+}
 
 export const DeleteSessionRequest = {
   encode(
@@ -22,7 +24,7 @@ export const DeleteSessionRequest = {
   ): DeleteSessionRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDeleteSessionRequest } as DeleteSessionRequest;
+    const message = createBaseDeleteSessionRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

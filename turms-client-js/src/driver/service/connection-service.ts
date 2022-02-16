@@ -199,12 +199,12 @@ export default class ConnectionService extends BaseService {
 
     // Base methods
 
-    close(): Promise<void> {
+    override close(): Promise<void> {
         return this.disconnect();
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    onDisconnected(): void {
+    override onDisconnected(): void {
+        // do nothing
     }
 
 }

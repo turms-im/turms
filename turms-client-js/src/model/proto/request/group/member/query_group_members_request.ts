@@ -11,7 +11,14 @@ export interface QueryGroupMembersRequest {
   withStatus?: boolean | undefined;
 }
 
-const baseQueryGroupMembersRequest: object = { groupId: "0", memberIds: "0" };
+function createBaseQueryGroupMembersRequest(): QueryGroupMembersRequest {
+  return {
+    groupId: "0",
+    lastUpdatedDate: undefined,
+    memberIds: [],
+    withStatus: undefined,
+  };
+}
 
 export const QueryGroupMembersRequest = {
   encode(
@@ -41,10 +48,7 @@ export const QueryGroupMembersRequest = {
   ): QueryGroupMembersRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQueryGroupMembersRequest,
-    } as QueryGroupMembersRequest;
-    message.memberIds = [];
+    const message = createBaseQueryGroupMembersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -11,7 +11,14 @@ export interface UpdateMessageRequest {
   recallDate?: string | undefined;
 }
 
-const baseUpdateMessageRequest: object = { messageId: "0" };
+function createBaseUpdateMessageRequest(): UpdateMessageRequest {
+  return {
+    messageId: "0",
+    text: undefined,
+    records: [],
+    recallDate: undefined,
+  };
+}
 
 export const UpdateMessageRequest = {
   encode(
@@ -39,8 +46,7 @@ export const UpdateMessageRequest = {
   ): UpdateMessageRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUpdateMessageRequest } as UpdateMessageRequest;
-    message.records = [];
+    const message = createBaseUpdateMessageRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

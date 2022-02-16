@@ -12,11 +12,9 @@ export interface UserStatusDetail {
   usingDeviceTypes: DeviceType[];
 }
 
-const baseUserStatusDetail: object = {
-  userId: "0",
-  userStatus: 0,
-  usingDeviceTypes: 0,
-};
+function createBaseUserStatusDetail(): UserStatusDetail {
+  return { userId: "0", userStatus: 0, usingDeviceTypes: [] };
+}
 
 export const UserStatusDetail = {
   encode(
@@ -40,8 +38,7 @@ export const UserStatusDetail = {
   decode(input: _m0.Reader | Uint8Array, length?: number): UserStatusDetail {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUserStatusDetail } as UserStatusDetail;
-    message.usingDeviceTypes = [];
+    const message = createBaseUserStatusDetail();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

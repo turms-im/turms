@@ -21,7 +21,7 @@ export default class InputFileReader {
 
     static readFile(file: File): Promise<string | Uint8Array> {
         if (!this._reader) {
-            this._reader = new FileReader()
+            this._reader = new FileReader();
         }
         const promise = new Promise<string | Uint8Array>((resolve, reject): void => {
             this._reader.onload = (event): void => {
@@ -33,7 +33,7 @@ export default class InputFileReader {
             };
             this._reader.onerror = (error): void => {
                 reject(error);
-            }
+            };
         });
         this._reader.readAsArrayBuffer(file);
         return promise;

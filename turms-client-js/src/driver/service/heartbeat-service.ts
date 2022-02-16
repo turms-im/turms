@@ -102,12 +102,12 @@ export default class HeartbeatService extends BaseService {
 
     // Base methods
 
-    close(): Promise<void> {
+    override close(): Promise<void> {
         this.onDisconnected();
         return Promise.resolve();
     }
 
-    onDisconnected(): void {
+    override onDisconnected(): void {
         this.stop();
         const error = TurmsBusinessError.from(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
         this._rejectHeartbeatPromises(error);

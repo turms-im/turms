@@ -10,7 +10,9 @@ export interface GroupJoinQuestionsWithVersion {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseGroupJoinQuestionsWithVersion: object = {};
+function createBaseGroupJoinQuestionsWithVersion(): GroupJoinQuestionsWithVersion {
+  return { groupJoinQuestions: [], lastUpdatedDate: undefined };
+}
 
 export const GroupJoinQuestionsWithVersion = {
   encode(
@@ -32,10 +34,7 @@ export const GroupJoinQuestionsWithVersion = {
   ): GroupJoinQuestionsWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseGroupJoinQuestionsWithVersion,
-    } as GroupJoinQuestionsWithVersion;
-    message.groupJoinQuestions = [];
+    const message = createBaseGroupJoinQuestionsWithVersion();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

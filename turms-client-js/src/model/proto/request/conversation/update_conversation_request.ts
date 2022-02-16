@@ -10,7 +10,9 @@ export interface UpdateConversationRequest {
   readDate: string;
 }
 
-const baseUpdateConversationRequest: object = { readDate: "0" };
+function createBaseUpdateConversationRequest(): UpdateConversationRequest {
+  return { targetId: undefined, groupId: undefined, readDate: "0" };
+}
 
 export const UpdateConversationRequest = {
   encode(
@@ -35,9 +37,7 @@ export const UpdateConversationRequest = {
   ): UpdateConversationRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseUpdateConversationRequest,
-    } as UpdateConversationRequest;
+    const message = createBaseUpdateConversationRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

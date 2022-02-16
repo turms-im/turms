@@ -16,7 +16,18 @@ export interface UserFriendRequest {
   recipientId?: string | undefined;
 }
 
-const baseUserFriendRequest: object = {};
+function createBaseUserFriendRequest(): UserFriendRequest {
+  return {
+    id: undefined,
+    creationDate: undefined,
+    content: undefined,
+    requestStatus: undefined,
+    reason: undefined,
+    expirationDate: undefined,
+    requesterId: undefined,
+    recipientId: undefined,
+  };
+}
 
 export const UserFriendRequest = {
   encode(
@@ -53,7 +64,7 @@ export const UserFriendRequest = {
   decode(input: _m0.Reader | Uint8Array, length?: number): UserFriendRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUserFriendRequest } as UserFriendRequest;
+    const message = createBaseUserFriendRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

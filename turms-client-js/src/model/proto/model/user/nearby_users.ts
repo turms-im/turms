@@ -9,7 +9,9 @@ export interface NearbyUsers {
   nearbyUsers: NearbyUser[];
 }
 
-const baseNearbyUsers: object = {};
+function createBaseNearbyUsers(): NearbyUsers {
+  return { nearbyUsers: [] };
+}
 
 export const NearbyUsers = {
   encode(
@@ -25,8 +27,7 @@ export const NearbyUsers = {
   decode(input: _m0.Reader | Uint8Array, length?: number): NearbyUsers {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseNearbyUsers } as NearbyUsers;
-    message.nearbyUsers = [];
+    const message = createBaseNearbyUsers();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

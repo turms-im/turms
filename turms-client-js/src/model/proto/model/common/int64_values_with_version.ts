@@ -9,7 +9,9 @@ export interface Int64ValuesWithVersion {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseInt64ValuesWithVersion: object = { values: "0" };
+function createBaseInt64ValuesWithVersion(): Int64ValuesWithVersion {
+  return { values: [], lastUpdatedDate: undefined };
+}
 
 export const Int64ValuesWithVersion = {
   encode(
@@ -33,8 +35,7 @@ export const Int64ValuesWithVersion = {
   ): Int64ValuesWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseInt64ValuesWithVersion } as Int64ValuesWithVersion;
-    message.values = [];
+    const message = createBaseInt64ValuesWithVersion();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

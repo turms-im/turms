@@ -12,7 +12,15 @@ export interface GroupJoinQuestion {
   score?: number | undefined;
 }
 
-const baseGroupJoinQuestion: object = { answers: "" };
+function createBaseGroupJoinQuestion(): GroupJoinQuestion {
+  return {
+    id: undefined,
+    groupId: undefined,
+    question: undefined,
+    answers: [],
+    score: undefined,
+  };
+}
 
 export const GroupJoinQuestion = {
   encode(
@@ -40,8 +48,7 @@ export const GroupJoinQuestion = {
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupJoinQuestion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseGroupJoinQuestion } as GroupJoinQuestion;
-    message.answers = [];
+    const message = createBaseGroupJoinQuestion();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

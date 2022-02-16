@@ -9,7 +9,9 @@ export interface QueryGroupBlockedUserInfosRequest {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseQueryGroupBlockedUserInfosRequest: object = { groupId: "0" };
+function createBaseQueryGroupBlockedUserInfosRequest(): QueryGroupBlockedUserInfosRequest {
+  return { groupId: "0", lastUpdatedDate: undefined };
+}
 
 export const QueryGroupBlockedUserInfosRequest = {
   encode(
@@ -31,9 +33,7 @@ export const QueryGroupBlockedUserInfosRequest = {
   ): QueryGroupBlockedUserInfosRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQueryGroupBlockedUserInfosRequest,
-    } as QueryGroupBlockedUserInfosRequest;
+    const message = createBaseQueryGroupBlockedUserInfosRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

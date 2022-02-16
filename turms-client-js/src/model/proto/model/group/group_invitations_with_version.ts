@@ -10,7 +10,9 @@ export interface GroupInvitationsWithVersion {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseGroupInvitationsWithVersion: object = {};
+function createBaseGroupInvitationsWithVersion(): GroupInvitationsWithVersion {
+  return { groupInvitations: [], lastUpdatedDate: undefined };
+}
 
 export const GroupInvitationsWithVersion = {
   encode(
@@ -32,10 +34,7 @@ export const GroupInvitationsWithVersion = {
   ): GroupInvitationsWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseGroupInvitationsWithVersion,
-    } as GroupInvitationsWithVersion;
-    message.groupInvitations = [];
+    const message = createBaseGroupInvitationsWithVersion();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -11,7 +11,14 @@ export interface UpdateRelationshipRequest {
   deleteGroupIndex?: number | undefined;
 }
 
-const baseUpdateRelationshipRequest: object = { userId: "0" };
+function createBaseUpdateRelationshipRequest(): UpdateRelationshipRequest {
+  return {
+    userId: "0",
+    blocked: undefined,
+    newGroupIndex: undefined,
+    deleteGroupIndex: undefined,
+  };
+}
 
 export const UpdateRelationshipRequest = {
   encode(
@@ -39,9 +46,7 @@ export const UpdateRelationshipRequest = {
   ): UpdateRelationshipRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseUpdateRelationshipRequest,
-    } as UpdateRelationshipRequest;
+    const message = createBaseUpdateRelationshipRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

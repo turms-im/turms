@@ -17,7 +17,20 @@ export interface Group {
   active?: boolean | undefined;
 }
 
-const baseGroup: object = {};
+function createBaseGroup(): Group {
+  return {
+    id: undefined,
+    typeId: undefined,
+    creatorId: undefined,
+    ownerId: undefined,
+    name: undefined,
+    intro: undefined,
+    announcement: undefined,
+    creationDate: undefined,
+    muteEndDate: undefined,
+    active: undefined,
+  };
+}
 
 export const Group = {
   encode(message: Group, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
@@ -57,7 +70,7 @@ export const Group = {
   decode(input: _m0.Reader | Uint8Array, length?: number): Group {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseGroup } as Group;
+    const message = createBaseGroup();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -27,9 +27,9 @@ export default class TurmsDriver {
 
     private readonly _stateStore: StateStore;
 
-    private _connectionService: ConnectionService;
-    private _heartbeatService: HeartbeatService;
-    private _messageService: MessageService;
+    private readonly _connectionService: ConnectionService;
+    private readonly _heartbeatService: HeartbeatService;
+    private readonly _messageService: MessageService;
 
     constructor(wsUrl?: string,
                 connectTimeout?: number,
@@ -52,7 +52,7 @@ export default class TurmsDriver {
     initConnectionService(wsUrl?: string, connectTimeout?: number): ConnectionService {
         const connectionService = new ConnectionService(this._stateStore, wsUrl, connectTimeout);
         connectionService.addOnDisconnectedListener(() => this._onConnectionDisconnected());
-        connectionService.addMessageListener(message => this._onMessage(message))
+        connectionService.addMessageListener(message => this._onMessage(message));
         return connectionService;
     }
 
@@ -64,7 +64,7 @@ export default class TurmsDriver {
                 if (!totalServices) {
                     resolve();
                 }
-            }
+            };
             this._connectionService.close().finally(() => tryResolve());
             this._heartbeatService.close().finally(() => tryResolve());
             this._messageService.close().finally(() => tryResolve());

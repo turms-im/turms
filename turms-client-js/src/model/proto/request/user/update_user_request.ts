@@ -12,7 +12,14 @@ export interface UpdateUserRequest {
   profileAccessStrategy?: ProfileAccessStrategy | undefined;
 }
 
-const baseUpdateUserRequest: object = {};
+function createBaseUpdateUserRequest(): UpdateUserRequest {
+  return {
+    password: undefined,
+    name: undefined,
+    intro: undefined,
+    profileAccessStrategy: undefined,
+  };
+}
 
 export const UpdateUserRequest = {
   encode(
@@ -37,7 +44,7 @@ export const UpdateUserRequest = {
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateUserRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUpdateUserRequest } as UpdateUserRequest;
+    const message = createBaseUpdateUserRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

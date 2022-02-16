@@ -11,7 +11,14 @@ export interface QueryRelationshipsRequest {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseQueryRelationshipsRequest: object = { userIds: "0" };
+function createBaseQueryRelationshipsRequest(): QueryRelationshipsRequest {
+  return {
+    userIds: [],
+    blocked: undefined,
+    groupIndex: undefined,
+    lastUpdatedDate: undefined,
+  };
+}
 
 export const QueryRelationshipsRequest = {
   encode(
@@ -41,10 +48,7 @@ export const QueryRelationshipsRequest = {
   ): QueryRelationshipsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQueryRelationshipsRequest,
-    } as QueryRelationshipsRequest;
-    message.userIds = [];
+    const message = createBaseQueryRelationshipsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

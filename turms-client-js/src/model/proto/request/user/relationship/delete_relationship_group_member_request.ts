@@ -10,10 +10,9 @@ export interface DeleteRelationshipGroupMemberRequest {
   targetGroupIndex?: number | undefined;
 }
 
-const baseDeleteRelationshipGroupMemberRequest: object = {
-  userId: "0",
-  groupIndex: 0,
-};
+function createBaseDeleteRelationshipGroupMemberRequest(): DeleteRelationshipGroupMemberRequest {
+  return { userId: "0", groupIndex: 0, targetGroupIndex: undefined };
+}
 
 export const DeleteRelationshipGroupMemberRequest = {
   encode(
@@ -38,9 +37,7 @@ export const DeleteRelationshipGroupMemberRequest = {
   ): DeleteRelationshipGroupMemberRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseDeleteRelationshipGroupMemberRequest,
-    } as DeleteRelationshipGroupMemberRequest;
+    const message = createBaseDeleteRelationshipGroupMemberRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

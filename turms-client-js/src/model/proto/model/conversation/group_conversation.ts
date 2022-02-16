@@ -14,7 +14,9 @@ export interface GroupConversation_MemberIdAndReadDateEntry {
   value: string;
 }
 
-const baseGroupConversation: object = { groupId: "0" };
+function createBaseGroupConversation(): GroupConversation {
+  return { groupId: "0", memberIdAndReadDate: {} };
+}
 
 export const GroupConversation = {
   encode(
@@ -36,8 +38,7 @@ export const GroupConversation = {
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupConversation {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseGroupConversation } as GroupConversation;
-    message.memberIdAndReadDate = {};
+    const message = createBaseGroupConversation();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -62,10 +63,9 @@ export const GroupConversation = {
   },
 };
 
-const baseGroupConversation_MemberIdAndReadDateEntry: object = {
-  key: "0",
-  value: "0",
-};
+function createBaseGroupConversation_MemberIdAndReadDateEntry(): GroupConversation_MemberIdAndReadDateEntry {
+  return { key: "0", value: "0" };
+}
 
 export const GroupConversation_MemberIdAndReadDateEntry = {
   encode(
@@ -87,9 +87,7 @@ export const GroupConversation_MemberIdAndReadDateEntry = {
   ): GroupConversation_MemberIdAndReadDateEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseGroupConversation_MemberIdAndReadDateEntry,
-    } as GroupConversation_MemberIdAndReadDateEntry;
+    const message = createBaseGroupConversation_MemberIdAndReadDateEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

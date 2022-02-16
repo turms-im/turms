@@ -9,7 +9,9 @@ export interface UsersOnlineStatuses {
   userStatuses: UserStatusDetail[];
 }
 
-const baseUsersOnlineStatuses: object = {};
+function createBaseUsersOnlineStatuses(): UsersOnlineStatuses {
+  return { userStatuses: [] };
+}
 
 export const UsersOnlineStatuses = {
   encode(
@@ -25,8 +27,7 @@ export const UsersOnlineStatuses = {
   decode(input: _m0.Reader | Uint8Array, length?: number): UsersOnlineStatuses {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUsersOnlineStatuses } as UsersOnlineStatuses;
-    message.userStatuses = [];
+    const message = createBaseUsersOnlineStatuses();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -15,7 +15,18 @@ export interface QueryMessagesRequest {
   withTotal: boolean;
 }
 
-const baseQueryMessagesRequest: object = { ids: "0", withTotal: false };
+function createBaseQueryMessagesRequest(): QueryMessagesRequest {
+  return {
+    ids: [],
+    size: undefined,
+    areGroupMessages: undefined,
+    areSystemMessages: undefined,
+    fromId: undefined,
+    deliveryDateAfter: undefined,
+    deliveryDateBefore: undefined,
+    withTotal: false,
+  };
+}
 
 export const QueryMessagesRequest = {
   encode(
@@ -57,8 +68,7 @@ export const QueryMessagesRequest = {
   ): QueryMessagesRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseQueryMessagesRequest } as QueryMessagesRequest;
-    message.ids = [];
+    const message = createBaseQueryMessagesRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

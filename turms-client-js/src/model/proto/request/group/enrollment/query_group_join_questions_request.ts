@@ -10,10 +10,9 @@ export interface QueryGroupJoinQuestionsRequest {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseQueryGroupJoinQuestionsRequest: object = {
-  groupId: "0",
-  withAnswers: false,
-};
+function createBaseQueryGroupJoinQuestionsRequest(): QueryGroupJoinQuestionsRequest {
+  return { groupId: "0", withAnswers: false, lastUpdatedDate: undefined };
+}
 
 export const QueryGroupJoinQuestionsRequest = {
   encode(
@@ -38,9 +37,7 @@ export const QueryGroupJoinQuestionsRequest = {
   ): QueryGroupJoinQuestionsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQueryGroupJoinQuestionsRequest,
-    } as QueryGroupJoinQuestionsRequest;
+    const message = createBaseQueryGroupJoinQuestionsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

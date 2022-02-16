@@ -16,7 +16,18 @@ export interface GroupInvitation {
   inviteeId?: string | undefined;
 }
 
-const baseGroupInvitation: object = {};
+function createBaseGroupInvitation(): GroupInvitation {
+  return {
+    id: undefined,
+    creationDate: undefined,
+    content: undefined,
+    status: undefined,
+    expirationDate: undefined,
+    groupId: undefined,
+    inviterId: undefined,
+    inviteeId: undefined,
+  };
+}
 
 export const GroupInvitation = {
   encode(
@@ -53,7 +64,7 @@ export const GroupInvitation = {
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupInvitation {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseGroupInvitation } as GroupInvitation;
+    const message = createBaseGroupInvitation();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

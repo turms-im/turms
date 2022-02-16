@@ -19,8 +19,9 @@ module.exports = {
     ],
     "rules": {
         "@typescript-eslint/ban-ts-ignore": "off",
-        "@typescript-eslint/no-namespace": "off",
         "@typescript-eslint/explicit-function-return-type": "error",
+        "@typescript-eslint/no-namespace": "off",
+        "@typescript-eslint/semi": ["error"],
         "no-trailing-spaces": "error",
         "quotes": ["error", "single"]
     },

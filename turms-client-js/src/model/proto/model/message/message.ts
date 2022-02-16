@@ -18,7 +18,21 @@ export interface Message {
   preMessageId?: string | undefined;
 }
 
-const baseMessage: object = {};
+function createBaseMessage(): Message {
+  return {
+    id: undefined,
+    deliveryDate: undefined,
+    modificationDate: undefined,
+    text: undefined,
+    senderId: undefined,
+    groupId: undefined,
+    isSystemMessage: undefined,
+    recipientId: undefined,
+    records: [],
+    sequenceId: undefined,
+    preMessageId: undefined,
+  };
+}
 
 export const Message = {
   encode(
@@ -64,8 +78,7 @@ export const Message = {
   decode(input: _m0.Reader | Uint8Array, length?: number): Message {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMessage } as Message;
-    message.records = [];
+    const message = createBaseMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

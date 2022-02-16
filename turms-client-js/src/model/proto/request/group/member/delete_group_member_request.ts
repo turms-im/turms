@@ -11,7 +11,14 @@ export interface DeleteGroupMemberRequest {
   quitAfterTransfer?: boolean | undefined;
 }
 
-const baseDeleteGroupMemberRequest: object = { groupId: "0", memberId: "0" };
+function createBaseDeleteGroupMemberRequest(): DeleteGroupMemberRequest {
+  return {
+    groupId: "0",
+    memberId: "0",
+    successorId: undefined,
+    quitAfterTransfer: undefined,
+  };
+}
 
 export const DeleteGroupMemberRequest = {
   encode(
@@ -39,9 +46,7 @@ export const DeleteGroupMemberRequest = {
   ): DeleteGroupMemberRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseDeleteGroupMemberRequest,
-    } as DeleteGroupMemberRequest;
+    const message = createBaseDeleteGroupMemberRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

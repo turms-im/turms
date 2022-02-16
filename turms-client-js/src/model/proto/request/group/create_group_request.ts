@@ -13,7 +13,16 @@ export interface CreateGroupRequest {
   muteEndDate?: string | undefined;
 }
 
-const baseCreateGroupRequest: object = { name: "" };
+function createBaseCreateGroupRequest(): CreateGroupRequest {
+  return {
+    name: "",
+    intro: undefined,
+    announcement: undefined,
+    minimumScore: undefined,
+    groupTypeId: undefined,
+    muteEndDate: undefined,
+  };
+}
 
 export const CreateGroupRequest = {
   encode(
@@ -44,7 +53,7 @@ export const CreateGroupRequest = {
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateGroupRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseCreateGroupRequest } as CreateGroupRequest;
+    const message = createBaseCreateGroupRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

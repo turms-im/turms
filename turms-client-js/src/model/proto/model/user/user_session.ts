@@ -9,7 +9,9 @@ export interface UserSession {
   serverId: string;
 }
 
-const baseUserSession: object = { sessionId: "", serverId: "" };
+function createBaseUserSession(): UserSession {
+  return { sessionId: "", serverId: "" };
+}
 
 export const UserSession = {
   encode(
@@ -28,7 +30,7 @@ export const UserSession = {
   decode(input: _m0.Reader | Uint8Array, length?: number): UserSession {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUserSession } as UserSession;
+    const message = createBaseUserSession();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

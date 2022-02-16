@@ -9,7 +9,9 @@ export interface CreateGroupJoinRequestRequest {
   content: string;
 }
 
-const baseCreateGroupJoinRequestRequest: object = { groupId: "0", content: "" };
+function createBaseCreateGroupJoinRequestRequest(): CreateGroupJoinRequestRequest {
+  return { groupId: "0", content: "" };
+}
 
 export const CreateGroupJoinRequestRequest = {
   encode(
@@ -31,9 +33,7 @@ export const CreateGroupJoinRequestRequest = {
   ): CreateGroupJoinRequestRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseCreateGroupJoinRequestRequest,
-    } as CreateGroupJoinRequestRequest;
+    const message = createBaseCreateGroupJoinRequestRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

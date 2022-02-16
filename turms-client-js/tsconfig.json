@@ -1,34 +1,37 @@
 // https://www.typescriptlang.org/tsconfig
 {
   "compilerOptions": {
-    // project options
+    // type checking
+    "noImplicitAny": false,
+    "noImplicitOverride": true,
+    "strict": true,
+    "strictNullChecks": false,
+
+    // modules
+    "module": "ES2015",
+    "moduleResolution": "Node",
+
+    // emit
     "declaration": true,
+    "declarationDir": "dist",
     "declarationMap": true,
+    // Do not set to "CommonJS", or rollup won't be able to tree-shake
+    "outDir": "dist",
+    "removeComments": true,
+    "sourceMap": true,
+
+    // interop constraints
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+
+    // language and environment
     "lib": [
       "dom",
       "ES2018"
     ],
-    // Avoid setting to "CommonJS", or rollup won't be able to tree-shake
-    "module": "ES2015",
-    "outDir": "dist",
-    "removeComments": true,
-    "sourceMap": true,
     "target": "es5",
 
-    // strict checks
-    "strict": true,
-    "strictNullChecks": false,
-
-    // module resolution
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "moduleResolution": "Node",
-
-    // lint checkers
-    "noImplicitAny": false,
-
-    // advanced
-    "declarationDir": "dist",
+    // completeness
     "skipLibCheck": true
   },
   "include": [

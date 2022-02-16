@@ -132,7 +132,7 @@ export default class MessageService extends BaseService {
                             cb.reject(TurmsBusinessError.fromNotification(notification));
                         }
                     } else {
-                        cb.reject(TurmsBusinessError.from(TurmsStatusCode.INVALID_NOTIFICATION, 'The code is missing'))
+                        cb.reject(TurmsBusinessError.from(TurmsStatusCode.INVALID_NOTIFICATION, 'The code is missing'));
                     }
                 }
             }
@@ -149,12 +149,12 @@ export default class MessageService extends BaseService {
 
     // Base methods
 
-    close(): Promise<void> {
+    override close(): Promise<void> {
         this.onDisconnected();
         return Promise.resolve();
     }
 
-    onDisconnected(): void {
+    override onDisconnected(): void {
         const error = TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
         this._rejectRequestPromises(error);
     }

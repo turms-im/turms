@@ -67,7 +67,17 @@ export interface TurmsNotification_Data {
   groupsWithVersion?: GroupsWithVersion | undefined;
 }
 
-const baseTurmsNotification: object = {};
+function createBaseTurmsNotification(): TurmsNotification {
+  return {
+    requestId: undefined,
+    code: undefined,
+    reason: undefined,
+    data: undefined,
+    requesterId: undefined,
+    closeStatus: undefined,
+    relayedRequest: undefined,
+  };
+}
 
 export const TurmsNotification = {
   encode(
@@ -107,7 +117,7 @@ export const TurmsNotification = {
   decode(input: _m0.Reader | Uint8Array, length?: number): TurmsNotification {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseTurmsNotification } as TurmsNotification;
+    const message = createBaseTurmsNotification();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -141,7 +151,29 @@ export const TurmsNotification = {
   },
 };
 
-const baseTurmsNotification_Data: object = {};
+function createBaseTurmsNotification_Data(): TurmsNotification_Data {
+  return {
+    ids: undefined,
+    idsWithVersion: undefined,
+    url: undefined,
+    conversations: undefined,
+    messages: undefined,
+    messagesWithTotalList: undefined,
+    userSession: undefined,
+    usersInfosWithVersion: undefined,
+    usersOnlineStatuses: undefined,
+    userFriendRequestsWithVersion: undefined,
+    userRelationshipGroupsWithVersion: undefined,
+    userRelationshipsWithVersion: undefined,
+    nearbyUsers: undefined,
+    groupInvitationsWithVersion: undefined,
+    groupJoinQuestionAnswerResult: undefined,
+    groupJoinRequestsWithVersion: undefined,
+    groupJoinQuestionsWithVersion: undefined,
+    groupMembersWithVersion: undefined,
+    groupsWithVersion: undefined,
+  };
+}
 
 export const TurmsNotification_Data = {
   encode(
@@ -262,7 +294,7 @@ export const TurmsNotification_Data = {
   ): TurmsNotification_Data {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseTurmsNotification_Data } as TurmsNotification_Data;
+    const message = createBaseTurmsNotification_Data();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -15,7 +15,9 @@ export interface File_Description {
   format?: string | undefined;
 }
 
-const baseFile: object = {};
+function createBaseFile(): File {
+  return { description: undefined, data: undefined };
+}
 
 export const File = {
   encode(message: File, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
@@ -34,7 +36,7 @@ export const File = {
   decode(input: _m0.Reader | Uint8Array, length?: number): File {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseFile } as File;
+    const message = createBaseFile();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -56,7 +58,9 @@ export const File = {
   },
 };
 
-const baseFile_Description: object = { url: "" };
+function createBaseFile_Description(): File_Description {
+  return { url: "", size: undefined, format: undefined };
+}
 
 export const File_Description = {
   encode(
@@ -78,7 +82,7 @@ export const File_Description = {
   decode(input: _m0.Reader | Uint8Array, length?: number): File_Description {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseFile_Description } as File_Description;
+    const message = createBaseFile_Description();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

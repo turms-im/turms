@@ -12,10 +12,14 @@ export interface QuerySignedPutUrlRequest {
   contentLength: string;
 }
 
-const baseQuerySignedPutUrlRequest: object = {
-  contentType: 0,
-  contentLength: "0",
-};
+function createBaseQuerySignedPutUrlRequest(): QuerySignedPutUrlRequest {
+  return {
+    contentType: 0,
+    keyStr: undefined,
+    keyNum: undefined,
+    contentLength: "0",
+  };
+}
 
 export const QuerySignedPutUrlRequest = {
   encode(
@@ -43,9 +47,7 @@ export const QuerySignedPutUrlRequest = {
   ): QuerySignedPutUrlRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQuerySignedPutUrlRequest,
-    } as QuerySignedPutUrlRequest;
+    const message = createBaseQuerySignedPutUrlRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -8,7 +8,9 @@ export interface QueryJoinedGroupInfosRequest {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseQueryJoinedGroupInfosRequest: object = {};
+function createBaseQueryJoinedGroupInfosRequest(): QueryJoinedGroupInfosRequest {
+  return { lastUpdatedDate: undefined };
+}
 
 export const QueryJoinedGroupInfosRequest = {
   encode(
@@ -27,9 +29,7 @@ export const QueryJoinedGroupInfosRequest = {
   ): QueryJoinedGroupInfosRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQueryJoinedGroupInfosRequest,
-    } as QueryJoinedGroupInfosRequest;
+    const message = createBaseQueryJoinedGroupInfosRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

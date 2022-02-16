@@ -10,11 +10,9 @@ export interface PrivateConversation {
   readDate: string;
 }
 
-const basePrivateConversation: object = {
-  ownerId: "0",
-  targetId: "0",
-  readDate: "0",
-};
+function createBasePrivateConversation(): PrivateConversation {
+  return { ownerId: "0", targetId: "0", readDate: "0" };
+}
 
 export const PrivateConversation = {
   encode(
@@ -36,7 +34,7 @@ export const PrivateConversation = {
   decode(input: _m0.Reader | Uint8Array, length?: number): PrivateConversation {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...basePrivateConversation } as PrivateConversation;
+    const message = createBasePrivateConversation();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

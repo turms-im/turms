@@ -8,7 +8,9 @@ export interface DeleteGroupJoinRequestRequest {
   requestId: string;
 }
 
-const baseDeleteGroupJoinRequestRequest: object = { requestId: "0" };
+function createBaseDeleteGroupJoinRequestRequest(): DeleteGroupJoinRequestRequest {
+  return { requestId: "0" };
+}
 
 export const DeleteGroupJoinRequestRequest = {
   encode(
@@ -27,9 +29,7 @@ export const DeleteGroupJoinRequestRequest = {
   ): DeleteGroupJoinRequestRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseDeleteGroupJoinRequestRequest,
-    } as DeleteGroupJoinRequestRequest;
+    const message = createBaseDeleteGroupJoinRequestRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

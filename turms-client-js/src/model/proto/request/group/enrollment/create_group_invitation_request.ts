@@ -10,11 +10,9 @@ export interface CreateGroupInvitationRequest {
   content: string;
 }
 
-const baseCreateGroupInvitationRequest: object = {
-  groupId: "0",
-  inviteeId: "0",
-  content: "",
-};
+function createBaseCreateGroupInvitationRequest(): CreateGroupInvitationRequest {
+  return { groupId: "0", inviteeId: "0", content: "" };
+}
 
 export const CreateGroupInvitationRequest = {
   encode(
@@ -39,9 +37,7 @@ export const CreateGroupInvitationRequest = {
   ): CreateGroupInvitationRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseCreateGroupInvitationRequest,
-    } as CreateGroupInvitationRequest;
+    const message = createBaseCreateGroupInvitationRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

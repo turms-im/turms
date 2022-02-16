@@ -9,7 +9,9 @@ export interface QueryUserProfileRequest {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseQueryUserProfileRequest: object = { userId: "0" };
+function createBaseQueryUserProfileRequest(): QueryUserProfileRequest {
+  return { userId: "0", lastUpdatedDate: undefined };
+}
 
 export const QueryUserProfileRequest = {
   encode(
@@ -31,9 +33,7 @@ export const QueryUserProfileRequest = {
   ): QueryUserProfileRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQueryUserProfileRequest,
-    } as QueryUserProfileRequest;
+    const message = createBaseQueryUserProfileRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -10,7 +10,9 @@ export interface UsersInfosWithVersion {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseUsersInfosWithVersion: object = {};
+function createBaseUsersInfosWithVersion(): UsersInfosWithVersion {
+  return { userInfos: [], lastUpdatedDate: undefined };
+}
 
 export const UsersInfosWithVersion = {
   encode(
@@ -32,8 +34,7 @@ export const UsersInfosWithVersion = {
   ): UsersInfosWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUsersInfosWithVersion } as UsersInfosWithVersion;
-    message.userInfos = [];
+    const message = createBaseUsersInfosWithVersion();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

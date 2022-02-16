@@ -10,7 +10,9 @@ export interface GroupsWithVersion {
   lastUpdatedDate?: string | undefined;
 }
 
-const baseGroupsWithVersion: object = {};
+function createBaseGroupsWithVersion(): GroupsWithVersion {
+  return { groups: [], lastUpdatedDate: undefined };
+}
 
 export const GroupsWithVersion = {
   encode(
@@ -29,8 +31,7 @@ export const GroupsWithVersion = {
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupsWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseGroupsWithVersion } as GroupsWithVersion;
-    message.groups = [];
+    const message = createBaseGroupsWithVersion();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

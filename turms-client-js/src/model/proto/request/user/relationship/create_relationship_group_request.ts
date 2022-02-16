@@ -8,7 +8,9 @@ export interface CreateRelationshipGroupRequest {
   name: string;
 }
 
-const baseCreateRelationshipGroupRequest: object = { name: "" };
+function createBaseCreateRelationshipGroupRequest(): CreateRelationshipGroupRequest {
+  return { name: "" };
+}
 
 export const CreateRelationshipGroupRequest = {
   encode(
@@ -27,9 +29,7 @@ export const CreateRelationshipGroupRequest = {
   ): CreateRelationshipGroupRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseCreateRelationshipGroupRequest,
-    } as CreateRelationshipGroupRequest;
+    const message = createBaseCreateRelationshipGroupRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -16,7 +16,18 @@ export interface GroupJoinRequest {
   responderId?: string | undefined;
 }
 
-const baseGroupJoinRequest: object = {};
+function createBaseGroupJoinRequest(): GroupJoinRequest {
+  return {
+    id: undefined,
+    creationDate: undefined,
+    content: undefined,
+    status: undefined,
+    expirationDate: undefined,
+    groupId: undefined,
+    requesterId: undefined,
+    responderId: undefined,
+  };
+}
 
 export const GroupJoinRequest = {
   encode(
@@ -53,7 +64,7 @@ export const GroupJoinRequest = {
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupJoinRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseGroupJoinRequest } as GroupJoinRequest;
+    const message = createBaseGroupJoinRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

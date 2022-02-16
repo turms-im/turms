@@ -9,10 +9,9 @@ export interface UpdateTypingStatusRequest {
   toId: string;
 }
 
-const baseUpdateTypingStatusRequest: object = {
-  isGroupMessage: false,
-  toId: "0",
-};
+function createBaseUpdateTypingStatusRequest(): UpdateTypingStatusRequest {
+  return { isGroupMessage: false, toId: "0" };
+}
 
 export const UpdateTypingStatusRequest = {
   encode(
@@ -34,9 +33,7 @@ export const UpdateTypingStatusRequest = {
   ): UpdateTypingStatusRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseUpdateTypingStatusRequest,
-    } as UpdateTypingStatusRequest;
+    const message = createBaseUpdateTypingStatusRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

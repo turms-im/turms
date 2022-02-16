@@ -9,10 +9,9 @@ export interface CreateFriendRequestRequest {
   content: string;
 }
 
-const baseCreateFriendRequestRequest: object = {
-  recipientId: "0",
-  content: "",
-};
+function createBaseCreateFriendRequestRequest(): CreateFriendRequestRequest {
+  return { recipientId: "0", content: "" };
+}
 
 export const CreateFriendRequestRequest = {
   encode(
@@ -34,9 +33,7 @@ export const CreateFriendRequestRequest = {
   ): CreateFriendRequestRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseCreateFriendRequestRequest,
-    } as CreateFriendRequestRequest;
+    const message = createBaseCreateFriendRequestRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

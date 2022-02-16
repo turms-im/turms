@@ -14,7 +14,17 @@ export interface QueryNearbyUsersRequest {
   withInfo?: boolean | undefined;
 }
 
-const baseQueryNearbyUsersRequest: object = { latitude: 0, longitude: 0 };
+function createBaseQueryNearbyUsersRequest(): QueryNearbyUsersRequest {
+  return {
+    latitude: 0,
+    longitude: 0,
+    distance: undefined,
+    maxNumber: undefined,
+    withCoordinates: undefined,
+    withDistance: undefined,
+    withInfo: undefined,
+  };
+}
 
 export const QueryNearbyUsersRequest = {
   encode(
@@ -51,9 +61,7 @@ export const QueryNearbyUsersRequest = {
   ): QueryNearbyUsersRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseQueryNearbyUsersRequest,
-    } as QueryNearbyUsersRequest;
+    const message = createBaseQueryNearbyUsersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

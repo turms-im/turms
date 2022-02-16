@@ -24,7 +24,7 @@ export default class TurmsBusinessError extends Error {
         return this._reason;
     }
 
-    toString(): string {
+    override toString(): string {
         return `${this._code}:${this._reason}`;
     }
 

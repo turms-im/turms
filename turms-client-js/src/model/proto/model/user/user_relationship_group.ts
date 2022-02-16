@@ -9,7 +9,9 @@ export interface UserRelationshipGroup {
   name: string;
 }
 
-const baseUserRelationshipGroup: object = { index: 0, name: "" };
+function createBaseUserRelationshipGroup(): UserRelationshipGroup {
+  return { index: 0, name: "" };
+}
 
 export const UserRelationshipGroup = {
   encode(
@@ -31,7 +33,7 @@ export const UserRelationshipGroup = {
   ): UserRelationshipGroup {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUserRelationshipGroup } as UserRelationshipGroup;
+    const message = createBaseUserRelationshipGroup();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

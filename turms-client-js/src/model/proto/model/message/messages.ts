@@ -9,7 +9,9 @@ export interface Messages {
   messages: Message[];
 }
 
-const baseMessages: object = {};
+function createBaseMessages(): Messages {
+  return { messages: [] };
+}
 
 export const Messages = {
   encode(
@@ -25,8 +27,7 @@ export const Messages = {
   decode(input: _m0.Reader | Uint8Array, length?: number): Messages {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMessages } as Messages;
-    message.messages = [];
+    const message = createBaseMessages();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

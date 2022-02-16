@@ -13,7 +13,9 @@ export interface CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry 
   value: string;
 }
 
-const baseCheckGroupJoinQuestionsAnswersRequest: object = {};
+function createBaseCheckGroupJoinQuestionsAnswersRequest(): CheckGroupJoinQuestionsAnswersRequest {
+  return { questionIdAndAnswer: {} };
+}
 
 export const CheckGroupJoinQuestionsAnswersRequest = {
   encode(
@@ -35,10 +37,7 @@ export const CheckGroupJoinQuestionsAnswersRequest = {
   ): CheckGroupJoinQuestionsAnswersRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseCheckGroupJoinQuestionsAnswersRequest,
-    } as CheckGroupJoinQuestionsAnswersRequest;
-    message.questionIdAndAnswer = {};
+    const message = createBaseCheckGroupJoinQuestionsAnswersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -61,8 +60,9 @@ export const CheckGroupJoinQuestionsAnswersRequest = {
   },
 };
 
-const baseCheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry: object =
-  { key: "0", value: "" };
+function createBaseCheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry(): CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry {
+  return { key: "0", value: "" };
+}
 
 export const CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry = {
   encode(
@@ -84,9 +84,8 @@ export const CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry = {
   ): CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseCheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry,
-    } as CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry;
+    const message =
+      createBaseCheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

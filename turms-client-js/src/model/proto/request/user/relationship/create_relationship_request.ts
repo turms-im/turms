@@ -10,7 +10,9 @@ export interface CreateRelationshipRequest {
   groupIndex?: number | undefined;
 }
 
-const baseCreateRelationshipRequest: object = { userId: "0", blocked: false };
+function createBaseCreateRelationshipRequest(): CreateRelationshipRequest {
+  return { userId: "0", blocked: false, groupIndex: undefined };
+}
 
 export const CreateRelationshipRequest = {
   encode(
@@ -35,9 +37,7 @@ export const CreateRelationshipRequest = {
   ): CreateRelationshipRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseCreateRelationshipRequest,
-    } as CreateRelationshipRequest;
+    const message = createBaseCreateRelationshipRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

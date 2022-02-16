@@ -8,7 +8,9 @@ export interface Int64Values {
   values: string[];
 }
 
-const baseInt64Values: object = { values: "0" };
+function createBaseInt64Values(): Int64Values {
+  return { values: [] };
+}
 
 export const Int64Values = {
   encode(
@@ -26,8 +28,7 @@ export const Int64Values = {
   decode(input: _m0.Reader | Uint8Array, length?: number): Int64Values {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseInt64Values } as Int64Values;
-    message.values = [];
+    const message = createBaseInt64Values();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

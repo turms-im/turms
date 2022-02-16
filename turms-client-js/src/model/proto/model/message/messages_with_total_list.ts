@@ -9,7 +9,9 @@ export interface MessagesWithTotalList {
   messagesWithTotalList: MessagesWithTotal[];
 }
 
-const baseMessagesWithTotalList: object = {};
+function createBaseMessagesWithTotalList(): MessagesWithTotalList {
+  return { messagesWithTotalList: [] };
+}
 
 export const MessagesWithTotalList = {
   encode(
@@ -28,8 +30,7 @@ export const MessagesWithTotalList = {
   ): MessagesWithTotalList {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMessagesWithTotalList } as MessagesWithTotalList;
-    message.messagesWithTotalList = [];
+    const message = createBaseMessagesWithTotalList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

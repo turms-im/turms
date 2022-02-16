@@ -13,11 +13,15 @@ export interface CreateGroupMemberRequest {
   muteEndDate?: string | undefined;
 }
 
-const baseCreateGroupMemberRequest: object = {
-  groupId: "0",
-  userId: "0",
-  role: 0,
-};
+function createBaseCreateGroupMemberRequest(): CreateGroupMemberRequest {
+  return {
+    groupId: "0",
+    userId: "0",
+    name: undefined,
+    role: 0,
+    muteEndDate: undefined,
+  };
+}
 
 export const CreateGroupMemberRequest = {
   encode(
@@ -48,9 +52,7 @@ export const CreateGroupMemberRequest = {
   ): CreateGroupMemberRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {
-      ...baseCreateGroupMemberRequest,
-    } as CreateGroupMemberRequest;
+    const message = createBaseCreateGroupMemberRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

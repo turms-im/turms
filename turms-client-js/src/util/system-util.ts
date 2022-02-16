@@ -3,7 +3,7 @@ import {DeviceType} from '../model/proto/constant/device_type';
 export default class SystemUtil {
 
     static isBrowser(): boolean {
-        return typeof window !== 'undefined' && typeof window.document !== 'undefined';
+        return typeof window === 'object' && window.document != null;
     }
 
     static getDeviceType(): DeviceType {

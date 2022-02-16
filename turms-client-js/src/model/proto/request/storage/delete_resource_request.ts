@@ -11,7 +11,9 @@ export interface DeleteResourceRequest {
   keyNum?: string | undefined;
 }
 
-const baseDeleteResourceRequest: object = { contentType: 0 };
+function createBaseDeleteResourceRequest(): DeleteResourceRequest {
+  return { contentType: 0, keyStr: undefined, keyNum: undefined };
+}
 
 export const DeleteResourceRequest = {
   encode(
@@ -36,7 +38,7 @@ export const DeleteResourceRequest = {
   ): DeleteResourceRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDeleteResourceRequest } as DeleteResourceRequest;
+    const message = createBaseDeleteResourceRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
