@@ -12,12 +12,11 @@
 </template>
 
 <script>
+import TurmsClient from 'turms-client-js';
 import Terminal from './terminal';
-import TurmsClient from 'turms-client-js/dist/turms-client.esm';
-import TurmsClientPackage from 'turms-client-js/package.json';
 
 const ONBOARD_MESSAGES = [
-    `Current version of turms-client-js: ${TurmsClientPackage.version}`,
+    `Current version of turms-client-js: ${TurmsClient.version}`,
     'Input commands like "user.login(\'1\', \'123\')"',
     '"help" for details'
 ];

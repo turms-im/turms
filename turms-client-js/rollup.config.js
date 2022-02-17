@@ -3,6 +3,7 @@ const path = require('path');
 
 const commonjs = require('@rollup/plugin-commonjs');
 const filesize = require('rollup-plugin-filesize');
+const json = require('@rollup/plugin-json');
 const resolve = require('@rollup/plugin-node-resolve').nodeResolve;
 const terser = require('rollup-plugin-terser').terser;
 const ts = require('rollup-plugin-ts');
@@ -36,6 +37,7 @@ function getConfig({output, useBabel, withDeclaration}) {
         input: 'src/turms-client.ts',
         output: [output],
         plugins: [
+            json(),
             resolve({extensions: ['.js', '.ts']}),
             commonjs(),
             transpile,
@@ -49,7 +51,7 @@ function getConfig({output, useBabel, withDeclaration}) {
 }
 
 if (fs.existsSync('dist')) {
-    fs.rmdirSync('dist', {recursive: true});
+    fs.rmSync('dist', {recursive: true});
 }
 
 module.exports = [
@@ -71,7 +73,7 @@ module.exports = [
     // IIFE for browsers
     {
         output: {
-            file: pkg.browser,
+            file: 'dist/turms-client.iife.js',
             format: 'iife',
             name: 'TurmsClient'
         },
@@ -79,7 +81,7 @@ module.exports = [
     },
     {
         output: {
-            file: pkg.browser.replace('.js', '.min.js'),
+            file: 'dist/turms-client.iife.min.js',
             format: 'iife',
             name: 'TurmsClient',
             plugins: [terser()]

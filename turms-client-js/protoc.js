@@ -68,7 +68,7 @@ function compile() {
         : 'protoc-gen-ts_proto=%CD%/node_modules/.bin/protoc-gen-ts_proto.cmd';
     const outDir = './src/model/proto';
     if (fs.existsSync(outDir)) {
-        fs.rmdirSync(outDir, {recursive: true});
+        fs.rmSync(outDir, {recursive: true});
     }
     fs.mkdirSync(outDir);
     // Use glob instead of the param "proto_path" because protoc-3.15.x-win64 won't accept

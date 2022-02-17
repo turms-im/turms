@@ -10,6 +10,7 @@
     // modules
     "module": "ES2015",
     "moduleResolution": "Node",
+    "resolveJsonModule": true,
 
     // emit
     "declaration": true,
