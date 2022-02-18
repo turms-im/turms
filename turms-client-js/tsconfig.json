@@ -28,6 +28,7 @@
     // language and environment
     "lib": [
       "dom",
+      "WebWorker",
       "ES2018"
     ],
     "target": "es5",

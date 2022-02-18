@@ -26,9 +26,9 @@ export const GroupConversation = {
     if (message.groupId !== "0") {
       writer.uint32(8).int64(message.groupId);
     }
-    Object.entries(message.memberIdAndReadDate).forEach(([key, value]) => {
+    Object.keys(message.memberIdAndReadDate).forEach(key => {
       GroupConversation_MemberIdAndReadDateEntry.encode(
-        { key: key as any, value },
+        { key: key as any, value: message.memberIdAndReadDate[key] },
         writer.uint32(18).fork()
       ).ldelim();
     });

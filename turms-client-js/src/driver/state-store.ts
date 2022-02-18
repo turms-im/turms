@@ -15,30 +15,59 @@
  * limitations under the License.
  */
 
+import WebSocketClient from '../transport/websocket-client';
+import SharedContextService, {NotificationType, RequestType} from './service/shared-context-service';
+
 export default class StateStore {
 
+    // Service
+    private readonly _sharedContextService?: SharedContextService;
+
     // Connection
-    private _websocket?: WebSocket;
+    private _websocket?: WebSocketClient;
 
     // Session
-    private _isSessionOpen = false;
+    private _isSessionOpen: boolean;
     private _sessionId?: string;
     private _serverId?: string;
 
     // Request
-    private _lastRequestDate = new Date(0);
+    private _lastRequestDate = 0;
 
-    get websocket(): WebSocket {
+    constructor(sharedContextService?: SharedContextService) {
+        this._sharedContextService = sharedContextService;
+        sharedContextService?.addNotificationListener(NotificationType.UPDATE_IS_SESSION_OPEN, notification => {
+            this._isSessionOpen = notification.data;
+        });
+        sharedContextService?.addNotificationListener(NotificationType.UPDATE_SESSION_ID, notification => {
+            this._sessionId = notification.data;
+        });
+        sharedContextService?.addNotificationListener(NotificationType.UPDATE_SERVER_ID, notification => {
+            this._serverId = notification.data;
+        });
+        sharedContextService?.addNotificationListener(NotificationType.UPDATE_LAST_REQUEST_DATE, notification => {
+            this._lastRequestDate = notification.data;
+        });
+    }
+
+    get sharedContextService(): SharedContextService | null {
+        return this._sharedContextService;
+    }
+
+    get useSharedContext(): boolean {
+        return !!this._sharedContextService;
+    }
+
+    get websocket(): WebSocketClient {
         return this._websocket;
     }
 
-    set websocket(value: WebSocket) {
+    set websocket(value: WebSocketClient) {
         this._websocket = value;
     }
 
     get isConnected(): boolean {
-        const ws = this._websocket;
-        return ws && ws.readyState === WebSocket.OPEN;
+        return !!this._websocket?.isConnected;
     }
 
     get isSessionOpen(): boolean {
@@ -47,6 +76,10 @@ export default class StateStore {
 
     set isSessionOpen(value: boolean) {
         this._isSessionOpen = value;
+        this._sharedContextService?.request({
+            type: RequestType.UPDATE_IS_SESSION_OPEN,
+            data: value
+        });
     }
 
     get sessionId(): string {
@@ -55,6 +88,10 @@ export default class StateStore {
 
     set sessionId(value: string) {
         this._sessionId = value;
+        this._sharedContextService?.request({
+            type: RequestType.UPDATE_SESSION_ID,
+            data: value
+        });
     }
 
     get serverId(): string {
@@ -63,14 +100,22 @@ export default class StateStore {
 
     set serverId(value: string) {
         this._serverId = value;
+        this._sharedContextService?.request({
+            type: RequestType.UPDATE_SERVER_ID,
+            data: value
+        });
     }
 
-    get lastRequestDate(): Date {
+    get lastRequestDate(): number {
         return this._lastRequestDate;
     }
 
-    set lastRequestDate(value: Date) {
+    set lastRequestDate(value: number) {
         this._lastRequestDate = value;
+        this._sharedContextService?.request({
+            type: RequestType.UPDATE_LAST_REQUEST_DATE,
+            data: value
+        });
     }
 
     reset(): void {
@@ -78,6 +123,7 @@ export default class StateStore {
         this._isSessionOpen = false;
         this._sessionId = null;
         this._serverId = null;
-        this._lastRequestDate = new Date(0);
+        this._lastRequestDate = 0;
     }
+
 }

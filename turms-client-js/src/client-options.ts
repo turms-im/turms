@@ -4,5 +4,6 @@ export default interface ClientOptions {
     requestTimeout?: number,
     minRequestInterval?: number,
     heartbeatInterval?: number,
-    storageServerUrl?: string
+    storageServerUrl?: string,
+    useSharedContext?: boolean
 }

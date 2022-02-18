@@ -22,9 +22,9 @@ export const CheckGroupJoinQuestionsAnswersRequest = {
     message: CheckGroupJoinQuestionsAnswersRequest,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    Object.entries(message.questionIdAndAnswer).forEach(([key, value]) => {
+    Object.keys(message.questionIdAndAnswer).forEach(key => {
       CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry.encode(
-        { key: key as any, value },
+        { key: key as any, value: message.questionIdAndAnswer[key] },
         writer.uint32(10).fork()
       ).ldelim();
     });

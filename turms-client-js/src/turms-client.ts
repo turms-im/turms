@@ -32,7 +32,8 @@ class TurmsClient {
         requestTimeout?: number,
         minRequestInterval?: number,
         heartbeatInterval?: number,
-        storageServerUrl?: string);
+        storageServerUrl?: string,
+        useSharedContext?: boolean);
 
     constructor(
         wsUrlOrOptions?: string | ClientOptions,
@@ -40,21 +41,27 @@ class TurmsClient {
         requestTimeout?: number,
         minRequestInterval?: number,
         heartbeatInterval?: number,
-        storageServerUrl?: string) {
+        storageServerUrl?: string,
+        useSharedContext?: boolean) {
         if (typeof wsUrlOrOptions === 'object') {
             connectionTimeout = wsUrlOrOptions.connectionTimeout;
             requestTimeout = wsUrlOrOptions.requestTimeout;
             minRequestInterval = wsUrlOrOptions.minRequestInterval;
             heartbeatInterval = wsUrlOrOptions.heartbeatInterval;
             storageServerUrl = wsUrlOrOptions.storageServerUrl;
+            useSharedContext = wsUrlOrOptions.useSharedContext;
             wsUrlOrOptions = wsUrlOrOptions.wsUrl;
+        }
+        if (useSharedContext && !TurmsClient.supportsSharedContext()) {
+            throw new Error('Cannot use the shared context because the browser doesn\'t support SharedWorker');
         }
         this._driver = new TurmsDriver(
             wsUrlOrOptions,
             connectionTimeout,
             requestTimeout,
             minRequestInterval,
-            heartbeatInterval);
+            heartbeatInterval,
+            useSharedContext);
         this._userService = new UserService(this);
         this._groupService = new GroupService(this);
         this._conversationService = new ConversationService(this);
@@ -100,6 +107,10 @@ class TurmsClient {
     // Util
     static InputFileReader(): InputFileReader {
         return InputFileReader;
+    }
+
+    static supportsSharedContext(): boolean {
+        return typeof SharedWorker === 'function';
     }
 }
 

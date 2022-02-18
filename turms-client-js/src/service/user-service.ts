@@ -13,6 +13,7 @@ import {UserStatus} from '../model/proto/constant/user_status';
 import {DeviceType} from '../model/proto/constant/device_type';
 import {ProfileAccessStrategy} from '../model/proto/constant/profile_access_strategy';
 import {ResponseAction} from '../model/proto/constant/response_action';
+import {NotificationType, RequestType} from '../driver/service/shared-context-service';
 
 export interface UserInfo {
     userId?: string;
@@ -57,6 +58,23 @@ export default class UserService {
                 });
             }
         });
+        turmsClient.driver.addSharedContextNotificationListener(NotificationType.UPDATE_LOGGED_IN_USER_INFO,
+            notification => {
+                const wasLoggedIn = this.isLoggedIn;
+                this._userInfo = notification.data;
+                const isLoggedIn = this.isLoggedIn;
+                if (wasLoggedIn) {
+                    if (!isLoggedIn) {
+                        this._changeToOffline({
+                            closeStatus: TurmsCloseStatus.UNKNOWN_ERROR
+                        }, false);
+                    }
+                } else {
+                    if (isLoggedIn) {
+                        this._changeToOnline(false);
+                    }
+                }
+            });
     }
 
     get userInfo(): UserInfo {
@@ -64,7 +82,8 @@ export default class UserService {
     }
 
     get isLoggedIn(): boolean {
-        return this._userInfo.onlineStatus >= 0 && this._userInfo.onlineStatus !== UserStatus.OFFLINE;
+        const info = this._userInfo;
+        return info && info.onlineStatus >= 0 && info.onlineStatus !== UserStatus.OFFLINE;
     }
 
     addOnOnlineListener(listener: () => void): void {
@@ -84,7 +103,7 @@ export default class UserService {
     }
 
     /**
-     * Note: Because of user privacy policies, most of modern browsers request Geolocation APIs to run in HTTPS,
+     * Note: Because of user privacy policies, most modern browsers request Geolocation APIs to run in HTTPS,
      * getUserLocation() cannot get the location of users in insecure sites.
      * FYI: https://stackoverflow.com/questions/37835805/http-sites-does-not-detect-the-location-in-chrome-issue
      * https://caniuse.com/#search=Geolocation
@@ -134,7 +153,7 @@ export default class UserService {
         userInfo.userId = userId;
         userInfo.password = storePassword ? password : null;
         try {
-            userInfo.deviceType = UserService._parseDeviceType(deviceType);
+            userInfo.deviceType = UserService._parseDeviceType(deviceType) ?? SystemUtil.getDeviceType();
         } catch (e) {
             return Promise.reject(e);
         }
@@ -151,12 +170,47 @@ export default class UserService {
         }
         this._storePassword = storePassword;
         return new Promise((resolve, reject) => {
-            const connect = this._turmsClient.driver.isConnected
-                ? Promise.resolve()
-                : this._turmsClient.driver.connect();
+            const driver = this._turmsClient.driver;
+            let connect: Promise<void>;
+            const useSharedContext = this._stateStore.useSharedContext;
+            if (driver.isConnected) {
+                connect = Promise.resolve();
+            } else if (useSharedContext) {
+                connect = driver.requestSharedContext({
+                    type: RequestType.REBIND_CONTEXT_ID,
+                    data: {
+                        userId,
+                        deviceType: userInfo.deviceType
+                    }
+                }).then(() => driver.connect());
+            } else {
+                connect = driver.connect();
+            }
             connect
                 .then(() => {
-                    return this._turmsClient.driver.send({
+                    const isLoggedInUser = this.isLoggedIn
+                        // TODO: handle undefined and null
+                        && JSON.stringify(this._userInfo) === JSON.stringify(userInfo);
+                    if (isLoggedInUser) {
+                        return false;
+                    }
+                    if (!useSharedContext) {
+                        return true;
+                    }
+                    return driver.requestSharedContext({type: RequestType.REQUEST_LOGIN})
+                        .then(authorized => {
+                            if (!authorized) {
+                                throw new Error('Another session is logging in');
+                            }
+                        }).then(() => true);
+                })
+                .then(needLogin => {
+                    if (!needLogin) {
+                        this._changeToOnline();
+                        resolve();
+                        return;
+                    }
+                    return driver.send({
                         createSessionRequest: {
                             version: 1,
                             userId,
@@ -169,8 +223,13 @@ export default class UserService {
                     }).then(() => {
                         this._changeToOnline();
                         this._userInfo = userInfo;
-                        resolve();
-                    }).catch(e => reject(e));
+                        this._updateSharedUserInfo();
+                        return driver.requestSharedContext({
+                            type: RequestType.FINISH_LOGIN_REQUEST
+                        }).finally(() => resolve());
+                    }).catch(e => driver.requestSharedContext({
+                        type: RequestType.FINISH_LOGIN_REQUEST
+                    }).finally(() => reject(e)));
                 })
                 .catch(e => reject(e));
         });
@@ -208,6 +267,7 @@ export default class UserService {
             }
         }).then(() => {
             this._userInfo.onlineStatus = onlineStatus as UserStatus;
+            this._updateSharedUserInfo();
         });
     }
 
@@ -239,6 +299,7 @@ export default class UserService {
         }).then(() => {
             if (this._storePassword) {
                 this._userInfo.password = password;
+                this._updateSharedUserInfo();
             }
         });
     }
@@ -557,8 +618,6 @@ export default class UserService {
             } else {
                 throw TurmsBusinessError.from(TurmsStatusCode.ILLEGAL_ARGUMENT, 'illegal DeviceType');
             }
-        } else {
-            return SystemUtil.getDeviceType();
         }
     }
 
@@ -575,15 +634,22 @@ export default class UserService {
         return onlineStatus;
     }
 
-    private _changeToOnline(): void {
-        if (!this.isLoggedIn) {
+    private _updateSharedUserInfo(): void {
+        this._turmsClient.driver.requestSharedContext({
+            type: RequestType.UPDATE_LOGGED_IN_USER_INFO,
+            data: this._userInfo
+        });
+    }
+
+    private _changeToOnline(check = true): void {
+        if (!check || !this.isLoggedIn) {
             this._stateStore.isSessionOpen = true;
             this._onOnlineListeners.forEach(listener => listener());
         }
     }
 
-    private _changeToOffline(sessionCloseInfo: SessionCloseInfo): void {
-        if (this.isLoggedIn) {
+    private _changeToOffline(sessionCloseInfo: SessionCloseInfo, check = true): void {
+        if (!check || this.isLoggedIn) {
             this._userInfo.onlineStatus = UserStatus.OFFLINE;
             this._stateStore.isSessionOpen = false;
             this._onOfflineListeners.forEach(listener => listener(sessionCloseInfo));

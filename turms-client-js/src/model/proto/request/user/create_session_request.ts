@@ -54,9 +54,9 @@ export const CreateSessionRequest = {
     if (message.deviceType !== 0) {
       writer.uint32(40).int32(message.deviceType);
     }
-    Object.entries(message.deviceDetails).forEach(([key, value]) => {
+    Object.keys(message.deviceDetails).forEach(key => {
       CreateSessionRequest_DeviceDetailsEntry.encode(
-        { key: key as any, value },
+        { key: key as any, value: message.deviceDetails[key] },
         writer.uint32(50).fork()
       ).ldelim();
     });

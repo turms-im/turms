@@ -19,6 +19,7 @@ module.exports = {
     ],
     "rules": {
         "@typescript-eslint/ban-ts-ignore": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/no-namespace": "off",
         "@typescript-eslint/semi": ["error"],

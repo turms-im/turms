@@ -52,7 +52,7 @@ export default class HeartbeatService extends BaseService {
         this._heartbeatTimer = new Timer((): void => {
             const now = new Date().getTime();
             const difference = Math.min(
-                now - this._stateStore.lastRequestDate.getTime(),
+                now - this._stateStore.lastRequestDate,
                 now - this._lastHeartbeatRequestDate);
             if (difference > this._heartbeatInterval) {
                 this.send().then(() => null);

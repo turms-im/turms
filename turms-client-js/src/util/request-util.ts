@@ -6,7 +6,7 @@ export default class RequestUtil {
     }
 
     public static isFalsy(value: any): boolean {
-        return value == null || !value?.length;
+        return value == null || value?.length === 0;
     }
 
     public static isTruthy(value: any): boolean {

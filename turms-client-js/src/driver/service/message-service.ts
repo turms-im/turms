@@ -77,40 +77,42 @@ export default class MessageService extends BaseService {
         return new Promise((resolve, reject) => {
             if (message.createSessionRequest) {
                 if (this._stateStore.isSessionOpen) {
-                    return Promise.reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
+                    return reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
                 }
             } else if (!this._stateStore.isConnected || !this._stateStore.isSessionOpen) {
                 return reject(TurmsBusinessError.from(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
             }
-            const now = new Date();
-            const difference = now.getTime() - this._stateStore.lastRequestDate.getTime();
+            const now = new Date().getTime();
+            const difference = now - this._stateStore.lastRequestDate;
             const isFrequent = this._minRequestInterval > 0 && difference <= this._minRequestInterval;
             if (isFrequent) {
                 return reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT));
             }
             const requestId = RequestUtil.generateRandomId(this._requestMap);
             message.requestId = '' + requestId;
-
+            let data;
             try {
-                const data = TurmsRequest.encode(message).finish();
-                this._stateStore.websocket.send(data);
+                data = TurmsRequest.encode(message).finish();
             } catch (e) {
-                reject(e);
+                return reject(e);
             }
-            this._stateStore.lastRequestDate = now;
-
-            let timeoutId;
-            if (this._requestTimeout > 0) {
-                timeoutId = setTimeout(() => {
-                    delete this._requestMap[requestId];
-                    reject(TurmsBusinessError.fromCode(TurmsStatusCode.REQUEST_TIMEOUT));
-                }, this._requestTimeout);
-            }
-            this._requestMap[requestId] = {
-                timeoutId,
-                resolve,
-                reject
-            };
+            this._stateStore.websocket.send(data)
+                .then(() => {
+                    this._stateStore.lastRequestDate = now;
+                    let timeoutId;
+                    if (this._requestTimeout > 0) {
+                        timeoutId = setTimeout(() => {
+                            delete this._requestMap[requestId];
+                            reject(TurmsBusinessError.fromCode(TurmsStatusCode.REQUEST_TIMEOUT));
+                        }, this._requestTimeout);
+                    }
+                    this._requestMap[requestId] = {
+                        timeoutId,
+                        resolve,
+                        reject
+                    };
+                })
+                .catch(e => reject(e));
         });
     }
 

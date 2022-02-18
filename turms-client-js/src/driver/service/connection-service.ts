@@ -16,10 +16,10 @@
  */
 
 import StateStore from '../state-store';
-import SystemUtil from '../../util/system-util';
 import TurmsBusinessError from '../../model/turms-business-error';
 import TurmsStatusCode from '../../model/turms-status-code';
 import BaseService from './base-service';
+import WebSocketFactory from '../../transport/websocket-factory';
 
 export interface ConnectOptions {
     wsUrl?: string,
@@ -50,25 +50,6 @@ export default class ConnectionService extends BaseService {
         this._initialConnectTimeout = isNaN(connectTimeout) || connectTimeout <= 0
             ? 30 * 1000
             : connectTimeout;
-        this._closeConnectionBeforeUnload();
-    }
-
-    /**
-     * Try to close the connection gracefully
-     * because there is no guarantee that the browser will do this for us
-     */
-    private _closeConnectionBeforeUnload(): void {
-        if (SystemUtil.isBrowser()) {
-            window.addEventListener('beforeunload', () => {
-                const ws = this._stateStore.websocket;
-                const status = ws?.readyState;
-                if (status === WebSocket.OPEN || status === WebSocket.CONNECTING) {
-                    // Don't use 1001 because the code must be either 1000,
-                    // or between 3000 and 4999 according to Chrome
-                    ws.close(1000);
-                }
-            });
-        }
     }
 
     private _resetStates(): void {
@@ -128,15 +109,30 @@ export default class ConnectionService extends BaseService {
                 connectTimeout = this._initialConnectTimeout
             }: ConnectOptions = {}): Promise<void> {
         return new Promise((resolve, reject) => {
-            if (this._stateStore.isConnected) {
-                return wsUrl === this._stateStore.websocket.url
+            const websocket = this._stateStore.websocket;
+            if (websocket?.isConnected) {
+                return wsUrl === websocket.url
                     ? resolve()
-                    : Promise.reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
+                    : reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
             }
             this._resetStates();
-            const ws = new WebSocket(wsUrl);
-            ws.binaryType = 'arraybuffer';
-            this._stateStore.websocket = ws;
+            this._stateStore.websocket = WebSocketFactory.create(wsUrl, {
+                onOpen: (): void => {
+                    if (connectTimeoutId) {
+                        clearTimeout(connectTimeoutId);
+                    }
+                    this._onWebSocketOpen();
+                    resolve();
+                },
+                onClose: (event): void => {
+                    if (connectTimeoutId) {
+                        clearTimeout(connectTimeoutId);
+                    }
+                    const info = this._onWebSocketClose(wsUrl, event);
+                    reject(info);
+                },
+                onMessage: (data): void => this._notifyMessageListeners(data)
+            }, this._stateStore.sharedContextService);
 
             let connectTimeoutId;
             if (connectTimeout > 0) {
@@ -144,35 +140,15 @@ export default class ConnectionService extends BaseService {
                     reject(TurmsBusinessError.fromCode(TurmsStatusCode.CONNECT_TIMEOUT));
                 }, connectTimeout);
             }
-
-            // onClose will always be triggered with a CloseEvent instance when
-            // 1. rejected by the HTTP upgrade error response
-            // 2. disconnected no matter by error (after onerror) or else
-            // so we don't need to add a listener on onerror
-            ws.onclose = (event): void => {
-                if (connectTimeoutId) {
-                    clearTimeout(connectTimeoutId);
-                }
-                const info = this._onWebSocketClose(event);
-                reject(info);
-            };
-            ws.onopen = ((): void => {
-                if (connectTimeoutId) {
-                    clearTimeout(connectTimeoutId);
-                }
-                this._onWebSocketOpen();
-                resolve();
-            });
-            ws.onmessage = (event): void => this._notifyMessageListeners(event.data);
         });
     }
 
     disconnect(): Promise<void> {
         const ws = this._stateStore.websocket;
-        if (this._stateStore.isConnected || ws?.readyState === WebSocket.CONNECTING) {
+        if (ws?.isConnected || ws?.isConnecting) {
             return new Promise(resolve => {
                 this._disconnectPromises.push(resolve);
-                ws.close(1000);
+                ws.close();
             });
         }
         return Promise.resolve();
@@ -184,12 +160,15 @@ export default class ConnectionService extends BaseService {
         this._notifyOnConnectedListener();
     }
 
-    private _onWebSocketClose(event: CloseEvent): ConnectionDisconnectInfo {
+    private _onWebSocketClose(url: string, event: {
+        code: number,
+        reason: string
+    }): ConnectionDisconnectInfo {
         const wasConnected = this._stateStore.isConnected;
         this._resolveDisconnectPromises();
         const info = {
             wasConnected,
-            wsUrl: (event.target as WebSocket).url,
+            wsUrl: url,
             code: event.code,
             reason: event.reason
         };

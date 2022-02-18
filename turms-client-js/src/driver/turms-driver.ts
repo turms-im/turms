@@ -18,10 +18,17 @@
 import MessageService from './service/message-service';
 import HeartbeatService from './service/heartbeat-service';
 import ConnectionService, {ConnectionDisconnectInfo, ConnectOptions} from './service/connection-service';
+import SharedContextService, {
+    Notification,
+    NotificationType,
+    Request,
+    Response
+} from './service/shared-context-service';
 import StateStore from './state-store';
 import {TurmsNotification} from '../model/proto/notification/turms_notification';
 import {TurmsRequest} from '../model/proto/request/turms_request';
 import {ParsedNotification} from '../model/parsed-notification';
+import SystemUtil from '../util/system-util';
 
 export default class TurmsDriver {
 
@@ -30,16 +37,24 @@ export default class TurmsDriver {
     private readonly _connectionService: ConnectionService;
     private readonly _heartbeatService: HeartbeatService;
     private readonly _messageService: MessageService;
+    private readonly _sharedContextService?: SharedContextService;
 
     constructor(wsUrl?: string,
                 connectTimeout?: number,
                 requestTimeout?: number,
                 minRequestInterval?: number,
-                heartbeatInterval?: number) {
-        this._stateStore = new StateStore();
+                heartbeatInterval?: number,
+                useSharedContext?: boolean) {
+        if (useSharedContext) {
+            this._sharedContextService = new SharedContextService(this._stateStore);
+        }
+        this._stateStore = new StateStore(this._sharedContextService);
         this._connectionService = this.initConnectionService(wsUrl, connectTimeout);
         this._heartbeatService = new HeartbeatService(this._stateStore, heartbeatInterval);
         this._messageService = new MessageService(this._stateStore, requestTimeout, minRequestInterval);
+        if (SystemUtil.isBrowser()) {
+            window.addEventListener('beforeunload', () => this.close());
+        }
     }
 
     // Getters
@@ -49,6 +64,7 @@ export default class TurmsDriver {
     }
 
     // Initializers and close
+
     initConnectionService(wsUrl?: string, connectTimeout?: number): ConnectionService {
         const connectionService = new ConnectionService(this._stateStore, wsUrl, connectTimeout);
         connectionService.addOnDisconnectedListener(() => this._onConnectionDisconnected());
@@ -69,6 +85,16 @@ export default class TurmsDriver {
             this._heartbeatService.close().finally(() => tryResolve());
             this._messageService.close().finally(() => tryResolve());
         });
+    }
+
+    // Shared Context
+
+    addSharedContextNotificationListener(type: NotificationType, listener: ((notification: Notification) => void)): void {
+        this._sharedContextService?.addNotificationListener(type, listener);
+    }
+
+    requestSharedContext(request: Request): Promise<any> {
+        return this._sharedContextService?.request(request);
     }
 
     // Heartbeat Service
