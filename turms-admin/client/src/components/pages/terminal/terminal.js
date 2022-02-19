@@ -12,6 +12,12 @@ const DUPLICATE_MAP = {
     '(': ')',
     '[': ']'
 };
+const MESSAGE_TYPE_COLORS = {
+    error: 'redBright',
+    warn: 'yellowBright',
+    info: 'blueBright',
+    success: 'greenBright'
+};
 const CHARS_TO_SKIP = Object.values(DUPLICATE_MAP)
     .reduce((result, val) => {
         result[val] = true;
@@ -147,22 +153,14 @@ export default class Terminal extends XTerm {
     }
 
     writeMsg({type, msg, newLine}) {
-        if (msg != null) {
-            let color;
-            if (type === 'error') {
-                color = 'redBright';
-            } else if (type === 'warn') {
-                color = 'yellowBright';
-            } else if (type === 'info') {
-                color = 'blueBright';
-            } else {
-                color = 'greenBright';
-            }
-            const data = styles[color].open + msg + styles[color].close;
-            this.writeln(data);
-            if (newLine) {
-                this.writeln('');
-            }
+        if (msg == null) {
+            return;
+        }
+        const color = MESSAGE_TYPE_COLORS[type || 'info'];
+        const data = styles[color].open + msg + styles[color].close;
+        this.writeln(data);
+        if (newLine) {
+            this.writeln('');
         }
     }
 

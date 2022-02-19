@@ -24,8 +24,8 @@ export default {
             // It works fine until the children are <table> and <tbody> because table elements will
             // become messy if we apply "flex" to them. So we use JS.
 
-            // "setTimeout(() => updateScrollMaxHeight.call(this))" is more accurate
-            // but it will cause a jerk in the UI so we don't use it
+            // "setTimeout(() => updateScrollMaxHeight.call(this))" is more accurate,
+            // but it will cause a jerk in the UI, so we don't use it
             updateScrollMaxHeight.call(this);
         }
     }

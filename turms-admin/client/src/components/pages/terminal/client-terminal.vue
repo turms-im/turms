@@ -17,7 +17,7 @@ import Terminal from './terminal';
 
 const ONBOARD_MESSAGES = [
     `Current version of turms-client-js: ${TurmsClient.version}`,
-    'Input commands like "user.login(\'1\', \'123\')"',
+    'Input commands, e.g. "user.login(1, 123)"',
     '"help" for details'
 ];
 const MESSAGE_FOR_VOID_FUNCTION = '(Done)';
@@ -31,8 +31,8 @@ const HELP = `* Builtin Objects:
         * storage (stge)
         * user
 * Command Examples:
-    * user.login('1', '123')
-    * msg.sendMessage(false, '1', null, 'This is my message')
+    * user.login(1, 123)
+    * msg.sendMessage(false, 1, null, 'This is my message')
 `;
 
 export default {
@@ -86,6 +86,7 @@ export default {
                     result = this.stringify(result);
                 }
                 return {
+                    type: 'success',
                     msg: result,
                     newLine: true
                 };
