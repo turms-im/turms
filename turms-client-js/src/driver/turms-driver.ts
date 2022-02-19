@@ -94,7 +94,10 @@ export default class TurmsDriver {
     }
 
     requestSharedContext(request: Request): Promise<any> {
-        return this._sharedContextService?.request(request);
+        if (!this._sharedContextService) {
+            throw Promise.reject(new Error('The shared context is disabled'));
+        }
+        return this._sharedContextService.request(request);
     }
 
     // Heartbeat Service

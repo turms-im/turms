@@ -40,7 +40,7 @@ export type Request = {
 };
 
 export type Response = {
-    requestId: string,
+    requestId: number,
     type: RequestType,
     data?: any,
     error?: Error
@@ -99,9 +99,16 @@ export default class SharedContextService extends BaseService {
     }
 
     request(request: Request): Promise<any> {
-        const register = request.type === RequestType.REGISTER
-            ? Promise.resolve()
-            : this._registerRequest;
+        let register: Promise<void>;
+        if (request.type === RequestType.REGISTER) {
+            register = Promise.resolve();
+        } else {
+            if (!this._registerRequest) {
+                const error = new Error('Cannot send request to the shared worker because the local service hasn\'t registered');
+                return Promise.reject(error);
+            }
+            register = this._registerRequest;
+        }
         return register.then(() => {
             return new Promise((resolve, reject) => {
                 const requestId = this.requestSeq++;

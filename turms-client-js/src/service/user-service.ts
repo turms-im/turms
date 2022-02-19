@@ -171,22 +171,8 @@ export default class UserService {
         this._storePassword = storePassword;
         return new Promise((resolve, reject) => {
             const driver = this._turmsClient.driver;
-            let connect: Promise<void>;
             const useSharedContext = this._stateStore.useSharedContext;
-            if (driver.isConnected) {
-                connect = Promise.resolve();
-            } else if (useSharedContext) {
-                connect = driver.requestSharedContext({
-                    type: RequestType.REBIND_CONTEXT_ID,
-                    data: {
-                        userId,
-                        deviceType: userInfo.deviceType
-                    }
-                }).then(() => driver.connect());
-            } else {
-                connect = driver.connect();
-            }
-            connect
+            this._connect(useSharedContext, userId, userInfo.deviceType)
                 .then(() => {
                     const isLoggedInUser = this.isLoggedIn
                         // TODO: handle undefined and null
@@ -202,13 +188,13 @@ export default class UserService {
                             if (!authorized) {
                                 throw new Error('Another session is logging in');
                             }
-                        }).then(() => true);
+                            return true;
+                        });
                 })
                 .then(needLogin => {
                     if (!needLogin) {
                         this._changeToOnline();
-                        resolve();
-                        return;
+                        return resolve();
                     }
                     return driver.send({
                         createSessionRequest: {
@@ -224,15 +210,38 @@ export default class UserService {
                         this._changeToOnline();
                         this._userInfo = userInfo;
                         this._updateSharedUserInfo();
-                        return driver.requestSharedContext({
-                            type: RequestType.FINISH_LOGIN_REQUEST
-                        }).finally(() => resolve());
-                    }).catch(e => driver.requestSharedContext({
-                        type: RequestType.FINISH_LOGIN_REQUEST
-                    }).finally(() => reject(e)));
+                        return useSharedContext
+                            ? driver.requestSharedContext({
+                                type: RequestType.FINISH_LOGIN_REQUEST
+                            }).finally(() => resolve())
+                            : resolve();
+                    }).catch(e => useSharedContext
+                            ? driver.requestSharedContext({
+                                type: RequestType.FINISH_LOGIN_REQUEST
+                            }).finally(() => reject(e))
+                            : reject(e));
                 })
                 .catch(e => reject(e));
         });
+    }
+
+    private _connect(useSharedContext: boolean, userId: string, deviceType: DeviceType): Promise<void> {
+        let connect: Promise<void>;
+        const driver = this._turmsClient.driver;
+        if (driver.isConnected) {
+            connect = Promise.resolve();
+        } else if (useSharedContext) {
+            connect = driver.requestSharedContext({
+                type: RequestType.REBIND_CONTEXT_ID,
+                data: {
+                    userId,
+                    deviceType
+                }
+            }).then(() => driver.connect());
+        } else {
+            connect = driver.connect();
+        }
+        return connect;
     }
 
     logout(disconnect = true): Promise<void> {
@@ -635,10 +644,12 @@ export default class UserService {
     }
 
     private _updateSharedUserInfo(): void {
-        this._turmsClient.driver.requestSharedContext({
-            type: RequestType.UPDATE_LOGGED_IN_USER_INFO,
-            data: this._userInfo
-        });
+        if (this._stateStore.useSharedContext) {
+            this._turmsClient.driver.requestSharedContext({
+                type: RequestType.UPDATE_LOGGED_IN_USER_INFO,
+                data: this._userInfo
+            });
+        }
     }
 
     private _changeToOnline(check = true): void {

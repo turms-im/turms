@@ -10,10 +10,10 @@ type PortContext = {
 };
 
 type SharedContextInfo = {
-    ports: Record<number, MessagePort>,
+    ports: Record<PortId, MessagePort>,
     ws?: WebSocket,
 
-    loggingInPortId?: number,
+    loggingInPortId?: PortId,
 
     // shared user info
     loggedInUserInfo?: any,
@@ -297,13 +297,13 @@ export default function (): void {
     // use "onconnect" instead of addEventListener('connect') to refer to
     // the implementation in "chrome://inspect/#workers" easily when debugging
     // @ts-ignore
-    self.onconnect = (e: MessageEvent): void => {
+    (this as SharedWorkerGlobalScope).onconnect = (e: MessageEvent): void => {
         const port: MessagePort = e.ports[0];
         const portContext: PortContext = {
             port
         };
         port.onmessage = (ev): void => {
-            const request = ev.data;
+            const request = ev.data as Request;
             const handler: RequestHandler = requestHandlers[request.type];
             if (!handler) {
                 response(port, {
@@ -313,30 +313,31 @@ export default function (): void {
                 });
                 return;
             }
+            const info = portContext.contextId && contexts[portContext.contextId];
+            if (handler.shouldHaveBoundContextId && !info) {
+                response(port, {
+                    requestId: request.id,
+                    type: request.type,
+                    error: new Error(`The request type ${request.type} can only be requested after the context ID is bound`)
+                });
+                return;
+            }
+            let data;
             try {
-                const info = portContext.contextId && contexts[portContext.contextId];
-                if (handler.shouldHaveBoundContextId && !info) {
-                    response(port, {
-                        requestId: request.id,
-                        type: request.type,
-                        error: new Error(`The request type ${request.type} can only be requested after the context ID is bound`)
-                    });
-                } else {
-                    const data = handler.handler(portContext, request, info);
-                    response(port, {
-                        requestId: request.id,
-                        type: request.type,
-                        data
-                    });
-                }
+                data = handler.handler(portContext, request, info);
             } catch (error) {
                 response(port, {
                     requestId: request.id,
                     type: request.type,
-                    // @ts-ignore
-                    error
+                    error: error as Error
                 });
+                return;
             }
+            response(port, {
+                requestId: request.id,
+                type: request.type,
+                data
+            });
         };
         port.start();
     };

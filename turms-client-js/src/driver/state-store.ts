@@ -50,7 +50,7 @@ export default class StateStore {
         });
     }
 
-    get sharedContextService(): SharedContextService | null {
+    get sharedContextService(): SharedContextService | undefined {
         return this._sharedContextService;
     }
 
