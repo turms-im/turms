@@ -17,17 +17,12 @@
 
 import MessageService from './service/message-service';
 import HeartbeatService from './service/heartbeat-service';
-import ConnectionService, {ConnectionDisconnectInfo, ConnectOptions} from './service/connection-service';
-import SharedContextService, {
-    Notification,
-    NotificationType,
-    Request,
-    Response
-} from './service/shared-context-service';
+import ConnectionService, { ConnectionDisconnectInfo, ConnectOptions } from './service/connection-service';
+import SharedContextService, { Notification, NotificationType, Request } from './service/shared-context-service';
 import StateStore from './state-store';
-import {TurmsNotification} from '../model/proto/notification/turms_notification';
-import {TurmsRequest} from '../model/proto/request/turms_request';
-import {ParsedNotification} from '../model/parsed-notification';
+import { TurmsNotification } from '../model/proto/notification/turms_notification';
+import { TurmsRequest } from '../model/proto/request/turms_request';
+import { ParsedNotification } from '../model/parsed-notification';
 import SystemUtil from '../util/system-util';
 
 export default class TurmsDriver {
@@ -95,7 +90,7 @@ export default class TurmsDriver {
 
     requestSharedContext(request: Request): Promise<any> {
         if (!this._sharedContextService) {
-            throw Promise.reject(new Error('The shared context is disabled'));
+            return Promise.reject(new Error('The shared context is disabled'));
         }
         return this._sharedContextService.request(request);
     }

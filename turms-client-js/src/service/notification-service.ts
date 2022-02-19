@@ -1,5 +1,5 @@
 import TurmsClient from '../turms-client';
-import {ParsedRelayedRequest} from '../model/parsed-relayed-request';
+import { ParsedRelayedRequest } from '../model/parsed-relayed-request';
 
 export default class NotificationService {
 

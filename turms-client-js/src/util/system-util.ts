@@ -1,4 +1,4 @@
-import {DeviceType} from '../model/proto/constant/device_type';
+import { DeviceType } from '../model/proto/constant/device_type';
 
 export default class SystemUtil {
 

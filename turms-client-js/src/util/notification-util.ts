@@ -1,7 +1,7 @@
-import {ParsedModel} from '../model/parsed-model';
+import { ParsedModel } from '../model/parsed-model';
 import TurmsStatusCode from '../model/turms-status-code';
 import TurmsBusinessError from '../model/turms-business-error';
-import {TurmsNotification} from '../model/proto/notification/turms_notification';
+import { TurmsNotification } from '../model/proto/notification/turms_notification';
 
 export default class NotificationUtil {
 

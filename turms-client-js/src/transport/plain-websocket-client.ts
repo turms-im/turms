@@ -1,4 +1,4 @@
-import WebSocketClient, {EventListener} from './websocket-client';
+import WebSocketClient, { EventListener } from './websocket-client';
 
 export default class PlainWebSocketClient extends WebSocketClient {
 

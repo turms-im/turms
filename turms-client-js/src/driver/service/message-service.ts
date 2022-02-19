@@ -20,10 +20,10 @@ import TurmsStatusCode from '../../model/turms-status-code';
 import TurmsBusinessError from '../../model/turms-business-error';
 import StateStore from '../state-store';
 import NotificationUtil from '../../util/notification-util';
-import {ParsedNotification} from '../../model/parsed-notification';
+import { ParsedNotification } from '../../model/parsed-notification';
 import BaseService from './base-service';
-import {TurmsNotification} from '../../model/proto/notification/turms_notification';
-import {TurmsRequest} from '../../model/proto/request/turms_request';
+import { TurmsNotification } from '../../model/proto/notification/turms_notification';
+import { TurmsRequest } from '../../model/proto/request/turms_request';
 
 interface RequestPromiseSeal {
     timeoutId?: number,

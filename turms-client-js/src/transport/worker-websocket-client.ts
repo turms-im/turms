@@ -1,5 +1,5 @@
-import WebSocketClient, {EventListener} from './websocket-client';
-import SharedContextService, {NotificationType, RequestType} from '../driver/service/shared-context-service';
+import WebSocketClient, { EventListener } from './websocket-client';
+import SharedContextService, { NotificationType, RequestType } from '../driver/service/shared-context-service';
 
 export default class WorkerWebSocketClient extends WebSocketClient {
 

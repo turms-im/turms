@@ -2,7 +2,7 @@ import TurmsClient from '../turms-client';
 import TurmsStatusCode from '../model/turms-status-code';
 import TurmsBusinessError from '../model/turms-business-error';
 import unfetch from 'unfetch';
-import {ContentType} from '../model/proto/constant/content_type';
+import { ContentType } from '../model/proto/constant/content_type';
 
 export default class StorageService {
 
@@ -158,7 +158,7 @@ export default class StorageService {
     private _upload(url: string, bytes: Uint8Array): Promise<string> {
         return new Promise((resolve, reject) => {
             try {
-                unfetch(url, {method: 'PUT', body: bytes}).then(res => {
+                unfetch(url, { method: 'PUT', body: bytes }).then(res => {
                     if (res.status === 200) {
                         resolve(res.url);
                     } else {

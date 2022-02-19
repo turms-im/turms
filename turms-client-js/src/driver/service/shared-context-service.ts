@@ -41,7 +41,6 @@ export type Request = {
 
 export type Response = {
     requestId: number,
-    type: RequestType,
     data?: any,
     error?: Error
 };

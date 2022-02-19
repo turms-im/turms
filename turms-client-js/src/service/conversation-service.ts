@@ -1,6 +1,6 @@
 import TurmsClient from '../turms-client';
 import RequestUtil from '../util/request-util';
-import {ParsedModel} from '../model/parsed-model';
+import { ParsedModel } from '../model/parsed-model';
 import NotificationUtil from '../util/notification-util';
 import TurmsBusinessError from '../model/turms-business-error';
 

@@ -16,7 +16,7 @@
  */
 
 import WebSocketClient from '../transport/websocket-client';
-import SharedContextService, {NotificationType, RequestType} from './service/shared-context-service';
+import SharedContextService, { NotificationType, RequestType } from './service/shared-context-service';
 
 export default class StateStore {
 

@@ -1,19 +1,19 @@
 import TurmsClient from '../turms-client';
 import RequestUtil from '../util/request-util';
-import {ParsedModel} from '../model/parsed-model';
+import { ParsedModel } from '../model/parsed-model';
 import NotificationUtil from '../util/notification-util';
 import SystemUtil from '../util/system-util';
 import UserLocation from '../model/user-location';
 import TurmsBusinessError from '../model/turms-business-error';
 import TurmsStatusCode from '../model/turms-status-code';
 import StateStore from '../driver/state-store';
-import {SessionCloseInfo} from '../model/session-close-info';
+import { SessionCloseInfo } from '../model/session-close-info';
 import TurmsCloseStatus from '../model/turms-close-status';
-import {UserStatus} from '../model/proto/constant/user_status';
-import {DeviceType} from '../model/proto/constant/device_type';
-import {ProfileAccessStrategy} from '../model/proto/constant/profile_access_strategy';
-import {ResponseAction} from '../model/proto/constant/response_action';
-import {NotificationType, RequestType} from '../driver/service/shared-context-service';
+import { UserStatus } from '../model/proto/constant/user_status';
+import { DeviceType } from '../model/proto/constant/device_type';
+import { ProfileAccessStrategy } from '../model/proto/constant/profile_access_strategy';
+import { ResponseAction } from '../model/proto/constant/response_action';
+import { NotificationType, RequestType } from '../driver/service/shared-context-service';
 
 export interface UserInfo {
     userId?: string;
@@ -183,7 +183,7 @@ export default class UserService {
                     if (!useSharedContext) {
                         return true;
                     }
-                    return driver.requestSharedContext({type: RequestType.REQUEST_LOGIN})
+                    return driver.requestSharedContext({ type: RequestType.REQUEST_LOGIN })
                         .then(authorized => {
                             if (!authorized) {
                                 throw new Error('Another session is logging in');

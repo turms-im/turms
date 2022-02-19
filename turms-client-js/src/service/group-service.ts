@@ -1,11 +1,11 @@
 import TurmsClient from '../turms-client';
 import RequestUtil from '../util/request-util';
-import {ParsedModel} from '../model/parsed-model';
+import { ParsedModel } from '../model/parsed-model';
 import NotificationUtil from '../util/notification-util';
 import TurmsBusinessError from '../model/turms-business-error';
 import TurmsStatusCode from '../model/turms-status-code';
-import {GroupJoinQuestionsAnswerResult} from '../model/proto/model/group/group_join_questions_answer_result';
-import {GroupMemberRole} from '../model/proto/constant/group_member_role';
+import { GroupJoinQuestionsAnswerResult } from '../model/proto/model/group/group_join_questions_answer_result';
+import { GroupMemberRole } from '../model/proto/constant/group_member_role';
 
 export default class GroupService {
     private _turmsClient: TurmsClient;

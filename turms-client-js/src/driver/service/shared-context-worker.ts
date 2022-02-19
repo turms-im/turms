@@ -1,4 +1,4 @@
-import {Request, RequestType, Response, Notification, NotificationType} from './shared-context-service';
+import { Notification, NotificationType, Request, RequestType, Response } from './shared-context-service';
 
 type PortId = number;
 type ContextId = string;
@@ -308,7 +308,6 @@ export default function (): void {
             if (!handler) {
                 response(port, {
                     requestId: request.id,
-                    type: request.type,
                     error: new Error('Unknown request: ' + JSON.stringify(request))
                 });
                 return;
@@ -317,7 +316,6 @@ export default function (): void {
             if (handler.shouldHaveBoundContextId && !info) {
                 response(port, {
                     requestId: request.id,
-                    type: request.type,
                     error: new Error(`The request type ${request.type} can only be requested after the context ID is bound`)
                 });
                 return;
@@ -328,14 +326,12 @@ export default function (): void {
             } catch (error) {
                 response(port, {
                     requestId: request.id,
-                    type: request.type,
                     error: error as Error
                 });
                 return;
             }
             response(port, {
                 requestId: request.id,
-                type: request.type,
                 data
             });
         };

@@ -1,5 +1,5 @@
 import TurmsStatusCode from './turms-status-code';
-import {TurmsNotification} from './proto/notification/turms_notification';
+import { TurmsNotification } from './proto/notification/turms_notification';
 
 export default class TurmsBusinessError extends Error {
     private readonly _isTurmsBusinessError = true;

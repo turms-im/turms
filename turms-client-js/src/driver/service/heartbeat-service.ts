@@ -21,7 +21,7 @@ import TurmsStatusCode from '../../model/turms-status-code';
 import StateStore from '../state-store';
 import PromiseSeal from '../../model/promise-seal';
 import BaseService from './base-service';
-import {TurmsNotification} from '../../model/proto/notification/turms_notification';
+import { TurmsNotification } from '../../model/proto/notification/turms_notification';
 
 export default class HeartbeatService extends BaseService {
 

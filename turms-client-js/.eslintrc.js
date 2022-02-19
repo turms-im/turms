@@ -23,7 +23,9 @@ module.exports = {
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/no-namespace": "off",
         "@typescript-eslint/semi": ["error"],
+        "no-throw-literal": "error",
         "no-trailing-spaces": "error",
+        "object-curly-spacing": ["error", "always"],
         "quotes": ["error", "single"]
     },
     ignorePatterns: [".eslintrc.js"]
