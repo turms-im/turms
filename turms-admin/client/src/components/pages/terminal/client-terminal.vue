@@ -1,184 +1,101 @@
 <template>
-    <div class="client-terminal-container">
+    <div
+        class="client-terminal"
+        :class="$attrs.class"
+    >
+        <div class="client-terminal__header">
+            <span>{{ title }}</span>
+            <span class="client-terminal__header-settings">
+                <span
+                    class="client-terminal__header-setting"
+                    @click="clear"
+                >
+                    <icon type="clear" />
+                </span>
+                <span
+                    v-if="showSetting"
+                    class="client-terminal__header-setting"
+                    @click="onSettingClick"
+                >
+                    <icon type="setting" />
+                </span>
+            </span>
+        </div>
         <div
-            ref="inputTerminal"
-            class="client-terminal-container__input"
-        />
-        <div
-            ref="notificationTerminal"
-            class="client-terminal-container__notification"
+            ref="terminal"
+            class="client-terminal__container"
         />
     </div>
 </template>
-
 <script>
-import TurmsClient from 'turms-client-js';
 import Terminal from './terminal';
-
-const ONBOARD_MESSAGES = [
-    `Current version of turms-client-js: ${TurmsClient.version}`,
-    'Input commands, e.g. "user.login(1, 123)"',
-    '"help" for details'
-];
-const MESSAGE_FOR_VOID_FUNCTION = '(Done)';
-const HELP = `* Builtin Objects:
-    * Turms Client: client
-    * Services:
-        * conversation (convo)
-        * group,
-        * message (msg)
-        * notification (notif)
-        * storage (stge)
-        * user
-* Command Examples:
-    * user.login(1, 123)
-    * msg.sendMessage(false, 1, null, 'This is my message')
-`;
+import Icon from '../../common/icon';
 
 export default {
     name: 'client-terminal',
+    components: {
+        Icon
+    },
     props: {
+        title: {
+            type: String,
+            required: true
+        },
+        showSetting: {
+            type: Boolean,
+            default: false
+        },
         options: {
             type: Object,
-            required: false,
-            default: () => ({})
+            required: true
         }
     },
     mounted() {
-        this.notificationTerm = this.initNotificationTerm(this.$refs.notificationTerminal);
-        this.inputTerm = this.initInputTerm(this.options, this.$refs.inputTerminal);
-        this.client = this.initClient(this.notificationTerm);
+        this.terminal = new Terminal(this.$refs.terminal, this.options);
     },
     beforeUnmount() {
-        this.inputTerm.dispose();
-        this.notificationTerm.dispose();
+        this.terminal.dispose();
     },
     methods: {
-        async executeCmd(cmd) {
-            try {
-                if (cmd === 'help') {
-                    return {
-                        type: 'info',
-                        msg: HELP.replace(/\n/g, '\r\n')
-                    };
-                }
-                const context = `
-                    const client = this;
-                    const conversation = convo = client.conversationService;
-                    const group = client.groupService;
-                    const message = msg = client.messageService;
-                    const notification = notif = client.notificationService;
-                    const storage = stge = client.storageService;
-                    const user = client.userService;
-                    return `;
-                const func = new Function(context + cmd);
-                let result = func.call(this.client);
-                let isFunction;
-                if (result instanceof Promise) {
-                    isFunction = true;
-                    result = await result;
-                } else if (cmd.endsWith(')')) {
-                    isFunction = true;
-                }
-                if (result == null && isFunction) {
-                    result = MESSAGE_FOR_VOID_FUNCTION;
-                } else {
-                    result = this.stringify(result);
-                }
-                return {
-                    type: 'success',
-                    msg: result,
-                    newLine: true
-                };
-            } catch (e) {
-                return {
-                    type: 'error',
-                    msg: this.stringify(e),
-                    newLine: true
-                };
-            }
+        clear() {
+            this.terminal.clear();
         },
-
-        initClient(term) {
-            const client = new TurmsClient({
-                // TODO: make configurable
-                wsUrl: `ws://${window.location.hostname}:10510`
-            });
-            client.userService.addOnOnlineListener(() => {
-                term.writeMsg({
-                    msg: 'Go online'
-                });
-            });
-            client.userService.addOnOfflineListener(() => {
-                term.writeMsg({
-                    msg: 'Go offline'
-                });
-            });
-            client.messageService.addMessageListener(m => {
-                term.writeMsg({
-                    msg: 'Received message: ' + this.stringify(m)
-                });
-            });
-            client.notificationService.addNotificationListener(n => {
-                term.writeMsg({
-                    msg: 'Received notification: ' + this.stringify(n)
-                });
-            });
-            return client;
+        onSettingClick() {
+            this.$emit('settingClick');
         },
-
-        initInputTerm(options, container) {
-            const term = new Terminal(container, options);
-            term.onLine = async (cmd) => await this.executeCmd(cmd);
-            for (let i = 0; i < ONBOARD_MESSAGES.length; i++) {
-                term.writeMsg({
-                    type: 'info',
-                    msg: ONBOARD_MESSAGES[i],
-                    newLine: i === ONBOARD_MESSAGES.length - 1
-                });
-            }
-            term.startNewLine();
-            term.focus();
-            return term;
-        },
-
-        initNotificationTerm(container) {
-            return new Terminal(container, {
-                disableStdin: true
-            });
-        },
-
-        stringify(obj) {
-            let msg;
-            try {
-                if (typeof obj === 'function') {
-                    return '[Function]';
-                }
-                msg = obj.message || JSON.stringify(obj, null, '  ');
-                return msg.replace(/\n/g, '\r\n');
-            } catch (e) {
-                // Suppress "TypeError: Converting circular structure to JSON"
-                return obj;
-            }
+        getTerminal() {
+            return this.terminal;
         }
     }
 };
 </script>
-
 <style lang="scss">
-.client-terminal-container {
+.client-terminal {
     display: flex;
-    width: 100%;
+    flex-direction: column;
     height: 100%;
 
-    &__input,
-    &__notification {
-        flex-grow: 1;
-        max-width: 50%;
+    &__header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px;
+        font-size: 16px;
+        font-weight: 500;
+        color: #777;
+        background-color: #fafafa;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px 4px 0 0;
     }
 
-    &__notification {
-        margin-left: 8px;
+    &__header-setting {
+        margin-left: 16px;
+        cursor: pointer;
+    }
+
+    &__container {
+        height: 100%;
     }
 
     .xterm-screen {
@@ -186,5 +103,11 @@ export default {
             padding: 8px;
         }
     }
+
+    .xterm-viewport {
+        width: 100% !important;
+        overflow: hidden;
+    }
 }
+
 </style>

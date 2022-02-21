@@ -1,5 +1,7 @@
 import IpRegex from 'ip-regex';
 
+const WEBSOCKET_URL_REGEX = new RegExp('^(?:(?:ws|wss)://|//)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$', 'i');
+
 export default class Validator {
 
     static getMessage;
@@ -57,11 +59,9 @@ export default class Validator {
 
     static isIp(messageId) {
         return {
-            validator: (rule, value) => {
-                return IpRegex({exact: true}).test(value)
-                    ? Promise.resolve()
-                    : Promise.reject(Validator.getMessage(messageId));
-            }
+            validator: (rule, value) => IpRegex({exact: true}).test(value)
+                ? Promise.resolve()
+                : Promise.reject(Validator.getMessage(messageId))
         };
     }
 
@@ -69,6 +69,14 @@ export default class Validator {
         return {
             type: 'url',
             messageId
+        };
+    }
+
+    static isWsUrl(messageId) {
+        return {
+            validator: (rule, value) => WEBSOCKET_URL_REGEX.test(value)
+                ? Promise.resolve()
+                : Promise.reject(Validator.getMessage(messageId))
         };
     }
 
@@ -104,6 +112,9 @@ export default class Validator {
                     break;
                 case 'isUrl':
                     rules.push(Validator.isUrl('fieldMustBeUrl'));
+                    break;
+                case 'isWsUrl':
+                    rules.push(Validator.isWsUrl('fieldMustBeWsUrl'));
                     break;
                 default:
                     throw new Error(`Cannot create a rule for the unknown type ${type}`);

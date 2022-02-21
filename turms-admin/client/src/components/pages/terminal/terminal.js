@@ -54,8 +54,8 @@ export default class Terminal extends XTerm {
 
         this.cursor = 0;
         this.currentLine = '';
-        this.history = [];
-        this.historyIndex = 0;
+        this.history = options.history || [];
+        this.historyIndex = this.history.length > 0 ? this.history.length - 1 : 0;
 
         this.fitAddon = new FitAddon();
         this.loadAddon(this.fitAddon);
@@ -118,6 +118,11 @@ export default class Terminal extends XTerm {
         this.write(PREFIX);
     }
 
+    clear() {
+        this.write(escapes.clearScreen);
+        this.startNewLine();
+    }
+
     // Text
 
     getNextChar() {
@@ -157,7 +162,8 @@ export default class Terminal extends XTerm {
             return;
         }
         const color = MESSAGE_TYPE_COLORS[type || 'info'];
-        const data = styles[color].open + msg + styles[color].close;
+        const style = styles[color];
+        const data = style.open + msg + style.close;
         this.writeln(data);
         if (newLine) {
             this.writeln('');

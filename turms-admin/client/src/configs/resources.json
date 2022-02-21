@@ -184,6 +184,8 @@
     },
     "storage": {
         "url": "url",
-        "locale": "locale"
+        "locale": "locale",
+        "terminalSettings": "terminalSettings",
+        "terminalCommandHistory": "terminalCommandHistory"
     }
 }

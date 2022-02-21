@@ -4,6 +4,7 @@ import FileSaver from './file-saver';
 import LayoutUtil from './layout-util';
 import Querystring from './querystring';
 import RequestUtil from './request-util';
+import Storage from './storage';
 import UiUtil from './ui-util';
 import Validator from './validator';
 
@@ -15,6 +16,7 @@ export default {
         app.config.globalProperties.$layout = LayoutUtil;
         app.config.globalProperties.$qs = Querystring;
         app.config.globalProperties.$rq = RequestUtil;
+        app.config.globalProperties.$storage = Storage;
         app.config.globalProperties.$ui = UiUtil;
         app.config.globalProperties.$validator = Validator;
         const t = app._context.provides[app.__VUE_I18N_SYMBOL__]?.global?.t;

@@ -118,7 +118,7 @@ export default {
     &__last-updated-time {
         display: flex;
         flex-direction: column;
-        align-items: end;
+        align-items: flex-end;
         justify-content: space-between;
 
         .cluster-dashboard-header__card-content {
