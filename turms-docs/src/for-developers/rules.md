@@ -31,8 +31,10 @@ Java自身是一个很保守的语言，其大生态也非常保守。其设计�
 一般规则：性能（低时间复杂度与空间复杂度） > 代码可读性 > 设计模式
 
 * 性能 > 代码可读性。如使用`long`，而不是`java.util.Date`或`java.time.Instant`来表示时间，以避免创建新对象以及时间转换时的计算；又比如`im.turms.server.common.cluster.service.idgen.SnowflakeIdGenerator`类下的`nextIncreasingId`函数与`nextLargeGapId`函数重复了约10行代码，但我们不提取这公共代码出来，以避免开辟新方法栈（不考虑JVM的滞后Inline操作）。
+* 性能 > 设计模式。如场景：
+  * 遍历处理`String`中的`char[]`元素。如果使用责任链模式，则需要用不同的Handler类实现不同类别的处理逻辑，虽然这样可以把逻辑理得很清晰，但是每个Handler都需要遍历一遍`char[]`，因此处理的时间复杂度为`O(n*m)`（n为char[]长度，m为Handler个数），这种复杂度的代码在Turms服务端代码中是禁止的。此时，就需要反设计模式来编写代码，尽可能把处理逻辑都写在一次遍历中，且尽量不要新开函数区分逻辑（这条可选），而是用注释分块来区分不同的处理逻辑，以避免函数栈开销。
+  * Protobuf模型的高效设计一直受人称道，但官方Java版本的Protobuf的代码实现是偏保守且低效的。比如Protobuf模型是Immutable的，只有其Builder是Mutable的，因此想要修改Protobuf模型，还得先`toBuilder()`成一个Builder，再重新创建一个新Protobuf模型实例，内存有效使用率低下（额外补充：其字符串解码实现也是非常地低效）。而我们可控的代码是能不用Builder就不用Builder，避免无意义的内存消耗。
 
-* 性能 > 设计模式。如场景：遍历处理`String`中的`char[]`元素。如果使用责任链模式，则需要用不同的Handler类实现不同类别的处理逻辑，虽然这样可以把逻辑理得很清晰，但是每个Handler都需要遍历一遍`char[]`，因此处理的时间复杂度为`O(n*m)`（n为char[]长度，m为Handler个数），这种复杂度的代码在Turms服务端代码中是禁止的。此时，就需要反设计模式来编写代码，尽可能把处理逻辑都写在一次遍历中，且尽量不要新开函数区分逻辑（这条可选），而是用注释分块来区分不同的处理逻辑，以避免函数栈开销。
 
 例外：如在极少数情况下，代码可读性优先于性能。以下文中提到的`禁止在客户端请求与管理员API请求的处理过程中使用反射`为例。尽管有这个规则，但如果请求中需要创建供数据库驱动使用的Entity对象时，那我们还是会通过反射创建并填充这个对象。因为如果不使用反射，就需要手写上百个字段序列化与反序列化逻辑，工作量巨大，且容易出错。而使用反射的收益性就很高，所以允许使用反射。
 
@@ -62,9 +64,9 @@ Java自身是一个很保守的语言，其大生态也非常保守。其设计�
 
 * 禁止使用动态代理技术（如Java动态代理、CGLib、Spring AOP等），尽量不使用代理或使用静态编译技术代替（如Lombok）
 
-* 在客户端请求与管理员API请求的处理过程中，除非不使用反射就需要写大量繁杂代码，其他场景下禁止使用反射技术。如：Turms在对MongoDB的Entity模型的数百个字段进行序列化与反序列化时，使用了反射
+* 在客户端请求与管理员API请求的处理过程中，除非不使用反射就需要写大量繁杂代码，其他场景下禁止使用反射技术。如：Turms在对MongoDB的Entity模型的数百个字段进行序列化与反序列化时，使用了反射。
 
-另外，如果有第三方依赖违背了以上原则，则根据性价比，排期对第三方依赖进行重构
+另外，如果有第三方依赖违背了以上原则，则根据性价比，排期对第三方依赖进行重构。
 
 ## 关于依赖库的使用
 
@@ -98,3 +100,38 @@ Java自身是一个很保守的语言，其大生态也非常保守。其设计�
   而在移除Spring之后，我们就能保证Turms服务端能够主动地统筹所有代码，即所有代码都为Turms服务，而不是Turms要去适配其他框架的代码。
 
 * Turms在整个Java生态中，唯一信任的依赖是：Netty
+
+## 异常捕获与打印
+
+作用：理解Turms服务端的异常捕获与打印原则能够帮助开发者快速定位异常并发现异常的Root Cause。
+
+在响应式编程中，最为人所诟病的就是该编程范式下的异常通常非常难定位，其堆栈信息基本没用。如果开发者在响应式编程模式下胡乱打印异常日志，很有可能调式者甚至无法根据日志判断这个异常是从哪里抛出来的，更别说反推其执行代码了。
+
+但其实好的异常日志打印原则与实践都比较简单，并且如果遵循该原则，定位异常通常也就几秒或几分钟的事情。其基本原则就是**最下游代码抛异常，无需打印。中游代码如果要做异常Translate，那就Translate后继续往上抛，无需打印；最上游接异常并打印**。至于什么代码算是“最上游”，调用`subscribe()`的代码就算“最上游”。该原则实践起来其实也很简单，只是响应式编程里的异常捕获“看起来”比较复杂而已。举例而言，在turms-service服务端中的`im.turms.service.workflow.access.servicerequest.dispatcher.ServiceRequestDispatcher#dispatch0`函数下，有段“根据Service层的处理结果，向相关用户发送通知”的操作，其代码如下：
+
+```java
+return result
+        .name(CLIENT_REQUEST_NAME)
+        .tag(CLIENT_REQUEST_TAG_TYPE, requestType.name())
+        .metrics()
+        .defaultIfEmpty(RequestHandlerResultFactory.NO_CONTENT)
+        .doOnEach(signal -> {
+            if (!signal.isOnNext()) {
+                return;
+            }
+            RequestHandlerResult requestResult = signal.get();
+            if (requestResult == null || requestResult.code() != TurmsStatusCode.OK) {
+                return;
+            }
+            notifyRelatedUsersOfAction(requestResult, userId, deviceType)
+                    .contextWrite(signal.getContextView())
+                    .subscribe(null, t -> {
+                        try (TracingCloseableContext ignored = context.asCloseable()) {
+                            LOGGER.error("Failed to notify related users of the action", t);
+                        }
+                    });
+        })
+        ...
+```
+
+如上文所述，该段代码通过`notifyRelatedUsersOfAction`函数进行通知下发操作，其内部实现我们并不关心，我们只要在最上游通过`subscribe(...)`保证能捕获其可能抛出的异常并打印即可。
