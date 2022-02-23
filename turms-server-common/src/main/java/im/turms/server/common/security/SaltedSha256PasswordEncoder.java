@@ -50,7 +50,9 @@ public class SaltedSha256PasswordEncoder implements PasswordEncoder {
         ThreadLocalRandom.current().nextBytes(salt);
 
         byte[] rawPasswordWithSalt = ArrayUtil.concat(salt, rawPassword);
-        byte[] saltedPassword = DIGEST.get().digest(rawPasswordWithSalt);
+        MessageDigest digest = DIGEST.get();
+        digest.reset();
+        byte[] saltedPassword = digest.digest(rawPasswordWithSalt);
 
         return ArrayUtil.concat(salt, saltedPassword);
     }
@@ -63,7 +65,9 @@ public class SaltedSha256PasswordEncoder implements PasswordEncoder {
         byte[] rawPasswordWithSalt = new byte[SALT_SIZE_BYTES + rawPassword.length];
         System.arraycopy(saltedPasswordWithSalt, 0, rawPasswordWithSalt, 0, SALT_SIZE_BYTES);
         System.arraycopy(rawPassword, 0, rawPasswordWithSalt, SALT_SIZE_BYTES, rawPassword.length);
-        byte[] saltedPassword = DIGEST.get().digest(rawPasswordWithSalt);
+        MessageDigest digest = DIGEST.get();
+        digest.reset();
+        byte[] saltedPassword = digest.digest(rawPasswordWithSalt);
         return Arrays.equals(saltedPassword, 0, saltedPassword.length,
                 saltedPasswordWithSalt, SALT_SIZE_BYTES, saltedPasswordWithSalt.length);
     }
