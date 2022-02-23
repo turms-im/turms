@@ -135,7 +135,7 @@ Turms客户端的会话生命周期比较容易理解，具体而言：先通过
 | 业务逻辑层 | userService.addOnOnlineListener  | 当会话建立/用户上线时 | 通常您并不需要通过`addOnOnlineListener`来添加上线监听事件，<br />而是将您的回调函数赋给`userService.login()`返回的异步成功回调onSucccess/then |
 | 业务逻辑层 | userService.addOnOfflineListener | 当会话断开/用户下线时 |                                                              |
 
-## 业务逻辑的认证与授权
+## 业务逻辑的认证与授权（拓展）
 
 对于客户端发来的权限信息，Turms服务端的态度是“客户端传来的权限信息均不可信”，因此Turms服务端会根据您在Turms服务端处所设定的业务配置，自行做各种必要的权限判断。
 
@@ -143,7 +143,7 @@ Turms客户端的会话生命周期比较容易理解，具体而言：先通过
 
 再比如对于一个“简单”的“发送消息”请求，Turms服务端就会判断该消息发送用户是否处于激活状态、是否设置了“允许发送消息给陌生人（非关系人）”、消息发送者是否在黑名单中。如果接收方是群组，那么消息发送者是否是群成员，并且是否处于禁言状态等等逻辑判断。而您仅仅只需调用一个sendMessage接口即可。
 
-## 与服务端通信时使用的数据格式
+## 与服务端通信时使用的数据格式（拓展）
 
 对于一般请求与响应而言：
 
@@ -161,18 +161,37 @@ Turms客户端的会话生命周期比较容易理解，具体而言：先通过
 * 上层代码无法控制PING/PONG的行为，甚至无法感知行为的发生
 * 网络层面的心跳逻辑不应该和应用层的心跳耦合
 
+## 接口的理解方法（重点）
+
+Turms所有客户端的接口都非常容易理解与使用。开发者甚至不需要看Turms客户端有什么接口，只需要凭借基本的IM业务知识就能反推Turms会有什么接口。
+
+一般开发者只需要记住：
+
+* 通过`new TurmsClient(...)`创建Turms客户端实例
+* 在上文`客户端的对外逻辑结构`提到的：Turms客户端分为五个服务：userService（用户相关服务）、groupService（群组相关服务）、messageService（消息相关服务）、notificationService（通知相关服务）、storageService（存储相关服务、可选拓展）。
+
+之后我们就能凭借业务知识反推Turms客户端会有什么接口了，比如：
+
+* 用户首先要能登陆，于是先想到其对应的服务`userService`用户相关服务。既然是`登陆`所以找找有没有`login`接口，于是自然地就找到了`client.userService.login(...)`接口。
+* 登陆后，用户需要能够发消息，那就先想到`messageService`消息相关服务，再看看有没有类似`sendMessage`的接口，于是找到了接口`client.messageService.sendMessage(...)`接口。
+* 既然能发消息，那有什么接口能监听收到的消息呢？既然跟消息有关，那依旧想到的是`messageService`，于是想到接口可能是`onMessage`、`subscribeMessage`或`addMessageListener`，代码里找一找，找到了`client.messageService.addMessageListener(...)`。
+* 既然能监听收到的消息，那怎么监听接收到的通知呢？既然跟通知有关，那想到的就是`notificationService`通知相关类服务，并且既然监听收到的消息的接口叫`addMessageListener`，那监听通知的接口就应该是`addNotificationListener`了，于是找到了`client.notification.addNotificationListener`。
+
+综上，一般开发者只需凭借基本的业务知识就能反推Turms客户端提供的接口，甚至不需要读Turms客户端的源码。
+
+而对于高级开发者，Turms客户端也开放了`driver`对象，让开发者自行实现一些相对底层的操作。另外，如在`会话的生命周期`提到的，Turms客户端是故意设计的清晰易懂，故意不提供诸如自动重连、自动路由跳转等操作，因为一方面开发者可以很容易地自行实现该类逻辑，另一方面，这类“隐藏”的内部逻辑会使得上层开发者难以把控底层驱动行为，在一些时候反而会成为绊脚石。
+
 ## 具体示例
 
 以下示例包括turms-client-js/kotlin/swift三个版本，并且其作用等价。具体包括了以下业务操作：初始化客户端、登录、监听会话连接断开（下线）、监听通知、监听新消息、查询附近的用户、发送消息、创建群组操作。
 
-### 体验实例的准备工作
+### 体验示例前的服务端准备工作
 
-* 方案一：在application.yaml配置文件中更新以下配置：
+* 方案一：无需在本地搭建Turms服务端，用户直接在本地通过客户端API连接Playground上的turms-gateway服务端（WebSocket端口：http://playground.turms.im:10510；TCP端口：http://playground.turms.im:11510）。但注意及时将本地客户端升级到最新版本，以避免出现因为服务端侧的接口更新，导致数据不一致的问题。
+* 方案二：在application.yaml配置文件中更新以下配置：
    1. 将`turms.gateway.session.enable-authentication`设置为false（取消用户登录认证）
    2. 将`turms.service.message.allow-sending-messages-to-stranger`也设置为true（允许没有用户关系的用户互相发送消息）
-* 方案二：使用自带`dev`profile配置。因为Turms提供的`dev`profile已做了上述配置。默认情况下，Turms发布包中的application.yaml的profile字段为空，即默认的profile不是`dev`，需要您手动配置为`dev`。
-
-提醒：以下客户端API为最新版本示例，而目前Playground上的Turms服务端（http://playground.turms.im:9510）为老版本，因此如果您直接连接Playground的服务端，可以会出现数据不一致的问题。
+* 方案三：使用自带`dev`profile配置。因为Turms提供的`dev`profile已做了上述配置。默认情况下，Turms发布包中的application.yaml的profile字段为空，即默认的profile不是`dev`，需要您手动配置为`dev`。
 
 ### turms-client-js版本
 
