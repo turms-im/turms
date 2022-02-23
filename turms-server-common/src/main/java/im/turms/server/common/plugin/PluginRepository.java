@@ -19,6 +19,7 @@ package im.turms.server.common.plugin;
 
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.util.CollectionUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,22 +47,12 @@ public class PluginRepository {
 
     public void register(Plugin plugin) {
         for (TurmsExtension extension : plugin.extensions()) {
-            Class<?>[] interfaceClasses;
-            ExtensionPoint extensionPoint;
-            if (extension instanceof JsTurmsExtensionAdaptor jsTurmsExtensionAdaptor) {
-                interfaceClasses = jsTurmsExtensionAdaptor.getExtensionPointClasses().toArray(Class[]::new);
-                extensionPoint = (ExtensionPoint) jsTurmsExtensionAdaptor.getProxy();
-            } else {
-                interfaceClasses = extension.getClass().getInterfaces();
-                extensionPoint = (ExtensionPoint) extension;
-            }
-            for (Class<?> interfaceClass : interfaceClasses) {
-                if (!ExtensionPoint.class.isAssignableFrom(interfaceClass)
-                        || interfaceClass == ExtensionPoint.class) {
-                    continue;
-                }
-                Class<? extends ExtensionPoint> clazz = (Class<? extends ExtensionPoint>) interfaceClass;
-                extensionPointMap.compute(clazz, (extensionPointClass, extensionPoints) -> {
+            ExtensionPoint extensionPoint = extension instanceof JsTurmsExtensionAdaptor jsTurmsExtensionAdaptor
+                    ? (ExtensionPoint) jsTurmsExtensionAdaptor.getProxy()
+                    : (ExtensionPoint) extension;
+            Class<? extends ExtensionPoint>[] interfaceClasses = extension.getExtensionPointClasses().toArray(Class[]::new);
+            for (Class<? extends ExtensionPoint> interfaceClass : interfaceClasses) {
+                extensionPointMap.compute(interfaceClass, (extensionPointClass, extensionPoints) -> {
                     if (extensionPoints == null) {
                         extensionPoints = new ArrayList<>(2);
                     } else if (singletonExtensionPointClasses.contains(extensionPointClass)) {
@@ -101,6 +92,20 @@ public class PluginRepository {
 
     public Collection<Plugin> getPlugins() {
         return pluginMap.values();
+    }
+
+    public List<Plugin> getPlugins(Set<String> ids) {
+        if (CollectionUtil.isEmpty(ids)) {
+            return Collections.emptyList();
+        }
+        List<Plugin> plugins = new ArrayList<>(ids.size());
+        for (String id : ids) {
+            Plugin plugin = pluginMap.get(id);
+            if (plugin != null) {
+                plugins.add(plugin);
+            }
+        }
+        return plugins;
     }
 
 }

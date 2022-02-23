@@ -19,6 +19,9 @@ package im.turms.server.common.plugin;
 
 import org.springframework.context.ApplicationContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author James Chen
  */
@@ -27,6 +30,7 @@ public abstract class TurmsExtension {
     private ApplicationContext context;
     private boolean started;
     private boolean running;
+    private List<Class<? extends ExtensionPoint>> extensionPointClasses;
 
     protected ApplicationContext getContext() {
         return context;
@@ -54,6 +58,21 @@ public abstract class TurmsExtension {
 
     protected <T> T loadProperties(Class<T> propertiesClass) {
         return context.getBean(PluginManager.class).loadProperties(propertiesClass);
+    }
+
+    List<Class<? extends ExtensionPoint>> getExtensionPointClasses() {
+        if (extensionPointClasses == null) {
+            Class<?>[] interfaces = getClass().getInterfaces();
+            List<Class<? extends ExtensionPoint>> classes = new ArrayList<>(interfaces.length);
+            for (Class<?> interfaceClass : interfaces) {
+                if (ExtensionPoint.class.isAssignableFrom(interfaceClass)
+                        && interfaceClass != ExtensionPoint.class) {
+                    classes.add((Class<? extends ExtensionPoint>) interfaceClass);
+                }
+            }
+            extensionPointClasses = classes;
+        }
+        return extensionPointClasses;
     }
 
     void start() {

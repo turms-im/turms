@@ -155,8 +155,56 @@ public class PluginManager {
         return pluginRepository.getExtensionPoints(clazz);
     }
 
+    public List<Class<? extends ExtensionPoint>> getExtensionPoints(TurmsExtension extension) {
+        return extension.getExtensionPointClasses();
+    }
+
     public Collection<Plugin> getPlugins() {
         return pluginRepository.getPlugins();
+    }
+
+    public List<Plugin> getPlugins(Set<String> ids) {
+        return pluginRepository.getPlugins(ids);
+    }
+
+    public int startPlugins(Set<String> ids) {
+        List<Plugin> plugins = pluginRepository.getPlugins(ids);
+        for (Plugin plugin : plugins) {
+            for (TurmsExtension extension : plugin.extensions()) {
+                extension.start();
+            }
+        }
+        return plugins.size();
+    }
+
+    public int stopPlugins(Set<String> ids) {
+        List<Plugin> plugins = pluginRepository.getPlugins(ids);
+        for (Plugin plugin : plugins) {
+            for (TurmsExtension extension : plugin.extensions()) {
+                extension.stop();
+            }
+        }
+        return plugins.size();
+    }
+
+    public int resumePlugins(Set<String> ids) {
+        List<Plugin> plugins = pluginRepository.getPlugins(ids);
+        for (Plugin plugin : plugins) {
+            for (TurmsExtension extension : plugin.extensions()) {
+                extension.resume();
+            }
+        }
+        return plugins.size();
+    }
+
+    public int pausePlugins(Set<String> ids) {
+        List<Plugin> plugins = pluginRepository.getPlugins(ids);
+        for (Plugin plugin : plugins) {
+            for (TurmsExtension extension : plugin.extensions()) {
+                extension.pause();
+            }
+        }
+        return plugins.size();
     }
 
     public <T extends ExtensionPoint> boolean hasRunningExtensions(Class<T> extensionPointClass) {

@@ -259,8 +259,7 @@ public class ConnectionService implements ClusterService {
                     LOGGER.info("[Client] Sending a open handshake request to member: {}[{}:{}]",
                             nodeId, member.getMemberHost(), member.getMemberPort());
                     rpcService.requestResponse(nodeId, new OpeningHandshakeRequest(localNodeId), null, connection)
-                            .doOnSuccess(unused -> onMemberConnectionHandshakeCompleted(member, connection, true))
-                            .subscribe(null, t -> {
+                            .subscribe(unused -> onMemberConnectionHandshakeCompleted(member, connection, true), t -> {
                                 LOGGER.error("[Client] Failed to complete handshake with member: {}[{}:{}]. Closing connection to reconnect",
                                         nodeId, member.getMemberHost(), member.getMemberPort(), t);
                                 // To keep logic simple, just disconnect to

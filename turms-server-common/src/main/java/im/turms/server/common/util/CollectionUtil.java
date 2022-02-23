@@ -22,7 +22,6 @@ import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.RandomAccess;
 import java.util.Set;
@@ -56,7 +55,7 @@ public final class CollectionUtil {
 
     public static <T> Set<T> add(Set<T> set, Set<T> values) {
         if (IMMUTABLE_COLLECTION_CLASS.isInstance(set)) {
-            Set<T> newSet = new HashSet<>(MapUtil.getCapability(set.size() + values.size()));
+            Set<T> newSet = UnifiedSet.newSet(set.size() + values.size());
             newSet.addAll(set);
             set = newSet;
         }
@@ -116,4 +115,7 @@ public final class CollectionUtil {
         return new ArrayList<>(collection);
     }
 
+    public static <T> boolean isEmpty(@Nullable Collection<T> collection) {
+        return collection == null || collection.isEmpty();
+    }
 }

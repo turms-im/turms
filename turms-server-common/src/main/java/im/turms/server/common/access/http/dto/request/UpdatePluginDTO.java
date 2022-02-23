@@ -15,25 +15,19 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.access.http.dto.response;
-
-import com.mongodb.client.result.UpdateResult;
+package im.turms.server.common.access.http.dto.request;
 
 /**
  * @author James Chen
- * @implNote In most cases,
- * it's meaningful to use UpdateResultDTO instead of TurmsStatusCode.OK for the result of update operations
- * because an update operation is usually considered as successful even if the no documents changed (no documents matched)
  */
-public record UpdateResultDTO(
-        Long matchedCount,
-        Long modifiedCount
+public record UpdatePluginDTO(
+        PluginStatus status
 ) {
 
-    public static final UpdateResultDTO NONE = new UpdateResultDTO(0L, 0L);
-
-    public static UpdateResultDTO get(UpdateResult result) {
-        return new UpdateResultDTO(result.getMatchedCount(), result.getModifiedCount());
+    public enum PluginStatus {
+        STARTED,
+        STOPPED,
+        RESUMED,
+        PAUSED
     }
-
 }
