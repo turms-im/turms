@@ -229,11 +229,11 @@ class MessageService(private val turmsClient: TurmsClient) {
     companion object {
         /**
          * Format: "@{userId}"
-         *
-         *
          * Example: "@{123}", "I need to talk with @{123} and @{321}"
+         * Note that some IDEs complain that "\\" before "}" is redundant,
+         * but do NOT remove it otherwise Android will fail to compile it.
          */
-        private val regex = Pattern.compile("@\\{(\\d+?)}")
+        private val regex = Pattern.compile("@\\{(\\d+?)\\}")
         private val DEFAULT_MENTIONED_USER_IDS_PARSER: (Message) -> Set<Long> = {
             if (it.hasText()) {
                 val text = it.text
