@@ -22,7 +22,10 @@ import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.PluginProperties;
+import im.turms.server.common.security.MessageDigestPool;
 import im.turms.server.common.util.ClassUtil;
+import im.turms.server.common.util.CollectionUtil;
+import io.lettuce.core.codec.Base16;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.graalvm.polyglot.Engine;
@@ -34,7 +37,10 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import javax.annotation.PreDestroy;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -53,6 +59,8 @@ public class PluginManager {
 
     @Getter
     private final boolean enabled;
+    private final boolean isJsScriptEnabled;
+    private final Path pluginDir;
 
     private final PluginRepository pluginRepository;
     private final ApplicationContext context;
@@ -75,11 +83,14 @@ public class PluginManager {
         pluginRepository = new PluginRepository(singletonExtensionPoints == null
                 ? Collections.emptySet()
                 : singletonExtensionPoints);
-        Path dir = getPluginDir(applicationContext.getHome(), pluginProperties.getDir());
-        boolean isJsScriptEnabled = ClassUtil.exists("org.graalvm.polyglot.Engine");
-        PluginFinder.FindResult findResult = PluginFinder.find(dir, isJsScriptEnabled);
+        pluginDir = getPluginDir(applicationContext.getHome(), pluginProperties.getDir());
+        isJsScriptEnabled = ClassUtil.exists("org.graalvm.polyglot.Engine");
+        PluginFinder.FindResult findResult = PluginFinder.find(pluginDir, isJsScriptEnabled);
         loadJavaPlugins(findResult.zipFiles());
         if (isJsScriptEnabled) {
+            engine = Engine.newBuilder()
+                    .option("engine.WarnInterpreterOnly", "false")
+                    .build();
             loadJsPlugins(findResult.jsScripts());
         }
         if (enabled) {
@@ -127,20 +138,22 @@ public class PluginManager {
         }
     }
 
-    @SneakyThrows
-    public void loadJsPlugins(List<String> scripts) {
-        if (scripts.isEmpty()) {
+    public void loadJsPlugins(Collection<String> scripts) {
+        if (CollectionUtil.isEmpty(scripts)) {
             return;
         }
-        Engine engine = Engine.newBuilder()
-                .option("engine.WarnInterpreterOnly", "false")
-                .build();
-        this.engine = engine;
         for (String script : scripts) {
-            JsPlugin jsPlugin = JsPluginFactory.create(engine, script);
-            Plugin plugin = JavaPluginFactory.create(jsPlugin.descriptor(), jsPlugin.extensions(), context);
-            pluginRepository.register(plugin);
+            loadJsPlugins(script);
         }
+    }
+
+    public void loadJsPlugins(String script) {
+        if (!isJsScriptEnabled) {
+            throw new UnsupportedOperationException("JavaScript plugins are disabled because the classes of GraalJS aren't loaded");
+        }
+        JsPlugin jsPlugin = JsPluginFactory.create((Engine) engine, script);
+        Plugin plugin = JavaPluginFactory.create(jsPlugin.descriptor(), jsPlugin.extensions(), context);
+        pluginRepository.register(plugin);
     }
 
     @SneakyThrows
@@ -149,6 +162,19 @@ public class PluginManager {
         String s = propertiesClass.getName() + UUID.randomUUID();
         return (T) context.getBean(ConfigurationPropertiesBindingPostProcessor.class)
                 .postProcessBeforeInitialization(properties, s);
+    }
+
+    @SneakyThrows
+    public synchronized void savePlugins(Set<String> scripts) {
+        for (String script : scripts) {
+            byte[] bytes = script.getBytes(StandardCharsets.UTF_8);
+            byte[] digest = MessageDigestPool.getSha1().digest(bytes);
+            String name = new String(Base16.encode(digest, false));
+            Path path = pluginDir.resolve("_network_" + name);
+            if (Files.notExists(path)) {
+                Files.write(path, bytes, StandardOpenOption.CREATE_NEW);
+            }
+        }
     }
 
     public <T extends ExtensionPoint> List<T> getExtensionPoints(Class<T> clazz) {

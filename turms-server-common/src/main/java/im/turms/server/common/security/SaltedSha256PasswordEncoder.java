@@ -20,7 +20,6 @@ package im.turms.server.common.security;
 import im.turms.server.common.util.ArrayUtil;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -31,27 +30,13 @@ public class SaltedSha256PasswordEncoder implements PasswordEncoder {
 
     public static final int SALT_SIZE_BYTES = 8;
 
-    private static final ThreadLocal<MessageDigest> DIGEST = ThreadLocal.withInitial(() -> {
-        try {
-            return MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
-        }
-    });
-
-    public SaltedSha256PasswordEncoder() {
-        // Check if SHA-256 exists
-        DIGEST.get();
-    }
-
     @Override
     public byte[] encode(byte[] rawPassword) {
         byte[] salt = new byte[SALT_SIZE_BYTES];
         ThreadLocalRandom.current().nextBytes(salt);
 
         byte[] rawPasswordWithSalt = ArrayUtil.concat(salt, rawPassword);
-        MessageDigest digest = DIGEST.get();
-        digest.reset();
+        MessageDigest digest = MessageDigestPool.getSha256();
         byte[] saltedPassword = digest.digest(rawPasswordWithSalt);
 
         return ArrayUtil.concat(salt, saltedPassword);
@@ -65,8 +50,7 @@ public class SaltedSha256PasswordEncoder implements PasswordEncoder {
         byte[] rawPasswordWithSalt = new byte[SALT_SIZE_BYTES + rawPassword.length];
         System.arraycopy(saltedPasswordWithSalt, 0, rawPasswordWithSalt, 0, SALT_SIZE_BYTES);
         System.arraycopy(rawPassword, 0, rawPasswordWithSalt, SALT_SIZE_BYTES, rawPassword.length);
-        MessageDigest digest = DIGEST.get();
-        digest.reset();
+        MessageDigest digest = MessageDigestPool.getSha256();
         byte[] saltedPassword = digest.digest(rawPasswordWithSalt);
         return Arrays.equals(saltedPassword, 0, saltedPassword.length,
                 saltedPasswordWithSalt, SALT_SIZE_BYTES, saltedPasswordWithSalt.length);

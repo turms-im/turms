@@ -17,17 +17,24 @@
 
 package im.turms.server.common.access.http.controller;
 
+import im.turms.server.common.access.http.dto.request.AddJsPluginDTO;
 import im.turms.server.common.access.http.dto.request.UpdatePluginDTO;
 import im.turms.server.common.access.http.dto.response.ExtensionDTO;
 import im.turms.server.common.access.http.dto.response.PluginDTO;
+import im.turms.server.common.access.http.dto.response.ResponseDTO;
+import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.access.http.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.http.permission.AdminPermission;
+import im.turms.server.common.access.http.permission.RequiredPermission;
 import im.turms.server.common.plugin.ExtensionPoint;
 import im.turms.server.common.plugin.Plugin;
 import im.turms.server.common.plugin.PluginDescriptor;
 import im.turms.server.common.plugin.PluginManager;
 import im.turms.server.common.plugin.TurmsExtension;
 import im.turms.server.common.util.CollectionUtil;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,7 +60,8 @@ public class PluginController {
     }
 
     @GetMapping
-    public List<PluginDTO> getPlugins(@RequestParam Set<String> ids) {
+    @RequiredPermission(AdminPermission.PLUGIN_QUERY)
+    public ResponseEntity<ResponseDTO<Collection<PluginDTO>>> getPlugins(@RequestParam(required = false) Set<String> ids) {
         Collection<Plugin> plugins = CollectionUtil.isEmpty(ids)
                 ? pluginManager.getPlugins()
                 : pluginManager.getPlugins(ids);
@@ -81,16 +89,17 @@ public class PluginController {
                     descriptor.getDescription(),
                     extensionDTOs));
         }
-        return pluginInfoList;
+        return ResponseFactory.okIfTruthy(pluginInfoList);
     }
 
     @PutMapping
-    public UpdateResultDTO updatePlugins(
+    @RequiredPermission(AdminPermission.PLUGIN_UPDATE)
+    public ResponseEntity<ResponseDTO<UpdateResultDTO>> updatePlugins(
             @RequestParam Set<String> ids,
             @RequestBody UpdatePluginDTO updatePluginDTO) {
         UpdatePluginDTO.PluginStatus status = updatePluginDTO.status();
         if (status == null) {
-            return UpdateResultDTO.NONE;
+            return ResponseFactory.okIfTruthy(UpdateResultDTO.NONE);
         }
         long count = switch (status) {
             case STARTED -> pluginManager.startPlugins(ids);
@@ -98,7 +107,20 @@ public class PluginController {
             case RESUMED -> pluginManager.resumePlugins(ids);
             case PAUSED -> pluginManager.pausePlugins(ids);
         };
-        return new UpdateResultDTO(count, count);
+        return ResponseFactory.okIfTruthy(new UpdateResultDTO(count, count));
+    }
+
+    @PostMapping("/js")
+    @RequiredPermission(AdminPermission.PLUGIN_CREATE)
+    public ResponseEntity<ResponseDTO<Void>> createPlugins(
+            @RequestParam(defaultValue = "false") boolean save,
+            @RequestBody AddJsPluginDTO addJsPluginDTO) {
+        Set<String> scripts = addJsPluginDTO.scripts();
+        pluginManager.loadJsPlugins(scripts);
+        if (save) {
+            pluginManager.savePlugins(scripts);
+        }
+        return ResponseFactory.OK;
     }
 
 }

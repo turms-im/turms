@@ -147,6 +147,11 @@
         "CLUSTER_CONFIG": [
             "CLUSTER_SETTING_UPDATE",
             "CLUSTER_SETTING_QUERY"
+        ],
+        "PLUGIN": [
+            "PLUGIN_CREATE",
+            "PLUGIN_UPDATE",
+            "PLUGIN_QUERY"
         ]
     },
     "apis": {

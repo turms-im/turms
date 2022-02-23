@@ -24,11 +24,11 @@ import im.turms.server.common.util.CollectionUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author James Chen
@@ -37,7 +37,7 @@ public class PluginRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginRepository.class);
 
-    private final Map<String, Plugin> pluginMap = new HashMap<>(16);
+    private final Map<String, Plugin> pluginMap = new ConcurrentHashMap<>(16);
     private final Map<Class<? extends ExtensionPoint>, List<ExtensionPoint>> extensionPointMap = new IdentityHashMap<>(8);
     private final Set<Class<? extends ExtensionPoint>> singletonExtensionPointClasses;
 
@@ -46,26 +46,30 @@ public class PluginRepository {
     }
 
     public void register(Plugin plugin) {
-        for (TurmsExtension extension : plugin.extensions()) {
-            ExtensionPoint extensionPoint = extension instanceof JsTurmsExtensionAdaptor jsTurmsExtensionAdaptor
-                    ? (ExtensionPoint) jsTurmsExtensionAdaptor.getProxy()
-                    : (ExtensionPoint) extension;
-            Class<? extends ExtensionPoint>[] interfaceClasses = extension.getExtensionPointClasses().toArray(Class[]::new);
-            for (Class<? extends ExtensionPoint> interfaceClass : interfaceClasses) {
-                extensionPointMap.compute(interfaceClass, (extensionPointClass, extensionPoints) -> {
-                    if (extensionPoints == null) {
-                        extensionPoints = new ArrayList<>(2);
-                    } else if (singletonExtensionPointClasses.contains(extensionPointClass)) {
-                        String message = "The singleton extension point %s in the plugin %s cannot be registered because an extension point has been registered"
-                                .formatted(extensionPointClass.getName(), plugin.descriptor().getId());
-                        LOGGER.warn(message);
+        pluginMap.computeIfAbsent(plugin.descriptor().getId(), id -> {
+            for (TurmsExtension extension : plugin.extensions()) {
+                ExtensionPoint extensionPoint = extension instanceof JsTurmsExtensionAdaptor jsTurmsExtensionAdaptor
+                        ? (ExtensionPoint) jsTurmsExtensionAdaptor.getProxy()
+                        : (ExtensionPoint) extension;
+                Class<? extends ExtensionPoint>[] interfaceClasses = extension.getExtensionPointClasses().toArray(Class[]::new);
+                for (Class<? extends ExtensionPoint> interfaceClass : interfaceClasses) {
+                    extensionPointMap.compute(interfaceClass, (extensionPointClass, extensionPoints) -> {
+                        if (extensionPoints == null) {
+                            extensionPoints = new ArrayList<>(2);
+                        } else if (singletonExtensionPointClasses.contains(extensionPointClass)) {
+                            String message =
+                                    "The singleton extension point %s in the plugin %s cannot be registered because an extension point has been registered"
+                                            .formatted(extensionPointClass.getName(), plugin.descriptor().getId());
+                            LOGGER.warn(message);
+                            return extensionPoints;
+                        }
+                        extensionPoints.add(extensionPoint);
                         return extensionPoints;
-                    }
-                    extensionPoints.add(extensionPoint);
-                    return extensionPoints;
-                });
+                    });
+                }
             }
-        }
+            return plugin;
+        });
     }
 
     public <T extends ExtensionPoint> boolean hasRunningExtensions(Class<T> clazz) {

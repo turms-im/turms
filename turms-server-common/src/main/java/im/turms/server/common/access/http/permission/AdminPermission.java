@@ -122,7 +122,11 @@ public enum AdminPermission {
     CLUSTER_LEADER_QUERY,
 
     CLUSTER_SETTING_UPDATE,
-    CLUSTER_SETTING_QUERY;
+    CLUSTER_SETTING_QUERY,
+
+    PLUGIN_CREATE,
+    PLUGIN_UPDATE,
+    PLUGIN_QUERY;
 
     public static final Set<AdminPermission> ALL = Set.of(AdminPermission.values());
 
@@ -230,7 +234,8 @@ public enum AdminPermission {
             ADMIN_CREATE,
             ADMIN_ROLE_CREATE,
             CLIENT_BLOCKLIST_CREATE,
-            CLUSTER_MEMBER_CREATE);
+            CLUSTER_MEMBER_CREATE,
+            PLUGIN_CREATE);
 
     public static final Set<AdminPermission> ALL_QUERY = Set.of(
             STATISTICS_USER_QUERY,
@@ -255,6 +260,7 @@ public enum AdminPermission {
             ADMIN_ROLE_QUERY,
             CLIENT_BLOCKLIST_QUERY,
             CLUSTER_MEMBER_QUERY,
-            CLUSTER_SETTING_QUERY);
+            CLUSTER_SETTING_QUERY,
+            PLUGIN_QUERY);
 
 }
