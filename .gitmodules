@@ -7,3 +7,6 @@
 [submodule "turms-client-swift/Protos"]
 	path = turms-client-swift/Protos
 	url = https://github.com/turms-im/proto.git
+[submodule "turms-client-dart/proto"]
+	path = turms-client-dart/proto
+	url = https://github.com/turms-im/proto.git
