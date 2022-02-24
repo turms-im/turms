@@ -70,11 +70,8 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
         if (isOpen) {
             throw RuntimeException("The TCP client has connected")
         }
-        this.host = host
-        this.port = port
-
         withContext(coroutineContext) {
-            socket = Socket(host, port)
+            val socket = Socket(host, port)
             socket.tcpNoDelay = true
             socket.reuseAddress = true
             if (useTls) {
@@ -88,9 +85,12 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
                     throw e
                 }
             }
+            this@TcpClient.socket = socket
             input = socket.getInputStream()
             output = socket.getOutputStream()
         }
+        this.host = host
+        this.port = port
         readBuffer = ByteBuffer.allocate(INITIAL_READ_BUFFER_CAPACITY)
         isOpen = true
     }
@@ -240,22 +240,6 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
         throw IllegalStateException("VarInt input too big")
     }
 
-    suspend fun writeVarInt(value: Int) = withContext(coroutineContext) {
-        var currentValue = value.toUInt()
-        synchronized(output) {
-            while (true) {
-                val maskedValue = currentValue.and(0x7FU)
-                currentValue = currentValue.shr(7)
-                if (currentValue == 0U) {
-                    output.write(maskedValue.toInt())
-                    return@withContext
-                } else {
-                    output.write(maskedValue.or(0x80U).toInt())
-                }
-            }
-        }
-    }
-
     suspend fun write(src: ByteArray) = withContext(coroutineContext) {
         try {
             synchronized(output) {
@@ -263,6 +247,23 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
             }
         } catch (e: Exception) {
             tryCallOnClose(e)
+        }
+    }
+
+    suspend fun writeVarIntLengthAndBytes(bytes: ByteArray) = withContext(coroutineContext) {
+        var currentValue = bytes.size.toUInt()
+        synchronized(output) {
+            while (true) {
+                val maskedValue = currentValue.and(0x7FU)
+                currentValue = currentValue.shr(7)
+                if (currentValue == 0U) {
+                    output.write(maskedValue.toInt())
+                    output.write(bytes)
+                    return@withContext
+                } else {
+                    output.write(maskedValue.or(0x80U).toInt())
+                }
+            }
         }
     }
 

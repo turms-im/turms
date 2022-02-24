@@ -46,7 +46,7 @@ class MessageService(
     requestTimeout: Int?,
     minRequestInterval: Int?
 ) : BaseService(coroutineContext, stateStore) {
-    private val requestTimeout = requestTimeout ?: 60 * 1000
+    private val requestTimeout = requestTimeout ?: (60 * 1000)
     private val minRequestInterval = minRequestInterval ?: 0
     private val notificationListeners: MutableList<(TurmsNotification) -> Unit> = LinkedList()
     private val requestMap = ConcurrentHashMap<Long, TurmsRequestContext>(256)
@@ -89,31 +89,29 @@ class MessageService(
             val request = requestBuilder
                 .setRequestId(requestId)
                 .build()
-            val requestContext = TurmsRequestContext(request, cont, null)
+            val requestContext = TurmsRequestContext(cont, null)
             val wasRequestAbsent = requestMap.putIfAbsent(requestId, requestContext) == null
-            if (wasRequestAbsent) {
-                launch {
-                    try {
-                        val payload = request.toByteArray()
-                        val tcp = stateStore.tcp!!
-                        tcp.writeVarInt(payload.size)
-                        tcp.write(payload)
-                    } catch (e: Exception) {
-                        cont.resumeWithException(e)
-                    }
+            if (!wasRequestAbsent) continue
+            launch {
+                try {
+                    val payload = request.toByteArray()
+                    val tcp = stateStore.tcp!!
+                    tcp.writeVarIntLengthAndBytes(payload)
+                } catch (e: Exception) {
+                    cont.resumeWithException(e)
                 }
-                if (requestTimeout > 0) {
-                    requestContext.timeoutDeferred = async {
-                        delay(requestTimeout.toLong())
-                        requestMap.remove(requestId)?.let {
-                            if (!requestContext.timeoutDeferred!!.isCompleted) {
-                                cont.tryResumeWithException(TurmsBusinessException(TurmsStatusCode.REQUEST_TIMEOUT))
-                            }
+            }
+            if (requestTimeout > 0) {
+                requestContext.timeoutDeferred = async {
+                    delay(requestTimeout.toLong())
+                    requestMap.remove(requestId)?.let {
+                        if (!requestContext.timeoutDeferred!!.isCompleted) {
+                            cont.tryResumeWithException(TurmsBusinessException(TurmsStatusCode.REQUEST_TIMEOUT))
                         }
                     }
                 }
-                return@suspendCoroutine
             }
+            return@suspendCoroutine
         }
     }
 
@@ -154,6 +152,7 @@ class MessageService(
         val iterator = requestMap.iterator()
         while (iterator.hasNext()) {
             iterator.next().value.cont.tryResumeWithException(e)
+            iterator.remove()
         }
     }
 
@@ -163,7 +162,6 @@ class MessageService(
         rejectRequests(TurmsBusinessException(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
 
     private data class TurmsRequestContext(
-        val request: TurmsRequest,
         val cont: Continuation<TurmsNotification>,
         var timeoutDeferred: Deferred<*>?
     )
