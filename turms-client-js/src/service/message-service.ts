@@ -295,7 +295,7 @@ export default class MessageService {
         if (systemMessageType === BuiltinSystemMessageType.RECALL_MESSAGE) {
             const size = message.records.length;
             for (let i = 1; i < size; i++) {
-                const id = Long.fromBytes(message.records[i] as any);
+                const id = Long.fromBytes(message.records[i] as any).toString();
                 recalledMessageIds.push(id);
             }
         }
