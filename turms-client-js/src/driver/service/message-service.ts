@@ -88,7 +88,7 @@ export default class MessageService extends BaseService {
             if (isFrequent) {
                 return reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT));
             }
-            const requestId = RequestUtil.generateRandomId(this._requestMap);
+            const requestId = this._generateRandomId();
             message.requestId = '' + requestId;
             let data;
             try {
@@ -142,6 +142,14 @@ export default class MessageService extends BaseService {
         const clonedNotification = JSON.parse(JSON.stringify(notification));
         const parsedNotification = NotificationUtil.transform(clonedNotification);
         this._notifyNotificationListeners(parsedNotification as ParsedNotification);
+    }
+
+    private _generateRandomId(): number {
+        let id;
+        do {
+            id = 1 + Math.floor(Math.random() * 9007199254740991);
+        } while (this._requestMap[id]);
+        return id;
     }
 
     private _rejectRequestPromises(error: TurmsBusinessError): void {

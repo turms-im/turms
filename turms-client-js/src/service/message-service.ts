@@ -46,7 +46,6 @@ export default class MessageService {
                         this._messageListeners.forEach(listener => listener(message, addition));
                     }
                 }
-                return null;
             });
     }
 

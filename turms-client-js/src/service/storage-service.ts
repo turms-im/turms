@@ -36,7 +36,7 @@ export default class StorageService {
             .then(url => this._getBytesFromGetUrl(url));
     }
 
-    public queryProfilePictureUrlForUpload(pictureSize): Promise<string> {
+    public queryProfilePictureUrlForUpload(pictureSize: number): Promise<string> {
         const userId = this._turmsClient.userService.userInfo.userId;
         if (userId) {
             return this._getSignedPutUrl(ContentType.PROFILE, pictureSize, null, userId);
@@ -79,7 +79,7 @@ export default class StorageService {
         return this._deleteResource(ContentType.GROUP_PROFILE, null, groupId);
     }
 
-// Message attachment
+    // Message attachment
 
     public queryAttachmentUrlForAccess(messageId: string, name?: string): Promise<string> {
         return this._getSignedGetUrl(ContentType.ATTACHMENT, name, messageId);
@@ -98,7 +98,7 @@ export default class StorageService {
             .then(url => this._upload(url, bytes));
     }
 
-// Base
+    // Base
 
     private _getSignedGetUrl(contentType: ContentType, keyStr?: string, keyNum?: string): Promise<string> {
         return this._turmsClient.driver.send({
@@ -139,7 +139,7 @@ export default class StorageService {
                         if (res.status === 200) {
                             return res.blob();
                         } else {
-                            reject(res);
+                            throw TurmsBusinessError.fromCode(TurmsStatusCode.INVALID_RESPONSE);
                         }
                     })
                     .then(data => {
@@ -148,7 +148,8 @@ export default class StorageService {
                             resolve(new Uint8Array(e.target.result as ArrayBuffer));
                         };
                         reader.readAsArrayBuffer(data);
-                    });
+                    })
+                    .catch(e => reject(e));
             } catch (e) {
                 reject(e);
             }
@@ -162,9 +163,9 @@ export default class StorageService {
                     if (res.status === 200) {
                         resolve(res.url);
                     } else {
-                        reject(res);
+                        throw TurmsBusinessError.fromCode(TurmsStatusCode.INVALID_RESPONSE);
                     }
-                });
+                }).catch(e => reject(e));
             } catch (e) {
                 reject(e);
             }
@@ -172,6 +173,6 @@ export default class StorageService {
     }
 
     private static _getBucketName(contentType: ContentType): string {
-        return ContentType[contentType].toString().toLowerCase().replace('_', '-');
+        return ContentType[contentType].toString().toLowerCase().replace(/_/g, '-');
     }
 }

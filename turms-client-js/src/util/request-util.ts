@@ -50,12 +50,4 @@ export default class RequestUtil {
         }
     }
 
-    static generateRandomId(requestMap: Record<number, any>): number {
-        let id;
-        do {
-            id = 1 + Math.floor(Math.random() * 9007199254740991);
-        } while (Object.prototype.hasOwnProperty.call(requestMap, id));
-        return id;
-    }
-
 }

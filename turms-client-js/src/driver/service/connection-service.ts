@@ -85,7 +85,7 @@ export default class ConnectionService extends BaseService {
             .filter(cur => cur !== listener);
     }
 
-    private _notifyOnConnectedListener(): void {
+    private _notifyOnConnectedListeners(): void {
         this._onConnectedListeners.forEach(listener => listener.call(this));
     }
 
@@ -157,7 +157,7 @@ export default class ConnectionService extends BaseService {
     // Lifecycle hooks
 
     private _onWebSocketOpen(): void {
-        this._notifyOnConnectedListener();
+        this._notifyOnConnectedListeners();
     }
 
     private _onWebSocketClose(url: string, event: {
