@@ -173,10 +173,10 @@ public class StorageService {
                     if response.statusCode == 200 {
                         seal.fulfill(data!)
                     } else {
-                        seal.reject(TurmsBusinessError(4000))
+                        seal.reject(TurmsBusinessError(.invalidResponse))
                     }
                 } else {
-                    seal.reject(TurmsBusinessError(4000))
+                    seal.reject(TurmsBusinessError(.invalidResponse))
                 }
             }.resume()
         }
@@ -195,10 +195,10 @@ public class StorageService {
                     if response.statusCode == 200 {
                         seal.fulfill(url)
                     } else {
-                        seal.reject(TurmsBusinessError(4000))
+                        seal.reject(TurmsBusinessError(.invalidResponse))
                     }
                 } else {
-                    seal.reject(TurmsBusinessError(4000))
+                    seal.reject(TurmsBusinessError(.invalidResponse))
                 }
             }.resume()
         }

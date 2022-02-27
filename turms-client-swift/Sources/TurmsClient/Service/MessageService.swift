@@ -26,7 +26,7 @@ public class MessageService {
         self.turmsClient = turmsClient
         self.turmsClient.driver
             .addNotificationListener {
-                if $0.hasRelayedRequest, case let .createMessageRequest(request) = $0.relayedRequest.kind {
+                if !self.messageListeners.isEmpty, $0.hasRelayedRequest, case let .createMessageRequest(request) = $0.relayedRequest.kind {
                     let message = MessageService.createMessage2Message($0.requesterID, request)
                     let addition = self.parseMessageAddition(message)
                     self.messageListeners.forEach { listener in listener(message, addition) }

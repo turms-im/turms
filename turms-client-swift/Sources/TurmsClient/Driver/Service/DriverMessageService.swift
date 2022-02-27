@@ -3,7 +3,7 @@ import PromiseKit
 
 class DriverMessageService: BaseService {
     private let requestTimeout: TimeInterval
-    private let minRequestInterval: TimeInterval?
+    private let minRequestInterval: TimeInterval
     private var notificationListeners: [(TurmsNotification) -> Void] = []
     private var requestMap: [Int64: Resolver<TurmsNotification>] = [:]
     private var lastRequestDate = Date(timeIntervalSince1970: 0)
@@ -45,7 +45,7 @@ class DriverMessageService: BaseService {
             }
             let now = Date()
             let difference = now.timeIntervalSince1970 - lastRequestDate.timeIntervalSince1970
-            let isFrequent = minRequestInterval != nil && minRequestInterval! > 0 && difference <= minRequestInterval!
+            let isFrequent = minRequestInterval > 0 && difference <= minRequestInterval
             if isFrequent {
                 return seal.reject(TurmsBusinessError(.clientRequestsTooFrequent))
             }
@@ -91,5 +91,20 @@ class DriverMessageService: BaseService {
             id = Int64.random(in: 1 ... Int64.max)
         } while requestMap.keys.contains(id)
         return id
+    }
+
+    private func rejectRequests(_ e: TurmsBusinessError) {
+        repeat {
+            requestMap.popFirst()?.value.reject(e)
+        } while !requestMap.isEmpty
+    }
+
+    override func close() -> Promise<Void> {
+        onDisconnected()
+        return Promise.value(())
+    }
+
+    override func onDisconnected() {
+        rejectRequests(TurmsBusinessError(.clientSessionHasBeenClosed))
     }
 }
