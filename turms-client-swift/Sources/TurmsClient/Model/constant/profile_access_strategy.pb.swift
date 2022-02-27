@@ -15,61 +15,60 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public enum ProfileAccessStrategy: SwiftProtobuf.Enum {
-  public typealias RawValue = Int
-  case all // = 0
-  case allExceptBlockedUsers // = 1
-  case friends // = 2
-  case UNRECOGNIZED(Int)
+    public typealias RawValue = Int
+    case all // = 0
+    case allExceptBlockedUsers // = 1
+    case friends // = 2
+    case UNRECOGNIZED(Int)
 
-  public init() {
-    self = .all
-  }
-
-  public init?(rawValue: Int) {
-    switch rawValue {
-    case 0: self = .all
-    case 1: self = .allExceptBlockedUsers
-    case 2: self = .friends
-    default: self = .UNRECOGNIZED(rawValue)
+    public init() {
+        self = .all
     }
-  }
 
-  public var rawValue: Int {
-    switch self {
-    case .all: return 0
-    case .allExceptBlockedUsers: return 1
-    case .friends: return 2
-    case .UNRECOGNIZED(let i): return i
+    public init?(rawValue: Int) {
+        switch rawValue {
+        case 0: self = .all
+        case 1: self = .allExceptBlockedUsers
+        case 2: self = .friends
+        default: self = .UNRECOGNIZED(rawValue)
+        }
     }
-  }
 
+    public var rawValue: Int {
+        switch self {
+        case .all: return 0
+        case .allExceptBlockedUsers: return 1
+        case .friends: return 2
+        case let .UNRECOGNIZED(i): return i
+        }
+    }
 }
 
 #if swift(>=4.2)
 
-extension ProfileAccessStrategy: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  public static var allCases: [ProfileAccessStrategy] = [
-    .all,
-    .allExceptBlockedUsers,
-    .friends,
-  ]
-}
+    extension ProfileAccessStrategy: CaseIterable {
+        // The compiler won't synthesize support with the UNRECOGNIZED case.
+        public static var allCases: [ProfileAccessStrategy] = [
+            .all,
+            .allExceptBlockedUsers,
+            .friends,
+        ]
+    }
 
-#endif  // swift(>=4.2)
+#endif // swift(>=4.2)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 extension ProfileAccessStrategy: SwiftProtobuf._ProtoNameProviding {
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "ALL"),
-    1: .same(proto: "ALL_EXCEPT_BLOCKED_USERS"),
-    2: .same(proto: "FRIENDS"),
-  ]
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        0: .same(proto: "ALL"),
+        1: .same(proto: "ALL_EXCEPT_BLOCKED_USERS"),
+        2: .same(proto: "FRIENDS"),
+    ]
 }

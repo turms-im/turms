@@ -15,168 +15,175 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct GroupMember {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var groupID: Int64 {
-    get {return _groupID ?? 0}
-    set {_groupID = newValue}
-  }
-  /// Returns true if `groupID` has been explicitly set.
-  public var hasGroupID: Bool {return self._groupID != nil}
-  /// Clears the value of `groupID`. Subsequent reads from it will return its default value.
-  public mutating func clearGroupID() {self._groupID = nil}
+    public var groupID: Int64 {
+        get { return _groupID ?? 0 }
+        set { _groupID = newValue }
+    }
 
-  public var userID: Int64 {
-    get {return _userID ?? 0}
-    set {_userID = newValue}
-  }
-  /// Returns true if `userID` has been explicitly set.
-  public var hasUserID: Bool {return self._userID != nil}
-  /// Clears the value of `userID`. Subsequent reads from it will return its default value.
-  public mutating func clearUserID() {self._userID = nil}
+    /// Returns true if `groupID` has been explicitly set.
+    public var hasGroupID: Bool { return _groupID != nil }
+    /// Clears the value of `groupID`. Subsequent reads from it will return its default value.
+    public mutating func clearGroupID() { _groupID = nil }
 
-  public var name: String {
-    get {return _name ?? String()}
-    set {_name = newValue}
-  }
-  /// Returns true if `name` has been explicitly set.
-  public var hasName: Bool {return self._name != nil}
-  /// Clears the value of `name`. Subsequent reads from it will return its default value.
-  public mutating func clearName() {self._name = nil}
+    public var userID: Int64 {
+        get { return _userID ?? 0 }
+        set { _userID = newValue }
+    }
 
-  public var role: GroupMemberRole {
-    get {return _role ?? .owner}
-    set {_role = newValue}
-  }
-  /// Returns true if `role` has been explicitly set.
-  public var hasRole: Bool {return self._role != nil}
-  /// Clears the value of `role`. Subsequent reads from it will return its default value.
-  public mutating func clearRole() {self._role = nil}
+    /// Returns true if `userID` has been explicitly set.
+    public var hasUserID: Bool { return _userID != nil }
+    /// Clears the value of `userID`. Subsequent reads from it will return its default value.
+    public mutating func clearUserID() { _userID = nil }
 
-  public var joinDate: Int64 {
-    get {return _joinDate ?? 0}
-    set {_joinDate = newValue}
-  }
-  /// Returns true if `joinDate` has been explicitly set.
-  public var hasJoinDate: Bool {return self._joinDate != nil}
-  /// Clears the value of `joinDate`. Subsequent reads from it will return its default value.
-  public mutating func clearJoinDate() {self._joinDate = nil}
+    public var name: String {
+        get { return _name ?? String() }
+        set { _name = newValue }
+    }
 
-  public var muteEndDate: Int64 {
-    get {return _muteEndDate ?? 0}
-    set {_muteEndDate = newValue}
-  }
-  /// Returns true if `muteEndDate` has been explicitly set.
-  public var hasMuteEndDate: Bool {return self._muteEndDate != nil}
-  /// Clears the value of `muteEndDate`. Subsequent reads from it will return its default value.
-  public mutating func clearMuteEndDate() {self._muteEndDate = nil}
+    /// Returns true if `name` has been explicitly set.
+    public var hasName: Bool { return _name != nil }
+    /// Clears the value of `name`. Subsequent reads from it will return its default value.
+    public mutating func clearName() { _name = nil }
 
-  public var userStatus: UserStatus {
-    get {return _userStatus ?? .available}
-    set {_userStatus = newValue}
-  }
-  /// Returns true if `userStatus` has been explicitly set.
-  public var hasUserStatus: Bool {return self._userStatus != nil}
-  /// Clears the value of `userStatus`. Subsequent reads from it will return its default value.
-  public mutating func clearUserStatus() {self._userStatus = nil}
+    public var role: GroupMemberRole {
+        get { return _role ?? .owner }
+        set { _role = newValue }
+    }
 
-  public var usingDeviceTypes: [DeviceType] = []
+    /// Returns true if `role` has been explicitly set.
+    public var hasRole: Bool { return _role != nil }
+    /// Clears the value of `role`. Subsequent reads from it will return its default value.
+    public mutating func clearRole() { _role = nil }
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    public var joinDate: Int64 {
+        get { return _joinDate ?? 0 }
+        set { _joinDate = newValue }
+    }
 
-  public init() {}
+    /// Returns true if `joinDate` has been explicitly set.
+    public var hasJoinDate: Bool { return _joinDate != nil }
+    /// Clears the value of `joinDate`. Subsequent reads from it will return its default value.
+    public mutating func clearJoinDate() { _joinDate = nil }
 
-  fileprivate var _groupID: Int64? = nil
-  fileprivate var _userID: Int64? = nil
-  fileprivate var _name: String? = nil
-  fileprivate var _role: GroupMemberRole? = nil
-  fileprivate var _joinDate: Int64? = nil
-  fileprivate var _muteEndDate: Int64? = nil
-  fileprivate var _userStatus: UserStatus? = nil
+    public var muteEndDate: Int64 {
+        get { return _muteEndDate ?? 0 }
+        set { _muteEndDate = newValue }
+    }
+
+    /// Returns true if `muteEndDate` has been explicitly set.
+    public var hasMuteEndDate: Bool { return _muteEndDate != nil }
+    /// Clears the value of `muteEndDate`. Subsequent reads from it will return its default value.
+    public mutating func clearMuteEndDate() { _muteEndDate = nil }
+
+    public var userStatus: UserStatus {
+        get { return _userStatus ?? .available }
+        set { _userStatus = newValue }
+    }
+
+    /// Returns true if `userStatus` has been explicitly set.
+    public var hasUserStatus: Bool { return _userStatus != nil }
+    /// Clears the value of `userStatus`. Subsequent reads from it will return its default value.
+    public mutating func clearUserStatus() { _userStatus = nil }
+
+    public var usingDeviceTypes: [DeviceType] = []
+
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    public init() {}
+
+    fileprivate var _groupID: Int64?
+    fileprivate var _userID: Int64?
+    fileprivate var _name: String?
+    fileprivate var _role: GroupMemberRole?
+    fileprivate var _joinDate: Int64?
+    fileprivate var _muteEndDate: Int64?
+    fileprivate var _userStatus: UserStatus?
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension GroupMember: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".GroupMember"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "group_id"),
-    2: .standard(proto: "user_id"),
-    3: .same(proto: "name"),
-    4: .same(proto: "role"),
-    5: .standard(proto: "join_date"),
-    6: .standard(proto: "mute_end_date"),
-    7: .standard(proto: "user_status"),
-    8: .standard(proto: "using_device_types"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".GroupMember"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "group_id"),
+        2: .standard(proto: "user_id"),
+        3: .same(proto: "name"),
+        4: .same(proto: "role"),
+        5: .standard(proto: "join_date"),
+        6: .standard(proto: "mute_end_date"),
+        7: .standard(proto: "user_status"),
+        8: .standard(proto: "using_device_types"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt64Field(value: &self._groupID) }()
-      case 2: try { try decoder.decodeSingularInt64Field(value: &self._userID) }()
-      case 3: try { try decoder.decodeSingularStringField(value: &self._name) }()
-      case 4: try { try decoder.decodeSingularEnumField(value: &self._role) }()
-      case 5: try { try decoder.decodeSingularInt64Field(value: &self._joinDate) }()
-      case 6: try { try decoder.decodeSingularInt64Field(value: &self._muteEndDate) }()
-      case 7: try { try decoder.decodeSingularEnumField(value: &self._userStatus) }()
-      case 8: try { try decoder.decodeRepeatedEnumField(value: &self.usingDeviceTypes) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularInt64Field(value: &_groupID)
+            case 2: try try decoder.decodeSingularInt64Field(value: &_userID)
+            case 3: try try decoder.decodeSingularStringField(value: &_name)
+            case 4: try try decoder.decodeSingularEnumField(value: &_role)
+            case 5: try try decoder.decodeSingularInt64Field(value: &_joinDate)
+            case 6: try try decoder.decodeSingularInt64Field(value: &_muteEndDate)
+            case 7: try try decoder.decodeSingularEnumField(value: &_userStatus)
+            case 8: try try decoder.decodeRepeatedEnumField(value: &usingDeviceTypes)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    try { if let v = self._groupID {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    } }()
-    try { if let v = self._userID {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    } }()
-    try { if let v = self._name {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    } }()
-    try { if let v = self._role {
-      try visitor.visitSingularEnumField(value: v, fieldNumber: 4)
-    } }()
-    try { if let v = self._joinDate {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
-    } }()
-    try { if let v = self._muteEndDate {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
-    } }()
-    try { if let v = self._userStatus {
-      try visitor.visitSingularEnumField(value: v, fieldNumber: 7)
-    } }()
-    if !self.usingDeviceTypes.isEmpty {
-      try visitor.visitPackedEnumField(value: self.usingDeviceTypes, fieldNumber: 8)
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        try { if let v = self._groupID {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
+        } }()
+        try { if let v = self._userID {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
+        } }()
+        try { if let v = self._name {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 3)
+        } }()
+        try { if let v = self._role {
+            try visitor.visitSingularEnumField(value: v, fieldNumber: 4)
+        } }()
+        try { if let v = self._joinDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
+        } }()
+        try { if let v = self._muteEndDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
+        } }()
+        try { if let v = self._userStatus {
+            try visitor.visitSingularEnumField(value: v, fieldNumber: 7)
+        } }()
+        if !usingDeviceTypes.isEmpty {
+            try visitor.visitPackedEnumField(value: usingDeviceTypes, fieldNumber: 8)
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  public static func ==(lhs: GroupMember, rhs: GroupMember) -> Bool {
-    if lhs._groupID != rhs._groupID {return false}
-    if lhs._userID != rhs._userID {return false}
-    if lhs._name != rhs._name {return false}
-    if lhs._role != rhs._role {return false}
-    if lhs._joinDate != rhs._joinDate {return false}
-    if lhs._muteEndDate != rhs._muteEndDate {return false}
-    if lhs._userStatus != rhs._userStatus {return false}
-    if lhs.usingDeviceTypes != rhs.usingDeviceTypes {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: GroupMember, rhs: GroupMember) -> Bool {
+        if lhs._groupID != rhs._groupID { return false }
+        if lhs._userID != rhs._userID { return false }
+        if lhs._name != rhs._name { return false }
+        if lhs._role != rhs._role { return false }
+        if lhs._joinDate != rhs._joinDate { return false }
+        if lhs._muteEndDate != rhs._muteEndDate { return false }
+        if lhs._userStatus != rhs._userStatus { return false }
+        if lhs.usingDeviceTypes != rhs.usingDeviceTypes { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

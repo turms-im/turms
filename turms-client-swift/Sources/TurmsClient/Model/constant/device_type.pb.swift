@@ -15,76 +15,75 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public enum DeviceType: SwiftProtobuf.Enum {
-  public typealias RawValue = Int
-  case desktop // = 0
-  case browser // = 1
-  case ios // = 2
-  case android // = 3
-  case others // = 4
-  case unknown // = 5
-  case UNRECOGNIZED(Int)
+    public typealias RawValue = Int
+    case desktop // = 0
+    case browser // = 1
+    case ios // = 2
+    case android // = 3
+    case others // = 4
+    case unknown // = 5
+    case UNRECOGNIZED(Int)
 
-  public init() {
-    self = .desktop
-  }
-
-  public init?(rawValue: Int) {
-    switch rawValue {
-    case 0: self = .desktop
-    case 1: self = .browser
-    case 2: self = .ios
-    case 3: self = .android
-    case 4: self = .others
-    case 5: self = .unknown
-    default: self = .UNRECOGNIZED(rawValue)
+    public init() {
+        self = .desktop
     }
-  }
 
-  public var rawValue: Int {
-    switch self {
-    case .desktop: return 0
-    case .browser: return 1
-    case .ios: return 2
-    case .android: return 3
-    case .others: return 4
-    case .unknown: return 5
-    case .UNRECOGNIZED(let i): return i
+    public init?(rawValue: Int) {
+        switch rawValue {
+        case 0: self = .desktop
+        case 1: self = .browser
+        case 2: self = .ios
+        case 3: self = .android
+        case 4: self = .others
+        case 5: self = .unknown
+        default: self = .UNRECOGNIZED(rawValue)
+        }
     }
-  }
 
+    public var rawValue: Int {
+        switch self {
+        case .desktop: return 0
+        case .browser: return 1
+        case .ios: return 2
+        case .android: return 3
+        case .others: return 4
+        case .unknown: return 5
+        case let .UNRECOGNIZED(i): return i
+        }
+    }
 }
 
 #if swift(>=4.2)
 
-extension DeviceType: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  public static var allCases: [DeviceType] = [
-    .desktop,
-    .browser,
-    .ios,
-    .android,
-    .others,
-    .unknown,
-  ]
-}
+    extension DeviceType: CaseIterable {
+        // The compiler won't synthesize support with the UNRECOGNIZED case.
+        public static var allCases: [DeviceType] = [
+            .desktop,
+            .browser,
+            .ios,
+            .android,
+            .others,
+            .unknown,
+        ]
+    }
 
-#endif  // swift(>=4.2)
+#endif // swift(>=4.2)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 extension DeviceType: SwiftProtobuf._ProtoNameProviding {
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "DESKTOP"),
-    1: .same(proto: "BROWSER"),
-    2: .same(proto: "IOS"),
-    3: .same(proto: "ANDROID"),
-    4: .same(proto: "OTHERS"),
-    5: .same(proto: "UNKNOWN"),
-  ]
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        0: .same(proto: "DESKTOP"),
+        1: .same(proto: "BROWSER"),
+        2: .same(proto: "IOS"),
+        3: .same(proto: "ANDROID"),
+        4: .same(proto: "OTHERS"),
+        5: .same(proto: "UNKNOWN"),
+    ]
 }

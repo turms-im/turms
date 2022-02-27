@@ -15,61 +15,60 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public enum ResponseAction: SwiftProtobuf.Enum {
-  public typealias RawValue = Int
-  case accept // = 0
-  case decline // = 1
-  case ignore // = 2
-  case UNRECOGNIZED(Int)
+    public typealias RawValue = Int
+    case accept // = 0
+    case decline // = 1
+    case ignore // = 2
+    case UNRECOGNIZED(Int)
 
-  public init() {
-    self = .accept
-  }
-
-  public init?(rawValue: Int) {
-    switch rawValue {
-    case 0: self = .accept
-    case 1: self = .decline
-    case 2: self = .ignore
-    default: self = .UNRECOGNIZED(rawValue)
+    public init() {
+        self = .accept
     }
-  }
 
-  public var rawValue: Int {
-    switch self {
-    case .accept: return 0
-    case .decline: return 1
-    case .ignore: return 2
-    case .UNRECOGNIZED(let i): return i
+    public init?(rawValue: Int) {
+        switch rawValue {
+        case 0: self = .accept
+        case 1: self = .decline
+        case 2: self = .ignore
+        default: self = .UNRECOGNIZED(rawValue)
+        }
     }
-  }
 
+    public var rawValue: Int {
+        switch self {
+        case .accept: return 0
+        case .decline: return 1
+        case .ignore: return 2
+        case let .UNRECOGNIZED(i): return i
+        }
+    }
 }
 
 #if swift(>=4.2)
 
-extension ResponseAction: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  public static var allCases: [ResponseAction] = [
-    .accept,
-    .decline,
-    .ignore,
-  ]
-}
+    extension ResponseAction: CaseIterable {
+        // The compiler won't synthesize support with the UNRECOGNIZED case.
+        public static var allCases: [ResponseAction] = [
+            .accept,
+            .decline,
+            .ignore,
+        ]
+    }
 
-#endif  // swift(>=4.2)
+#endif // swift(>=4.2)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 extension ResponseAction: SwiftProtobuf._ProtoNameProviding {
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "ACCEPT"),
-    1: .same(proto: "DECLINE"),
-    2: .same(proto: "IGNORE"),
-  ]
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        0: .same(proto: "ACCEPT"),
+        1: .same(proto: "DECLINE"),
+        2: .same(proto: "IGNORE"),
+    ]
 }

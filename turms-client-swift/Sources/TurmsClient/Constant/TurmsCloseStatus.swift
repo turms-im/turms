@@ -1,7 +1,6 @@
 import Foundation
 
 public enum TurmsCloseStatus: Int {
-
     case illegalRequest = 100
     case heartbeatTimeout = 110
     case loginTimeout

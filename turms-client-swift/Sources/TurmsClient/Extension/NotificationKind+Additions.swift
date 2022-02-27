@@ -1,50 +1,50 @@
 import SwiftProtobuf
 
-extension TurmsNotification.DataMessage.OneOf_Kind {
-    public func getKindData<T>(_ messageType: T.Type) throws -> T? {
+public extension TurmsNotification.DataMessage.OneOf_Kind {
+    func getKindData<T>(_: T.Type) throws -> T? {
         var message: Any
         switch self {
-        case .ids(let v):
+        case let .ids(v):
             message = v
-        case .idsWithVersion(let v):
+        case let .idsWithVersion(v):
             message = v
-        case .url(let v):
-            message = v
-
-        case .conversations(let v):
+        case let .url(v):
             message = v
 
-        case .messages(let v):
-            message = v
-        case .messagesWithTotalList(let v):
+        case let .conversations(v):
             message = v
 
-        case .userSession(let v):
+        case let .messages(v):
             message = v
-        case .usersInfosWithVersion(let v):
-            message = v
-        case .usersOnlineStatuses(let v):
-            message = v
-        case .userFriendRequestsWithVersion(let v):
-            message = v
-        case .userRelationshipGroupsWithVersion(let v):
-            message = v
-        case .userRelationshipsWithVersion(let v):
-            message = v
-        case .nearbyUsers(let v):
+        case let .messagesWithTotalList(v):
             message = v
 
-        case .groupInvitationsWithVersion(let v):
+        case let .userSession(v):
             message = v
-        case .groupJoinQuestionAnswerResult(let v):
+        case let .usersInfosWithVersion(v):
             message = v
-        case .groupJoinRequestsWithVersion(let v):
+        case let .usersOnlineStatuses(v):
             message = v
-        case .groupJoinQuestionsWithVersion(let v):
+        case let .userFriendRequestsWithVersion(v):
             message = v
-        case .groupMembersWithVersion(let v):
+        case let .userRelationshipGroupsWithVersion(v):
             message = v
-        case .groupsWithVersion(let v):
+        case let .userRelationshipsWithVersion(v):
+            message = v
+        case let .nearbyUsers(v):
+            message = v
+
+        case let .groupInvitationsWithVersion(v):
+            message = v
+        case let .groupJoinQuestionAnswerResult(v):
+            message = v
+        case let .groupJoinRequestsWithVersion(v):
+            message = v
+        case let .groupJoinQuestionsWithVersion(v):
+            message = v
+        case let .groupMembersWithVersion(v):
+            message = v
+        case let .groupsWithVersion(v):
             message = v
         }
         return message as? T

@@ -15,96 +15,98 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct UpdateMessageRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var messageID: Int64 = 0
+    public var messageID: Int64 = 0
 
-  public var text: String {
-    get {return _text ?? String()}
-    set {_text = newValue}
-  }
-  /// Returns true if `text` has been explicitly set.
-  public var hasText: Bool {return self._text != nil}
-  /// Clears the value of `text`. Subsequent reads from it will return its default value.
-  public mutating func clearText() {self._text = nil}
+    public var text: String {
+        get { return _text ?? String() }
+        set { _text = newValue }
+    }
 
-  public var records: [Data] = []
+    /// Returns true if `text` has been explicitly set.
+    public var hasText: Bool { return _text != nil }
+    /// Clears the value of `text`. Subsequent reads from it will return its default value.
+    public mutating func clearText() { _text = nil }
 
-  public var recallDate: Int64 {
-    get {return _recallDate ?? 0}
-    set {_recallDate = newValue}
-  }
-  /// Returns true if `recallDate` has been explicitly set.
-  public var hasRecallDate: Bool {return self._recallDate != nil}
-  /// Clears the value of `recallDate`. Subsequent reads from it will return its default value.
-  public mutating func clearRecallDate() {self._recallDate = nil}
+    public var records: [Data] = []
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    public var recallDate: Int64 {
+        get { return _recallDate ?? 0 }
+        set { _recallDate = newValue }
+    }
 
-  public init() {}
+    /// Returns true if `recallDate` has been explicitly set.
+    public var hasRecallDate: Bool { return _recallDate != nil }
+    /// Clears the value of `recallDate`. Subsequent reads from it will return its default value.
+    public mutating func clearRecallDate() { _recallDate = nil }
 
-  fileprivate var _text: String? = nil
-  fileprivate var _recallDate: Int64? = nil
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    public init() {}
+
+    fileprivate var _text: String?
+    fileprivate var _recallDate: Int64?
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension UpdateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".UpdateMessageRequest"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "message_id"),
-    2: .same(proto: "text"),
-    3: .same(proto: "records"),
-    4: .standard(proto: "recall_date"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".UpdateMessageRequest"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "message_id"),
+        2: .same(proto: "text"),
+        3: .same(proto: "records"),
+        4: .standard(proto: "recall_date"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt64Field(value: &self.messageID) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self._text) }()
-      case 3: try { try decoder.decodeRepeatedBytesField(value: &self.records) }()
-      case 4: try { try decoder.decodeSingularInt64Field(value: &self._recallDate) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularInt64Field(value: &messageID)
+            case 2: try try decoder.decodeSingularStringField(value: &_text)
+            case 3: try try decoder.decodeRepeatedBytesField(value: &records)
+            case 4: try try decoder.decodeSingularInt64Field(value: &_recallDate)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.messageID != 0 {
-      try visitor.visitSingularInt64Field(value: self.messageID, fieldNumber: 1)
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if messageID != 0 {
+            try visitor.visitSingularInt64Field(value: messageID, fieldNumber: 1)
+        }
+        try { if let v = self._text {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 2)
+        } }()
+        if !records.isEmpty {
+            try visitor.visitRepeatedBytesField(value: records, fieldNumber: 3)
+        }
+        try { if let v = self._recallDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
+        } }()
+        try unknownFields.traverse(visitor: &visitor)
     }
-    try { if let v = self._text {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    } }()
-    if !self.records.isEmpty {
-      try visitor.visitRepeatedBytesField(value: self.records, fieldNumber: 3)
-    }
-    try { if let v = self._recallDate {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
-    } }()
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  public static func ==(lhs: UpdateMessageRequest, rhs: UpdateMessageRequest) -> Bool {
-    if lhs.messageID != rhs.messageID {return false}
-    if lhs._text != rhs._text {return false}
-    if lhs.records != rhs.records {return false}
-    if lhs._recallDate != rhs._recallDate {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: UpdateMessageRequest, rhs: UpdateMessageRequest) -> Bool {
+        if lhs.messageID != rhs.messageID { return false }
+        if lhs._text != rhs._text { return false }
+        if lhs.records != rhs.records { return false }
+        if lhs._recallDate != rhs._recallDate { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

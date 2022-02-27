@@ -1,12 +1,11 @@
 public enum TurmsStatusCode: Int {
+    // **********************************************************
+    // * Defined on the client side
+    // **********************************************************
 
-    //**********************************************************
-    //* Defined on the client side
-    //**********************************************************
-
-    //**********************************************************
-    //* For application error
-    //**********************************************************
+    // **********************************************************
+    // * For application error
+    // **********************************************************
 
     // Client - Request
     case invalidRequest = 100
@@ -18,9 +17,9 @@ public enum TurmsStatusCode: Int {
     case invalidNotification = 200
     case invalidResponse
 
-    //**********************************************************
-    //* For business error
-    //**********************************************************
+    // **********************************************************
+    // * For business error
+    // **********************************************************
 
     // User
     case clientSessionAlreadyEstablished = 300
@@ -31,18 +30,18 @@ public enum TurmsStatusCode: Int {
     // Storage
     case queryProfileUrlToUpdateBeforeLogin = 500
 
-    //**********************************************************
-    //* Defined on the server side
-    //**********************************************************
+    // **********************************************************
+    // * Defined on the server side
+    // **********************************************************
 
     // Successful responses
     case ok = 1000
     case noContent
     case alreadyUpToDate
 
-    //**********************************************************
-    //* For application error
-    //**********************************************************
+    // **********************************************************
+    // * For application error
+    // **********************************************************
 
     // Client
     case invalidRequestFromServer = 1100
@@ -56,9 +55,9 @@ public enum TurmsStatusCode: Int {
     case serverInternalError = 1200
     case serverUnavailable
 
-    //**********************************************************
-    //* For business error
-    //**********************************************************
+    // **********************************************************
+    // * For business error
+    // **********************************************************
 
     // User
 
@@ -201,14 +200,12 @@ public enum TurmsStatusCode: Int {
     case redundantRequestForPresignedProfileUrl = 6900
 }
 
-extension TurmsStatusCode {
-
-    public static func isSuccessCode(_ code: Int) -> Bool {
-        return 1000 <= code && code < 1100
+public extension TurmsStatusCode {
+    static func isSuccessCode(_ code: Int) -> Bool {
+        return code >= 1000 && code < 1100
     }
 
-    public static func isServerError(_ code: Int) -> Bool {
-        return (1200...1299).contains(code) || (200...299).contains(code)
+    static func isServerError(_ code: Int) -> Bool {
+        return (1200 ... 1299).contains(code) || (200 ... 299).contains(code)
     }
-
 }

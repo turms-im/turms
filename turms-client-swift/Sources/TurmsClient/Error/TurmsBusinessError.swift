@@ -1,5 +1,4 @@
 public struct TurmsBusinessError: Error {
-
     public let code: Int
     public let reason: String?
 
@@ -14,8 +13,7 @@ public struct TurmsBusinessError: Error {
     }
 
     init(_ notification: TurmsNotification) {
-        self.code = Int(notification.code)
-        self.reason = notification.hasReason ? notification.reason : nil
+        code = Int(notification.code)
+        reason = notification.hasReason ? notification.reason : nil
     }
-
 }

@@ -15,81 +15,80 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public enum UserStatus: SwiftProtobuf.Enum {
-  public typealias RawValue = Int
-  case available // = 0
-  case offline // = 1
-  case invisible // = 2
-  case busy // = 3
-  case doNotDisturb // = 4
-  case away // = 5
-  case beRightBack // = 6
-  case UNRECOGNIZED(Int)
+    public typealias RawValue = Int
+    case available // = 0
+    case offline // = 1
+    case invisible // = 2
+    case busy // = 3
+    case doNotDisturb // = 4
+    case away // = 5
+    case beRightBack // = 6
+    case UNRECOGNIZED(Int)
 
-  public init() {
-    self = .available
-  }
-
-  public init?(rawValue: Int) {
-    switch rawValue {
-    case 0: self = .available
-    case 1: self = .offline
-    case 2: self = .invisible
-    case 3: self = .busy
-    case 4: self = .doNotDisturb
-    case 5: self = .away
-    case 6: self = .beRightBack
-    default: self = .UNRECOGNIZED(rawValue)
+    public init() {
+        self = .available
     }
-  }
 
-  public var rawValue: Int {
-    switch self {
-    case .available: return 0
-    case .offline: return 1
-    case .invisible: return 2
-    case .busy: return 3
-    case .doNotDisturb: return 4
-    case .away: return 5
-    case .beRightBack: return 6
-    case .UNRECOGNIZED(let i): return i
+    public init?(rawValue: Int) {
+        switch rawValue {
+        case 0: self = .available
+        case 1: self = .offline
+        case 2: self = .invisible
+        case 3: self = .busy
+        case 4: self = .doNotDisturb
+        case 5: self = .away
+        case 6: self = .beRightBack
+        default: self = .UNRECOGNIZED(rawValue)
+        }
     }
-  }
 
+    public var rawValue: Int {
+        switch self {
+        case .available: return 0
+        case .offline: return 1
+        case .invisible: return 2
+        case .busy: return 3
+        case .doNotDisturb: return 4
+        case .away: return 5
+        case .beRightBack: return 6
+        case let .UNRECOGNIZED(i): return i
+        }
+    }
 }
 
 #if swift(>=4.2)
 
-extension UserStatus: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  public static var allCases: [UserStatus] = [
-    .available,
-    .offline,
-    .invisible,
-    .busy,
-    .doNotDisturb,
-    .away,
-    .beRightBack,
-  ]
-}
+    extension UserStatus: CaseIterable {
+        // The compiler won't synthesize support with the UNRECOGNIZED case.
+        public static var allCases: [UserStatus] = [
+            .available,
+            .offline,
+            .invisible,
+            .busy,
+            .doNotDisturb,
+            .away,
+            .beRightBack,
+        ]
+    }
 
-#endif  // swift(>=4.2)
+#endif // swift(>=4.2)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 extension UserStatus: SwiftProtobuf._ProtoNameProviding {
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "AVAILABLE"),
-    1: .same(proto: "OFFLINE"),
-    2: .same(proto: "INVISIBLE"),
-    3: .same(proto: "BUSY"),
-    4: .same(proto: "DO_NOT_DISTURB"),
-    5: .same(proto: "AWAY"),
-    6: .same(proto: "BE_RIGHT_BACK"),
-  ]
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        0: .same(proto: "AVAILABLE"),
+        1: .same(proto: "OFFLINE"),
+        2: .same(proto: "INVISIBLE"),
+        3: .same(proto: "BUSY"),
+        4: .same(proto: "DO_NOT_DISTURB"),
+        5: .same(proto: "AWAY"),
+        6: .same(proto: "BE_RIGHT_BACK"),
+    ]
 }

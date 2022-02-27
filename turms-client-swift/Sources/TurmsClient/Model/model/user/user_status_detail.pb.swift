@@ -15,71 +15,71 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct UserStatusDetail {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var userID: Int64 = 0
+    public var userID: Int64 = 0
 
-  public var userStatus: UserStatus = .available
+    public var userStatus: UserStatus = .available
 
-  public var usingDeviceTypes: [DeviceType] = []
+    public var usingDeviceTypes: [DeviceType] = []
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  public init() {}
+    public init() {}
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension UserStatusDetail: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".UserStatusDetail"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "user_id"),
-    2: .standard(proto: "user_status"),
-    3: .standard(proto: "using_device_types"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".UserStatusDetail"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "user_id"),
+        2: .standard(proto: "user_status"),
+        3: .standard(proto: "using_device_types"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt64Field(value: &self.userID) }()
-      case 2: try { try decoder.decodeSingularEnumField(value: &self.userStatus) }()
-      case 3: try { try decoder.decodeRepeatedEnumField(value: &self.usingDeviceTypes) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularInt64Field(value: &userID)
+            case 2: try try decoder.decodeSingularEnumField(value: &userStatus)
+            case 3: try try decoder.decodeRepeatedEnumField(value: &usingDeviceTypes)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.userID != 0 {
-      try visitor.visitSingularInt64Field(value: self.userID, fieldNumber: 1)
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if userID != 0 {
+            try visitor.visitSingularInt64Field(value: userID, fieldNumber: 1)
+        }
+        if userStatus != .available {
+            try visitor.visitSingularEnumField(value: userStatus, fieldNumber: 2)
+        }
+        if !usingDeviceTypes.isEmpty {
+            try visitor.visitPackedEnumField(value: usingDeviceTypes, fieldNumber: 3)
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    if self.userStatus != .available {
-      try visitor.visitSingularEnumField(value: self.userStatus, fieldNumber: 2)
-    }
-    if !self.usingDeviceTypes.isEmpty {
-      try visitor.visitPackedEnumField(value: self.usingDeviceTypes, fieldNumber: 3)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  public static func ==(lhs: UserStatusDetail, rhs: UserStatusDetail) -> Bool {
-    if lhs.userID != rhs.userID {return false}
-    if lhs.userStatus != rhs.userStatus {return false}
-    if lhs.usingDeviceTypes != rhs.usingDeviceTypes {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: UserStatusDetail, rhs: UserStatusDetail) -> Bool {
+        if lhs.userID != rhs.userID { return false }
+        if lhs.userStatus != rhs.userStatus { return false }
+        if lhs.usingDeviceTypes != rhs.usingDeviceTypes { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

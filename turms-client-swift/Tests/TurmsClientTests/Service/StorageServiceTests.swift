@@ -7,7 +7,7 @@ class StorageServiceTests: XCTestCase {
     static let USER_ID: Int64 = 1
     static let GROUP_ID: Int64 = 1
     static let PROFILE_PICTURE = Data([0, 1, 2, 3, 4])
-    static let ATTACHMENT: Data = Data([0, 1, 2, 3, 4])
+    static let ATTACHMENT: Data = .init([0, 1, 2, 3, 4])
 
     override func setUp() {
         continueAfterFailure = false

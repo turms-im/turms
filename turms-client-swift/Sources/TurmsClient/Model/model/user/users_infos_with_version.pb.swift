@@ -15,72 +15,73 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct UsersInfosWithVersion {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var userInfos: [UserInfo] = []
+    public var userInfos: [UserInfo] = []
 
-  public var lastUpdatedDate: Int64 {
-    get {return _lastUpdatedDate ?? 0}
-    set {_lastUpdatedDate = newValue}
-  }
-  /// Returns true if `lastUpdatedDate` has been explicitly set.
-  public var hasLastUpdatedDate: Bool {return self._lastUpdatedDate != nil}
-  /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
-  public mutating func clearLastUpdatedDate() {self._lastUpdatedDate = nil}
+    public var lastUpdatedDate: Int64 {
+        get { return _lastUpdatedDate ?? 0 }
+        set { _lastUpdatedDate = newValue }
+    }
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    /// Returns true if `lastUpdatedDate` has been explicitly set.
+    public var hasLastUpdatedDate: Bool { return _lastUpdatedDate != nil }
+    /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
+    public mutating func clearLastUpdatedDate() { _lastUpdatedDate = nil }
 
-  public init() {}
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  fileprivate var _lastUpdatedDate: Int64? = nil
+    public init() {}
+
+    fileprivate var _lastUpdatedDate: Int64?
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension UsersInfosWithVersion: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".UsersInfosWithVersion"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "user_infos"),
-    2: .standard(proto: "last_updated_date"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".UsersInfosWithVersion"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "user_infos"),
+        2: .standard(proto: "last_updated_date"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeRepeatedMessageField(value: &self.userInfos) }()
-      case 2: try { try decoder.decodeSingularInt64Field(value: &self._lastUpdatedDate) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeRepeatedMessageField(value: &userInfos)
+            case 2: try try decoder.decodeSingularInt64Field(value: &_lastUpdatedDate)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.userInfos.isEmpty {
-      try visitor.visitRepeatedMessageField(value: self.userInfos, fieldNumber: 1)
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if !userInfos.isEmpty {
+            try visitor.visitRepeatedMessageField(value: userInfos, fieldNumber: 1)
+        }
+        try { if let v = self._lastUpdatedDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
+        } }()
+        try unknownFields.traverse(visitor: &visitor)
     }
-    try { if let v = self._lastUpdatedDate {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    } }()
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  public static func ==(lhs: UsersInfosWithVersion, rhs: UsersInfosWithVersion) -> Bool {
-    if lhs.userInfos != rhs.userInfos {return false}
-    if lhs._lastUpdatedDate != rhs._lastUpdatedDate {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: UsersInfosWithVersion, rhs: UsersInfosWithVersion) -> Bool {
+        if lhs.userInfos != rhs.userInfos { return false }
+        if lhs._lastUpdatedDate != rhs._lastUpdatedDate { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

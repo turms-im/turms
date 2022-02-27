@@ -15,96 +15,99 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct QueryRelatedUserIdsRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var blocked: Bool {
-    get {return _blocked ?? false}
-    set {_blocked = newValue}
-  }
-  /// Returns true if `blocked` has been explicitly set.
-  public var hasBlocked: Bool {return self._blocked != nil}
-  /// Clears the value of `blocked`. Subsequent reads from it will return its default value.
-  public mutating func clearBlocked() {self._blocked = nil}
+    public var blocked: Bool {
+        get { return _blocked ?? false }
+        set { _blocked = newValue }
+    }
 
-  public var groupIndex: Int32 {
-    get {return _groupIndex ?? 0}
-    set {_groupIndex = newValue}
-  }
-  /// Returns true if `groupIndex` has been explicitly set.
-  public var hasGroupIndex: Bool {return self._groupIndex != nil}
-  /// Clears the value of `groupIndex`. Subsequent reads from it will return its default value.
-  public mutating func clearGroupIndex() {self._groupIndex = nil}
+    /// Returns true if `blocked` has been explicitly set.
+    public var hasBlocked: Bool { return _blocked != nil }
+    /// Clears the value of `blocked`. Subsequent reads from it will return its default value.
+    public mutating func clearBlocked() { _blocked = nil }
 
-  public var lastUpdatedDate: Int64 {
-    get {return _lastUpdatedDate ?? 0}
-    set {_lastUpdatedDate = newValue}
-  }
-  /// Returns true if `lastUpdatedDate` has been explicitly set.
-  public var hasLastUpdatedDate: Bool {return self._lastUpdatedDate != nil}
-  /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
-  public mutating func clearLastUpdatedDate() {self._lastUpdatedDate = nil}
+    public var groupIndex: Int32 {
+        get { return _groupIndex ?? 0 }
+        set { _groupIndex = newValue }
+    }
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    /// Returns true if `groupIndex` has been explicitly set.
+    public var hasGroupIndex: Bool { return _groupIndex != nil }
+    /// Clears the value of `groupIndex`. Subsequent reads from it will return its default value.
+    public mutating func clearGroupIndex() { _groupIndex = nil }
 
-  public init() {}
+    public var lastUpdatedDate: Int64 {
+        get { return _lastUpdatedDate ?? 0 }
+        set { _lastUpdatedDate = newValue }
+    }
 
-  fileprivate var _blocked: Bool? = nil
-  fileprivate var _groupIndex: Int32? = nil
-  fileprivate var _lastUpdatedDate: Int64? = nil
+    /// Returns true if `lastUpdatedDate` has been explicitly set.
+    public var hasLastUpdatedDate: Bool { return _lastUpdatedDate != nil }
+    /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
+    public mutating func clearLastUpdatedDate() { _lastUpdatedDate = nil }
+
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    public init() {}
+
+    fileprivate var _blocked: Bool?
+    fileprivate var _groupIndex: Int32?
+    fileprivate var _lastUpdatedDate: Int64?
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension QueryRelatedUserIdsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".QueryRelatedUserIdsRequest"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "blocked"),
-    2: .standard(proto: "group_index"),
-    3: .standard(proto: "last_updated_date"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".QueryRelatedUserIdsRequest"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "blocked"),
+        2: .standard(proto: "group_index"),
+        3: .standard(proto: "last_updated_date"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularBoolField(value: &self._blocked) }()
-      case 2: try { try decoder.decodeSingularInt32Field(value: &self._groupIndex) }()
-      case 3: try { try decoder.decodeSingularInt64Field(value: &self._lastUpdatedDate) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularBoolField(value: &_blocked)
+            case 2: try try decoder.decodeSingularInt32Field(value: &_groupIndex)
+            case 3: try try decoder.decodeSingularInt64Field(value: &_lastUpdatedDate)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    try { if let v = self._blocked {
-      try visitor.visitSingularBoolField(value: v, fieldNumber: 1)
-    } }()
-    try { if let v = self._groupIndex {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
-    } }()
-    try { if let v = self._lastUpdatedDate {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
-    } }()
-    try unknownFields.traverse(visitor: &visitor)
-  }
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        try { if let v = self._blocked {
+            try visitor.visitSingularBoolField(value: v, fieldNumber: 1)
+        } }()
+        try { if let v = self._groupIndex {
+            try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
+        } }()
+        try { if let v = self._lastUpdatedDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
+        } }()
+        try unknownFields.traverse(visitor: &visitor)
+    }
 
-  public static func ==(lhs: QueryRelatedUserIdsRequest, rhs: QueryRelatedUserIdsRequest) -> Bool {
-    if lhs._blocked != rhs._blocked {return false}
-    if lhs._groupIndex != rhs._groupIndex {return false}
-    if lhs._lastUpdatedDate != rhs._lastUpdatedDate {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: QueryRelatedUserIdsRequest, rhs: QueryRelatedUserIdsRequest) -> Bool {
+        if lhs._blocked != rhs._blocked { return false }
+        if lhs._groupIndex != rhs._groupIndex { return false }
+        if lhs._lastUpdatedDate != rhs._lastUpdatedDate { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

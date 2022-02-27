@@ -15,176 +15,184 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct GroupJoinRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var id: Int64 {
-    get {return _id ?? 0}
-    set {_id = newValue}
-  }
-  /// Returns true if `id` has been explicitly set.
-  public var hasID: Bool {return self._id != nil}
-  /// Clears the value of `id`. Subsequent reads from it will return its default value.
-  public mutating func clearID() {self._id = nil}
+    public var id: Int64 {
+        get { return _id ?? 0 }
+        set { _id = newValue }
+    }
 
-  public var creationDate: Int64 {
-    get {return _creationDate ?? 0}
-    set {_creationDate = newValue}
-  }
-  /// Returns true if `creationDate` has been explicitly set.
-  public var hasCreationDate: Bool {return self._creationDate != nil}
-  /// Clears the value of `creationDate`. Subsequent reads from it will return its default value.
-  public mutating func clearCreationDate() {self._creationDate = nil}
+    /// Returns true if `id` has been explicitly set.
+    public var hasID: Bool { return _id != nil }
+    /// Clears the value of `id`. Subsequent reads from it will return its default value.
+    public mutating func clearID() { _id = nil }
 
-  public var content: String {
-    get {return _content ?? String()}
-    set {_content = newValue}
-  }
-  /// Returns true if `content` has been explicitly set.
-  public var hasContent: Bool {return self._content != nil}
-  /// Clears the value of `content`. Subsequent reads from it will return its default value.
-  public mutating func clearContent() {self._content = nil}
+    public var creationDate: Int64 {
+        get { return _creationDate ?? 0 }
+        set { _creationDate = newValue }
+    }
 
-  public var status: RequestStatus {
-    get {return _status ?? .pending}
-    set {_status = newValue}
-  }
-  /// Returns true if `status` has been explicitly set.
-  public var hasStatus: Bool {return self._status != nil}
-  /// Clears the value of `status`. Subsequent reads from it will return its default value.
-  public mutating func clearStatus() {self._status = nil}
+    /// Returns true if `creationDate` has been explicitly set.
+    public var hasCreationDate: Bool { return _creationDate != nil }
+    /// Clears the value of `creationDate`. Subsequent reads from it will return its default value.
+    public mutating func clearCreationDate() { _creationDate = nil }
 
-  public var expirationDate: Int64 {
-    get {return _expirationDate ?? 0}
-    set {_expirationDate = newValue}
-  }
-  /// Returns true if `expirationDate` has been explicitly set.
-  public var hasExpirationDate: Bool {return self._expirationDate != nil}
-  /// Clears the value of `expirationDate`. Subsequent reads from it will return its default value.
-  public mutating func clearExpirationDate() {self._expirationDate = nil}
+    public var content: String {
+        get { return _content ?? String() }
+        set { _content = newValue }
+    }
 
-  public var groupID: Int64 {
-    get {return _groupID ?? 0}
-    set {_groupID = newValue}
-  }
-  /// Returns true if `groupID` has been explicitly set.
-  public var hasGroupID: Bool {return self._groupID != nil}
-  /// Clears the value of `groupID`. Subsequent reads from it will return its default value.
-  public mutating func clearGroupID() {self._groupID = nil}
+    /// Returns true if `content` has been explicitly set.
+    public var hasContent: Bool { return _content != nil }
+    /// Clears the value of `content`. Subsequent reads from it will return its default value.
+    public mutating func clearContent() { _content = nil }
 
-  public var requesterID: Int64 {
-    get {return _requesterID ?? 0}
-    set {_requesterID = newValue}
-  }
-  /// Returns true if `requesterID` has been explicitly set.
-  public var hasRequesterID: Bool {return self._requesterID != nil}
-  /// Clears the value of `requesterID`. Subsequent reads from it will return its default value.
-  public mutating func clearRequesterID() {self._requesterID = nil}
+    public var status: RequestStatus {
+        get { return _status ?? .pending }
+        set { _status = newValue }
+    }
 
-  public var responderID: Int64 {
-    get {return _responderID ?? 0}
-    set {_responderID = newValue}
-  }
-  /// Returns true if `responderID` has been explicitly set.
-  public var hasResponderID: Bool {return self._responderID != nil}
-  /// Clears the value of `responderID`. Subsequent reads from it will return its default value.
-  public mutating func clearResponderID() {self._responderID = nil}
+    /// Returns true if `status` has been explicitly set.
+    public var hasStatus: Bool { return _status != nil }
+    /// Clears the value of `status`. Subsequent reads from it will return its default value.
+    public mutating func clearStatus() { _status = nil }
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    public var expirationDate: Int64 {
+        get { return _expirationDate ?? 0 }
+        set { _expirationDate = newValue }
+    }
 
-  public init() {}
+    /// Returns true if `expirationDate` has been explicitly set.
+    public var hasExpirationDate: Bool { return _expirationDate != nil }
+    /// Clears the value of `expirationDate`. Subsequent reads from it will return its default value.
+    public mutating func clearExpirationDate() { _expirationDate = nil }
 
-  fileprivate var _id: Int64? = nil
-  fileprivate var _creationDate: Int64? = nil
-  fileprivate var _content: String? = nil
-  fileprivate var _status: RequestStatus? = nil
-  fileprivate var _expirationDate: Int64? = nil
-  fileprivate var _groupID: Int64? = nil
-  fileprivate var _requesterID: Int64? = nil
-  fileprivate var _responderID: Int64? = nil
+    public var groupID: Int64 {
+        get { return _groupID ?? 0 }
+        set { _groupID = newValue }
+    }
+
+    /// Returns true if `groupID` has been explicitly set.
+    public var hasGroupID: Bool { return _groupID != nil }
+    /// Clears the value of `groupID`. Subsequent reads from it will return its default value.
+    public mutating func clearGroupID() { _groupID = nil }
+
+    public var requesterID: Int64 {
+        get { return _requesterID ?? 0 }
+        set { _requesterID = newValue }
+    }
+
+    /// Returns true if `requesterID` has been explicitly set.
+    public var hasRequesterID: Bool { return _requesterID != nil }
+    /// Clears the value of `requesterID`. Subsequent reads from it will return its default value.
+    public mutating func clearRequesterID() { _requesterID = nil }
+
+    public var responderID: Int64 {
+        get { return _responderID ?? 0 }
+        set { _responderID = newValue }
+    }
+
+    /// Returns true if `responderID` has been explicitly set.
+    public var hasResponderID: Bool { return _responderID != nil }
+    /// Clears the value of `responderID`. Subsequent reads from it will return its default value.
+    public mutating func clearResponderID() { _responderID = nil }
+
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    public init() {}
+
+    fileprivate var _id: Int64?
+    fileprivate var _creationDate: Int64?
+    fileprivate var _content: String?
+    fileprivate var _status: RequestStatus?
+    fileprivate var _expirationDate: Int64?
+    fileprivate var _groupID: Int64?
+    fileprivate var _requesterID: Int64?
+    fileprivate var _responderID: Int64?
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension GroupJoinRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".GroupJoinRequest"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "id"),
-    2: .standard(proto: "creation_date"),
-    3: .same(proto: "content"),
-    4: .same(proto: "status"),
-    5: .standard(proto: "expiration_date"),
-    6: .standard(proto: "group_id"),
-    7: .standard(proto: "requester_id"),
-    8: .standard(proto: "responder_id"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".GroupJoinRequest"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "id"),
+        2: .standard(proto: "creation_date"),
+        3: .same(proto: "content"),
+        4: .same(proto: "status"),
+        5: .standard(proto: "expiration_date"),
+        6: .standard(proto: "group_id"),
+        7: .standard(proto: "requester_id"),
+        8: .standard(proto: "responder_id"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt64Field(value: &self._id) }()
-      case 2: try { try decoder.decodeSingularInt64Field(value: &self._creationDate) }()
-      case 3: try { try decoder.decodeSingularStringField(value: &self._content) }()
-      case 4: try { try decoder.decodeSingularEnumField(value: &self._status) }()
-      case 5: try { try decoder.decodeSingularInt64Field(value: &self._expirationDate) }()
-      case 6: try { try decoder.decodeSingularInt64Field(value: &self._groupID) }()
-      case 7: try { try decoder.decodeSingularInt64Field(value: &self._requesterID) }()
-      case 8: try { try decoder.decodeSingularInt64Field(value: &self._responderID) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularInt64Field(value: &_id)
+            case 2: try try decoder.decodeSingularInt64Field(value: &_creationDate)
+            case 3: try try decoder.decodeSingularStringField(value: &_content)
+            case 4: try try decoder.decodeSingularEnumField(value: &_status)
+            case 5: try try decoder.decodeSingularInt64Field(value: &_expirationDate)
+            case 6: try try decoder.decodeSingularInt64Field(value: &_groupID)
+            case 7: try try decoder.decodeSingularInt64Field(value: &_requesterID)
+            case 8: try try decoder.decodeSingularInt64Field(value: &_responderID)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    try { if let v = self._id {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    } }()
-    try { if let v = self._creationDate {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    } }()
-    try { if let v = self._content {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    } }()
-    try { if let v = self._status {
-      try visitor.visitSingularEnumField(value: v, fieldNumber: 4)
-    } }()
-    try { if let v = self._expirationDate {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
-    } }()
-    try { if let v = self._groupID {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
-    } }()
-    try { if let v = self._requesterID {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 7)
-    } }()
-    try { if let v = self._responderID {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 8)
-    } }()
-    try unknownFields.traverse(visitor: &visitor)
-  }
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        try { if let v = self._id {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
+        } }()
+        try { if let v = self._creationDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
+        } }()
+        try { if let v = self._content {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 3)
+        } }()
+        try { if let v = self._status {
+            try visitor.visitSingularEnumField(value: v, fieldNumber: 4)
+        } }()
+        try { if let v = self._expirationDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
+        } }()
+        try { if let v = self._groupID {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
+        } }()
+        try { if let v = self._requesterID {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 7)
+        } }()
+        try { if let v = self._responderID {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 8)
+        } }()
+        try unknownFields.traverse(visitor: &visitor)
+    }
 
-  public static func ==(lhs: GroupJoinRequest, rhs: GroupJoinRequest) -> Bool {
-    if lhs._id != rhs._id {return false}
-    if lhs._creationDate != rhs._creationDate {return false}
-    if lhs._content != rhs._content {return false}
-    if lhs._status != rhs._status {return false}
-    if lhs._expirationDate != rhs._expirationDate {return false}
-    if lhs._groupID != rhs._groupID {return false}
-    if lhs._requesterID != rhs._requesterID {return false}
-    if lhs._responderID != rhs._responderID {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: GroupJoinRequest, rhs: GroupJoinRequest) -> Bool {
+        if lhs._id != rhs._id { return false }
+        if lhs._creationDate != rhs._creationDate { return false }
+        if lhs._content != rhs._content { return false }
+        if lhs._status != rhs._status { return false }
+        if lhs._expirationDate != rhs._expirationDate { return false }
+        if lhs._groupID != rhs._groupID { return false }
+        if lhs._requesterID != rhs._requesterID { return false }
+        if lhs._responderID != rhs._responderID { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

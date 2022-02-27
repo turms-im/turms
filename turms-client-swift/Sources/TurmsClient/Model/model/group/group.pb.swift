@@ -15,208 +15,218 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct Group {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var id: Int64 {
-    get {return _id ?? 0}
-    set {_id = newValue}
-  }
-  /// Returns true if `id` has been explicitly set.
-  public var hasID: Bool {return self._id != nil}
-  /// Clears the value of `id`. Subsequent reads from it will return its default value.
-  public mutating func clearID() {self._id = nil}
+    public var id: Int64 {
+        get { return _id ?? 0 }
+        set { _id = newValue }
+    }
 
-  public var typeID: Int64 {
-    get {return _typeID ?? 0}
-    set {_typeID = newValue}
-  }
-  /// Returns true if `typeID` has been explicitly set.
-  public var hasTypeID: Bool {return self._typeID != nil}
-  /// Clears the value of `typeID`. Subsequent reads from it will return its default value.
-  public mutating func clearTypeID() {self._typeID = nil}
+    /// Returns true if `id` has been explicitly set.
+    public var hasID: Bool { return _id != nil }
+    /// Clears the value of `id`. Subsequent reads from it will return its default value.
+    public mutating func clearID() { _id = nil }
 
-  public var creatorID: Int64 {
-    get {return _creatorID ?? 0}
-    set {_creatorID = newValue}
-  }
-  /// Returns true if `creatorID` has been explicitly set.
-  public var hasCreatorID: Bool {return self._creatorID != nil}
-  /// Clears the value of `creatorID`. Subsequent reads from it will return its default value.
-  public mutating func clearCreatorID() {self._creatorID = nil}
+    public var typeID: Int64 {
+        get { return _typeID ?? 0 }
+        set { _typeID = newValue }
+    }
 
-  public var ownerID: Int64 {
-    get {return _ownerID ?? 0}
-    set {_ownerID = newValue}
-  }
-  /// Returns true if `ownerID` has been explicitly set.
-  public var hasOwnerID: Bool {return self._ownerID != nil}
-  /// Clears the value of `ownerID`. Subsequent reads from it will return its default value.
-  public mutating func clearOwnerID() {self._ownerID = nil}
+    /// Returns true if `typeID` has been explicitly set.
+    public var hasTypeID: Bool { return _typeID != nil }
+    /// Clears the value of `typeID`. Subsequent reads from it will return its default value.
+    public mutating func clearTypeID() { _typeID = nil }
 
-  public var name: String {
-    get {return _name ?? String()}
-    set {_name = newValue}
-  }
-  /// Returns true if `name` has been explicitly set.
-  public var hasName: Bool {return self._name != nil}
-  /// Clears the value of `name`. Subsequent reads from it will return its default value.
-  public mutating func clearName() {self._name = nil}
+    public var creatorID: Int64 {
+        get { return _creatorID ?? 0 }
+        set { _creatorID = newValue }
+    }
 
-  public var intro: String {
-    get {return _intro ?? String()}
-    set {_intro = newValue}
-  }
-  /// Returns true if `intro` has been explicitly set.
-  public var hasIntro: Bool {return self._intro != nil}
-  /// Clears the value of `intro`. Subsequent reads from it will return its default value.
-  public mutating func clearIntro() {self._intro = nil}
+    /// Returns true if `creatorID` has been explicitly set.
+    public var hasCreatorID: Bool { return _creatorID != nil }
+    /// Clears the value of `creatorID`. Subsequent reads from it will return its default value.
+    public mutating func clearCreatorID() { _creatorID = nil }
 
-  public var announcement: String {
-    get {return _announcement ?? String()}
-    set {_announcement = newValue}
-  }
-  /// Returns true if `announcement` has been explicitly set.
-  public var hasAnnouncement: Bool {return self._announcement != nil}
-  /// Clears the value of `announcement`. Subsequent reads from it will return its default value.
-  public mutating func clearAnnouncement() {self._announcement = nil}
+    public var ownerID: Int64 {
+        get { return _ownerID ?? 0 }
+        set { _ownerID = newValue }
+    }
 
-  public var creationDate: Int64 {
-    get {return _creationDate ?? 0}
-    set {_creationDate = newValue}
-  }
-  /// Returns true if `creationDate` has been explicitly set.
-  public var hasCreationDate: Bool {return self._creationDate != nil}
-  /// Clears the value of `creationDate`. Subsequent reads from it will return its default value.
-  public mutating func clearCreationDate() {self._creationDate = nil}
+    /// Returns true if `ownerID` has been explicitly set.
+    public var hasOwnerID: Bool { return _ownerID != nil }
+    /// Clears the value of `ownerID`. Subsequent reads from it will return its default value.
+    public mutating func clearOwnerID() { _ownerID = nil }
 
-  public var muteEndDate: Int64 {
-    get {return _muteEndDate ?? 0}
-    set {_muteEndDate = newValue}
-  }
-  /// Returns true if `muteEndDate` has been explicitly set.
-  public var hasMuteEndDate: Bool {return self._muteEndDate != nil}
-  /// Clears the value of `muteEndDate`. Subsequent reads from it will return its default value.
-  public mutating func clearMuteEndDate() {self._muteEndDate = nil}
+    public var name: String {
+        get { return _name ?? String() }
+        set { _name = newValue }
+    }
 
-  public var active: Bool {
-    get {return _active ?? false}
-    set {_active = newValue}
-  }
-  /// Returns true if `active` has been explicitly set.
-  public var hasActive: Bool {return self._active != nil}
-  /// Clears the value of `active`. Subsequent reads from it will return its default value.
-  public mutating func clearActive() {self._active = nil}
+    /// Returns true if `name` has been explicitly set.
+    public var hasName: Bool { return _name != nil }
+    /// Clears the value of `name`. Subsequent reads from it will return its default value.
+    public mutating func clearName() { _name = nil }
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    public var intro: String {
+        get { return _intro ?? String() }
+        set { _intro = newValue }
+    }
 
-  public init() {}
+    /// Returns true if `intro` has been explicitly set.
+    public var hasIntro: Bool { return _intro != nil }
+    /// Clears the value of `intro`. Subsequent reads from it will return its default value.
+    public mutating func clearIntro() { _intro = nil }
 
-  fileprivate var _id: Int64? = nil
-  fileprivate var _typeID: Int64? = nil
-  fileprivate var _creatorID: Int64? = nil
-  fileprivate var _ownerID: Int64? = nil
-  fileprivate var _name: String? = nil
-  fileprivate var _intro: String? = nil
-  fileprivate var _announcement: String? = nil
-  fileprivate var _creationDate: Int64? = nil
-  fileprivate var _muteEndDate: Int64? = nil
-  fileprivate var _active: Bool? = nil
+    public var announcement: String {
+        get { return _announcement ?? String() }
+        set { _announcement = newValue }
+    }
+
+    /// Returns true if `announcement` has been explicitly set.
+    public var hasAnnouncement: Bool { return _announcement != nil }
+    /// Clears the value of `announcement`. Subsequent reads from it will return its default value.
+    public mutating func clearAnnouncement() { _announcement = nil }
+
+    public var creationDate: Int64 {
+        get { return _creationDate ?? 0 }
+        set { _creationDate = newValue }
+    }
+
+    /// Returns true if `creationDate` has been explicitly set.
+    public var hasCreationDate: Bool { return _creationDate != nil }
+    /// Clears the value of `creationDate`. Subsequent reads from it will return its default value.
+    public mutating func clearCreationDate() { _creationDate = nil }
+
+    public var muteEndDate: Int64 {
+        get { return _muteEndDate ?? 0 }
+        set { _muteEndDate = newValue }
+    }
+
+    /// Returns true if `muteEndDate` has been explicitly set.
+    public var hasMuteEndDate: Bool { return _muteEndDate != nil }
+    /// Clears the value of `muteEndDate`. Subsequent reads from it will return its default value.
+    public mutating func clearMuteEndDate() { _muteEndDate = nil }
+
+    public var active: Bool {
+        get { return _active ?? false }
+        set { _active = newValue }
+    }
+
+    /// Returns true if `active` has been explicitly set.
+    public var hasActive: Bool { return _active != nil }
+    /// Clears the value of `active`. Subsequent reads from it will return its default value.
+    public mutating func clearActive() { _active = nil }
+
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    public init() {}
+
+    fileprivate var _id: Int64?
+    fileprivate var _typeID: Int64?
+    fileprivate var _creatorID: Int64?
+    fileprivate var _ownerID: Int64?
+    fileprivate var _name: String?
+    fileprivate var _intro: String?
+    fileprivate var _announcement: String?
+    fileprivate var _creationDate: Int64?
+    fileprivate var _muteEndDate: Int64?
+    fileprivate var _active: Bool?
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".Group"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "id"),
-    2: .standard(proto: "type_id"),
-    3: .standard(proto: "creator_id"),
-    4: .standard(proto: "owner_id"),
-    5: .same(proto: "name"),
-    6: .same(proto: "intro"),
-    7: .same(proto: "announcement"),
-    8: .standard(proto: "creation_date"),
-    9: .standard(proto: "mute_end_date"),
-    10: .same(proto: "active"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".Group"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "id"),
+        2: .standard(proto: "type_id"),
+        3: .standard(proto: "creator_id"),
+        4: .standard(proto: "owner_id"),
+        5: .same(proto: "name"),
+        6: .same(proto: "intro"),
+        7: .same(proto: "announcement"),
+        8: .standard(proto: "creation_date"),
+        9: .standard(proto: "mute_end_date"),
+        10: .same(proto: "active"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt64Field(value: &self._id) }()
-      case 2: try { try decoder.decodeSingularInt64Field(value: &self._typeID) }()
-      case 3: try { try decoder.decodeSingularInt64Field(value: &self._creatorID) }()
-      case 4: try { try decoder.decodeSingularInt64Field(value: &self._ownerID) }()
-      case 5: try { try decoder.decodeSingularStringField(value: &self._name) }()
-      case 6: try { try decoder.decodeSingularStringField(value: &self._intro) }()
-      case 7: try { try decoder.decodeSingularStringField(value: &self._announcement) }()
-      case 8: try { try decoder.decodeSingularInt64Field(value: &self._creationDate) }()
-      case 9: try { try decoder.decodeSingularInt64Field(value: &self._muteEndDate) }()
-      case 10: try { try decoder.decodeSingularBoolField(value: &self._active) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularInt64Field(value: &_id)
+            case 2: try try decoder.decodeSingularInt64Field(value: &_typeID)
+            case 3: try try decoder.decodeSingularInt64Field(value: &_creatorID)
+            case 4: try try decoder.decodeSingularInt64Field(value: &_ownerID)
+            case 5: try try decoder.decodeSingularStringField(value: &_name)
+            case 6: try try decoder.decodeSingularStringField(value: &_intro)
+            case 7: try try decoder.decodeSingularStringField(value: &_announcement)
+            case 8: try try decoder.decodeSingularInt64Field(value: &_creationDate)
+            case 9: try try decoder.decodeSingularInt64Field(value: &_muteEndDate)
+            case 10: try try decoder.decodeSingularBoolField(value: &_active)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    try { if let v = self._id {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    } }()
-    try { if let v = self._typeID {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    } }()
-    try { if let v = self._creatorID {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
-    } }()
-    try { if let v = self._ownerID {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
-    } }()
-    try { if let v = self._name {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 5)
-    } }()
-    try { if let v = self._intro {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 6)
-    } }()
-    try { if let v = self._announcement {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 7)
-    } }()
-    try { if let v = self._creationDate {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 8)
-    } }()
-    try { if let v = self._muteEndDate {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 9)
-    } }()
-    try { if let v = self._active {
-      try visitor.visitSingularBoolField(value: v, fieldNumber: 10)
-    } }()
-    try unknownFields.traverse(visitor: &visitor)
-  }
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        try { if let v = self._id {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
+        } }()
+        try { if let v = self._typeID {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
+        } }()
+        try { if let v = self._creatorID {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
+        } }()
+        try { if let v = self._ownerID {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
+        } }()
+        try { if let v = self._name {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 5)
+        } }()
+        try { if let v = self._intro {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 6)
+        } }()
+        try { if let v = self._announcement {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 7)
+        } }()
+        try { if let v = self._creationDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 8)
+        } }()
+        try { if let v = self._muteEndDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 9)
+        } }()
+        try { if let v = self._active {
+            try visitor.visitSingularBoolField(value: v, fieldNumber: 10)
+        } }()
+        try unknownFields.traverse(visitor: &visitor)
+    }
 
-  public static func ==(lhs: Group, rhs: Group) -> Bool {
-    if lhs._id != rhs._id {return false}
-    if lhs._typeID != rhs._typeID {return false}
-    if lhs._creatorID != rhs._creatorID {return false}
-    if lhs._ownerID != rhs._ownerID {return false}
-    if lhs._name != rhs._name {return false}
-    if lhs._intro != rhs._intro {return false}
-    if lhs._announcement != rhs._announcement {return false}
-    if lhs._creationDate != rhs._creationDate {return false}
-    if lhs._muteEndDate != rhs._muteEndDate {return false}
-    if lhs._active != rhs._active {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: Group, rhs: Group) -> Bool {
+        if lhs._id != rhs._id { return false }
+        if lhs._typeID != rhs._typeID { return false }
+        if lhs._creatorID != rhs._creatorID { return false }
+        if lhs._ownerID != rhs._ownerID { return false }
+        if lhs._name != rhs._name { return false }
+        if lhs._intro != rhs._intro { return false }
+        if lhs._announcement != rhs._announcement { return false }
+        if lhs._creationDate != rhs._creationDate { return false }
+        if lhs._muteEndDate != rhs._muteEndDate { return false }
+        if lhs._active != rhs._active { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

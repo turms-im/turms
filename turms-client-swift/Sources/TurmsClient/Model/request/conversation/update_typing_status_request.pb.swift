@@ -15,63 +15,63 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct UpdateTypingStatusRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var isGroupMessage: Bool = false
+    public var isGroupMessage: Bool = false
 
-  public var toID: Int64 = 0
+    public var toID: Int64 = 0
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  public init() {}
+    public init() {}
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension UpdateTypingStatusRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".UpdateTypingStatusRequest"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "is_group_message"),
-    2: .standard(proto: "to_id"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".UpdateTypingStatusRequest"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "is_group_message"),
+        2: .standard(proto: "to_id"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularBoolField(value: &self.isGroupMessage) }()
-      case 2: try { try decoder.decodeSingularInt64Field(value: &self.toID) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularBoolField(value: &isGroupMessage)
+            case 2: try try decoder.decodeSingularInt64Field(value: &toID)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.isGroupMessage != false {
-      try visitor.visitSingularBoolField(value: self.isGroupMessage, fieldNumber: 1)
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if isGroupMessage != false {
+            try visitor.visitSingularBoolField(value: isGroupMessage, fieldNumber: 1)
+        }
+        if toID != 0 {
+            try visitor.visitSingularInt64Field(value: toID, fieldNumber: 2)
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    if self.toID != 0 {
-      try visitor.visitSingularInt64Field(value: self.toID, fieldNumber: 2)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  public static func ==(lhs: UpdateTypingStatusRequest, rhs: UpdateTypingStatusRequest) -> Bool {
-    if lhs.isGroupMessage != rhs.isGroupMessage {return false}
-    if lhs.toID != rhs.toID {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: UpdateTypingStatusRequest, rhs: UpdateTypingStatusRequest) -> Bool {
+        if lhs.isGroupMessage != rhs.isGroupMessage { return false }
+        if lhs.toID != rhs.toID { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

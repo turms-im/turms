@@ -26,15 +26,15 @@ public class MessageService {
         self.turmsClient = turmsClient
         self.turmsClient.driver
             .addNotificationListener {
-            if $0.hasRelayedRequest, case .createMessageRequest(let request) = $0.relayedRequest.kind {
-                let message = MessageService.createMessage2Message($0.requesterID, request)
-                let addition = self.parseMessageAddition(message)
-                self.messageListeners.forEach { listener in listener(message, addition) }
+                if $0.hasRelayedRequest, case let .createMessageRequest(request) = $0.relayedRequest.kind {
+                    let message = MessageService.createMessage2Message($0.requesterID, request)
+                    let addition = self.parseMessageAddition(message)
+                    self.messageListeners.forEach { listener in listener(message, addition) }
+                }
             }
-        }
     }
 
-    func addMessageListener(_ listener: @escaping (Message, MessageAddition) -> ()) {
+    func addMessageListener(_ listener: @escaping (Message, MessageAddition) -> Void) {
         messageListeners.append(listener)
     }
 
@@ -45,7 +45,8 @@ public class MessageService {
         text: String? = nil,
         records: [Data]? = nil,
         burnAfter: Int32? = nil,
-        preMessageId: Int64? = nil) -> Promise<Int64> {
+        preMessageId: Int64? = nil
+    ) -> Promise<Int64> {
         if Validator.areAllNil(text, records) {
             return Promise(error: TurmsBusinessError(TurmsStatusCode.illegalArgument, "text and records must not all be null"))
         }
@@ -82,7 +83,8 @@ public class MessageService {
     public func forwardMessage(
         messageId: Int64,
         isGroupMessage: Bool,
-        targetId: Int64) -> Promise<Int64> {
+        targetId: Int64
+    ) -> Promise<Int64> {
         return turmsClient.driver
             .send {
                 $0.createMessageRequest = .with {
@@ -102,7 +104,8 @@ public class MessageService {
     public func updateSentMessage(
         messageId: Int64,
         text: String? = nil,
-        records: [Data]? = nil) -> Promise<Void> {
+        records: [Data]? = nil
+    ) -> Promise<Void> {
         if Validator.areAllNil(text, records) {
             return Promise.value(())
         }
@@ -128,7 +131,8 @@ public class MessageService {
         fromId: Int64? = nil,
         deliveryDateAfter: Date? = nil,
         deliveryDateBefore: Date? = nil,
-        size: Int32 = 50) -> Promise<[Message]> {
+        size: Int32 = 50
+    ) -> Promise<[Message]> {
         return turmsClient.driver
             .send {
                 $0.queryMessagesRequest = .with {
@@ -166,7 +170,8 @@ public class MessageService {
         fromId: Int64? = nil,
         deliveryDateAfter: Date? = nil,
         deliveryDateBefore: Date? = nil,
-        size: Int32 = 1) -> Promise<[MessagesWithTotal]> {
+        size: Int32 = 1
+    ) -> Promise<[MessagesWithTotal]> {
         return turmsClient.driver
             .send {
                 $0.queryMessagesRequest = .with {
@@ -329,7 +334,7 @@ public class MessageService {
         var recalledMessageIds: [Int64] = []
         if systemMessageType == BuiltinSystemMessageType.recallMessage {
             let size = records.count
-            for i in 1...(size - 1) {
+            for i in 1 ... (size - 1) {
                 let id = records[i].withUnsafeBytes {
                     $0.load(as: Int64.self)
                 }

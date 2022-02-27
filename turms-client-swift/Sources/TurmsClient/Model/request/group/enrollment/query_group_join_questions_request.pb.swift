@@ -15,80 +15,81 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct QueryGroupJoinQuestionsRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var groupID: Int64 = 0
+    public var groupID: Int64 = 0
 
-  public var withAnswers: Bool = false
+    public var withAnswers: Bool = false
 
-  public var lastUpdatedDate: Int64 {
-    get {return _lastUpdatedDate ?? 0}
-    set {_lastUpdatedDate = newValue}
-  }
-  /// Returns true if `lastUpdatedDate` has been explicitly set.
-  public var hasLastUpdatedDate: Bool {return self._lastUpdatedDate != nil}
-  /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
-  public mutating func clearLastUpdatedDate() {self._lastUpdatedDate = nil}
+    public var lastUpdatedDate: Int64 {
+        get { return _lastUpdatedDate ?? 0 }
+        set { _lastUpdatedDate = newValue }
+    }
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    /// Returns true if `lastUpdatedDate` has been explicitly set.
+    public var hasLastUpdatedDate: Bool { return _lastUpdatedDate != nil }
+    /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
+    public mutating func clearLastUpdatedDate() { _lastUpdatedDate = nil }
 
-  public init() {}
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  fileprivate var _lastUpdatedDate: Int64? = nil
+    public init() {}
+
+    fileprivate var _lastUpdatedDate: Int64?
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension QueryGroupJoinQuestionsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".QueryGroupJoinQuestionsRequest"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "group_id"),
-    2: .standard(proto: "with_answers"),
-    3: .standard(proto: "last_updated_date"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".QueryGroupJoinQuestionsRequest"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "group_id"),
+        2: .standard(proto: "with_answers"),
+        3: .standard(proto: "last_updated_date"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt64Field(value: &self.groupID) }()
-      case 2: try { try decoder.decodeSingularBoolField(value: &self.withAnswers) }()
-      case 3: try { try decoder.decodeSingularInt64Field(value: &self._lastUpdatedDate) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularInt64Field(value: &groupID)
+            case 2: try try decoder.decodeSingularBoolField(value: &withAnswers)
+            case 3: try try decoder.decodeSingularInt64Field(value: &_lastUpdatedDate)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.groupID != 0 {
-      try visitor.visitSingularInt64Field(value: self.groupID, fieldNumber: 1)
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if groupID != 0 {
+            try visitor.visitSingularInt64Field(value: groupID, fieldNumber: 1)
+        }
+        if withAnswers != false {
+            try visitor.visitSingularBoolField(value: withAnswers, fieldNumber: 2)
+        }
+        try { if let v = self._lastUpdatedDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
+        } }()
+        try unknownFields.traverse(visitor: &visitor)
     }
-    if self.withAnswers != false {
-      try visitor.visitSingularBoolField(value: self.withAnswers, fieldNumber: 2)
-    }
-    try { if let v = self._lastUpdatedDate {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
-    } }()
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  public static func ==(lhs: QueryGroupJoinQuestionsRequest, rhs: QueryGroupJoinQuestionsRequest) -> Bool {
-    if lhs.groupID != rhs.groupID {return false}
-    if lhs.withAnswers != rhs.withAnswers {return false}
-    if lhs._lastUpdatedDate != rhs._lastUpdatedDate {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: QueryGroupJoinQuestionsRequest, rhs: QueryGroupJoinQuestionsRequest) -> Bool {
+        if lhs.groupID != rhs.groupID { return false }
+        if lhs.withAnswers != rhs.withAnswers { return false }
+        if lhs._lastUpdatedDate != rhs._lastUpdatedDate { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

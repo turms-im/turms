@@ -3,19 +3,18 @@ import PromiseKit
 import Starscream
 
 public class ConnectionService: BaseService {
-
     private let initialWsUrl: String
     private let initialConnectTimeout: TimeInterval
 
-    private var disconnectPromises: [Resolver<()>] = []
+    private var disconnectPromises: [Resolver<Void>] = []
 
-    private var onConnectedListeners: [() -> ()] = []
-    private var onDisconnectedListeners: [(ConnectionDisconnectInfo) -> ()] = []
-    private var messageListeners: [(Data) -> ()] = []
+    private var onConnectedListeners: [() -> Void] = []
+    private var onDisconnectedListeners: [(ConnectionDisconnectInfo) -> Void] = []
+    private var messageListeners: [(Data) -> Void] = []
 
     init(stateStore: StateStore, wsUrl: String? = nil, connectTimeout: TimeInterval? = nil) {
-        self.initialWsUrl = wsUrl ?? "ws://localhost:10510"
-        self.initialConnectTimeout = connectTimeout ?? 30
+        initialWsUrl = wsUrl ?? "ws://localhost:10510"
+        initialConnectTimeout = connectTimeout ?? 30
         super.init(stateStore)
     }
 
@@ -25,15 +24,15 @@ public class ConnectionService: BaseService {
 
     // Listeners
 
-    func addOnConnectedListener(_ listener: @escaping () -> ()) {
+    func addOnConnectedListener(_ listener: @escaping () -> Void) {
         onConnectedListeners.append(listener)
     }
 
-    func addOnDisconnectedListener(_ listener: @escaping (ConnectionDisconnectInfo) -> ()) {
+    func addOnDisconnectedListener(_ listener: @escaping (ConnectionDisconnectInfo) -> Void) {
         onDisconnectedListeners.append(listener)
     }
 
-    func addMessageListener(_ listener: @escaping (Data) -> ()) {
+    func addMessageListener(_ listener: @escaping (Data) -> Void) {
         messageListeners.append(listener)
     }
 
@@ -63,7 +62,7 @@ public class ConnectionService: BaseService {
 
     // Connection
 
-    public func connect(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil) -> Promise<()> {
+    public func connect(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil) -> Promise<Void> {
         return Promise { seal in
             if stateStore.isConnected {
                 seal.reject(TurmsBusinessError(.clientSessionAlreadyEstablished))
@@ -72,22 +71,23 @@ public class ConnectionService: BaseService {
             resetStates()
             let request = URLRequest(
                 url: URL(string: wsUrl ?? initialWsUrl)!,
-                timeoutInterval: connectTimeout ?? initialConnectTimeout)
+                timeoutInterval: connectTimeout ?? initialConnectTimeout
+            )
             let websocket = WebSocket(request: request)
             websocket.onEvent = { [weak self] event in
                 switch event {
-                case .binary(let data):
+                case let .binary(data):
                     self?.notifyMessageListeners(data)
                 case .connected:
                     self?.onWebSocketOpen()
                     seal.fulfill(())
-                case .disconnected(let reason, let websocketCode):
+                case let .disconnected(reason, websocketCode):
                     self?.onWebsocketClose(statusCode: Int(websocketCode), reason: reason)
                     seal.reject(NSError())
                 case .cancelled: // disconnect by client and won't trigger the "disconnected" event
                     self?.onWebsocketClose()
                     seal.reject(NSError())
-                case .error(let error):
+                case let .error(error):
                     self?.onWebsocketClose(error: error)
                     seal.reject(error ?? NSError())
                 default: break
@@ -98,7 +98,7 @@ public class ConnectionService: BaseService {
         }
     }
 
-    public func disconnect() -> Promise<()> {
+    public func disconnect() -> Promise<Void> {
         return Promise { seal in
             if stateStore.isConnected {
                 seal.fulfill(())
@@ -127,8 +127,7 @@ public class ConnectionService: BaseService {
 
     // Base methods
 
-    override func close() -> Promise<()> {
+    override func close() -> Promise<Void> {
         return disconnect()
     }
-
 }

@@ -15,1781 +15,1782 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 /// Client -> Server -> Client
 public struct TurmsRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  /// Note: request_id is allowed to be duplicate because
-  /// it is used for clients to identify the response of the same request id in a session
-  public var requestID: Int64 {
-    get {return _requestID ?? 0}
-    set {_requestID = newValue}
-  }
-  /// Returns true if `requestID` has been explicitly set.
-  public var hasRequestID: Bool {return self._requestID != nil}
-  /// Clears the value of `requestID`. Subsequent reads from it will return its default value.
-  public mutating func clearRequestID() {self._requestID = nil}
-
-  public var kind: TurmsRequest.OneOf_Kind? = nil
-
-  /// User - Session
-  public var createSessionRequest: CreateSessionRequest {
-    get {
-      if case .createSessionRequest(let v)? = kind {return v}
-      return CreateSessionRequest()
+    /// Note: request_id is allowed to be duplicate because
+    /// it is used for clients to identify the response of the same request id in a session
+    public var requestID: Int64 {
+        get { return _requestID ?? 0 }
+        set { _requestID = newValue }
     }
-    set {kind = .createSessionRequest(newValue)}
-  }
 
-  public var deleteSessionRequest: DeleteSessionRequest {
-    get {
-      if case .deleteSessionRequest(let v)? = kind {return v}
-      return DeleteSessionRequest()
-    }
-    set {kind = .deleteSessionRequest(newValue)}
-  }
+    /// Returns true if `requestID` has been explicitly set.
+    public var hasRequestID: Bool { return _requestID != nil }
+    /// Clears the value of `requestID`. Subsequent reads from it will return its default value.
+    public mutating func clearRequestID() { _requestID = nil }
 
-  /// Conversation
-  public var queryConversationsRequest: QueryConversationsRequest {
-    get {
-      if case .queryConversationsRequest(let v)? = kind {return v}
-      return QueryConversationsRequest()
-    }
-    set {kind = .queryConversationsRequest(newValue)}
-  }
+    public var kind: TurmsRequest.OneOf_Kind?
 
-  public var updateConversationRequest: UpdateConversationRequest {
-    get {
-      if case .updateConversationRequest(let v)? = kind {return v}
-      return UpdateConversationRequest()
-    }
-    set {kind = .updateConversationRequest(newValue)}
-  }
-
-  public var updateTypingStatusRequest: UpdateTypingStatusRequest {
-    get {
-      if case .updateTypingStatusRequest(let v)? = kind {return v}
-      return UpdateTypingStatusRequest()
-    }
-    set {kind = .updateTypingStatusRequest(newValue)}
-  }
-
-  /// Message
-  public var createMessageRequest: CreateMessageRequest {
-    get {
-      if case .createMessageRequest(let v)? = kind {return v}
-      return CreateMessageRequest()
-    }
-    set {kind = .createMessageRequest(newValue)}
-  }
-
-  public var queryMessagesRequest: QueryMessagesRequest {
-    get {
-      if case .queryMessagesRequest(let v)? = kind {return v}
-      return QueryMessagesRequest()
-    }
-    set {kind = .queryMessagesRequest(newValue)}
-  }
-
-  public var updateMessageRequest: UpdateMessageRequest {
-    get {
-      if case .updateMessageRequest(let v)? = kind {return v}
-      return UpdateMessageRequest()
-    }
-    set {kind = .updateMessageRequest(newValue)}
-  }
-
-  /// Group Member
-  public var createGroupMemberRequest: CreateGroupMemberRequest {
-    get {
-      if case .createGroupMemberRequest(let v)? = kind {return v}
-      return CreateGroupMemberRequest()
-    }
-    set {kind = .createGroupMemberRequest(newValue)}
-  }
-
-  public var deleteGroupMemberRequest: DeleteGroupMemberRequest {
-    get {
-      if case .deleteGroupMemberRequest(let v)? = kind {return v}
-      return DeleteGroupMemberRequest()
-    }
-    set {kind = .deleteGroupMemberRequest(newValue)}
-  }
-
-  public var queryGroupMembersRequest: QueryGroupMembersRequest {
-    get {
-      if case .queryGroupMembersRequest(let v)? = kind {return v}
-      return QueryGroupMembersRequest()
-    }
-    set {kind = .queryGroupMembersRequest(newValue)}
-  }
-
-  public var updateGroupMemberRequest: UpdateGroupMemberRequest {
-    get {
-      if case .updateGroupMemberRequest(let v)? = kind {return v}
-      return UpdateGroupMemberRequest()
-    }
-    set {kind = .updateGroupMemberRequest(newValue)}
-  }
-
-  /// User
-  public var queryUserProfileRequest: QueryUserProfileRequest {
-    get {
-      if case .queryUserProfileRequest(let v)? = kind {return v}
-      return QueryUserProfileRequest()
-    }
-    set {kind = .queryUserProfileRequest(newValue)}
-  }
-
-  public var queryNearbyUsersRequest: QueryNearbyUsersRequest {
-    get {
-      if case .queryNearbyUsersRequest(let v)? = kind {return v}
-      return QueryNearbyUsersRequest()
-    }
-    set {kind = .queryNearbyUsersRequest(newValue)}
-  }
-
-  public var queryUserOnlineStatusesRequest: QueryUserOnlineStatusesRequest {
-    get {
-      if case .queryUserOnlineStatusesRequest(let v)? = kind {return v}
-      return QueryUserOnlineStatusesRequest()
-    }
-    set {kind = .queryUserOnlineStatusesRequest(newValue)}
-  }
-
-  public var updateUserLocationRequest: UpdateUserLocationRequest {
-    get {
-      if case .updateUserLocationRequest(let v)? = kind {return v}
-      return UpdateUserLocationRequest()
-    }
-    set {kind = .updateUserLocationRequest(newValue)}
-  }
-
-  public var updateUserOnlineStatusRequest: UpdateUserOnlineStatusRequest {
-    get {
-      if case .updateUserOnlineStatusRequest(let v)? = kind {return v}
-      return UpdateUserOnlineStatusRequest()
-    }
-    set {kind = .updateUserOnlineStatusRequest(newValue)}
-  }
-
-  public var updateUserRequest: UpdateUserRequest {
-    get {
-      if case .updateUserRequest(let v)? = kind {return v}
-      return UpdateUserRequest()
-    }
-    set {kind = .updateUserRequest(newValue)}
-  }
-
-  /// User Relationship
-  public var createFriendRequestRequest: CreateFriendRequestRequest {
-    get {
-      if case .createFriendRequestRequest(let v)? = kind {return v}
-      return CreateFriendRequestRequest()
-    }
-    set {kind = .createFriendRequestRequest(newValue)}
-  }
-
-  public var createRelationshipGroupRequest: CreateRelationshipGroupRequest {
-    get {
-      if case .createRelationshipGroupRequest(let v)? = kind {return v}
-      return CreateRelationshipGroupRequest()
-    }
-    set {kind = .createRelationshipGroupRequest(newValue)}
-  }
-
-  public var createRelationshipRequest: CreateRelationshipRequest {
-    get {
-      if case .createRelationshipRequest(let v)? = kind {return v}
-      return CreateRelationshipRequest()
-    }
-    set {kind = .createRelationshipRequest(newValue)}
-  }
-
-  public var deleteRelationshipGroupRequest: DeleteRelationshipGroupRequest {
-    get {
-      if case .deleteRelationshipGroupRequest(let v)? = kind {return v}
-      return DeleteRelationshipGroupRequest()
-    }
-    set {kind = .deleteRelationshipGroupRequest(newValue)}
-  }
-
-  public var deleteRelationshipRequest: DeleteRelationshipRequest {
-    get {
-      if case .deleteRelationshipRequest(let v)? = kind {return v}
-      return DeleteRelationshipRequest()
-    }
-    set {kind = .deleteRelationshipRequest(newValue)}
-  }
-
-  public var queryFriendRequestsRequest: QueryFriendRequestsRequest {
-    get {
-      if case .queryFriendRequestsRequest(let v)? = kind {return v}
-      return QueryFriendRequestsRequest()
-    }
-    set {kind = .queryFriendRequestsRequest(newValue)}
-  }
-
-  public var queryRelatedUserIdsRequest: QueryRelatedUserIdsRequest {
-    get {
-      if case .queryRelatedUserIdsRequest(let v)? = kind {return v}
-      return QueryRelatedUserIdsRequest()
-    }
-    set {kind = .queryRelatedUserIdsRequest(newValue)}
-  }
-
-  public var queryRelationshipGroupsRequest: QueryRelationshipGroupsRequest {
-    get {
-      if case .queryRelationshipGroupsRequest(let v)? = kind {return v}
-      return QueryRelationshipGroupsRequest()
-    }
-    set {kind = .queryRelationshipGroupsRequest(newValue)}
-  }
-
-  public var queryRelationshipsRequest: QueryRelationshipsRequest {
-    get {
-      if case .queryRelationshipsRequest(let v)? = kind {return v}
-      return QueryRelationshipsRequest()
-    }
-    set {kind = .queryRelationshipsRequest(newValue)}
-  }
-
-  public var updateFriendRequestRequest: UpdateFriendRequestRequest {
-    get {
-      if case .updateFriendRequestRequest(let v)? = kind {return v}
-      return UpdateFriendRequestRequest()
-    }
-    set {kind = .updateFriendRequestRequest(newValue)}
-  }
-
-  public var updateRelationshipGroupRequest: UpdateRelationshipGroupRequest {
-    get {
-      if case .updateRelationshipGroupRequest(let v)? = kind {return v}
-      return UpdateRelationshipGroupRequest()
-    }
-    set {kind = .updateRelationshipGroupRequest(newValue)}
-  }
-
-  public var updateRelationshipRequest: UpdateRelationshipRequest {
-    get {
-      if case .updateRelationshipRequest(let v)? = kind {return v}
-      return UpdateRelationshipRequest()
-    }
-    set {kind = .updateRelationshipRequest(newValue)}
-  }
-
-  /// Group
-  public var createGroupRequest: CreateGroupRequest {
-    get {
-      if case .createGroupRequest(let v)? = kind {return v}
-      return CreateGroupRequest()
-    }
-    set {kind = .createGroupRequest(newValue)}
-  }
-
-  public var deleteGroupRequest: DeleteGroupRequest {
-    get {
-      if case .deleteGroupRequest(let v)? = kind {return v}
-      return DeleteGroupRequest()
-    }
-    set {kind = .deleteGroupRequest(newValue)}
-  }
-
-  public var queryGroupRequest: QueryGroupRequest {
-    get {
-      if case .queryGroupRequest(let v)? = kind {return v}
-      return QueryGroupRequest()
-    }
-    set {kind = .queryGroupRequest(newValue)}
-  }
-
-  public var queryJoinedGroupIdsRequest: QueryJoinedGroupIdsRequest {
-    get {
-      if case .queryJoinedGroupIdsRequest(let v)? = kind {return v}
-      return QueryJoinedGroupIdsRequest()
-    }
-    set {kind = .queryJoinedGroupIdsRequest(newValue)}
-  }
-
-  public var queryJoinedGroupInfosRequest: QueryJoinedGroupInfosRequest {
-    get {
-      if case .queryJoinedGroupInfosRequest(let v)? = kind {return v}
-      return QueryJoinedGroupInfosRequest()
-    }
-    set {kind = .queryJoinedGroupInfosRequest(newValue)}
-  }
-
-  public var updateGroupRequest: UpdateGroupRequest {
-    get {
-      if case .updateGroupRequest(let v)? = kind {return v}
-      return UpdateGroupRequest()
-    }
-    set {kind = .updateGroupRequest(newValue)}
-  }
-
-  /// Group Blocklist
-  public var createGroupBlockedUserRequest: CreateGroupBlockedUserRequest {
-    get {
-      if case .createGroupBlockedUserRequest(let v)? = kind {return v}
-      return CreateGroupBlockedUserRequest()
-    }
-    set {kind = .createGroupBlockedUserRequest(newValue)}
-  }
-
-  public var deleteGroupBlockedUserRequest: DeleteGroupBlockedUserRequest {
-    get {
-      if case .deleteGroupBlockedUserRequest(let v)? = kind {return v}
-      return DeleteGroupBlockedUserRequest()
-    }
-    set {kind = .deleteGroupBlockedUserRequest(newValue)}
-  }
-
-  public var queryGroupBlockedUserIdsRequest: QueryGroupBlockedUserIdsRequest {
-    get {
-      if case .queryGroupBlockedUserIdsRequest(let v)? = kind {return v}
-      return QueryGroupBlockedUserIdsRequest()
-    }
-    set {kind = .queryGroupBlockedUserIdsRequest(newValue)}
-  }
-
-  public var queryGroupBlockedUserInfosRequest: QueryGroupBlockedUserInfosRequest {
-    get {
-      if case .queryGroupBlockedUserInfosRequest(let v)? = kind {return v}
-      return QueryGroupBlockedUserInfosRequest()
-    }
-    set {kind = .queryGroupBlockedUserInfosRequest(newValue)}
-  }
-
-  /// Group Enrollment
-  public var checkGroupJoinQuestionsAnswersRequest: CheckGroupJoinQuestionsAnswersRequest {
-    get {
-      if case .checkGroupJoinQuestionsAnswersRequest(let v)? = kind {return v}
-      return CheckGroupJoinQuestionsAnswersRequest()
-    }
-    set {kind = .checkGroupJoinQuestionsAnswersRequest(newValue)}
-  }
-
-  public var createGroupInvitationRequest: CreateGroupInvitationRequest {
-    get {
-      if case .createGroupInvitationRequest(let v)? = kind {return v}
-      return CreateGroupInvitationRequest()
-    }
-    set {kind = .createGroupInvitationRequest(newValue)}
-  }
-
-  public var createGroupJoinRequestRequest: CreateGroupJoinRequestRequest {
-    get {
-      if case .createGroupJoinRequestRequest(let v)? = kind {return v}
-      return CreateGroupJoinRequestRequest()
-    }
-    set {kind = .createGroupJoinRequestRequest(newValue)}
-  }
-
-  public var createGroupJoinQuestionRequest: CreateGroupJoinQuestionRequest {
-    get {
-      if case .createGroupJoinQuestionRequest(let v)? = kind {return v}
-      return CreateGroupJoinQuestionRequest()
-    }
-    set {kind = .createGroupJoinQuestionRequest(newValue)}
-  }
-
-  public var deleteGroupInvitationRequest: DeleteGroupInvitationRequest {
-    get {
-      if case .deleteGroupInvitationRequest(let v)? = kind {return v}
-      return DeleteGroupInvitationRequest()
-    }
-    set {kind = .deleteGroupInvitationRequest(newValue)}
-  }
-
-  public var deleteGroupJoinRequestRequest: DeleteGroupJoinRequestRequest {
-    get {
-      if case .deleteGroupJoinRequestRequest(let v)? = kind {return v}
-      return DeleteGroupJoinRequestRequest()
-    }
-    set {kind = .deleteGroupJoinRequestRequest(newValue)}
-  }
-
-  public var deleteGroupJoinQuestionRequest: DeleteGroupJoinQuestionRequest {
-    get {
-      if case .deleteGroupJoinQuestionRequest(let v)? = kind {return v}
-      return DeleteGroupJoinQuestionRequest()
-    }
-    set {kind = .deleteGroupJoinQuestionRequest(newValue)}
-  }
-
-  public var queryGroupInvitationsRequest: QueryGroupInvitationsRequest {
-    get {
-      if case .queryGroupInvitationsRequest(let v)? = kind {return v}
-      return QueryGroupInvitationsRequest()
-    }
-    set {kind = .queryGroupInvitationsRequest(newValue)}
-  }
-
-  public var queryGroupJoinRequestsRequest: QueryGroupJoinRequestsRequest {
-    get {
-      if case .queryGroupJoinRequestsRequest(let v)? = kind {return v}
-      return QueryGroupJoinRequestsRequest()
-    }
-    set {kind = .queryGroupJoinRequestsRequest(newValue)}
-  }
-
-  public var queryGroupJoinQuestionsRequest: QueryGroupJoinQuestionsRequest {
-    get {
-      if case .queryGroupJoinQuestionsRequest(let v)? = kind {return v}
-      return QueryGroupJoinQuestionsRequest()
-    }
-    set {kind = .queryGroupJoinQuestionsRequest(newValue)}
-  }
-
-  public var updateGroupJoinQuestionRequest: UpdateGroupJoinQuestionRequest {
-    get {
-      if case .updateGroupJoinQuestionRequest(let v)? = kind {return v}
-      return UpdateGroupJoinQuestionRequest()
-    }
-    set {kind = .updateGroupJoinQuestionRequest(newValue)}
-  }
-
-  /// Storage
-  public var deleteResourceRequest: DeleteResourceRequest {
-    get {
-      if case .deleteResourceRequest(let v)? = kind {return v}
-      return DeleteResourceRequest()
-    }
-    set {kind = .deleteResourceRequest(newValue)}
-  }
-
-  public var querySignedGetURLRequest: QuerySignedGetUrlRequest {
-    get {
-      if case .querySignedGetURLRequest(let v)? = kind {return v}
-      return QuerySignedGetUrlRequest()
-    }
-    set {kind = .querySignedGetURLRequest(newValue)}
-  }
-
-  public var querySignedPutURLRequest: QuerySignedPutUrlRequest {
-    get {
-      if case .querySignedPutURLRequest(let v)? = kind {return v}
-      return QuerySignedPutUrlRequest()
-    }
-    set {kind = .querySignedPutURLRequest(newValue)}
-  }
-
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
-
-  public enum OneOf_Kind: Equatable {
     /// User - Session
-    case createSessionRequest(CreateSessionRequest)
-    case deleteSessionRequest(DeleteSessionRequest)
-    /// Conversation
-    case queryConversationsRequest(QueryConversationsRequest)
-    case updateConversationRequest(UpdateConversationRequest)
-    case updateTypingStatusRequest(UpdateTypingStatusRequest)
-    /// Message
-    case createMessageRequest(CreateMessageRequest)
-    case queryMessagesRequest(QueryMessagesRequest)
-    case updateMessageRequest(UpdateMessageRequest)
-    /// Group Member
-    case createGroupMemberRequest(CreateGroupMemberRequest)
-    case deleteGroupMemberRequest(DeleteGroupMemberRequest)
-    case queryGroupMembersRequest(QueryGroupMembersRequest)
-    case updateGroupMemberRequest(UpdateGroupMemberRequest)
-    /// User
-    case queryUserProfileRequest(QueryUserProfileRequest)
-    case queryNearbyUsersRequest(QueryNearbyUsersRequest)
-    case queryUserOnlineStatusesRequest(QueryUserOnlineStatusesRequest)
-    case updateUserLocationRequest(UpdateUserLocationRequest)
-    case updateUserOnlineStatusRequest(UpdateUserOnlineStatusRequest)
-    case updateUserRequest(UpdateUserRequest)
-    /// User Relationship
-    case createFriendRequestRequest(CreateFriendRequestRequest)
-    case createRelationshipGroupRequest(CreateRelationshipGroupRequest)
-    case createRelationshipRequest(CreateRelationshipRequest)
-    case deleteRelationshipGroupRequest(DeleteRelationshipGroupRequest)
-    case deleteRelationshipRequest(DeleteRelationshipRequest)
-    case queryFriendRequestsRequest(QueryFriendRequestsRequest)
-    case queryRelatedUserIdsRequest(QueryRelatedUserIdsRequest)
-    case queryRelationshipGroupsRequest(QueryRelationshipGroupsRequest)
-    case queryRelationshipsRequest(QueryRelationshipsRequest)
-    case updateFriendRequestRequest(UpdateFriendRequestRequest)
-    case updateRelationshipGroupRequest(UpdateRelationshipGroupRequest)
-    case updateRelationshipRequest(UpdateRelationshipRequest)
-    /// Group
-    case createGroupRequest(CreateGroupRequest)
-    case deleteGroupRequest(DeleteGroupRequest)
-    case queryGroupRequest(QueryGroupRequest)
-    case queryJoinedGroupIdsRequest(QueryJoinedGroupIdsRequest)
-    case queryJoinedGroupInfosRequest(QueryJoinedGroupInfosRequest)
-    case updateGroupRequest(UpdateGroupRequest)
-    /// Group Blocklist
-    case createGroupBlockedUserRequest(CreateGroupBlockedUserRequest)
-    case deleteGroupBlockedUserRequest(DeleteGroupBlockedUserRequest)
-    case queryGroupBlockedUserIdsRequest(QueryGroupBlockedUserIdsRequest)
-    case queryGroupBlockedUserInfosRequest(QueryGroupBlockedUserInfosRequest)
-    /// Group Enrollment
-    case checkGroupJoinQuestionsAnswersRequest(CheckGroupJoinQuestionsAnswersRequest)
-    case createGroupInvitationRequest(CreateGroupInvitationRequest)
-    case createGroupJoinRequestRequest(CreateGroupJoinRequestRequest)
-    case createGroupJoinQuestionRequest(CreateGroupJoinQuestionRequest)
-    case deleteGroupInvitationRequest(DeleteGroupInvitationRequest)
-    case deleteGroupJoinRequestRequest(DeleteGroupJoinRequestRequest)
-    case deleteGroupJoinQuestionRequest(DeleteGroupJoinQuestionRequest)
-    case queryGroupInvitationsRequest(QueryGroupInvitationsRequest)
-    case queryGroupJoinRequestsRequest(QueryGroupJoinRequestsRequest)
-    case queryGroupJoinQuestionsRequest(QueryGroupJoinQuestionsRequest)
-    case updateGroupJoinQuestionRequest(UpdateGroupJoinQuestionRequest)
-    /// Storage
-    case deleteResourceRequest(DeleteResourceRequest)
-    case querySignedGetURLRequest(QuerySignedGetUrlRequest)
-    case querySignedPutURLRequest(QuerySignedPutUrlRequest)
-
-  #if !swift(>=4.1)
-    public static func ==(lhs: TurmsRequest.OneOf_Kind, rhs: TurmsRequest.OneOf_Kind) -> Bool {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch (lhs, rhs) {
-      case (.createSessionRequest, .createSessionRequest): return {
-        guard case .createSessionRequest(let l) = lhs, case .createSessionRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.deleteSessionRequest, .deleteSessionRequest): return {
-        guard case .deleteSessionRequest(let l) = lhs, case .deleteSessionRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryConversationsRequest, .queryConversationsRequest): return {
-        guard case .queryConversationsRequest(let l) = lhs, case .queryConversationsRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.updateConversationRequest, .updateConversationRequest): return {
-        guard case .updateConversationRequest(let l) = lhs, case .updateConversationRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.updateTypingStatusRequest, .updateTypingStatusRequest): return {
-        guard case .updateTypingStatusRequest(let l) = lhs, case .updateTypingStatusRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.createMessageRequest, .createMessageRequest): return {
-        guard case .createMessageRequest(let l) = lhs, case .createMessageRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryMessagesRequest, .queryMessagesRequest): return {
-        guard case .queryMessagesRequest(let l) = lhs, case .queryMessagesRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.updateMessageRequest, .updateMessageRequest): return {
-        guard case .updateMessageRequest(let l) = lhs, case .updateMessageRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.createGroupMemberRequest, .createGroupMemberRequest): return {
-        guard case .createGroupMemberRequest(let l) = lhs, case .createGroupMemberRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.deleteGroupMemberRequest, .deleteGroupMemberRequest): return {
-        guard case .deleteGroupMemberRequest(let l) = lhs, case .deleteGroupMemberRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryGroupMembersRequest, .queryGroupMembersRequest): return {
-        guard case .queryGroupMembersRequest(let l) = lhs, case .queryGroupMembersRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.updateGroupMemberRequest, .updateGroupMemberRequest): return {
-        guard case .updateGroupMemberRequest(let l) = lhs, case .updateGroupMemberRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryUserProfileRequest, .queryUserProfileRequest): return {
-        guard case .queryUserProfileRequest(let l) = lhs, case .queryUserProfileRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryNearbyUsersRequest, .queryNearbyUsersRequest): return {
-        guard case .queryNearbyUsersRequest(let l) = lhs, case .queryNearbyUsersRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryUserOnlineStatusesRequest, .queryUserOnlineStatusesRequest): return {
-        guard case .queryUserOnlineStatusesRequest(let l) = lhs, case .queryUserOnlineStatusesRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.updateUserLocationRequest, .updateUserLocationRequest): return {
-        guard case .updateUserLocationRequest(let l) = lhs, case .updateUserLocationRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.updateUserOnlineStatusRequest, .updateUserOnlineStatusRequest): return {
-        guard case .updateUserOnlineStatusRequest(let l) = lhs, case .updateUserOnlineStatusRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.updateUserRequest, .updateUserRequest): return {
-        guard case .updateUserRequest(let l) = lhs, case .updateUserRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.createFriendRequestRequest, .createFriendRequestRequest): return {
-        guard case .createFriendRequestRequest(let l) = lhs, case .createFriendRequestRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.createRelationshipGroupRequest, .createRelationshipGroupRequest): return {
-        guard case .createRelationshipGroupRequest(let l) = lhs, case .createRelationshipGroupRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.createRelationshipRequest, .createRelationshipRequest): return {
-        guard case .createRelationshipRequest(let l) = lhs, case .createRelationshipRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.deleteRelationshipGroupRequest, .deleteRelationshipGroupRequest): return {
-        guard case .deleteRelationshipGroupRequest(let l) = lhs, case .deleteRelationshipGroupRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.deleteRelationshipRequest, .deleteRelationshipRequest): return {
-        guard case .deleteRelationshipRequest(let l) = lhs, case .deleteRelationshipRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryFriendRequestsRequest, .queryFriendRequestsRequest): return {
-        guard case .queryFriendRequestsRequest(let l) = lhs, case .queryFriendRequestsRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryRelatedUserIdsRequest, .queryRelatedUserIdsRequest): return {
-        guard case .queryRelatedUserIdsRequest(let l) = lhs, case .queryRelatedUserIdsRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryRelationshipGroupsRequest, .queryRelationshipGroupsRequest): return {
-        guard case .queryRelationshipGroupsRequest(let l) = lhs, case .queryRelationshipGroupsRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryRelationshipsRequest, .queryRelationshipsRequest): return {
-        guard case .queryRelationshipsRequest(let l) = lhs, case .queryRelationshipsRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.updateFriendRequestRequest, .updateFriendRequestRequest): return {
-        guard case .updateFriendRequestRequest(let l) = lhs, case .updateFriendRequestRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.updateRelationshipGroupRequest, .updateRelationshipGroupRequest): return {
-        guard case .updateRelationshipGroupRequest(let l) = lhs, case .updateRelationshipGroupRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.updateRelationshipRequest, .updateRelationshipRequest): return {
-        guard case .updateRelationshipRequest(let l) = lhs, case .updateRelationshipRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.createGroupRequest, .createGroupRequest): return {
-        guard case .createGroupRequest(let l) = lhs, case .createGroupRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.deleteGroupRequest, .deleteGroupRequest): return {
-        guard case .deleteGroupRequest(let l) = lhs, case .deleteGroupRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryGroupRequest, .queryGroupRequest): return {
-        guard case .queryGroupRequest(let l) = lhs, case .queryGroupRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryJoinedGroupIdsRequest, .queryJoinedGroupIdsRequest): return {
-        guard case .queryJoinedGroupIdsRequest(let l) = lhs, case .queryJoinedGroupIdsRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryJoinedGroupInfosRequest, .queryJoinedGroupInfosRequest): return {
-        guard case .queryJoinedGroupInfosRequest(let l) = lhs, case .queryJoinedGroupInfosRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.updateGroupRequest, .updateGroupRequest): return {
-        guard case .updateGroupRequest(let l) = lhs, case .updateGroupRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.createGroupBlockedUserRequest, .createGroupBlockedUserRequest): return {
-        guard case .createGroupBlockedUserRequest(let l) = lhs, case .createGroupBlockedUserRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.deleteGroupBlockedUserRequest, .deleteGroupBlockedUserRequest): return {
-        guard case .deleteGroupBlockedUserRequest(let l) = lhs, case .deleteGroupBlockedUserRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryGroupBlockedUserIdsRequest, .queryGroupBlockedUserIdsRequest): return {
-        guard case .queryGroupBlockedUserIdsRequest(let l) = lhs, case .queryGroupBlockedUserIdsRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryGroupBlockedUserInfosRequest, .queryGroupBlockedUserInfosRequest): return {
-        guard case .queryGroupBlockedUserInfosRequest(let l) = lhs, case .queryGroupBlockedUserInfosRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.checkGroupJoinQuestionsAnswersRequest, .checkGroupJoinQuestionsAnswersRequest): return {
-        guard case .checkGroupJoinQuestionsAnswersRequest(let l) = lhs, case .checkGroupJoinQuestionsAnswersRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.createGroupInvitationRequest, .createGroupInvitationRequest): return {
-        guard case .createGroupInvitationRequest(let l) = lhs, case .createGroupInvitationRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.createGroupJoinRequestRequest, .createGroupJoinRequestRequest): return {
-        guard case .createGroupJoinRequestRequest(let l) = lhs, case .createGroupJoinRequestRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.createGroupJoinQuestionRequest, .createGroupJoinQuestionRequest): return {
-        guard case .createGroupJoinQuestionRequest(let l) = lhs, case .createGroupJoinQuestionRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.deleteGroupInvitationRequest, .deleteGroupInvitationRequest): return {
-        guard case .deleteGroupInvitationRequest(let l) = lhs, case .deleteGroupInvitationRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.deleteGroupJoinRequestRequest, .deleteGroupJoinRequestRequest): return {
-        guard case .deleteGroupJoinRequestRequest(let l) = lhs, case .deleteGroupJoinRequestRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.deleteGroupJoinQuestionRequest, .deleteGroupJoinQuestionRequest): return {
-        guard case .deleteGroupJoinQuestionRequest(let l) = lhs, case .deleteGroupJoinQuestionRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryGroupInvitationsRequest, .queryGroupInvitationsRequest): return {
-        guard case .queryGroupInvitationsRequest(let l) = lhs, case .queryGroupInvitationsRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryGroupJoinRequestsRequest, .queryGroupJoinRequestsRequest): return {
-        guard case .queryGroupJoinRequestsRequest(let l) = lhs, case .queryGroupJoinRequestsRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryGroupJoinQuestionsRequest, .queryGroupJoinQuestionsRequest): return {
-        guard case .queryGroupJoinQuestionsRequest(let l) = lhs, case .queryGroupJoinQuestionsRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.updateGroupJoinQuestionRequest, .updateGroupJoinQuestionRequest): return {
-        guard case .updateGroupJoinQuestionRequest(let l) = lhs, case .updateGroupJoinQuestionRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.deleteResourceRequest, .deleteResourceRequest): return {
-        guard case .deleteResourceRequest(let l) = lhs, case .deleteResourceRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.querySignedGetURLRequest, .querySignedGetURLRequest): return {
-        guard case .querySignedGetURLRequest(let l) = lhs, case .querySignedGetURLRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.querySignedPutURLRequest, .querySignedPutURLRequest): return {
-        guard case .querySignedPutURLRequest(let l) = lhs, case .querySignedPutURLRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      default: return false
-      }
+    public var createSessionRequest: CreateSessionRequest {
+        get {
+            if case let .createSessionRequest(v)? = kind { return v }
+            return CreateSessionRequest()
+        }
+        set { kind = .createSessionRequest(newValue) }
     }
-  #endif
-  }
 
-  public init() {}
+    public var deleteSessionRequest: DeleteSessionRequest {
+        get {
+            if case let .deleteSessionRequest(v)? = kind { return v }
+            return DeleteSessionRequest()
+        }
+        set { kind = .deleteSessionRequest(newValue) }
+    }
 
-  fileprivate var _requestID: Int64? = nil
+    /// Conversation
+    public var queryConversationsRequest: QueryConversationsRequest {
+        get {
+            if case let .queryConversationsRequest(v)? = kind { return v }
+            return QueryConversationsRequest()
+        }
+        set { kind = .queryConversationsRequest(newValue) }
+    }
+
+    public var updateConversationRequest: UpdateConversationRequest {
+        get {
+            if case let .updateConversationRequest(v)? = kind { return v }
+            return UpdateConversationRequest()
+        }
+        set { kind = .updateConversationRequest(newValue) }
+    }
+
+    public var updateTypingStatusRequest: UpdateTypingStatusRequest {
+        get {
+            if case let .updateTypingStatusRequest(v)? = kind { return v }
+            return UpdateTypingStatusRequest()
+        }
+        set { kind = .updateTypingStatusRequest(newValue) }
+    }
+
+    /// Message
+    public var createMessageRequest: CreateMessageRequest {
+        get {
+            if case let .createMessageRequest(v)? = kind { return v }
+            return CreateMessageRequest()
+        }
+        set { kind = .createMessageRequest(newValue) }
+    }
+
+    public var queryMessagesRequest: QueryMessagesRequest {
+        get {
+            if case let .queryMessagesRequest(v)? = kind { return v }
+            return QueryMessagesRequest()
+        }
+        set { kind = .queryMessagesRequest(newValue) }
+    }
+
+    public var updateMessageRequest: UpdateMessageRequest {
+        get {
+            if case let .updateMessageRequest(v)? = kind { return v }
+            return UpdateMessageRequest()
+        }
+        set { kind = .updateMessageRequest(newValue) }
+    }
+
+    /// Group Member
+    public var createGroupMemberRequest: CreateGroupMemberRequest {
+        get {
+            if case let .createGroupMemberRequest(v)? = kind { return v }
+            return CreateGroupMemberRequest()
+        }
+        set { kind = .createGroupMemberRequest(newValue) }
+    }
+
+    public var deleteGroupMemberRequest: DeleteGroupMemberRequest {
+        get {
+            if case let .deleteGroupMemberRequest(v)? = kind { return v }
+            return DeleteGroupMemberRequest()
+        }
+        set { kind = .deleteGroupMemberRequest(newValue) }
+    }
+
+    public var queryGroupMembersRequest: QueryGroupMembersRequest {
+        get {
+            if case let .queryGroupMembersRequest(v)? = kind { return v }
+            return QueryGroupMembersRequest()
+        }
+        set { kind = .queryGroupMembersRequest(newValue) }
+    }
+
+    public var updateGroupMemberRequest: UpdateGroupMemberRequest {
+        get {
+            if case let .updateGroupMemberRequest(v)? = kind { return v }
+            return UpdateGroupMemberRequest()
+        }
+        set { kind = .updateGroupMemberRequest(newValue) }
+    }
+
+    /// User
+    public var queryUserProfileRequest: QueryUserProfileRequest {
+        get {
+            if case let .queryUserProfileRequest(v)? = kind { return v }
+            return QueryUserProfileRequest()
+        }
+        set { kind = .queryUserProfileRequest(newValue) }
+    }
+
+    public var queryNearbyUsersRequest: QueryNearbyUsersRequest {
+        get {
+            if case let .queryNearbyUsersRequest(v)? = kind { return v }
+            return QueryNearbyUsersRequest()
+        }
+        set { kind = .queryNearbyUsersRequest(newValue) }
+    }
+
+    public var queryUserOnlineStatusesRequest: QueryUserOnlineStatusesRequest {
+        get {
+            if case let .queryUserOnlineStatusesRequest(v)? = kind { return v }
+            return QueryUserOnlineStatusesRequest()
+        }
+        set { kind = .queryUserOnlineStatusesRequest(newValue) }
+    }
+
+    public var updateUserLocationRequest: UpdateUserLocationRequest {
+        get {
+            if case let .updateUserLocationRequest(v)? = kind { return v }
+            return UpdateUserLocationRequest()
+        }
+        set { kind = .updateUserLocationRequest(newValue) }
+    }
+
+    public var updateUserOnlineStatusRequest: UpdateUserOnlineStatusRequest {
+        get {
+            if case let .updateUserOnlineStatusRequest(v)? = kind { return v }
+            return UpdateUserOnlineStatusRequest()
+        }
+        set { kind = .updateUserOnlineStatusRequest(newValue) }
+    }
+
+    public var updateUserRequest: UpdateUserRequest {
+        get {
+            if case let .updateUserRequest(v)? = kind { return v }
+            return UpdateUserRequest()
+        }
+        set { kind = .updateUserRequest(newValue) }
+    }
+
+    /// User Relationship
+    public var createFriendRequestRequest: CreateFriendRequestRequest {
+        get {
+            if case let .createFriendRequestRequest(v)? = kind { return v }
+            return CreateFriendRequestRequest()
+        }
+        set { kind = .createFriendRequestRequest(newValue) }
+    }
+
+    public var createRelationshipGroupRequest: CreateRelationshipGroupRequest {
+        get {
+            if case let .createRelationshipGroupRequest(v)? = kind { return v }
+            return CreateRelationshipGroupRequest()
+        }
+        set { kind = .createRelationshipGroupRequest(newValue) }
+    }
+
+    public var createRelationshipRequest: CreateRelationshipRequest {
+        get {
+            if case let .createRelationshipRequest(v)? = kind { return v }
+            return CreateRelationshipRequest()
+        }
+        set { kind = .createRelationshipRequest(newValue) }
+    }
+
+    public var deleteRelationshipGroupRequest: DeleteRelationshipGroupRequest {
+        get {
+            if case let .deleteRelationshipGroupRequest(v)? = kind { return v }
+            return DeleteRelationshipGroupRequest()
+        }
+        set { kind = .deleteRelationshipGroupRequest(newValue) }
+    }
+
+    public var deleteRelationshipRequest: DeleteRelationshipRequest {
+        get {
+            if case let .deleteRelationshipRequest(v)? = kind { return v }
+            return DeleteRelationshipRequest()
+        }
+        set { kind = .deleteRelationshipRequest(newValue) }
+    }
+
+    public var queryFriendRequestsRequest: QueryFriendRequestsRequest {
+        get {
+            if case let .queryFriendRequestsRequest(v)? = kind { return v }
+            return QueryFriendRequestsRequest()
+        }
+        set { kind = .queryFriendRequestsRequest(newValue) }
+    }
+
+    public var queryRelatedUserIdsRequest: QueryRelatedUserIdsRequest {
+        get {
+            if case let .queryRelatedUserIdsRequest(v)? = kind { return v }
+            return QueryRelatedUserIdsRequest()
+        }
+        set { kind = .queryRelatedUserIdsRequest(newValue) }
+    }
+
+    public var queryRelationshipGroupsRequest: QueryRelationshipGroupsRequest {
+        get {
+            if case let .queryRelationshipGroupsRequest(v)? = kind { return v }
+            return QueryRelationshipGroupsRequest()
+        }
+        set { kind = .queryRelationshipGroupsRequest(newValue) }
+    }
+
+    public var queryRelationshipsRequest: QueryRelationshipsRequest {
+        get {
+            if case let .queryRelationshipsRequest(v)? = kind { return v }
+            return QueryRelationshipsRequest()
+        }
+        set { kind = .queryRelationshipsRequest(newValue) }
+    }
+
+    public var updateFriendRequestRequest: UpdateFriendRequestRequest {
+        get {
+            if case let .updateFriendRequestRequest(v)? = kind { return v }
+            return UpdateFriendRequestRequest()
+        }
+        set { kind = .updateFriendRequestRequest(newValue) }
+    }
+
+    public var updateRelationshipGroupRequest: UpdateRelationshipGroupRequest {
+        get {
+            if case let .updateRelationshipGroupRequest(v)? = kind { return v }
+            return UpdateRelationshipGroupRequest()
+        }
+        set { kind = .updateRelationshipGroupRequest(newValue) }
+    }
+
+    public var updateRelationshipRequest: UpdateRelationshipRequest {
+        get {
+            if case let .updateRelationshipRequest(v)? = kind { return v }
+            return UpdateRelationshipRequest()
+        }
+        set { kind = .updateRelationshipRequest(newValue) }
+    }
+
+    /// Group
+    public var createGroupRequest: CreateGroupRequest {
+        get {
+            if case let .createGroupRequest(v)? = kind { return v }
+            return CreateGroupRequest()
+        }
+        set { kind = .createGroupRequest(newValue) }
+    }
+
+    public var deleteGroupRequest: DeleteGroupRequest {
+        get {
+            if case let .deleteGroupRequest(v)? = kind { return v }
+            return DeleteGroupRequest()
+        }
+        set { kind = .deleteGroupRequest(newValue) }
+    }
+
+    public var queryGroupRequest: QueryGroupRequest {
+        get {
+            if case let .queryGroupRequest(v)? = kind { return v }
+            return QueryGroupRequest()
+        }
+        set { kind = .queryGroupRequest(newValue) }
+    }
+
+    public var queryJoinedGroupIdsRequest: QueryJoinedGroupIdsRequest {
+        get {
+            if case let .queryJoinedGroupIdsRequest(v)? = kind { return v }
+            return QueryJoinedGroupIdsRequest()
+        }
+        set { kind = .queryJoinedGroupIdsRequest(newValue) }
+    }
+
+    public var queryJoinedGroupInfosRequest: QueryJoinedGroupInfosRequest {
+        get {
+            if case let .queryJoinedGroupInfosRequest(v)? = kind { return v }
+            return QueryJoinedGroupInfosRequest()
+        }
+        set { kind = .queryJoinedGroupInfosRequest(newValue) }
+    }
+
+    public var updateGroupRequest: UpdateGroupRequest {
+        get {
+            if case let .updateGroupRequest(v)? = kind { return v }
+            return UpdateGroupRequest()
+        }
+        set { kind = .updateGroupRequest(newValue) }
+    }
+
+    /// Group Blocklist
+    public var createGroupBlockedUserRequest: CreateGroupBlockedUserRequest {
+        get {
+            if case let .createGroupBlockedUserRequest(v)? = kind { return v }
+            return CreateGroupBlockedUserRequest()
+        }
+        set { kind = .createGroupBlockedUserRequest(newValue) }
+    }
+
+    public var deleteGroupBlockedUserRequest: DeleteGroupBlockedUserRequest {
+        get {
+            if case let .deleteGroupBlockedUserRequest(v)? = kind { return v }
+            return DeleteGroupBlockedUserRequest()
+        }
+        set { kind = .deleteGroupBlockedUserRequest(newValue) }
+    }
+
+    public var queryGroupBlockedUserIdsRequest: QueryGroupBlockedUserIdsRequest {
+        get {
+            if case let .queryGroupBlockedUserIdsRequest(v)? = kind { return v }
+            return QueryGroupBlockedUserIdsRequest()
+        }
+        set { kind = .queryGroupBlockedUserIdsRequest(newValue) }
+    }
+
+    public var queryGroupBlockedUserInfosRequest: QueryGroupBlockedUserInfosRequest {
+        get {
+            if case let .queryGroupBlockedUserInfosRequest(v)? = kind { return v }
+            return QueryGroupBlockedUserInfosRequest()
+        }
+        set { kind = .queryGroupBlockedUserInfosRequest(newValue) }
+    }
+
+    /// Group Enrollment
+    public var checkGroupJoinQuestionsAnswersRequest: CheckGroupJoinQuestionsAnswersRequest {
+        get {
+            if case let .checkGroupJoinQuestionsAnswersRequest(v)? = kind { return v }
+            return CheckGroupJoinQuestionsAnswersRequest()
+        }
+        set { kind = .checkGroupJoinQuestionsAnswersRequest(newValue) }
+    }
+
+    public var createGroupInvitationRequest: CreateGroupInvitationRequest {
+        get {
+            if case let .createGroupInvitationRequest(v)? = kind { return v }
+            return CreateGroupInvitationRequest()
+        }
+        set { kind = .createGroupInvitationRequest(newValue) }
+    }
+
+    public var createGroupJoinRequestRequest: CreateGroupJoinRequestRequest {
+        get {
+            if case let .createGroupJoinRequestRequest(v)? = kind { return v }
+            return CreateGroupJoinRequestRequest()
+        }
+        set { kind = .createGroupJoinRequestRequest(newValue) }
+    }
+
+    public var createGroupJoinQuestionRequest: CreateGroupJoinQuestionRequest {
+        get {
+            if case let .createGroupJoinQuestionRequest(v)? = kind { return v }
+            return CreateGroupJoinQuestionRequest()
+        }
+        set { kind = .createGroupJoinQuestionRequest(newValue) }
+    }
+
+    public var deleteGroupInvitationRequest: DeleteGroupInvitationRequest {
+        get {
+            if case let .deleteGroupInvitationRequest(v)? = kind { return v }
+            return DeleteGroupInvitationRequest()
+        }
+        set { kind = .deleteGroupInvitationRequest(newValue) }
+    }
+
+    public var deleteGroupJoinRequestRequest: DeleteGroupJoinRequestRequest {
+        get {
+            if case let .deleteGroupJoinRequestRequest(v)? = kind { return v }
+            return DeleteGroupJoinRequestRequest()
+        }
+        set { kind = .deleteGroupJoinRequestRequest(newValue) }
+    }
+
+    public var deleteGroupJoinQuestionRequest: DeleteGroupJoinQuestionRequest {
+        get {
+            if case let .deleteGroupJoinQuestionRequest(v)? = kind { return v }
+            return DeleteGroupJoinQuestionRequest()
+        }
+        set { kind = .deleteGroupJoinQuestionRequest(newValue) }
+    }
+
+    public var queryGroupInvitationsRequest: QueryGroupInvitationsRequest {
+        get {
+            if case let .queryGroupInvitationsRequest(v)? = kind { return v }
+            return QueryGroupInvitationsRequest()
+        }
+        set { kind = .queryGroupInvitationsRequest(newValue) }
+    }
+
+    public var queryGroupJoinRequestsRequest: QueryGroupJoinRequestsRequest {
+        get {
+            if case let .queryGroupJoinRequestsRequest(v)? = kind { return v }
+            return QueryGroupJoinRequestsRequest()
+        }
+        set { kind = .queryGroupJoinRequestsRequest(newValue) }
+    }
+
+    public var queryGroupJoinQuestionsRequest: QueryGroupJoinQuestionsRequest {
+        get {
+            if case let .queryGroupJoinQuestionsRequest(v)? = kind { return v }
+            return QueryGroupJoinQuestionsRequest()
+        }
+        set { kind = .queryGroupJoinQuestionsRequest(newValue) }
+    }
+
+    public var updateGroupJoinQuestionRequest: UpdateGroupJoinQuestionRequest {
+        get {
+            if case let .updateGroupJoinQuestionRequest(v)? = kind { return v }
+            return UpdateGroupJoinQuestionRequest()
+        }
+        set { kind = .updateGroupJoinQuestionRequest(newValue) }
+    }
+
+    /// Storage
+    public var deleteResourceRequest: DeleteResourceRequest {
+        get {
+            if case let .deleteResourceRequest(v)? = kind { return v }
+            return DeleteResourceRequest()
+        }
+        set { kind = .deleteResourceRequest(newValue) }
+    }
+
+    public var querySignedGetURLRequest: QuerySignedGetUrlRequest {
+        get {
+            if case let .querySignedGetURLRequest(v)? = kind { return v }
+            return QuerySignedGetUrlRequest()
+        }
+        set { kind = .querySignedGetURLRequest(newValue) }
+    }
+
+    public var querySignedPutURLRequest: QuerySignedPutUrlRequest {
+        get {
+            if case let .querySignedPutURLRequest(v)? = kind { return v }
+            return QuerySignedPutUrlRequest()
+        }
+        set { kind = .querySignedPutURLRequest(newValue) }
+    }
+
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    public enum OneOf_Kind: Equatable {
+        /// User - Session
+        case createSessionRequest(CreateSessionRequest)
+        case deleteSessionRequest(DeleteSessionRequest)
+        /// Conversation
+        case queryConversationsRequest(QueryConversationsRequest)
+        case updateConversationRequest(UpdateConversationRequest)
+        case updateTypingStatusRequest(UpdateTypingStatusRequest)
+        /// Message
+        case createMessageRequest(CreateMessageRequest)
+        case queryMessagesRequest(QueryMessagesRequest)
+        case updateMessageRequest(UpdateMessageRequest)
+        /// Group Member
+        case createGroupMemberRequest(CreateGroupMemberRequest)
+        case deleteGroupMemberRequest(DeleteGroupMemberRequest)
+        case queryGroupMembersRequest(QueryGroupMembersRequest)
+        case updateGroupMemberRequest(UpdateGroupMemberRequest)
+        /// User
+        case queryUserProfileRequest(QueryUserProfileRequest)
+        case queryNearbyUsersRequest(QueryNearbyUsersRequest)
+        case queryUserOnlineStatusesRequest(QueryUserOnlineStatusesRequest)
+        case updateUserLocationRequest(UpdateUserLocationRequest)
+        case updateUserOnlineStatusRequest(UpdateUserOnlineStatusRequest)
+        case updateUserRequest(UpdateUserRequest)
+        /// User Relationship
+        case createFriendRequestRequest(CreateFriendRequestRequest)
+        case createRelationshipGroupRequest(CreateRelationshipGroupRequest)
+        case createRelationshipRequest(CreateRelationshipRequest)
+        case deleteRelationshipGroupRequest(DeleteRelationshipGroupRequest)
+        case deleteRelationshipRequest(DeleteRelationshipRequest)
+        case queryFriendRequestsRequest(QueryFriendRequestsRequest)
+        case queryRelatedUserIdsRequest(QueryRelatedUserIdsRequest)
+        case queryRelationshipGroupsRequest(QueryRelationshipGroupsRequest)
+        case queryRelationshipsRequest(QueryRelationshipsRequest)
+        case updateFriendRequestRequest(UpdateFriendRequestRequest)
+        case updateRelationshipGroupRequest(UpdateRelationshipGroupRequest)
+        case updateRelationshipRequest(UpdateRelationshipRequest)
+        /// Group
+        case createGroupRequest(CreateGroupRequest)
+        case deleteGroupRequest(DeleteGroupRequest)
+        case queryGroupRequest(QueryGroupRequest)
+        case queryJoinedGroupIdsRequest(QueryJoinedGroupIdsRequest)
+        case queryJoinedGroupInfosRequest(QueryJoinedGroupInfosRequest)
+        case updateGroupRequest(UpdateGroupRequest)
+        /// Group Blocklist
+        case createGroupBlockedUserRequest(CreateGroupBlockedUserRequest)
+        case deleteGroupBlockedUserRequest(DeleteGroupBlockedUserRequest)
+        case queryGroupBlockedUserIdsRequest(QueryGroupBlockedUserIdsRequest)
+        case queryGroupBlockedUserInfosRequest(QueryGroupBlockedUserInfosRequest)
+        /// Group Enrollment
+        case checkGroupJoinQuestionsAnswersRequest(CheckGroupJoinQuestionsAnswersRequest)
+        case createGroupInvitationRequest(CreateGroupInvitationRequest)
+        case createGroupJoinRequestRequest(CreateGroupJoinRequestRequest)
+        case createGroupJoinQuestionRequest(CreateGroupJoinQuestionRequest)
+        case deleteGroupInvitationRequest(DeleteGroupInvitationRequest)
+        case deleteGroupJoinRequestRequest(DeleteGroupJoinRequestRequest)
+        case deleteGroupJoinQuestionRequest(DeleteGroupJoinQuestionRequest)
+        case queryGroupInvitationsRequest(QueryGroupInvitationsRequest)
+        case queryGroupJoinRequestsRequest(QueryGroupJoinRequestsRequest)
+        case queryGroupJoinQuestionsRequest(QueryGroupJoinQuestionsRequest)
+        case updateGroupJoinQuestionRequest(UpdateGroupJoinQuestionRequest)
+        /// Storage
+        case deleteResourceRequest(DeleteResourceRequest)
+        case querySignedGetURLRequest(QuerySignedGetUrlRequest)
+        case querySignedPutURLRequest(QuerySignedPutUrlRequest)
+
+        #if !swift(>=4.1)
+            public static func == (lhs: TurmsRequest.OneOf_Kind, rhs: TurmsRequest.OneOf_Kind) -> Bool {
+                // The use of inline closures is to circumvent an issue where the compiler
+                // allocates stack space for every case branch when no optimizations are
+                // enabled. https://github.com/apple/swift-protobuf/issues/1034
+                switch (lhs, rhs) {
+                case (.createSessionRequest, .createSessionRequest): return {
+                        guard case let .createSessionRequest(l) = lhs, case let .createSessionRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteSessionRequest, .deleteSessionRequest): return {
+                        guard case let .deleteSessionRequest(l) = lhs, case let .deleteSessionRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryConversationsRequest, .queryConversationsRequest): return {
+                        guard case let .queryConversationsRequest(l) = lhs, case let .queryConversationsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateConversationRequest, .updateConversationRequest): return {
+                        guard case let .updateConversationRequest(l) = lhs, case let .updateConversationRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateTypingStatusRequest, .updateTypingStatusRequest): return {
+                        guard case let .updateTypingStatusRequest(l) = lhs, case let .updateTypingStatusRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.createMessageRequest, .createMessageRequest): return {
+                        guard case let .createMessageRequest(l) = lhs, case let .createMessageRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryMessagesRequest, .queryMessagesRequest): return {
+                        guard case let .queryMessagesRequest(l) = lhs, case let .queryMessagesRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateMessageRequest, .updateMessageRequest): return {
+                        guard case let .updateMessageRequest(l) = lhs, case let .updateMessageRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.createGroupMemberRequest, .createGroupMemberRequest): return {
+                        guard case let .createGroupMemberRequest(l) = lhs, case let .createGroupMemberRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteGroupMemberRequest, .deleteGroupMemberRequest): return {
+                        guard case let .deleteGroupMemberRequest(l) = lhs, case let .deleteGroupMemberRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryGroupMembersRequest, .queryGroupMembersRequest): return {
+                        guard case let .queryGroupMembersRequest(l) = lhs, case let .queryGroupMembersRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateGroupMemberRequest, .updateGroupMemberRequest): return {
+                        guard case let .updateGroupMemberRequest(l) = lhs, case let .updateGroupMemberRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryUserProfileRequest, .queryUserProfileRequest): return {
+                        guard case let .queryUserProfileRequest(l) = lhs, case let .queryUserProfileRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryNearbyUsersRequest, .queryNearbyUsersRequest): return {
+                        guard case let .queryNearbyUsersRequest(l) = lhs, case let .queryNearbyUsersRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryUserOnlineStatusesRequest, .queryUserOnlineStatusesRequest): return {
+                        guard case let .queryUserOnlineStatusesRequest(l) = lhs, case let .queryUserOnlineStatusesRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateUserLocationRequest, .updateUserLocationRequest): return {
+                        guard case let .updateUserLocationRequest(l) = lhs, case let .updateUserLocationRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateUserOnlineStatusRequest, .updateUserOnlineStatusRequest): return {
+                        guard case let .updateUserOnlineStatusRequest(l) = lhs, case let .updateUserOnlineStatusRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateUserRequest, .updateUserRequest): return {
+                        guard case let .updateUserRequest(l) = lhs, case let .updateUserRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.createFriendRequestRequest, .createFriendRequestRequest): return {
+                        guard case let .createFriendRequestRequest(l) = lhs, case let .createFriendRequestRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.createRelationshipGroupRequest, .createRelationshipGroupRequest): return {
+                        guard case let .createRelationshipGroupRequest(l) = lhs, case let .createRelationshipGroupRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.createRelationshipRequest, .createRelationshipRequest): return {
+                        guard case let .createRelationshipRequest(l) = lhs, case let .createRelationshipRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteRelationshipGroupRequest, .deleteRelationshipGroupRequest): return {
+                        guard case let .deleteRelationshipGroupRequest(l) = lhs, case let .deleteRelationshipGroupRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteRelationshipRequest, .deleteRelationshipRequest): return {
+                        guard case let .deleteRelationshipRequest(l) = lhs, case let .deleteRelationshipRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryFriendRequestsRequest, .queryFriendRequestsRequest): return {
+                        guard case let .queryFriendRequestsRequest(l) = lhs, case let .queryFriendRequestsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryRelatedUserIdsRequest, .queryRelatedUserIdsRequest): return {
+                        guard case let .queryRelatedUserIdsRequest(l) = lhs, case let .queryRelatedUserIdsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryRelationshipGroupsRequest, .queryRelationshipGroupsRequest): return {
+                        guard case let .queryRelationshipGroupsRequest(l) = lhs, case let .queryRelationshipGroupsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryRelationshipsRequest, .queryRelationshipsRequest): return {
+                        guard case let .queryRelationshipsRequest(l) = lhs, case let .queryRelationshipsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateFriendRequestRequest, .updateFriendRequestRequest): return {
+                        guard case let .updateFriendRequestRequest(l) = lhs, case let .updateFriendRequestRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateRelationshipGroupRequest, .updateRelationshipGroupRequest): return {
+                        guard case let .updateRelationshipGroupRequest(l) = lhs, case let .updateRelationshipGroupRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateRelationshipRequest, .updateRelationshipRequest): return {
+                        guard case let .updateRelationshipRequest(l) = lhs, case let .updateRelationshipRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.createGroupRequest, .createGroupRequest): return {
+                        guard case let .createGroupRequest(l) = lhs, case let .createGroupRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteGroupRequest, .deleteGroupRequest): return {
+                        guard case let .deleteGroupRequest(l) = lhs, case let .deleteGroupRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryGroupRequest, .queryGroupRequest): return {
+                        guard case let .queryGroupRequest(l) = lhs, case let .queryGroupRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryJoinedGroupIdsRequest, .queryJoinedGroupIdsRequest): return {
+                        guard case let .queryJoinedGroupIdsRequest(l) = lhs, case let .queryJoinedGroupIdsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryJoinedGroupInfosRequest, .queryJoinedGroupInfosRequest): return {
+                        guard case let .queryJoinedGroupInfosRequest(l) = lhs, case let .queryJoinedGroupInfosRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateGroupRequest, .updateGroupRequest): return {
+                        guard case let .updateGroupRequest(l) = lhs, case let .updateGroupRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.createGroupBlockedUserRequest, .createGroupBlockedUserRequest): return {
+                        guard case let .createGroupBlockedUserRequest(l) = lhs, case let .createGroupBlockedUserRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteGroupBlockedUserRequest, .deleteGroupBlockedUserRequest): return {
+                        guard case let .deleteGroupBlockedUserRequest(l) = lhs, case let .deleteGroupBlockedUserRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryGroupBlockedUserIdsRequest, .queryGroupBlockedUserIdsRequest): return {
+                        guard case let .queryGroupBlockedUserIdsRequest(l) = lhs, case let .queryGroupBlockedUserIdsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryGroupBlockedUserInfosRequest, .queryGroupBlockedUserInfosRequest): return {
+                        guard case let .queryGroupBlockedUserInfosRequest(l) = lhs, case let .queryGroupBlockedUserInfosRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.checkGroupJoinQuestionsAnswersRequest, .checkGroupJoinQuestionsAnswersRequest): return {
+                        guard case let .checkGroupJoinQuestionsAnswersRequest(l) = lhs, case let .checkGroupJoinQuestionsAnswersRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.createGroupInvitationRequest, .createGroupInvitationRequest): return {
+                        guard case let .createGroupInvitationRequest(l) = lhs, case let .createGroupInvitationRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.createGroupJoinRequestRequest, .createGroupJoinRequestRequest): return {
+                        guard case let .createGroupJoinRequestRequest(l) = lhs, case let .createGroupJoinRequestRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.createGroupJoinQuestionRequest, .createGroupJoinQuestionRequest): return {
+                        guard case let .createGroupJoinQuestionRequest(l) = lhs, case let .createGroupJoinQuestionRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteGroupInvitationRequest, .deleteGroupInvitationRequest): return {
+                        guard case let .deleteGroupInvitationRequest(l) = lhs, case let .deleteGroupInvitationRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteGroupJoinRequestRequest, .deleteGroupJoinRequestRequest): return {
+                        guard case let .deleteGroupJoinRequestRequest(l) = lhs, case let .deleteGroupJoinRequestRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteGroupJoinQuestionRequest, .deleteGroupJoinQuestionRequest): return {
+                        guard case let .deleteGroupJoinQuestionRequest(l) = lhs, case let .deleteGroupJoinQuestionRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryGroupInvitationsRequest, .queryGroupInvitationsRequest): return {
+                        guard case let .queryGroupInvitationsRequest(l) = lhs, case let .queryGroupInvitationsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryGroupJoinRequestsRequest, .queryGroupJoinRequestsRequest): return {
+                        guard case let .queryGroupJoinRequestsRequest(l) = lhs, case let .queryGroupJoinRequestsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryGroupJoinQuestionsRequest, .queryGroupJoinQuestionsRequest): return {
+                        guard case let .queryGroupJoinQuestionsRequest(l) = lhs, case let .queryGroupJoinQuestionsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateGroupJoinQuestionRequest, .updateGroupJoinQuestionRequest): return {
+                        guard case let .updateGroupJoinQuestionRequest(l) = lhs, case let .updateGroupJoinQuestionRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteResourceRequest, .deleteResourceRequest): return {
+                        guard case let .deleteResourceRequest(l) = lhs, case let .deleteResourceRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.querySignedGetURLRequest, .querySignedGetURLRequest): return {
+                        guard case let .querySignedGetURLRequest(l) = lhs, case let .querySignedGetURLRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.querySignedPutURLRequest, .querySignedPutURLRequest): return {
+                        guard case let .querySignedPutURLRequest(l) = lhs, case let .querySignedPutURLRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                default: return false
+                }
+            }
+        #endif
+    }
+
+    public init() {}
+
+    fileprivate var _requestID: Int64?
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".TurmsRequest"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "request_id"),
-    3: .standard(proto: "create_session_request"),
-    4: .standard(proto: "delete_session_request"),
-    5: .standard(proto: "query_conversations_request"),
-    6: .standard(proto: "update_conversation_request"),
-    7: .standard(proto: "update_typing_status_request"),
-    8: .standard(proto: "create_message_request"),
-    9: .standard(proto: "query_messages_request"),
-    10: .standard(proto: "update_message_request"),
-    11: .standard(proto: "create_group_member_request"),
-    12: .standard(proto: "delete_group_member_request"),
-    13: .standard(proto: "query_group_members_request"),
-    14: .standard(proto: "update_group_member_request"),
-    100: .standard(proto: "query_user_profile_request"),
-    101: .standard(proto: "query_nearby_users_request"),
-    102: .standard(proto: "query_user_online_statuses_request"),
-    103: .standard(proto: "update_user_location_request"),
-    104: .standard(proto: "update_user_online_status_request"),
-    105: .standard(proto: "update_user_request"),
-    200: .standard(proto: "create_friend_request_request"),
-    201: .standard(proto: "create_relationship_group_request"),
-    202: .standard(proto: "create_relationship_request"),
-    203: .standard(proto: "delete_relationship_group_request"),
-    204: .standard(proto: "delete_relationship_request"),
-    205: .standard(proto: "query_friend_requests_request"),
-    206: .standard(proto: "query_related_user_ids_request"),
-    207: .standard(proto: "query_relationship_groups_request"),
-    208: .standard(proto: "query_relationships_request"),
-    209: .standard(proto: "update_friend_request_request"),
-    210: .standard(proto: "update_relationship_group_request"),
-    211: .standard(proto: "update_relationship_request"),
-    300: .standard(proto: "create_group_request"),
-    301: .standard(proto: "delete_group_request"),
-    302: .standard(proto: "query_group_request"),
-    303: .standard(proto: "query_joined_group_ids_request"),
-    304: .standard(proto: "query_joined_group_infos_request"),
-    305: .standard(proto: "update_group_request"),
-    400: .standard(proto: "create_group_blocked_user_request"),
-    401: .standard(proto: "delete_group_blocked_user_request"),
-    402: .standard(proto: "query_group_blocked_user_ids_request"),
-    403: .standard(proto: "query_group_blocked_user_infos_request"),
-    500: .standard(proto: "check_group_join_questions_answers_request"),
-    501: .standard(proto: "create_group_invitation_request"),
-    502: .standard(proto: "create_group_join_request_request"),
-    503: .standard(proto: "create_group_join_question_request"),
-    504: .standard(proto: "delete_group_invitation_request"),
-    505: .standard(proto: "delete_group_join_request_request"),
-    506: .standard(proto: "delete_group_join_question_request"),
-    507: .standard(proto: "query_group_invitations_request"),
-    508: .standard(proto: "query_group_join_requests_request"),
-    509: .standard(proto: "query_group_join_questions_request"),
-    510: .standard(proto: "update_group_join_question_request"),
-    1000: .standard(proto: "delete_resource_request"),
-    1001: .standard(proto: "query_signed_get_url_request"),
-    1002: .standard(proto: "query_signed_put_url_request"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".TurmsRequest"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "request_id"),
+        3: .standard(proto: "create_session_request"),
+        4: .standard(proto: "delete_session_request"),
+        5: .standard(proto: "query_conversations_request"),
+        6: .standard(proto: "update_conversation_request"),
+        7: .standard(proto: "update_typing_status_request"),
+        8: .standard(proto: "create_message_request"),
+        9: .standard(proto: "query_messages_request"),
+        10: .standard(proto: "update_message_request"),
+        11: .standard(proto: "create_group_member_request"),
+        12: .standard(proto: "delete_group_member_request"),
+        13: .standard(proto: "query_group_members_request"),
+        14: .standard(proto: "update_group_member_request"),
+        100: .standard(proto: "query_user_profile_request"),
+        101: .standard(proto: "query_nearby_users_request"),
+        102: .standard(proto: "query_user_online_statuses_request"),
+        103: .standard(proto: "update_user_location_request"),
+        104: .standard(proto: "update_user_online_status_request"),
+        105: .standard(proto: "update_user_request"),
+        200: .standard(proto: "create_friend_request_request"),
+        201: .standard(proto: "create_relationship_group_request"),
+        202: .standard(proto: "create_relationship_request"),
+        203: .standard(proto: "delete_relationship_group_request"),
+        204: .standard(proto: "delete_relationship_request"),
+        205: .standard(proto: "query_friend_requests_request"),
+        206: .standard(proto: "query_related_user_ids_request"),
+        207: .standard(proto: "query_relationship_groups_request"),
+        208: .standard(proto: "query_relationships_request"),
+        209: .standard(proto: "update_friend_request_request"),
+        210: .standard(proto: "update_relationship_group_request"),
+        211: .standard(proto: "update_relationship_request"),
+        300: .standard(proto: "create_group_request"),
+        301: .standard(proto: "delete_group_request"),
+        302: .standard(proto: "query_group_request"),
+        303: .standard(proto: "query_joined_group_ids_request"),
+        304: .standard(proto: "query_joined_group_infos_request"),
+        305: .standard(proto: "update_group_request"),
+        400: .standard(proto: "create_group_blocked_user_request"),
+        401: .standard(proto: "delete_group_blocked_user_request"),
+        402: .standard(proto: "query_group_blocked_user_ids_request"),
+        403: .standard(proto: "query_group_blocked_user_infos_request"),
+        500: .standard(proto: "check_group_join_questions_answers_request"),
+        501: .standard(proto: "create_group_invitation_request"),
+        502: .standard(proto: "create_group_join_request_request"),
+        503: .standard(proto: "create_group_join_question_request"),
+        504: .standard(proto: "delete_group_invitation_request"),
+        505: .standard(proto: "delete_group_join_request_request"),
+        506: .standard(proto: "delete_group_join_question_request"),
+        507: .standard(proto: "query_group_invitations_request"),
+        508: .standard(proto: "query_group_join_requests_request"),
+        509: .standard(proto: "query_group_join_questions_request"),
+        510: .standard(proto: "update_group_join_question_request"),
+        1000: .standard(proto: "delete_resource_request"),
+        1001: .standard(proto: "query_signed_get_url_request"),
+        1002: .standard(proto: "query_signed_put_url_request"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt64Field(value: &self._requestID) }()
-      case 3: try {
-        var v: CreateSessionRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .createSessionRequest(let m) = current {v = m}
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularInt64Field(value: &_requestID)
+            case 3: try {
+                    var v: CreateSessionRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .createSessionRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .createSessionRequest(v)
+                    }
+                }()
+            case 4: try {
+                    var v: DeleteSessionRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteSessionRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteSessionRequest(v)
+                    }
+                }()
+            case 5: try {
+                    var v: QueryConversationsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryConversationsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryConversationsRequest(v)
+                    }
+                }()
+            case 6: try {
+                    var v: UpdateConversationRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateConversationRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateConversationRequest(v)
+                    }
+                }()
+            case 7: try {
+                    var v: UpdateTypingStatusRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateTypingStatusRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateTypingStatusRequest(v)
+                    }
+                }()
+            case 8: try {
+                    var v: CreateMessageRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .createMessageRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .createMessageRequest(v)
+                    }
+                }()
+            case 9: try {
+                    var v: QueryMessagesRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryMessagesRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryMessagesRequest(v)
+                    }
+                }()
+            case 10: try {
+                    var v: UpdateMessageRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateMessageRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateMessageRequest(v)
+                    }
+                }()
+            case 11: try {
+                    var v: CreateGroupMemberRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .createGroupMemberRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .createGroupMemberRequest(v)
+                    }
+                }()
+            case 12: try {
+                    var v: DeleteGroupMemberRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteGroupMemberRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteGroupMemberRequest(v)
+                    }
+                }()
+            case 13: try {
+                    var v: QueryGroupMembersRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryGroupMembersRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryGroupMembersRequest(v)
+                    }
+                }()
+            case 14: try {
+                    var v: UpdateGroupMemberRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateGroupMemberRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateGroupMemberRequest(v)
+                    }
+                }()
+            case 100: try {
+                    var v: QueryUserProfileRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryUserProfileRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryUserProfileRequest(v)
+                    }
+                }()
+            case 101: try {
+                    var v: QueryNearbyUsersRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryNearbyUsersRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryNearbyUsersRequest(v)
+                    }
+                }()
+            case 102: try {
+                    var v: QueryUserOnlineStatusesRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryUserOnlineStatusesRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryUserOnlineStatusesRequest(v)
+                    }
+                }()
+            case 103: try {
+                    var v: UpdateUserLocationRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateUserLocationRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateUserLocationRequest(v)
+                    }
+                }()
+            case 104: try {
+                    var v: UpdateUserOnlineStatusRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateUserOnlineStatusRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateUserOnlineStatusRequest(v)
+                    }
+                }()
+            case 105: try {
+                    var v: UpdateUserRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateUserRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateUserRequest(v)
+                    }
+                }()
+            case 200: try {
+                    var v: CreateFriendRequestRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .createFriendRequestRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .createFriendRequestRequest(v)
+                    }
+                }()
+            case 201: try {
+                    var v: CreateRelationshipGroupRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .createRelationshipGroupRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .createRelationshipGroupRequest(v)
+                    }
+                }()
+            case 202: try {
+                    var v: CreateRelationshipRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .createRelationshipRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .createRelationshipRequest(v)
+                    }
+                }()
+            case 203: try {
+                    var v: DeleteRelationshipGroupRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteRelationshipGroupRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteRelationshipGroupRequest(v)
+                    }
+                }()
+            case 204: try {
+                    var v: DeleteRelationshipRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteRelationshipRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteRelationshipRequest(v)
+                    }
+                }()
+            case 205: try {
+                    var v: QueryFriendRequestsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryFriendRequestsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryFriendRequestsRequest(v)
+                    }
+                }()
+            case 206: try {
+                    var v: QueryRelatedUserIdsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryRelatedUserIdsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryRelatedUserIdsRequest(v)
+                    }
+                }()
+            case 207: try {
+                    var v: QueryRelationshipGroupsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryRelationshipGroupsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryRelationshipGroupsRequest(v)
+                    }
+                }()
+            case 208: try {
+                    var v: QueryRelationshipsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryRelationshipsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryRelationshipsRequest(v)
+                    }
+                }()
+            case 209: try {
+                    var v: UpdateFriendRequestRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateFriendRequestRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateFriendRequestRequest(v)
+                    }
+                }()
+            case 210: try {
+                    var v: UpdateRelationshipGroupRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateRelationshipGroupRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateRelationshipGroupRequest(v)
+                    }
+                }()
+            case 211: try {
+                    var v: UpdateRelationshipRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateRelationshipRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateRelationshipRequest(v)
+                    }
+                }()
+            case 300: try {
+                    var v: CreateGroupRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .createGroupRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .createGroupRequest(v)
+                    }
+                }()
+            case 301: try {
+                    var v: DeleteGroupRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteGroupRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteGroupRequest(v)
+                    }
+                }()
+            case 302: try {
+                    var v: QueryGroupRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryGroupRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryGroupRequest(v)
+                    }
+                }()
+            case 303: try {
+                    var v: QueryJoinedGroupIdsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryJoinedGroupIdsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryJoinedGroupIdsRequest(v)
+                    }
+                }()
+            case 304: try {
+                    var v: QueryJoinedGroupInfosRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryJoinedGroupInfosRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryJoinedGroupInfosRequest(v)
+                    }
+                }()
+            case 305: try {
+                    var v: UpdateGroupRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateGroupRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateGroupRequest(v)
+                    }
+                }()
+            case 400: try {
+                    var v: CreateGroupBlockedUserRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .createGroupBlockedUserRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .createGroupBlockedUserRequest(v)
+                    }
+                }()
+            case 401: try {
+                    var v: DeleteGroupBlockedUserRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteGroupBlockedUserRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteGroupBlockedUserRequest(v)
+                    }
+                }()
+            case 402: try {
+                    var v: QueryGroupBlockedUserIdsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryGroupBlockedUserIdsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryGroupBlockedUserIdsRequest(v)
+                    }
+                }()
+            case 403: try {
+                    var v: QueryGroupBlockedUserInfosRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryGroupBlockedUserInfosRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryGroupBlockedUserInfosRequest(v)
+                    }
+                }()
+            case 500: try {
+                    var v: CheckGroupJoinQuestionsAnswersRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .checkGroupJoinQuestionsAnswersRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .checkGroupJoinQuestionsAnswersRequest(v)
+                    }
+                }()
+            case 501: try {
+                    var v: CreateGroupInvitationRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .createGroupInvitationRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .createGroupInvitationRequest(v)
+                    }
+                }()
+            case 502: try {
+                    var v: CreateGroupJoinRequestRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .createGroupJoinRequestRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .createGroupJoinRequestRequest(v)
+                    }
+                }()
+            case 503: try {
+                    var v: CreateGroupJoinQuestionRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .createGroupJoinQuestionRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .createGroupJoinQuestionRequest(v)
+                    }
+                }()
+            case 504: try {
+                    var v: DeleteGroupInvitationRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteGroupInvitationRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteGroupInvitationRequest(v)
+                    }
+                }()
+            case 505: try {
+                    var v: DeleteGroupJoinRequestRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteGroupJoinRequestRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteGroupJoinRequestRequest(v)
+                    }
+                }()
+            case 506: try {
+                    var v: DeleteGroupJoinQuestionRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteGroupJoinQuestionRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteGroupJoinQuestionRequest(v)
+                    }
+                }()
+            case 507: try {
+                    var v: QueryGroupInvitationsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryGroupInvitationsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryGroupInvitationsRequest(v)
+                    }
+                }()
+            case 508: try {
+                    var v: QueryGroupJoinRequestsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryGroupJoinRequestsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryGroupJoinRequestsRequest(v)
+                    }
+                }()
+            case 509: try {
+                    var v: QueryGroupJoinQuestionsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryGroupJoinQuestionsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryGroupJoinQuestionsRequest(v)
+                    }
+                }()
+            case 510: try {
+                    var v: UpdateGroupJoinQuestionRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateGroupJoinQuestionRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateGroupJoinQuestionRequest(v)
+                    }
+                }()
+            case 1000: try {
+                    var v: DeleteResourceRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteResourceRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteResourceRequest(v)
+                    }
+                }()
+            case 1001: try {
+                    var v: QuerySignedGetUrlRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .querySignedGetURLRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .querySignedGetURLRequest(v)
+                    }
+                }()
+            case 1002: try {
+                    var v: QuerySignedPutUrlRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .querySignedPutURLRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .querySignedPutURLRequest(v)
+                    }
+                }()
+            default: break
+            }
         }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .createSessionRequest(v)
-        }
-      }()
-      case 4: try {
-        var v: DeleteSessionRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .deleteSessionRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .deleteSessionRequest(v)
-        }
-      }()
-      case 5: try {
-        var v: QueryConversationsRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryConversationsRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryConversationsRequest(v)
-        }
-      }()
-      case 6: try {
-        var v: UpdateConversationRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .updateConversationRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .updateConversationRequest(v)
-        }
-      }()
-      case 7: try {
-        var v: UpdateTypingStatusRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .updateTypingStatusRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .updateTypingStatusRequest(v)
-        }
-      }()
-      case 8: try {
-        var v: CreateMessageRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .createMessageRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .createMessageRequest(v)
-        }
-      }()
-      case 9: try {
-        var v: QueryMessagesRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryMessagesRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryMessagesRequest(v)
-        }
-      }()
-      case 10: try {
-        var v: UpdateMessageRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .updateMessageRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .updateMessageRequest(v)
-        }
-      }()
-      case 11: try {
-        var v: CreateGroupMemberRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .createGroupMemberRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .createGroupMemberRequest(v)
-        }
-      }()
-      case 12: try {
-        var v: DeleteGroupMemberRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .deleteGroupMemberRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .deleteGroupMemberRequest(v)
-        }
-      }()
-      case 13: try {
-        var v: QueryGroupMembersRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryGroupMembersRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryGroupMembersRequest(v)
-        }
-      }()
-      case 14: try {
-        var v: UpdateGroupMemberRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .updateGroupMemberRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .updateGroupMemberRequest(v)
-        }
-      }()
-      case 100: try {
-        var v: QueryUserProfileRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryUserProfileRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryUserProfileRequest(v)
-        }
-      }()
-      case 101: try {
-        var v: QueryNearbyUsersRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryNearbyUsersRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryNearbyUsersRequest(v)
-        }
-      }()
-      case 102: try {
-        var v: QueryUserOnlineStatusesRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryUserOnlineStatusesRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryUserOnlineStatusesRequest(v)
-        }
-      }()
-      case 103: try {
-        var v: UpdateUserLocationRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .updateUserLocationRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .updateUserLocationRequest(v)
-        }
-      }()
-      case 104: try {
-        var v: UpdateUserOnlineStatusRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .updateUserOnlineStatusRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .updateUserOnlineStatusRequest(v)
-        }
-      }()
-      case 105: try {
-        var v: UpdateUserRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .updateUserRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .updateUserRequest(v)
-        }
-      }()
-      case 200: try {
-        var v: CreateFriendRequestRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .createFriendRequestRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .createFriendRequestRequest(v)
-        }
-      }()
-      case 201: try {
-        var v: CreateRelationshipGroupRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .createRelationshipGroupRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .createRelationshipGroupRequest(v)
-        }
-      }()
-      case 202: try {
-        var v: CreateRelationshipRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .createRelationshipRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .createRelationshipRequest(v)
-        }
-      }()
-      case 203: try {
-        var v: DeleteRelationshipGroupRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .deleteRelationshipGroupRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .deleteRelationshipGroupRequest(v)
-        }
-      }()
-      case 204: try {
-        var v: DeleteRelationshipRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .deleteRelationshipRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .deleteRelationshipRequest(v)
-        }
-      }()
-      case 205: try {
-        var v: QueryFriendRequestsRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryFriendRequestsRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryFriendRequestsRequest(v)
-        }
-      }()
-      case 206: try {
-        var v: QueryRelatedUserIdsRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryRelatedUserIdsRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryRelatedUserIdsRequest(v)
-        }
-      }()
-      case 207: try {
-        var v: QueryRelationshipGroupsRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryRelationshipGroupsRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryRelationshipGroupsRequest(v)
-        }
-      }()
-      case 208: try {
-        var v: QueryRelationshipsRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryRelationshipsRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryRelationshipsRequest(v)
-        }
-      }()
-      case 209: try {
-        var v: UpdateFriendRequestRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .updateFriendRequestRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .updateFriendRequestRequest(v)
-        }
-      }()
-      case 210: try {
-        var v: UpdateRelationshipGroupRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .updateRelationshipGroupRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .updateRelationshipGroupRequest(v)
-        }
-      }()
-      case 211: try {
-        var v: UpdateRelationshipRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .updateRelationshipRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .updateRelationshipRequest(v)
-        }
-      }()
-      case 300: try {
-        var v: CreateGroupRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .createGroupRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .createGroupRequest(v)
-        }
-      }()
-      case 301: try {
-        var v: DeleteGroupRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .deleteGroupRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .deleteGroupRequest(v)
-        }
-      }()
-      case 302: try {
-        var v: QueryGroupRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryGroupRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryGroupRequest(v)
-        }
-      }()
-      case 303: try {
-        var v: QueryJoinedGroupIdsRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryJoinedGroupIdsRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryJoinedGroupIdsRequest(v)
-        }
-      }()
-      case 304: try {
-        var v: QueryJoinedGroupInfosRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryJoinedGroupInfosRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryJoinedGroupInfosRequest(v)
-        }
-      }()
-      case 305: try {
-        var v: UpdateGroupRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .updateGroupRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .updateGroupRequest(v)
-        }
-      }()
-      case 400: try {
-        var v: CreateGroupBlockedUserRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .createGroupBlockedUserRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .createGroupBlockedUserRequest(v)
-        }
-      }()
-      case 401: try {
-        var v: DeleteGroupBlockedUserRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .deleteGroupBlockedUserRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .deleteGroupBlockedUserRequest(v)
-        }
-      }()
-      case 402: try {
-        var v: QueryGroupBlockedUserIdsRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryGroupBlockedUserIdsRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryGroupBlockedUserIdsRequest(v)
-        }
-      }()
-      case 403: try {
-        var v: QueryGroupBlockedUserInfosRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryGroupBlockedUserInfosRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryGroupBlockedUserInfosRequest(v)
-        }
-      }()
-      case 500: try {
-        var v: CheckGroupJoinQuestionsAnswersRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .checkGroupJoinQuestionsAnswersRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .checkGroupJoinQuestionsAnswersRequest(v)
-        }
-      }()
-      case 501: try {
-        var v: CreateGroupInvitationRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .createGroupInvitationRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .createGroupInvitationRequest(v)
-        }
-      }()
-      case 502: try {
-        var v: CreateGroupJoinRequestRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .createGroupJoinRequestRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .createGroupJoinRequestRequest(v)
-        }
-      }()
-      case 503: try {
-        var v: CreateGroupJoinQuestionRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .createGroupJoinQuestionRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .createGroupJoinQuestionRequest(v)
-        }
-      }()
-      case 504: try {
-        var v: DeleteGroupInvitationRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .deleteGroupInvitationRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .deleteGroupInvitationRequest(v)
-        }
-      }()
-      case 505: try {
-        var v: DeleteGroupJoinRequestRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .deleteGroupJoinRequestRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .deleteGroupJoinRequestRequest(v)
-        }
-      }()
-      case 506: try {
-        var v: DeleteGroupJoinQuestionRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .deleteGroupJoinQuestionRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .deleteGroupJoinQuestionRequest(v)
-        }
-      }()
-      case 507: try {
-        var v: QueryGroupInvitationsRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryGroupInvitationsRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryGroupInvitationsRequest(v)
-        }
-      }()
-      case 508: try {
-        var v: QueryGroupJoinRequestsRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryGroupJoinRequestsRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryGroupJoinRequestsRequest(v)
-        }
-      }()
-      case 509: try {
-        var v: QueryGroupJoinQuestionsRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryGroupJoinQuestionsRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryGroupJoinQuestionsRequest(v)
-        }
-      }()
-      case 510: try {
-        var v: UpdateGroupJoinQuestionRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .updateGroupJoinQuestionRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .updateGroupJoinQuestionRequest(v)
-        }
-      }()
-      case 1000: try {
-        var v: DeleteResourceRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .deleteResourceRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .deleteResourceRequest(v)
-        }
-      }()
-      case 1001: try {
-        var v: QuerySignedGetUrlRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .querySignedGetURLRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .querySignedGetURLRequest(v)
-        }
-      }()
-      case 1002: try {
-        var v: QuerySignedPutUrlRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .querySignedPutURLRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .querySignedPutURLRequest(v)
-        }
-      }()
-      default: break
-      }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    try { if let v = self._requestID {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    } }()
-    switch self.kind {
-    case .createSessionRequest?: try {
-      guard case .createSessionRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }()
-    case .deleteSessionRequest?: try {
-      guard case .deleteSessionRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    }()
-    case .queryConversationsRequest?: try {
-      guard case .queryConversationsRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }()
-    case .updateConversationRequest?: try {
-      guard case .updateConversationRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-    }()
-    case .updateTypingStatusRequest?: try {
-      guard case .updateTypingStatusRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
-    }()
-    case .createMessageRequest?: try {
-      guard case .createMessageRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
-    }()
-    case .queryMessagesRequest?: try {
-      guard case .queryMessagesRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
-    }()
-    case .updateMessageRequest?: try {
-      guard case .updateMessageRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-    }()
-    case .createGroupMemberRequest?: try {
-      guard case .createGroupMemberRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
-    }()
-    case .deleteGroupMemberRequest?: try {
-      guard case .deleteGroupMemberRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 12)
-    }()
-    case .queryGroupMembersRequest?: try {
-      guard case .queryGroupMembersRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 13)
-    }()
-    case .updateGroupMemberRequest?: try {
-      guard case .updateGroupMemberRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 14)
-    }()
-    case .queryUserProfileRequest?: try {
-      guard case .queryUserProfileRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 100)
-    }()
-    case .queryNearbyUsersRequest?: try {
-      guard case .queryNearbyUsersRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 101)
-    }()
-    case .queryUserOnlineStatusesRequest?: try {
-      guard case .queryUserOnlineStatusesRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 102)
-    }()
-    case .updateUserLocationRequest?: try {
-      guard case .updateUserLocationRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 103)
-    }()
-    case .updateUserOnlineStatusRequest?: try {
-      guard case .updateUserOnlineStatusRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 104)
-    }()
-    case .updateUserRequest?: try {
-      guard case .updateUserRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 105)
-    }()
-    case .createFriendRequestRequest?: try {
-      guard case .createFriendRequestRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 200)
-    }()
-    case .createRelationshipGroupRequest?: try {
-      guard case .createRelationshipGroupRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 201)
-    }()
-    case .createRelationshipRequest?: try {
-      guard case .createRelationshipRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 202)
-    }()
-    case .deleteRelationshipGroupRequest?: try {
-      guard case .deleteRelationshipGroupRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 203)
-    }()
-    case .deleteRelationshipRequest?: try {
-      guard case .deleteRelationshipRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 204)
-    }()
-    case .queryFriendRequestsRequest?: try {
-      guard case .queryFriendRequestsRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 205)
-    }()
-    case .queryRelatedUserIdsRequest?: try {
-      guard case .queryRelatedUserIdsRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 206)
-    }()
-    case .queryRelationshipGroupsRequest?: try {
-      guard case .queryRelationshipGroupsRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 207)
-    }()
-    case .queryRelationshipsRequest?: try {
-      guard case .queryRelationshipsRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 208)
-    }()
-    case .updateFriendRequestRequest?: try {
-      guard case .updateFriendRequestRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 209)
-    }()
-    case .updateRelationshipGroupRequest?: try {
-      guard case .updateRelationshipGroupRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 210)
-    }()
-    case .updateRelationshipRequest?: try {
-      guard case .updateRelationshipRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 211)
-    }()
-    case .createGroupRequest?: try {
-      guard case .createGroupRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 300)
-    }()
-    case .deleteGroupRequest?: try {
-      guard case .deleteGroupRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 301)
-    }()
-    case .queryGroupRequest?: try {
-      guard case .queryGroupRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 302)
-    }()
-    case .queryJoinedGroupIdsRequest?: try {
-      guard case .queryJoinedGroupIdsRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 303)
-    }()
-    case .queryJoinedGroupInfosRequest?: try {
-      guard case .queryJoinedGroupInfosRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 304)
-    }()
-    case .updateGroupRequest?: try {
-      guard case .updateGroupRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 305)
-    }()
-    case .createGroupBlockedUserRequest?: try {
-      guard case .createGroupBlockedUserRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 400)
-    }()
-    case .deleteGroupBlockedUserRequest?: try {
-      guard case .deleteGroupBlockedUserRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 401)
-    }()
-    case .queryGroupBlockedUserIdsRequest?: try {
-      guard case .queryGroupBlockedUserIdsRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 402)
-    }()
-    case .queryGroupBlockedUserInfosRequest?: try {
-      guard case .queryGroupBlockedUserInfosRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 403)
-    }()
-    case .checkGroupJoinQuestionsAnswersRequest?: try {
-      guard case .checkGroupJoinQuestionsAnswersRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 500)
-    }()
-    case .createGroupInvitationRequest?: try {
-      guard case .createGroupInvitationRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 501)
-    }()
-    case .createGroupJoinRequestRequest?: try {
-      guard case .createGroupJoinRequestRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 502)
-    }()
-    case .createGroupJoinQuestionRequest?: try {
-      guard case .createGroupJoinQuestionRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 503)
-    }()
-    case .deleteGroupInvitationRequest?: try {
-      guard case .deleteGroupInvitationRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 504)
-    }()
-    case .deleteGroupJoinRequestRequest?: try {
-      guard case .deleteGroupJoinRequestRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 505)
-    }()
-    case .deleteGroupJoinQuestionRequest?: try {
-      guard case .deleteGroupJoinQuestionRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 506)
-    }()
-    case .queryGroupInvitationsRequest?: try {
-      guard case .queryGroupInvitationsRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 507)
-    }()
-    case .queryGroupJoinRequestsRequest?: try {
-      guard case .queryGroupJoinRequestsRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 508)
-    }()
-    case .queryGroupJoinQuestionsRequest?: try {
-      guard case .queryGroupJoinQuestionsRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 509)
-    }()
-    case .updateGroupJoinQuestionRequest?: try {
-      guard case .updateGroupJoinQuestionRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 510)
-    }()
-    case .deleteResourceRequest?: try {
-      guard case .deleteResourceRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 1000)
-    }()
-    case .querySignedGetURLRequest?: try {
-      guard case .querySignedGetURLRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 1001)
-    }()
-    case .querySignedPutURLRequest?: try {
-      guard case .querySignedPutURLRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 1002)
-    }()
-    case nil: break
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        try { if let v = self._requestID {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
+        } }()
+        switch kind {
+        case .createSessionRequest?: try {
+                guard case let .createSessionRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+            }()
+        case .deleteSessionRequest?: try {
+                guard case let .deleteSessionRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+            }()
+        case .queryConversationsRequest?: try {
+                guard case let .queryConversationsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+            }()
+        case .updateConversationRequest?: try {
+                guard case let .updateConversationRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+            }()
+        case .updateTypingStatusRequest?: try {
+                guard case let .updateTypingStatusRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+            }()
+        case .createMessageRequest?: try {
+                guard case let .createMessageRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
+            }()
+        case .queryMessagesRequest?: try {
+                guard case let .queryMessagesRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
+            }()
+        case .updateMessageRequest?: try {
+                guard case let .updateMessageRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+            }()
+        case .createGroupMemberRequest?: try {
+                guard case let .createGroupMemberRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
+            }()
+        case .deleteGroupMemberRequest?: try {
+                guard case let .deleteGroupMemberRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 12)
+            }()
+        case .queryGroupMembersRequest?: try {
+                guard case let .queryGroupMembersRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 13)
+            }()
+        case .updateGroupMemberRequest?: try {
+                guard case let .updateGroupMemberRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 14)
+            }()
+        case .queryUserProfileRequest?: try {
+                guard case let .queryUserProfileRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 100)
+            }()
+        case .queryNearbyUsersRequest?: try {
+                guard case let .queryNearbyUsersRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 101)
+            }()
+        case .queryUserOnlineStatusesRequest?: try {
+                guard case let .queryUserOnlineStatusesRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 102)
+            }()
+        case .updateUserLocationRequest?: try {
+                guard case let .updateUserLocationRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 103)
+            }()
+        case .updateUserOnlineStatusRequest?: try {
+                guard case let .updateUserOnlineStatusRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 104)
+            }()
+        case .updateUserRequest?: try {
+                guard case let .updateUserRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 105)
+            }()
+        case .createFriendRequestRequest?: try {
+                guard case let .createFriendRequestRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 200)
+            }()
+        case .createRelationshipGroupRequest?: try {
+                guard case let .createRelationshipGroupRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 201)
+            }()
+        case .createRelationshipRequest?: try {
+                guard case let .createRelationshipRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 202)
+            }()
+        case .deleteRelationshipGroupRequest?: try {
+                guard case let .deleteRelationshipGroupRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 203)
+            }()
+        case .deleteRelationshipRequest?: try {
+                guard case let .deleteRelationshipRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 204)
+            }()
+        case .queryFriendRequestsRequest?: try {
+                guard case let .queryFriendRequestsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 205)
+            }()
+        case .queryRelatedUserIdsRequest?: try {
+                guard case let .queryRelatedUserIdsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 206)
+            }()
+        case .queryRelationshipGroupsRequest?: try {
+                guard case let .queryRelationshipGroupsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 207)
+            }()
+        case .queryRelationshipsRequest?: try {
+                guard case let .queryRelationshipsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 208)
+            }()
+        case .updateFriendRequestRequest?: try {
+                guard case let .updateFriendRequestRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 209)
+            }()
+        case .updateRelationshipGroupRequest?: try {
+                guard case let .updateRelationshipGroupRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 210)
+            }()
+        case .updateRelationshipRequest?: try {
+                guard case let .updateRelationshipRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 211)
+            }()
+        case .createGroupRequest?: try {
+                guard case let .createGroupRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 300)
+            }()
+        case .deleteGroupRequest?: try {
+                guard case let .deleteGroupRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 301)
+            }()
+        case .queryGroupRequest?: try {
+                guard case let .queryGroupRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 302)
+            }()
+        case .queryJoinedGroupIdsRequest?: try {
+                guard case let .queryJoinedGroupIdsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 303)
+            }()
+        case .queryJoinedGroupInfosRequest?: try {
+                guard case let .queryJoinedGroupInfosRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 304)
+            }()
+        case .updateGroupRequest?: try {
+                guard case let .updateGroupRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 305)
+            }()
+        case .createGroupBlockedUserRequest?: try {
+                guard case let .createGroupBlockedUserRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 400)
+            }()
+        case .deleteGroupBlockedUserRequest?: try {
+                guard case let .deleteGroupBlockedUserRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 401)
+            }()
+        case .queryGroupBlockedUserIdsRequest?: try {
+                guard case let .queryGroupBlockedUserIdsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 402)
+            }()
+        case .queryGroupBlockedUserInfosRequest?: try {
+                guard case let .queryGroupBlockedUserInfosRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 403)
+            }()
+        case .checkGroupJoinQuestionsAnswersRequest?: try {
+                guard case let .checkGroupJoinQuestionsAnswersRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 500)
+            }()
+        case .createGroupInvitationRequest?: try {
+                guard case let .createGroupInvitationRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 501)
+            }()
+        case .createGroupJoinRequestRequest?: try {
+                guard case let .createGroupJoinRequestRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 502)
+            }()
+        case .createGroupJoinQuestionRequest?: try {
+                guard case let .createGroupJoinQuestionRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 503)
+            }()
+        case .deleteGroupInvitationRequest?: try {
+                guard case let .deleteGroupInvitationRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 504)
+            }()
+        case .deleteGroupJoinRequestRequest?: try {
+                guard case let .deleteGroupJoinRequestRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 505)
+            }()
+        case .deleteGroupJoinQuestionRequest?: try {
+                guard case let .deleteGroupJoinQuestionRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 506)
+            }()
+        case .queryGroupInvitationsRequest?: try {
+                guard case let .queryGroupInvitationsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 507)
+            }()
+        case .queryGroupJoinRequestsRequest?: try {
+                guard case let .queryGroupJoinRequestsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 508)
+            }()
+        case .queryGroupJoinQuestionsRequest?: try {
+                guard case let .queryGroupJoinQuestionsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 509)
+            }()
+        case .updateGroupJoinQuestionRequest?: try {
+                guard case let .updateGroupJoinQuestionRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 510)
+            }()
+        case .deleteResourceRequest?: try {
+                guard case let .deleteResourceRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 1000)
+            }()
+        case .querySignedGetURLRequest?: try {
+                guard case let .querySignedGetURLRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 1001)
+            }()
+        case .querySignedPutURLRequest?: try {
+                guard case let .querySignedPutURLRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 1002)
+            }()
+        case nil: break
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  public static func ==(lhs: TurmsRequest, rhs: TurmsRequest) -> Bool {
-    if lhs._requestID != rhs._requestID {return false}
-    if lhs.kind != rhs.kind {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: TurmsRequest, rhs: TurmsRequest) -> Bool {
+        if lhs._requestID != rhs._requestID { return false }
+        if lhs.kind != rhs.kind { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

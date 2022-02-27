@@ -6,16 +6,14 @@ public class UserService {
     public var userInfo: User?
     private var storePassword = false
 
-    private var onOnlineListeners: [() -> ()] = []
-    private var onOfflineListeners: [(SessionCloseInfo) -> ()] = []
+    private var onOnlineListeners: [() -> Void] = []
+    private var onOfflineListeners: [(SessionCloseInfo) -> Void] = []
 
     var isLoggedIn: Bool {
-        get {
-            guard let status = userInfo?.onlineStatus else {
-                return false
-            }
-            return status != .offline && UserStatus.allCases.contains(status)
+        guard let status = userInfo?.onlineStatus else {
+            return false
         }
+        return status != .offline && UserStatus.allCases.contains(status)
     }
 
     init(_ turmsClient: TurmsClient) {
@@ -24,18 +22,18 @@ public class UserService {
             self?.changeToOffline(SessionCloseInfo(closeStatus: Int32(TurmsCloseStatus.connectionClosed.rawValue), businessStatus: nil, reason: nil))
         }
         turmsClient.driver.addNotificationListener { [weak self] n in
-            if n.hasCloseStatus && self?.isLoggedIn == true {
+            if n.hasCloseStatus, self?.isLoggedIn == true {
                 let info = SessionCloseInfo(closeStatus: n.closeStatus, businessStatus: n.hasCode ? n.code : nil, reason: n.hasReason ? n.reason : nil)
                 self?.changeToOffline(info)
             }
         }
     }
 
-    public func addOnlineListener(_ listener: @escaping () -> ()) {
+    public func addOnlineListener(_ listener: @escaping () -> Void) {
         onOnlineListeners.append(listener)
     }
 
-    public func addOfflineListener(listener: @escaping (SessionCloseInfo) -> ()) {
+    public func addOfflineListener(listener: @escaping (SessionCloseInfo) -> Void) {
         onOfflineListeners.append(listener)
     }
 
@@ -43,10 +41,11 @@ public class UserService {
         userId: Int64,
         password: String? = nil,
         deviceType: DeviceType? = nil,
-        deviceDetails: [String:String]? = nil,
+        deviceDetails: [String: String]? = nil,
         onlineStatus: UserStatus? = nil,
         location: Location? = nil,
-        storePassword: Bool = false) -> Promise<Void> {
+        storePassword: Bool = false
+    ) -> Promise<Void> {
         var user = User(userId: userId)
         if storePassword {
             user.password = password
@@ -93,8 +92,8 @@ public class UserService {
         let d = disconnect
             ? turmsClient.driver.disconnect()
             : turmsClient.driver.send {
-            $0.deleteSessionRequest = DeleteSessionRequest()
-        }.asVoid()
+                $0.deleteSessionRequest = DeleteSessionRequest()
+            }.asVoid()
         return d.done {
             self.changeToOffline(SessionCloseInfo(closeStatus: Int32(TurmsCloseStatus.disconnectedByClient.rawValue), businessStatus: nil, reason: nil))
         }
@@ -137,7 +136,8 @@ public class UserService {
     public func updateProfile(
         name: String? = nil,
         intro: String? = nil,
-        profileAccessStrategy: ProfileAccessStrategy? = nil) -> Promise<Void> {
+        profileAccessStrategy: ProfileAccessStrategy? = nil
+    ) -> Promise<Void> {
         if Validator.areAllNil(name, intro, profileAccessStrategy) {
             return Promise.value(())
         }
@@ -219,7 +219,8 @@ public class UserService {
         relatedUserIds: [Int64]? = nil,
         isBlocked: Bool? = nil,
         groupIndex: Int32? = nil,
-        lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipsWithVersion?> {
+        lastUpdatedDate: Date? = nil
+    ) -> Promise<UserRelationshipsWithVersion?> {
         return turmsClient.driver
             .send {
                 $0.queryRelationshipsRequest = .with {
@@ -266,14 +267,16 @@ public class UserService {
         return queryRelationships(
             isBlocked: false,
             groupIndex: groupIndex,
-            lastUpdatedDate: lastUpdatedDate)
+            lastUpdatedDate: lastUpdatedDate
+        )
     }
 
     public func queryBlockedUsers(groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipsWithVersion?> {
         return queryRelationships(
             isBlocked: true,
             groupIndex: groupIndex,
-            lastUpdatedDate: lastUpdatedDate)
+            lastUpdatedDate: lastUpdatedDate
+        )
     }
 
     public func createRelationship(userId: Int64, isBlocked: Bool, groupIndex: Int32? = nil) -> Promise<Void> {
@@ -294,14 +297,16 @@ public class UserService {
         return createRelationship(
             userId: userId,
             isBlocked: false,
-            groupIndex: groupIndex)
+            groupIndex: groupIndex
+        )
     }
 
     public func createBlockedUserRelationship(userId: Int64, groupIndex: Int32? = nil) -> Promise<Void> {
         return createRelationship(
             userId: userId,
             isBlocked: true,
-            groupIndex: groupIndex)
+            groupIndex: groupIndex
+        )
     }
 
     public func deleteRelationship(relatedUserId: Int64, deleteGroupIndex: Int32? = nil, targetGroupIndex: Int32? = nil) -> Promise<Void> {
@@ -482,5 +487,4 @@ public class UserService {
             }
         }
     }
-
 }

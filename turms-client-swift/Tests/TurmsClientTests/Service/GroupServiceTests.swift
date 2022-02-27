@@ -49,7 +49,7 @@ class GroupServiceTests: XCTestCase {
         assertCompleted("unmuteGroup_shouldSucceed", service.unmuteGroup(groupId!))
         assertCompleted("updateGroupJoinQuestion_shouldSucceed", service.updateGroupJoinQuestion(questionId: groupQuestionId!, question: "new-question", answers: ["answer"]))
         assertCompleted("updateGroupMemberInfo_shouldSucceed", service.updateGroupMemberInfo(groupId: groupId!, memberId: groupMemberId, name: "myname"))
-        assertCompleted("muteGroupMember_shouldSucceed", service.muteGroupMember(groupId: groupId!, memberId: groupMemberId, muteEndDate: Date(timeIntervalSinceNow: 100000)))
+        assertCompleted("muteGroupMember_shouldSucceed", service.muteGroupMember(groupId: groupId!, memberId: groupMemberId, muteEndDate: Date(timeIntervalSinceNow: 100_000)))
         assertCompleted("unmuteGroupMember_shouldSucceed", service.unmuteGroupMember(groupId: groupId!, memberId: groupMemberId))
 
         // Query

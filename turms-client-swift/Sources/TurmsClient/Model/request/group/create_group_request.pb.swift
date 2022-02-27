@@ -15,136 +15,141 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct CreateGroupRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var name: String = String()
+    public var name: String = .init()
 
-  public var intro: String {
-    get {return _intro ?? String()}
-    set {_intro = newValue}
-  }
-  /// Returns true if `intro` has been explicitly set.
-  public var hasIntro: Bool {return self._intro != nil}
-  /// Clears the value of `intro`. Subsequent reads from it will return its default value.
-  public mutating func clearIntro() {self._intro = nil}
+    public var intro: String {
+        get { return _intro ?? String() }
+        set { _intro = newValue }
+    }
 
-  public var announcement: String {
-    get {return _announcement ?? String()}
-    set {_announcement = newValue}
-  }
-  /// Returns true if `announcement` has been explicitly set.
-  public var hasAnnouncement: Bool {return self._announcement != nil}
-  /// Clears the value of `announcement`. Subsequent reads from it will return its default value.
-  public mutating func clearAnnouncement() {self._announcement = nil}
+    /// Returns true if `intro` has been explicitly set.
+    public var hasIntro: Bool { return _intro != nil }
+    /// Clears the value of `intro`. Subsequent reads from it will return its default value.
+    public mutating func clearIntro() { _intro = nil }
 
-  public var minimumScore: Int32 {
-    get {return _minimumScore ?? 0}
-    set {_minimumScore = newValue}
-  }
-  /// Returns true if `minimumScore` has been explicitly set.
-  public var hasMinimumScore: Bool {return self._minimumScore != nil}
-  /// Clears the value of `minimumScore`. Subsequent reads from it will return its default value.
-  public mutating func clearMinimumScore() {self._minimumScore = nil}
+    public var announcement: String {
+        get { return _announcement ?? String() }
+        set { _announcement = newValue }
+    }
 
-  public var groupTypeID: Int64 {
-    get {return _groupTypeID ?? 0}
-    set {_groupTypeID = newValue}
-  }
-  /// Returns true if `groupTypeID` has been explicitly set.
-  public var hasGroupTypeID: Bool {return self._groupTypeID != nil}
-  /// Clears the value of `groupTypeID`. Subsequent reads from it will return its default value.
-  public mutating func clearGroupTypeID() {self._groupTypeID = nil}
+    /// Returns true if `announcement` has been explicitly set.
+    public var hasAnnouncement: Bool { return _announcement != nil }
+    /// Clears the value of `announcement`. Subsequent reads from it will return its default value.
+    public mutating func clearAnnouncement() { _announcement = nil }
 
-  public var muteEndDate: Int64 {
-    get {return _muteEndDate ?? 0}
-    set {_muteEndDate = newValue}
-  }
-  /// Returns true if `muteEndDate` has been explicitly set.
-  public var hasMuteEndDate: Bool {return self._muteEndDate != nil}
-  /// Clears the value of `muteEndDate`. Subsequent reads from it will return its default value.
-  public mutating func clearMuteEndDate() {self._muteEndDate = nil}
+    public var minimumScore: Int32 {
+        get { return _minimumScore ?? 0 }
+        set { _minimumScore = newValue }
+    }
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    /// Returns true if `minimumScore` has been explicitly set.
+    public var hasMinimumScore: Bool { return _minimumScore != nil }
+    /// Clears the value of `minimumScore`. Subsequent reads from it will return its default value.
+    public mutating func clearMinimumScore() { _minimumScore = nil }
 
-  public init() {}
+    public var groupTypeID: Int64 {
+        get { return _groupTypeID ?? 0 }
+        set { _groupTypeID = newValue }
+    }
 
-  fileprivate var _intro: String? = nil
-  fileprivate var _announcement: String? = nil
-  fileprivate var _minimumScore: Int32? = nil
-  fileprivate var _groupTypeID: Int64? = nil
-  fileprivate var _muteEndDate: Int64? = nil
+    /// Returns true if `groupTypeID` has been explicitly set.
+    public var hasGroupTypeID: Bool { return _groupTypeID != nil }
+    /// Clears the value of `groupTypeID`. Subsequent reads from it will return its default value.
+    public mutating func clearGroupTypeID() { _groupTypeID = nil }
+
+    public var muteEndDate: Int64 {
+        get { return _muteEndDate ?? 0 }
+        set { _muteEndDate = newValue }
+    }
+
+    /// Returns true if `muteEndDate` has been explicitly set.
+    public var hasMuteEndDate: Bool { return _muteEndDate != nil }
+    /// Clears the value of `muteEndDate`. Subsequent reads from it will return its default value.
+    public mutating func clearMuteEndDate() { _muteEndDate = nil }
+
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    public init() {}
+
+    fileprivate var _intro: String?
+    fileprivate var _announcement: String?
+    fileprivate var _minimumScore: Int32?
+    fileprivate var _groupTypeID: Int64?
+    fileprivate var _muteEndDate: Int64?
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".CreateGroupRequest"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "name"),
-    2: .same(proto: "intro"),
-    3: .same(proto: "announcement"),
-    4: .standard(proto: "minimum_score"),
-    5: .standard(proto: "group_type_id"),
-    6: .standard(proto: "mute_end_date"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".CreateGroupRequest"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "name"),
+        2: .same(proto: "intro"),
+        3: .same(proto: "announcement"),
+        4: .standard(proto: "minimum_score"),
+        5: .standard(proto: "group_type_id"),
+        6: .standard(proto: "mute_end_date"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.name) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self._intro) }()
-      case 3: try { try decoder.decodeSingularStringField(value: &self._announcement) }()
-      case 4: try { try decoder.decodeSingularInt32Field(value: &self._minimumScore) }()
-      case 5: try { try decoder.decodeSingularInt64Field(value: &self._groupTypeID) }()
-      case 6: try { try decoder.decodeSingularInt64Field(value: &self._muteEndDate) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularStringField(value: &name)
+            case 2: try try decoder.decodeSingularStringField(value: &_intro)
+            case 3: try try decoder.decodeSingularStringField(value: &_announcement)
+            case 4: try try decoder.decodeSingularInt32Field(value: &_minimumScore)
+            case 5: try try decoder.decodeSingularInt64Field(value: &_groupTypeID)
+            case 6: try try decoder.decodeSingularInt64Field(value: &_muteEndDate)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.name.isEmpty {
-      try visitor.visitSingularStringField(value: self.name, fieldNumber: 1)
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if !name.isEmpty {
+            try visitor.visitSingularStringField(value: name, fieldNumber: 1)
+        }
+        try { if let v = self._intro {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 2)
+        } }()
+        try { if let v = self._announcement {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 3)
+        } }()
+        try { if let v = self._minimumScore {
+            try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
+        } }()
+        try { if let v = self._groupTypeID {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
+        } }()
+        try { if let v = self._muteEndDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
+        } }()
+        try unknownFields.traverse(visitor: &visitor)
     }
-    try { if let v = self._intro {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    } }()
-    try { if let v = self._announcement {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    } }()
-    try { if let v = self._minimumScore {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
-    } }()
-    try { if let v = self._groupTypeID {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
-    } }()
-    try { if let v = self._muteEndDate {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
-    } }()
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  public static func ==(lhs: CreateGroupRequest, rhs: CreateGroupRequest) -> Bool {
-    if lhs.name != rhs.name {return false}
-    if lhs._intro != rhs._intro {return false}
-    if lhs._announcement != rhs._announcement {return false}
-    if lhs._minimumScore != rhs._minimumScore {return false}
-    if lhs._groupTypeID != rhs._groupTypeID {return false}
-    if lhs._muteEndDate != rhs._muteEndDate {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: CreateGroupRequest, rhs: CreateGroupRequest) -> Bool {
+        if lhs.name != rhs.name { return false }
+        if lhs._intro != rhs._intro { return false }
+        if lhs._announcement != rhs._announcement { return false }
+        if lhs._minimumScore != rhs._minimumScore { return false }
+        if lhs._groupTypeID != rhs._groupTypeID { return false }
+        if lhs._muteEndDate != rhs._muteEndDate { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

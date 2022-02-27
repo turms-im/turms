@@ -15,96 +15,98 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct QueryGroupMembersRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var groupID: Int64 = 0
+    public var groupID: Int64 = 0
 
-  public var lastUpdatedDate: Int64 {
-    get {return _lastUpdatedDate ?? 0}
-    set {_lastUpdatedDate = newValue}
-  }
-  /// Returns true if `lastUpdatedDate` has been explicitly set.
-  public var hasLastUpdatedDate: Bool {return self._lastUpdatedDate != nil}
-  /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
-  public mutating func clearLastUpdatedDate() {self._lastUpdatedDate = nil}
+    public var lastUpdatedDate: Int64 {
+        get { return _lastUpdatedDate ?? 0 }
+        set { _lastUpdatedDate = newValue }
+    }
 
-  public var memberIds: [Int64] = []
+    /// Returns true if `lastUpdatedDate` has been explicitly set.
+    public var hasLastUpdatedDate: Bool { return _lastUpdatedDate != nil }
+    /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
+    public mutating func clearLastUpdatedDate() { _lastUpdatedDate = nil }
 
-  public var withStatus: Bool {
-    get {return _withStatus ?? false}
-    set {_withStatus = newValue}
-  }
-  /// Returns true if `withStatus` has been explicitly set.
-  public var hasWithStatus: Bool {return self._withStatus != nil}
-  /// Clears the value of `withStatus`. Subsequent reads from it will return its default value.
-  public mutating func clearWithStatus() {self._withStatus = nil}
+    public var memberIds: [Int64] = []
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    public var withStatus: Bool {
+        get { return _withStatus ?? false }
+        set { _withStatus = newValue }
+    }
 
-  public init() {}
+    /// Returns true if `withStatus` has been explicitly set.
+    public var hasWithStatus: Bool { return _withStatus != nil }
+    /// Clears the value of `withStatus`. Subsequent reads from it will return its default value.
+    public mutating func clearWithStatus() { _withStatus = nil }
 
-  fileprivate var _lastUpdatedDate: Int64? = nil
-  fileprivate var _withStatus: Bool? = nil
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    public init() {}
+
+    fileprivate var _lastUpdatedDate: Int64?
+    fileprivate var _withStatus: Bool?
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension QueryGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".QueryGroupMembersRequest"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "group_id"),
-    2: .standard(proto: "last_updated_date"),
-    3: .standard(proto: "member_ids"),
-    4: .standard(proto: "with_status"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".QueryGroupMembersRequest"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "group_id"),
+        2: .standard(proto: "last_updated_date"),
+        3: .standard(proto: "member_ids"),
+        4: .standard(proto: "with_status"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt64Field(value: &self.groupID) }()
-      case 2: try { try decoder.decodeSingularInt64Field(value: &self._lastUpdatedDate) }()
-      case 3: try { try decoder.decodeRepeatedInt64Field(value: &self.memberIds) }()
-      case 4: try { try decoder.decodeSingularBoolField(value: &self._withStatus) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularInt64Field(value: &groupID)
+            case 2: try try decoder.decodeSingularInt64Field(value: &_lastUpdatedDate)
+            case 3: try try decoder.decodeRepeatedInt64Field(value: &memberIds)
+            case 4: try try decoder.decodeSingularBoolField(value: &_withStatus)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.groupID != 0 {
-      try visitor.visitSingularInt64Field(value: self.groupID, fieldNumber: 1)
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if groupID != 0 {
+            try visitor.visitSingularInt64Field(value: groupID, fieldNumber: 1)
+        }
+        try { if let v = self._lastUpdatedDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
+        } }()
+        if !memberIds.isEmpty {
+            try visitor.visitPackedInt64Field(value: memberIds, fieldNumber: 3)
+        }
+        try { if let v = self._withStatus {
+            try visitor.visitSingularBoolField(value: v, fieldNumber: 4)
+        } }()
+        try unknownFields.traverse(visitor: &visitor)
     }
-    try { if let v = self._lastUpdatedDate {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    } }()
-    if !self.memberIds.isEmpty {
-      try visitor.visitPackedInt64Field(value: self.memberIds, fieldNumber: 3)
-    }
-    try { if let v = self._withStatus {
-      try visitor.visitSingularBoolField(value: v, fieldNumber: 4)
-    } }()
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  public static func ==(lhs: QueryGroupMembersRequest, rhs: QueryGroupMembersRequest) -> Bool {
-    if lhs.groupID != rhs.groupID {return false}
-    if lhs._lastUpdatedDate != rhs._lastUpdatedDate {return false}
-    if lhs.memberIds != rhs.memberIds {return false}
-    if lhs._withStatus != rhs._withStatus {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: QueryGroupMembersRequest, rhs: QueryGroupMembersRequest) -> Bool {
+        if lhs.groupID != rhs.groupID { return false }
+        if lhs._lastUpdatedDate != rhs._lastUpdatedDate { return false }
+        if lhs.memberIds != rhs.memberIds { return false }
+        if lhs._withStatus != rhs._withStatus { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

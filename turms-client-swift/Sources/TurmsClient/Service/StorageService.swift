@@ -7,7 +7,7 @@ public class StorageService {
 
     init(_ turmsClient: TurmsClient, storageServerUrl: String? = nil) {
         self.turmsClient = turmsClient
-        self.serverUrl = storageServerUrl ?? "http://localhost:9000"
+        serverUrl = storageServerUrl ?? "http://localhost:9000"
     }
 
     // Profile picture
@@ -207,15 +207,15 @@ public class StorageService {
     private static func getBucketName(_ contentType: ContentType) throws -> String {
         // Use hardcode because the methods of ContentType._protobuf_nameMap cannot be accessed
         switch contentType {
-            case .profile:
-                return "profile"
-            case .groupProfile:
-                return "group-profile"
-            case .attachment:
-                return "attachment"
-            default:
-                let reason = "Unknown content type \(contentType)"
-                throw TurmsBusinessError(TurmsStatusCode.illegalArgument, reason)
-            }
+        case .profile:
+            return "profile"
+        case .groupProfile:
+            return "group-profile"
+        case .attachment:
+            return "attachment"
+        default:
+            let reason = "Unknown content type \(contentType)"
+            throw TurmsBusinessError(TurmsStatusCode.illegalArgument, reason)
+        }
     }
 }

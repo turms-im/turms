@@ -3,7 +3,6 @@ import PromiseKit
 import Starscream
 
 public class TurmsDriver {
-
     let stateStore: StateStore
 
     private let connectionService: ConnectionService
@@ -11,11 +10,11 @@ public class TurmsDriver {
     private let messageService: DriverMessageService
 
     public init(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil) {
-        self.stateStore = StateStore()
+        stateStore = StateStore()
 
-        self.connectionService = ConnectionService(stateStore: stateStore, wsUrl: wsUrl, connectTimeout: connectTimeout)
-        self.heartbeatService = HeartbeatService(stateStore: stateStore, heartbeatInterval: heartbeatInterval)
-        self.messageService = DriverMessageService(stateStore: stateStore, requestTimeout: requestTimeout, minRequestInterval: minRequestInterval)
+        connectionService = ConnectionService(stateStore: stateStore, wsUrl: wsUrl, connectTimeout: connectTimeout)
+        heartbeatService = HeartbeatService(stateStore: stateStore, heartbeatInterval: heartbeatInterval)
+        messageService = DriverMessageService(stateStore: stateStore, requestTimeout: requestTimeout, minRequestInterval: minRequestInterval)
 
         initConnectionService()
     }
@@ -23,7 +22,7 @@ public class TurmsDriver {
     // Lifecycle Hook
 
     private func initConnectionService() {
-        connectionService.addOnDisconnectedListener { [weak self] info in
+        connectionService.addOnDisconnectedListener { [weak self] _ in
             self?.onConnectionDisconnected()
         }
         connectionService.addMessageListener { [weak self] in
@@ -31,7 +30,7 @@ public class TurmsDriver {
         }
     }
 
-    public func close() -> Promise<()> {
+    public func close() -> Promise<Void> {
         return when(resolved: connectionService.close(), heartbeatService.close(), messageService.close())
             .asVoid()
     }
@@ -46,23 +45,21 @@ public class TurmsDriver {
         heartbeatService.stop()
     }
 
-    public func sendHeartbeat() -> Promise<()> {
+    public func sendHeartbeat() -> Promise<Void> {
         return heartbeatService.send()
     }
 
     public var isHeartbeatRunning: Bool {
-        get {
-            return heartbeatService.isRunning
-        }
+        return heartbeatService.isRunning
     }
 
     // Connection Service
 
-    public func connect(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil) -> Promise<()> {
+    public func connect(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil) -> Promise<Void> {
         return connectionService.connect(wsUrl: wsUrl, connectTimeout: connectTimeout)
     }
 
-    public func disconnect() -> Promise<()> {
+    public func disconnect() -> Promise<Void> {
         return connectionService.disconnect()
     }
 
@@ -72,29 +69,29 @@ public class TurmsDriver {
 
     // Connection Listeners
 
-    public func addOnConnectedListener(_ listener: @escaping () -> ()) {
-        self.connectionService.addOnConnectedListener(listener)
+    public func addOnConnectedListener(_ listener: @escaping () -> Void) {
+        connectionService.addOnConnectedListener(listener)
     }
 
-    public func addOnDisconnectedListener(listener: @escaping (ConnectionDisconnectInfo) -> ()) {
-        self.connectionService.addOnDisconnectedListener(listener);
+    public func addOnDisconnectedListener(listener: @escaping (ConnectionDisconnectInfo) -> Void) {
+        connectionService.addOnDisconnectedListener(listener)
     }
 
     // Message Service
 
-    public func send(_ populator: (inout TurmsRequest) -> ()) -> Promise<TurmsNotification> {
+    public func send(_ populator: (inout TurmsRequest) -> Void) -> Promise<TurmsNotification> {
         var request = TurmsRequest()
         populator(&request)
         let notification = messageService.sendRequest(&request)
         if case .createSessionRequest = request.kind {
-            notification.done { _ -> Void in
+            notification.done { _ in
                 self.heartbeatService.start()
             }
         }
         return notification
     }
 
-    public func addNotificationListener(_ listener: @escaping (TurmsNotification) -> ()) {
+    public func addNotificationListener(_ listener: @escaping (TurmsNotification) -> Void) {
         messageService.addNotificationListener(listener)
     }
 

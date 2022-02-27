@@ -11,18 +11,16 @@ class HeartbeatService: BaseService {
     private let heartbeatTimerInterval: TimeInterval
     private var lastHeartbeatRequestDate: TimeInterval = 0
     private var heartbeatTimer: Timer?
-    private var heartbeatPromises: [Resolver<()>] = []
+    private var heartbeatPromises: [Resolver<Void>] = []
 
     init(stateStore: StateStore, heartbeatInterval: TimeInterval? = nil) {
         self.heartbeatInterval = heartbeatInterval ?? 120
-        self.heartbeatTimerInterval = max(1, self.heartbeatInterval / 10)
+        heartbeatTimerInterval = max(1, self.heartbeatInterval / 10)
         super.init(stateStore)
     }
 
     var isRunning: Bool {
-        get {
-            return heartbeatTimer?.isValid == true
-        }
+        return heartbeatTimer?.isValid == true
     }
 
     func start() {
@@ -35,7 +33,8 @@ class HeartbeatService: BaseService {
                 target: self,
                 selector: #selector(checkAndSendHeartbeat),
                 userInfo: nil,
-                repeats: true)
+                repeats: true
+            )
         }
     }
 
@@ -78,21 +77,20 @@ class HeartbeatService: BaseService {
     @objc func checkAndSendHeartbeat() {
         let now = Date().timeIntervalSince1970
         let difference = min(now - stateStore.lastRequestDate.timeIntervalSince1970,
-            now - lastHeartbeatRequestDate)
+                             now - lastHeartbeatRequestDate)
         if difference > heartbeatInterval {
             send()
             lastHeartbeatRequestDate = now
         }
     }
 
-    override func close() -> Promise<()> {
+    override func close() -> Promise<Void> {
         onDisconnected()
         return Promise.value(())
     }
 
     override func onDisconnected() {
-        stop();
-        rejectHeartbeatPromises(TurmsBusinessError(.clientSessionHasBeenClosed));
+        stop()
+        rejectHeartbeatPromises(TurmsBusinessError(.clientSessionHasBeenClosed))
     }
-
 }

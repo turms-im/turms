@@ -1,5 +1,4 @@
 public extension TurmsNotification {
-
     func getFirstId() throws -> Int64 {
         let ids = data.ids
         if ids.values.count > 0 {
@@ -16,5 +15,4 @@ public extension TurmsNotification {
     func isServerError() -> Bool {
         return hasCode && TurmsStatusCode.isServerError(Int(code))
     }
-
 }

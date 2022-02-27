@@ -15,96 +15,99 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct QueryGroupInvitationsRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var groupID: Int64 {
-    get {return _groupID ?? 0}
-    set {_groupID = newValue}
-  }
-  /// Returns true if `groupID` has been explicitly set.
-  public var hasGroupID: Bool {return self._groupID != nil}
-  /// Clears the value of `groupID`. Subsequent reads from it will return its default value.
-  public mutating func clearGroupID() {self._groupID = nil}
+    public var groupID: Int64 {
+        get { return _groupID ?? 0 }
+        set { _groupID = newValue }
+    }
 
-  public var areSentByMe: Bool {
-    get {return _areSentByMe ?? false}
-    set {_areSentByMe = newValue}
-  }
-  /// Returns true if `areSentByMe` has been explicitly set.
-  public var hasAreSentByMe: Bool {return self._areSentByMe != nil}
-  /// Clears the value of `areSentByMe`. Subsequent reads from it will return its default value.
-  public mutating func clearAreSentByMe() {self._areSentByMe = nil}
+    /// Returns true if `groupID` has been explicitly set.
+    public var hasGroupID: Bool { return _groupID != nil }
+    /// Clears the value of `groupID`. Subsequent reads from it will return its default value.
+    public mutating func clearGroupID() { _groupID = nil }
 
-  public var lastUpdatedDate: Int64 {
-    get {return _lastUpdatedDate ?? 0}
-    set {_lastUpdatedDate = newValue}
-  }
-  /// Returns true if `lastUpdatedDate` has been explicitly set.
-  public var hasLastUpdatedDate: Bool {return self._lastUpdatedDate != nil}
-  /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
-  public mutating func clearLastUpdatedDate() {self._lastUpdatedDate = nil}
+    public var areSentByMe: Bool {
+        get { return _areSentByMe ?? false }
+        set { _areSentByMe = newValue }
+    }
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    /// Returns true if `areSentByMe` has been explicitly set.
+    public var hasAreSentByMe: Bool { return _areSentByMe != nil }
+    /// Clears the value of `areSentByMe`. Subsequent reads from it will return its default value.
+    public mutating func clearAreSentByMe() { _areSentByMe = nil }
 
-  public init() {}
+    public var lastUpdatedDate: Int64 {
+        get { return _lastUpdatedDate ?? 0 }
+        set { _lastUpdatedDate = newValue }
+    }
 
-  fileprivate var _groupID: Int64? = nil
-  fileprivate var _areSentByMe: Bool? = nil
-  fileprivate var _lastUpdatedDate: Int64? = nil
+    /// Returns true if `lastUpdatedDate` has been explicitly set.
+    public var hasLastUpdatedDate: Bool { return _lastUpdatedDate != nil }
+    /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
+    public mutating func clearLastUpdatedDate() { _lastUpdatedDate = nil }
+
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    public init() {}
+
+    fileprivate var _groupID: Int64?
+    fileprivate var _areSentByMe: Bool?
+    fileprivate var _lastUpdatedDate: Int64?
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension QueryGroupInvitationsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".QueryGroupInvitationsRequest"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "group_id"),
-    2: .standard(proto: "are_sent_by_me"),
-    3: .standard(proto: "last_updated_date"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".QueryGroupInvitationsRequest"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "group_id"),
+        2: .standard(proto: "are_sent_by_me"),
+        3: .standard(proto: "last_updated_date"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt64Field(value: &self._groupID) }()
-      case 2: try { try decoder.decodeSingularBoolField(value: &self._areSentByMe) }()
-      case 3: try { try decoder.decodeSingularInt64Field(value: &self._lastUpdatedDate) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularInt64Field(value: &_groupID)
+            case 2: try try decoder.decodeSingularBoolField(value: &_areSentByMe)
+            case 3: try try decoder.decodeSingularInt64Field(value: &_lastUpdatedDate)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    try { if let v = self._groupID {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    } }()
-    try { if let v = self._areSentByMe {
-      try visitor.visitSingularBoolField(value: v, fieldNumber: 2)
-    } }()
-    try { if let v = self._lastUpdatedDate {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
-    } }()
-    try unknownFields.traverse(visitor: &visitor)
-  }
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        try { if let v = self._groupID {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
+        } }()
+        try { if let v = self._areSentByMe {
+            try visitor.visitSingularBoolField(value: v, fieldNumber: 2)
+        } }()
+        try { if let v = self._lastUpdatedDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
+        } }()
+        try unknownFields.traverse(visitor: &visitor)
+    }
 
-  public static func ==(lhs: QueryGroupInvitationsRequest, rhs: QueryGroupInvitationsRequest) -> Bool {
-    if lhs._groupID != rhs._groupID {return false}
-    if lhs._areSentByMe != rhs._areSentByMe {return false}
-    if lhs._lastUpdatedDate != rhs._lastUpdatedDate {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: QueryGroupInvitationsRequest, rhs: QueryGroupInvitationsRequest) -> Bool {
+        if lhs._groupID != rhs._groupID { return false }
+        if lhs._areSentByMe != rhs._areSentByMe { return false }
+        if lhs._lastUpdatedDate != rhs._lastUpdatedDate { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

@@ -14,7 +14,8 @@ public class GroupService {
         announcement: String? = nil,
         minimumScore: Int32? = nil,
         muteEndDate: Date? = nil,
-        groupTypeId: Int64? = nil) -> Promise<Int64> {
+        groupTypeId: Int64? = nil
+    ) -> Promise<Int64> {
         return turmsClient.driver
             .send {
                 $0.createGroupRequest = .with {
@@ -60,7 +61,8 @@ public class GroupService {
         groupTypeId: Int64? = nil,
         muteEndDate: Date? = nil,
         successorId: Int64? = nil,
-        quitAfterTransfer: Bool? = nil) -> Promise<Void> {
+        quitAfterTransfer: Bool? = nil
+    ) -> Promise<Void> {
         if Validator.areAllNil(
             groupName,
             intro,
@@ -68,7 +70,8 @@ public class GroupService {
             minimumScore,
             groupTypeId,
             muteEndDate,
-            successorId) {
+            successorId
+        ) {
             return Promise.value(())
         }
         return turmsClient.driver
@@ -246,7 +249,8 @@ public class GroupService {
 
     public func queryBlockedUserIds(
         groupId: Int64,
-        lastUpdatedDate: Date? = nil) -> Promise<Int64ValuesWithVersion?> {
+        lastUpdatedDate: Date? = nil
+    ) -> Promise<Int64ValuesWithVersion?> {
         return turmsClient.driver
             .send {
                 $0.queryGroupBlockedUserIdsRequest = .with {
@@ -263,7 +267,8 @@ public class GroupService {
 
     public func queryBlockedUserInfos(
         groupId: Int64,
-        lastUpdatedDate: Date? = nil) -> Promise<UsersInfosWithVersion?> {
+        lastUpdatedDate: Date? = nil
+    ) -> Promise<UsersInfosWithVersion?> {
         return turmsClient.driver
             .send {
                 $0.queryGroupBlockedUserInfosRequest = .with {
@@ -391,7 +396,8 @@ public class GroupService {
     public func queryGroupJoinQuestionsRequest(
         groupId: Int64,
         withAnswers: Bool = false,
-        lastUpdatedDate: Date? = nil) -> Promise<GroupJoinQuestionsWithVersion?> {
+        lastUpdatedDate: Date? = nil
+    ) -> Promise<GroupJoinQuestionsWithVersion?> {
         return turmsClient.driver
             .send {
                 $0.queryGroupJoinQuestionsRequest = .with {
@@ -433,7 +439,8 @@ public class GroupService {
         userId: Int64,
         name: String? = nil,
         role: GroupMemberRole? = nil,
-        muteEndDate: Date? = nil) -> Promise<Void> {
+        muteEndDate: Date? = nil
+    ) -> Promise<Void> {
         return turmsClient.driver
             .send {
                 $0.createGroupMemberRequest = .with {
@@ -486,7 +493,8 @@ public class GroupService {
         memberId: Int64,
         name: String? = nil,
         role: GroupMemberRole? = nil,
-        muteEndDate: Date? = nil) -> Promise<Void> {
+        muteEndDate: Date? = nil
+    ) -> Promise<Void> {
         if Validator.areAllNil(name, role, muteEndDate) {
             return Promise.value(())
         }
@@ -513,14 +521,16 @@ public class GroupService {
         return updateGroupMemberInfo(
             groupId: groupId,
             memberId: memberId,
-            muteEndDate: muteEndDate)
+            muteEndDate: muteEndDate
+        )
     }
 
     public func unmuteGroupMember(groupId: Int64, memberId: Int64) -> Promise<Void> {
         return muteGroupMember(
             groupId: groupId,
             memberId: memberId,
-            muteEndDate: Date(timeIntervalSince1970: 0))
+            muteEndDate: Date(timeIntervalSince1970: 0)
+        )
     }
 
     public func queryGroupMembers(groupId: Int64, withStatus: Bool = false, lastUpdatedDate: Date? = nil) -> Promise<GroupMembersWithVersion?> {
@@ -552,5 +562,4 @@ public class GroupService {
                 try $0.data.kind?.getKindData(GroupMembersWithVersion.self)
             }
     }
-
 }

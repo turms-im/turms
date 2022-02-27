@@ -3,7 +3,7 @@ import XCTest
 
 final class TurmsClientTests: XCTestCase {
     func test_init_shouldReturnNotNilClientInstance() {
-        let turmsClient: TurmsClient = TurmsClient(Config.WS_URL)
+        let turmsClient = TurmsClient(Config.WS_URL)
         XCTAssertNotNil(turmsClient)
     }
 }

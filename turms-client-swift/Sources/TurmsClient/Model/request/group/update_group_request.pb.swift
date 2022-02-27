@@ -15,184 +15,192 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct UpdateGroupRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var groupID: Int64 = 0
+    public var groupID: Int64 = 0
 
-  public var groupName: String {
-    get {return _groupName ?? String()}
-    set {_groupName = newValue}
-  }
-  /// Returns true if `groupName` has been explicitly set.
-  public var hasGroupName: Bool {return self._groupName != nil}
-  /// Clears the value of `groupName`. Subsequent reads from it will return its default value.
-  public mutating func clearGroupName() {self._groupName = nil}
+    public var groupName: String {
+        get { return _groupName ?? String() }
+        set { _groupName = newValue }
+    }
 
-  public var intro: String {
-    get {return _intro ?? String()}
-    set {_intro = newValue}
-  }
-  /// Returns true if `intro` has been explicitly set.
-  public var hasIntro: Bool {return self._intro != nil}
-  /// Clears the value of `intro`. Subsequent reads from it will return its default value.
-  public mutating func clearIntro() {self._intro = nil}
+    /// Returns true if `groupName` has been explicitly set.
+    public var hasGroupName: Bool { return _groupName != nil }
+    /// Clears the value of `groupName`. Subsequent reads from it will return its default value.
+    public mutating func clearGroupName() { _groupName = nil }
 
-  public var announcement: String {
-    get {return _announcement ?? String()}
-    set {_announcement = newValue}
-  }
-  /// Returns true if `announcement` has been explicitly set.
-  public var hasAnnouncement: Bool {return self._announcement != nil}
-  /// Clears the value of `announcement`. Subsequent reads from it will return its default value.
-  public mutating func clearAnnouncement() {self._announcement = nil}
+    public var intro: String {
+        get { return _intro ?? String() }
+        set { _intro = newValue }
+    }
 
-  public var minimumScore: Int32 {
-    get {return _minimumScore ?? 0}
-    set {_minimumScore = newValue}
-  }
-  /// Returns true if `minimumScore` has been explicitly set.
-  public var hasMinimumScore: Bool {return self._minimumScore != nil}
-  /// Clears the value of `minimumScore`. Subsequent reads from it will return its default value.
-  public mutating func clearMinimumScore() {self._minimumScore = nil}
+    /// Returns true if `intro` has been explicitly set.
+    public var hasIntro: Bool { return _intro != nil }
+    /// Clears the value of `intro`. Subsequent reads from it will return its default value.
+    public mutating func clearIntro() { _intro = nil }
 
-  public var groupTypeID: Int64 {
-    get {return _groupTypeID ?? 0}
-    set {_groupTypeID = newValue}
-  }
-  /// Returns true if `groupTypeID` has been explicitly set.
-  public var hasGroupTypeID: Bool {return self._groupTypeID != nil}
-  /// Clears the value of `groupTypeID`. Subsequent reads from it will return its default value.
-  public mutating func clearGroupTypeID() {self._groupTypeID = nil}
+    public var announcement: String {
+        get { return _announcement ?? String() }
+        set { _announcement = newValue }
+    }
 
-  public var muteEndDate: Int64 {
-    get {return _muteEndDate ?? 0}
-    set {_muteEndDate = newValue}
-  }
-  /// Returns true if `muteEndDate` has been explicitly set.
-  public var hasMuteEndDate: Bool {return self._muteEndDate != nil}
-  /// Clears the value of `muteEndDate`. Subsequent reads from it will return its default value.
-  public mutating func clearMuteEndDate() {self._muteEndDate = nil}
+    /// Returns true if `announcement` has been explicitly set.
+    public var hasAnnouncement: Bool { return _announcement != nil }
+    /// Clears the value of `announcement`. Subsequent reads from it will return its default value.
+    public mutating func clearAnnouncement() { _announcement = nil }
 
-  public var successorID: Int64 {
-    get {return _successorID ?? 0}
-    set {_successorID = newValue}
-  }
-  /// Returns true if `successorID` has been explicitly set.
-  public var hasSuccessorID: Bool {return self._successorID != nil}
-  /// Clears the value of `successorID`. Subsequent reads from it will return its default value.
-  public mutating func clearSuccessorID() {self._successorID = nil}
+    public var minimumScore: Int32 {
+        get { return _minimumScore ?? 0 }
+        set { _minimumScore = newValue }
+    }
 
-  public var quitAfterTransfer: Bool {
-    get {return _quitAfterTransfer ?? false}
-    set {_quitAfterTransfer = newValue}
-  }
-  /// Returns true if `quitAfterTransfer` has been explicitly set.
-  public var hasQuitAfterTransfer: Bool {return self._quitAfterTransfer != nil}
-  /// Clears the value of `quitAfterTransfer`. Subsequent reads from it will return its default value.
-  public mutating func clearQuitAfterTransfer() {self._quitAfterTransfer = nil}
+    /// Returns true if `minimumScore` has been explicitly set.
+    public var hasMinimumScore: Bool { return _minimumScore != nil }
+    /// Clears the value of `minimumScore`. Subsequent reads from it will return its default value.
+    public mutating func clearMinimumScore() { _minimumScore = nil }
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    public var groupTypeID: Int64 {
+        get { return _groupTypeID ?? 0 }
+        set { _groupTypeID = newValue }
+    }
 
-  public init() {}
+    /// Returns true if `groupTypeID` has been explicitly set.
+    public var hasGroupTypeID: Bool { return _groupTypeID != nil }
+    /// Clears the value of `groupTypeID`. Subsequent reads from it will return its default value.
+    public mutating func clearGroupTypeID() { _groupTypeID = nil }
 
-  fileprivate var _groupName: String? = nil
-  fileprivate var _intro: String? = nil
-  fileprivate var _announcement: String? = nil
-  fileprivate var _minimumScore: Int32? = nil
-  fileprivate var _groupTypeID: Int64? = nil
-  fileprivate var _muteEndDate: Int64? = nil
-  fileprivate var _successorID: Int64? = nil
-  fileprivate var _quitAfterTransfer: Bool? = nil
+    public var muteEndDate: Int64 {
+        get { return _muteEndDate ?? 0 }
+        set { _muteEndDate = newValue }
+    }
+
+    /// Returns true if `muteEndDate` has been explicitly set.
+    public var hasMuteEndDate: Bool { return _muteEndDate != nil }
+    /// Clears the value of `muteEndDate`. Subsequent reads from it will return its default value.
+    public mutating func clearMuteEndDate() { _muteEndDate = nil }
+
+    public var successorID: Int64 {
+        get { return _successorID ?? 0 }
+        set { _successorID = newValue }
+    }
+
+    /// Returns true if `successorID` has been explicitly set.
+    public var hasSuccessorID: Bool { return _successorID != nil }
+    /// Clears the value of `successorID`. Subsequent reads from it will return its default value.
+    public mutating func clearSuccessorID() { _successorID = nil }
+
+    public var quitAfterTransfer: Bool {
+        get { return _quitAfterTransfer ?? false }
+        set { _quitAfterTransfer = newValue }
+    }
+
+    /// Returns true if `quitAfterTransfer` has been explicitly set.
+    public var hasQuitAfterTransfer: Bool { return _quitAfterTransfer != nil }
+    /// Clears the value of `quitAfterTransfer`. Subsequent reads from it will return its default value.
+    public mutating func clearQuitAfterTransfer() { _quitAfterTransfer = nil }
+
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    public init() {}
+
+    fileprivate var _groupName: String?
+    fileprivate var _intro: String?
+    fileprivate var _announcement: String?
+    fileprivate var _minimumScore: Int32?
+    fileprivate var _groupTypeID: Int64?
+    fileprivate var _muteEndDate: Int64?
+    fileprivate var _successorID: Int64?
+    fileprivate var _quitAfterTransfer: Bool?
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".UpdateGroupRequest"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "group_id"),
-    2: .standard(proto: "group_name"),
-    3: .same(proto: "intro"),
-    4: .same(proto: "announcement"),
-    5: .standard(proto: "minimum_score"),
-    6: .standard(proto: "group_type_id"),
-    7: .standard(proto: "mute_end_date"),
-    8: .standard(proto: "successor_id"),
-    9: .standard(proto: "quit_after_transfer"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".UpdateGroupRequest"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "group_id"),
+        2: .standard(proto: "group_name"),
+        3: .same(proto: "intro"),
+        4: .same(proto: "announcement"),
+        5: .standard(proto: "minimum_score"),
+        6: .standard(proto: "group_type_id"),
+        7: .standard(proto: "mute_end_date"),
+        8: .standard(proto: "successor_id"),
+        9: .standard(proto: "quit_after_transfer"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt64Field(value: &self.groupID) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self._groupName) }()
-      case 3: try { try decoder.decodeSingularStringField(value: &self._intro) }()
-      case 4: try { try decoder.decodeSingularStringField(value: &self._announcement) }()
-      case 5: try { try decoder.decodeSingularInt32Field(value: &self._minimumScore) }()
-      case 6: try { try decoder.decodeSingularInt64Field(value: &self._groupTypeID) }()
-      case 7: try { try decoder.decodeSingularInt64Field(value: &self._muteEndDate) }()
-      case 8: try { try decoder.decodeSingularInt64Field(value: &self._successorID) }()
-      case 9: try { try decoder.decodeSingularBoolField(value: &self._quitAfterTransfer) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularInt64Field(value: &groupID)
+            case 2: try try decoder.decodeSingularStringField(value: &_groupName)
+            case 3: try try decoder.decodeSingularStringField(value: &_intro)
+            case 4: try try decoder.decodeSingularStringField(value: &_announcement)
+            case 5: try try decoder.decodeSingularInt32Field(value: &_minimumScore)
+            case 6: try try decoder.decodeSingularInt64Field(value: &_groupTypeID)
+            case 7: try try decoder.decodeSingularInt64Field(value: &_muteEndDate)
+            case 8: try try decoder.decodeSingularInt64Field(value: &_successorID)
+            case 9: try try decoder.decodeSingularBoolField(value: &_quitAfterTransfer)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.groupID != 0 {
-      try visitor.visitSingularInt64Field(value: self.groupID, fieldNumber: 1)
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if groupID != 0 {
+            try visitor.visitSingularInt64Field(value: groupID, fieldNumber: 1)
+        }
+        try { if let v = self._groupName {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 2)
+        } }()
+        try { if let v = self._intro {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 3)
+        } }()
+        try { if let v = self._announcement {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 4)
+        } }()
+        try { if let v = self._minimumScore {
+            try visitor.visitSingularInt32Field(value: v, fieldNumber: 5)
+        } }()
+        try { if let v = self._groupTypeID {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
+        } }()
+        try { if let v = self._muteEndDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 7)
+        } }()
+        try { if let v = self._successorID {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 8)
+        } }()
+        try { if let v = self._quitAfterTransfer {
+            try visitor.visitSingularBoolField(value: v, fieldNumber: 9)
+        } }()
+        try unknownFields.traverse(visitor: &visitor)
     }
-    try { if let v = self._groupName {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    } }()
-    try { if let v = self._intro {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    } }()
-    try { if let v = self._announcement {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 4)
-    } }()
-    try { if let v = self._minimumScore {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 5)
-    } }()
-    try { if let v = self._groupTypeID {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
-    } }()
-    try { if let v = self._muteEndDate {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 7)
-    } }()
-    try { if let v = self._successorID {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 8)
-    } }()
-    try { if let v = self._quitAfterTransfer {
-      try visitor.visitSingularBoolField(value: v, fieldNumber: 9)
-    } }()
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  public static func ==(lhs: UpdateGroupRequest, rhs: UpdateGroupRequest) -> Bool {
-    if lhs.groupID != rhs.groupID {return false}
-    if lhs._groupName != rhs._groupName {return false}
-    if lhs._intro != rhs._intro {return false}
-    if lhs._announcement != rhs._announcement {return false}
-    if lhs._minimumScore != rhs._minimumScore {return false}
-    if lhs._groupTypeID != rhs._groupTypeID {return false}
-    if lhs._muteEndDate != rhs._muteEndDate {return false}
-    if lhs._successorID != rhs._successorID {return false}
-    if lhs._quitAfterTransfer != rhs._quitAfterTransfer {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: UpdateGroupRequest, rhs: UpdateGroupRequest) -> Bool {
+        if lhs.groupID != rhs.groupID { return false }
+        if lhs._groupName != rhs._groupName { return false }
+        if lhs._intro != rhs._intro { return false }
+        if lhs._announcement != rhs._announcement { return false }
+        if lhs._minimumScore != rhs._minimumScore { return false }
+        if lhs._groupTypeID != rhs._groupTypeID { return false }
+        if lhs._muteEndDate != rhs._muteEndDate { return false }
+        if lhs._successorID != rhs._successorID { return false }
+        if lhs._quitAfterTransfer != rhs._quitAfterTransfer { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

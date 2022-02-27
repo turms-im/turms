@@ -15,71 +15,71 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct GroupJoinQuestionsAnswerResult {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var score: Int32 = 0
+    public var score: Int32 = 0
 
-  public var questionIds: [Int64] = []
+    public var questionIds: [Int64] = []
 
-  public var joined: Bool = false
+    public var joined: Bool = false
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  public init() {}
+    public init() {}
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension GroupJoinQuestionsAnswerResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".GroupJoinQuestionsAnswerResult"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "score"),
-    2: .standard(proto: "question_ids"),
-    3: .same(proto: "joined"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".GroupJoinQuestionsAnswerResult"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "score"),
+        2: .standard(proto: "question_ids"),
+        3: .same(proto: "joined"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt32Field(value: &self.score) }()
-      case 2: try { try decoder.decodeRepeatedInt64Field(value: &self.questionIds) }()
-      case 3: try { try decoder.decodeSingularBoolField(value: &self.joined) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularInt32Field(value: &score)
+            case 2: try try decoder.decodeRepeatedInt64Field(value: &questionIds)
+            case 3: try try decoder.decodeSingularBoolField(value: &joined)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.score != 0 {
-      try visitor.visitSingularInt32Field(value: self.score, fieldNumber: 1)
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if score != 0 {
+            try visitor.visitSingularInt32Field(value: score, fieldNumber: 1)
+        }
+        if !questionIds.isEmpty {
+            try visitor.visitPackedInt64Field(value: questionIds, fieldNumber: 2)
+        }
+        if joined != false {
+            try visitor.visitSingularBoolField(value: joined, fieldNumber: 3)
+        }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    if !self.questionIds.isEmpty {
-      try visitor.visitPackedInt64Field(value: self.questionIds, fieldNumber: 2)
-    }
-    if self.joined != false {
-      try visitor.visitSingularBoolField(value: self.joined, fieldNumber: 3)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  public static func ==(lhs: GroupJoinQuestionsAnswerResult, rhs: GroupJoinQuestionsAnswerResult) -> Bool {
-    if lhs.score != rhs.score {return false}
-    if lhs.questionIds != rhs.questionIds {return false}
-    if lhs.joined != rhs.joined {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: GroupJoinQuestionsAnswerResult, rhs: GroupJoinQuestionsAnswerResult) -> Bool {
+        if lhs.score != rhs.score { return false }
+        if lhs.questionIds != rhs.questionIds { return false }
+        if lhs.joined != rhs.joined { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

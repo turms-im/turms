@@ -15,80 +15,81 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
-  struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
-  typealias Version = _2
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+    struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
+    typealias Version = _2
 }
 
 public struct UpdateFriendRequestRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
 
-  public var requestID: Int64 = 0
+    public var requestID: Int64 = 0
 
-  public var responseAction: ResponseAction = .accept
+    public var responseAction: ResponseAction = .accept
 
-  public var reason: String {
-    get {return _reason ?? String()}
-    set {_reason = newValue}
-  }
-  /// Returns true if `reason` has been explicitly set.
-  public var hasReason: Bool {return self._reason != nil}
-  /// Clears the value of `reason`. Subsequent reads from it will return its default value.
-  public mutating func clearReason() {self._reason = nil}
+    public var reason: String {
+        get { return _reason ?? String() }
+        set { _reason = newValue }
+    }
 
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
+    /// Returns true if `reason` has been explicitly set.
+    public var hasReason: Bool { return _reason != nil }
+    /// Clears the value of `reason`. Subsequent reads from it will return its default value.
+    public mutating func clearReason() { _reason = nil }
 
-  public init() {}
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  fileprivate var _reason: String? = nil
+    public init() {}
+
+    fileprivate var _reason: String?
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "im.turms.proto"
+private let _protobuf_package = "im.turms.proto"
 
 extension UpdateFriendRequestRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".UpdateFriendRequestRequest"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "request_id"),
-    2: .standard(proto: "response_action"),
-    3: .same(proto: "reason"),
-  ]
+    public static let protoMessageName: String = _protobuf_package + ".UpdateFriendRequestRequest"
+    public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "request_id"),
+        2: .standard(proto: "response_action"),
+        3: .same(proto: "reason"),
+    ]
 
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt64Field(value: &self.requestID) }()
-      case 2: try { try decoder.decodeSingularEnumField(value: &self.responseAction) }()
-      case 3: try { try decoder.decodeSingularStringField(value: &self._reason) }()
-      default: break
-      }
+    public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every case branch when no optimizations are
+            // enabled. https://github.com/apple/swift-protobuf/issues/1034
+            switch fieldNumber {
+            case 1: try try decoder.decodeSingularInt64Field(value: &requestID)
+            case 2: try try decoder.decodeSingularEnumField(value: &responseAction)
+            case 3: try try decoder.decodeSingularStringField(value: &_reason)
+            default: break
+            }
+        }
     }
-  }
 
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.requestID != 0 {
-      try visitor.visitSingularInt64Field(value: self.requestID, fieldNumber: 1)
+    public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if requestID != 0 {
+            try visitor.visitSingularInt64Field(value: requestID, fieldNumber: 1)
+        }
+        if responseAction != .accept {
+            try visitor.visitSingularEnumField(value: responseAction, fieldNumber: 2)
+        }
+        try { if let v = self._reason {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 3)
+        } }()
+        try unknownFields.traverse(visitor: &visitor)
     }
-    if self.responseAction != .accept {
-      try visitor.visitSingularEnumField(value: self.responseAction, fieldNumber: 2)
-    }
-    try { if let v = self._reason {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    } }()
-    try unknownFields.traverse(visitor: &visitor)
-  }
 
-  public static func ==(lhs: UpdateFriendRequestRequest, rhs: UpdateFriendRequestRequest) -> Bool {
-    if lhs.requestID != rhs.requestID {return false}
-    if lhs.responseAction != rhs.responseAction {return false}
-    if lhs._reason != rhs._reason {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
+    public static func == (lhs: UpdateFriendRequestRequest, rhs: UpdateFriendRequestRequest) -> Bool {
+        if lhs.requestID != rhs.requestID { return false }
+        if lhs.responseAction != rhs.responseAction { return false }
+        if lhs._reason != rhs._reason { return false }
+        if lhs.unknownFields != rhs.unknownFields { return false }
+        return true
+    }
 }

@@ -25,5 +25,4 @@ public class StateStore {
         serverId = nil
         lastRequestDate = Date(timeIntervalSince1970: 0)
     }
-
 }

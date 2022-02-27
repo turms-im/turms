@@ -16,7 +16,8 @@ public class TurmsClient {
             connectTimeout: connectTimeout,
             requestTimeout: requestTimeout,
             minRequestInterval: minRequestInterval,
-            heartbeatInterval: heartbeatInterval)
+            heartbeatInterval: heartbeatInterval
+        )
         userService = UserService(self)
         groupService = GroupService(self)
         conversationService = ConversationService(self)
@@ -25,8 +26,7 @@ public class TurmsClient {
         notificationService = NotificationService(self)
     }
 
-    public func close() -> Promise<()> {
-        return driver.close();
+    public func close() -> Promise<Void> {
+        return driver.close()
     }
-
 }

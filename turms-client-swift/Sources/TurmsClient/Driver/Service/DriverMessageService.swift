@@ -4,7 +4,7 @@ import PromiseKit
 class DriverMessageService: BaseService {
     private let requestTimeout: TimeInterval
     private let minRequestInterval: TimeInterval?
-    private var notificationListeners: [(TurmsNotification) -> ()] = []
+    private var notificationListeners: [(TurmsNotification) -> Void] = []
     private var requestMap: [Int64: Resolver<TurmsNotification>] = [:]
     private var lastRequestDate = Date(timeIntervalSince1970: 0)
 
@@ -16,7 +16,7 @@ class DriverMessageService: BaseService {
 
     // Listeners
 
-    func addNotificationListener(_ listener: @escaping (TurmsNotification) -> ()) {
+    func addNotificationListener(_ listener: @escaping (TurmsNotification) -> Void) {
         notificationListeners.append(listener)
     }
 
@@ -28,7 +28,7 @@ class DriverMessageService: BaseService {
 
     // Request and notification
 
-    func sendRequest(_ populator: (inout TurmsRequest) -> ()) -> Promise<TurmsNotification> {
+    func sendRequest(_ populator: (inout TurmsRequest) -> Void) -> Promise<TurmsNotification> {
         var request = TurmsRequest()
         populator(&request)
         return sendRequest(&request)
@@ -88,7 +88,7 @@ class DriverMessageService: BaseService {
     private func generateRandomId() -> Int64 {
         var id: Int64
         repeat {
-            id = Int64.random(in: 1...Int64.max)
+            id = Int64.random(in: 1 ... Int64.max)
         } while requestMap.keys.contains(id)
         return id
     }
