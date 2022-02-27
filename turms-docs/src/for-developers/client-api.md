@@ -1,6 +1,6 @@
 # 客户端接口
 
-Turms客户端目前支持JavaScript、Kotlin与Swift这三种语言，对外暴露一致的接口，并且表现为一致的行为。各语言版本之间的部分接口参数可能出现不完全一致的情况，这主要体现在：1. 接口采用更贴近当前语言特性及习惯的参数与语法；2. turms-client-js独有的参数与接口。
+Turms客户端目前支持JavaScript、Kotlin、Swift与Dart这四种语言，对外暴露一致的接口，并且表现为一致的行为。各语言版本之间的部分接口参数可能出现不完全一致的情况，这主要体现在：1. 接口采用更贴近当前语言特性及习惯的参数与语法；2. turms-client-js独有的参数与接口。
 
 由于Turms各语言客户端行为具有高度的一致性，因此如果您基于上述任意一种语言进行业务开发，您可以在代码逻辑不做改变的情况下，轻松将已写好的业务代码翻译为另外两种语言（具体可参考在本文结尾处的示例）。
 
@@ -49,6 +49,14 @@ Turms客户端目前支持JavaScript、Kotlin与Swift这三种语言，对外暴
          ```
 
    * 对于使用turms-client-swift的项目：在Xcode中，通过`General`标签页下的`Frameworks, Libraries, and Embedded Content`指定本地turms-client-swift文件夹路径并添加即可。
+
+   * 对于使用turms-client-dart的项目：在您项目的`pubspec.yaml`里添加下述依赖即可：
+
+     ```yaml
+     dependencies:
+       turms_client_dart:
+         path: <YOUR_OWN_DIR>/turms_client_dart
+     ```
 
 3. 编写业务逻辑
 
@@ -110,11 +118,11 @@ Turms客户端对版本的最低要求，主要是根据：平台全球市场占
 
 客户端主要接口的差异如下表：
 
-|              | JavaScript客户端                  | Kotlin客户端                       | Swift客户端              | 实例            |
-| ------------ | --------------------------------- | -------------------------------------- | ------------------------ | ------------------------ |
-| 时间表达单位 | 一律为毫秒                        | 一律为毫秒 | 采用TimeInterval（即秒） | connectTimeout |
-| 业务异常模型 | TurmsBusinessError（继承自Error） | TurmsBusinessException（继承自不携带栈信息的RuntimeException） | TurmsBusinessError（继承自Error） |    |
-| 异步模型     | Promise模型                       | Coroutines模型 | 由PromiseKit提供的Promise模型 |                          |
+|              | JavaScript客户端                  | Kotlin客户端                       | Swift客户端              | Dart客户端  | 实例            |
+| ------------ | --------------------------------- | -------------------------------------- | ------------------------ | ------------------------ | ------------------------ |
+| 时间表达单位 | 一律为毫秒                        | 一律为毫秒 | 采用TimeInterval（即秒） | 一律为毫秒 | connectTimeout |
+| 业务异常模型 | TurmsBusinessError（继承自Error） | TurmsBusinessException（继承自不携带栈信息的RuntimeException） | TurmsBusinessError（继承自Error） | TurmsBusinessException（继承自Exception） |    |
+| 异步模型     | Promise模型                       | Coroutines模型 | 由PromiseKit提供的Promise模型 | Future模型 |                          |
 
 补充：对于对外暴露的回调函数实现，Turms的Swift客户端没有采用Swift常见的delegate代理模式，而是和其他语言客户端一样通过函数传递逃逸闭包。
 
@@ -152,7 +160,7 @@ Turms客户端的会话生命周期比较容易理解，具体而言：先通过
 
 对于心跳请求而言：
 
-* 基于纯TCP协议实现的客户端：一个长度为1字节的数值`0`数据。这里的数值`0`其实是指“该Payload的长度在varint编码下为一字节长度的0”，即Payload为0字节。
+* 基于纯TCP协议实现的客户端：一个长度为一字节的`[0]`数据。这里的数值`0`其实是指“该Payload的长度在varint编码下为一字节长度的0”，即Payload为0字节。
 * 基于WebSocket协议实现的客户端：一个正文为空（0字节）的Binary类型消息
 
 补充：Turms不通过WebSocket的PING/PONG来实现心跳的原因是：
@@ -268,11 +276,7 @@ client.messageService.addMessageListener { message, _ ->
     println("onMessage: Receive a message from other users or server: $message")
 }
 
-try {
-    client.userService.login(1, "123")
-} catch (e: Exception) {
-    e.printStackTrace()
-}
+client.userService.login(1, "123")
 
 val users = client.userService.queryNearbyUsers(
     139.667651f,
@@ -352,6 +356,41 @@ client.userService.login(userId: 1, password: "123")
     }.catch {
         print($0)
     }
+```
+
+### turms-client-dart版本
+
+```dart
+// Initialize client
+final client = TurmsClient();
+
+// Listen to the offline event
+client.userService.addOnOfflineListener((info) => 
+    print('onOffline: ${info.closeStatus}:${info.businessStatus}:${info.reason}'));
+
+// Listen to inbound notifications
+client.notificationService.addNotificationListener((notification) => 
+    print('onNotification: Receive a notification from other users or server: $notification'));
+
+// Listen to inbound messages
+client.messageService.addMessageListener((message, _) => 
+    print('onMessage: Receive a message from other users or server: $message'));
+
+await client.userService.login(Int64(1), password: '123');
+
+final users = await client.userService
+    .queryNearbyUsers(139.667651, 35.792657, distance: 100, maxNumber: 10);
+print('nearby users: $users');
+
+final msgId = await client.messageService
+    .sendMessage(false, Int64(1), text: 'Hello Turms', burnAfter: 30);
+print('message $msgId has been sent');
+
+final groupId = await client.groupService.createGroup(
+    'Turms Developers Group',
+    announcement: 'This is a group for the developers who are interested in Turms',
+    intro: 'nope');
+print('group $groupId has been created');
 ```
 
 ## turms-client-js共享上下文

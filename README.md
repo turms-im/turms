@@ -107,9 +107,10 @@ Note: The main disadvantage of the current Turms project is that it does not pro
 | <span style="white-space:nowrap;"> turms-gateway </span> | A gateway (push server) interacting with clients, and responsible for user authentication, session management, push notification, and load balancing for turms-service servers |
 | <span style="white-space:nowrap;"> turms-service</span> |Implements IM business logic, and provides admins with business data management, RBAC, cluster management|
 | <span style="white-space:nowrap;"> turms-admin</span> |Provides features such as business data management and cluster management for Turms server cluster|
-| <span style="white-space:nowrap;"> turms-client-js</span> | Exposes APIs to interact with the Turms server to implement IM features and underlying driver logic (such as heartbeat). You don't need to know its implementations because it's transparent for developers |
-| <span style="white-space:nowrap;"> turns-client-kotlin</span> | ditto|
+| <span style="white-space:nowrap;"> turms-client-js</span> | Exposes APIs to interact with the Turms server to implement IM features, underlying driver logic (such as heartbeat) and sharing the WebSocket connection between tabs. You don't need to know its implementations because it's transparent for developers |
+| <span style="white-space:nowrap;"> turns-client-kotlin</span> | Exposes APIs to interact with the Turms server to implement IM features and underlying driver logic (such as heartbeat). You don't need to know its implementations because it's transparent for developers |
 | <span style="white-space:nowrap;"> turns-client-swift </span> | ditto|
+| <span style="white-space:nowrap;"> turns-client-dart</span> | ditto |
 | <span style="white-space:nowrap;"> turms-plugin </span> | When events (such as user going online/offline, message receiving and forwarding, etc) are fired, turms-gateway and turms-service will trigger corresponding custom plugins to facilitate developers to implement custom features |
 | <span style="white-space:nowrap;">turms-plugin-antispam</span> | A plugin based on turms-plugin for the anti-spam protection using Aho-Corasick automaton with double array trie (The time complexity of detection is O(n), and n is the length of target string code points) |
 | <span style="white-space:nowrap;"> turms-plugin-minio</span> |A plugin based on turms-plugin for the storage service, and is used to interact with MinIO server|
