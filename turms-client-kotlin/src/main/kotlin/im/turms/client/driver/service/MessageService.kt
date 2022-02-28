@@ -83,17 +83,17 @@ class MessageService(
             cont.resumeWithException(TurmsBusinessException(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT))
             return@suspendCoroutine
         }
-        stateStore.lastRequestDate = now.time
+        val requestContext = TurmsRequestContext(cont, null)
         while (true) {
             val requestId = generateRandomId()
-            val request = requestBuilder
-                .setRequestId(requestId)
-                .build()
-            val requestContext = TurmsRequestContext(cont, null)
             val wasRequestAbsent = requestMap.putIfAbsent(requestId, requestContext) == null
             if (!wasRequestAbsent) continue
+            stateStore.lastRequestDate = now.time
             launch {
                 try {
+                    val request = requestBuilder
+                        .setRequestId(requestId)
+                        .build()
                     val payload = request.toByteArray()
                     val tcp = stateStore.tcp!!
                     tcp.writeVarIntLengthAndBytes(payload)

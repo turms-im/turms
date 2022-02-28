@@ -10,5 +10,6 @@ core.safecrlf true
 
 # Declare files that will always have LF line endings on checkout
 *.sh text eol=lf
+*.swift eol=lf
 *.lua eol=lf
 *.options eol=lf

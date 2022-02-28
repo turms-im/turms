@@ -160,7 +160,7 @@ Turms客户端的会话生命周期比较容易理解，具体而言：先通过
 
 对于心跳请求而言：
 
-* 基于纯TCP协议实现的客户端：一个长度为一字节的`[0]`数据。这里的数值`0`其实是指“该Payload的长度在varint编码下为一字节长度的0”，即Payload为0字节。
+* 基于纯TCP协议实现的客户端：一个长度为一字节的`[0]`字节数组。这里的数值`0`其实是指“该Payload的长度在varint编码下为一字节长度的0”，即Payload为0字节。
 * 基于WebSocket协议实现的客户端：一个正文为空（0字节）的Binary类型消息
 
 补充：Turms不通过WebSocket的PING/PONG来实现心跳的原因是：
@@ -225,8 +225,8 @@ client.messageService.addMessageListener(message => {
 client.userService.login('1', '123')
     .then(() => {
         client.userService.queryNearbyUsers(
-            139.667651,
             35.792657,
+            139.667651,
             100,
             10)
             .then(users => {
@@ -279,8 +279,8 @@ client.messageService.addMessageListener { message, _ ->
 client.userService.login(1, "123")
 
 val users = client.userService.queryNearbyUsers(
-    139.667651f,
     35.792657f,
+    139.667651f,
     100,
     10
 )
@@ -329,8 +329,8 @@ client.messageService.addMessageListener{ (message: Message, _: MessageAddition)
 client.userService.login(userId: 1, password: "123")
     .done {
         client.userService.queryNearbyUsers(
-                latitude: 139.667651,
-                longitude: 35.792657,
+                latitude: 35.792657,
+                longitude: 139.667651,
                 distance: 100,
                 maxNumber: 10)
             .done {
@@ -379,7 +379,7 @@ client.messageService.addMessageListener((message, _) =>
 await client.userService.login(Int64(1), password: '123');
 
 final users = await client.userService
-    .queryNearbyUsers(139.667651, 35.792657, distance: 100, maxNumber: 10);
+    .queryNearbyUsers(35.792657, 139.667651, distance: 100, maxNumber: 10);
 print('nearby users: $users');
 
 final msgId = await client.messageService
