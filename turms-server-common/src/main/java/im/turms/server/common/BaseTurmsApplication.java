@@ -24,6 +24,8 @@ import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.StringUtil;
 import org.springframework.boot.SpringApplication;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -73,7 +75,14 @@ public abstract class BaseTurmsApplication {
             StringUtil.getBytes("testテスト");
             CollectionUtil.add(Set.of(), 1);
         } catch (Exception e) {
-            throw new IllegalStateException("The current JDK cannot work with turms server", e);
+            RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
+            String jvmInfo = "%s/%s/%s"
+                    .formatted(bean.getVmName(),
+                            bean.getVmVersion(),
+                            bean.getVmVendor());
+            String message = "The current JVM [%s] cannot work with turms server"
+                    .formatted(jvmInfo);
+            throw new IllegalStateException(message, e);
         }
     }
 
