@@ -100,13 +100,13 @@ Turms客户端对版本的最低要求，主要是根据：平台全球市场占
 
 各种Service类可以对Turms所提供的业务模型进行增删改查操作。您需要了解其返回值种类，以开发您自己的业务代码。
 
-#### 对于状态码为10xx的响应
+#### 对于状态码为10xx的响应（拓展知识）
 
 * 对于增加业务模型的函数，如果该函数的返回值被声明为一个异步模型（如：Promise\<string>），则返回的泛型（如前文的string类型）的值必定不为空，否则会抛出一个状态码为MISSING_DATA的错误（TurmsBusinessError），表明本应该存在的数据点丢失。若出现该错误，则意味着Turms的服务端或客户端自身存在行为不一致的Bug。
 * 对于删除与更新业务模型的函数，它们均返回被异步模型包裹的Void类型（如：Promise\<Void>）。
 * 对于查找业务模型的函数，如果该类函数返回被异步模型包裹的List类型，则当服务端返回空数据时，该查找操作函数会返回一个空List，而非null或undefined。如果被包裹的类型不是List类型，则当服务端返回空数据时，该查找操作函数会返回一个undefined（JavaScript）或null（Kotlin）或nil（Swift）。特例：answerGroupQuestions方法可以算做查询方法，但其返回数据永不为空。
 
-#### 对于状态非10xx的响应
+#### 对于状态非10xx的响应（拓展知识）
 
 对于Service类而言，这类响应均被认作是“错误”状态响应。通过异步模型抛出TurmsBusinessException，并在该错误模型中包括了具体状态码与错误原因。
 
@@ -143,7 +143,7 @@ Turms客户端的会话生命周期比较容易理解，具体而言：先通过
 | 业务逻辑层 | userService.addOnOnlineListener  | 当会话建立/用户上线时 | 通常您并不需要通过`addOnOnlineListener`来添加上线监听事件，<br />而是将您的回调函数赋给`userService.login()`返回的异步成功回调onSucccess/then |
 | 业务逻辑层 | userService.addOnOfflineListener | 当会话断开/用户下线时 |                                                              |
 
-## 业务逻辑的认证与授权（拓展）
+## 业务逻辑的认证与授权（拓展知识）
 
 对于客户端发来的权限信息，Turms服务端的态度是“客户端传来的权限信息均不可信”，因此Turms服务端会根据您在Turms服务端处所设定的业务配置，自行做各种必要的权限判断。
 
@@ -151,7 +151,7 @@ Turms客户端的会话生命周期比较容易理解，具体而言：先通过
 
 再比如对于一个“简单”的“发送消息”请求，Turms服务端就会判断该消息发送用户是否处于激活状态、是否设置了“允许发送消息给陌生人（非关系人）”、消息发送者是否在黑名单中。如果接收方是群组，那么消息发送者是否是群成员，并且是否处于禁言状态等等逻辑判断。而您仅仅只需调用一个sendMessage接口即可。
 
-## 与服务端通信时使用的数据格式（拓展）
+## 与服务端通信时使用的数据格式（拓展知识）
 
 对于一般请求与响应而言：
 
@@ -419,7 +419,7 @@ var client = new TurmsClient({
 
 如果`useSharedContext`为`true`，但用户的浏览器并不支持`Shared Web Workers`，则`new TurmsClient()`会直接抛异常。
 
-如果您想要提前知道当前浏览器是否支持共享上下文，您可以调用：`TurmsClient.supportsSharedContext()`，该函数返回`boolean`，`true`即支持，`false`即不支持。
+如果您想要提前知道当前浏览器是否支持共享上下文，您可以调用：`TurmsClient.isSharedContextSupported()`，该函数返回`boolean`，`true`即支持，`false`即不支持。
 
 注意事项：
 

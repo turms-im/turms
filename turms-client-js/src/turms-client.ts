@@ -52,7 +52,7 @@ class TurmsClient {
             useSharedContext = wsUrlOrOptions.useSharedContext;
             wsUrlOrOptions = wsUrlOrOptions.wsUrl;
         }
-        if (useSharedContext && !TurmsClient.supportsSharedContext()) {
+        if (useSharedContext && !TurmsClient.isSharedContextSupported()) {
             throw new Error('Cannot use the shared context because the browser doesn\'t support SharedWorker');
         }
         this._driver = new TurmsDriver(
@@ -109,7 +109,7 @@ class TurmsClient {
         return InputFileReader;
     }
 
-    static supportsSharedContext(): boolean {
+    static isSharedContextSupported(): boolean {
         return typeof SharedWorker === 'function';
     }
 }
