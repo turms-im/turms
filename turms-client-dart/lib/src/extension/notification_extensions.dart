@@ -7,7 +7,7 @@ import '../model/turms_status_code.dart';
 extension NotificationExtensions on TurmsNotification {
   Int64 getFirstIdOrThrow() {
     if (!data.hasIds()) {
-      final reason = 'Cannot get ID from the illegal response: $this';
+      final reason = 'Cannot get ID from the invalid response: $this';
       throw TurmsBusinessException(TurmsStatusCode.invalidResponse, reason);
     }
     return data.ids.values[0];

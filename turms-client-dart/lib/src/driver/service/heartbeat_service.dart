@@ -11,7 +11,7 @@ import 'base_service.dart';
 class HeartbeatService extends BaseService {
   static const _defaultHeartbeatIntervalMillis = 120 * 1000;
   static const _heartbeatFailureRequestId = -100;
-  static final Uint8List heartbeatRequest = Uint8List.fromList([0]);
+  static final Uint8List _heartbeatRequest = Uint8List.fromList([0]);
 
   final int _heartbeatIntervalMillis;
   final Duration _heartbeatTimerInterval;
@@ -56,7 +56,7 @@ class HeartbeatService extends BaseService {
       throw TurmsBusinessException.fromCode(
           TurmsStatusCode.clientSessionHasBeenClosed);
     }
-    stateStore.tcp!.write(heartbeatRequest);
+    stateStore.tcp!.write(_heartbeatRequest);
     final completer = Completer<void>();
     _heartbeatCompleters.add(completer);
     return completer.future;

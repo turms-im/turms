@@ -121,9 +121,9 @@ class StorageService {
     final request = await _httpClient.getUrl(serverUrl);
     final response = await request.close();
     if (response.statusCode == 200) {
-      final list =
+      final bytes =
           await response.reduce((pre, element) => pre..addAll(element));
-      return Uint8List.fromList(list);
+      return Uint8List.fromList(bytes);
     } else {
       throw TurmsBusinessException.fromCode(TurmsStatusCode.invalidResponse);
     }

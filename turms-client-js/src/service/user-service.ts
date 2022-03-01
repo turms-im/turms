@@ -163,10 +163,9 @@ export default class UserService {
         } catch (e) {
             return Promise.reject(e);
         }
-        const isPosition = location && location['coords'];
-        if (isPosition) {
-            const position = location as GeolocationPosition;
-            userInfo.location = new UserLocation(position.coords.longitude, position.coords.latitude);
+        if (location) {
+            location = location['coords'] as GeolocationCoordinates || location as UserLocation;
+            userInfo.location = new UserLocation(location.longitude, location.latitude);
         }
         this._storePassword = storePassword;
         return new Promise((resolve, reject) => {

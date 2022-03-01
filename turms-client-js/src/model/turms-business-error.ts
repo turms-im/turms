@@ -46,7 +46,7 @@ export default class TurmsBusinessError extends Error {
 
     static notFalsy(name: string, notEmpty = false): never {
         const emptyPlaceholder = notEmpty ? ' or empty' : '';
-        throw this.illegalParam(`${name} must not be null${emptyPlaceholder} or an invalid param`);
+        TurmsBusinessError.illegalParam(`${name} must not be null${emptyPlaceholder} or an invalid param`);
     }
 
     static illegalParamPromise<T = never>(reason: string): Promise<T> {
@@ -56,6 +56,6 @@ export default class TurmsBusinessError extends Error {
 
     static notFalsyPromise<T = never>(name: string, notEmpty = false): Promise<T> {
         const emptyPlaceholder = notEmpty ? ' or empty' : '';
-        return this.illegalParamPromise(`${name} must not be null${emptyPlaceholder} or an invalid param`);
+        return TurmsBusinessError.illegalParamPromise(`${name} must not be null${emptyPlaceholder} or an invalid param`);
     }
 }

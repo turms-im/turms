@@ -173,6 +173,7 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
         if (isOpen) {
             onClose?.invoke(t)
         }
+        readBuffer.clear()
         isOpen = false
     }
 

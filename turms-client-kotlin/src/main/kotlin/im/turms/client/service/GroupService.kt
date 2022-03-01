@@ -459,7 +459,7 @@ class GroupService(private val turmsClient: TurmsClient) {
     suspend fun queryGroupMembersByMemberIds(
         groupId: Long,
         @NotEmpty memberIds: Set<Long>,
-        withStatus: Boolean
+        withStatus: Boolean = false
     ): GroupMembersWithVersion? = if (memberIds.isEmpty()) {
         throw TurmsBusinessException(TurmsStatusCode.ILLEGAL_ARGUMENT, "memberIds must not be null or empty")
     } else turmsClient.driver

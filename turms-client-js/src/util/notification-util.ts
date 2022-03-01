@@ -55,7 +55,7 @@ export default class NotificationUtil {
     static getFirstIdOrThrow(notification: TurmsNotification): any {
         const value = notification.data?.ids?.values?.[0];
         if (value == null) {
-            const reason = `Cannot get ID from the illegal response: ${JSON.stringify(notification)}`;
+            const reason = `Cannot get ID from the invalid response: ${JSON.stringify(notification)}`;
             throw TurmsBusinessError.from(TurmsStatusCode.INVALID_RESPONSE, reason);
         }
         return value;

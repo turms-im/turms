@@ -141,15 +141,15 @@ class UserService {
   }
 
   Future<void> updateOnlineStatus(UserStatus onlineStatus) async {
-    await _turmsClient.driver.send(UpdateUserOnlineStatusRequest(
-        deviceTypes: [], userStatus: onlineStatus));
+    await _turmsClient.driver
+        .send(UpdateUserOnlineStatusRequest(userStatus: onlineStatus));
     _userInfo?.onlineStatus = onlineStatus;
   }
 
   Future<void> disconnectOnlineDevices(List<DeviceType> deviceTypes) async {
     if (deviceTypes.isEmpty) {
       throw TurmsBusinessException(
-          TurmsStatusCode.illegalArgument, 'deviceTypes must be empty');
+          TurmsStatusCode.illegalArgument, 'deviceTypes must not be empty');
     }
     await _turmsClient.driver.send(UpdateUserOnlineStatusRequest(
         userStatus: UserStatus.OFFLINE, deviceTypes: deviceTypes));
@@ -213,7 +213,7 @@ class UserService {
     return n.data.usersOnlineStatuses.userStatuses;
   }
 
-  // // Relationship
+  // Relationship
 
   Future<UserRelationshipsWithVersion?> queryRelationships(
       {Set<Int64>? relatedUserIds,

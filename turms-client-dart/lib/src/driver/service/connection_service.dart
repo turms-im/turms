@@ -22,15 +22,15 @@ class _MessageDecoder {
 
   List<Uint8List> decodeMessages(List<int> bytes) {
     readBuffer.addAll(bytes);
-    final list = <Uint8List>[];
+    final messages = <Uint8List>[];
     while (true) {
       final message = _tryReadMessage();
       if (message == null) {
         break;
       }
-      list.add(message);
+      messages.add(message);
     }
-    return list;
+    return messages;
   }
 
   void clear() {
@@ -40,14 +40,13 @@ class _MessageDecoder {
   Uint8List? _tryReadMessage() {
     payloadLength ??= _tryReadVarInt();
     if (payloadLength != null) {
-      final length = payloadLength!;
-      final end = readIndex + length;
+      final end = readIndex + payloadLength!;
       if (readBuffer.length >= end) {
-        final sublist = readBuffer.sublist(readIndex, end);
+        final message = readBuffer.sublist(readIndex, end);
         readBuffer.removeRange(0, end);
         readIndex = 0;
         payloadLength = null;
-        return Uint8List.fromList(sublist);
+        return Uint8List.fromList(message);
       }
     }
     return null;
@@ -84,10 +83,10 @@ class ConnectionService extends BaseService {
   final _MessageDecoder _decoder = _MessageDecoder();
 
   ConnectionService(
-      StateStore stateStore, String? host, int? port, int? connectTimeout)
+      StateStore stateStore, String? host, int? port, int? connectTimeoutMillis)
       : _initialHost = host ?? '127.0.0.1',
         _initialPort = port ?? 11510,
-        _initialConnectTimeoutMillis = connectTimeout ?? 30 * 1000,
+        _initialConnectTimeoutMillis = connectTimeoutMillis ?? 30 * 1000,
         super(stateStore);
 
   // Listeners
@@ -144,19 +143,18 @@ class ConnectionService extends BaseService {
             TurmsStatusCode.clientSessionAlreadyEstablished);
       }
     }
-    _decoder.clear();
-    final tcp = TcpClient()..onClose = _onSocketClose;
-    connectTimeoutMillis ??= _initialConnectTimeoutMillis;
-    final timeout = connectTimeoutMillis > 0
-        ? Duration(milliseconds: connectTimeoutMillis)
-        : null;
-    await tcp.connect(host ?? _initialHost, port ?? _initialPort,
-        useTls ?? false, context, timeout, (bytes) {
+    final tcp = TcpClient(_onSocketClose, (bytes) {
       final messages = _decoder.decodeMessages(bytes);
       for (final message in messages) {
         _notifyMessageListeners(message);
       }
     });
+    connectTimeoutMillis ??= _initialConnectTimeoutMillis;
+    final timeout = connectTimeoutMillis > 0
+        ? Duration(milliseconds: connectTimeoutMillis)
+        : null;
+    await tcp.connect(host ?? _initialHost, port ?? _initialPort,
+        useTls ?? false, context, timeout);
     stateStore.tcp = tcp;
     _onSocketOpen();
   }
@@ -177,6 +175,7 @@ class ConnectionService extends BaseService {
   }
 
   void _onSocketClose(dynamic error) {
+    _decoder.clear();
     stateStore.isConnected = false;
     _notifyOnDisconnectedListeners(error);
   }

@@ -14,15 +14,13 @@ class TcpClient {
   bool isOpen = false;
   bool isReading = false;
 
-  OnClose? onClose;
+  OnClose _onClose;
+  OnBytesReceived _onBytesReceived;
 
-  Future<void> connect(
-      String host,
-      int port,
-      bool useTls,
-      SecurityContext? context,
-      Duration? timeout,
-      OnBytesReceived onBytesReceived) async {
+  TcpClient(this._onClose, this._onBytesReceived);
+
+  Future<void> connect(String host, int port, bool useTls,
+      SecurityContext? context, Duration? timeout) async {
     if (isOpen) {
       throw StateError('The TCP client has connected');
     }
@@ -47,7 +45,7 @@ class TcpClient {
     isOpen = true;
     _socket.listen((bytes) {
       try {
-        onBytesReceived.call(bytes);
+        _onBytesReceived.call(bytes);
       } catch (e) {
         close(e);
       }
@@ -82,7 +80,7 @@ class TcpClient {
 
   void tryCallOnClose(dynamic error) {
     if (isOpen) {
-      onClose?.call(error);
+      _onClose.call(error);
     }
     isOpen = false;
   }

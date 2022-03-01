@@ -91,10 +91,10 @@ class MessageService(
             stateStore.lastRequestDate = now.time
             launch {
                 try {
-                    val request = requestBuilder
+                    val payload = requestBuilder
                         .setRequestId(requestId)
                         .build()
-                    val payload = request.toByteArray()
+                        .toByteArray()
                     val tcp = stateStore.tcp!!
                     tcp.writeVarIntLengthAndBytes(payload)
                 } catch (e: Exception) {

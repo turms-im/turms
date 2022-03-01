@@ -37,7 +37,7 @@ interface RequestPromiseSeal {
 export default class MessageService extends BaseService {
 
     private readonly _requestTimeout: number;
-    private readonly _minRequestInterval?: number;
+    private readonly _minRequestInterval: number;
     private _notificationListeners: ((notification: ParsedNotification) => void)[] = [];
     private _requestMap: Record<number, RequestPromiseSeal> = {};
 
@@ -46,7 +46,7 @@ export default class MessageService extends BaseService {
         this._requestTimeout = isNaN(requestTimeout) || requestTimeout <= 0
             ? 60 * 1000
             : requestTimeout;
-        this._minRequestInterval = minRequestInterval;
+        this._minRequestInterval = minRequestInterval || 0;
     }
 
     // Listeners
