@@ -29,7 +29,7 @@ public class MessageDigestPool {
     }
 
     /**
-     * We don't need to call "remove()" because we assurme all caller threads won't die
+     * We don't need to call "remove()" because we assume all caller threads won't die
      * until the application is shutdown.
      */
     private static final ThreadLocal<MessageDigest> SHA1 = ThreadLocal.withInitial(() -> {

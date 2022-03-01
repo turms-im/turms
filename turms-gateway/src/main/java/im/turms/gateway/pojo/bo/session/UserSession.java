@@ -21,6 +21,7 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.util.RandomUtil;
 import im.turms.gateway.pojo.bo.session.connection.NetConnection;
+import im.turms.server.common.bo.location.Coordinates;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.logging.core.logger.Logger;
@@ -30,14 +31,13 @@ import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
-import org.springframework.data.geo.Point;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.function.BiConsumer;
 
 /**
@@ -45,6 +45,10 @@ import java.util.function.BiConsumer;
  */
 @Data
 public final class UserSession {
+
+    public static final AtomicIntegerFieldUpdater<UserSession>
+            IS_DELETE_SESSION_LOCK_ACQUIRED_UPDATER = AtomicIntegerFieldUpdater
+            .newUpdater(UserSession.class, "isDeleteSessionLockAcquired");
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserSession.class);
 
@@ -60,7 +64,7 @@ public final class UserSession {
     private final Map<String, String> deviceDetails;
     private final Date loginDate;
     @Nullable
-    private Point loginLocation;
+    private Coordinates loginCoordinates;
     /**
      * 1. Use {@link ByteBuf} instead of {@link TurmsNotification}
      * so that turms-gateway can:
@@ -89,7 +93,7 @@ public final class UserSession {
     /**
      * Used to avoid logging DeleteSessionRequest twice in a session
      */
-    private final AtomicBoolean isDeleteSessionLockAcquired = new AtomicBoolean(false);
+    private volatile int isDeleteSessionLockAcquired = 0;
     @Nullable
     private NetConnection connection;
     @Nullable
@@ -99,13 +103,13 @@ public final class UserSession {
                        Long userId,
                        DeviceType loggingInDeviceType,
                        @Nullable Map<String, String> deviceDetails,
-                       @Nullable Point loginLocation) {
+                       @Nullable Coordinates loginCoordinates) {
         Date now = new Date();
         this.version = version;
         this.userId = userId;
         this.deviceType = loggingInDeviceType;
         this.loginDate = now;
-        this.loginLocation = loginLocation;
+        this.loginCoordinates = loginCoordinates;
         this.lastHeartbeatRequestTimestampMillis = now.getTime();
         this.deviceDetails = deviceDetails == null ? Collections.emptyMap() : deviceDetails;
     }
@@ -123,10 +127,10 @@ public final class UserSession {
             isSessionOpen = false;
             // Note that it is acceptable to complete/close the connection multiple times
             // so that it's unnecessary to update isSessionOpen atomically
-            if (connection != null) {
-                connection.close(closeReason);
-            } else {
+            if (connection == null) {
                 LOGGER.warn("The connection is missing for the user session: {}", this);
+            } else {
+                connection.close(closeReason);
             }
         }
     }
@@ -154,7 +158,7 @@ public final class UserSession {
     }
 
     public boolean acquireDeleteSessionRequestLoggingLock() {
-        return isDeleteSessionLockAcquired.compareAndSet(false, true);
+        return IS_DELETE_SESSION_LOCK_ACQUIRED_UPDATER.compareAndSet(this, 0, 1);
     }
 
     @Override
@@ -165,7 +169,7 @@ public final class UserSession {
                 ", userId=" + userId +
                 ", deviceType=" + deviceType +
                 ", loginDate=" + loginDate +
-                ", loginLocation=" + loginLocation +
+                ", loginCoordinates=" + loginCoordinates +
                 ", isSessionOpen=" + isSessionOpen +
                 ", connection=" + connection +
                 '}';

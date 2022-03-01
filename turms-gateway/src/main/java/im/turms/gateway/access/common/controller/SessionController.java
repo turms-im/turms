@@ -28,11 +28,11 @@ import im.turms.gateway.access.tcp.dto.RequestHandlerResult;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.mediator.ServiceMediator;
+import im.turms.server.common.bo.location.Coordinates;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import io.netty.util.Timeout;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
@@ -83,10 +83,11 @@ public class SessionController {
         }
         // TODO: Log deviceDetails in API logs
         Map<String, String> deviceDetails = createSessionRequest.getDeviceDetailsMap();
-        Point position = null;
+        Coordinates coordinates = null;
         if (createSessionRequest.hasLocation()) {
+            // TODO: make full use of the data in location
             UserLocation location = createSessionRequest.getLocation();
-            position = new Point(location.getLatitude(), location.getLongitude());
+            coordinates = new Coordinates(location.getLongitude(), location.getLatitude());
         }
         Mono<UserSession> processLoginRequestMono = serviceMediator.processLoginRequest(createSessionRequest.getVersion(),
                 sessionWrapper.getIp(),
@@ -95,7 +96,7 @@ public class SessionController {
                 deviceType,
                 deviceDetails,
                 userStatus,
-                position,
+                coordinates,
                 sessionWrapper.getIpStr());
         Timeout idleConnectionTimeout = sessionWrapper.getConnectionTimeoutTask();
         DeviceType finalDeviceType = deviceType;

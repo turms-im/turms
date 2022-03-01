@@ -30,6 +30,7 @@ import im.turms.gateway.service.impl.message.InboundRequestService;
 import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.gateway.service.impl.session.UserService;
 import im.turms.gateway.service.impl.session.UserSimultaneousLoginService;
+import im.turms.server.common.bo.location.Coordinates;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
@@ -38,7 +39,6 @@ import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.lang.ByteArrayWrapper;
 import im.turms.server.common.plugin.PluginManager;
 import im.turms.server.common.plugin.SequentialExtensionPointInvoker;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -89,7 +89,7 @@ public class ServiceMediator {
             @NotNull DeviceType deviceType,
             @Nullable Map<String, String> deviceDetails,
             @Nullable UserStatus userStatus,
-            @Nullable Point position,
+            @Nullable Coordinates coordinates,
             @Nullable String ipStr) {
         if (version != 1) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNSUPPORTED_CLIENT_VERSION, "The supported versions are: 1"));
@@ -97,9 +97,9 @@ public class ServiceMediator {
         if (userSimultaneousLoginService.isForbiddenDeviceType(deviceType)) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE));
         }
-        return authenticate(version, userId, password, deviceType, deviceDetails, userStatus, position, ipStr)
+        return authenticate(version, userId, password, deviceType, deviceDetails, userStatus, coordinates, ipStr)
                 .flatMap(statusCode -> statusCode == TurmsStatusCode.OK
-                        ? sessionService.tryRegisterOnlineUser(version, ip, userId, deviceType, deviceDetails, userStatus, position)
+                        ? sessionService.tryRegisterOnlineUser(version, ip, userId, deviceType, deviceDetails, userStatus, coordinates)
                         : Mono.error(TurmsBusinessException.get(statusCode)));
     }
 
@@ -164,7 +164,7 @@ public class ServiceMediator {
             @NotNull DeviceType deviceType,
             @Nullable Map<String, String> deviceDetails,
             @Nullable UserStatus userStatus,
-            @Nullable Point position,
+            @Nullable Coordinates coordinates,
             @Nullable String ip) {
         if (userId == ADMIN_ID) {
             return Mono.just(TurmsStatusCode.LOGIN_AUTHENTICATION_FAILED);
@@ -181,7 +181,7 @@ public class ServiceMediator {
                     deviceType,
                     deviceDetails,
                     userStatus,
-                    position,
+                    coordinates,
                     ip);
             Mono<TurmsStatusCode> authenticate = pluginManager.invokeExtensionPointsSequentially(
                             UserAuthenticator.class,

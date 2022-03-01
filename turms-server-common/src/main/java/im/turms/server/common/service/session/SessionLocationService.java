@@ -19,6 +19,7 @@ package im.turms.server.common.service.session;
 
 
 import im.turms.common.constant.DeviceType;
+import im.turms.server.common.bo.location.Coordinates;
 import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
@@ -35,7 +36,6 @@ import io.lettuce.core.GeoArgs;
 import io.lettuce.core.GeoCoordinates;
 import io.lettuce.core.GeoWithin;
 import lombok.Getter;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -73,13 +73,15 @@ public class SessionLocationService {
      */
     public Mono<Void> upsertUserLocation(@NotNull Long userId,
                                          @NotNull @ValidDeviceType DeviceType deviceType,
-                                         @NotNull Point position,
+                                         @NotNull Coordinates coordinates,
                                          @NotNull Date timestamp) {
         try {
             AssertUtil.notNull(userId, "userId");
             AssertUtil.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
-            AssertUtil.notNull(position, "position");
+            AssertUtil.notNull(coordinates, "coordinates");
+            AssertUtil.inRange(coordinates.longitude(), "longitude", Coordinates.LONGITUDE_MIN, Coordinates.LONGITUDE_MAX);
+            AssertUtil.inRange(coordinates.latitude(), "latitude", Coordinates.LATITUDE_MIN, Coordinates.LATITUDE_MAX);
             AssertUtil.notNull(timestamp, "timestamp");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
@@ -90,7 +92,7 @@ public class SessionLocationService {
         Object member = treatUserIdAndDeviceTypeAsUniqueUser
                 ? new UserSessionId(userId, deviceType)
                 : userId;
-        return locationRedisClientManager.geoadd(userId, RedisEntryId.LOCATION_BUFFER, position, member)
+        return locationRedisClientManager.geoadd(userId, RedisEntryId.LOCATION_BUFFER, coordinates, member)
                 .then();
     }
 

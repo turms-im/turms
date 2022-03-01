@@ -65,9 +65,28 @@ public final class AssertUtil {
         }
     }
 
+    public static void min(int num, String name, int min) {
+        if (num < min) {
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, name + " must be greater than or equal to " + min);
+        }
+    }
+
     public static void max(Integer num, String name, int max) {
         if (num != null && num > max) {
             throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, name + " must be less than or equal to " + max);
+        }
+    }
+
+    public static void max(int num, String name, int max) {
+        if (num > max) {
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, name + " must be less than or equal to " + max);
+        }
+    }
+
+    public static void inRange(double num, String name, double min, double max) {
+        if (num > max || num < min) {
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT,
+                    name + " must be less than or equal to " + max + ", and greater than or equal to " + min);
         }
     }
 

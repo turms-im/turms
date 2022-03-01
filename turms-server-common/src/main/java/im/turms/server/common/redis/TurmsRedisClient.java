@@ -17,6 +17,7 @@
 
 package im.turms.server.common.redis;
 
+import im.turms.server.common.bo.location.Coordinates;
 import im.turms.server.common.redis.codec.TurmsRedisCodecAdapter;
 import im.turms.server.common.redis.codec.context.RedisCodecContext;
 import im.turms.server.common.redis.command.TurmsCommandEncoder;
@@ -44,7 +45,6 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Data;
-import org.springframework.data.geo.Point;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -154,10 +154,10 @@ public class TurmsRedisClient {
 
     // Geo
 
-    public Mono<Long> geoadd(Object key, Point coordinates, Object member) {
+    public Mono<Long> geoadd(Object key, Coordinates coordinates, Object member) {
         ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
         ByteBuf memberBuffer = serializationContext.encodeGeoMember(member);
-        return commands.geoadd(keyBuffer, coordinates.getX(), coordinates.getY(), memberBuffer)
+        return commands.geoadd(keyBuffer, coordinates.longitude(), coordinates.latitude(), memberBuffer)
                 .doFinally(signal -> {
                     ByteBufUtil.ensureReleased(keyBuffer);
                     ByteBufUtil.ensureReleased(memberBuffer);

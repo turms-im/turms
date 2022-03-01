@@ -27,6 +27,7 @@ import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.observability.MetricsService;
+import im.turms.server.common.bo.location.Coordinates;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.rpc.exception.ConnectionNotFound;
@@ -53,7 +54,6 @@ import im.turms.server.common.util.ReactorUtil;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -352,13 +352,17 @@ public class SessionService implements ISessionService {
             @NotNull DeviceType deviceType,
             @Nullable Map<String, String> deviceDetails,
             @Nullable UserStatus userStatus,
-            @Nullable Point position) {
+            @Nullable Coordinates coordinates) {
         try {
             AssertUtil.notNull(ip, "ip");
             AssertUtil.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
             AssertUtil.state(userStatus != UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
             AssertUtil.state(userStatus != UserStatus.OFFLINE, "The user status must not be OFFLINE");
+            if (coordinates != null) {
+                AssertUtil.inRange(coordinates.longitude(), "longitude", Coordinates.LONGITUDE_MIN, Coordinates.LONGITUDE_MAX);
+                AssertUtil.inRange(coordinates.latitude(), "latitude", Coordinates.LATITUDE_MIN, Coordinates.LATITUDE_MAX);
+            }
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
@@ -377,7 +381,7 @@ public class SessionService implements ISessionService {
                     // Check the current sessions status
                     UserStatus existingUserStatus = sessionsStatus.userStatus();
                     if (existingUserStatus == UserStatus.OFFLINE) {
-                        return addOnlineDeviceIfAbsent(version, ip, userId, deviceType, deviceDetails, userStatus, position);
+                        return addOnlineDeviceIfAbsent(version, ip, userId, deviceType, deviceDetails, userStatus, coordinates);
                     }
                     boolean conflicts = sessionsStatus.getLoggedInDeviceTypes().contains(deviceType);
                     if (conflicts) {
@@ -392,12 +396,18 @@ public class SessionService implements ISessionService {
                                     ? Mono.empty()
                                     : userStatusService.updateOnlineUserStatusIfPresent(userId, userStatus)
                                     .then()
-                                    .onErrorResume(throwable -> Mono.empty());
-                            if (position != null) {
+                                    .onErrorResume(t -> {
+                                        LOGGER.error("Failed to update the online status of the user " + userId, t);
+                                        return Mono.empty();
+                                    });
+                            if (coordinates != null) {
                                 updateSessionInfoMono = updateSessionInfoMono
                                         .flatMap(unused -> sessionLocationService
-                                                .upsertUserLocation(userId, deviceType, position, new Date())
-                                                .onErrorResume(throwable -> Mono.empty()));
+                                                .upsertUserLocation(userId, deviceType, coordinates, new Date())
+                                                .onErrorResume(t -> {
+                                                    LOGGER.error("Failed to upsert the location of the user " + userId, t);
+                                                    return Mono.empty();
+                                                }));
                             }
                             return updateSessionInfoMono.thenReturn(session);
                         } else if (userSimultaneousLoginService.shouldDisconnectLoggingInDeviceIfConflicts()) {
@@ -406,7 +416,7 @@ public class SessionService implements ISessionService {
                     }
                     return disconnectConflictedDeviceTypes(userId, deviceType, sessionsStatus)
                             .flatMap(wasSuccessful -> wasSuccessful
-                                    ? addOnlineDeviceIfAbsent(version, ip, userId, deviceType, deviceDetails, userStatus, position)
+                                    ? addOnlineDeviceIfAbsent(version, ip, userId, deviceType, deviceDetails, userStatus, coordinates)
                                     : Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
                 });
     }
@@ -499,7 +509,7 @@ public class SessionService implements ISessionService {
             @NotNull DeviceType deviceType,
             @Nullable Map<String, String> deviceDetails,
             @Nullable UserStatus userStatus,
-            @Nullable Point position) {
+            @Nullable Coordinates coordinates) {
         // Try to update the global user status
         return userStatusService.addOnlineDeviceIfAbsent(userId, deviceType, userStatus, closeIdleSessionAfterSeconds)
                 .flatMap(wasSuccessful -> {
@@ -509,7 +519,7 @@ public class SessionService implements ISessionService {
                     UserStatus finalUserStatus = null == userStatus ? UserStatus.AVAILABLE : userStatus;
                     UserSessionsManager manager = sessionsManagerByUserId
                             .computeIfAbsent(userId, key -> new UserSessionsManager(key, finalUserStatus));
-                    UserSession session = manager.addSessionIfAbsent(version, deviceType, deviceDetails, position);
+                    UserSession session = manager.addSessionIfAbsent(version, deviceType, deviceDetails, coordinates);
                     // This should never happen
                     if (null == session) {
                         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE));
@@ -521,7 +531,7 @@ public class SessionService implements ISessionService {
                                     ? (sessions.isEmpty() ? null : sessions)
                                     : sessions;
                         });
-                        session = manager.addSessionIfAbsent(version, deviceType, deviceDetails, position);
+                        session = manager.addSessionIfAbsent(version, deviceType, deviceDetails, coordinates);
                         if (null == session) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR));
                         }
@@ -535,8 +545,8 @@ public class SessionService implements ISessionService {
                         return sessions;
                     });
                     Date now = new Date();
-                    if (null != position && sessionLocationService.isLocationEnabled()) {
-                        return sessionLocationService.upsertUserLocation(userId, deviceType, position, now)
+                    if (null != coordinates && sessionLocationService.isLocationEnabled()) {
+                        return sessionLocationService.upsertUserLocation(userId, deviceType, coordinates, now)
                                 .thenReturn(session);
                     }
                     return Mono.just(session);

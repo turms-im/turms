@@ -21,6 +21,7 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.pojo.bo.session.UserSession;
+import im.turms.server.common.bo.location.Coordinates;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.lang.ConcurrentEnumMap;
 import im.turms.server.common.logging.core.logger.Logger;
@@ -29,7 +30,6 @@ import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.HashedWheelTimer;
 import lombok.Data;
-import org.springframework.data.geo.Point;
 import org.springframework.util.Assert;
 
 import javax.annotation.Nullable;
@@ -73,14 +73,14 @@ public final class UserSessionsManager {
     public UserSession addSessionIfAbsent(int version,
                                           DeviceType loggingInDeviceType,
                                           Map<String, String> deviceDetails,
-                                          @Nullable Point position) {
+                                          @Nullable Coordinates coordinates) {
         Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
         UserSession userSession = new UserSession(
                 version,
                 userId,
                 loggingInDeviceType,
                 deviceDetails,
-                position);
+                coordinates);
         boolean added = sessionMap.putIfAbsent(loggingInDeviceType, userSession) == null;
         return added ? userSession : null;
     }

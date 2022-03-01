@@ -32,6 +32,7 @@ import im.turms.common.model.dto.request.user.QueryUserProfileRequest;
 import im.turms.common.model.dto.request.user.UpdateUserLocationRequest;
 import im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.common.model.dto.request.user.UpdateUserRequest;
+import im.turms.server.common.bo.location.Coordinates;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
@@ -47,7 +48,6 @@ import im.turms.service.workflow.service.impl.user.UserService;
 import im.turms.service.workflow.service.impl.user.onlineuser.SessionService;
 import im.turms.service.workflow.service.impl.user.onlineuser.UsersNearbyService;
 import im.turms.service.workflow.service.impl.user.relationship.UserRelationshipService;
-import org.springframework.data.geo.Point;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;
@@ -130,7 +130,7 @@ public class UserServiceController {
             return usersNearbyService.queryNearbyUsers(
                             clientRequest.userId(),
                             clientRequest.deviceType(),
-                            new Point(request.getLongitude(), request.getLatitude()),
+                            new Coordinates(request.getLongitude(), request.getLatitude()),
                             maxNumber,
                             distance,
                             request.getWithCoordinates(),
@@ -192,7 +192,7 @@ public class UserServiceController {
             Mono<Void> updateMono = sessionLocationService.upsertUserLocation(
                     clientRequest.userId(),
                     clientRequest.deviceType(),
-                    new Point(request.getLatitude(), request.getLongitude()),
+                    new Coordinates(request.getLongitude(), request.getLatitude()),
                     new Date());
             return updateMono.thenReturn(RequestHandlerResultFactory.OK);
         };

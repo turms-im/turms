@@ -1,6 +1,7 @@
 package integration.im.turms.server.common.service.session;
 
 import im.turms.common.constant.DeviceType;
+import im.turms.server.common.bo.location.Coordinates;
 import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.plugin.PluginManager;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.data.geo.Point;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -41,16 +41,16 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
 
     static final long USER_1_ID = 1;
     static final DeviceType USER_1_DEVICE = DeviceType.ANDROID;
-    static final Point USER_1_LOCATION_1 = new Point(10, 10);
-    static final Point USER_1_LOCATION_2 = new Point(10, 20);
+    static final Coordinates USER_1_COORDINATES_1 = new Coordinates(10, 10);
+    static final Coordinates USER_1_COORDINATES_2 = new Coordinates(10, 20);
 
     static final long USER_2_ID = 2;
     static final DeviceType USER_2_DEVICE = DeviceType.ANDROID;
-    static final Point USER_2_LOCATION = new Point(10, 30);
+    static final Coordinates USER_2_COORDINATES = new Coordinates(10, 30);
 
     static final long USER_3_ID = 3;
     static final DeviceType USER_3_DEVICE = DeviceType.ANDROID;
-    static final Point USER_3_LOCATION = new Point(10, 40);
+    static final Coordinates USER_3_COORDINATES = new Coordinates(10, 40);
 
     static final long NONEXISTENT_USER_ID = 99999;
     static final DeviceType NONEXISTENT_USER_DEVICE = DeviceType.ANDROID;
@@ -93,17 +93,17 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     @Test
     void upsertUserLocation_shouldInsert_ifNotExists() {
         StepVerifier
-                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_1_ID, USER_1_DEVICE, USER_1_LOCATION_1, new Date()))
+                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_1_ID, USER_1_DEVICE, USER_1_COORDINATES_1, new Date()))
                 .as("The location of user " + USER_1_ID + " should be inserted")
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
         StepVerifier
-                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_2_ID, USER_2_DEVICE, USER_2_LOCATION, new Date()))
+                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_2_ID, USER_2_DEVICE, USER_2_COORDINATES, new Date()))
                 .as("The location of user " + USER_2_ID + " should be inserted")
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
         StepVerifier
-                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_3_ID, USER_3_DEVICE, USER_3_LOCATION, new Date()))
+                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_3_ID, USER_3_DEVICE, USER_3_COORDINATES, new Date()))
                 .as("The location of user " + USER_3_ID + " should be inserted")
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
@@ -113,7 +113,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     @Test
     void upsertUserLocation_shouldUpdate_ifExists() {
         Mono<Void> upsertUserLocation =
-                SESSION_LOCATION_SERVICE.upsertUserLocation(USER_1_ID, USER_1_DEVICE, USER_1_LOCATION_2, new Date());
+                SESSION_LOCATION_SERVICE.upsertUserLocation(USER_1_ID, USER_1_DEVICE, USER_1_COORDINATES_2, new Date());
         StepVerifier
                 .create(upsertUserLocation)
                 .expectComplete()
@@ -127,8 +127,8 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
         StepVerifier
                 .create(getUserLocation)
                 .expectNextMatches(coordinates -> {
-                    assertThat(coordinates.getX().intValue()).isEqualTo((int) USER_1_LOCATION_2.getX());
-                    assertThat(coordinates.getY().intValue()).isEqualTo((int) USER_1_LOCATION_2.getY());
+                    assertThat(coordinates.getX().intValue()).isEqualTo((int) USER_1_COORDINATES_2.longitude());
+                    assertThat(coordinates.getY().intValue()).isEqualTo((int) USER_1_COORDINATES_2.latitude());
                     return true;
                 })
                 .expectComplete()

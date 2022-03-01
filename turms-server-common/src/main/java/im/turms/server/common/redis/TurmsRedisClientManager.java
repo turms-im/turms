@@ -17,6 +17,7 @@
 
 package im.turms.server.common.redis;
 
+import im.turms.server.common.bo.location.Coordinates;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.redis.codec.context.RedisCodecContext;
@@ -33,7 +34,6 @@ import io.lettuce.core.protocol.LongKeyGenerator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import lombok.AllArgsConstructor;
-import org.springframework.data.geo.Point;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -119,7 +119,7 @@ public class TurmsRedisClientManager {
 
     // Geo
 
-    public Mono<Long> geoadd(Long shardKey, Object key, Point coordinates, Object member) {
+    public Mono<Long> geoadd(Long shardKey, Object key, Coordinates coordinates, Object member) {
         return getClient(shardKey).geoadd(key, coordinates, member);
     }
 

@@ -18,13 +18,13 @@
 package im.turms.service.workflow.service.impl.user.onlineuser;
 
 import im.turms.common.constant.DeviceType;
+import im.turms.server.common.bo.location.Coordinates;
 import im.turms.server.common.bo.location.NearbyUser;
 import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.service.workflow.service.impl.user.UserService;
 import io.lettuce.core.GeoWithin;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -55,7 +55,7 @@ public class UsersNearbyService {
     public Mono<Collection<NearbyUser>> queryNearbyUsers(
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
-            @Nullable Point coordinates,
+            @Nullable Coordinates coordinates,
             @Nullable Short maxNumber,
             @Nullable Integer maxDistance,
             boolean withCoordinates,

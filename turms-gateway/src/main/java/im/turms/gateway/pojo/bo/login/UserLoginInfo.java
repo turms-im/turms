@@ -19,7 +19,7 @@ package im.turms.gateway.pojo.bo.login;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
-import org.springframework.data.geo.Point;
+import im.turms.server.common.bo.location.Coordinates;
 
 import java.util.Map;
 
@@ -33,6 +33,6 @@ public record UserLoginInfo(
         DeviceType loggingInDeviceType,
         Map<String, String> deviceDetails,
         UserStatus userStatus,
-        Point location,
+        Coordinates coordinates,
         String ip) {
 }

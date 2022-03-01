@@ -19,8 +19,8 @@ package unit.im.turms.gateway.pojo.bo.session;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.gateway.pojo.bo.session.UserSession;
+import im.turms.server.common.bo.location.Coordinates;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.geo.Point;
 
 import java.util.Collections;
 import java.util.Map;
@@ -36,7 +36,7 @@ class UserSessionTests {
     private final Long userId = 1L;
     private final DeviceType deviceType = DeviceType.ANDROID;
     private final Map<String, String> deviceDetails = Collections.emptyMap();
-    private final Point loginLocation = new Point(1F, 1F);
+    private final Coordinates coordinates = new Coordinates(1F, 1F);
 
     @Test
     void constructor_shouldReturnInstance() {
@@ -45,7 +45,7 @@ class UserSessionTests {
                 userId,
                 deviceType,
                 deviceDetails,
-                loginLocation);
+                coordinates);
         assertThat(userSession).isNotNull();
     }
 
@@ -56,9 +56,9 @@ class UserSessionTests {
                 userId,
                 deviceType,
                 deviceDetails,
-                loginLocation);
+                coordinates);
         assertThat(userSession.getDeviceType()).isEqualTo(deviceType);
-        assertThat(userSession.getLoginLocation()).isEqualTo(loginLocation);
+        assertThat(userSession.getLoginCoordinates()).isEqualTo(coordinates);
     }
 
 }
