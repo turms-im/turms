@@ -163,7 +163,7 @@ public final class Member {
                 wsAddress,
                 tcpAddress,
                 udpAddress,
-                new MemberStatus(hasJoinedCluster, isActive, isHealthy, new Date()));
+                new MemberStatus(hasJoinedCluster, isHealthy, isActive, new Date()));
     }
 
     public void updateIfNotNull(
