@@ -58,7 +58,7 @@ createApp(App)
                 set: _.set,
                 uniq: _.uniq
             };
-            globalProperties.$sleep = async (millis) => await new Promise(resolve => setTimeout(resolve, millis));
+            globalProperties.$sleep = (millis) => new Promise(resolve => setTimeout(resolve, millis));
         }
     })
     .mount('#app');
