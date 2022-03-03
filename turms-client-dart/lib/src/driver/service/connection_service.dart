@@ -13,15 +13,20 @@ typedef OnDisconnectedListener = void Function(dynamic error);
 typedef MessageListener = void Function(Uint8List message);
 
 class _MessageDecoder {
-  int readIndex = 0;
-  int tempPayloadLength = 0;
-  int? payloadLength;
+  static const int _maxReadBufferCapacity = 8 * 1024 * 1024;
 
-  // TODO: MAX LIMIT
-  List<int> readBuffer = [];
+  int _readIndex = 0;
+  int _tempPayloadLength = 0;
+  int? _payloadLength;
+
+  final List<int> _readBuffer = [];
 
   List<Uint8List> decodeMessages(List<int> bytes) {
-    readBuffer.addAll(bytes);
+    if ((_readBuffer.length + bytes.length) > _maxReadBufferCapacity) {
+      throw Exception(
+          'The read buffer has exceeded the maximum size $_maxReadBufferCapacity');
+    }
+    _readBuffer.addAll(bytes);
     final messages = <Uint8List>[];
     while (true) {
       final message = _tryReadMessage();
@@ -34,18 +39,21 @@ class _MessageDecoder {
   }
 
   void clear() {
-    readBuffer.clear();
+    _readIndex = 0;
+    _tempPayloadLength = 0;
+    _payloadLength = null;
+    _readBuffer.clear();
   }
 
   Uint8List? _tryReadMessage() {
-    payloadLength ??= _tryReadVarInt();
-    if (payloadLength != null) {
-      final end = readIndex + payloadLength!;
-      if (readBuffer.length >= end) {
-        final message = readBuffer.sublist(readIndex, end);
-        readBuffer.removeRange(0, end);
-        readIndex = 0;
-        payloadLength = null;
+    _payloadLength ??= _tryReadVarInt();
+    if (_payloadLength != null) {
+      final end = _readIndex + _payloadLength!;
+      if (_readBuffer.length >= end) {
+        final message = _readBuffer.sublist(_readIndex, end);
+        _readBuffer.removeRange(0, end);
+        _readIndex = 0;
+        _payloadLength = null;
         return Uint8List.fromList(message);
       }
     }
@@ -53,17 +61,17 @@ class _MessageDecoder {
   }
 
   int? _tryReadVarInt() {
-    final length = readBuffer.length;
-    while (readIndex < 5) {
-      if (readIndex >= length) {
+    final length = _readBuffer.length;
+    while (_readIndex < 5) {
+      if (_readIndex >= length) {
         return null;
       }
-      final byte = readBuffer[readIndex];
-      tempPayloadLength |= (byte & 0x7F) << (7 * readIndex);
-      readIndex++;
+      final byte = _readBuffer[_readIndex];
+      _tempPayloadLength |= (byte & 0x7F) << (7 * _readIndex);
+      _readIndex++;
       if (byte & 0x80 == 0) {
-        final length = tempPayloadLength;
-        tempPayloadLength = 0;
+        final length = _tempPayloadLength;
+        _tempPayloadLength = 0;
         return length;
       }
     }
@@ -160,11 +168,11 @@ class ConnectionService extends BaseService {
   }
 
   Future<void> disconnect() async {
-    _decoder.clear();
     if (stateStore.isConnected) {
       stateStore.isConnected = false;
       await stateStore.tcp?.close(null);
     }
+    _decoder.clear();
   }
 
   // Lifecycle hooks

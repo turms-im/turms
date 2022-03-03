@@ -62,14 +62,14 @@ class HeartbeatService extends BaseService {
     return completer.future;
   }
 
-  void resolveHeartbeatPromises() {
+  void resolveHeartbeatCompleters() {
     _heartbeatCompleters.removeWhere((completer) {
       completer.complete();
       return true;
     });
   }
 
-  bool rejectHeartbeatPromisesIfFail(TurmsNotification notification) {
+  bool rejectHeartbeatCompletersIfFail(TurmsNotification notification) {
     if (_heartbeatFailureRequestId == notification.requestId.toInt()) {
       _rejectHeartbeatCompleters(
           TurmsBusinessException.fromNotification(notification));

@@ -14,8 +14,8 @@ class TcpClient {
   bool isOpen = false;
   bool isReading = false;
 
-  OnClose _onClose;
-  OnBytesReceived _onBytesReceived;
+  final OnClose _onClose;
+  final OnBytesReceived _onBytesReceived;
 
   TcpClient(this._onClose, this._onBytesReceived);
 

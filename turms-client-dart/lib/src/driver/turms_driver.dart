@@ -130,7 +130,7 @@ class TurmsDriver {
         print('Failed to parse TurmsNotification: $e');
         return;
       }
-      if (_heartbeatService.rejectHeartbeatPromisesIfFail(notification)) {
+      if (_heartbeatService.rejectHeartbeatCompletersIfFail(notification)) {
         return;
       }
       if (notification.data.hasUserSession()) {
@@ -143,7 +143,7 @@ class TurmsDriver {
       }
       _messageService.didReceiveNotification(notification);
     } else {
-      _heartbeatService.resolveHeartbeatPromises();
+      _heartbeatService.resolveHeartbeatCompleters();
     }
   }
 }
