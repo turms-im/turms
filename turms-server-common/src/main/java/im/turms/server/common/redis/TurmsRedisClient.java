@@ -56,9 +56,13 @@ import static io.lettuce.core.protocol.CommandType.GEORADIUSBYMEMBER;
 
 /**
  * @author James Chen
- * @implNote For Redis commands, we MUST ensure the key/val buffers are released in "doFinally"
+ * @implNote 1. For Redis commands, we MUST ensure the key/val buffers are released in "doFinally"
  * by ourselves because if a command is cancelled or fails, Lettuce won't release these buffers
  * because it hasn't flushed the buffers.
+ * 2. Ensure encoding data in a cold publisher instead of a hot publisher,
+ * or the memory will leak because the cold finalizer will never be called
+ * if it's won't be subscribed (this may happen in the scenario: when the previous
+ * publisher fail, the next publisher will never be subscribed)
  * @see AbstractRedisReactiveCommands
  */
 @Data
@@ -129,79 +133,91 @@ public class TurmsRedisClient {
     // Hashes
 
     public Mono<Long> hdel(Object key, Object... fields) {
-        ByteBuf keyBuffer = serializationContext.encodeHashKey(key);
-        ByteBuf[] fieldBuffers = serializationContext.encodeHashFields(fields);
-        return commands.hdel(keyBuffer, fieldBuffers)
-                .doFinally(signal -> {
-                    ByteBufUtil.ensureReleased(keyBuffer);
-                    ByteBufUtil.ensureReleased(fieldBuffers);
-                });
+        return Mono.defer(() -> {
+            ByteBuf keyBuffer = serializationContext.encodeHashKey(key);
+            ByteBuf[] fieldBuffers = serializationContext.encodeHashFields(fields);
+            return commands.hdel(keyBuffer, fieldBuffers)
+                    .doFinally(signal -> {
+                        ByteBufUtil.ensureReleased(keyBuffer);
+                        ByteBufUtil.ensureReleased(fieldBuffers);
+                    });
+        });
     }
 
     public <K, V> Flux<Map.Entry<K, V>> hgetall(K key) {
-        ByteBuf keyBuffer = serializationContext.encodeHashKey(key);
-        Flux<KeyValue<K, V>> flux = commands.createDissolvingFlux(() -> commandBuilder.hgetall(keyBuffer));
-        Flux<Map.Entry<K, V>> entryFlux = flux
-                .flatMap(entry -> {
-                    if (entry.isEmpty()) {
-                        return Mono.empty();
-                    }
-                    return Mono.just(new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue()));
-                });
-        return entryFlux
-                .doFinally(signal -> ByteBufUtil.ensureReleased(keyBuffer));
+        return Flux.defer(() -> {
+            ByteBuf keyBuffer = serializationContext.encodeHashKey(key);
+            Flux<KeyValue<K, V>> flux = commands.createDissolvingFlux(() -> commandBuilder.hgetall(keyBuffer));
+            Flux<Map.Entry<K, V>> entryFlux = flux
+                    .flatMap(entry -> {
+                        if (entry.isEmpty()) {
+                            return Mono.empty();
+                        }
+                        return Mono.just(new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue()));
+                    });
+            return entryFlux
+                    .doFinally(signal -> ByteBufUtil.ensureReleased(keyBuffer));
+        });
     }
 
     // Geo
 
     public Mono<Long> geoadd(Object key, Coordinates coordinates, Object member) {
-        ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
-        ByteBuf memberBuffer = serializationContext.encodeGeoMember(member);
-        return commands.geoadd(keyBuffer, coordinates.longitude(), coordinates.latitude(), memberBuffer)
-                .doFinally(signal -> {
-                    ByteBufUtil.ensureReleased(keyBuffer);
-                    ByteBufUtil.ensureReleased(memberBuffer);
-                });
+        return Mono.defer(() -> {
+            ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
+            ByteBuf memberBuffer = serializationContext.encodeGeoMember(member);
+            return commands.geoadd(keyBuffer, coordinates.longitude(), coordinates.latitude(), memberBuffer)
+                    .doFinally(signal -> {
+                        ByteBufUtil.ensureReleased(keyBuffer);
+                        ByteBufUtil.ensureReleased(memberBuffer);
+                    });
+        });
     }
 
     public Flux<GeoCoordinates> geopos(Object key, Object... members) {
-        ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
-        ByteBuf[] memberBuffers = serializationContext.encodeGeoMembers(members);
-        return commands.geopos(keyBuffer, memberBuffers)
-                .flatMap(value -> value.isEmpty() ? Mono.empty() : Mono.just(value.getValue()))
-                .doFinally(signal -> {
-                    ByteBufUtil.ensureReleased(keyBuffer);
-                    ByteBufUtil.ensureReleased(memberBuffers);
-                });
+        return Flux.defer(() -> {
+            ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
+            ByteBuf[] memberBuffers = serializationContext.encodeGeoMembers(members);
+            return commands.geopos(keyBuffer, memberBuffers)
+                    .flatMap(value -> value.isEmpty() ? Mono.empty() : Mono.just(value.getValue()))
+                    .doFinally(signal -> {
+                        ByteBufUtil.ensureReleased(keyBuffer);
+                        ByteBufUtil.ensureReleased(memberBuffers);
+                    });
+        });
     }
 
     public <T> Flux<GeoWithin<T>> georadiusbymember(Object key, Object member, double distanceMeters, GeoArgs geoArgs) {
-        ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
-        ByteBuf memberBuffer = serializationContext.encodeGeoMember(member);
-        Flux<GeoWithin<T>> flux = commands.createDissolvingFlux(() -> commandBuilder
-                .georadiusbymember(GEORADIUSBYMEMBER, keyBuffer, memberBuffer, distanceMeters, GeoArgs.Unit.m.name(), geoArgs));
-        return flux
-                .onErrorResume(RedisCommandExecutionException.class, e -> {
-                    String message = e.getMessage();
-                    if (message != null && message.endsWith("could not decode requested zset member")) {
-                        return Flux.empty();
-                    }
-                    return Flux.error(e);
-                })
-                .doFinally(signal -> {
-                    ByteBufUtil.ensureReleased(keyBuffer);
-                    ByteBufUtil.ensureReleased(memberBuffer);
-                });
+        return Flux.defer(() -> {
+            ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
+            ByteBuf memberBuffer = serializationContext.encodeGeoMember(member);
+            Flux<GeoWithin<T>> flux = commands.createDissolvingFlux(() -> commandBuilder
+                    .georadiusbymember(GEORADIUSBYMEMBER, keyBuffer, memberBuffer, distanceMeters, GeoArgs.Unit.m.name(), geoArgs));
+            return flux
+                    .onErrorResume(RedisCommandExecutionException.class, e -> {
+                        String message = e.getMessage();
+                        if (message != null && message.endsWith("could not decode requested zset member")) {
+                            return Flux.empty();
+                        }
+                        return Flux.error(e);
+                    })
+                    .doFinally(signal -> {
+                        ByteBufUtil.ensureReleased(keyBuffer);
+                        ByteBufUtil.ensureReleased(memberBuffer);
+                    });
+        });
     }
 
     public Mono<Long> georem(Object key, Object... members) {
-        ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
-        ByteBuf[] memberBuffers = serializationContext.encodeGeoMembers(members);
-        return commands.zrem(keyBuffer, memberBuffers)
-                .doFinally(signal -> {
-                    ByteBufUtil.ensureReleased(keyBuffer);
-                    ByteBufUtil.ensureReleased(memberBuffers);
-                });
+        return Mono.defer(() -> {
+            ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
+            ByteBuf[] memberBuffers = serializationContext.encodeGeoMembers(members);
+            return commands.zrem(keyBuffer, memberBuffers)
+                    .doFinally(signal -> {
+                        ByteBufUtil.ensureReleased(keyBuffer);
+                        ByteBufUtil.ensureReleased(memberBuffers);
+                    });
+        });
     }
 
     // Scripting
@@ -214,21 +230,23 @@ public class TurmsRedisClient {
      * @param keyLength the real key length
      */
     public <T> Mono<T> eval(RedisScript script, int keyLength, ByteBuf... keys) {
-        for (int i = 0; i < keys.length; i++) {
-            keys[i] = ByteBufUtil.ensureByteBufRefCnfCorrect(keys[i])
-                    .retain();
-        }
-        return (Mono<T>) commands
-                .createFlux(() -> commandBuilder.evalsha(script.digest(), script.outputType(), keys, keyLength))
-                .onErrorResume(e -> {
-                    if (exceptionContainsNoScriptException(e)) {
-                        return commands
-                                .createFlux(() -> commandBuilder.eval(script.script(), script.outputType(), keys, keyLength));
-                    }
-                    return Flux.error(e);
-                })
-                .doFinally(signal -> ByteBufUtil.ensureReleased(keys))
-                .single();
+        return Mono.defer(() -> {
+            for (int i = 0; i < keys.length; i++) {
+                keys[i] = ByteBufUtil.ensureByteBufRefCnfCorrect(keys[i])
+                        .retain();
+            }
+            return (Mono<T>) commands
+                    .createFlux(() -> commandBuilder.evalsha(script.digest(), script.outputType(), keys, keyLength))
+                    .onErrorResume(e -> {
+                        if (exceptionContainsNoScriptException(e)) {
+                            return commands
+                                    .createFlux(() -> commandBuilder.eval(script.script(), script.outputType(), keys, keyLength));
+                        }
+                        return Flux.error(e);
+                    })
+                    .doFinally(signal -> ByteBufUtil.ensureReleased(keys))
+                    .single();
+        });
     }
 
     private boolean exceptionContainsNoScriptException(Throwable e) {
