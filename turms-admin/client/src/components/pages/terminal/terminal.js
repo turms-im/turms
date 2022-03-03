@@ -56,6 +56,9 @@ export default class Terminal extends XTerm {
         this.currentLine = '';
         this.history = options.history || [];
         this.historyIndex = this.history.length > 0 ? this.history.length - 1 : 0;
+        this.onCursorChanged = options.onCursorChanged;
+        this.onInputChanged = options.onInputChanged;
+        this.handleInputEvent = options.handleInputEvent;
 
         this.fitAddon = new FitAddon();
         this.loadAddon(this.fitAddon);
@@ -68,8 +71,8 @@ export default class Terminal extends XTerm {
                 return;
             }
             const event = e.domEvent;
-            const isControlKey = await this.handleControlKey(event);
-            if (!isControlKey) {
+            const handled = await this.handleControlKey(event);
+            if (!handled) {
                 const key = event.key;
                 this.insertText(key);
             }
@@ -97,6 +100,7 @@ export default class Terminal extends XTerm {
 
     fit() {
         this.fitAddon.fit();
+        this._triggerOnCursorChangedListeners();
     }
 
     // Cursor
@@ -104,6 +108,7 @@ export default class Terminal extends XTerm {
     cursorTo(pos) {
         this.cursor = pos;
         this.write(escapes.cursorTo(PREFIX.length + pos));
+        this._triggerOnCursorChangedListeners();
     }
 
     // Line
@@ -119,8 +124,11 @@ export default class Terminal extends XTerm {
     }
 
     clear() {
+        this.currentLine = '';
         this.write(escapes.clearScreen);
         this.startNewLine();
+        this.onInputChanged?.(this.currentLine);
+        this._triggerOnCursorChangedListeners();
     }
 
     // Text
@@ -145,9 +153,9 @@ export default class Terminal extends XTerm {
         this.currentLine = this.currentLine.slice(0, this.cursor) + output + this.currentLine.slice(this.cursor);
         if (isCursorAtEnd) {
             this.write(output);
+            this.onInputChanged?.(this.currentLine);
         } else {
-            this.eraseLine();
-            this.write(this.currentLine);
+            this.writeLine(this.currentLine);
         }
         if (duplicate) {
             this.cursor++;
@@ -170,9 +178,29 @@ export default class Terminal extends XTerm {
         }
     }
 
+    writeLine(line, updateCursor) {
+        this.currentLine = line;
+        this.eraseLine();
+        this.write(line);
+        this.onInputChanged?.(this.currentLine);
+        if (updateCursor) {
+            this.cursorTo(this.currentLine.length);
+        }
+    }
+
     // Event
 
+    _triggerOnCursorChangedListeners() {
+        setTimeout(() => {
+            const rect = this.textarea.getBoundingClientRect();
+            this.onCursorChanged?.(rect.right, rect.bottom);
+        });
+    }
+
     async handleControlKey(event) {
+        if (this.handleInputEvent?.(event)) {
+            return true;
+        }
         const key = event.key;
         switch (key) {
             case 'Enter':
@@ -189,58 +217,49 @@ export default class Terminal extends XTerm {
                 }
                 this.startNewLine();
                 this.currentLine = '';
-                this.cursor = 0;
+                this.cursorTo(0);
                 break;
             case 'ArrowUp':
                 if (this.history.length) {
-                    this.currentLine = this.history[this.historyIndex];
+                    const currentLine = this.history[this.historyIndex];
                     if (this.historyIndex) {
                         this.historyIndex--;
                     }
-                    this.eraseLine();
-                    this.write(this.currentLine);
-                    this.cursorTo(this.currentLine.length);
+                    this.writeLine(currentLine, true);
                 }
                 break;
-            case 'ArrowDown':
+            case 'ArrowDown': {
+                let currentLine = '';
                 if (this.historyIndex < this.history.length - 1) {
                     this.historyIndex++;
-                    this.currentLine = this.history[this.historyIndex];
-                } else {
-                    this.currentLine = '';
+                    currentLine = this.history[this.historyIndex];
                 }
-                this.eraseLine();
-                this.write(this.currentLine);
-                this.cursorTo(this.currentLine.length);
+                this.writeLine(currentLine, true);
+            }
                 break;
             case 'ArrowLeft':
                 if (this.cursor > 0) {
-                    this.cursor -= 1;
-                    this.write(escapes.cursorBackward(1));
+                    this.cursorTo(this.cursor - 1);
                 }
                 break;
             case 'ArrowRight':
                 if (this.cursor >= 0 && this.cursor < this.currentLine.length) {
-                    this.cursor += 1;
-                    this.write(escapes.cursorForward(1));
+                    this.cursorTo(this.cursor + 1);
                 }
                 break;
             case 'Backspace':
                 if (this.cursor > 0) {
-                    this.currentLine = this.currentLine.substr(0, this.cursor - 1)
-                        + this.currentLine.substr(this.cursor);
-                    this.cursor -= 1;
-                    this.eraseLine();
-                    this.write(this.currentLine);
-                    this.cursorTo(this.cursor);
+                    const currentLine = this.currentLine.substring(0, this.cursor - 1)
+                        + this.currentLine.substring(this.cursor);
+                    this.writeLine(currentLine);
+                    this.cursorTo(this.cursor - 1);
                 }
                 break;
             case 'Delete':
                 if (this.cursor >= 0) {
-                    this.currentLine = this.currentLine.substr(0, this.cursor)
-                        + this.currentLine.substr(this.cursor + 1);
-                    this.eraseLine();
-                    this.write(this.currentLine);
+                    const currentLine = this.currentLine.substring(0, this.cursor)
+                        + this.currentLine.substring(this.cursor + 1);
+                    this.writeLine(currentLine);
                     this.cursorTo(this.cursor);
                 }
                 break;
@@ -257,7 +276,7 @@ export default class Terminal extends XTerm {
                         await navigator.clipboard.writeText(selection);
                     } else {
                         this.currentLine = '';
-                        this.cursor = 0;
+                        this.cursorTo(0);
                         this.writeln('');
                         this.startNewLine();
                     }

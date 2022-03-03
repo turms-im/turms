@@ -336,7 +336,7 @@ export default {
             }
             Object.entries(record).forEach(([key, value]) => {
                 if (dynamicInputFieldIds.includes(key)) {
-                    const values = value.filter(i => i)
+                    const values = value.filter(Boolean)
                         .map(i => i.value);
                     if (values.length) {
                         record[key] = values;

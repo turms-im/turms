@@ -25,17 +25,28 @@
             ref="terminal"
             class="client-terminal__container"
         />
+        <autocomplete
+            v-if="options.ast"
+            ref="autocomplete"
+            :items="astItems"
+            @selectItem="selectItem"
+        />
     </div>
 </template>
 <script>
-import Terminal from './terminal';
+import AstMixin from './ast-mixin';
+import Autocomplete from './autocomplete';
 import Icon from '../../common/icon';
+import Terminal from './terminal';
+import TrieSearch from 'trie-search';
 
 export default {
     name: 'client-terminal',
     components: {
+        Autocomplete,
         Icon
     },
+    mixins: [AstMixin],
     props: {
         title: {
             type: String,
@@ -50,21 +61,95 @@ export default {
             required: true
         }
     },
+    data() {
+        return {
+            astItems: []
+        };
+    },
     mounted() {
-        this.terminal = new Terminal(this.$refs.terminal, this.options);
+        if (this.options.ast) {
+            this.allDeclarations = {};
+            for (const declaration of this.options.ast) {
+                this.allDeclarations[declaration.name] = declaration;
+            }
+            this.rootTrie = new TrieSearch(null, {
+                keepAll: true,
+                cache: false
+            });
+            for (const declaration of this.options.astRoot) {
+                this.rootTrie.map(declaration.name.toLowerCase(), declaration);
+            }
+        }
+        this.terminal = new Terminal(this.$refs.terminal, {
+            ...this.options,
+            onCursorChanged: this.onCursorChanged,
+            onInputChanged: this.onInputChanged,
+            handleInputEvent: this.handleInputEvent
+        });
     },
     beforeUnmount() {
         this.terminal.dispose();
     },
     methods: {
+        selectItem(item) {
+            const terms = this.terminal.currentLine.split('.');
+            terms.pop();
+            const line = terms.concat(item.name).join('.');
+            this.terminal.writeLine(line, true);
+            this.terminal.focus();
+        },
         clear() {
             this.terminal.clear();
         },
-        onSettingClick() {
-            this.$emit('settingClick');
-        },
         getTerminal() {
             return this.terminal;
+        },
+        handleInputEvent(event) {
+            const autocomplete = this.$refs.autocomplete;
+            if (autocomplete?.isVisible) {
+                if (event.key === 'Enter') {
+                    autocomplete.select();
+                    return true;
+                } else if (event.key === 'ArrowDown') {
+                    autocomplete.scrollDown();
+                    return true;
+                } else if (event.key === 'ArrowUp') {
+                    autocomplete.scrollUp();
+                    return true;
+                }
+            }
+            return false;
+        },
+        onCursorChanged(x, y) {
+            this.$refs.autocomplete?.updatePosition(x + 4, y + 8);
+        },
+        onInputChanged(text) {
+            // TODO: support param suggestion
+            const terms = text.split('.');
+            let trie = this.rootTrie;
+            const length = terms.length;
+            for (let i = 0; i < length; i++) {
+                const term = terms[i];
+                const matches = trie.search(term.toLowerCase());
+                if (i === length - 1) {
+                    if (trie && matches[0]?.name !== term) {
+                        this.astItems = term ? matches : trie.indexed.all;
+                    } else {
+                        this.astItems = [];
+                    }
+                } else {
+                    const match = matches.find(item => item.name === term);
+                    const declaration = match == null ? null : this.allDeclarations[match.type];
+                    if (declaration) {
+                        trie = this.parseTrie(declaration);
+                    } else {
+                        break;
+                    }
+                }
+            }
+        },
+        onSettingClick() {
+            this.$emit('settingClick');
         }
     }
 };

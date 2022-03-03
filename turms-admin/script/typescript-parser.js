@@ -19,35 +19,27 @@ const {
 } = require('typescript');
 
 const Visibility = {
-    Private: 0,
-    Protected: 1,
-    Public: 2
+    Private: 'private',
+    Protected: 'protected',
+    Public: 'public'
 };
 
 function getNodeName(node) {
     return node.name?.getText();
 }
 
+const modifiers = {
+    [SyntaxKind.PublicKeyword]: Visibility.Public,
+    [SyntaxKind.ProtectedKeyword]: Visibility.Protected,
+    [SyntaxKind.PrivateKeyword]: Visibility.Private
+};
+
 function getNodeVisibility(node) {
-    if (!node.modifiers) {
-        return;
-    }
-    for (const modifier of node.modifiers) {
-        switch (modifier.kind) {
-            case SyntaxKind.PublicKeyword:
-                return Visibility.Public;
-            case SyntaxKind.ProtectedKeyword:
-                return Visibility.Protected;
-            case SyntaxKind.PrivateKeyword:
-                return Visibility.Private;
-            default:
-                break;
-        }
-    }
+    return node.modifiers?.find(modifier => modifiers[modifier.kind]);
 }
 
 function getNodeType(node) {
-    return node?.type?.getText();
+    return node.type?.getText();
 }
 
 function containsModifier(node, modifierKind) {
@@ -58,6 +50,10 @@ function isAsync(node) {
     return containsModifier(node, SyntaxKind.AsyncKeyword);
 }
 
+function isConst(node) {
+    return node.kind === SyntaxKind.ConstKeyword;
+}
+
 function isOptional(node) {
     return !!node.questionToken;
 }
@@ -66,8 +62,13 @@ function isStatic(node) {
     return containsModifier(node, SyntaxKind.StaticKeyword);
 }
 
-function isConst(node) {
-    return node?.kind === SyntaxKind.ConstKeyword;
+function isNotStatic(node) {
+    return !isStatic(node);
+}
+
+function isVisible(node) {
+    const visibility = getNodeVisibility(node);
+    return !visibility || visibility === 'public';
 }
 
 function parseEnum(node) {
@@ -102,10 +103,9 @@ function parseVariables(node) {
 }
 
 function parseInterface(node) {
-    const interfaceDeclaration = {
+    const declaration = {
         syntax: 'interface',
         name: getNodeName(node),
-        typeParameters: (node.typeParameters || []).map(param => param.getText()),
         properties: [],
         methods: []
     };
@@ -113,28 +113,28 @@ function parseInterface(node) {
     if (node.members) {
         node.members.forEach(member => {
             if (isPropertySignature(member)) {
-                interfaceDeclaration.properties.push({
-                    name: getNodeName(node),
-                    visibility: Visibility.Public,
-                    type: getNodeType(node),
-                    isOptional: isOptional(member),
-                    isStatic: isStatic(member)
-                });
+                if (isNotStatic(member)) {
+                    declaration.properties.push({
+                        name: getNodeName(member),
+                        type: getNodeType(member),
+                        isOptional: isOptional(member)
+                    });
+                }
             } else if (isMethodSignature(member)) {
-                interfaceDeclaration.methods.push({
-                    name: getNodeName(node),
-                    isAbstract: true,
-                    visibility: Visibility.Public,
-                    type: getNodeType(node),
-                    isOptional: isOptional(member),
-                    isStatic: isStatic(member),
-                    isAsync: isAsync(member),
-                    parameters: parseMethodParams(member)
-                });
+                if (isNotStatic(member)) {
+                    declaration.methods.push({
+                        name: getNodeName(member),
+                        isAbstract: true,
+                        type: getNodeType(member),
+                        isOptional: isOptional(member),
+                        isAsync: isAsync(member),
+                        parameters: parseMethodParams(member)
+                    });
+                }
             }
         });
     }
-    return interfaceDeclaration;
+    return declaration;
 }
 
 function parseMethodParams(node) {
@@ -146,20 +146,17 @@ function parseMethodParams(node) {
                     type: getNodeType(param)
                 });
             } else if (isObjectBindingPattern(param.name) || isArrayBindingPattern(param.name)) {
-                const elements = param.name.elements;
-                let types = [];
-                const boundParam = {};
-                if (param.type && isTypeReferenceNode(param.type)) {
-                    boundParam.typeReference = getNodeType(param);
-                } else if (param.type && isTypeLiteralNode(param.type)) {
-                    types = param.type.elementTypes.map(type => type.getText())
-                        || param.type.members.filter(member => isPropertySignature(member)).map(signature => signature.type.getText());
-                }
-                boundParam.parameters = elements.map((bindingElement, index) => ({
-                    name: bindingElement.name.getText(),
-                    type: types[index]
-                }));
-                params.push(boundParam);
+                const types = param.type && isTypeLiteralNode(param.type)
+                    ? (param.type.elementTypes.map(type => type.getText())
+                        || param.type.members.filter(member => isPropertySignature(member)).map(signature => signature.type.getText()))
+                    : [];
+                params.push({
+                    typeReference: param.type && isTypeReferenceNode(param.type) ? getNodeType(param) : undefined,
+                    parameters: param.name.elements.map((bindingElement, index) => ({
+                        name: bindingElement.name.getText(),
+                        type: types[index]
+                    }))
+                });
             }
             return params;
         },
@@ -168,9 +165,9 @@ function parseMethodParams(node) {
 }
 
 function parseClass(node) {
-    const classDeclaration = {
+    const declaration = {
+        syntax: 'class',
         name: node.name.text,
-        typeParameters: (node.typeParameters || []).map(param => param.getText()),
         properties: [],
         accessors: [],
         methods: []
@@ -179,32 +176,33 @@ function parseClass(node) {
     if (node.members) {
         node.members.forEach((member) => {
             if (isPropertyDeclaration(member)) {
-                classDeclaration.properties.push({
-                    name: getNodeName(member),
-                    visibility: getNodeVisibility(member),
-                    type: getNodeType(member),
-                    isOptional: isOptional(member),
-                    isStatic: isStatic(member)
-                });
+                if (isVisible(member) && isNotStatic(member)) {
+                    declaration.properties.push({
+                        syntax: 'property',
+                        name: getNodeName(member),
+                        type: getNodeType(member),
+                        isOptional: isOptional(member)
+                    });
+                }
             } else if (isGetAccessorDeclaration(member)) {
-                classDeclaration.accessors.push({
-                    syntax: 'get_accessor',
-                    name: getNodeName(member),
-                    visibility: getNodeVisibility(member),
-                    type: getNodeType(member),
-                    isStatic: isStatic(member)
-                });
+                if (isVisible(member) && isNotStatic(member)) {
+                    declaration.accessors.push({
+                        syntax: 'get_accessor',
+                        name: getNodeName(member),
+                        type: getNodeType(member)
+                    });
+                }
             } else if (isSetAccessorDeclaration(member)) {
-                classDeclaration.accessors.push({
-                    syntax: 'set_accessor',
-                    name: getNodeName(member),
-                    visibility: getNodeVisibility(member),
-                    type: getNodeType(member),
-                    isStatic: isStatic(member)
-                });
+                if (isVisible(member) && isNotStatic(member)) {
+                    declaration.accessors.push({
+                        syntax: 'set_accessor',
+                        name: getNodeName(member),
+                        type: getNodeType(member)
+                    });
+                }
             } else if (isConstructorDeclaration(member)) {
-                classDeclaration.constructor = {
-                    name: classDeclaration.name,
+                declaration.constructor = {
+                    name: declaration.name,
                     parameters: (member.parameters || []).flatMap(parameter => {
                         if (isIdentifier(parameter.name)) {
                             return {
@@ -225,18 +223,18 @@ function parseClass(node) {
                     })
                 };
             } else if (isMethodDeclaration(member)) {
-                classDeclaration.methods.push({
-                    name: getNodeName(member),
-                    visibility: getNodeVisibility(member),
-                    type: getNodeType(member),
-                    isOptional: isOptional(member),
-                    isStatic: isStatic(member),
-                    parameters: parseMethodParams(member)
-                });
+                if (isVisible(member) && isNotStatic(member)) {
+                    declaration.methods.push({
+                        name: getNodeName(member),
+                        type: getNodeType(member),
+                        isOptional: isOptional(member),
+                        parameters: parseMethodParams(member)
+                    });
+                }
             }
         });
     }
-    return classDeclaration;
+    return declaration;
 }
 
 module.exports = {
@@ -248,8 +246,7 @@ module.exports = {
             true,
             ScriptKind.TS
         );
-        const resource = source.getChildAt(0);
-        const nodes = resource.getChildren();
+        const nodes = source.getChildAt(0).getChildren();
         const declarations = [];
         for (let node = nodes.shift(); node; node = nodes.shift()) {
             switch (node.kind) {
@@ -268,15 +265,12 @@ module.exports = {
                 case SyntaxKind.ClassDeclaration:
                     declarations.push(parseClass(node));
                     break;
-                default:
-                    break;
             }
-            if ([SyntaxKind.ClassDeclaration,
+            if (![SyntaxKind.ClassDeclaration,
                 SyntaxKind.ModuleDeclaration,
                 SyntaxKind.FunctionDeclaration].includes(node.kind)) {
-                continue;
+                nodes.unshift(...node.getChildren());
             }
-            nodes.unshift(...node.getChildren());
         }
         return declarations;
     }

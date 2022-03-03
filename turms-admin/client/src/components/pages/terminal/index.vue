@@ -17,7 +17,6 @@
         <a-modal
             v-model:visible="modalVisible"
             :title="$t('settings')"
-            @cancel="handleCancel"
             @ok="handleOk"
         >
             <a-form
@@ -55,34 +54,72 @@
 <script>
 import TurmsClient from 'turms-client-js';
 import ClientTerminal from './client-terminal';
+import Ast from '../../../assets/turms-client-ast.json';
 
 const ONBOARD_MESSAGES = [
     `Current version of turms-client-js: ${TurmsClient.version}`,
-    'Input commands, e.g. "user.login(1, 123)"',
+    'Input commands, e.g. "user.login(1, \'123\')"',
     '"help" for details'
 ];
 const HELP = `* Builtin Objects:
     * Turms Client: client
     * Services:
-        * conversation (convo)
-        * group,
-        * message (msg)
-        * notification (notif)
-        * storage (stge)
+        * conversation
+        * group
+        * message
+        * notification
+        * storage
         * user
 * Command Examples:
-    * user.login(1, 123)
-    * msg.sendMessage(false, 1, null, 'This is my message')
+    * user.login(1, '123')
+    * message.sendMessage(false, 1, null, 'This is my message')
 `;
 const CONTEXT = `
 const client = this;
-const conversation = convo = client.conversationService;
+const conversation = client.conversationService;
 const group = client.groupService;
-const message = msg = client.messageService;
-const notification = notif = client.notificationService;
-const storage = stge = client.storageService;
+const message = client.messageService;
+const notification = client.notificationService;
+const storage = client.storageService;
 const user = client.userService;
 return `;
+const AST_ROOT = [
+    {
+        name: 'help'
+    },
+    {
+        name: 'this',
+        type: 'TurmsClient'
+    },
+    {
+        name: 'client',
+        type: 'TurmsClient'
+    },
+    {
+        name: 'conversation',
+        type: 'ConversationService'
+    },
+    {
+        name: 'group',
+        type: 'GroupService'
+    },
+    {
+        name: 'message',
+        type: 'MessageService'
+    },
+    {
+        name: 'notification',
+        type: 'NotificationService'
+    },
+    {
+        name: 'storage',
+        type: 'StorageService'
+    },
+    {
+        name: 'user',
+        type: 'UserService'
+    }
+].map(val => ({syntax: 'variable', ...val}));
 const MESSAGE_FOR_VOID_FUNCTION = '(Done)';
 
 export default {
@@ -102,7 +139,9 @@ export default {
             settings,
             formState: this.$util.copy(settings),
             cliTerminalOptions: {
-                history: this.$storage.getArray(this.$rs.storage.terminalCommandHistory)
+                history: this.$storage.getArray(this.$rs.storage.terminalCommandHistory),
+                ast: Ast,
+                astRoot: AST_ROOT
             },
             notificationTerminalOptions: {
                 disableStdin: true
@@ -112,17 +151,15 @@ export default {
     mounted() {
         this.initCliTerminal();
         this.notificationTerminal = this.$refs.notificationTerminal.getTerminal();
-        this.client = this.initClient(this.notificationTerminal);
+        this.client = this.initClient();
     },
     methods: {
         openSettingModal() {
+            this.formState = this.$util.copy(this.settings);
             this.modalVisible = true;
         },
         closeSettingModal() {
             this.modalVisible = false;
-        },
-        handleCancel() {
-            this.formState = this.$util.copy(this.settings);
         },
         async handleOk() {
             let values;
@@ -130,7 +167,6 @@ export default {
                 values = await this.$refs.form.validateFields();
             } catch (errorInfo) {
                 return;
-                // do nothing
             }
             const isClientSettingsChanged = this.settings.useSharedContext !== values.useSharedContext
                 || this.settings.url !== values.url;
@@ -140,7 +176,7 @@ export default {
             };
             if (isClientSettingsChanged) {
                 await this.client.close();
-                this.client = this.initClient(this.notificationTerminal);
+                this.client = this.initClient();
                 this.notificationTerminal.writeMsg({
                     msg: 'The previous client has been closed, and a new client with the new settings have been created'
                 });
@@ -148,13 +184,13 @@ export default {
             this.closeSettingModal();
         },
         async executeCmd(cmd) {
+            if (cmd === 'help') {
+                return {
+                    type: 'info',
+                    msg: HELP.replace(/\n/g, '\r\n')
+                };
+            }
             try {
-                if (cmd === 'help') {
-                    return {
-                        type: 'info',
-                        msg: HELP.replace(/\n/g, '\r\n')
-                    };
-                }
                 const func = new Function(CONTEXT + cmd);
                 let result = func.call(this.client);
                 let isFunction;
@@ -164,13 +200,11 @@ export default {
                 } else if (cmd.endsWith(')')) {
                     isFunction = true;
                 }
-                if (result == null && isFunction) {
-                    result = MESSAGE_FOR_VOID_FUNCTION;
-                } else {
-                    result = this.stringify(result);
-                }
+                result = result == null && isFunction
+                    ? MESSAGE_FOR_VOID_FUNCTION
+                    : this.stringify(result);
                 return {
-                    type: 'success',
+                    type: isFunction ? 'success' : 'info',
                     msg: result,
                     newLine: true
                 };
@@ -182,7 +216,8 @@ export default {
                 };
             }
         },
-        initClient(terminal) {
+        initClient() {
+            const terminal = this.notificationTerminal;
             const client = new TurmsClient({
                 wsUrl: this.settings.url,
                 useSharedContext: this.settings.useSharedContext

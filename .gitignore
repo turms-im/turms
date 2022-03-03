@@ -41,9 +41,9 @@ turms-gateway/target/
 turms-service/dist/log/
 turms-service/target/
 
-# We build the "ast.json" when installing turms-admin
+# We build the "turms-client-ast.json" when installing turms-admin
 # so there is no need to git the file.
-turms-admin/client/src/assets/ast.json
+turms-admin/client/src/assets/turms-client-ast.json
 turms-admin/cypress/screenshots/
 turms-admin/cypress/videos/
 turms-admin/data/

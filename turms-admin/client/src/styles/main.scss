@@ -1,6 +1,18 @@
+body {
+    overflow-y: hidden;
+}
+
+td {
+    word-break: break-all;
+}
+
 .ant-breadcrumb {
     display: flex;
     align-items: center;
+}
+
+.ant-message-notice-content {
+    max-width: 500px;
 }
 
 .ant-table-hide-scrollbar {
@@ -18,7 +30,7 @@
 }
 
 ::-webkit-scrollbar-track {
-    background: rgb(250 250 250);
+    background: #fafafaff;
 }
 
 ::-webkit-scrollbar-thumb {

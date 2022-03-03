@@ -40,12 +40,4 @@ export default {
 
 <style lang="scss">
 @import "styles/main";
-
-.ant-message-notice-content {
-    max-width: 500px;
-}
-
-td {
-    word-break: break-all;
-}
 </style>

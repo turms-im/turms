@@ -147,7 +147,7 @@ export default {
         let selectedKey;
         const fullPath = window.location.pathname || '';
         const paths = fullPath.split('/')
-            .filter(path => path);
+            .filter(Boolean);
         if (paths.length) {
             const fullPathExists = menuItems
                 .find(item => item.key === fullPath || item.children?.find(sub => sub.key === fullPath));
