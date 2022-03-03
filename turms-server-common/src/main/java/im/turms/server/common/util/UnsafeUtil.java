@@ -42,4 +42,7 @@ public class UnsafeUtil {
         }
     }
 
+    private UnsafeUtil() {
+    }
+
 }

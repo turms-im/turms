@@ -170,7 +170,7 @@ public class PluginManager {
             byte[] bytes = script.getBytes(StandardCharsets.UTF_8);
             byte[] digest = MessageDigestPool.getSha1().digest(bytes);
             String name = new String(Base16.encode(digest, false));
-            Path path = pluginDir.resolve("_network_" + name);
+            Path path = pluginDir.resolve("_network_" + name + ".js");
             if (Files.notExists(path)) {
                 Files.write(path, bytes, StandardOpenOption.CREATE_NEW);
             }

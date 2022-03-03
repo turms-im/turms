@@ -20,7 +20,7 @@ package im.turms.server.common.bo.location;
 /**
  * Note that though the first number is always the latitude and the second is the longitude,
  * e.g. "21.3069°, -157.8583°",
- * but the geoadd command in Redis requires the longitude come firsts.
+ * the geoadd command in Redis requires the longitude come firsts.
  */
 public record Coordinates(
         // x, -180 to 180, West to East

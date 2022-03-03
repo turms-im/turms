@@ -40,8 +40,8 @@ public final class DateUtil {
     public static String toStr(long timeInMillis) {
         Calendar calendar = CALENDAR_THREAD_LOCAL.get();
         calendar.setTimeInMillis(timeInMillis);
-        StringBuilder sb = new StringBuilder(DATE_TIME_LENGTH);
-        sb.append(calendar.get(Calendar.YEAR))
+        return new StringBuilder(DATE_TIME_LENGTH)
+                .append(calendar.get(Calendar.YEAR))
                 .append('-')
                 .append(twoDigit(calendar.get(Calendar.MONTH) + 1))
                 .append('-')
@@ -53,8 +53,8 @@ public final class DateUtil {
                 .append(':')
                 .append(twoDigit(calendar.get(Calendar.SECOND)))
                 .append('.')
-                .append(threeDigit(calendar.get(Calendar.MILLISECOND)));
-        return sb.toString();
+                .append(threeDigit(calendar.get(Calendar.MILLISECOND)))
+                .toString();
     }
 
     public static byte[] toBytes(long timeInMillis) {

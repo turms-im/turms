@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
  */
 public class RefCntAwareByteBuf extends WrappedByteBuf {
 
-    public static final AtomicReferenceFieldUpdater<RefCntAwareByteBuf, Runnable>
+    private static final AtomicReferenceFieldUpdater<RefCntAwareByteBuf, Runnable>
             UPDATER = AtomicReferenceFieldUpdater.newUpdater(RefCntAwareByteBuf.class, Runnable.class, "onCountdownRefCntZero");
 
     private volatile Runnable onCountdownRefCntZero;

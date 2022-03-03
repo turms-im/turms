@@ -76,12 +76,10 @@ public abstract class BaseTurmsApplication {
             CollectionUtil.add(Set.of(), 1);
         } catch (Exception e) {
             RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
-            String jvmInfo = "%s/%s/%s"
+            String message = "The current JVM [%s/%s/%s] cannot work with turms server"
                     .formatted(bean.getVmName(),
                             bean.getVmVersion(),
                             bean.getVmVendor());
-            String message = "The current JVM [%s] cannot work with turms server"
-                    .formatted(jvmInfo);
             throw new IllegalStateException(message, e);
         }
     }
