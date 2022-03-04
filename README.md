@@ -167,3 +167,15 @@ Original Project Documentation：https://turms-im.github.io/docs
 4. If the Turms project is not profitable, what is the quality of its project?
 
    Our documentation and source code have answered this question for us, and in the open source community, there is no open source IM project that can compete with the Turms project in medium and large IM application scenarios. Another thing to mention is that commercial projects do not mean high quality, and even the quality of documentation and code for many commercial projects is shocking.
+
+## Special Thanks
+
+Mainly developed in IntelliJ IDEA and CLion.
+
+License kindly provided by [JetBrains Community Support Team](https://www.jetbrains.com/community/opensource/#support).
+
+<p align="center">
+  <img height="100" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg?_gl=1*1xnabwe*_ga*NTkwMTMxNTcuMTY0MTM3MjM3MQ..*_ga_V0XZL7QHEB*MTY0NjQwMDU3OS43LjEuMTY0NjQwMTE5NS42MA..&_ga=2.246007808.508918265.1646398289-59013157.1641372371">
+  <img height="100" src="https://resources.jetbrains.com/storage/products/company/brand/logos/IntelliJ_IDEA.svg?_gl=1*1lzm1us*_ga*NTkwMTMxNTcuMTY0MTM3MjM3MQ..*_ga_V0XZL7QHEB*MTY0NjQwMDU3OS43LjEuMTY0NjQwMTM5NC4w&_ga=2.207800214.508918265.1646398289-59013157.1641372371">
+  <img height="100" src="https://resources.jetbrains.com/storage/products/company/brand/logos/CLion.svg?_gl=1*1lzm1us*_ga*NTkwMTMxNTcuMTY0MTM3MjM3MQ..*_ga_V0XZL7QHEB*MTY0NjQwMDU3OS43LjEuMTY0NjQwMTM5NC4w&_ga=2.207800214.508918265.1646398289-59013157.1641372371">
+</p>

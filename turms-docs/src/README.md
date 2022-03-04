@@ -174,3 +174,15 @@ Turms项目采用`Apache License 2.0`协议，因此我们并不关心使用者�
 4. Turms项目如果不盈利，那它的项目质量如何？
 
    我们的文档与源码已经替我们回答了这个问题，并且在全球开源界，暂时还没有一个开源IM项目能跟Turms项目在中大型IM应用场景中竞争。另外一提的是，商业项目不代表质量高，甚至很多商业项目的文档与代码质量是令人触目惊心的水平。  
+
+## 特别感谢
+
+Turms项目主要在IntelliJ IDEA与CLion这两个IDE上进行开发。
+
+感谢[JetBrains Community Support Team](https://www.jetbrains.com/community/opensource/#support)为非商业开源项目提供的License。
+
+<p align="center">
+  <img height="100" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg?_gl=1*1xnabwe*_ga*NTkwMTMxNTcuMTY0MTM3MjM3MQ..*_ga_V0XZL7QHEB*MTY0NjQwMDU3OS43LjEuMTY0NjQwMTE5NS42MA..&_ga=2.246007808.508918265.1646398289-59013157.1641372371">
+  <img height="100" src="https://resources.jetbrains.com/storage/products/company/brand/logos/IntelliJ_IDEA.svg?_gl=1*1lzm1us*_ga*NTkwMTMxNTcuMTY0MTM3MjM3MQ..*_ga_V0XZL7QHEB*MTY0NjQwMDU3OS43LjEuMTY0NjQwMTM5NC4w&_ga=2.207800214.508918265.1646398289-59013157.1641372371">
+  <img height="100" src="https://resources.jetbrains.com/storage/products/company/brand/logos/CLion.svg?_gl=1*1lzm1us*_ga*NTkwMTMxNTcuMTY0MTM3MjM3MQ..*_ga_V0XZL7QHEB*MTY0NjQwMDU3OS43LjEuMTY0NjQwMTM5NC4w&_ga=2.207800214.508918265.1646398289-59013157.1641372371">
+</p>
