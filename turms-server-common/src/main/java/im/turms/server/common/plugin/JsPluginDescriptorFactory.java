@@ -20,6 +20,8 @@ package im.turms.server.common.plugin;
 import im.turms.server.common.plugin.script.CorruptedScriptException;
 import org.graalvm.polyglot.Value;
 
+import javax.annotation.Nullable;
+import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -29,9 +31,9 @@ public class JsPluginDescriptorFactory extends PluginDescriptorFactory {
 
     private static final String GET_PLUGIN_DESCRIPTOR = "getPluginDescriptor";
 
-    public static JsPluginDescriptor parsePluginDescriptor(Value bindings, String script) {
+    public static JsPluginDescriptor parsePluginDescriptor(Value bindings, String script, @Nullable Path path) {
         Map<String, Object> map = executeGetPluginDescriptor(bindings, script);
-        return createJsPluginDescriptor(map);
+        return createJsPluginDescriptor(map, path);
     }
 
     public static Map<String, Object> executeGetPluginDescriptor(Value bindings, String script) {
@@ -63,13 +65,14 @@ public class JsPluginDescriptorFactory extends PluginDescriptorFactory {
         }
     }
 
-    private static JsPluginDescriptor createJsPluginDescriptor(Map<String, Object> map) {
+    private static JsPluginDescriptor createJsPluginDescriptor(Map<String, Object> map, @Nullable Path path) {
         PluginDescriptor descriptor = createPluginDescriptor(map);
         return new JsPluginDescriptor(descriptor.getId(),
                 descriptor.getVersion(),
                 descriptor.getProvider(),
                 descriptor.getLicense(),
-                descriptor.getDescription());
+                descriptor.getDescription(),
+                path);
     }
 
 }

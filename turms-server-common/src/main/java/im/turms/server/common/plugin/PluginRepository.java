@@ -112,4 +112,15 @@ public class PluginRepository {
         return plugins;
     }
 
+    public List<Plugin> removePlugins(Set<String> ids) {
+        List<Plugin> plugins = new ArrayList<>(ids.size());
+        for (String id : ids) {
+            Plugin plugin = pluginMap.remove(id);
+            if (plugin != null) {
+                plugins.add(plugin);
+            }
+        }
+        return plugins;
+    }
+
 }

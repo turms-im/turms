@@ -18,8 +18,10 @@
 package im.turms.server.common.plugin;
 
 import lombok.Data;
+import lombok.SneakyThrows;
 
 import java.net.URL;
+import java.nio.file.Path;
 
 /**
  * @author James Chen
@@ -29,15 +31,16 @@ public class JavaPluginDescriptor extends PluginDescriptor {
     private final String entryClass;
     private final URL jarUrl;
 
+    @SneakyThrows
     public JavaPluginDescriptor(String id,
                                 String version,
                                 String provider,
                                 String license,
                                 String description,
                                 String entryClass,
-                                URL jarUrl) {
-        super(id, version, provider, license, description);
+                                String jarPath) {
+        super(id, version, provider, license, description, Path.of(jarPath));
         this.entryClass = entryClass;
-        this.jarUrl = jarUrl;
+        this.jarUrl = getPath().toUri().toURL();
     }
 }

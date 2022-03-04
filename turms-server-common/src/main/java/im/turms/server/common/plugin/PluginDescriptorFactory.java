@@ -39,7 +39,7 @@ public abstract class PluginDescriptorFactory {
         String provider = readPropertiesString(properties, PLUGIN_PROVIDER, false);
         String license = readPropertiesString(properties, PLUGIN_LICENSE, false);
         String description = readPropertiesString(properties, PLUGIN_DESCRIPTION, false);
-        return new PluginDescriptor(id, version, provider, license, description);
+        return new PluginDescriptor(id, version, provider, license, description, null);
     }
 
     @Nullable

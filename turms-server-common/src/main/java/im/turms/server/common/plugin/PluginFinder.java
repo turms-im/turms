@@ -44,7 +44,7 @@ public class PluginFinder {
         }
         int size = files.size();
         List<ZipFile> zipFiles = new ArrayList<>(size);
-        List<String> jsScripts = isJsScriptEnabled
+        List<JsFile> jsFiles = isJsScriptEnabled
                 ? new ArrayList<>(size)
                 : Collections.emptyList();
         for (Path path : files) {
@@ -59,13 +59,14 @@ public class PluginFinder {
                 zipFiles.add(file);
             } else if (isJsScriptEnabled && pathStr.endsWith(".js")) {
                 try (FileInputStream stream = new FileInputStream(path.toFile())) {
-                    jsScripts.add(new String(stream.readAllBytes(), StandardCharsets.UTF_8));
+                    String script = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+                    jsFiles.add(new JsFile(script, path));
                 } catch (IOException e) {
                     throw new IllegalStateException("Failed to load the js file: " + path.toAbsolutePath(), e);
                 }
             }
         }
-        return new FindResult(zipFiles, jsScripts);
+        return new FindResult(zipFiles, jsFiles);
     }
 
     private static List<Path> listFiles(Path dir) {
@@ -80,7 +81,7 @@ public class PluginFinder {
 
     public record FindResult(
             List<ZipFile> zipFiles,
-            List<String> jsScripts
+            List<JsFile> jsFiles
     ) {
     }
 }

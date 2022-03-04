@@ -25,6 +25,7 @@ import im.turms.server.common.property.env.common.PluginProperties;
 import im.turms.server.common.security.MessageDigestPool;
 import im.turms.server.common.util.ClassUtil;
 import im.turms.server.common.util.CollectionUtil;
+import im.turms.server.common.util.ThrowableUtil;
 import io.lettuce.core.codec.Base16;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -37,6 +38,7 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import javax.annotation.PreDestroy;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,6 +49,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.zip.ZipFile;
 
 /**
@@ -91,7 +94,7 @@ public class PluginManager {
             engine = Engine.newBuilder()
                     .option("engine.WarnInterpreterOnly", "false")
                     .build();
-            loadJsPlugins(findResult.jsScripts());
+            loadJsPlugins(findResult.jsFiles());
         }
         if (enabled) {
             startPlugins();
@@ -138,20 +141,33 @@ public class PluginManager {
         }
     }
 
-    public void loadJsPlugins(Collection<String> scripts) {
+    public void loadJsPlugins(Collection<JsFile> files) {
+        if (CollectionUtil.isEmpty(files)) {
+            return;
+        }
+        for (JsFile file : files) {
+            loadJsPlugin(file.script(), file.path());
+        }
+    }
+
+    public void loadJsPlugins(Collection<String> scripts, boolean save) {
         if (CollectionUtil.isEmpty(scripts)) {
             return;
         }
         for (String script : scripts) {
-            loadJsPlugins(script);
+            Path path = null;
+            if (save) {
+                path = savePlugin(script);
+            }
+            loadJsPlugin(script, path);
         }
     }
 
-    public void loadJsPlugins(String script) {
+    public void loadJsPlugin(String script, Path path) {
         if (!isJsScriptEnabled) {
             throw new UnsupportedOperationException("JavaScript plugins are disabled because the classes of GraalJS aren't loaded");
         }
-        JsPlugin jsPlugin = JsPluginFactory.create((Engine) engine, script);
+        JsPlugin jsPlugin = JsPluginFactory.create((Engine) engine, script, path);
         Plugin plugin = JavaPluginFactory.create(jsPlugin.descriptor(), jsPlugin.extensions(), context);
         pluginRepository.register(plugin);
     }
@@ -165,16 +181,17 @@ public class PluginManager {
     }
 
     @SneakyThrows
-    public synchronized void savePlugins(Set<String> scripts) {
-        for (String script : scripts) {
-            byte[] bytes = script.getBytes(StandardCharsets.UTF_8);
-            byte[] digest = MessageDigestPool.getSha1().digest(bytes);
-            String name = new String(Base16.encode(digest, false));
-            Path path = pluginDir.resolve("_network_" + name + ".js");
+    private Path savePlugin(String script) {
+        byte[] bytes = script.getBytes(StandardCharsets.UTF_8);
+        byte[] digest = MessageDigestPool.getSha1().digest(bytes);
+        String name = new String(Base16.encode(digest, false));
+        Path path = pluginDir.resolve("_network_" + name + ".js");
+        synchronized (this) {
             if (Files.notExists(path)) {
                 Files.write(path, bytes, StandardOpenOption.CREATE_NEW);
             }
         }
+        return path;
     }
 
     public <T extends ExtensionPoint> List<T> getExtensionPoints(Class<T> clazz) {
@@ -195,42 +212,64 @@ public class PluginManager {
 
     public int startPlugins(Set<String> ids) {
         List<Plugin> plugins = pluginRepository.getPlugins(ids);
-        for (Plugin plugin : plugins) {
-            for (TurmsExtension extension : plugin.extensions()) {
-                extension.start();
-            }
-        }
-        return plugins.size();
+        return executeOnExtensions(plugins, TurmsExtension::start, "starting", "Caught errors while starting some extensions");
     }
 
     public int stopPlugins(Set<String> ids) {
         List<Plugin> plugins = pluginRepository.getPlugins(ids);
-        for (Plugin plugin : plugins) {
-            for (TurmsExtension extension : plugin.extensions()) {
-                extension.stop();
-            }
-        }
-        return plugins.size();
+        return stopPlugins(plugins);
+    }
+
+    public int stopPlugins(List<Plugin> plugins) {
+        return executeOnExtensions(plugins, TurmsExtension::stop, "stopping", "Caught errors while stopping some extensions");
     }
 
     public int resumePlugins(Set<String> ids) {
         List<Plugin> plugins = pluginRepository.getPlugins(ids);
-        for (Plugin plugin : plugins) {
-            for (TurmsExtension extension : plugin.extensions()) {
-                extension.resume();
-            }
-        }
-        return plugins.size();
+        return executeOnExtensions(plugins, TurmsExtension::resume, "resuming", "Caught errors while resuming some extensions");
     }
 
     public int pausePlugins(Set<String> ids) {
         List<Plugin> plugins = pluginRepository.getPlugins(ids);
+        return executeOnExtensions(plugins, TurmsExtension::pause, "pausing", "Caught errors while pausing some extensions");
+    }
+
+    private int executeOnExtensions(List<Plugin> plugins,
+                                    Consumer<TurmsExtension> consumer,
+                                    String action,
+                                    String errorMessage) {
+        List<Runnable> runnables = new ArrayList<>(plugins.size() * 2);
         for (Plugin plugin : plugins) {
             for (TurmsExtension extension : plugin.extensions()) {
-                extension.pause();
+                runnables.add(() -> {
+                    try {
+                        consumer.accept(extension);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Caught an error while %s the extension %s from the plugin %s"
+                                .formatted(action, extension.getClass().getName(), plugin.descriptor().getId()), e);
+                    }
+                });
             }
         }
+        ThrowableUtil.delayError(runnables, errorMessage);
         return plugins.size();
+    }
+
+    public void deletePlugins(Set<String> ids, boolean deleteLocalFiles) {
+        List<Plugin> plugins = pluginRepository.removePlugins(ids);
+        stopPlugins(plugins);
+        if (deleteLocalFiles) {
+            for (Plugin plugin : plugins) {
+                try {
+                    Path path = plugin.descriptor().getPath();
+                    if (path != null) {
+                        Files.deleteIfExists(path);
+                    }
+                } catch (IOException e) {
+                    // ignored
+                }
+            }
+        }
     }
 
     public <T extends ExtensionPoint> boolean hasRunningExtensions(Class<T> extensionPointClass) {

@@ -125,6 +125,7 @@ public enum AdminPermission {
     CLUSTER_SETTING_QUERY,
 
     PLUGIN_CREATE,
+    PLUGIN_DELETE,
     PLUGIN_UPDATE,
     PLUGIN_QUERY;
 

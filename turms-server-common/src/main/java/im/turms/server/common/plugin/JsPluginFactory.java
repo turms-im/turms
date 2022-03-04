@@ -31,6 +31,7 @@ import org.graalvm.polyglot.Value;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -72,7 +73,7 @@ public class JsPluginFactory {
         }
     }
 
-    public static JsPlugin create(Engine engine, String script) {
+    public static JsPlugin create(Engine engine, String script, Path path) {
         Context context = Context.newBuilder(JS_LANGUAGE_TYPE)
                 .allowHostAccess(HostAccess.ALL)
                 .allowHostClassLookup(className -> true)
@@ -82,7 +83,7 @@ public class JsPluginFactory {
         context.eval(PLUGIN_CONTEXT);
         context.eval(source);
         Value bindings = context.getBindings(JS_LANGUAGE_TYPE);
-        JsPluginDescriptor descriptor = JsPluginDescriptorFactory.parsePluginDescriptor(bindings, script);
+        JsPluginDescriptor descriptor = JsPluginDescriptorFactory.parsePluginDescriptor(bindings, script, path);
         List<TurmsExtension> extensions = createExtensions(bindings, bindings.getMemberKeys());
         new JsContext(descriptor.getId()).bind(context, bindings);
         return new JsPlugin(context, descriptor, extensions);

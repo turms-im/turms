@@ -17,11 +17,15 @@
 
 package im.turms.server.common.plugin;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import java.nio.file.Path;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
 @Data
 public class PluginDescriptor {
     private final String id;
@@ -29,4 +33,6 @@ public class PluginDescriptor {
     private final String provider;
     private final String license;
     private final String description;
+
+    private final Path path;
 }

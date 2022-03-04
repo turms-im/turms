@@ -20,8 +20,6 @@ package im.turms.server.common.plugin;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -53,7 +51,7 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
             try (file) {
                 JavaPluginDescriptor pluginDescriptor;
                 try {
-                    pluginDescriptor = tryCreatePluginDescriptor(file, Path.of(name).toUri().toURL());
+                    pluginDescriptor = tryCreatePluginDescriptor(file, name);
                     if (pluginDescriptor != null) {
                         descriptors.add(pluginDescriptor);
                     }
@@ -68,7 +66,7 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
     }
 
     @Nullable
-    private static JavaPluginDescriptor tryCreatePluginDescriptor(ZipFile file, URL jarUrl) {
+    private static JavaPluginDescriptor tryCreatePluginDescriptor(ZipFile file, String filePath) {
         Enumeration<? extends ZipEntry> entries = file.entries();
         while (entries.hasMoreElements()) {
             ZipEntry zipEntry = entries.nextElement();
@@ -82,7 +80,7 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
                 properties.load(stream);
             } catch (IOException e) {
                 throw new IllegalStateException("Failed to read \"%s\" into properties for the jar %s"
-                        .formatted(PROPERTIES_FILE_NAME, jarUrl.toString()), e);
+                        .formatted(PROPERTIES_FILE_NAME, filePath), e);
             }
             try {
                 Map map = properties;
@@ -94,9 +92,9 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
                         pluginDescriptor.getLicense(),
                         pluginDescriptor.getDescription(),
                         clazz,
-                        jarUrl);
+                        filePath);
             } catch (Exception e) {
-                throw new IllegalStateException("Cannot parse the jar " + jarUrl.toString(), e);
+                throw new IllegalStateException("Cannot parse the jar " + filePath, e);
             }
         }
         return null;

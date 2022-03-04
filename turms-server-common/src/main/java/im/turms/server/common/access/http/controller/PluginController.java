@@ -33,6 +33,7 @@ import im.turms.server.common.plugin.PluginManager;
 import im.turms.server.common.plugin.TurmsExtension;
 import im.turms.server.common.util.CollectionUtil;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -112,14 +113,20 @@ public class PluginController {
 
     @PostMapping("/js")
     @RequiredPermission(AdminPermission.PLUGIN_CREATE)
-    public ResponseEntity<ResponseDTO<Void>> createPlugins(
+    public ResponseEntity<ResponseDTO<Void>> createJsPlugins(
             @RequestParam(defaultValue = "false") boolean save,
             @RequestBody AddJsPluginDTO addJsPluginDTO) {
         Set<String> scripts = addJsPluginDTO.scripts();
-        pluginManager.loadJsPlugins(scripts);
-        if (save) {
-            pluginManager.savePlugins(scripts);
-        }
+        pluginManager.loadJsPlugins(scripts, save);
+        return ResponseFactory.OK;
+    }
+
+    @DeleteMapping
+    @RequiredPermission(AdminPermission.PLUGIN_DELETE)
+    public ResponseEntity<ResponseDTO<Void>> deletePlugins(
+            @RequestParam Set<String> ids,
+            @RequestParam(required = false) Boolean deleteLocalFiles) {
+        pluginManager.deletePlugins(ids, deleteLocalFiles);
         return ResponseFactory.OK;
     }
 

@@ -17,22 +17,10 @@
 
 package im.turms.server.common.plugin;
 
-import lombok.Data;
-
-import javax.annotation.Nullable;
 import java.nio.file.Path;
 
-/**
- * @author James Chen
- */
-@Data
-public class JsPluginDescriptor extends PluginDescriptor {
-    public JsPluginDescriptor(String id,
-                              String version,
-                              String provider,
-                              String license,
-                              String description,
-                              @Nullable Path path) {
-        super(id, version, provider, license, description, path);
-    }
+public record JsFile(
+        String script,
+        Path path
+) {
 }
