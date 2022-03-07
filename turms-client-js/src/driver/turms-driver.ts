@@ -24,6 +24,7 @@ import { TurmsNotification } from '../model/proto/notification/turms_notificatio
 import { TurmsRequest } from '../model/proto/request/turms_request';
 import { ParsedNotification } from '../model/parsed-notification';
 import SystemUtil from '../util/system-util';
+import WebSocketMetrics from '../transport/websocket-metrics';
 
 export default class TurmsDriver {
 
@@ -125,6 +126,10 @@ export default class TurmsDriver {
 
     get isConnected(): boolean {
         return this._stateStore.isConnected;
+    }
+
+    get connectionMetrics(): WebSocketMetrics | undefined {
+        return this._stateStore.websocket?.metrics;
     }
 
     // Connection Listeners

@@ -1,3 +1,5 @@
+import WebSocketMetrics from './websocket-metrics';
+
 type OnCloseParams = {
     code: number,
     reason: string
@@ -26,6 +28,8 @@ export default abstract class WebSocketClient {
     abstract get isConnecting(): boolean;
 
     abstract get isConnected(): boolean;
+
+    abstract get metrics(): WebSocketMetrics;
 
     protected notifyOnOpen(): void {
         this._listener.onOpen();

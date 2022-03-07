@@ -58,7 +58,7 @@ export default class StateStore {
         return !!this._sharedContextService;
     }
 
-    get websocket(): WebSocketClient {
+    get websocket(): WebSocketClient | undefined {
         return this._websocket;
     }
 
