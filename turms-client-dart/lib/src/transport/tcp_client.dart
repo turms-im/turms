@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'tcp_metrics.dart';
+
 typedef OnBytesReceived = void Function(List<int> bytes);
 typedef OnClose = void Function(dynamic error);
 
@@ -13,23 +15,36 @@ class TcpClient {
 
   bool isOpen = false;
   bool isReading = false;
+  TcpMetrics metrics = TcpMetrics();
 
   final OnClose _onClose;
   final OnBytesReceived _onBytesReceived;
 
   TcpClient(this._onClose, this._onBytesReceived);
 
+  // TODO: support passing InternetAddress
   Future<void> connect(String host, int port, bool useTls,
       SecurityContext? context, Duration? timeout) async {
     if (isOpen) {
       throw StateError('The TCP client has connected');
     }
-    var socket = await Socket.connect(host, port, timeout: timeout)
+    final stopwatch = Stopwatch()..start();
+    final addresses = await InternetAddress.lookup(host);
+    metrics.addressResolverTime = stopwatch.elapsedMilliseconds;
+    if (addresses.isEmpty) {
+      throw SocketException('Cannot find the addresses of the host: $host');
+    }
+    final address = addresses[0];
+    stopwatch.reset();
+    var socket = await Socket.connect(address, port, timeout: timeout)
       ..setOption(SocketOption.tcpNoDelay, true);
+    metrics.connectTime = stopwatch.elapsedMilliseconds;
     if (useTls) {
       try {
+        stopwatch.reset();
         socket = await SecureSocket.secure(socket,
             context: context ?? SecurityContext.defaultContext);
+        metrics.tlsHandshakeTime = stopwatch.elapsedMilliseconds;
       } catch (e) {
         try {
           await socket.close();
@@ -45,6 +60,7 @@ class TcpClient {
     isOpen = true;
     _socket.listen((bytes) {
       try {
+        metrics.dataReceived += bytes.length;
         _onBytesReceived.call(bytes);
       } catch (e) {
         close(e);
@@ -52,17 +68,18 @@ class TcpClient {
     }, onDone: () => tryCallOnClose(null), onError: tryCallOnClose);
   }
 
-  void write(Uint8List bytes) {
-    _socket.write(bytes);
+  void write(List<int> bytes) {
+    _socket.add(bytes);
+    metrics.dataSent += bytes.length;
   }
 
   void writeVarInt(int v) {
     for (var i = 0; i < 5; i++) {
       if ((v >> 7) == 0) {
-        _socket.add([v & 0x7f]);
+        write([v & 0x7f]);
         break;
       } else {
-        _socket.add([v | 0x80]);
+        write([v | 0x80]);
       }
       v >>= 7;
     }
@@ -70,7 +87,7 @@ class TcpClient {
 
   void writeVarIntLengthAndBytes(Uint8List bytes) {
     writeVarInt(bytes.lengthInBytes);
-    _socket.add(bytes);
+    write(bytes);
   }
 
   Future<void> close(dynamic error) async {
@@ -82,6 +99,7 @@ class TcpClient {
     if (isOpen) {
       _onClose.call(error);
     }
+    metrics = TcpMetrics();
     isOpen = false;
   }
 }

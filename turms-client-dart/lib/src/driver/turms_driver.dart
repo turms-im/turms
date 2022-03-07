@@ -5,6 +5,7 @@ import 'package:protobuf/protobuf.dart';
 
 import '../model/notification/turms_notification.pb.dart';
 import '../model/request/turms_request.pb.dart';
+import '../transport/tcp_metrics.dart';
 import 'service/connection_service.dart';
 import 'service/heartbeat_service.dart';
 import 'service/message_service.dart';
@@ -73,6 +74,8 @@ class TurmsDriver {
   Future<void> disconnect() => _connectionService.disconnect();
 
   bool get isConnected => _stateStore.isConnected;
+
+  TcpMetrics? get connectionMetrics => stateStore.tcp?.metrics;
 
   // Connection Listeners
 

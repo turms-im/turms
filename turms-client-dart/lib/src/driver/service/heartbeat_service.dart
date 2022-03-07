@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:typed_data';
 
 import '../../model/notification/turms_notification.pb.dart';
 import '../../model/turms_business_exception.dart';
@@ -11,7 +10,7 @@ import 'base_service.dart';
 class HeartbeatService extends BaseService {
   static const _defaultHeartbeatIntervalMillis = 120 * 1000;
   static const _heartbeatFailureRequestId = -100;
-  static final Uint8List _heartbeatRequest = Uint8List.fromList([0]);
+  static final List<int> _heartbeatRequest = [0];
 
   final int _heartbeatIntervalMillis;
   final Duration _heartbeatTimerInterval;
