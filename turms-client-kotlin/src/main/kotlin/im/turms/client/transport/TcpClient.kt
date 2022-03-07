@@ -22,8 +22,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.CertificatePinner
 import okhttp3.internal.tls.OkHostnameVerifier
+import java.io.EOFException
 import java.io.InputStream
 import java.io.OutputStream
+import java.net.InetAddress
 import java.net.Socket
 import java.nio.ByteBuffer
 import java.security.NoSuchAlgorithmException
@@ -51,8 +53,9 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
     private lateinit var output: OutputStream
     private lateinit var readBuffer: ByteBuffer
 
-    var isOpen: Boolean = false
-    var isReading: Boolean = false
+    var isOpen = false
+    var isReading = false
+    var metrics = TcpMetrics()
 
     var onClose: ((Throwable?) -> Unit)? = null
 
@@ -71,16 +74,24 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
             throw RuntimeException("The TCP client has connected")
         }
         withContext(coroutineContext) {
-            val socket = Socket(host, port)
+            var start = System.currentTimeMillis()
+            val address = InetAddress.getByName(host)
+            metrics.addressResolverTime = (System.currentTimeMillis() - start).toInt()
+            start = System.currentTimeMillis()
+            val socket = Socket(address, port)
+            metrics.connectTime = (System.currentTimeMillis() - start).toInt()
             socket.tcpNoDelay = true
             socket.reuseAddress = true
             if (useTls) {
                 try {
-                    connectTls(host, port, trustManager, serverName, hostname, pins)
+                    start = System.currentTimeMillis()
+                    connectTls(socket, host, port, trustManager, serverName, hostname, pins)
+                    metrics.tlsHandshakeTime = (System.currentTimeMillis() - start).toInt()
                 } catch (e: Exception) {
                     try {
                         socket.close()
                     } catch (e: Exception) {
+                        // ignored
                     }
                     throw e
                 }
@@ -96,6 +107,7 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
     }
 
     private fun connectTls(
+        socket: Socket,
         host: String,
         port: Int,
         trustManager: X509TrustManager?,
@@ -114,6 +126,7 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
         try {
             sslParameters.serverNames = listOf(SNIHostName(serverName))
         } catch (e: Exception) {
+            // ignored
         }
 
         ssl.sslParameters = sslParameters
@@ -175,6 +188,7 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
         }
         readBuffer.clear()
         isOpen = false
+        metrics = TcpMetrics()
     }
 
     // Read and Write
@@ -201,6 +215,7 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
                     tryCallOnClose()
                     return
                 }
+                metrics.dataReceived++
                 if (readBuffer.remaining() > 0) {
                     readBuffer.put(data.toByte())
                 } else if (readBuffer.capacity() >= MAX_READ_BUFFER_CAPACITY) {
@@ -211,14 +226,13 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
                             close(exception)
                         }
                     } catch (e: Exception) {
+                        // ignored
                     }
                     throw exception
                 } else {
-                    val buf = ByteBuffer.allocate(readBuffer.capacity() * 2)
-                    readBuffer.flip()
-                    buf.put(readBuffer)
-                    buf.put(data.toByte())
-                    readBuffer = buf
+                    readBuffer = ByteBuffer.allocate(readBuffer.capacity() * 2)
+                        .put(readBuffer.flip())
+                        .put(data.toByte())
                 }
             }
             readBuffer.flip()
@@ -230,21 +244,32 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
     }
 
     fun readVarInt(): Int {
-        var result = 0U
-        (0 until 4 * 7 step 7).forEach { shift ->
-            val current = input.read().toUInt()
-            result = result or current.and(0x7FU).shl(shift)
-            if (current and 0x80U == 0U) {
-                return result.toInt()
+        try {
+            var result = 0U
+            for (shift in 0 until 4 * 7 step 7) {
+                val data = input.read()
+                if (data == -1) {
+                    throw EOFException()
+                }
+                metrics.dataReceived++
+                val current = data.toUInt()
+                result = result or current.and(0x7FU).shl(shift)
+                if (current and 0x80U == 0U) {
+                    return result.toInt()
+                }
             }
+            throw IllegalStateException("VarInt input too big")
+        } catch (e: Exception) {
+            tryCallOnClose(e)
+            throw e
         }
-        throw IllegalStateException("VarInt input too big")
     }
 
     suspend fun write(src: ByteArray) = withContext(coroutineContext) {
         try {
             synchronized(output) {
                 output.write(src)
+                metrics.dataSent += src.size
             }
         } catch (e: Exception) {
             tryCallOnClose(e)
@@ -260,9 +285,11 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
                 if (currentValue == 0U) {
                     output.write(maskedValue.toInt())
                     output.write(bytes)
+                    metrics.dataSent += bytes.size + 1
                     return@withContext
                 } else {
                     output.write(maskedValue.or(0x80U).toInt())
+                    metrics.dataSent++
                 }
             }
         }

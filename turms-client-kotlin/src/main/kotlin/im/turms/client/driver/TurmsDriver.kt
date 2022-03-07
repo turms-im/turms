@@ -24,6 +24,7 @@ import im.turms.client.driver.service.HeartbeatService
 import im.turms.client.driver.service.MessageService
 import im.turms.client.extension.camelToSnakeCase
 import im.turms.client.transport.Pin
+import im.turms.client.transport.TcpMetrics
 import im.turms.common.model.dto.notification.TurmsNotification
 import im.turms.common.model.dto.request.TurmsRequest
 import kotlinx.coroutines.CoroutineScope
@@ -103,6 +104,8 @@ class TurmsDriver(
 
     val isConnected: Boolean
         get() = stateStore.isConnected
+
+    val connectionMetrics: TcpMetrics? get() = stateStore.tcp?.metrics
 
     // Connection Listeners
 
