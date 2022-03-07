@@ -167,6 +167,10 @@ Original Project Documentation：https://turms-im.github.io/docs
 4. If the Turms project is not profitable, what is the quality of its project?
 
    Our documentation and source code have answered this question for us, and in the open source community, there is no open source IM project that can compete with the Turms project in medium and large IM application scenarios. Another thing to mention is that commercial projects do not mean high quality, and even the quality of documentation and code for many commercial projects is shocking.
+   
+5. Does Turms use dual license agreements or have hidden charges?
+
+   No. Some projects are free for personal use and charge for commercial use, using dual licensing agreements, or have many hidden charges. The Turms project is licensed under the `Apache License 2.0` license, and there is no charge. Some projects claim to be open source software, but they are not. For details, please refer to [The Open Source Definition](https://en.wikipedia.org/wiki/The_Open_Source_Definition).
 
 ## Special Thanks
 

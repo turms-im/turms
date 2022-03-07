@@ -174,6 +174,10 @@ Turms项目采用`Apache License 2.0`协议，因此我们并不关心使用者�
 4. Turms项目如果不盈利，那它的项目质量如何？
 
    我们的文档与源码已经替我们回答了这个问题，并且在全球开源界，暂时还没有一个开源IM项目能跟Turms项目在中大型IM应用场景中竞争。另外一提的是，商业项目不代表质量高，甚至很多商业项目的文档与代码质量是令人触目惊心的水平。  
+   
+5. Turms有使用双授权协议或带有隐藏收费条目吗？
+
+   没有。一些开源项目对个人使用免费，对商业使用收费，采用双授权协议，或带有很多隐藏收费条目。而整个Turms项目有且仅使用`Apache License 2.0`协议，也不存在任何收费环节。部分项目自称开源软件，但其实并不是，具体可参考`开源软件`真正的定义：[中文版](https://gitee.com/opensource-guide/guide/%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%9A%E5%88%9D%E8%AF%86%E5%BC%80%E6%BA%90/%E7%AC%AC%201%20%E5%B0%8F%E8%8A%82%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%E5%BC%80%E6%BA%90/#%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6)、[英文版](https://en.wikipedia.org/wiki/The_Open_Source_Definition)。
 
 ## 特别感谢
 
