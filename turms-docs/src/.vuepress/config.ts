@@ -48,7 +48,7 @@ export default defineUserConfig<DefaultThemeOptions>({
                 ]
             },
             {
-                text: '服务端知识',
+                text: '服务端指南',
                 collapsible: true,
                 children: [
                     {
@@ -73,8 +73,9 @@ export default defineUserConfig<DefaultThemeOptions>({
                             '/for-developers/redevelopment.md',
                             '/for-developers/rules.md',
                             '/for-developers/plugin.md',
-                            '/for-developers/code.md'
-                            // TODO: 1. Config Development; 2. Testing
+                            '/for-developers/code.md',
+                            '/for-developers/testing.md'
+                            // TODO: Config Development
                         ]
                     },
                     {
