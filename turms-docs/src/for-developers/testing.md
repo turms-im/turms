@@ -20,8 +20,8 @@
 
 另外，不仅是Turms，其实对于任何技术方案来说，我们在看它或快或慢的时候，主要是为了探究“它什么这么快/慢？”。举例来说，我们在研究JVM为什么会占这么多内存时，如果我们只看到了Java极为冗余与普遍的对象头时，我们会感叹“原来是冗余设计问题，难怪占这么多内存”，但如果我们又看了JVM对Code Cache的设计与使用，我们又会感叹“原来是空间换时间，难怪占这么多内存”，评价方向截然不同。归根到底就是外行看热闹，内行看门道。Turms为了方便用户看其中的门道，因此文档都写得比较详尽，方便用户自行评测Turms适不适用于自己的应用场景。
 
-### turms-benchmark项目（预览文档）
+### turms-performance-testing项目（预览文档）
 
-尽管Turms没计划提供现成的压测报告，但我们近期会写为Turms服务端定制一套分布式压测平台。该平台的UI展示与报告分析会由turms-admin负责，而节点管控与任务执行分别由turms-benchmark中的Controller节点与Agent节点负责。
+尽管Turms没计划提供现成的压测报告，但我们近期会为Turms服务端定制一套分布式压测平台。该平台的UI展示与报告分析会由turms-admin负责，而节点管控与任务执行分别由turms-performance-testing中的Controller节点与Agent节点负责。
 
 特别一提的是：Turms之所以能快速定制与开发众多平台，也得益于我们在[基于Turms做二次开发的原因](https://turms-im.github.io/docs/for-developers/redevelopment.html#%E5%9F%BA%E4%BA%8Eturms%E5%81%9A%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E7%9A%84%E5%8E%9F%E5%9B%A0)提到的“可控性。Turms项目100%开源，并对很多基础中间件进行了自研，保证了底层技术的可控，避免了项目后期发展动力不足”，因此我们做新项目不会受制于第三方依赖，动力十足。
