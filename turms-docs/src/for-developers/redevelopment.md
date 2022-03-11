@@ -22,6 +22,8 @@
 
    * 代码质量高。Turms服务端在代码实现上能始终保持着高级工程师应有的水平，能在代码性能与可读性中取得平衡。具体请看Turms的服务端源码。特别一提，部分开源项目说得性能很好，但是一看代码就露馅了。之所以敢说Turms服务端能达到Java生态的极限，除了Turms服务端自身实现本来就非常高效外，我们对很多低效但关键的依赖库（如`mongo-java-driver`与`lettuce`）进行了重构，甚至自研实现（如日志实现/集群实现），以保证极致的性能。
 
+   * 技术方案具有前瞻性。作为软件工程师，我们深有体会的一点是：可能今天众星拱月的知名技术方案，明天就成了昨日黄花，成了“技术负债”。诸如服务端侧的Hadoop，Web侧的Bootstrap、Backbone.js与Ember.js。而Turms在做技术选型时，不仅会考虑当前的现状，如[集群的设计与实现](https://turms-im.github.io/docs/for-developers/cluster.html#%E7%BA%AF%E8%87%AA%E7%A0%94%E7%9A%84%E5%8E%9F%E5%9B%A0)，还会考虑未来技术的发展进程，如[系统资源管理](https://turms-im.github.io/docs/for-developers/system-resource-management.html#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86)提到的Valhalla项目与Loom项目。
+
    * 自研IM服务的市场需求大。即便现在到各招聘网站查询IM工程师相关岗位，也能发现国内外还有大量企业招聘IM相关人才，各公司投入上百或千万从零或基于古老的IM开源项目自研，重复造IM服务，社会资源利用率低。
 
 另外，如果您还在犹豫是否要采用其他开源IM项目，那我们非常推荐您将Turms与它们做对比，在您大概读过Turms的文档与源码，相信您心中会有明确的答案。
