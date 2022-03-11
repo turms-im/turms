@@ -83,7 +83,7 @@ public class LogDirectoryVisitor extends SimpleFileVisitor<Path> {
                         .atStartOfDay(TimeZoneConstant.ZONE_ID);
                 handleLogFile(path, timestamp, index);
             }
-        } catch (Throwable e) {
+        } catch (Exception e) {
             InternalLogger.INSTANCE.warn("Cannot figure out if a file matches the template: " + path, e);
         }
         return FileVisitResult.CONTINUE;

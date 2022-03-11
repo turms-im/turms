@@ -31,6 +31,9 @@ public class LogThreadContext {
     // so just keep it simple, don't wrap it
     private static final FastThreadLocal<TracingContext> CONTEXT = new FastThreadLocal<>();
 
+    private LogThreadContext() {
+    }
+
     public static void put(TracingContext context) {
         CONTEXT.set(context);
     }
@@ -44,6 +47,7 @@ public class LogThreadContext {
         CONTEXT.remove();
     }
 
+    @Nullable
     public static TracingContext removeAndGet() {
         TracingContext context = CONTEXT.getIfExists();
         CONTEXT.remove();

@@ -22,12 +22,16 @@ import im.turms.server.common.logging.core.idle.BackoffIdleStrategy;
 import im.turms.server.common.logging.core.logger.InternalLogger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.model.LogRecord;
+import im.turms.server.common.util.ByteBufUtil;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import org.jctools.queues.MpscUnboundedArrayQueue;
 
 import java.util.List;
 
 /**
+ * Note that we only use one thread to process logs,
+ * which means that we don't need to consider the scenarios of concurrent modifications
+ *
  * @author James Chen
  */
 public final class LogProcessor {
@@ -36,40 +40,8 @@ public final class LogProcessor {
     private volatile boolean active;
 
     public LogProcessor(MpscUnboundedArrayQueue<LogRecord> recordQueue) {
-        Runnable processor = () -> {
-            BackoffIdleStrategy idleStrategy = new BackoffIdleStrategy(128, 128, 1024000, 1024000);
-            LogRecord record;
-            Thread thread = Thread.currentThread();
-            while (active && !thread.isInterrupted()) {
-                while ((record = recordQueue.relaxedPoll()) != null) {
-                    idleStrategy.reset();
-                    List<Appender> appenders = record.logger().getAppenders();
-                    for (Appender appender : appenders) {
-                        try {
-                            appender.append(record);
-                        } catch (Exception e) {
-                            InternalLogger.printException(e);
-                        }
-                    }
-                    try {
-                        record.data().release();
-                    } catch (Exception e) {
-                        InternalLogger.printException(e);
-                    }
-                }
-                idleStrategy.idle();
-            }
-            List<Appender> appenders = LoggerFactory.getAllAppenders();
-            for (Appender appender : appenders) {
-                try {
-                    appender.close();
-                } catch (Throwable e) {
-                    InternalLogger.printException(e);
-                }
-            }
-        };
         thread = new DefaultThreadFactory("turms-log-processor")
-                .newThread(processor);
+                .newThread(() -> drainLogsForever(recordQueue));
         active = true;
         Runtime.getRuntime()
                 .addShutdownHook(new DefaultThreadFactory("turms-log-shutdown")
@@ -84,6 +56,41 @@ public final class LogProcessor {
 
     public void close() {
         active = false;
+    }
+
+    private void drainLogsForever(MpscUnboundedArrayQueue<LogRecord> recordQueue) {
+        BackoffIdleStrategy idleStrategy = new BackoffIdleStrategy(128,
+                128,
+                1024000,
+                1024000);
+        LogRecord logRecord;
+        Thread currentThread = Thread.currentThread();
+        while (true) {
+            while ((logRecord = recordQueue.relaxedPoll()) != null) {
+                idleStrategy.reset();
+                List<Appender> appenders = logRecord.logger().getAppenders();
+                for (Appender appender : appenders) {
+                    try {
+                        appender.append(logRecord);
+                    } catch (Exception e) {
+                        InternalLogger.printException(e);
+                    }
+                }
+                ByteBufUtil.safeEnsureReleased(logRecord.data());
+            }
+            if (!active || currentThread.isInterrupted()) {
+                break;
+            }
+            idleStrategy.idle();
+        }
+        List<Appender> appenders = LoggerFactory.getAllAppenders();
+        for (Appender appender : appenders) {
+            try {
+                appender.close();
+            } catch (Exception e) {
+                InternalLogger.printException(e);
+            }
+        }
     }
 
 }
