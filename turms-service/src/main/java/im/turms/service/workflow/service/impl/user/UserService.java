@@ -209,7 +209,12 @@ public class UserService {
         Long finalId = id;
         return mongoClient.inTransaction(session -> mongoClient.insert(session, user)
                         .then(userRelationshipGroupService.createRelationshipGroup(finalId, 0, "", now, session))
-                        .then(userVersionService.upsertEmptyUserVersion(user.getId(), date, session).onErrorResume(t -> Mono.empty()))
+                        .then(userVersionService.upsertEmptyUserVersion(user.getId(), date, session)
+                                .onErrorResume(t -> {
+                                    LOGGER.error("Caught an error while upserting a version for the user {} after creating the user",
+                                            user.getId(), t);
+                                    return Mono.empty();
+                                }))
                         .thenReturn(user))
                 .retryWhen(TRANSACTION_RETRY)
                 .doOnSuccess(ignored -> registeredUsersCounter.increment());
@@ -332,7 +337,11 @@ public class UserService {
                                 return userRelationshipService.deleteAllRelationships(userIds, session, false)
                                         .then(userRelationshipGroupService.deleteAllRelationshipGroups(userIds, session, false))
                                         .then(conversationService.deletePrivateConversations(userIds, session))
-                                        .then(userVersionService.delete(userIds, session).onErrorResume(t -> Mono.empty()))
+                                        .then(userVersionService.delete(userIds, session)
+                                                .onErrorResume(t -> {
+                                                    LOGGER.error("Caught an error while deleting the version for the users {} after deleting the users", userIds, t);
+                                                    return Mono.empty();
+                                                }))
                                         .then(messageService.deleteSequenceIds(false, userIds)
                                                 .doOnError(t -> LOGGER.error("Failed to remove the message sequence IDs for the user IDs: {}", userIds, t)))
                                         .thenReturn(result);
@@ -474,8 +483,11 @@ public class UserService {
                 .setIfNotNull(User.Fields.LAST_UPDATED_DATE, new Date());
         return mongoClient.updateMany(User.class, filter, update)
                 .flatMap(result -> Boolean.FALSE.equals(isActive) && result.getModifiedCount() > 0
-                        ? Mono.just(sessionService.disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED))
-                        .onErrorResume(t -> Mono.empty()).thenReturn(result)
+                        ? sessionService.disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED)
+                        .onErrorResume(t -> {
+                            LOGGER.error("Caught an error while disconnecting the session of the users {} after inactivating the users", userIds, t);
+                            return Mono.empty();
+                        }).thenReturn(result)
                         : Mono.just(result));
     }
 

@@ -25,6 +25,8 @@ import im.turms.common.util.RandomUtil;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
@@ -70,6 +72,8 @@ import static im.turms.server.common.constant.BusinessConstant.DEFAULT_RELATIONS
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class UserRelationshipGroupService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserRelationshipGroupService.class);
 
     private final TurmsMongoClient mongoClient;
     private final UserVersionService userVersionService;
@@ -233,7 +237,11 @@ public class UserRelationshipGroupService {
                 .set(UserRelationshipGroup.Fields.NAME, newGroupName);
         return mongoClient.updateOne(UserRelationshipGroup.class, filter, update)
                 .flatMap(result -> userVersionService.updateRelationshipGroupsVersion(ownerId)
-                        .onErrorResume(t -> Mono.empty())
+                        .onErrorResume(t -> {
+                            LOGGER.error("Caught an error while updating the relationship groups version of the owner {} after updating a relationship group name",
+                                    ownerId, t);
+                            return Mono.empty();
+                        })
                         .thenReturn(result));
     }
 
@@ -277,12 +285,15 @@ public class UserRelationshipGroupService {
                     if (!hasRelationship) {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ADD_NOT_RELATED_USER_TO_GROUP));
                     }
-                    Date now = new Date();
                     UserRelationshipGroupMember member = new UserRelationshipGroupMember(
-                            ownerId, groupIndex, relatedUserId, now);
+                            ownerId, groupIndex, relatedUserId, new Date());
                     return mongoClient.upsert(session, member)
                             .flatMap(groupMember -> userVersionService.updateRelationshipGroupsVersion(ownerId)
-                                    .onErrorResume(t -> Mono.empty()))
+                                    .onErrorResume(t -> {
+                                        LOGGER.error("Caught an error while updating the relationship groups version of the owner {} after adding a user to the groups",
+                                                ownerId, t);
+                                        return Mono.empty();
+                                    }))
                             .thenReturn(member);
                 });
     }
@@ -327,7 +338,12 @@ public class UserRelationshipGroupService {
                     return mongoClient.insertAllOfSameType(newMembers);
                 })
                 .then(mongoClient.deleteOne(UserRelationshipGroup.class, filterGroup))
-                .then(userVersionService.updateRelationshipGroupsVersion(ownerId).onErrorResume(t -> Mono.empty()))
+                .then(userVersionService.updateRelationshipGroupsVersion(ownerId)
+                        .onErrorResume(t -> {
+                            LOGGER.error("Caught an error while updating the relationship groups version of the owner {} after deleting relationships",
+                                    ownerId, t);
+                            return Mono.empty();
+                        }))
                 .then();
     }
 
@@ -346,7 +362,11 @@ public class UserRelationshipGroupService {
         if (updateRelationshipGroupsVersion) {
             return mongoClient.deleteMany(session, UserRelationshipGroup.class, filter)
                     .flatMap(result -> userVersionService.updateRelationshipGroupsVersion(ownerIds)
-                            .onErrorResume(t -> Mono.empty())
+                            .onErrorResume(t -> {
+                                LOGGER.error("Caught an error while updating the relationship groups version of the owners {} after deleting all groups",
+                                        ownerIds, t);
+                                return Mono.empty();
+                            })
                             .thenReturn(result));
         }
         return mongoClient.deleteMany(session, UserRelationshipGroup.class, filter);
@@ -389,7 +409,11 @@ public class UserRelationshipGroupService {
                             ownerIds.add(key.getOwnerId());
                         }
                         return userVersionService.updateRelationshipGroupsVersion(ownerIds)
-                                .onErrorResume(t -> Mono.empty())
+                                .onErrorResume(t -> {
+                                    LOGGER.error("Caught an error while updating the relationship groups version of the owners {} after deleting users from all groups",
+                                            ownerIds, t);
+                                    return Mono.empty();
+                                })
                                 .thenReturn(result);
                     });
         }
@@ -420,7 +444,12 @@ public class UserRelationshipGroupService {
         // Don't use transaction for better performance
         return mongoClient.insert(new UserRelationshipGroupMember(newKey, new Date()))
                 .then(mongoClient.deleteOne(UserRelationshipGroupMember.class, filter))
-                .then(userVersionService.updateRelationshipGroupsVersion(ownerId).onErrorResume(t -> Mono.empty()))
+                .then(userVersionService.updateRelationshipGroupsVersion(ownerId)
+                        .onErrorResume(t -> {
+                            LOGGER.error("Caught an error while updating the relationship groups version of the owner {} after moving a user to a new group",
+                                    ownerId, t);
+                            return Mono.empty();
+                        }))
                 .then();
     }
 

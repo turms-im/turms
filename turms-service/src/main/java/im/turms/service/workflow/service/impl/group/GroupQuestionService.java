@@ -27,6 +27,8 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
@@ -65,6 +67,8 @@ import java.util.stream.Collectors;
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class GroupQuestionService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GroupQuestionService.class);
 
     private final Node node;
     private final TurmsMongoClient mongoClient;
@@ -222,8 +226,12 @@ public class GroupQuestionService {
                 answers,
                 score);
         return mongoClient.insert(groupJoinQuestion)
-                .then(Mono.defer(() -> groupVersionService.updateJoinQuestionsVersion(groupId)
-                        .onErrorResume(t -> Mono.empty())))
+                .then(groupVersionService.updateJoinQuestionsVersion(groupId)
+                        .onErrorResume(t -> {
+                            LOGGER.error("Caught an error while updating the join questions version of the group {} after creating a join question",
+                                    groupId, t);
+                            return Mono.empty();
+                        }))
                 .thenReturn(groupJoinQuestion);
     }
 
@@ -260,7 +268,11 @@ public class GroupQuestionService {
                                     .eq(DomainFieldName.ID, questionId);
                             return mongoClient.deleteOne(GroupJoinQuestion.class, filter)
                                     .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
-                                            .onErrorResume(t -> Mono.empty())
+                                            .onErrorResume(t -> {
+                                                LOGGER.error("Caught an error while updating the join questions version of the group {} after deleting a join question",
+                                                        groupId, t);
+                                                return Mono.empty();
+                                            })
                                             .then());
                         }));
     }
@@ -364,7 +376,11 @@ public class GroupQuestionService {
                                     .setIfNotNull(GroupJoinQuestion.Fields.SCORE, score);
                             return mongoClient.updateOne(GroupJoinQuestion.class, filter, update)
                                     .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
-                                            .onErrorResume(t -> Mono.empty())
+                                            .onErrorResume(t -> {
+                                                LOGGER.error("Caught an error while updating the join questions version of the group {} after updating a join question",
+                                                        groupId, t);
+                                                return Mono.empty();
+                                            })
                                             .thenReturn(result));
                         }));
     }

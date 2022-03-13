@@ -29,6 +29,8 @@ import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
@@ -71,6 +73,8 @@ import java.util.stream.Collectors;
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class GroupMemberService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GroupMemberService.class);
 
     private final Node node;
     private final TurmsMongoClient mongoClient;
@@ -122,8 +126,12 @@ public class GroupMemberService {
                 joinDate,
                 muteEndDate);
         return mongoClient.insert(session, groupMember)
-                .then(Mono.defer(() -> groupVersionService.updateMembersVersion(groupId)
-                        .onErrorResume(t -> Mono.empty())))
+                .then(groupVersionService.updateMembersVersion(groupId)
+                        .onErrorResume(t -> {
+                            LOGGER.error("Caught an error while updating the members version of the group {} after adding a group member",
+                                    groupId, t);
+                            return Mono.empty();
+                        }))
                 .thenReturn(groupMember);
     }
 
@@ -222,9 +230,18 @@ public class GroupMemberService {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, keys);
         return mongoClient.deleteMany(session, GroupMember.class, filter)
-                .flatMap(result -> updateGroupMembersVersion && result.getDeletedCount() > 0
-                        ? groupVersionService.updateMembersVersion(groupIds).onErrorResume(t -> Mono.empty()).thenReturn(result)
-                        : Mono.just(result));
+                .flatMap(result -> {
+                    if (!updateGroupMembersVersion || result.getDeletedCount() == 0) {
+                        return Mono.just(result);
+                    }
+                    return groupVersionService.updateMembersVersion(groupIds)
+                            .onErrorResume(t -> {
+                                LOGGER.error("Caught an error while updating the members version of the groups {} after deleting group members",
+                                        groupIds, t);
+                                return Mono.empty();
+                            })
+                            .thenReturn(result);
+                });
     }
 
     public Mono<UpdateResult> updateGroupMember(
@@ -277,19 +294,23 @@ public class GroupMemberService {
         }
         return mongoClient.updateMany(session, GroupMember.class, filter, update)
                 .flatMap(result -> {
-                    if (updateGroupMembersVersion && result.getModifiedCount() > 0) {
-                        int size = keys.size();
-                        Mono<?> updateMono;
-                        if (size == 1) {
-                            Long groupId = keys.iterator().next().getGroupId();
-                            updateMono = groupVersionService.updateMembersVersion(groupId);
-                        } else {
-                            Set<Long> groupIds = CollectionUtil.newSetWithExpectedSize(size);
-                            updateMono = groupVersionService.updateMembersVersion(groupIds);
-                        }
-                        return updateMono.onErrorResume(t -> Mono.empty()).thenReturn(result);
+                    if (!updateGroupMembersVersion || result.getModifiedCount() == 0) {
+                        return Mono.just(result);
                     }
-                    return Mono.just(result);
+                    int size = keys.size();
+                    Set<Long> groupIds = CollectionUtil.newSetWithExpectedSize(size);
+                    for (GroupMember.Key key : keys) {
+                        groupIds.add(key.getGroupId());
+                    }
+                    Mono<?> updateMono = size == 1
+                            ? groupVersionService.updateMembersVersion(groupIds.iterator().next())
+                            : groupVersionService.updateMembersVersion(groupIds);
+                    return updateMono
+                            .onErrorResume(t -> {
+                                LOGGER.error("Caught an error while updating the members version of the groups {} after updating group members", groupIds, t);
+                                return Mono.empty();
+                            })
+                            .thenReturn(result);
                 });
     }
 
@@ -793,8 +814,7 @@ public class GroupMemberService {
                                 .userOnlineInfo2groupMember(
                                         member.getKey().getUserId(),
                                         info,
-                                        node.getSharedProperties().getService().getUser().isRespondOfflineIfInvisible())
-                                .build();
+                                        node.getSharedProperties().getService().getUser().isRespondOfflineIfInvisible());
                         builder.addGroupMembers(groupMember);
                     }
                     return builder.build();

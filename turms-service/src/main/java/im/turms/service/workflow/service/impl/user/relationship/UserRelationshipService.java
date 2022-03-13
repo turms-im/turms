@@ -26,6 +26,8 @@ import im.turms.common.util.Validator;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
@@ -70,6 +72,8 @@ import static im.turms.service.constant.DaoConstant.TRANSACTION_RETRY;
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class UserRelationshipService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserRelationshipService.class);
+
     private final UserVersionService userVersionService;
     private final UserRelationshipGroupService userRelationshipGroupService;
     private final TurmsMongoClient mongoClient;
@@ -100,13 +104,19 @@ public class UserRelationshipService {
                 return mongoClient
                         .inTransaction(newSession -> mongoClient.deleteMany(newSession, UserRelationship.class, filter)
                                 .flatMap(result -> userVersionService.updateRelationshipsVersion(userIds, newSession)
-                                        .onErrorResume(t -> Mono.empty())
+                                        .onErrorResume(t -> {
+                                            LOGGER.error("Caught an error while updating the relationships version of the users {} after deleting all relationships", userIds, t);
+                                            return Mono.empty();
+                                        })
                                         .thenReturn(result)))
                         .retryWhen(TRANSACTION_RETRY);
             }
             return mongoClient.deleteMany(session, UserRelationship.class, filter)
                     .flatMap(result -> userVersionService.updateRelationshipsVersion(userIds, session)
-                            .onErrorResume(t -> Mono.empty())
+                            .onErrorResume(t -> {
+                                LOGGER.error("Caught an error while updating the relationships version of the users {} after deleting all relationships", userIds, t);
+                                return Mono.empty();
+                            })
                             .thenReturn(result));
         }
         return mongoClient.deleteMany(session, UserRelationship.class, filter);
@@ -131,7 +141,12 @@ public class UserRelationshipService {
                             .in(DomainFieldName.ID, keys);
                     return mongoClient.deleteMany(session, UserRelationship.class, filter)
                             .flatMap(result -> userRelationshipGroupService.deleteRelatedUsersFromAllRelationshipGroups(keys, session, true)
-                                    .then(userVersionService.updateRelationshipsVersion(ownerIds, null).onErrorResume(t -> Mono.empty()))
+                                    .then(userVersionService.updateRelationshipsVersion(ownerIds, null)
+                                            .onErrorResume(t -> {
+                                                LOGGER.error("Caught an error while updating relationships version of the group owners {} after deleting their relationships",
+                                                        ownerIds, t);
+                                                return Mono.empty();
+                                            }))
                                     .thenReturn(result));
                 })
                 .retryWhen(TRANSACTION_RETRY);
@@ -161,9 +176,13 @@ public class UserRelationshipService {
                 .then(userVersionService.updateSpecificVersion(
                                 ownerId,
                                 session,
-                                UserVersion.Fields.RELATIONSHIP_GROUPS_MEMBERS,
+                                UserVersion.Fields.RELATIONSHIP_GROUP_MEMBERS,
                                 UserVersion.Fields.RELATIONSHIPS)
-                        .onErrorResume(t -> Mono.empty()))
+                        .onErrorResume(t -> {
+                            LOGGER.error("Caught an error while updating the relationships version and relationships group members version of the owner {} after deleting a relationship",
+                                    ownerId, t);
+                            return Mono.empty();
+                        }))
                 .then();
     }
 
@@ -524,11 +543,15 @@ public class UserRelationshipService {
         Update update = Update.newBuilder(2)
                 .setIfNotNull(UserRelationship.Fields.ESTABLISHMENT_DATE, establishmentDate)
                 .setOrUnsetDate(UserRelationship.Fields.BLOCK_DATE, blockDate);
-        Set<Long> finalOwnerIds = ownerIds;
         return mongoClient.updateMany(UserRelationship.class, filter, update)
                 .flatMap(result -> {
                     if (result.getModifiedCount() > 0) {
-                        return userVersionService.updateRelationshipsVersion(finalOwnerIds, null).onErrorResume(t -> Mono.empty())
+                        return userVersionService.updateRelationshipsVersion(ownerIds, null)
+                                .onErrorResume(t -> {
+                                    LOGGER.error("Caught an error while updating the relationships version of the owners {} after updating their relationships",
+                                            ownerIds, t);
+                                    return Mono.empty();
+                                })
                                 .thenReturn(result);
                     }
                     return Mono.just(result);

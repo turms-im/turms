@@ -52,8 +52,8 @@ public final class UserVersion {
     @Field(Fields.RELATIONSHIP_GROUPS)
     private final Date relationshipGroups;
 
-    @Field(Fields.RELATIONSHIP_GROUPS_MEMBERS)
-    private final Date relationshipGroupsMembers;
+    @Field(Fields.RELATIONSHIP_GROUP_MEMBERS)
+    private final Date relationshipGroupMembers;
 
     @Field(Fields.GROUP_JOIN_REQUESTS)
     private final Date groupJoinRequests; // sent group join requests
@@ -74,7 +74,7 @@ public final class UserVersion {
 
         public static final String RELATIONSHIPS = "r";
         public static final String RELATIONSHIP_GROUPS = "rg";
-        public static final String RELATIONSHIP_GROUPS_MEMBERS = "rgm";
+        public static final String RELATIONSHIP_GROUP_MEMBERS = "rgm";
 
         public static final String GROUP_JOIN_REQUESTS = "gjr";
 

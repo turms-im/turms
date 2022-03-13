@@ -213,11 +213,11 @@ public class UserVersionService {
     }
 
     public Mono<UpdateResult> updateRelationshipGroupsMembersVersion(@NotNull Long userId) {
-        return updateSpecificVersion(userId, null, UserVersion.Fields.RELATIONSHIP_GROUPS_MEMBERS);
+        return updateSpecificVersion(userId, null, UserVersion.Fields.RELATIONSHIP_GROUP_MEMBERS);
     }
 
     public Mono<UpdateResult> updateRelationshipGroupsMembersVersion(@NotEmpty Set<Long> userIds) {
-        return updateSpecificVersion(userIds, null, UserVersion.Fields.RELATIONSHIP_GROUPS_MEMBERS);
+        return updateSpecificVersion(userIds, null, UserVersion.Fields.RELATIONSHIP_GROUP_MEMBERS);
     }
 
     public Mono<UpdateResult> updateSentGroupInvitationsVersion(@NotNull Long userId) {

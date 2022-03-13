@@ -27,6 +27,8 @@ import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.logging.core.logger.Logger;
+import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
@@ -63,6 +65,8 @@ import static im.turms.service.constant.DaoConstant.TRANSACTION_RETRY;
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class GroupBlocklistService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GroupBlocklistService.class);
 
     private final TurmsMongoClient mongoClient;
     private final GroupMemberService groupMemberService;
@@ -104,28 +108,39 @@ public class GroupBlocklistService {
                     GroupBlockedUser blockedUser = new GroupBlockedUser(
                             groupId, userIdToBlock, new Date(), requesterId);
                     if (isGroupMember) {
-                        Mono<Boolean> updateVersion = groupVersionService.updateVersion(
-                                groupId,
-                                false,
-                                true,
-                                true,
-                                false,
-                                false);
+                        Mono<Void> updateVersion = groupVersionService.updateVersion(
+                                        groupId,
+                                        false,
+                                        true,
+                                        true,
+                                        false,
+                                        false)
+                                .onErrorResume(t -> {
+                                    LOGGER.error("Caught an error while updating the members and blocklist version of the group {} after blocking a user",
+                                            groupId, t);
+                                    return Mono.empty();
+                                })
+                                .then();
                         if (session == null) {
                             return mongoClient
                                     .inTransaction(newSession ->
                                             groupMemberService.deleteGroupMembers(groupId, userIdToBlock, newSession, false)
                                                     .then(mongoClient.insert(newSession, blockedUser))
-                                                    .then(updateVersion.then().onErrorResume(throwable -> Mono.empty())))
-                                    .retryWhen(TRANSACTION_RETRY);
+                                                    .then(updateVersion)
+                                                    .retryWhen(TRANSACTION_RETRY));
                         }
                         return groupMemberService.deleteGroupMembers(groupId, userIdToBlock, session, false)
                                 .then(mongoClient.insert(session, blockedUser))
-                                .then(updateVersion.then().onErrorResume(throwable -> Mono.empty()));
+                                .then(updateVersion);
                     }
-                    Mono<Boolean> updateVersion = groupVersionService.updateBlocklistVersion(groupId);
                     return mongoClient.insert(session, blockedUser)
-                            .then(updateVersion.then().onErrorResume(throwable -> Mono.empty()));
+                            .then(groupVersionService.updateBlocklistVersion(groupId)
+                                    .onErrorResume(t -> {
+                                        LOGGER.error("Caught an error while updating the blocklist version of the group {} after blocking a user",
+                                                groupId, t);
+                                        return Mono.empty();
+                                    })
+                                    .then());
                 });
     }
 
@@ -154,7 +169,11 @@ public class GroupBlocklistService {
                     Mono<DeleteResult> removeMono = mongoClient.deleteOne(session, GroupBlockedUser.class, filter);
                     if (updateBlocklistVersion) {
                         return removeMono.flatMap(result -> groupVersionService.updateBlocklistVersion(groupId)
-                                .onErrorResume(throwable -> Mono.empty())
+                                .onErrorResume(t -> {
+                                    LOGGER.error("Caught an error while updating the blocklist version of the group {} after unblocking a user",
+                                            groupId, t);
+                                    return Mono.empty();
+                                })
                                 .then());
                     }
                     return removeMono.then();

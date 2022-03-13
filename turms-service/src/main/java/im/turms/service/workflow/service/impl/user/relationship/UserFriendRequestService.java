@@ -201,8 +201,18 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
         UserFriendRequest userFriendRequest = new UserFriendRequest(id, content, status, reason,
                 creationDate, responseDate, requesterId, recipientId);
         return mongoClient.insert(userFriendRequest)
-                .then(Mono.defer(() -> userVersionService.updateReceivedFriendRequestsVersion(recipientId).onErrorResume(t -> Mono.empty())
-                        .then(userVersionService.updateSentFriendRequestsVersion(requesterId).onErrorResume(t -> Mono.empty()))))
+                .then(userVersionService.updateReceivedFriendRequestsVersion(recipientId)
+                        .onErrorResume(t -> {
+                            LOGGER.error("Caught an error while updating the received friend requests version of the recipient {} after creating a friend request",
+                                    recipientId, t);
+                            return Mono.empty();
+                        }))
+                .then(userVersionService.updateSentFriendRequestsVersion(requesterId)
+                        .onErrorResume(t -> {
+                            LOGGER.error("Caught an error while updating the sent friend requests version of the requester {} after creating a friend request",
+                                    requesterId, t);
+                            return Mono.empty();
+                        }))
                 .thenReturn(userFriendRequest);
     }
 
@@ -265,8 +275,12 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
         return mongoClient.updateOne(session, UserFriendRequest.class, filter, update)
                 .flatMap(result -> result.getModifiedCount() > 0
                         ? queryRecipientId(requestId)
-                        .flatMap(recipientId -> userVersionService.updateSentFriendRequestsVersion(recipientId)
-                                .onErrorResume(t -> Mono.empty())
+                        .flatMap(recipientId -> userVersionService.updateReceivedFriendRequestsVersion(recipientId)
+                                .onErrorResume(t -> {
+                                    LOGGER.error("Caught an error while updating the received friend requests version of the recipient {} after updating a pending friend request",
+                                            recipientId, t);
+                                    return Mono.empty();
+                                })
                                 .thenReturn(result))
                         : Mono.just(result));
     }

@@ -159,20 +159,24 @@ public class GroupService {
                 .inTransaction(session -> {
                     Date now = new Date();
                     return mongoClient.insert(session, group)
-                            .then(Mono.defer(() -> groupMemberService.addGroupMember(
-                                            group.getId(),
-                                            creatorId,
-                                            GroupMemberRole.OWNER,
-                                            null,
-                                            now,
-                                            null,
-                                            session)
-                                    .then(Mono.defer(() -> {
-                                        createdGroupsCounter.increment();
-                                        return groupVersionService.upsert(groupId, now)
-                                                .onErrorResume(t -> Mono.empty())
-                                                .thenReturn(group);
-                                    }))));
+                            .then(groupMemberService.addGroupMember(
+                                    group.getId(),
+                                    creatorId,
+                                    GroupMemberRole.OWNER,
+                                    null,
+                                    now,
+                                    null,
+                                    session))
+                            .then(Mono.defer(() -> {
+                                createdGroupsCounter.increment();
+                                return groupVersionService.upsert(groupId, now)
+                                        .onErrorResume(t -> {
+                                            LOGGER.error("Caught an error while upserting a version for the group {} after creating the group",
+                                                    groupId, t);
+                                            return Mono.empty();
+                                        });
+                            }))
+                            .thenReturn(group);
                 })
                 .retryWhen(TRANSACTION_RETRY);
     }
