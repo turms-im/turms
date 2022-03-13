@@ -298,6 +298,9 @@ public class ConnectionService implements ClusterService {
 
     public void keepalive(String nodeId) {
         TurmsConnection connection = connectionPool.get(nodeId);
+        if (connection == null) {
+            throw new IllegalStateException("Received a keepalive request from a non-connected node: " + nodeId);
+        }
         connection.setLastKeepaliveTimestamp(System.currentTimeMillis());
     }
 
@@ -343,14 +346,10 @@ public class ConnectionService implements ClusterService {
         if (elapsedTime < keepaliveIntervalMillis) {
             return;
         }
-        try {
-            rpcService.requestResponse(nodeId, new KeepaliveRequest())
-                    .subscribe(null,
-                            t -> LOGGER.warn("Failed to send a keepalive request to the member " + nodeId, t),
-                            () -> connection.setLastKeepaliveTimestamp(System.currentTimeMillis()));
-        } catch (Exception e) {
-            LOGGER.error("Failed to send a keepalive request to the member " + nodeId, e);
-        }
+        rpcService.requestResponse(nodeId, new KeepaliveRequest())
+                .subscribe(null,
+                        t -> LOGGER.warn("Failed to send a keepalive request to the member " + nodeId, t),
+                        () -> connection.setLastKeepaliveTimestamp(System.currentTimeMillis()));
     }
 
     // Handshake

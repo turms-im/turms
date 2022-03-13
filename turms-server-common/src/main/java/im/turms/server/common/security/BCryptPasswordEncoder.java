@@ -18,6 +18,7 @@
 package im.turms.server.common.security;
 
 import im.turms.server.common.util.ArrayUtil;
+import io.netty.util.concurrent.FastThreadLocal;
 import org.bouncycastle.crypto.generators.BCrypt;
 
 import java.util.Arrays;
@@ -31,7 +32,12 @@ public class BCryptPasswordEncoder implements PasswordEncoder {
     public static final int SALT_SIZE_BYTES = 16;
     private static final int COST = 10;
 
-    private static final ThreadLocal<BCrypt> BCRYPT = ThreadLocal.withInitial(BCrypt::new);
+    private static final FastThreadLocal<BCrypt> BCRYPT = new FastThreadLocal<>() {
+        @Override
+        protected BCrypt initialValue() {
+            return new BCrypt();
+        }
+    };
 
     @Override
     public byte[] encode(byte[] rawPassword) {

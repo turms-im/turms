@@ -410,7 +410,7 @@ public final class MongoFakingManager {
                 .doOnError(error -> LOGGER.error("Failed to fake message-related data", error))
                 .doOnSuccess(unused -> LOGGER.info("Message-related data has been faked"))
                 .subscribeOn(Schedulers.boundedElastic());
-        return Mono.when(adminMono, userMono, groupMono, conversationMono, messageMono)
+        return Mono.whenDelayError(adminMono, userMono, groupMono, conversationMono, messageMono)
                 .then()
                 .doOnSuccess(ignored -> LOGGER.info("All data has been faked"))
                 .doOnError(t -> LOGGER.error("Failed to fake data", t));

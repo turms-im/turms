@@ -62,7 +62,7 @@ public class SettingController {
 
     @GetMapping
     @RequiredPermission(CLUSTER_SETTING_QUERY)
-    public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterSettings(@RequestParam(defaultValue = "false") Boolean onlyMutable)
+    public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterSettings(@RequestParam(defaultValue = "false") boolean onlyMutable)
             throws IOException {
         return ResponseFactory.okIfTruthy(PropertiesUtil.getPropertyValueMap(node.getSharedProperties(), onlyMutable));
     }
@@ -76,8 +76,8 @@ public class SettingController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content =
             @Content(schema = @Schema(implementation = TurmsProperties.class))))
     public Mono<ResponseEntity<ResponseDTO<Void>>> updateClusterSettings(
-            @RequestParam(defaultValue = "false") Boolean reset,
-            @RequestParam(defaultValue = "false") Boolean updateGlobalSettings,
+            @RequestParam(defaultValue = "false") boolean reset,
+            @RequestParam(defaultValue = "false") boolean updateGlobalSettings,
             @RequestBody(required = false) Map<String, Object> turmsProperties) throws IOException {
         if (updateGlobalSettings) {
             Mono<Void> updatePropertiesMono = turmsPropertiesManager.updateGlobalProperties(reset, turmsProperties);
@@ -91,8 +91,8 @@ public class SettingController {
     @GetMapping("/metadata")
     @RequiredPermission(CLUSTER_SETTING_QUERY)
     public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterConfigMetadata(
-            @RequestParam(defaultValue = "false") Boolean onlyMutable,
-            @RequestParam(defaultValue = "false") Boolean withValue) {
+            @RequestParam(defaultValue = "false") boolean onlyMutable,
+            @RequestParam(defaultValue = "false") boolean withValue) {
         Map<String, Object> metadata = onlyMutable ? PropertiesUtil.ONLY_MUTABLE_METADATA : PropertiesUtil.METADATA;
         if (withValue) {
             try {

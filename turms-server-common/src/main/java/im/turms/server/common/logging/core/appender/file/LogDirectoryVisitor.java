@@ -33,6 +33,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.TreeSet;
 
 import static im.turms.server.common.logging.core.appender.file.RollingFileAppender.FIELD_DELIMITER;
@@ -111,12 +112,12 @@ public class LogDirectoryVisitor extends SimpleFileVisitor<Path> {
     }
 
     @SneakyThrows
-    public static ArrayDeque<LogFile> visit(Path directory,
-                                            String prefix,
-                                            String suffix,
-                                            String middle,
-                                            DateTimeFormatter template,
-                                            int maxFiles) {
+    public static Deque<LogFile> visit(Path directory,
+                                       String prefix,
+                                       String suffix,
+                                       String middle,
+                                       DateTimeFormatter template,
+                                       int maxFiles) {
         LogDirectoryVisitor visitor = new LogDirectoryVisitor(prefix, suffix, middle, template, maxFiles);
         Files.walkFileTree(directory, Collections.emptySet(), 1, visitor);
         return new ArrayDeque<>(visitor.files);

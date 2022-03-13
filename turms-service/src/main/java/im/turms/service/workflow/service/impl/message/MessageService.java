@@ -588,7 +588,7 @@ public class MessageService {
                 .collect(CollectorUtil.toList(messageIds.size()))
                 .flatMap(messageMonos -> {
                     int size = messageMonos.size();
-                    return Mono.when(messageMonos)
+                    return Mono.whenDelayError(messageMonos)
                             .thenReturn(UpdateResult.acknowledged(size, (long) size, null));
                 });
     }

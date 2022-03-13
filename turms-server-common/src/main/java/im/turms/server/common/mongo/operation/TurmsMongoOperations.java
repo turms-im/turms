@@ -314,7 +314,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                             .then();
                 })
                 .toList();
-        return Mono.when(sources);
+        return Mono.whenDelayError(sources);
     }
 
     @Override

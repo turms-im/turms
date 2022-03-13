@@ -28,6 +28,7 @@ import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -73,7 +74,7 @@ public class JsPluginFactory {
         }
     }
 
-    public static JsPlugin create(Engine engine, String script, Path path) {
+    public static JsPlugin create(Engine engine, String script, @Nullable Path path) {
         Context context = Context.newBuilder(JS_LANGUAGE_TYPE)
                 .allowHostAccess(HostAccess.ALL)
                 .allowHostClassLookup(className -> true)

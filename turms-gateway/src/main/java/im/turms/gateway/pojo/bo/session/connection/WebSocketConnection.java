@@ -72,8 +72,12 @@ public class WebSocketConnection extends NetConnection {
                     })
                     .retryWhen(RETRY_SEND_CLOSE_NOTIFICATION)
                     .doFinally(signal -> close())
-                    .subscribe(null, t -> LOGGER.error("Failed to send the close notification with retries exhausted: " +
-                            RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, t));
+                    .subscribe(null, t -> {
+                        if (!ThrowableUtil.isDisconnectedClientError(t)) {
+                            LOGGER.error("Failed to send the close notification with retries exhausted: " +
+                                    RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, t);
+                        }
+                    });
         }
     }
 

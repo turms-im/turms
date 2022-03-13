@@ -32,7 +32,6 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class UsersNearbyService {
         this.userService = userService;
     }
 
-    public Mono<Collection<NearbyUser>> queryNearbyUsers(
+    public Mono<List<NearbyUser>> queryNearbyUsers(
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
             @Nullable Coordinates coordinates,
@@ -75,7 +74,7 @@ public class UsersNearbyService {
                 maxDistance,
                 withCoordinates,
                 withDistance);
-        Mono<Collection<NearbyUser>> resultMono;
+        Mono<List<NearbyUser>> resultMono;
         if (withUserInfo) {
             resultMono = nearbyUserFlux
                     .collectMap(geo -> {
@@ -112,8 +111,7 @@ public class UsersNearbyService {
                             geo.getCoordinates(),
                             geo.getDistance().intValue(),
                             null))
-                    .collectList()
-                    .map(users -> users);
+                    .collectList();
         }
         return upsertMono.then(resultMono);
     }

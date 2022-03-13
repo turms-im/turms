@@ -18,6 +18,7 @@
 package im.turms.server.common.util;
 
 import im.turms.server.common.constant.TimeZoneConstant;
+import io.netty.util.concurrent.FastThreadLocal;
 
 import javax.annotation.Nullable;
 import java.util.Calendar;
@@ -29,8 +30,13 @@ import java.util.GregorianCalendar;
  */
 public final class DateUtil {
 
-    private static final ThreadLocal<Calendar> CALENDAR_THREAD_LOCAL = ThreadLocal
-            .withInitial(() -> new GregorianCalendar(TimeZoneConstant.ZONE));
+    private static final FastThreadLocal<Calendar> CALENDAR_THREAD_LOCAL = new FastThreadLocal<>() {
+        @Override
+        protected Calendar initialValue() {
+            return new GregorianCalendar(TimeZoneConstant.ZONE);
+        }
+    };
+
     // "1970-01-01 00:00:00.000"
     public static final int DATE_TIME_LENGTH = 23;
 

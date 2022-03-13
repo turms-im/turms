@@ -32,7 +32,7 @@ public class CharNormalizer {
         int low = codepoint & 0xFF;
         char[][] data = cache[high];
         if (data == null) {
-            String className = "im.turms.plugin.antispam.character.data." + "U%02X".formatted(high);
+            String className = "im.turms.plugin.antispam.character.data.U%02X".formatted(high);
             data = (char[][]) Class.forName(className)
                     .getField("DATA")
                     .get(null);

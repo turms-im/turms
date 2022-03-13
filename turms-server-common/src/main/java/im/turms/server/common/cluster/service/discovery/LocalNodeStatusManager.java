@@ -170,7 +170,7 @@ public class LocalNodeStatusManager {
                     monos.add(renewLocalLeader(now)
                             .flatMap(isLeader -> isLeader ? updateMembersStatus(now) : Mono.empty()));
                 }
-                Mono.when(monos)
+                Mono.whenDelayError(monos)
                         .timeout(heartbeatInterval)
                         .subscribe(null,
                                 t -> LOGGER.error("Failed to send heartbeat request", t),
@@ -275,7 +275,7 @@ public class LocalNodeStatusManager {
             for (String availableMemberNodeId : availableMemberNodeIds) {
                 unavailableMemberIds.remove(availableMemberNodeId);
             }
-            return Mono.when(
+            return Mono.whenDelayError(
                     updateFollowersToAvailable(availableMemberNodeIds),
                     updateFollowersToUnavailable(unavailableMemberIds));
         }

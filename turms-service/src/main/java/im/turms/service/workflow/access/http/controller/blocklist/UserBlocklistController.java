@@ -91,9 +91,9 @@ public class UserBlocklistController {
     @RequiredPermission(CLIENT_BLOCKLIST_DELETE)
     public Mono<ResponseEntity<ResponseDTO<Void>>> deleteBlockedUserIds(
             @RequestParam(required = false) Set<Long> ids,
-            @RequestParam(defaultValue = "false") Boolean deleteAll) {
+            @RequestParam(defaultValue = "false") boolean deleteAll) {
         Mono<Void> result = Mono.empty();
-        if (Boolean.TRUE.equals(deleteAll)) {
+        if (deleteAll) {
             result = blocklistService.unblockAllUserIds();
         } else if (!CollectionUtils.isEmpty(ids)) {
             result = result

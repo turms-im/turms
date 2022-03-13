@@ -76,11 +76,9 @@ public class UserSessionWrapper {
         return ip;
     }
 
-    /**
-     * @implNote Don't use getHostString() to avoid getting a hostname
-     */
     public String getIpStr() {
         if (ipStr == null) {
+            // Don't use "getHostString()" to avoid getting a hostname
             ipStr = address.getAddress().getHostAddress();
         }
         return ipStr;

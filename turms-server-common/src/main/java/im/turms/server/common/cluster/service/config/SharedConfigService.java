@@ -114,14 +114,10 @@ public class SharedConfigService implements ClusterService {
 
     public Mono<Void> upsert(Filter filter, Update update, Object entity) {
         return mongoClient.updateOne(entity.getClass(), filter, update)
-                .flatMap(updateResult -> {
-                    if (updateResult.getMatchedCount() == 0) {
-                        return mongoClient.insert(entity)
-                                .onErrorResume(DuplicateKeyException.class, e -> this.upsert(filter, update, entity));
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+                .flatMap(updateResult -> updateResult.getMatchedCount() == 0
+                        ? mongoClient.insert(entity)
+                        .onErrorResume(DuplicateKeyException.class, e -> this.upsert(filter, update, entity))
+                        : Mono.empty());
     }
 
     public Mono<DeleteResult> remove(Class<?> clazz, Filter filter) {

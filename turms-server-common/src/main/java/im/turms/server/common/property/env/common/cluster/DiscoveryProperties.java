@@ -46,7 +46,7 @@ public class DiscoveryProperties {
     @Min(0)
     private int heartbeatIntervalSeconds = 10;
 
-    @Description("Delay to notify listeners on members change. Waits for seconds to avoid thundering herd")
+    @Description("Delay notifying listeners on members change. Waits for seconds to avoid thundering herd")
     @Min(0)
     private int delayToNotifyMembersChangeSeconds = 3;
 

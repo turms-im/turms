@@ -17,6 +17,8 @@
 
 package im.turms.server.common.security;
 
+import io.netty.util.concurrent.FastThreadLocal;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -32,21 +34,19 @@ public class MessageDigestPool {
      * We don't need to call "remove()" because we assume all caller threads won't die
      * until the application is shutdown.
      */
-    private static final ThreadLocal<MessageDigest> SHA1 = ThreadLocal.withInitial(() -> {
-        try {
+    private static final FastThreadLocal<MessageDigest> SHA1 = new FastThreadLocal<>() {
+        @Override
+        protected MessageDigest initialValue() throws Exception {
             return MessageDigest.getInstance("SHA1");
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
         }
-    });
+    };
 
-    private static final ThreadLocal<MessageDigest> SHA256 = ThreadLocal.withInitial(() -> {
-        try {
+    private static final FastThreadLocal<MessageDigest> SHA256 = new FastThreadLocal<>() {
+        @Override
+        protected MessageDigest initialValue() throws Exception {
             return MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
         }
-    });
+    };
 
     public static MessageDigest getSha1() {
         MessageDigest digest = SHA1.get();

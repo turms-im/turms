@@ -85,8 +85,8 @@ public class UserOnlineInfoController {
     @GetMapping("/count")
     @RequiredPermission(AdminPermission.STATISTICS_USER_QUERY)
     public Mono<ResponseEntity<ResponseDTO<OnlineUserNumberDTO>>> countOnlineUsers(
-            @RequestParam(required = false, defaultValue = "false") Boolean countByNodes) {
-        if (countByNodes == null || !countByNodes) {
+            @RequestParam(required = false, defaultValue = "false") boolean countByNodes) {
+        if (!countByNodes) {
             return ResponseFactory.okIfTruthy(statisticsService.countOnlineUsers()
                     .map(total -> new OnlineUserNumberDTO(total, null)));
         }
@@ -104,7 +104,7 @@ public class UserOnlineInfoController {
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_QUERY)
     public Mono<ResponseEntity<ResponseDTO<Collection<UserSessionsStatus>>>> queryOnlineUsersStatus(
             @RequestParam Set<Long> ids,
-            @RequestParam(defaultValue = "true") Boolean checkIfExists) {
+            @RequestParam(defaultValue = "true") boolean checkIfExists) {
         List<Mono<UserSessionsStatus>> userSessionStatusMonos = new ArrayList<>(ids.size());
         for (Long userId : ids) {
             Mono<UserSessionsStatus> userOnlineInfoMno = userStatusService.getUserSessionsStatus(userId)
@@ -124,15 +124,15 @@ public class UserOnlineInfoController {
 
     @GetMapping("/nearby-users")
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<NearbyUser>>>> queryUsersNearby(
+    public Mono<ResponseEntity<ResponseDTO<List<NearbyUser>>>> queryUsersNearby(
             @RequestParam Long userId,
             @RequestParam(required = false) DeviceType deviceType,
             @RequestParam(required = false) Short maxNumber,
             @RequestParam(required = false) Integer maxDistance,
-            @RequestParam(defaultValue = "false") Boolean withCoordinates,
-            @RequestParam(defaultValue = "false") Boolean withDistance,
-            @RequestParam(defaultValue = "false") Boolean withUserInfo) {
-        Mono<Collection<NearbyUser>> usersNearby = usersNearbyService
+            @RequestParam(defaultValue = "false") boolean withCoordinates,
+            @RequestParam(defaultValue = "false") boolean withDistance,
+            @RequestParam(defaultValue = "false") boolean withUserInfo) {
+        Mono<List<NearbyUser>> usersNearby = usersNearbyService
                 .queryNearbyUsers(userId, deviceType, null, maxNumber, maxDistance, withCoordinates, withDistance, withUserInfo);
         return ResponseFactory.okIfTruthy(usersNearby);
     }

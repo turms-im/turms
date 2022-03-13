@@ -75,7 +75,7 @@ public class MessageController {
     @PostMapping
     @RequiredPermission(MESSAGE_CREATE)
     public Mono<ResponseEntity<ResponseDTO<Void>>> createMessages(
-            @RequestParam(defaultValue = "true") Boolean send,
+            @RequestParam(defaultValue = "true") boolean send,
             @RequestBody CreateMessageDTO createMessageDTO) {
         Mono<Void> sendMono = messageService.authAndSaveAndSendMessage(
                 send,
@@ -241,7 +241,7 @@ public class MessageController {
                 return Mono.empty();
             }
         }
-        return ResponseFactory.okIfTruthy(Flux.merge(counts).then(Mono.just(statistics)));
+        return ResponseFactory.okIfTruthy(Mono.when(counts).thenReturn(statistics));
     }
 
     @PutMapping

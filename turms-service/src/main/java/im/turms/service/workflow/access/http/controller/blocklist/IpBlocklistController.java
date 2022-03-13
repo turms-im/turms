@@ -91,9 +91,9 @@ public class IpBlocklistController {
     @RequiredPermission(CLIENT_BLOCKLIST_DELETE)
     public Mono<ResponseEntity<ResponseDTO<Void>>> deleteBlockedIps(
             @RequestParam(required = false) Set<String> ids,
-            @RequestParam(defaultValue = "false") Boolean deleteAll) {
+            @RequestParam(defaultValue = "false") boolean deleteAll) {
         Mono<Void> result = Mono.empty();
-        if (Boolean.TRUE.equals(deleteAll)) {
+        if (deleteAll) {
             result = blocklistService.unblockAllIps();
         } else if (!CollectionUtils.isEmpty(ids)) {
             result = result

@@ -195,24 +195,26 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
         GroupInvitation groupInvitation =
                 new GroupInvitation(id, groupId, inviterId, inviteeId, content, status, creationDate, responseDate);
         return mongoClient.insert(groupInvitation)
-                .then(groupVersionService.updateGroupInvitationsVersion(groupId)
-                        .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the group invitations version of the group {} after creating a group invitation",
-                                    groupId, t);
-                            return Mono.empty();
-                        }))
-                .then(userVersionService.updateSentGroupInvitationsVersion(inviterId)
-                        .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the sent group invitations version of the inviter {} after creating a group invitation",
-                                    inviterId, t);
-                            return Mono.empty();
-                        }))
-                .then(userVersionService.updateReceivedGroupInvitationsVersion(inviteeId)
-                        .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the received group invitations version of the invitee {} after creating a group invitation",
-                                    inviteeId, t);
-                            return Mono.empty();
-                        }))
+                .then(Mono.whenDelayError(
+                        groupVersionService.updateGroupInvitationsVersion(groupId)
+                                .onErrorResume(t -> {
+                                    LOGGER.error("Caught an error while updating the group invitations version of the group {} after creating a group invitation",
+                                            groupId, t);
+                                    return Mono.empty();
+                                }),
+                        userVersionService.updateSentGroupInvitationsVersion(inviterId)
+                                .onErrorResume(t -> {
+                                    LOGGER.error("Caught an error while updating the sent group invitations version of the inviter {} after creating a group invitation",
+                                            inviterId, t);
+                                    return Mono.empty();
+                                }),
+                        userVersionService.updateReceivedGroupInvitationsVersion(inviteeId)
+                                .onErrorResume(t -> {
+                                    LOGGER.error("Caught an error while updating the received group invitations version of the invitee {} after creating a group invitation",
+                                            inviteeId, t);
+                                    return Mono.empty();
+                                })
+                ))
                 .thenReturn(groupInvitation);
     }
 

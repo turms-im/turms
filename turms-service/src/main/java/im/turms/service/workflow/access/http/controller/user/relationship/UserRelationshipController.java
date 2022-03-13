@@ -98,7 +98,7 @@ public class UserRelationshipController {
             @RequestParam(required = false) Date establishmentDateStart,
             @RequestParam(required = false) Date establishmentDateEnd,
             @RequestParam(required = false) Integer size,
-            @RequestParam(defaultValue = "false") Boolean withGroupIndexes) {
+            @RequestParam(defaultValue = "false") boolean withGroupIndexes) {
         size = pageUtil.getSize(size);
         Flux<UserRelationship> relationshipsFlux = userRelationshipService.queryRelationships(
                 ownerIds, relatedUserIds, groupIndexes, isBlocked, DateRange.of(establishmentDateStart, establishmentDateEnd), 0, size);
@@ -117,7 +117,7 @@ public class UserRelationshipController {
             @RequestParam(required = false) Date establishmentDateEnd,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(required = false) Integer size,
-            @RequestParam(defaultValue = "false") Boolean withGroupIndexes) {
+            @RequestParam(defaultValue = "false") boolean withGroupIndexes) {
         size = pageUtil.getSize(size);
         Mono<Long> count = userRelationshipService.countRelationships(
                 ownerIds, relatedUserIds, groupIndexes, isBlocked);

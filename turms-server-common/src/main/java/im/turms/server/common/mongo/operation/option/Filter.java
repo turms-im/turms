@@ -22,6 +22,7 @@ import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.mongo.util.SerializationUtil;
 import im.turms.server.common.util.MapUtil;
 import org.bson.BsonArray;
+import org.bson.BsonArrayUtil;
 import org.bson.BsonDateTime;
 import org.bson.BsonDocument;
 import org.bson.BsonNull;
@@ -171,8 +172,7 @@ public class Filter implements Bson {
         for (Filter filter : filters) {
             values.add(filter.document);
         }
-        // TODO: avoid the copy of List<BsonValue>
-        document.append("$or", new BsonArray(values));
+        document.append("$or", BsonArrayUtil.newArray(values));
         return this;
     }
 

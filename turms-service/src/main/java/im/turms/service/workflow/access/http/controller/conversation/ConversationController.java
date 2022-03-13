@@ -129,7 +129,7 @@ public class ConversationController {
                 : conversationService
                 .upsertGroupConversationsReadDate(CollectionUtil.newSet(groupConversationMemberKeys.getGroupConversationMemberKeys()),
                         updateConversationDTO.readDate());
-        return Mono.when(updatePrivateConversions, updateGroupConversationsMono)
+        return Mono.whenDelayError(updatePrivateConversions, updateGroupConversationsMono)
                 .thenReturn(ResponseFactory.OK);
     }
 

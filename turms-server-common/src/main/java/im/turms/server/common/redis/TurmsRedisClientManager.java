@@ -95,7 +95,7 @@ public class TurmsRedisClientManager {
         for (Map.Entry<TurmsRedisClient, Collection<Long>> entry : entries) {
             results.add(execute.apply(entry.getKey(), entry.getValue()).then());
         }
-        return Mono.when(results);
+        return Mono.whenDelayError(results);
     }
 
     public Mono<Long> del(Long shardKey, Collection<ByteBuf> keys) {
@@ -204,7 +204,7 @@ public class TurmsRedisClientManager {
                     .eval(script, bufferEntry.keyCount, new CustomKeyBuffer(bufferEntry.buffer));
             list.add(result);
         }
-        return Mono.when(list);
+        return Mono.whenDelayError(list);
     }
 
     // Internal

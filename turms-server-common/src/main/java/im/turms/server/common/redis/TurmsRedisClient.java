@@ -60,7 +60,7 @@ import static io.lettuce.core.protocol.CommandType.GEORADIUSBYMEMBER;
  * by ourselves because if a command is cancelled or fails, Lettuce won't release these buffers
  * because it hasn't flushed the buffers.
  * 2. Ensure encoding data in a cold publisher instead of a hot publisher,
- * or the memory will leak because the cold finalizer will never be called
+ * or the memory may leak because the cold finalizer will never be called
  * if it's won't be subscribed (this may happen in the scenario: when the previous
  * publisher fail, the next publisher will never be subscribed)
  * @see AbstractRedisReactiveCommands

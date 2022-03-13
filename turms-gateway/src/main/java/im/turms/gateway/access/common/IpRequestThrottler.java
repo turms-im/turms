@@ -40,8 +40,8 @@ public class IpRequestThrottler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IpRequestThrottler.class);
 
-    private static final long IDLE_ENTRY_TTL = 30 * 60 * 1000;
-    private static final long INTERVAL_TO_CHECK = 30 * 60 * 1000;
+    private static final long IDLE_ENTRY_TTL = 30 * 60 * 1000L;
+    private static final long INTERVAL_TO_CHECK = 30 * 60 * 1000L;
     private static final int BATCH_SIZE = 10_000;
 
     /**
@@ -58,13 +58,12 @@ public class IpRequestThrottler {
     private final Map<ByteArrayWrapper, TokenBucket> ipRequestTokenBucketMap = new ConcurrentHashMap<>(256);
 
     public IpRequestThrottler(Node node, SessionService sessionService) {
-        sessionService.addOnSessionClosedListeners(session -> {
-            // Try to remove the buckets with enough tokens
-            // because most of the clients won't log in again once them have gone offline,
-            // so it's a good time to remove unused buckets
-            ipRequestTokenBucketMap.computeIfPresent(session.getIp(), (key, bucket) ->
-                    bucket.isTokensMoreThanOrEqualsToInitialTokens() ? null : bucket);
-        });
+        sessionService.addOnSessionClosedListeners(session ->
+                // Try to remove the buckets with enough tokens
+                // because most clients won't log in again once they have gone offline,
+                // so it's a good time to remove unused buckets
+                ipRequestTokenBucketMap.computeIfPresent(session.getIp(), (key, bucket) ->
+                        bucket.isTokensMoreThanOrEqualsToInitialTokens() ? null : bucket));
 
         ClientApiProperties clientApiProperties = node.getSharedProperties().getGateway().getClientApi();
         requestTokenBucketContext = new TokenBucketContext(clientApiProperties.getRateLimiting());
@@ -97,8 +96,7 @@ public class IpRequestThrottler {
         int processed = 0;
         long startTime = System.currentTimeMillis();
         while (iterator.hasNext()) {
-            Map.Entry<ByteArrayWrapper, TokenBucket> entry = iterator.next();
-            TokenBucket bucket = entry.getValue();
+            TokenBucket bucket = iterator.next().getValue();
             long lastAccessTime = bucket.getLastRefillTime();
             if ((startTime - lastAccessTime) > IDLE_ENTRY_TTL && bucket.isTokensMoreThanOrEqualsToInitialTokens()) {
                 iterator.remove();

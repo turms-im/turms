@@ -574,7 +574,7 @@ public class GroupService {
                         Mono<Boolean> mono = groupVersionService.updateInformation(groupId);
                         monos.add(mono);
                     }
-                    return Flux.merge(monos).then().thenReturn(result);
+                    return Mono.whenDelayError(monos).thenReturn(result);
                 });
     }
 

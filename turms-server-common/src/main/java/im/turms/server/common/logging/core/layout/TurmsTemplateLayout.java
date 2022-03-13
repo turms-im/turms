@@ -104,7 +104,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
         }
         int estimatedLength = (msg == null ? 0 : msg.length()) + ESTIMATED_PATTERN_TEXT_LENGTH + estimatedThrowableLength;
         if (args != null && shouldParse) {
-            estimatedLength += args.length * 8;
+            estimatedLength += args.length * 16;
         }
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(estimatedLength);
         try {

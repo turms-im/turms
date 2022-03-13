@@ -176,7 +176,7 @@ public class AdminService extends BaseAdminService {
         Admin admin = new Admin(account, password, name, roleId, registrationDate);
         AdminInfo adminInfo = new AdminInfo(admin, rawPassword);
         String finalAccount = account;
-        Mono<?> result = upsert
+        Mono<Void> result = upsert
                 ? mongoClient.upsert(admin)
                 : mongoClient.insert(admin);
         return result.then(Mono.fromCallable(() -> {

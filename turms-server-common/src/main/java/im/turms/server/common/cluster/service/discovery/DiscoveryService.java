@@ -423,7 +423,9 @@ public class DiscoveryService implements ClusterService {
             }
             if (fieldName.equals(Member.Fields.udpAddress)) {
                 udpAddress = value.asString().getValue();
+                continue;
             }
+            LOGGER.warn("Cannot update an unknown field [{}:{}] on member", fieldName, value);
         }
         memberToUpdate.updateIfNotNull(
                 zone,

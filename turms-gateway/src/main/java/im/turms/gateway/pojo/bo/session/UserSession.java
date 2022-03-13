@@ -46,7 +46,7 @@ import java.util.function.BiConsumer;
 @Data
 public final class UserSession {
 
-    public static final AtomicIntegerFieldUpdater<UserSession>
+    private static final AtomicIntegerFieldUpdater<UserSession>
             IS_DELETE_SESSION_LOCK_ACQUIRED_UPDATER = AtomicIntegerFieldUpdater
             .newUpdater(UserSession.class, "isDeleteSessionLockAcquired");
 

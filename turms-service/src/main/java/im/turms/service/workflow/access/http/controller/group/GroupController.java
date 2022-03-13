@@ -223,7 +223,7 @@ public class GroupController {
                 return Mono.empty();
             }
         }
-        return ResponseFactory.okIfTruthy(Flux.merge(counts).then(Mono.just(statistics)));
+        return ResponseFactory.okIfTruthy(Mono.when(counts).thenReturn(statistics));
     }
 
     @PutMapping

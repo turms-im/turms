@@ -125,7 +125,7 @@ public class PluginController {
     @RequiredPermission(AdminPermission.PLUGIN_DELETE)
     public ResponseEntity<ResponseDTO<Void>> deletePlugins(
             @RequestParam Set<String> ids,
-            @RequestParam(required = false) Boolean deleteLocalFiles) {
+            @RequestParam(required = false) boolean deleteLocalFiles) {
         pluginManager.deletePlugins(ids, deleteLocalFiles);
         return ResponseFactory.OK;
     }

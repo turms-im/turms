@@ -156,9 +156,9 @@ public class ConversationService {
                 // Ignore isAllowMoveReadDateForward()
                 update.set(fieldKey, readDate);
             }
-            upsertMonos.add(mongoClient.upsert(GroupConversation.class, filter, update).then());
+            upsertMonos.add(mongoClient.upsert(GroupConversation.class, filter, update));
         }
-        return Mono.when(upsertMonos);
+        return Mono.whenDelayError(upsertMonos);
     }
 
     public Mono<Void> upsertPrivateConversationReadDate(@NotNull Long ownerId,

@@ -201,18 +201,20 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
         UserFriendRequest userFriendRequest = new UserFriendRequest(id, content, status, reason,
                 creationDate, responseDate, requesterId, recipientId);
         return mongoClient.insert(userFriendRequest)
-                .then(userVersionService.updateReceivedFriendRequestsVersion(recipientId)
-                        .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the received friend requests version of the recipient {} after creating a friend request",
-                                    recipientId, t);
-                            return Mono.empty();
-                        }))
-                .then(userVersionService.updateSentFriendRequestsVersion(requesterId)
-                        .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the sent friend requests version of the requester {} after creating a friend request",
-                                    requesterId, t);
-                            return Mono.empty();
-                        }))
+                .then(Mono.whenDelayError(
+                        userVersionService.updateReceivedFriendRequestsVersion(recipientId)
+                                .onErrorResume(t -> {
+                                    LOGGER.error("Caught an error while updating the received friend requests version of the recipient {} after creating a friend request",
+                                            recipientId, t);
+                                    return Mono.empty();
+                                }),
+                        userVersionService.updateSentFriendRequestsVersion(requesterId)
+                                .onErrorResume(t -> {
+                                    LOGGER.error("Caught an error while updating the sent friend requests version of the requester {} after creating a friend request",
+                                            requesterId, t);
+                                    return Mono.empty();
+                                })
+                ))
                 .thenReturn(userFriendRequest);
     }
 
@@ -367,19 +369,17 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.REQUESTER_NOT_FRIEND_REQUEST_RECIPIENT));
                     }
                     return switch (action) {
-                        case ACCEPT -> mongoClient.inTransaction(
-                                        session -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.ACCEPTED, reason, session)
-                                                .then(userRelationshipService.friendTwoUsers(request.getRequesterId(), requesterId, session))
-                                                .then())
+                        case ACCEPT -> mongoClient
+                                .inTransaction(session -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.ACCEPTED, reason, session)
+                                        .then(userRelationshipService.friendTwoUsers(request.getRequesterId(), requesterId, session)))
                                 .retryWhen(TRANSACTION_RETRY);
-                        case IGNORE -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.IGNORED, reason, null)
-                                .then();
-                        case DECLINE -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.DECLINED, reason, null)
-                                .then();
+                        case IGNORE -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.IGNORED, reason, null);
+                        case DECLINE -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.DECLINED, reason, null);
                         default -> Mono.error(TurmsBusinessException
                                 .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The response action must not be UNRECOGNIZED"));
                     };
-                });
+                })
+                .then();
     }
 
     public Mono<UserFriendRequestsWithVersion> queryFriendRequestsWithVersion(

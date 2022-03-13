@@ -79,21 +79,22 @@ public class EntityCodec<T> implements Codec<T> {
         try {
             for (EntityField<?> field : entity.fieldMap().values()) {
                 Object fieldValue = field.get(value);
-                if (fieldValue != null) {
-                    if (field.isIdField()) {
-                        writer.writeName(DomainFieldName.ID);
-                    } else {
-                        writer.writeName(field.getName());
-                    }
-                    Class<?> fieldValueClass = fieldValue.getClass();
-                    if (Map.class.isAssignableFrom(fieldValueClass)) {
-                        TurmsMapCodec codec = new TurmsMapCodec(field.getKeyClass(), field.getElementClass());
-                        codec.setRegistry(registry);
-                        encoderContext.encodeWithChildContext(codec, writer, (Map) fieldValue);
-                    } else {
-                        Codec codec = registry.get(fieldValueClass);
-                        encoderContext.encodeWithChildContext(codec, writer, fieldValue);
-                    }
+                if (fieldValue == null) {
+                    continue;
+                }
+                if (field.isIdField()) {
+                    writer.writeName(DomainFieldName.ID);
+                } else {
+                    writer.writeName(field.getName());
+                }
+                Class<?> fieldValueClass = fieldValue.getClass();
+                if (Map.class.isAssignableFrom(fieldValueClass)) {
+                    TurmsMapCodec codec = new TurmsMapCodec(field.getKeyClass(), field.getElementClass());
+                    codec.setRegistry(registry);
+                    encoderContext.encodeWithChildContext(codec, writer, (Map) fieldValue);
+                } else {
+                    Codec codec = registry.get(fieldValueClass);
+                    encoderContext.encodeWithChildContext(codec, writer, fieldValue);
                 }
             }
         } catch (Exception e) {
@@ -114,7 +115,10 @@ public class EntityCodec<T> implements Codec<T> {
             EntityField field = DomainFieldName.ID.equals(fieldName)
                     ? entity.getField(entity.idFieldName())
                     : entity.getField(fieldName);
-            if (field != null) {
+            if (field == null) {
+                LOGGER.warn("Found properties {} not present in the entity {}", fieldName, entity.collectionName());
+                reader.skipValue();
+            } else {
                 Object value = null;
                 if (reader.getCurrentBsonType() == BsonType.NULL) {
                     reader.readNull();
@@ -134,9 +138,6 @@ public class EntityCodec<T> implements Codec<T> {
                             .formatted(fieldName, entity.entityClass().getName());
                     throw new IllegalStateException(message, e);
                 }
-            } else {
-                LOGGER.warn("Found property {} not present in the entity {}", fieldName, entity.collectionName());
-                reader.skipValue();
             }
         }
         reader.readEndDocument();
@@ -151,7 +152,10 @@ public class EntityCodec<T> implements Codec<T> {
             EntityField<?> field = DomainFieldName.ID.equals(fieldName)
                     ? entity.getField(entity.idFieldName())
                     : entity.getField(fieldName);
-            if (field != null) {
+            if (field == null) {
+                LOGGER.warn("Found properties not present in the entity: " + fieldName);
+                reader.skipValue();
+            } else {
                 Object value = null;
                 if (reader.getCurrentBsonType() == BsonType.NULL) {
                     reader.readNull();
@@ -165,9 +169,6 @@ public class EntityCodec<T> implements Codec<T> {
                     }
                 }
                 values[field.getCtorParamIndex()] = value;
-            } else {
-                LOGGER.warn("Found property not present in the entity: " + fieldName);
-                reader.skipValue();
             }
         }
         reader.readEndDocument();

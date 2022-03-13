@@ -293,7 +293,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     .forwardNotification(notificationForRecipients, notificationByteBuf, requesterId, requesterDevice);
             Mono<Boolean> notifyRecipientsMono = outboundMessageService
                     .forwardNotification(notificationForRecipients, notificationByteBuf, recipients);
-            return Mono.when(notifyRequesterMono, notifyRecipientsMono)
+            return Mono.whenDelayError(notifyRequesterMono, notifyRecipientsMono)
                     .doFinally(signal -> notificationByteBuf.release());
         }
         return outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, recipients)

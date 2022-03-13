@@ -307,7 +307,8 @@ public class GroupMemberService {
                             : groupVersionService.updateMembersVersion(groupIds);
                     return updateMono
                             .onErrorResume(t -> {
-                                LOGGER.error("Caught an error while updating the members version of the groups {} after updating group members", groupIds, t);
+                                LOGGER.error("Caught an error while updating the members version of the groups {} after updating group members",
+                                        groupIds, t);
                                 return Mono.empty();
                             })
                             .thenReturn(result);

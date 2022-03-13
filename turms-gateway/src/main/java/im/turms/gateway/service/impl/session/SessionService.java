@@ -314,7 +314,7 @@ public class SessionService implements ISessionService {
                     .onErrorResume(t -> Mono.empty());
             monos.add(mono);
         }
-        return Mono.when(monos);
+        return Mono.whenDelayError(monos);
     }
 
     @Override

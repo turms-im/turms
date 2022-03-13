@@ -482,7 +482,7 @@ public class UserRelationshipService {
                 monos.add(delete);
             }
         }
-        return Flux.concat(monos).then();
+        return Mono.whenDelayError(monos);
     }
 
     public Mono<Boolean> isBlocked(@NotNull Long ownerId, @NotNull Long relatedUserId) {

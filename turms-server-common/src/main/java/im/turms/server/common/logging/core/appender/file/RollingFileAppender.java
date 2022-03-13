@@ -31,7 +31,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -40,21 +40,21 @@ import java.util.concurrent.TimeUnit;
 public class RollingFileAppender extends Appender {
 
     public static final char FIELD_DELIMITER = '_';
+    private static final String FILE_MIDDLE = "yyyyMMdd";
 
     private final String filePrefix;
     private final String fileSuffix;
-    private final String fileMiddle = "yyyyMMdd";
 
     private final Path fileDirectory;
 
     private final DateTimeFormatter fileDateTimeFormatter = DateTimeFormatter
-            .ofPattern(fileMiddle)
+            .ofPattern(FILE_MIDDLE)
             .withZone(TimeZoneConstant.ZONE_ID);
 
     private final int maxFiles;
     private final long maxFileSize;
 
-    private final ArrayDeque<LogFile> files;
+    private final Deque<LogFile> files;
     private LogFile currentFile;
 
     private long nextFileSize;
@@ -79,7 +79,7 @@ public class RollingFileAppender extends Appender {
         this.maxFileSize = (maxFileMb > 0) ? maxFileMb * 1024 * 1024 : Long.MAX_VALUE;
 
         Files.createDirectories(fileDirectory);
-        files = LogDirectoryVisitor.visit(fileDirectory, filePrefix, fileSuffix, fileMiddle, fileDateTimeFormatter, maxFiles);
+        files = LogDirectoryVisitor.visit(fileDirectory, filePrefix, fileSuffix, FILE_MIDDLE, fileDateTimeFormatter, maxFiles);
 
         LogFile logFile = files.peekLast();
 

@@ -217,8 +217,8 @@ public final class MongoEntityFactory {
                 setter = ReflectionUtil.getSetter(field);
             }
             // Constructor
-            Integer ctorParamIndex = constructor.isNoArgConstructor()
-                    ? null
+            int ctorParamIndex = constructor.isNoArgConstructor()
+                    ? EntityField.UNSET_CTOR_PARAM_INDEX
                     : parseCtorParamIndex(constructor, field);
             if (entityFields == null) {
                 entityFields = new HashMap<>(16);

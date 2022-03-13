@@ -29,6 +29,8 @@ import java.lang.invoke.MethodHandle;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class EntityField<T> {
 
+    static final int UNSET_CTOR_PARAM_INDEX = -1;
+
     private final Class<T> clazz;
     /**
      * Key for Map
@@ -41,11 +43,12 @@ public class EntityField<T> {
     @EqualsAndHashCode.Include
     private final String name;
     private final boolean isIdField;
-    /*
-     Don't use map to find the parameter index in constructor dynamically
-     to avoid unnecessary overhead when decoding (instantiate) entity from BSON
-    */
-    private final Integer ctorParamIndex;
+    /**
+     * Don't use map to find the parameter index in constructor dynamically
+     * to avoid unnecessary overhead when decoding (instantiate) entity from BSON.
+     * It's -1 if the field isn't a field in constructor.
+     */
+    private final int ctorParamIndex;
 
     private final MethodHandle getter;
     private final MethodHandle setter;

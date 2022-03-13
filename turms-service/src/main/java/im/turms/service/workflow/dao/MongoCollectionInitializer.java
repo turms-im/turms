@@ -324,7 +324,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 throw new IllegalStateException(message);
             }
         };
-        return Mono.when(entityMap.asMap().entrySet().stream()
+        return Mono.whenDelayError(entityMap.asMap().entrySet().stream()
                 .map(entry -> entry.getKey().ensureIndexesAndShard(entry.getValue().stream()
                                 .map(MongoEntity::entityClass)
                                 .collect(Collectors.toList()),
