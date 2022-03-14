@@ -102,7 +102,9 @@ public class ConnectionService implements ClusterService {
     private final Thread keepaliveThread;
 
     /**
-     * Note that it is allowed to connect to non-member turms servers
+     * Note that:
+     * 1. It is allowed to connect to non-member turms servers.
+     * 2. Only after handshake done, a connection can be put in the pool.
      */
     private final Map<String, TurmsConnection> connectionPool = new ConcurrentHashMap<>();
     /**
@@ -261,7 +263,13 @@ public class ConnectionService implements ClusterService {
                     LOGGER.info("[Client] Sending a open handshake request to member: {}[{}:{}]",
                             nodeId, member.getMemberHost(), member.getMemberPort());
                     rpcService.requestResponse(nodeId, new OpeningHandshakeRequest(localNodeId), null, connection)
-                            .subscribe(unused -> onMemberConnectionHandshakeCompleted(member, connection, true), t -> {
+                            .subscribe(code -> {
+                                if (code == OpeningHandshakeRequest.RESPONSE_CODE_SUCCESS) {
+                                    onMemberConnectionHandshakeCompleted(member, connection, true);
+                                } else {
+                                    throw new IllegalStateException("Failure code: " + code);
+                                }
+                            }, t -> {
                                 LOGGER.error("[Client] Failed to complete handshake with member: {}[{}:{}]. Closing connection to reconnect",
                                         nodeId, member.getMemberHost(), member.getMemberPort(), t);
                                 // To keep logic simple, just disconnect to
