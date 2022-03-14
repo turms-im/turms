@@ -18,8 +18,10 @@
 package im.turms.server.common.mongo.exception;
 
 import com.mongodb.ErrorCategory;
+import com.mongodb.MongoBulkWriteException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteError;
+import com.mongodb.bulk.BulkWriteError;
 
 /**
  * @author James Chen
@@ -30,6 +32,17 @@ public class MongoExceptionTranslator {
         if (t instanceof MongoWriteException e) {
             WriteError error = e.getError();
             if (error.getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
+                return new DuplicateKeyException(t.getMessage(), t);
+            }
+        } else if (t instanceof MongoBulkWriteException e) {
+            boolean areAllErrorsDuplicateKeyErrors = true;
+            for (BulkWriteError error : e.getWriteErrors()) {
+                if (!error.getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
+                    areAllErrorsDuplicateKeyErrors = false;
+                    break;
+                }
+            }
+            if (areAllErrorsDuplicateKeyErrors) {
                 return new DuplicateKeyException(t.getMessage(), t);
             }
         } else if (t instanceof com.mongodb.DuplicateKeyException) {

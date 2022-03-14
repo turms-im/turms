@@ -335,7 +335,8 @@ public class UserRelationshipGroupService {
                                 .Key(memberKey.getOwnerId(), newGroupIndex, memberKey.getRelatedUserId());
                         newMembers.add(new UserRelationshipGroupMember(newKey, now));
                     }
-                    return mongoClient.insertAllOfSameType(newMembers);
+                    return mongoClient.insertAllOfSameType(newMembers)
+                            .onErrorResume(DuplicateKeyException.class, e -> Mono.empty());
                 })
                 .then(mongoClient.deleteOne(UserRelationshipGroup.class, filterGroup))
                 .then(userVersionService.updateRelationshipGroupsVersion(ownerId)
