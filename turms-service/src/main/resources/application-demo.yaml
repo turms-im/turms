@@ -5,3 +5,6 @@ turms:
     admin-api:
       address:
         advertise-strategy: public_address
+    message:
+      allow-send-messages-to-oneself: true
+      allow-send-messages-to-stranger: true
