@@ -20,6 +20,7 @@ package im.turms.gateway.manager;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.gateway.access.udp.UdpDispatcher;
+import im.turms.gateway.constant.ThreadNameConstant;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.dto.CloseReason;
@@ -84,7 +85,7 @@ public class HeartbeatManager {
         setCloseIdleSessionAfterSeconds(closeIdleSessionAfterSeconds);
         this.minHeartbeatIntervalMillis = minHeartbeatIntervalSeconds * 1000;
         this.switchProtocolAfterMillis = switchProtocolAfterSeconds * 1000;
-        DefaultThreadFactory factory = new DefaultThreadFactory("heartbeat-update", true);
+        DefaultThreadFactory factory = new DefaultThreadFactory(ThreadNameConstant.CLIENT_HEARTBEAT_REFRESHER, true);
         workerThread = factory.newThread(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {

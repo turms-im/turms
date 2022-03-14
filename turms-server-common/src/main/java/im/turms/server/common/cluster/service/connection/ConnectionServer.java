@@ -18,6 +18,7 @@
 package im.turms.server.common.cluster.service.connection;
 
 import im.turms.server.common.access.common.resource.LoopResourcesFactory;
+import im.turms.server.common.constant.ThreadNameConstant;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.util.SslUtil;
@@ -27,6 +28,7 @@ import reactor.netty.ChannelBindException;
 import reactor.netty.DisposableServer;
 import reactor.netty.channel.ChannelOperations;
 import reactor.netty.channel.MicrometerChannelMetricsRecorder;
+import reactor.netty.resources.LoopResources;
 import reactor.netty.tcp.TcpServer;
 
 import java.time.Duration;
@@ -73,10 +75,11 @@ public class ConnectionServer {
         }
         // Loop until the server is set up, or an exception occurs
         int currentPort = proposedPort;
+        LoopResources loopResources = LoopResourcesFactory.createForServer(ThreadNameConstant.NODE_CONNECTION_SERVER);
         while (true) {
             try {
                 TcpServer tcpServer = TcpServer.create()
-                        .runOn(LoopResourcesFactory.createForServer("connection-server"))
+                        .runOn(loopResources)
                         .host(host)
                         .port(currentPort)
                         .metrics(true, () -> new MicrometerChannelMetricsRecorder(NODE_TCP_SERVER_NAME, "tcp"))

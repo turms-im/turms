@@ -25,6 +25,7 @@ import im.turms.common.model.dto.udpsignal.UdpSignalRequest;
 import im.turms.gateway.access.udp.dto.UdpNotification;
 import im.turms.gateway.access.udp.dto.UdpSignalResponseBufferPool;
 import im.turms.gateway.constant.MetricsConstant;
+import im.turms.gateway.constant.ThreadNameConstant;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.access.common.resource.LoopResourcesFactory;
@@ -80,7 +81,7 @@ public class UdpDispatcher {
                     .host(host)
                     .port(port)
                     .option(ChannelOption.SO_REUSEADDR, true)
-                    .runOn(LoopResourcesFactory.createForServer("gateway-udp"))
+                    .runOn(LoopResourcesFactory.createForServer(ThreadNameConstant.GATEWAY_UDP_PREFIX))
                     .metrics(true, () -> new TurmsMicrometerChannelMetricsRecorder(MetricsConstant.CLIENT_NETWORK, "udp"))
                     .handle((inbound, outbound) -> {
                         Flux<DatagramPacket> responseFlux = inbound.receiveObject()

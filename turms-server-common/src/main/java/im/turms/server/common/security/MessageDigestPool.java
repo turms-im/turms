@@ -20,7 +20,6 @@ package im.turms.server.common.security;
 import io.netty.util.concurrent.FastThreadLocal;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * @author James Chen

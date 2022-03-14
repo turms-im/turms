@@ -22,6 +22,7 @@ import im.turms.server.common.bo.blocklist.BlockedClient;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.constant.CronConstant;
+import im.turms.server.common.constant.ThreadNameConstant;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.exception.TurmsBusinessException;
@@ -36,8 +37,8 @@ import im.turms.server.common.rpc.service.ISessionService;
 import im.turms.server.common.task.TrivialTaskManager;
 import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.InetAddressUtil;
+import im.turms.server.common.util.NamedThreadFactory;
 import io.lettuce.core.ScriptOutputType;
-import io.netty.util.concurrent.DefaultThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -87,8 +88,8 @@ public class BlocklistService {
         BlocklistProperties.IpBlocklistTypeProperties ipBlocklistProperties = blocklistProperties.getIp();
         BlocklistProperties.UserIdBlocklistTypeProperties userIdBlocklistProperties = blocklistProperties.getUserId();
 
-        threadPoolExecutor =
-                new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory("turms-client-blocklist-sync", true));
+        threadPoolExecutor = new ScheduledThreadPoolExecutor(1,
+                new NamedThreadFactory(ThreadNameConstant.CLIENT_BLOCKLIST_SYNC, true));
 
         isIpBlocklistEnabled = ipBlocklistProperties.isEnabled();
         isUserIdBlocklistEnabled = userIdBlocklistProperties.isEnabled();

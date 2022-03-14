@@ -17,11 +17,16 @@
 
 package im.turms.server.common.access.http.config;
 
+import im.turms.server.common.access.common.resource.LoopResourcesFactory;
+import im.turms.server.common.constant.ThreadNameConstant;
 import im.turms.server.common.metrics.TurmsMicrometerChannelMetricsRecorder;
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory;
 import org.springframework.boot.web.embedded.netty.NettyServerCustomizer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.reactive.ReactorResourceFactory;
 import reactor.netty.http.server.HttpServer;
+import reactor.netty.resources.LoopResources;
 
 import static im.turms.server.common.constant.CommonMetricsConstant.ADMIN_API_NAME;
 import static io.netty.channel.ChannelOption.SO_LINGER;
@@ -35,6 +40,24 @@ import static io.netty.channel.ChannelOption.TCP_NODELAY;
  */
 @Configuration
 public class NettyServerConfig implements NettyServerCustomizer {
+
+    @Bean
+    ReactorResourceFactory reactorServerResourceFactory() {
+        return new ReactorResourceFactory() {
+            private final LoopResources loopResources = LoopResourcesFactory
+                    .createForServer(ThreadNameConstant.ADMIN_HTTP_PREFIX);
+
+            @Override
+            public LoopResources getLoopResources() {
+                return loopResources;
+            }
+
+            @Override
+            public void setLoopResources(LoopResources loopResources) {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
 
     @Override
     public HttpServer apply(HttpServer httpServer) {

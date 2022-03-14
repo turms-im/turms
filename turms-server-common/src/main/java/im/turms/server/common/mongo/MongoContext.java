@@ -28,6 +28,7 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
+import im.turms.server.common.constant.ThreadNameConstant;
 import im.turms.server.common.mongo.codec.MongoCodecProvider;
 import im.turms.server.common.mongo.entity.MongoEntity;
 import im.turms.server.common.mongo.entity.MongoEntityFactory;
@@ -98,7 +99,8 @@ public class MongoContext {
         mongoCodecProvider.setRegistry(codecRegistry);
         ConnectionString connectionSettings = new ConnectionString(connectionString);
         eventLoopGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(),
-                new DefaultThreadFactory("turms-mongo-event-loop"));
+                // TODO: distinguish thread pool names when there are multiple contexts
+                new DefaultThreadFactory(ThreadNameConstant.MONGO_EVENT_LOOP));
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connectionSettings)
                 .applyToClusterSettings(builder -> builder.addClusterListener(new ClusterListener() {

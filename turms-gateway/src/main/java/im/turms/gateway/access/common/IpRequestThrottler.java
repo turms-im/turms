@@ -17,6 +17,7 @@
 
 package im.turms.gateway.access.common;
 
+import im.turms.gateway.constant.ThreadNameConstant;
 import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.lang.ByteArrayWrapper;
@@ -25,7 +26,7 @@ import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.env.gateway.clientapi.ClientApiProperties;
 import im.turms.server.common.throttle.TokenBucket;
 import im.turms.server.common.throttle.TokenBucketContext;
-import io.netty.util.concurrent.DefaultThreadFactory;
+import im.turms.server.common.util.NamedThreadFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
@@ -70,7 +71,7 @@ public class IpRequestThrottler {
 
         node.addPropertiesChangeListener(newProperties -> requestTokenBucketContext.updateRequestTokenBucket(clientApiProperties.getRateLimiting()));
 
-        new DefaultThreadFactory("turms-ip-request-token-bucket-cleaner", true)
+        new NamedThreadFactory(ThreadNameConstant.IP_REQUEST_TOKEN_BUCKET_CLEANER, true)
                 .newThread(() -> {
                     Thread thread = Thread.currentThread();
                     while (!thread.isInterrupted()) {

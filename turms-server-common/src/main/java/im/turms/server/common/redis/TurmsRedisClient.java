@@ -18,6 +18,7 @@
 package im.turms.server.common.redis;
 
 import im.turms.server.common.bo.location.Coordinates;
+import im.turms.server.common.constant.ThreadNameConstant;
 import im.turms.server.common.redis.codec.TurmsRedisCodecAdapter;
 import im.turms.server.common.redis.codec.context.RedisCodecContext;
 import im.turms.server.common.redis.command.TurmsCommandEncoder;
@@ -85,7 +86,7 @@ public class TurmsRedisClient {
         this.serializationContext = serializationContext;
         commandBuilder = new TurmsRedisCommandBuilder(serializationContext);
         DefaultEventExecutorGroup eventExecutorGroup = new DefaultEventExecutorGroup(DefaultClientResources.MIN_COMPUTATION_THREADS,
-                new DefaultThreadFactory("lettuce-eventExecutorLoop"));
+                new DefaultThreadFactory(ThreadNameConstant.LETTUCE_EVENT_LOOP));
         DefaultEventLoopGroupProvider eventLoopGroupProvider =
                 new DefaultEventLoopGroupProvider(DefaultClientResources.MIN_IO_THREADS,
                         (ThreadFactoryProvider) poolName -> new DefaultThreadFactory(poolName, true));

@@ -20,6 +20,7 @@ package im.turms.gateway.access.websocket.factory;
 import im.turms.gateway.access.common.function.ConnectionHandler;
 import im.turms.gateway.access.common.handler.ServiceAvailabilityHandler;
 import im.turms.gateway.constant.MetricsConstant;
+import im.turms.gateway.constant.ThreadNameConstant;
 import im.turms.gateway.service.impl.session.SessionService;
 import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.healthcheck.ServerStatusManager;
@@ -99,7 +100,7 @@ public final class WebSocketFactory {
                 .childOption(SO_REUSEADDR, true)
                 .childOption(SO_LINGER, 0)
                 .childOption(TCP_NODELAY, true)
-                .runOn(LoopResourcesFactory.createForServer("gateway-ws"))
+                .runOn(LoopResourcesFactory.createForServer(ThreadNameConstant.GATEWAY_WS_PREFIX))
                 .metrics(true, () -> new TurmsMicrometerChannelMetricsRecorder(MetricsConstant.CLIENT_NETWORK, "websocket"))
                 .handle(getHttpRequestHandler(handler, serverSpec))
                 .doOnChannelInit((connectionObserver, channel, remoteAddress) ->

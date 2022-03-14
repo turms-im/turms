@@ -20,13 +20,14 @@ package im.turms.server.common.cluster.service.discovery;
 import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.cluster.service.config.domain.discovery.Leader;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
+import im.turms.server.common.constant.ThreadNameConstant;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.DomainFieldName;
 import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
-import io.netty.util.concurrent.DefaultThreadFactory;
+import im.turms.server.common.util.NamedThreadFactory;
 import lombok.Getter;
 import lombok.Setter;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
@@ -66,7 +67,8 @@ public class LocalNodeStatusManager {
     private final Duration heartbeatInterval;
     private final long heartbeatIntervalMillis;
     private ScheduledFuture<?> heartbeatFuture;
-    private final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory("discovery-heartbeat"));
+    private final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1,
+            new NamedThreadFactory(ThreadNameConstant.NODE_DISCOVERY_HEARTBEAT_REFRESHER, false));
 
     // Health
     private final AtomicBoolean isHealthStatusUpdating = new AtomicBoolean();

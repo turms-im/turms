@@ -17,13 +17,13 @@
 
 package im.turms.server.common.logging.core.processor;
 
+import im.turms.server.common.constant.ThreadNameConstant;
 import im.turms.server.common.logging.core.appender.Appender;
 import im.turms.server.common.logging.core.idle.BackoffIdleStrategy;
 import im.turms.server.common.logging.core.logger.InternalLogger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.model.LogRecord;
 import im.turms.server.common.util.ByteBufUtil;
-import io.netty.util.concurrent.DefaultThreadFactory;
 import org.jctools.queues.MpscUnboundedArrayQueue;
 
 import java.util.List;
@@ -40,12 +40,11 @@ public final class LogProcessor {
     private volatile boolean active;
 
     public LogProcessor(MpscUnboundedArrayQueue<LogRecord> recordQueue) {
-        thread = new DefaultThreadFactory("turms-log-processor")
-                .newThread(() -> drainLogsForever(recordQueue));
-        active = true;
+        thread = new Thread(() -> drainLogsForever(recordQueue),
+                ThreadNameConstant.LOG_PROCESSOR);
         Runtime.getRuntime()
-                .addShutdownHook(new DefaultThreadFactory("turms-log-shutdown")
-                        .newThread(this::close));
+                .addShutdownHook(new Thread(this::close, ThreadNameConstant.LOG_SHUTDOWN));
+        active = true;
     }
 
     public void start() {

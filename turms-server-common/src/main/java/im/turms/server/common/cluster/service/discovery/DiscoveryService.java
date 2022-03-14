@@ -31,6 +31,7 @@ import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import im.turms.server.common.cluster.service.connection.ConnectionService;
 import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.rpc.RpcService;
+import im.turms.server.common.constant.ThreadNameConstant;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.core.logger.Logger;
@@ -39,7 +40,7 @@ import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.env.common.cluster.DiscoveryProperties;
 import im.turms.server.common.util.CollectorUtil;
-import io.netty.util.concurrent.DefaultThreadFactory;
+import im.turms.server.common.util.NamedThreadFactory;
 import lombok.Getter;
 import org.apache.commons.collections4.ListUtils;
 import org.bson.BsonValue;
@@ -80,8 +81,8 @@ public class DiscoveryService implements ClusterService {
     private static final Duration CRUD_TIMEOUT_DURATION = Duration.ofSeconds(10);
     private static final Comparator<Member> MEMBER_PRIORITY_COMPARATOR = DiscoveryService::compareMemberPriority;
 
-    private final ScheduledExecutorService scheduler =
-            new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory("turms-cluster-discovery"));
+    private final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1,
+            new NamedThreadFactory(ThreadNameConstant.NODE_DISCOVERY_CHANGE_NOTIFIER, false));
     private ScheduledFuture<?> notifyMembersChangeFuture;
 
     private final DiscoveryProperties discoveryProperties;

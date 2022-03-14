@@ -28,12 +28,14 @@ import im.turms.server.common.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.cluster.service.discovery.MemberConnectionListener;
 import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.rpc.RpcService;
+import im.turms.server.common.constant.ThreadNameConstant;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.logging.core.model.LogLevel;
 import im.turms.server.common.property.env.common.cluster.connection.ConnectionClientProperties;
 import im.turms.server.common.property.env.common.cluster.connection.ConnectionProperties;
 import im.turms.server.common.property.env.common.cluster.connection.ConnectionServerProperties;
+import im.turms.server.common.util.NamedThreadFactory;
 import im.turms.server.common.util.SslUtil;
 import im.turms.server.common.util.ThrowableUtil;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -131,10 +133,10 @@ public class ConnectionService implements ClusterService {
         keepaliveTimeoutMillis = clientProperties.getKeepaliveTimeoutSeconds() * 1000L;
         reconnectInterval = Duration.ofSeconds(clientProperties.getReconnectIntervalSeconds());
         eventLoopGroupForClients = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(),
-                new DefaultThreadFactory("turms-cluster-connection-client-io"));
-        connectionRetryScheduler =
-                Executors.newScheduledThreadPool(1, new DefaultThreadFactory("turms-cluster-connection-retry", true));
-        keepaliveThread = new DefaultThreadFactory("turms-cluster-connection-keepalive", true)
+                new DefaultThreadFactory(ThreadNameConstant.NODE_CONNECTION_CLIENT_IO));
+        connectionRetryScheduler = Executors.newScheduledThreadPool(1,
+                new NamedThreadFactory(ThreadNameConstant.NODE_CONNECTION_RETRY, true));
+        keepaliveThread = new NamedThreadFactory(ThreadNameConstant.NODE_CONNECTION_KEEPALIVE, true)
                 .newThread(() -> {
                     sendKeepaliveToConnectionsForever();
                     LOGGER.warn("Keepalive thread has been stopped");

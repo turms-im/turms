@@ -18,6 +18,7 @@
 package im.turms.server.common.healthcheck;
 
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.constant.ThreadNameConstant;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
@@ -57,7 +58,7 @@ public class HealthCheckManager {
 
     private void startHealthCheck(int intervalSeconds) {
         long intervalMillis = intervalSeconds * 1000L;
-        DefaultThreadFactory threadFactory = new DefaultThreadFactory("health-checker", true);
+        DefaultThreadFactory threadFactory = new DefaultThreadFactory(ThreadNameConstant.HEALTH_CHECKER, true);
         new ScheduledThreadPoolExecutor(1, threadFactory)
                 .scheduleWithFixedDelay(() -> {
                     cpuHealthChecker.updateHealthStatus();

@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class Slf4jBridgeFactory implements ILoggerFactory {
 
-    private final ConcurrentHashMap<String, Slf4jBridge> loggerMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Slf4jBridge> loggerMap = new ConcurrentHashMap<>(128);
 
     @Override
     public org.slf4j.Logger getLogger(String name) {

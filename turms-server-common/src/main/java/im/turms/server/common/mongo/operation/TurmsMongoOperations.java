@@ -42,6 +42,7 @@ import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.internal.MongoCollectionUtil;
 import com.mongodb.reactivestreams.client.internal.MongoOperationPublisher;
 import com.mongodb.reactivestreams.client.internal.TurmsFindPublisherImpl;
+import im.turms.server.common.constant.ThreadNameConstant;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.mongo.BsonPool;
@@ -104,7 +105,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     private static final Filter FILTER_ALL = Filter.newBuilder(0);
     private static final BsonDocument EMPTY_FILTER = new BsonDocument();
     private static final BsonDocument FILTER_ALL_DOCUMENT = EMPTY_FILTER;
-    private static final Scheduler WATCH_SCHEDULER = Schedulers.newSingle("turms-mongo-watch", false);
+    private static final Scheduler WATCH_SCHEDULER = Schedulers.newSingle(ThreadNameConstant.MONGO_CHANGE_WATCHER, false);
 
     // Session
     private static final ClientSessionOptions DEFAULT_SESSION_OPTIONS = ClientSessionOptions.builder().build();

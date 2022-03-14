@@ -25,6 +25,7 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.gateway.access.tcp.TcpDispatcher;
+import im.turms.gateway.constant.ThreadNameConstant;
 import im.turms.server.common.client.TurmsClient;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.context.TurmsApplicationContext;
@@ -35,9 +36,9 @@ import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.FakeProperties;
 import im.turms.server.common.proto.ProtoFormatter;
+import im.turms.server.common.util.NamedThreadFactory;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.server.common.util.ThrowableUtil;
-import io.netty.util.concurrent.DefaultThreadFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -111,7 +112,7 @@ public class ClientFakingManager {
      */
     private Mono<List<TurmsClient>> prepareClients(long firstUserId, int userCount) {
         LOGGER.info("Preparing clients");
-        LoopResources loopResources = LoopResources.create("turms-client");
+        LoopResources loopResources = LoopResources.create(ThreadNameConstant.FAKE_CLIENT);
         List<Mono<TurmsNotification>> results = new ArrayList<>(userCount);
         ConcurrentLinkedQueue<TurmsClient> clients = new ConcurrentLinkedQueue<>();
         for (int i = 0; i < userCount; i++) {
@@ -126,12 +127,12 @@ public class ClientFakingManager {
                         if (TurmsStatusCode.isSuccessCode(notification.getCode())) {
                             clients.add(client);
                         } else {
-                            LOGGER.error("The session {} failed to login: {}", client.getSessionId(),
+                            LOGGER.error("The session {} failed to log in: {}", client.getSessionId(),
                                     ProtoFormatter.toJSON5(notification, 128));
                         }
                     })
                     .onErrorResume(t -> {
-                        LOGGER.error("The session {} failed to login", client.getSessionId(), t);
+                        LOGGER.error("The session {} failed to log in", client.getSessionId(), t);
                         return Mono.empty();
                     });
             results.add(loginResult);
@@ -154,7 +155,7 @@ public class ClientFakingManager {
         int jitter = userCount / 10;
         Range<Long> fakedNumberRange = Range
                 .closedOpen(Math.max(0, userIdRange.lowerEndpoint() - jitter), userIdRange.upperEndpoint() + jitter);
-        DefaultThreadFactory threadFactory = new DefaultThreadFactory("turms-client-manager", true);
+        NamedThreadFactory threadFactory = new NamedThreadFactory(ThreadNameConstant.FAKE_CLIENT_MANAGER, true);
         thread = threadFactory.newThread(() -> {
             Iterator<TurmsClient> clientIterator = Iterators.cycle(clients);
             Set<String> excludedRequestNames = Set.of(RandomRequestFactory.CREATE_SESSION_REQUEST_FILED_NAME,
@@ -187,7 +188,8 @@ public class ClientFakingManager {
                 } catch (InterruptedException e) {
                     for (TurmsClient client : clients) {
                         client.logout()
-                                .subscribe(null, t -> LOGGER.error("Caught an error while the client with the user ID [{}] logging out", client.getUserId(), t));
+                                .subscribe(null, t -> LOGGER.error("Caught an error while the client with the user ID [{}] logging out",
+                                        client.getUserId(), t));
                     }
                     break;
                 }
