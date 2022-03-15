@@ -122,7 +122,7 @@ JVM默认的堆配置如下：
 
 ### 关于Valhalla项目
 
-Java的内存占用一直为人所诟病，诸如一个Integer对象所存放的对象头所需的内存空间大于实际int数据数倍，也因为这样的设计缺陷，导致编程时还需要一些变通手段，如在使用`Integer`对象时，JVM会优先使用`java.lang.Integer.IntegerCache`类里的对象缓存。相比很多追求性能优化（甚至是寄存器级别的优化）的C++服务端项目（如Nginx、Redis），由于Java自身的设计缺陷与保守，Java对内存的浪费就让人感觉有些“自暴自弃”了，并且更糟糕的是：这样的精神也传导给了整个Java生态圈。通过阅读源码，能发现很多知名Java项目也是“功能能用，功能写着舒服，性能差不多就行，反正JVM会帮忙GC”的态度，诸如可以很容易做Cache的地方不Cache、基础数据结构乱用、反复内存拷贝（如最常见的`String`与`StringBuilder`在实践中，通常来来回回拷贝很多次，源码让人触目惊心），只有诸如Netty这样极个别项目会有优化、精益求精的意识，关于这点我们已经在其他章节重点讲解了，故不赘述。
+Java的内存占用一直为人所诟病，诸如一个Integer对象所存放的对象头所需的内存（在64位系统且开启了压缩指针的情况下，为12字节）大于实际int数据数倍，也因为这样的设计缺陷，导致编程时还需要一些变通手段，如在使用`Integer`对象时，JVM会优先使用`java.lang.Integer.IntegerCache`类里的对象缓存。相比很多追求性能优化（甚至是寄存器级别的优化）的C++服务端项目（如Nginx、Redis），由于Java自身的设计缺陷与保守，Java对内存的浪费就让人感觉有些“自暴自弃”了，并且更糟糕的是：这样的精神也传导给了整个Java生态圈。通过阅读源码，能发现很多知名Java项目也是“功能能用，功能写着舒服，性能差不多就行，反正JVM会帮忙GC”的态度，诸如可以很容易做Cache的地方不Cache、基础数据结构乱用、反复内存拷贝（如最常见的`String`与`StringBuilder`在实践中，通常来来回回拷贝很多次，源码让人触目惊心），只有诸如Netty这样极个别项目会有优化、精益求精的意识，关于这点我们已经在其他章节重点讲解了，故不赘述。
 
 而Valhalla项目对现有的Java Object体系进行了重构。原有的`Object`在新的Java体系中叫做`IdentityObject`，而新体系下的`Object`则成了`IdentityObject`与`ValueObject`的父类（注意：Valhalla团队尚未定稿，因此概念可能还会变），其中`ValueObject`让用户能够自定义性能如传统Java八大基础类型一样高效的数据结构，无需对象头、访问时无需通过指针查找、栈上分配，甚至直接存储在CPU寄存器之中。等Valhalla项目发布Preview版本后，我们将引入`ValueObject`，并且由于我们已等待该项目数年，非常熟悉其设计，故可在一周内完成适配与测试工作。这也是我们会为`Preview`特性开绿灯的唯一特性。
 
@@ -130,11 +130,11 @@ Java的内存占用一直为人所诟病，诸如一个Integer对象所存放的
 
 ## 线程
 
-由于Turms服务端不存在阻塞I/O，诸如RPC、MongoDB与Redis的网络请求都是基于Netty异步实现的。如果更往下看，在Linux系统上，即都为epoll相关操作，因此服务端所需的线程数远远少于传统Java Web应用。以16核CPU为例，turms-gateway与turms-service的线程数峰值的范围约在80~150（含JVM内部线程）之间，具体峰值数要根据服务器的CPU内核数与所运行的服务端个数（如一个turms-gateway可以同时启动TCP/WebSocket/UDP服务端）而定。
+由于Turms服务端不存在阻塞I/O，诸如RPC、MongoDB与Redis的网络请求都是基于Netty异步实现的，如果更往下看，在Linux系统上，即都为epoll相关操作，因此服务端所需的线程数远远少于传统Java Web应用。以16核CPU为例，turms-gateway与turms-service的线程数峰值的范围约在80~140（含JVM内部线程）之间，具体峰值数要根据服务器的CPU内核数与所运行的服务端个数（如一个turms-gateway可以同时启动TCP/WebSocket/UDP服务端）而定。
 
 特别值得一提的是：Turms的线程峰值数与同时在线用户规模与请求QPS无关。
 
-补充：正因为Turms服务端自身使用的线程数相比CPU核数而言并不算多，因此在个别代码中我们直接使用`ThreadLocal`缓存一些相对大且线程不安全的对象，并且相比传统服务端，Turms也极大地减少了线程上下文切换带来的开销
+补充：正因为Turms服务端自身使用的线程数相比CPU核数而言并不算多，因此在个别代码中我们直接使用`ThreadLocal`缓存一些相对大且线程不安全的对象，并且相比传统服务端，Turms也极大地减少了线程上下文切换带来的开销。
 
 ### CPU健康监控
 
@@ -148,7 +148,43 @@ TODO
 
 ### 线程模型
 
+（相关文档：[Linux系统参考配置](https://turms-im.github.io/docs/for-developers/distribution.html#linux%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%82%E8%80%83%E9%85%8D%E7%BD%AE)、[源码-网络配置](https://turms-im.github.io/docs/for-developers/code.html#%E7%BD%91%E7%BB%9C%E5%B1%82%E9%85%8D%E7%BD%AE)）
+
+#### 业务处理TCP/WebSocket服务端与HTTP后台管理API服务端
+
+业务处理TCP/WebSocket服务端与HTTP后台管理API服务端的实现均采用`主从Reactor多线程模型`。具体而言，均使用一个Acceptor线程（主Reactor组、Boss EventLoopGroup）与CPU核数个数的Worker线程组（从Reactor组、Worker EventLoopGroup）。其中：
+
+* Acceptor线程通过`io.netty.channel.nio.NioEventLoop#run`函数，从`ServerSocketChannel`监听TCP客户端的连接事件，并为已连接的TCP客户端创建对应的`SocketChannel`，将其分配给一个Worker线程进行后续处理。
+
+  Acceptor线程名为：`turms-gateway-tcp-acceptor`、`turms-gateway-ws-acceptor`或`turms-admin-http-acceptor`。
+
+  主要相关Linux系统配置：`net.core.somaxconn`（TCP accept队列最大长度）。
+
+* 一个Worker线程可以绑定并处理多个`SocketChannel`，并通过`io.netty.channel.nio.NioEventLoop#run`来不断监听`SocketChannel`的read事件与需要处理write任务，并在读写字节流时执行`ChannelPipeline`中一系列`ChannelHandler`的编解码函数，完成字节编解码任务。
+
+  在Worker线程完成客户端请求的解码工作后，Worker线程就会执行Turms服务端的[源码-客户端请求处理逻辑](https://turms-im.github.io/docs/for-developers/code.html#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%B7%E6%B1%82%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B)了（注意：这里并不需要切换线程）。而在这个业务请求处理过程中，最耗时的是客户端请求的Protobuf解码与MongoDB与Redis请求的编码操作，而IM逻辑只是完成IM业务逻辑的调度，因此并不耗时。特别一提的是，在业务请求的处理过程中，如果需要对一个字符串进行[敏感词过滤](https://turms-im.github.io/docs/for-developers/anti-spam.html)检测，并采用`MASK_TEXT`策略，则其性能表现可以简单约等于Java的`String#getBytes("UTF-8")`，因此也不耗时。
+
+  Worker线程名为：`turms-gateway-tcp-worker`、`turms-gateway-ws-worker`或`turms-admin-http-worker`。
+
+  主要Linux系统配置：net.ipv4.tcp_mem、net.ipv4.tcp_rmem、net.ipv4.tcp_wmem
+
+#### Node服务端与客户端
+
 TODO
+
+#### Lettuce与MongoDB客户端
+
+TODO
+
+### 判断任意一行代码在哪个线程组上执行的方法
+
+在了解了上述Turms服务端的线程模型后，读者可以很容易地判断Turms服务端任意一行代码会执行在哪个线程组上。
+
+以处理客户端业务请求为例，从Netty的Worker线程读完一个Turms客户端发来的TurmsRequest字节流开始，这一整条业务处理流程都会在该Worker线程上执行，该线程在处理完业务逻辑后就可以返回去处理其他业务请求了。
+
+而在业务流程处理过程中，Worker线程可能会触发各种网络I/O操作，诸如发送MongoDB与Redis的客户端请求。当这些网络I/O操作完成后，会有一系列的业务相关的回调函数需要执行，而这些回调函数都会执行在MongoDB或Redis客户端NIO线程上。
+
+简而言之，开发者在Service层看到的所有非回调形式的业务处理代码都是在Worker线程上执行的，而各种回调形式的业务处理代码通常都是在MongoDB或Redis客户端的NIO线程上执行。管理员API同理。
 
 ### 关于Loom项目
 
@@ -172,7 +208,7 @@ TODO
 
   一些开发者可能会认为`reactor-core`的使用会比协程复杂，但这样的说法通常只是从初学者角度来看的。对于初级工程师而言，其实不管是协程，还是`reactor-core`，在不学习其原理的情况下，二者表面的使用其实都很简单。只是在开发者学习的初期，协程可以在Java层面保证了初级工程师很容易写出高性能的代码，而`reactor-core`最好要有高级工程师带着初级程序员写，否则代码可能维护性极差、甚至出现逻辑错误。但只要过了这短暂的初学阶段，学习协程就会面临刚刚提到的“学习难度1+1>2”的问题，而`reactor-core`只要求工程师掌握最基本的线程知识。
 
-  举例来说，对于Turms服务端（含第三方库）的**任意一行代码**，我们只需要凭借最基本的线程知识，就能准确推断出这行代码会在哪个线程组上执行，并且这个线程组是谁、从哪、为什么被创建出来的，其生命周期又是如何。TODO：之后我们会讲解Turms服务端的线程模型，并举例说明为什么推导任意一行代码执行在什么线程组上其实是非常简单的事情。
+  如`判断任意一行代码在哪个线程组上执行的方法`所述，对于Turms服务端（含第三方库）的**任意一行代码**，我们只需要凭借最基本的线程知识，就能准确推断出这行代码会在哪个线程组上执行，并且这个线程组是谁、从哪、为什么被创建出来的，其生命周期又是如何。
 
   另外，我们在编写Turms服务端代码的时候，几乎不会考虑“该如何用reactor-core编写异步的代码”，如同很多开发者不会考虑“同步的代码该怎么写”。
 
