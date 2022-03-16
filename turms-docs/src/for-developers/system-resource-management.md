@@ -122,11 +122,31 @@ JVM默认的堆配置如下：
 
 ### 关于Valhalla项目
 
-Java的内存占用一直为人所诟病，诸如一个Integer对象所存放的对象头所需的内存（在64位系统且开启了压缩指针的情况下，为12字节）大于实际int数据数倍，也因为这样的设计缺陷，导致编程时还需要一些变通手段，如在使用`Integer`对象时，JVM会优先使用`java.lang.Integer.IntegerCache`类里的对象缓存。相比很多追求性能优化（甚至是寄存器级别的优化）的C++服务端项目（如Nginx、Redis），由于Java自身的设计缺陷与保守，Java对内存的浪费就让人感觉有些“自暴自弃”了，并且更糟糕的是：这样的精神也传导给了整个Java生态圈。通过阅读源码，能发现很多知名Java项目也是“功能能用，功能写着舒服，性能差不多就行，反正JVM会帮忙GC”的态度，诸如可以很容易做Cache的地方不Cache、基础数据结构乱用、反复内存拷贝（如最常见的`String`与`StringBuilder`在实践中，通常来来回回拷贝很多次，源码让人触目惊心），只有诸如Netty这样极个别项目会有优化、精益求精的意识，关于这点我们已经在其他章节重点讲解了，故不赘述。
+Java的内存占用一直为人所诟病，诸如一个Integer对象所存放的对象头所需的内存（在64位系统且开启了压缩指针的情况下，为12字节）大于实际int数据数倍，也因为这样的设计缺陷，导致编程时还需要一些变通手段，如在使用`Integer`对象时，JVM会优先使用`java.lang.Integer.IntegerCache`类里的对象缓存。相比很多追求性能优化（甚至是寄存器级别的优化）的C++服务端项目（如Nginx、Redis），由于Java自身的设计缺陷与保守，Java对内存的浪费就让人感觉有些“自暴自弃”了，并且更糟糕的是：这样的精神也传导给了整个Java生态圈。通过阅读源码，能发现很多知名Java项目也是“功能能用，代码写着舒服，性能差不多就行，反正JVM会帮忙GC”的态度，诸如可以很容易做Cache的地方不Cache、基础数据结构乱用、反复内存拷贝（如最常见的`String`与`StringBuilder`在实践中，通常来来回回拷贝很多次，源码让人触目惊心），只有诸如Netty这样极个别项目会有性能优化与精益求精的意识，关于这点我们已经在其他章节重点讲解了，故不赘述。
 
-而Valhalla项目对现有的Java Object体系进行了重构。原有的`Object`在新的Java体系中叫做`IdentityObject`，而新体系下的`Object`则成了`IdentityObject`与`ValueObject`的父类（注意：Valhalla团队尚未定稿，因此概念可能还会变），其中`ValueObject`让用户能够自定义性能如传统Java八大基础类型一样高效的数据结构，无需对象头、访问时无需通过指针查找、栈上分配，甚至直接存储在CPU寄存器之中。等Valhalla项目发布Preview版本后，我们将引入`ValueObject`，并且由于我们已等待该项目数年，非常熟悉其设计，故可在一周内完成适配与测试工作。这也是我们会为`Preview`特性开绿灯的唯一特性。
+而Valhalla项目对现有的Java Object体系进行了重构。原有的`Object`在新的Java体系中叫做`IdentityObject`，而新体系下的`Object`则成了`IdentityObject`与`ValueObject`的父类（注意：Valhalla团队尚未定稿，因此概念可能还会变），其中`ValueObject`可以让开发者自定义性能如Java传统八大基础类型一样高效的数据结构，无需对象头、访问时无需通过指针查找，栈上分配甚至直接存储在CPU寄存器之中，自然也无需进行GC，同时这些类也能声明字段并定义函数。而Java传统的八大基本类型也将基于新的对象体系重新进行设计，如`int`这样的`primitive type`将成为`primitive class`（`primitive class`是`value class`的一种类型，其值不可为`null`），而其`包装类（Wrapper Class）` `Integer`与可能会支持的`int.ref`将成为`value class`（值可为`null`）。
 
-特别一提：如果Java没有Valhalla这个项目，可能Turms服务端最初会以C#语言立项。
+举例来说，类`primitive class Point { private double x; private double y; }`的primitive实例对象只需占用2个double的字节，即16字节，无需对象头。
+
+等Valhalla项目发布Preview版本后，我们将引入`ValueObject`，并且由于我们已等待该项目数年，非常熟悉其设计，故可在一周内完成适配与测试工作。这也是我们会为`Preview`特性开绿灯的唯一特性。
+
+补充：
+
+* 其实Java的发展历程也印证了我们谈到过的“[IM功能丰富要付出致命的代价](https://turms-im.github.io/docs/for-developers/schema.html#%E5%8A%9F%E8%83%BD%E4%B8%B0%E5%AF%8C%E7%9A%84%E8%87%B4%E5%91%BD%E4%BB%A3%E4%BB%B7)”的观点，即一个项目引以为傲的特性，其背后可能藏着万丈深渊。
+
+  Java曾引以为傲的`Everything is an object`，并强调`Java has no structures or unions as complex data types. You don't need structures and unions when you have classes`（引用自Java在1995年发布的白皮书：[Simple, Object Oriented, and Familiar](https://www.stroustrup.com/1995_Java_whitepaper.pdf)）来宣传Java远比C与C++简单易用。
+
+  （额外补充：纵观Java的发展史，开发者也会感叹因Java能够不断顺应时代发展，调整自身发展方向，过五关斩六将而展现出来的强大生命力）
+
+  但在当今的编程实践中，提倡“万物皆对象”而不提供`structure`更像是诅咒，诸如当我们将一个`int`放进一个`List<Integer>`时，还需要`new`一个新对象，徒增对象头。换言之，只要我们使用了Java提供的`List`与`Map`等常用数据结构，就得白白浪费非常多的内存，而这些集合类在实际项目中又是无法避免的，它就像诅咒一样挥之不去（补充：其实诸如`HashSet`与`LinkedList`的内部数据结构比很多开发者能想象到的内存浪费还要浪费，对象头占的内存比实际数据占的还多，也因此我们看其源码时会使用“触目惊心”来评价）。
+
+  如今，Valhalla项目希望通过引入`primitive/value class`语言特性来改变这现状，但因为其既要向前兼容庞大的Java生态，又要让Java摆脱传统`万物皆对象`的诅咒，导致Valhalla项目的发展如履薄冰，光是设计稿就推翻了非常多次，至今花了近8年时间也没发布Preview特性，且未来还得花很长时间让开发者重新认识新的Java语言模型。可见，一个项目初期引以为傲的特性，可能会在项目发展的中后期就成“诅咒”了，既让项目的维护者头疼，也让使用者头疼。
+
+  IM功能设计也是同样的道理，具备强生命力的设计应该遵循`Less is more`的设计理念。“IM功能丰富”看似是值得引以为傲的特性，开发者初期以为开源IM项目都为自己把功能都做好了，自己基本什么也不用做了。但这背后都是有代价的，项目拓展性可能极差，中后期做拓展还不如自己重写。
+
+* 如果Java没有Valhalla这个项目，可能Turms服务端最初会以C#语言立项。
+
+参考文档：[Valhalla项目下的Java语言模型](https://openjdk.java.net/projects/valhalla/design-notes/state-of-valhalla/02-object-model)
 
 ## 线程
 

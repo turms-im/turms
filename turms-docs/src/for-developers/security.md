@@ -63,7 +63,7 @@ Turms的自动封禁机制采用分级制度，默认提供3个等级，这3个�
 
   综上，Bloom Filter在分布式环境下，连黑名单系统最为基础的功能都无法实现，就算Bloom Filter配合其他工程实践勉强实现，那Bloom Filter自身的优势也就不存在了。
 
-* 被拉黑用户数据量本身很小，Bloom Filter无法发挥其优势。而且如果只是判断用户是否被拉黑，我们按100万的被封禁的用户ID来看，一共也才需要61.4MiB内存（特别一提的是：等未来Valhalla项目发布了，那时大约只需占46MiB）。这里以具体代码为例：
+* 被拉黑用户数据量本身很小，Bloom Filter无法发挥其优势。而且如果只是判断用户是否被拉黑，我们按100万的被封禁的用户ID来看，一共也才需要61.4MiB内存（特别一提的是：等未来Valhalla项目支持`ConcurrentHashMap<long, Object>`后，可能只需约46MiB内存，但具体占多少内存还要看Valhalla项目最终愿意重构多少Java类，与其阶段性JEP的完成度）。这里以具体代码为例：
 
   ```java
   public static void main(String[] args) {
