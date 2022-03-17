@@ -20,6 +20,7 @@ package im.turms.plugin.antispam.ac;
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.tuple.primitive.CharObjectPair;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -70,7 +71,7 @@ public class DoubleArrayTrie {
         for (CharObjectPair<State> entry : siblingEntries) {
             siblings.add(new NodeEntry(entry.getOne() + 1, entry.getTwo()));
         }
-        Queue<SiblingGroup> siblingGroupQueue = new LinkedList<>();
+        Queue<SiblingGroup> siblingGroupQueue = new ArrayDeque<>(64);
         SiblingGroup siblingGroup = new SiblingGroup(-1, siblings);
         do {
             insert(siblingGroupQueue, siblingGroup);

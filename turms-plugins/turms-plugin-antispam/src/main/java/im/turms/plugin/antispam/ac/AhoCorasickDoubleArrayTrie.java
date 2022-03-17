@@ -21,7 +21,7 @@ import im.turms.plugin.antispam.dictionary.Word;
 import org.eclipse.collections.api.iterator.MutableCharIterator;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
 
@@ -92,7 +92,7 @@ public class AhoCorasickDoubleArrayTrie {
     }
 
     protected void constructOutputAndFailure(Trie trie) {
-        Queue<State> queue = new LinkedList<>();
+        Queue<State> queue = new ArrayDeque<>(64);
 
         // Point the failure of states of the depth 1 to the root state
         for (State depthOneState : trie.rootState.getStates()) {

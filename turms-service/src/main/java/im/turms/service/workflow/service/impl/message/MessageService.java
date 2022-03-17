@@ -51,6 +51,7 @@ import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.BitUtil;
 import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.CollectorUtil;
+import im.turms.server.common.util.DateUtil;
 import im.turms.service.bo.ServicePermission;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.plugin.extension.ExpiredMessageDeletionNotifier;
@@ -79,8 +80,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.Duration;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -474,7 +473,7 @@ public class MessageService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Date beforeDate = Date.from(Instant.now().minus(timeToLiveHours, ChronoUnit.HOURS));
+        Date beforeDate = DateUtil.addHours(System.currentTimeMillis(), -timeToLiveHours);
         Filter filter = Filter.newBuilder(1)
                 .lt(Message.Fields.DELIVERY_DATE, beforeDate);
         QueryOptions options = QueryOptions.newBuilder(1)

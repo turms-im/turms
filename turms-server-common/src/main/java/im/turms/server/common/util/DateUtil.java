@@ -39,81 +39,82 @@ public final class DateUtil {
 
     // "1970-01-01 00:00:00.000"
     public static final int DATE_TIME_LENGTH = 23;
+    private static final long HOURS_IN_MILLIS = 60 * 60 * 1000L;
+    private static final int MAX_TWO_DIGITS_CACHE_NUMBER = 60;
+    private static final int MAX_THREE_DIGITS_CACHE_NUMBER = 100;
+
+    private static final byte[][] TWO_DIGITS = new byte[MAX_TWO_DIGITS_CACHE_NUMBER + 1][];
+    private static final byte[][] THREE_DIGITS = new byte[MAX_THREE_DIGITS_CACHE_NUMBER + 1][];
+
+    static {
+        byte[] oneDigitZero = {'0'};
+        byte[] twoDigitsZero = {'0', '0'};
+        int i;
+        for (i = 0; i <= MAX_TWO_DIGITS_CACHE_NUMBER; i++) {
+            byte[] bytes = Formatter.toCharBytes(i);
+            if (bytes.length == 1) {
+                bytes = ArrayUtil.concat(oneDigitZero, bytes);
+            }
+            TWO_DIGITS[i] = bytes;
+        }
+        for (i = 0; i <= MAX_THREE_DIGITS_CACHE_NUMBER; i++) {
+            byte[] bytes = Formatter.toCharBytes(i);
+            if (bytes.length == 1) {
+                bytes = ArrayUtil.concat(twoDigitsZero, bytes);
+            } else if (bytes.length == 2) {
+                bytes = ArrayUtil.concat(oneDigitZero, bytes);
+            }
+            THREE_DIGITS[i] = bytes;
+        }
+    }
 
     private DateUtil() {
     }
 
+    public static Date addHours(long date, int hours) {
+        return new Date(date + hours * HOURS_IN_MILLIS);
+    }
+
     public static String toStr(long timeInMillis) {
-        Calendar calendar = CALENDAR_THREAD_LOCAL.get();
-        calendar.setTimeInMillis(timeInMillis);
-        return new StringBuilder(DATE_TIME_LENGTH)
-                .append(calendar.get(Calendar.YEAR))
-                .append('-')
-                .append(twoDigit(calendar.get(Calendar.MONTH) + 1))
-                .append('-')
-                .append(twoDigit(calendar.get(Calendar.DAY_OF_MONTH)))
-                .append(' ')
-                .append(twoDigit(calendar.get(Calendar.HOUR_OF_DAY)))
-                .append(':')
-                .append(twoDigit(calendar.get(Calendar.MINUTE)))
-                .append(':')
-                .append(twoDigit(calendar.get(Calendar.SECOND)))
-                .append('.')
-                .append(threeDigit(calendar.get(Calendar.MILLISECOND)))
-                .toString();
+        byte[] bytes = toBytes(timeInMillis);
+        return StringUtil.newString(bytes, StringUtil.LATIN1);
     }
 
     public static byte[] toBytes(long timeInMillis) {
         Calendar calendar = CALENDAR_THREAD_LOCAL.get();
         calendar.setTimeInMillis(timeInMillis);
-        byte[] bytes = new byte[DATE_TIME_LENGTH];
-
-        byte[] src = Formatter.toCharBytes(calendar.get(Calendar.YEAR));
-        System.arraycopy(src, 0, bytes, 0, src.length);
-        int i = src.length;
-
-        bytes[i] = '-';
-        i++;
-
-        src = twoDigitBytes(calendar.get(Calendar.MONTH) + 1);
-        System.arraycopy(src, 0, bytes, i, src.length);
-        i += src.length;
-
-        bytes[i] = '-';
-        i++;
-
-        src = twoDigitBytes(calendar.get(Calendar.DAY_OF_MONTH));
-        System.arraycopy(src, 0, bytes, i, src.length);
-        i += src.length;
-
-        bytes[i] = ' ';
-        i++;
-
-        src = twoDigitBytes(calendar.get(Calendar.HOUR_OF_DAY));
-        System.arraycopy(src, 0, bytes, i, src.length);
-        i += src.length;
-
-        bytes[i] = ':';
-        i++;
-
-        src = twoDigitBytes(calendar.get(Calendar.MINUTE));
-        System.arraycopy(src, 0, bytes, i, src.length);
-        i += src.length;
-
-        bytes[i] = ':';
-        i++;
-
-        src = twoDigitBytes(calendar.get(Calendar.SECOND));
-        System.arraycopy(src, 0, bytes, i, src.length);
-        i += src.length;
-
-        bytes[i] = '.';
-        i++;
-
-        src = threeDigitBytes(calendar.get(Calendar.MILLISECOND));
-        System.arraycopy(src, 0, bytes, i, src.length);
-
-        return bytes;
+        byte[] year = Formatter.toCharBytes(calendar.get(Calendar.YEAR));
+        byte[] month = twoDigitBytes(calendar.get(Calendar.MONTH) + 1);
+        byte[] dayOfMonth = twoDigitBytes(calendar.get(Calendar.DAY_OF_MONTH));
+        byte[] hourOfDay = twoDigitBytes(calendar.get(Calendar.HOUR_OF_DAY));
+        byte[] minute = twoDigitBytes(calendar.get(Calendar.MINUTE));
+        byte[] second = twoDigitBytes(calendar.get(Calendar.SECOND));
+        byte[] millis = threeDigitBytes(calendar.get(Calendar.MILLISECOND));
+        return new byte[]{
+                year[0],
+                year[1],
+                year[2],
+                year[3],
+                '-',
+                month[0],
+                month[1],
+                '-',
+                dayOfMonth[0],
+                dayOfMonth[1],
+                ' ',
+                hourOfDay[0],
+                hourOfDay[1],
+                ':',
+                minute[0],
+                minute[1],
+                ':',
+                second[0],
+                second[1],
+                '.',
+                millis[0],
+                millis[1],
+                millis[2]
+        };
     }
 
     public static Date max(@Nullable Date date1, @Nullable Date date2) {
@@ -142,37 +143,16 @@ public final class DateUtil {
         return d1 != null && !d1.before(d2);
     }
 
-    private static String twoDigit(int i) {
-        if (i >= 0 && i < 10) {
-            return "0" + i;
-        }
-        return String.valueOf(i);
-    }
-
-    private static String threeDigit(int i) {
-        if (i >= 0 && i < 10) {
-            return "00" + i;
-        } else if (i < 100) {
-            return "0" + i;
-        }
-        return String.valueOf(i);
-    }
-
     private static byte[] twoDigitBytes(int i) {
-        if (i >= 0 && i < 10) {
-            // TODO: cache
-            return new byte[]{'0', (byte) (i + 48)};
+        if (i <= MAX_TWO_DIGITS_CACHE_NUMBER) {
+            return TWO_DIGITS[i];
         }
         return Formatter.toCharBytes(i);
     }
 
     private static byte[] threeDigitBytes(int i) {
-        if (i >= 0 && i < 10) {
-            // TODO: cache
-            return new byte[]{'0', '0', (byte) (i + 48)};
-        } else if (i < 100) {
-            // TODO: cache
-            return ArrayUtil.concat(new byte[]{'0'}, Formatter.toCharBytes(i));
+        if (i <= MAX_THREE_DIGITS_CACHE_NUMBER) {
+            return THREE_DIGITS[i];
         }
         return Formatter.toCharBytes(i);
     }
