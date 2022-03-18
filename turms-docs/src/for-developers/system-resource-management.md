@@ -124,7 +124,7 @@ JVM默认的堆配置如下：
 
 Java的内存占用一直为人所诟病，诸如一个Integer对象所存放的对象头所需的内存（在64位系统且开启了压缩指针的情况下，为12字节）大于实际int数据数倍，也因为这样的设计缺陷，导致编程时还需要一些变通手段，如在使用`Integer`对象时，JVM会优先使用`java.lang.Integer.IntegerCache`类里的对象缓存。相比很多追求性能优化（甚至是寄存器级别的优化）的C++服务端项目（如Nginx、Redis），由于Java自身的设计缺陷与保守，Java对内存的浪费就让人感觉有些“自暴自弃”了，并且更糟糕的是：这样的精神也传导给了整个Java生态圈。通过阅读源码，能发现很多知名Java项目也是“功能能用，代码写着舒服，性能差不多就行，反正JVM会帮忙GC”的态度，诸如可以很容易做Cache的地方不Cache、基础数据结构乱用、反复内存拷贝（如最常见的`String`与`StringBuilder`在实践中，通常来来回回拷贝很多次，源码让人触目惊心），只有诸如Netty这样极个别项目会有性能优化与精益求精的意识，关于这点我们已经在其他章节重点讲解了，故不赘述。
 
-而Valhalla项目对现有的Java Object体系进行了重构。原有的`Object`在新的Java体系中叫做`IdentityObject`，而新体系下的`Object`则成了`IdentityObject`与`ValueObject`的父类（注意：Valhalla团队尚未定稿，因此概念可能还会变），其中`ValueObject`可以让开发者自定义性能如Java传统八大基础类型一样高效的数据结构，无需对象头、访问时无需通过指针查找，栈上分配甚至直接存储在CPU寄存器之中，自然也无需进行GC，同时这些类也能声明字段并定义函数。而Java传统的八大基本类型也将基于新的对象体系重新进行设计，如`int`这样的`primitive type`将成为`primitive class`（`primitive class`是`value class`的一种类型，其值不可为`null`），而其`包装类（Wrapper Class）` `Integer`与可能会支持的`int.ref`将成为`value class`（值可为`null`）。
+而Valhalla项目对现有的Java Object体系进行了重构。原有的`Object`在新的Java体系中叫做`IdentityObject`，而新体系下的`Object`则成了`IdentityObject`与`ValueObject`的父类（注意：Valhalla团队尚未定稿，因此概念可能还会变），二者有些类似于C#的`Reference types`与`Value types`。其中`ValueObject`下分两大类，即`primitive class`与`value class`。`primitive class`可以让开发者自定义性能如Java传统八大基础类型一样高效的数据结构，无需对象头、访问时无需通过指针查找、栈上分配，自然也无需进行GC，同时这些类也能声明字段并定义函数。而Java传统的八大基本类型也将基于新的对象体系重新进行设计，如`int`这样的`primitive type`将成为`primitive class`（`primitive class`是`value class`的一种类型，其值不可为`null`），而其`包装类（Wrapper Class）` `Integer`与可能会支持的`int.ref`将成为`value class`（值可为`null`），因此未来也不会有`包装类`这一概念了。
 
 举例来说，类`primitive class Point { private double x; private double y; }`的primitive实例对象只需占用2个double的字节，即16字节，无需对象头。
 
@@ -134,7 +134,7 @@ Java的内存占用一直为人所诟病，诸如一个Integer对象所存放的
 
 * 其实Java的发展历程也印证了我们谈到过的“[IM功能丰富要付出致命的代价](https://turms-im.github.io/docs/for-developers/schema.html#%E5%8A%9F%E8%83%BD%E4%B8%B0%E5%AF%8C%E7%9A%84%E8%87%B4%E5%91%BD%E4%BB%A3%E4%BB%B7)”的观点，即一个项目引以为傲的特性，其背后可能藏着万丈深渊。
 
-  Java曾引以为傲的`Everything is an object`，并强调`Java has no structures or unions as complex data types. You don't need structures and unions when you have classes`（引用自Java在1995年发布的白皮书：[Simple, Object Oriented, and Familiar](https://www.stroustrup.com/1995_Java_whitepaper.pdf)）来宣传Java远比C与C++简单易用。
+  Java曾引以为傲的`Everything is an object`，并强调`Java has no structures or unions as complex data types. You don't need structures and unions when you have classes`（引用自Sun公司在1995年发布的Java白皮书：[Simple, Object Oriented, and Familiar](https://www.stroustrup.com/1995_Java_whitepaper.pdf)）来宣传Java远比C与C++简单易用。
 
   （额外补充：纵观Java的发展史，开发者也会感叹因Java能够不断顺应时代发展，调整自身发展方向，过五关斩六将而展现出来的强大生命力）
 
@@ -267,4 +267,7 @@ TODO
 
 只要缺少上面的一个条件，开发者迟早会遇到类似上述的“Netty提示：ByteBuf的引用计数已经为0，无法再次进行释放操作”这样难度的Bug，也因此对于一般的技术团队，我们更推荐Loom项目，而不是reactor-core。当然，更推荐的可能是切换编程语言。但Turms项目如今已经能满足上述条件，不再存在“异常难以Debug”的情况。
 
-额外补充：在turms-admin管理系统开发的时候，我们通常也是尽量避免使用`await/async`，其原因是turms-admin最终会编译成ES5语法，而被`await/async`修饰的函数在`source map`关闭之后，非常难Debug，故尽量避免`await/async`。
+额外补充：
+
+* 部分文章会说reactor-core这样的异步框架很容易写出回调地狱。但如上文所述，reactor-core自身有很强的表达能力，实际上是开发者“想设计几层，就能写出几层的调用层级”。换言之，如果一个函数的最高调用层级是5层，那用reactor-core可以写出5/4/3/2/1层级的代码。而在实践中，Turms服务端的嵌套回调函数都是为了减少中间对象或实现栈分配（而非堆分配）而做的嵌套，具体可以看Turms服务端源码。
+* 在开发turms-admin管理系统的时候，我们通常也是尽量避免使用`await/async`，其原因是turms-admin最终会transpile成ES5语法，而被`await/async`修饰的函数在`source map`关闭之后，非常难Debug，故尽量避免`await/async`。

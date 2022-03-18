@@ -33,7 +33,7 @@ Java自身是一个很保守的语言，其大生态也非常保守。其设计�
 * 性能 > 代码可读性。如使用`long`，而不是`java.util.Date`或`java.time.Instant`来表示时间，以避免创建新对象以及时间转换时的计算；又比如`im.turms.server.common.cluster.service.idgen.SnowflakeIdGenerator`类下的`nextIncreasingId`函数与`nextLargeGapId`函数重复了约10行代码，但我们不提取这公共代码出来，以避免开辟新方法栈（不考虑JVM的滞后Inline操作）。
 * 性能 > 设计模式。如场景：
   * 遍历处理`String`中的`char[]`元素。如果使用责任链模式，则需要用不同的Handler类实现不同类别的处理逻辑，虽然这样可以把逻辑理得很清晰，但是每个Handler都需要遍历一遍`char[]`，因此处理的时间复杂度为`O(n*m)`（n为char[]长度，m为Handler个数），这种复杂度的代码在Turms服务端代码中是禁止的。此时，就需要反设计模式来编写代码，尽可能把处理逻辑都写在一次遍历中，且尽量不要新开函数区分逻辑（这条可选），而是用注释分块来区分不同的处理逻辑，以避免函数栈开销。
-  * Protobuf模型的高效设计一直受人称道，但官方Java版本的Protobuf的代码实现是偏保守且低效的。比如Protobuf模型是Immutable的，只有其Builder是Mutable的，因此想要修改Protobuf模型，还得先`toBuilder()`成一个Builder，再重新创建一个新Protobuf模型实例，内存有效使用率低下（额外补充：其字符串解码实现也是非常地低效）。而我们可控的代码是能不用Builder就不用Builder，避免无意义的内存消耗。
+  * Protobuf模型的高效设计一直受人称道，但官方Java版本的Protobuf的代码实现是偏保守且低效的。比如Protobuf模型是Immutable的，只有其Builder是Mutable的，因此想要修改Protobuf模型，还得先`toBuilder()`成一个Builder，再重新创建一个新Protobuf模型实例，内存有效使用率低下（额外补充：其字符串解码实现也是非常地低效，比如其为了兼容低版本Java，采用了`char[]`进行编码，但新版本Java的String内部只存储`byte[]`，因此需要一次额外的类型转换）。而我们可控的代码是能不用Builder就不用Builder，避免无意义的内存消耗。
 
 
 例外：如在极少数情况下，代码可读性优先于性能。以下文中提到的`禁止在客户端请求与管理员API请求的处理过程中使用反射`为例。尽管有这个规则，但如果请求中需要创建供数据库驱动使用的Entity对象时，那我们还是会通过反射创建并填充这个对象。因为如果不使用反射，就需要手写上百个字段序列化与反序列化逻辑，工作量巨大，且容易出错。而使用反射的收益性就很高，所以允许使用反射。

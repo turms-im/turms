@@ -67,7 +67,7 @@ fs.file-max = 1629424
 # 默认值：60。当内存使用率不足10%时使用swap。尽量避免使用swap，以减少唤醒软中断进程
 vm.swappiness = 10
 
-# 默认值：1024。定义SYN半开连接队列的最大长度。此参数过大可能遭遇到SYN flood攻击
+# 默认值：1024。定义SYN半开连接队列的最大长度。此参数过大可能加剧SYN flood攻击效果
 net.ipv4.tcp_max_syn_backlog = 65536
 # 默认值：4096。调整accept队列的长度。可以通过命令：netstat -s | grep "listen queue"，来查看有多少个连接因为队列溢出而被丢弃。如果持续不断地有连接因为accept队列溢出被丢弃，就应该调大backlog以及somaxconn参数
 net.core.somaxconn = 65536
@@ -128,8 +128,8 @@ net.core.wmem_max = 16777216
 
 # [min, default, max]，单位是字节
 # min：指定为每个TCP连接预留用于接收缓冲区的最小内存，即使在pressure模式下TCP连接都至少会预留这部分内存用于接收缓冲
-# default：指定TCP连接用于接收缓冲的初始内存大小
-# max：为每个TCP连接用于接收缓冲的最大内存
+# default：指定每个TCP连接用于接收缓冲的初始内存大小
+# max：指定每个TCP连接用于接收缓冲的最大内存
 # 缓冲区太小，会降低TCP吞吐量，无法高效利用网络带宽，导致通信延迟升高；缓冲区太大，会导致TCP连接内存占用高以及受限于带宽时延积的瓶颈，从而造成内存浪费
 net.ipv4.tcp_rmem = 4096 87380 16777216
 net.ipv4.tcp_wmem = 4096 87380 16777216
