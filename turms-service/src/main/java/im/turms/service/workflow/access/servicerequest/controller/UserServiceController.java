@@ -39,7 +39,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.server.common.service.session.UserStatusService;
 import im.turms.server.common.util.CollectionUtil;
-import im.turms.service.util.ProtoModelUtil;
+import im.turms.service.proto.ProtoModelConvertor;
 import im.turms.service.workflow.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.workflow.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResultFactory;
@@ -112,7 +112,7 @@ public class UserServiceController {
                     .map(user -> {
                         UsersInfosWithVersion.Builder userBuilder = UsersInfosWithVersion
                                 .newBuilder()
-                                .addUserInfos(ProtoModelUtil.userProfile2proto(user).build());
+                                .addUserInfos(ProtoModelConvertor.userProfile2proto(user).build());
                         return RequestHandlerResultFactory.get(TurmsNotification.Data
                                 .newBuilder()
                                 .setUsersInfosWithVersion(userBuilder)
@@ -142,7 +142,7 @@ public class UserServiceController {
                         }
                         NearbyUsers.Builder builder = NearbyUsers.newBuilder();
                         for (var nearbyUser : nearbyUsers) {
-                            builder.addNearbyUsers(ProtoModelUtil.nearbyUser2proto(nearbyUser));
+                            builder.addNearbyUsers(ProtoModelConvertor.nearbyUser2proto(nearbyUser));
                         }
                         return RequestHandlerResultFactory.get(TurmsNotification.Data
                                 .newBuilder()
@@ -171,7 +171,7 @@ public class UserServiceController {
                     .collectList()
                     .map(userIdAndSessionsStatusList -> {
                         for (Pair<Long, UserSessionsStatus> userIdAndSessionsStatus : userIdAndSessionsStatusList) {
-                            statusesBuilder.addUserStatuses(ProtoModelUtil
+                            statusesBuilder.addUserStatuses(ProtoModelConvertor
                                     .userOnlineInfo2userStatus(
                                             userIdAndSessionsStatus.getFirst(),
                                             userIdAndSessionsStatus.getSecond(),

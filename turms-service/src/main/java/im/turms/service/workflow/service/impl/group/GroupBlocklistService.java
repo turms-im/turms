@@ -39,7 +39,7 @@ import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.DateUtil;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidGroupBlockedUserKey;
-import im.turms.service.util.ProtoModelUtil;
+import im.turms.service.proto.ProtoModelConvertor;
 import im.turms.service.workflow.dao.domain.group.GroupBlockedUser;
 import im.turms.service.workflow.service.impl.user.UserService;
 import im.turms.service.workflow.service.util.DomainConstraintUtil;
@@ -286,7 +286,7 @@ public class GroupBlocklistService {
                                 UsersInfosWithVersion.Builder builder = UsersInfosWithVersion.newBuilder();
                                 builder.setLastUpdatedDate(version.getTime());
                                 for (User user : users) {
-                                    builder.addUserInfos(ProtoModelUtil.userProfile2proto(user));
+                                    builder.addUserInfos(ProtoModelConvertor.userProfile2proto(user));
                                 }
                                 return builder.build();
                             });

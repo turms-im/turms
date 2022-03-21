@@ -40,7 +40,7 @@ import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.DateUtil;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidUserRelationshipKey;
-import im.turms.service.util.ProtoModelUtil;
+import im.turms.service.proto.ProtoModelConvertor;
 import im.turms.service.workflow.dao.domain.user.UserRelationship;
 import im.turms.service.workflow.dao.domain.user.UserRelationshipGroupMember;
 import im.turms.service.workflow.dao.domain.user.UserVersion;
@@ -258,7 +258,7 @@ public class UserRelationshipService {
                                 UserRelationshipsWithVersion.Builder builder = UserRelationshipsWithVersion.newBuilder()
                                         .setLastUpdatedDate(date.getTime());
                                 for (UserRelationship relationship : relationships) {
-                                    builder.addUserRelationships(ProtoModelUtil.relationship2proto(relationship));
+                                    builder.addUserRelationships(ProtoModelConvertor.relationship2proto(relationship));
                                 }
                                 return builder.build();
                             });

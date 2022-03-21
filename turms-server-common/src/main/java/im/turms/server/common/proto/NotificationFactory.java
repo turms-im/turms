@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.factory;
+package im.turms.server.common.proto;
 
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;

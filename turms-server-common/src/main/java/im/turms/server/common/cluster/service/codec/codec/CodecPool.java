@@ -37,9 +37,9 @@ import im.turms.server.common.rpc.codec.request.HandleServiceRequestCodec;
 import im.turms.server.common.rpc.codec.request.SendNotificationRequestCodec;
 import im.turms.server.common.rpc.codec.request.SetUserOfflineRequestCodec;
 import im.turms.server.common.rpc.codec.response.ServiceResponseCodec;
+import io.netty.util.collection.IntObjectHashMap;
 import org.springframework.core.GenericTypeResolver;
 
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -48,7 +48,7 @@ import java.util.Map;
  */
 public final class CodecPool {
 
-    private static final Map<Integer, Codec> ID_CODEC_MAP = new HashMap<>(32);
+    private static final IntObjectHashMap<Codec> ID_CODEC_MAP = new IntObjectHashMap<>(32);
     private static final Map<Class<?>, Codec> CLASS_CODEC_MAP = new IdentityHashMap<>(32);
 
     public static void init() {

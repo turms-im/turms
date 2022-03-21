@@ -41,7 +41,7 @@ import im.turms.server.common.util.DateUtil;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidUserRelationshipGroupKey;
 import im.turms.service.constraint.ValidUserRelationshipKey;
-import im.turms.service.util.ProtoModelUtil;
+import im.turms.service.proto.ProtoModelConvertor;
 import im.turms.service.workflow.dao.domain.user.UserRelationship;
 import im.turms.service.workflow.dao.domain.user.UserRelationshipGroup;
 import im.turms.service.workflow.dao.domain.user.UserRelationshipGroupMember;
@@ -159,7 +159,7 @@ public class UserRelationshipGroupService {
                             .collect(CollectorUtil.toList())
                             .map(groups -> {
                                 for (UserRelationshipGroup group : groups) {
-                                    builder.addUserRelationshipGroups(ProtoModelUtil.relationshipGroup2proto(group));
+                                    builder.addUserRelationshipGroups(ProtoModelConvertor.relationshipGroup2proto(group));
                                 }
                                 return builder.build();
                             });

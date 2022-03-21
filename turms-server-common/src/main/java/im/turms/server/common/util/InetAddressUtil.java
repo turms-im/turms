@@ -29,6 +29,10 @@ import java.util.Arrays;
  * @author James Chen
  */
 public final class InetAddressUtil {
+
+    public static final int IPV4_BYTE_LENGTH = 4;
+    public static final int IPV6_BYTE_LENGTH = 16;
+
     private InetAddressUtil() {
     }
 
@@ -46,6 +50,10 @@ public final class InetAddressUtil {
         } catch (UnknownHostException e) {
             throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The IP " + Arrays.toString(ip) + " is invalid");
         }
+    }
+
+    public static boolean isIpV4OrV6(byte[] ip) {
+        return ip != null && (ip.length == IPV4_BYTE_LENGTH || ip.length == IPV6_BYTE_LENGTH);
     }
 
 }

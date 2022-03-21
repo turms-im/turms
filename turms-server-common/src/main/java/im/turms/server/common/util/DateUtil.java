@@ -40,7 +40,7 @@ public final class DateUtil {
     // "1970-01-01 00:00:00.000"
     public static final int DATE_TIME_LENGTH = 23;
     private static final long HOURS_IN_MILLIS = 60 * 60 * 1000L;
-    private static final int MAX_TWO_DIGITS_CACHE_NUMBER = 60;
+    private static final int MAX_TWO_DIGITS_CACHE_NUMBER = 59;
     private static final int MAX_THREE_DIGITS_CACHE_NUMBER = 100;
 
     private static final byte[][] TWO_DIGITS = new byte[MAX_TWO_DIGITS_CACHE_NUMBER + 1][];

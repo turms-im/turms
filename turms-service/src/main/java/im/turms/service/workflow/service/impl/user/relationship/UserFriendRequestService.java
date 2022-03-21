@@ -45,7 +45,7 @@ import im.turms.server.common.util.DateUtil;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidRequestStatus;
 import im.turms.service.constraint.ValidResponseAction;
-import im.turms.service.util.ProtoModelUtil;
+import im.turms.service.proto.ProtoModelConvertor;
 import im.turms.service.workflow.dao.domain.user.UserFriendRequest;
 import im.turms.service.workflow.service.documentation.UsesNonIndexedData;
 import im.turms.service.workflow.service.impl.ExpirableModelService;
@@ -406,7 +406,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
                                 UserFriendRequestsWithVersion.Builder builder = UserFriendRequestsWithVersion.newBuilder();
                                 int expireAfterSeconds = getModelExpireAfterSeconds();
                                 for (UserFriendRequest request : requests) {
-                                    builder.addUserFriendRequests(ProtoModelUtil.friendRequest2proto(request, expireAfterSeconds));
+                                    builder.addUserFriendRequests(ProtoModelConvertor.friendRequest2proto(request, expireAfterSeconds));
                                 }
                                 return builder
                                         .setLastUpdatedDate(version.getTime())

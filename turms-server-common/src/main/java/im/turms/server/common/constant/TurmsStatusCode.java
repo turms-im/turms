@@ -17,10 +17,8 @@
 
 package im.turms.server.common.constant;
 
+import io.netty.util.collection.IntObjectHashMap;
 import lombok.Getter;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -214,7 +212,8 @@ public enum TurmsStatusCode {
     REDUNDANT_REQUEST_FOR_PRESIGNED_PROFILE_URL(6900, "The request for the presigned profile URL is redundant", 406);
 
     public static final int STATUS_CODE_LENGTH = 4;
-    private static final Map<Integer, TurmsStatusCode> CODE_POOL = new HashMap<>((int) (TurmsStatusCode.values().length / 0.5));
+    private static final IntObjectHashMap<TurmsStatusCode> CODE_POOL =
+            new IntObjectHashMap<>((int) (TurmsStatusCode.values().length / 0.5));
 
     static {
         for (TurmsStatusCode value : TurmsStatusCode.values()) {

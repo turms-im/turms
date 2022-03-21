@@ -25,8 +25,8 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.Arrays;
 
-import static im.turms.server.common.util.IpUtil.IPV4_BYTE_LENGTH;
-import static im.turms.server.common.util.IpUtil.IPV6_BYTE_LENGTH;
+import static im.turms.server.common.util.InetAddressUtil.IPV4_BYTE_LENGTH;
+import static im.turms.server.common.util.InetAddressUtil.IPV6_BYTE_LENGTH;
 
 /**
  * @author James Chen

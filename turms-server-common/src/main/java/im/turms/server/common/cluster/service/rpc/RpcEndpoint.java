@@ -23,17 +23,15 @@ import im.turms.server.common.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.cluster.service.rpc.dto.RpcResponse;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
-import im.turms.server.common.util.MapUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.IllegalReferenceCountException;
 import lombok.Getter;
+import org.jctools.maps.NonBlockingHashMapLong;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 import reactor.netty.channel.ChannelOperations;
 
 import java.nio.channels.ClosedChannelException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -51,9 +49,8 @@ public final class RpcEndpoint {
     private final String nodeId;
     @Getter
     private final TurmsConnection connection;
-    private final Map<Integer, Sinks.One<?>> pendingRequestMap =
-            new ConcurrentHashMap<>(MapUtil.getCapability(
-                    (int) (EXPECTED_MAX_QPS * EXPECTED_AVERAGE_RTT * (INITIAL_CAPACITY_PERCENTAGE / 100F))));
+    private final NonBlockingHashMapLong<Sinks.One<?>> pendingRequestMap =
+            new NonBlockingHashMapLong<>((int) (EXPECTED_MAX_QPS * EXPECTED_AVERAGE_RTT * (INITIAL_CAPACITY_PERCENTAGE / 100F)));
 
     public RpcEndpoint(String nodeId, TurmsConnection connection) {
         this.nodeId = nodeId;

@@ -38,7 +38,7 @@ import im.turms.server.common.logging.core.logger.LoggerFactory;
 import im.turms.server.common.property.constant.TimeType;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.service.bo.MessageFromKey;
-import im.turms.service.util.ProtoModelUtil;
+import im.turms.service.proto.ProtoModelConvertor;
 import im.turms.service.workflow.access.http.util.PageUtil;
 import im.turms.service.workflow.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.workflow.access.servicerequest.dispatcher.ServiceRequestMapping;
@@ -159,7 +159,7 @@ public class MessageServiceController {
                     if (request.hasMessageId()) {
                         dataForRecipients = clientRequest.turmsRequest()
                                 .toBuilder()
-                                .setCreateMessageRequest(ProtoModelUtil.cloneAndFillMessageRequest(request, message))
+                                .setCreateMessageRequest(ProtoModelConvertor.cloneAndFillMessageRequest(request, message))
                                 .build();
                     } else {
                         CreateMessageRequest.Builder requestBuilder = request.toBuilder()
@@ -247,7 +247,7 @@ public class MessageServiceController {
                                                 .setIsGroupMessage(senderKey.isGroupMessage())
                                                 .setFromId(senderKey.fromId())
                                                 .addAllMessages(
-                                                        Collections2.transform(messages, m -> ProtoModelUtil.message2proto(m).build()))
+                                                        Collections2.transform(messages, m -> ProtoModelConvertor.message2proto(m).build()))
                                                 .build());
                                 messagesWithTotalMonos.add(messagesWithTotalMono);
                             }
@@ -262,7 +262,7 @@ public class MessageServiceController {
                         } else {
                             Messages messagesList = Messages
                                     .newBuilder()
-                                    .addAllMessages(Collections2.transform(messages, m -> ProtoModelUtil.message2proto(m).build()))
+                                    .addAllMessages(Collections2.transform(messages, m -> ProtoModelConvertor.message2proto(m).build()))
                                     .build();
                             TurmsNotification.Data data = TurmsNotification.Data.newBuilder()
                                     .setMessages(messagesList)

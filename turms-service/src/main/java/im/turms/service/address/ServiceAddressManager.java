@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.service.manager;
+package im.turms.service.address;
 
 import im.turms.server.common.address.BaseServiceAddressManager;
 import im.turms.server.common.address.PublicIpManager;

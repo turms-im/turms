@@ -23,7 +23,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * Responsibilities:
  * <p>
- * For users: 1. Authentication; 2. Session representation; 3. Push notifications; 4. Backpressure (TODO)
+ * For users: 1. Authentication; 2. Session representation; 3. Push notifications; 4. Backpressure
  * <p>
  * For monitoring: 1. Logging; 2. Request tracing
  * <p>

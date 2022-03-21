@@ -43,7 +43,7 @@ import im.turms.server.common.util.DateUtil;
 import im.turms.service.bo.ServicePermission;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidRequestStatus;
-import im.turms.service.util.ProtoModelUtil;
+import im.turms.service.proto.ProtoModelConvertor;
 import im.turms.service.workflow.dao.domain.group.GroupInvitation;
 import im.turms.service.workflow.service.documentation.UsesNonIndexedData;
 import im.turms.service.workflow.service.impl.ExpirableModelService;
@@ -345,7 +345,7 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
                                 GroupInvitationsWithVersion.Builder builder = GroupInvitationsWithVersion.newBuilder();
                                 int expireAfterSeconds = getModelExpireAfterSeconds();
                                 for (GroupInvitation groupInvitation : groupInvitations) {
-                                    builder.addGroupInvitations(ProtoModelUtil.groupInvitation2proto(groupInvitation, expireAfterSeconds));
+                                    builder.addGroupInvitations(ProtoModelConvertor.groupInvitation2proto(groupInvitation, expireAfterSeconds));
                                 }
                                 return builder
                                         .setLastUpdatedDate(version.getTime())
@@ -386,7 +386,7 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
                                             int expireAfterSeconds = getModelExpireAfterSeconds();
                                             for (GroupInvitation invitation : groupInvitations) {
                                                 builder.addGroupInvitations(
-                                                        ProtoModelUtil.groupInvitation2proto(invitation, expireAfterSeconds).build());
+                                                        ProtoModelConvertor.groupInvitation2proto(invitation, expireAfterSeconds).build());
                                             }
                                             return builder.build();
                                         });

@@ -19,7 +19,7 @@ package im.turms.server.common.dto;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.server.common.util.IpUtil;
+import im.turms.server.common.util.InetAddressUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.NetUtil;
 import lombok.Data;
@@ -68,7 +68,7 @@ public final class ServiceRequest {
                           Long requestId,
                           TurmsRequest.KindCase type,
                           ByteBuf turmsRequestBuffer) {
-        if (!IpUtil.isIpV4OrV6(ip)) {
+        if (!InetAddressUtil.isIpV4OrV6(ip)) {
             throw new IllegalArgumentException("Illegal IP: " + Arrays.toString(ip));
         }
         this.ip = ip;

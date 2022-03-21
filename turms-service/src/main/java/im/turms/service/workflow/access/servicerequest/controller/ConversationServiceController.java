@@ -25,7 +25,7 @@ import im.turms.common.model.dto.request.conversation.UpdateTypingStatusRequest;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.util.CollectorUtil;
-import im.turms.service.util.ProtoModelUtil;
+import im.turms.service.proto.ProtoModelConvertor;
 import im.turms.service.workflow.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.workflow.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResultFactory;
@@ -73,7 +73,7 @@ public class ConversationServiceController {
                     return Mono.just(RequestHandlerResultFactory.NO_CONTENT);
                 }
                 dataFlux = conversationService.queryGroupConversations(groupIds)
-                        .map(conversation -> ProtoModelUtil.groupConversations2proto(conversation).build())
+                        .map(conversation -> ProtoModelConvertor.groupConversations2proto(conversation).build())
                         .collect(CollectorUtil.toList(targetIds.size()))
                         .map(conversations -> TurmsNotification.Data
                                 .newBuilder()
@@ -83,7 +83,7 @@ public class ConversationServiceController {
                                 .build());
             } else {
                 dataFlux = conversationService.queryPrivateConversations(clientRequest.userId(), targetIds)
-                        .map(conversation -> ProtoModelUtil.privateConversation2proto(conversation).build())
+                        .map(conversation -> ProtoModelConvertor.privateConversation2proto(conversation).build())
                         .collect(CollectorUtil.toList(targetIds.size()))
                         .map(conversations -> TurmsNotification.Data
                                 .newBuilder()

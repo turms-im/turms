@@ -44,7 +44,7 @@ import im.turms.server.common.util.DateUtil;
 import im.turms.service.bo.ServicePermission;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.constraint.ValidGroupMemberRole;
-import im.turms.service.util.ProtoModelUtil;
+import im.turms.service.proto.ProtoModelConvertor;
 import im.turms.service.workflow.dao.domain.group.GroupBlockedUser;
 import im.turms.service.workflow.dao.domain.group.GroupMember;
 import im.turms.service.workflow.service.util.DomainConstraintUtil;
@@ -696,7 +696,7 @@ public class GroupMemberService {
                         return fillMembersBuilderWithStatus(members, builder);
                     }
                     for (GroupMember member : members) {
-                        builder.addGroupMembers(ProtoModelUtil.groupMember2proto(member));
+                        builder.addGroupMembers(ProtoModelConvertor.groupMember2proto(member));
                     }
                     return Mono.just(builder.build());
                 });
@@ -726,7 +726,7 @@ public class GroupMemberService {
                                     return fillMembersBuilderWithStatus(members, builder);
                                 }
                                 for (GroupMember member : members) {
-                                    builder.addGroupMembers(ProtoModelUtil.groupMember2proto(member));
+                                    builder.addGroupMembers(ProtoModelConvertor.groupMember2proto(member));
                                 }
                                 return Mono.just(builder
                                         .setLastUpdatedDate(version.getTime())
@@ -811,7 +811,7 @@ public class GroupMemberService {
                     for (int i = 0; i < memberCount; i++) {
                         GroupMember member = members.get(i);
                         UserSessionsStatus info = (UserSessionsStatus) results[i];
-                        var groupMember = ProtoModelUtil
+                        var groupMember = ProtoModelConvertor
                                 .userOnlineInfo2groupMember(
                                         member.getKey().getUserId(),
                                         info,

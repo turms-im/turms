@@ -45,7 +45,7 @@ import im.turms.server.common.util.DateUtil;
 import im.turms.server.common.util.ThrowableUtil;
 import im.turms.service.bo.ServicePermission;
 import im.turms.service.constant.OperationResultConstant;
-import im.turms.service.util.ProtoModelUtil;
+import im.turms.service.proto.ProtoModelConvertor;
 import im.turms.service.workflow.dao.domain.group.Group;
 import im.turms.service.workflow.dao.domain.group.GroupType;
 import im.turms.service.workflow.dao.domain.user.UserPermissionGroup;
@@ -636,7 +636,7 @@ public class GroupService {
                         ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE))
                         : mongoClient.findById(Group.class, groupId)
                         .map(group -> GroupsWithVersion.newBuilder()
-                                .addGroups(ProtoModelUtil.group2proto(group))
+                                .addGroups(ProtoModelConvertor.group2proto(group))
                                 .setLastUpdatedDate(version.getTime())
                                 .build()))
                 .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE)));
@@ -703,7 +703,7 @@ public class GroupService {
                                 }
                                 GroupsWithVersion.Builder builder = GroupsWithVersion.newBuilder();
                                 for (Group group : groups) {
-                                    builder.addGroups(ProtoModelUtil.group2proto(group));
+                                    builder.addGroups(ProtoModelConvertor.group2proto(group));
                                 }
                                 return builder
                                         .setLastUpdatedDate(version.getTime())

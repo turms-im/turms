@@ -19,9 +19,9 @@ package im.turms.gateway.pojo.bo.session.connection;
 
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.dto.CloseReason;
-import im.turms.server.common.factory.NotificationFactory;
 import im.turms.server.common.logging.core.logger.Logger;
 import im.turms.server.common.logging.core.logger.LoggerFactory;
+import im.turms.server.common.proto.NotificationFactory;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.server.common.util.ThrowableUtil;
 import io.netty.buffer.ByteBuf;

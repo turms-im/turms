@@ -20,20 +20,19 @@ package im.turms.server.common.client;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
+import org.jctools.maps.NonBlockingHashMapLong;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 import reactor.netty.resources.LoopResources;
 
 import javax.annotation.Nullable;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author James Chen
  */
 public abstract class TurmsClient {
 
-    private final Map<Long, Sinks.One<TurmsNotification>> pendingRequestMap = new ConcurrentHashMap<>(128);
+    private final NonBlockingHashMapLong<Sinks.One<TurmsNotification>> pendingRequestMap = new NonBlockingHashMapLong<>(128);
 
     public static TurmsTcpClient tcp() {
         return new TurmsTcpClient();

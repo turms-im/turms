@@ -55,7 +55,7 @@ import im.turms.server.common.util.DateUtil;
 import im.turms.service.bo.ServicePermission;
 import im.turms.service.constant.OperationResultConstant;
 import im.turms.service.plugin.extension.ExpiredMessageDeletionNotifier;
-import im.turms.service.util.ProtoModelUtil;
+import im.turms.service.proto.ProtoModelConvertor;
 import im.turms.service.workflow.dao.domain.message.Message;
 import im.turms.service.workflow.service.impl.conversation.ConversationService;
 import im.turms.service.workflow.service.impl.group.GroupMemberService;
@@ -369,12 +369,13 @@ public class MessageService {
             @Nullable @PastOrPresent Date recallDate,
             @Nullable Long referenceId,
             @Nullable Long preMessageId) {
+        MessageProperties messageProperties = node.getSharedProperties().getService().getMessage();
         try {
             AssertUtil.notNull(senderId, "senderId");
             AssertUtil.notNull(targetId, "targetId");
             AssertUtil.notNull(isGroupMessage, "isGroupMessage");
             AssertUtil.notNull(isSystemMessage, "isSystemMessage");
-            AssertUtil.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
+            AssertUtil.maxLength(text, "text", messageProperties.getMaxTextLimit());
             validRecordsLength(records);
             AssertUtil.min(burnAfter, "burnAfter", 0);
             AssertUtil.pastOrPresent(deliveryDate, "deliveryDate");
@@ -389,10 +390,10 @@ public class MessageService {
         if (messageId == null) {
             messageId = node.nextLargeGapId(ServiceType.MESSAGE);
         }
-        if (!node.getSharedProperties().getService().getMessage().isRecordsPersistent()) {
+        if (!messageProperties.isRecordsPersistent()) {
             records = null;
         }
-        if (!node.getSharedProperties().getService().getMessage().isPreMessageIdPersistent()) {
+        if (!messageProperties.isPreMessageIdPersistent()) {
             preMessageId = null;
         }
         Mono<Long> sequenceId = null;
@@ -906,7 +907,7 @@ public class MessageService {
     private Mono<Boolean> sendMessage(@NotNull Message message, @NotNull Set<Long> recipientIds) {
         TurmsRequest request = TurmsRequest
                 .newBuilder()
-                .setCreateMessageRequest(ProtoModelUtil.message2createMessageRequest(message))
+                .setCreateMessageRequest(ProtoModelConvertor.message2createMessageRequest(message))
                 .build();
         TurmsNotification notification = TurmsNotification
                 .newBuilder()

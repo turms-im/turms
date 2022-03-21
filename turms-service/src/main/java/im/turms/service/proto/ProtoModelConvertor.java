@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.service.util;
+package im.turms.service.proto;
 
 import com.google.common.collect.Maps;
 import com.google.protobuf.ByteString;
@@ -54,9 +54,9 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-public final class ProtoModelUtil {
+public final class ProtoModelConvertor {
 
-    private ProtoModelUtil() {
+    private ProtoModelConvertor() {
     }
 
     // Transformation
