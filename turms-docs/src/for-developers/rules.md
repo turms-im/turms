@@ -60,9 +60,9 @@ Java自身是一个很保守的语言，其大生态也非常保守。其设计�
 
 * 在客户端请求与管理员API请求的处理过程中，禁止使用Stream
 
-* 关于“为什么一些看似可以用primitive参数的函数，依旧使用包装类”的问题。依旧使用包装类是因为：一个函数中的部分参数虽然可能看似可以使用primitives，但实际上这些primitives最终大概率会传给Java的集合类实现（如Map<Long, Object>）、只接受对象的函数（如`Object`类型、`Long`类型、泛型等）或作为类的Object字段等。因此，如果一个函数只是自顾自地使用primitive，那整条逻辑处理下来，这个primitive很可能在包装类与primitive之间反复转换多次。综上，Turms服务端在大部分情况下，统一使用包装类，以避免这样多次的转换。只有能保证primitive不会转成包装类，我们才统一使用primitive。
+* 关于“为什么一些看似可以用primitive参数的函数，依旧使用包装类”的问题。依旧使用包装类是因为：一个函数中的部分参数虽然可能看似可以使用primitives，但实际上这些primitives最终大概率会传给Java的集合类实现（如`Map<Long, Object>`）、只接受对象的函数（如`Object`类型、`Long`类型、泛型等）或作为类的Object字段等。因此，如果一个函数只是自顾自地使用primitive，那整条逻辑处理下来，这个primitive很可能在包装类与primitive之间反复转换多次。综上，Turms服务端在大部分情况下，统一使用包装类，以避免这样多次的转换。只有能保证primitive不会转成包装类，我们才统一使用primitive。
 
-  另外，这既是为什么我们在[关于Valhalla项目](https://turms-im.github.io/docs/for-developers/system-resource-management.html#%E5%85%B3%E4%BA%8Evalhalla%E9%A1%B9%E7%9B%AE)中说“万物皆对象”“像诅咒一样挥之不去”，一个primitive在复杂的逻辑中，很难不会被转换成包装类，无意义的对象浪费了大量的内存，也是为什么我们一直在等待Valhalla项目终结包装类、并支持诸如List<int>类型等特性。
+  另外，这既是为什么我们在[关于Valhalla项目](https://turms-im.github.io/docs/for-developers/system-resource-management.html#%E5%85%B3%E4%BA%8Evalhalla%E9%A1%B9%E7%9B%AE)中说“万物皆对象”的设计理念“像诅咒一样挥之不去”，一个primitive在复杂的逻辑中，很难不会被转换成包装类，无意义的对象浪费了大量的内存，也是为什么我们一直在等待Valhalla项目终结包装类、并支持诸如`List<int>`类型等特性。
 
 #### 代理与反射
 
