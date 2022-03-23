@@ -63,20 +63,24 @@ Turms的自动封禁机制采用分级制度，默认提供3个等级，这3个�
 
   综上，Bloom Filter在分布式环境下，连黑名单系统最为基础的功能都无法实现，就算Bloom Filter配合其他工程实践勉强实现，那Bloom Filter自身的优势也就不存在了。
 
-* 被拉黑用户数据量本身很小，Bloom Filter无法发挥其优势。而且如果只是判断用户是否被拉黑，我们按100万的被封禁的用户ID来看，一共也才需要61.4MiB内存（特别一提的是：等未来Valhalla项目支持`ConcurrentHashMap<long, Object>`后，可能只需约46MiB内存，但具体占多少内存还要看Valhalla项目最终愿意重构多少Java类，与其阶段性JEP的完成度）。这里以具体代码为例：
+* 被拉黑用户数据量本身很小，Bloom Filter无法发挥其优势。而且如果只是判断用户是否被拉黑，我们按100万的被封禁的用户ID来看，一共也才需要12MiB或61.4MiB内存（额外补充：这个例子也印证了我们在[关于Valhalla项目](https://turms-im.github.io/docs/for-developers/system-resource-management.html#%E5%85%B3%E4%BA%8Evalhalla%E9%A1%B9%E7%9B%AE)篇章中提及到的：`Java对内存的浪费就让人感觉有些“自暴自弃”了`）。这里以具体代码为例：
 
   ```java
   public static void main(String[] args) {
       int number = 1_000_000;
-      var map = ConcurrentHashMap.newKeySet((int)(number / 0.75F + 1.0F));
+      var map1 = ConcurrentHashMap.newKeySet((int)(number / 0.75F + 1.0F));
+      var map2 = new NonBlockingHashMapLong<>(number);
       for (int i = 0; i < number; i++) {
-          map.add(new Long(i));
+          map1.add(new Long(i));
+          map2.put(i, true);
       }
-      System.out.println(GraphLayout.parseInstance(map).toFootprint());
+      System.out.println(GraphLayout.parseInstance(map1).toFootprint());
+      System.out.println(GraphLayout.parseInstance(map2).toFootprint());
   }
   ```
   其内存占用的输出如下（基于`org.openjdk.jol.jol-core`库实现计算）：
   ```text
+  java.util.concurrent.ConcurrentHashMap$KeySetView@593634add footprint:
        COUNT       AVG       SUM   DESCRIPTION
            1   8388624   8388624   [Ljava.util.concurrent.ConcurrentHashMap$Node;
            1        16        16   java.lang.Boolean
@@ -85,6 +89,17 @@ Turms的自动封禁机制采用分级制度，默认提供3个等级，这3个�
            1        24        24   java.util.concurrent.ConcurrentHashMap$KeySetView
      1000000        32  32000000   java.util.concurrent.ConcurrentHashMap$Node
      2000004            64388728   (total)
+  
+  org.jctools.maps.NonBlockingHashMapLong@51ca57d6d footprint:
+       COUNT       AVG       SUM   DESCRIPTION
+           3   2796304   8388912   [J
+           1   4194320   4194320   [Ljava.lang.Object;
+           1        16        16   java.lang.Boolean
+           2        16        32   org.jctools.maps.ConcurrentAutoTable
+           2        40        80   org.jctools.maps.ConcurrentAutoTable$CAT
+           1        40        40   org.jctools.maps.NonBlockingHashMapLong
+           1        64        64   org.jctools.maps.NonBlockingHashMapLong$CHM
+          11            12583464   (total)
   ```
 
 * 存在误差
