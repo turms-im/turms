@@ -17,11 +17,11 @@
 
 package helper;
 
-import im.turms.server.common.property.TurmsProperties;
-import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.service.ServiceProperties;
-import im.turms.server.common.property.env.service.env.database.MongoProperties;
-import im.turms.server.common.property.env.service.env.redis.TurmsRedisProperties;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.service.ServiceProperties;
+import im.turms.server.common.infra.property.env.service.env.database.MongoProperties;
+import im.turms.server.common.infra.property.env.service.env.redis.TurmsRedisProperties;
 import im.turms.server.common.testing.BaseIntegrationTest;
 
 import java.util.List;

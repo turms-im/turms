@@ -65,7 +65,7 @@ public class ConnectionService: BaseService {
     public func connect(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil) -> Promise<Void> {
         return Promise { seal in
             if stateStore.isConnected {
-                seal.reject(TurmsBusinessError(.clientSessionAlreadyEstablished))
+                seal.reject(ResponseError(.clientSessionAlreadyEstablished))
                 return
             }
             resetStates()

@@ -1,4 +1,4 @@
-export interface SessionCloseInfo {
+export default interface SessionCloseInfo {
     closeStatus: number;
     businessStatus?: number;
     reason?: string;

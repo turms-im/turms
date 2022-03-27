@@ -17,12 +17,12 @@
 
 package integration.access;
 
-import im.turms.gateway.access.common.function.ConnectionHandler;
-import im.turms.gateway.access.tcp.factory.TcpServerFactory;
-import im.turms.gateway.service.impl.session.SessionService;
-import im.turms.server.common.healthcheck.ServerStatusManager;
-import im.turms.server.common.property.env.gateway.TcpProperties;
-import im.turms.server.common.service.blocklist.BlocklistService;
+import im.turms.gateway.access.client.common.connection.ConnectionListener;
+import im.turms.gateway.access.client.tcp.TcpServerFactory;
+import im.turms.gateway.domain.session.service.SessionService;
+import im.turms.server.common.domain.blocklist.service.BlocklistService;
+import im.turms.server.common.infra.healthcheck.ServerStatusManager;
+import im.turms.server.common.infra.property.env.gateway.TcpProperties;
 import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.OngoingStubbing;
 import reactor.core.publisher.Mono;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 
 class TcpServerIT {
 
-    private static final ConnectionHandler NEVER_CLOSE = (connection, isWebSocketConnection, in, out, onClose) -> Mono.never();
+    private static final ConnectionListener NEVER_CLOSE = (connection, isWebSocketConnection, in, out, onClose) -> Mono.never();
 
     @Test
     void shouldCloseOrAcceptConnection_accordingTo_ServerStatusManager_isActive() throws InterruptedException {

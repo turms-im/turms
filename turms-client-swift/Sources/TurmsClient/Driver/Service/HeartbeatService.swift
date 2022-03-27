@@ -45,7 +45,7 @@ class HeartbeatService: BaseService {
     func send() -> Promise<Void> {
         return Promise { seal in
             if !stateStore.isConnected || !stateStore.isSessionOpen {
-                seal.reject(TurmsBusinessError(.clientSessionHasBeenClosed))
+                seal.reject(ResponseError(.clientSessionHasBeenClosed))
                 return
             }
             stateStore.websocket?.write(data: HeartbeatService.HEARTBEAT_REQUEST) {
@@ -62,7 +62,7 @@ class HeartbeatService: BaseService {
 
     func rejectHeartbeatPromisesIfFail(_ notification: TurmsNotification) -> Bool {
         if notification.hasRequestID, notification.requestID == HeartbeatService.HEARTBEAT_FAILURE_REQUEST_ID {
-            rejectHeartbeatPromises(TurmsBusinessError(notification))
+            rejectHeartbeatPromises(ResponseError(notification))
             return true
         }
         return false
@@ -91,6 +91,6 @@ class HeartbeatService: BaseService {
 
     override func onDisconnected() {
         stop()
-        rejectHeartbeatPromises(TurmsBusinessError(.clientSessionHasBeenClosed))
+        rejectHeartbeatPromises(ResponseError(.clientSessionHasBeenClosed))
     }
 }

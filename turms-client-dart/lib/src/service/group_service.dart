@@ -1,6 +1,7 @@
 import 'package:fixnum/fixnum.dart' show Int64;
 
 import '../../turms_client.dart';
+import '../exception/response_exception.dart';
 import '../extension/date_time_extensions.dart';
 import '../extension/int_extensions.dart';
 import '../extension/iterable_extensions.dart';
@@ -40,8 +41,7 @@ import '../model/request/group/query_group_request.pb.dart';
 import '../model/request/group/query_joined_group_ids_request.pb.dart';
 import '../model/request/group/query_joined_group_infos_request.pb.dart';
 import '../model/request/group/update_group_request.pb.dart';
-import '../model/turms_business_exception.dart';
-import '../model/turms_status_code.dart';
+import '../model/response_status_code.dart';
 
 class GroupService {
   final TurmsClient _turmsClient;
@@ -143,8 +143,8 @@ class GroupService {
   Future<Int64> addGroupJoinQuestion(
       Int64 groupId, String question, Set<String> answers, int score) async {
     if (answers.isEmpty) {
-      throw TurmsBusinessException(
-          TurmsStatusCode.illegalArgument, 'answers must not be empty');
+      throw ResponseException(
+          ResponseStatusCode.illegalArgument, 'answers must not be empty');
     }
     final n = await _turmsClient.driver.send(CreateGroupJoinQuestionRequest(
         groupId: groupId, question: question, answers: answers, score: score));
@@ -272,7 +272,7 @@ class GroupService {
   Future<GroupJoinQuestionsAnswerResult?> answerGroupQuestions(
       Map<Int64, String> questionIdsAndAnswers) async {
     if (questionIdsAndAnswers.isEmpty) {
-      throw TurmsBusinessException(TurmsStatusCode.illegalArgument,
+      throw ResponseException(ResponseStatusCode.illegalArgument,
           'questionIdsAndAnswers must not be empty');
     }
     final n = await _turmsClient.driver.send(
@@ -280,8 +280,7 @@ class GroupService {
             questionIdAndAnswer: questionIdsAndAnswers));
     return n.data.hasGroupJoinQuestionAnswerResult()
         ? n.data.groupJoinQuestionAnswerResult
-        : throw TurmsBusinessException.fromCode(
-            TurmsStatusCode.invalidResponse);
+        : throw ResponseException.fromCode(ResponseStatusCode.invalidResponse);
   }
 
   // Group Member

@@ -16,9 +16,9 @@
  */
 package im.turms.client.driver.service
 
-import im.turms.client.constant.TurmsStatusCode
 import im.turms.client.driver.StateStore
-import im.turms.client.exception.TurmsBusinessException
+import im.turms.client.exception.ResponseException
+import im.turms.client.model.ResponseStatusCode
 import im.turms.client.transport.Pin
 import im.turms.client.transport.TcpClient
 import kotlinx.coroutines.TimeoutCancellationException
@@ -119,7 +119,7 @@ class ConnectionService(
             if (host == stateStore.tcp?.host && port == stateStore.tcp?.port) {
                 return
             } else {
-                throw TurmsBusinessException(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED)
+                throw ResponseException(ResponseStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED)
             }
         }
         resetStates()

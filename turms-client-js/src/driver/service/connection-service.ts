@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-import StateStore from '../state-store';
-import TurmsBusinessError from '../../model/turms-business-error';
-import TurmsStatusCode from '../../model/turms-status-code';
 import BaseService from './base-service';
+import ResponseStatusCode from '../../model/response-status-code';
+import ResponseError from '../../error/response-error';
+import StateStore from '../state-store';
 import WebSocketFactory from '../../transport/websocket-factory';
 
 export interface ConnectOptions {
@@ -113,7 +113,7 @@ export default class ConnectionService extends BaseService {
             if (websocket?.isConnected) {
                 return wsUrl === websocket.url
                     ? resolve()
-                    : reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
+                    : reject(ResponseError.fromCode(ResponseStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
             }
             this._resetStates();
             this._stateStore.websocket = WebSocketFactory.create(wsUrl, {
@@ -137,7 +137,7 @@ export default class ConnectionService extends BaseService {
             let connectTimeoutId;
             if (connectTimeout > 0) {
                 connectTimeoutId = setTimeout(() => {
-                    reject(TurmsBusinessError.fromCode(TurmsStatusCode.CONNECT_TIMEOUT));
+                    reject(ResponseError.fromCode(ResponseStatusCode.CONNECT_TIMEOUT));
                 }, connectTimeout);
             }
         });

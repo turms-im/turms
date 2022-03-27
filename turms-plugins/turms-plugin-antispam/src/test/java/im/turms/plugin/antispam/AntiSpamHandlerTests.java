@@ -24,9 +24,9 @@ import im.turms.plugin.antispam.ac.Store;
 import im.turms.plugin.antispam.property.AntiSpamProperties;
 import im.turms.plugin.antispam.property.TextParsingStrategy;
 import im.turms.plugin.antispam.property.UnwantedWordHandleStrategy;
-import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.service.workflow.access.servicerequest.dto.ClientRequest;
+import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.service.access.servicerequest.dto.ClientRequest;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
@@ -59,8 +59,8 @@ class AntiSpamHandlerTests {
         Mono<ClientRequest> result = handler.transform(clientRequest);
         StepVerifier.create(result)
                 .expectErrorSatisfies(t -> {
-                    assertThat(t).isInstanceOf(TurmsBusinessException.class);
-                    assertThat(((TurmsBusinessException) t).getCode()).isEqualTo(TurmsStatusCode.MESSAGE_IS_ILLEGAL);
+                    assertThat(t).isInstanceOf(ResponseException.class);
+                    assertThat(((ResponseException) t).getCode()).isEqualTo(ResponseStatusCode.MESSAGE_IS_ILLEGAL);
                 })
                 .verify();
     }
@@ -153,8 +153,8 @@ class AntiSpamHandlerTests {
         Mono<ClientRequest> result = handler.transform(clientRequest);
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> {
-                    TurmsBusinessException e = (TurmsBusinessException) throwable;
-                    assertThat(e.getCode()).isEqualTo(TurmsStatusCode.MESSAGE_IS_ILLEGAL);
+                    ResponseException e = (ResponseException) throwable;
+                    assertThat(e.getCode()).isEqualTo(ResponseStatusCode.MESSAGE_IS_ILLEGAL);
                     String expected = String.join(String.valueOf((char) SpamDetector.UNWANTED_WORD_DELIMITER), words);
                     assertThat(e.getReason()).isEqualTo(expected);
                     return true;

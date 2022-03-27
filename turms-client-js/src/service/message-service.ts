@@ -1,11 +1,12 @@
+import * as Long from 'long';
+
 import TurmsClient from '../turms-client';
 import RequestUtil from '../util/request-util';
 import { ParsedModel } from '../model/parsed-model';
 import NotificationUtil from '../util/notification-util';
-import MessageAddition from '../model/message/message-addition';
-import TurmsBusinessError from '../model/turms-business-error';
-import BuiltinSystemMessageType from '../model/message/builtin-system-message-type';
-import * as Long from 'long';
+import BuiltinSystemMessageType from '../model/builtin-system-message-type';
+import MessageAddition from '../model/message-addition';
+import ResponseError from '../error/response-error';
 import { UserLocation } from '../model/proto/model/user/user_location';
 import { AudioFile } from '../model/proto/model/file/audio_file';
 import { VideoFile } from '../model/proto/model/file/video_file';
@@ -66,10 +67,10 @@ export default class MessageService {
         burnAfter?: number,
         preMessageId?: string): Promise<string> {
         if (RequestUtil.isFalsy(targetId)) {
-            return TurmsBusinessError.notFalsyPromise('targetId');
+            return ResponseError.notFalsyPromise('targetId');
         }
         if (RequestUtil.isFalsy(text) && RequestUtil.isFalsy(records)) {
-            return TurmsBusinessError.illegalParamPromise('text and records must not all be null');
+            return ResponseError.illegalParamPromise('text and records must not all be null');
         }
         if (!deliveryDate) {
             deliveryDate = new Date();
@@ -92,10 +93,10 @@ export default class MessageService {
         isGroupMessage: boolean,
         targetId: string): Promise<string> {
         if (RequestUtil.isFalsy(messageId)) {
-            return TurmsBusinessError.notFalsyPromise('messageId');
+            return ResponseError.notFalsyPromise('messageId');
         }
         if (RequestUtil.isFalsy(targetId)) {
-            return TurmsBusinessError.notFalsyPromise('targetId');
+            return ResponseError.notFalsyPromise('targetId');
         }
         return this._turmsClient.driver.send({
             createMessageRequest: {
@@ -112,7 +113,7 @@ export default class MessageService {
         text?: string,
         records?: Uint8Array[]): Promise<void> {
         if (RequestUtil.isFalsy(messageId)) {
-            return TurmsBusinessError.notFalsyPromise('messageId');
+            return ResponseError.notFalsyPromise('messageId');
         }
         if (RequestUtil.areAllFalsy(text, records)) {
             return Promise.resolve();
@@ -172,7 +173,7 @@ export default class MessageService {
 
     recallMessage(messageId: string, recallDate = new Date()): Promise<void> {
         if (RequestUtil.isFalsy(messageId)) {
-            return TurmsBusinessError.notFalsyPromise('messageId');
+            return ResponseError.notFalsyPromise('messageId');
         }
         return this._turmsClient.driver.send({
             updateMessageRequest: {

@@ -48,7 +48,7 @@ public class MessageService {
         preMessageId: Int64? = nil
     ) -> Promise<Int64> {
         if Validator.areAllNil(text, records) {
-            return Promise(error: TurmsBusinessError(TurmsStatusCode.illegalArgument, "text and records must not all be null"))
+            return Promise(error: ResponseError(ResponseStatusCode.illegalArgument, "text and records must not all be null"))
         }
         return turmsClient.driver
             .send {

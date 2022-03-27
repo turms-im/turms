@@ -9,8 +9,6 @@ import MessageService from './service/message-service';
 import NotificationService from './service/notification-service';
 import StorageService from './service/storage-service';
 
-import InputFileReader from './util/input-file-reader';
-
 import ClientOptions from './client-options';
 
 class TurmsClient {
@@ -70,6 +68,10 @@ class TurmsClient {
         this._notificationService = new NotificationService(this);
     }
 
+    static isSharedContextSupported(): boolean {
+        return typeof SharedWorker === 'function';
+    }
+
     // Driver
     get driver(): TurmsDriver {
         return this._driver;
@@ -102,15 +104,6 @@ class TurmsClient {
 
     close(): Promise<void> {
         return this.driver.close();
-    }
-
-    // Util
-    static InputFileReader(): InputFileReader {
-        return InputFileReader;
-    }
-
-    static isSharedContextSupported(): boolean {
-        return typeof SharedWorker === 'function';
     }
 }
 

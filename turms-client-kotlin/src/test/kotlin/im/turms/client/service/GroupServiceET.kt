@@ -26,7 +26,7 @@ import helper.Constants.ORDER_LOW_PRIORITY
 import helper.Constants.ORDER_MIDDLE_PRIORITY
 import helper.ExceptionUtil
 import im.turms.client.TurmsClient
-import im.turms.client.constant.TurmsStatusCode
+import im.turms.client.model.ResponseStatusCode
 import im.turms.common.constant.GroupMemberRole
 import im.turms.common.model.bo.group.Group
 import kotlinx.coroutines.runBlocking
@@ -285,9 +285,9 @@ internal class GroupServiceET {
             assertTrue(isCorrect)
         } catch (e: ExecutionException) {
             assertTrue(
-                ExceptionUtil.isTurmsStatusCode(
+                ExceptionUtil.isResponseStatusCode(
                     e,
-                    TurmsStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION
+                    ResponseStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION
                 )
             )
         }
@@ -326,7 +326,7 @@ internal class GroupServiceET {
             client.groupService.deleteInvitation(groupInvitationId)
             true
         } catch (e: ExecutionException) {
-            ExceptionUtil.isTurmsStatusCode(e, TurmsStatusCode.RECALLING_GROUP_INVITATION_IS_DISABLED)
+            ExceptionUtil.isResponseStatusCode(e, ResponseStatusCode.RECALLING_GROUP_INVITATION_IS_DISABLED)
         }
         assertTrue(isSuccessful)
     }
@@ -339,7 +339,7 @@ internal class GroupServiceET {
             client.groupService.deleteJoinRequest(groupJoinRequestId)
             true
         } catch (e: ExecutionException) {
-            ExceptionUtil.isTurmsStatusCode(e, TurmsStatusCode.RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED)
+            ExceptionUtil.isResponseStatusCode(e, ResponseStatusCode.RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED)
         }
         assertTrue(isSuccessful)
     }

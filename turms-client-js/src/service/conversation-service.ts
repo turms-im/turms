@@ -2,7 +2,7 @@ import TurmsClient from '../turms-client';
 import RequestUtil from '../util/request-util';
 import { ParsedModel } from '../model/parsed-model';
 import NotificationUtil from '../util/notification-util';
-import TurmsBusinessError from '../model/turms-business-error';
+import ResponseError from '../error/response-error';
 
 export default class ConversationService {
 
@@ -41,7 +41,7 @@ export default class ConversationService {
 
     updatePrivateConversationReadDate(targetId: string, readDate?: Date): Promise<void> {
         if (RequestUtil.isFalsy(targetId)) {
-            return TurmsBusinessError.notFalsyPromise('targetId');
+            return ResponseError.notFalsyPromise('targetId');
         }
         readDate = readDate ?? new Date();
         return this._turmsClient.driver.send({
@@ -54,7 +54,7 @@ export default class ConversationService {
 
     updateGroupConversationReadDate(groupId: string, readDate?: Date): Promise<void> {
         if (RequestUtil.isFalsy(groupId)) {
-            return TurmsBusinessError.notFalsyPromise('groupId');
+            return ResponseError.notFalsyPromise('groupId');
         }
         readDate = readDate ?? new Date();
         return this._turmsClient.driver.send({
@@ -67,7 +67,7 @@ export default class ConversationService {
 
     updatePrivateConversationTypingStatus(targetId: string): Promise<void> {
         if (RequestUtil.isFalsy(targetId)) {
-            return TurmsBusinessError.notFalsyPromise('targetId');
+            return ResponseError.notFalsyPromise('targetId');
         }
         return this._turmsClient.driver.send({
             updateTypingStatusRequest: {
@@ -79,7 +79,7 @@ export default class ConversationService {
 
     updateGroupConversationTypingStatus(groupId: string): Promise<void> {
         if (RequestUtil.isFalsy(groupId)) {
-            return TurmsBusinessError.notFalsyPromise('groupId');
+            return ResponseError.notFalsyPromise('groupId');
         }
         return this._turmsClient.driver.send({
             updateTypingStatusRequest: {

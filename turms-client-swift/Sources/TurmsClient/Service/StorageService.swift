@@ -33,7 +33,7 @@ public class StorageService {
         if let userId = turmsClient.userService.userInfo?.userId {
             return getSignedPutUrl(contentType: .profile, size: Int64(pictureSize), keyNum: userId)
         } else {
-            return Promise(error: TurmsBusinessError(TurmsStatusCode.queryProfileUrlToUpdateBeforeLogin))
+            return Promise(error: ResponseError(ResponseStatusCode.queryProfileUrlToUpdateBeforeLogin))
         }
     }
 
@@ -173,10 +173,10 @@ public class StorageService {
                     if response.statusCode == 200 {
                         seal.fulfill(data!)
                     } else {
-                        seal.reject(TurmsBusinessError(.invalidResponse))
+                        seal.reject(ResponseError(.invalidResponse))
                     }
                 } else {
-                    seal.reject(TurmsBusinessError(.invalidResponse))
+                    seal.reject(ResponseError(.invalidResponse))
                 }
             }.resume()
         }
@@ -195,10 +195,10 @@ public class StorageService {
                     if response.statusCode == 200 {
                         seal.fulfill(url)
                     } else {
-                        seal.reject(TurmsBusinessError(.invalidResponse))
+                        seal.reject(ResponseError(.invalidResponse))
                     }
                 } else {
-                    seal.reject(TurmsBusinessError(.invalidResponse))
+                    seal.reject(ResponseError(.invalidResponse))
                 }
             }.resume()
         }
@@ -215,7 +215,7 @@ public class StorageService {
             return "attachment"
         default:
             let reason = "Unknown content type \(contentType)"
-            throw TurmsBusinessError(TurmsStatusCode.illegalArgument, reason)
+            throw ResponseError(ResponseStatusCode.illegalArgument, reason)
         }
     }
 }

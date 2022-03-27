@@ -18,18 +18,19 @@ package im.turms.client.service
 
 import im.turms.client.TurmsClient
 import im.turms.client.annotation.NotEmpty
-import im.turms.client.constant.TurmsStatusCode
-import im.turms.client.exception.TurmsBusinessException
+import im.turms.client.exception.ResponseException
+import im.turms.client.model.ResponseStatusCode
 import im.turms.client.model.SessionCloseInfo
 import im.turms.client.model.User
 import im.turms.client.model.UserInfoWithVersion
 import im.turms.client.model.UserLocation
 import im.turms.client.util.SystemUtil
+import im.turms.client.util.Validator
 import im.turms.common.constant.DeviceType
 import im.turms.common.constant.ProfileAccessStrategy
 import im.turms.common.constant.ResponseAction
+import im.turms.common.constant.SessionCloseStatus
 import im.turms.common.constant.UserStatus
-import im.turms.common.constant.statuscode.SessionCloseStatus
 import im.turms.common.model.bo.common.Int64ValuesWithVersion
 import im.turms.common.model.bo.user.NearbyUser
 import im.turms.common.model.bo.user.UserFriendRequestsWithVersion
@@ -57,7 +58,6 @@ import im.turms.common.model.dto.request.user.relationship.QueryRelationshipsReq
 import im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest
 import im.turms.common.model.dto.request.user.relationship.UpdateRelationshipGroupRequest
 import im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest
-import im.turms.common.util.Validator
 import java.util.*
 
 /**
@@ -147,8 +147,8 @@ class UserService(private val turmsClient: TurmsClient) {
 
     suspend fun updateOnlineStatus(onlineStatus: UserStatus) =
         if (onlineStatus == UserStatus.OFFLINE) {
-            throw TurmsBusinessException(
-                TurmsStatusCode.ILLEGAL_ARGUMENT,
+            throw ResponseException(
+                ResponseStatusCode.ILLEGAL_ARGUMENT,
                 "The online status must not be $onlineStatus"
             )
         } else turmsClient.driver
@@ -162,7 +162,7 @@ class UserService(private val turmsClient: TurmsClient) {
 
     suspend fun disconnectOnlineDevices(@NotEmpty deviceTypes: Set<DeviceType>) =
         if (deviceTypes.isEmpty()) {
-            throw TurmsBusinessException(TurmsStatusCode.ILLEGAL_ARGUMENT, "deviceTypes must not be null or empty")
+            throw ResponseException(ResponseStatusCode.ILLEGAL_ARGUMENT, "deviceTypes must not be null or empty")
         } else turmsClient.driver
             .send(
                 UpdateUserOnlineStatusRequest.newBuilder().apply {
@@ -233,7 +233,7 @@ class UserService(private val turmsClient: TurmsClient) {
 
     suspend fun queryOnlineStatusesRequest(@NotEmpty userIds: Set<Long>): List<UserStatusDetail> =
         if (userIds.isEmpty()) {
-            throw TurmsBusinessException(TurmsStatusCode.ILLEGAL_ARGUMENT, "userIds must not be null or empty")
+            throw ResponseException(ResponseStatusCode.ILLEGAL_ARGUMENT, "userIds must not be null or empty")
         } else turmsClient.driver
             .send(
                 QueryUserOnlineStatusesRequest.newBuilder().apply {

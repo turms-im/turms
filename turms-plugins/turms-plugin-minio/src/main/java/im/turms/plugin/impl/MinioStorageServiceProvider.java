@@ -18,16 +18,17 @@
 package im.turms.plugin.impl;
 
 import im.turms.common.constant.ContentType;
-import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.logging.core.logger.Logger;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
-import im.turms.server.common.plugin.TurmsExtension;
-import im.turms.server.common.property.TurmsProperties;
-import im.turms.server.common.property.env.service.business.StorageProperties;
-import im.turms.service.plugin.extension.StorageServiceProvider;
-import im.turms.service.workflow.service.impl.group.GroupMemberService;
-import im.turms.service.workflow.service.impl.message.MessageService;
+import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
+import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.plugin.TurmsExtension;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.env.service.business.StorageProperties;
+import im.turms.service.domain.group.service.GroupMemberService;
+import im.turms.service.domain.message.service.MessageService;
+import im.turms.service.infra.plugin.extension.StorageServiceProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.MimeTypeUtils;
 import reactor.core.publisher.Mono;
@@ -96,26 +97,26 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                                      String keyStr,
                                      @Nullable Long keyNum) {
         if (!isServing) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
+            return ResponseExceptionPublisherPool.serverUnavailable();
         }
         return hasPermissionToDelete(requesterId, contentType, keyNum)
                 .flatMap(hasPermission -> {
                     if (!hasPermission) {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                        return ResponseExceptionPublisherPool.unauthorized();
                     }
                     String key;
                     switch (contentType) {
                         case PROFILE -> key = requesterId.toString();
                         case GROUP_PROFILE -> {
                             if (keyNum == null) {
-                                return Mono.error(TurmsBusinessException
-                                        .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null"));
+                                return Mono.error(ResponseException
+                                        .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null"));
                             }
                             key = keyNum.toString();
                         }
                         case ATTACHMENT -> {
-                            return Mono.error(TurmsBusinessException
-                                    .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The attachments cannot be deleted"));
+                            return Mono.error(ResponseException
+                                    .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The attachments cannot be deleted"));
                         }
                         default -> {
                             return Mono.error(new IllegalStateException("Unexpected value: " + contentType));
@@ -135,20 +136,20 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                                              String keyStr,
                                              @Nullable Long keyNum) {
         if (!isServing) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
+            return ResponseExceptionPublisherPool.serverUnavailable();
         }
         return hasPermissionToGet(requesterId, contentType, keyNum)
                 .flatMap(hasPermission -> {
                     if (!hasPermission) {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                        return ResponseExceptionPublisherPool.unauthorized();
                     }
                     return switch (contentType) {
                         case PROFILE, GROUP_PROFILE -> Mono
-                                .error(TurmsBusinessException.get(TurmsStatusCode.REDUNDANT_REQUEST_FOR_PRESIGNED_PROFILE_URL));
+                                .error(ResponseException.get(ResponseStatusCode.REDUNDANT_REQUEST_FOR_PRESIGNED_PROFILE_URL));
                         case ATTACHMENT -> {
                             if (keyNum == null) {
-                                yield Mono.error(TurmsBusinessException
-                                        .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null"));
+                                yield Mono.error(ResponseException
+                                        .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null"));
                             }
                             String key = keyStr == null
                                     ? keyNum.toString()
@@ -168,7 +169,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                                              @Nullable Long keyNum,
                                              long contentLength) {
         if (!isServing) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
+            return ResponseExceptionPublisherPool.serverUnavailable();
         }
         int sizeLimit = switch (contentType) {
             case PROFILE -> storageProperties.getProfileSizeLimit();
@@ -177,12 +178,12 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             default -> throw new IllegalStateException("Unexpected value: " + contentType);
         };
         if (sizeLimit != 0 && contentLength > sizeLimit) {
-            throw TurmsBusinessException.get(TurmsStatusCode.FILE_TOO_LARGE);
+            throw ResponseException.get(ResponseStatusCode.FILE_TOO_LARGE);
         }
         return hasPermissionToPut(requesterId, contentType, keyNum)
                 .flatMap(hasPermission -> {
                     if (!hasPermission) {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                        return ResponseExceptionPublisherPool.unauthorized();
                     }
                     String type;
                     String objectKey;
@@ -194,16 +195,16 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                         case GROUP_PROFILE -> {
                             type = storageProperties.getGroupProfileContentType();
                             if (keyNum == null) {
-                                return Mono.error(TurmsBusinessException
-                                        .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null"));
+                                return Mono.error(ResponseException
+                                        .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null"));
                             }
                             objectKey = keyNum.toString();
                         }
                         case ATTACHMENT -> {
                             type = storageProperties.getAttachmentContentType();
                             if (keyNum == null) {
-                                return Mono.error(TurmsBusinessException
-                                        .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null"));
+                                return Mono.error(ResponseException
+                                        .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null"));
                             }
                             objectKey = keyStr == null
                                     ? keyNum.toString()
@@ -420,7 +421,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             case PROFILE, GROUP_PROFILE -> Mono.just(true);
             case ATTACHMENT -> {
                 if (keyNum == null) {
-                    throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null");
+                    throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null");
                 }
                 yield messageService.isMessageRecipientOrSender(keyNum, requesterId);
             }
@@ -435,13 +436,13 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             case PROFILE -> Mono.just(true);
             case GROUP_PROFILE -> {
                 if (keyNum == null) {
-                    throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null");
+                    throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null");
                 }
                 yield groupMemberService.isOwnerOrManager(requesterId, keyNum);
             }
             case ATTACHMENT -> {
                 if (keyNum == null) {
-                    throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null");
+                    throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null");
                 }
                 yield messageService.isMessageRecipientOrSender(keyNum, requesterId);
             }
@@ -454,7 +455,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             case PROFILE -> Mono.just(true);
             case GROUP_PROFILE -> {
                 if (keyNum == null) {
-                    throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null");
+                    throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null");
                 }
                 yield groupMemberService.isOwnerOrManager(requesterId, keyNum);
             }

@@ -24,9 +24,9 @@ import helper.Constants.ORDER_LAST
 import helper.Constants.ORDER_LOWEST_PRIORITY
 import helper.Constants.ORDER_LOW_PRIORITY
 import helper.Constants.ORDER_MIDDLE_PRIORITY
-import helper.ExceptionUtil.isTurmsStatusCode
+import helper.ExceptionUtil.isResponseStatusCode
 import im.turms.client.TurmsClient
-import im.turms.client.constant.TurmsStatusCode
+import im.turms.client.model.ResponseStatusCode
 import im.turms.common.constant.ResponseAction
 import im.turms.common.constant.UserStatus
 import kotlinx.coroutines.runBlocking
@@ -84,7 +84,7 @@ internal class UserServiceET {
             val result = turmsClient.userService.createRelationship(10L, true)
             assertNotNull(result)
         } catch (e: ExecutionException) {
-            assertTrue(isTurmsStatusCode(e, TurmsStatusCode.CREATE_EXISTING_RELATIONSHIP))
+            assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP))
         }
     }
 
@@ -96,7 +96,7 @@ internal class UserServiceET {
             val result = turmsClient.userService.createFriendRelationship(10L)
             assertNotNull(result)
         } catch (e: ExecutionException) {
-            assertTrue(isTurmsStatusCode(e, TurmsStatusCode.CREATE_EXISTING_RELATIONSHIP))
+            assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP))
         }
     }
 
@@ -108,7 +108,7 @@ internal class UserServiceET {
             val result = turmsClient.userService.createBlockedUserRelationship(10L)
             assertNotNull(result)
         } catch (e: ExecutionException) {
-            assertTrue(isTurmsStatusCode(e, TurmsStatusCode.CREATE_EXISTING_RELATIONSHIP))
+            assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP))
         }
     }
 
@@ -120,7 +120,7 @@ internal class UserServiceET {
             val friendRequestId = turmsClient.userService.sendFriendRequest(11L, "content")
             assertNotNull(friendRequestId)
         } catch (e: ExecutionException) {
-            assertTrue(isTurmsStatusCode(e, TurmsStatusCode.CREATE_EXISTING_FRIEND_REQUEST))
+            assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_FRIEND_REQUEST))
         }
     }
 

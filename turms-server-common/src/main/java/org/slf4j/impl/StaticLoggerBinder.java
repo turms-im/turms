@@ -1,6 +1,6 @@
 package org.slf4j.impl;
 
-import im.turms.server.common.logging.slf4j.Slf4jBridgeFactory;
+import im.turms.server.common.infra.logging.slf4j.Slf4jBridgeFactory;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.spi.LoggerFactoryBinder;
 

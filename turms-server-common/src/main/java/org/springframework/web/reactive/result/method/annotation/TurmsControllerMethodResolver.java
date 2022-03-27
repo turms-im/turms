@@ -17,7 +17,7 @@
 
 package org.springframework.web.reactive.result.method.annotation;
 
-import im.turms.server.common.util.ReflectionUtil;
+import im.turms.server.common.infra.reflect.ReflectionUtil;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.http.codec.HttpMessageReader;

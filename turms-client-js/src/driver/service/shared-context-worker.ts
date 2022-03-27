@@ -16,7 +16,7 @@ type SharedContextInfo = {
     loggingInPortId?: PortId,
 
     // shared user info
-    loggedInUserInfo?: any,
+    loggedInUserInfo?: Record<string, unknown>,
     isSessionOpen?: boolean,
     sessionId?: string;
     serverId?: string;

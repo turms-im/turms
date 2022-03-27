@@ -17,8 +17,8 @@
 
 package io.lettuce.core;
 
-import im.turms.server.common.redis.codec.TurmsRedisCodecAdapter;
-import im.turms.server.common.redis.codec.context.RedisCodecContext;
+import im.turms.server.common.storage.redis.codec.TurmsRedisCodecAdapter;
+import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.output.CommandOutput;
 import io.lettuce.core.output.GeoWithinListOutput;

@@ -16,9 +16,9 @@
  */
 package im.turms.client.driver.service
 
-import im.turms.client.constant.TurmsStatusCode
 import im.turms.client.driver.StateStore
-import im.turms.client.exception.TurmsBusinessException
+import im.turms.client.exception.ResponseException
+import im.turms.client.model.ResponseStatusCode
 import im.turms.common.model.dto.notification.TurmsNotification
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -73,7 +73,7 @@ class HeartbeatService(
 
     suspend fun send() = suspendCoroutine<Unit> { cont ->
         if (!stateStore.isConnected || !stateStore.isSessionOpen) {
-            cont.resumeWithException(TurmsBusinessException(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
+            cont.resumeWithException(ResponseException(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
             return@suspendCoroutine
         }
         launch {
@@ -94,13 +94,13 @@ class HeartbeatService(
 
     fun rejectHeartbeatPromisesIfFail(notification: TurmsNotification): Boolean {
         if (notification.hasRequestId() && notification.requestId == HEARTBEAT_FAILURE_REQUEST_ID) {
-            rejectHeartbeatRequests(TurmsBusinessException.get(notification))
+            rejectHeartbeatRequests(ResponseException.get(notification))
             return true
         }
         return false
     }
 
-    private fun rejectHeartbeatRequests(e: TurmsBusinessException) {
+    private fun rejectHeartbeatRequests(e: ResponseException) {
         while (true) {
             heartbeatContinuationQueue.poll()?.resumeWithException(e) ?: return
         }
@@ -112,7 +112,7 @@ class HeartbeatService(
 
     override fun onDisconnected() {
         stop()
-        rejectHeartbeatRequests(TurmsBusinessException(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
+        rejectHeartbeatRequests(ResponseException(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
     }
 
     companion object {

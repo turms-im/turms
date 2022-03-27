@@ -1,6 +1,6 @@
 import TurmsDriver from '../../src/driver/turms-driver';
 import TurmsClient from '../../src/turms-client';
-import TurmsStatusCode from '../../src/model/turms-status-code';
+import ResponseStatusCode from '../../src/model/turms-status-code';
 
 let client: TurmsClient;
 let driver: TurmsDriver;
@@ -36,7 +36,7 @@ describe('TurmsDriver Class', () => {
                 userId: '1'
             }
         });
-        expect(TurmsStatusCode.isSuccessCode(result.code)).toBeTruthy();
+        expect(ResponseStatusCode.isSuccessCode(result.code)).toBeTruthy();
     });
     it('disconnect_shouldSucceed', async () => {
         await driver.disconnect();

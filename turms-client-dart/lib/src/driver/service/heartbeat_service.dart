@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'dart:math';
 
+import '../../exception/response_exception.dart';
 import '../../model/notification/turms_notification.pb.dart';
-import '../../model/turms_business_exception.dart';
-import '../../model/turms_status_code.dart';
+import '../../model/response_status_code.dart';
 import '../state_store.dart';
 import 'base_service.dart';
 
 class HeartbeatService extends BaseService {
   static const _defaultHeartbeatIntervalMillis = 120 * 1000;
   static const _heartbeatFailureRequestId = -100;
-  static final List<int> _heartbeatRequest = [0];
+  static const List<int> _heartbeatRequest = [0];
 
   final int _heartbeatIntervalMillis;
   final Duration _heartbeatTimerInterval;
@@ -52,8 +52,8 @@ class HeartbeatService extends BaseService {
 
   Future<void> send() async {
     if (!stateStore.isConnected || !stateStore.isSessionOpen) {
-      throw TurmsBusinessException.fromCode(
-          TurmsStatusCode.clientSessionHasBeenClosed);
+      throw ResponseException.fromCode(
+          ResponseStatusCode.clientSessionHasBeenClosed);
     }
     stateStore.tcp!.write(_heartbeatRequest);
     final completer = Completer<void>();
@@ -71,13 +71,13 @@ class HeartbeatService extends BaseService {
   bool rejectHeartbeatCompletersIfFail(TurmsNotification notification) {
     if (_heartbeatFailureRequestId == notification.requestId.toInt()) {
       _rejectHeartbeatCompleters(
-          TurmsBusinessException.fromNotification(notification));
+          ResponseException.fromNotification(notification));
       return true;
     }
     return false;
   }
 
-  void _rejectHeartbeatCompleters(TurmsBusinessException exception) {
+  void _rejectHeartbeatCompleters(ResponseException exception) {
     _heartbeatCompleters.removeWhere((completer) {
       completer.completeError(exception);
       return true;
@@ -93,8 +93,8 @@ class HeartbeatService extends BaseService {
   @override
   void onDisconnected() {
     stop();
-    final exception = TurmsBusinessException.fromCode(
-        TurmsStatusCode.clientSessionHasBeenClosed);
+    final exception = ResponseException.fromCode(
+        ResponseStatusCode.clientSessionHasBeenClosed);
     _rejectHeartbeatCompleters(exception);
   }
 }

@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-import Timer from '../../util/timer';
-import TurmsBusinessError from '../../model/turms-business-error';
-import TurmsStatusCode from '../../model/turms-status-code';
-import StateStore from '../state-store';
-import PromiseSeal from '../../model/promise-seal';
 import BaseService from './base-service';
+import ResponseStatusCode from '../../model/response-status-code';
+import ResponseError from '../../error/response-error';
+import StateStore from '../state-store';
+import Timer from '../../util/timer';
 import { TurmsNotification } from '../../model/proto/notification/turms_notification';
+import PromiseSeal from '../../model/promise-seal';
 
 export default class HeartbeatService extends BaseService {
 
@@ -69,7 +69,7 @@ export default class HeartbeatService extends BaseService {
     send(): Promise<void> {
         return new Promise((resolve, reject): void => {
             if (!this._stateStore.isConnected || !this._stateStore.isSessionOpen) {
-                return reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
+                return reject(ResponseError.fromCode(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
             }
             this._stateStore.websocket.send(HeartbeatService.HEARTBEAT_REQUEST);
             this._heartbeatPromises.push({
@@ -88,12 +88,12 @@ export default class HeartbeatService extends BaseService {
 
     rejectHeartbeatPromisesIfFail(notification: TurmsNotification): boolean {
         if (HeartbeatService.HEARTBEAT_FAILURE_REQUEST_ID === parseInt(notification.requestId)) {
-            this._rejectHeartbeatPromises(TurmsBusinessError.fromNotification(notification));
+            this._rejectHeartbeatPromises(ResponseError.fromNotification(notification));
             return true;
         }
     }
 
-    private _rejectHeartbeatPromises(error: TurmsBusinessError): void {
+    private _rejectHeartbeatPromises(error: ResponseError): void {
         for (const cb of this._heartbeatPromises) {
             cb.reject(error);
         }
@@ -109,7 +109,7 @@ export default class HeartbeatService extends BaseService {
 
     override onDisconnected(): void {
         this.stop();
-        const error = TurmsBusinessError.from(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
+        const error = ResponseError.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
         this._rejectHeartbeatPromises(error);
     }
 }

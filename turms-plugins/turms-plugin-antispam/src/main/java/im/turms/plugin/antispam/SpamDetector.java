@@ -18,8 +18,8 @@
 package im.turms.plugin.antispam;
 
 import im.turms.plugin.antispam.ac.AhoCorasickDoubleArrayTrie;
-import im.turms.server.common.lang.FastStringBuilder;
-import im.turms.server.common.util.StringUtil;
+import im.turms.server.common.infra.lang.FastStringBuilder;
+import im.turms.server.common.infra.lang.StringUtil;
 
 import java.util.Arrays;
 

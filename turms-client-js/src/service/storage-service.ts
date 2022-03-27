@@ -1,8 +1,8 @@
-import TurmsClient from '../turms-client';
-import TurmsStatusCode from '../model/turms-status-code';
-import TurmsBusinessError from '../model/turms-business-error';
 import unfetch from 'unfetch';
 import { ContentType } from '../model/proto/constant/content_type';
+import ResponseStatusCode from '../model/response-status-code';
+import ResponseError from '../error/response-error';
+import TurmsClient from '../turms-client';
 
 export default class StorageService {
 
@@ -41,7 +41,7 @@ export default class StorageService {
         if (userId) {
             return this._getSignedPutUrl(ContentType.PROFILE, pictureSize, null, userId);
         } else {
-            return Promise.reject(TurmsBusinessError.fromCode(TurmsStatusCode.QUERY_PROFILE_URL_TO_UPDATE_BEFORE_LOGIN));
+            return Promise.reject(ResponseError.fromCode(ResponseStatusCode.QUERY_PROFILE_URL_TO_UPDATE_BEFORE_LOGIN));
         }
     }
 
@@ -139,7 +139,7 @@ export default class StorageService {
                         if (res.status === 200) {
                             return res.blob();
                         } else {
-                            throw TurmsBusinessError.fromCode(TurmsStatusCode.INVALID_RESPONSE);
+                            throw ResponseError.fromCode(ResponseStatusCode.INVALID_RESPONSE);
                         }
                     })
                     .then(data => {
@@ -163,7 +163,7 @@ export default class StorageService {
                     if (res.status === 200) {
                         resolve(res.url);
                     } else {
-                        throw TurmsBusinessError.fromCode(TurmsStatusCode.INVALID_RESPONSE);
+                        throw ResponseError.fromCode(ResponseStatusCode.INVALID_RESPONSE);
                     }
                 }).catch(e => reject(e));
             } catch (e) {

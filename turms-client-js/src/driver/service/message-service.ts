@@ -15,20 +15,19 @@
  * limitations under the License.
  */
 
-import RequestUtil from '../../util/request-util';
-import TurmsStatusCode from '../../model/turms-status-code';
-import TurmsBusinessError from '../../model/turms-business-error';
-import StateStore from '../state-store';
-import NotificationUtil from '../../util/notification-util';
-import { ParsedNotification } from '../../model/parsed-notification';
 import BaseService from './base-service';
+import NotificationUtil from '../../util/notification-util';
+import ResponseStatusCode from '../../model/response-status-code';
+import ResponseError from '../../error/response-error';
+import StateStore from '../state-store';
+import { ParsedNotification } from '../../model/parsed-notification';
 import { TurmsNotification } from '../../model/proto/notification/turms_notification';
 import { TurmsRequest } from '../../model/proto/request/turms_request';
 
 interface RequestPromiseSeal {
     timeoutId?: number,
     resolve: (value?: unknown) => void;
-    reject: (reason?: TurmsBusinessError) => void;
+    reject: (reason?: ResponseError) => void;
 }
 
 /**
@@ -77,16 +76,16 @@ export default class MessageService extends BaseService {
         return new Promise((resolve, reject) => {
             if (message.createSessionRequest) {
                 if (this._stateStore.isSessionOpen) {
-                    return reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
+                    return reject(ResponseError.fromCode(ResponseStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
                 }
             } else if (!this._stateStore.isConnected || !this._stateStore.isSessionOpen) {
-                return reject(TurmsBusinessError.from(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
+                return reject(ResponseError.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
             }
             const now = new Date().getTime();
             const difference = now - this._stateStore.lastRequestDate;
             const isFrequent = this._minRequestInterval > 0 && difference <= this._minRequestInterval;
             if (isFrequent) {
-                return reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT));
+                return reject(ResponseError.fromCode(ResponseStatusCode.CLIENT_REQUESTS_TOO_FREQUENT));
             }
             const requestId = this._generateRandomId();
             message.requestId = '' + requestId;
@@ -103,7 +102,7 @@ export default class MessageService extends BaseService {
                     if (this._requestTimeout > 0) {
                         timeoutId = setTimeout(() => {
                             delete this._requestMap[requestId];
-                            reject(TurmsBusinessError.fromCode(TurmsStatusCode.REQUEST_TIMEOUT));
+                            reject(ResponseError.fromCode(ResponseStatusCode.REQUEST_TIMEOUT));
                         }, this._requestTimeout);
                     }
                     this._requestMap[requestId] = {
@@ -128,13 +127,13 @@ export default class MessageService extends BaseService {
                     }
                     delete this._requestMap[requestId];
                     if (notification.code) {
-                        if (TurmsStatusCode.isSuccessCode(notification.code)) {
+                        if (ResponseStatusCode.isSuccessCode(notification.code)) {
                             cb.resolve(notification);
                         } else {
-                            cb.reject(TurmsBusinessError.fromNotification(notification));
+                            cb.reject(ResponseError.fromNotification(notification));
                         }
                     } else {
-                        cb.reject(TurmsBusinessError.from(TurmsStatusCode.INVALID_NOTIFICATION, 'The code is missing'));
+                        cb.reject(ResponseError.from(ResponseStatusCode.INVALID_NOTIFICATION, 'The code is missing'));
                     }
                 }
             }
@@ -152,7 +151,7 @@ export default class MessageService extends BaseService {
         return id;
     }
 
-    private _rejectRequestPromises(error: TurmsBusinessError): void {
+    private _rejectRequestPromises(error: ResponseError): void {
         Object.values(this._requestMap).forEach(request => request.reject(error));
         this._requestMap = {};
     }
@@ -165,7 +164,7 @@ export default class MessageService extends BaseService {
     }
 
     override onDisconnected(): void {
-        const error = TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
+        const error = ResponseError.fromCode(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
         this._rejectRequestPromises(error);
     }
 }

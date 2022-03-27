@@ -1,7 +1,7 @@
-import { ParsedModel } from '../model/parsed-model';
-import TurmsStatusCode from '../model/turms-status-code';
-import TurmsBusinessError from '../model/turms-business-error';
+import ResponseStatusCode from '../model/response-status-code';
+import ResponseError from '../error/response-error';
 import { TurmsNotification } from '../model/proto/notification/turms_notification';
+import { ParsedModel } from '../model/parsed-model';
 
 export default class NotificationUtil {
 
@@ -56,7 +56,7 @@ export default class NotificationUtil {
         const value = notification.data?.ids?.values?.[0];
         if (value == null) {
             const reason = `Cannot get ID from the invalid response: ${JSON.stringify(notification)}`;
-            throw TurmsBusinessError.from(TurmsStatusCode.INVALID_RESPONSE, reason);
+            throw ResponseError.from(ResponseStatusCode.INVALID_RESPONSE, reason);
         }
         return value;
     }

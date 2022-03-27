@@ -17,7 +17,7 @@
 
 package helper;
 
-import im.turms.server.common.access.http.dto.response.ResponseDTO;
+import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.testing.BaseIntegrationTest;
 import im.turms.service.TurmsServiceApplication;
 import lombok.Getter;

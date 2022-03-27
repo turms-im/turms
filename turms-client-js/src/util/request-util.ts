@@ -1,5 +1,4 @@
 export default class RequestUtil {
-    static ERROR = new Error('Illegal parameters');
 
     static getDateTimeStr(value: Date): string | undefined {
         return value ? '' + value.getTime() : undefined;
@@ -15,17 +14,17 @@ export default class RequestUtil {
 
     static throwIfEmpty(value): void {
         if (!Object.keys(value).length) {
-            throw RequestUtil.ERROR;
+            throw new Error('Illegal parameters');
         }
     }
 
     static throwIfAnyFalsy(...values: any[]): void {
         if (this.isFalsy(values)) {
-            throw RequestUtil.ERROR;
+            throw new Error('Illegal parameters');
         } else {
             for (const value of values) {
                 if (this.isFalsy(value)) {
-                    throw RequestUtil.ERROR;
+                    throw new Error('Illegal parameters');
                 }
             }
         }
@@ -33,7 +32,7 @@ export default class RequestUtil {
 
     static throwIfAllFalsy(...values: any[]): void {
         if (RequestUtil.areAllFalsy(values)) {
-            throw RequestUtil.ERROR;
+            throw new Error('Illegal parameters');
         }
     }
 

@@ -1,6 +1,7 @@
 import 'package:fixnum/fixnum.dart';
 
 import '../../turms_client.dart';
+import '../exception/response_exception.dart';
 import '../extension/date_time_extensions.dart';
 import '../extension/int_extensions.dart';
 import '../extension/iterable_extensions.dart';
@@ -36,10 +37,9 @@ import '../model/request/user/relationship/update_relationship_request.pb.dart';
 import '../model/request/user/update_user_location_request.pb.dart';
 import '../model/request/user/update_user_online_status_request.pb.dart';
 import '../model/request/user/update_user_request.pb.dart';
+import '../model/response_status_code.dart';
 import '../model/session_close_info.dart';
-import '../model/turms_business_exception.dart';
-import '../model/turms_close_status.dart';
-import '../model/turms_status_code.dart';
+import '../model/session_close_status.dart';
 import '../model/user_info_with_version.dart';
 import '../util/system.dart';
 
@@ -76,7 +76,8 @@ class UserService {
   UserService(this._turmsClient) {
     _turmsClient.driver
       ..addOnDisconnectedListener((_) => _changeToOffline(
-          SessionCloseInfo.fromCloseStatus(TurmsCloseStatus.connectionClosed)))
+          SessionCloseInfo.fromCloseStatus(
+              SessionCloseStatus.connectionClosed)))
       ..addNotificationListener((notification) {
         if (notification.hasCloseStatus() && isLoggedIn) {
           _changeToOffline(SessionCloseInfo(notification.closeStatus,
@@ -137,7 +138,7 @@ class UserService {
       await _turmsClient.driver.send(DeleteSessionRequest());
     }
     _changeToOffline(SessionCloseInfo.fromCloseStatus(
-        TurmsCloseStatus.disconnectedByClient));
+        SessionCloseStatus.disconnectedByClient));
   }
 
   Future<void> updateOnlineStatus(UserStatus onlineStatus) async {
@@ -148,8 +149,8 @@ class UserService {
 
   Future<void> disconnectOnlineDevices(List<DeviceType> deviceTypes) async {
     if (deviceTypes.isEmpty) {
-      throw TurmsBusinessException(
-          TurmsStatusCode.illegalArgument, 'deviceTypes must not be empty');
+      throw ResponseException(
+          ResponseStatusCode.illegalArgument, 'deviceTypes must not be empty');
     }
     await _turmsClient.driver.send(UpdateUserOnlineStatusRequest(
         userStatus: UserStatus.OFFLINE, deviceTypes: deviceTypes));

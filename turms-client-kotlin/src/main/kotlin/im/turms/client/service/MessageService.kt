@@ -18,11 +18,12 @@ package im.turms.client.service
 
 import com.google.protobuf.ByteString
 import im.turms.client.TurmsClient
-import im.turms.client.constant.TurmsStatusCode
-import im.turms.client.exception.TurmsBusinessException
-import im.turms.client.model.message.BuiltinSystemMessageType
-import im.turms.client.model.message.MessageAddition
+import im.turms.client.exception.ResponseException
+import im.turms.client.model.BuiltinSystemMessageType
+import im.turms.client.model.MessageAddition
+import im.turms.client.model.ResponseStatusCode
 import im.turms.client.util.MapUtil
+import im.turms.client.util.Validator
 import im.turms.common.model.bo.file.AudioFile
 import im.turms.common.model.bo.file.File
 import im.turms.common.model.bo.file.ImageFile
@@ -34,7 +35,6 @@ import im.turms.common.model.dto.request.TurmsRequest
 import im.turms.common.model.dto.request.message.CreateMessageRequest
 import im.turms.common.model.dto.request.message.QueryMessagesRequest
 import im.turms.common.model.dto.request.message.UpdateMessageRequest
-import im.turms.common.util.Validator
 import java.nio.ByteBuffer
 import java.util.*
 import java.util.regex.Pattern
@@ -60,7 +60,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         preMessageId: Long? = null
     ): Long {
         if (text == null && records == null) {
-            throw TurmsBusinessException(TurmsStatusCode.ILLEGAL_ARGUMENT, "text and records must not all be null")
+            throw ResponseException(ResponseStatusCode.ILLEGAL_ARGUMENT, "text and records must not all be null")
         }
         return turmsClient.driver
             .send(

@@ -24,28 +24,28 @@ class UserServiceTests: XCTestCase {
 
         // Create
         assertCompleted("createRelationship_shouldSucceed", service.createRelationship(userId: 10, isBlocked: true).recover { error -> Promise<Void> in
-            if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.createExistingRelationship.rawValue {
+            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingRelationship.rawValue {
                 return Promise.value(())
             } else {
                 throw error
             }
         })
         assertCompleted("createFriendRelationship_shouldSucceed", service.createFriendRelationship(userId: 10).recover { error -> Promise<Void> in
-            if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.createExistingRelationship.rawValue {
+            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingRelationship.rawValue {
                 return Promise.value(())
             } else {
                 throw error
             }
         })
         assertCompleted("createBlockedUserRelationship_shouldSucceed", service.createBlockedUserRelationship(userId: 10).recover { error -> Promise<Void> in
-            if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.createExistingRelationship.rawValue {
+            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingRelationship.rawValue {
                 return Promise.value(())
             } else {
                 throw error
             }
         })
         assertCompleted("sendFriendRequest_shouldReturnFriendRequestId", service.sendFriendRequest(recipientId: 11, content: "content").recover { error -> Promise<Int64> in
-            if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.createExistingFriendRequest.rawValue {
+            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingFriendRequest.rawValue {
                 return Promise.value(0)
             } else {
                 throw error

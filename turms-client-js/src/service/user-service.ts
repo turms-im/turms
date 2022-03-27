@@ -4,11 +4,11 @@ import { ParsedModel } from '../model/parsed-model';
 import NotificationUtil from '../util/notification-util';
 import SystemUtil from '../util/system-util';
 import UserLocation from '../model/user-location';
-import TurmsBusinessError from '../model/turms-business-error';
-import TurmsStatusCode from '../model/turms-status-code';
+import ResponseStatusCode from '../model/response-status-code';
+import ResponseError from '../error/response-error';
 import StateStore from '../driver/state-store';
-import { SessionCloseInfo } from '../model/session-close-info';
-import TurmsCloseStatus from '../model/turms-close-status';
+import SessionCloseInfo from '../model/session-close-info';
+import SessionCloseStatus from '../model/session-close-status';
 import { UserStatus } from '../model/proto/constant/user_status';
 import { DeviceType } from '../model/proto/constant/device_type';
 import { ProfileAccessStrategy } from '../model/proto/constant/profile_access_strategy';
@@ -47,7 +47,7 @@ export default class UserService {
         this._turmsClient = turmsClient;
         this._stateStore = turmsClient.driver.stateStore();
         turmsClient.driver.addOnDisconnectedListener(() => this._changeToOffline({
-            closeStatus: TurmsCloseStatus.CONNECTION_CLOSED
+            closeStatus: SessionCloseStatus.CONNECTION_CLOSED
         }));
         turmsClient.driver.addNotificationListener(notification => {
             if (notification.closeStatus && this.isLoggedIn) {
@@ -66,7 +66,7 @@ export default class UserService {
                 if (wasLoggedIn) {
                     if (!isLoggedIn) {
                         this._changeToOffline({
-                            closeStatus: TurmsCloseStatus.UNKNOWN_ERROR
+                            closeStatus: SessionCloseStatus.UNKNOWN_ERROR
                         }, false);
                     }
                 } else {
@@ -147,7 +147,7 @@ export default class UserService {
             storePassword = userIdOrOptions.storePassword;
         }
         if (RequestUtil.isFalsy(userId)) {
-            return TurmsBusinessError.notFalsyPromise('userId');
+            return ResponseError.notFalsyPromise('userId');
         }
         const userInfo: UserInfo = {};
         userInfo.userId = userId;
@@ -254,14 +254,14 @@ export default class UserService {
         }
         return promise.then(() => {
             this._changeToOffline({
-                closeStatus: TurmsCloseStatus.DISCONNECTED_BY_CLIENT
+                closeStatus: SessionCloseStatus.DISCONNECTED_BY_CLIENT
             });
         });
     }
 
     updateOnlineStatus(onlineStatus: string | UserStatus): Promise<void> {
         if (RequestUtil.isFalsy(onlineStatus)) {
-            return TurmsBusinessError.notFalsyPromise('onlineStatus');
+            return ResponseError.notFalsyPromise('onlineStatus');
         }
         try {
             onlineStatus = UserService._parseUserStatus(onlineStatus);
@@ -281,7 +281,7 @@ export default class UserService {
 
     disconnectOnlineDevices(deviceTypes: string[] | DeviceType[]): Promise<void> {
         if (RequestUtil.isFalsy(deviceTypes)) {
-            return TurmsBusinessError.notFalsyPromise('deviceTypes', true);
+            return ResponseError.notFalsyPromise('deviceTypes', true);
         }
         try {
             deviceTypes = deviceTypes.map((type: string | DeviceType) => UserService._parseDeviceType(type));
@@ -298,7 +298,7 @@ export default class UserService {
 
     updatePassword(password: string): Promise<void> {
         if (RequestUtil.isFalsy(password)) {
-            return TurmsBusinessError.notFalsyPromise('password');
+            return ResponseError.notFalsyPromise('password');
         }
         return this._turmsClient.driver.send({
             updateUserRequest: {
@@ -322,7 +322,7 @@ export default class UserService {
         if (typeof profileAccessStrategy === 'string') {
             profileAccessStrategy = ProfileAccessStrategy[profileAccessStrategy] as ProfileAccessStrategy;
             if (RequestUtil.isFalsy(profileAccessStrategy)) {
-                return TurmsBusinessError.notFalsyPromise('profileAccessStrategy');
+                return ResponseError.notFalsyPromise('profileAccessStrategy');
             }
         }
         return this._turmsClient.driver.send({
@@ -336,7 +336,7 @@ export default class UserService {
 
     queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UserInfoWithVersion | undefined> {
         if (RequestUtil.isFalsy(userId)) {
-            return TurmsBusinessError.notFalsyPromise('userId');
+            return ResponseError.notFalsyPromise('userId');
         }
         return this._turmsClient.driver.send({
             queryUserProfileRequest: {
@@ -363,10 +363,10 @@ export default class UserService {
                      withDistance?: boolean,
                      withInfo?: boolean): Promise<ParsedModel.NearbyUser[]> {
         if (RequestUtil.isFalsy(latitude)) {
-            return TurmsBusinessError.notFalsyPromise('latitude');
+            return ResponseError.notFalsyPromise('latitude');
         }
         if (RequestUtil.isFalsy(longitude)) {
-            return TurmsBusinessError.notFalsyPromise('longitude');
+            return ResponseError.notFalsyPromise('longitude');
         }
         return this._turmsClient.driver.send({
             queryNearbyUsersRequest: {
@@ -383,7 +383,7 @@ export default class UserService {
 
     queryOnlineStatusesRequest(userIds: string[]): Promise<ParsedModel.UserStatusDetail[]> {
         if (RequestUtil.isFalsy(userIds)) {
-            return TurmsBusinessError.notFalsyPromise('userIds', true);
+            return ResponseError.notFalsyPromise('userIds', true);
         }
         return this._turmsClient.driver.send({
             queryUserOnlineStatusesRequest: {
@@ -432,10 +432,10 @@ export default class UserService {
 
     createRelationship(userId: string, isBlocked: boolean, groupIndex?: number): Promise<void> {
         if (RequestUtil.isFalsy(userId)) {
-            return TurmsBusinessError.notFalsyPromise('userId');
+            return ResponseError.notFalsyPromise('userId');
         }
         if (RequestUtil.isFalsy(isBlocked)) {
-            return TurmsBusinessError.notFalsyPromise('isBlocked');
+            return ResponseError.notFalsyPromise('isBlocked');
         }
         return this._turmsClient.driver.send({
             createRelationshipRequest: {
@@ -456,7 +456,7 @@ export default class UserService {
 
     deleteRelationship(relatedUserId: string, deleteGroupIndex?: number, targetGroupIndex?: number): Promise<void> {
         if (RequestUtil.isFalsy(relatedUserId)) {
-            return TurmsBusinessError.notFalsyPromise('relatedUserId');
+            return ResponseError.notFalsyPromise('relatedUserId');
         }
         return this._turmsClient.driver.send({
             deleteRelationshipRequest: {
@@ -469,7 +469,7 @@ export default class UserService {
 
     updateRelationship(relatedUserId: string, isBlocked?: boolean, groupIndex?: number): Promise<void> {
         if (RequestUtil.isFalsy(relatedUserId)) {
-            return TurmsBusinessError.notFalsyPromise('relatedUserId');
+            return ResponseError.notFalsyPromise('relatedUserId');
         }
         if (RequestUtil.areAllFalsy(isBlocked, groupIndex)) {
             return Promise.resolve();
@@ -485,10 +485,10 @@ export default class UserService {
 
     sendFriendRequest(recipientId: string, content: string): Promise<string> {
         if (RequestUtil.isFalsy(recipientId)) {
-            return TurmsBusinessError.notFalsyPromise('recipientId');
+            return ResponseError.notFalsyPromise('recipientId');
         }
         if (RequestUtil.isFalsy(content)) {
-            return TurmsBusinessError.notFalsyPromise('content');
+            return ResponseError.notFalsyPromise('content');
         }
         return this._turmsClient.driver.send({
             createFriendRequestRequest: {
@@ -500,15 +500,15 @@ export default class UserService {
 
     replyFriendRequest(requestId: string, responseAction: string | ResponseAction, reason?: string): Promise<void> {
         if (RequestUtil.isFalsy(requestId)) {
-            return TurmsBusinessError.notFalsyPromise('requestId');
+            return ResponseError.notFalsyPromise('requestId');
         }
         if (RequestUtil.isFalsy(responseAction)) {
-            return TurmsBusinessError.notFalsyPromise('responseAction');
+            return ResponseError.notFalsyPromise('responseAction');
         }
         if (typeof responseAction === 'string') {
             responseAction = ResponseAction[responseAction] as ResponseAction;
             if (RequestUtil.isFalsy(responseAction)) {
-                return TurmsBusinessError.notFalsyPromise('reponseAction');
+                return ResponseError.notFalsyPromise('reponseAction');
             }
         }
         return this._turmsClient.driver.send({
@@ -531,7 +531,7 @@ export default class UserService {
 
     createRelationshipGroup(name: string): Promise<string> {
         if (RequestUtil.isFalsy(name)) {
-            return TurmsBusinessError.notFalsyPromise('name');
+            return ResponseError.notFalsyPromise('name');
         }
         return this._turmsClient.driver.send({
             createRelationshipGroupRequest: {
@@ -542,7 +542,7 @@ export default class UserService {
 
     deleteRelationshipGroups(groupIndex: number, targetGroupIndex?: number): Promise<void> {
         if (RequestUtil.isFalsy(groupIndex)) {
-            return TurmsBusinessError.notFalsyPromise('groupIndex');
+            return ResponseError.notFalsyPromise('groupIndex');
         }
         return this._turmsClient.driver.send({
             deleteRelationshipGroupRequest: {
@@ -554,10 +554,10 @@ export default class UserService {
 
     updateRelationshipGroup(groupIndex: number, newName: string): Promise<void> {
         if (RequestUtil.isFalsy(groupIndex)) {
-            return TurmsBusinessError.notFalsyPromise('groupIndex');
+            return ResponseError.notFalsyPromise('groupIndex');
         }
         if (RequestUtil.isFalsy(newName)) {
-            return TurmsBusinessError.notFalsyPromise('newName');
+            return ResponseError.notFalsyPromise('newName');
         }
         return this._turmsClient.driver.send({
             updateRelationshipGroupRequest: {
@@ -577,10 +577,10 @@ export default class UserService {
 
     moveRelatedUserToGroup(relatedUserId: string, groupIndex: number): Promise<void> {
         if (RequestUtil.isFalsy(relatedUserId)) {
-            return TurmsBusinessError.notFalsyPromise('relatedUserId');
+            return ResponseError.notFalsyPromise('relatedUserId');
         }
         if (RequestUtil.isFalsy(groupIndex)) {
-            return TurmsBusinessError.notFalsyPromise('groupIndex');
+            return ResponseError.notFalsyPromise('groupIndex');
         }
         return this._turmsClient.driver.send({
             updateRelationshipRequest: {
@@ -597,10 +597,10 @@ export default class UserService {
      */
     updateLocation(latitude: number, longitude: number, name?: string, address?: string): Promise<void> {
         if (RequestUtil.isFalsy(latitude)) {
-            return TurmsBusinessError.notFalsyPromise('latitude');
+            return ResponseError.notFalsyPromise('latitude');
         }
         if (RequestUtil.isFalsy(longitude)) {
-            return TurmsBusinessError.notFalsyPromise('longitude');
+            return ResponseError.notFalsyPromise('longitude');
         }
         RequestUtil.throwIfAnyFalsy(latitude, longitude);
         return this._turmsClient.driver.send({
@@ -617,14 +617,14 @@ export default class UserService {
         if (typeof deviceType === 'string') {
             deviceType = DeviceType[deviceType] as DeviceType;
             if (RequestUtil.isFalsy(deviceType)) {
-                throw TurmsBusinessError.from(TurmsStatusCode.ILLEGAL_ARGUMENT, 'illegal DeviceType');
+                throw ResponseError.from(ResponseStatusCode.ILLEGAL_ARGUMENT, 'illegal DeviceType');
             }
             return deviceType;
         } else if (typeof deviceType === 'number') {
             if (deviceType >= 0 && deviceType <= DeviceType.UNKNOWN) {
                 return deviceType;
             } else {
-                throw TurmsBusinessError.from(TurmsStatusCode.ILLEGAL_ARGUMENT, 'illegal DeviceType');
+                throw ResponseError.from(ResponseStatusCode.ILLEGAL_ARGUMENT, 'illegal DeviceType');
             }
         }
     }
@@ -633,11 +633,11 @@ export default class UserService {
         if (typeof onlineStatus === 'string') {
             onlineStatus = UserStatus[onlineStatus] as UserStatus;
             if (RequestUtil.isFalsy(onlineStatus)) {
-                TurmsBusinessError.notFalsy('onlineStatus');
+                ResponseError.notFalsy('onlineStatus');
             }
         }
         if (onlineStatus === UserStatus.OFFLINE) {
-            throw TurmsBusinessError.illegalParam('onlineStatus cannot be OFFLINE');
+            throw ResponseError.illegalParam('onlineStatus cannot be OFFLINE');
         }
         return onlineStatus;
     }

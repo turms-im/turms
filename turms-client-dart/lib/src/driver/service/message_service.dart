@@ -3,10 +3,10 @@ import 'dart:math';
 
 import 'package:fixnum/fixnum.dart' show Int64;
 
+import '../../exception/response_exception.dart';
 import '../../model/notification/turms_notification.pb.dart';
 import '../../model/request/turms_request.pb.dart';
-import '../../model/turms_business_exception.dart';
-import '../../model/turms_status_code.dart';
+import '../../model/response_status_code.dart';
 import '../state_store.dart';
 import 'base_service.dart';
 
@@ -62,20 +62,20 @@ class MessageService extends BaseService {
   Future<TurmsNotification> sendRequest(TurmsRequest request) async {
     if (request.hasCreateSessionRequest()) {
       if (stateStore.isSessionOpen) {
-        throw TurmsBusinessException.fromCode(
-            TurmsStatusCode.clientSessionAlreadyEstablished);
+        throw ResponseException.fromCode(
+            ResponseStatusCode.clientSessionAlreadyEstablished);
       }
     } else if (!stateStore.isConnected || !stateStore.isSessionOpen) {
-      throw TurmsBusinessException.fromCode(
-          TurmsStatusCode.clientSessionHasBeenClosed);
+      throw ResponseException.fromCode(
+          ResponseStatusCode.clientSessionHasBeenClosed);
     }
     final now = DateTime.now().millisecondsSinceEpoch;
     final difference = now - stateStore.lastRequestDate;
     final isFrequent = _minRequestIntervalMillis > 0 &&
         difference <= _minRequestIntervalMillis;
     if (isFrequent) {
-      throw TurmsBusinessException.fromCode(
-          TurmsStatusCode.clientRequestsTooFrequent);
+      throw ResponseException.fromCode(
+          ResponseStatusCode.clientRequestsTooFrequent);
     }
     final requestId = _generateRandomId();
     request.requestId = Int64(requestId);
@@ -84,8 +84,8 @@ class MessageService extends BaseService {
     final timeoutTimer = _requestTimeoutMillis > 0
         ? Timer(Duration(milliseconds: _requestTimeoutMillis), () {
             final context = _requestMap.remove(requestId);
-            context?.completer.completeError(TurmsBusinessException.fromCode(
-                TurmsStatusCode.requestTimeout));
+            context?.completer.completeError(ResponseException.fromCode(
+                ResponseStatusCode.requestTimeout));
           })
         : null;
     final completer = Completer<TurmsNotification>();
@@ -104,15 +104,15 @@ class MessageService extends BaseService {
       if (context != null) {
         context.timeoutTimer?.cancel();
         if (notification.hasCode()) {
-          if (TurmsStatusCode.isSuccessCode(notification.code)) {
+          if (ResponseStatusCode.isSuccessCode(notification.code)) {
             context.completer.complete(notification);
           } else {
             context.completer.completeError(
-                TurmsBusinessException.fromNotification(notification));
+                ResponseException.fromNotification(notification));
           }
         } else {
-          context.completer.completeError(TurmsBusinessException(
-              TurmsStatusCode.invalidNotification, 'The code is missing'));
+          context.completer.completeError(ResponseException(
+              ResponseStatusCode.invalidNotification, 'The code is missing'));
         }
       }
     }
@@ -127,7 +127,7 @@ class MessageService extends BaseService {
     return id;
   }
 
-  void _rejectRequestCompleter(TurmsBusinessException exception) {
+  void _rejectRequestCompleter(ResponseException exception) {
     _requestMap.removeWhere((key, context) {
       context.completer.completeError(exception);
       return true;
@@ -142,8 +142,8 @@ class MessageService extends BaseService {
 
   @override
   void onDisconnected() {
-    final exception = TurmsBusinessException.fromCode(
-        TurmsStatusCode.clientSessionHasBeenClosed);
+    final exception = ResponseException.fromCode(
+        ResponseStatusCode.clientSessionHasBeenClosed);
     _rejectRequestCompleter(exception);
   }
 }

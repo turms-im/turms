@@ -38,21 +38,21 @@ class DriverMessageService: BaseService {
         return Promise { seal in
             if case .createSessionRequest = request.kind {
                 if stateStore.isSessionOpen {
-                    return seal.reject(TurmsBusinessError(.clientSessionAlreadyEstablished))
+                    return seal.reject(ResponseError(.clientSessionAlreadyEstablished))
                 }
             } else if !stateStore.isConnected || !stateStore.isSessionOpen {
-                return seal.reject(TurmsBusinessError(.clientSessionHasBeenClosed))
+                return seal.reject(ResponseError(.clientSessionHasBeenClosed))
             }
             let now = Date()
             let difference = now.timeIntervalSince1970 - lastRequestDate.timeIntervalSince1970
             let isFrequent = minRequestInterval > 0 && difference <= minRequestInterval
             if isFrequent {
-                return seal.reject(TurmsBusinessError(.clientRequestsTooFrequent))
+                return seal.reject(ResponseError(.clientRequestsTooFrequent))
             }
             request.requestID = generateRandomId()
             if requestTimeout > 0 {
                 after(.seconds(Int(requestTimeout))).done {
-                    seal.reject(TurmsBusinessError(TurmsStatusCode.requestTimeout))
+                    seal.reject(ResponseError(ResponseStatusCode.requestTimeout))
                 }
             }
             let data = try request.serializedData()
@@ -69,17 +69,17 @@ class DriverMessageService: BaseService {
             let handler = requestMap[requestId]
             if notification.hasCode {
                 let code = Int(notification.code)
-                if TurmsStatusCode.isSuccessCode(code) {
+                if ResponseStatusCode.isSuccessCode(code) {
                     handler?.fulfill(notification)
                 } else {
                     if notification.hasReason {
-                        handler?.reject(TurmsBusinessError(code, notification.reason))
+                        handler?.reject(ResponseError(code, notification.reason))
                     } else {
-                        handler?.reject(TurmsBusinessError(code))
+                        handler?.reject(ResponseError(code))
                     }
                 }
             } else {
-                handler?.reject(TurmsBusinessError(TurmsStatusCode.invalidNotification, "The code is missing"))
+                handler?.reject(ResponseError(ResponseStatusCode.invalidNotification, "The code is missing"))
             }
         }
         notifyNotificationListener(notification)
@@ -93,7 +93,7 @@ class DriverMessageService: BaseService {
         return id
     }
 
-    private func rejectRequests(_ e: TurmsBusinessError) {
+    private func rejectRequests(_ e: ResponseError) {
         repeat {
             requestMap.popFirst()?.value.reject(e)
         } while !requestMap.isEmpty
@@ -105,6 +105,6 @@ class DriverMessageService: BaseService {
     }
 
     override func onDisconnected() {
-        rejectRequests(TurmsBusinessError(.clientSessionHasBeenClosed))
+        rejectRequests(ResponseError(.clientSessionHasBeenClosed))
     }
 }

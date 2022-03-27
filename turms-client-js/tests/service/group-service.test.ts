@@ -1,6 +1,6 @@
 import Constants from '../helper/constants';
 import TurmsClient from '../../src/turms-client';
-import TurmsStatusCode from '../../src/model/turms-status-code'
+import ResponseStatusCode from '../../src/model/turms-status-code'
 import {GroupMemberRole} from '../../src/model/proto/constant/group_member_role';
 
 const GROUP_MEMBER_ID = '3';
@@ -136,7 +136,7 @@ describe('Query', () => {
             const isCorrect = answerResult.questionIds.indexOf(groupJoinQuestionId) >= 0;
             expect(isCorrect).toEqual(true);
         } catch (e) {
-            expect(e.code).toEqual(TurmsStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION);
+            expect(e.code).toEqual(ResponseStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION);
         }
     });
 });
@@ -154,14 +154,14 @@ describe('Delete', () => {
         try {
             expect(await turmsClient.groupService.deleteInvitation(groupInvitationId)).toBeTruthy();
         } catch (e) {
-            expect(e.code).toEqual(TurmsStatusCode.RECALL_NOT_PENDING_GROUP_INVITATION);
+            expect(e.code).toEqual(ResponseStatusCode.RECALL_NOT_PENDING_GROUP_INVITATION);
         }
     });
     it('deleteInvitation_shouldSucceedOrThrowDisabledFunction', async () => {
         try {
             expect(await turmsClient.groupService.deleteJoinRequest(groupJoinRequestId)).toBeTruthy();
         } catch (e) {
-            expect(e.code).toEqual(TurmsStatusCode.RECALL_NOT_PENDING_GROUP_INVITATION);
+            expect(e.code).toEqual(ResponseStatusCode.RECALL_NOT_PENDING_GROUP_INVITATION);
         }
     });
     it('quitGroup_shouldSucceed', async () => {

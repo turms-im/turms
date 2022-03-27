@@ -28,7 +28,7 @@ import com.mongodb.internal.operation.TurmsFindOperation;
 import com.mongodb.lang.Nullable;
 import com.mongodb.reactivestreams.client.ClientSession;
 import com.mongodb.reactivestreams.client.FindPublisher;
-import im.turms.server.common.mongo.operation.option.QueryOptions;
+import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.codecs.Codec;

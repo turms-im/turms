@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import '../../model/turms_business_exception.dart';
-import '../../model/turms_status_code.dart';
+import '../../exception/response_exception.dart';
+import '../../model/response_status_code.dart';
 import '../../transport/tcp_client.dart';
 import '../state_store.dart';
 import 'base_service.dart';
@@ -147,8 +147,8 @@ class ConnectionService extends BaseService {
       if (host == stateStore.tcp?.host && port == stateStore.tcp?.port) {
         return;
       } else {
-        throw TurmsBusinessException.fromCode(
-            TurmsStatusCode.clientSessionAlreadyEstablished);
+        throw ResponseException.fromCode(
+            ResponseStatusCode.clientSessionAlreadyEstablished);
       }
     }
     final tcp = TcpClient(_onSocketClose, (bytes) {

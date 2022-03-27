@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:fixnum/fixnum.dart' show Int64;
 
 import '../../turms_client.dart';
+import '../exception/response_exception.dart';
 import '../extension/date_time_extensions.dart';
 import '../extension/iterable_extensions.dart';
 import '../extension/notification_extensions.dart';
@@ -18,8 +19,7 @@ import '../model/model/user/user_location.pb.dart';
 import '../model/request/message/create_message_request.pb.dart';
 import '../model/request/message/query_messages_request.pb.dart';
 import '../model/request/message/update_message_request.pb.dart';
-import '../model/turms_business_exception.dart';
-import '../model/turms_status_code.dart';
+import '../model/response_status_code.dart';
 
 typedef MentionedUserIdsParser = Set<Int64> Function(Message message);
 typedef MessageListener = void Function(
@@ -76,7 +76,7 @@ class MessageService {
       int? burnAfter,
       Int64? preMessageId}) async {
     if (text == null && (records?.isEmpty ?? true)) {
-      throw TurmsBusinessException(TurmsStatusCode.illegalArgument,
+      throw ResponseException(ResponseStatusCode.illegalArgument,
           'text and records must not all be null');
     }
     deliveryDate ??= DateTime.now();

@@ -17,11 +17,11 @@
 
 package im.turms.server.common;
 
-import im.turms.server.common.constant.TimeZoneConstant;
-import im.turms.server.common.logging.core.logger.Logger;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
-import im.turms.server.common.util.CollectionUtil;
-import im.turms.server.common.util.StringUtil;
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.time.TimeZoneConst;
 import org.springframework.boot.SpringApplication;
 
 import java.lang.management.ManagementFactory;
@@ -37,7 +37,7 @@ public abstract class BaseTurmsApplication {
     static {
         // Hard code these properties to ensure they work as expected
 
-        TimeZone.setDefault(TimeZoneConstant.ZONE);
+        TimeZone.setDefault(TimeZoneConst.ZONE);
         // Disable the max direct memory limit and buffer counters of Netty
         // so that we can get the used direct memory via BufferPoolMXBean without depending on ByteBufAllocator of Netty
         System.setProperty("io.netty.maxDirectMemory", "0");

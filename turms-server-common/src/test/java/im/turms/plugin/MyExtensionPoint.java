@@ -17,7 +17,7 @@
 
 package im.turms.plugin;
 
-import im.turms.server.common.plugin.ExtensionPoint;
+import im.turms.server.common.infra.plugin.ExtensionPoint;
 
 /**
  * @author James Chen

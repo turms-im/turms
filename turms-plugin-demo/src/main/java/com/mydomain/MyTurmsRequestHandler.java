@@ -1,11 +1,11 @@
 package com.mydomain;
 
 import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.server.common.logging.core.logger.LoggerFactory;
-import im.turms.server.common.logging.core.logger.Logger;
-import im.turms.server.common.plugin.TurmsExtension;
-import im.turms.service.plugin.extension.ClientRequestTransformer;
-import im.turms.service.workflow.access.servicerequest.dto.ClientRequest;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.plugin.TurmsExtension;
+import im.turms.service.infra.plugin.extension.ClientRequestTransformer;
+import im.turms.service.access.servicerequest.dto.ClientRequest;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;

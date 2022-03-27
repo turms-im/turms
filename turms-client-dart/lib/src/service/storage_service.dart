@@ -5,12 +5,12 @@ import 'dart:typed_data';
 import 'package:fixnum/fixnum.dart';
 
 import '../../turms_client.dart';
+import '../exception/response_exception.dart';
 import '../model/constant/content_type.pbenum.dart';
 import '../model/request/storage/delete_resource_request.pb.dart';
 import '../model/request/storage/query_signed_get_url_request.pb.dart';
 import '../model/request/storage/query_signed_put_url_request.pb.dart';
-import '../model/turms_business_exception.dart';
-import '../model/turms_status_code.dart';
+import '../model/response_status_code.dart';
 
 class StorageService {
   // TODO: destroy
@@ -35,8 +35,8 @@ class StorageService {
   Future<String> queryProfilePictureUrlForUpload(int pictureSize) async {
     final userId = _turmsClient.userService.userInfo?.userId;
     if (userId == null) {
-      throw TurmsBusinessException.fromCode(
-          TurmsStatusCode.queryProfileUrlToUpdateBeforeLogin);
+      throw ResponseException.fromCode(
+          ResponseStatusCode.queryProfileUrlToUpdateBeforeLogin);
     } else {
       return _getSignedPutUrl(ContentType.PROFILE, pictureSize, keyNum: userId);
     }
@@ -125,7 +125,7 @@ class StorageService {
           await response.reduce((pre, element) => pre..addAll(element));
       return Uint8List.fromList(bytes);
     } else {
-      throw TurmsBusinessException.fromCode(TurmsStatusCode.invalidResponse);
+      throw ResponseException.fromCode(ResponseStatusCode.invalidResponse);
     }
   }
 
@@ -138,7 +138,7 @@ class StorageService {
           .transform(utf8.decoder)
           .reduce((previous, element) => previous + element);
     } else {
-      throw TurmsBusinessException.fromCode(TurmsStatusCode.invalidResponse);
+      throw ResponseException.fromCode(ResponseStatusCode.invalidResponse);
     }
   }
 

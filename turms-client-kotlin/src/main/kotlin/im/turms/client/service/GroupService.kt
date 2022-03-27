@@ -18,9 +18,10 @@ package im.turms.client.service
 
 import im.turms.client.TurmsClient
 import im.turms.client.annotation.NotEmpty
-import im.turms.client.constant.TurmsStatusCode
-import im.turms.client.exception.TurmsBusinessException
+import im.turms.client.exception.ResponseException
 import im.turms.client.model.GroupWithVersion
+import im.turms.client.model.ResponseStatusCode
+import im.turms.client.util.Validator
 import im.turms.common.constant.GroupMemberRole
 import im.turms.common.model.bo.common.Int64ValuesWithVersion
 import im.turms.common.model.bo.group.GroupInvitationsWithVersion
@@ -56,7 +57,6 @@ import im.turms.common.model.dto.request.group.member.CreateGroupMemberRequest
 import im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest
 import im.turms.common.model.dto.request.group.member.QueryGroupMembersRequest
 import im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest
-import im.turms.common.util.Validator
 import java.util.*
 
 /**
@@ -166,7 +166,7 @@ class GroupService(private val turmsClient: TurmsClient) {
         @NotEmpty answers: List<String>,
         score: Int
     ): Long = if (answers.isEmpty()) {
-        throw TurmsBusinessException(TurmsStatusCode.ILLEGAL_ARGUMENT, "answers must not be null or empty")
+        throw ResponseException(ResponseStatusCode.ILLEGAL_ARGUMENT, "answers must not be null or empty")
     } else turmsClient.driver
         .send(
             CreateGroupJoinQuestionRequest.newBuilder().apply {
@@ -353,8 +353,8 @@ class GroupService(private val turmsClient: TurmsClient) {
 
     suspend fun answerGroupQuestions(@NotEmpty questionIdAndAnswerMap: Map<Long, String>): GroupJoinQuestionsAnswerResult =
         if (questionIdAndAnswerMap.isEmpty()) {
-            throw TurmsBusinessException(
-                TurmsStatusCode.ILLEGAL_ARGUMENT,
+            throw ResponseException(
+                ResponseStatusCode.ILLEGAL_ARGUMENT,
                 "questionIdAndAnswerMap must not be null or empty"
             )
         } else turmsClient.driver
@@ -367,7 +367,7 @@ class GroupService(private val turmsClient: TurmsClient) {
                 if (data.hasGroupJoinQuestionAnswerResult()) {
                     data.groupJoinQuestionAnswerResult
                 } else {
-                    throw TurmsBusinessException(TurmsStatusCode.INVALID_RESPONSE)
+                    throw ResponseException(ResponseStatusCode.INVALID_RESPONSE)
                 }
             }
 
@@ -461,7 +461,7 @@ class GroupService(private val turmsClient: TurmsClient) {
         @NotEmpty memberIds: Set<Long>,
         withStatus: Boolean = false
     ): GroupMembersWithVersion? = if (memberIds.isEmpty()) {
-        throw TurmsBusinessException(TurmsStatusCode.ILLEGAL_ARGUMENT, "memberIds must not be null or empty")
+        throw ResponseException(ResponseStatusCode.ILLEGAL_ARGUMENT, "memberIds must not be null or empty")
     } else turmsClient.driver
         .send(
             QueryGroupMembersRequest.newBuilder().apply {

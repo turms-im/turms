@@ -28,11 +28,12 @@ import im.turms.plugin.antispam.property.AntiSpamProperties;
 import im.turms.plugin.antispam.property.DictionaryParsingProperties;
 import im.turms.plugin.antispam.property.TextType;
 import im.turms.plugin.antispam.property.UnwantedWordHandleStrategy;
-import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.plugin.TurmsExtension;
-import im.turms.service.plugin.extension.ClientRequestTransformer;
-import im.turms.service.workflow.access.servicerequest.dto.ClientRequest;
+import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
+import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.plugin.TurmsExtension;
+import im.turms.service.access.servicerequest.dto.ClientRequest;
+import im.turms.service.infra.plugin.extension.ClientRequestTransformer;
 import reactor.core.publisher.Mono;
 
 import java.nio.file.Path;
@@ -118,15 +119,15 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
                 case REJECT_REQUEST -> {
                     if (field.shouldRejectSilently()) {
                         if (spamDetector.containsUnwantedWords(text)) {
-                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.OK));
+                            return ResponseExceptionPublisherPool.ok();
                         }
                     } else if (maxNumberOfUnwantedWordsToReturn > 0) {
                         String words = spamDetector.findUnwantedWords(text, maxNumberOfUnwantedWordsToReturn);
                         if (words != null) {
-                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.MESSAGE_IS_ILLEGAL, words));
+                            return Mono.error(ResponseException.get(ResponseStatusCode.MESSAGE_IS_ILLEGAL, words));
                         }
                     } else if (spamDetector.containsUnwantedWords(text)) {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.MESSAGE_IS_ILLEGAL));
+                        return Mono.error(ResponseException.get(ResponseStatusCode.MESSAGE_IS_ILLEGAL));
                     }
                 }
                 case MASK_TEXT -> {

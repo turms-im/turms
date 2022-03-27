@@ -17,9 +17,9 @@
 package im.turms.client.service
 
 import im.turms.client.TurmsClient
-import im.turms.client.constant.TurmsStatusCode
-import im.turms.client.exception.TurmsBusinessException
+import im.turms.client.exception.ResponseException
 import im.turms.client.extension.tryResumeWithException
+import im.turms.client.model.ResponseStatusCode
 import im.turms.common.constant.ContentType
 import im.turms.common.model.dto.request.TurmsRequest
 import im.turms.common.model.dto.request.storage.DeleteResourceRequest
@@ -55,7 +55,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         return if (userId != null) {
             getSignedPutUrl(ContentType.PROFILE, pictureSize, null, userId)
         } else {
-            throw TurmsBusinessException(TurmsStatusCode.QUERY_PROFILE_URL_TO_UPDATE_BEFORE_LOGIN)
+            throw ResponseException(ResponseStatusCode.QUERY_PROFILE_URL_TO_UPDATE_BEFORE_LOGIN)
         }
     }
 
@@ -175,7 +175,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                 if (body != null) {
                     it.resume(body.bytes())
                 } else {
-                    it.resumeWithException(TurmsBusinessException(TurmsStatusCode.INVALID_RESPONSE))
+                    it.resumeWithException(ResponseException(ResponseStatusCode.INVALID_RESPONSE))
                 }
             }
         })
@@ -196,7 +196,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                 if (body != null) {
                     it.resume(body.string())
                 } else {
-                    it.resumeWithException(TurmsBusinessException(TurmsStatusCode.INVALID_RESPONSE))
+                    it.resumeWithException(ResponseException(ResponseStatusCode.INVALID_RESPONSE))
                 }
             }
         })

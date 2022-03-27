@@ -1,15 +1,19 @@
 import 'package:fixnum/fixnum.dart';
 
+import '../exception/response_exception.dart';
 import '../model/notification/turms_notification.pb.dart';
-import '../model/turms_business_exception.dart';
-import '../model/turms_status_code.dart';
+import '../model/response_status_code.dart';
 
 extension NotificationExtensions on TurmsNotification {
   Int64 getFirstIdOrThrow() {
     if (!data.hasIds()) {
       final reason = 'Cannot get ID from the invalid response: $this';
-      throw TurmsBusinessException(TurmsStatusCode.invalidResponse, reason);
+      throw ResponseException(ResponseStatusCode.invalidResponse, reason);
     }
     return data.ids.values[0];
   }
+
+  bool get isSuccessCode => hasCode() && ResponseStatusCode.isSuccessCode(code);
+
+  bool get isErrorCode => hasCode() && ResponseStatusCode.isErrorCode(code);
 }

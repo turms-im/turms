@@ -17,8 +17,8 @@
 
 package im.turms.plugin.antispam;
 
-import im.turms.server.common.plugin.TurmsExtension;
-import im.turms.server.common.plugin.TurmsPlugin;
+import im.turms.server.common.infra.plugin.TurmsExtension;
+import im.turms.server.common.infra.plugin.TurmsPlugin;
 
 import java.util.Set;
 

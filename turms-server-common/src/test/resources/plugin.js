@@ -10,7 +10,7 @@ function getPluginDescriptor() {
 
 class MyPlugin extends TurmsExtension {
     getExtensionPoints() {
-        return ['unit.im.turms.server.common.plugin.MyExtensionPointForJs'];
+        return ['unit.im.turms.server.common.infra.plugin.MyExtensionPointForJs'];
     }
 
     testBool() {

@@ -1,6 +1,6 @@
 import Constants from '../helper/constants';
 import TurmsClient from '../../src/turms-client';
-import TurmsStatusCode from '../../src/model/turms-status-code'
+import ResponseStatusCode from '../../src/model/turms-status-code'
 import {UserStatus} from '../../src/model/proto/constant/user_status';
 import {ResponseAction} from '../../src/model/proto/constant/response_action';
 
@@ -35,7 +35,7 @@ describe('Create', () => {
             const result = await turmsClient.userService.createRelationship('10', true);
             expect(result).toBeFalsy();
         } catch (e) {
-            expect(e.code).toEqual(TurmsStatusCode.CREATE_EXISTING_RELATIONSHIP);
+            expect(e.code).toEqual(ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP);
         }
     });
     it('createFriendRelationship_shouldSucceed', async () => {
@@ -43,7 +43,7 @@ describe('Create', () => {
             const result = await turmsClient.userService.createFriendRelationship('10');
             expect(result).toBeFalsy();
         } catch (e) {
-            expect(e.code).toEqual(TurmsStatusCode.CREATE_EXISTING_RELATIONSHIP);
+            expect(e.code).toEqual(ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP);
         }
     });
     it('createBlockedUserRelationship_shouldSucceed', async () => {
@@ -51,7 +51,7 @@ describe('Create', () => {
             const result = await turmsClient.userService.createBlockedUserRelationship('10');
             expect(result).toBeFalsy();
         } catch (e) {
-            expect(e.code).toEqual(TurmsStatusCode.CREATE_EXISTING_RELATIONSHIP);
+            expect(e.code).toEqual(ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP);
         }
     });
     it('sendFriendRequest_shouldReturnFriendRequestId', async () => {
@@ -59,7 +59,7 @@ describe('Create', () => {
             const friendRequestId = await turmsClient.userService.sendFriendRequest('11', 'content');
             expect(friendRequestId).toBeTruthy();
         } catch (e) {
-            expect(e.code).toEqual(TurmsStatusCode.CREATE_EXISTING_FRIEND_REQUEST);
+            expect(e.code).toEqual(ResponseStatusCode.CREATE_EXISTING_FRIEND_REQUEST);
         }
     });
     it('createRelationshipGroup_shouldReturnRelationshipGroupIndex', async () => {
@@ -67,7 +67,7 @@ describe('Create', () => {
             relationshipGroupIndex = await turmsClient.userService.createRelationshipGroup('newGroup');
             expect(relationshipGroupIndex).toBeTruthy();
         } catch (e) {
-            expect(e.code).toEqual(TurmsStatusCode.CREATE_EXISTING_FRIEND_REQUEST);
+            expect(e.code).toEqual(ResponseStatusCode.CREATE_EXISTING_FRIEND_REQUEST);
         }
     });
 });

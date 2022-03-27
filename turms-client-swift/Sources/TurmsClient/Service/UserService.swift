@@ -19,7 +19,7 @@ public class UserService {
     init(_ turmsClient: TurmsClient) {
         self.turmsClient = turmsClient
         turmsClient.driver.addOnDisconnectedListener { [weak self] _ in
-            self?.changeToOffline(SessionCloseInfo(closeStatus: Int32(TurmsCloseStatus.connectionClosed.rawValue), businessStatus: nil, reason: nil))
+            self?.changeToOffline(SessionCloseInfo(closeStatus: Int32(SessionCloseStatus.connectionClosed.rawValue), businessStatus: nil, reason: nil))
         }
         turmsClient.driver.addNotificationListener { [weak self] n in
             if n.hasCloseStatus, self?.isLoggedIn == true {
@@ -95,13 +95,13 @@ public class UserService {
                 $0.deleteSessionRequest = DeleteSessionRequest()
             }.asVoid()
         return d.done {
-            self.changeToOffline(SessionCloseInfo(closeStatus: Int32(TurmsCloseStatus.disconnectedByClient.rawValue), businessStatus: nil, reason: nil))
+            self.changeToOffline(SessionCloseInfo(closeStatus: Int32(SessionCloseStatus.disconnectedByClient.rawValue), businessStatus: nil, reason: nil))
         }
     }
 
     public func updateUserOnlineStatus(_ onlineStatus: UserStatus) -> Promise<Void> {
         if onlineStatus == .offline {
-            return Promise(error: TurmsBusinessError(TurmsStatusCode.illegalArgument, "The online status must not be OFFLINE"))
+            return Promise(error: ResponseError(ResponseStatusCode.illegalArgument, "The online status must not be OFFLINE"))
         }
         return turmsClient.driver
             .send {

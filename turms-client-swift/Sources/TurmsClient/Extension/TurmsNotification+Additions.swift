@@ -4,15 +4,15 @@ public extension TurmsNotification {
         if ids.values.count > 0 {
             return ids.values[0]
         } else {
-            throw TurmsBusinessError(TurmsStatusCode.invalidResponse)
+            throw ResponseError(ResponseStatusCode.invalidResponse)
         }
     }
 
     func isSuccessful() -> Bool {
-        return hasCode && TurmsStatusCode.isSuccessCode(Int(code))
+        return hasCode && ResponseStatusCode.isSuccessCode(Int(code))
     }
 
     func isServerError() -> Bool {
-        return hasCode && TurmsStatusCode.isServerError(Int(code))
+        return hasCode && ResponseStatusCode.isServerError(Int(code))
     }
 }

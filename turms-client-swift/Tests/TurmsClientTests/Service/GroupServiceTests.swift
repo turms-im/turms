@@ -87,7 +87,7 @@ class GroupServiceTests: XCTestCase {
             XCTAssertEqual(groupMemberId, $0!.groupMembers[0].userID)
         })
         assertCompleted("answerGroupQuestions_shouldReturnAnswerResult", service.answerGroupQuestions([groupQuestionId!: "answer"]).recover { error -> Promise<GroupJoinQuestionsAnswerResult> in
-            if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.memberCannotAnswerGroupQuestion.rawValue {
+            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.memberCannotAnswerGroupQuestion.rawValue {
                 return Promise.value(GroupJoinQuestionsAnswerResult())
             } else {
                 throw error
@@ -100,14 +100,14 @@ class GroupServiceTests: XCTestCase {
         assertCompleted("deleteGroupJoinQuestion_shouldSucceed", service.deleteGroupJoinQuestion(groupQuestionId!))
         assertCompleted("unblockUser_shouldSucceed", service.unblockUser(groupId: groupId!, userId: groupBlockedUserId))
         assertCompleted("deleteInvitation_shouldSucceedOrThrowDisabledFunction", service.deleteInvitation(groupInvitationId!).recover { error -> Promise<Void> in
-            if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.recallingGroupInvitationIsDisabled.rawValue {
+            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.recallingGroupInvitationIsDisabled.rawValue {
                 return Promise.value(())
             } else {
                 throw error
             }
         })
         assertCompleted("deleteJoinRequest_shouldSucceedOrThrowDisabledFunction", service.deleteJoinRequest(groupJoinRequestId!).recover { error -> Promise<Void> in
-            if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.recallingGroupJoinRequestIsDisabled.rawValue {
+            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.recallingGroupJoinRequestIsDisabled.rawValue {
                 return Promise.value(())
             } else {
                 throw error

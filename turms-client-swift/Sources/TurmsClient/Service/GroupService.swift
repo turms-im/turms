@@ -428,7 +428,7 @@ public class GroupService {
                 if let value = result {
                     return value
                 } else {
-                    throw TurmsBusinessError(TurmsStatusCode.invalidResponse)
+                    throw ResponseError(ResponseStatusCode.invalidResponse)
                 }
             }
     }

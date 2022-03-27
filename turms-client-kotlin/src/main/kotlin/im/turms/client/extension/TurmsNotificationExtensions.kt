@@ -17,14 +17,14 @@
 
 package im.turms.client.extension
 
-import im.turms.client.constant.TurmsStatusCode
+import im.turms.client.model.ResponseStatusCode
 import im.turms.common.model.dto.notification.TurmsNotification
 
 /**
  * @author James Chen
  */
 fun TurmsNotification.isSuccessful(): Boolean =
-    hasCode() && TurmsStatusCode.isSuccessCode(this.code)
+    hasCode() && ResponseStatusCode.isSuccessCode(this.code)
 
 fun TurmsNotification.isServerError(): Boolean =
-    hasCode() && TurmsStatusCode.isServerError(this.code)
+    hasCode() && ResponseStatusCode.isServerError(this.code)

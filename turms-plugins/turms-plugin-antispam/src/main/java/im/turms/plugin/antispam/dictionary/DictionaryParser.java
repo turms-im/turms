@@ -18,7 +18,7 @@
 package im.turms.plugin.antispam.dictionary;
 
 import im.turms.plugin.antispam.TextPreprocessor;
-import im.turms.server.common.lang.CharArrayBuffer;
+import im.turms.server.common.infra.lang.CharArrayBuffer;
 import lombok.SneakyThrows;
 
 import java.io.BufferedReader;
