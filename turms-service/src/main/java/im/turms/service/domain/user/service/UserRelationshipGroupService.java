@@ -32,10 +32,8 @@ import im.turms.server.common.infra.random.RandomUtil;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
-import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
-import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.service.domain.common.suggestion.UsesNonIndexedData;
 import im.turms.service.domain.common.validation.DataValidator;
 import im.turms.service.domain.user.po.UserRelationship;
@@ -285,8 +283,6 @@ public class UserRelationshipGroupService {
             return Mono.empty();
         }
         UserRelationshipGroup.Key key = new UserRelationshipGroup.Key(ownerId, deleteGroupIndex);
-        Filter filterGroup = Filter.newBuilder(1)
-                .eq(DomainFieldName.ID, key);
         // Don't use transaction for better performance
         return userRelationshipGroupMemberRepository.findRelationshipGroupMembers(ownerId, deleteGroupIndex)
                 .collectList()

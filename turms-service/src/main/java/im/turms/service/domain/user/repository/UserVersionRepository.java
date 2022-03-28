@@ -31,7 +31,6 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 import java.util.Set;
 
@@ -45,9 +44,33 @@ public class UserVersionRepository extends BaseRepository<UserVersion> {
         super(mongoClient, UserVersion.class);
     }
 
-    public Mono<UpdateResult> updateSpecificVersion(@NotEmpty Set<Long> userIds,
+    public Mono<UpdateResult> updateSpecificVersion(Long userId,
                                                     @Nullable ClientSession session,
-                                                    @NotEmpty String... fields) {
+                                                    String... fields) {
+        Filter filter = Filter.newBuilder(1)
+                .eq(DomainFieldName.ID, userId);
+        Date now = new Date();
+        Update update = Update.newBuilder(fields.length);
+        for (String field : fields) {
+            update.set(field, now);
+        }
+        return mongoClient.updateMany(session, entityClass, filter, update);
+    }
+
+    public Mono<UpdateResult> updateSpecificVersion(Long userId,
+                                                    @Nullable ClientSession session,
+                                                    String field) {
+        Filter filter = Filter.newBuilder(1)
+                .eq(DomainFieldName.ID, userId);
+        Date now = new Date();
+        Update update = Update.newBuilder(1)
+                .set(field, now);
+        return mongoClient.updateMany(session, entityClass, filter, update);
+    }
+
+    public Mono<UpdateResult> updateSpecificVersion(Set<Long> userIds,
+                                                    @Nullable ClientSession session,
+                                                    String... fields) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, userIds);
         Date now = new Date();

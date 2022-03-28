@@ -161,7 +161,7 @@ public final class DateUtil {
         };
         List<Pair<Date, Date>> lists = new LinkedList<>();
         while (true) {
-            // Note: Do not use Instant because it doesn't support plussing months
+            // Don't use ZonedDateTime and Instant because they are inefficient
             Calendar calendar = CALENDAR_THREAD_LOCAL.get();
             calendar.setTime(startDate);
             calendar.add(unit, 1);

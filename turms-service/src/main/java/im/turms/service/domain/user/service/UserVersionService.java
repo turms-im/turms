@@ -32,7 +32,6 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
@@ -192,7 +191,23 @@ public class UserVersionService {
     }
 
     public Mono<UpdateResult> updateSpecificVersion(@NotNull Long userId, @Nullable ClientSession session, @NotEmpty String... fields) {
-        return updateSpecificVersion(Collections.singleton(userId), session, fields);
+        try {
+            Validator.notNull(userId, "userId");
+            Validator.notEmpty(fields, "fields");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        return userVersionRepository.updateSpecificVersion(userId, session, fields);
+    }
+
+    public Mono<UpdateResult> updateSpecificVersion(@NotNull Long userId, @Nullable ClientSession session, @NotNull String field) {
+        try {
+            Validator.notNull(userId, "userId");
+            Validator.notNull(field, "field");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        return userVersionRepository.updateSpecificVersion(userId, session, field);
     }
 
     public Mono<UpdateResult> updateSpecificVersion(@NotEmpty Set<Long> userIds,
@@ -217,7 +232,7 @@ public class UserVersionService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userVersionRepository.deleteByIds(userIds);
+        return userVersionRepository.deleteByIds(userIds, session);
     }
 
 }

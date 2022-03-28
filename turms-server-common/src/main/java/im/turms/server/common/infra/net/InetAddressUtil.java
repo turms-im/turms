@@ -48,7 +48,7 @@ public final class InetAddressUtil {
         try {
             return InetAddress.getByAddress(ip).getHostAddress();
         } catch (UnknownHostException e) {
-            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The IP " + Arrays.toString(ip) + " is invalid");
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The IP bytes " + Arrays.toString(ip) + " is invalid");
         }
     }
 
