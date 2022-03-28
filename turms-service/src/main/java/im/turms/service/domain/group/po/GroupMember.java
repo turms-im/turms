@@ -17,7 +17,7 @@
 
 package im.turms.service.domain.group.po;
 
-import im.turms.common.constant.GroupMemberRole;
+import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.IndexType;
 import im.turms.server.common.storage.mongo.entity.ShardingStrategy;

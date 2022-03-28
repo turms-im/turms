@@ -17,10 +17,10 @@
 
 package im.turms.gateway.domain.session.manager;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.UserStatus;
-import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.access.client.common.UserSession;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.domain.location.bo.Coordinates;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.lang.ConcurrentEnumMap;
@@ -102,7 +102,7 @@ public final class UserSessionsManager {
         if (userSession == null) {
             return false;
         }
-        var session = im.turms.common.model.bo.user.UserSession.newBuilder()
+        var session = im.turms.server.common.access.client.dto.model.user.UserSession.newBuilder()
                 .setSessionId(Integer.toString(userSession.getId()))
                 .setServerId(serverId)
                 .build();

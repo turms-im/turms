@@ -18,9 +18,9 @@
 package im.turms.service.access.servicerequest.dispatcher;
 
 import com.google.protobuf.CodedInputStream;
-import im.turms.common.constant.DeviceType;
-import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dispatcher.IServiceRequestDispatcher;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
@@ -59,9 +59,9 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
 import static im.turms.server.common.infra.metrics.CommonMetricNameConst.CLIENT_REQUEST;
 import static im.turms.server.common.infra.metrics.CommonMetricNameConst.CLIENT_REQUEST_TAG_TYPE;
 

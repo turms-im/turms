@@ -17,9 +17,9 @@
 
 package im.turms.service.access.servicerequest.dto;
 
-import im.turms.common.model.bo.common.Int64Values;
-import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.model.common.Int64Values;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 
 import javax.annotation.Nullable;

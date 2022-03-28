@@ -19,13 +19,13 @@ package im.turms.gateway.infra.fake;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Range;
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.UserStatus;
-import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.gateway.access.client.tcp.TcpUserSessionAssembler;
 import im.turms.gateway.infra.thread.ThreadNameConst;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.client.TurmsClient;
 import im.turms.server.common.infra.context.TurmsApplicationContext;

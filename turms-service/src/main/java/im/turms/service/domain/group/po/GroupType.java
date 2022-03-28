@@ -17,13 +17,13 @@
 
 package im.turms.service.domain.group.po;
 
-import im.turms.common.constant.GroupInvitationStrategy;
-import im.turms.common.constant.GroupJoinStrategy;
-import im.turms.common.constant.GroupUpdateStrategy;
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
+import im.turms.service.domain.group.bo.GroupInvitationStrategy;
+import im.turms.service.domain.group.bo.GroupJoinStrategy;
+import im.turms.service.domain.group.bo.GroupUpdateStrategy;
 import lombok.Data;
 
 /**

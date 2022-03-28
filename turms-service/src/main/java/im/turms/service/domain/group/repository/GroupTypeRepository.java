@@ -18,14 +18,14 @@
 package im.turms.service.domain.group.repository;
 
 import com.mongodb.client.result.UpdateResult;
-import im.turms.common.constant.GroupInvitationStrategy;
-import im.turms.common.constant.GroupJoinStrategy;
-import im.turms.common.constant.GroupUpdateStrategy;
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.Update;
+import im.turms.service.domain.group.bo.GroupInvitationStrategy;
+import im.turms.service.domain.group.bo.GroupJoinStrategy;
+import im.turms.service.domain.group.bo.GroupUpdateStrategy;
 import im.turms.service.domain.group.po.GroupType;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;

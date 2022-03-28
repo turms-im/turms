@@ -19,7 +19,7 @@ package im.turms.service.domain.user.repository;
 
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
-import im.turms.common.constant.RequestStatus;
+import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.time.DateConst;
 import im.turms.server.common.infra.time.DateRange;

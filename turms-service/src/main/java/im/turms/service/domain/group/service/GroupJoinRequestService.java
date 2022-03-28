@@ -19,8 +19,8 @@ package im.turms.service.domain.group.service;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import im.turms.common.constant.RequestStatus;
-import im.turms.common.model.bo.group.GroupJoinRequestsWithVersion;
+import im.turms.server.common.access.client.dto.constant.RequestStatus;
+import im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;

@@ -17,7 +17,7 @@
 
 package im.turms.server.common.infra.exception;
 
-import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

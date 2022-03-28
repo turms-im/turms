@@ -20,7 +20,7 @@ package im.turms.service.domain.group.repository;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
-import im.turms.common.constant.GroupMemberRole;
+import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.storage.mongo.DomainFieldName;

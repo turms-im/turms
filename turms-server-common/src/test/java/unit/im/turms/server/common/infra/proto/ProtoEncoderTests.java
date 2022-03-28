@@ -19,7 +19,7 @@ package unit.im.turms.server.common.infra.proto;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import im.turms.common.model.dto.request.message.CreateMessageRequest;
+import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.infra.proto.ProtoEncoder;
 import io.netty.buffer.ByteBuf;
 import org.junit.jupiter.api.Test;

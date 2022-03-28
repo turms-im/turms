@@ -17,7 +17,7 @@
 
 package im.turms.service.domain.group.access.admin.dto.request;
 
-import im.turms.common.constant.GroupMemberRole;
+import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 
 import java.util.Date;
 

@@ -17,7 +17,7 @@
 
 package im.turms.server.common.domain.user.po;
 
-import im.turms.common.constant.ProfileAccessStrategy;
+import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;

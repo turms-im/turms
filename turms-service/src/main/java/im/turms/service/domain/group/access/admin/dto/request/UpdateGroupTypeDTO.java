@@ -17,9 +17,9 @@
 
 package im.turms.service.domain.group.access.admin.dto.request;
 
-import im.turms.common.constant.GroupInvitationStrategy;
-import im.turms.common.constant.GroupJoinStrategy;
-import im.turms.common.constant.GroupUpdateStrategy;
+import im.turms.service.domain.group.bo.GroupInvitationStrategy;
+import im.turms.service.domain.group.bo.GroupJoinStrategy;
+import im.turms.service.domain.group.bo.GroupUpdateStrategy;
 
 /**
  * @author James Chen

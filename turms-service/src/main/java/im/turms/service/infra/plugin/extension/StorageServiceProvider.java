@@ -17,7 +17,7 @@
 
 package im.turms.service.infra.plugin.extension;
 
-import im.turms.common.constant.ContentType;
+import im.turms.server.common.access.client.dto.constant.ContentType;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
 import reactor.core.publisher.Mono;
 

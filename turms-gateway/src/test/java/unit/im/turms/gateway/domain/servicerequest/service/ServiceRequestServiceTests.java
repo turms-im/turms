@@ -18,12 +18,12 @@
 package unit.im.turms.gateway.domain.servicerequest.service;
 
 import com.google.common.net.InetAddresses;
-import im.turms.common.constant.DeviceType;
-import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.servicerequest.service.ServiceRequestService;
 import im.turms.gateway.domain.session.service.SessionService;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;

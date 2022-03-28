@@ -32,7 +32,6 @@ terraform/alicloud/playground/.terraform/
 
 ### Turms Common ###
 turms-server-common/target/
-turms-java-common/target/
 
 ### Turms Servers ###
 turms-gateway/dist/log/

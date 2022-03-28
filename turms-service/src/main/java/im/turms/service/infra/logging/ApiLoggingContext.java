@@ -17,7 +17,7 @@
 
 package im.turms.service.infra.logging;
 
-import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.logging.CommonApiLoggingContext;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.env.clientapi.ClientApiLoggingProperties;

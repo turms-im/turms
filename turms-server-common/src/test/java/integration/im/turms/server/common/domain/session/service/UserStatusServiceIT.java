@@ -18,8 +18,8 @@
 package integration.im.turms.server.common.domain.session.service;
 
 import com.google.common.collect.SetMultimap;
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.UserStatus;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;

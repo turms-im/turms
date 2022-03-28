@@ -17,12 +17,12 @@
 
 package im.turms.server.common.domain.blocklist.service;
 
-import im.turms.common.constant.SessionCloseStatus;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.blocklist.bo.BlockedClient;
 import im.turms.server.common.domain.blocklist.manager.AutoBlockManager;
 import im.turms.server.common.domain.blocklist.manager.BlocklistServiceManager;
 import im.turms.server.common.domain.session.bo.CloseReason;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.service.ISessionService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;

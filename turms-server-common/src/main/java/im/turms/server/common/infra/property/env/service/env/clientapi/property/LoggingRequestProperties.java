@@ -17,7 +17,7 @@
 
 package im.turms.server.common.infra.property.env.service.env.clientapi.property;
 
-import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

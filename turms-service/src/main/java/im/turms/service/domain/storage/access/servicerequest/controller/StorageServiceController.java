@@ -17,11 +17,11 @@
 
 package im.turms.service.domain.storage.access.servicerequest.controller;
 
-import im.turms.common.constant.ContentType;
-import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.storage.DeleteResourceRequest;
-import im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequest;
-import im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequest;
+import im.turms.server.common.access.client.dto.constant.ContentType;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest;
+import im.turms.server.common.access.client.dto.request.storage.QuerySignedGetUrlRequest;
+import im.turms.server.common.access.client.dto.request.storage.QuerySignedPutUrlRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.exception.ResponseException;
@@ -33,9 +33,9 @@ import im.turms.service.domain.storage.service.StorageService;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_RESOURCE_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_GET_URL_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_PUT_URL_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RESOURCE_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_GET_URL_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_PUT_URL_REQUEST;
 
 /**
  * @author James Chen

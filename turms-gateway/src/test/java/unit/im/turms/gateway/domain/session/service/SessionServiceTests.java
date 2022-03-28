@@ -17,16 +17,16 @@
 
 package unit.im.turms.gateway.domain.session.service;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.SessionCloseStatus;
-import im.turms.common.constant.UserStatus;
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.observability.service.MetricsService;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.domain.session.service.UserService;
 import im.turms.gateway.domain.session.service.UserSimultaneousLoginService;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;

@@ -17,8 +17,8 @@
 
 package im.turms.gateway.infra.proto;
 
-import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.common.model.dto.request.user.CreateSessionRequest;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.user.CreateSessionRequest;
 import im.turms.server.common.infra.proto.ProtoFormatter;
 
 /**

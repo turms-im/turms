@@ -17,8 +17,8 @@
 
 package im.turms.service.domain.group.access.admin.controller;
 
-import im.turms.common.constant.RequestStatus;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
+import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.domain.common.dto.response.DeleteResultDTO;
 import im.turms.server.common.domain.common.dto.response.PaginationDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;

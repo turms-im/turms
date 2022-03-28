@@ -17,12 +17,12 @@
 
 package unit.im.turms.gateway.domain.session.manager;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.SessionCloseStatus;
-import im.turms.common.constant.UserStatus;
 import im.turms.gateway.access.client.common.connection.NetConnection;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.domain.session.bo.CloseReason;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import org.junit.jupiter.api.Test;
 

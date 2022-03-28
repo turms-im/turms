@@ -19,7 +19,7 @@ package im.turms.gateway.infra.proto;
 
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.WireFormat;
-import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
 import org.springframework.util.Assert;
@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
 
 /**
  * @author James Chen
@@ -35,7 +35,7 @@ import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_S
 public final class TurmsNotificationParser {
 
     /**
-     * {@link im.turms.common.model.dto.notification.TurmsNotification:99}
+     * {@link im.turms.server.common.access.client.dto.notification.TurmsNotification:99}
      */
     private static final int REQUESTER_ID_TAG = 40;
     private static final int CLOSE_STATUS_TAG = 48;

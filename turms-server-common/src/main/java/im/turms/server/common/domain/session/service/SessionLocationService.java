@@ -18,7 +18,7 @@
 package im.turms.server.common.domain.session.service;
 
 
-import im.turms.common.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.location.bo.Coordinates;

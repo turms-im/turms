@@ -18,8 +18,8 @@
 package unit.im.turms.server.common.infra.proto;
 
 import com.google.protobuf.ByteString;
-import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.common.model.dto.request.message.CreateMessageRequest;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.infra.proto.ProtoFormatter;
 import org.junit.jupiter.api.Test;
 

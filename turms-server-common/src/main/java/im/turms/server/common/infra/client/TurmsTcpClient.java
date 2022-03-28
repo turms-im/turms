@@ -17,12 +17,12 @@
 
 package im.turms.server.common.infra.client;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.common.model.dto.request.user.CreateSessionRequest;
-import im.turms.common.model.dto.request.user.DeleteSessionRequest;
 import im.turms.server.common.access.client.codec.CodecFactory;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.user.CreateSessionRequest;
+import im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;

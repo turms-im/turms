@@ -17,7 +17,7 @@
 
 package im.turms.server.common.domain.session.bo;
 
-import im.turms.common.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 
 /**
  * @author James Chen

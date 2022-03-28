@@ -17,7 +17,7 @@
 
 package im.turms.service.domain.common.repository;
 
-import im.turms.common.constant.RequestStatus;
+import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;

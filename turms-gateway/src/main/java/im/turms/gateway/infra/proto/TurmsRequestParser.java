@@ -20,8 +20,8 @@ package im.turms.gateway.infra.proto;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.WireFormat;
-import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.common.model.dto.request.user.CreateSessionRequest;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.user.CreateSessionRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
 import org.springframework.util.Assert;
@@ -29,8 +29,8 @@ import org.springframework.util.Assert;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
 
 /**
  * @author James Chen

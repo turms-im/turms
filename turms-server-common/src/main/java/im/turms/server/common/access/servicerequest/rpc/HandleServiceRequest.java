@@ -17,7 +17,7 @@
 
 package im.turms.server.common.access.servicerequest.rpc;
 
-import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.servicerequest.dispatcher.IServiceRequestDispatcher;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;

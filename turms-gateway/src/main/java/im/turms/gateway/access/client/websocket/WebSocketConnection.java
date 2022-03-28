@@ -17,9 +17,9 @@
 
 package im.turms.gateway.access.client.websocket;
 
-import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.access.client.common.connection.NetConnection;
 import im.turms.server.common.access.client.NotificationFactory;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;

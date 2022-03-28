@@ -17,8 +17,8 @@
 
 package unit.im.turms.server.common.domain.servicerequest.rpc;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequest;
 import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequestCodec;

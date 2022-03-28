@@ -17,10 +17,10 @@
 
 package im.turms.gateway.domain.servicerequest.service;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.session.service.SessionService;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;

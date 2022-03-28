@@ -20,9 +20,8 @@ package im.turms.service.domain.group.service;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
-import im.turms.common.constant.GroupInvitationStrategy;
-import im.turms.common.constant.GroupMemberRole;
-import im.turms.common.model.bo.group.GroupMembersWithVersion;
+import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
+import im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.UserStatusService;
@@ -38,6 +37,7 @@ import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.service.domain.common.permission.ServicePermission;
 import im.turms.service.domain.common.validation.DataValidator;
+import im.turms.service.domain.group.bo.GroupInvitationStrategy;
 import im.turms.service.domain.group.po.GroupMember;
 import im.turms.service.domain.group.repository.GroupMemberRepository;
 import im.turms.service.infra.proto.ProtoModelConvertor;
@@ -78,7 +78,7 @@ public class GroupMemberService {
     private final UserStatusService userStatusService;
 
     /**
-     * @param groupService is lazy because: GroupService -> GroupMemberService -> GroupService
+     * @param groupService          is lazy because: GroupService -> GroupMemberService -> GroupService
      * @param groupBlocklistService is lazy because: GroupMemberService -> GroupBlocklistService -> GroupMemberService
      */
     public GroupMemberService(

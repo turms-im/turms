@@ -21,14 +21,14 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.protobuf.ByteString;
-import im.turms.common.model.bo.message.Messages;
-import im.turms.common.model.bo.message.MessagesWithTotal;
-import im.turms.common.model.bo.message.MessagesWithTotalList;
-import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.common.model.dto.request.message.CreateMessageRequest;
-import im.turms.common.model.dto.request.message.QueryMessagesRequest;
-import im.turms.common.model.dto.request.message.UpdateMessageRequest;
+import im.turms.server.common.access.client.dto.model.message.Messages;
+import im.turms.server.common.access.client.dto.model.message.MessagesWithTotal;
+import im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
+import im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest;
+import im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectorUtil;
@@ -59,9 +59,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_MESSAGES_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_MESSAGE_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_MESSAGES_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_MESSAGE_REQUEST;
 
 /**
  * @author James Chen

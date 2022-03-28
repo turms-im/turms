@@ -17,8 +17,8 @@
 
 package im.turms.service.infra.logging;
 
-import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import io.netty.buffer.ByteBuf;

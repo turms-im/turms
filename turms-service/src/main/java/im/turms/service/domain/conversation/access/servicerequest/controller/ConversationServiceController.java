@@ -17,11 +17,11 @@
 
 package im.turms.service.domain.conversation.access.servicerequest.controller;
 
-import im.turms.common.model.bo.conversation.Conversations;
-import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.conversation.QueryConversationsRequest;
-import im.turms.common.model.dto.request.conversation.UpdateConversationRequest;
-import im.turms.common.model.dto.request.conversation.UpdateTypingStatusRequest;
+import im.turms.server.common.access.client.dto.model.conversation.Conversations;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest;
+import im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest;
+import im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectorUtil;
@@ -37,9 +37,9 @@ import reactor.core.publisher.Mono;
 import java.util.Date;
 import java.util.List;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_CONVERSATIONS_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_CONVERSATION_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_TYPING_STATUS_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_CONVERSATIONS_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_CONVERSATION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_TYPING_STATUS_REQUEST;
 
 /**
  * @author James Chen

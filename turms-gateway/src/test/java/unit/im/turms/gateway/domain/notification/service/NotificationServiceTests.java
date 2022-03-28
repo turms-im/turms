@@ -17,7 +17,6 @@
 
 package unit.im.turms.gateway.domain.notification.service;
 
-import im.turms.common.constant.DeviceType;
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.access.client.tcp.TcpConnection;
 import im.turms.gateway.domain.notification.service.NotificationService;
@@ -25,6 +24,7 @@ import im.turms.gateway.domain.session.manager.UserSessionsManager;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.infra.logging.ApiLoggingContext;
 import im.turms.gateway.infra.plugin.extension.NotificationHandler;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.location.bo.Coordinates;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import im.turms.server.common.infra.plugin.PluginManager;

@@ -17,7 +17,7 @@
 
 package im.turms.server.common.domain.session.service;
 
-import im.turms.common.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import reactor.core.publisher.Mono;

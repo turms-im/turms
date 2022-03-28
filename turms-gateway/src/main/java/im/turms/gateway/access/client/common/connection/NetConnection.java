@@ -17,10 +17,10 @@
 
 package im.turms.gateway.access.client.common.connection;
 
-import im.turms.common.constant.SessionCloseStatus;
-import im.turms.common.model.dto.udpsignal.UdpNotificationType;
 import im.turms.gateway.access.client.udp.UdpRequestDispatcher;
+import im.turms.gateway.access.client.udp.dto.UdpNotificationType;
 import im.turms.server.common.domain.session.bo.CloseReason;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import lombok.Data;
 import reactor.util.retry.Retry;

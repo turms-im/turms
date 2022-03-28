@@ -17,7 +17,7 @@
 
 package im.turms.service.domain.user.service.onlineuser;
 
-import im.turms.common.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.location.bo.Coordinates;
 import im.turms.server.common.domain.location.bo.NearbyUser;
 import im.turms.server.common.domain.session.bo.UserSessionId;

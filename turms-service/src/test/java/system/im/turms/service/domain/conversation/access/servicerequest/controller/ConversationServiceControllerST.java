@@ -16,11 +16,11 @@
  */
 package system.im.turms.service.domain.conversation.access.servicerequest.controller;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.common.model.dto.request.conversation.QueryConversationsRequest;
-import im.turms.common.model.dto.request.conversation.UpdateConversationRequest;
-import im.turms.common.model.dto.request.conversation.UpdateTypingStatusRequest;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest;
+import im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest;
+import im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.domain.conversation.access.servicerequest.controller.ConversationServiceController;

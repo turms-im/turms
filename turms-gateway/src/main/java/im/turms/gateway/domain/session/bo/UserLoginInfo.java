@@ -17,8 +17,8 @@
 
 package im.turms.gateway.domain.session.bo;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.UserStatus;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.domain.location.bo.Coordinates;
 
 import java.util.Map;

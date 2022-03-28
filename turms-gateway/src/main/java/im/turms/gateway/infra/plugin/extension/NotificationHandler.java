@@ -17,7 +17,7 @@
 
 package im.turms.gateway.infra.plugin.extension;
 
-import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
 import reactor.core.publisher.Mono;
 

@@ -17,9 +17,9 @@
 
 package im.turms.server.common.domain.session.rpc;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.SessionCloseStatus;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
 import io.netty.buffer.ByteBuf;

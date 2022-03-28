@@ -17,7 +17,7 @@
 
 package im.turms.gateway.infra.proto;
 
-import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 
 /**
  * @author James Chen

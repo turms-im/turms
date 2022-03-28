@@ -17,7 +17,7 @@
 
 package im.turms.server.common.domain.common.util;
 
-import im.turms.common.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.infra.lang.BitUtil;
 import org.eclipse.collections.api.map.primitive.ByteObjectMap;
 import org.eclipse.collections.api.map.primitive.MutableByteObjectMap;

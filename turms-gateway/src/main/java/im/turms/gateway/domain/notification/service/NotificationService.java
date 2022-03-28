@@ -17,7 +17,6 @@
 
 package im.turms.gateway.domain.notification.service;
 
-import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
 import im.turms.gateway.domain.session.service.SessionService;
@@ -26,6 +25,7 @@ import im.turms.gateway.infra.logging.NotificationLogging;
 import im.turms.gateway.infra.plugin.extension.NotificationHandler;
 import im.turms.gateway.infra.proto.SimpleTurmsNotification;
 import im.turms.gateway.infra.proto.TurmsNotificationParser;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.domain.notification.service.INotificationService;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;

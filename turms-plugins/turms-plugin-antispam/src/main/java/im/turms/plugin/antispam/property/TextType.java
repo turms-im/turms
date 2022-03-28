@@ -18,7 +18,7 @@
 package im.turms.plugin.antispam.property;
 
 import com.google.protobuf.Descriptors;
-import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import lombok.Getter;
 
 /**

@@ -17,7 +17,7 @@
 
 package im.turms.service.domain.user.access.admin.dto.request;
 
-import im.turms.common.constant.UserStatus;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
 
 /**
  * @author James Chen

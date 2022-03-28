@@ -17,18 +17,19 @@
 
 package im.turms.gateway.access.client.udp;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.SessionCloseStatus;
-import im.turms.common.model.dto.udpsignal.UdpNotificationType;
-import im.turms.common.model.dto.udpsignal.UdpRequestType;
-import im.turms.common.model.dto.udpsignal.UdpSignalRequest;
 import im.turms.gateway.access.client.common.UserSession;
+import im.turms.gateway.access.client.udp.dto.UdpNotification;
+import im.turms.gateway.access.client.udp.dto.UdpNotificationType;
+import im.turms.gateway.access.client.udp.dto.UdpRequestType;
+import im.turms.gateway.access.client.udp.dto.UdpSignalRequest;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.infra.metrics.MetricNameConst;
 import im.turms.gateway.infra.thread.ThreadNameConst;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.common.LoopResourcesFactory;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.CloseReason;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -129,10 +130,10 @@ public class UdpRequestDispatcher {
         if (signalRequest == null) {
             return Mono.just(ResponseStatusCode.INVALID_REQUEST);
         }
-        long userId = signalRequest.getUserId();
-        DeviceType deviceType = signalRequest.getDeviceType();
-        int sessionId = signalRequest.getSessionId();
-        return switch (signalRequest.getType()) {
+        long userId = signalRequest.userId();
+        DeviceType deviceType = signalRequest.deviceType();
+        int sessionId = signalRequest.sessionId();
+        return switch (signalRequest.type()) {
             case HEARTBEAT -> {
                 UserSession session = sessionService.authAndUpdateHeartbeatTimestamp(userId, deviceType, sessionId);
                 if (session == null) {

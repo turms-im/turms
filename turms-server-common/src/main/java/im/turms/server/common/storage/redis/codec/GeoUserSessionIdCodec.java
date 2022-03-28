@@ -17,7 +17,7 @@
 
 package im.turms.server.common.storage.redis.codec;
 
-import im.turms.common.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import io.netty.buffer.ByteBuf;
 

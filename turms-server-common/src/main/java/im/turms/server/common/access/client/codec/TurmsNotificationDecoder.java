@@ -17,7 +17,7 @@
 
 package im.turms.server.common.access.client.codec;
 
-import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;

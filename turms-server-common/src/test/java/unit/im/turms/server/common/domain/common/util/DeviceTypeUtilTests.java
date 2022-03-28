@@ -17,7 +17,7 @@
 
 package unit.im.turms.server.common.domain.common.util;
 
-import im.turms.common.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import org.junit.jupiter.api.Test;
 

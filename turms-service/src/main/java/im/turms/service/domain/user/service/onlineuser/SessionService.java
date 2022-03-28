@@ -17,8 +17,8 @@
 
 package im.turms.service.domain.user.service.onlineuser;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.SessionCloseStatus;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.rpc.SetUserOfflineRequest;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;

@@ -17,7 +17,7 @@
 
 package im.turms.gateway.access.client.udp;
 
-import im.turms.common.model.dto.udpsignal.UdpNotificationType;
+import im.turms.gateway.access.client.udp.dto.UdpNotificationType;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

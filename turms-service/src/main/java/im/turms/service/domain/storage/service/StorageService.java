@@ -17,7 +17,7 @@
 
 package im.turms.service.domain.storage.service;
 
-import im.turms.common.constant.ContentType;
+import im.turms.server.common.access.client.dto.constant.ContentType;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.plugin.PluginManager;

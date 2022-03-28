@@ -17,8 +17,8 @@
 
 package unit.im.turms.server.common.domain.servicerequest.rpc;
 
-import im.turms.common.model.bo.common.Int64Values;
-import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.model.common.Int64Values;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 import im.turms.server.common.access.servicerequest.rpc.ServiceResponseCodec;

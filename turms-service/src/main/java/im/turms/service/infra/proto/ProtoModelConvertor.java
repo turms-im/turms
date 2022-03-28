@@ -19,26 +19,26 @@ package im.turms.service.infra.proto;
 
 import com.google.common.collect.Maps;
 import com.google.protobuf.ByteString;
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.GroupMemberRole;
-import im.turms.common.constant.ProfileAccessStrategy;
-import im.turms.common.constant.RequestStatus;
-import im.turms.common.constant.UserStatus;
-import im.turms.common.model.bo.conversation.GroupConversation;
-import im.turms.common.model.bo.conversation.PrivateConversation;
-import im.turms.common.model.bo.group.Group;
-import im.turms.common.model.bo.group.GroupInvitation;
-import im.turms.common.model.bo.group.GroupJoinQuestion;
-import im.turms.common.model.bo.group.GroupJoinRequest;
-import im.turms.common.model.bo.group.GroupMember;
-import im.turms.common.model.bo.user.NearbyUser;
-import im.turms.common.model.bo.user.UserFriendRequest;
-import im.turms.common.model.bo.user.UserInfo;
-import im.turms.common.model.bo.user.UserLocation;
-import im.turms.common.model.bo.user.UserRelationship;
-import im.turms.common.model.bo.user.UserRelationshipGroup;
-import im.turms.common.model.bo.user.UserStatusDetail;
-import im.turms.common.model.dto.request.message.CreateMessageRequest;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
+import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
+import im.turms.server.common.access.client.dto.constant.RequestStatus;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.access.client.dto.model.conversation.GroupConversation;
+import im.turms.server.common.access.client.dto.model.conversation.PrivateConversation;
+import im.turms.server.common.access.client.dto.model.group.Group;
+import im.turms.server.common.access.client.dto.model.group.GroupInvitation;
+import im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion;
+import im.turms.server.common.access.client.dto.model.group.GroupJoinRequest;
+import im.turms.server.common.access.client.dto.model.group.GroupMember;
+import im.turms.server.common.access.client.dto.model.user.NearbyUser;
+import im.turms.server.common.access.client.dto.model.user.UserFriendRequest;
+import im.turms.server.common.access.client.dto.model.user.UserInfo;
+import im.turms.server.common.access.client.dto.model.user.UserLocation;
+import im.turms.server.common.access.client.dto.model.user.UserRelationship;
+import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup;
+import im.turms.server.common.access.client.dto.model.user.UserStatusDetail;
+import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.user.po.User;
@@ -61,8 +61,8 @@ public final class ProtoModelConvertor {
 
     // Transformation
 
-    public static im.turms.common.model.bo.message.Message.Builder message2proto(Message message) {
-        var builder = im.turms.common.model.bo.message.Message.newBuilder();
+    public static im.turms.server.common.access.client.dto.model.message.Message.Builder message2proto(Message message) {
+        var builder = im.turms.server.common.access.client.dto.model.message.Message.newBuilder();
         Long messageId = message.getId();
         Boolean isSystemMessage = message.getIsSystemMessage();
         Date deliveryDate = message.getDeliveryDate();

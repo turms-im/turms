@@ -17,9 +17,9 @@
 
 package im.turms.gateway.access.client.common;
 
-import im.turms.common.constant.SessionCloseStatus;
 import im.turms.gateway.access.client.common.connection.NetConnection;
 import im.turms.server.common.domain.session.bo.CloseReason;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;

@@ -17,8 +17,8 @@
 
 package unit.im.turms.server.common.domain.session.rpc;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.SessionCloseStatus;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.rpc.SetUserOfflineRequest;
 import im.turms.server.common.domain.session.rpc.SetUserOfflineRequestCodec;
 import org.junit.jupiter.api.Test;

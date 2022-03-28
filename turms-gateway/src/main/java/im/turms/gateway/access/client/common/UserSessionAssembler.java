@@ -17,15 +17,15 @@
 
 package im.turms.gateway.access.client.common;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.SessionCloseStatus;
 import im.turms.gateway.access.client.common.connection.ConnectionListener;
 import im.turms.gateway.access.client.common.connection.NetConnection;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.infra.logging.ApiLoggingContext;
 import im.turms.gateway.infra.logging.ClientApiLogging;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.CloseReason;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -41,7 +41,7 @@ import reactor.netty.NettyOutbound;
 import javax.annotation.Nullable;
 import java.net.InetSocketAddress;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
 
 /**
  * @author James Chen

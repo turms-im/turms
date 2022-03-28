@@ -17,7 +17,7 @@
 
 package integration.im.turms.server.common.domain.session.service;
 
-import im.turms.common.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.location.bo.Coordinates;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.domain.session.service.SessionLocationService;

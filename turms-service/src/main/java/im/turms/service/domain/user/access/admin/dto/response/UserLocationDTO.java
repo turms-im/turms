@@ -17,7 +17,7 @@
 
 package im.turms.service.domain.user.access.admin.dto.response;
 
-import im.turms.common.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import org.springframework.data.geo.Point;
 
 /**

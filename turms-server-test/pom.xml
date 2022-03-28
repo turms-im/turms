@@ -52,7 +52,7 @@
     <dependencies>
         <dependency>
             <groupId>im.turms</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>server-common</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

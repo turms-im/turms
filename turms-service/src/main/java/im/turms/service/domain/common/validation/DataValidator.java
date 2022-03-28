@@ -17,11 +17,11 @@
 
 package im.turms.service.domain.common.validation;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.GroupMemberRole;
-import im.turms.common.constant.ProfileAccessStrategy;
-import im.turms.common.constant.RequestStatus;
-import im.turms.common.constant.ResponseAction;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
+import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
+import im.turms.server.common.access.client.dto.constant.RequestStatus;
+import im.turms.server.common.access.client.dto.constant.ResponseAction;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.service.domain.group.bo.GroupQuestionIdAndAnswer;

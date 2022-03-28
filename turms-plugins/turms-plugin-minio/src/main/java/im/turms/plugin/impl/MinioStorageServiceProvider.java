@@ -17,10 +17,10 @@
 
 package im.turms.plugin.impl;
 
-import im.turms.common.constant.ContentType;
+import im.turms.server.common.access.client.dto.constant.ContentType;
 import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.plugin.TurmsExtension;

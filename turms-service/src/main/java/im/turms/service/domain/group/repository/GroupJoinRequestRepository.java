@@ -18,7 +18,7 @@
 package im.turms.service.domain.group.repository;
 
 import com.mongodb.client.result.UpdateResult;
-import im.turms.common.constant.RequestStatus;
+import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.time.DateRange;

@@ -19,9 +19,9 @@ package im.turms.service.domain.user.service;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import im.turms.common.constant.ProfileAccessStrategy;
-import im.turms.common.constant.SessionCloseStatus;
+import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;

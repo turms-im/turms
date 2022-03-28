@@ -17,19 +17,19 @@
 
 package im.turms.gateway.domain.session.access.client.controller;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.SessionCloseStatus;
-import im.turms.common.constant.UserStatus;
-import im.turms.common.model.bo.user.UserLocation;
-import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.user.CreateSessionRequest;
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.access.client.common.UserSessionWrapper;
 import im.turms.gateway.access.client.tcp.RequestHandlerResult;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
 import im.turms.gateway.domain.session.service.SessionService;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.access.client.dto.model.user.UserLocation;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.user.CreateSessionRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.location.bo.Coordinates;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import io.netty.util.Timeout;

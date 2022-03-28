@@ -17,8 +17,8 @@
 
 package im.turms.server.common.access.servicerequest.dto;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.net.InetAddressUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.NetUtil;

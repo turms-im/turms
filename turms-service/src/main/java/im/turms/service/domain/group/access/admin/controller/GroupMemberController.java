@@ -18,9 +18,9 @@
 package im.turms.service.domain.group.access.admin.controller;
 
 import com.mongodb.client.result.DeleteResult;
-import im.turms.common.constant.GroupMemberRole;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
+import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.domain.common.dto.response.DeleteResultDTO;
 import im.turms.server.common.domain.common.dto.response.PaginationDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;

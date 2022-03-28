@@ -17,7 +17,7 @@
 
 package im.turms.service.access.servicerequest.dispatcher;
 
-import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import org.springframework.context.annotation.Bean;
 
 import java.lang.annotation.ElementType;

@@ -20,7 +20,7 @@ package im.turms.service.domain.user.service;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
-import im.turms.common.model.bo.user.UserRelationshipGroupsWithVersion;
+import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;

@@ -18,9 +18,9 @@
 package unit.im.turms.server.common.infra.cluster.service.rpc.channel;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import im.turms.common.constant.DeviceType;
-import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.common.model.dto.request.message.CreateMessageRequest;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequest;
 import im.turms.server.common.infra.cluster.service.rpc.channel.RpcFrameDecoder;

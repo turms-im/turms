@@ -17,11 +17,11 @@
 
 package unit.im.turms.gateway.infra.proto;
 
-import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.common.model.dto.request.message.CreateMessageRequest;
 import im.turms.gateway.infra.proto.SimpleTurmsNotification;
 import im.turms.gateway.infra.proto.TurmsNotificationParser;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.infra.exception.ResponseException;
 import org.junit.jupiter.api.Test;
 

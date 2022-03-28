@@ -17,7 +17,7 @@
 
 package im.turms.service.access.servicerequest.dto;
 
-import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 

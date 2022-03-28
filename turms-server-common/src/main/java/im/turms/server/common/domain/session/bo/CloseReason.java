@@ -17,7 +17,6 @@
 
 package im.turms.server.common.domain.session.bo;
 
-import im.turms.common.constant.SessionCloseStatus;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ThrowableInfo;
 

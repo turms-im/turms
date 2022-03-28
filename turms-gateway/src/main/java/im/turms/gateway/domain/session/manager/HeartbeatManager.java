@@ -17,13 +17,13 @@
 
 package im.turms.gateway.domain.session.manager;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.SessionCloseStatus;
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.access.client.udp.UdpRequestDispatcher;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.infra.thread.ThreadNameConst;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.session.bo.CloseReason;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;

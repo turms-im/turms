@@ -19,7 +19,7 @@ package im.turms.server.common.infra.fake;
 
 import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.Message;
-import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.random.RandomUtil;
 import org.springframework.data.util.Pair;
 

@@ -18,22 +18,22 @@
 package im.turms.service.domain.user.access.servicerequest.controller;
 
 import com.google.common.collect.Sets;
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.ProfileAccessStrategy;
-import im.turms.common.constant.SessionCloseStatus;
-import im.turms.common.constant.UserStatus;
-import im.turms.common.model.bo.user.NearbyUsers;
-import im.turms.common.model.bo.user.UsersInfosWithVersion;
-import im.turms.common.model.bo.user.UsersOnlineStatuses;
-import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.user.QueryNearbyUsersRequest;
-import im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest;
-import im.turms.common.model.dto.request.user.QueryUserProfileRequest;
-import im.turms.common.model.dto.request.user.UpdateUserLocationRequest;
-import im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest;
-import im.turms.common.model.dto.request.user.UpdateUserRequest;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.access.client.dto.model.user.NearbyUsers;
+import im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion;
+import im.turms.server.common.access.client.dto.model.user.UsersOnlineStatuses;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest;
+import im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest;
+import im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest;
+import im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest;
+import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
+import im.turms.server.common.access.client.dto.request.user.UpdateUserRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.location.bo.Coordinates;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;
@@ -60,12 +60,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_NEARBY_USERS_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_USER_ONLINE_STATUSES_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_USER_PROFILE_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_USER_LOCATION_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_USER_ONLINE_STATUS_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_USER_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_NEARBY_USERS_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_ONLINE_STATUSES_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_PROFILE_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_USER_LOCATION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_USER_ONLINE_STATUS_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_USER_REQUEST;
 
 /**
  * @author James Chen

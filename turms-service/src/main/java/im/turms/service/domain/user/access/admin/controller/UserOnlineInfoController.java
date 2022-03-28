@@ -17,14 +17,14 @@
 
 package im.turms.service.domain.user.access.admin.controller;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.SessionCloseStatus;
-import im.turms.common.constant.UserStatus;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.domain.location.bo.NearbyUser;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;

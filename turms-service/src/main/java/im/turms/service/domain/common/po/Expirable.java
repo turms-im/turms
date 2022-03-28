@@ -17,7 +17,7 @@
 
 package im.turms.service.domain.common.po;
 
-import im.turms.common.constant.RequestStatus;
+import im.turms.server.common.access.client.dto.constant.RequestStatus;
 
 import java.util.Date;
 

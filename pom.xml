@@ -55,8 +55,6 @@
     </properties>
 
     <modules>
-        <module>turms-java-common</module>
-
         <module>turms-client-kotlin</module>
 
         <module>turms-server-common</module>
@@ -74,11 +72,6 @@
 
     <dependencies>
         <!-- Common -->
-        <dependency>
-            <groupId>im.turms</groupId>
-            <artifactId>common</artifactId>
-            <version>${revision}</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>

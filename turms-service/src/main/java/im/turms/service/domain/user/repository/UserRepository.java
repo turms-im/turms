@@ -18,7 +18,7 @@
 package im.turms.service.domain.user.repository;
 
 import com.mongodb.client.result.UpdateResult;
-import im.turms.common.constant.ProfileAccessStrategy;
+import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.time.DateRange;

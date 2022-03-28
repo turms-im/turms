@@ -17,7 +17,7 @@
 
 package im.turms.server.common.storage.mongo.operation.option;
 
-import im.turms.common.constant.RequestStatus;
+import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.storage.mongo.util.SerializationUtil;

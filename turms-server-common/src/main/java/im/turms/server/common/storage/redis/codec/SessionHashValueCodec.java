@@ -17,7 +17,7 @@
 
 package im.turms.server.common.storage.redis.codec;
 
-import im.turms.common.constant.UserStatus;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.property.env.common.cluster.NodeProperties;
 import io.netty.buffer.ByteBuf;

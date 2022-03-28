@@ -17,9 +17,6 @@
 
 package im.turms.gateway.access.client.common;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.gateway.access.client.tcp.RequestHandlerResult;
 import im.turms.gateway.domain.servicerequest.service.ServiceRequestService;
 import im.turms.gateway.domain.session.access.client.controller.SessionController;
@@ -29,6 +26,9 @@ import im.turms.gateway.infra.logging.ClientApiLogging;
 import im.turms.gateway.infra.proto.SimpleTurmsRequest;
 import im.turms.gateway.infra.proto.TurmsRequestParser;
 import im.turms.server.common.access.client.NotificationFactory;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
@@ -45,9 +45,9 @@ import io.netty.buffer.Unpooled;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
 import static im.turms.server.common.infra.metrics.CommonMetricNameConst.CLIENT_REQUEST;
 import static im.turms.server.common.infra.metrics.CommonMetricNameConst.CLIENT_REQUEST_TAG_TYPE;
 

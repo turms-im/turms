@@ -20,7 +20,7 @@ package im.turms.gateway.domain.session.service;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.SetMultimap;
-import im.turms.common.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.property.constant.LoginConflictStrategy;

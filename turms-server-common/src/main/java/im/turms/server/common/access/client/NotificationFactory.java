@@ -17,10 +17,10 @@
 
 package im.turms.server.common.access.client;
 
-import im.turms.common.constant.SessionCloseStatus;
-import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.CloseReason;
+import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.exception.ThrowableInfo;
 
 /**

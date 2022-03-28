@@ -37,6 +37,9 @@
         <graalvm.version>22.0.0</graalvm.version>
         <jctools-core.version>3.3.0</jctools-core.version>
         <springdoc.version>1.6.4</springdoc.version>
+
+        <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
+        <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -70,6 +73,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-webflux-ui</artifactId>
             <version>${springdoc.version}</version>
@@ -84,6 +92,13 @@
     </dependencies>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>${os-maven-plugin.version}</version>
+            </extension>
+        </extensions>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -105,5 +120,39 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>artifact-protobuf</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.xolstice.maven.plugins</groupId>
+                        <artifactId>protobuf-maven-plugin</artifactId>
+                        <version>${protobuf-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
+                            </protocArtifact>
+                            <protoSourceRoot>${project.basedir}/src/main/proto</protoSourceRoot>
+                            <outputDirectory>${project.build.sourceDirectory}</outputDirectory>
+                            <clearOutputDirectory>false</clearOutputDirectory>
+                            <temporaryProtoFileDirectory>${project.build.directory}/protoc-dependencies
+                            </temporaryProtoFileDirectory>
+                            <!-- prevent Command line is too long errors -->
+                            <useArgumentFile>true</useArgumentFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

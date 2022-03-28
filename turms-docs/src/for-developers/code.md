@@ -28,7 +28,7 @@ Turms服务端项目的分包主要目标有：
 * 尽量保证业务子域的独立性。这点主要是为了划清业务边界，让各模块易读与易改（额外一提，turms-service未来会支持以各种业务域组合形态做部署，举例来说，turms-service未来既可以部署成用户业务域的服务，也可以部署成消息业务域的服务，也可以部署成用户+消息业务域的服务等等）。
 * 支撑域的功能特性模块与业务模块一定要分开。这点主要是为了划清问题域与支撑域的边界。
 * 尽量让开发者通过包结构就能推测包的上下游关系。这点主要出于代码的可读性考虑，在长期的编程实践中，当我们看到中大型项目的包结构不做分层的代码，那我们可能就得自己翻几遍包或代码，才推测可能的包上下游关系。
-* 尽量让包的层次少一点。
+* 在能保证逻辑清晰的情况下，尽量让包的层次少一点。
 
 另外，在阅读各种优秀开源项目的包结构时，我们会发现大部分知名的中大型开源服务端项目可能压根就不做分层设计，并且通常是以`按功能特性分包为主，以按类型分包为辅`做混合设计，又或者是按照常规的MVC或DDD分层设计。对于这些分包思路，我们一般会评价“中规中矩，符合惯例，但差强人意”，因为它们并没有很好的满足上述的`分包目标`，很多开发者在阅读这些项目的源码时也会陷入到“不知道从哪读起”的情况，编码时也会经常遇到代码模棱两可的归属问题。
 
@@ -79,7 +79,7 @@ flowchart LR
         config
         logging
         metrics
-    ...
+        ...
     end
 ```
 
@@ -111,9 +111,9 @@ flowchart LR
 
 阅读下文前，建议读者先行阅读[客户端访问服务端标准流程](https://turms-im.github.io/docs/for-developers/architecture.html#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AE%BF%E9%97%AE%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B)，先从架构角度理解其背后的设计思路，这样在读源码的时候就不容易“迷路”。
 
-请求模型：`im.turms.common.model.dto.request.TurmsRequest`
+请求模型：`im.turms.server.common.access.client.dto.request.TurmsRequest`
 
-响应与通知模型：`im.turms.common.model.dto.notification.TurmsNotification`
+响应与通知模型：`im.turms.server.common.access.client.dto.notification.TurmsNotification`
 
 ### UML顺序图
 
@@ -145,7 +145,7 @@ sequenceDiagram
 
    WebSocket服务端：`im.turms.gateway.access.client.websocket.WebSocketServerFactory#create`
 
-   这两个函数主要做的就是：基于reactor-netty，绑定监听地址、配置EventLoop线程池、（可选）配置SSL、开启相关度量等常规工作。
+   这两个函数主要做的就是：基于`reactor-netty`库，绑定服务端的监听地址、配置EventLoop线程池、（可选）配置SSL、开启相关度量等常规服务端相关工作。
 
 2. 对于纯TCP连接（而非预备的WebSocket连接），给新确立的TCP连接绑上编解码Handlers
 
@@ -175,7 +175,7 @@ sequenceDiagram
 
 #### 网络层与业务逻辑层的衔接
 
-1. 网络层与业务逻辑层，通过函数接口：`im.turms.gateway.access.client.common.connection.ConnectionListener#onAdded`进行绑定，主要绑定的内容就是：输入字节流、输出字节流、连接关闭时的回调函数。
+1. 网络层与业务逻辑层，通过函数接口：`im.turms.gateway.access.client.common.connection.ConnectionListener#onAdded`进行绑定，主要绑定的内容就是：TCP连接的输入字节流、输出字节流、关闭时的回调函数。
 
    对于TCP服务端，在`im.turms.gateway.access.client.tcp.TcpServerFactory#create`函数下，通过`.handle((in, out) -> connectionListener.onAdded((Connection) in, false, in.receive(), out, ((Connection) in).onDispose()))`进行绑定。
 
@@ -263,17 +263,21 @@ return switch (requestType) {
     case DELETE_SESSION_REQUEST -> sessionController.handleDeleteSessionRequest(sessionWrapper);
     default -> {
         serviceRequestBuffer.retain();
-        yield handleServiceRequestForTurms(sessionWrapper, request, serviceRequestBuffer);
+        yield handleServiceRequest(sessionWrapper, request, serviceRequestBuffer);
     }
 };
 ```
 
-* 将`CREATE_SESSION_REQUEST`与`DELETE_SESSION_REQUEST`这两个turms-gateway能自行处理的请求交由自己的Controller层进行处理，即`SessionController`，该Controller主要就是借由`im.turms.gateway.domain.session.service.SessionService`服务与Redis服务端进行交互，执行用户`登陆`与`登出`相关逻辑。由于业务逻辑并非本篇的重点，这里就不展开讲了。等这Controller与Service的逻辑都处理完，则返回一个`TurmsNotification`对象，并经由上述的网络层与编解码Handlers，最终将字节数据发送给客户端。
+* 将`CREATE_SESSION_REQUEST`与`DELETE_SESSION_REQUEST`这两个turms-gateway能自行处理的请求交由turms-gateway自己的Controller层进行处理，即`SessionController`，该Controller主要就是借由`im.turms.gateway.domain.session.service.SessionService`服务与Redis服务端进行交互，执行用户`登陆`与`登出`相关逻辑。由于业务逻辑并非本篇的重点，这里就不展开讲了。
 
-* 对于其他所有请求，turms-gateway通过上述的`handleServiceRequest`函数，最终经由RPC，将客户端请求下发给turms-service进行处理。其中，`handleServiceRequest`函数会调用`node.getRpcService().requestResponse(request)`通过自研RPC框架，将包装有客户端请求字节数据的RPC请求`im.turms.server.common.access.servicerequest.rpc.HandleServiceRequest`下发给turms-service进行处理。具体RPC的实现并非本篇重点，这里就不展开讲了。等turms-service处理完请求，会返回一个`im.turms.server.common.access.servicerequest.dto.ServiceResponse`，该对象会在上述的`im.turms.gateway.domain.servicerequest.service.ServiceRequestService#handleServiceRequest`函数的代码，经过下述的`getNotificationFromResponse`函数将`ServiceResponse`转换为`TurmsNotification`，并经由上述的网络层与编解码Handlers，最终将字节数据发送给客户端。：
+  等这Controller与Service的逻辑都处理完，则返回一个`TurmsNotification`对象，并经由上述的网络层与编解码Handlers，最终将字节数据发送给客户端。
 
+* 对于其他所有请求，turms-gateway通过上述的`handleServiceRequest`函数，最终经由RPC，将客户端请求下发给turms-service进行处理。其中，`handleServiceRequest`函数会调用`node.getRpcService().requestResponse(request)`通过自研RPC框架，将包装有客户端请求字节数据的RPC请求`im.turms.server.common.access.servicerequest.rpc.HandleServiceRequest`下发给turms-service进行处理。具体RPC的实现并非本篇重点，这里就不展开讲了。
+
+  等turms-service处理完请求，会返回一个`im.turms.server.common.access.servicerequest.dto.ServiceResponse`，该对象会在上述的`im.turms.gateway.domain.servicerequest.service.ServiceRequestService#handleServiceRequest`函数中，经过下述的`getNotificationFromResponse`函数将`ServiceResponse`转换为`TurmsNotification`，并再经由上述的网络层与编解码Handlers，最终将字节数据发送给客户端：
+  
   ```java
-  return sendServiceRequest(serviceRequest)
+  return node.getRpcService().requestResponse(request)
           .defaultIfEmpty(REQUEST_RESPONSE_NO_CONTENT)
           .map(response -> getNotificationFromResponse(response, serviceRequest.getRequestId()));
   ```
@@ -298,7 +302,7 @@ return switch (requestType) {
 
 ## 通知下发
 
-通知模型：`im.turms.common.model.dto.notification.TurmsNotification`
+通知模型：`im.turms.server.common.access.client.dto.notification.TurmsNotification`
 
 `通知`有且仅会被turms-service生成，turms-gateway不会自行生成`通知`。
 
@@ -441,14 +445,14 @@ TODO
 
 ```mermaid
 sequenceDiagram
-    participant I as InboundRequestService
+    participant S as ServiceRequestService
     participant R as RpcService
     participant D as DiscoveryService
     participant C as CodecService
     participant E as RpcEndpoint
     participant F as RpcFrameEncoder
     participant O as ChannelOperations
-    I->>R: sendServiceRequest
+    S->>R: handleServiceRequest
     R->>D: getOtherActiveConnectedMembers
     D-->>R: otherActiveConnectedMembers(List<Member>)
     R->>C: serializeWithoutCodecId
@@ -461,12 +465,36 @@ sequenceDiagram
 
 ##### 业务层
 
-接着上文，turms-gateway会通过`im.turms.gateway.domain.servicerequest.service.ServiceRequestService(...)`函数向turms-service发送`HandleServiceRequest`，而该函数会调用RPC服务的`RpcService#requestResponse`函数，将RPC请求的处理逻辑代理给下游RPC服务执行，具体代码如下：
+接着上文，turms-gateway会通过`im.turms.gateway.domain.servicerequest.service.ServiceRequestService#handleServiceRequest(...)`函数向turms-service发送`HandleServiceRequest`，而该函数会调用RPC服务的`RpcService#requestResponse`函数，将RPC请求的处理逻辑代理给下游RPC服务执行，具体代码如下：
 
 ```java
-Mono<ServiceResponse> sendServiceRequest(ServiceRequest serviceRequest) {
-    HandleServiceRequest request = new HandleServiceRequest(serviceRequest);
-    return node.getRpcService().requestResponse(request);
+Mono<TurmsNotification> handleServiceRequest(ServiceRequest serviceRequest) {
+    try {
+        // Validate
+        Long userId = serviceRequest.getUserId();
+        DeviceType deviceType = serviceRequest.getDeviceType();
+        UserSession session;
+        try {
+            session = sessionService.getLocalUserSession(userId, deviceType);
+        } catch (Exception e) {
+            return Mono.error(ResponseException.get(ResponseStatusCode.INVALID_REQUEST, e.getMessage()));
+        }
+        if (session == null) {
+            return ResponseExceptionPublisherPool.sendRequestFromNonExistingSession();
+        }
+        // Update heartbeat
+        sessionService.updateHeartbeatTimestamp(session);
+        // Forward request
+        serviceRequest.getTurmsRequestBuffer().retain();
+        HandleServiceRequest request = new HandleServiceRequest(serviceRequest);
+        return node.getRpcService().requestResponse(request)
+                .defaultIfEmpty(REQUEST_RESPONSE_NO_CONTENT)
+                .map(response -> getNotificationFromResponse(response, serviceRequest.getRequestId()));
+    } catch (Exception e) {
+        return Mono.error(e);
+    } finally {
+        serviceRequest.getTurmsRequestBuffer().release();
+    }
 }
 ```
 

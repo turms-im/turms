@@ -17,20 +17,20 @@
 
 package im.turms.service.domain.user.access.servicerequest.controller;
 
-import im.turms.common.constant.ResponseAction;
-import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.user.relationship.CreateFriendRequestRequest;
-import im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest;
-import im.turms.common.model.dto.request.user.relationship.CreateRelationshipRequest;
-import im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequest;
-import im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest;
-import im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest;
-import im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest;
-import im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest;
-import im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest;
-import im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest;
-import im.turms.common.model.dto.request.user.relationship.UpdateRelationshipGroupRequest;
-import im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest;
+import im.turms.server.common.access.client.dto.constant.ResponseAction;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest;
+import im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest;
+import im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest;
+import im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest;
+import im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest;
+import im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest;
+import im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest;
+import im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest;
+import im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest;
+import im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest;
+import im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest;
+import im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
@@ -46,18 +46,18 @@ import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_FRIEND_REQUEST_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_GROUP_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_GROUP_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_FRIEND_REQUESTS_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_RELATED_USER_IDS_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_RELATIONSHIPS_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_RELATIONSHIP_GROUPS_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_FRIEND_REQUEST_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_RELATIONSHIP_GROUP_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_RELATIONSHIP_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_FRIEND_REQUEST_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_GROUP_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_GROUP_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_FRIEND_REQUESTS_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_RELATED_USER_IDS_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_RELATIONSHIPS_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_RELATIONSHIP_GROUPS_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_FRIEND_REQUEST_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_RELATIONSHIP_GROUP_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_RELATIONSHIP_REQUEST;
 import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_RELATIONSHIP_GROUP_INDEX;
 
 /**

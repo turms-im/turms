@@ -17,9 +17,9 @@
 
 package im.turms.gateway.access.client.common;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.access.client.common.connection.NetConnection;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.domain.location.bo.Coordinates;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
