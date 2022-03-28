@@ -20,8 +20,8 @@ package im.turms.service.domain.common.access.admin.controller;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.property.env.service.env.adminapi.AdminApiProperties;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.infra.time.TimeZoneConst;
-import im.turms.service.domain.common.access.admin.dto.request.DivideBy;
+import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DivideBy;
 import im.turms.service.domain.common.access.admin.dto.response.StatisticsRecordDTO;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.HttpStatus;
@@ -31,11 +31,8 @@ import reactor.core.publisher.Mono;
 import reactor.function.Function3;
 
 import javax.annotation.Nullable;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -65,7 +62,7 @@ public abstract class BaseController {
             Function3<DateRange, Boolean, Boolean, Mono<Long>> function,
             @Nullable Boolean areGroupMessages,
             @Nullable Boolean areSystemMessages) {
-        List<Pair<Date, Date>> dates = divideDate(dateRange.start(), dateRange.end(), divideBy);
+        List<Pair<Date, Date>> dates = DateUtil.divideDuration(dateRange.start(), dateRange.end(), divideBy);
         List<Mono<StatisticsRecordDTO>> monos = new ArrayList<>(dates.size());
         for (Pair<Date, Date> datePair : dates) {
             Mono<Long> result = function.apply(
@@ -83,7 +80,7 @@ public abstract class BaseController {
             DateRange dateRange,
             DivideBy divideBy,
             Function<DateRange, Mono<Long>> function) {
-        List<Pair<Date, Date>> dates = divideDate(dateRange.start(), dateRange.end(), divideBy);
+        List<Pair<Date, Date>> dates = DateUtil.divideDuration(dateRange.start(), dateRange.end(), divideBy);
         List<Mono<StatisticsRecordDTO>> monos = new ArrayList<>(dates.size());
         for (Pair<Date, Date> datePair : dates) {
             DateRange range = DateRange.of(datePair.getLeft(), datePair.getRight());
@@ -100,12 +97,10 @@ public abstract class BaseController {
             Function3<DateRange, Boolean, Boolean, Mono<Long>> function,
             @Nullable Boolean areGroupMessages,
             @Nullable Boolean areSystemMessages) {
-        int maxHourRanges = node.getSharedProperties()
-                .getService().getAdminApi().getMaxHourDifferencePerCountRequest();
-        int maxDayRanges = node.getSharedProperties()
-                .getService().getAdminApi().getMaxDayDifferencePerCountRequest();
-        int maxMonthRanges = node.getSharedProperties()
-                .getService().getAdminApi().getMaxMonthDifferencePerCountRequest();
+        AdminApiProperties properties = node.getSharedProperties().getService().getAdminApi();
+        int maxHourRanges = properties.getMaxHourDifferencePerCountRequest();
+        int maxDayRanges = properties.getMaxDayDifferencePerCountRequest();
+        int maxMonthRanges = properties.getMaxMonthDifferencePerCountRequest();
         boolean checked = isDurationNotGreaterThanMax(dateRange, divideBy,
                 maxHourRanges, maxDayRanges, maxMonthRanges);
         if (checked) {
@@ -162,32 +157,6 @@ public abstract class BaseController {
             case MONTH -> (int) Math.ceil((double) diffInMillis / 2629746000L);
             case NOOP -> 1;
         };
-    }
-
-    private List<Pair<Date, Date>> divideDate(Date startDate, Date endDate, DivideBy divideBy) {
-        if (!endDate.after(startDate)) {
-            return Collections.emptyList();
-        }
-        if (startDate.equals(endDate)) {
-            return Collections.emptyList();
-        }
-        List<Pair<Date, Date>> lists = new LinkedList<>();
-        while (true) {
-            ZonedDateTime time = ZonedDateTime.now(TimeZoneConst.ZONE_ID);
-            Date currentEndDate = switch (divideBy) {
-                case HOUR -> new Date(time.plusHours(1).toEpochSecond());
-                case DAY -> new Date(time.plusDays(1).toEpochSecond());
-                case MONTH -> new Date(time.plusMonths(1).toEpochSecond());
-                default -> throw new IllegalStateException("Unexpected value: " + divideBy);
-            };
-            if (endDate.before(currentEndDate)) {
-                break;
-            }
-            Pair<Date, Date> datePair = Pair.of(startDate, currentEndDate);
-            lists.add(datePair);
-            startDate = currentEndDate;
-        }
-        return lists;
     }
 
 }

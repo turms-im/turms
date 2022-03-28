@@ -21,11 +21,15 @@ import im.turms.server.common.infra.collection.ArrayUtil;
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
 import io.netty.util.concurrent.FastThreadLocal;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author James Chen
@@ -143,6 +147,33 @@ public final class DateUtil {
 
     public static boolean isAfterOrSame(@Nullable Date d1, Date d2) {
         return d1 != null && !d1.before(d2);
+    }
+
+    public static List<Pair<Date, Date>> divideDuration(Date startDate, Date endDate, DivideBy divideBy) {
+        if (!endDate.after(startDate)) {
+            return Collections.emptyList();
+        }
+        int unit = switch (divideBy) {
+            case HOUR -> Calendar.HOUR_OF_DAY;
+            case DAY -> Calendar.DAY_OF_YEAR;
+            case MONTH -> Calendar.MONTH;
+            default -> throw new IllegalStateException("Unexpected value: " + divideBy);
+        };
+        List<Pair<Date, Date>> lists = new LinkedList<>();
+        while (true) {
+            // Note: Do not use Instant because it doesn't support plussing months
+            Calendar calendar = CALENDAR_THREAD_LOCAL.get();
+            calendar.setTime(startDate);
+            calendar.add(unit, 1);
+            Date currentEndDate = calendar.getTime();
+            if (endDate.before(currentEndDate)) {
+                break;
+            }
+            Pair<Date, Date> datePair = Pair.of(startDate, currentEndDate);
+            lists.add(datePair);
+            startDate = currentEndDate;
+        }
+        return lists;
     }
 
     private static byte[] twoDigitBytes(int i) {

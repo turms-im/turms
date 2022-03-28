@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.service.domain.common.access.admin.dto.request;
+package im.turms.server.common.infra.time;
 
 /**
  * @author James Chen
