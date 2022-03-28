@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.user.po;
 
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
@@ -32,7 +33,7 @@ import java.util.Set;
  */
 @Data
 @Document(UserPermissionGroup.COLLECTION_NAME)
-public final class UserPermissionGroup {
+public final class UserPermissionGroup extends BaseEntity {
 
     public static final String COLLECTION_NAME = "userPermissionGroup";
 

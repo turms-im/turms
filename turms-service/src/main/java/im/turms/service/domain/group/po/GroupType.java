@@ -20,6 +20,7 @@ package im.turms.service.domain.group.po;
 import im.turms.common.constant.GroupInvitationStrategy;
 import im.turms.common.constant.GroupJoinStrategy;
 import im.turms.common.constant.GroupUpdateStrategy;
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
@@ -37,7 +38,7 @@ import lombok.Data;
  */
 @Data
 @Document(GroupType.COLLECTION_NAME)
-public final class GroupType {
+public final class GroupType extends BaseEntity {
 
     public static final String COLLECTION_NAME = "groupType";
 

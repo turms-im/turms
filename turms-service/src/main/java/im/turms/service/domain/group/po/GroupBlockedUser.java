@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.group.po;
 
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
@@ -42,7 +43,7 @@ import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReas
 @Document(GroupBlockedUser.COLLECTION_NAME)
 @CompoundIndex({GroupBlockedUser.Fields.ID_GROUP_ID, GroupBlockedUser.Fields.ID_USER_ID})
 @Sharded(shardKey = GroupBlockedUser.Fields.ID_GROUP_ID)
-public final class GroupBlockedUser {
+public final class GroupBlockedUser extends BaseEntity {
 
     public static final String COLLECTION_NAME = "groupBlockedUser";
 

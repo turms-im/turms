@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.group.po;
 
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.IndexType;
 import im.turms.server.common.storage.mongo.entity.ShardingStrategy;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
@@ -34,7 +35,7 @@ import java.util.Set;
 @Data
 @Document(GroupJoinQuestion.COLLECTION_NAME)
 @Sharded(shardKey = GroupJoinQuestion.Fields.GROUP_ID, shardingStrategy = ShardingStrategy.HASH)
-public final class GroupJoinQuestion {
+public final class GroupJoinQuestion extends BaseEntity {
 
     public static final String COLLECTION_NAME = "groupJoinQuestion";
 

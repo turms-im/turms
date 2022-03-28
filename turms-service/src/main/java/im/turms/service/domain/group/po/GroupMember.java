@@ -18,6 +18,7 @@
 package im.turms.service.domain.group.po;
 
 import im.turms.common.constant.GroupMemberRole;
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.IndexType;
 import im.turms.server.common.storage.mongo.entity.ShardingStrategy;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
@@ -45,7 +46,7 @@ import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReas
 @Data
 @Document(GroupMember.COLLECTION_NAME)
 @Sharded(shardKey = GroupMember.Fields.ID_GROUP_ID, shardingStrategy = ShardingStrategy.HASH)
-public final class GroupMember {
+public final class GroupMember extends BaseEntity {
 
     public static final String COLLECTION_NAME = "groupMember";
 

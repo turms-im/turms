@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.message.po;
 
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
@@ -48,7 +49,7 @@ import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReas
         ifExist = Message.Fields.CONVERSATION_ID)
 @Sharded(shardKey = Message.Fields.DELIVERY_DATE)
 @TieredStorage(creationDateFieldName = Message.Fields.DELIVERY_DATE)
-public final class Message {
+public final class Message extends BaseEntity {
 
     public static final String COLLECTION_NAME = "message";
 

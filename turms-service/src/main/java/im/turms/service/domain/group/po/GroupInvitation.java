@@ -18,6 +18,7 @@
 package im.turms.service.domain.group.po;
 
 import im.turms.common.constant.RequestStatus;
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
@@ -46,7 +47,7 @@ import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReas
 @Document(GroupInvitation.COLLECTION_NAME)
 @CompoundIndex({GroupInvitation.Fields.INVITEE_ID, GroupInvitation.Fields.CREATION_DATE})
 @Sharded(shardKey = GroupInvitation.Fields.INVITEE_ID)
-public class GroupInvitation implements Expirable {
+public class GroupInvitation extends BaseEntity implements Expirable {
 
     public static final String COLLECTION_NAME = "groupInvitation";
 

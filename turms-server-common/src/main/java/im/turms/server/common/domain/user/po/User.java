@@ -18,6 +18,7 @@
 package im.turms.server.common.domain.user.po;
 
 import im.turms.common.constant.ProfileAccessStrategy;
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
@@ -33,7 +34,7 @@ import java.util.Date;
 @Data
 @Document(User.COLLECTION_NAME)
 @Sharded
-public final class User {
+public final class User extends BaseEntity {
 
     public static final String COLLECTION_NAME = "user";
 

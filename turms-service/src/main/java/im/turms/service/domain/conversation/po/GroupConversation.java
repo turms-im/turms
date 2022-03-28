@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.conversation.po;
 
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
@@ -34,7 +35,7 @@ import java.util.Map;
 @Data
 @Document(GroupConversation.COLLECTION_NAME)
 @Sharded
-public final class GroupConversation {
+public final class GroupConversation extends BaseEntity {
 
     public static final String COLLECTION_NAME = "groupConversation";
 

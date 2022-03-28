@@ -17,6 +17,7 @@
 
 package im.turms.server.common.domain.admin.po;
 
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.infra.property.env.common.security.SecurityProperties;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
@@ -39,7 +40,7 @@ import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReas
 @AllArgsConstructor
 @Document(Admin.COLLECTION_NAME)
 @Builder(toBuilder = true)
-public final class Admin {
+public final class Admin extends BaseEntity {
 
     public static final String COLLECTION_NAME = "admin";
 

@@ -18,6 +18,7 @@
 package im.turms.server.common.domain.admin.po;
 
 import im.turms.server.common.access.admin.permission.AdminPermission;
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
@@ -40,7 +41,7 @@ import java.util.Set;
  */
 @Data
 @Document(AdminRole.COLLECTION_NAME)
-public final class AdminRole {
+public final class AdminRole extends BaseEntity {
 
     public static final String COLLECTION_NAME = "adminRole";
 

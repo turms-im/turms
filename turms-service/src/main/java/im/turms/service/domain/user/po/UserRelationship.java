@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.user.po;
 
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.IndexType;
 import im.turms.server.common.storage.mongo.entity.ShardingStrategy;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
@@ -47,7 +48,7 @@ import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReas
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Document(UserRelationship.COLLECTION_NAME)
 @Sharded(shardKey = UserRelationship.Fields.ID_OWNER_ID, shardingStrategy = ShardingStrategy.HASH)
-public final class UserRelationship {
+public final class UserRelationship extends BaseEntity {
 
     public static final String COLLECTION_NAME = "userRelationship";
 

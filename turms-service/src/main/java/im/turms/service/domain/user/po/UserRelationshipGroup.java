@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.user.po;
 
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.IndexType;
 import im.turms.server.common.storage.mongo.entity.ShardingStrategy;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
@@ -40,7 +41,7 @@ import java.util.List;
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Document(UserRelationshipGroup.COLLECTION_NAME)
 @Sharded(shardKey = UserRelationshipGroup.Fields.ID_OWNER_ID, shardingStrategy = ShardingStrategy.HASH)
-public final class UserRelationshipGroup {
+public final class UserRelationshipGroup extends BaseEntity {
 
     public static final String COLLECTION_NAME = "userRelationshipGroup";
 

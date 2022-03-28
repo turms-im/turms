@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.conversation.po;
 
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.IndexType;
 import im.turms.server.common.storage.mongo.entity.ShardingStrategy;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
@@ -37,7 +38,7 @@ import java.util.List;
 @Data
 @Document(PrivateConversation.COLLECTION_NAME)
 @Sharded(shardKey = PrivateConversation.Fields.ID_OWNER_ID, shardingStrategy = ShardingStrategy.HASH)
-public final class PrivateConversation {
+public final class PrivateConversation extends BaseEntity {
 
     public static final String COLLECTION_NAME = "privateConversation";
 

@@ -18,6 +18,7 @@
 package im.turms.service.domain.user.po;
 
 import im.turms.common.constant.RequestStatus;
+import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
@@ -48,7 +49,7 @@ import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReas
         UserFriendRequest.Fields.CREATION_DATE,
         UserFriendRequest.Fields.REQUESTER_ID})
 @Sharded(shardKey = UserFriendRequest.Fields.RECIPIENT_ID)
-public class UserFriendRequest implements Expirable {
+public class UserFriendRequest extends BaseEntity implements Expirable {
 
     public static final String COLLECTION_NAME = "userFriendRequest";
 
