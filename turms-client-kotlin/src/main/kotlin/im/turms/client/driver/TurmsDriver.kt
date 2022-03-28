@@ -16,17 +16,16 @@
  */
 package im.turms.client.driver
 
-import com.google.protobuf.Descriptors
 import com.google.protobuf.InvalidProtocolBufferException
-import com.google.protobuf.Message
+import com.google.protobuf.MessageLite
 import im.turms.client.driver.service.ConnectionService
 import im.turms.client.driver.service.HeartbeatService
 import im.turms.client.driver.service.MessageService
-import im.turms.client.extension.camelToSnakeCase
+import im.turms.client.extension.isSuccessful
+import im.turms.client.model.proto.notification.TurmsNotification
+import im.turms.client.model.proto.request.TurmsRequest
 import im.turms.client.transport.Pin
 import im.turms.client.transport.TcpMetrics
-import im.turms.common.model.dto.notification.TurmsNotification
-import im.turms.common.model.dto.request.TurmsRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
@@ -131,13 +130,13 @@ class TurmsDriver(
         return notification
     }
 
-    suspend fun send(builder: Message.Builder): TurmsNotification {
-        val descriptor: Descriptors.Descriptor = builder.descriptorForType
-        val fieldName = descriptor.name.camelToSnakeCase()
+    suspend fun send(builder: MessageLite.Builder): TurmsNotification {
         val requestBuilder: TurmsRequest.Builder = TurmsRequest.newBuilder()
-        val requestDescriptor: Descriptors.Descriptor = requestBuilder.descriptorForType
-        val fieldDescriptor: Descriptors.FieldDescriptor = requestDescriptor.findFieldByName(fieldName)
-        requestBuilder.setField(fieldDescriptor, builder.build())
+        val method = requestBuilder.javaClass.getDeclaredMethod(
+            "set${builder.defaultInstanceForType.javaClass.simpleName}",
+            builder.javaClass
+        )
+        method.invoke(requestBuilder, builder)
         return send(requestBuilder)
     }
 

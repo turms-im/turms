@@ -19,7 +19,7 @@ package im.turms.client.driver.service
 import im.turms.client.driver.StateStore
 import im.turms.client.exception.ResponseException
 import im.turms.client.model.ResponseStatusCode
-import im.turms.common.model.dto.notification.TurmsNotification
+import im.turms.client.model.proto.notification.TurmsNotification
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay

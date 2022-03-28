@@ -21,13 +21,14 @@ import im.turms.client.exception.ResponseException
 import im.turms.client.extension.isSuccessful
 import im.turms.client.extension.tryResumeWithException
 import im.turms.client.model.ResponseStatusCode
-import im.turms.common.model.dto.notification.TurmsNotification
-import im.turms.common.model.dto.request.TurmsRequest
+import im.turms.client.model.proto.notification.TurmsNotification
+import im.turms.client.model.proto.request.TurmsRequest
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
+import java.util.LinkedList
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.coroutines.Continuation

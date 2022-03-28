@@ -1,6 +1,9 @@
 [submodule "turms-client-js/src/proto"]
 	path = turms-client-js/src/proto
 	url = https://github.com/turms-im/proto.git
+[submodule "turms-client-kotlin/src/main/proto"]
+	path = turms-client-kotlin/src/main/proto
+	url = https://github.com/turms-im/proto.git
 [submodule "turms-java-common/src/main/proto"]
 	path = turms-java-common/src/main/proto
 	url = https://github.com/turms-im/proto.git

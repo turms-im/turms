@@ -17,8 +17,8 @@
 package im.turms.client.service
 
 import im.turms.client.TurmsClient
-import im.turms.common.model.dto.request.TurmsRequest
-import java.util.*
+import im.turms.client.model.proto.request.TurmsRequest
+import java.util.LinkedList
 
 /**
  * @author James Chen

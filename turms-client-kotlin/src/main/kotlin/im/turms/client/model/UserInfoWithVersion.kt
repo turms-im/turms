@@ -16,8 +16,8 @@
  */
 package im.turms.client.model
 
-import im.turms.common.model.bo.user.UserInfo
-import im.turms.common.model.dto.notification.TurmsNotification
+import im.turms.client.model.proto.model.user.UserInfo
+import im.turms.client.model.proto.notification.TurmsNotification
 
 /**
  * @author James Chen

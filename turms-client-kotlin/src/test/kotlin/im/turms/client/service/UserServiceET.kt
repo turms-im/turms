@@ -27,8 +27,8 @@ import helper.Constants.ORDER_MIDDLE_PRIORITY
 import helper.ExceptionUtil.isResponseStatusCode
 import im.turms.client.TurmsClient
 import im.turms.client.model.ResponseStatusCode
-import im.turms.common.constant.ResponseAction
-import im.turms.common.constant.UserStatus
+import im.turms.client.model.proto.constant.ResponseAction
+import im.turms.client.model.proto.constant.UserStatus
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals

@@ -21,8 +21,8 @@ import helper.Constants.ORDER_FIRST
 import helper.Constants.ORDER_LOW_PRIORITY
 import helper.Constants.ORDER_MIDDLE_PRIORITY
 import im.turms.client.TurmsClient
-import im.turms.common.model.bo.conversation.GroupConversation
-import im.turms.common.model.bo.conversation.PrivateConversation
+import im.turms.client.model.proto.model.conversation.GroupConversation
+import im.turms.client.model.proto.model.conversation.PrivateConversation
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertNotNull

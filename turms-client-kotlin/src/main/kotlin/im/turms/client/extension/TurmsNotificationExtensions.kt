@@ -18,7 +18,7 @@
 package im.turms.client.extension
 
 import im.turms.client.model.ResponseStatusCode
-import im.turms.common.model.dto.notification.TurmsNotification
+import im.turms.client.model.proto.notification.TurmsNotification
 
 /**
  * @author James Chen

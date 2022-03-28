@@ -25,7 +25,7 @@ import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.withTimeout
 import java.net.SocketException
 import java.nio.ByteBuffer
-import java.util.*
+import java.util.LinkedList
 import java.util.concurrent.ConcurrentLinkedQueue
 import javax.net.ssl.X509TrustManager
 import kotlin.coroutines.Continuation

@@ -17,8 +17,8 @@
 
 package im.turms.client.model
 
-import im.turms.common.constant.DeviceType
-import im.turms.common.constant.UserStatus
+import im.turms.client.model.proto.constant.DeviceType
+import im.turms.client.model.proto.constant.UserStatus
 
 /**
  * @author James Chen
@@ -27,6 +27,7 @@ data class User(
     var userId: Long,
     var password: String? = null,
     var deviceType: DeviceType? = null,
+    var deviceDetails: Map<String, String>? = null,
     var onlineStatus: UserStatus? = null,
     var location: UserLocation? = null
 )

@@ -21,44 +21,45 @@ import im.turms.client.annotation.NotEmpty
 import im.turms.client.exception.ResponseException
 import im.turms.client.model.ResponseStatusCode
 import im.turms.client.model.SessionCloseInfo
+import im.turms.client.model.SessionCloseStatus
 import im.turms.client.model.User
 import im.turms.client.model.UserInfoWithVersion
 import im.turms.client.model.UserLocation
+import im.turms.client.model.proto.constant.DeviceType
+import im.turms.client.model.proto.constant.ProfileAccessStrategy
+import im.turms.client.model.proto.constant.ResponseAction
+import im.turms.client.model.proto.constant.UserStatus
+import im.turms.client.model.proto.model.common.Int64ValuesWithVersion
+import im.turms.client.model.proto.model.user.NearbyUser
+import im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion
+import im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion
+import im.turms.client.model.proto.model.user.UserRelationshipsWithVersion
+import im.turms.client.model.proto.model.user.UserStatusDetail
+import im.turms.client.model.proto.notification.TurmsNotification
+import im.turms.client.model.proto.request.user.CreateSessionRequest
+import im.turms.client.model.proto.request.user.DeleteSessionRequest
+import im.turms.client.model.proto.request.user.QueryNearbyUsersRequest
+import im.turms.client.model.proto.request.user.QueryUserOnlineStatusesRequest
+import im.turms.client.model.proto.request.user.QueryUserProfileRequest
+import im.turms.client.model.proto.request.user.UpdateUserLocationRequest
+import im.turms.client.model.proto.request.user.UpdateUserOnlineStatusRequest
+import im.turms.client.model.proto.request.user.UpdateUserRequest
+import im.turms.client.model.proto.request.user.relationship.CreateFriendRequestRequest
+import im.turms.client.model.proto.request.user.relationship.CreateRelationshipGroupRequest
+import im.turms.client.model.proto.request.user.relationship.CreateRelationshipRequest
+import im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest
+import im.turms.client.model.proto.request.user.relationship.DeleteRelationshipRequest
+import im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest
+import im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest
+import im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest
+import im.turms.client.model.proto.request.user.relationship.QueryRelationshipsRequest
+import im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest
+import im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest
+import im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest
 import im.turms.client.util.SystemUtil
 import im.turms.client.util.Validator
-import im.turms.common.constant.DeviceType
-import im.turms.common.constant.ProfileAccessStrategy
-import im.turms.common.constant.ResponseAction
-import im.turms.common.constant.SessionCloseStatus
-import im.turms.common.constant.UserStatus
-import im.turms.common.model.bo.common.Int64ValuesWithVersion
-import im.turms.common.model.bo.user.NearbyUser
-import im.turms.common.model.bo.user.UserFriendRequestsWithVersion
-import im.turms.common.model.bo.user.UserRelationshipGroupsWithVersion
-import im.turms.common.model.bo.user.UserRelationshipsWithVersion
-import im.turms.common.model.bo.user.UserStatusDetail
-import im.turms.common.model.dto.notification.TurmsNotification
-import im.turms.common.model.dto.request.user.CreateSessionRequest
-import im.turms.common.model.dto.request.user.DeleteSessionRequest
-import im.turms.common.model.dto.request.user.QueryNearbyUsersRequest
-import im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest
-import im.turms.common.model.dto.request.user.QueryUserProfileRequest
-import im.turms.common.model.dto.request.user.UpdateUserLocationRequest
-import im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest
-import im.turms.common.model.dto.request.user.UpdateUserRequest
-import im.turms.common.model.dto.request.user.relationship.CreateFriendRequestRequest
-import im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest
-import im.turms.common.model.dto.request.user.relationship.CreateRelationshipRequest
-import im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequest
-import im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest
-import im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest
-import im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest
-import im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest
-import im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest
-import im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest
-import im.turms.common.model.dto.request.user.relationship.UpdateRelationshipGroupRequest
-import im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest
-import java.util.*
+import java.util.Date
+import java.util.LinkedList
 
 /**
  * @author James Chen
@@ -77,7 +78,7 @@ class UserService(private val turmsClient: TurmsClient) {
                 && userInfo?.onlineStatus != UserStatus.OFFLINE
 
     init {
-        turmsClient.driver.addOnDisconnectedListener { changeToOffline(SessionCloseInfo(SessionCloseStatus.CONNECTION_CLOSED.code)) }
+        turmsClient.driver.addOnDisconnectedListener { changeToOffline(SessionCloseInfo(SessionCloseStatus.CONNECTION_CLOSED)) }
         turmsClient.driver.addNotificationListener {
             if (it.hasCloseStatus() && isLoggedIn) {
                 val info = SessionCloseInfo(
@@ -125,7 +126,7 @@ class UserService(private val turmsClient: TurmsClient) {
             deviceDetails?.let { this.putAllDeviceDetails(it) }
             onlineStatus.let { this.userStatus = it }
             location?.let {
-                this.location = im.turms.common.model.bo.user.UserLocation.newBuilder().apply {
+                this.location = im.turms.client.model.proto.model.user.UserLocation.newBuilder().apply {
                     this.longitude = it.longitude
                     this.latitude = it.latitude
                 }.build()
@@ -142,7 +143,7 @@ class UserService(private val turmsClient: TurmsClient) {
         } else {
             turmsClient.driver.send(DeleteSessionRequest.newBuilder())
         }
-        changeToOffline(SessionCloseInfo(SessionCloseStatus.DISCONNECTED_BY_CLIENT.code))
+        changeToOffline(SessionCloseInfo(SessionCloseStatus.DISCONNECTED_BY_CLIENT))
     }
 
     suspend fun updateOnlineStatus(onlineStatus: UserStatus) =

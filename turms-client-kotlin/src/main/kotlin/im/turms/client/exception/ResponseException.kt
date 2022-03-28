@@ -16,7 +16,7 @@
  */
 package im.turms.client.exception
 
-import im.turms.common.model.dto.notification.TurmsNotification
+import im.turms.client.model.proto.notification.TurmsNotification
 
 /**
  * @author James Chen

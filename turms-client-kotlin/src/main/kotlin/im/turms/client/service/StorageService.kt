@@ -20,11 +20,11 @@ import im.turms.client.TurmsClient
 import im.turms.client.exception.ResponseException
 import im.turms.client.extension.tryResumeWithException
 import im.turms.client.model.ResponseStatusCode
-import im.turms.common.constant.ContentType
-import im.turms.common.model.dto.request.TurmsRequest
-import im.turms.common.model.dto.request.storage.DeleteResourceRequest
-import im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequest
-import im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequest
+import im.turms.client.model.proto.constant.ContentType
+import im.turms.client.model.proto.request.TurmsRequest
+import im.turms.client.model.proto.request.storage.DeleteResourceRequest
+import im.turms.client.model.proto.request.storage.QuerySignedGetUrlRequest
+import im.turms.client.model.proto.request.storage.QuerySignedPutUrlRequest
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient

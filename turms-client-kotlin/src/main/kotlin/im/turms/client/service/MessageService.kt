@@ -22,21 +22,22 @@ import im.turms.client.exception.ResponseException
 import im.turms.client.model.BuiltinSystemMessageType
 import im.turms.client.model.MessageAddition
 import im.turms.client.model.ResponseStatusCode
+import im.turms.client.model.proto.model.file.AudioFile
+import im.turms.client.model.proto.model.file.File
+import im.turms.client.model.proto.model.file.ImageFile
+import im.turms.client.model.proto.model.file.VideoFile
+import im.turms.client.model.proto.model.message.Message
+import im.turms.client.model.proto.model.message.MessagesWithTotal
+import im.turms.client.model.proto.model.user.UserLocation
+import im.turms.client.model.proto.request.TurmsRequest
+import im.turms.client.model.proto.request.message.CreateMessageRequest
+import im.turms.client.model.proto.request.message.QueryMessagesRequest
+import im.turms.client.model.proto.request.message.UpdateMessageRequest
 import im.turms.client.util.MapUtil
 import im.turms.client.util.Validator
-import im.turms.common.model.bo.file.AudioFile
-import im.turms.common.model.bo.file.File
-import im.turms.common.model.bo.file.ImageFile
-import im.turms.common.model.bo.file.VideoFile
-import im.turms.common.model.bo.message.Message
-import im.turms.common.model.bo.message.MessagesWithTotal
-import im.turms.common.model.bo.user.UserLocation
-import im.turms.common.model.dto.request.TurmsRequest
-import im.turms.common.model.dto.request.message.CreateMessageRequest
-import im.turms.common.model.dto.request.message.QueryMessagesRequest
-import im.turms.common.model.dto.request.message.UpdateMessageRequest
 import java.nio.ByteBuffer
-import java.util.*
+import java.util.Date
+import java.util.LinkedList
 import java.util.regex.Pattern
 
 /**
@@ -364,16 +365,18 @@ class MessageService(private val turmsClient: TurmsClient) {
     init {
         this.turmsClient.driver
             .addNotificationListener { notification ->
-                if (notification.hasRelayedRequest()) {
-                    val relayedRequest: TurmsRequest = notification.relayedRequest
-                    if (relayedRequest.hasCreateMessageRequest()) {
-                        val createMessageRequest: CreateMessageRequest = relayedRequest.createMessageRequest
-                        val requesterId: Long = notification.requesterId
-                        val message = createMessageRequest2Message(requesterId, createMessageRequest)
-                        val addition: MessageAddition = parseMessageAddition(message)
-                        messageListeners.forEach { listener -> listener(message, addition) }
-                    }
+                if (messageListeners.isEmpty() || !notification.hasRelayedRequest()) {
+                    return@addNotificationListener
                 }
+                val relayedRequest: TurmsRequest = notification.relayedRequest
+                if (!relayedRequest.hasCreateMessageRequest()) {
+                    return@addNotificationListener
+                }
+                val createMessageRequest: CreateMessageRequest = relayedRequest.createMessageRequest
+                val requesterId: Long = notification.requesterId
+                val message = createMessageRequest2Message(requesterId, createMessageRequest)
+                val addition: MessageAddition = parseMessageAddition(message)
+                messageListeners.forEach { listener -> listener(message, addition) }
             }
     }
 

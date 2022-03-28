@@ -17,13 +17,14 @@
 package im.turms.client.service
 
 import im.turms.client.TurmsClient
+import im.turms.client.model.proto.model.conversation.GroupConversation
+import im.turms.client.model.proto.model.conversation.PrivateConversation
+import im.turms.client.model.proto.request.conversation.QueryConversationsRequest
+import im.turms.client.model.proto.request.conversation.UpdateConversationRequest
+import im.turms.client.model.proto.request.conversation.UpdateTypingStatusRequest
 import im.turms.client.util.Validator
-import im.turms.common.model.bo.conversation.GroupConversation
-import im.turms.common.model.bo.conversation.PrivateConversation
-import im.turms.common.model.dto.request.conversation.QueryConversationsRequest
-import im.turms.common.model.dto.request.conversation.UpdateConversationRequest
-import im.turms.common.model.dto.request.conversation.UpdateTypingStatusRequest
-import java.util.*
+import java.util.Collections
+import java.util.Date
 
 /**
  * @author James Chen

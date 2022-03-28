@@ -14,22 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package im.turms.client.extension
+package im.turms.client.model
 
 /**
  * @author James Chen
  */
-fun String.camelToSnakeCase(): String {
-    val builder = StringBuilder()
-    for (char in this) {
-        if (char.isUpperCase()) {
-            if (builder.isNotEmpty()) {
-                builder.append('_')
-            }
-            builder.append(char.lowercaseChar())
-        } else {
-            builder.append(char)
-        }
-    }
-    return builder.toString()
+object SessionCloseStatus {
+    const val ILLEGAL_REQUEST = 100
+    const val HEARTBEAT_TIMEOUT = 110
+    const val LOGIN_TIMEOUT = 111
+    const val SWITCH = 112
+
+    const val SERVER_ERROR = 200
+    const val SERVER_CLOSED = 201
+    const val SERVER_UNAVAILABLE = 202
+
+    const val CONNECTION_CLOSED = 300
+
+    const val UNKNOWN_ERROR = 400
+
+    const val DISCONNECTED_BY_CLIENT = 500
+    const val DISCONNECTED_BY_OTHER_DEVICE = 501
+
+    const val DISCONNECTED_BY_ADMIN = 600
+
+    const val USER_IS_DELETED_OR_INACTIVATED = 700
+    const val USER_IS_BLOCKED = 701
 }

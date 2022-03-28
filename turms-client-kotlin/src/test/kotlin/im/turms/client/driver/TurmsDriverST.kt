@@ -24,8 +24,8 @@ import helper.Constants.ORDER_LOWEST_PRIORITY
 import helper.Constants.ORDER_MIDDLE_PRIORITY
 import im.turms.client.TurmsClient
 import im.turms.client.extension.isSuccessful
-import im.turms.common.model.dto.request.TurmsRequest
-import im.turms.common.model.dto.request.user.QueryUserProfileRequest
+import im.turms.client.model.proto.request.TurmsRequest
+import im.turms.client.model.proto.request.user.QueryUserProfileRequest
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertFalse

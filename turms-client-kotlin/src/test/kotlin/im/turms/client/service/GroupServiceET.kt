@@ -27,8 +27,8 @@ import helper.Constants.ORDER_MIDDLE_PRIORITY
 import helper.ExceptionUtil
 import im.turms.client.TurmsClient
 import im.turms.client.model.ResponseStatusCode
-import im.turms.common.constant.GroupMemberRole
-import im.turms.common.model.bo.group.Group
+import im.turms.client.model.proto.constant.GroupMemberRole
+import im.turms.client.model.proto.model.group.Group
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import org.junit.jupiter.api.Timeout
-import java.util.*
+import java.util.Date
 import java.util.concurrent.ExecutionException
 import kotlin.properties.Delegates
 

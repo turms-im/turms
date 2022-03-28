@@ -16,7 +16,7 @@
  */
 package im.turms.client.util
 
-import im.turms.common.constant.DeviceType
+import im.turms.client.model.proto.constant.DeviceType
 
 /**
  * @author James Chen
