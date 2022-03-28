@@ -54,7 +54,17 @@ docker pull ghcr.io/turms-im/turms-service:latest
 *        hard    nofile          1048576
 ```
 
-Turms服务端只需要很少的线程就能正常运行，因此运维人员一般无需再专门为Turms服务端修改`noproc`配置。
+* nofile配置为默认最大值1048576（1024*1024），该值受限于`fs.nr_open`。
+
+  用户如果需要更大的值，可以通过`sudo sysctl -w fs.nr_open=2147483584`命令，来修改`fs.nr_open`的值，从而提高`nofile`的最大值上限。
+
+* Turms服务端只需要很少的线程就能正常运行，因此运维人员一般无需再专门为Turms服务端修改`noproc`配置。
+
+  关于为什么Turms服务端只需要很少的线程就能正常运行，读者可以阅读[Turms服务端线程模型](https://turms-im.github.io/docs/for-developers/system-resource-management.html#%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B)
+
+参考文档：
+
+* https://www.kernel.org/doc/Documentation/sysctl/fs.txt
 
 ### /etc/sysctl.conf
 

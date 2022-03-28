@@ -7,7 +7,7 @@
 * 管理员API路径：`/groups`。具体API细节请参考OpenAPI文档
 * 客户端接口：请查阅`GroupServiceController`类。
 * 底层请求模型：请查阅`https://github.com/turms-im/proto/tree/master/request/group`目录下的接口描述文件
-* 配置类：`im.turms.server.common.property.env.service.business.GroupProperties`
+* 配置类：`im.turms.server.common.infra.property.env.service.business.GroupProperties`
 
 ## 功能列表
 

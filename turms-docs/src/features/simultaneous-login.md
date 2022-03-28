@@ -8,14 +8,14 @@
    * turms-client-kotlin 会判断当前的运行环境是Android还是桌面系统，分别以`Android`、`Desktop`的身份登录
    * turms-client-swift 则默认以`iOS`身份进行登录
 
-相关配置类：`im.turms.server.common.property.env.gateway.SessionProperties`
+相关配置类：`im.turms.server.common.infra.property.env.gateway.SessionProperties`
 
 ## 多端登录类型
 
 “设备类型”指的是：Android、iOS、Desktop、Browser、Others、Unknown。
 以下是常见的多端登陆类型搭配，供您快速挑选实现。
 
-配置属性：`im.turms.server.common.property.env.gateway.SimultaneousLoginProperties#strategy`
+配置属性：`im.turms.server.common.infra.property.env.gateway.SimultaneousLoginProperties#strategy`
 
 其他相关配置：`allowDeviceTypeUnknownLogin`、`allowDeviceTypeOthersLogin`
 
@@ -36,7 +36,7 @@
 
 ## 多端登陆冲突解决策略
 
-配置属性：`im.turms.server.common.property.env.gateway.SimultaneousLoginProperties#loginConflictStrategy`
+配置属性：`im.turms.server.common.infra.property.env.gateway.SimultaneousLoginProperties#loginConflictStrategy`
 
 | **类型**           | 对应Enum值                   |
 | :----------------- | ---------------------------- |

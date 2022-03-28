@@ -4,8 +4,6 @@ Turms客户端目前支持JavaScript、Kotlin、Swift与Dart这四种语言，�
 
 由于Turms各语言客户端行为具有高度的一致性，因此如果您基于上述任意一种语言进行业务开发，您可以在代码逻辑不做改变的情况下，轻松将已写好的业务代码翻译为另外两种语言（具体可参考在本文结尾处的示例）。
 
-（之后还会支持C#与C++，其他语言暂不在考虑范围内）
-
 ## Quick Start
 
 1. 克隆Turms仓库（目前客户端代码均未发布到第三方依赖仓库中）。参考命令：git clone --depth 1 https://github.com/turms-im/turms.git
@@ -90,7 +88,7 @@ Turms客户端对版本的最低要求，主要是根据：平台全球市场占
   - notificationService：通知相关服务。负责接受与响应业务层面上的通知（即：其他用户向该用户发送好友请求、群组成员上下线等通知）。
     提醒：消息（message）不算做业务层面上的“通知”（notification），因此notificationService不会处理用户消息，用户消息仅由messageService进行处理。而driver中TurmsNotification的“通知”概念指的是网络层面上的Turms服务端给Turms客户端的通知，因此notificationService也不会处理底层的TurmsNotification数据。
     
-    补充：关于通知功能的开启与关闭，您可以在turms服务端`im.turms.server.common.property.env.service.business.NotificationProperties`处，实时地进行修改。
+    补充：关于通知功能的开启与关闭，您可以在turms服务端`im.turms.server.common.infra.property.env.service.business.NotificationProperties`处，实时地进行修改。
     
   - storageService：存储相关服务（可选拓展）。负责用户头像、群组头像与消息附件的上传与下载操作。补充：该服务为turms的拓展服务，因此若您希望使用该功能，您需要将turms-plugin-minio或您自行实现的存储插件集成到turms服务端当中。
 
@@ -108,7 +106,7 @@ Turms客户端对版本的最低要求，主要是根据：平台全球市场占
 
 #### 对于状态非10xx的响应（拓展知识）
 
-对于Service类而言，这类响应均被认作是“错误”状态响应。通过异步模型抛出TurmsBusinessException，并在该错误模型中包括了具体状态码与错误原因。
+对于Service类而言，这类响应均被认作是“错误”状态响应。通过异步模型抛出`ResponseException`，并在该错误模型中包括了具体状态码与错误原因。
 
 ### 主要接口差异（拓展知识）
 
@@ -121,14 +119,14 @@ Turms客户端对版本的最低要求，主要是根据：平台全球市场占
 |              | JavaScript客户端                  | Kotlin客户端                       | Swift客户端              | Dart客户端  | 实例            |
 | ------------ | --------------------------------- | -------------------------------------- | ------------------------ | ------------------------ | ------------------------ |
 | 时间表达单位 | 一律为毫秒                        | 一律为毫秒 | 采用TimeInterval（即秒） | 一律为毫秒 | connectTimeout |
-| 业务异常模型 | TurmsBusinessError（继承自Error） | TurmsBusinessException（继承自不携带栈信息的RuntimeException） | TurmsBusinessError（继承自Error） | TurmsBusinessException（继承自Exception） |    |
+| 响应异常模型 | ResponseError（继承自Error） | ResponseException（继承自RuntimeException） | ResponseError（继承自Error） | ResponseException（继承自Exception） |    |
 | 异步模型     | Promise模型                       | Coroutines模型 | 由PromiseKit提供的Promise模型 | Future模型 |                          |
 
 补充：对于对外暴露的回调函数实现，Turms的Swift客户端没有采用Swift常见的delegate代理模式，而是和其他语言客户端一样通过函数传递逃逸闭包。
 
 ## 会话的生命周期
 
-Turms客户端的会话生命周期比较容易理解，具体而言：先通过`driver.connect()`进行网络层的连接，而后通过`userService.login()`进行业务层面上的登录操作，在登录成功后，对应的会话就建立了。最后再通过`userService.logout()`方法向服务端发送会话关闭通知，同时也会关闭网络层连接。
+Turms客户端的会话生命周期比较容易理解，具体而言：先通过`driver.connect(...)`进行网络层的连接，而后通过`userService.login(...)`进行业务层面上的登录操作，在登录成功后，对应的会话就建立了。最后再通过`userService.logout(...)`方法向服务端发送会话关闭通知，同时也会关闭网络层连接。
 
 为了保持逻辑简单，也方便上层开发者自行组合各种逻辑。Turms不提供诸如自动重连、自动路由跳转等操作，一方面开发者可以很容易地实现该类逻辑，另一方面，这类“隐藏”的内部逻辑会使得上层开发者难以把控底层驱动行为，在一些时候反而会成为绊脚石。
 
@@ -138,18 +136,18 @@ Turms客户端的会话生命周期比较容易理解，具体而言：先通过
 
 | 层次       | 名称                             | 调用时机              | 提醒                                                         |
 | ---------- | -------------------------------- | --------------------- | ------------------------------------------------------------ |
-| 网络层     | driver.addOnConnectedListener    | 当网络层连接建立时    | 通常您并不需要通过`addOnConnectedListener`来添加连接监听事件，<br />而是将您的回调函数赋给`driver.connect()`返回的异步成功回调onSucccess/then |
+| 网络层     | driver.addOnConnectedListener    | 当网络层连接建立时    | 通常您并不需要通过`addOnConnectedListener`来添加连接监听事件，<br />而是将您的回调函数赋给`driver.connect(...)`返回的异步成功回调onSucccess/then |
 | 网络层     | driver.addOnDisconnectedListener | 当网络层连接断开时    |                                                              |
-| 业务逻辑层 | userService.addOnOnlineListener  | 当会话建立/用户上线时 | 通常您并不需要通过`addOnOnlineListener`来添加上线监听事件，<br />而是将您的回调函数赋给`userService.login()`返回的异步成功回调onSucccess/then |
+| 业务逻辑层 | userService.addOnOnlineListener  | 当会话建立/用户上线时 | 通常您并不需要通过`addOnOnlineListener`来添加上线监听事件，<br />而是将您的回调函数赋给`userService.login(...)`返回的异步成功回调onSucccess/then |
 | 业务逻辑层 | userService.addOnOfflineListener | 当会话断开/用户下线时 |                                                              |
 
 ## 业务逻辑的认证与授权（拓展知识）
 
 对于客户端发来的权限信息，Turms服务端的态度是“客户端传来的权限信息均不可信”，因此Turms服务端会根据您在Turms服务端处所设定的业务配置，自行做各种必要的权限判断。
 
-以“修改已发送消息”功能为例，该行为会触发一系列判定逻辑。Turms会先判断目标消息是否确实是由该用户发出的，再根据您在Turms服务端配置的allowEditingMessageBySender（默认为true），来判断是否允许用户修改已发送消息，若您设置其为false，则在客户端处会捕获到一个TurmsBusinessException（Kotlin）或TurmsBusinessError（JavaScript/Swift）对象，而它由业务状态码模型TurmsStatusCode表示（由code与reason描述信息组成）。
+以“修改已发送消息”功能为例，该行为会触发一系列判定逻辑。Turms会先判断目标消息是否确实是由该用户发出的，再根据您在Turms服务端配置的allowEditingMessageBySender（默认为true），来判断是否允许用户修改已发送消息，若您设置其为false，则在客户端处会捕获到一个`ResponseException`（Kotlin）或`ResponseError`（JavaScript/Swift）对象，而它由业务状态码模型`ResponseStatusCode`表示（由`code`与`reason`描述信息组成）。
 
-再比如对于一个“简单”的“发送消息”请求，Turms服务端就会判断该消息发送用户是否处于激活状态、是否设置了“允许发送消息给陌生人（非关系人）”、消息发送者是否在黑名单中。如果接收方是群组，那么消息发送者是否是群成员，并且是否处于禁言状态等等逻辑判断。而您仅仅只需调用一个sendMessage接口即可。
+再比如对于一个“简单”的“发送消息”请求，Turms服务端就会判断该消息发送用户是否处于激活状态、是否设置了“允许发送消息给陌生人（非关系人）”、消息发送者是否在黑名单中。如果接收方是群组，那么消息发送者是否是群成员，并且是否处于禁言状态等等逻辑判断。而您仅仅只需调用一个`sendMessage(...)`接口即可。
 
 ## 与服务端通信时使用的数据格式（拓展知识）
 

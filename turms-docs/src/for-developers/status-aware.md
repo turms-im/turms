@@ -37,11 +37,11 @@
 
 推模式指的是：当某个业务模型发生变化时（由于增删改操作），服务端将主动通知相关在线用户该事件的发生。而当客户端收到通知时，Turms客户端会触发`NotificationService`中的`onNotification`回调函数。该函数的参数为`TurmsRequest`对象，表明触发该事件的请求。
 
-通知相关行为可以根据：`im.turms.server.common.property.env.service.business.NotificationProperties`类进行配置。每一种通知类型都可以单独配置，并且所有通知相关配置均可在集群运行时进行动态更新。
+通知相关行为可以根据：`im.turms.server.common.infra.property.env.service.business.NotificationProperties`类进行配置。每一种通知类型都可以单独配置，并且所有通知相关配置均可在集群运行时进行动态更新。
 
 ##### 示例
 
-以`im.turms.server.common.property.env.service.business.NotificationProperties#notifyMembersAfterGroupUpdated`这个属性为例。该属性用于控制“当群组信息发生变化时，是否通知群组成员”。这里的群组信息指的是：群组名称、群组类型、群组禁言时间等这样具有全局性的群组信息。
+以`im.turms.server.common.infra.property.env.service.business.NotificationProperties#notifyMembersAfterGroupUpdated`这个属性为例。该属性用于控制“当群组信息发生变化时，是否通知群组成员”。这里的群组信息指的是：群组名称、群组类型、群组禁言时间等这样具有全局性的群组信息。
 
 如果您将该属性值设置为true，则当群组信息发生变化时，群组成员的客户端都将收到触发该变化的通知。否则，群组成员客户端不会收到任何通知。
 
@@ -124,8 +124,8 @@ Turms基于上述的“推模式”与“拉模式”实现客户端的消息接
 
 * 可达性
   
-  * 方案一：如果您希望实现几乎100%的消息必达，您可以开启`turms.service.message.sequence-id`下的`use-sequence-id-for-group-conversation`与`use-sequence-id-for-private-conversation`（默认配置下，均关闭），该机制会在每次生成消息记录时，向Redis请求一个会话级别的自增`sequence ID`，并将这个ID赋给当前消息记录上，客户端可以通过这个ID的自增性判断消息是否丢失
-  * 方案二（默认实现）：如果您不要求消息必须100%必达，则关闭上述配置，从而获得更大的消息推送吞吐量
+  * 方案一：如果您希望实现几乎100%的消息必达，您可以开启`turms.service.message.sequence-id`下的`use-sequence-id-for-group-conversation`与`use-sequence-id-for-private-conversation`（默认配置下，均关闭），该机制会在每次生成消息记录时，向Redis请求一个会话级别的自增`sequence ID`，并将这个ID赋给当前消息记录上，客户端可以通过这个ID的自增性与消息发送时间判断消息是否丢失（需要判断消息发送时间是因为：如果Redis宕机，序列号数据丢失，序列ID会从头开始计算，而当客户端检测到序列号变小时，则可以再根据消息发送时间判断哪条是最新的消息）。
+  * 方案二（默认实现）：如果您不要求消息必须100%必达，则关闭上述配置，从而获得更大的消息推送吞吐量。
   
 * 有序性
   

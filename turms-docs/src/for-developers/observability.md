@@ -161,7 +161,7 @@ Turms日志实现非常精简，大概只实现了标准日志库的百分之几
 
 对于常规日志：
 
-   * 调用`im.turms.server.common.logging.core.logger.AsyncLogger#doLog`函数
+   * 调用`im.turms.server.common.infra.logging.core.logger.AsyncLogger#doLog`函数
    * `doLog`函数内部通过`PooledByteBufAllocator.DEFAULT`分配一块堆外内存，并遍历一遍message，将非占位符直接写入该内存，跳过占位符并写入具体参数，最后将这块内存放到日志处理的MPSC队列中（基于jctools的`MpscUnboundedArrayQueue`）
    * 日志处理线程检测到有新的日志（即`ByteBuffer`对象）时，会将该堆外内存写入NIO包的`FileChannel`（可以是控制台、也可以是文件）中，该对象在Linux系统下，会最终调用`pwrite`直接将堆外内存写入文件描述符中
 

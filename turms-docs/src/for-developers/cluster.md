@@ -1,6 +1,6 @@
 # 集群的设计与实现
 
-Turms的集群代码实现比较清晰，也很容易理解。代码实现包为：`src/main/java/im/turms/server/common/cluster`；配置包为：`src/main/java/im/turms/server/common/property/env/common/cluster`
+Turms的集群代码实现比较清晰，也很容易理解。代码实现包为：`src/main/java/im/turms/server/common/infra/cluster`；配置包为：`src/main/java/im/turms/server/common/infra/property/env/common/cluster`
 
 ## 纯自研的原因
 
@@ -16,9 +16,9 @@ Turms的集群代码实现比较清晰，也很容易理解。代码实现包为
 
 ## 节点
 
-实现类：`im.turms.server.common.cluster.node.Node`
+实现类：`im.turms.server.common.infra.cluster.node.Node`
 
-配置类：`im.turms.server.common.property.env.common.cluster.NodeProperties`
+配置类：`im.turms.server.common.infra.property.env.common.cluster.NodeProperties`
 
 每个服务端有且仅有一个节点类实例。节点类对内管理节点信息与节点生命周期事件，并调度各节点服务。对外承接用户自定义配置，并暴露节点服务与提供一些常用的Util函数供业务实现代码使用。
 
@@ -26,9 +26,9 @@ Turms的集群代码实现比较清晰，也很容易理解。代码实现包为
 
 ### 分布式配置中心服务（Config）
 
-服务类：`im.turms.server.common.cluster.service.config.SharedConfigService`
+服务类：`im.turms.server.common.infra.cluster.service.config.SharedConfigService`
 
-配置类：`im.turms.server.common.property.env.common.cluster.SharedConfigProperties`
+配置类：`im.turms.server.common.infra.property.env.common.cluster.SharedConfigProperties`
 
 如今微服务领域的基础服务实现方案百花齐放。以配置中心的实现方案为例，其实现方案就有：K8S的ConfigMaps、云服务厂商的配置服务（如AWS的AppConfig）、开源实现（如Zookeeper）。作为Turms作为一个技术中立的开源项目，其技术栈绝不能被厂商所绑定。但与此同时，又要保证这些实现能够很方便地获得云服务厂商的支持，以让运维人员“点点鼠标就能实现与部署了”。同时又要满足容灾、高可用、可监控、易操作等多种关键特性，因此Turms通过MongoDB自研实现配置中心实现，以满足上述的所有要求。
 
@@ -45,9 +45,9 @@ TODO
 
 ### 服务注册与发现服务（Discovery）
 
-服务类：`im.turms.server.common.cluster.service.discovery.DiscoveryService`
+服务类：`im.turms.server.common.infra.cluster.service.discovery.DiscoveryService`
 
-配置类：`im.turms.server.common.property.env.common.cluster.DiscoveryProperties`
+配置类：`im.turms.server.common.infra.property.env.common.cluster.DiscoveryProperties`
 
 #### 职责
 
@@ -64,7 +64,7 @@ TODO
 
 ##### Member
 
-类：`im.turms.server.common.cluster.service.config.domain.discovery.Member`
+类：`im.turms.server.common.infra.cluster.service.config.domain.discovery.Member`
 
 | 字段类别     | 字段名            | 描述                                                         |
 | ------------ | ----------------- | ------------------------------------------------------------ |
@@ -103,7 +103,7 @@ TODO
 节点参与选举的条件：
 
 * 节点类型必须为`turms-service`，而不是`turms-gateway`。这是因为一些Leader行为只能由turms-service执行，turms-gateway没有能力执行这些操作。
-* `im.turms.server.common.property.env.common.cluster.NodeProperties#leaderEligible`为`true`（默认为`true`）
+* `im.turms.server.common.infra.property.env.common.cluster.NodeProperties#leaderEligible`为`true`（默认为`true`）
 * 节点状态必须为`active`
 
 ##### 自动选举
@@ -124,7 +124,7 @@ API接口`POST /cluster/members/leader`允许强制集群重新选举Leader。�
 
 具体动作而言：
 
-* Leader最重要的动作之一就是根据其他节点在服务注册中心（MongoDB）的心跳刷新时间，来更新各节点的最新状态（具体代码在：`im.turms.server.common.cluster.service.discovery.LocalNodeStatusManager#updateMembersStatus`）
+* Leader最重要的动作之一就是根据其他节点在服务注册中心（MongoDB）的心跳刷新时间，来更新各节点的最新状态（具体代码在：`im.turms.server.common.infra.cluster.service.discovery.LocalNodeStatusManager#updateMembersStatus`）
 * “定期cron向Redis发送清除过期黑名单记录的指令”这一动作只需一个节点，即Leader来定期执行。
 * “定期cron删除过期数据库数据操作，如用户消息”，也有且仅会被Leader执行（补充：这类操作的代码其实是“历史遗留代码”，“顺便”保留的。毕竟极少应用会真得删除用户数据，因此默认disabled状态，可以忽略）
 
@@ -134,9 +134,9 @@ TODO
 
 ### 网络连接服务（Connection）
 
-服务类：`im.turms.server.common.cluster.service.connection.ConnectionService`
+服务类：`im.turms.server.common.infra.cluster.service.connection.ConnectionService`
 
-配置类：`im.turms.server.common.property.env.common.cluster.connection.ConnectionProperties`
+配置类：`im.turms.server.common.infra.property.env.common.cluster.connection.ConnectionProperties`
 
 在Turms服务端集群实现中，`Connection`是介于`Transport`与`RPC`之间的一个概念，因为`Connection`一方面需要维护节点之间的TCP连接，另一方面又需要通过`RpcService`来完成节点之间的心跳操作（用于检测节点之间的TCP连接是否健康）。之所以没把`ConnectionService`与`RpcService`合并成一个Service是因为二者都有大量自己的逻辑，为尽可能遵循单一职责的原则，以避免大量TCP连接维护与RPC能力实现的逻辑混在一起，因此两个服务没进行合并。
 
@@ -156,15 +156,15 @@ TODO
 
 ### 编解码服务（Codec）
 
-服务类：`im.turms.server.common.cluster.service.codec.CodecService`
+服务类：`im.turms.server.common.infra.cluster.service.codec.CodecService`
 
 该服务主要为RPC服务提供数据的编解码实现。特别地，Turms并没有采用反射机制来统一实现序列化与反序列化逻辑，而是为每个数据定制实现，这主要是因为：1. 定制化实现，保证绝对地高效。如Set\<DeviceType\>可以用一个Byte，按Bit表示值的存在与否，而不是用一组Byte表示；2. 避免反射，保证高效；3. 代码所见即所得，避免隐晦操作的存在
 
 ### RPC服务
 
-服务类：`im.turms.server.common.cluster.service.rpc.RpcService`
+服务类：`im.turms.server.common.infra.cluster.service.rpc.RpcService`
 
-配置类：`im.turms.server.common.property.env.common.cluster.RpcProperties`
+配置类：`im.turms.server.common.infra.property.env.common.cluster.RpcProperties`
 
 该服务基于“网络连接服务”提供的底层TCP网络连接与“编解码服务”提供的数据序列化与反序列化能力，来实现RPC操作的相关逻辑。
 
@@ -180,7 +180,7 @@ RPC响应的组成部分：
 
 1. Varint编码的正文长度，用于在TCP字节流中区分每个RPC响应数据所在的字节区间。对大部分RPC响应而言，该部分通常占1 byte。
 2. 响应头：数据类型ID（2 bytes） + 被响应的请求ID（4 bytes）
-3. 响应体：响应体可以分为两大类：正常响应与异常响应。正确响应即各种数据类型，如八大基本类型与其他组合的数据类型。异常响应本质上也仅仅是一种“组合的数据类型”，它的表现形式为`RpcException`数据类型，通过`RpcErrorCode`、`TurmsStatusCode`、`description (String)`字段，来描述异常信息。
+3. 响应体：响应体可以分为两大类：正常响应与异常响应。正确响应即各种数据类型，如八大基本类型与其他组合的数据类型。异常响应本质上也仅仅是一种“组合的数据类型”，它的表现形式为`RpcException`数据类型，通过`RpcErrorCode`、`ResponseStatusCode`、`description (String)`字段，来描述异常信息。
 
 补充
 
@@ -200,25 +200,25 @@ turms-gateway服务端对turms-service服务端的背压实现比较取巧，具
 
 ### 分布式ID生成服务（IdGen）
 
-服务类：`im.turms.server.common.cluster.service.idgen.IdService`
+服务类：`im.turms.server.common.infra.cluster.service.idgen.IdService`
 
-分布式ID生成器用于为各业务场景快速提供集群唯一的ID。生成一个集群唯一的ID只需要节点进行本地运算操作（具体代码：`im.turms.server.common.cluster.service.idgen.SnowflakeIdGenerator#nextLargeGapId`），效率极高。
+分布式ID生成器用于为各业务场景快速提供集群唯一的ID。生成一个集群唯一的ID只需要节点进行本地运算操作（具体代码：`im.turms.server.common.infra.cluster.service.idgen.SnowflakeIdGenerator#nextLargeGapId`），效率极高。
 
 #### 原理
 
 Turms的分布式ID生成器基于主流的[雪花ID算法](https://en.wikipedia.org/wiki/Snowflake_ID)实现，生成的ID为`long`数据类型，具体而言：
 
 * 最高位（1 bit）始终为0，表示正数
-* 41 bits表示以毫秒为单位的时间戳，可表示约69年时间。具体UTC时间区间为：`[2020-10-13, 2090-06-19]`。`2020-10-13`为硬编码的Epoch时间，如果您想修改该时间，修改`im.turms.server.common.cluster.service.idgen.SnowflakeIdGenerator#EPOCH`的值即可
-* 4 bits表示数据中心ID，ID区间为[0, 15]。在实际运用中，该ID通常以`云服务中的区域`划分，即每个区域都有一个ID。Turms会根据节点的`im.turms.server.common.property.env.common.cluster.NodeProperties#zone`“区域名”，自动将区域名映射为[0, 15]区间中的值。注意：如果有16个以上的区域名，虽然这些区域名仍会被映射为[0, 15]区间中的值，但这也意味着会出现重复的数据中心ID，有集群节点生成相同ID的风险。并且，被降级处理的节点会打印警告日志，提醒有生成相同ID的风险。
-* 8 bits表示工作节点ID，ID区间为[0, 255]。Turms会根据节点的`im.turms.server.common.property.env.common.cluster.NodeProperties#zone`“区域名”，自动将区域名映射为[0, 255]区间中的值。注意：如果在一个数据中心中有256个以上的节点，虽然这些节点ID仍会被映射为[0, 255]区间中的值，但这也意味着会出现重复的工作节点ID，有集群节点生成相同ID的风险。并且，被降级处理的节点会打印警告日志，提醒有生成相同ID的风险。
+* 41 bits表示以毫秒为单位的时间戳，可表示约69年时间。具体UTC时间区间为：`[2020-10-13, 2090-06-19]`。`2020-10-13`为硬编码的Epoch时间，如果您想修改该时间，修改`im.turms.server.common.infra.cluster.service.idgen.SnowflakeIdGenerator#EPOCH`的值即可
+* 4 bits表示数据中心ID，ID区间为[0, 15]。在实际运用中，该ID通常以`云服务中的区域`划分，即每个区域都有一个ID。Turms会根据节点的`NodeProperties#zone`“区域名”，自动将区域名映射为[0, 15]区间中的值。注意：如果有16个以上的区域名，虽然这些区域名仍会被映射为[0, 15]区间中的值，但这也意味着会出现重复的数据中心ID，有集群节点生成相同ID的风险。并且，被降级处理的节点会打印警告日志，提醒有生成相同ID的风险。
+* 8 bits表示工作节点ID，ID区间为[0, 255]。Turms会根据节点的`im.turms.server.common.infra.property.env.common.cluster.NodeProperties#zone`“区域名”，自动将区域名映射为[0, 255]区间中的值。注意：如果在一个数据中心中有256个以上的节点，虽然这些节点ID仍会被映射为[0, 255]区间中的值，但这也意味着会出现重复的工作节点ID，有集群节点生成相同ID的风险。并且，被降级处理的节点会打印警告日志，提醒有生成相同ID的风险。
 * 10 bits表示序列号。在单位时间戳字段内（1毫秒）可表示至多1024个序列号，即1毫秒中最多可生成1024个唯一ID。换言之，1秒内至多可以表示1024000个唯一ID，因此在实际使用中，是不可能出现重复ID的情况。
 
-补充：根据节点信息，更新数据中心ID与工作节点ID信息的代码在：`im.turms.server.common.cluster.service.idgen.IdService#IdService`的`addOnMembersChangeListener`中
+补充：根据节点信息，更新数据中心ID与工作节点ID信息的代码在：`im.turms.server.common.infra.cluster.service.idgen.IdService#IdService`的`addOnMembersChangeListener`中
 
 #### 变种实现
 
-具体实现：`im.turms.server.common.cluster.service.idgen.SnowflakeIdGenerator#nextLargeGapId`
+具体实现：`im.turms.server.common.infra.cluster.service.idgen.SnowflakeIdGenerator#nextLargeGapId`
 
 常规雪花算法生成的ID是单调递增的。但在大部分情况下，Turms的业务实现采用的是大间距ID，以避免ID单调递增。这么做是因为：使用大间距ID，以保证当这些数据存储到MongoDB数据库时，MongoDB能够根据这些ID，生成足够多的Chunks，并将这些Chunks负载均衡分配给各MongoDB服务端，让其进行存储。而单调递增ID会导致所有新数据始终分配到唯一的热点MongoDB服务端，导致数据库的负载均衡失效。
 

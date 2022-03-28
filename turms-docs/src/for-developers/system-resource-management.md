@@ -2,7 +2,7 @@
 
 内存与CPU资源对服务端的重要性不言而喻，Turms各模块都比较极致地使用内存与CPU，具体可参考各模块实现的文档与代码。而在另一方面，为保证服务端的正常运行，其内部也提供了一套健康检测机制，该机制配合上层的“拒绝服务”机制，以尽最大努力保证服务端能够正常运行。
 
-Turms提供系统资源监控配置类：`im.turms.server.common.property.env.common.healthcheck.HealthCheckProperties`，来允许用户配置可用内存占用率与CPU占用率。Turms服务端的`HealthCheckManager`会持续检测可用物理内存与CPU占用率，如果检测到可用物理内存过低或CPU占用率过高，则会：
+Turms提供系统资源监控配置类：`im.turms.server.common.infra.property.env.common.healthcheck.HealthCheckProperties`，来允许用户配置可用内存占用率与CPU占用率。Turms服务端的`HealthCheckManager`会持续检测可用物理内存与CPU占用率，如果检测到可用物理内存过低或CPU占用率过高，则会：
 
 * 将自身在服务注册中心的`isHealthy`信息标记为`false`。由于RPC发送端只会从`isHealthy`为`true`的服务端中，挑选RPC的响应服务端，因此能实现类似背压的效果
 * 拒绝对外提供服务。具体而言：如果是turms-gateway服务端，则拒绝新会话的建立与用户请求的处理；如果是turms-service服务端，则拒绝处理turms-gateway服务端发来的RPC请求（注意：就算处于“不健康”状态，turms-service仍然会为管理员API提供服务）
@@ -104,7 +104,7 @@ JVM默认的堆配置如下：
 
 #### 配置
 
-配置类：`im.turms.server.common.property.env.common.healthcheck.MemoryHealthCheckProperties`
+配置类：`im.turms.server.common.infra.property.env.common.healthcheck.MemoryHealthCheckProperties`
 
 如上文所述，要想让运维人员准确评估服务端应该使用多少内存其实是非常困难，甚至不现实的事，尤其是一些关键系统内核（如TCP连接）所占内存是动态变化的，因此`MemoryHealthCheckProperties`除了提供诸如`maxAvailableMemoryPercentage`与`maxAvailableDirectMemoryPercentage`这样限定Turms服务端可使用内存上限的配置，同时也提供了`minFreeSystemMemoryBytes`这一配置，让Turms服务端能够实时检测系统的可用物理内存，并尽最大努力预留这些内存出来。
 
@@ -158,7 +158,7 @@ Java的内存占用一直为人所诟病，诸如一个Integer对象所存放的
 
 ### CPU健康监控
 
-配置类：`im.turms.server.common.property.env.common.healthcheck.CpuHealthCheckProperties`
+配置类：`im.turms.server.common.infra.property.env.common.healthcheck.CpuHealthCheckProperties`
 
 作用：监控CPU使用率，如果N次检测到CPU使用率超过阈值，则将节点的`isHealthy`设为`false`，并与其他节点共享该状态，同时拒绝提供服务，直到CPU使用率健康。具体配置见上述的配置类。
 

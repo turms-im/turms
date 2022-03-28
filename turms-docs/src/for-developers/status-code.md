@@ -1,12 +1,12 @@
 # 状态码
 
-共有两种状态码需要开发者了解，一种是TurmsStatusCode，另一种是SessionCloseStatus。下表内容不需要刻意记忆，只需要在遇见不认识的状态码时，懂得查询即可。
+共有两种状态码需要开发者了解，一种是`ResponseStatusCode`，另一种是`SessionCloseStatus`。下表内容不需要刻意记忆，只需要在遇见不认识的状态码时，懂得查询即可。
 
-## TurmsStatusCode
+## ResponseStatusCode
 
-TurmsStatusCode表明请求响应中的处理状态，类似HTTP的状态码。
+ResponseStatusCode表明请求响应中的处理状态，类似HTTP的状态码。
 
-每一个请求响应都会包含一个TurmsStatusCode。具体的状态码声明可查阅`im.turms.client.constant.TurmsStatusCode`类。
+每一个请求响应都会包含一个ResponseStatusCode。具体的状态码声明可查阅`turms-client-kotlin`项目下的`im.turms.client.model.ResponseStatusCode`类。
 
 ### 客户端独有状态码
 
@@ -137,7 +137,7 @@ TurmsStatusCode表明请求响应中的处理状态，类似HTTP的状态码。
 
 SessionCloseStatus表明会话关闭的原因。
 
-具体的状态码声明可查阅`im.turms.common.constant.statuscode.SessionCloseStatus`类。
+具体的状态码声明可查阅`im.turms.common.constant.SessionCloseStatus`类。
 
 | 原因类别       | 名称                           | 状态码 | 含义                                              |
 | -------------- | ------------------------------ | ------ | ------------------------------------------------- |

@@ -37,7 +37,7 @@
 
 Turms的自动封禁机制采用分级制度，默认提供3个等级，这3个等级的封禁时长分别是：1分钟、30分钟、60分钟。默认配置下，当客户端触发5次非法行为，则服务端会以等级1的配置封禁客户端的IP与用户ID，如果在封禁时间内，又触发了一定次数的非法行为，则进入下一个封禁等级，以此类推。
 
-如果您想要修改默认配置，您可以通过`turms.security.blocklist.ip.auto-block`与``turms.security.blocklist.user-id.auto-block``前缀，并配合IDEA的智能提示对默认配置进行修改。其具体的配置项声明在`im.turms.server.common.property.env.common.security.AutoBlockItemProperties`类中。
+如果您想要修改默认配置，您可以通过`turms.security.blocklist.ip.auto-block`与``turms.security.blocklist.user-id.auto-block``前缀，并配合IDEA的智能提示对默认配置进行修改。其具体的配置项声明在`im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties`类中。
 
 #### 封禁相关API
 
@@ -63,16 +63,16 @@ Turms的自动封禁机制采用分级制度，默认提供3个等级，这3个�
 
   综上，Bloom Filter在分布式环境下，连黑名单系统最为基础的功能都无法实现，就算Bloom Filter配合其他工程实践勉强实现，那Bloom Filter自身的优势也就不存在了。
 
-* 被拉黑用户数据量本身很小，Bloom Filter无法发挥其优势。而且如果只是判断用户是否被拉黑，我们按100万的被封禁的用户ID来看，一共也才需要12MiB或61.4MiB内存（额外补充：这个例子也印证了我们在[关于Valhalla项目](https://turms-im.github.io/docs/for-developers/system-resource-management.html#%E5%85%B3%E4%BA%8Evalhalla%E9%A1%B9%E7%9B%AE)篇章中提及到的：`Java对内存的浪费就让人感觉有些“自暴自弃”了`）。这里以具体代码为例：
+* 被拉黑用户数据量本身很小，Bloom Filter无法发挥其优势。而且如果只是判断用户是否被拉黑，我们按100万的被封禁的用户ID来看，一共也才需要12MiB或61.4MiB内存（额外补充：这个例子也印证了我们在[关于Valhalla项目](https://turms-im.github.io/docs/for-developers/system-resource-management.html#%E5%85%B3%E4%BA%8Evalhalla%E9%A1%B9%E7%9B%AE)篇章中提及到的：`Java对内存的浪费就让人感觉有些“自暴自弃”了`）。因为在实际编程中通常都使用线程安全的集合，且大部分线程安全的Set内部一般都是基于Map实现的，因此下文统一使用的是线程安全的Map：
 
   ```java
   public static void main(String[] args) {
       int number = 1_000_000;
       var map1 = ConcurrentHashMap.newKeySet((int)(number / 0.75F + 1.0F));
       var map2 = new NonBlockingHashMapLong<>(number);
-      for (int i = 0; i < number; i++) {
-          map1.add(new Long(i));
-          map2.put(i, true);
+      for (long i = 0; i < number; i++) {
+          map1.add(i);
+          map2.put(i, Boolean.TRUE);
       }
       System.out.println(GraphLayout.parseInstance(map1).toFootprint());
       System.out.println(GraphLayout.parseInstance(map2).toFootprint());

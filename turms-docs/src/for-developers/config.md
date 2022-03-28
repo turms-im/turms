@@ -27,7 +27,7 @@ Turms属性分为三大类配置：Turms Service配置、Turms Gateway配置，�
 
 每个类别中的属性都能通过`application.yaml`配置，并且对于标有`MutablePropertiesView`注释的属性，您都能通过供管理员专用的API接口在Turms集群运行时进行零停机实时更新。
 
-由于所有的配置项高达上百个，直接看代码比看文档更加直观，因此推荐您直接查阅`im.turms.server.common.property`目录下各配置类，下文仅对大的分类做简要介绍。
+由于所有的配置项高达上百个，直接看代码比看文档更加直观，因此推荐您直接查阅`im.turms.server.common.infra.property`目录下各配置类，下文仅对大的分类做简要介绍。
 
 提醒：您在本地编译`turms/turms-gateway`服务端项目后，编译器会生成`target/classes/META-INF/spring-configuration-metadata.json`文件。IntelliJ IDEA 能够自动检测到该文件，并在您输入Turms相关配置的时提供配置提示与补全功能，如下图所示：
 

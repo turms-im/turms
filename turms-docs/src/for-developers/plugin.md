@@ -162,7 +162,7 @@ Turms服务端中的插件实现相对灵活，既允许插件使用独立类环
 
 1. 在您插件项目下，按`Ctrl + F9`来自动编译并打包您的插件JAR包到`<您插件项目根目录>/target`目录下
 
-2. 在`turms-server-common`项目下，把`im.turms.server.common.plugin.PluginManager`类内的`getPluginDir`函数实现改成：
+2. 在`turms-server-common`项目下，把`im.turms.server.common.infra.plugin.PluginManager`类内的`getPluginDir`函数实现改成：
 
    ```java
    private Path getPluginDir(Path home, String pluginsDir) {

@@ -8,7 +8,7 @@
 2. Turms会不定期优化代码，一些函数名或函数实现可能会稍微改变，但其思想是不会变的。
 3. 各模块源码所做的事情通常比下文讲得多得多，但为了方便读者理解，**本文只挑选主要流程进行讲解，并略去了大量细节**。如果读者对其中的细节感兴趣，可以在阅读完本文的相关讲解，并对主要流程有大概的认识后，再去阅读源码，了解其具体实现细节。
 
-## 项目结构（预览文档，新代码尚未发布）
+## 项目结构
 
 本文讲解Turms服务端的包结构，以帮忙开发者更好地理解包之间的关系与层次。
 
@@ -30,7 +30,7 @@ Turms服务端项目的分包主要目标有：
 * 尽量让开发者通过包结构就能推测包的上下游关系。这点主要出于代码的可读性考虑，在长期的编程实践中，当我们看到中大型项目的包结构不做分层的代码，那我们可能就得自己翻几遍包或代码，才推测可能的包上下游关系。
 * 尽量让包的层次少一点。
 
-另外，在阅读各种优秀开源项目的包结构时，我们会发现大部分知名的中大型开源服务端项目可能压根就不做分层设计，并且通常是以`按功能特性分包为主，以按类型分包为辅`做混合设计。对于这种分包思路，我们一般会评价“还行吧，符合惯例，但差强人意”，因为它们并没有很好的满足上述的`分包目标`，很多开发者在阅读这些项目的源码时也会陷入到“不知道从哪读起”的情况。
+另外，在阅读各种优秀开源项目的包结构时，我们会发现大部分知名的中大型开源服务端项目可能压根就不做分层设计，并且通常是以`按功能特性分包为主，以按类型分包为辅`做混合设计，又或者是按照常规的MVC或DDD分层设计。对于这些分包思路，我们一般会评价“中规中矩，符合惯例，但差强人意”，因为它们并没有很好的满足上述的`分包目标`，很多开发者在阅读这些项目的源码时也会陷入到“不知道从哪读起”的情况，编码时也会经常遇到代码模棱两可的归属问题。
 
 ### 分包思路
 
@@ -41,44 +41,71 @@ Turms服务端项目的分包主要目标有：
 ```mermaid
 flowchart LR
     access-->domain
+    domain-->storage
     access-->infra
     domain-->infra
+    storage-->infra
     
     subgraph domain
         subgraph user/group/message/...
-            controller-->service-->repository
-            controller-->dto
+            domain-access(access)-->admin
+            domain-access(access)-->client/servicerequest
+            
+            admin-->admin-controller(controller)-->service
+            admin-->admin-dto(dto)
+            admin-->admin-others(...)
+            
+            client/servicerequest-->controller-->service
+            client/servicerequest-->...
+            
+            service-->repository
             service-->manager
             service-->bo
-            repository-->entity
+            
+            repository-->po
+            
             model
+            rpc
         end
+    end
+    
+    subgraph storage
+        mongo
+        redis
     end
     
     subgraph infra
         cluster
         config
         logging
-        mongo
-        redis
+        metrics
     ...
     end
 ```
 
 上图框里的名称就是实际Turms服务端中包的名称，其连线就是包与包之间的逻辑关系。其中：
 
-第一层按层来分包，分别分为了`access`、`domain`与`infra`三层：
+第一层按层来分包，分别是`access`、`domain`、`storage`与`infra`这四层，其中：
 
-* access：接入层，负责用户会话管理与用户请求调度。
-* domain：业务域层，负责处理各种业务域相关的逻辑。内部按照常见的分层分包设计，分为`controller`、`service`与`repository`三层。特别强调下，为什么要单独抽个`model`出来，像是上图中`dto`（Data Transfer Object）/`bo`（Business Object）/`do`（Data Object）都是贫血模型，只有`model`是充血模型，它们不仅要存储状态，还自带些行为，用于处理各种高内聚的逻辑，比较特别，因此单独分包。
-* infra：基础服务层，负责为`access`与`domain`层提供基础功能实现，如日志处理、配置管理、MongoDB客户端管理等。内部按照功能特性分包。
+* access：接入层，负责管理员与客户端的会话管理与请求调度。该层会将用户请求分发给`domain`层的`access`层。
+* domain：业务域层，负责处理各种业务域相关的逻辑。domain层内部按照常见的分层分包设计，分为`access`、`service`与`repository`三层。
+  * 其中，相对比较特别的是`domain`层中的`access`层。因为`service`的上层不仅有调度管理员HTTP请求的Controller层`admin`，还有调度客户端请求的Controller层`client`或`servicerequest`（对于turms-gateway来说是`client`包，而对于turms-service来说是`servicerequest`包）。二者共享Service层，因此使用一个单独的`accecss`层来涵盖这两层。
+  * 关于为什么要单独抽个`model`出来。像是上图中`dto`（Data Transfer Object）/`bo`（Business Object）/`po`（Persistent Object）都是贫血模型，只有`model`是充血模型，它们不仅要存储状态（数据），还自带些行为（逻辑），用于处理各种高内聚的逻辑，比较特别，因此单独分包。
+* storage：存储层，提供MongoDB客户端管理与Redis客户端管理，分别对应`mongo`包与`redis`包。
+* infra：基础服务层，负责为`access`与`domain`层提供基础功能实现，如日志处理、配置管理等。infra层内部按照功能特性分包。
 
-再次提醒，读者可能已经从上述的分包实践中，看出了很多分包理念的影子，而Turms只是参考这些理念做的设计，并不需要遵循这些分包理念。
+综上，Turms服务端的分包设计其实设计得很巧妙：
+
+* 通过`access`、`domain`、`storage`与`infra`这四层，开发者可以基于已掌握的MVC分层知识，快速理解Turms服务端的源码层次，并能根据包名清楚地明白每层包跟用户会话与用户请求是什么关系。
+* 而`domain`层的各业务域又可以帮助开发者快速区分各Turms服务端有哪些业务域。而每个域的内部又基于常见的MVC分层设计，开发者可以基于以往知识，快速理解一个业务域的内部上下游逻辑关系。
+* `infra`层又可以帮助开发者理解Turms服务端的支撑域具体包括哪些功能模块。
+
+因此这样的分包层次其实是比较清晰的，有利于长期维护。另外，读者可能已经从上述的分包实践中，看出了很多分包理念的影子，而Turms只是参考这些理念做的设计，并不需要遵循这些分包理念。
 
 补充：
 
-* 为什么不把业务域特性与非业务域特性拆分成两个模块。因为现阶段既没分模块的必要，分模块还会增加项目结构的复杂度。
-* Turms服务端的贫血模型大部分是用Java的`record`表示的，但还有些贫血模型因为性能原因（改动一个字段是否需要重新new个对象），仍用`class`表示。
+* 关于为什么不把第一层包拆分成模块，这是因为现阶段既没分模块的必要，分模块还会增加项目结构的复杂度，如无必要，勿增实体。
+* Turms服务端的贫血模型大部分是用Java的`record`表示的，但还有些贫血模型因为性能原因（改动一个字段是否需要重新new个新对象），仍用`class`表示。
 
 ## 客户端请求处理流程
 
@@ -114,57 +141,53 @@ sequenceDiagram
 
 1. 启动接收客户端请求的服务端
 
-   TCP服务端：`im.turms.gateway.access.tcp.factory.TcpServerFactory#create`
+   TCP服务端：`im.turms.gateway.access.client.tcp.TcpServerFactory#create`
 
-   WebSocket服务端：`im.turms.gateway.access.websocket.factory.WebSocketFactory#create`
+   WebSocket服务端：`im.turms.gateway.access.client.websocket.WebSocketServerFactory#create`
 
    这两个函数主要做的就是：基于reactor-netty，绑定监听地址、配置EventLoop线程池、（可选）配置SSL、开启相关度量等常规工作。
 
 2. 对于纯TCP连接（而非预备的WebSocket连接），给新确立的TCP连接绑上编解码Handlers
 
-   在`im.turms.gateway.access.tcp.factory.TcpServerFactory#create`函数内，通过下述回调，给新TCP连接绑上对应的`TurmsRequest`与`TurmsNotification`的编解码实例。
+   在`im.turms.gateway.access.client.tcp.TcpServerFactory#create`函数内，通过下述回调，给新TCP连接绑上对应的`TurmsRequest`与`TurmsNotification`的编解码实例。
 
    ```java
-   .doOnConnection(handlerConfig::configureConnection);
-   ```
-
-   其中，`configureConnection`函数来自：`im.turms.gateway.access.tcp.handler.TcpHandlerConfig`
-
-   ```java
-   void configureConnection(Connection connection) {
+   .doOnConnection(connection -> {
+       // Inbound
        connection.addHandlerLast("varintLengthBasedFrameDecoder", CodecFactory.getExtendedVarintLengthBasedFrameDecoder(maxFrameLength));
+       // Outbound
        connection.addHandlerLast("varintLengthFieldPrepender", CodecFactory.getVarintLengthFieldPrepender());
        connection.addHandlerLast("protobufFrameEncoder", CodecFactory.getProtobufFrameEncoder());
-   }
+   });
    ```
 
 3. 对于WebSocket连接，则先监听并校验HTTP Upgrade请求，然后再Upgrade成WebSocket连接
 
-   在`im.turms.gateway.access.websocket.factory.WebSocketFactory#create`函数内，通过下述代码绑定HTTP监听回调：
+   在`im.turms.gateway.access.client.websocket.WebSocketServerFactory#create`函数内，通过下述代码绑定HTTP监听回调：
 
    ```
    .handle(getHttpRequestHandler(handler, serverSpec))
    ```
 
-   其中`getHttpRequestHandler`函数来自`im.turms.gateway.access.websocket.factory.WebSocketFactory#getHttpRequestHandler`，该回调用于校验HTTP请求，如果监听到是合法的HTTP Upgrade请求，则将该连接升级为WebSocket连接。
+   其中`getHttpRequestHandler`函数来自`im.turms.gateway.access.client.websocket.WebSocketServerFactory#getHttpRequestHandler`，该回调用于校验HTTP请求，如果监听到是合法的HTTP Upgrade请求，则将该连接升级为WebSocket连接。
 
 至此，纯网络层的操作基本就完成了，下一步就是衔接网络层与业务逻辑层。
 
 #### 网络层与业务逻辑层的衔接
 
-1. 网络层与业务逻辑层，通过函数接口：`im.turms.gateway.access.common.function.ConnectionHandler#handle`进行绑定，主要绑定的内容就是：输入字节流、输出字节流、连接关闭时的回调函数。
+1. 网络层与业务逻辑层，通过函数接口：`im.turms.gateway.access.client.common.connection.ConnectionListener#onAdded`进行绑定，主要绑定的内容就是：输入字节流、输出字节流、连接关闭时的回调函数。
 
-   对于TCP服务端，在`im.turms.gateway.access.tcp.factory.TcpServerFactory#create`函数下，通过`.handle((in, out) -> handler.handle((Connection) in, false, in.receive(), out, ((Connection) in).onDispose()))`进行绑定。
+   对于TCP服务端，在`im.turms.gateway.access.client.tcp.TcpServerFactory#create`函数下，通过`.handle((in, out) -> connectionListener.onAdded((Connection) in, false, in.receive(), out, ((Connection) in).onDispose()))`进行绑定。
 
-   对于WebSocket服务端，在`im.turms.gateway.access.websocket.factory.WebSocketFactory#create`函数下，通过`handler.handle((Connection) in, true, inbound, out, onClose)`绑定。
+   对于WebSocket服务端，在`im.turms.gateway.access.client.websocket.WebSocketServerFactory#create`函数下，通过`connectionListener.onAdded((Connection) in, true, inbound, out, onClose)`绑定。
 
-2. 上述`handler.handle`会调用下述的`im.turms.gateway.access.common.UserSessionDispatcher#bindConnectionWithSessionWrapper`回调函数，用于协调处理输入字节流与输出字节流的逻辑，而从全局视角来看，这些字节数据本质上就是上层业务层的`请求`、`响应`与`通知`，因此这部分代码是服务端与客户端交互的重点，我们之后还会回看这块代码。其源码如下：
+2. 上述`connectionListener.onAdded`会调用下述的`UserSessionAssembler#bindConnectionWithSessionWrapper`回调函数，用于协调处理输入字节流与输出字节流的逻辑，而从全局视角来看，这些字节数据本质上就是上层业务层的`请求`、`响应`与`通知`，因此这部分代码是服务端与客户端交互的重点，我们之后还会回看这块代码。其源码如下：
 
    ```java
-   ConnectionHandler bindConnectionWithSessionWrapper() {
+   ConnectionListener bindConnectionWithSessionWrapper() {
        return (connection, isWebSocketConnection, in, out, onClose) -> {
            InetSocketAddress address = (InetSocketAddress) connection.address();
-           NetConnection netConnection = NetConnection.create(connection);
+           NetConnection netConnection = createConnection(connection);
            UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, address, closeIdleConnectionAfterSeconds,
                    userSession -> userSession.setNotificationConsumer((turmsNotificationBuffer, tracingContext) -> {
                        turmsNotificationBuffer.touch(turmsNotificationBuffer);
@@ -228,7 +251,7 @@ sequenceDiagram
 
 #### 业务层——请求调度层
 
-经由网络层的操作，来到了`im.turms.gateway.access.common.ClientRequestDispatcher#handleRequest`。该函数完成：调度心跳请求、业务请求；简单校验请求，如果是非法请求，则尝试拉黑等。
+经由网络层的操作，来到了`im.turms.gateway.access.client.common.ClientRequestDispatcher#handleRequest`。该函数完成：调度心跳请求、业务请求；简单校验请求，如果是非法请求，则尝试拉黑等。
 
 该函数的代码虽多，但其实很容易读，我们这里主要关注的是`handleServiceRequest(sessionWrapper, request, serviceRequestBuffer, tracingContext)`这行代码，`handleServiceRequest`函数的主要源码如下：
 
@@ -245,9 +268,9 @@ return switch (requestType) {
 };
 ```
 
-* 将`CREATE_SESSION_REQUEST`与`DELETE_SESSION_REQUEST`这两个turms-gateway能自行处理的请求交由自己的Controller层进行处理，即`im.turms.gateway.access.common.controller.SessionController`，该Controller主要就是借由`im.turms.gateway.service.impl.session.SessionService`服务与Redis服务端进行交互，执行用户`登陆`与`登出`相关逻辑。由于业务逻辑并非本篇的重点，这里就不展开讲了。等这Controller与Service的逻辑都处理完，则返回一个`TurmsNotification`对象，并经由上述的网络层与编解码Handlers，最终将字节数据发送给客户端。
+* 将`CREATE_SESSION_REQUEST`与`DELETE_SESSION_REQUEST`这两个turms-gateway能自行处理的请求交由自己的Controller层进行处理，即`SessionController`，该Controller主要就是借由`im.turms.gateway.domain.session.service.SessionService`服务与Redis服务端进行交互，执行用户`登陆`与`登出`相关逻辑。由于业务逻辑并非本篇的重点，这里就不展开讲了。等这Controller与Service的逻辑都处理完，则返回一个`TurmsNotification`对象，并经由上述的网络层与编解码Handlers，最终将字节数据发送给客户端。
 
-* 对于其他所有请求，turms-gateway通过上述的`handleServiceRequestForTurms`函数，最终经由RPC，将客户端请求下发给turms-service进行处理。其中的大致调用流程如下：经过几层简单的调用，来到`im.turms.gateway.service.impl.message.InboundRequestService#processServiceRequest0`，该函数会调用`im.turms.gateway.service.impl.message.InboundRequestService#sendServiceRequest`通过自研RPC框架，将包装有客户端请求字节数据的RPC请求`im.turms.server.common.rpc.request.HandleServiceRequest`下发给turms-service进行处理。其中，具体RPC的实现并非本篇重点，这里就不展开讲了。等turms-service处理完请求，会返回一个`im.turms.server.common.dto.ServiceResponse`，该对象会在上述的`im.turms.gateway.service.impl.message.InboundRequestService#processServiceRequest0`函数的代码，经过下述的`getNotificationFromResponse`函数将`ServiceResponse`转换为`TurmsNotification`，并经由上述的网络层与编解码Handlers，最终将字节数据发送给客户端。：
+* 对于其他所有请求，turms-gateway通过上述的`handleServiceRequest`函数，最终经由RPC，将客户端请求下发给turms-service进行处理。其中，`handleServiceRequest`函数会调用`node.getRpcService().requestResponse(request)`通过自研RPC框架，将包装有客户端请求字节数据的RPC请求`im.turms.server.common.access.servicerequest.rpc.HandleServiceRequest`下发给turms-service进行处理。具体RPC的实现并非本篇重点，这里就不展开讲了。等turms-service处理完请求，会返回一个`im.turms.server.common.access.servicerequest.dto.ServiceResponse`，该对象会在上述的`im.turms.gateway.domain.servicerequest.service.ServiceRequestService#handleServiceRequest`函数的代码，经过下述的`getNotificationFromResponse`函数将`ServiceResponse`转换为`TurmsNotification`，并经由上述的网络层与编解码Handlers，最终将字节数据发送给客户端。：
 
   ```java
   return sendServiceRequest(serviceRequest)
@@ -263,11 +286,11 @@ return switch (requestType) {
 
 1. 请求调度层
 
-   经由RPC层的处理，turms-service会首先通过`im.turms.service.workflow.access.servicerequest.dispatcher.ServiceRequestDispatcher#dispatch`拿到客户端请求的字节数据。该函数会调用`im.turms.service.workflow.access.servicerequest.dispatcher.ServiceRequestDispatcher#dispatch0`函数，完成诸如：请求校验、客户端拉黑、判断服务端监控状态、触发插件与调用Controller层接口函数、触发上游等任务。代码虽多，但其实还是比较易读的，这里我们主要看到其中的`result = handler.handle(lastClientRequest);`这行代码，`handler#handle`函数其实是`im.turms.service.workflow.access.servicerequest.dispatcher.ClientRequestHandler#handle`函数，而`handle`函数的实现，其实就是各Controller层接口的实现。
+   经由RPC层的处理，turms-service会首先通过`im.turms.service.access.servicerequest.dispatcher.ServiceRequestDispatcher#dispatch`拿到客户端请求的字节数据。该函数会调用`im.turms.service.access.servicerequest.dispatcher.ServiceRequestDispatcher#dispatch0`函数，完成诸如：请求校验、客户端拉黑、判断服务端监控状态、触发插件与调用Controller层接口函数、触发上游等任务。代码虽多，但其实还是比较易读的，这里我们主要看到其中的`result = result.switchIfEmpty(Mono.defer(() -> handler.handle(lastClientRequest)));`这行代码，`handler#handle`函数其实是`im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler#handle`函数，而`handle`函数的实现，其实就是各Controller层接口的实现。
 
 2. 请求Controller层
 
-   各Controller通过上述的`handle`函数，拿到了传来的`im.turms.service.workflow.access.servicerequest.dto.ClientRequest`对象后，就开始执行相关的业务逻辑，并向MongoDB服务端发送各种CRUD请求。业务逻辑处理并非本篇重点，这里就不展开讲解了。等Controller层处理完相关业务逻辑，就会返回一个`im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResult`对象。简单来说，该对象描述了：要发回给客户端的`响应`，与要发给其他用户的`通知`（比如：如果该请求是发送群聊消息请求，那么对于消息的接收客户端，这些发送给它们的输出字节流就是`通知`）。
+   各Controller通过上述的`handle`函数，拿到了传来的`im.turms.service.access.servicerequest.dto.ClientRequest`对象后，就开始执行相关的业务逻辑，并向MongoDB服务端发送各种CRUD请求。业务逻辑处理并非本篇重点，这里就不展开讲解了。等Controller层处理完相关业务逻辑，就会返回一个`im.turms.service.access.servicerequest.dto.RequestHandlerResult`对象。简单来说，该对象描述了：要发回给客户端的`响应`，与要发给其他用户的`通知`（比如：如果该请求是发送群聊消息请求，那么对于消息的接收客户端，这些发送给它们的输出字节流就是`通知`）。
 
    对于`响应`，会借由上述的RPC操作，将字节数据发回给turms-gateway，而turms-gateway再通过上述已经提及过的`respondToRequests`函数里的`.flatMap(turmsNotificationBuffer -> {`，最终将响应字节数据发送给客户端。
 
@@ -293,7 +316,7 @@ sequenceDiagram
 
 ### turms-service
 
-在上文中，我们讲到turms-service在处理完客户端请求的业务逻辑后，会返回一个`im.turms.service.workflow.access.servicerequest.dto.RequestHandlerResult`对象，该对象也包含了：通知数据与一组需要接收通知的用户ID。该对象会被先传递到`im.turms.service.workflow.access.servicerequest.dispatcher.ServiceRequestDispatcher#dispatch0`函数里的下述回调中：
+在上文中，我们讲到turms-service在处理完客户端请求的业务逻辑后，会返回一个`im.turms.service.access.servicerequest.dto.RequestHandlerResult`对象，该对象也包含了：通知数据与一组需要接收通知的用户ID。该对象会被先传递到`im.turms.service.access.servicerequest.dispatcher.ServiceRequestDispatcher#dispatch0`函数里的下述回调中：
 
 ```java
 .doOnEach(signal -> {
@@ -301,7 +324,7 @@ sequenceDiagram
         return;
     }
     RequestHandlerResult requestResult = signal.get();
-    if (requestResult == null || requestResult.code() != TurmsStatusCode.OK) {
+    if (requestResult == null || requestResult.code() != ResponseStatusCode.OK) {
         return;
     }
     notifyRelatedUsersOfAction(requestResult, userId, deviceType)
@@ -346,7 +369,7 @@ Mono<Void> notifyRelatedUsersOfAction(
 }
 ```
 
-我们主要看`outboundMessageService.forwardNotification`函数，该函数首先会通过`im.turms.server.common.service.session.UserStatusService#getDeviceAndNodeIdMapByUserId`函数从本地缓存或者Redis服务端中拉取通知接收用户ID所在的turms-gateway服务端节点ID，拿到这些节点ID后，再通过`im.turms.service.workflow.service.impl.message.OutboundMessageService#forwardClientMessageToNodes`函数，将`通知`通过RPC实现，转发给这些节点，让其进行具体的通知下发操作。具体代码实现如下：
+我们主要看`outboundMessageService.forwardNotification`函数，该函数首先会通过`im.turms.server.common.domain.session.service.UserStatusService#getDeviceAndNodeIdMapByUserId`函数从本地缓存或者Redis服务端中拉取通知接收用户ID所在的turms-gateway服务端节点ID，拿到这些节点ID后，再通过`im.turms.service.domain.message.service.OutboundMessageService#forwardClientMessageToNodes(...)`函数，将`通知`通过RPC实现，转发给这些节点，让其进行具体的通知下发操作。具体代码实现如下：
 
 ```java
 Mono<Boolean> forwardNotification(
@@ -380,7 +403,7 @@ Mono<Boolean> forwardNotification(
 
 ### turms-gateway
 
-`通知`经过RPC的转发后，turms-gateway首先会在`im.turms.gateway.service.impl.message.OutboundMessageService#sendNotificationToLocalClients`函数中获得turms-service发来的`通知`字节数据。该函数会调用`userSession.sendNotification(wrappedNotificationData, tracingContext)`将通知数据发送给该批用户的会话。而`sendNotification`函数就是之前我们让读者重点注意的，在`im.turms.gateway.access.common.UserSessionDispatcher#bindConnectionWithSessionWrapper`的回调函数，该函数通过`out.sendObject`完成通知的字节数据下发。具体代码如下：
+`通知`经过RPC的转发后，turms-gateway首先会在`im.turms.gateway.domain.notification.service.NotificationService#sendNotificationToLocalClients(...)`函数中获得turms-service发来的`通知`字节数据。该函数会调用`userSession.sendNotification(wrappedNotificationData, tracingContext)`将通知数据发送给该批用户的会话。而`sendNotification`函数就是之前我们让读者重点注意的，在`im.turms.gateway.access.client.common.UserSessionAssembler#bindConnectionWithSessionWrapper`的回调函数，该函数通过`out.sendObject`完成通知的字节数据下发。具体代码如下：
 
 ```java
 UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, address, closeIdleConnectionAfterSeconds,
@@ -438,7 +461,7 @@ sequenceDiagram
 
 ##### 业务层
 
-接着上文，turms-gateway会通过`im.turms.gateway.service.impl.message.InboundRequestService#sendServiceRequest`函数向turms-service发送`HandleServiceRequest`，而该函数会调用RPC服务的`im.turms.server.common.cluster.service.rpc.RpcService#requestResponse`函数，将RPC请求的处理逻辑代理给下游RPC服务执行，具体代码如下：
+接着上文，turms-gateway会通过`im.turms.gateway.domain.servicerequest.service.ServiceRequestService(...)`函数向turms-service发送`HandleServiceRequest`，而该函数会调用RPC服务的`RpcService#requestResponse`函数，将RPC请求的处理逻辑代理给下游RPC服务执行，具体代码如下：
 
 ```java
 Mono<ServiceResponse> sendServiceRequest(ServiceRequest serviceRequest) {
@@ -449,7 +472,7 @@ Mono<ServiceResponse> sendServiceRequest(ServiceRequest serviceRequest) {
 
 ##### RPC层——逻辑层
 
-由于函数调用方并没有指定`HandleServiceRequest`请求的RPC接收节点，因此`requestResponse`函数会首先通过`im.turms.server.common.cluster.service.rpc.RpcService#getOtherActiveConnectedMembersToRespond`函数，获得一批可以处理该RPC请求的节点，在判断完这些节点的健康状态后，如果不存在健康的节点，则抛异常，否则再将这RPC请求通过`im.turms.server.common.cluster.service.codec.CodecService#serializeWithoutCodecId`编码成字节数据，并通过`endpoint.sendRequest(request, requestBody)`这一函数，将字节数据交由下游的网络层进行发送。`requestResponse0`的具体源码如下：
+由于函数调用方并没有指定`HandleServiceRequest`请求的RPC接收节点，因此`requestResponse`函数会首先通过`im.turms.server.common.infra.cluster.service.rpc.RpcService#getOtherActiveConnectedMembersToRespond`函数，获得一批可以处理该RPC请求的节点，在判断完这些节点的健康状态后，如果不存在健康的节点，则抛异常，否则再将这RPC请求通过`im.turms.server.common.infra.cluster.service.codec.CodecService#serializeWithoutCodecId`编码成字节数据，并通过`endpoint.sendRequest(request, requestBody)`这一函数，将字节数据交由下游的网络层进行发送。`requestResponse0`的具体源码如下：
 
 ```java
 <T> Mono<T> requestResponse0(RpcEndpoint endpoint,
@@ -492,7 +515,7 @@ Mono<ServiceResponse> sendServiceRequest(ServiceRequest serviceRequest) {
 
 ##### RPC层——网络层
 
-RPC请求在被上游RPC逻辑层编码成字节数据后，会被传递给`im.turms.server.common.cluster.service.rpc.RpcEndpoint#sendRequest`函数，该函数会通过`RpcFrameEncoder.INSTANCE.encodeRequest(request, requestBody)`再给该字节数据append上`请求类型ID`与`请求ID`这两个字节数据，以让RPC对端能够根据`请求类型ID`进行解码，并通过`请求ID`返回对应的响应，并最终发送字节流数据给RPC对端。`sendRequest`具体代码实现如下：
+RPC请求在被上游RPC逻辑层编码成字节数据后，会被传递给`im.turms.server.common.infra.cluster.service.rpc.RpcEndpoint#sendRequest`函数，该函数会通过`RpcFrameEncoder.INSTANCE.encodeRequest(request, requestBody)`再给该字节数据append上`请求类型ID`与`请求ID`这两个字节数据，以让RPC对端能够根据`请求类型ID`进行解码，并通过`请求ID`返回对应的响应，并最终发送字节流数据给RPC对端。`sendRequest`具体代码实现如下：
 
 ```java
 <T> Mono<T> sendRequest(RpcRequest<T> request, ByteBuf requestBody) {

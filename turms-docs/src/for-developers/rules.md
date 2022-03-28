@@ -30,7 +30,7 @@ Java自身是一个很保守的语言，其大生态也非常保守。其设计�
 
 一般规则：性能（低时间复杂度与空间复杂度） > 代码可读性 > 设计模式
 
-* 性能 > 代码可读性。如使用`long`，而不是`java.util.Date`或`java.time.Instant`来表示时间，以避免创建新对象以及时间转换时的计算；又比如`im.turms.server.common.cluster.service.idgen.SnowflakeIdGenerator`类下的`nextIncreasingId`函数与`nextLargeGapId`函数重复了约10行代码，但我们不提取这公共代码出来，以避免开辟新方法栈（不考虑JVM的滞后Inline操作）。
+* 性能 > 代码可读性。如使用`long`，而不是`java.util.Date`或`java.time.Instant`来表示时间，以避免创建新对象以及时间转换时的计算；又比如`im.turms.server.common.infra.cluster.service.idgen.SnowflakeIdGenerator`类下的`nextIncreasingId`函数与`nextLargeGapId`函数重复了约10行代码，但我们不提取这公共代码出来，以避免开辟新方法栈（不考虑JVM的滞后Inline操作）。
 * 性能 > 设计模式。如场景：
   * 遍历处理`String`中的`char[]`元素。如果使用责任链模式，则需要用不同的Handler类实现不同类别的处理逻辑，虽然这样可以把逻辑理得很清晰，但是每个Handler都需要遍历一遍`char[]`，因此处理的时间复杂度为`O(n*m)`（n为char[]长度，m为Handler个数），这种复杂度的代码在Turms服务端代码中是禁止的。此时，就需要反设计模式来编写代码，尽可能把处理逻辑都写在一次遍历中，且尽量不要新开函数区分逻辑（这条可选），而是用注释分块来区分不同的处理逻辑，以避免函数栈开销。
   * Protobuf模型的高效设计一直受人称道，但官方Java版本的Protobuf的代码实现是偏保守且低效的。比如Protobuf模型是Immutable的，只有其Builder是Mutable的，因此想要修改Protobuf模型，还得先`toBuilder()`成一个Builder，再重新创建一个新Protobuf模型实例，内存有效使用率低下（额外补充：其字符串解码实现也是非常地低效，比如其为了兼容低版本Java，采用了`char[]`进行编码，但新版本Java的String内部只存储`byte[]`，因此需要一次额外的类型转换）。而我们可控的代码是能不用Builder就不用Builder，避免无意义的内存消耗。
@@ -82,7 +82,7 @@ Java自身是一个很保守的语言，其大生态也非常保守。其设计�
 
 * 关注于抽象实现的依赖库在与响应式编程结合时，在问题排查问题上，会给开发者带来地狱级的体验，尤其是Bug与需要手动释放的内存相关。在常规问题排查上，我们通常可以通过栈信息来很快的排查出问题。但在响应式编程中，这样的方法通常行不通，我们更多的靠逻辑推理来排查问题。即熟读上下游代码（包括依赖包内的代码），推演代码可能经过的所有流程。
 
-  如果代码的抽象层少、且调用关系扁平，这个排查过程其实很简单，可能我们只用在一个类内的几十行代码上扫几眼，就能大概知道出现问题的原因了。但如果流程中，使用到了大量“封装、抽象，用户无需关注底层实现逻辑”依赖库，地狱级体验就来了。原本我们可能只需要一个小数十行的函数就能实现所有相关逻辑。但如果基于抽象库去实现相关功能，我们在问题排查时，可能要查看的代码可能是A抽象类(A1,A2,A3...)类->B抽象类(B1,B2,B3...)->C抽象类(C1,C2,C3...)->...，在数十个类、数十个方法间跳转，并进行推理。其中最典型的对照例子就是：Turms的`im.turms.gateway.access.websocket.factory.WebSocketFactory#getHttpRequestHandler`在一个小数十行的函数内实现了一组WebSocket握手逻辑。但如果这套逻辑让Spring来实现，它会将各个不同包下的类，各种逻辑东拼西凑地混在一起，在问题排查时，如果还伴随着一些需要手动释放的内存，地狱级的问题排查体验就来了。
+  如果代码的抽象层少、且调用关系扁平，这个排查过程其实很简单，可能我们只用在一个类内的几十行代码上扫几眼，就能大概知道出现问题的原因了。但如果流程中，使用到了大量“封装、抽象，用户无需关注底层实现逻辑”依赖库，地狱级体验就来了。原本我们可能只需要一个小数十行的函数就能实现所有相关逻辑。但如果基于抽象库去实现相关功能，我们在问题排查时，可能要查看的代码可能是A抽象类(A1,A2,A3...)类->B抽象类(B1,B2,B3...)->C抽象类(C1,C2,C3...)->...，在数十个类、数十个方法间跳转，并进行推理。其中最典型的对照例子就是：Turms的`im.turms.gateway.access.client.websocket.WebSocketServerFactory#getHttpRequestHandler`在一个小数十行的函数内实现了一组WebSocket握手逻辑。但如果这套逻辑让Spring来实现，它会将各个不同包下的类，各种逻辑东拼西凑地混在一起，在问题排查时，如果还伴随着一些需要手动释放的内存，地狱级的问题排查体验就来了。
 
 * 部分依赖库在一些地方会自行Suppress异常，上层应用代码无法感知。由于出问题的时候，底层库代码与上层应用代码在大部分情况下，是跑在不同的栈上的。除非底层依赖库支持全局的异常回调，否则上层应用甚至无法感知异常的发生。对于一些Trivial级别的错误，上层应用感知不到也没关系。但如果是一些上层应用非常关注的异常（如RPC的TCP连接的异常断开），这将是引发整个系统异常与失序的导火索了。
 
@@ -111,7 +111,7 @@ Java自身是一个很保守的语言，其大生态也非常保守。其设计�
 
 在响应式编程中，最为人所诟病的就是该编程范式下的异常通常非常难定位，其堆栈信息基本没用。如果开发者在响应式编程模式下胡乱打印异常日志，很有可能调式者甚至无法根据日志判断这个异常是从哪里抛出来的，更别说反推其执行代码了。
 
-但其实好的异常日志打印原则与实践都比较简单，并且如果遵循该原则，定位异常通常也就几秒或几分钟的事情。其基本原则就是**最下游代码抛异常，无需打印。中游代码如果要做异常Translate，那就Translate后继续往上抛，无需打印；最上游接异常并打印**。至于什么代码算是“最上游”，调用`subscribe()`的代码就算“最上游”。该原则实践起来其实也很简单，只是响应式编程里的异常捕获“看起来”比较复杂而已。举例而言，在turms-service服务端中的`im.turms.service.workflow.access.servicerequest.dispatcher.ServiceRequestDispatcher#dispatch0`函数下，有段“根据Service层的处理结果，向相关用户发送通知”的操作，其代码如下：
+但其实好的异常日志打印原则与实践都比较简单，并且如果遵循该原则，定位异常通常也就几秒或几分钟的事情。其基本原则就是**最下游代码抛异常，无需打印。中游代码如果要做异常Translate，那就Translate后继续往上抛，无需打印；最上游接异常并打印**。至于什么代码算是“最上游”，调用`subscribe()`的代码就算“最上游”。该原则实践起来其实也很简单，只是响应式编程里的异常捕获“看起来”比较复杂而已。举例而言，在turms-service服务端中的`im.turms.service.access.servicerequest.dispatcher.ServiceRequestDispatcher#dispatch0`函数下，有段“根据Service层的处理结果，向相关用户发送通知”的操作，其代码如下：
 
 ```java
 return result
@@ -124,7 +124,7 @@ return result
                 return;
             }
             RequestHandlerResult requestResult = signal.get();
-            if (requestResult == null || requestResult.code() != TurmsStatusCode.OK) {
+            if (requestResult == null || requestResult.code() != ResponseStatusCode.OK) {
                 return;
             }
             notifyRelatedUsersOfAction(requestResult, userId, deviceType)
