@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.task;
 
+import im.turms.server.common.infra.thread.NamedThreadFactory;
+import im.turms.server.common.infra.thread.ThreadNameConst;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
@@ -39,8 +41,10 @@ public class TrivialTaskManager {
     private final TaskScheduler taskScheduler;
 
     public TrivialTaskManager() {
-        scheduledTaskMap = new ConcurrentHashMap<>();
-        taskScheduler = new ConcurrentTaskScheduler();
+        scheduledTaskMap = new ConcurrentHashMap<>(32);
+        NamedThreadFactory threadFactory = new NamedThreadFactory(ThreadNameConst.TRIVIAL_TASK_MANAGER, true);
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(threadFactory);
+        taskScheduler = new ConcurrentTaskScheduler(executor);
     }
 
     public void reschedule(String key, String cronExpression, Runnable runnable) {
