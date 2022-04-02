@@ -18,7 +18,7 @@
 package unit.im.turms.gateway.domain.session.service;
 
 import im.turms.gateway.access.client.common.UserSession;
-import im.turms.gateway.domain.observability.service.MetricsService;
+import im.turms.gateway.domain.observation.service.MetricsService;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.domain.session.service.UserService;

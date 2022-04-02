@@ -20,7 +20,7 @@ package im.turms.gateway.domain.session.service;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
 import im.turms.gateway.access.client.common.UserSession;
-import im.turms.gateway.domain.observability.service.MetricsService;
+import im.turms.gateway.domain.observation.service.MetricsService;
 import im.turms.gateway.domain.session.bo.UserLoginInfo;
 import im.turms.gateway.domain.session.manager.HeartbeatManager;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;

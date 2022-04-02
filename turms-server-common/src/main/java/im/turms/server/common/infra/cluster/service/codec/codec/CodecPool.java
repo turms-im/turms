@@ -20,7 +20,7 @@ package im.turms.server.common.infra.cluster.service.codec.codec;
 import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequestCodec;
 import im.turms.server.common.access.servicerequest.rpc.ServiceResponseCodec;
 import im.turms.server.common.domain.notification.rpc.SendNotificationRequestCodec;
-import im.turms.server.common.domain.observability.rpc.CountOnlineUsersRequestCodec;
+import im.turms.server.common.domain.observation.rpc.CountOnlineUsersRequestCodec;
 import im.turms.server.common.domain.session.rpc.SetUserOfflineRequestCodec;
 import im.turms.server.common.infra.cluster.service.codec.codec.impl.BoolCodec;
 import im.turms.server.common.infra.cluster.service.codec.codec.impl.ByteCodec;

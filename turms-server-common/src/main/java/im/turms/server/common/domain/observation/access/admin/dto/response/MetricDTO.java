@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.domain.observability.access.admin.dto.response;
+package im.turms.server.common.domain.observation.access.admin.dto.response;
 
 import java.util.List;
 import java.util.Map;

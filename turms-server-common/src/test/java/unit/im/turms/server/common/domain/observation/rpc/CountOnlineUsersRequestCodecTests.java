@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-package unit.im.turms.server.common.domain.observability.rpc;
+package unit.im.turms.server.common.domain.observation.rpc;
 
-import im.turms.server.common.domain.observability.rpc.CountOnlineUsersRequest;
-import im.turms.server.common.domain.observability.rpc.CountOnlineUsersRequestCodec;
+import im.turms.server.common.domain.observation.rpc.CountOnlineUsersRequest;
+import im.turms.server.common.domain.observation.rpc.CountOnlineUsersRequestCodec;
 import org.junit.jupiter.api.Test;
 import unit.im.turms.server.common.infra.cluster.service.rpc.codec.BaseCodecTest;
 

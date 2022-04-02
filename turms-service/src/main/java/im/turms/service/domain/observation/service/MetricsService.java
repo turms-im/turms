@@ -15,21 +15,23 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.domain.observability.service;
+package im.turms.service.domain.observation.service;
 
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Metrics;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 /**
  * @author James Chen
  */
-
 @Service
 public class MetricsService {
 
     @Getter
-    private final MeterRegistry registry = Metrics.globalRegistry;
+    private final MeterRegistry registry;
+
+    public MetricsService(MeterRegistry registry) {
+        this.registry = registry;
+    }
 
 }

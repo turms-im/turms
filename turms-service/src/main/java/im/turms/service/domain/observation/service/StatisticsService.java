@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package im.turms.service.domain.observability.service;
+package im.turms.service.domain.observation.service;
 
-import im.turms.server.common.domain.observability.rpc.CountOnlineUsersRequest;
+import im.turms.server.common.domain.observation.rpc.CountOnlineUsersRequest;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.rpc.RpcErrorCode;
 import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;

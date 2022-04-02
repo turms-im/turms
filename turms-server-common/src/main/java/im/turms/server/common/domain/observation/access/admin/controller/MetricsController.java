@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.domain.observability.access.admin.controller;
+package im.turms.server.common.domain.observation.access.admin.controller;
 
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.domain.observability.access.admin.dto.response.MetricDTO;
+import im.turms.server.common.domain.observation.access.admin.dto.response.MetricDTO;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.metrics.CsvReporter;

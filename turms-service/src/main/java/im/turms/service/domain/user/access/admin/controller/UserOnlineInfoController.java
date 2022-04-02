@@ -31,7 +31,7 @@ import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
-import im.turms.service.domain.observability.service.StatisticsService;
+import im.turms.service.domain.observation.service.StatisticsService;
 import im.turms.service.domain.user.access.admin.dto.request.UpdateOnlineStatusDTO;
 import im.turms.service.domain.user.access.admin.dto.response.OnlineUserNumberDTO;
 import im.turms.service.domain.user.access.admin.dto.response.UserLocationDTO;

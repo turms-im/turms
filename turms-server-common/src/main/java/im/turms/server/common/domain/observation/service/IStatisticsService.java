@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.domain.observability.service;
+package im.turms.server.common.domain.observation.service;
 
 import reactor.core.publisher.Mono;
 

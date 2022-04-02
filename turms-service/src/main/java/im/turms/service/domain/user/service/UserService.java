@@ -38,7 +38,7 @@ import im.turms.service.domain.common.validation.DataValidator;
 import im.turms.service.domain.conversation.service.ConversationService;
 import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.domain.message.service.MessageService;
-import im.turms.service.domain.observability.service.MetricsService;
+import im.turms.service.domain.observation.service.MetricsService;
 import im.turms.service.domain.user.repository.UserRepository;
 import im.turms.service.domain.user.service.onlineuser.SessionService;
 import im.turms.service.infra.metrics.MetricNameConst;

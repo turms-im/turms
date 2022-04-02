@@ -15,30 +15,27 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.domain.observability.rpc;
+package im.turms.gateway.domain.observation.service;
 
-import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
-import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
-import io.netty.buffer.ByteBuf;
+import im.turms.gateway.domain.session.service.SessionService;
+import im.turms.server.common.domain.observation.service.IStatisticsService;
+import org.springframework.stereotype.Service;
 
 /**
  * @author James Chen
  */
-public class CountOnlineUsersRequestCodec extends RpcRequestCodec<CountOnlineUsersRequest> {
+@Service
+public class StatisticsService implements IStatisticsService {
 
-    @Override
-    public CodecId getCodecId() {
-        return CodecId.RPC_COUNT_ONLINE_USERS;
+    private final SessionService sessionService;
+
+    public StatisticsService(SessionService sessionService) {
+        this.sessionService = sessionService;
     }
 
     @Override
-    protected int initialCapacityForRequest(CountOnlineUsersRequest data) {
-        return 0;
-    }
-
-    @Override
-    public CountOnlineUsersRequest readRequestData(ByteBuf input) {
-        return new CountOnlineUsersRequest();
+    public int countLocalOnlineUsers() {
+        return sessionService.countLocalOnlineUsers();
     }
 
 }

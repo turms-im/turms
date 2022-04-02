@@ -44,7 +44,7 @@ import im.turms.service.domain.group.po.Group;
 import im.turms.service.domain.group.po.GroupType;
 import im.turms.service.domain.group.repository.GroupRepository;
 import im.turms.service.domain.message.service.MessageService;
-import im.turms.service.domain.observability.service.MetricsService;
+import im.turms.service.domain.observation.service.MetricsService;
 import im.turms.service.domain.user.po.UserPermissionGroup;
 import im.turms.service.domain.user.service.UserPermissionGroupService;
 import im.turms.service.domain.user.service.UserVersionService;

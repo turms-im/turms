@@ -51,7 +51,7 @@ import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.domain.message.bo.BuiltinSystemMessageType;
 import im.turms.service.domain.message.po.Message;
 import im.turms.service.domain.message.repository.MessageRepository;
-import im.turms.service.domain.observability.service.MetricsService;
+import im.turms.service.domain.observation.service.MetricsService;
 import im.turms.service.domain.user.service.UserService;
 import im.turms.service.infra.plugin.extension.ExpiredMessageDeletionNotifier;
 import im.turms.service.infra.proto.ProtoModelConvertor;
