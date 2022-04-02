@@ -32,12 +32,14 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <kotlin.version>1.6.10</kotlin.version>
+        <kotlinx-coroutines.version>1.6.0</kotlinx-coroutines.version>
+        <okhttp.version>4.9.3</okhttp.version>
         <protobuf.version>3.19.4</protobuf.version>
-        <kotlin.version>1.5.31</kotlin.version>
-        <kotlinx-coroutines.version>1.5.2</kotlinx-coroutines.version>
-        <okhttp.version>4.9.2</okhttp.version>
-        <junit.version>5.8.1</junit.version>
+
+        <junit.version>5.8.2</junit.version>
+
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     </properties>
 
     <build>
@@ -115,4 +117,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>

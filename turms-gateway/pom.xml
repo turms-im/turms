@@ -35,14 +35,20 @@
         <dependency>
             <groupId>im.turms</groupId>
             <artifactId>server-common</artifactId>
-            <version>${project.version}</version>
         </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>im.turms</groupId>
             <artifactId>server-test-common</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Processor -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

@@ -31,17 +31,10 @@
     <artifactId>turms-service</artifactId>
     <version>${revision}</version>
 
-    <properties>
-        <commons-io.version>2.11.0</commons-io.version>
-
-        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>im.turms</groupId>
             <artifactId>server-common</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -54,18 +47,24 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
-            <version>${protobuf.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
         </dependency>
+
+        <!-- Testing -->
         <dependency>
             <groupId>im.turms</groupId>
             <artifactId>server-test-common</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Processor -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -74,7 +73,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>${versions-maven-plugin.version}</version>
             </plugin>
 
             <plugin>
@@ -189,7 +187,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>${maven-source-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>

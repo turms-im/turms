@@ -6,7 +6,7 @@
 
     <groupId>com.mydomain</groupId>
     <artifactId>my-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,7 +14,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.compilerVersion>17</maven.compiler.compilerVersion>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
+        <maven-shade-plugin.version>3.3.0</maven-shade-plugin.version>
     </properties>
 
     <dependencies>
