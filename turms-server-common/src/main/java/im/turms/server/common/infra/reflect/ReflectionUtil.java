@@ -33,9 +33,11 @@ import java.lang.reflect.Method;
 public final class ReflectionUtil {
 
     private static final Unsafe UNSAFE = UnsafeUtil.UNSAFE;
+    private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
     /**
      * "UNSAFE.objectFieldOffset(AccessibleObject.class.getDeclaredField("override"))" won't work
-     * because Java hides these fields: https://bugs.openjdk.java.net/browse/JDK-8210522
+     * because Java hides {@link java.lang.reflect.AccessibleObject#override} in
+     * https://bugs.openjdk.java.net/browse/JDK-8210522
      * So we get the offset via:
      * "jdk.internal.misc.Unsafe#objectFieldOffset(AccessibleObject.class, "override")"
      */
@@ -48,7 +50,7 @@ public final class ReflectionUtil {
         try {
             Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
-            return MethodHandles.lookup().unreflectGetter(field);
+            return LOOKUP.unreflectGetter(field);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -57,7 +59,7 @@ public final class ReflectionUtil {
     public static MethodHandle getGetter(Field field) {
         try {
             field.setAccessible(true);
-            return MethodHandles.lookup().unreflectGetter(field);
+            return LOOKUP.unreflectGetter(field);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -67,7 +69,7 @@ public final class ReflectionUtil {
         try {
             Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
-            return MethodHandles.lookup().unreflectSetter(field);
+            return LOOKUP.unreflectSetter(field);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -76,7 +78,7 @@ public final class ReflectionUtil {
     public static MethodHandle getSetter(Field field) {
         try {
             field.setAccessible(true);
-            return MethodHandles.lookup().unreflectSetter(field);
+            return LOOKUP.unreflectSetter(field);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -85,7 +87,7 @@ public final class ReflectionUtil {
     public static VarHandle getVarHandle(Class<?> clazz, String fieldName) {
         try {
             return MethodHandles
-                    .privateLookupIn(clazz, MethodHandles.lookup())
+                    .privateLookupIn(clazz, LOOKUP)
                     .unreflectVarHandle(clazz.getDeclaredField(fieldName));
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -95,7 +97,7 @@ public final class ReflectionUtil {
     public static MethodHandle method2Handle(Method method) {
         try {
             method.setAccessible(true);
-            return MethodHandles.lookup().unreflect(method);
+            return LOOKUP.unreflect(method);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

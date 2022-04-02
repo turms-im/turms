@@ -65,11 +65,11 @@ public final class ServiceRequest {
     public ServiceRequest(byte[] ip,
                           Long userId,
                           DeviceType deviceType,
-                          Long requestId,
-                          TurmsRequest.KindCase type,
+                          @Nullable Long requestId,
+                          @Nullable TurmsRequest.KindCase type,
                           ByteBuf turmsRequestBuffer) {
         if (!InetAddressUtil.isIpV4OrV6(ip)) {
-            throw new IllegalArgumentException("Illegal IP: " + Arrays.toString(ip));
+            throw new IllegalArgumentException("Illegal IP bytes: " + Arrays.toString(ip));
         }
         this.ip = ip;
         this.userId = userId;

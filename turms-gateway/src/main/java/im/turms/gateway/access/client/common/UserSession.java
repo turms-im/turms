@@ -80,7 +80,7 @@ public final class UserSession {
     private volatile long lastHeartbeatRequestTimestampMillis;
     private volatile long lastRequestTimestampMillis;
     // No need to add volatile because it can only be accessed by one thread
-    // (the thread "heartbeat-update" in HeartbeatManager)
+    // (the thread "turms-client-heartbeat-refresher" in HeartbeatManager)
     private long lastHeartbeatUpdateTimestampMillis;
 
     /**

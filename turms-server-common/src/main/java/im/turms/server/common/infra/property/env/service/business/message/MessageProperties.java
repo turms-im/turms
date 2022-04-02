@@ -75,22 +75,22 @@ public class MessageProperties {
             "Note: If false, senders will not get the message ID after the message has sent and cannot edit it")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean messagePersistent = true;
+    private boolean persistMessage = true;
 
     @Description("Whether to persist the records of messages in databases")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean recordsPersistent;
+    private boolean persistRecord;
 
     @Description("Whether to persist the \"preMessageId\" of messages in databases")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean preMessageIdPersistent;
+    private boolean persistPreMessageId;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("A message will become expired after the TTL has elapsed")
+    @Description("A message will be retained for the given period and will be removed from the database after the retention period")
     @Min(0)
-    private int messageExpireAfterHours;
+    private int messageRetentionPeriodHours;
 
     @Description("Clean the expired messages when the cron expression is triggered")
     @GlobalProperty
@@ -140,17 +140,23 @@ public class MessageProperties {
     @JsonView(MutablePropertiesView.class)
     private boolean sendMessageToOtherSenderOnlineDevices = true;
 
-    /**
-     * Cache
-     */
+    @NestedConfigurationProperty
+    private CacheProperties cache = new CacheProperties();
 
-    @Description("The maximum size of the cache of sent messages.")
-    @Min(0)
-    private int sentMessageCacheMaxSize = 10240;
+    @AllArgsConstructor
+    @Builder(toBuilder = true)
+    @Data
+    @NoArgsConstructor
+    public static class CacheProperties {
 
-    @Description("The life duration of each sent message in the cache." +
-            "For a better performance, it is a good practice to keep the value greater than the allowed recall duration")
-    @Min(1)
-    private int sentMessageExpireAfter = 30;
+        @Description("The maximum size of the cache of sent messages.")
+        @Min(0)
+        private int sentMessageCacheMaxSize = 10240;
 
+        @Description("The retention period of sent messages in the cache. " +
+                "For a better performance, it is a good practice to keep the value greater than the allowed recall duration")
+        @Min(1)
+        private int sentMessageExpireAfter = 30;
+
+    }
 }

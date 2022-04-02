@@ -41,6 +41,7 @@ import java.util.concurrent.ScheduledFuture;
 public class TrivialTaskManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrivialTaskManager.class);
+    private static final int SLOW_SLOG_THRESHOLD_MILLIS = 1000;
 
     private final Map<String, ScheduledFuture<?>> scheduledTaskMap;
 
@@ -80,7 +81,7 @@ public class TrivialTaskManager {
             }
             long endTime = System.currentTimeMillis();
             long diff = endTime - startTime;
-            if (diff > 1000) {
+            if (diff > SLOW_SLOG_THRESHOLD_MILLIS) {
                 String name = runnable.getClass().getName();
                 LOGGER.warn("A slow task [" + name + "] took " + diff + " milliseconds to execute");
             }

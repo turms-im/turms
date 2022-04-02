@@ -33,10 +33,10 @@ public record ServiceResponse(
 ) {
     @Override
     public String toString() {
-        return "ServiceResponse[" +
+        return "ServiceResponse{" +
                 "dataForRequester=" + ProtoFormatter.toLogString(dataForRequester) +
                 ", code=" + code +
                 ", reason=" + reason +
-                ']';
+                '}';
     }
 }

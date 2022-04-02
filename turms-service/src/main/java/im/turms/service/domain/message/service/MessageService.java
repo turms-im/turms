@@ -158,13 +158,13 @@ public class MessageService {
         useSequenceIdForGroupConversation = sequenceIdProperties.isUseSequenceIdForGroupConversation();
         useSequenceIdForPrivateConversation = sequenceIdProperties.isUseSequenceIdForPrivateConversation();
         timeType = messageProperties.getTimeType();
-        int relayedMessageCacheMaxSize = turmsPropertiesManager.getLocalProperties().getService().getMessage().getSentMessageCacheMaxSize();
-        if (relayedMessageCacheMaxSize > 0 && turmsPropertiesManager.getLocalProperties().getService().getMessage().isMessagePersistent()) {
+        MessageProperties.CacheProperties cacheProperties = turmsPropertiesManager.getLocalProperties().getService().getMessage().getCache();
+        int relayedMessageCacheMaxSize = cacheProperties.getSentMessageCacheMaxSize();
+        if (relayedMessageCacheMaxSize > 0 && turmsPropertiesManager.getLocalProperties().getService().getMessage().isPersistMessage()) {
             this.sentMessageCache = Caffeine
                     .newBuilder()
                     .maximumSize(relayedMessageCacheMaxSize)
-                    .expireAfterWrite(Duration.ofSeconds(
-                            turmsPropertiesManager.getLocalProperties().getService().getMessage().getSentMessageExpireAfter()))
+                    .expireAfterWrite(Duration.ofSeconds(cacheProperties.getSentMessageExpireAfter()))
                     .build();
         } else {
             sentMessageCache = null;
@@ -177,12 +177,12 @@ public class MessageService {
                 turmsPropertiesManager.getLocalProperties().getService().getMessage().getExpiredMessagesCleanupCron(),
                 () -> {
                     if (node.isLocalNodeLeader()) {
-                        int expireAfterHours = node.getSharedProperties()
+                        int retentionPeriodHours = node.getSharedProperties()
                                 .getService()
                                 .getMessage()
-                                .getMessageExpireAfterHours();
-                        if (expireAfterHours > 0) {
-                            deleteExpiredMessages(expireAfterHours)
+                                .getMessageRetentionPeriodHours();
+                        if (retentionPeriodHours > 0) {
+                            deleteExpiredMessages(retentionPeriodHours)
                                     .subscribe(null, t -> LOGGER.error("Caught an error while deleting expired messages", t));
                         }
                     }
@@ -349,10 +349,10 @@ public class MessageService {
         if (messageId == null) {
             messageId = node.nextLargeGapId(ServiceType.MESSAGE);
         }
-        if (!messageProperties.isRecordsPersistent()) {
+        if (!messageProperties.isPersistRecord()) {
             records = null;
         }
-        if (!messageProperties.isPreMessageIdPersistent()) {
+        if (!messageProperties.isPersistPreMessageId()) {
             preMessageId = null;
         }
         Mono<Long> sequenceId = null;
@@ -427,18 +427,18 @@ public class MessageService {
         return saveMessage;
     }
 
-    public Flux<Long> queryExpiredMessageIds(@NotNull Integer timeToLiveHours) {
+    public Flux<Long> queryExpiredMessageIds(@NotNull Integer retentionPeriodHours) {
         try {
-            Validator.notNull(timeToLiveHours, "timeToLiveHours");
+            Validator.notNull(retentionPeriodHours, "retentionPeriodHours");
         } catch (ResponseException e) {
             return Flux.error(e);
         }
-        Date expirationDate = DateUtil.addHours(System.currentTimeMillis(), -timeToLiveHours);
+        Date expirationDate = DateUtil.addHours(System.currentTimeMillis(), -retentionPeriodHours);
         return messageRepository.findExpiredMessageIds(expirationDate);
     }
 
-    public Mono<Void> deleteExpiredMessages(@NotNull Integer timeToLiveHours) {
-        return queryExpiredMessageIds(timeToLiveHours)
+    public Mono<Void> deleteExpiredMessages(@NotNull Integer retentionPeriodHours) {
+        return queryExpiredMessageIds(retentionPeriodHours)
                 .collectList()
                 .flatMap(expiredMessageIds -> {
                     if (expiredMessageIds.isEmpty()) {
@@ -724,7 +724,7 @@ public class MessageService {
                             ? groupMemberService.findMemberIdsByGroupId(targetId).collect(Collectors.toSet())
                             : Mono.just(Set.of(targetId));
                     return recipientIdsMono.flatMap(recipientIds -> {
-                        if (!node.getSharedProperties().getService().getMessage().isMessagePersistent()) {
+                        if (!node.getSharedProperties().getService().getMessage().isPersistMessage()) {
                             return recipientIds.isEmpty()
                                     ? Mono.empty()
                                     : Mono.just(Pair.of(null, recipientIds));
