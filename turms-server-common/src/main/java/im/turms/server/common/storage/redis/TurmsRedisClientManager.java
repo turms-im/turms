@@ -151,7 +151,7 @@ public class TurmsRedisClientManager {
      * @param keyGenerator The size of keys should not be larger than 1,048,576(1024*1024), or Redis will throw
      */
     public Mono<Void> eval(RedisScript script, short firstKey, LongKeyGenerator keyGenerator) {
-        int expectedKeySize = Math.max(keyGenerator.expectedSize(), 1);
+        int estimatedKeySize = Math.max(keyGenerator.estimatedSize(), 1);
         int clientSize = clients.size();
         long key;
         // fast path
@@ -161,7 +161,7 @@ public class TurmsRedisClientManager {
                 return Mono.empty();
             }
             ByteBuf keysBuffer = PooledByteBufAllocator.DEFAULT
-                    .directBuffer(expectedKeySize * (Long.BYTES + 16));
+                    .directBuffer(estimatedKeySize * (Long.BYTES + 16));
             int keyCount = 1;
             try {
                 CommandArgsUtil.writeRawShortArg(keysBuffer, firstKey);
@@ -179,7 +179,7 @@ public class TurmsRedisClientManager {
                     .then();
         }
         // slow path
-        int keysPerClient = Math.max(expectedKeySize / clientSize, 1);
+        int keysPerClient = Math.max(estimatedKeySize / clientSize, 1);
         Map<TurmsRedisClient, BufferEntry> keyForClients = new IdentityHashMap<>(clientSize);
         while ((key = keyGenerator.next()) != -1) {
             TurmsRedisClient client = getClient(key);

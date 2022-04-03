@@ -30,7 +30,6 @@ import im.turms.server.common.infra.throttle.TokenBucketContext;
 import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -56,7 +55,7 @@ public class IpRequestThrottler {
      * for each client request and needs to store a lot of items.
      * So just using and iterating ConcurrentHashMap is enough
      */
-    private final Map<ByteArrayWrapper, TokenBucket> ipRequestTokenBucketMap = new ConcurrentHashMap<>(256);
+    private final ConcurrentHashMap<ByteArrayWrapper, TokenBucket> ipRequestTokenBucketMap = new ConcurrentHashMap<>(256);
 
     public IpRequestThrottler(Node node, SessionService sessionService) {
         sessionService.addOnSessionClosedListeners(session ->
@@ -93,11 +92,11 @@ public class IpRequestThrottler {
     }
 
     private void removeExpiredRequestTokenBuckets() throws InterruptedException {
-        Iterator<Map.Entry<ByteArrayWrapper, TokenBucket>> iterator = ipRequestTokenBucketMap.entrySet().iterator();
+        Iterator<TokenBucket> iterator = ipRequestTokenBucketMap.values().iterator();
         int processed = 0;
         long startTime = System.currentTimeMillis();
         while (iterator.hasNext()) {
-            TokenBucket bucket = iterator.next().getValue();
+            TokenBucket bucket = iterator.next();
             long lastAccessTime = bucket.getLastRefillTime();
             if ((startTime - lastAccessTime) > IDLE_ENTRY_TTL && bucket.isTokensMoreThanOrEqualsToInitialTokens()) {
                 iterator.remove();

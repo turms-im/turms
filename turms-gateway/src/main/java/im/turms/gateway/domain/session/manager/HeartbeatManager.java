@@ -32,9 +32,9 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Setter;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -119,29 +119,28 @@ public class HeartbeatManager {
     }
 
     private void updateOnlineUsersTtl() {
-        Set<Map.Entry<Long, UserSessionsManager>> entries = sessionsManagerByUserId.entrySet();
-        LongKeyGenerator userIds = collectOnlineUsersAndUpdateStatus(entries);
+        Collection<UserSessionsManager> managers = sessionsManagerByUserId.values();
+        LongKeyGenerator userIds = collectOnlineUsersAndUpdateStatus(managers);
         userStatusService.updateOnlineUsersTtl(userIds, closeIdleSessionAfterSeconds)
                 .subscribe(null, t -> LOGGER.error("Failed to update online users", t));
     }
 
-    private LongKeyGenerator collectOnlineUsersAndUpdateStatus(Set<Map.Entry<Long, UserSessionsManager>> entries) {
-        int onlineUserCount = entries.size();
-        int expectedUserCountToRefreshPerInterval = (int) (UPDATE_HEARTBEAT_INTERVAL_FACTOR * onlineUserCount / expectedFractionPerSecond);
-        Iterator<Map.Entry<Long, UserSessionsManager>> iterator = entries.iterator();
+    private LongKeyGenerator collectOnlineUsersAndUpdateStatus(Collection<UserSessionsManager> managers) {
+        int onlineUserCount = managers.size();
+        int estimatedUserCountToRefreshPerInterval = (int) (UPDATE_HEARTBEAT_INTERVAL_FACTOR * onlineUserCount / expectedFractionPerSecond);
+        Iterator<UserSessionsManager> iterator = managers.iterator();
         return new LongKeyGenerator() {
             final long now = System.currentTimeMillis();
 
             @Override
-            public int expectedSize() {
-                return expectedUserCountToRefreshPerInterval;
+            public int estimatedSize() {
+                return estimatedUserCountToRefreshPerInterval;
             }
 
             @Override
             public long next() {
                 while (iterator.hasNext()) {
-                    Map.Entry<Long, UserSessionsManager> entry = iterator.next();
-                    Map<DeviceType, UserSession> sessionMap = entry.getValue().getSessionMap();
+                    Map<DeviceType, UserSession> sessionMap = iterator.next().getSessionMap();
                     for (Map.Entry<DeviceType, UserSession> sessionEntry : sessionMap.entrySet()) {
                         Long userId = closeOrUpdateSession(sessionEntry.getValue(), now);
                         if (userId != null) {

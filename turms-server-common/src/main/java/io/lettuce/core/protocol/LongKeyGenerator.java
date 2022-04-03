@@ -31,7 +31,7 @@ package io.lettuce.core.protocol;
  * @author James Chen
  */
 public abstract class LongKeyGenerator {
-    public abstract int expectedSize();
+    public abstract int estimatedSize();
 
     public abstract long next();
 }

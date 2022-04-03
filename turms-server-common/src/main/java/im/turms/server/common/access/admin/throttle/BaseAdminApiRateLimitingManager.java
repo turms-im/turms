@@ -39,11 +39,10 @@ public abstract class BaseAdminApiRateLimitingManager {
         tokenBucketContext = new TokenBucketContext(properties);
         taskManager.reschedule("expiredAdminApiAccessInfoCleaner", CronConst.EXPIRED_ADMIN_API_ACCESS_INFO_CLEANUP_CRON,
                 () -> {
-                    Iterator<Map.Entry<String, TokenBucket>> iterator = ipTokenBucketMap.entrySet().iterator();
+                    Iterator<TokenBucket> iterator = ipTokenBucketMap.values().iterator();
                     long now = System.currentTimeMillis();
                     while (iterator.hasNext()) {
-                        Map.Entry<String, TokenBucket> entry = iterator.next();
-                        TokenBucket bucket = entry.getValue();
+                        TokenBucket bucket = iterator.next();
                         bucket.refill(now);
                         // We assume idle sessions will have the max number of tokens "capacity" finally
                         if (bucket.getTokens() >= tokenBucketContext.getCapacity()) {

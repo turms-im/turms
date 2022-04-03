@@ -21,11 +21,9 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties;
 import im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties.BlockLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
@@ -43,7 +41,7 @@ public class AutoBlockManager<T> {
     private final int maxLevel;
     private final int blockTriggerTimes;
 
-    private final Map<T, BlockStatus> blockStatusMap;
+    private final ConcurrentHashMap<T, BlockStatus> blockStatusMap;
 
     public AutoBlockManager(AutoBlockItemProperties autoBlockProperties, BiConsumer<T, Integer> onClientBlocked) {
         this.onClientBlocked = onClientBlocked;
@@ -105,10 +103,9 @@ public class AutoBlockManager<T> {
 
     public void evictExpiredBlockedClient() {
         long now = System.currentTimeMillis();
-        Iterator<Map.Entry<T, BlockStatus>> iterator = blockStatusMap.entrySet().iterator();
+        Iterator<BlockStatus> iterator = blockStatusMap.values().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<T, BlockStatus> entry = iterator.next();
-            BlockStatus status = entry.getValue();
+            BlockStatus status = iterator.next();
             int reduceOneTriggerTimeInterval = status.currentLevelProperties.getReduceOneTriggerTimeIntervalMillis();
             if (reduceOneTriggerTimeInterval > 0) {
                 int times = status.triggerTimes - (int) (now - status.lastBlockTriggerTime) / reduceOneTriggerTimeInterval;
@@ -120,7 +117,6 @@ public class AutoBlockManager<T> {
     }
 
     @AllArgsConstructor
-    @Data
     private static class BlockStatus {
         private int currentLevel;
         private BlockLevel currentLevelProperties;

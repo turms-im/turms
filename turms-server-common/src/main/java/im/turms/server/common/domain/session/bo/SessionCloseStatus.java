@@ -17,8 +17,7 @@
 
 package im.turms.server.common.domain.session.bo;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.eclipse.collections.impl.map.mutable.primitive.IntObjectHashMap;
 
 /**
  * @author James Chen
@@ -68,7 +67,7 @@ public enum SessionCloseStatus {
     USER_IS_DELETED_OR_INACTIVATED(700),
     USER_IS_BLOCKED(701);
 
-    private static final Map<Integer, SessionCloseStatus> CODE_POOL = new HashMap<>((int) (SessionCloseStatus.values().length / 0.5));
+    private static final IntObjectHashMap<SessionCloseStatus> CODE_POOL = new IntObjectHashMap<>(SessionCloseStatus.values().length);
 
     static {
         for (SessionCloseStatus status : SessionCloseStatus.values()) {

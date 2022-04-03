@@ -28,7 +28,6 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.proto.ProtoEncoder;
 import io.netty.buffer.ByteBuf;
-import io.netty.util.HashedWheelTimer;
 import lombok.Data;
 import org.springframework.util.Assert;
 
@@ -46,10 +45,6 @@ public final class UserSessionsManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserSessionsManager.class);
 
-    /**
-     * The count of pending timeouts should be roughly the same as the count of online sessions
-     */
-    private static final HashedWheelTimer HEARTBEAT_TIMER = new HashedWheelTimer();
     private static final EnumMap<DeviceType, UserSession> SESSION_MAP_TEMPLATE = new EnumMap<>(DeviceType.class);
 
     private final Long userId;

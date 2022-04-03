@@ -246,7 +246,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
         Iterator<Long> iterator = userIds.iterator();
         LongKeyGenerator users = new LongKeyGenerator() {
             @Override
-            public int expectedSize() {
+            public int estimatedSize() {
                 return userIds.size();
             }
 
