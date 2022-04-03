@@ -61,6 +61,7 @@ const ONBOARD_MESSAGES = [
     'Input commands, e.g. "user.login(1, \'123\')"',
     '"help" for details'
 ];
+
 const HELP = `* Builtin Objects:
     * Turms Client: client
     * Services:
@@ -70,10 +71,14 @@ const HELP = `* Builtin Objects:
         * notification
         * storage
         * user
+* Builtin Commands:
+    * help: print this help message
+    * clear: clear screen
 * Command Examples:
     * user.login(1, '123')
     * message.sendMessage(false, 1, null, 'This is my message')
-`;
+`.replace(/\n/g, '\r\n');
+
 const CONTEXT = `
 const client = this;
 const conversation = client.conversationService;
@@ -83,9 +88,13 @@ const notification = client.notificationService;
 const storage = client.storageService;
 const user = client.userService;
 return `;
+
 const AST_ROOT = [
     {
         name: 'help'
+    },
+    {
+        name: 'clear'
     },
     {
         name: 'this',
@@ -120,6 +129,7 @@ const AST_ROOT = [
         type: 'UserService'
     }
 ].map(val => ({syntax: 'variable', ...val}));
+
 const MESSAGE_FOR_VOID_FUNCTION = '(Done)';
 
 export default {
@@ -187,18 +197,18 @@ export default {
             if (cmd === 'help') {
                 return {
                     type: 'info',
-                    msg: HELP.replace(/\n/g, '\r\n')
+                    msg: HELP
                 };
+            } else if (cmd === 'clear') {
+                this.$refs.cliTerminal.clear();
+                return;
             }
             try {
                 const func = new Function(CONTEXT + cmd);
                 let result = func.call(this.client);
-                let isFunction;
+                const isFunction = cmd.endsWith(')');
                 if (result instanceof Promise) {
-                    isFunction = true;
                     result = await result;
-                } else if (cmd.endsWith(')')) {
-                    isFunction = true;
                 }
                 result = result == null && isFunction
                     ? MESSAGE_FOR_VOID_FUNCTION
