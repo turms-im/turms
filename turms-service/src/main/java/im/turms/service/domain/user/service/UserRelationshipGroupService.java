@@ -282,7 +282,6 @@ public class UserRelationshipGroupService {
         if (deleteGroupIndex.equals(newGroupIndex)) {
             return Mono.empty();
         }
-        UserRelationshipGroup.Key key = new UserRelationshipGroup.Key(ownerId, deleteGroupIndex);
         // Don't use transaction for better performance
         return userRelationshipGroupMemberRepository.findRelationshipGroupMembers(ownerId, deleteGroupIndex)
                 .collectList()
@@ -294,9 +293,11 @@ public class UserRelationshipGroupService {
                     Date now = new Date();
                     for (UserRelationshipGroupMember member : members) {
                         UserRelationshipGroupMember.Key memberKey = member.getKey();
-                        UserRelationshipGroupMember.Key newKey = new UserRelationshipGroupMember
-                                .Key(memberKey.getOwnerId(), newGroupIndex, memberKey.getRelatedUserId());
-                        newMembers.add(new UserRelationshipGroupMember(newKey, now));
+                        UserRelationshipGroupMember groupMember = new UserRelationshipGroupMember(memberKey.getOwnerId(),
+                                newGroupIndex,
+                                memberKey.getRelatedUserId(),
+                                now);
+                        newMembers.add(groupMember);
                     }
                     return userRelationshipGroupMemberRepository.insertAllOfSameType(newMembers)
                             .onErrorResume(DuplicateKeyException.class, e -> Mono.empty());

@@ -244,6 +244,10 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         List<ShardKey.Path> paths = shardKey.paths();
         BsonDocument filter = new BsonDocument(MapUtil.getCapability(paths.size()));
         for (ShardKey.Path shardKeyPath : paths) {
+            if (shardKeyPath.isIdField()) {
+                filter.append(DomainFieldName.ID, document.get(DomainFieldName.ID));
+                continue;
+            }
             String[] path = shardKeyPath.path();
             // fast path
             if (path.length == 1) {
@@ -612,7 +616,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         CreateCollectionOptions options = new CreateCollectionOptions();
         BsonDocument jsonSchema = entity.jsonSchema();
         if (jsonSchema == null) {
-            String message = "Failed to create collection [%s] because no JSON schema specified"
+            String message = "Failed to create the collection [%s] because no JSON schema specified"
                     .formatted(entity.collectionName());
             return Mono.error(new RuntimeException(message));
         }
@@ -705,6 +709,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     }
 
     private BsonDocument encodeEntityForUpdateOps(BsonDocument document) {
+        // Remove "_id", or MongoDB will throw "Performing an update on the path '_id' would modify the immutable field '_id'"
         document.remove(DomainFieldName.ID);
         return new BsonDocument("$set", document);
     }

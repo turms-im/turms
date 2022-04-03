@@ -426,20 +426,18 @@ public class UserRelationshipService {
                     .onErrorMap(DuplicateKeyException.class,
                             e -> ResponseException.get(ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP)));
         }
-        if (newGroupIndex != null && deleteGroupIndex != null && !newGroupIndex.equals(deleteGroupIndex)) {
-            monos.add(userRelationshipGroupService.moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, newGroupIndex));
-        } else {
-            if (newGroupIndex != null) {
-                Mono<UserRelationshipGroupMember> add = userRelationshipGroupService.addRelatedUserToRelationshipGroups(
-                        ownerId, newGroupIndex, relatedUserId, session);
-                monos.add(add);
+        if (newGroupIndex != null && deleteGroupIndex != null) {
+            if (!newGroupIndex.equals(deleteGroupIndex)) {
+                monos.add(userRelationshipGroupService.moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, newGroupIndex));
             }
-            if (deleteGroupIndex != null) {
-                Integer targetGroupIndex = newGroupIndex == null ? DEFAULT_RELATIONSHIP_GROUP_INDEX : newGroupIndex;
-                Mono<Void> delete = userRelationshipGroupService
-                        .moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, targetGroupIndex);
-                monos.add(delete);
-            }
+        } else if (newGroupIndex != null) {
+            Mono<UserRelationshipGroupMember> add = userRelationshipGroupService.addRelatedUserToRelationshipGroups(
+                    ownerId, newGroupIndex, relatedUserId, session);
+            monos.add(add);
+        } else if (deleteGroupIndex != null) {
+            Mono<Void> delete = userRelationshipGroupService
+                    .moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, DEFAULT_RELATIONSHIP_GROUP_INDEX);
+            monos.add(delete);
         }
         return Mono.whenDelayError(monos);
     }

@@ -21,16 +21,17 @@ import org.bson.BsonDocument;
 
 import java.util.List;
 
+/**
+ * @author James Chen
+ */
 public record ShardKey(BsonDocument document, List<Path> paths) {
 
     /**
      * e.g. "_id.whatever" =>
      * fullPath: "_id.whatever"
      * path: ["_id", "whatever"]
-     *
-     * @author James Chen
      */
-    public record Path(String fullPath, String[] path) {
+    public record Path(boolean isIdField, String fullPath, String[] path) {
     }
 
 }

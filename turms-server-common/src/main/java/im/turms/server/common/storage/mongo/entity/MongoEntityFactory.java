@@ -179,11 +179,9 @@ public final class MongoEntityFactory {
             // Note that we split the shard key one level at most (e.g. "_id.whatever")
             // because we don't have other cases currently
             String[] path = StringUtils.split(shardKey, ".");
-            if (path == null) {
-                paths.add(new ShardKey.Path(shardKey, new String[]{shardKey}));
-            } else {
-                paths.add(new ShardKey.Path(shardKey, path));
-            }
+            paths.add(new ShardKey.Path(shardKey.startsWith(DomainFieldName.ID),
+                    shardKey,
+                    path == null ? new String[]{shardKey} : path));
         }
         return new ShardKey(document, paths);
     }
