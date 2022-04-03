@@ -17,14 +17,14 @@ let package = Package(
     dependencies: [
         // Don't use Combine because of "@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)"
         .package(url: "https://github.com/mxcl/PromiseKit", from: "6.16.0"),
-        .package(url: "https://github.com/apple/swift-protobuf", from: "1.18.0"),
+        .package(url: "https://github.com/apple/swift-protobuf", from: "1.19.0"),
         .package(url: "https://github.com/daltoniam/Starscream", .branch("master")),
 
         // Dev deps
-        .package(url: "https://github.com/shibapm/PackageConfig", from: "0.13.0"),
-        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.48.17"),
-        .package(url: "https://github.com/Realm/SwiftLint", from: "0.45.0"),
-        .package(url: "https://github.com/orta/Komondor", from: "1.0.6"),
+        .package(url: "https://github.com/shibapm/PackageConfig", from: "1.1.3"),
+        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.49.6"),
+        .package(url: "https://github.com/Realm/SwiftLint", from: "0.47.0"),
+        .package(url: "https://github.com/orta/Komondor", from: "1.1.3"),
     ],
     targets: [
         .target(

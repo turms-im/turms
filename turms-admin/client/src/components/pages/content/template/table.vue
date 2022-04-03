@@ -106,7 +106,8 @@ export default {
         return {
             pagination: {
                 current: 1,
-                pageSize: 20
+                pageSize: 20,
+                showSizeChanger: false
             },
             scrollMaxHeight: '100%'
         };
