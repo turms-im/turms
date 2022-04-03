@@ -19,6 +19,7 @@ package im.turms.server.common.storage.mongo.util;
 
 import im.turms.server.common.storage.mongo.codec.EntityCodec;
 import org.bson.BsonArray;
+import org.bson.BsonBinary;
 import org.bson.BsonBoolean;
 import org.bson.BsonDateTime;
 import org.bson.BsonDocument;
@@ -59,6 +60,9 @@ public final class SerializationUtil {
             return new BsonArray(list);
         }
         Class<?> clazz = value.getClass();
+        if (value instanceof byte[] bytes) {
+            return new BsonBinary(bytes);
+        }
         if (clazz.isArray()) {
             int size = Array.getLength(value);
             List<BsonValue> list = new ArrayList<>(size);
