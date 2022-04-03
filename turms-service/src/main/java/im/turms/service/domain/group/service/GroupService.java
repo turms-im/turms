@@ -148,8 +148,18 @@ public class GroupService {
                 ? node.getSharedProperties().getService().getGroup().isActivateGroupWhenCreated()
                 : isActive;
         Long groupId = node.nextLargeGapId(ServiceType.GROUP);
-        Group group = new Group(groupId, groupTypeId, creatorId, ownerId, groupName, intro,
-                announcement, minimumScore, creationDate, deletionDate, muteEndDate, isActive);
+        Group group = new Group(groupId,
+                groupTypeId,
+                creatorId,
+                ownerId,
+                groupName,
+                intro,
+                announcement,
+                minimumScore == null ? 0 : minimumScore,
+                creationDate == null ? new Date() : creationDate,
+                deletionDate,
+                muteEndDate,
+                isActive);
         return groupRepository
                 .inTransaction(session -> {
                     Date now = new Date();

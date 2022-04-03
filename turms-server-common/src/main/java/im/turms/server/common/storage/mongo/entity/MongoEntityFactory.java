@@ -20,6 +20,7 @@ package im.turms.server.common.storage.mongo.entity;
 import com.google.common.base.CaseFormat;
 import com.mongodb.client.model.IndexModel;
 import com.mongodb.client.model.IndexOptions;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
 import im.turms.server.common.storage.mongo.BsonPool;
 import im.turms.server.common.storage.mongo.DomainFieldName;
@@ -31,14 +32,17 @@ import im.turms.server.common.storage.mongo.entity.annotation.PropertySetter;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import im.turms.server.common.storage.mongo.entity.annotation.TieredStorage;
 import lombok.Data;
+import lombok.SneakyThrows;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mapping.PreferredConstructor;
 import org.springframework.data.mapping.model.PreferredConstructorDiscoverer;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
+import java.io.InputStream;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -61,10 +65,12 @@ public final class MongoEntityFactory {
         PreferredConstructor<T, ?> constructor = PreferredConstructorDiscoverer.discover(clazz);
         EntityFieldsInfo entityFieldsInfo = parseFields(clazz, constructor, clazz.getDeclaredMethods());
         ShardKey shardKey = parseShardKey(clazz);
+        String collectionName = parseCollectionName(clazz);
         return new MongoEntity<>(
                 clazz,
                 constructor,
-                parseCollectionName(clazz),
+                collectionName,
+                findCollectionSchema(collectionName),
                 shardKey,
                 parseZone(clazz, shardKey),
                 parseCompoundIndex(clazz),
@@ -100,6 +106,19 @@ public final class MongoEntityFactory {
             throw new IllegalStateException("The collection name must not be blank for the class " + clazz.getName());
         }
         return name;
+    }
+
+    @SneakyThrows
+    @Nullable
+    private BsonDocument findCollectionSchema(String name) {
+        String resourceName = "schema/" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, name) + ".json";
+        InputStream stream = ClassUtils.getDefaultClassLoader()
+                .getResourceAsStream(resourceName);
+        if (stream == null) {
+            return null;
+        }
+        byte[] bytes = stream.readAllBytes();
+        return BsonDocument.parse(StringUtil.newLatin1String(bytes));
     }
 
     /**

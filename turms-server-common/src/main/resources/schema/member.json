@@ -1,0 +1,108 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "metricsApiAddress",
+      "isLeaderEligible",
+      "memberHost",
+      "nodeVersion",
+      "nodeType",
+      "priority",
+      "isSeed",
+      "memberPort",
+      "registrationDate",
+      "adminApiAddress",
+      "status"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "object",
+        "required": [
+          "clusterId",
+          "nodeId"
+        ],
+        "properties": {
+          "clusterId": {
+            "bsonType": "string"
+          },
+          "nodeId": {
+            "bsonType": "string"
+          }
+        }
+      },
+      "metricsApiAddress": {
+        "bsonType": "string"
+      },
+      "isLeaderEligible": {
+        "bsonType": "bool"
+      },
+      "nodeVersion": {
+        "bsonType": "object",
+        "required": [
+          "patch",
+          "major",
+          "minor",
+          "qualifier"
+        ],
+        "properties": {
+          "patch": {
+            "bsonType": "int"
+          },
+          "major": {
+            "bsonType": "int"
+          },
+          "minor": {
+            "bsonType": "int"
+          },
+          "qualifier": {
+            "bsonType": "int"
+          }
+        }
+      },
+      "nodeType": {
+        "bsonType": "int"
+      },
+      "priority": {
+        "bsonType": "int"
+      },
+      "isSeed": {
+        "bsonType": "bool"
+      },
+      "zone": {
+        "bsonType": "string"
+      },
+      "memberPort": {
+        "bsonType": "int"
+      },
+      "registrationDate": {
+        "bsonType": "date"
+      },
+      "adminApiAddress": {
+        "bsonType": "string"
+      },
+      "status": {
+        "bsonType": "object",
+        "required": [
+          "hasJoinedCluster",
+          "lastHeartbeatDate",
+          "isActive",
+          "isHealthy"
+        ],
+        "properties": {
+          "hasJoinedCluster": {
+            "bsonType": "bool"
+          },
+          "lastHeartbeatDate": {
+            "bsonType": "date"
+          },
+          "isActive": {
+            "bsonType": "bool"
+          },
+          "isHealthy": {
+            "bsonType": "bool"
+          }
+        }
+      }
+    }
+  }
+}

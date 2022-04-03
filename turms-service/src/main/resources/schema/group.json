@@ -2,42 +2,43 @@
   "$jsonSchema": {
     "bsonType": "object",
     "required": [
-      "pa",
-      "rd",
-      "act",
-      "pgid",
-      "pw",
-      "intro",
-      "lud",
-      "n"
+      "cd",
+      "ac",
+      "ms",
+      "oid",
+      "tid",
+      "cid"
     ],
     "properties": {
       "_id": {
         "bsonType": "long"
       },
-      "pa": {
-        "bsonType": "int"
-      },
-      "rd": {
+      "cd": {
         "bsonType": "date"
       },
-      "act": {
+      "ac": {
         "bsonType": "bool"
       },
-      "pgid": {
-        "bsonType": "long"
-      },
-      "pw": {
-        "bsonType": "binData"
+      "ms": {
+        "bsonType": "int"
       },
       "intro": {
         "bsonType": "string"
       },
-      "lud": {
-        "bsonType": "date"
+      "oid": {
+        "bsonType": "long"
+      },
+      "tid": {
+        "bsonType": "long"
       },
       "n": {
         "bsonType": "string"
+      },
+      "annt": {
+        "bsonType": "string"
+      },
+      "cid": {
+        "bsonType": "long"
       }
     }
   }

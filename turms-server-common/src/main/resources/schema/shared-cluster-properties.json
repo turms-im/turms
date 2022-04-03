@@ -1,0 +1,26 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "commonProperties",
+      "lastUpdatedTime"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "commonProperties": {
+        "bsonType": "object"
+      },
+      "lastUpdatedTime": {
+        "bsonType": "date"
+      },
+      "serviceProperties": {
+        "bsonType": "object"
+      },
+      "gatewayProperties": {
+        "bsonType": "object"
+      }
+    }
+  }
+}

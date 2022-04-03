@@ -56,6 +56,13 @@ public class SharedConfigService implements ClusterService {
         }
         List<Class<?>> classes = List.of(SharedClusterProperties.class, Leader.class, Member.class);
         mongoClient.registerEntitiesByClasses(classes);
+        for (Class<?> entityClass : classes) {
+            try {
+                mongoClient.createCollection(entityClass).block(Duration.ofMinutes(1));
+            } catch (Exception e) {
+                throw new IllegalStateException("Failed to create the collection for the class: " + entityClass.getName(), e);
+            }
+        }
         try {
             mongoClient.ensureIndexesAndShard(classes).block(Duration.ofMinutes(1));
         } catch (Exception e) {

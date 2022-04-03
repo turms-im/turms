@@ -1,0 +1,24 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "generation",
+      "nodeId",
+      "renewDate"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "generation": {
+        "bsonType": "int"
+      },
+      "nodeId": {
+        "bsonType": "string"
+      },
+      "renewDate": {
+        "bsonType": "date"
+      }
+    }
+  }
+}

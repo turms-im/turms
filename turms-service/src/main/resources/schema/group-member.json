@@ -3,8 +3,7 @@
     "bsonType": "object",
     "required": [
       "role",
-      "jd",
-      "n"
+      "jd"
     ],
     "properties": {
       "_id": {

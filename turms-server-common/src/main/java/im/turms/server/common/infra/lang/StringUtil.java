@@ -117,4 +117,9 @@ public final class StringUtil {
         return (String) NEW_STRING.invokeExact(bytes, coder);
     }
 
+    @SneakyThrows
+    public static String newLatin1String(byte[] bytes) {
+        return (String) NEW_STRING.invokeExact(bytes, LATIN1);
+    }
+
 }

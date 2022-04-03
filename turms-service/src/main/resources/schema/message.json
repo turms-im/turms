@@ -2,12 +2,10 @@
   "$jsonSchema": {
     "bsonType": "object",
     "required": [
-      "bf",
       "gm",
       "dyd",
       "tid",
       "sid",
-      "txt",
       "sm"
     ],
     "properties": {

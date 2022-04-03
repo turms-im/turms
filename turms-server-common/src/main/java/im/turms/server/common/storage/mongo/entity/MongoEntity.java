@@ -33,6 +33,7 @@ public record MongoEntity<T>(
         PreferredConstructor<T, ?> constructor,
         // Collection
         String collectionName,
+        BsonDocument jsonSchema,
         // Shard key, zone and index
         ShardKey shardKey,
         Zone zone,

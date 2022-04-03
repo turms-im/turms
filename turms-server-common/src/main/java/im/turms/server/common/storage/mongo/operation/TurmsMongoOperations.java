@@ -22,12 +22,16 @@ import com.mongodb.TransactionOptions;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.CountOptions;
+import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.DeleteOptions;
 import com.mongodb.client.model.IndexModel;
 import com.mongodb.client.model.InsertManyOptions;
 import com.mongodb.client.model.InsertOneOptions;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.ValidationAction;
+import com.mongodb.client.model.ValidationLevel;
+import com.mongodb.client.model.ValidationOptions;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.DeleteResult;
@@ -605,7 +609,18 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public Mono<Void> createCollection(Class<?> clazz) {
         MongoEntity<?> entity = context.getEntity(clazz);
-        Publisher<Void> source = context.getDatabase().createCollection(entity.collectionName());
+        CreateCollectionOptions options = new CreateCollectionOptions();
+        BsonDocument jsonSchema = entity.jsonSchema();
+        if (jsonSchema == null) {
+            String message = "Failed to create collection [%s] because no JSON schema specified"
+                    .formatted(entity.collectionName());
+            return Mono.error(new RuntimeException(message));
+        }
+        options.validationOptions(new ValidationOptions()
+                .validator(jsonSchema)
+                .validationAction(ValidationAction.ERROR)
+                .validationLevel(ValidationLevel.STRICT));
+        Publisher<Void> source = context.getDatabase().createCollection(entity.collectionName(), options);
         return Mono.from(source);
     }
 
