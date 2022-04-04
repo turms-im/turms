@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.json;
 
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.time.DateUtil;
@@ -101,9 +102,12 @@ public final class JsonSizeCalculator {
         if (val instanceof Date) {
             return DateUtil.DATE_TIME_LENGTH;
         }
+        if (val instanceof String str) {
+            return StringUtil.getLength(str);
+        }
         if (val.getClass().getPackageName().startsWith("java.lang")) {
             // We don't use "String.valueOf(val).length()" for better performance
-            return 16;
+            return 8;
         }
         return -1;
     }
