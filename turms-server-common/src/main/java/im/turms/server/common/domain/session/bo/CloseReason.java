@@ -18,11 +18,10 @@
 package im.turms.server.common.domain.session.bo;
 
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.exception.ThrowableInfo;
 
 import javax.annotation.Nullable;
-import java.util.EnumMap;
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -33,7 +32,7 @@ public record CloseReason(
         @Nullable String reason
 ) {
 
-    private static final Map<SessionCloseStatus, CloseReason> POOL = new EnumMap<>(SessionCloseStatus.class);
+    private static final FastEnumMap<SessionCloseStatus, CloseReason> POOL = new FastEnumMap<>(SessionCloseStatus.class);
 
     static {
         for (SessionCloseStatus closeStatus : SessionCloseStatus.values()) {
@@ -49,16 +48,14 @@ public record CloseReason(
         ThrowableInfo info = ThrowableInfo.get(throwable);
         ResponseStatusCode code = info.code();
         SessionCloseStatus closeStatus;
-        if (ResponseStatusCode.isServerError(code.getBusinessCode())) {
+        if (code.isServerError()) {
             closeStatus = SessionCloseStatus.SERVER_ERROR;
+        } else if (code.isCodeClientIllegalRequest()) {
+            closeStatus = SessionCloseStatus.ILLEGAL_REQUEST;
+        } else if (code == ResponseStatusCode.SERVER_UNAVAILABLE) {
+            closeStatus = SessionCloseStatus.SERVER_UNAVAILABLE;
         } else {
-            if (ResponseStatusCode.isCodeClientIllegalRequest(code.getBusinessCode())) {
-                closeStatus = SessionCloseStatus.ILLEGAL_REQUEST;
-            } else if (code == ResponseStatusCode.SERVER_UNAVAILABLE) {
-                closeStatus = SessionCloseStatus.SERVER_UNAVAILABLE;
-            } else {
-                closeStatus = SessionCloseStatus.UNKNOWN_ERROR;
-            }
+            closeStatus = SessionCloseStatus.UNKNOWN_ERROR;
         }
         return new CloseReason(closeStatus, code, info.reason());
     }

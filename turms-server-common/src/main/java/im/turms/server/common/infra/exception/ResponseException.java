@@ -19,13 +19,12 @@ package im.turms.server.common.infra.exception;
 
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.collection.FastEnumMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.EnumMap;
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -34,7 +33,7 @@ import java.util.Map;
 @Data
 public final class ResponseException extends StacklessException {
 
-    private static final Map<ResponseStatusCode, ResponseException> POOL = new EnumMap<>(ResponseStatusCode.class);
+    private static final FastEnumMap<ResponseStatusCode, ResponseException> POOL = new FastEnumMap<>(ResponseStatusCode.class);
 
     static {
         for (ResponseStatusCode code : ResponseStatusCode.values()) {

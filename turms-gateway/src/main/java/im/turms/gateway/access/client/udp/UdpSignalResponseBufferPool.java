@@ -19,40 +19,53 @@ package im.turms.gateway.access.client.udp;
 
 import im.turms.gateway.access.client.udp.dto.UdpNotificationType;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.collection.FastEnumMap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-
-import java.util.EnumMap;
-import java.util.Map;
 
 /**
  * @author James Chen
  */
 public final class UdpSignalResponseBufferPool {
 
-    private static final Map<ResponseStatusCode, ByteBuf> CODE_POOL = new EnumMap<>(ResponseStatusCode.class);
-    private static final Map<UdpNotificationType, ByteBuf> NOTIFICATION_POOL = new EnumMap<>(UdpNotificationType.class);
+    private static final FastEnumMap<ResponseStatusCode, ByteBuf> CODE_POOL = new FastEnumMap<>(ResponseStatusCode.class);
+    private static final FastEnumMap<UdpNotificationType, ByteBuf> NOTIFICATION_POOL = new FastEnumMap<>(UdpNotificationType.class);
+
+    static {
+        for (UdpNotificationType type : UdpNotificationType.values()) {
+            NOTIFICATION_POOL.put(type, Unpooled.unreleasableBuffer(Unpooled
+                    .directBuffer(Byte.BYTES)
+                    .writeByte(type.ordinal() + 1)));
+        }
+    }
 
     private UdpSignalResponseBufferPool() {
     }
 
     public static ByteBuf get(ResponseStatusCode code) {
-        return CODE_POOL.computeIfAbsent(code, key -> {
-            if (key == ResponseStatusCode.OK) {
-                return Unpooled.EMPTY_BUFFER;
+        ByteBuf buf = CODE_POOL.get(code);
+        if (buf != null) {
+            return buf;
+        }
+        synchronized (CODE_POOL) {
+            buf = CODE_POOL.get(code);
+            if (buf != null) {
+                return buf;
             }
-            return Unpooled.unreleasableBuffer(Unpooled
-                    .directBuffer(Short.BYTES)
-                    .writeShort(key.getBusinessCode()));
-        });
+            if (code == ResponseStatusCode.OK) {
+                buf = Unpooled.EMPTY_BUFFER;
+            } else {
+                buf = Unpooled.unreleasableBuffer(Unpooled
+                        .directBuffer(Short.BYTES)
+                        .writeShort(code.getBusinessCode()));
+            }
+            CODE_POOL.put(code, buf);
+            return buf;
+        }
     }
 
     public static ByteBuf get(UdpNotificationType type) {
-        return NOTIFICATION_POOL.computeIfAbsent(type, key -> {
-            ByteBuf buffer = Unpooled.directBuffer(Byte.BYTES);
-            buffer.writeByte(key.ordinal() + 1);
-            return Unpooled.unreleasableBuffer(buffer);
-        });
+        return NOTIFICATION_POOL.get(type);
     }
 
 }

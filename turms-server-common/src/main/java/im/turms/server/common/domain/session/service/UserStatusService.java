@@ -27,6 +27,7 @@ import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectorUtil;
+import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.property.TurmsProperties;
@@ -270,7 +271,7 @@ public class UserStatusService {
                             userStatus = (UserStatus) entry.getValue();
                         } else {
                             if (onlineDeviceTypeAndNodeIdMap == null) {
-                                onlineDeviceTypeAndNodeIdMap = new EnumMap<>(DeviceType.class);
+                                onlineDeviceTypeAndNodeIdMap = new FastEnumMap<>(DeviceType.class);
                             }
                             onlineDeviceTypeAndNodeIdMap.put(
                                     (DeviceType) entry.getKey(),

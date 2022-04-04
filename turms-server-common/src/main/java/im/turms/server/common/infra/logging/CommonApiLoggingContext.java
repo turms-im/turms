@@ -19,12 +19,12 @@ package im.turms.server.common.infra.logging;
 
 import com.google.common.collect.Sets;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.property.constant.LoggingRequestCategory;
 import im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingCategoryProperties;
 import im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingRequestProperties;
 
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -39,7 +39,7 @@ public abstract class CommonApiLoggingContext {
             Set<LoggingRequestProperties> loggingRequests,
             Set<LoggingRequestCategory> excludedCategories,
             Set<TurmsRequest.KindCase> excludedRequestTypes) {
-        Map<TurmsRequest.KindCase, LoggingRequestProperties> result = new EnumMap<>(TurmsRequest.KindCase.class);
+        Map<TurmsRequest.KindCase, LoggingRequestProperties> result = new FastEnumMap<>(TurmsRequest.KindCase.class);
 
         // 1. handle included categories
         for (LoggingCategoryProperties includedCategory : includedCategories) {

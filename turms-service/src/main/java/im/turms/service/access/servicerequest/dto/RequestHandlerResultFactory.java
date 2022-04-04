@@ -21,13 +21,12 @@ import im.turms.server.common.access.client.dto.model.common.Int64Values;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.collection.FastEnumMap;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -35,27 +34,36 @@ import java.util.Set;
  */
 public final class RequestHandlerResultFactory {
 
-    private static final Map<ResponseStatusCode, RequestHandlerResult> POOL = new EnumMap<>(ResponseStatusCode.class);
+    private static final FastEnumMap<ResponseStatusCode, RequestHandlerResult> POOL = new FastEnumMap<>(ResponseStatusCode.class);
 
     private RequestHandlerResultFactory() {
     }
 
+    static {
+        Set<Long> recipients = Collections.emptySet();
+        for (ResponseStatusCode code : ResponseStatusCode.values()) {
+            RequestHandlerResult result = new RequestHandlerResult(null,
+                    false,
+                    recipients,
+                    null,
+                    code,
+                    null);
+            POOL.put(code, result);
+        }
+    }
+
     public static final RequestHandlerResult OK = get(ResponseStatusCode.OK);
 
-    public static final RequestHandlerResult NO_CONTENT = new RequestHandlerResult(
-            null,
-            false,
-            null,
-            null,
-            ResponseStatusCode.NO_CONTENT,
-            null);
+    public static final RequestHandlerResult NO_CONTENT = get(ResponseStatusCode.NO_CONTENT);
 
     public static RequestHandlerResult get(@NotNull ResponseStatusCode code) {
-        return POOL
-                .computeIfAbsent(code, statusCode -> new RequestHandlerResult(null, false, Collections.emptySet(), null, statusCode, null));
+        return POOL.get(code);
     }
 
     public static RequestHandlerResult get(@NotNull ResponseStatusCode code, @Nullable String reason) {
+        if (reason == null) {
+            return POOL.get(code);
+        }
         return new RequestHandlerResult(null, false, Collections.emptySet(), null, code, reason);
     }
 

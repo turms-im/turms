@@ -213,7 +213,7 @@ public enum ResponseStatusCode {
 
     public static final int STATUS_CODE_LENGTH = 4;
     private static final IntObjectHashMap<ResponseStatusCode> CODE_POOL =
-            new IntObjectHashMap<>((int) (ResponseStatusCode.values().length / 0.5));
+            new IntObjectHashMap<>((int) (ResponseStatusCode.values().length / 0.5F));
 
     static {
         for (ResponseStatusCode value : ResponseStatusCode.values()) {
@@ -249,6 +249,10 @@ public enum ResponseStatusCode {
 
     public static boolean isServerError(int businessCode) {
         return 1200 <= businessCode && businessCode < 1300;
+    }
+
+    public boolean isCodeClientIllegalRequest() {
+        return isCodeClientIllegalRequest(businessCode);
     }
 
     public boolean isSuccessCode() {

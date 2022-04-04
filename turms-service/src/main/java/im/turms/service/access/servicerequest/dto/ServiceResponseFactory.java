@@ -20,37 +20,36 @@ package im.turms.service.access.servicerequest.dto;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
+import im.turms.server.common.infra.collection.FastEnumMap;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.EnumMap;
-import java.util.Map;
 
 /**
  * @author James Chen
  */
 public final class ServiceResponseFactory {
 
-    private static final Map<ResponseStatusCode, ServiceResponse> RESPONSE_POOL = new EnumMap<>(ResponseStatusCode.class);
+    private static final FastEnumMap<ResponseStatusCode, ServiceResponse> POOL = new FastEnumMap<>(ResponseStatusCode.class);
     public static final ServiceResponse NO_CONTENT;
 
     static {
         for (ResponseStatusCode status : ResponseStatusCode.values()) {
-            RESPONSE_POOL.put(status, new ServiceResponse(null, status, null));
+            POOL.put(status, new ServiceResponse(null, status, null));
         }
-        NO_CONTENT = RESPONSE_POOL.get(ResponseStatusCode.NO_CONTENT);
+        NO_CONTENT = POOL.get(ResponseStatusCode.NO_CONTENT);
     }
 
     private ServiceResponseFactory() {
     }
 
     public static ServiceResponse get(@NotNull ResponseStatusCode statusCode) {
-        return RESPONSE_POOL.get(statusCode);
+        return POOL.get(statusCode);
     }
 
     public static ServiceResponse get(@NotNull ResponseStatusCode statusCode, String message) {
         return message == null
-                ? RESPONSE_POOL.get(statusCode)
+                ? POOL.get(statusCode)
                 : new ServiceResponse(null, statusCode, message);
     }
 
@@ -59,7 +58,7 @@ public final class ServiceResponseFactory {
             @NotNull ResponseStatusCode statusCode,
             @Nullable String message) {
         return data == null && message == null
-                ? RESPONSE_POOL.get(statusCode)
+                ? POOL.get(statusCode)
                 : new ServiceResponse(data, statusCode, message);
     }
 

@@ -23,7 +23,7 @@ import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.domain.location.bo.Coordinates;
 import im.turms.server.common.domain.session.bo.CloseReason;
-import im.turms.server.common.infra.lang.ConcurrentEnumMap;
+import im.turms.server.common.infra.collection.ConcurrentEnumMap;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.proto.ProtoEncoder;
@@ -33,7 +33,6 @@ import org.springframework.util.Assert;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,14 +44,12 @@ public final class UserSessionsManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserSessionsManager.class);
 
-    private static final EnumMap<DeviceType, UserSession> SESSION_MAP_TEMPLATE = new EnumMap<>(DeviceType.class);
-
     private final Long userId;
     private UserStatus userStatus;
     /**
      * The online session map of a user
      */
-    private final Map<DeviceType, UserSession> sessionMap = new ConcurrentEnumMap<>(SESSION_MAP_TEMPLATE);
+    private final Map<DeviceType, UserSession> sessionMap = new ConcurrentEnumMap<>(DeviceType.class);
 
     public UserSessionsManager(Long userId, UserStatus userStatus) {
         Assert.notNull(userId, "userId must not be null");

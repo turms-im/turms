@@ -26,6 +26,7 @@ import im.turms.server.common.access.servicerequest.dispatcher.IServiceRequestDi
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
+import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.exception.ThrowableInfo;
 import im.turms.server.common.infra.healthcheck.HealthCheckManager;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
@@ -79,7 +80,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     private final OutboundMessageService outboundMessageService;
     private final PluginManager pluginManager;
 
-    private final Map<TurmsRequest.KindCase, ClientRequestHandler> router;
+    private final FastEnumMap<TurmsRequest.KindCase, ClientRequestHandler> router;
 
     public ServiceRequestDispatcher(ApiLoggingContext apiLoggingContext,
                                     ApplicationContext context,
@@ -103,9 +104,9 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         }
     }
 
-    private Map<TurmsRequest.KindCase, ClientRequestHandler> getMappings(ConfigurableApplicationContext context,
+    private FastEnumMap<TurmsRequest.KindCase, ClientRequestHandler> getMappings(ConfigurableApplicationContext context,
                                                                          Set<TurmsRequest.KindCase> disabledEndpoints) {
-        Map<TurmsRequest.KindCase, ClientRequestHandler> mappingMap = new EnumMap<>(TurmsRequest.KindCase.class);
+        FastEnumMap<TurmsRequest.KindCase, ClientRequestHandler> mappingMap = new FastEnumMap<>(TurmsRequest.KindCase.class);
         ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
         String[] definitionNames = beanFactory.getBeanDefinitionNames();
         for (String beanName : definitionNames) {
