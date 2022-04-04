@@ -36,7 +36,7 @@ import im.turms.server.common.infra.net.InetAddressUtil;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.security.BlocklistProperties;
 import im.turms.server.common.infra.task.CronConst;
-import im.turms.server.common.infra.task.TrivialTaskManager;
+import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.storage.redis.TurmsRedisClient;
@@ -82,7 +82,7 @@ public class BlocklistService {
     private final ScheduledThreadPoolExecutor threadPoolExecutor;
 
     public BlocklistService(Node node,
-                            TrivialTaskManager trivialTaskManager,
+                            TaskManager taskManager,
                             TurmsRedisClient ipBlocklistRedisClient,
                             TurmsRedisClient userIdBlocklistRedisClient,
                             TurmsPropertiesManager turmsPropertiesManager,
@@ -175,7 +175,7 @@ public class BlocklistService {
             userIdAutoBlockManagerForCorruptedRequest = null;
             userIdAutoBlockManagerForFrequentRequest = null;
         }
-        trivialTaskManager.reschedule("expiredBlockedClientCleanup", CronConst.EXPIRED_BLOCKED_CLIENT_CLEANUP_CRON, () -> {
+        taskManager.reschedule("expiredBlockedClientCleanup", CronConst.EXPIRED_BLOCKED_CLIENT_CLEANUP_CRON, () -> {
             if (isIpBlocklistEnabled) {
                 ipAutoBlockManagerForCorruptedRequest.evictExpiredBlockedClient();
                 if (isGateway) {

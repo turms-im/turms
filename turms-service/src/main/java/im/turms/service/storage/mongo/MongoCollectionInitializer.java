@@ -32,7 +32,7 @@ import im.turms.server.common.infra.property.env.service.env.database.MongoPrope
 import im.turms.server.common.infra.property.env.service.env.database.TieredStorageProperties;
 import im.turms.server.common.infra.reactor.ReactorUtil;
 import im.turms.server.common.infra.security.PasswordManager;
-import im.turms.server.common.infra.task.TrivialTaskManager;
+import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.storage.mongo.BsonPool;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
@@ -115,7 +115,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
             TurmsMongoClient conversationMongoClient,
             TurmsMongoClient messageMongoClient,
             PasswordManager passwordManager,
-            TrivialTaskManager taskManager,
+            TaskManager taskManager,
             TurmsApplicationContext context,
             TurmsPropertiesManager turmsPropertiesManager) {
         this.node = node;

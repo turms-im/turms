@@ -57,6 +57,6 @@ public class ThreadNameConst {
     public static final String NODE_DISCOVERY_HEARTBEAT_REFRESHER = "turms-node-discovery-heartbeat-refresher";
 
     // Task
-    public static final String TRIVIAL_TASK_MANAGER = "turms-trivial-task-manager";
+    public static final String TASK_MANAGER = "turms-task-manager";
 
 }

@@ -31,7 +31,7 @@ import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import im.turms.server.common.infra.task.TrivialTaskManager;
+import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
@@ -84,7 +84,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             TurmsPropertiesManager turmsPropertiesManager,
             UserVersionService userVersionService,
             UserRelationshipService userRelationshipService,
-            TrivialTaskManager taskManager) {
+            TaskManager taskManager) {
         super(userFriendRequestRepository);
         this.node = node;
         this.userFriendRequestRepository = userFriendRequestRepository;

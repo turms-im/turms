@@ -28,7 +28,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import im.turms.server.common.infra.task.TrivialTaskManager;
+import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
@@ -84,7 +84,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
             GroupMemberService groupMemberService,
             UserVersionService userVersionService,
             GroupVersionService groupVersionService,
-            TrivialTaskManager taskManager) {
+            TaskManager taskManager) {
         super(groupInvitationRepository);
         this.groupInvitationRepository = groupInvitationRepository;
         this.groupMemberService = groupMemberService;

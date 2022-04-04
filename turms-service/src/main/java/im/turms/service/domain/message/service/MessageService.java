@@ -38,7 +38,7 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.TimeType;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.infra.property.env.service.business.message.SequenceIdProperties;
-import im.turms.server.common.infra.task.TrivialTaskManager;
+import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
@@ -142,7 +142,7 @@ public class MessageService {
             MetricsService metricsService,
 
             PluginManager pluginManager,
-            TrivialTaskManager taskManager) {
+            TaskManager taskManager) {
         this.messageRepository = messageRepository;
         this.redisClientManager = sequenceIdRedisClientManager;
         this.node = node;

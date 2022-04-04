@@ -19,7 +19,7 @@ package im.turms.server.common.access.admin.throttle;
 
 import im.turms.server.common.infra.property.env.common.adminapi.AdminApiRateLimitingProperties;
 import im.turms.server.common.infra.task.CronConst;
-import im.turms.server.common.infra.task.TrivialTaskManager;
+import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.throttle.TokenBucket;
 import im.turms.server.common.infra.throttle.TokenBucketContext;
 
@@ -35,7 +35,7 @@ public abstract class BaseAdminApiRateLimitingManager {
     private final Map<String, TokenBucket> ipTokenBucketMap = new ConcurrentHashMap<>(32);
     private final TokenBucketContext tokenBucketContext;
 
-    protected BaseAdminApiRateLimitingManager(TrivialTaskManager taskManager, AdminApiRateLimitingProperties properties) {
+    protected BaseAdminApiRateLimitingManager(TaskManager taskManager, AdminApiRateLimitingProperties properties) {
         tokenBucketContext = new TokenBucketContext(properties);
         taskManager.reschedule("expiredAdminApiAccessInfoCleaner", CronConst.EXPIRED_ADMIN_API_ACCESS_INFO_CLEANUP_CRON,
                 () -> {

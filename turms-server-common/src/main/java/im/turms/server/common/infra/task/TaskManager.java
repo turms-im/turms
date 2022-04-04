@@ -33,23 +33,23 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
 /**
- * Handle trivial tasks in a thread
+ * Handle tasks in a thread
  *
  * @author James Chen
  */
 @Component
-public class TrivialTaskManager {
+public class TaskManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TrivialTaskManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TaskManager.class);
     private static final int SLOW_SLOG_THRESHOLD_MILLIS = 1000;
 
     private final Map<String, ScheduledFuture<?>> scheduledTaskMap;
 
     private final TaskScheduler taskScheduler;
 
-    public TrivialTaskManager() {
+    public TaskManager() {
         scheduledTaskMap = new ConcurrentHashMap<>(32);
-        NamedThreadFactory threadFactory = new NamedThreadFactory(ThreadNameConst.TRIVIAL_TASK_MANAGER, true);
+        NamedThreadFactory threadFactory = new NamedThreadFactory(ThreadNameConst.TASK_MANAGER, true);
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(threadFactory);
         taskScheduler = new ConcurrentTaskScheduler(executor);
     }

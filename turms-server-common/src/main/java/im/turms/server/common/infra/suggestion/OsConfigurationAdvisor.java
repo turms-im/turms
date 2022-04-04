@@ -43,7 +43,7 @@ public class OsConfigurationAdvisor {
         if (!SystemUtils.IS_OS_LINUX) {
             return Collections.emptyList();
         }
-        List<Suggestion> suggestionList = List.of(
+        Suggestion[] suggestionList = new Suggestion[]{
                 Suggestion.newRange("fs.file-max", 10_000, 1_629_424, 1_629_424),
 
                 Suggestion.newRange("vm.swappiness", 1, 10, 10),
@@ -59,8 +59,8 @@ public class OsConfigurationAdvisor {
                 Suggestion.newOption("net.ipv4.tcp_fastopen", 3),
                 Suggestion.newOption("net.ipv4.tcp_moderate_rcvbuf", 1),
                 Suggestion.newOption("net.ipv4.tcp_window_scaling", 1)
-        );
-        List<String> suggestions = new ArrayList<>(suggestionList.size() + 1);
+        };
+        List<String> suggestions = new ArrayList<>(suggestionList.length + 1);
         Integer value;
         for (Suggestion suggestion : suggestionList) {
             value = readParam(suggestion.name.replace('.', '/'));

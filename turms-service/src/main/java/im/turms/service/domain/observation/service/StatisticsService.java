@@ -24,7 +24,7 @@ import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import im.turms.server.common.infra.task.TrivialTaskManager;
+import im.turms.server.common.infra.task.TaskManager;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -49,7 +49,7 @@ public class StatisticsService {
     public StatisticsService(
             Node node,
             TurmsPropertiesManager turmsPropertiesManager,
-            TrivialTaskManager taskManager) {
+            TaskManager taskManager) {
         this.node = node;
         taskManager.reschedule(
                 "onlineUsersNumberLogging",

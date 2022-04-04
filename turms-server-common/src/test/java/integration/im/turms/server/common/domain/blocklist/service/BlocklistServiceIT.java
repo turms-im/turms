@@ -23,7 +23,7 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.security.BlocklistProperties;
 import im.turms.server.common.infra.property.env.common.security.SecurityProperties;
-import im.turms.server.common.infra.task.TrivialTaskManager;
+import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.storage.redis.CommonRedisConfig;
 import im.turms.server.common.testing.BaseIntegrationTest;
 import org.junit.jupiter.api.MethodOrderer;
@@ -272,7 +272,7 @@ class BlocklistServiceIT extends BaseIntegrationTest {
 
         BlocklistService.maxLogQueueSize = maxLogSize;
         return new BlocklistService(node,
-                new TrivialTaskManager(),
+                new TaskManager(),
                 CommonRedisConfig.newIpBlocklistRedisClient(uri),
                 CommonRedisConfig.newUserIdBlocklistRedisClient(uri),
                 propertiesManager,
