@@ -72,8 +72,7 @@ public final class FastEnumMap<K extends Enum<K>, V> implements Map<K, V> {
 
     @Override
     public V remove(Object key) {
-        remove((K) key);
-        return null;
+        return remove((K) key);
     }
 
     @Override
@@ -157,12 +156,14 @@ public final class FastEnumMap<K extends Enum<K>, V> implements Map<K, V> {
         return existingValue;
     }
 
-    public void remove(K e) {
-        int ordinal = e.ordinal();
-        if (values[ordinal] != null) {
+    public V remove(K key) {
+        int ordinal = key.ordinal();
+        V value = values[ordinal];
+        if (value != null) {
             size--;
+            values[ordinal] = null;
         }
-        values[ordinal] = null;
+        return value;
     }
 
     public V get(K key) {

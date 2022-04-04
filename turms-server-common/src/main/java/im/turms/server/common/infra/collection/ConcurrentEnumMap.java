@@ -86,8 +86,7 @@ public final class ConcurrentEnumMap<K extends Enum<K>, V> implements Map<K, V> 
 
     @Override
     public V remove(Object key) {
-        remove((K) key);
-        return null;
+        return remove((K) key);
     }
 
     @Override
@@ -172,8 +171,8 @@ public final class ConcurrentEnumMap<K extends Enum<K>, V> implements Map<K, V> 
         return existingValue;
     }
 
-    public V remove(K e) {
-        int ordinal = e.ordinal();
+    public V remove(K key) {
+        int ordinal = key.ordinal();
         V value = (V) VALUES_HANDLE.getAndSet(values, ordinal, null);
         if (value != null) {
             SIZE_UPDATER.getAndDecrement(this);
