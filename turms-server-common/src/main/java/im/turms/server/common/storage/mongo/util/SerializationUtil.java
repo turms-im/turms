@@ -59,10 +59,10 @@ public final class SerializationUtil {
             }
             return new BsonArray(list);
         }
-        Class<?> clazz = value.getClass();
         if (value instanceof byte[] bytes) {
             return new BsonBinary(bytes);
         }
+        Class<?> clazz = value.getClass();
         if (clazz.isArray()) {
             int size = Array.getLength(value);
             List<BsonValue> list = new ArrayList<>(size);

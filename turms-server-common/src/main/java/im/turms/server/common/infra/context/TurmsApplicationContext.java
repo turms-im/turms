@@ -20,6 +20,7 @@ package im.turms.server.common.infra.context;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.suggestion.OsConfigurationAdvisor;
 import io.lettuce.core.RedisException;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,7 @@ public class TurmsApplicationContext {
                 isProduction ? "production" : "non-production");
 
         setupErrorHandlerContext();
+        printOsConfigurationSuggestions();
     }
 
     @EventListener(classes = ContextClosedEvent.class)
@@ -187,6 +189,13 @@ public class TurmsApplicationContext {
     private boolean isRedisConnectionClosedException(Throwable throwable) {
         Throwable cause = throwable.getCause();
         return cause instanceof RedisException && "Connection closed".equals(cause.getMessage());
+    }
+
+    private void printOsConfigurationSuggestions() {
+        List<String> suggestions = OsConfigurationAdvisor.getSuggestions();
+        for (String suggestion : suggestions) {
+            LOGGER.warn(suggestion);
+        }
     }
 
 }
