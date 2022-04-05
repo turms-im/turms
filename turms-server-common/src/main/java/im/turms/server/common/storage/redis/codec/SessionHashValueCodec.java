@@ -18,12 +18,12 @@
 package im.turms.server.common.storage.redis.codec;
 
 import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.property.env.common.cluster.NodeProperties;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author James Chen
@@ -39,12 +39,15 @@ public class SessionHashValueCodec implements TurmsRedisCodec<Object> {
             int userStatus = status.getNumber();
             buffer = ByteBufUtil.getPooledPreferredByteBuffer(userStatus);
         } else if (element instanceof String nodeId) {
-            byte[] nodeIdBytes = nodeId.getBytes(StandardCharsets.UTF_8);
-            if (nodeIdBytes.length == 0 || nodeIdBytes.length > NodeProperties.NODE_ID_MAX_LENGTH) {
+            // The node ID can only contain ASCII characters,
+            // so we don't need to encode its coder
+            byte[] nodeIdBytes = StringUtil.getBytes(nodeId);
+            int length = nodeIdBytes.length;
+            if (length == 0 || length > NodeProperties.NODE_ID_MAX_LENGTH) {
                 throw new IllegalArgumentException(
                         "The length of node ID must be greater than 0 and less than or equals to " + NodeProperties.NODE_ID_MAX_LENGTH);
             }
-            buffer = BUFFER_ALLOCATOR.directBuffer(nodeIdBytes.length)
+            buffer = BUFFER_ALLOCATOR.directBuffer(length)
                     .writeBytes(nodeIdBytes);
         } else {
             throw new IllegalArgumentException("The data must be an instance of UserStatus or String");
@@ -60,14 +63,14 @@ public class SessionHashValueCodec implements TurmsRedisCodec<Object> {
         } else if (remaining == 1) {
             byte value = in.get();
             UserStatus userStatus = UserStatus.forNumber(value);
-            if (userStatus == null) {
-                throw new IllegalArgumentException("Cannot parse " + value + " to UserStatus");
+            if (userStatus != null) {
+                return userStatus;
             }
-            return userStatus;
+            return StringUtil.newLatin1String(new byte[]{value});
         } else {
             byte[] bytes = new byte[remaining];
             in.get(bytes);
-            return new String(bytes, StandardCharsets.UTF_8);
+            return StringUtil.newLatin1String(bytes);
         }
     }
 }
