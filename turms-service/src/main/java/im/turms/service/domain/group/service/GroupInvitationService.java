@@ -25,6 +25,7 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -43,7 +44,7 @@ import im.turms.service.domain.group.repository.GroupInvitationRepository;
 import im.turms.service.domain.user.service.UserVersionService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidRequestStatus;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -303,7 +304,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
         return versionMono
                 .flatMap(version -> {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
-                        return Mono.error(ResponseException.get(ResponseStatusCode.ALREADY_UP_TO_DATE));
+                        return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     Flux<GroupInvitation> invitationFlux = areSentByUser
                             ? queryGroupInvitationsByInviterId(userId)
@@ -324,7 +325,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                                         .build();
                             });
                 })
-                .switchIfEmpty(Mono.error(ResponseException.get(ResponseStatusCode.ALREADY_UP_TO_DATE)));
+                .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
     }
 
     public Mono<GroupInvitationsWithVersion> queryGroupInvitationsWithVersion(
@@ -345,7 +346,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                     return groupVersionService.queryGroupInvitationsVersion(groupId)
                             .flatMap(version -> {
                                 if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
-                                    return Mono.error(ResponseException.get(ResponseStatusCode.ALREADY_UP_TO_DATE));
+                                    return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                                 }
                                 return queryGroupInvitationsByGroupId(groupId)
                                         .collect(Collectors.toSet())
@@ -363,7 +364,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                                             return builder.build();
                                         });
                             })
-                            .switchIfEmpty(Mono.error(ResponseException.get(ResponseStatusCode.ALREADY_UP_TO_DATE)));
+                            .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
                 });
     }
 
@@ -434,7 +435,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
             return Mono.error(e);
         }
         if (Validator.areAllNull(inviterId, inviteeId, content, status, creationDate)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return groupInvitationRepository.updateInvitations(invitationIds, inviterId, inviteeId, content, status, creationDate, responseDate);
     }

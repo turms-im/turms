@@ -43,7 +43,7 @@ import im.turms.service.domain.user.repository.UserRepository;
 import im.turms.service.domain.user.service.onlineuser.SessionService;
 import im.turms.service.infra.metrics.MetricNameConst;
 import im.turms.service.infra.validation.ValidProfileAccess;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import io.micrometer.core.instrument.Counter;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
@@ -414,7 +414,7 @@ public class UserService {
                 profileAccessStrategy,
                 registrationDate,
                 isActive)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         byte[] password = rawPassword == null || rawPassword.isEmpty()
                 ? null

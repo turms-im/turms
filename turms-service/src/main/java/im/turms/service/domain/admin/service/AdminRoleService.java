@@ -24,11 +24,12 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.admin.service.BaseAdminRoleService;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.service.domain.admin.repository.AdminRoleRepository;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.apache.commons.lang3.tuple.Triple;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.context.annotation.DependsOn;
@@ -212,7 +213,7 @@ public class AdminRoleService extends BaseAdminRoleService {
             return Mono.error(e);
         }
         if (Validator.areAllFalsy(newName, permissions, rank)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return adminRoleRepository.updateAdminRoles(roleIds, newName, permissions, rank);
     }
@@ -321,7 +322,7 @@ public class AdminRoleService extends BaseAdminRoleService {
             return Mono.error(e);
         }
         return permissions.isEmpty()
-                ? Mono.just(true)
+                ? PublisherPool.TRUE
                 : queryPermissions(account)
                 .map(adminPermissions -> adminPermissions.containsAll(permissions))
                 .defaultIfEmpty(false);

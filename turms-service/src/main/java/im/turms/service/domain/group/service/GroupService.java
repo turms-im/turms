@@ -49,7 +49,7 @@ import im.turms.service.domain.user.po.UserPermissionGroup;
 import im.turms.service.domain.user.service.UserPermissionGroupService;
 import im.turms.service.domain.user.service.UserVersionService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import io.micrometer.core.instrument.Counter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.DependsOn;
@@ -407,7 +407,7 @@ public class GroupService {
                 ? queryGroupOwnerId(groupId)
                 : Mono.just(auxiliaryCurrentOwnerId);
         return queryOwnerIdMono
-                .switchIfEmpty(Mono.error(ResponseException.get(ResponseStatusCode.TRANSFER_NON_EXISTING_GROUP)))
+                .switchIfEmpty(ResponseExceptionPublisherPool.transferNonExistingGroup())
                 .flatMap(ownerId -> groupMemberService
                         .isGroupMember(groupId, successorId)
                         .flatMap(isGroupMember -> !isGroupMember
@@ -515,7 +515,7 @@ public class GroupService {
         }
         if (Validator.areAllNull(typeId, creatorId, ownerId, name, intro, announcement,
                 minimumScore, isActive, creationDate, deletionDate, muteEndDate)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return groupRepository.updateGroups(groupIds,
                         typeId,

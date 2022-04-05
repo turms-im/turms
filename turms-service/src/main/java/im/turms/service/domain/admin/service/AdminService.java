@@ -31,7 +31,7 @@ import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.service.domain.admin.repository.AdminRepository;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.context.annotation.DependsOn;
@@ -244,7 +244,7 @@ public class AdminService extends BaseAdminService {
             return Mono.error(e);
         }
         if (Validator.areAllNull(rawPassword, name, roleId)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         boolean onlyUpdateRequesterInfo = targetAccounts.size() == 1 && targetAccounts.iterator().next().equals(requesterAccount);
         if (onlyUpdateRequesterInfo) {
@@ -284,7 +284,7 @@ public class AdminService extends BaseAdminService {
             return Mono.error(e);
         }
         if (Validator.areAllNull(rawPassword, name, roleId)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         byte[] password = rawPassword == null
                 ? null

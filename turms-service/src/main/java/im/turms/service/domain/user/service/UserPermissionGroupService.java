@@ -32,7 +32,7 @@ import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.service.domain.user.po.UserPermissionGroup;
 import im.turms.service.domain.user.repository.UserPermissionGroupRepository;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -155,7 +155,7 @@ public class UserPermissionGroupService {
                 ownedGroupLimit,
                 ownedGroupLimitForEachGroupType,
                 groupTypeLimitMap)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return userPermissionGroupRepository.updateUserPermissionGroups(groupIds,
                 creatableGroupTypeIds,

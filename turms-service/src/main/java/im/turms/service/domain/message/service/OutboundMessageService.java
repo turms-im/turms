@@ -28,6 +28,7 @@ import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.proto.ProtoEncoder;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.reactor.ReactorUtil;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
@@ -87,7 +88,7 @@ public class OutboundMessageService {
             @NotNull Set<Long> recipientIds) {
         if (recipientIds.isEmpty()) {
             notificationData.release();
-            return Mono.just(true);
+            return PublisherPool.TRUE;
         }
         int recipientCount = recipientIds.size();
         Mono<Boolean> mono = recipientCount == 1
@@ -116,7 +117,7 @@ public class OutboundMessageService {
                     }
                     if (nodeIds.isEmpty()) {
                         notificationData.release();
-                        return Mono.just(false);
+                        return PublisherPool.FALSE;
                     }
                     Mono<Boolean> mono = forwardClientMessageToNodes(notificationData, nodeIds, recipientId);
                     return tryLogNotification(mono, notificationForLogging, 1);
@@ -135,7 +136,7 @@ public class OutboundMessageService {
             @NotNull Set<Long> recipientIds) {
         if (recipientIds.isEmpty()) {
             messageData.release();
-            return Mono.just(true);
+            return PublisherPool.TRUE;
         }
         int recipientIdCount = recipientIds.size();
         if (recipientIdCount == 1) {
@@ -152,12 +153,12 @@ public class OutboundMessageService {
                 .flatMap(pairs -> {
                     if (pairs.isEmpty()) {
                         messageData.release();
-                        return Mono.just(false);
+                        return PublisherPool.FALSE;
                     }
                     int gatewayMemberCount = node.getDiscoveryService().getActiveSortedGatewayMembers().size();
                     if (gatewayMemberCount == 0) {
                         messageData.release();
-                        return Mono.just(false);
+                        return PublisherPool.FALSE;
                     }
                     int expectedMembersCount = Math.min(gatewayMemberCount, recipientIdCount);
                     int expectedRecipientCountPerMember = Math.max(1, recipientIdCount / expectedMembersCount);
@@ -184,7 +185,7 @@ public class OutboundMessageService {
                     Set<String> nodeIds = CollectionUtil.newSet(deviceTypeAndNodeIdMap.values());
                     if (nodeIds.isEmpty()) {
                         notificationData.release();
-                        return Mono.just(false);
+                        return PublisherPool.FALSE;
                     }
                     return forwardClientMessageToNodes(notificationData, nodeIds, recipientId);
                 })
@@ -201,7 +202,7 @@ public class OutboundMessageService {
         int size = nodeIds.size();
         if (size == 0) {
             messageData.release();
-            return Mono.just(false);
+            return PublisherPool.FALSE;
         }
         if (size == 1) {
             String nodeId = nodeIds.iterator().next();
@@ -224,7 +225,7 @@ public class OutboundMessageService {
         int size = nodeIds.size();
         if (size == 0) {
             messageData.release();
-            return Mono.just(false);
+            return PublisherPool.FALSE;
         }
         if (size == 1) {
             return forwardClientMessageToNode(messageData, nodeIds.iterator().next(), Set.of(recipientId));
@@ -248,7 +249,7 @@ public class OutboundMessageService {
         int size = recipients.size();
         if (size == 0) {
             messageData.release();
-            return Mono.just(false);
+            return PublisherPool.FALSE;
         }
         SendNotificationRequest request = new SendNotificationRequest(
                 messageData,

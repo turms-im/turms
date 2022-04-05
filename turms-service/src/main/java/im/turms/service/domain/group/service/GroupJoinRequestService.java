@@ -41,7 +41,7 @@ import im.turms.service.domain.group.repository.GroupJoinRequestRepository;
 import im.turms.service.domain.user.service.UserVersionService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidRequestStatus;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -352,7 +352,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
             return Mono.error(e);
         }
         if (Validator.areAllNull(requesterId, responderId, content, status, creationDate)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return groupJoinRequestRepository.updateRequests(requestIds,
                 requesterId,

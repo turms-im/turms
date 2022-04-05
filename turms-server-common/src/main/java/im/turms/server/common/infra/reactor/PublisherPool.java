@@ -15,21 +15,19 @@
  * limitations under the License.
  */
 
-package im.turms.service.storage.mongo;
+package im.turms.server.common.infra.reactor;
 
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
+import reactor.core.publisher.Mono;
 
 /**
  * @author James Chen
  */
-public final class OperationResultConst {
+public class PublisherPool {
 
-    private OperationResultConst() {
+    private PublisherPool() {
     }
 
-    public static final UpdateResult ACKNOWLEDGED_UPDATE_RESULT = UpdateResult.acknowledged(0L, 0L, null);
-
-    public static final DeleteResult ACKNOWLEDGED_DELETE_RESULT = DeleteResult.acknowledged(0L);
+    public static final Mono<Boolean> TRUE = Mono.just(true);
+    public static final Mono<Boolean> FALSE = Mono.just(false);
 
 }

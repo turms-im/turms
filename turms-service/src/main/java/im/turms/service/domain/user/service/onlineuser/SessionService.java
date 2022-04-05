@@ -24,6 +24,7 @@ import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.reactor.ReactorUtil;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
@@ -143,7 +144,7 @@ public class SessionService {
             return Mono.error(e);
         }
         return switch (userIds.size()) {
-            case 0 -> Mono.just(true);
+            case 0 -> PublisherPool.TRUE;
             case 1 -> disconnect(userIds.iterator().next(), closeStatus);
             default -> {
                 List<Mono<Boolean>> monos = new ArrayList<>(userIds.size());
@@ -169,7 +170,7 @@ public class SessionService {
         }
         int size = userIds.size();
         return switch (size) {
-            case 0 -> Mono.just(true);
+            case 0 -> PublisherPool.TRUE;
             case 1 -> disconnect(userIds.iterator().next(), deviceTypes, closeStatus);
             default -> {
                 List<Mono<Boolean>> monos = new ArrayList<>(size);

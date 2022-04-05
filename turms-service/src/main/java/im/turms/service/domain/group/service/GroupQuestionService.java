@@ -30,6 +30,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -39,7 +40,7 @@ import im.turms.service.domain.group.po.GroupJoinQuestion;
 import im.turms.service.domain.group.repository.GroupQuestionRepository;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidGroupQuestionIdAndAnswer;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
@@ -167,8 +168,8 @@ public class GroupQuestionService {
                                                 null,
                                                 null,
                                                 null)
-                                        .thenReturn(true)
-                                        : Mono.just(false))
+                                        .then(PublisherPool.TRUE)
+                                        : PublisherPool.FALSE)
                                 .map(joined -> GroupJoinQuestionsAnswerResult
                                         .newBuilder()
                                         .setJoined(joined)
@@ -291,7 +292,7 @@ public class GroupQuestionService {
         }
         Mono<Boolean> authenticated = withAnswers
                 ? groupMemberService.isOwnerOrManager(requesterId, groupId)
-                : Mono.just(true);
+                : PublisherPool.TRUE;
         return authenticated
                 .flatMap(isAuthenticated -> isAuthenticated != null && isAuthenticated
                         ? groupVersionService.queryGroupJoinQuestionsVersion(groupId)
@@ -331,7 +332,7 @@ public class GroupQuestionService {
             return Mono.error(e);
         }
         if (Validator.areAllNull(question, answers, score)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return queryGroupId(questionId)
                 .flatMap(groupId -> groupMemberService.isOwnerOrManager(requesterId, groupId)
@@ -364,7 +365,7 @@ public class GroupQuestionService {
             return Mono.error(e);
         }
         if (Validator.areAllFalsy(groupId, question, answers, score)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return groupQuestionRepository.updateQuestions(ids, groupId, question, answers, score);
     }

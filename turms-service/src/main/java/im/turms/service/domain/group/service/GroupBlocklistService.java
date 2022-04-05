@@ -25,6 +25,7 @@ import im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.time.DateRange;
@@ -37,7 +38,7 @@ import im.turms.service.domain.group.repository.GroupBlocklistRepository;
 import im.turms.service.domain.user.service.UserService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidGroupBlockedUserKey;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -222,7 +223,7 @@ public class GroupBlocklistService {
                 .queryBlocklistVersion(groupId)
                 .flatMap(version -> {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
-                        return Mono.error(ResponseException.get(ResponseStatusCode.ALREADY_UP_TO_DATE));
+                        return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     return queryGroupBlockedUserIds(groupId)
                             .collect(Collectors.toSet())
@@ -238,7 +239,7 @@ public class GroupBlocklistService {
                             });
 
                 })
-                .switchIfEmpty(Mono.error(ResponseException.get(ResponseStatusCode.ALREADY_UP_TO_DATE)));
+                .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
     }
 
     public Mono<UsersInfosWithVersion> queryGroupBlockedUserInfosWithVersion(
@@ -253,7 +254,7 @@ public class GroupBlocklistService {
                 .queryBlocklistVersion(groupId)
                 .flatMap(version -> {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
-                        return Mono.error(ResponseException.get(ResponseStatusCode.ALREADY_UP_TO_DATE));
+                        return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     return queryGroupBlockedUserIds(groupId)
                             .collect(Collectors.toSet())
@@ -277,7 +278,7 @@ public class GroupBlocklistService {
                             });
 
                 })
-                .switchIfEmpty(Mono.error(ResponseException.get(ResponseStatusCode.ALREADY_UP_TO_DATE)));
+                .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
     }
 
     public Mono<GroupBlockedUser> addBlockedUser(
@@ -314,7 +315,7 @@ public class GroupBlocklistService {
             return Mono.error(e);
         }
         if (Validator.areAllNull(blockDate, requesterId)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return groupBlocklistRepository.updateBlockedUsers(keys, blockDate, requesterId);
     }

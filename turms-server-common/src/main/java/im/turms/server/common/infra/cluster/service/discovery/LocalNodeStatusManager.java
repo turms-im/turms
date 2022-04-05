@@ -22,6 +22,7 @@ import im.turms.server.common.infra.cluster.service.config.domain.discovery.Lead
 import im.turms.server.common.infra.cluster.service.config.domain.discovery.Member;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.storage.mongo.DomainFieldName;
@@ -231,7 +232,7 @@ public class LocalNodeStatusManager {
     private Mono<Boolean> renewLocalLeader(Date renewDate) {
         Leader leader = discoveryService.getLeader();
         if (leader == null) {
-            return Mono.just(false);
+            return PublisherPool.FALSE;
         }
         Filter filter = Filter.newBuilder(3)
                 .eq(DomainFieldName.ID, localMember.getClusterId())
@@ -245,11 +246,11 @@ public class LocalNodeStatusManager {
                     if (updateResult.getMatchedCount() == 0) {
                         return sharedConfigService.insert(leader)
                                 // True for the case: no leader
-                                .thenReturn(true)
+                                .then(PublisherPool.TRUE)
                                 // False for the case: leader has changed
-                                .onErrorResume(DuplicateKeyException.class, e -> Mono.just(false));
+                                .onErrorResume(DuplicateKeyException.class, e -> PublisherPool.FALSE);
                     } else {
-                        return Mono.just(true);
+                        return PublisherPool.TRUE;
                     }
                 });
     }

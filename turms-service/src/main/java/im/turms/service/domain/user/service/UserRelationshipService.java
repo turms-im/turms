@@ -25,8 +25,10 @@ import im.turms.server.common.access.client.dto.model.user.UserRelationshipsWith
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
@@ -39,7 +41,7 @@ import im.turms.service.domain.user.po.UserVersion;
 import im.turms.service.domain.user.repository.UserRelationshipRepository;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidUserRelationshipKey;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -201,7 +203,7 @@ public class UserRelationshipService {
         return userVersionService.queryRelationshipsLastUpdatedDate(ownerId)
                 .flatMap(date -> {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, date)) {
-                        return Mono.error(ResponseException.get(ResponseStatusCode.ALREADY_UP_TO_DATE));
+                        return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     return queryRelatedUserIds(Set.of(ownerId), Set.of(groupIndex), isBlocked)
                             .collect(Collectors.toSet())
@@ -215,7 +217,7 @@ public class UserRelationshipService {
                                         .build();
                             });
                 })
-                .switchIfEmpty(Mono.error(ResponseException.get(ResponseStatusCode.ALREADY_UP_TO_DATE)));
+                .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
     }
 
     public Mono<UserRelationshipsWithVersion> queryRelationshipsWithVersion(
@@ -227,7 +229,7 @@ public class UserRelationshipService {
         return userVersionService.queryRelationshipsLastUpdatedDate(ownerId)
                 .flatMap(date -> {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, date)) {
-                        return Mono.error(ResponseException.get(ResponseStatusCode.ALREADY_UP_TO_DATE));
+                        return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     return queryRelationships(
                             Set.of(ownerId),
@@ -250,7 +252,7 @@ public class UserRelationshipService {
                                 return builder.build();
                             });
                 })
-                .switchIfEmpty(Mono.error(ResponseException.get(ResponseStatusCode.ALREADY_UP_TO_DATE)));
+                .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
     }
 
     public Flux<Long> queryRelatedUserIds(
@@ -393,7 +395,7 @@ public class UserRelationshipService {
                 DEFAULT_RELATIONSHIP_GROUP_INDEX, null, now, true, session)
                 .then(upsertOneSidedRelationship(userTwoId, userOneId, null,
                         DEFAULT_RELATIONSHIP_GROUP_INDEX, null, now, true, session))
-                .thenReturn(true);
+                .then(PublisherPool.TRUE);
     }
 
     // TODO: break down
@@ -485,7 +487,7 @@ public class UserRelationshipService {
             return Mono.error(e);
         }
         if (Validator.areAllNull(blockDate, establishmentDate)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return userRelationshipRepository.updateUserOneSidedRelationships(keys, blockDate, establishmentDate)
                 .flatMap(result -> {

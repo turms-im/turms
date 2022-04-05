@@ -23,6 +23,8 @@ import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.exception.ThrowableInfo;
 
+import javax.annotation.Nullable;
+
 /**
  * @author James Chen
  */
@@ -39,7 +41,7 @@ public final class NotificationFactory {
                 .setRequestId(requestId)
                 .setCode(code.getBusinessCode());
         String reason = code.getReason();
-        trySetReason(builder, reason, code);
+        trySetReason(builder, code, reason);
         return builder.build();
     }
 
@@ -49,7 +51,7 @@ public final class NotificationFactory {
                 .setRequestId(requestId)
                 .setCode(code.getBusinessCode());
         reason = reason == null ? code.getReason() : reason;
-        trySetReason(builder, reason, code);
+        trySetReason(builder, code, reason);
         return builder.build();
     }
 
@@ -60,7 +62,7 @@ public final class NotificationFactory {
                 .setRequestId(requestId)
                 .setCode(code.getBusinessCode());
         String reason = info.reason();
-        trySetReason(builder, reason, code);
+        trySetReason(builder, code, reason);
         return builder.build();
     }
 
@@ -74,7 +76,7 @@ public final class NotificationFactory {
         if (statusCode != null) {
             builder.setCode(statusCode.getBusinessCode());
         }
-        trySetReason(builder, reason, statusCode);
+        trySetReason(builder, statusCode, reason);
         return builder.build();
     }
 
@@ -86,11 +88,13 @@ public final class NotificationFactory {
                 .build();
     }
 
-    private static void trySetReason(TurmsNotification.Builder builder, String reason, ResponseStatusCode code) {
+    private static void trySetReason(TurmsNotification.Builder builder,
+                                     ResponseStatusCode code,
+                                     @Nullable String reason) {
         if (reason == null) {
             return;
         }
-        if (ResponseStatusCode.isServerError(code.getBusinessCode())) {
+        if (code.isServerError()) {
             if (returnReasonForServerError) {
                 builder.setReason(reason);
             }

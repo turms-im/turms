@@ -58,6 +58,9 @@ public class ResponseExceptionPublisherPool {
     private static final Mono SESSION_SIMULTANEOUS_CONFLICTS_DECLINE = Mono
             .error(ResponseException.get(ResponseStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
 
+    private static final Mono TRANSFER_NON_EXISTING_GROUP = Mono
+            .error(ResponseException.get(ResponseStatusCode.TRANSFER_NON_EXISTING_GROUP));
+
     private static final Mono UNAUTHORIZED = Mono
             .error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED));
 
@@ -110,6 +113,11 @@ public class ResponseExceptionPublisherPool {
     @SuppressWarnings("unchecked")
     public static <T> Mono<T> serverUnavailable() {
         return SERVER_UNAVAILABLE;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Mono<T> transferNonExistingGroup() {
+        return TRANSFER_NON_EXISTING_GROUP;
     }
 
     @SuppressWarnings("unchecked")

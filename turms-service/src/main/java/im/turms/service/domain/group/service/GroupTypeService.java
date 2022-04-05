@@ -36,7 +36,7 @@ import im.turms.service.domain.group.bo.GroupJoinStrategy;
 import im.turms.service.domain.group.bo.GroupUpdateStrategy;
 import im.turms.service.domain.group.po.GroupType;
 import im.turms.service.domain.group.repository.GroupTypeRepository;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -196,7 +196,7 @@ public class GroupTypeService {
                 selfInfoUpdatable,
                 enableReadReceipt,
                 messageEditable)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return groupTypeRepository.updateTypes(ids,
                 name,

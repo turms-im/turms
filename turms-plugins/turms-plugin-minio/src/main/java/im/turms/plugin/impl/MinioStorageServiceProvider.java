@@ -26,6 +26,7 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.env.service.business.StorageProperties;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.domain.message.service.MessageService;
 import im.turms.service.infra.plugin.extension.StorageServiceProvider;
@@ -418,7 +419,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
 
     private Mono<Boolean> hasPermissionToGet(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable Long keyNum) {
         return switch (contentType) {
-            case PROFILE, GROUP_PROFILE -> Mono.just(true);
+            case PROFILE, GROUP_PROFILE -> PublisherPool.TRUE;
             case ATTACHMENT -> {
                 if (keyNum == null) {
                     throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null");
@@ -433,7 +434,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                                              @NotNull ContentType contentType,
                                              @Nullable Long keyNum) {
         return switch (contentType) {
-            case PROFILE -> Mono.just(true);
+            case PROFILE -> PublisherPool.TRUE;
             case GROUP_PROFILE -> {
                 if (keyNum == null) {
                     throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null");
@@ -452,14 +453,14 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
 
     private Mono<Boolean> hasPermissionToDelete(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable Long keyNum) {
         return switch (contentType) {
-            case PROFILE -> Mono.just(true);
+            case PROFILE -> PublisherPool.TRUE;
             case GROUP_PROFILE -> {
                 if (keyNum == null) {
                     throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null");
                 }
                 yield groupMemberService.isOwnerOrManager(requesterId, keyNum);
             }
-            case ATTACHMENT -> Mono.just(false);
+            case ATTACHMENT -> PublisherPool.FALSE;
             default -> throw new IllegalStateException("Unexpected value: " + contentType);
         };
     }

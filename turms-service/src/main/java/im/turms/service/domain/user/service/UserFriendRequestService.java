@@ -44,7 +44,7 @@ import im.turms.service.domain.user.repository.UserFriendRequestRepository;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidRequestStatus;
 import im.turms.service.infra.validation.ValidResponseAction;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -278,7 +278,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             return Mono.error(e);
         }
         if (Validator.areAllNull(requesterId, recipientId, content, status, reason, creationDate, responseDate)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return userFriendRequestRepository.updateFriendRequests(requestIds,
                 requesterId,

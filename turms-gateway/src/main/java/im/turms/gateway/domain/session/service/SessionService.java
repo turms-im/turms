@@ -52,6 +52,7 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
 import im.turms.server.common.infra.property.env.gateway.SessionProperties;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.reactor.ReactorUtil;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
@@ -262,7 +263,7 @@ public class SessionService implements ISessionService {
         Queue<UserSession> sessions = sessionsByIp.get(new ByteArrayWrapper(ip));
         Iterator<UserSession> iterator = sessions.iterator();
         if (!iterator.hasNext()) {
-            return Mono.just(false);
+            return PublisherPool.FALSE;
         }
         Mono<Boolean> first = setLocalSessionOffline(iterator.next().getUserId(),
                 DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
@@ -331,7 +332,7 @@ public class SessionService implements ISessionService {
         }
         UserSessionsManager manager = getUserSessionsManager(userId);
         if (manager == null) {
-            return Mono.just(false);
+            return PublisherPool.FALSE;
         }
         return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, deviceTypes, closeReason, manager);
     }
@@ -349,13 +350,13 @@ public class SessionService implements ISessionService {
         }
         UserSessionsManager manager = getUserSessionsManager(userId);
         if (manager == null) {
-            return Mono.just(false);
+            return PublisherPool.FALSE;
         }
         UserSession session = manager.getSession(deviceType);
         if (session.getId() == sessionId) {
             return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, Collections.singleton(deviceType), closeReason, manager);
         }
-        return Mono.just(false);
+        return PublisherPool.FALSE;
     }
 
     /**
@@ -568,7 +569,7 @@ public class SessionService implements ISessionService {
             }
         }
         if (nodeIdAndDeviceTypesMap == null) {
-            return Mono.just(true);
+            return PublisherPool.TRUE;
         }
         Set<String> nodeIds = nodeIdAndDeviceTypesMap.keySet();
         List<Mono<Boolean>> disconnectionRequests = new ArrayList<>(nodeIds.size());
@@ -588,7 +589,7 @@ public class SessionService implements ISessionService {
                         }
                         // For the second case (dead target node), we consider the user sessions already offline,
                         // so we return true for the logging in client to log in for better user experience.
-                        return Mono.just(true);
+                        return PublisherPool.TRUE;
                     }));
         }
         return ReactorUtil.areAllTrue(disconnectionRequests);

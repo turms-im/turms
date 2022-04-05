@@ -32,6 +32,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.redis.RedisEntryId;
@@ -52,7 +53,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -193,7 +193,7 @@ public class UserStatusService {
         }
         int size = userIds.size();
         return switch (size) {
-            case 0 -> Mono.just(true);
+            case 0 -> PublisherPool.TRUE;
             case 1 -> updateOnlineUserStatusIfPresent(userIds.iterator().next(), userStatus);
             default -> {
                 List<Mono<Boolean>> monos = new ArrayList<>(userIds.size());

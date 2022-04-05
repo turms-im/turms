@@ -38,6 +38,7 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.TimeType;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.infra.property.env.service.business.message.SequenceIdProperties;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
@@ -55,7 +56,7 @@ import im.turms.service.domain.observation.service.MetricsService;
 import im.turms.service.domain.user.service.UserService;
 import im.turms.service.infra.plugin.extension.ExpiredMessageDeletionNotifier;
 import im.turms.service.infra.proto.ProtoModelConvertor;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import io.micrometer.core.instrument.Counter;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -224,7 +225,7 @@ public class MessageService {
     public Mono<Boolean> isMessageRecipientOrSender(@NotNull Long messageId, @NotNull Long userId) {
         return isMessageRecipient(messageId, userId)
                 .flatMap(isSentToUser -> isSentToUser
-                        ? Mono.just(true)
+                        ? PublisherPool.TRUE
                         : isMessageSentByUser(messageId, userId));
     }
 
@@ -499,7 +500,7 @@ public class MessageService {
             return Mono.error(e);
         }
         if (Validator.areAllNull(isSystemMessage, text, records, burnAfter, recallDate)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         if (recallDate == null) {
             return messageRepository.updateMessages(messageIds, isSystemMessage, text, records, burnAfter, session);

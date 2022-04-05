@@ -33,7 +33,7 @@ import im.turms.service.domain.conversation.access.admin.dto.response.Conversati
 import im.turms.service.domain.conversation.po.GroupConversation;
 import im.turms.service.domain.conversation.po.PrivateConversation;
 import im.turms.service.domain.conversation.service.ConversationService;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -102,7 +102,7 @@ public class ConversationController extends BaseController {
             @RequestParam(required = false) Set<Long> ownerIds,
             @RequestParam(required = false) Set<Long> groupIds) {
         Mono<DeleteResult> resultMono = isEmptyPrivateConversationKeys(privateConversationKeys)
-                ? Mono.just(OperationResultConst.ACKNOWLEDGED_DELETE_RESULT)
+                ? OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT
                 : conversationService
                 .deletePrivateConversations(CollectionUtil.newSet(privateConversationKeys.getPrivateConversationKeys()));
         if (!CollectionUtils.isEmpty(ownerIds)) {

@@ -44,7 +44,7 @@ import im.turms.service.domain.user.repository.UserRelationshipGroupRepository;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidUserRelationshipGroupKey;
 import im.turms.service.infra.validation.ValidUserRelationshipKey;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -233,7 +233,7 @@ public class UserRelationshipGroupService {
             return Mono.error(e);
         }
         if (name == null && creationDate == null) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return userRelationshipGroupRepository.updateRelationshipGroups(keys, name, creationDate);
     }

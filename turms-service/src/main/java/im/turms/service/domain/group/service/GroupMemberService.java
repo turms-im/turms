@@ -31,6 +31,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
@@ -42,7 +43,7 @@ import im.turms.service.domain.group.po.GroupMember;
 import im.turms.service.domain.group.repository.GroupMemberRepository;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidGroupMemberRole;
-import im.turms.service.storage.mongo.OperationResultConst;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
@@ -69,6 +70,12 @@ import java.util.stream.Collectors;
 public class GroupMemberService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupMemberService.class);
+
+    private static final Pair<ServicePermission, GroupInvitationStrategy> ADD_USER_TO_INACTIVE_GROUP =
+            Pair.of(ServicePermission.get(ResponseStatusCode.ADD_USER_TO_INACTIVE_GROUP), null);
+
+    private static final Pair<ServicePermission, GroupInvitationStrategy> GROUP_INVITER_NOT_MEMBER =
+            Pair.of(ServicePermission.get(ResponseStatusCode.GROUP_INVITER_NOT_MEMBER), null);
 
     private final Node node;
     private final GroupMemberRepository groupMemberRepository;
@@ -273,7 +280,7 @@ public class GroupMemberService {
             return Mono.error(e);
         }
         if (Validator.areAllNull(name, role, joinDate, muteEndDate)) {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return groupMemberRepository.updateGroupMembers(keys, name, role, joinDate, muteEndDate, session)
                 .flatMap(result -> {
@@ -362,8 +369,8 @@ public class GroupMemberService {
                                     .formatted(inviterRole, strategy);
                             return Mono.just(Pair.of(ServicePermission.get(code, reason), strategy));
                         })
-                        .defaultIfEmpty(Pair.of(ServicePermission.get(ResponseStatusCode.ADD_USER_TO_INACTIVE_GROUP), null)))
-                .defaultIfEmpty(Pair.of(ServicePermission.get(ResponseStatusCode.GROUP_INVITER_NOT_MEMBER), null));
+                        .defaultIfEmpty(ADD_USER_TO_INACTIVE_GROUP))
+                .defaultIfEmpty(GROUP_INVITER_NOT_MEMBER);
     }
 
     /**
@@ -462,7 +469,7 @@ public class GroupMemberService {
     public Mono<Boolean> isOwner(@NotNull Long userId, @NotNull Long groupId) {
         return queryGroupMemberRole(userId, groupId)
                 .map(memberRole -> memberRole == GroupMemberRole.OWNER)
-                .defaultIfEmpty(false);
+                .switchIfEmpty(PublisherPool.FALSE);
     }
 
     public Mono<Boolean> isOwnerOrManager(@NotNull Long userId, @NotNull Long groupId) {
@@ -584,7 +591,7 @@ public class GroupMemberService {
         return groupMemberRepository.deleteAll()
                 .flatMap(result -> updateGroupMembersVersion && result.getDeletedCount() > 0
                         ? groupVersionService.updateMembersVersion().thenReturn(result)
-                        : Mono.just(OperationResultConst.ACKNOWLEDGED_DELETE_RESULT));
+                        : OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT);
     }
 
     public Flux<GroupMember> queryGroupMembers(@NotNull Long groupId, @NotEmpty Set<Long> memberIds) {
@@ -682,7 +689,7 @@ public class GroupMemberService {
                     .map(isOwnerOrManager -> isOwnerOrManager ? ResponseStatusCode.OK :
                             ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_MEMBER_INFO);
         } else {
-            return Mono.just(OperationResultConst.ACKNOWLEDGED_UPDATE_RESULT);
+            return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return isAuthorizedMono
                 .flatMap(code -> code == ResponseStatusCode.OK
@@ -697,7 +704,7 @@ public class GroupMemberService {
         return groupMemberRepository.deleteAllGroupMembers(groupIds, session)
                 .flatMap(result -> updateMembersVersion && result.getDeletedCount() > 0
                         ? groupVersionService.updateMembersVersion(groupIds).thenReturn(result)
-                        : Mono.just(OperationResultConst.ACKNOWLEDGED_DELETE_RESULT));
+                        : OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT);
     }
 
     public Flux<Long> queryGroupManagersAndOwnerId(@NotNull Long groupId) {

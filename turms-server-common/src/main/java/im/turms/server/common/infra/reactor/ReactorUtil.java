@@ -34,7 +34,7 @@ public final class ReactorUtil {
 
     public static Mono<Boolean> areAllTrue(Mono<Boolean>... monos) {
         if (monos.length == 0) {
-            return Mono.just(false);
+            return PublisherPool.FALSE;
         }
         return Flux.merge(monos)
                 .collect(CollectorUtil.toList(monos.length))
@@ -50,7 +50,7 @@ public final class ReactorUtil {
 
     public static Mono<Boolean> areAllTrue(@NotNull List<Mono<Boolean>> monos) {
         if (monos.isEmpty()) {
-            return Mono.just(false);
+            return PublisherPool.FALSE;
         }
         return Flux.merge(monos)
                 .collect(CollectorUtil.toList(monos.size()))
@@ -66,7 +66,7 @@ public final class ReactorUtil {
 
     public static Mono<Boolean> atLeastOneTrue(@NotNull List<Mono<Boolean>> monos) {
         if (monos.isEmpty()) {
-            return Mono.just(false);
+            return PublisherPool.FALSE;
         }
         return Flux.merge(monos)
                 .collect(CollectorUtil.toList(monos.size()))

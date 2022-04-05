@@ -26,6 +26,7 @@ import im.turms.server.common.infra.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.security.PasswordManager;
 import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
@@ -144,7 +145,7 @@ public abstract class BaseAdminService {
             isQueryingSelfInfo = false;
         }
         return isQueryingSelfInfo
-                ? Mono.just(true)
+                ? PublisherPool.TRUE
                 : isAdminAuthorized(account, permission);
     }
 
