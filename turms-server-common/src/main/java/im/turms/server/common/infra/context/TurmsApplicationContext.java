@@ -50,6 +50,7 @@ public class TurmsApplicationContext {
     private boolean isClosing;
 
     private final Path home;
+    private final String configDir;
     private final boolean isProduction;
     private final boolean isDevOrLocalTest;
     private final String activeEnvProfile;
@@ -58,13 +59,20 @@ public class TurmsApplicationContext {
     public TurmsApplicationContext(Environment environment,
                                    NodeType nodeType,
                                    @Autowired(required = false) BuildProperties buildProperties) {
-
         String homeDir = nodeType == NodeType.SERVICE
                 ? System.getenv("TURMS_SERVICE_HOME")
                 : System.getenv("TURMS_GATEWAY_HOME");
         home = homeDir == null
                 ? Path.of("").toAbsolutePath()
                 : Path.of(homeDir).toAbsolutePath();
+
+        // The property should be passed from "bin/run.sh"
+        String configDir = System.getProperty("spring.config.location");
+        if (configDir == null || configDir.isBlank()) {
+            LOGGER.warn("The property \"spring.config.location\" is empty");
+            configDir = "./config";
+        }
+        this.configDir = configDir;
 
         List<String> devEnvs = List.of("dev", "development",
                 "local");

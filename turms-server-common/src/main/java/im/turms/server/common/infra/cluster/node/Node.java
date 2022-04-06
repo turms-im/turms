@@ -44,6 +44,7 @@ import lombok.Getter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -216,6 +217,10 @@ public class Node {
 
     public TurmsProperties getSharedProperties() {
         return sharedPropertyService.getSharedProperties();
+    }
+
+    public Mono<Void> updateSharedProperties(TurmsProperties properties) {
+        return sharedPropertyService.updateSharedProperties(properties);
     }
 
     public void addPropertiesChangeListener(Consumer<TurmsProperties> listener) {

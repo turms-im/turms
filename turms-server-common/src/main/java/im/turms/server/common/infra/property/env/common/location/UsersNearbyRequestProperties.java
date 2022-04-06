@@ -26,7 +26,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 
 /**
@@ -50,12 +49,12 @@ public class UsersNearbyRequestProperties {
 
     @JsonView(MutablePropertiesView.class)
     @Description("The default maximum distance limit in meters")
-    @DecimalMin("0")
+    @Min(0)
     private int defaultMaxDistanceMeters = 10_000;
 
     @JsonView(MutablePropertiesView.class)
     @Description("The maximum distance limit in meters")
-    @DecimalMin("0")
+    @Min(0)
     private int maxDistanceMeters = 10_000;
 
 }

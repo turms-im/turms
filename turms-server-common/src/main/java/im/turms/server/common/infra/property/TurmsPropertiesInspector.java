@@ -22,35 +22,32 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.infra.property.metadata.annotation.Description;
 import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.validation.ValidCron;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
+import org.springframework.util.ConcurrentReferenceHashMap;
 
-import javax.validation.constraints.NotNull;
-import java.io.IOException;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -60,7 +57,7 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-public final class PropertiesUtil {
+public class TurmsPropertiesInspector {
 
     private static final String TURMS_PROPERTIES_PACKAGE_NAME = TurmsProperties.class.getPackageName();
     private static final String FIELD_NAME_DEPRECATED = "deprecated";
@@ -71,21 +68,24 @@ public final class PropertiesUtil {
     private static final String FIELD_NAME_OPTIONS = "options";
     private static final String FIELD_NAME_TYPE = "type";
 
+    public static final ObjectMapper MAPPER = new ObjectMapper()
+            .registerModule(new JavaTimeModule());
     public static final ObjectWriter MUTABLE_PROPERTIES_WRITER = new ObjectMapper()
             .disable(MapperFeature.DEFAULT_VIEW_INCLUSION)
             .registerModule(new JavaTimeModule())
             .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
             .writerWithView(MutablePropertiesView.class);
-    public static final ObjectMapper MAPPER = new ObjectMapper()
-            .registerModule(new JavaTimeModule())
-            .setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-    public static final TypeReference<HashMap<String, Object>> TYPE_REF_MAP = new TypeReference<>() {
-    };
+
     public static final Map<String, Object> METADATA = ImmutableMap.copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, false));
     public static final Map<String, Object> ONLY_MUTABLE_METADATA =
             ImmutableMap.copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, true));
+    public static final TypeReference<HashMap<String, Object>> TYPE_REF_MAP = new TypeReference<>() {
+    };
 
-    private PropertiesUtil() {
+    private static final Map<Field, Map<Class<? extends Annotation>, Annotation>> ANNOTATION_MAP =
+            new ConcurrentReferenceHashMap<>(512);
+
+    private TurmsPropertiesInspector() {
     }
 
     public static boolean isMutableProperty(Field field) {
@@ -100,36 +100,9 @@ public final class PropertiesUtil {
         return false;
     }
 
-    // Merge
-
-    public static TurmsProperties mergeAsProperties(
-            @NotNull TurmsProperties propertiesToUpdate,
-            @NotNull String propertiesForUpdating) throws IOException {
-        ObjectReader objectReader = new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
-                .readerForUpdating(propertiesToUpdate)
-                .forType(TurmsProperties.class);
-        return objectReader.readValue(propertiesForUpdating);
-    }
-
-    public static TurmsProperties mergeAsProperties(
-            @NotNull TurmsProperties propertiesToUpdate,
-            Map<String, Object> propertiesForUpdating) throws IOException {
-        return mergeAsProperties(propertiesToUpdate, toMutablePropertiesString(propertiesForUpdating));
-    }
-
-    public static Map<String, Object> mergePropertiesWithMetadata(
-            @NotNull Map<String, Object> properties,
-            @NotNull Map<String, Object> metadata) {
-        properties = MapUtil.addValueKeyToAllLeaves(properties);
-        return MapUtil.deepMerge(properties, metadata);
-    }
-
-    // Structure analysis
-
-    public static Map<String, Object> getPropertyValueMap(TurmsProperties turmsProperties, boolean returnOnlyMutableProperties)
-            throws IOException {
+    @SneakyThrows
+    public static Map<String, Object> getPropertyValueMap(TurmsProperties turmsProperties,
+                                                          boolean returnOnlyMutableProperties) {
         return returnOnlyMutableProperties
                 ? MAPPER.readValue(MUTABLE_PROPERTIES_WRITER.writeValueAsBytes(turmsProperties), TYPE_REF_MAP)
                 : MAPPER.readValue(MAPPER.writeValueAsBytes(turmsProperties), TYPE_REF_MAP);
@@ -152,6 +125,27 @@ public final class PropertiesUtil {
                 .set("turms", jsonNodeTree);
     }
 
+    public static Map<Class<? extends Annotation>, Annotation> getConstraints(Field field) {
+        Map<Class<? extends Annotation>, Annotation> map = ANNOTATION_MAP.get(field);
+        if (map != null) {
+            return map;
+        }
+        map = ANNOTATION_MAP.computeIfAbsent(field, key -> {
+            Map<Class<? extends Annotation>, Annotation> newMap = null;
+            for (Annotation annotation : key.getDeclaredAnnotations()) {
+                Class<? extends Annotation> annotationType = annotation.annotationType();
+                if (annotationType == Min.class || annotationType == Max.class || annotationType == ValidCron.class) {
+                    if (newMap == null) {
+                        newMap = new HashMap<>(4);
+                    }
+                    newMap.put(annotationType, annotation);
+                }
+            }
+            return newMap == null ? Collections.emptyMap() : newMap;
+        });
+        return map;
+    }
+
     private static Map<String, Object> getMetadata(Map<String, Object> outputMetadata, Class<?> clazz, boolean onlyMutable) {
         List<Field> fieldList = getFields(clazz, onlyMutable);
         for (Field field : fieldList) {
@@ -168,15 +162,21 @@ public final class PropertiesUtil {
         if (onlyMutable) {
             fieldList = FieldUtils.getFieldsListWithAnnotation(clazz, JsonView.class)
                     .stream()
-                    .filter(PropertiesUtil::isMutableProperty)
+                    .filter(TurmsPropertiesInspector::isMutableProperty)
                     .toList();
         } else {
             fieldList = FieldUtils.getAllFieldsList(clazz);
         }
-        return fieldList
-                .stream()
-                .filter(field -> !field.isAnnotationPresent(JsonIgnore.class))
-                .toList();
+        if (fieldList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Field> fields = new ArrayList<>(fieldList.size());
+        for (Field field : fieldList) {
+            if (!field.isAnnotationPresent(JsonIgnore.class)) {
+                fields.add(field);
+            }
+        }
+        return fields;
     }
 
     private static Object getFieldMetadata(Field field, boolean onlyMutable) {
@@ -233,48 +233,6 @@ public final class PropertiesUtil {
             return "string";
         }
         return type.getTypeName();
-    }
-
-    // Convert
-
-    public static String toMutablePropertiesString(TurmsProperties propertiesForUpdating) {
-        try {
-            return MUTABLE_PROPERTIES_WRITER.writeValueAsString(propertiesForUpdating);
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    public static String toMutablePropertiesString(Map<String, Object> propertiesForUpdating) {
-        try {
-            return MUTABLE_PROPERTIES_WRITER.writeValueAsString(propertiesForUpdating);
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    // Persist
-
-    public static void persist(Path filePath, String propertiesJson) throws IOException {
-        ObjectNode tree = getNotEmptyPropertiesTree(propertiesJson);
-        Yaml yaml = getYaml();
-        String configYaml = yaml.dump(yaml.load(MUTABLE_PROPERTIES_WRITER.writeValueAsString(tree)));
-        Path dir = filePath.getParent();
-        if (dir != null) {
-            Files.createDirectories(dir);
-        }
-        Files.writeString(filePath, configYaml, StandardCharsets.UTF_8,
-                StandardOpenOption.WRITE,
-                StandardOpenOption.TRUNCATE_EXISTING,
-                StandardOpenOption.CREATE);
-    }
-
-    private static Yaml getYaml() {
-        DumperOptions options = new DumperOptions();
-        options.setIndent(2);
-        options.setPrettyFlow(true);
-        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        return new Yaml(options);
     }
 
 }

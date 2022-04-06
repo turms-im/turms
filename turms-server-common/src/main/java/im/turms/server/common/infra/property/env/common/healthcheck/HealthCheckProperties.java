@@ -21,6 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import javax.validation.constraints.Min;
 
@@ -36,8 +37,10 @@ public class HealthCheckProperties {
     @Min(1)
     private int checkIntervalSeconds = 3;
 
+    @NestedConfigurationProperty
     private CpuHealthCheckProperties cpu = new CpuHealthCheckProperties();
 
+    @NestedConfigurationProperty
     private MemoryHealthCheckProperties memory = new MemoryHealthCheckProperties();
 
 }

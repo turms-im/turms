@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 /**
  * @author James Chen
  */
-@Target({ElementType.PARAMETER, ElementType.TYPE_USE})
-@Retention(RetentionPolicy.SOURCE)
+@Target({ElementType.PARAMETER, ElementType.TYPE_USE, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
 public @interface ValidCron {
 }

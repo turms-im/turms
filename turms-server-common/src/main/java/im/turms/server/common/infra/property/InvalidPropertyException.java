@@ -15,17 +15,13 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.validation;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package im.turms.server.common.infra.property;
 
 /**
  * @author James Chen
  */
-@Target({ElementType.PARAMETER, ElementType.TYPE_USE})
-@Retention(RetentionPolicy.SOURCE)
-public @interface ValidIpAddress {
+public class InvalidPropertyException extends RuntimeException {
+    public InvalidPropertyException(String message) {
+        super(message);
+    }
 }

@@ -23,8 +23,9 @@ import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.exception.ResponseException;
-import im.turms.server.common.infra.property.PropertiesUtil;
 import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesConvertor;
+import im.turms.server.common.infra.property.TurmsPropertiesInspector;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +40,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -64,9 +64,10 @@ public class SettingController extends BaseController {
 
     @GetMapping
     @RequiredPermission(CLUSTER_SETTING_QUERY)
-    public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterSettings(@RequestParam(defaultValue = "false") boolean onlyMutable)
-            throws IOException {
-        return ResponseFactory.okIfTruthy(PropertiesUtil.getPropertyValueMap(node.getSharedProperties(), onlyMutable));
+    public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterSettings(
+            @RequestParam(defaultValue = "false") boolean onlyMutable) {
+        return ResponseFactory.okIfTruthy(TurmsPropertiesInspector
+                .getPropertyValueMap(node.getSharedProperties(), onlyMutable));
     }
 
     /**
@@ -80,7 +81,7 @@ public class SettingController extends BaseController {
     public Mono<ResponseEntity<ResponseDTO<Void>>> updateClusterSettings(
             @RequestParam(defaultValue = "false") boolean reset,
             @RequestParam(defaultValue = "false") boolean updateGlobalSettings,
-            @RequestBody(required = false) Map<String, Object> turmsProperties) throws IOException {
+            @RequestBody(required = false) Map<String, Object> turmsProperties) {
         if (updateGlobalSettings) {
             Mono<Void> updatePropertiesMono = turmsPropertiesManager.updateGlobalProperties(reset, turmsProperties);
             return updatePropertiesMono.thenReturn(ResponseFactory.OK);
@@ -95,17 +96,21 @@ public class SettingController extends BaseController {
     public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterConfigMetadata(
             @RequestParam(defaultValue = "false") boolean onlyMutable,
             @RequestParam(defaultValue = "false") boolean withValue) {
-        Map<String, Object> metadata = onlyMutable ? PropertiesUtil.ONLY_MUTABLE_METADATA : PropertiesUtil.METADATA;
+        Map<String, Object> metadata = onlyMutable
+                ? TurmsPropertiesInspector.ONLY_MUTABLE_METADATA
+                : TurmsPropertiesInspector.METADATA;
         if (withValue) {
             try {
-                Map<String, Object> propertyValueMap = PropertiesUtil.getPropertyValueMap(node.getSharedProperties(), onlyMutable)
+                Map<String, Object> propertyValueMap = TurmsPropertiesInspector
+                        .getPropertyValueMap(node.getSharedProperties(), onlyMutable)
                         .entrySet()
                         .stream()
                         .filter(entry -> metadata.containsKey(entry.getKey()))
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-                Map<String, Object> propertiesWithMetadata = PropertiesUtil.mergePropertiesWithMetadata(propertyValueMap, metadata);
+                Map<String, Object> propertiesWithMetadata = TurmsPropertiesConvertor
+                        .mergePropertiesWithMetadata(propertyValueMap, metadata);
                 return ResponseFactory.okIfTruthy(propertiesWithMetadata);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 throw ResponseException.get(ResponseStatusCode.SERVER_INTERNAL_ERROR, e);
             }
         }

@@ -17,11 +17,12 @@
 
 package im.turms.server.common.infra.property;
 
+import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import lombok.Setter;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -32,6 +33,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.mergeAsProperties;
+import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.toMutablePropertiesString;
+import static im.turms.server.common.infra.property.TurmsPropertiesSerializer.persist;
+import static im.turms.server.common.infra.property.TurmsPropertiesValidator.validate;
 
 /**
  * To make the code of {@link TurmsProperties} clean, we separate the operation methods from it.
@@ -46,31 +52,30 @@ public class TurmsPropertiesManager {
     public final List<Consumer<TurmsProperties>> propertiesChangeListeners = new LinkedList<>();
 
     private static final TurmsProperties DEFAULT_PROPERTIES = new TurmsProperties();
-    private static final String DEFAULT_PROPERTIES_STR = PropertiesUtil.toMutablePropertiesString(DEFAULT_PROPERTIES);
+    private static final String DEFAULT_PROPERTIES_STR = toMutablePropertiesString(DEFAULT_PROPERTIES);
 
     private final Path latestConfigFilePath;
-    @Setter
-    private Node node;
+    private final Node node;
     private TurmsProperties localTurmsProperties;
 
     /**
      * @param node is lazy because: Node -> TurmsPropertiesManager -> Node
      */
-    public TurmsPropertiesManager(@Lazy Node node, TurmsProperties localTurmsProperties, TurmsApplicationContext context) {
+    public TurmsPropertiesManager(@Lazy Node node,
+                                  TurmsProperties localTurmsProperties,
+                                  TurmsApplicationContext context) {
         this.node = node;
         this.localTurmsProperties = localTurmsProperties;
         // Get latestConfigFilePath according to the active profiles
         String activeProfile = context.getActiveEnvProfile();
-        // The property should be passed from "bin/run.sh"
-        String configDir = System.getProperty("spring.config.location");
-        if (configDir == null || configDir.isBlank()) {
-            LOGGER.warn("The property \"spring.config.location\" is empty");
-            configDir = "./config";
-        }
         String latestConfigFileName = activeProfile == null
                 ? "application-latest.yaml"
                 : "application-%s-latest.yaml".formatted(activeProfile);
-        latestConfigFilePath = Path.of("%s/%s".formatted(configDir, latestConfigFileName));
+        latestConfigFilePath = Path.of("%s/%s".formatted(context.getConfigDir(), latestConfigFileName));
+        InvalidPropertyException exception = validate(localTurmsProperties);
+        if (exception != null) {
+            throw exception;
+        }
     }
 
     /**
@@ -85,7 +90,7 @@ public class TurmsPropertiesManager {
 
     public void updateLocalProperties(
             boolean reset,
-            Map<String, Object> propertiesForUpdating) throws IOException {
+            Map<String, Object> propertiesForUpdating) {
         TurmsProperties newLocalProperties;
         // Convert new turms properties to String instead of byte[] because the properties will be saved
         // as a yaml file in the local file system later
@@ -97,17 +102,21 @@ public class TurmsPropertiesManager {
             if (propertiesForUpdating == null || propertiesForUpdating.isEmpty()) {
                 return;
             }
-            newPropertiesStr = PropertiesUtil.toMutablePropertiesString(propertiesForUpdating);
+            newPropertiesStr = toMutablePropertiesString(propertiesForUpdating);
             if ("{}".equals(newPropertiesStr)) {
                 return;
             }
-            newLocalProperties = PropertiesUtil.mergeAsProperties(
+            newLocalProperties = mergeAsProperties(
                     node.getSharedProperties(),
                     newPropertiesStr);
+            InvalidPropertyException exception = validate(newLocalProperties);
+            if (exception != null) {
+                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
+            }
         }
         try {
             localTurmsProperties = newLocalProperties;
-            PropertiesUtil.persist(latestConfigFilePath, newPropertiesStr);
+            persist(latestConfigFilePath, newPropertiesStr);
         } catch (IOException e) {
             LOGGER.error("Failed to persist new turms properties", e);
         }
@@ -116,15 +125,20 @@ public class TurmsPropertiesManager {
 
     public Mono<Void> updateGlobalProperties(
             boolean reset,
-            Map<String, Object> turmsPropertiesForUpdating) throws IOException {
+            Map<String, Object> turmsPropertiesForUpdating) {
         if (reset) {
-            return node.getSharedPropertyService().updateSharedProperties(new TurmsProperties());
+            return node.updateSharedProperties(DEFAULT_PROPERTIES);
         }
         if (turmsPropertiesForUpdating == null || turmsPropertiesForUpdating.isEmpty()) {
             return Mono.empty();
         }
-        TurmsProperties properties = PropertiesUtil.mergeAsProperties(node.getSharedProperties(), turmsPropertiesForUpdating);
-        return node.getSharedPropertyService().updateSharedProperties(properties);
+        TurmsProperties properties = mergeAsProperties(node.getSharedProperties(),
+                turmsPropertiesForUpdating);
+        InvalidPropertyException exception = validate(properties);
+        if (exception != null) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
+        }
+        return node.updateSharedProperties(properties);
     }
 
     // Listener
