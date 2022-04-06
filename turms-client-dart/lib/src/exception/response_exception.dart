@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import '../model/notification/turms_notification.pb.dart';
+import '../model/proto/notification/turms_notification.pb.dart';
 
 class ResponseException implements Exception {
   final int code;

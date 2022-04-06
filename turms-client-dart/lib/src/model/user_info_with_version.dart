@@ -1,4 +1,4 @@
-import 'model/user/user_info.pb.dart';
+import 'proto/model/user/user_info.pb.dart';
 
 class UserInfoWithVersion {
   final UserInfo userInfo;

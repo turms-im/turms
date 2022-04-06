@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import '../model/constant/device_type.pb.dart';
+import '../model/proto/constant/device_type.pb.dart';
 
 DeviceType _getDeviceType() {
   //  * [kIsWeb], the equivalent constant in the `foundation` library.

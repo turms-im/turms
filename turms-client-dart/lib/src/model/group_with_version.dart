@@ -1,4 +1,4 @@
-import 'model/group/group.pb.dart';
+import 'proto/model/group/group.pb.dart';
 
 class GroupWithVersion {
   final Group group;

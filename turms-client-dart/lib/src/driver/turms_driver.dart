@@ -3,8 +3,9 @@ import 'dart:typed_data';
 
 import 'package:protobuf/protobuf.dart';
 
-import '../model/notification/turms_notification.pb.dart';
-import '../model/request/turms_request.pb.dart';
+import '../extension/notification_extensions.dart';
+import '../model/proto/notification/turms_notification.pb.dart';
+import '../model/proto/request/turms_request.pb.dart';
 import '../transport/tcp_metrics.dart';
 import 'service/connection_service.dart';
 import 'service/heartbeat_service.dart';
@@ -94,9 +95,9 @@ class TurmsDriver {
   // Message Service
 
   Future<TurmsNotification> send(GeneratedMessage message) async {
-    final request = TurmsRequest.create();
     final name = message.info_.messageName;
     final fieldName = name.substring(0, 1).toLowerCase() + name.substring(1);
+    final request = TurmsRequest.create();
     final fieldInfo = request.info_.byName[fieldName];
     if (fieldInfo == null) {
       throw ArgumentError(

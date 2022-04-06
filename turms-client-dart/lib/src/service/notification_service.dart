@@ -1,5 +1,4 @@
 import '../../turms_client.dart';
-import '../model/request/turms_request.pb.dart';
 
 typedef NotificationListener = void Function(TurmsRequest request);
 

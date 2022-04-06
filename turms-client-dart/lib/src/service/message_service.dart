@@ -3,29 +3,12 @@ import 'dart:typed_data';
 import 'package:fixnum/fixnum.dart' show Int64;
 
 import '../../turms_client.dart';
-import '../exception/response_exception.dart';
-import '../extension/date_time_extensions.dart';
-import '../extension/iterable_extensions.dart';
-import '../extension/notification_extensions.dart';
-import '../model/builtin_system_message_type.dart';
-import '../model/message_addition.dart';
-import '../model/model/file/audio_file.pb.dart';
-import '../model/model/file/file.pb.dart';
-import '../model/model/file/image_file.pb.dart';
-import '../model/model/file/video_file.pb.dart';
-import '../model/model/message/message.pb.dart';
-import '../model/model/message/messages_with_total.pb.dart';
-import '../model/model/user/user_location.pb.dart';
-import '../model/request/message/create_message_request.pb.dart';
-import '../model/request/message/query_messages_request.pb.dart';
-import '../model/request/message/update_message_request.pb.dart';
-import '../model/response_status_code.dart';
 
 typedef MentionedUserIdsParser = Set<Int64> Function(Message message);
 typedef MessageListener = void Function(
     Message message, MessageAddition addition);
 
-class MessageService {
+class DriverMessageService {
   /// Format: "@{userId}"
   /// Example: "@{123}", "I need to talk with @{123} and @{321}"
   static final RegExp _defaultMentionedUserIdsParserRegex =
@@ -47,7 +30,7 @@ class MessageService {
   MentionedUserIdsParser? _mentionedUserIdsParser;
   final List<MessageListener> _messageListeners = [];
 
-  MessageService(this._turmsClient) {
+  DriverMessageService(this._turmsClient) {
     _turmsClient.driver.addNotificationListener((notification) {
       if (_messageListeners.isNotEmpty &&
           notification.hasRelayedRequest() &&

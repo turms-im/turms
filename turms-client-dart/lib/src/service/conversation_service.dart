@@ -1,12 +1,6 @@
 import 'package:fixnum/fixnum.dart' show Int64;
 
 import '../../turms_client.dart';
-import '../extension/date_time_extensions.dart';
-import '../model/model/conversation/group_conversation.pb.dart';
-import '../model/model/conversation/private_conversation.pb.dart';
-import '../model/request/conversation/query_conversations_request.pb.dart';
-import '../model/request/conversation/update_conversation_request.pb.dart';
-import '../model/request/conversation/update_typing_status_request.pb.dart';
 
 class ConversationService {
   final TurmsClient _turmsClient;

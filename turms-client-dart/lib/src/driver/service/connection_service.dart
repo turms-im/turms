@@ -47,17 +47,18 @@ class _MessageDecoder {
 
   Uint8List? _tryReadMessage() {
     _payloadLength ??= _tryReadVarInt();
-    if (_payloadLength != null) {
-      final end = _readIndex + _payloadLength!;
-      if (_readBuffer.length >= end) {
-        final message = _readBuffer.sublist(_readIndex, end);
-        _readBuffer.removeRange(0, end);
-        _readIndex = 0;
-        _payloadLength = null;
-        return Uint8List.fromList(message);
-      }
+    if (_payloadLength == null) {
+      return null;
     }
-    return null;
+    final end = _readIndex + _payloadLength!;
+    if (_readBuffer.length < end) {
+      return null;
+    }
+    final message = _readBuffer.sublist(_readIndex, end);
+    _readBuffer.removeRange(0, end);
+    _readIndex = 0;
+    _payloadLength = null;
+    return Uint8List.fromList(message);
   }
 
   int? _tryReadVarInt() {

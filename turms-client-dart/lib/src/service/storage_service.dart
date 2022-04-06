@@ -5,12 +5,6 @@ import 'dart:typed_data';
 import 'package:fixnum/fixnum.dart';
 
 import '../../turms_client.dart';
-import '../exception/response_exception.dart';
-import '../model/constant/content_type.pbenum.dart';
-import '../model/request/storage/delete_resource_request.pb.dart';
-import '../model/request/storage/query_signed_get_url_request.pb.dart';
-import '../model/request/storage/query_signed_put_url_request.pb.dart';
-import '../model/response_status_code.dart';
 
 class StorageService {
   // TODO: destroy

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import '../../exception/response_exception.dart';
-import '../../model/notification/turms_notification.pb.dart';
+import '../../model/proto/notification/turms_notification.pb.dart';
 import '../../model/response_status_code.dart';
 import '../state_store.dart';
 import 'base_service.dart';

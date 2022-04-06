@@ -4,8 +4,8 @@ import 'dart:math';
 import 'package:fixnum/fixnum.dart' show Int64;
 
 import '../../exception/response_exception.dart';
-import '../../model/notification/turms_notification.pb.dart';
-import '../../model/request/turms_request.pb.dart';
+import '../../model/proto/notification/turms_notification.pb.dart';
+import '../../model/proto/request/turms_request.pb.dart';
 import '../../model/response_status_code.dart';
 import '../state_store.dart';
 import 'base_service.dart';
@@ -84,8 +84,8 @@ class MessageService extends BaseService {
     final timeoutTimer = _requestTimeoutMillis > 0
         ? Timer(Duration(milliseconds: _requestTimeoutMillis), () {
             final context = _requestMap.remove(requestId);
-            context?.completer.completeError(ResponseException.fromCode(
-                ResponseStatusCode.requestTimeout));
+            context?.completer.completeError(
+                ResponseException.fromCode(ResponseStatusCode.requestTimeout));
           })
         : null;
     final completer = Completer<TurmsNotification>();

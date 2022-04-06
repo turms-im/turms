@@ -13,7 +13,7 @@ class TurmsClient {
   late final UserService _userService;
   late final GroupService _groupService;
   late final ConversationService _conversationService;
-  late final MessageService _messageService;
+  late final DriverMessageService _messageService;
   late final StorageService _storageService;
   late final NotificationService _notificationService;
 
@@ -35,14 +35,12 @@ class TurmsClient {
     _userService = UserService(this);
     _groupService = GroupService(this);
     _conversationService = ConversationService(this);
-    _messageService = MessageService(this);
+    _messageService = DriverMessageService(this);
     _storageService = StorageService(this, storageServerUrl);
     _notificationService = NotificationService(this);
   }
 
-  Future<void> close() async {
-    await driver.close();
-  }
+  Future<void> close() => driver.close();
 
   TurmsDriver get driver => _driver;
 
@@ -50,7 +48,7 @@ class TurmsClient {
 
   StorageService get storageService => _storageService;
 
-  MessageService get messageService => _messageService;
+  DriverMessageService get messageService => _messageService;
 
   ConversationService get conversationService => _conversationService;
 

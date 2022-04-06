@@ -1,7 +1,7 @@
 import 'package:fixnum/fixnum.dart';
 
 import '../exception/response_exception.dart';
-import '../model/notification/turms_notification.pb.dart';
+import '../model/proto/notification/turms_notification.pb.dart';
 import '../model/response_status_code.dart';
 
 extension NotificationExtensions on TurmsNotification {

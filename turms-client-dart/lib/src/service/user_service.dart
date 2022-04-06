@@ -1,53 +1,14 @@
 import 'package:fixnum/fixnum.dart';
 
 import '../../turms_client.dart';
-import '../exception/response_exception.dart';
-import '../extension/date_time_extensions.dart';
 import '../extension/int_extensions.dart';
-import '../extension/iterable_extensions.dart';
-import '../extension/notification_extensions.dart';
-import '../model/constant/device_type.pb.dart';
-import '../model/constant/profile_access_strategy.pb.dart';
-import '../model/constant/response_action.pb.dart';
-import '../model/constant/user_status.pb.dart';
-import '../model/model/common/int64_values_with_version.pb.dart';
-import '../model/model/user/nearby_user.pb.dart';
-import '../model/model/user/user_friend_requests_with_version.pb.dart';
-import '../model/model/user/user_location.pb.dart' as internal_location;
-import '../model/model/user/user_relationship_groups_with_version.pb.dart';
-import '../model/model/user/user_relationships_with_version.pb.dart';
-import '../model/model/user/user_status_detail.pb.dart';
-import '../model/request/user/create_session_request.pb.dart';
-import '../model/request/user/delete_session_request.pb.dart';
-import '../model/request/user/query_nearby_users_request.pb.dart';
-import '../model/request/user/query_user_online_statuses_request.pb.dart';
-import '../model/request/user/query_user_profile_request.pb.dart';
-import '../model/request/user/relationship/create_friend_request_request.pb.dart';
-import '../model/request/user/relationship/create_relationship_group_request.pb.dart';
-import '../model/request/user/relationship/create_relationship_request.pb.dart';
-import '../model/request/user/relationship/delete_relationship_group_request.pb.dart';
-import '../model/request/user/relationship/delete_relationship_request.pb.dart';
-import '../model/request/user/relationship/query_friend_requests_request.pb.dart';
-import '../model/request/user/relationship/query_related_user_ids_request.pb.dart';
-import '../model/request/user/relationship/query_relationship_groups_request.pb.dart';
-import '../model/request/user/relationship/query_relationships_request.pb.dart';
-import '../model/request/user/relationship/update_friend_request_request.pb.dart';
-import '../model/request/user/relationship/update_relationship_group_request.pb.dart';
-import '../model/request/user/relationship/update_relationship_request.pb.dart';
-import '../model/request/user/update_user_location_request.pb.dart';
-import '../model/request/user/update_user_online_status_request.pb.dart';
-import '../model/request/user/update_user_request.pb.dart';
-import '../model/response_status_code.dart';
-import '../model/session_close_info.dart';
-import '../model/session_close_status.dart';
-import '../model/user_info_with_version.dart';
 import '../util/system.dart';
 
-class UserLocation {
+class Location {
   final double longitude;
   final double latitude;
 
-  UserLocation(this.longitude, this.latitude);
+  Location(this.longitude, this.latitude);
 }
 
 class UserInfo {
@@ -56,7 +17,7 @@ class UserInfo {
   DeviceType? deviceType;
   Map<String, String>? deviceDetails;
   UserStatus? onlineStatus;
-  UserLocation? location;
+  Location? location;
 
   UserInfo(this.userId, this.password, this.deviceType, this.deviceDetails,
       this.onlineStatus, this.location);
@@ -108,7 +69,7 @@ class UserService {
       DeviceType? deviceType,
       Map<String, String>? deviceDetails,
       UserStatus? onlineStatus,
-      UserLocation? location,
+      Location? location,
       bool storePassword = false}) async {
     final user = UserInfo(userId, storePassword ? password : null,
         deviceType ?? currentDeviceType, deviceDetails, onlineStatus, location);
@@ -124,7 +85,7 @@ class UserService {
         userStatus: onlineStatus,
         location: location == null
             ? null
-            : internal_location.UserLocation(
+            : UserLocation(
                 longitude: location.longitude, latitude: location.latitude)));
     _changeToOnline();
     _storePassword = storePassword;
