@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import im.turms.server.common.access.admin.codec.TurmsCharSequenceEncoder;
+import im.turms.server.common.access.admin.codec.TurmsResourceHttpMessageWriter;
 import im.turms.server.common.infra.json.JsonSizeCalculator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
@@ -85,6 +86,7 @@ public class CodecConfig {
                     }
                 }
             }
+            configurer.customCodecs().register(new TurmsResourceHttpMessageWriter());
             configurer.defaultCodecs().jackson2JsonEncoder(new Jackson2JsonEncoder(objectMapper, EMPTY_MIME_TYPES) {
                 @Override
                 public DataBuffer encodeValue(Object value, DataBufferFactory bufferFactory, ResolvableType valueType, MimeType mimeType,

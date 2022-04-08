@@ -87,7 +87,7 @@ public class TurmsRequestMappingHandlerAdapter extends RequestMappingHandlerAdap
         exchange.getAttributes().remove(HandlerMapping.PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE);
         exchange.getResponse().getHeaders().clearContentHeaders();
 
-        InvocableHandlerMethod invocable = this.methodResolver.getExceptionHandlerMethod(exception, handlerMethod);
+        InvocableHandlerMethod invocable = methodResolver.getExceptionHandlerMethod(exception, handlerMethod);
         if (invocable != null) {
             try {
                 bindingContext.getModel().asMap().clear();

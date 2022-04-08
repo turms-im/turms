@@ -19,8 +19,12 @@ package im.turms.server.common.domain.observation.model;
 
 import jdk.jfr.Recording;
 import jdk.jfr.RecordingState;
+import lombok.SneakyThrows;
 
 import javax.annotation.Nullable;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Date;
 
 /**
@@ -34,26 +38,54 @@ public record RecordingSession(
 ) {
 
     @Nullable
-    public Date getStopTime() {
+    public Date getCloseDate() {
         RecordingState state = recording.getState();
         return state == RecordingState.CLOSED || state == RecordingState.STOPPED
                 ? Date.from(recording.getStopTime()) : null;
     }
 
-    public void close(boolean keepFile) {
-        RecordingState state = recording.getState();
-        try {
+    public File getFile() {
+        return recording().getDestination().toFile();
+    }
+
+    public File getFile(File tempFile) throws IOException {
+        synchronized (recording) {
+            RecordingState state = recording.getState();
             if (state == RecordingState.RUNNING) {
-                recording.stop();
-                recording.close();
-            } else if (state == RecordingState.STOPPED) {
-                recording.close();
+                recording.dump(tempFile.toPath());
+                return tempFile;
+            } else if (state == RecordingState.STOPPED || state == RecordingState.CLOSED) {
+                return recording.getDestination().toFile();
+            } else {
+                throw new IllegalStateException("Failed to dump the recording ["
+                        + id
+                        + "] because it is in the state of \""
+                        + state
+                        + "\"");
             }
-        } catch (IllegalStateException e) {
-            // ignore
-        }
-        if (!keepFile) {
-            recording.getDestination().toFile().delete();
         }
     }
+
+    public void deleteFile() throws IOException {
+        Files.deleteIfExists(recording.getDestination().toFile().toPath());
+    }
+
+    public boolean checkIfFileExists() {
+        return Files.exists(recording.getDestination().toFile().toPath());
+    }
+
+    @SneakyThrows
+    public void close(boolean keepFile) {
+        // 1. All states can be changed to closed
+        // 2. close() will call stop() to flush data internally if it is running
+        recording.close();
+        if (!keepFile) {
+            deleteFile();
+        }
+    }
+
+    public boolean isRunning() {
+        return recording.getState() == RecordingState.RUNNING;
+    }
+
 }

@@ -20,6 +20,10 @@ package im.turms.server.common.domain.observation.service;
 import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
 import im.turms.server.common.domain.observation.model.RecordingSession;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.io.FileResource;
+import im.turms.server.common.infra.io.FileUtil;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.FlightRecorderProperties;
 import im.turms.server.common.infra.random.RandomUtil;
@@ -29,14 +33,15 @@ import im.turms.server.common.infra.validation.Validator;
 import jdk.jfr.Configuration;
 import jdk.jfr.FlightRecorder;
 import jdk.jfr.Recording;
-import jdk.jfr.RecordingState;
 import lombok.SneakyThrows;
 import org.jctools.queues.MpscUnboundedArrayQueue;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.Min;
 import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -53,12 +58,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class FlightRecordingService {
 
-    private final File jfrBasePath;
+    private static final Logger LOGGER = LoggerFactory.getLogger(FlightRecordingService.class);
+
+    private final File jfrBaseDir;
     private final Map<String, String> defaultConfigs;
     private final int closedRecordingRetentionPeriod;
 
+    /**
+     * Includes not deleted recording sessions
+     */
     private final Map<Long, RecordingSession> sessionMap = new ConcurrentHashMap<>(16);
-    private final MpscUnboundedArrayQueue<Long> pendingClosedRecordingIds;
+    private final MpscUnboundedArrayQueue<Long> closedNotDeletedRecordingIds;
 
     public FlightRecordingService(TurmsApplicationContext context,
                                   TurmsPropertiesManager propertiesManager,
@@ -78,7 +88,8 @@ public class FlightRecordingService {
         } else {
             defaultConfigs = localDefaultConfigs;
         }
-        jfrBasePath = context.getHome().resolve("./jfr").toFile();
+        jfrBaseDir = context.getHome().resolve("./jfr").toFile();
+        jfrBaseDir.mkdirs();
         for (Recording recording : FlightRecorder.getFlightRecorder().getRecordings()) {
             long id = recording.getId();
             sessionMap.put(id, new RecordingSession(id, recording, null));
@@ -86,34 +97,50 @@ public class FlightRecordingService {
         FlightRecorderProperties recorderProperties = propertiesManager.getLocalProperties().getFlightRecorder();
         closedRecordingRetentionPeriod = recorderProperties.getClosedRecordingRetentionPeriod();
         if (closedRecordingRetentionPeriod > 0) {
-            pendingClosedRecordingIds = new MpscUnboundedArrayQueue<>(16);
-            taskManager.reschedule("closedRecordingCleanup", CronConst.CLOSED_RECORDINGS_CLEANUP_CRON, () ->
-                    pendingClosedRecordingIds.drain(id -> {
-                        RecordingSession session = sessionMap.remove(id);
-                        if (session != null) {
-                            session.close(false);
-                        }
-                    }));
+            closedNotDeletedRecordingIds = new MpscUnboundedArrayQueue<>(16);
+            taskManager.reschedule("closedRecordingCleanup", CronConst.CLOSED_RECORDINGS_CLEANUP_CRON, () -> {
+                List<Long>[] pendingIds = new List[]{null};
+                closedNotDeletedRecordingIds.drain(id ->
+                        sessionMap.computeIfPresent(id, (key, session) -> {
+                            try {
+                                session.deleteFile();
+                                return null;
+                            } catch (IOException e) {
+                                // The file may be in use
+                                LOGGER.error("Failed to delete the recording file of the session: " + key, e);
+                                if (session.checkIfFileExists()) {
+                                    if (pendingIds[0] == null) {
+                                        pendingIds[0] = new ArrayList<>();
+                                    }
+                                    pendingIds[0].add(key);
+                                    return session;
+                                }
+                                return null;
+                            }
+                        }));
+                if (pendingIds[0] != null) {
+                    closedNotDeletedRecordingIds.addAll(pendingIds[0]);
+                }
+            });
         } else {
-            pendingClosedRecordingIds = null;
+            closedNotDeletedRecordingIds = null;
         }
     }
 
     @SneakyThrows
     public RecordingSession startRecording(
-            @Min(0) Integer durationSeconds,
+            @Nullable @Min(0) Integer durationSeconds,
             @Nullable @Min(0) Integer maxAgeSeconds,
             @Nullable @Min(0) Integer maxSizeBytes,
             @Nullable @Min(0) Integer delaySeconds,
             @Nullable Map<String, String> customSettings,
             @Nullable String description) {
-        Validator.notNull(durationSeconds, "durationSeconds");
         Validator.min(durationSeconds, "durationSeconds", 0);
         Validator.min(maxAgeSeconds, "maxAgeSeconds", 0);
         Validator.min(maxSizeBytes, "maxSizeBytes", 0);
         Validator.min(delaySeconds, "delaySeconds", 0);
-
-        if (customSettings == null) {
+        // TODO: max limit
+        if (customSettings == null || customSettings.isEmpty()) {
             customSettings = defaultConfigs;
         } else {
             customSettings.putAll(defaultConfigs);
@@ -123,12 +150,13 @@ public class FlightRecordingService {
         String name = "custom-" + id;
         recording.setName(name);
 
-        File tempFile = File.createTempFile(name, ".jfr", jfrBasePath);
-        tempFile.deleteOnExit();
+        File tempFile = FileUtil.createTempFile(name, ".jfr", jfrBaseDir);
         try {
-            recording.setDuration(Duration.of(durationSeconds, ChronoUnit.SECONDS));
             recording.setDestination(tempFile.toPath());
             recording.setToDisk(true);
+            if (durationSeconds != null) {
+                recording.setDuration(Duration.of(durationSeconds, ChronoUnit.SECONDS));
+            }
             if (maxAgeSeconds != null) {
                 recording.setMaxAge(Duration.of(maxAgeSeconds, ChronoUnit.SECONDS));
             }
@@ -144,12 +172,12 @@ public class FlightRecordingService {
             sessionMap.put(id, session);
             return session;
         } catch (Exception e) {
-            tempFile.delete();
             try {
                 recording.close();
-            } catch (Exception e2) {
+            } catch (Exception ignored) {
                 // ignore
             }
+            tempFile.delete();
             throw e;
         }
     }
@@ -159,8 +187,7 @@ public class FlightRecordingService {
         long modifiedCount = 0;
         for (RecordingSession session : sessionMap.values()) {
             matchedCount++;
-            Recording recording = session.recording();
-            if (recording.getState() == RecordingState.RUNNING) {
+            if (session.isRunning()) {
                 closeSession(session);
                 modifiedCount++;
             }
@@ -177,8 +204,7 @@ public class FlightRecordingService {
                 continue;
             }
             matchedCount++;
-            Recording recording = session.recording();
-            if (recording.getState() == RecordingState.RUNNING) {
+            if (session.isRunning()) {
                 closeSession(session);
                 modifiedCount++;
             }
@@ -186,27 +212,30 @@ public class FlightRecordingService {
         return new UpdateResultDTO(matchedCount, modifiedCount);
     }
 
-    @SneakyThrows
+    public void closeRecording(Long id) {
+        RecordingSession session = sessionMap.get(id);
+        if (session == null) {
+            return;
+        }
+        if (session.isRunning()) {
+            closeSession(session);
+        }
+    }
+
     @Nullable
-    public File getRecordingFile(Long id, boolean close) {
+    @SneakyThrows
+    public FileSystemResource getRecordingFile(Long id, boolean close) {
         RecordingSession session = sessionMap.get(id);
         if (session == null) {
             return null;
         }
         if (close) {
             session.close(true);
-            if (closedRecordingRetentionPeriod > 0) {
-                // TODO: don't delete the file if it's in use
-                pendingClosedRecordingIds.offer(session.id());
-            } else if (closedRecordingRetentionPeriod == 0) {
-                sessionMap.remove(session.id());
-            }
-            return session.recording().getDestination().toFile();
+            return new FileResource(session.getFile(), () -> closeRecording(id));
         } else {
-            File file = File.createTempFile("temp-" + id + "-" + RandomUtil.nextPositiveInt(), ".jfr", jfrBasePath);
-            file.deleteOnExit();
-            session.recording().dump(file.toPath());
-            return file;
+            String prefix = "temp-" + id + "-" + RandomUtil.nextPositiveInt();
+            File tempFile = FileUtil.createTempFile(prefix, ".jfr", jfrBaseDir);
+            return new FileSystemResource(session.getFile(tempFile));
         }
     }
 
@@ -253,10 +282,12 @@ public class FlightRecordingService {
     private void closeSession(RecordingSession session) {
         if (closedRecordingRetentionPeriod > 0) {
             session.close(true);
-            pendingClosedRecordingIds.offer(session.id());
+            closedNotDeletedRecordingIds.offer(session.id());
         } else if (closedRecordingRetentionPeriod == 0) {
             session.close(false);
-            sessionMap.remove(session.id());
+            sessionMap.remove(session.id(), session);
+        } else {
+            session.close(true);
         }
     }
 

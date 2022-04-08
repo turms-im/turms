@@ -31,6 +31,7 @@ import jdk.jfr.Recording;
 import jdk.jfr.RecordingState;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,8 +42,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -77,7 +78,7 @@ public class FlightRecordingController {
                     recording.getId(),
                     state.name(),
                     Date.from(recording.getStartTime()),
-                    session.getStopTime(),
+                    session.getCloseDate(),
                     session.description()
             ));
         }
@@ -118,17 +119,23 @@ public class FlightRecordingController {
 
     @RequiredPermission(AdminPermission.FLIGHT_RECORDING_QUERY)
     @GetMapping("/jfr")
-    public ResponseEntity<FileSystemResource> downloadRecording(
+    public ResponseEntity<FileSystemResource> downloadJfr(
             @RequestParam Long id,
             @RequestParam(required = false) boolean close) {
-        File file = flightRecordingService.getRecordingFile(id, close);
+        FileSystemResource file;
+        try {
+            file = flightRecordingService.getRecordingFile(id, close);
+        } catch (IllegalStateException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+        }
         if (file == null) {
-            return ResponseEntity.notFound().build();
+            // Don't use 404, which is confusing
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Recording not found");
         }
         return ResponseEntity.ok()
                 .headers(headers -> headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=flight-recording-" + id + ".jfr"))
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(new FileSystemResource(file));
+                .body(file);
     }
 
 }

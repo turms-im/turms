@@ -15,18 +15,26 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.domain.observation.dto.response;
+package im.turms.server.common.infra.io;
 
-import java.util.Date;
+import lombok.SneakyThrows;
+
+import java.io.File;
 
 /**
  * @author James Chen
  */
-public record RecordingSessionDTO(
-        long id,
-        String state,
-        Date startDate,
-        Date closeDate,
-        String description
-) {
+public class FileUtil {
+
+    private FileUtil() {
+    }
+
+    @SneakyThrows
+    public static File createTempFile(String prefix, String suffix, File directory) {
+        directory.mkdirs();
+        File tempFile = File.createTempFile(prefix, suffix, directory);
+        tempFile.deleteOnExit();
+        return tempFile;
+    }
+
 }

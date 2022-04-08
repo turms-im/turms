@@ -151,11 +151,9 @@ public class TurmsHandlerMethod extends InvocableHandlerMethod {
                 return true;
             }
             Type parameterType = returnType.getGenericParameterType();
-            if (parameterType instanceof ParameterizedType) {
-                ParameterizedType type = (ParameterizedType) parameterType;
-                if (type.getActualTypeArguments().length == 1) {
-                    return Void.class.equals(type.getActualTypeArguments()[0]);
-                }
+            if (parameterType instanceof ParameterizedType type
+                    && type.getActualTypeArguments().length == 1) {
+                return Void.class.equals(type.getActualTypeArguments()[0]);
             }
         }
         return false;
