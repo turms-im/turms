@@ -27,44 +27,45 @@ Turms的API文档基于[Springdoc](https://github.com/springdoc/springdoc-openap
 
 ### 非业务相关类
 
+在`通用`列中，带✅的行表示这些API端口同时存在于turms-gateway与turms-serivce服务端中，而不带✅则表明这些API端口仅存在于turms-service服务端中，turms-gateway服务端没有这些API端口。
+
 #### 监控类
 
-下表所有端口同时存在于turms-gateway与turms-serivce服务端。
+| **种类**     | **Controller**            | 路径               | 通用 |
+| :----------- | :------------------------ | ------------------ | ---- |
+| 度量信息管理 | MetricsController         | /metrics           | ✅    |
+| 飞行记录管理 | FlightRecordingController | /flight-recordings | ✅    |
 
-| **种类**     | **Controller**    | 路径     |      |
-| :----------- | :---------------- | -------- | ---- |
-| 度量信息管理 | MetricsController | /metrics |      |
+#### 插件类
+
+| **种类** | **Controller**   | 路径     | 通用 |
+| :------- | :--------------- | -------- | ---- |
+| 插件管理 | PluginController | /plugins | ✅    |
 
 #### 管理员类
 
-下表所有端口仅存在于turms-service服务端，turms-gateway服务端没有这些端口。
-
-| **种类**       | **Controller**      | 路径          | **补充**                                                     |
-| :------------- | :------------------ | ------------- | ------------------------------------------------------------ |
-| 管理员管理     | AdminController     | /admins       | 每个Turms集群默认存在一个角色为`ROOT`，账号名与密码均为`turms`的账号 |
-| 管理员角色管理 | AdminRoleController | /admins/roles | 每个Turms集群默认存在一个角色为`ROOT`的超级管理员角色，其具有所有权限 |
+| **种类**       | **Controller**      | 路径          | 通用 | **补充**                                                     |
+| :------------- | :------------------ | ------------- | ---- | ------------------------------------------------------------ |
+| 管理员管理     | AdminController     | /admins       |      | 每个Turms集群默认存在一个角色为`ROOT`，账号名与密码均为`turms`的账号 |
+| 管理员角色管理 | AdminRoleController | /admins/roles |      | 每个Turms集群默认存在一个角色为`ROOT`的超级管理员角色，其具有所有权限 |
 
 #### 集群类
 
-下表所有端口仅存在于turms-service服务端，turms-gateway服务端没有这些端口。
-
-| **种类**     | **Controller**   | 路径             |
-| :----------- | :--------------- | ---------------- |
-| 集群节点管理 | MemberController | /cluster/members |
-| 集群配置管理 | SettingController | /cluster/settings  |
+| **种类**     | **Controller**   | 路径             | 通用           |
+| :----------- | :--------------- | ---------------- | ---------------- |
+| 集群节点管理 | MemberController | /cluster/members |  |
+| 集群配置管理 | SettingController | /cluster/settings  |   |
 
 #### 黑名单类
 
-下表所有端口仅存在于turms-service服务端，turms-gateway服务端没有这些端口。
-
-| **种类**       | **Controller**          | 路径                   |
-| :------------- | :---------------------- | ---------------------- |
-| IP黑名单管理   | IpBlocklistController   | /blocked-clients/ips   |
-| 用户黑名单管理 | UserBlocklistController | /blocked-clients/users |
+| **种类**       | **Controller**          | 路径                   | 通用 |
+| :------------- | :---------------------- | ---------------------- | ---- |
+| IP黑名单管理   | IpBlocklistController   | /blocked-clients/ips   |      |
+| 用户黑名单管理 | UserBlocklistController | /blocked-clients/users |      |
 
 ### 业务相关类
 
-下表所有端口仅存在于turms-service服务端，turms-gateway服务端没有这些端口。
+下表所有API端口仅存在于turms-service服务端，turms-gateway服务端没有这些API端口。
 
 #### 用户类
 

@@ -17,15 +17,14 @@
 
 package im.turms.server.common.infra.property.env.common;
 
-import com.fasterxml.jackson.annotation.JsonView;
+
 import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import javax.validation.constraints.Min;
 
 /**
  * @author James Chen
@@ -34,12 +33,11 @@ import java.util.List;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class IpProperties {
+public class FlightRecorderProperties {
 
-    @JsonView(MutablePropertiesView.class)
-    @Description("The public IP detectors will only be used to query the public IP of the local node " +
-            "if needed (e.g. If the discovery property \"advertiseStrategy\" is \"PUBLIC_ADDRESS\"")
-    private List<String> publicIpDetectorAddresses =
-            List.of("https://checkip.amazonaws.com", "https://bot.whatismyipaddress.com", "https://myip.dnsomatic.com");
+    @Description("A closed recording will be retained for the given period and will be removed from the file system after the retention period. " +
+            "0 means no retention. -1 means unlimited retention.")
+    @Min(-1)
+    private int closedRecordingRetentionPeriod = 0;
 
 }

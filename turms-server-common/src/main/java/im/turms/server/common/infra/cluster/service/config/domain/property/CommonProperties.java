@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.cluster.service.config.domain.property;
 
+import im.turms.server.common.infra.property.env.common.FlightRecorderProperties;
 import im.turms.server.common.infra.property.env.common.IpProperties;
 import im.turms.server.common.infra.property.env.common.PluginProperties;
 import im.turms.server.common.infra.property.env.common.UserStatusProperties;
@@ -36,6 +37,8 @@ import lombok.Data;
 public class CommonProperties {
 
     private ClusterProperties cluster;
+
+    private FlightRecorderProperties flightRecorder;
 
     private HealthCheckProperties healthCheck;
 

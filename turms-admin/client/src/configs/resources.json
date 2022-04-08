@@ -30,6 +30,12 @@
             "STATISTICS_GROUP_QUERY",
             "STATISTICS_MESSAGE_QUERY"
         ],
+        "FLIGHT_RECORDING": [
+            "FLIGHT_RECORDING_CREATE",
+            "FLIGHT_RECORDING_DELETE",
+            "FLIGHT_RECORDING_UPDATE",
+            "FLIGHT_RECORDING_QUERY"
+        ],
         "USER": {
             "USER_INFO": [
                 "USER_CREATE",

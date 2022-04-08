@@ -69,6 +69,7 @@ public class SharedClusterProperties {
     public static CommonProperties getCommonProperties(TurmsProperties turmsProperties) {
         return new CommonProperties(
                 turmsProperties.getCluster(),
+                turmsProperties.getFlightRecorder(),
                 turmsProperties.getHealthCheck(),
                 turmsProperties.getIp(),
                 turmsProperties.getLocation(),
@@ -82,6 +83,7 @@ public class SharedClusterProperties {
         if (commonProperties != null) {
             turmsProperties = new TurmsProperties(
                     commonProperties.getCluster(),
+                    commonProperties.getFlightRecorder(),
                     commonProperties.getHealthCheck(),
                     commonProperties.getIp(),
                     commonProperties.getLocation(),

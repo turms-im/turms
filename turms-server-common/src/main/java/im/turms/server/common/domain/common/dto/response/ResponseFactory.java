@@ -67,8 +67,16 @@ public final class ResponseFactory {
         return okIfTruthy(data.map(UpdateResultDTO::get));
     }
 
+    public static ResponseEntity<ResponseDTO<UpdateResultDTO>> updateResult(long modifiedCount) {
+        return okIfTruthy(new UpdateResultDTO(modifiedCount, modifiedCount));
+    }
+
     public static Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteResult(Mono<DeleteResult> data) {
         return okIfTruthy(data.map(DeleteResultDTO::get));
+    }
+
+    public static ResponseEntity<ResponseDTO<DeleteResultDTO>> deleteResult(long deletedCount) {
+        return okIfTruthy(new DeleteResultDTO(deletedCount));
     }
 
     // Base methods

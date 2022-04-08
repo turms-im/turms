@@ -141,8 +141,8 @@ public class HeartbeatManager {
             public long next() {
                 while (iterator.hasNext()) {
                     Map<DeviceType, UserSession> sessionMap = iterator.next().getSessionMap();
-                    for (Map.Entry<DeviceType, UserSession> sessionEntry : sessionMap.entrySet()) {
-                        Long userId = closeOrUpdateSession(sessionEntry.getValue(), now);
+                    for (UserSession session : sessionMap.values()) {
+                        Long userId = closeOrUpdateSession(session, now);
                         if (userId != null) {
                             return userId;
                         }
@@ -158,13 +158,14 @@ public class HeartbeatManager {
         if (!session.isOpen()) {
             return null;
         }
-        int requestElapsedTime = (int) (now - session.getLastRequestTimestampMillis());
-        if (requestElapsedTime > switchProtocolAfterMillis
-                && session.isConnected()
-                && UdpRequestDispatcher.isEnabled()
-                && session.supportsSwitchingToUdp()) {
-            session.getConnection().switchToUdp();
-            return null;
+        if (UdpRequestDispatcher.isEnabled()
+                && session.supportsSwitchingToUdp()
+                && session.isConnected()) {
+            int requestElapsedTime = (int) (now - session.getLastRequestTimestampMillis());
+            if (requestElapsedTime > switchProtocolAfterMillis) {
+                session.getConnection().switchToUdp();
+                return null;
+            }
         }
         long lastHeartbeatUpdateTimestamp = session.getLastHeartbeatUpdateTimestampMillis();
         if (minHeartbeatIntervalMillis > 0

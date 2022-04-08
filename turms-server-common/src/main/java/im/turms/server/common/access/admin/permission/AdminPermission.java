@@ -27,6 +27,11 @@ public enum AdminPermission {
     STATISTICS_GROUP_QUERY,
     STATISTICS_MESSAGE_QUERY,
 
+    FLIGHT_RECORDING_CREATE,
+    FLIGHT_RECORDING_DELETE,
+    FLIGHT_RECORDING_UPDATE,
+    FLIGHT_RECORDING_QUERY,
+
     USER_CREATE,
     USER_DELETE,
     USER_UPDATE,
@@ -219,6 +224,7 @@ public enum AdminPermission {
             CLUSTER_SETTING_QUERY);
 
     public static final Set<AdminPermission> ALL_CREATE = Set.of(
+            FLIGHT_RECORDING_CREATE,
             USER_CREATE,
             USER_RELATIONSHIP_CREATE,
             USER_RELATIONSHIP_GROUP_CREATE,
@@ -242,6 +248,7 @@ public enum AdminPermission {
             STATISTICS_USER_QUERY,
             STATISTICS_GROUP_QUERY,
             STATISTICS_MESSAGE_QUERY,
+            FLIGHT_RECORDING_QUERY,
             USER_QUERY,
             USER_RELATIONSHIP_QUERY,
             USER_RELATIONSHIP_GROUP_QUERY,

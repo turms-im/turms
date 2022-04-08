@@ -42,4 +42,6 @@ public final class CronConst {
 
     public static final String EXPIRED_ADMIN_API_ACCESS_INFO_CLEANUP_CRON = "0 0/30 * * * *";
 
+    public static final String CLOSED_RECORDINGS_CLEANUP_CRON = "0 0/10 * * * *";
+
 }

@@ -69,7 +69,8 @@ public class TurmsPropertiesInspector {
     private static final String FIELD_NAME_TYPE = "type";
 
     public static final ObjectMapper MAPPER = new ObjectMapper()
-            .registerModule(new JavaTimeModule());
+            .registerModule(new JavaTimeModule())
+            .setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
     public static final ObjectWriter MUTABLE_PROPERTIES_WRITER = new ObjectMapper()
             .disable(MapperFeature.DEFAULT_VIEW_INCLUSION)
             .registerModule(new JavaTimeModule())

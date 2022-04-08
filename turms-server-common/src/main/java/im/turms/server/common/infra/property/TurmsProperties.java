@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.property;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import im.turms.server.common.infra.property.env.common.FlightRecorderProperties;
 import im.turms.server.common.infra.property.env.common.IpProperties;
 import im.turms.server.common.infra.property.env.common.PluginProperties;
 import im.turms.server.common.infra.property.env.common.UserStatusProperties;
@@ -57,6 +58,10 @@ public class TurmsProperties {
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private ClusterProperties cluster = new ClusterProperties();
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private FlightRecorderProperties flightRecorder = new FlightRecorderProperties();
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
