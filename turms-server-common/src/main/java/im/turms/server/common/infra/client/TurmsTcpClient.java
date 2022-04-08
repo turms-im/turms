@@ -90,6 +90,8 @@ public class TurmsTcpClient extends TurmsClient {
 
     @Override
     public Mono<TurmsNotification> login(long userId, DeviceType deviceType, @Nullable String password) {
+        this.userId = userId;
+        this.deviceType = deviceType;
         return sendRequest(TurmsRequest.newBuilder()
                 .setCreateSessionRequest(CreateSessionRequest.newBuilder()
                         .setVersion(1)
@@ -99,10 +101,8 @@ public class TurmsTcpClient extends TurmsClient {
                         .build()))
                 .flatMap(n -> {
                     if (n.getCode() != ResponseStatusCode.OK.getBusinessCode()) {
-                        return Mono.error(new IllegalStateException("Failed to login: " + ProtoFormatter.toJSON5(n, 128)));
+                        return Mono.error(new IllegalStateException("Failed to log in: " + ProtoFormatter.toJSON5(n, 128)));
                     }
-                    this.userId = userId;
-                    this.deviceType = deviceType;
                     return Mono.just(n);
                 });
     }
