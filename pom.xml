@@ -37,7 +37,6 @@
         <commons-io.version>2.11.0</commons-io.version>
         <disruptor.version>3.4.4</disruptor.version>
         <eclipse-collections.version>11.0.0</eclipse-collections.version>
-        <flight-recorder-starter.version>2.3.0</flight-recorder-starter.version>
         <graalvm.version>22.0.0.2</graalvm.version>
         <guava.version>31.1-jre</guava.version>
         <icu4j.version>70.1</icu4j.version>
@@ -132,13 +131,6 @@
                 <groupId>io.projectreactor.tools</groupId>
                 <artifactId>blockhound</artifactId>
                 <version>${blockhound.version}</version>
-            </dependency>
-
-            <!-- Observation -->
-            <dependency>
-                <groupId>de.mirkosertic</groupId>
-                <artifactId>flight-recorder-starter</artifactId>
-                <version>${flight-recorder-starter.version}</version>
             </dependency>
 
             <!-- Miscellaneous -->

@@ -231,7 +231,13 @@ public class FlightRecordingService {
         }
         if (close) {
             session.close(true);
-            return new FileResource(session.getFile(), () -> closeRecording(id));
+            return new FileResource(session.getFile(), throwable -> {
+                if (throwable == null) {
+                    closeRecording(id);
+                } else {
+                    LOGGER.error("Failed to close the recording session {}", id, throwable);
+                }
+            });
         } else {
             String prefix = "temp-" + id + "-" + RandomUtil.nextPositiveInt();
             File tempFile = FileUtil.createTempFile(prefix, ".jfr", jfrBaseDir);

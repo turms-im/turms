@@ -42,26 +42,40 @@ import java.util.Map;
  * @see ResourceHttpMessageWriter#zeroCopy
  */
 public class TurmsResourceHttpMessageWriter extends ResourceHttpMessageWriter {
+
     @Override
-    public Mono<Void> write(Publisher<? extends Resource> inputStream, ResolvableType elementType, MediaType mediaType, ReactiveHttpOutputMessage message, Map<String, Object> hints) {
-        return super.write(inputStream, elementType, mediaType, message, hints)
-                .doOnSuccess(unused -> Mono.from(inputStream)
+    public Mono<Void> write(Publisher<? extends Resource> resource, ResolvableType elementType, MediaType mediaType, ReactiveHttpOutputMessage message, Map<String, Object> hints) {
+        Mono<Void> write = super.write(resource, elementType, mediaType, message, hints);
+        return cleanup(resource, write);
+    }
+
+    @Override
+    public Mono<Void> write(Publisher<? extends Resource> resource, ResolvableType actualType, ResolvableType elementType, MediaType mediaType, ServerHttpRequest request,
+                            ServerHttpResponse response, Map<String, Object> hints) {
+        Mono<Void> write = super.write(resource, actualType, elementType, mediaType, request, response, hints);
+        return cleanup(resource, write);
+    }
+
+    private Mono<Void> cleanup(Publisher<? extends Resource> resourcePublisher, Mono<Void> write) {
+        return write
+                .doOnError(throwable -> Mono.from(resourcePublisher)
                         .subscribe(resource -> {
                             if (resource instanceof FileResource file) {
-                                file.cleanup();
+                                file.cleanup(throwable);
+                            }
+                        }))
+                .doOnSuccess(unused -> Mono.from(resourcePublisher)
+                        .subscribe(resource -> {
+                            if (resource instanceof FileResource file) {
+                                file.cleanup(null);
+                            }
+                        }))
+                .doOnCancel(() -> Mono.from(resourcePublisher)
+                        .subscribe(resource -> {
+                            if (resource instanceof FileResource file) {
+                                file.cleanup(null);
                             }
                         }));
     }
 
-    @Override
-    public Mono<Void> write(Publisher<? extends Resource> inputStream, ResolvableType actualType, ResolvableType elementType, MediaType mediaType, ServerHttpRequest request,
-                            ServerHttpResponse response, Map<String, Object> hints) {
-        return super.write(inputStream, actualType, elementType, mediaType, request, response, hints)
-                .doOnSuccess(unused -> Mono.from(inputStream)
-                        .subscribe(resource -> {
-                            if (resource instanceof FileResource file) {
-                                file.cleanup();
-                            }
-                        }));
-    }
 }

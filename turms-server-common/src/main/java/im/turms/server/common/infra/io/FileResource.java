@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.channels.ReadableByteChannel;
+import java.util.function.Consumer;
 
 /**
  * @author James Chen
@@ -32,9 +33,9 @@ import java.nio.channels.ReadableByteChannel;
 public class FileResource extends FileSystemResource {
 
     @Nullable
-    private final Runnable cleanup;
+    private final Consumer<Throwable> cleanup;
 
-    public FileResource(File file, @Nullable Runnable cleanup) {
+    public FileResource(File file, @Nullable Consumer<Throwable> cleanup) {
         super(file);
         this.cleanup = cleanup;
     }
@@ -49,9 +50,9 @@ public class FileResource extends FileSystemResource {
         throw new UnsupportedEncodingException("TemporaryFileResource does not support InputStream");
     }
 
-    public void cleanup() {
+    public void cleanup(@Nullable Throwable throwable) {
         if (cleanup != null) {
-            cleanup.run();
+            cleanup.accept(throwable);
         }
     }
 

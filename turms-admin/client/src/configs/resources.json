@@ -164,7 +164,7 @@
     "apis": {
         "clusterMember": "/cluster/members",
 
-        "heapdump": "/actuator/heapdump",
+        "heapdump": "/heapdump",
         "threaddump": "/actuator/threaddump",
         "metrics": "/metrics",
 
