@@ -12,7 +12,19 @@
             }"
             @click="selectItem(item)"
         >
-            {{ item.name }}
+            <div class="client-terminal-autocomplete__item-group">
+                <span class="client-terminal-autocomplete__item-syntax">
+                    {{ item.syntax }}
+                </span>
+                <span class="client-terminal-autocomplete__item-name">
+                    {{ item.name }}
+                </span>
+            </div>
+            <div class="client-terminal-autocomplete__item-group">
+                <span class="client-terminal-autocomplete__item-type">
+                    {{ item.type }}
+                </span>
+            </div>
         </div>
     </div>
 </template>
@@ -91,6 +103,7 @@ export default {
     position: absolute;
     z-index: 100;
     width: 400px;
+    max-width: 400px;
     max-height: 240px;
     overflow-y: auto;
     background-color: #454545;
@@ -99,10 +112,13 @@ export default {
     &__item {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         height: 24px;
         padding: 0 8px;
+        overflow-x: hidden;
         font-family: Consolas, Monaco, serif;
         color: #fff;
+        white-space: nowrap;
         cursor: pointer;
 
         &:hover {
@@ -111,6 +127,18 @@ export default {
 
         &--selected {
             background-color: #515457;
+        }
+
+        &-name {
+            margin-left: 8px;
+        }
+
+        &-group {
+            display: flex;
+
+            &:not(:first-of-type) {
+                margin-left: 16px;
+            }
         }
     }
 

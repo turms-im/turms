@@ -226,6 +226,7 @@ function parseClass(node) {
                 if (isVisible(member) && isNotStatic(member)) {
                     declaration.methods.push({
                         name: getNodeName(member),
+                        syntax: 'method',
                         type: getNodeType(member),
                         isOptional: isOptional(member),
                         parameters: parseMethodParams(member)

@@ -125,10 +125,10 @@ export default class Terminal extends XTerm {
 
     clear() {
         this.currentLine = '';
+        this.cursorTo(0);
         this.write(escapes.clearScreen);
         this.startNewLine();
         this.onInputChanged?.(this.currentLine);
-        this._triggerOnCursorChangedListeners();
     }
 
     // Text
