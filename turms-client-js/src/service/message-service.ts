@@ -1,7 +1,7 @@
 import * as Long from 'long';
 
 import TurmsClient from '../turms-client';
-import RequestUtil from '../util/request-util';
+import Validator from '../util/validator';
 import { ParsedModel } from '../model/parsed-model';
 import NotificationUtil from '../util/notification-util';
 import BuiltinSystemMessageType from '../model/builtin-system-message-type';
@@ -12,6 +12,7 @@ import { AudioFile } from '../model/proto/model/file/audio_file';
 import { VideoFile } from '../model/proto/model/file/video_file';
 import { ImageFile } from '../model/proto/model/file/image_file';
 import { File } from '../model/proto/model/file/file';
+import DataParser from '../util/data-parser';
 
 export default class MessageService {
     /**
@@ -66,10 +67,10 @@ export default class MessageService {
         records?: Uint8Array[],
         burnAfter?: number,
         preMessageId?: string): Promise<string> {
-        if (RequestUtil.isFalsy(targetId)) {
+        if (Validator.isFalsy(targetId)) {
             return ResponseError.notFalsyPromise('targetId');
         }
-        if (RequestUtil.isFalsy(text) && RequestUtil.isFalsy(records)) {
+        if (Validator.isFalsy(text) && Validator.isFalsy(records)) {
             return ResponseError.illegalParamPromise('text and records must not all be null');
         }
         if (!deliveryDate) {
@@ -79,7 +80,7 @@ export default class MessageService {
             createMessageRequest: {
                 groupId: isGroupMessage ? targetId : undefined,
                 recipientId: !isGroupMessage ? targetId : undefined,
-                deliveryDate: RequestUtil.getDateTimeStr(deliveryDate),
+                deliveryDate: DataParser.getDateTimeStr(deliveryDate),
                 text,
                 records: records || [],
                 burnAfter,
@@ -92,10 +93,10 @@ export default class MessageService {
         messageId: string,
         isGroupMessage: boolean,
         targetId: string): Promise<string> {
-        if (RequestUtil.isFalsy(messageId)) {
+        if (Validator.isFalsy(messageId)) {
             return ResponseError.notFalsyPromise('messageId');
         }
-        if (RequestUtil.isFalsy(targetId)) {
+        if (Validator.isFalsy(targetId)) {
             return ResponseError.notFalsyPromise('targetId');
         }
         return this._turmsClient.driver.send({
@@ -112,10 +113,10 @@ export default class MessageService {
         messageId: string,
         text?: string,
         records?: Uint8Array[]): Promise<void> {
-        if (RequestUtil.isFalsy(messageId)) {
+        if (Validator.isFalsy(messageId)) {
             return ResponseError.notFalsyPromise('messageId');
         }
-        if (RequestUtil.areAllFalsy(text, records)) {
+        if (Validator.areAllFalsy(text, records)) {
             return Promise.resolve();
         }
         return this._turmsClient.driver.send({
@@ -141,8 +142,8 @@ export default class MessageService {
                 areGroupMessages,
                 areSystemMessages,
                 fromId,
-                deliveryDateAfter: RequestUtil.getDateTimeStr(deliveryDateAfter),
-                deliveryDateBefore: RequestUtil.getDateTimeStr(deliveryDateBefore),
+                deliveryDateAfter: DataParser.getDateTimeStr(deliveryDateAfter),
+                deliveryDateBefore: DataParser.getDateTimeStr(deliveryDateBefore),
                 size,
                 withTotal: false
             }
@@ -163,8 +164,8 @@ export default class MessageService {
                 areGroupMessages,
                 areSystemMessages,
                 fromId,
-                deliveryDateAfter: RequestUtil.getDateTimeStr(deliveryDateAfter),
-                deliveryDateBefore: RequestUtil.getDateTimeStr(deliveryDateBefore),
+                deliveryDateAfter: DataParser.getDateTimeStr(deliveryDateAfter),
+                deliveryDateBefore: DataParser.getDateTimeStr(deliveryDateBefore),
                 size,
                 withTotal: true
             }
@@ -172,13 +173,13 @@ export default class MessageService {
     }
 
     recallMessage(messageId: string, recallDate = new Date()): Promise<void> {
-        if (RequestUtil.isFalsy(messageId)) {
+        if (Validator.isFalsy(messageId)) {
             return ResponseError.notFalsyPromise('messageId');
         }
         return this._turmsClient.driver.send({
             updateMessageRequest: {
                 messageId,
-                recallDate: RequestUtil.getDateTimeStr(recallDate),
+                recallDate: DataParser.getDateTimeStr(recallDate),
                 records: []
             }
         }).then(() => null);
@@ -202,7 +203,7 @@ export default class MessageService {
         locationName?: string,
         address?: string
     ): Uint8Array {
-        RequestUtil.throwIfAnyFalsy(latitude, longitude);
+        Validator.throwIfAnyFalsy(latitude, longitude);
         return UserLocation.encode({
             latitude,
             longitude,
@@ -212,7 +213,7 @@ export default class MessageService {
     }
 
     static generateAudioRecordByDescription(url: string, duration?: number, format?: string, size?: number): Uint8Array {
-        RequestUtil.throwIfAnyFalsy(url);
+        Validator.throwIfAnyFalsy(url);
         return AudioFile.encode({
             description: {
                 url,
@@ -224,14 +225,14 @@ export default class MessageService {
     }
 
     static generateAudioRecordByData(data: ArrayBuffer): Uint8Array {
-        RequestUtil.throwIfAnyFalsy(data);
+        Validator.throwIfAnyFalsy(data);
         return AudioFile.encode({
             data: new Uint8Array(data)
         }).finish();
     }
 
     static generateVideoRecordByDescription(url: string, duration?: number, format?: string, size?: number): Uint8Array {
-        RequestUtil.throwIfAnyFalsy(url);
+        Validator.throwIfAnyFalsy(url);
         return VideoFile.encode({
             description: {
                 url,
@@ -243,21 +244,21 @@ export default class MessageService {
     }
 
     static generateVideoRecordByData(data: ArrayBuffer): Uint8Array {
-        RequestUtil.throwIfAnyFalsy(data);
+        Validator.throwIfAnyFalsy(data);
         return VideoFile.encode({
             data: new Uint8Array(data)
         }).finish();
     }
 
     public static generateImageRecordByData(data: ArrayBuffer): Uint8Array {
-        RequestUtil.throwIfAnyFalsy(data);
+        Validator.throwIfAnyFalsy(data);
         return ImageFile.encode({
             data: new Uint8Array(data)
         }).finish();
     }
 
     static generateImageRecordByDescription(url: string, fileSize?: number, imageSize?: number, original?: boolean): Uint8Array {
-        RequestUtil.throwIfAnyFalsy(url);
+        Validator.throwIfAnyFalsy(url);
         return ImageFile.encode({
             description: {
                 url,
@@ -269,14 +270,14 @@ export default class MessageService {
     }
 
     static generateFileRecordByDate(data: ArrayBuffer): Uint8Array {
-        RequestUtil.throwIfAnyFalsy(data);
+        Validator.throwIfAnyFalsy(data);
         return File.encode({
             data: new Uint8Array(data)
         }).finish();
     }
 
     static generateFileRecordByDescription(url: string, format?: string, size?: number): Uint8Array {
-        RequestUtil.throwIfAnyFalsy(url);
+        Validator.throwIfAnyFalsy(url);
         return File.encode({
             description: {
                 url,

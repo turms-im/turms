@@ -1,8 +1,4 @@
-export default class RequestUtil {
-
-    static getDateTimeStr(value: Date): string | undefined {
-        return value ? '' + value.getTime() : undefined;
-    }
+export default class Validator {
 
     public static isFalsy(value: any): boolean {
         return value == null || value?.length === 0;
@@ -31,7 +27,7 @@ export default class RequestUtil {
     }
 
     static throwIfAllFalsy(...values: any[]): void {
-        if (RequestUtil.areAllFalsy(values)) {
+        if (Validator.areAllFalsy(values)) {
             throw new Error('Illegal parameters');
         }
     }

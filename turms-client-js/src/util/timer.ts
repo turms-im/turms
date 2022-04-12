@@ -1,6 +1,6 @@
 export default class Timer {
     private _timerId?: number | NodeJS.Timer;
-    private _interval?: number;
+    private readonly _interval?: number;
     private readonly _callback: (...args: any[]) => void;
     private _ignoreNextCall: boolean;
     private _isRunning: boolean;

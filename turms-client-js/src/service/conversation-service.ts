@@ -1,5 +1,5 @@
 import TurmsClient from '../turms-client';
-import RequestUtil from '../util/request-util';
+import Validator from '../util/validator';
 import { ParsedModel } from '../model/parsed-model';
 import NotificationUtil from '../util/notification-util';
 import ResponseError from '../error/response-error';
@@ -13,7 +13,7 @@ export default class ConversationService {
     }
 
     queryPrivateConversations(targetIds: string[]): Promise<ParsedModel.PrivateConversation[]> {
-        if (RequestUtil.isFalsy(targetIds)) {
+        if (Validator.isFalsy(targetIds)) {
             return Promise.resolve([]);
         }
         return this._turmsClient.driver.send({
@@ -25,7 +25,7 @@ export default class ConversationService {
     }
 
     queryGroupConversations(groupIds: string[]): Promise<ParsedModel.GroupConversation[]> {
-        if (RequestUtil.isFalsy(groupIds)) {
+        if (Validator.isFalsy(groupIds)) {
             return Promise.resolve([]);
         }
         return this._turmsClient.driver.send({
@@ -40,7 +40,7 @@ export default class ConversationService {
     }
 
     updatePrivateConversationReadDate(targetId: string, readDate?: Date): Promise<void> {
-        if (RequestUtil.isFalsy(targetId)) {
+        if (Validator.isFalsy(targetId)) {
             return ResponseError.notFalsyPromise('targetId');
         }
         readDate = readDate ?? new Date();
@@ -53,7 +53,7 @@ export default class ConversationService {
     }
 
     updateGroupConversationReadDate(groupId: string, readDate?: Date): Promise<void> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
         readDate = readDate ?? new Date();
@@ -66,7 +66,7 @@ export default class ConversationService {
     }
 
     updatePrivateConversationTypingStatus(targetId: string): Promise<void> {
-        if (RequestUtil.isFalsy(targetId)) {
+        if (Validator.isFalsy(targetId)) {
             return ResponseError.notFalsyPromise('targetId');
         }
         return this._turmsClient.driver.send({
@@ -78,7 +78,7 @@ export default class ConversationService {
     }
 
     updateGroupConversationTypingStatus(groupId: string): Promise<void> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
         return this._turmsClient.driver.send({

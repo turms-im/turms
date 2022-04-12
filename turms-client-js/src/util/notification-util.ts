@@ -64,7 +64,7 @@ export default class NotificationUtil {
     static getIdsWithVer(n: TurmsNotification): ParsedModel.IdsWithVersion | undefined {
         const idsWithVersion = n.data?.idsWithVersion;
         const arr = idsWithVersion?.values;
-        if (arr && arr.length) {
+        if (arr?.length) {
             return {
                 ids: arr,
                 lastUpdatedDate: this.transformDate(idsWithVersion.lastUpdatedDate)

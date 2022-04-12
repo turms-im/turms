@@ -1,11 +1,12 @@
 import TurmsClient from '../turms-client';
-import RequestUtil from '../util/request-util';
+import Validator from '../util/validator';
 import { ParsedModel } from '../model/parsed-model';
 import NotificationUtil from '../util/notification-util';
 import ResponseStatusCode from '../model/response-status-code';
 import ResponseError from '../error/response-error';
 import { GroupJoinQuestionsAnswerResult } from '../model/proto/model/group/group_join_questions_answer_result';
 import { GroupMemberRole } from '../model/proto/constant/group_member_role';
+import DataParser from '../util/data-parser';
 
 export default class GroupService {
     private _turmsClient: TurmsClient;
@@ -21,7 +22,7 @@ export default class GroupService {
         minimumScore?: number,
         muteEndDate?: Date,
         groupTypeId?: string): Promise<string> {
-        if (RequestUtil.isFalsy(name)) {
+        if (Validator.isFalsy(name)) {
             return ResponseError.notFalsyPromise('name');
         }
         return this._turmsClient.driver.send({
@@ -30,14 +31,14 @@ export default class GroupService {
                 intro,
                 announcement,
                 minimumScore,
-                muteEndDate: RequestUtil.getDateTimeStr(muteEndDate),
+                muteEndDate: DataParser.getDateTimeStr(muteEndDate),
                 groupTypeId
             }
         }).then(n => NotificationUtil.getFirstIdOrThrow(n));
     }
 
     deleteGroup(groupId: string): Promise<void> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
         return this._turmsClient.driver.send({
@@ -57,10 +58,10 @@ export default class GroupService {
         muteEndDate?: Date,
         successorId?: string,
         quitAfterTransfer?: boolean): Promise<void> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (RequestUtil.areAllFalsy(groupName, intro, announcement, minimumScore, groupTypeId,
+        if (Validator.areAllFalsy(groupName, intro, announcement, minimumScore, groupTypeId,
             muteEndDate, successorId)) {
             return Promise.resolve();
         }
@@ -70,7 +71,7 @@ export default class GroupService {
                 groupName,
                 intro,
                 announcement,
-                muteEndDate: RequestUtil.getDateTimeStr(muteEndDate),
+                muteEndDate: DataParser.getDateTimeStr(muteEndDate),
                 minimumScore,
                 groupTypeId,
                 successorId,
@@ -80,20 +81,20 @@ export default class GroupService {
     }
 
     transferOwnership(groupId: string, successorId: string, quitAfterTransfer = false): Promise<void> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (RequestUtil.isFalsy(successorId)) {
+        if (Validator.isFalsy(successorId)) {
             return ResponseError.notFalsyPromise('successorId');
         }
         return this.updateGroup(groupId, null, null, null, null, null, null, successorId, quitAfterTransfer);
     }
 
     muteGroup(groupId: string, muteEndDate: Date): Promise<void> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (RequestUtil.isFalsy(muteEndDate)) {
+        if (Validator.isFalsy(muteEndDate)) {
             return ResponseError.notFalsyPromise('muteEndDate');
         }
         return this.updateGroup(groupId, null, null, null, null, null, muteEndDate, null);
@@ -104,13 +105,13 @@ export default class GroupService {
     }
 
     queryGroup(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion | undefined> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
         return this._turmsClient.driver.send({
             queryGroupRequest: {
                 groupId,
-                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => {
             const groupsWithVersion = n.data?.groupsWithVersion;
@@ -127,7 +128,7 @@ export default class GroupService {
     queryJoinedGroupIds(lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined> {
         return this._turmsClient.driver.send({
             queryJoinedGroupIdsRequest: {
-                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.getIdsWithVer(n));
     }
@@ -135,22 +136,22 @@ export default class GroupService {
     queryJoinedGroupInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupsWithVersion | undefined> {
         return this._turmsClient.driver.send({
             queryJoinedGroupInfosRequest: {
-                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.transform(n.data?.groupsWithVersion));
     }
 
     addGroupJoinQuestion(groupId: string, question: string, answers: string[], score: number): Promise<string> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (RequestUtil.isFalsy(question)) {
+        if (Validator.isFalsy(question)) {
             return ResponseError.notFalsyPromise('question');
         }
-        if (RequestUtil.isFalsy(answers)) {
+        if (Validator.isFalsy(answers)) {
             return ResponseError.notFalsyPromise('answers', true);
         }
-        if (RequestUtil.isFalsy(score)) {
+        if (Validator.isFalsy(score)) {
             return ResponseError.notFalsyPromise('score');
         }
         return this._turmsClient.driver.send({
@@ -164,7 +165,7 @@ export default class GroupService {
     }
 
     deleteGroupJoinQuestion(questionId: string): Promise<void> {
-        if (RequestUtil.isFalsy(questionId)) {
+        if (Validator.isFalsy(questionId)) {
             return ResponseError.notFalsyPromise('questionId');
         }
         return this._turmsClient.driver.send({
@@ -175,10 +176,10 @@ export default class GroupService {
     }
 
     updateGroupJoinQuestion(questionId: string, question?: string, answers?: string[], score?: number): Promise<void> {
-        if (RequestUtil.isFalsy(questionId)) {
+        if (Validator.isFalsy(questionId)) {
             return ResponseError.notFalsyPromise('questionId');
         }
-        if (RequestUtil.areAllFalsy(question, answers, score)) {
+        if (Validator.areAllFalsy(question, answers, score)) {
             return Promise.resolve();
         }
         return this._turmsClient.driver.send({
@@ -193,10 +194,10 @@ export default class GroupService {
 
     // Group Blocklist
     blockUser(groupId: string, userId: string): Promise<void> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (RequestUtil.isFalsy(userId)) {
+        if (Validator.isFalsy(userId)) {
             return ResponseError.notFalsyPromise('userId');
         }
         return this._turmsClient.driver.send({
@@ -208,10 +209,10 @@ export default class GroupService {
     }
 
     unblockUser(groupId: string, userId: string): Promise<void> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (RequestUtil.isFalsy(userId)) {
+        if (Validator.isFalsy(userId)) {
             return ResponseError.notFalsyPromise('userId');
         }
         return this._turmsClient.driver.send({
@@ -225,13 +226,13 @@ export default class GroupService {
     queryBlockedUserIds(
         groupId: string,
         lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
         return this._turmsClient.driver.send({
             queryGroupBlockedUserIdsRequest: {
                 groupId,
-                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.getIdsWithVer(n));
     }
@@ -239,26 +240,26 @@ export default class GroupService {
     queryBlockedUserInfos(
         groupId: string,
         lastUpdatedDate?: Date): Promise<ParsedModel.UsersInfosWithVersion | undefined> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
         return this._turmsClient.driver.send({
             queryGroupBlockedUserInfosRequest: {
                 groupId,
-                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.transform(n.data?.usersInfosWithVersion));
     }
 
     // Group Enrollment
     createInvitation(groupId: string, inviteeId: string, content: string): Promise<string> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (RequestUtil.isFalsy(inviteeId)) {
+        if (Validator.isFalsy(inviteeId)) {
             return ResponseError.notFalsyPromise('inviteeId');
         }
-        if (RequestUtil.isFalsy(content)) {
+        if (Validator.isFalsy(content)) {
             return ResponseError.notFalsyPromise('content');
         }
         return this._turmsClient.driver.send({
@@ -271,7 +272,7 @@ export default class GroupService {
     }
 
     deleteInvitation(invitationId: string): Promise<void> {
-        if (RequestUtil.isFalsy(invitationId)) {
+        if (Validator.isFalsy(invitationId)) {
             return ResponseError.notFalsyPromise('invitationId');
         }
         return this._turmsClient.driver.send({
@@ -282,34 +283,34 @@ export default class GroupService {
     }
 
     queryInvitationsByGroupId(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
         return this._turmsClient.driver.send({
             queryGroupInvitationsRequest: {
                 groupId,
-                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.transform(n.data?.groupInvitationsWithVersion));
     }
 
     queryInvitations(areSentByMe: boolean, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined> {
-        if (RequestUtil.isFalsy(areSentByMe)) {
+        if (Validator.isFalsy(areSentByMe)) {
             return ResponseError.notFalsyPromise('areSentByMe');
         }
         return this._turmsClient.driver.send({
             queryGroupInvitationsRequest: {
                 areSentByMe,
-                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.transform(n.data?.groupInvitationsWithVersion));
     }
 
     createJoinRequest(groupId: string, content: string): Promise<string> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (RequestUtil.isFalsy(content)) {
+        if (Validator.isFalsy(content)) {
             return ResponseError.notFalsyPromise('content');
         }
         return this._turmsClient.driver.send({
@@ -321,7 +322,7 @@ export default class GroupService {
     }
 
     deleteJoinRequest(requestId: string): Promise<void> {
-        if (RequestUtil.isFalsy(requestId)) {
+        if (Validator.isFalsy(requestId)) {
             return ResponseError.notFalsyPromise('requestId');
         }
         return this._turmsClient.driver.send({
@@ -332,13 +333,13 @@ export default class GroupService {
     }
 
     queryJoinRequests(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinRequestsWithVersion | undefined> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
         return this._turmsClient.driver.send({
             queryGroupJoinRequestsRequest: {
                 groupId,
-                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.transform(n.data?.groupJoinRequestsWithVersion));
     }
@@ -346,7 +347,7 @@ export default class GroupService {
     querySentJoinRequests(lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinRequestsWithVersion | undefined> {
         return this._turmsClient.driver.send({
             queryGroupJoinRequestsRequest: {
-                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.transform(n.data?.groupJoinRequestsWithVersion));
     }
@@ -358,20 +359,20 @@ export default class GroupService {
         groupId: string,
         withAnswers = false,
         lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinQuestionsWithVersion | undefined> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
         return this._turmsClient.driver.send({
             queryGroupJoinQuestionsRequest: {
                 groupId,
                 withAnswers,
-                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.transform(n.data?.groupJoinQuestionsWithVersion));
     }
 
     answerGroupQuestions(questionIdToAnswer: { [k: string]: string }): Promise<GroupJoinQuestionsAnswerResult | undefined> {
-        if (RequestUtil.isFalsy(questionIdToAnswer)) {
+        if (Validator.isFalsy(questionIdToAnswer)) {
             return ResponseError.notFalsyPromise('questionIdToAnswer', true);
         }
         return this._turmsClient.driver.send({
@@ -395,15 +396,15 @@ export default class GroupService {
         name?: string,
         role?: string | GroupMemberRole,
         muteEndDate?: Date): Promise<void> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (RequestUtil.isFalsy(userId)) {
+        if (Validator.isFalsy(userId)) {
             return ResponseError.notFalsyPromise('userId');
         }
         if (typeof role === 'string') {
             role = GroupMemberRole[role] as GroupMemberRole;
-            if (RequestUtil.isFalsy(role)) {
+            if (Validator.isFalsy(role)) {
                 return ResponseError.notFalsyPromise('role');
             }
         }
@@ -413,13 +414,13 @@ export default class GroupService {
                 userId,
                 name,
                 role,
-                muteEndDate: RequestUtil.getDateTimeStr(muteEndDate)
+                muteEndDate: DataParser.getDateTimeStr(muteEndDate)
             }
         }).then(() => null);
     }
 
     quitGroup(groupId: string, successorId?: string, quitAfterTransfer?: boolean): Promise<void> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
         return this._turmsClient.driver.send({
@@ -433,10 +434,10 @@ export default class GroupService {
     }
 
     removeGroupMember(groupId: string, memberId: string): Promise<void> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (RequestUtil.isFalsy(memberId)) {
+        if (Validator.isFalsy(memberId)) {
             return ResponseError.notFalsyPromise('memberId');
         }
         return this._turmsClient.driver.send({
@@ -453,18 +454,18 @@ export default class GroupService {
         name?: string,
         role?: string | GroupMemberRole,
         muteEndDate?: Date): Promise<void> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (RequestUtil.isFalsy(memberId)) {
+        if (Validator.isFalsy(memberId)) {
             return ResponseError.notFalsyPromise('memberId');
         }
-        if (RequestUtil.areAllFalsy(name, role, muteEndDate)) {
+        if (Validator.areAllFalsy(name, role, muteEndDate)) {
             return Promise.resolve();
         }
         if (typeof role === 'string') {
             role = GroupMemberRole[role] as GroupMemberRole;
-            if (RequestUtil.isFalsy(role)) {
+            if (Validator.isFalsy(role)) {
                 return ResponseError.notFalsyPromise('role');
             }
         }
@@ -474,19 +475,19 @@ export default class GroupService {
                 memberId,
                 name,
                 role,
-                muteEndDate: RequestUtil.getDateTimeStr(muteEndDate)
+                muteEndDate: DataParser.getDateTimeStr(muteEndDate)
             }
         }).then(() => null);
     }
 
     muteGroupMember(groupId: string, memberId: string, muteEndDate: Date): Promise<void> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (RequestUtil.isFalsy(memberId)) {
+        if (Validator.isFalsy(memberId)) {
             return ResponseError.notFalsyPromise('memberId');
         }
-        if (RequestUtil.isFalsy(muteEndDate)) {
+        if (Validator.isFalsy(muteEndDate)) {
             return ResponseError.notFalsyPromise('muteEndDate');
         }
         return this.updateGroupMemberInfo(groupId, memberId, undefined, undefined, muteEndDate);
@@ -497,13 +498,13 @@ export default class GroupService {
     }
 
     queryGroupMembers(groupId: string, withStatus = false, lastUpdatedDate?: Date): Promise<ParsedModel.GroupMembersWithVersion | undefined> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
         return this._turmsClient.driver.send({
             queryGroupMembersRequest: {
                 groupId,
-                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate),
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
                 withStatus,
                 memberIds: []
             }
@@ -511,10 +512,10 @@ export default class GroupService {
     }
 
     queryGroupMembersByMemberIds(groupId: string, memberIds: string[], withStatus = false): Promise<ParsedModel.GroupMembersWithVersion | undefined> {
-        if (RequestUtil.isFalsy(groupId)) {
+        if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (RequestUtil.isFalsy(memberIds)) {
+        if (Validator.isFalsy(memberIds)) {
             return ResponseError.notFalsyPromise('memberIds', true);
         }
         return this._turmsClient.driver.send({
