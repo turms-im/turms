@@ -1,18 +1,18 @@
 #!/bin/bash
 
-BASEDIR="$(dirname $0)"
+BASEDIR="$(dirname "$0")"
 PROTO_DIR="$BASEDIR/src/main/proto"
 JAVA_OUTPUT_DIR="$BASEDIR/src/main/java"
-echo $BASEDIR
-echo $PROTO_DIR
-FILES=$(find $PROTO_DIR -type f -name "*.proto")
-for proto in $FILES; do
-    echo $proto
-    sed -zi 's/im.turms.server.common.access.client.dto./im.turms.client.model.proto./' $proto
+echo "$BASEDIR"
+echo "$PROTO_DIR"
+FILES=$(find "$PROTO_DIR" -type f -name "*.proto")
+for FILE in $FILES; do
+    echo "$FILE"
+    sed -zi 's/im.turms.server.common.access.client.dto./im.turms.client.model.proto./' "$FILE"
     # We don't use "kotlin_out" because protoc has a poor support for Kotlin currently
-    protoc -I=$PROTO_DIR --java_out=lite:$JAVA_OUTPUT_DIR $proto
+    protoc -I="$PROTO_DIR" --java_out=lite:"$JAVA_OUTPUT_DIR" "$FILE"
 done
 
-find $JAVA_OUTPUT_DIR -type f -name "*OuterClass.java" | xargs rm -f
+find "$JAVA_OUTPUT_DIR" -type f -name "*OuterClass.java" -delete
 
 echo "Done"
