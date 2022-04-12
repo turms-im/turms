@@ -62,7 +62,7 @@ public class AdminRoleService extends BaseAdminRoleService {
             "Only a role with a lower rank compared to the one of the account can be created, updated, or deleted";
     private static final String ERROR_NO_PERMISSION = "The account doesn't have the permissions";
 
-    private final Map<Long, AdminRole> roles = new ConcurrentHashMap<>(16);
+    private final Map<Long, AdminRole> idToRole = new ConcurrentHashMap<>(16);
     private final AdminRoleRepository adminRoleRepository;
     private final AdminService adminService;
 
@@ -124,7 +124,7 @@ public class AdminRoleService extends BaseAdminRoleService {
         }
         return adminRoleRepository.insert(adminRole)
                 .then(Mono.fromCallable(() -> {
-                    roles.put(adminRole.getId(), adminRole);
+                    idToRole.put(adminRole.getId(), adminRole);
                     return adminRole;
                 }));
     }
@@ -159,7 +159,7 @@ public class AdminRoleService extends BaseAdminRoleService {
         return adminRoleRepository.deleteByIds(roleIds)
                 .map(result -> {
                     for (Long id : roleIds) {
-                        roles.remove(id);
+                        idToRole.remove(id);
                     }
                     return result;
                 });
@@ -362,7 +362,7 @@ public class AdminRoleService extends BaseAdminRoleService {
         return roleId.equals(ADMIN_ROLE_ROOT_ID)
                 ? Mono.just(getRootRole())
                 : adminRoleRepository.findById(roleId)
-                .doOnNext(role -> roles.put(roleId, role));
+                .doOnNext(role -> idToRole.put(roleId, role));
     }
 
     public Mono<Set<AdminPermission>> queryPermissions(@NotNull String account) {
@@ -381,7 +381,7 @@ public class AdminRoleService extends BaseAdminRoleService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        AdminRole role = roles.get(roleId);
+        AdminRole role = idToRole.get(roleId);
         return role == null
                 ? queryAndCacheRole(roleId).map(AdminRole::getPermissions)
                 : Mono.just(role.getPermissions());

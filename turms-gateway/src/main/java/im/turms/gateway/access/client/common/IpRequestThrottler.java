@@ -55,14 +55,14 @@ public class IpRequestThrottler {
      * for each client request and needs to store a lot of items.
      * So just using and iterating ConcurrentHashMap is enough
      */
-    private final ConcurrentHashMap<ByteArrayWrapper, TokenBucket> ipRequestTokenBucketMap = new ConcurrentHashMap<>(256);
+    private final ConcurrentHashMap<ByteArrayWrapper, TokenBucket> ipToRequestTokenBucket = new ConcurrentHashMap<>(256);
 
     public IpRequestThrottler(Node node, SessionService sessionService) {
         sessionService.addOnSessionClosedListeners(session ->
                 // Try to remove the buckets with enough tokens
                 // because most clients won't log in again once they have gone offline,
                 // so it's a good time to remove unused buckets
-                ipRequestTokenBucketMap.computeIfPresent(session.getIp(), (key, bucket) ->
+                ipToRequestTokenBucket.computeIfPresent(session.getIp(), (key, bucket) ->
                         bucket.isTokensMoreThanOrEqualsToInitialTokens() ? null : bucket));
 
         ClientApiProperties clientApiProperties = node.getSharedProperties().getGateway().getClientApi();
@@ -92,7 +92,7 @@ public class IpRequestThrottler {
     }
 
     private void removeExpiredRequestTokenBuckets() throws InterruptedException {
-        Iterator<TokenBucket> iterator = ipRequestTokenBucketMap.values().iterator();
+        Iterator<TokenBucket> iterator = ipToRequestTokenBucket.values().iterator();
         int processed = 0;
         long startTime = System.currentTimeMillis();
         while (iterator.hasNext()) {
@@ -114,7 +114,7 @@ public class IpRequestThrottler {
     }
 
     public boolean tryAcquireToken(ByteArrayWrapper ip, long timestamp) {
-        TokenBucket bucket = ipRequestTokenBucketMap.computeIfAbsent(ip, key -> new TokenBucket(requestTokenBucketContext));
+        TokenBucket bucket = ipToRequestTokenBucket.computeIfAbsent(ip, key -> new TokenBucket(requestTokenBucketContext));
         return bucket.tryAcquire(timestamp);
     }
 

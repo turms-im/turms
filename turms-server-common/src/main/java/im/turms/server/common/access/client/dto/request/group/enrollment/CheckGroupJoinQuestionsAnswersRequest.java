@@ -68,15 +68,15 @@ private static final long serialVersionUID = 0L;
             break;
           case 10: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              questionIdAndAnswer_ = com.google.protobuf.MapField.newMapField(
-                  QuestionIdAndAnswerDefaultEntryHolder.defaultEntry);
+              questionIdToAnswer_ = com.google.protobuf.MapField.newMapField(
+                  QuestionIdToAnswerDefaultEntryHolder.defaultEntry);
               mutable_bitField0_ |= 0x00000001;
             }
             com.google.protobuf.MapEntry<java.lang.Long, java.lang.String>
-            questionIdAndAnswer__ = input.readMessage(
-                QuestionIdAndAnswerDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-            questionIdAndAnswer_.getMutableMap().put(
-                questionIdAndAnswer__.getKey(), questionIdAndAnswer__.getValue());
+            questionIdToAnswer__ = input.readMessage(
+                QuestionIdToAnswerDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+            questionIdToAnswer_.getMutableMap().put(
+                questionIdToAnswer__.getKey(), questionIdToAnswer__.getValue());
             break;
           }
           default: {
@@ -109,7 +109,7 @@ private static final long serialVersionUID = 0L;
       int number) {
     switch (number) {
       case 1:
-        return internalGetQuestionIdAndAnswer();
+        return internalGetQuestionIdToAnswer();
       default:
         throw new RuntimeException(
             "Invalid map field number: " + number);
@@ -123,81 +123,81 @@ private static final long serialVersionUID = 0L;
             im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.class, im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.Builder.class);
   }
 
-  public static final int QUESTION_ID_AND_ANSWER_FIELD_NUMBER = 1;
-  private static final class QuestionIdAndAnswerDefaultEntryHolder {
+  public static final int QUESTION_ID_TO_ANSWER_FIELD_NUMBER = 1;
+  private static final class QuestionIdToAnswerDefaultEntryHolder {
     static final com.google.protobuf.MapEntry<
         java.lang.Long, java.lang.String> defaultEntry =
             com.google.protobuf.MapEntry
             .<java.lang.Long, java.lang.String>newDefaultInstance(
-                im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOuterClass.internal_static_im_turms_proto_CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry_descriptor, 
+                im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOuterClass.internal_static_im_turms_proto_CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry_descriptor, 
                 com.google.protobuf.WireFormat.FieldType.INT64,
                 0L,
                 com.google.protobuf.WireFormat.FieldType.STRING,
                 "");
   }
   private com.google.protobuf.MapField<
-      java.lang.Long, java.lang.String> questionIdAndAnswer_;
+      java.lang.Long, java.lang.String> questionIdToAnswer_;
   private com.google.protobuf.MapField<java.lang.Long, java.lang.String>
-  internalGetQuestionIdAndAnswer() {
-    if (questionIdAndAnswer_ == null) {
+  internalGetQuestionIdToAnswer() {
+    if (questionIdToAnswer_ == null) {
       return com.google.protobuf.MapField.emptyMapField(
-          QuestionIdAndAnswerDefaultEntryHolder.defaultEntry);
+          QuestionIdToAnswerDefaultEntryHolder.defaultEntry);
     }
-    return questionIdAndAnswer_;
+    return questionIdToAnswer_;
   }
 
-  public int getQuestionIdAndAnswerCount() {
-    return internalGetQuestionIdAndAnswer().getMap().size();
+  public int getQuestionIdToAnswerCount() {
+    return internalGetQuestionIdToAnswer().getMap().size();
   }
   /**
-   * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
 
   @java.lang.Override
-  public boolean containsQuestionIdAndAnswer(
+  public boolean containsQuestionIdToAnswer(
       long key) {
     
-    return internalGetQuestionIdAndAnswer().getMap().containsKey(key);
+    return internalGetQuestionIdToAnswer().getMap().containsKey(key);
   }
   /**
-   * Use {@link #getQuestionIdAndAnswerMap()} instead.
+   * Use {@link #getQuestionIdToAnswerMap()} instead.
    */
   @java.lang.Override
   @java.lang.Deprecated
-  public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdAndAnswer() {
-    return getQuestionIdAndAnswerMap();
+  public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdToAnswer() {
+    return getQuestionIdToAnswerMap();
   }
   /**
-   * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
   @java.lang.Override
 
-  public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdAndAnswerMap() {
-    return internalGetQuestionIdAndAnswer().getMap();
+  public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdToAnswerMap() {
+    return internalGetQuestionIdToAnswer().getMap();
   }
   /**
-   * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
   @java.lang.Override
 
-  public java.lang.String getQuestionIdAndAnswerOrDefault(
+  public java.lang.String getQuestionIdToAnswerOrDefault(
       long key,
       java.lang.String defaultValue) {
     
     java.util.Map<java.lang.Long, java.lang.String> map =
-        internalGetQuestionIdAndAnswer().getMap();
+        internalGetQuestionIdToAnswer().getMap();
     return map.containsKey(key) ? map.get(key) : defaultValue;
   }
   /**
-   * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
   @java.lang.Override
 
-  public java.lang.String getQuestionIdAndAnswerOrThrow(
+  public java.lang.String getQuestionIdToAnswerOrThrow(
       long key) {
     
     java.util.Map<java.lang.Long, java.lang.String> map =
-        internalGetQuestionIdAndAnswer().getMap();
+        internalGetQuestionIdToAnswer().getMap();
     if (!map.containsKey(key)) {
       throw new java.lang.IllegalArgumentException();
     }
@@ -221,8 +221,8 @@ private static final long serialVersionUID = 0L;
     com.google.protobuf.GeneratedMessageV3
       .serializeLongMapTo(
         output,
-        internalGetQuestionIdAndAnswer(),
-        QuestionIdAndAnswerDefaultEntryHolder.defaultEntry,
+        internalGetQuestionIdToAnswer(),
+        QuestionIdToAnswerDefaultEntryHolder.defaultEntry,
         1);
     unknownFields.writeTo(output);
   }
@@ -234,14 +234,14 @@ private static final long serialVersionUID = 0L;
 
     size = 0;
     for (java.util.Map.Entry<java.lang.Long, java.lang.String> entry
-         : internalGetQuestionIdAndAnswer().getMap().entrySet()) {
+         : internalGetQuestionIdToAnswer().getMap().entrySet()) {
       com.google.protobuf.MapEntry<java.lang.Long, java.lang.String>
-      questionIdAndAnswer__ = QuestionIdAndAnswerDefaultEntryHolder.defaultEntry.newBuilderForType()
+      questionIdToAnswer__ = QuestionIdToAnswerDefaultEntryHolder.defaultEntry.newBuilderForType()
           .setKey(entry.getKey())
           .setValue(entry.getValue())
           .build();
       size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, questionIdAndAnswer__);
+          .computeMessageSize(1, questionIdToAnswer__);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -258,8 +258,8 @@ private static final long serialVersionUID = 0L;
     }
     im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest other = (im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest) obj;
 
-    if (!internalGetQuestionIdAndAnswer().equals(
-        other.internalGetQuestionIdAndAnswer())) return false;
+    if (!internalGetQuestionIdToAnswer().equals(
+        other.internalGetQuestionIdToAnswer())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -271,9 +271,9 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    if (!internalGetQuestionIdAndAnswer().getMap().isEmpty()) {
-      hash = (37 * hash) + QUESTION_ID_AND_ANSWER_FIELD_NUMBER;
-      hash = (53 * hash) + internalGetQuestionIdAndAnswer().hashCode();
+    if (!internalGetQuestionIdToAnswer().getMap().isEmpty()) {
+      hash = (37 * hash) + QUESTION_ID_TO_ANSWER_FIELD_NUMBER;
+      hash = (53 * hash) + internalGetQuestionIdToAnswer().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -387,7 +387,7 @@ private static final long serialVersionUID = 0L;
         int number) {
       switch (number) {
         case 1:
-          return internalGetQuestionIdAndAnswer();
+          return internalGetQuestionIdToAnswer();
         default:
           throw new RuntimeException(
               "Invalid map field number: " + number);
@@ -398,7 +398,7 @@ private static final long serialVersionUID = 0L;
         int number) {
       switch (number) {
         case 1:
-          return internalGetMutableQuestionIdAndAnswer();
+          return internalGetMutableQuestionIdToAnswer();
         default:
           throw new RuntimeException(
               "Invalid map field number: " + number);
@@ -430,7 +430,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      internalGetMutableQuestionIdAndAnswer().clear();
+      internalGetMutableQuestionIdToAnswer().clear();
       return this;
     }
 
@@ -458,8 +458,8 @@ private static final long serialVersionUID = 0L;
     public im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest buildPartial() {
       im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest result = new im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest(this);
       int from_bitField0_ = bitField0_;
-      result.questionIdAndAnswer_ = internalGetQuestionIdAndAnswer();
-      result.questionIdAndAnswer_.makeImmutable();
+      result.questionIdToAnswer_ = internalGetQuestionIdToAnswer();
+      result.questionIdToAnswer_.makeImmutable();
       onBuilt();
       return result;
     }
@@ -508,8 +508,8 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest other) {
       if (other == im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.getDefaultInstance()) return this;
-      internalGetMutableQuestionIdAndAnswer().mergeFrom(
-          other.internalGetQuestionIdAndAnswer());
+      internalGetMutableQuestionIdToAnswer().mergeFrom(
+          other.internalGetQuestionIdToAnswer());
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -541,99 +541,99 @@ private static final long serialVersionUID = 0L;
     private int bitField0_;
 
     private com.google.protobuf.MapField<
-        java.lang.Long, java.lang.String> questionIdAndAnswer_;
+        java.lang.Long, java.lang.String> questionIdToAnswer_;
     private com.google.protobuf.MapField<java.lang.Long, java.lang.String>
-    internalGetQuestionIdAndAnswer() {
-      if (questionIdAndAnswer_ == null) {
+    internalGetQuestionIdToAnswer() {
+      if (questionIdToAnswer_ == null) {
         return com.google.protobuf.MapField.emptyMapField(
-            QuestionIdAndAnswerDefaultEntryHolder.defaultEntry);
+            QuestionIdToAnswerDefaultEntryHolder.defaultEntry);
       }
-      return questionIdAndAnswer_;
+      return questionIdToAnswer_;
     }
     private com.google.protobuf.MapField<java.lang.Long, java.lang.String>
-    internalGetMutableQuestionIdAndAnswer() {
+    internalGetMutableQuestionIdToAnswer() {
       onChanged();;
-      if (questionIdAndAnswer_ == null) {
-        questionIdAndAnswer_ = com.google.protobuf.MapField.newMapField(
-            QuestionIdAndAnswerDefaultEntryHolder.defaultEntry);
+      if (questionIdToAnswer_ == null) {
+        questionIdToAnswer_ = com.google.protobuf.MapField.newMapField(
+            QuestionIdToAnswerDefaultEntryHolder.defaultEntry);
       }
-      if (!questionIdAndAnswer_.isMutable()) {
-        questionIdAndAnswer_ = questionIdAndAnswer_.copy();
+      if (!questionIdToAnswer_.isMutable()) {
+        questionIdToAnswer_ = questionIdToAnswer_.copy();
       }
-      return questionIdAndAnswer_;
+      return questionIdToAnswer_;
     }
 
-    public int getQuestionIdAndAnswerCount() {
-      return internalGetQuestionIdAndAnswer().getMap().size();
+    public int getQuestionIdToAnswerCount() {
+      return internalGetQuestionIdToAnswer().getMap().size();
     }
     /**
-     * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
 
     @java.lang.Override
-    public boolean containsQuestionIdAndAnswer(
+    public boolean containsQuestionIdToAnswer(
         long key) {
       
-      return internalGetQuestionIdAndAnswer().getMap().containsKey(key);
+      return internalGetQuestionIdToAnswer().getMap().containsKey(key);
     }
     /**
-     * Use {@link #getQuestionIdAndAnswerMap()} instead.
+     * Use {@link #getQuestionIdToAnswerMap()} instead.
      */
     @java.lang.Override
     @java.lang.Deprecated
-    public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdAndAnswer() {
-      return getQuestionIdAndAnswerMap();
+    public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdToAnswer() {
+      return getQuestionIdToAnswerMap();
     }
     /**
-     * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
     @java.lang.Override
 
-    public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdAndAnswerMap() {
-      return internalGetQuestionIdAndAnswer().getMap();
+    public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdToAnswerMap() {
+      return internalGetQuestionIdToAnswer().getMap();
     }
     /**
-     * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
     @java.lang.Override
 
-    public java.lang.String getQuestionIdAndAnswerOrDefault(
+    public java.lang.String getQuestionIdToAnswerOrDefault(
         long key,
         java.lang.String defaultValue) {
       
       java.util.Map<java.lang.Long, java.lang.String> map =
-          internalGetQuestionIdAndAnswer().getMap();
+          internalGetQuestionIdToAnswer().getMap();
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
     @java.lang.Override
 
-    public java.lang.String getQuestionIdAndAnswerOrThrow(
+    public java.lang.String getQuestionIdToAnswerOrThrow(
         long key) {
       
       java.util.Map<java.lang.Long, java.lang.String> map =
-          internalGetQuestionIdAndAnswer().getMap();
+          internalGetQuestionIdToAnswer().getMap();
       if (!map.containsKey(key)) {
         throw new java.lang.IllegalArgumentException();
       }
       return map.get(key);
     }
 
-    public Builder clearQuestionIdAndAnswer() {
-      internalGetMutableQuestionIdAndAnswer().getMutableMap()
+    public Builder clearQuestionIdToAnswer() {
+      internalGetMutableQuestionIdToAnswer().getMutableMap()
           .clear();
       return this;
     }
     /**
-     * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
 
-    public Builder removeQuestionIdAndAnswer(
+    public Builder removeQuestionIdToAnswer(
         long key) {
       
-      internalGetMutableQuestionIdAndAnswer().getMutableMap()
+      internalGetMutableQuestionIdToAnswer().getMutableMap()
           .remove(key);
       return this;
     }
@@ -642,13 +642,13 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Deprecated
     public java.util.Map<java.lang.Long, java.lang.String>
-    getMutableQuestionIdAndAnswer() {
-      return internalGetMutableQuestionIdAndAnswer().getMutableMap();
+    getMutableQuestionIdToAnswer() {
+      return internalGetMutableQuestionIdToAnswer().getMutableMap();
     }
     /**
-     * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
-    public Builder putQuestionIdAndAnswer(
+    public Builder putQuestionIdToAnswer(
         long key,
         java.lang.String value) {
       
@@ -656,17 +656,17 @@ private static final long serialVersionUID = 0L;
   throw new NullPointerException("map value");
 }
 
-      internalGetMutableQuestionIdAndAnswer().getMutableMap()
+      internalGetMutableQuestionIdToAnswer().getMutableMap()
           .put(key, value);
       return this;
     }
     /**
-     * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
 
-    public Builder putAllQuestionIdAndAnswer(
+    public Builder putAllQuestionIdToAnswer(
         java.util.Map<java.lang.Long, java.lang.String> values) {
-      internalGetMutableQuestionIdAndAnswer().getMutableMap()
+      internalGetMutableQuestionIdToAnswer().getMutableMap()
           .putAll(values);
       return this;
     }

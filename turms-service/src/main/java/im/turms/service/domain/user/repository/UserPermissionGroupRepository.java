@@ -47,14 +47,14 @@ public class UserPermissionGroupRepository extends BaseRepository<UserPermission
             @Nullable Set<Long> creatableGroupTypeIds,
             @Nullable Integer ownedGroupLimit,
             @Nullable Integer ownedGroupLimitForEachGroupType,
-            @Nullable Map<Long, Integer> groupTypeLimitMap) {
+            @Nullable Map<Long, Integer> groupTypeIdToLimit) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, groupIds);
         Update update = Update.newBuilder(4)
                 .setIfNotNull(UserPermissionGroup.Fields.CREATABLE_GROUP_TYPE_IDS, creatableGroupTypeIds)
                 .setIfNotNull(UserPermissionGroup.Fields.OWNED_GROUP_LIMIT, ownedGroupLimit)
                 .setIfNotNull(UserPermissionGroup.Fields.OWNED_GROUP_LIMIT_FOR_EACH_GROUP_TYPE, ownedGroupLimitForEachGroupType)
-                .setIfNotNull(UserPermissionGroup.Fields.GROUP_TYPE_LIMITS, groupTypeLimitMap);
+                .setIfNotNull(UserPermissionGroup.Fields.GROUP_TYPE_TO_LIMIT, groupTypeIdToLimit);
         return mongoClient.updateMany(entityClass, filter, update);
     }
 

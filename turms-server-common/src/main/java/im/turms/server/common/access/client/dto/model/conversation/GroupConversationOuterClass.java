@@ -37,10 +37,10 @@ public final class GroupConversationOuterClass {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_GroupConversation_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_im_turms_proto_GroupConversation_MemberIdAndReadDateEntry_descriptor;
+    internal_static_im_turms_proto_GroupConversation_MemberIdToReadDateEntry_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_im_turms_proto_GroupConversation_MemberIdAndReadDateEntry_fieldAccessorTable;
+      internal_static_im_turms_proto_GroupConversation_MemberIdToReadDateEntry_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -51,14 +51,14 @@ public final class GroupConversationOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n+model/conversation/group_conversation." +
-      "proto\022\016im.turms.proto\"\276\001\n\021GroupConversat" +
-      "ion\022\020\n\010group_id\030\001 \001(\003\022[\n\027member_id_and_r" +
-      "ead_date\030\002 \003(\0132:.im.turms.proto.GroupCon" +
-      "versation.MemberIdAndReadDateEntry\032:\n\030Me" +
-      "mberIdAndReadDateEntry\022\013\n\003key\030\001 \001(\003\022\r\n\005v" +
-      "alue\030\002 \001(\003:\0028\001BB\n;im.turms.server.common" +
-      ".access.client.dto.model.conversationP\001\272" +
-      "\002\000b\006proto3"
+      "proto\022\016im.turms.proto\"\273\001\n\021GroupConversat" +
+      "ion\022\020\n\010group_id\030\001 \001(\003\022Y\n\026member_id_to_re" +
+      "ad_date\030\002 \003(\01329.im.turms.proto.GroupConv" +
+      "ersation.MemberIdToReadDateEntry\0329\n\027Memb" +
+      "erIdToReadDateEntry\022\013\n\003key\030\001 \001(\003\022\r\n\005valu" +
+      "e\030\002 \001(\003:\0028\001BB\n;im.turms.server.common.ac" +
+      "cess.client.dto.model.conversationP\001\272\002\000b" +
+      "\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -69,12 +69,12 @@ public final class GroupConversationOuterClass {
     internal_static_im_turms_proto_GroupConversation_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_GroupConversation_descriptor,
-        new java.lang.String[] { "GroupId", "MemberIdAndReadDate", });
-    internal_static_im_turms_proto_GroupConversation_MemberIdAndReadDateEntry_descriptor =
+        new java.lang.String[] { "GroupId", "MemberIdToReadDate", });
+    internal_static_im_turms_proto_GroupConversation_MemberIdToReadDateEntry_descriptor =
       internal_static_im_turms_proto_GroupConversation_descriptor.getNestedTypes().get(0);
-    internal_static_im_turms_proto_GroupConversation_MemberIdAndReadDateEntry_fieldAccessorTable = new
+    internal_static_im_turms_proto_GroupConversation_MemberIdToReadDateEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_im_turms_proto_GroupConversation_MemberIdAndReadDateEntry_descriptor,
+        internal_static_im_turms_proto_GroupConversation_MemberIdToReadDateEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
   }
 

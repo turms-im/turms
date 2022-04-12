@@ -60,7 +60,7 @@ import static im.turms.server.common.domain.admin.constant.AdminConst.ROOT_ADMIN
 public class AdminService extends BaseAdminService {
 
     private static final String ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK =
-            "Only a admin with a lower rank compared to the account can be created, updated, or deleted";
+            "Only an admin with a lower rank compared to the account can be created, updated, or deleted";
     private static final int MIN_ACCOUNT_LIMIT = 1;
     private static final int MIN_PASSWORD_LIMIT = 1;
     private static final int MIN_NAME_LIMIT = 1;
@@ -72,10 +72,7 @@ public class AdminService extends BaseAdminService {
     private final AdminRepository adminRepository;
     private final AdminRoleService adminRoleService;
 
-    /**
-     * Account -> AdminInfo
-     */
-    private final Map<String, AdminInfo> adminMap = new ConcurrentHashMap<>();
+    private final Map<String, AdminInfo> accountToAdmin = new ConcurrentHashMap<>();
 
     public AdminService(
             PasswordManager passwordManager,
@@ -97,7 +94,7 @@ public class AdminService extends BaseAdminService {
         }
         Set<Long> roleIds = Sets.newHashSetWithExpectedSize(accounts.size());
         for (String account : accounts) {
-            AdminInfo adminInfo = adminMap.get(account);
+            AdminInfo adminInfo = accountToAdmin.get(account);
             if (adminInfo != null) {
                 roleIds.add(adminInfo.getAdmin().getRoleId());
             }
@@ -174,7 +171,7 @@ public class AdminService extends BaseAdminService {
                 ? adminRepository.upsert(admin)
                 : adminRepository.insert(admin);
         return result.then(Mono.fromCallable(() -> {
-            adminMap.put(finalAccount, adminInfo);
+            accountToAdmin.put(finalAccount, adminInfo);
             return admin;
         }));
     }
@@ -221,7 +218,7 @@ public class AdminService extends BaseAdminService {
         return adminRepository.deleteByIds(accounts)
                 .map(result -> {
                     for (String account : accounts) {
-                        adminMap.remove(account);
+                        accountToAdmin.remove(account);
                     }
                     return result;
                 });

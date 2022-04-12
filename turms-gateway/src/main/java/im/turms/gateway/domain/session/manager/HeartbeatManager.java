@@ -61,7 +61,7 @@ public class HeartbeatManager {
 
     private final SessionService sessionService;
     private final UserStatusService userStatusService;
-    private final Map<Long, UserSessionsManager> sessionsManagerByUserId;
+    private final Map<Long, UserSessionsManager> userIdToSessionsManager;
     private final Thread workerThread;
     private int closeIdleSessionAfterSeconds;
     private int closeIdleSessionAfterMillis;
@@ -73,14 +73,14 @@ public class HeartbeatManager {
 
     public HeartbeatManager(SessionService sessionService,
                             UserStatusService userStatusService,
-                            Map<Long, UserSessionsManager> sessionsManagerByUserId,
+                            Map<Long, UserSessionsManager> userIdToSessionsManager,
                             int clientHeartbeatIntervalSeconds,
                             int closeIdleSessionAfterSeconds,
                             int minHeartbeatIntervalSeconds,
                             int switchProtocolAfterSeconds) {
         this.sessionService = sessionService;
         this.userStatusService = userStatusService;
-        this.sessionsManagerByUserId = sessionsManagerByUserId;
+        this.userIdToSessionsManager = userIdToSessionsManager;
         setClientHeartbeatIntervalSeconds(clientHeartbeatIntervalSeconds);
         setCloseIdleSessionAfterSeconds(closeIdleSessionAfterSeconds);
         this.minHeartbeatIntervalMillis = minHeartbeatIntervalSeconds * 1000;
@@ -119,7 +119,7 @@ public class HeartbeatManager {
     }
 
     private void updateOnlineUsersTtl() {
-        Collection<UserSessionsManager> managers = sessionsManagerByUserId.values();
+        Collection<UserSessionsManager> managers = userIdToSessionsManager.values();
         LongKeyGenerator userIds = collectOnlineUsersAndUpdateStatus(managers);
         userStatusService.updateOnlineUsersTtl(userIds, closeIdleSessionAfterSeconds)
                 .subscribe(null, t -> LOGGER.error("Failed to update online users", t));
@@ -140,8 +140,8 @@ public class HeartbeatManager {
             @Override
             public long next() {
                 while (iterator.hasNext()) {
-                    Map<DeviceType, UserSession> sessionMap = iterator.next().getSessionMap();
-                    for (UserSession session : sessionMap.values()) {
+                    Map<DeviceType, UserSession> deviceTypeToSession = iterator.next().getDeviceTypeToSession();
+                    for (UserSession session : deviceTypeToSession.values()) {
                         Long userId = closeOrUpdateSession(session, now);
                         if (userId != null) {
                             return userId;

@@ -43,7 +43,7 @@ public class GroupConversationRepository extends BaseRepository<GroupConversatio
     public Mono<Void> upsert(Long groupId, Long memberId, Date readDate, boolean allowMoveReadDateForward) {
         Filter filter = Filter.newBuilder(allowMoveReadDateForward ? 1 : 2)
                 .eq(DomainFieldName.ID, groupId);
-        String fieldKey = GroupConversation.Fields.MEMBER_ID_AND_READ_DATE + "." + memberId;
+        String fieldKey = GroupConversation.Fields.MEMBER_ID_TO_READ_DATE + "." + memberId;
         if (!allowMoveReadDateForward) {
             // Only update if no existing date or the existing date is before readDate
             filter.ltOrNull(fieldKey, readDate);
@@ -58,7 +58,7 @@ public class GroupConversationRepository extends BaseRepository<GroupConversatio
                 .eq(DomainFieldName.ID, groupId);
         Update update = Update.newBuilder(memberIds.size());
         for (long memberId : memberIds) {
-            String fieldKey = GroupConversation.Fields.MEMBER_ID_AND_READ_DATE + "." + memberId;
+            String fieldKey = GroupConversation.Fields.MEMBER_ID_TO_READ_DATE + "." + memberId;
             // Ignore isAllowMoveReadDateForward()
             update.set(fieldKey, readDate);
         }

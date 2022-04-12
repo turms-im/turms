@@ -27,7 +27,7 @@ public struct GroupConversation {
 
     public var groupID: Int64 = 0
 
-    public var memberIDAndReadDate: [Int64: Int64] = [:]
+    public var memberIDToReadDate: [Int64: Int64] = [:]
 
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -42,7 +42,7 @@ extension GroupConversation: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     public static let protoMessageName: String = _protobuf_package + ".GroupConversation"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "group_id"),
-        2: .standard(proto: "member_id_and_read_date"),
+        2: .standard(proto: "member_id_to_read_date"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -52,7 +52,7 @@ extension GroupConversation: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
             case 1: try try decoder.decodeSingularInt64Field(value: &groupID)
-            case 2: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufInt64, SwiftProtobuf.ProtobufInt64>.self, value: &self.memberIDAndReadDate) }()
+            case 2: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufInt64, SwiftProtobuf.ProtobufInt64>.self, value: &self.memberIDToReadDate) }()
             default: break
             }
         }
@@ -62,15 +62,15 @@ extension GroupConversation: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         if groupID != 0 {
             try visitor.visitSingularInt64Field(value: groupID, fieldNumber: 1)
         }
-        if !memberIDAndReadDate.isEmpty {
-            try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufInt64, SwiftProtobuf.ProtobufInt64>.self, value: memberIDAndReadDate, fieldNumber: 2)
+        if !memberIDToReadDate.isEmpty {
+            try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufInt64, SwiftProtobuf.ProtobufInt64>.self, value: memberIDToReadDate, fieldNumber: 2)
         }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: GroupConversation, rhs: GroupConversation) -> Bool {
         if lhs.groupID != rhs.groupID { return false }
-        if lhs.memberIDAndReadDate != rhs.memberIDAndReadDate { return false }
+        if lhs.memberIDToReadDate != rhs.memberIDToReadDate { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

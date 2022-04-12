@@ -63,7 +63,7 @@ public class GroupTypeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupTypeService.class);
 
     private final Node node;
-    private final Map<Long, GroupType> groupTypeMap = new ConcurrentHashMap<>(16);
+    private final Map<Long, GroupType> idToGroupType = new ConcurrentHashMap<>(16);
     private final GroupTypeRepository groupTypeRepository;
 
     public GroupTypeService(
@@ -75,7 +75,7 @@ public class GroupTypeService {
     }
 
     public void initGroupTypes() {
-        groupTypeMap.putIfAbsent(
+        idToGroupType.putIfAbsent(
                 DEFAULT_GROUP_TYPE_ID,
                 new GroupType(
                         DEFAULT_GROUP_TYPE_ID,
@@ -94,12 +94,12 @@ public class GroupTypeService {
                     OperationType operationType = event.getOperationType();
                     GroupType groupType = event.getFullDocument();
                     switch (operationType) {
-                        case INSERT, UPDATE, REPLACE -> groupTypeMap.put(groupType.getId(), groupType);
+                        case INSERT, UPDATE, REPLACE -> idToGroupType.put(groupType.getId(), groupType);
                         case DELETE -> {
                             long groupTypeId = ChangeStreamUtil.getIdAsLong(event.getDocumentKey());
-                            groupTypeMap.remove(groupTypeId);
+                            idToGroupType.remove(groupTypeId);
                         }
-                        case INVALIDATE -> groupTypeMap.keySet().removeIf(id -> !id.equals(DEFAULT_GROUP_TYPE_ID));
+                        case INVALIDATE -> idToGroupType.keySet().removeIf(id -> !id.equals(DEFAULT_GROUP_TYPE_ID));
                         default -> LOGGER.fatal("Detected an illegal operation on GroupType collection: " + event);
                     }
                 })
@@ -107,12 +107,12 @@ public class GroupTypeService {
                         .error("Caught an error while processing the change stream event of GroupType: {}", o, throwable))
                 .subscribe();
         groupTypeRepository.findAll()
-                .doOnNext(groupType -> groupTypeMap.put(groupType.getId(), groupType))
+                .doOnNext(groupType -> idToGroupType.put(groupType.getId(), groupType))
                 .subscribe(null, t -> LOGGER.error("Caught an error while finding all group types", t));
     }
 
     public GroupType getDefaultGroupType() {
-        return groupTypeMap.get(DEFAULT_GROUP_TYPE_ID);
+        return idToGroupType.get(DEFAULT_GROUP_TYPE_ID);
     }
 
     public Flux<GroupType> queryGroupTypes(
@@ -163,7 +163,7 @@ public class GroupTypeService {
                 selfInfoUpdatable,
                 enableReadReceipt,
                 messageEditable);
-        groupTypeMap.put(id, groupType);
+        idToGroupType.put(id, groupType);
         return groupTypeRepository.insert(groupType).thenReturn(groupType);
     }
 
@@ -219,10 +219,10 @@ public class GroupTypeService {
                 .doOnNext(result -> {
                     if (groupTypeIds != null) {
                         for (Long id : groupTypeIds) {
-                            groupTypeMap.remove(id);
+                            idToGroupType.remove(id);
                         }
                     } else {
-                        groupTypeMap.keySet().removeIf(id -> !id.equals(DEFAULT_GROUP_TYPE_ID));
+                        idToGroupType.keySet().removeIf(id -> !id.equals(DEFAULT_GROUP_TYPE_ID));
                     }
                 });
     }
@@ -233,9 +233,9 @@ public class GroupTypeService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        GroupType groupType = groupTypeMap.get(groupTypeId);
+        GroupType groupType = idToGroupType.get(groupTypeId);
         return groupType == null
-                ? groupTypeRepository.findById(groupTypeId).doOnNext(type -> groupTypeMap.put(groupTypeId, type))
+                ? groupTypeRepository.findById(groupTypeId).doOnNext(type -> idToGroupType.put(groupTypeId, type))
                 : Mono.just(groupType);
     }
 

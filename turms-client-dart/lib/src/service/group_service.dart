@@ -230,14 +230,14 @@ class GroupService {
   }
 
   Future<GroupJoinQuestionsAnswerResult?> answerGroupQuestions(
-      Map<Int64, String> questionIdsAndAnswers) async {
-    if (questionIdsAndAnswers.isEmpty) {
+      Map<Int64, String> questionIdToAnswer) async {
+    if (questionIdToAnswer.isEmpty) {
       throw ResponseException(ResponseStatusCode.illegalArgument,
-          'questionIdsAndAnswers must not be empty');
+          'questionIdToAnswer must not be empty');
     }
     final n = await _turmsClient.driver.send(
         CheckGroupJoinQuestionsAnswersRequest(
-            questionIdAndAnswer: questionIdsAndAnswers));
+            questionIdToAnswer: questionIdToAnswer));
     return n.data.hasGroupJoinQuestionAnswerResult()
         ? n.data.groupJoinQuestionAnswerResult
         : throw ResponseException.fromCode(ResponseStatusCode.invalidResponse);

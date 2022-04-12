@@ -75,7 +75,7 @@ class NotificationServiceTests {
                         .delay(Duration.ofSeconds(1))
                         .then(Mono.fromRunnable(byteBuf::release))
                         .thenReturn(byteBuf));
-        when(sessionsManager.getSessionMap())
+        when(sessionsManager.getDeviceTypeToSession())
                 .thenReturn(Map.of(DeviceType.ANDROID, session));
         NotificationService notificationService = newOutboundMessageService(sessionsManager);
 

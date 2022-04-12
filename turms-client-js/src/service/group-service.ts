@@ -370,13 +370,13 @@ export default class GroupService {
         }).then(n => NotificationUtil.transform(n.data?.groupJoinQuestionsWithVersion));
     }
 
-    answerGroupQuestions(questionIdsAndAnswers: { [k: string]: string }): Promise<GroupJoinQuestionsAnswerResult | undefined> {
-        if (RequestUtil.isFalsy(questionIdsAndAnswers)) {
-            return ResponseError.notFalsyPromise('questionIdsAndAnswers', true);
+    answerGroupQuestions(questionIdToAnswer: { [k: string]: string }): Promise<GroupJoinQuestionsAnswerResult | undefined> {
+        if (RequestUtil.isFalsy(questionIdToAnswer)) {
+            return ResponseError.notFalsyPromise('questionIdToAnswer', true);
         }
         return this._turmsClient.driver.send({
             checkGroupJoinQuestionsAnswersRequest: {
-                questionIdAndAnswer: questionIdsAndAnswers
+                questionIdToAnswer: questionIdToAnswer
             }
         }).then(n => {
             const result = NotificationUtil.transform(n.data?.groupJoinQuestionAnswerResult);

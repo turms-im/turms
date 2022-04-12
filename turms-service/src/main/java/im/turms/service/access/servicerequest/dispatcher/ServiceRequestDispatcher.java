@@ -78,7 +78,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     private final OutboundMessageService outboundMessageService;
     private final PluginManager pluginManager;
 
-    private final FastEnumMap<TurmsRequest.KindCase, ClientRequestHandler> router;
+    private final FastEnumMap<TurmsRequest.KindCase, ClientRequestHandler> requestTypeToHandler;
 
     public ServiceRequestDispatcher(ApiLoggingContext apiLoggingContext,
                                     ApplicationContext context,
@@ -94,10 +94,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         this.pluginManager = pluginManager;
         Set<TurmsRequest.KindCase> disabledEndpoints =
                 turmsPropertiesManager.getLocalProperties().getService().getClientApi().getDisabledEndpoints();
-        router = getMappings((ConfigurableApplicationContext) context, disabledEndpoints);
-        for (TurmsRequest.KindCase kindCase : TurmsRequest.KindCase.values()) {
-            if (!router.containsKey(kindCase) && kindCase != KIND_NOT_SET && !isRequestForGateway(kindCase)) {
-                throw new IllegalStateException("No client request handler for the request type: " + kindCase.name());
+        requestTypeToHandler = getMappings((ConfigurableApplicationContext) context, disabledEndpoints);
+        for (TurmsRequest.KindCase requestType : TurmsRequest.KindCase.values()) {
+            if (!requestTypeToHandler.containsKey(requestType) && requestType != KIND_NOT_SET && !isRequestForGateway(requestType)) {
+                throw new IllegalStateException("No client request handler for the request type: " + requestType.name());
             }
         }
     }
@@ -207,7 +207,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             if (requestType == KIND_NOT_SET) {
                 return Mono.just(ServiceResponseFactory.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The request type cannot be KIND_NOT_SET"));
             }
-            ClientRequestHandler handler = router.get(requestType);
+            ClientRequestHandler handler = requestTypeToHandler.get(requestType);
             if (handler == null) {
                 return Mono.just(ServiceResponseFactory.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The request type is unsupported"));
             }

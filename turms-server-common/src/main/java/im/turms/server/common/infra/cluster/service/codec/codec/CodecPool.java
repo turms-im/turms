@@ -48,11 +48,11 @@ import java.util.Map;
  */
 public final class CodecPool {
 
-    private static final IntObjectHashMap<Codec> ID_CODEC_MAP = new IntObjectHashMap<>(32);
-    private static final Map<Class<?>, Codec> CLASS_CODEC_MAP = new IdentityHashMap<>(32);
+    private static final IntObjectHashMap<Codec> ID_TO_CODEC = new IntObjectHashMap<>(32);
+    private static final Map<Class<?>, Codec> CLASS_TO_CODEC = new IdentityHashMap<>(32);
 
     public static void init() {
-        if (!ID_CODEC_MAP.isEmpty()) {
+        if (!ID_TO_CODEC.isEmpty()) {
             return;
         }
         // Primitives
@@ -95,14 +95,14 @@ public final class CodecPool {
      * Usually used when deserializing
      */
     public static <T> Codec<T> getCodec(int id) {
-        return ID_CODEC_MAP.get(id);
+        return ID_TO_CODEC.get(id);
     }
 
     /**
      * Usually used when serializing
      */
     public static <T> Codec<T> getCodec(Class<?> clazz) {
-        return CLASS_CODEC_MAP.get(clazz);
+        return CLASS_TO_CODEC.get(clazz);
     }
 
     private static void register(Codec<?> codec) {
@@ -110,15 +110,15 @@ public final class CodecPool {
         if (clazz == null) {
             throw new IllegalStateException("The codec %s cannot be resolved".formatted(codec));
         }
-        if (CLASS_CODEC_MAP.containsKey(clazz)) {
+        if (CLASS_TO_CODEC.containsKey(clazz)) {
             throw new IllegalStateException("The codec for the class %s has already existed".formatted(clazz.getSimpleName()));
         }
         int codecId = codec.getCodecId().getId();
-        if (ID_CODEC_MAP.containsKey(codecId)) {
+        if (ID_TO_CODEC.containsKey(codecId)) {
             throw new IllegalStateException("The codec ID %d has already existed".formatted(codecId));
         }
-        CLASS_CODEC_MAP.put(clazz, codec);
-        ID_CODEC_MAP.put(codecId, codec);
+        CLASS_TO_CODEC.put(clazz, codec);
+        ID_TO_CODEC.put(codecId, codec);
     }
 
 }

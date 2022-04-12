@@ -38,7 +38,7 @@ export default class MessageService extends BaseService {
     private readonly _requestTimeout: number;
     private readonly _minRequestInterval: number;
     private _notificationListeners: ((notification: ParsedNotification) => void)[] = [];
-    private _requestMap: Record<number, RequestPromiseSeal> = {};
+    private _idToRequest: Record<number, RequestPromiseSeal> = {};
 
     constructor(stateStore: StateStore, requestTimeout?: number, minRequestInterval?: number) {
         super(stateStore);
@@ -101,11 +101,11 @@ export default class MessageService extends BaseService {
                     let timeoutId;
                     if (this._requestTimeout > 0) {
                         timeoutId = setTimeout(() => {
-                            delete this._requestMap[requestId];
+                            delete this._idToRequest[requestId];
                             reject(ResponseError.fromCode(ResponseStatusCode.REQUEST_TIMEOUT));
                         }, this._requestTimeout);
                     }
-                    this._requestMap[requestId] = {
+                    this._idToRequest[requestId] = {
                         timeoutId,
                         resolve,
                         reject
@@ -120,12 +120,12 @@ export default class MessageService extends BaseService {
         if (isResponse) {
             const requestId = parseInt(notification.requestId);
             if (requestId) {
-                const cb = this._requestMap[requestId];
+                const cb = this._idToRequest[requestId];
                 if (cb) {
                     if (cb.timeoutId) {
                         clearTimeout(cb.timeoutId);
                     }
-                    delete this._requestMap[requestId];
+                    delete this._idToRequest[requestId];
                     if (notification.code) {
                         if (ResponseStatusCode.isSuccessCode(notification.code)) {
                             cb.resolve(notification);
@@ -147,13 +147,13 @@ export default class MessageService extends BaseService {
         let id;
         do {
             id = 1 + Math.floor(Math.random() * 9007199254740991);
-        } while (this._requestMap[id]);
+        } while (this._idToRequest[id]);
         return id;
     }
 
     private _rejectRequestPromises(error: ResponseError): void {
-        Object.values(this._requestMap).forEach(request => request.reject(error));
-        this._requestMap = {};
+        Object.values(this._idToRequest).forEach(request => request.reject(error));
+        this._idToRequest = {};
     }
 
     // Base methods

@@ -351,16 +351,16 @@ class GroupService(private val turmsClient: TurmsClient) {
             if (data.hasGroupJoinQuestionsWithVersion()) data.groupJoinQuestionsWithVersion else null
         }
 
-    suspend fun answerGroupQuestions(@NotEmpty questionIdAndAnswerMap: Map<Long, String>): GroupJoinQuestionsAnswerResult =
-        if (questionIdAndAnswerMap.isEmpty()) {
+    suspend fun answerGroupQuestions(@NotEmpty questionIdToAnswer: Map<Long, String>): GroupJoinQuestionsAnswerResult =
+        if (questionIdToAnswer.isEmpty()) {
             throw ResponseException(
                 ResponseStatusCode.ILLEGAL_ARGUMENT,
-                "questionIdAndAnswerMap must not be null or empty"
+                "questionIdToAnswer must not be null or empty"
             )
         } else turmsClient.driver
             .send(
                 CheckGroupJoinQuestionsAnswersRequest.newBuilder().apply {
-                    putAllQuestionIdAndAnswer(questionIdAndAnswerMap)
+                    putAllQuestionIdToAnswer(questionIdToAnswer)
                 }
             ).let {
                 val data: TurmsNotification.Data = it.data

@@ -58,7 +58,7 @@ public class UserPermissionGroupService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserPermissionGroupService.class);
 
-    private final Map<Long, UserPermissionGroup> userPermissionGroupMap = new ConcurrentHashMap<>(16);
+    private final Map<Long, UserPermissionGroup> idToPermissionGroup = new ConcurrentHashMap<>(16);
     private final Node node;
     private final UserPermissionGroupRepository userPermissionGroupRepository;
     private final UserService userService;
@@ -71,7 +71,7 @@ public class UserPermissionGroupService {
         this.userPermissionGroupRepository = userPermissionGroupRepository;
         this.userService = userService;
 
-        userPermissionGroupMap.putIfAbsent(
+        idToPermissionGroup.putIfAbsent(
                 DEFAULT_USER_PERMISSION_GROUP_ID,
                 new UserPermissionGroup(
                         DEFAULT_USER_PERMISSION_GROUP_ID,
@@ -80,18 +80,18 @@ public class UserPermissionGroupService {
                         Integer.MAX_VALUE,
                         Collections.emptyMap()));
         userPermissionGroupRepository.findAll()
-                .subscribe(userPermissionGroup -> userPermissionGroupMap.put(userPermissionGroup.getId(), userPermissionGroup));
+                .subscribe(userPermissionGroup -> idToPermissionGroup.put(userPermissionGroup.getId(), userPermissionGroup));
         userPermissionGroupRepository.watch(FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
                     OperationType operationType = event.getOperationType();
                     UserPermissionGroup userPermissionGroup = event.getFullDocument();
                     switch (operationType) {
-                        case INSERT, UPDATE, REPLACE -> userPermissionGroupMap.put(userPermissionGroup.getId(), userPermissionGroup);
+                        case INSERT, UPDATE, REPLACE -> idToPermissionGroup.put(userPermissionGroup.getId(), userPermissionGroup);
                         case DELETE -> {
                             long groupTypeId = ChangeStreamUtil.getIdAsLong(event.getDocumentKey());
-                            userPermissionGroupMap.remove(groupTypeId);
+                            idToPermissionGroup.remove(groupTypeId);
                         }
-                        case INVALIDATE -> userPermissionGroupMap.clear();
+                        case INVALIDATE -> idToPermissionGroup.clear();
                         default -> LOGGER.fatal("Detected an illegal operation on UserPermissionGroup collection: " + event);
                     }
                 })
@@ -101,7 +101,7 @@ public class UserPermissionGroupService {
     }
 
     public UserPermissionGroup getDefaultUserPermissionGroup() {
-        return userPermissionGroupMap.get(DEFAULT_USER_PERMISSION_GROUP_ID);
+        return idToPermissionGroup.get(DEFAULT_USER_PERMISSION_GROUP_ID);
     }
 
     public Flux<UserPermissionGroup> queryUserPermissionGroups(
@@ -116,12 +116,12 @@ public class UserPermissionGroupService {
             @NotNull Set<Long> creatableGroupTypeIds,
             @NotNull Integer ownedGroupLimit,
             @NotNull Integer ownedGroupLimitForEachGroupType,
-            @NotNull Map<Long, Integer> groupTypeLimitMap) {
+            @NotNull Map<Long, Integer> groupTypeIdToLimit) {
         try {
             Validator.notNull(creatableGroupTypeIds, "creatableGroupTypeIds");
             Validator.notNull(ownedGroupLimit, "ownedGroupLimit");
             Validator.notNull(ownedGroupLimitForEachGroupType, "ownedGroupLimitForEachGroupType");
-            Validator.notNull(groupTypeLimitMap, "groupTypeLimitMap");
+            Validator.notNull(groupTypeIdToLimit, "groupTypeIdToLimit");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -133,8 +133,8 @@ public class UserPermissionGroupService {
                 creatableGroupTypeIds,
                 ownedGroupLimit,
                 ownedGroupLimitForEachGroupType,
-                groupTypeLimitMap);
-        userPermissionGroupMap.put(groupId, userPermissionGroup);
+                groupTypeIdToLimit);
+        idToPermissionGroup.put(groupId, userPermissionGroup);
         return userPermissionGroupRepository.insert(userPermissionGroup)
                 .thenReturn(userPermissionGroup);
     }
@@ -144,7 +144,7 @@ public class UserPermissionGroupService {
             @Nullable Set<Long> creatableGroupTypeIds,
             @Nullable Integer ownedGroupLimit,
             @Nullable Integer ownedGroupLimitForEachGroupType,
-            @Nullable Map<Long, Integer> groupTypeLimitMap) {
+            @Nullable Map<Long, Integer> groupTypeIdToLimit) {
         try {
             Validator.notEmpty(groupIds, "groupIds");
         } catch (ResponseException e) {
@@ -154,14 +154,14 @@ public class UserPermissionGroupService {
                 creatableGroupTypeIds,
                 ownedGroupLimit,
                 ownedGroupLimitForEachGroupType,
-                groupTypeLimitMap)) {
+                groupTypeIdToLimit)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return userPermissionGroupRepository.updateUserPermissionGroups(groupIds,
                 creatableGroupTypeIds,
                 ownedGroupLimit,
                 ownedGroupLimitForEachGroupType,
-                groupTypeLimitMap);
+                groupTypeIdToLimit);
     }
 
     public Mono<DeleteResult> deleteUserPermissionGroups(@Nullable Set<Long> groupIds) {
@@ -173,10 +173,10 @@ public class UserPermissionGroupService {
                 .doOnNext(result -> {
                     if (groupIds != null) {
                         for (Long id : groupIds) {
-                            userPermissionGroupMap.remove(id);
+                            idToPermissionGroup.remove(id);
                         }
                     } else {
-                        userPermissionGroupMap.keySet()
+                        idToPermissionGroup.keySet()
                                 .removeIf(id -> !id.equals(DEFAULT_USER_PERMISSION_GROUP_ID));
                     }
                 });
@@ -188,10 +188,10 @@ public class UserPermissionGroupService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        UserPermissionGroup userPermissionGroup = userPermissionGroupMap.get(groupId);
+        UserPermissionGroup userPermissionGroup = idToPermissionGroup.get(groupId);
         if (userPermissionGroup == null) {
             return userPermissionGroupRepository.findById(groupId)
-                    .doOnNext(type -> userPermissionGroupMap.put(groupId, type));
+                    .doOnNext(type -> idToPermissionGroup.put(groupId, type));
         }
         return Mono.just(userPermissionGroup);
     }

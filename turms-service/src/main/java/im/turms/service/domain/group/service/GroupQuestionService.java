@@ -106,18 +106,18 @@ public class GroupQuestionService {
      * group join questions ids -> score
      */
     public Mono<Pair<List<Long>, Integer>> checkGroupQuestionAnswersAndCountScore(
-            @NotEmpty Set<@ValidGroupQuestionIdAndAnswer GroupQuestionIdAndAnswer> questionIdAndAnswers,
+            @NotEmpty Set<@ValidGroupQuestionIdAndAnswer GroupQuestionIdAndAnswer> questionIdAndAnswerPairs,
             @Nullable Long groupId) {
         try {
-            Validator.notEmpty(questionIdAndAnswers, "questionIdAndAnswers");
-            for (GroupQuestionIdAndAnswer idAndAnswer : questionIdAndAnswers) {
+            Validator.notEmpty(questionIdAndAnswerPairs, "questionIdAndAnswerPairs");
+            for (GroupQuestionIdAndAnswer idAndAnswer : questionIdAndAnswerPairs) {
                 DataValidator.validGroupQuestionIdAndAnswer(idAndAnswer);
             }
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        List<Mono<Pair<Long, Integer>>> checks = new ArrayList<>(questionIdAndAnswers.size());
-        for (GroupQuestionIdAndAnswer entry : questionIdAndAnswers) {
+        List<Mono<Pair<Long, Integer>>> checks = new ArrayList<>(questionIdAndAnswerPairs.size());
+        for (GroupQuestionIdAndAnswer entry : questionIdAndAnswerPairs) {
             checks.add(checkGroupQuestionAnswerAndGetScore(entry.id(), entry.answer(), groupId)
                     .map(score -> Pair.of(entry.id(), score)));
         }
@@ -136,17 +136,17 @@ public class GroupQuestionService {
 
     public Mono<GroupJoinQuestionsAnswerResult> checkGroupQuestionAnswerAndJoin(
             @NotNull Long requesterId,
-            @NotEmpty Set<@ValidGroupQuestionIdAndAnswer GroupQuestionIdAndAnswer> questionIdAndAnswers) {
+            @NotEmpty Set<@ValidGroupQuestionIdAndAnswer GroupQuestionIdAndAnswer> questionIdAndAnswerPairs) {
         try {
             Validator.notNull(requesterId, "requesterId");
-            Validator.notEmpty(questionIdAndAnswers, "questionIdAndAnswers");
-            for (GroupQuestionIdAndAnswer idAndAnswer : questionIdAndAnswers) {
+            Validator.notEmpty(questionIdAndAnswerPairs, "questionIdAndAnswerPairs");
+            for (GroupQuestionIdAndAnswer idAndAnswer : questionIdAndAnswerPairs) {
                 DataValidator.validGroupQuestionIdAndAnswer(idAndAnswer);
             }
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Long firstQuestionId = questionIdAndAnswers.iterator().next().id();
+        Long firstQuestionId = questionIdAndAnswerPairs.iterator().next().id();
         return queryGroupId(firstQuestionId)
                 .flatMap(groupId -> groupBlocklistService.isBlocked(groupId, requesterId)
                         .flatMap(isBlocked -> isBlocked
@@ -156,7 +156,7 @@ public class GroupQuestionService {
                                 ? Mono.error(ResponseException.get(ResponseStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION))
                                 : groupService.isGroupActiveAndNotDeleted(groupId))
                         .flatMap(isActive -> isActive
-                                ? checkGroupQuestionAnswersAndCountScore(questionIdAndAnswers, groupId)
+                                ? checkGroupQuestionAnswersAndCountScore(questionIdAndAnswerPairs, groupId)
                                 : Mono.error(ResponseException.get(ResponseStatusCode.ANSWER_QUESTION_OF_INACTIVE_GROUP)))
                         .flatMap(idsAndScore -> groupService.queryGroupMinimumScore(groupId)
                                 .flatMap(minimumScore -> idsAndScore.getRight() >= minimumScore

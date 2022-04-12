@@ -114,7 +114,7 @@ public class BlocklistServiceManager<T> {
     /**
      * Used to check if a user is blocked or not fastly
      */
-    private final ConcurrentHashMap<T, Long> blocklist;
+    private final ConcurrentHashMap<T, Long> blockedClientIdToBlockEndTime;
     /**
      * Used to remove the local expired blocked clients quickly
      * so that we can run eviction more frequently without worrying
@@ -166,7 +166,7 @@ public class BlocklistServiceManager<T> {
             }
             return i;
         });
-        blocklist = new ConcurrentHashMap<>(1024);
+        blockedClientIdToBlockEndTime = new ConcurrentHashMap<>(1024);
 
         try {
             resetAndSyncAllBlockedClients(false)
@@ -208,7 +208,7 @@ public class BlocklistServiceManager<T> {
         int i = 2;
         for (T targetId : targetIds) {
             BlockedClient blockedClient = new BlockedClient(targetId, blockEndTimeMillis);
-            blocklist.put(targetId, blockEndTimeMillis);
+            blockedClientIdToBlockEndTime.put(targetId, blockEndTimeMillis);
             blockedClientSkipList.add(blockedClient);
             triggerOnTargetBlocked(targetId);
             args[i] = encodeId(targetId);
@@ -227,7 +227,7 @@ public class BlocklistServiceManager<T> {
             return;
         }
         T targetId = (T) blockedClient.id();
-        blocklist.put(targetId, blockEndTimeInMillis);
+        blockedClientIdToBlockEndTime.put(targetId, blockEndTimeInMillis);
         blockedClientSkipList.add(blockedClient);
         triggerOnTargetBlocked(targetId);
     }
@@ -254,7 +254,7 @@ public class BlocklistServiceManager<T> {
     }
 
     private void removeLocalBlockedClient(T targetId) {
-        Long blockEndTime = blocklist.remove(targetId);
+        Long blockEndTime = blockedClientIdToBlockEndTime.remove(targetId);
         if (blockEndTime == null) {
             return;
         }
@@ -263,7 +263,7 @@ public class BlocklistServiceManager<T> {
     }
 
     public Mono<Void> unblockAll() {
-        blocklist.clear();
+        blockedClientIdToBlockEndTime.clear();
         blockedClientSkipList.clear();
         return redisClient.eval(evictAllBlockedClients, getBlocklistKey());
     }
@@ -276,7 +276,7 @@ public class BlocklistServiceManager<T> {
             if (blockedClient.blockEndTime() < now) {
                 iterator.remove();
                 T id = (T) blockedClient.id();
-                blocklist.remove(id, blockedClient.blockEndTime());
+                blockedClientIdToBlockEndTime.remove(id, blockedClient.blockEndTime());
             } else {
                 break;
             }
@@ -284,16 +284,16 @@ public class BlocklistServiceManager<T> {
     }
 
     public int count() {
-        return blocklist.size();
+        return blockedClientIdToBlockEndTime.size();
     }
 
     public boolean isTargetBlocked(T target) {
-        Long blockEndTime = blocklist.get(target);
+        Long blockEndTime = blockedClientIdToBlockEndTime.get(target);
         if (blockEndTime == null) {
             return false;
         }
         if (blockEndTime < System.currentTimeMillis()) {
-            blocklist.remove(target, blockEndTime);
+            blockedClientIdToBlockEndTime.remove(target, blockEndTime);
             blockedClientSkipList.remove(new BlockedClient(target, blockEndTime));
             return false;
         }
@@ -301,12 +301,12 @@ public class BlocklistServiceManager<T> {
     }
 
     public BlockedClient getBlockedClient(T target) {
-        Long blockEndTime = blocklist.get(target);
+        Long blockEndTime = blockedClientIdToBlockEndTime.get(target);
         if (blockEndTime == null) {
             return null;
         }
         if (blockEndTime < System.currentTimeMillis()) {
-            blocklist.remove(target, blockEndTime);
+            blockedClientIdToBlockEndTime.remove(target, blockEndTime);
             blockedClientSkipList.remove(new BlockedClient(target, blockEndTime));
             return null;
         }
@@ -315,12 +315,12 @@ public class BlocklistServiceManager<T> {
 
     public List<BlockedClient> getBlockedClients(int page, int size) {
         int offset = size * page;
-        size = Math.min(size, blocklist.size() - offset);
+        size = Math.min(size, blockedClientIdToBlockEndTime.size() - offset);
         if (size <= 0) {
             return Collections.emptyList();
         }
         List<BlockedClient> blockedClients = new LinkedList<>();
-        Iterator<Map.Entry<T, Long>> iterator = blocklist.entrySet().iterator();
+        Iterator<Map.Entry<T, Long>> iterator = blockedClientIdToBlockEndTime.entrySet().iterator();
         long now = System.currentTimeMillis();
         int i = 0;
         long blockEndTime;
@@ -386,7 +386,7 @@ public class BlocklistServiceManager<T> {
             return Mono.empty();
         }
         LOGGER.info("Starting resetting and synchronizing blocked clients");
-        blocklist.clear();
+        blockedClientIdToBlockEndTime.clear();
         blockedClientSkipList.clear();
         localTimestamp = UNINITIALIZED_ID;
         localLogId = UNINITIALIZED_ID;

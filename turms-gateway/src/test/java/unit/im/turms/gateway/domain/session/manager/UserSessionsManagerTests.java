@@ -64,9 +64,9 @@ class UserSessionsManagerTests {
         NetConnection connection = mock(NetConnection.class);
         manager.getSession(deviceType).setConnection(connection, new ByteArrayWrapper(new byte[]{}));
 
-        assertThat(manager.getSessionMap()).hasSize(1);
+        assertThat(manager.getDeviceTypeToSession()).hasSize(1);
         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.SERVER_CLOSED));
-        assertThat(manager.getSessionMap()).isEmpty();
+        assertThat(manager.getDeviceTypeToSession()).isEmpty();
     }
 
     @Test
@@ -98,7 +98,7 @@ class UserSessionsManagerTests {
         manager.addSessionIfAbsent(version, DeviceType.ANDROID, null, null);
         manager.addSessionIfAbsent(version, DeviceType.IOS, null, null);
         manager.addSessionIfAbsent(version, DeviceType.DESKTOP, null, null);
-        assertThat(manager.getSessionsNumber()).isEqualTo(3);
+        assertThat(manager.countSessions()).isEqualTo(3);
     }
 
     @Test

@@ -57,7 +57,7 @@ class MessageServiceTests: XCTestCase {
     // Util
 
     func test_generateLocationRecord() {
-        let data = MessageService.generateLocationRecord(latitude: 1, longitude: 1, locationName: "name", address: "address")
+        let data = MessageService.generateLocationRecord(latitude: 1, longitude: 1, details: ["name": "value"])
         XCTAssertNotNil(data)
     }
 

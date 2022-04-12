@@ -270,9 +270,9 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     }
 
     private Mono<Void> ensureIndexesAndShard() {
-        Multimap<TurmsMongoClient, MongoEntity<?>> entityMap = HashMultimap.create(clients.size(), 8);
+        Multimap<TurmsMongoClient, MongoEntity<?>> clientToEntities = HashMultimap.create(clients.size(), 8);
         for (TurmsMongoClient client : clients) {
-            entityMap.putAll(client, client.getRegisteredEntities());
+            clientToEntities.putAll(client, client.getRegisteredEntities());
         }
         BiPredicate<Class<?>, CompoundIndex> customCompoundIndexFilter = (entityClass, index) -> {
             if (entityClass == Message.class) {
@@ -324,7 +324,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 throw new IllegalStateException(message);
             }
         };
-        return Mono.whenDelayError(entityMap.asMap().entrySet().stream()
+        return Mono.whenDelayError(clientToEntities.asMap().entrySet().stream()
                 .map(entry -> entry.getKey().ensureIndexesAndShard(entry.getValue().stream()
                                 .map(MongoEntity::entityClass)
                                 .collect(Collectors.toList()),
@@ -475,12 +475,12 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         if (tags.isEmpty()) {
             return true;
         }
-        Map<String, Tag> tagMap = tags.stream().collect(Collectors.toMap(Tag::tag, tag -> tag));
+        Map<String, Tag> nameToTag = tags.stream().collect(Collectors.toMap(Tag::tag, tag -> tag));
         String creationDateFieldName = entity.zone().creationDateFieldName();
         long now = System.currentTimeMillis();
         long elapsedTime = 0;
         for (Pair<String, StorageTierProperties> pair : propertiesPairs) {
-            Tag tag = tagMap.get(pair.getFirst());
+            Tag tag = nameToTag.get(pair.getFirst());
             if (tag == null) {
                 return true;
             }

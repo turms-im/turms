@@ -28,12 +28,13 @@ import java.util.Set;
  * @author James Chen
  */
 public record UserSessionsStatus(
+        Long userId,
         UserStatus userStatus,
-        Map<DeviceType, String> nodeIdByDeviceTypeMap
+        Map<DeviceType, String> deviceTypeToNodeId
 ) {
 
     public String getNodeIdByDeviceType(DeviceType deviceType) {
-        return nodeIdByDeviceTypeMap.get(deviceType);
+        return deviceTypeToNodeId.get(deviceType);
     }
 
     public UserStatus getUserStatus(boolean convertInvisibleToOffline) {
@@ -44,7 +45,7 @@ public record UserSessionsStatus(
 
     @JsonIgnore
     public Set<DeviceType> getLoggedInDeviceTypes() {
-        return nodeIdByDeviceTypeMap.keySet();
+        return deviceTypeToNodeId.keySet();
     }
 
 }

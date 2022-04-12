@@ -73,15 +73,15 @@ private static final long serialVersionUID = 0L;
           }
           case 18: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              memberIdAndReadDate_ = com.google.protobuf.MapField.newMapField(
-                  MemberIdAndReadDateDefaultEntryHolder.defaultEntry);
+              memberIdToReadDate_ = com.google.protobuf.MapField.newMapField(
+                  MemberIdToReadDateDefaultEntryHolder.defaultEntry);
               mutable_bitField0_ |= 0x00000001;
             }
             com.google.protobuf.MapEntry<java.lang.Long, java.lang.Long>
-            memberIdAndReadDate__ = input.readMessage(
-                MemberIdAndReadDateDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-            memberIdAndReadDate_.getMutableMap().put(
-                memberIdAndReadDate__.getKey(), memberIdAndReadDate__.getValue());
+            memberIdToReadDate__ = input.readMessage(
+                MemberIdToReadDateDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+            memberIdToReadDate_.getMutableMap().put(
+                memberIdToReadDate__.getKey(), memberIdToReadDate__.getValue());
             break;
           }
           default: {
@@ -114,7 +114,7 @@ private static final long serialVersionUID = 0L;
       int number) {
     switch (number) {
       case 2:
-        return internalGetMemberIdAndReadDate();
+        return internalGetMemberIdToReadDate();
       default:
         throw new RuntimeException(
             "Invalid map field number: " + number);
@@ -139,81 +139,81 @@ private static final long serialVersionUID = 0L;
     return groupId_;
   }
 
-  public static final int MEMBER_ID_AND_READ_DATE_FIELD_NUMBER = 2;
-  private static final class MemberIdAndReadDateDefaultEntryHolder {
+  public static final int MEMBER_ID_TO_READ_DATE_FIELD_NUMBER = 2;
+  private static final class MemberIdToReadDateDefaultEntryHolder {
     static final com.google.protobuf.MapEntry<
         java.lang.Long, java.lang.Long> defaultEntry =
             com.google.protobuf.MapEntry
             .<java.lang.Long, java.lang.Long>newDefaultInstance(
-                im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_MemberIdAndReadDateEntry_descriptor, 
+                im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_MemberIdToReadDateEntry_descriptor, 
                 com.google.protobuf.WireFormat.FieldType.INT64,
                 0L,
                 com.google.protobuf.WireFormat.FieldType.INT64,
                 0L);
   }
   private com.google.protobuf.MapField<
-      java.lang.Long, java.lang.Long> memberIdAndReadDate_;
+      java.lang.Long, java.lang.Long> memberIdToReadDate_;
   private com.google.protobuf.MapField<java.lang.Long, java.lang.Long>
-  internalGetMemberIdAndReadDate() {
-    if (memberIdAndReadDate_ == null) {
+  internalGetMemberIdToReadDate() {
+    if (memberIdToReadDate_ == null) {
       return com.google.protobuf.MapField.emptyMapField(
-          MemberIdAndReadDateDefaultEntryHolder.defaultEntry);
+          MemberIdToReadDateDefaultEntryHolder.defaultEntry);
     }
-    return memberIdAndReadDate_;
+    return memberIdToReadDate_;
   }
 
-  public int getMemberIdAndReadDateCount() {
-    return internalGetMemberIdAndReadDate().getMap().size();
+  public int getMemberIdToReadDateCount() {
+    return internalGetMemberIdToReadDate().getMap().size();
   }
   /**
-   * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+   * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
    */
 
   @java.lang.Override
-  public boolean containsMemberIdAndReadDate(
+  public boolean containsMemberIdToReadDate(
       long key) {
     
-    return internalGetMemberIdAndReadDate().getMap().containsKey(key);
+    return internalGetMemberIdToReadDate().getMap().containsKey(key);
   }
   /**
-   * Use {@link #getMemberIdAndReadDateMap()} instead.
+   * Use {@link #getMemberIdToReadDateMap()} instead.
    */
   @java.lang.Override
   @java.lang.Deprecated
-  public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdAndReadDate() {
-    return getMemberIdAndReadDateMap();
+  public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdToReadDate() {
+    return getMemberIdToReadDateMap();
   }
   /**
-   * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+   * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
    */
   @java.lang.Override
 
-  public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdAndReadDateMap() {
-    return internalGetMemberIdAndReadDate().getMap();
+  public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdToReadDateMap() {
+    return internalGetMemberIdToReadDate().getMap();
   }
   /**
-   * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+   * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
    */
   @java.lang.Override
 
-  public long getMemberIdAndReadDateOrDefault(
+  public long getMemberIdToReadDateOrDefault(
       long key,
       long defaultValue) {
     
     java.util.Map<java.lang.Long, java.lang.Long> map =
-        internalGetMemberIdAndReadDate().getMap();
+        internalGetMemberIdToReadDate().getMap();
     return map.containsKey(key) ? map.get(key) : defaultValue;
   }
   /**
-   * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+   * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
    */
   @java.lang.Override
 
-  public long getMemberIdAndReadDateOrThrow(
+  public long getMemberIdToReadDateOrThrow(
       long key) {
     
     java.util.Map<java.lang.Long, java.lang.Long> map =
-        internalGetMemberIdAndReadDate().getMap();
+        internalGetMemberIdToReadDate().getMap();
     if (!map.containsKey(key)) {
       throw new java.lang.IllegalArgumentException();
     }
@@ -240,8 +240,8 @@ private static final long serialVersionUID = 0L;
     com.google.protobuf.GeneratedMessageV3
       .serializeLongMapTo(
         output,
-        internalGetMemberIdAndReadDate(),
-        MemberIdAndReadDateDefaultEntryHolder.defaultEntry,
+        internalGetMemberIdToReadDate(),
+        MemberIdToReadDateDefaultEntryHolder.defaultEntry,
         2);
     unknownFields.writeTo(output);
   }
@@ -257,14 +257,14 @@ private static final long serialVersionUID = 0L;
         .computeInt64Size(1, groupId_);
     }
     for (java.util.Map.Entry<java.lang.Long, java.lang.Long> entry
-         : internalGetMemberIdAndReadDate().getMap().entrySet()) {
+         : internalGetMemberIdToReadDate().getMap().entrySet()) {
       com.google.protobuf.MapEntry<java.lang.Long, java.lang.Long>
-      memberIdAndReadDate__ = MemberIdAndReadDateDefaultEntryHolder.defaultEntry.newBuilderForType()
+      memberIdToReadDate__ = MemberIdToReadDateDefaultEntryHolder.defaultEntry.newBuilderForType()
           .setKey(entry.getKey())
           .setValue(entry.getValue())
           .build();
       size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, memberIdAndReadDate__);
+          .computeMessageSize(2, memberIdToReadDate__);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -283,8 +283,8 @@ private static final long serialVersionUID = 0L;
 
     if (getGroupId()
         != other.getGroupId()) return false;
-    if (!internalGetMemberIdAndReadDate().equals(
-        other.internalGetMemberIdAndReadDate())) return false;
+    if (!internalGetMemberIdToReadDate().equals(
+        other.internalGetMemberIdToReadDate())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -299,9 +299,9 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + GROUP_ID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getGroupId());
-    if (!internalGetMemberIdAndReadDate().getMap().isEmpty()) {
-      hash = (37 * hash) + MEMBER_ID_AND_READ_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + internalGetMemberIdAndReadDate().hashCode();
+    if (!internalGetMemberIdToReadDate().getMap().isEmpty()) {
+      hash = (37 * hash) + MEMBER_ID_TO_READ_DATE_FIELD_NUMBER;
+      hash = (53 * hash) + internalGetMemberIdToReadDate().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -415,7 +415,7 @@ private static final long serialVersionUID = 0L;
         int number) {
       switch (number) {
         case 2:
-          return internalGetMemberIdAndReadDate();
+          return internalGetMemberIdToReadDate();
         default:
           throw new RuntimeException(
               "Invalid map field number: " + number);
@@ -426,7 +426,7 @@ private static final long serialVersionUID = 0L;
         int number) {
       switch (number) {
         case 2:
-          return internalGetMutableMemberIdAndReadDate();
+          return internalGetMutableMemberIdToReadDate();
         default:
           throw new RuntimeException(
               "Invalid map field number: " + number);
@@ -460,7 +460,7 @@ private static final long serialVersionUID = 0L;
       super.clear();
       groupId_ = 0L;
 
-      internalGetMutableMemberIdAndReadDate().clear();
+      internalGetMutableMemberIdToReadDate().clear();
       return this;
     }
 
@@ -489,8 +489,8 @@ private static final long serialVersionUID = 0L;
       im.turms.server.common.access.client.dto.model.conversation.GroupConversation result = new im.turms.server.common.access.client.dto.model.conversation.GroupConversation(this);
       int from_bitField0_ = bitField0_;
       result.groupId_ = groupId_;
-      result.memberIdAndReadDate_ = internalGetMemberIdAndReadDate();
-      result.memberIdAndReadDate_.makeImmutable();
+      result.memberIdToReadDate_ = internalGetMemberIdToReadDate();
+      result.memberIdToReadDate_.makeImmutable();
       onBuilt();
       return result;
     }
@@ -542,8 +542,8 @@ private static final long serialVersionUID = 0L;
       if (other.getGroupId() != 0L) {
         setGroupId(other.getGroupId());
       }
-      internalGetMutableMemberIdAndReadDate().mergeFrom(
-          other.internalGetMemberIdAndReadDate());
+      internalGetMutableMemberIdToReadDate().mergeFrom(
+          other.internalGetMemberIdToReadDate());
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -606,99 +606,99 @@ private static final long serialVersionUID = 0L;
     }
 
     private com.google.protobuf.MapField<
-        java.lang.Long, java.lang.Long> memberIdAndReadDate_;
+        java.lang.Long, java.lang.Long> memberIdToReadDate_;
     private com.google.protobuf.MapField<java.lang.Long, java.lang.Long>
-    internalGetMemberIdAndReadDate() {
-      if (memberIdAndReadDate_ == null) {
+    internalGetMemberIdToReadDate() {
+      if (memberIdToReadDate_ == null) {
         return com.google.protobuf.MapField.emptyMapField(
-            MemberIdAndReadDateDefaultEntryHolder.defaultEntry);
+            MemberIdToReadDateDefaultEntryHolder.defaultEntry);
       }
-      return memberIdAndReadDate_;
+      return memberIdToReadDate_;
     }
     private com.google.protobuf.MapField<java.lang.Long, java.lang.Long>
-    internalGetMutableMemberIdAndReadDate() {
+    internalGetMutableMemberIdToReadDate() {
       onChanged();;
-      if (memberIdAndReadDate_ == null) {
-        memberIdAndReadDate_ = com.google.protobuf.MapField.newMapField(
-            MemberIdAndReadDateDefaultEntryHolder.defaultEntry);
+      if (memberIdToReadDate_ == null) {
+        memberIdToReadDate_ = com.google.protobuf.MapField.newMapField(
+            MemberIdToReadDateDefaultEntryHolder.defaultEntry);
       }
-      if (!memberIdAndReadDate_.isMutable()) {
-        memberIdAndReadDate_ = memberIdAndReadDate_.copy();
+      if (!memberIdToReadDate_.isMutable()) {
+        memberIdToReadDate_ = memberIdToReadDate_.copy();
       }
-      return memberIdAndReadDate_;
+      return memberIdToReadDate_;
     }
 
-    public int getMemberIdAndReadDateCount() {
-      return internalGetMemberIdAndReadDate().getMap().size();
+    public int getMemberIdToReadDateCount() {
+      return internalGetMemberIdToReadDate().getMap().size();
     }
     /**
-     * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+     * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
 
     @java.lang.Override
-    public boolean containsMemberIdAndReadDate(
+    public boolean containsMemberIdToReadDate(
         long key) {
       
-      return internalGetMemberIdAndReadDate().getMap().containsKey(key);
+      return internalGetMemberIdToReadDate().getMap().containsKey(key);
     }
     /**
-     * Use {@link #getMemberIdAndReadDateMap()} instead.
+     * Use {@link #getMemberIdToReadDateMap()} instead.
      */
     @java.lang.Override
     @java.lang.Deprecated
-    public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdAndReadDate() {
-      return getMemberIdAndReadDateMap();
+    public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdToReadDate() {
+      return getMemberIdToReadDateMap();
     }
     /**
-     * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+     * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
     @java.lang.Override
 
-    public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdAndReadDateMap() {
-      return internalGetMemberIdAndReadDate().getMap();
+    public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdToReadDateMap() {
+      return internalGetMemberIdToReadDate().getMap();
     }
     /**
-     * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+     * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
     @java.lang.Override
 
-    public long getMemberIdAndReadDateOrDefault(
+    public long getMemberIdToReadDateOrDefault(
         long key,
         long defaultValue) {
       
       java.util.Map<java.lang.Long, java.lang.Long> map =
-          internalGetMemberIdAndReadDate().getMap();
+          internalGetMemberIdToReadDate().getMap();
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+     * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
     @java.lang.Override
 
-    public long getMemberIdAndReadDateOrThrow(
+    public long getMemberIdToReadDateOrThrow(
         long key) {
       
       java.util.Map<java.lang.Long, java.lang.Long> map =
-          internalGetMemberIdAndReadDate().getMap();
+          internalGetMemberIdToReadDate().getMap();
       if (!map.containsKey(key)) {
         throw new java.lang.IllegalArgumentException();
       }
       return map.get(key);
     }
 
-    public Builder clearMemberIdAndReadDate() {
-      internalGetMutableMemberIdAndReadDate().getMutableMap()
+    public Builder clearMemberIdToReadDate() {
+      internalGetMutableMemberIdToReadDate().getMutableMap()
           .clear();
       return this;
     }
     /**
-     * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+     * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
 
-    public Builder removeMemberIdAndReadDate(
+    public Builder removeMemberIdToReadDate(
         long key) {
       
-      internalGetMutableMemberIdAndReadDate().getMutableMap()
+      internalGetMutableMemberIdToReadDate().getMutableMap()
           .remove(key);
       return this;
     }
@@ -707,28 +707,28 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Deprecated
     public java.util.Map<java.lang.Long, java.lang.Long>
-    getMutableMemberIdAndReadDate() {
-      return internalGetMutableMemberIdAndReadDate().getMutableMap();
+    getMutableMemberIdToReadDate() {
+      return internalGetMutableMemberIdToReadDate().getMutableMap();
     }
     /**
-     * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+     * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
-    public Builder putMemberIdAndReadDate(
+    public Builder putMemberIdToReadDate(
         long key,
         long value) {
       
       
-      internalGetMutableMemberIdAndReadDate().getMutableMap()
+      internalGetMutableMemberIdToReadDate().getMutableMap()
           .put(key, value);
       return this;
     }
     /**
-     * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+     * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
 
-    public Builder putAllMemberIdAndReadDate(
+    public Builder putAllMemberIdToReadDate(
         java.util.Map<java.lang.Long, java.lang.Long> values) {
-      internalGetMutableMemberIdAndReadDate().getMutableMap()
+      internalGetMutableMemberIdToReadDate().getMutableMap()
           .putAll(values);
       return this;
     }

@@ -105,7 +105,7 @@ public class OutboundMessageService {
             @NotNull ByteBuf notificationData,
             @NotNull Long recipientId,
             @NotNull DeviceType excludedDeviceType) {
-        return userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
+        return userStatusService.getDeviceTypeToNodeIdMapByUserId(recipientId)
                 .doOnError(t -> notificationData.release())
                 .flatMap(deviceTypeAndNodeIdMap -> {
                     Set<String> nodeIds = CollectionUtil.newSetWithExpectedSize(deviceTypeAndNodeIdMap.size());
@@ -144,7 +144,7 @@ public class OutboundMessageService {
         }
         List<Mono<RecipientAndNodeIds>> monos = new ArrayList<>(recipientIdCount);
         for (Long recipientId : recipientIds) {
-            monos.add(userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
+            monos.add(userStatusService.getDeviceTypeToNodeIdMapByUserId(recipientId)
                     .map(map -> new RecipientAndNodeIds(recipientId, map.values())));
         }
         return Flux.merge(monos)
@@ -162,14 +162,14 @@ public class OutboundMessageService {
                     }
                     int expectedMembersCount = Math.min(gatewayMemberCount, recipientIdCount);
                     int expectedRecipientCountPerMember = Math.max(1, recipientIdCount / expectedMembersCount);
-                    SetMultimap<String, Long> userIdsByNodeId =
+                    SetMultimap<String, Long> nodeIdToUserIds =
                             HashMultimap.create(expectedMembersCount, expectedRecipientCountPerMember);
                     for (RecipientAndNodeIds pair : pairs) {
                         for (String nodeId : pair.nodeIds) {
-                            userIdsByNodeId.put(nodeId, pair.recipientId);
+                            nodeIdToUserIds.put(nodeId, pair.recipientId);
                         }
                     }
-                    return forwardClientMessageToNodes(messageData, userIdsByNodeId);
+                    return forwardClientMessageToNodes(messageData, nodeIdToUserIds);
                 });
     }
 
@@ -179,7 +179,7 @@ public class OutboundMessageService {
     private Mono<Boolean> forwardClientMessageByRecipientId(
             @NotNull ByteBuf notificationData,
             @NotNull Long recipientId) {
-        return userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
+        return userStatusService.getDeviceTypeToNodeIdMapByUserId(recipientId)
                 .doOnError(t -> notificationData.release())
                 .flatMap(deviceTypeAndNodeIdMap -> {
                     Set<String> nodeIds = CollectionUtil.newSet(deviceTypeAndNodeIdMap.values());
@@ -197,8 +197,8 @@ public class OutboundMessageService {
 
     // Network transmission methods
 
-    private Mono<Boolean> forwardClientMessageToNodes(ByteBuf messageData, SetMultimap<String, Long> recipientIdsByNodeId) {
-        Multiset<String> nodeIds = recipientIdsByNodeId.keys();
+    private Mono<Boolean> forwardClientMessageToNodes(ByteBuf messageData, SetMultimap<String, Long> nodeIdToRecipientIds) {
+        Multiset<String> nodeIds = nodeIdToRecipientIds.keys();
         int size = nodeIds.size();
         if (size == 0) {
             messageData.release();
@@ -206,12 +206,12 @@ public class OutboundMessageService {
         }
         if (size == 1) {
             String nodeId = nodeIds.iterator().next();
-            return forwardClientMessageToNode(messageData, nodeId, recipientIdsByNodeId.get(nodeId));
+            return forwardClientMessageToNode(messageData, nodeId, nodeIdToRecipientIds.get(nodeId));
         }
         List<Mono<Boolean>> monos = new ArrayList<>(size);
         messageData.retain(size);
         for (String nodeId : nodeIds) {
-            Set<Long> recipientIds = recipientIdsByNodeId.get(nodeId);
+            Set<Long> recipientIds = nodeIdToRecipientIds.get(nodeId);
             monos.add(forwardClientMessageToNode(messageData, nodeId, recipientIds));
         }
         return ReactorUtil.atLeastOneTrue(monos)

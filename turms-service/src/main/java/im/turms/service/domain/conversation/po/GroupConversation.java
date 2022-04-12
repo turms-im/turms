@@ -42,11 +42,11 @@ public final class GroupConversation extends BaseEntity {
     @Id
     private final Long groupId;
 
-    @Field(Fields.MEMBER_ID_AND_READ_DATE)
-    private final Map<Long, Date> memberIdAndReadDate;
+    @Field(Fields.MEMBER_ID_TO_READ_DATE)
+    private final Map<Long, Date> memberIdToReadDate;
 
     public static final class Fields {
-        public static final String MEMBER_ID_AND_READ_DATE = "mr";
+        public static final String MEMBER_ID_TO_READ_DATE = "mr";
 
         private Fields() {
         }

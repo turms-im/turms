@@ -103,8 +103,13 @@ public class SessionService implements ISessionService {
 
     private int closeIdleSessionAfterSeconds;
 
-    private final ConcurrentHashMap<Long, UserSessionsManager> sessionsManagerByUserId;
-    private final ConcurrentHashMap<ByteArrayWrapper, ConcurrentLinkedQueue<UserSession>> sessionsByIp;
+    private final ConcurrentHashMap<Long, UserSessionsManager> userIdToSessionsManager;
+    /**
+     * We don't use "NonBlockingHashMapLong" because
+     * we need to support IPv6 addresses which takes 16 bytes per address.
+     * So we can only eliminate unnecessary objects after Valhalla publish value objects.
+     */
+    private final ConcurrentHashMap<ByteArrayWrapper, ConcurrentLinkedQueue<UserSession>> ipToSessions;
 
     private final List<Consumer<UserSession>> onSessionClosedListeners = new LinkedList<>();
 
@@ -127,15 +132,15 @@ public class SessionService implements ISessionService {
         this.userStatusService = userStatusService;
         this.userSimultaneousLoginService = userSimultaneousLoginService;
         TurmsProperties turmsProperties = node.getSharedProperties();
-        sessionsManagerByUserId = new ConcurrentHashMap<>(4096);
-        sessionsByIp = new ConcurrentHashMap<>(4096);
+        userIdToSessionsManager = new ConcurrentHashMap<>(4096);
+        ipToSessions = new ConcurrentHashMap<>(4096);
 
         SessionProperties sessionProperties = turmsProperties.getGateway().getSession();
         closeIdleSessionAfterSeconds = sessionProperties.getCloseIdleSessionAfterSeconds();
 
         heartbeatManager = new HeartbeatManager(this,
                 userStatusService,
-                sessionsManagerByUserId,
+                userIdToSessionsManager,
                 sessionProperties.getClientHeartbeatIntervalSeconds(),
                 closeIdleSessionAfterSeconds,
                 sessionProperties.getMinHeartbeatIntervalSeconds(),
@@ -153,7 +158,7 @@ public class SessionService implements ISessionService {
 
         MeterRegistry registry = metricsService.getRegistry();
         loggedInUsersCounter = registry.counter(LOGGED_IN_USERS_COUNTER);
-        registry.gaugeMapSize(ONLINE_USERS_GAUGE, Tags.empty(), sessionsManagerByUserId);
+        registry.gaugeMapSize(ONLINE_USERS_GAUGE, Tags.empty(), userIdToSessionsManager);
     }
 
     @PreDestroy
@@ -260,7 +265,7 @@ public class SessionService implements ISessionService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Queue<UserSession> sessions = sessionsByIp.get(new ByteArrayWrapper(ip));
+        Queue<UserSession> sessions = ipToSessions.get(new ByteArrayWrapper(ip));
         Iterator<UserSession> iterator = sessions.iterator();
         if (!iterator.hasNext()) {
             return PublisherPool.FALSE;
@@ -387,7 +392,7 @@ public class SessionService implements ISessionService {
                         manager.setDeviceOffline(session.getDeviceType(), closeReason);
                         ByteArrayWrapper ip = session.getIp();
                         if (ip != null) {
-                            sessionsByIp.computeIfPresent(ip, (key, sessions) -> sessions.remove(session)
+                            ipToSessions.computeIfPresent(ip, (key, sessions) -> sessions.remove(session)
                                     ? (sessions.isEmpty() ? null : sessions)
                                     : sessions);
                         }
@@ -408,7 +413,7 @@ public class SessionService implements ISessionService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Set<Map.Entry<Long, UserSessionsManager>> entries = sessionsManagerByUserId.entrySet();
+        Set<Map.Entry<Long, UserSessionsManager>> entries = userIdToSessionsManager.entrySet();
         List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
         for (Map.Entry<Long, UserSessionsManager> entry : entries) {
             Long userId = entry.getKey();
@@ -526,24 +531,24 @@ public class SessionService implements ISessionService {
     @Nullable
     public UserSessionsManager getUserSessionsManager(@NotNull Long userId) {
         Validator.notNull(userId, "userId");
-        return sessionsManagerByUserId.get(userId);
+        return userIdToSessionsManager.get(userId);
     }
 
     @Nullable
     public UserSession getLocalUserSession(@NotNull Long userId, @NotNull DeviceType deviceType) {
         Validator.notNull(userId, "userId");
         Validator.notNull(deviceType, "deviceType");
-        UserSessionsManager userSessionsManager = sessionsManagerByUserId.get(userId);
+        UserSessionsManager userSessionsManager = userIdToSessionsManager.get(userId);
         return userSessionsManager == null ? null : userSessionsManager.getSession(deviceType);
     }
 
     @Nullable
     public Queue<UserSession> getLocalUserSession(ByteArrayWrapper ip) {
-        return sessionsByIp.get(ip);
+        return ipToSessions.get(ip);
     }
 
     public int countLocalOnlineUsers() {
-        return sessionsManagerByUserId.size();
+        return userIdToSessionsManager.size();
     }
 
     private Mono<Boolean> disconnectConflictedDeviceTypes(@NotNull Long userId,
@@ -558,23 +563,23 @@ public class SessionService implements ISessionService {
             return Mono.error(e);
         }
         Set<DeviceType> conflictedDeviceTypes = userSimultaneousLoginService.getConflictedDeviceTypes(deviceType);
-        HashMultimap<String, DeviceType> nodeIdAndDeviceTypesMap = null;
+        HashMultimap<String, DeviceType> nodeIdToDeviceTypes = null;
         for (DeviceType conflictedDeviceType : conflictedDeviceTypes) {
             String nodeId = sessionsStatus.getNodeIdByDeviceType(conflictedDeviceType);
             if (nodeId != null) {
-                if (nodeIdAndDeviceTypesMap == null) {
-                    nodeIdAndDeviceTypesMap = HashMultimap.create(3, 3);
+                if (nodeIdToDeviceTypes == null) {
+                    nodeIdToDeviceTypes = HashMultimap.create(3, 3);
                 }
-                nodeIdAndDeviceTypesMap.put(nodeId, deviceType);
+                nodeIdToDeviceTypes.put(nodeId, deviceType);
             }
         }
-        if (nodeIdAndDeviceTypesMap == null) {
+        if (nodeIdToDeviceTypes == null) {
             return PublisherPool.TRUE;
         }
-        Set<String> nodeIds = nodeIdAndDeviceTypesMap.keySet();
+        Set<String> nodeIds = nodeIdToDeviceTypes.keySet();
         List<Mono<Boolean>> disconnectionRequests = new ArrayList<>(nodeIds.size());
         for (String nodeId : nodeIds) {
-            Set<DeviceType> deviceTypes = nodeIdAndDeviceTypesMap.get(nodeId);
+            Set<DeviceType> deviceTypes = nodeIdToDeviceTypes.get(nodeId);
             SetUserOfflineRequest request = new SetUserOfflineRequest(userId, deviceTypes, SessionCloseStatus.DISCONNECTED_BY_CLIENT);
             disconnectionRequests.add(node.getRpcService().requestResponse(nodeId, request)
                     .onErrorResume(ConnectionNotFound.class, t -> {
@@ -619,13 +624,13 @@ public class SessionService implements ISessionService {
                         return Mono.error(ResponseException.get(ResponseStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
                     }
                     UserStatus finalUserStatus = null == userStatus ? UserStatus.AVAILABLE : userStatus;
-                    UserSessionsManager manager = sessionsManagerByUserId
+                    UserSessionsManager manager = userIdToSessionsManager
                             .computeIfAbsent(userId, key -> new UserSessionsManager(key, finalUserStatus));
                     UserSession session = manager.addSessionIfAbsent(version, deviceType, deviceDetails, coordinates);
                     // This should never happen
                     if (null == session) {
                         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE));
-                        sessionsByIp.computeIfPresent(ip, (key, sessions) -> {
+                        ipToSessions.computeIfPresent(ip, (key, sessions) -> {
                             boolean removed = sessions.removeIf(userSession ->
                                     userSession.getUserId().equals(userId)
                                             && userSession.getDeviceType().equals(deviceType));
@@ -639,7 +644,7 @@ public class SessionService implements ISessionService {
                         }
                     }
                     UserSession finalSession = session;
-                    sessionsByIp.compute(ip, (key, sessions) -> {
+                    ipToSessions.compute(ip, (key, sessions) -> {
                         if (sessions == null) {
                             sessions = new ConcurrentLinkedQueue<>();
                         }
@@ -658,8 +663,8 @@ public class SessionService implements ISessionService {
     private void removeSessionsManagerIfEmpty(@NotNull CloseReason closeReason,
                                               @NotNull UserSessionsManager manager,
                                               @NotNull Long userId) {
-        if (manager.getSessionsNumber() == 0) {
-            sessionsManagerByUserId.remove(userId);
+        if (manager.countSessions() == 0) {
+            userIdToSessionsManager.remove(userId);
         }
         pluginManager.invokeExtensionPoints(UserOnlineStatusChangeHandler.class, "goOffline",
                         handler -> handler.goOffline(manager, closeReason))
@@ -668,17 +673,17 @@ public class SessionService implements ISessionService {
 
     private UserSessionsStatus getSessionStatusFromSharedAndLocalInfo(@NotNull Long userId,
                                                                       @NotNull UserSessionsStatus sharedSessionsStatus) {
-        UserSessionsManager manager = sessionsManagerByUserId.get(userId);
+        UserSessionsManager manager = userIdToSessionsManager.get(userId);
         if (manager == null) {
             return sharedSessionsStatus;
         }
-        Map<DeviceType, String> sharedNodeIdByOnlineDeviceTypeMap = sharedSessionsStatus.nodeIdByDeviceTypeMap();
-        for (Map.Entry<DeviceType, UserSession> entry : manager.getSessionMap().entrySet()) {
+        Map<DeviceType, String> sharedOnlineDeviceTypeToNodeId = sharedSessionsStatus.deviceTypeToNodeId();
+        for (DeviceType deviceType : manager.getDeviceTypeToSession().keySet()) {
             // Don't just merge two maps for convenience to avoiding creating a new map
-            if (!sharedNodeIdByOnlineDeviceTypeMap.containsKey(entry.getKey())) {
-                Map<DeviceType, String> onlineDeviceTypeAndNodeIdMap = MapUtil.merge(sharedNodeIdByOnlineDeviceTypeMap,
-                        Maps.transformValues(manager.getSessionMap(), ignored -> Node.getNodeId()));
-                return new UserSessionsStatus(manager.getUserStatus(), onlineDeviceTypeAndNodeIdMap);
+            if (!sharedOnlineDeviceTypeToNodeId.containsKey(deviceType)) {
+                Map<DeviceType, String> onlineDeviceTypeToNodeId = MapUtil.merge(sharedOnlineDeviceTypeToNodeId,
+                        Maps.transformValues(manager.getDeviceTypeToSession(), ignored -> Node.getNodeId()));
+                return new UserSessionsStatus(userId, manager.getUserStatus(), onlineDeviceTypeToNodeId);
             }
         }
         return sharedSessionsStatus;

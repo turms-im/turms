@@ -32,18 +32,18 @@ import java.util.Map;
 @Configuration
 public class ApiLoggingContext extends CommonApiLoggingContext {
 
-    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingRequestProperties;
-    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingNotificationsProperties;
+    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> typeToSupportedLoggingRequestProperties;
+    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> typeToSupportedLoggingNotificationsProperties;
     private final float heartbeatSampleRate;
 
     public ApiLoggingContext(TurmsPropertiesManager propertiesManager) {
         ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties().getGateway().getClientApi().getLogging();
-        supportedLoggingRequestProperties = getSupportedLoggingRequestProperties(
+        typeToSupportedLoggingRequestProperties = getSupportedLoggingRequestProperties(
                 loggingProperties.getIncludedRequestCategories(),
                 loggingProperties.getIncludedRequests(),
                 loggingProperties.getExcludedRequestCategories(),
                 loggingProperties.getExcludedRequestTypes());
-        supportedLoggingNotificationsProperties = getSupportedLoggingRequestProperties(
+        typeToSupportedLoggingNotificationsProperties = getSupportedLoggingRequestProperties(
                 loggingProperties.getIncludedNotificationCategories(),
                 loggingProperties.getIncludedNotifications(),
                 loggingProperties.getExcludedNotificationCategories(),
@@ -56,11 +56,11 @@ public class ApiLoggingContext extends CommonApiLoggingContext {
     }
 
     public boolean shouldLogRequest(TurmsRequest.KindCase requestType) {
-        return shouldLog(requestType, supportedLoggingRequestProperties);
+        return shouldLog(requestType, typeToSupportedLoggingRequestProperties);
     }
 
     public boolean shouldLogNotification(TurmsRequest.KindCase requestType) {
-        return shouldLog(requestType, supportedLoggingNotificationsProperties);
+        return shouldLog(requestType, typeToSupportedLoggingNotificationsProperties);
     }
 
 }

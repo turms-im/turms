@@ -109,7 +109,7 @@ public class NotificationService implements INotificationService {
                     offlineRecipientIds.add(recipientId);
                 }
             } else {
-                for (UserSession userSession : userSessionsManager.getSessionMap().values()) {
+                for (UserSession userSession : userSessionsManager.getDeviceTypeToSession().values()) {
                     wrappedNotificationData.retain();
                     // It's the responsibility of the downstream to decrease the reference count of the notification by 1
                     // when the notification is queued successfully and released by Netty, or fails to be queued.

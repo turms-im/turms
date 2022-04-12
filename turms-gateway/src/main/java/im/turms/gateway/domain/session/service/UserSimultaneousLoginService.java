@@ -40,10 +40,7 @@ public class UserSimultaneousLoginService {
 
     private final Node node;
 
-    /**
-     * device type -> exclusive device types
-     */
-    private SetMultimap<DeviceType, DeviceType> exclusiveDeviceTypes;
+    private SetMultimap<DeviceType, DeviceType> deviceTypeToExclusiveDeviceTypes;
 
     /**
      * Forbidden device types can never connect to turms servers
@@ -61,12 +58,12 @@ public class UserSimultaneousLoginService {
     }
 
     public void applyStrategy(@NotNull SimultaneousLoginStrategy strategy) {
-        exclusiveDeviceTypes = newExclusiveDeviceFromStrategy(strategy);
+        deviceTypeToExclusiveDeviceTypes = newExclusiveDeviceFromStrategy(strategy);
         forbiddenDeviceTypes = newForbiddenDeviceTypesFromStrategy(strategy);
     }
 
     public Set<DeviceType> getConflictedDeviceTypes(@NotNull @ValidDeviceType DeviceType deviceType) {
-        return exclusiveDeviceTypes.get(deviceType);
+        return deviceTypeToExclusiveDeviceTypes.get(deviceType);
     }
 
     public boolean isForbiddenDeviceType(DeviceType deviceType) {
@@ -83,44 +80,44 @@ public class UserSimultaneousLoginService {
     }
 
     private SetMultimap<DeviceType, DeviceType> newExclusiveDeviceFromStrategy(SimultaneousLoginStrategy strategy) {
-        SetMultimap<DeviceType, DeviceType> newExclusiveDeviceTypes =
+        SetMultimap<DeviceType, DeviceType> newDeviceTypeToExclusiveDeviceTypes =
                 HashMultimap.create(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length);
         for (DeviceType deviceType : DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES) {
             // Every device type conflicts with itself
-            newExclusiveDeviceTypes.put(deviceType, deviceType);
+            newDeviceTypeToExclusiveDeviceTypes.put(deviceType, deviceType);
         }
         switch (strategy) {
             case ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE -> {
             }
             case ALLOW_ONE_DEVICE_FOR_ALL_DEVICE_TYPES_ONLINE -> {
                 for (DeviceType type : DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES) {
-                    addDeviceTypeConflictedWithAllTypes(newExclusiveDeviceTypes, type);
+                    addDeviceTypeConflictedWithAllTypes(newDeviceTypeToExclusiveDeviceTypes, type);
                 }
             }
             case ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_MOBILE_ONLINE,
                     ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE -> {
-                addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
             }
             case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE -> {
-                addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.BROWSER);
-                addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.BROWSER);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
             }
             case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_MOBILE_ONLINE -> {
-                addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.ANDROID);
-                addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.IOS);
-                addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.ANDROID);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.IOS);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
             }
             case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_OR_MOBILE_ONLINE -> {
-                addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.BROWSER);
-                addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.ANDROID);
-                addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.IOS);
-                addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.BROWSER, DeviceType.ANDROID);
-                addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.BROWSER, DeviceType.IOS);
-                addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.BROWSER);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.ANDROID);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.IOS);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.BROWSER, DeviceType.ANDROID);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.BROWSER, DeviceType.IOS);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
             }
             default -> throw new IllegalStateException("Unexpected value: " + strategy);
         }
-        return newExclusiveDeviceTypes;
+        return newDeviceTypeToExclusiveDeviceTypes;
     }
 
     private Set<DeviceType> newForbiddenDeviceTypesFromStrategy(SimultaneousLoginStrategy strategy) {
@@ -146,19 +143,19 @@ public class UserSimultaneousLoginService {
     }
 
     private void addDeviceTypeConflictedWithAllTypes(
-            Multimap<DeviceType, DeviceType> exclusiveDeviceTypes,
+            Multimap<DeviceType, DeviceType> deviceTypeToExclusiveDeviceTypes,
             @NotNull @ValidDeviceType DeviceType deviceType) {
         for (DeviceType type : DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES) {
-            addConflictedDeviceTypes(exclusiveDeviceTypes, deviceType, type);
+            addConflictedDeviceTypes(deviceTypeToExclusiveDeviceTypes, deviceType, type);
         }
     }
 
     private void addConflictedDeviceTypes(
-            Multimap<DeviceType, DeviceType> exclusiveDeviceTypes,
+            Multimap<DeviceType, DeviceType> deviceTypeToExclusiveDeviceTypes,
             @NotNull @ValidDeviceType DeviceType deviceTypeOne,
             @NotNull @ValidDeviceType DeviceType deviceTypeTwo) {
-        exclusiveDeviceTypes.put(deviceTypeOne, deviceTypeTwo);
-        exclusiveDeviceTypes.put(deviceTypeTwo, deviceTypeOne);
+        deviceTypeToExclusiveDeviceTypes.put(deviceTypeOne, deviceTypeTwo);
+        deviceTypeToExclusiveDeviceTypes.put(deviceTypeTwo, deviceTypeOne);
     }
 
 }

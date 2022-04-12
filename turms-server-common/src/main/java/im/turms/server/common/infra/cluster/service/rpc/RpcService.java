@@ -82,10 +82,7 @@ public class RpcService implements ClusterService {
     private ConnectionService connectionService;
     private DiscoveryService discoveryService;
 
-    /**
-     * Node ID -> RPC Endpoint
-     */
-    private final Map<String, RpcEndpoint> endpointPool = new ConcurrentHashMap<>(32);
+    private final Map<String, RpcEndpoint> nodeIdToEndpoint = new ConcurrentHashMap<>(32);
 
     public RpcService(ApplicationContext context,
                       NodeType nodeType,
@@ -121,7 +118,7 @@ public class RpcService implements ClusterService {
             @Override
             public void onConnectionClosed() {
                 if (member != null) {
-                    endpointPool.remove(member.getNodeId());
+                    nodeIdToEndpoint.remove(member.getNodeId());
                 }
             }
 
@@ -203,12 +200,12 @@ public class RpcService implements ClusterService {
         if (nodeId.equals(discoveryService.getLocalMember().getNodeId())) {
             throw new IllegalArgumentException("The target node ID of RPC endpoint cannot be the local node ID: " + nodeId);
         }
-        RpcEndpoint endpoint = endpointPool.get(nodeId);
+        RpcEndpoint endpoint = nodeIdToEndpoint.get(nodeId);
         if (endpoint != null && (connection == null || connection == endpoint.getConnection())) {
             return endpoint;
         }
         endpoint = createEndpoint(nodeId, connection);
-        RpcEndpoint previous = endpointPool.putIfAbsent(nodeId, endpoint);
+        RpcEndpoint previous = nodeIdToEndpoint.putIfAbsent(nodeId, endpoint);
         if (previous != null) {
             return previous;
         }

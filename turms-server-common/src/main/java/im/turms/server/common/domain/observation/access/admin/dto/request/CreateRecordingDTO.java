@@ -15,18 +15,19 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.domain.observation.dto.response;
+package im.turms.server.common.domain.observation.access.admin.dto.request;
 
-import java.util.Date;
+import java.util.Map;
 
 /**
  * @author James Chen
  */
-public record RecordingSessionDTO(
-        long id,
-        String state,
-        Date startDate,
-        Date closeDate,
+public record CreateRecordingDTO(
+        Integer durationSeconds,
+        Integer maxAgeSeconds,
+        Integer maxSizeBytes,
+        Integer delaySeconds,
+        Map<String, String> customSettings,
         String description
 ) {
 }

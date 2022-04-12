@@ -22,8 +22,8 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-public record OnlineUserNumberDTO(
+public record OnlineUserCountDTO(
         Integer total,
-        Map<String, Integer> numberById
+        Map<String, Integer> nodeIdToUserCount
 ) {
 }

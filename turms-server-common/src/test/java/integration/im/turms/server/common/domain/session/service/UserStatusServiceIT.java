@@ -57,8 +57,8 @@ class UserStatusServiceIT extends BaseIntegrationTest {
 
     static final int ORDER_ADD_ONLINE_DEVICE_IF_ABSENT = 0;
     static final int ORDER_GET_NODE_ID_BY_USER_ID_AND_DEVICE_TYPE = 10;
-    static final int ORDER_GET_DEVICE_AND_NODE_ID_MAP_BY_USER_ID = 20;
-    static final int ORDER_GET_NODE_ID_AND_DEVICE_MAP_BY_USER_ID = 30;
+    static final int ORDER_GET_DEVICE_TYPE_TO_NODE_ID_MAP_BY_USER_ID = 20;
+    static final int ORDER_GET_NODE_ID_TO_DEVICE_TYPE_MAP_BY_USER_ID = 30;
     static final int ORDER_UPDATE_ONLINE_USER_STATUS = 40;
     static final int ORDER_UPDATE_ONLINE_USERS_TTL = 50;
     static final int ORDER_GET_USER_SESSIONS_STATUS = 60;
@@ -172,10 +172,10 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 .verify();
     }
 
-    @Order(ORDER_GET_DEVICE_AND_NODE_ID_MAP_BY_USER_ID)
+    @Order(ORDER_GET_DEVICE_TYPE_TO_NODE_ID_MAP_BY_USER_ID)
     @Test
-    void getDeviceAndNodeIdMapByUserId_shouldReturnDeviceAndNodeId_forExistingUser() {
-        Mono<Map<DeviceType, String>> deviceAndNodeId = USER_STATUS_SERVICE.getDeviceAndNodeIdMapByUserId(USER_1_ID);
+    void getDeviceTypeToNodeIdMapByUserId_shouldReturnDeviceAndNodeId_forExistingUser() {
+        Mono<Map<DeviceType, String>> deviceAndNodeId = USER_STATUS_SERVICE.getDeviceTypeToNodeIdMapByUserId(USER_1_ID);
         StepVerifier
                 .create(deviceAndNodeId)
                 .assertNext(map -> assertThat(map)
@@ -184,20 +184,20 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 .verify();
     }
 
-    @Order(ORDER_GET_DEVICE_AND_NODE_ID_MAP_BY_USER_ID + 1)
+    @Order(ORDER_GET_DEVICE_TYPE_TO_NODE_ID_MAP_BY_USER_ID + 1)
     @Test
-    void getDeviceAndNodeIdMapByUserId_shouldReturnEmpty_forNonExistingUser() {
-        Mono<Map<DeviceType, String>> deviceAndNodeId = USER_STATUS_SERVICE.getDeviceAndNodeIdMapByUserId(NON_EXISTING_USER_ID);
+    void getDeviceTypeToNodeIdMapByUserId_shouldReturnEmpty_forNonExistingUser() {
+        Mono<Map<DeviceType, String>> deviceAndNodeId = USER_STATUS_SERVICE.getDeviceTypeToNodeIdMapByUserId(NON_EXISTING_USER_ID);
         StepVerifier
                 .create(deviceAndNodeId)
                 .expectComplete()
                 .verify();
     }
 
-    @Order(ORDER_GET_NODE_ID_AND_DEVICE_MAP_BY_USER_ID)
+    @Order(ORDER_GET_NODE_ID_TO_DEVICE_TYPE_MAP_BY_USER_ID)
     @Test
-    void getNodeIdAndDeviceMapByUserId_shouldReturnNodeIdAndDeviceMap_forExistingUser() {
-        Mono<SetMultimap<String, DeviceType>> nodeIdAndDevices = USER_STATUS_SERVICE.getNodeIdAndDeviceMapByUserId(USER_1_ID);
+    void getNodeIdToDeviceTypeMapByUserId_shouldReturnNodeIdToDeviceTypeMap_forExistingUser() {
+        Mono<SetMultimap<String, DeviceType>> nodeIdAndDevices = USER_STATUS_SERVICE.getNodeIdToDeviceTypeMapByUserId(USER_1_ID);
         StepVerifier
                 .create(nodeIdAndDevices)
                 .assertNext(map -> assertThat(map)
@@ -207,10 +207,10 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 .verify();
     }
 
-    @Order(ORDER_GET_NODE_ID_AND_DEVICE_MAP_BY_USER_ID + 1)
+    @Order(ORDER_GET_NODE_ID_TO_DEVICE_TYPE_MAP_BY_USER_ID + 1)
     @Test
-    void getNodeIdAndDeviceMapByUserId_shouldReturnEmpty_forNonExistingUser() {
-        Mono<Map<DeviceType, String>> deviceAndNodeId = USER_STATUS_SERVICE.getDeviceAndNodeIdMapByUserId(NON_EXISTING_USER_ID);
+    void getNodeIdToDeviceTypeMapByUserId_shouldReturnEmpty_forNonExistingUser() {
+        Mono<Map<DeviceType, String>> deviceAndNodeId = USER_STATUS_SERVICE.getDeviceTypeToNodeIdMapByUserId(NON_EXISTING_USER_ID);
         StepVerifier
                 .create(deviceAndNodeId)
                 .expectComplete()
@@ -275,7 +275,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 .assertNext(status -> {
                     assertThat(status.userStatus())
                             .isEqualTo(USER_1_STATUS_AFTER_UPDATED);
-                    assertThat(status.nodeIdByDeviceTypeMap())
+                    assertThat(status.deviceTypeToNodeId())
                             .containsOnly(entry(USER_1_DEVICE, LOCAL_NODE_ID), entry(USER_1_DIFF_DEVICE, LOCAL_NODE_ID));
                 })
                 .expectComplete()
@@ -290,7 +290,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 .create(statusMono)
                 .assertNext(status -> {
                     assertThat(status.userStatus()).isEqualTo(UserStatus.OFFLINE);
-                    assertThat(status.nodeIdByDeviceTypeMap()).isEmpty();
+                    assertThat(status.deviceTypeToNodeId()).isEmpty();
                 })
                 .expectComplete()
                 .verify();

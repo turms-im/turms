@@ -27,7 +27,7 @@ class MessageService extends BaseService {
   late final int _requestTimeoutMillis;
   late final int _minRequestIntervalMillis;
   final List<NotificationListener> _notificationListeners = [];
-  final Map<int, TurmsRequestContext> _requestMap = {};
+  final Map<int, TurmsRequestContext> _idToRequest = {};
 
   MessageService(StateStore stateStore, int? requestTimeoutMillis,
       int? minRequestIntervalMillis)
@@ -83,14 +83,14 @@ class MessageService extends BaseService {
     stateStore.tcp!.writeVarIntLengthAndBytes(payload);
     final timeoutTimer = _requestTimeoutMillis > 0
         ? Timer(Duration(milliseconds: _requestTimeoutMillis), () {
-            final context = _requestMap.remove(requestId);
+            final context = _idToRequest.remove(requestId);
             context?.completer.completeError(
                 ResponseException.fromCode(ResponseStatusCode.requestTimeout));
           })
         : null;
     final completer = Completer<TurmsNotification>();
     final requestContext = TurmsRequestContext(completer, timeoutTimer);
-    _requestMap[requestId] = requestContext;
+    _idToRequest[requestId] = requestContext;
     stateStore.lastRequestDate = now;
     return completer.future;
   }
@@ -123,12 +123,12 @@ class MessageService extends BaseService {
     int id;
     do {
       id = _random.nextInt(randomMax);
-    } while (_requestMap.containsKey(id));
+    } while (_idToRequest.containsKey(id));
     return id;
   }
 
   void _rejectRequestCompleter(ResponseException exception) {
-    _requestMap.removeWhere((key, context) {
+    _idToRequest.removeWhere((key, context) {
       context.completer.completeError(exception);
       return true;
     });

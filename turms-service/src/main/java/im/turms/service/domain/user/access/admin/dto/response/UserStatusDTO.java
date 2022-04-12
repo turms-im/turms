@@ -30,7 +30,7 @@ import java.util.Map;
 public record UserStatusDTO(
         Long userId,
         UserStatus status,
-        Map<DeviceType, String> sessions,
+        Map<DeviceType, String> deviceTypeToNodeId,
         Date loginDate,
         Point coordinates
 ) {

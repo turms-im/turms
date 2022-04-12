@@ -32,14 +32,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class BaseAdminApiRateLimitingManager {
 
-    private final Map<String, TokenBucket> ipTokenBucketMap = new ConcurrentHashMap<>(32);
+    private final Map<String, TokenBucket> ipToTokenBucket = new ConcurrentHashMap<>(32);
     private final TokenBucketContext tokenBucketContext;
 
     protected BaseAdminApiRateLimitingManager(TaskManager taskManager, AdminApiRateLimitingProperties properties) {
         tokenBucketContext = new TokenBucketContext(properties);
         taskManager.reschedule("expiredAdminApiAccessInfoCleaner", CronConst.EXPIRED_ADMIN_API_ACCESS_INFO_CLEANUP_CRON,
                 () -> {
-                    Iterator<TokenBucket> iterator = ipTokenBucketMap.values().iterator();
+                    Iterator<TokenBucket> iterator = ipToTokenBucket.values().iterator();
                     long now = System.currentTimeMillis();
                     while (iterator.hasNext()) {
                         TokenBucket bucket = iterator.next();
@@ -53,7 +53,7 @@ public abstract class BaseAdminApiRateLimitingManager {
     }
 
     public boolean tryAcquireTokenByIp(String ip) {
-        TokenBucket bucket = ipTokenBucketMap.computeIfAbsent(ip, key -> new TokenBucket(tokenBucketContext));
+        TokenBucket bucket = ipToTokenBucket.computeIfAbsent(ip, key -> new TokenBucket(tokenBucketContext));
         return bucket.tryAcquire(System.currentTimeMillis());
     }
 

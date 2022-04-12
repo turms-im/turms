@@ -45,7 +45,7 @@ public abstract class BaseAdminRoleService {
     private static final AdminRole ROOT_ROLE =
             new AdminRole(ADMIN_ROLE_ROOT_ID, "ROOT", AdminPermission.ALL, Integer.MAX_VALUE);
 
-    private final Map<Long, AdminRole> roles = new ConcurrentHashMap<>(16);
+    private final Map<Long, AdminRole> idToRole = new ConcurrentHashMap<>(16);
     private final BaseRepository<AdminRole> adminRoleRepository;
 
     protected BaseAdminRoleService(BaseRepository<AdminRole> adminRoleRepository) {
@@ -59,10 +59,10 @@ public abstract class BaseAdminRoleService {
                 .doOnNext(event -> {
                     AdminRole adminRole = event.getFullDocument();
                     switch (event.getOperationType()) {
-                        case INSERT, UPDATE, REPLACE -> roles.put(adminRole.getId(), adminRole);
+                        case INSERT, UPDATE, REPLACE -> idToRole.put(adminRole.getId(), adminRole);
                         case DELETE -> {
                             long roleId = ChangeStreamUtil.getIdAsLong(event.getDocumentKey());
-                            roles.remove(roleId);
+                            idToRole.remove(roleId);
                         }
                         case INVALIDATE -> resetRoles();
                         default -> LOGGER.fatal("Detected an illegal operation on AdminRole collection: " + event);
@@ -75,12 +75,12 @@ public abstract class BaseAdminRoleService {
         // Load
         resetRoles();
         adminRoleRepository.findAll()
-                .doOnNext(role -> roles.put(role.getId(), role))
+                .doOnNext(role -> idToRole.put(role.getId(), role))
                 .subscribe(null, t -> LOGGER.error("Caught an error while find all admin roles", t));
     }
 
     public AdminRole getRootRole() {
-        return roles.get(ADMIN_ROLE_ROOT_ID);
+        return idToRole.get(ADMIN_ROLE_ROOT_ID);
     }
 
     public Mono<AdminRole> queryAndCacheRole(@NotNull Long roleId) {
@@ -92,7 +92,7 @@ public abstract class BaseAdminRoleService {
         return roleId.equals(ADMIN_ROLE_ROOT_ID)
                 ? Mono.just(getRootRole())
                 : adminRoleRepository.findById(roleId)
-                .doOnNext(role -> roles.put(roleId, role));
+                .doOnNext(role -> idToRole.put(roleId, role));
     }
 
     public Mono<Set<AdminPermission>> queryPermissions(@NotNull Long roleId) {
@@ -101,7 +101,7 @@ public abstract class BaseAdminRoleService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        AdminRole role = roles.get(roleId);
+        AdminRole role = idToRole.get(roleId);
         return role == null
                 ? queryAndCacheRole(roleId).map(AdminRole::getPermissions)
                 : Mono.just(role.getPermissions());
@@ -120,8 +120,8 @@ public abstract class BaseAdminRoleService {
     }
 
     private void resetRoles() {
-        roles.keySet().removeIf(id -> !id.equals(ADMIN_ROLE_ROOT_ID));
-        roles.put(ADMIN_ROLE_ROOT_ID, ROOT_ROLE);
+        idToRole.keySet().removeIf(id -> !id.equals(ADMIN_ROLE_ROOT_ID));
+        idToRole.put(ADMIN_ROLE_ROOT_ID, ROOT_ROLE);
     }
 
 }

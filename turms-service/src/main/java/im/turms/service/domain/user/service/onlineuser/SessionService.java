@@ -65,7 +65,7 @@ public class SessionService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userStatusService.getNodeIdAndDeviceMapByUserId(userId)
+        return userStatusService.getNodeIdToDeviceTypeMapByUserId(userId)
                 .flatMap(nodeIdAndDeviceTypeMap -> {
                     Set<Map.Entry<String, Collection<DeviceType>>> entries = nodeIdAndDeviceTypeMap.asMap().entrySet();
                     List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
@@ -101,7 +101,7 @@ public class SessionService {
         if (size == 1) {
             return disconnect(userId, deviceTypes.iterator().next(), closeStatus);
         }
-        return userStatusService.getNodeIdAndDeviceMapByUserId(userId)
+        return userStatusService.getNodeIdToDeviceTypeMapByUserId(userId)
                 .flatMap(nodeIdAndDeviceTypeMap -> {
                     Set<Map.Entry<String, Collection<DeviceType>>> entries = nodeIdAndDeviceTypeMap.asMap().entrySet();
                     List<Mono<Boolean>> monos = new ArrayList<>(entries.size());

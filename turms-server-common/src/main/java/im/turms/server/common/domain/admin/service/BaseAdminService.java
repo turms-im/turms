@@ -51,10 +51,7 @@ public abstract class BaseAdminService {
     private final BaseRepository<Admin> adminRepository;
     private final BaseAdminRoleService adminRoleService;
 
-    /**
-     * Account -> AdminInfo
-     */
-    private final Map<String, AdminInfo> adminMap = new ConcurrentHashMap<>();
+    private final Map<String, AdminInfo> accountToAdmin = new ConcurrentHashMap<>();
 
     protected BaseAdminService(
             PasswordManager passwordManager,
@@ -73,12 +70,12 @@ public abstract class BaseAdminService {
                 .doOnNext(event -> {
                     Admin admin = event.getFullDocument();
                     switch (event.getOperationType()) {
-                        case INSERT, UPDATE, REPLACE -> adminMap.put(admin.getAccount(), new AdminInfo(admin, null));
+                        case INSERT, UPDATE, REPLACE -> accountToAdmin.put(admin.getAccount(), new AdminInfo(admin, null));
                         case DELETE -> {
                             String account = ChangeStreamUtil.getIdAsString(event.getDocumentKey());
-                            adminMap.remove(account);
+                            accountToAdmin.remove(account);
                         }
-                        case INVALIDATE -> adminMap.clear();
+                        case INVALIDATE -> accountToAdmin.clear();
                         default -> LOGGER.fatal("Detected an illegal operation on Admin collection: " + event);
                     }
                 })
@@ -91,7 +88,7 @@ public abstract class BaseAdminService {
                 .collectList()
                 .doOnNext(admins -> {
                     for (Admin admin : admins) {
-                        adminMap.put(admin.getAccount(), new AdminInfo(admin, null));
+                        accountToAdmin.put(admin.getAccount(), new AdminInfo(admin, null));
                     }
                     boolean rootAdminExists = admins.stream()
                             .anyMatch(admin -> admin.getRoleId().equals(ADMIN_ROLE_ROOT_ID));
@@ -122,7 +119,7 @@ public abstract class BaseAdminService {
         }
         return queryRoleId(account)
                 .flatMap(roleId -> adminRoleService.hasPermission(roleId, permission))
-                .defaultIfEmpty(false);
+                .switchIfEmpty(PublisherPool.FALSE);
     }
 
     public Mono<Boolean> isAdminAuthorized(
@@ -160,7 +157,7 @@ public abstract class BaseAdminService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        AdminInfo adminInfo = adminMap.get(account);
+        AdminInfo adminInfo = accountToAdmin.get(account);
         if (adminInfo != null && adminInfo.getRawPassword() != null) {
             return Mono.just(adminInfo.getRawPassword().equals(rawPassword));
         }
@@ -168,14 +165,14 @@ public abstract class BaseAdminService {
                 .map(admin -> {
                     boolean isValidPassword = passwordManager.matchesAdminPassword(rawPassword, admin.getPassword());
                     if (isValidPassword) {
-                        AdminInfo info = adminMap.get(admin.getAccount());
+                        AdminInfo info = accountToAdmin.get(admin.getAccount());
                         if (info != null) {
                             info.setRawPassword(rawPassword);
                         }
                     }
                     return isValidPassword;
                 })
-                .defaultIfEmpty(false);
+                .switchIfEmpty(PublisherPool.FALSE);
     }
 
     public Mono<Admin> queryAdmin(@NotNull String account) {
@@ -184,10 +181,10 @@ public abstract class BaseAdminService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        AdminInfo adminInfo = adminMap.get(account);
+        AdminInfo adminInfo = accountToAdmin.get(account);
         if (adminInfo == null) {
             return adminRepository.findById(account)
-                    .doOnNext(admin -> adminMap.put(account, new AdminInfo(admin, null)));
+                    .doOnNext(admin -> accountToAdmin.put(account, new AdminInfo(admin, null)));
         }
         return Mono.just(adminInfo.getAdmin());
     }

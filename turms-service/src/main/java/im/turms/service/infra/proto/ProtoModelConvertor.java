@@ -486,10 +486,10 @@ public final class ProtoModelConvertor {
         if (groupId != null) {
             builder.setGroupId(groupId);
         }
-        Map<Long, Date> memberIdAndReadDate = groupConversation.getMemberIdAndReadDate();
-        if (memberIdAndReadDate != null) {
-            Map<Long, Long> map = Maps.transformValues(memberIdAndReadDate, Date::getTime);
-            builder.putAllMemberIdAndReadDate(map);
+        Map<Long, Date> memberIdToReadDate = groupConversation.getMemberIdToReadDate();
+        if (memberIdToReadDate != null) {
+            Map<Long, Long> map = Maps.transformValues(memberIdToReadDate, Date::getTime);
+            builder.putAllMemberIdToReadDate(map);
         }
         return builder;
     }

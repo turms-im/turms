@@ -1,6 +1,6 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
+import * as _m0 from "protobufjs/minimal";
 import { TurmsRequest } from "../request/turms_request";
 import { Int64Values } from "../model/common/int64_values";
 import { Int64ValuesWithVersion } from "../model/common/int64_values_with_version";

@@ -30,8 +30,8 @@ public  final class CheckGroupJoinQuestionsAnswersRequest extends
     CheckGroupJoinQuestionsAnswersRequestOrBuilder {
   private CheckGroupJoinQuestionsAnswersRequest() {
   }
-  public static final int QUESTION_ID_AND_ANSWER_FIELD_NUMBER = 1;
-  private static final class QuestionIdAndAnswerDefaultEntryHolder {
+  public static final int QUESTION_ID_TO_ANSWER_FIELD_NUMBER = 1;
+  private static final class QuestionIdToAnswerDefaultEntryHolder {
     static final com.google.protobuf.MapEntryLite<
         java.lang.Long, java.lang.String> defaultEntry =
             com.google.protobuf.MapEntryLite
@@ -42,85 +42,85 @@ public  final class CheckGroupJoinQuestionsAnswersRequest extends
                 "");
   }
   private com.google.protobuf.MapFieldLite<
-      java.lang.Long, java.lang.String> questionIdAndAnswer_ =
+      java.lang.Long, java.lang.String> questionIdToAnswer_ =
           com.google.protobuf.MapFieldLite.emptyMapField();
   private com.google.protobuf.MapFieldLite<java.lang.Long, java.lang.String>
-  internalGetQuestionIdAndAnswer() {
-    return questionIdAndAnswer_;
+  internalGetQuestionIdToAnswer() {
+    return questionIdToAnswer_;
   }
   private com.google.protobuf.MapFieldLite<java.lang.Long, java.lang.String>
-  internalGetMutableQuestionIdAndAnswer() {
-    if (!questionIdAndAnswer_.isMutable()) {
-      questionIdAndAnswer_ = questionIdAndAnswer_.mutableCopy();
+  internalGetMutableQuestionIdToAnswer() {
+    if (!questionIdToAnswer_.isMutable()) {
+      questionIdToAnswer_ = questionIdToAnswer_.mutableCopy();
     }
-    return questionIdAndAnswer_;
+    return questionIdToAnswer_;
   }
   @java.lang.Override
 
-  public int getQuestionIdAndAnswerCount() {
-    return internalGetQuestionIdAndAnswer().size();
+  public int getQuestionIdToAnswerCount() {
+    return internalGetQuestionIdToAnswer().size();
   }
   /**
-   * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
   @java.lang.Override
 
-  public boolean containsQuestionIdAndAnswer(
+  public boolean containsQuestionIdToAnswer(
       long key) {
     
-    return internalGetQuestionIdAndAnswer().containsKey(key);
+    return internalGetQuestionIdToAnswer().containsKey(key);
   }
   /**
-   * Use {@link #getQuestionIdAndAnswerMap()} instead.
+   * Use {@link #getQuestionIdToAnswerMap()} instead.
    */
   @java.lang.Override
   @java.lang.Deprecated
-  public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdAndAnswer() {
-    return getQuestionIdAndAnswerMap();
+  public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdToAnswer() {
+    return getQuestionIdToAnswerMap();
   }
   /**
-   * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
   @java.lang.Override
 
-  public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdAndAnswerMap() {
+  public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdToAnswerMap() {
     return java.util.Collections.unmodifiableMap(
-        internalGetQuestionIdAndAnswer());
+        internalGetQuestionIdToAnswer());
   }
   /**
-   * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
   @java.lang.Override
 
-  public java.lang.String getQuestionIdAndAnswerOrDefault(
+  public java.lang.String getQuestionIdToAnswerOrDefault(
       long key,
       java.lang.String defaultValue) {
     
     java.util.Map<java.lang.Long, java.lang.String> map =
-        internalGetQuestionIdAndAnswer();
+        internalGetQuestionIdToAnswer();
     return map.containsKey(key) ? map.get(key) : defaultValue;
   }
   /**
-   * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
   @java.lang.Override
 
-  public java.lang.String getQuestionIdAndAnswerOrThrow(
+  public java.lang.String getQuestionIdToAnswerOrThrow(
       long key) {
     
     java.util.Map<java.lang.Long, java.lang.String> map =
-        internalGetQuestionIdAndAnswer();
+        internalGetQuestionIdToAnswer();
     if (!map.containsKey(key)) {
       throw new java.lang.IllegalArgumentException();
     }
     return map.get(key);
   }
   /**
-   * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
   private java.util.Map<java.lang.Long, java.lang.String>
-  getMutableQuestionIdAndAnswerMap() {
-    return internalGetMutableQuestionIdAndAnswer();
+  getMutableQuestionIdToAnswerMap() {
+    return internalGetMutableQuestionIdToAnswer();
   }
 
   public static im.turms.client.model.proto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest parseFrom(
@@ -220,99 +220,99 @@ public  final class CheckGroupJoinQuestionsAnswersRequest extends
 
     @java.lang.Override
 
-    public int getQuestionIdAndAnswerCount() {
-      return instance.getQuestionIdAndAnswerMap().size();
+    public int getQuestionIdToAnswerCount() {
+      return instance.getQuestionIdToAnswerMap().size();
     }
     /**
-     * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
     @java.lang.Override
 
-    public boolean containsQuestionIdAndAnswer(
+    public boolean containsQuestionIdToAnswer(
         long key) {
       
-      return instance.getQuestionIdAndAnswerMap().containsKey(key);
+      return instance.getQuestionIdToAnswerMap().containsKey(key);
     }
 
-    public Builder clearQuestionIdAndAnswer() {
+    public Builder clearQuestionIdToAnswer() {
       copyOnWrite();
-      instance.getMutableQuestionIdAndAnswerMap().clear();
+      instance.getMutableQuestionIdToAnswerMap().clear();
       return this;
     }
     /**
-     * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
 
-    public Builder removeQuestionIdAndAnswer(
+    public Builder removeQuestionIdToAnswer(
         long key) {
       
       copyOnWrite();
-      instance.getMutableQuestionIdAndAnswerMap().remove(key);
+      instance.getMutableQuestionIdToAnswerMap().remove(key);
       return this;
     }
     /**
-     * Use {@link #getQuestionIdAndAnswerMap()} instead.
+     * Use {@link #getQuestionIdToAnswerMap()} instead.
      */
     @java.lang.Override
     @java.lang.Deprecated
-    public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdAndAnswer() {
-      return getQuestionIdAndAnswerMap();
+    public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdToAnswer() {
+      return getQuestionIdToAnswerMap();
     }
     /**
-     * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
     @java.lang.Override
-    public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdAndAnswerMap() {
+    public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdToAnswerMap() {
       return java.util.Collections.unmodifiableMap(
-          instance.getQuestionIdAndAnswerMap());
+          instance.getQuestionIdToAnswerMap());
     }
     /**
-     * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
     @java.lang.Override
 
-    public java.lang.String getQuestionIdAndAnswerOrDefault(
+    public java.lang.String getQuestionIdToAnswerOrDefault(
         long key,
         java.lang.String defaultValue) {
       
       java.util.Map<java.lang.Long, java.lang.String> map =
-          instance.getQuestionIdAndAnswerMap();
+          instance.getQuestionIdToAnswerMap();
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
     @java.lang.Override
 
-    public java.lang.String getQuestionIdAndAnswerOrThrow(
+    public java.lang.String getQuestionIdToAnswerOrThrow(
         long key) {
       
       java.util.Map<java.lang.Long, java.lang.String> map =
-          instance.getQuestionIdAndAnswerMap();
+          instance.getQuestionIdToAnswerMap();
       if (!map.containsKey(key)) {
         throw new java.lang.IllegalArgumentException();
       }
       return map.get(key);
     }
     /**
-     * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
-    public Builder putQuestionIdAndAnswer(
+    public Builder putQuestionIdToAnswer(
         long key,
         java.lang.String value) {
       
       java.lang.Class<?> valueClass = value.getClass();
       copyOnWrite();
-      instance.getMutableQuestionIdAndAnswerMap().put(key, value);
+      instance.getMutableQuestionIdToAnswerMap().put(key, value);
       return this;
     }
     /**
-     * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
-    public Builder putAllQuestionIdAndAnswer(
+    public Builder putAllQuestionIdToAnswer(
         java.util.Map<java.lang.Long, java.lang.String> values) {
       copyOnWrite();
-      instance.getMutableQuestionIdAndAnswerMap().putAll(values);
+      instance.getMutableQuestionIdToAnswerMap().putAll(values);
       return this;
     }
 
@@ -332,8 +332,8 @@ public  final class CheckGroupJoinQuestionsAnswersRequest extends
       }
       case BUILD_MESSAGE_INFO: {
           java.lang.Object[] objects = new java.lang.Object[] {
-            "questionIdAndAnswer_",
-            QuestionIdAndAnswerDefaultEntryHolder.defaultEntry,
+            "questionIdToAnswer_",
+            QuestionIdToAnswerDefaultEntryHolder.defaultEntry,
           };
           java.lang.String info =
               "\u0000\u0001\u0000\u0000\u0001\u0001\u0001\u0001\u0000\u0000\u00012";

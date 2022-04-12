@@ -1,6 +1,6 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
+import * as _m0 from "protobufjs/minimal";
 import { DeviceType } from "../../constant/device_type";
 import { UserStatus } from "../../constant/user_status";
 import { UserLocation } from "../../model/user/user_location";
@@ -54,9 +54,9 @@ export const CreateSessionRequest = {
     if (message.deviceType !== 0) {
       writer.uint32(40).int32(message.deviceType);
     }
-    Object.keys(message.deviceDetails).forEach(key => {
+    Object.entries(message.deviceDetails).forEach(([key, value]) => {
       CreateSessionRequest_DeviceDetailsEntry.encode(
-        { key: key as any, value: message.deviceDetails[key] },
+        { key: key as any, value },
         writer.uint32(50).fork()
       ).ldelim();
     });

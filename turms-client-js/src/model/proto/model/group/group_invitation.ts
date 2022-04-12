@@ -1,6 +1,6 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
+import * as _m0 from "protobufjs/minimal";
 import { RequestStatus } from "../../constant/request_status";
 
 export const protobufPackage = "im.turms.proto";

@@ -139,7 +139,7 @@ public class UserStatusService {
         }
         return getUserSessionsStatus(userId)
                 .flatMap(sessionsStatus -> {
-                    String nodeId = sessionsStatus.nodeIdByDeviceTypeMap().get(deviceType);
+                    String nodeId = sessionsStatus.deviceTypeToNodeId().get(deviceType);
                     return nodeId == null ? Mono.empty() : Mono.just(nodeId);
                 });
     }
@@ -147,7 +147,7 @@ public class UserStatusService {
     /**
      * @return MonoEmpty if the user is offline
      */
-    public Mono<Map<DeviceType, String>> getDeviceAndNodeIdMapByUserId(@NotNull Long userId) {
+    public Mono<Map<DeviceType, String>> getDeviceTypeToNodeIdMapByUserId(@NotNull Long userId) {
         try {
             Validator.notNull(userId, "userId");
         } catch (ResponseException e) {
@@ -156,23 +156,23 @@ public class UserStatusService {
         if (cacheUserSessionsStatus) {
             UserSessionsStatus sessionsStatus = userSessionsStatusCache.getIfPresent(userId);
             if (sessionsStatus != null) {
-                Map<DeviceType, String> deviceTypeAndNodeIdMap = sessionsStatus.nodeIdByDeviceTypeMap();
-                return deviceTypeAndNodeIdMap != null && !deviceTypeAndNodeIdMap.isEmpty()
-                        ? Mono.just(deviceTypeAndNodeIdMap)
-                        : Mono.empty();
+                Map<DeviceType, String> deviceTypeToNodeId = sessionsStatus.deviceTypeToNodeId();
+                return deviceTypeToNodeId == null || deviceTypeToNodeId.isEmpty()
+                        ? Mono.empty()
+                        : Mono.just(deviceTypeToNodeId);
             }
         }
         return fetchUserSessionsStatus(userId)
                 .flatMap(sessionsStatus -> {
-                    Map<DeviceType, String> deviceTypeAndNodeIdMap = sessionsStatus.nodeIdByDeviceTypeMap();
-                    return deviceTypeAndNodeIdMap == null || deviceTypeAndNodeIdMap.isEmpty()
+                    Map<DeviceType, String> deviceTypeToNodeId = sessionsStatus.deviceTypeToNodeId();
+                    return deviceTypeToNodeId == null || deviceTypeToNodeId.isEmpty()
                             ? Mono.empty()
-                            : Mono.just(deviceTypeAndNodeIdMap);
+                            : Mono.just(deviceTypeToNodeId);
                 });
     }
 
-    public Mono<SetMultimap<String, DeviceType>> getNodeIdAndDeviceMapByUserId(@NotNull Long userId) {
-        return getDeviceAndNodeIdMapByUserId(userId)
+    public Mono<SetMultimap<String, DeviceType>> getNodeIdToDeviceTypeMapByUserId(@NotNull Long userId) {
+        return getDeviceTypeToNodeIdMapByUserId(userId)
                 .map(deviceTypeAndNodeIdMap -> {
                     SetMultimap<String, DeviceType> multimap = HashMultimap.create();
                     for (Map.Entry<DeviceType, String> entry : deviceTypeAndNodeIdMap.entrySet()) {
@@ -265,26 +265,26 @@ public class UserStatusService {
                 .collect(CollectorUtil.toList())
                 .map(entries -> {
                     UserStatus userStatus = null;
-                    Map<DeviceType, String> onlineDeviceTypeAndNodeIdMap = null;
+                    Map<DeviceType, String> onlineDeviceTypeToNodeId = null;
                     for (Map.Entry<Object, Object> entry : entries) {
                         if (entry.getKey().equals(RedisEntryId.SESSIONS_STATUS)) {
                             userStatus = (UserStatus) entry.getValue();
                         } else {
-                            if (onlineDeviceTypeAndNodeIdMap == null) {
-                                onlineDeviceTypeAndNodeIdMap = new FastEnumMap<>(DeviceType.class);
+                            if (onlineDeviceTypeToNodeId == null) {
+                                onlineDeviceTypeToNodeId = new FastEnumMap<>(DeviceType.class);
                             }
-                            onlineDeviceTypeAndNodeIdMap.put(
+                            onlineDeviceTypeToNodeId.put(
                                     (DeviceType) entry.getKey(),
                                     (String) entry.getValue());
                         }
                     }
-                    if (onlineDeviceTypeAndNodeIdMap == null) {
+                    if (onlineDeviceTypeToNodeId == null) {
                         userStatus = UserStatus.OFFLINE;
-                        onlineDeviceTypeAndNodeIdMap = Collections.emptyMap();
+                        onlineDeviceTypeToNodeId = Collections.emptyMap();
                     } else if (userStatus == null || userStatus == UserStatus.OFFLINE) {
                         userStatus = UserStatus.AVAILABLE;
                     }
-                    UserSessionsStatus userSessionsStatus = new UserSessionsStatus(userStatus, onlineDeviceTypeAndNodeIdMap);
+                    UserSessionsStatus userSessionsStatus = new UserSessionsStatus(userId, userStatus, onlineDeviceTypeToNodeId);
                     if (cacheUserSessionsStatus) {
                         userSessionsStatusCache.put(userId, userSessionsStatus);
                     }

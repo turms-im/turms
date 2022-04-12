@@ -27,6 +27,6 @@ public record UpdateUserPermissionGroupDTO(
         Set<Long> creatableGroupTypeIds,
         Integer ownedGroupLimit,
         Integer ownedGroupLimitForEachGroupType,
-        Map<Long, Integer> groupTypeLimits
+        Map<Long, Integer> groupTypeIdToLimit
 ) {
 }

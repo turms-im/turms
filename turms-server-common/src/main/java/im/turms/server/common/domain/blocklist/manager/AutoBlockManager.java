@@ -41,7 +41,7 @@ public class AutoBlockManager<T> {
     private final int maxLevel;
     private final int blockTriggerTimes;
 
-    private final ConcurrentHashMap<T, BlockStatus> blockStatusMap;
+    private final ConcurrentHashMap<T, BlockStatus> blockedClientIdToStatus;
 
     public AutoBlockManager(AutoBlockItemProperties autoBlockProperties, BiConsumer<T, Integer> onClientBlocked) {
         this.onClientBlocked = onClientBlocked;
@@ -50,17 +50,17 @@ public class AutoBlockManager<T> {
         isEnabled = autoBlockProperties.isEnabled() && !levels.isEmpty();
         blockTriggerTimes = autoBlockProperties.getBlockTriggerTimes();
         if (isEnabled) {
-            blockStatusMap = null;
+            blockedClientIdToStatus = null;
             return;
         }
-        blockStatusMap = new ConcurrentHashMap<>(1024);
+        blockedClientIdToStatus = new ConcurrentHashMap<>(1024);
     }
 
     public void tryBlockClient(T id) {
         if (!isEnabled) {
             return;
         }
-        blockStatusMap.compute(id, (key, status) -> {
+        blockedClientIdToStatus.compute(id, (key, status) -> {
             long now = System.currentTimeMillis();
             if (status == null) {
                 status = new BlockStatus(UNSET_BLOCK_LEVEL, null, 0, now);
@@ -98,12 +98,12 @@ public class AutoBlockManager<T> {
     }
 
     public void unblockClient(T id) {
-        blockStatusMap.remove(id);
+        blockedClientIdToStatus.remove(id);
     }
 
     public void evictExpiredBlockedClient() {
         long now = System.currentTimeMillis();
-        Iterator<BlockStatus> iterator = blockStatusMap.values().iterator();
+        Iterator<BlockStatus> iterator = blockedClientIdToStatus.values().iterator();
         while (iterator.hasNext()) {
             BlockStatus status = iterator.next();
             int reduceOneTriggerTimeInterval = status.currentLevelProperties.getReduceOneTriggerTimeIntervalMillis();

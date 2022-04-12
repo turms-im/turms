@@ -1,6 +1,6 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
+import * as _m0 from "protobufjs/minimal";
 import { GroupMemberRole } from "../../constant/group_member_role";
 import { UserStatus } from "../../constant/user_status";
 import { DeviceType } from "../../constant/device_type";

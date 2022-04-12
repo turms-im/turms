@@ -25,36 +25,36 @@ public interface CheckGroupJoinQuestionsAnswersRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
-  int getQuestionIdAndAnswerCount();
+  int getQuestionIdToAnswerCount();
   /**
-   * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
-  boolean containsQuestionIdAndAnswer(
+  boolean containsQuestionIdToAnswer(
       long key);
   /**
-   * Use {@link #getQuestionIdAndAnswerMap()} instead.
+   * Use {@link #getQuestionIdToAnswerMap()} instead.
    */
   @java.lang.Deprecated
   java.util.Map<java.lang.Long, java.lang.String>
-  getQuestionIdAndAnswer();
+  getQuestionIdToAnswer();
   /**
-   * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
   java.util.Map<java.lang.Long, java.lang.String>
-  getQuestionIdAndAnswerMap();
+  getQuestionIdToAnswerMap();
   /**
-   * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
 
-  java.lang.String getQuestionIdAndAnswerOrDefault(
+  java.lang.String getQuestionIdToAnswerOrDefault(
       long key,
       java.lang.String defaultValue);
   /**
-   * <code>map&lt;int64, string&gt; question_id_and_answer = 1;</code>
+   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
 
-  java.lang.String getQuestionIdAndAnswerOrThrow(
+  java.lang.String getQuestionIdToAnswerOrThrow(
       long key);
 }

@@ -207,7 +207,7 @@ class SessionServiceTests {
         when(userStatusService.updateOnlineUsersTtl(any(), anyInt()))
                 .thenReturn(Mono.empty());
         when(userStatusService.fetchUserSessionsStatus(any()))
-                .thenReturn(Mono.just(new UserSessionsStatus(UserStatus.OFFLINE, new HashMap<>())));
+                .thenReturn(Mono.just(new UserSessionsStatus(userId, UserStatus.OFFLINE, new HashMap<>())));
         when(userStatusService.removeStatusByUserIdAndDeviceTypes(any(), any()))
                 .thenReturn(Mono.just(true));
 

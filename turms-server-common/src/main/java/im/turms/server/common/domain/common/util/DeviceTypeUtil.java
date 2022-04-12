@@ -43,20 +43,20 @@ public final class DeviceTypeUtil {
     private static final int DEVICE_TYPE_COUNT = ALL_DEVICE_TYPES.length;
 
     // No need to use volatile or CAS
-    private static ByteObjectMap<Set<DeviceType>> deviceTypesByteMap = ByteObjectMaps.immutable.empty();
+    private static ByteObjectMap<Set<DeviceType>> byteToDeviceTypes = ByteObjectMaps.immutable.empty();
 
     private DeviceTypeUtil() {
     }
 
     public static Set<DeviceType> byte2DeviceTypes(byte deviceTypesByte) {
-        Set<DeviceType> deviceTypes = deviceTypesByteMap.get(deviceTypesByte);
+        Set<DeviceType> deviceTypes = byteToDeviceTypes.get(deviceTypesByte);
         if (deviceTypes != null) {
             return deviceTypes;
         }
         deviceTypes = byte2DeviceTypes0(deviceTypesByte);
-        MutableByteObjectMap<Set<DeviceType>> map = ByteObjectMaps.mutable.withAll(deviceTypesByteMap);
+        MutableByteObjectMap<Set<DeviceType>> map = ByteObjectMaps.mutable.withAll(byteToDeviceTypes);
         map.put(deviceTypesByte, deviceTypes);
-        deviceTypesByteMap = map;
+        byteToDeviceTypes = map;
         return deviceTypes;
     }
 

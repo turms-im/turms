@@ -33,11 +33,11 @@ public abstract class BaseMongoConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseMongoConfig.class);
 
-    private final Map<String, TurmsMongoClient> clientMap = new HashMap<>(8);
+    private final Map<String, TurmsMongoClient> uriToClient = new HashMap<>(8);
 
     @PreDestroy
     public void destroy() {
-        for (TurmsMongoClient client : clientMap.values()) {
+        for (TurmsMongoClient client : uriToClient.values()) {
             try {
                 client.destroy();
             } catch (Exception ignored) {
@@ -47,7 +47,7 @@ public abstract class BaseMongoConfig {
     }
 
     protected synchronized TurmsMongoClient getMongoClient(TurmsMongoProperties properties) {
-        return clientMap.computeIfAbsent(properties.getUri(), key -> {
+        return uriToClient.computeIfAbsent(properties.getUri(), key -> {
             try {
                 return TurmsMongoClient.of(properties)
                         .block(Duration.ofMinutes(1));

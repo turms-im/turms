@@ -49,15 +49,14 @@ public final class UserPermissionGroup extends BaseEntity {
     @Field(Fields.OWNED_GROUP_LIMIT_FOR_EACH_GROUP_TYPE)
     private final Integer ownedGroupLimitForEachGroupType;
 
-    @Field(Fields.GROUP_TYPE_LIMITS)
-    // group type id -> limit
-    private final Map<Long, Integer> groupTypeLimits;
+    @Field(Fields.GROUP_TYPE_TO_LIMIT)
+    private final Map<Long, Integer> groupTypeIdToLimit;
 
     public static final class Fields {
         public static final String CREATABLE_GROUP_TYPE_IDS = "cgtid";
         public static final String OWNED_GROUP_LIMIT = "ogl";
         public static final String OWNED_GROUP_LIMIT_FOR_EACH_GROUP_TYPE = "oglegt";
-        public static final String GROUP_TYPE_LIMITS = "gtl";
+        public static final String GROUP_TYPE_TO_LIMIT = "gtl";
 
         private Fields() {
         }

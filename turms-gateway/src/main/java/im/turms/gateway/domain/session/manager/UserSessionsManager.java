@@ -49,7 +49,7 @@ public final class UserSessionsManager {
     /**
      * The online session map of a user
      */
-    private final Map<DeviceType, UserSession> sessionMap = new ConcurrentEnumMap<>(DeviceType.class);
+    private final Map<DeviceType, UserSession> deviceTypeToSession = new ConcurrentEnumMap<>(DeviceType.class);
 
     public UserSessionsManager(Long userId, UserStatus userStatus) {
         Assert.notNull(userId, "userId must not be null");
@@ -73,14 +73,14 @@ public final class UserSessionsManager {
                 loggingInDeviceType,
                 deviceDetails,
                 coordinates);
-        boolean added = sessionMap.putIfAbsent(loggingInDeviceType, userSession) == null;
+        boolean added = deviceTypeToSession.putIfAbsent(loggingInDeviceType, userSession) == null;
         return added ? userSession : null;
     }
 
     public void setDeviceOffline(
             @NotNull DeviceType deviceType,
             @NotNull CloseReason closeReason) {
-        UserSession session = sessionMap.remove(deviceType);
+        UserSession session = deviceTypeToSession.remove(deviceType);
         if (session != null) {
             session.close(closeReason);
         }
@@ -90,7 +90,7 @@ public final class UserSessionsManager {
      * @return true if the notification is sent
      */
     public boolean pushSessionNotification(DeviceType deviceType, String serverId) {
-        UserSession userSession = sessionMap.get(deviceType);
+        UserSession userSession = deviceTypeToSession.get(deviceType);
         if (userSession == null) {
             return false;
         }
@@ -112,15 +112,15 @@ public final class UserSessionsManager {
     }
 
     public UserSession getSession(@NotNull DeviceType deviceType) {
-        return sessionMap.get(deviceType);
+        return deviceTypeToSession.get(deviceType);
     }
 
-    public int getSessionsNumber() {
-        return sessionMap.size();
+    public int countSessions() {
+        return deviceTypeToSession.size();
     }
 
     public Set<DeviceType> getLoggedInDeviceTypes() {
-        return sessionMap.keySet();
+        return deviceTypeToSession.keySet();
     }
 
 }

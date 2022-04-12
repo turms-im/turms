@@ -105,12 +105,11 @@ public class ConnectionService implements ClusterService {
      * 1. It is allowed to connect to non-member turms servers.
      * 2. Only after handshake done, a connection can be put in the pool.
      */
-    private final Map<String, TurmsConnection> connectionPool = new ConcurrentHashMap<>();
+    private final Map<String, TurmsConnection> nodeIdToConnection = new ConcurrentHashMap<>();
     /**
-     * Address -> Retry times.
      * Never stop reconnecting until the member is removed from the discovery registry
      */
-    private final Map<String, Integer> connectionRetryTimesMap = new ConcurrentHashMap<>();
+    private final Map<String, Integer> nodeIdToConnectionRetries = new ConcurrentHashMap<>();
     private final Set<String> connectingMembers = ConcurrentHashMap.newKeySet();
     /**
      * Use supplier rather than just listener so that we can bind each generated listener
@@ -157,7 +156,7 @@ public class ConnectionService implements ClusterService {
             }
         }
         ClosingHandshakeRequest request = new ClosingHandshakeRequest(ClosingHandshakeRequest.CLOSE_STATUS_CODE_SERVER_SHUTTING_DOWN);
-        for (TurmsConnection connection : connectionPool.values()) {
+        for (TurmsConnection connection : nodeIdToConnection.values()) {
             connection.setClosing(true);
             Connection conn = connection.getConnection();
             if (conn.isDisposed()) {
@@ -172,7 +171,7 @@ public class ConnectionService implements ClusterService {
                         .subscribe(null, t -> LOGGER.error("Failed to send a closing handshake request", t));
             }
         }
-        connectionPool.clear();
+        nodeIdToConnection.clear();
     }
 
     @Override
@@ -190,11 +189,11 @@ public class ConnectionService implements ClusterService {
 
     @Nullable
     public TurmsConnection getMemberConnection(String memberId) {
-        return connectionPool.get(memberId);
+        return nodeIdToConnection.get(memberId);
     }
 
     public boolean isMemberConnected(String memberId) {
-        TurmsConnection connection = connectionPool.get(memberId);
+        TurmsConnection connection = nodeIdToConnection.get(memberId);
         return connection != null
                 && !connection.getConnection().isDisposed()
                 && !connection.isClosing();
@@ -252,7 +251,7 @@ public class ConnectionService implements ClusterService {
                 nodeId,
                 member.getMemberHost(),
                 member.getMemberPort(),
-                connectionRetryTimesMap.getOrDefault(nodeId, 0));
+                nodeIdToConnectionRetries.getOrDefault(nodeId, 0));
         initTcpConnection(member.getMemberHost(), member.getMemberPort())
                 .doOnSuccess(conn -> {
                     TurmsConnection connection =
@@ -281,16 +280,16 @@ public class ConnectionService implements ClusterService {
                     if (!discoveryService.isKnownMember(nodeId)) {
                         return Mono.empty();
                     }
-                    int retryTimes = connectionRetryTimesMap.getOrDefault(nodeId, 0);
+                    int retryTimes = nodeIdToConnectionRetries.getOrDefault(nodeId, 0);
                     LOGGER.error("[Client] Failed to connect to member: {}[{}:{}]. Retry times: {}",
                             nodeId, member.getMemberHost(), member.getMemberPort(), retryTimes, throwable);
                     retryTimes++;
-                    connectionRetryTimesMap.put(nodeId, retryTimes);
+                    nodeIdToConnectionRetries.put(nodeId, retryTimes);
                     connectionRetryScheduler.schedule(() -> {
                         if (!isMemberConnected(nodeId) && discoveryService.isKnownMember(nodeId)) {
                             connectMemberUntilSucceedOrRemoved0(member);
                         } else {
-                            connectionRetryTimesMap.remove(nodeId);
+                            nodeIdToConnectionRetries.remove(nodeId);
                         }
                     }, Math.min(retryTimes * 10, 60), TimeUnit.SECONDS);
                     return Mono.empty();
@@ -306,7 +305,7 @@ public class ConnectionService implements ClusterService {
     // Keepalive
 
     public void keepalive(String nodeId) {
-        TurmsConnection connection = connectionPool.get(nodeId);
+        TurmsConnection connection = nodeIdToConnection.get(nodeId);
         if (connection == null) {
             throw new IllegalStateException("Received a keepalive request from a non-connected node: " + nodeId);
         }
@@ -315,7 +314,7 @@ public class ConnectionService implements ClusterService {
 
     private void sendKeepaliveToConnectionsForever() {
         while (!Thread.currentThread().isInterrupted()) {
-            Iterator<Map.Entry<String, TurmsConnection>> iterator = connectionPool.entrySet().iterator();
+            Iterator<Map.Entry<String, TurmsConnection>> iterator = nodeIdToConnection.entrySet().iterator();
             while (iterator.hasNext()) {
                 try {
                     sendKeepalive(iterator);
@@ -376,7 +375,7 @@ public class ConnectionService implements ClusterService {
         if (member == null) {
             return OpeningHandshakeRequest.RESPONSE_CODE_UNKNOWN_MEMBER;
         }
-        TurmsConnection existingConnection = connectionPool.get(nodeId);
+        TurmsConnection existingConnection = nodeIdToConnection.get(nodeId);
         if (existingConnection != null) {
             if (!existingConnection.getConnection().isDisposed()) {
                 return OpeningHandshakeRequest.RESPONSE_CODE_CONNECTION_ALREADY_EXISTS;
@@ -495,8 +494,8 @@ public class ConnectionService implements ClusterService {
                 nodeId,
                 member.getMemberHost(),
                 member.getMemberPort());
-        connectionPool.put(nodeId, connection);
-        connectionRetryTimesMap.remove(nodeId);
+        nodeIdToConnection.put(nodeId, connection);
+        nodeIdToConnectionRetries.remove(nodeId);
         connectingMembers.remove(nodeId);
         updateHasConnectedToAllMembers(discoveryService.getAllKnownMembers().keySet());
         for (MemberConnectionListener listener : connection.getListeners()) {

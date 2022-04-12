@@ -1,20 +1,20 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "im.turms.proto";
 
 export interface CheckGroupJoinQuestionsAnswersRequest {
-  questionIdAndAnswer: { [key: string]: string };
+  questionIdToAnswer: { [key: string]: string };
 }
 
-export interface CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry {
+export interface CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry {
   key: string;
   value: string;
 }
 
 function createBaseCheckGroupJoinQuestionsAnswersRequest(): CheckGroupJoinQuestionsAnswersRequest {
-  return { questionIdAndAnswer: {} };
+  return { questionIdToAnswer: {} };
 }
 
 export const CheckGroupJoinQuestionsAnswersRequest = {
@@ -22,9 +22,9 @@ export const CheckGroupJoinQuestionsAnswersRequest = {
     message: CheckGroupJoinQuestionsAnswersRequest,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    Object.keys(message.questionIdAndAnswer).forEach(key => {
-      CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry.encode(
-        { key: key as any, value: message.questionIdAndAnswer[key] },
+    Object.entries(message.questionIdToAnswer).forEach(([key, value]) => {
+      CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry.encode(
+        { key: key as any, value },
         writer.uint32(10).fork()
       ).ldelim();
     });
@@ -43,12 +43,12 @@ export const CheckGroupJoinQuestionsAnswersRequest = {
       switch (tag >>> 3) {
         case 1:
           const entry1 =
-            CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry.decode(
+            CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry.decode(
               reader,
               reader.uint32()
             );
           if (entry1.value !== undefined) {
-            message.questionIdAndAnswer[entry1.key] = entry1.value;
+            message.questionIdToAnswer[entry1.key] = entry1.value;
           }
           break;
         default:
@@ -60,13 +60,13 @@ export const CheckGroupJoinQuestionsAnswersRequest = {
   },
 };
 
-function createBaseCheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry(): CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry {
+function createBaseCheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry(): CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry {
   return { key: "0", value: "" };
 }
 
-export const CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry = {
+export const CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry = {
   encode(
-    message: CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry,
+    message: CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.key !== "0") {
@@ -81,11 +81,11 @@ export const CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number
-  ): CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry {
+  ): CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message =
-      createBaseCheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry();
+      createBaseCheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

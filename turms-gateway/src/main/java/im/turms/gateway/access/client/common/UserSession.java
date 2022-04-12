@@ -59,7 +59,8 @@ public final class UserSession {
     private final Long userId;
     private final DeviceType deviceType;
     /**
-     * Mainly used for push notification and statistics
+     * Mainly used for push notification and statistics.
+     * e.g. "deviceToken" and "registrationId".
      */
     private final Map<String, String> deviceDetails;
     private final Date loginDate;

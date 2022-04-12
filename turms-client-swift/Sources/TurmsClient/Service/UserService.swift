@@ -452,17 +452,14 @@ public class UserService {
      * updateLocation() in UserService sends the location of user to the server only.
      * sendMessage() with records of location sends user's location to both server and its recipients.
      */
-    public func updateLocation(latitude: Float, longitude: Float, name: String? = nil, address: String? = nil) -> Promise<Void> {
+    public func updateLocation(latitude: Float, longitude: Float, details: [String: String]? = nil) -> Promise<Void> {
         return turmsClient.driver
             .send {
                 $0.updateUserLocationRequest = .with {
                     $0.latitude = latitude
                     $0.longitude = longitude
-                    if let v = name {
-                        $0.name = v
-                    }
-                    if let v = address {
-                        $0.address = v
+                    if let v = details {
+                        $0.details = v
                     }
                 }
             }

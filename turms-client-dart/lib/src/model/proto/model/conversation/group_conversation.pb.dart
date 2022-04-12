@@ -13,21 +13,21 @@ import 'package:protobuf/protobuf.dart' as $pb;
 class GroupConversation extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'GroupConversation', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
     ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'groupId')
-    ..m<$fixnum.Int64, $fixnum.Int64>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'memberIdAndReadDate', entryClassName: 'GroupConversation.MemberIdAndReadDateEntry', keyFieldType: $pb.PbFieldType.O6, valueFieldType: $pb.PbFieldType.O6, packageName: const $pb.PackageName('im.turms.proto'))
+    ..m<$fixnum.Int64, $fixnum.Int64>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'memberIdToReadDate', entryClassName: 'GroupConversation.MemberIdToReadDateEntry', keyFieldType: $pb.PbFieldType.O6, valueFieldType: $pb.PbFieldType.O6, packageName: const $pb.PackageName('im.turms.proto'))
     ..hasRequiredFields = false
   ;
 
   GroupConversation._() : super();
   factory GroupConversation({
     $fixnum.Int64? groupId,
-    $core.Map<$fixnum.Int64, $fixnum.Int64>? memberIdAndReadDate,
+    $core.Map<$fixnum.Int64, $fixnum.Int64>? memberIdToReadDate,
   }) {
     final _result = create();
     if (groupId != null) {
       _result.groupId = groupId;
     }
-    if (memberIdAndReadDate != null) {
-      _result.memberIdAndReadDate.addAll(memberIdAndReadDate);
+    if (memberIdToReadDate != null) {
+      _result.memberIdToReadDate.addAll(memberIdToReadDate);
     }
     return _result;
   }
@@ -62,6 +62,6 @@ class GroupConversation extends $pb.GeneratedMessage {
   void clearGroupId() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.Map<$fixnum.Int64, $fixnum.Int64> get memberIdAndReadDate => $_getMap(1);
+  $core.Map<$fixnum.Int64, $fixnum.Int64> get memberIdToReadDate => $_getMap(1);
 }
 

@@ -37,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TurmsRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
 
-    private final ConcurrentHashMap<RequestHandlerId, TurmsHandlerMethod> methodCache = new ConcurrentHashMap<>(256);
+    private final ConcurrentHashMap<RequestHandlerId, TurmsHandlerMethod> idToMethodCache = new ConcurrentHashMap<>(256);
 
     @Override
     protected HandlerMethod createHandlerMethod(Object handler, Method method) {
@@ -53,14 +53,14 @@ public class TurmsRequestMappingHandlerMapping extends RequestMappingHandlerMapp
     public Mono<HandlerMethod> getHandlerInternal(ServerWebExchange exchange) {
         ServerHttpRequest request = exchange.getRequest();
         RequestHandlerId handlerId = new RequestHandlerId(request.getMethod(), request.getURI().getPath());
-        TurmsHandlerMethod method = methodCache.get(handlerId);
+        TurmsHandlerMethod method = idToMethodCache.get(handlerId);
         if (method != null) {
             return Mono.just(method);
         }
         Mono<HandlerMethod> handlerInternal = super.getHandlerInternal(exchange);
         return handlerInternal
                 // It's fine to overwrite
-                .doOnNext(handlerMethod -> methodCache.put(handlerId, (TurmsHandlerMethod) handlerMethod));
+                .doOnNext(handlerMethod -> idToMethodCache.put(handlerId, (TurmsHandlerMethod) handlerMethod));
     }
 
     private record RequestHandlerId(HttpMethod method, String path) {

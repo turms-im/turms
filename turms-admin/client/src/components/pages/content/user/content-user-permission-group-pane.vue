@@ -48,9 +48,9 @@ export default {
                             rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
-                            id: 'groupTypeLimits',
+                            id: 'groupTypeIdToLimit',
                             type: 'INPUT',
-                            label: 'groupTypeLimit',
+                            label: 'groupTypeIdToLimit',
                             rules: this.$validator.create({required: true})
                         }
                     ]
@@ -76,9 +76,9 @@ export default {
                             rules: this.$validator.create({onlyNumber: true})
                         },
                         {
-                            id: 'groupTypeLimits',
+                            id: 'groupTypeIdToLimit',
                             type: 'INPUT',
-                            label: 'groupTypeLimit'
+                            label: 'groupTypeIdToLimit'
                         }
                     ]
                 }
@@ -104,8 +104,8 @@ export default {
                         width: '15%'
                     },
                     {
-                        title: 'groupTypeLimit',
-                        key: 'groupTypeLimits',
+                        title: 'groupTypeIdToLimit',
+                        key: 'groupTypeIdToLimit',
                         width: '20%'
                     },
                     {

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
+import * as _m0 from "protobufjs/minimal";
 import { CreateSessionRequest } from "../request/user/create_session_request";
 import { DeleteSessionRequest } from "../request/user/delete_session_request";
 import { QueryConversationsRequest } from "../request/conversation/query_conversations_request";

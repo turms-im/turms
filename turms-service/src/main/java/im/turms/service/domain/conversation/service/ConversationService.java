@@ -130,11 +130,11 @@ public class ConversationService {
         if (readDate == null) {
             readDate = new Date();
         }
-        Multimap<Long, Long> multimap = ArrayListMultimap.create(1, keys.size());
+        Multimap<Long, Long> groupIdToMemberIds = ArrayListMultimap.create(1, keys.size());
         for (GroupConversation.GroupConversionMemberKey key : keys) {
-            multimap.put(key.getGroupId(), key.getMemberId());
+            groupIdToMemberIds.put(key.getGroupId(), key.getMemberId());
         }
-        Set<Map.Entry<Long, Collection<Long>>> entries = multimap.asMap().entrySet();
+        Set<Map.Entry<Long, Collection<Long>>> entries = groupIdToMemberIds.asMap().entrySet();
         List<Mono<Void>> upsertMonos = new ArrayList<>(entries.size());
         for (Map.Entry<Long, Collection<Long>> entry : entries) {
             Long groupId = entry.getKey();

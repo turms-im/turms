@@ -56,8 +56,8 @@ public  final class GroupConversation extends
     groupId_ = 0L;
   }
 
-  public static final int MEMBER_ID_AND_READ_DATE_FIELD_NUMBER = 2;
-  private static final class MemberIdAndReadDateDefaultEntryHolder {
+  public static final int MEMBER_ID_TO_READ_DATE_FIELD_NUMBER = 2;
+  private static final class MemberIdToReadDateDefaultEntryHolder {
     static final com.google.protobuf.MapEntryLite<
         java.lang.Long, java.lang.Long> defaultEntry =
             com.google.protobuf.MapEntryLite
@@ -68,85 +68,85 @@ public  final class GroupConversation extends
                 0L);
   }
   private com.google.protobuf.MapFieldLite<
-      java.lang.Long, java.lang.Long> memberIdAndReadDate_ =
+      java.lang.Long, java.lang.Long> memberIdToReadDate_ =
           com.google.protobuf.MapFieldLite.emptyMapField();
   private com.google.protobuf.MapFieldLite<java.lang.Long, java.lang.Long>
-  internalGetMemberIdAndReadDate() {
-    return memberIdAndReadDate_;
+  internalGetMemberIdToReadDate() {
+    return memberIdToReadDate_;
   }
   private com.google.protobuf.MapFieldLite<java.lang.Long, java.lang.Long>
-  internalGetMutableMemberIdAndReadDate() {
-    if (!memberIdAndReadDate_.isMutable()) {
-      memberIdAndReadDate_ = memberIdAndReadDate_.mutableCopy();
+  internalGetMutableMemberIdToReadDate() {
+    if (!memberIdToReadDate_.isMutable()) {
+      memberIdToReadDate_ = memberIdToReadDate_.mutableCopy();
     }
-    return memberIdAndReadDate_;
+    return memberIdToReadDate_;
   }
   @java.lang.Override
 
-  public int getMemberIdAndReadDateCount() {
-    return internalGetMemberIdAndReadDate().size();
+  public int getMemberIdToReadDateCount() {
+    return internalGetMemberIdToReadDate().size();
   }
   /**
-   * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+   * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
    */
   @java.lang.Override
 
-  public boolean containsMemberIdAndReadDate(
+  public boolean containsMemberIdToReadDate(
       long key) {
     
-    return internalGetMemberIdAndReadDate().containsKey(key);
+    return internalGetMemberIdToReadDate().containsKey(key);
   }
   /**
-   * Use {@link #getMemberIdAndReadDateMap()} instead.
+   * Use {@link #getMemberIdToReadDateMap()} instead.
    */
   @java.lang.Override
   @java.lang.Deprecated
-  public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdAndReadDate() {
-    return getMemberIdAndReadDateMap();
+  public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdToReadDate() {
+    return getMemberIdToReadDateMap();
   }
   /**
-   * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+   * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
    */
   @java.lang.Override
 
-  public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdAndReadDateMap() {
+  public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdToReadDateMap() {
     return java.util.Collections.unmodifiableMap(
-        internalGetMemberIdAndReadDate());
+        internalGetMemberIdToReadDate());
   }
   /**
-   * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+   * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
    */
   @java.lang.Override
 
-  public long getMemberIdAndReadDateOrDefault(
+  public long getMemberIdToReadDateOrDefault(
       long key,
       long defaultValue) {
     
     java.util.Map<java.lang.Long, java.lang.Long> map =
-        internalGetMemberIdAndReadDate();
+        internalGetMemberIdToReadDate();
     return map.containsKey(key) ? map.get(key) : defaultValue;
   }
   /**
-   * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+   * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
    */
   @java.lang.Override
 
-  public long getMemberIdAndReadDateOrThrow(
+  public long getMemberIdToReadDateOrThrow(
       long key) {
     
     java.util.Map<java.lang.Long, java.lang.Long> map =
-        internalGetMemberIdAndReadDate();
+        internalGetMemberIdToReadDate();
     if (!map.containsKey(key)) {
       throw new java.lang.IllegalArgumentException();
     }
     return map.get(key);
   }
   /**
-   * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+   * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
    */
   private java.util.Map<java.lang.Long, java.lang.Long>
-  getMutableMemberIdAndReadDateMap() {
-    return internalGetMutableMemberIdAndReadDate();
+  getMutableMemberIdToReadDateMap() {
+    return internalGetMutableMemberIdToReadDate();
   }
 
   public static im.turms.client.model.proto.model.conversation.GroupConversation parseFrom(
@@ -274,99 +274,99 @@ public  final class GroupConversation extends
 
     @java.lang.Override
 
-    public int getMemberIdAndReadDateCount() {
-      return instance.getMemberIdAndReadDateMap().size();
+    public int getMemberIdToReadDateCount() {
+      return instance.getMemberIdToReadDateMap().size();
     }
     /**
-     * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+     * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
     @java.lang.Override
 
-    public boolean containsMemberIdAndReadDate(
+    public boolean containsMemberIdToReadDate(
         long key) {
       
-      return instance.getMemberIdAndReadDateMap().containsKey(key);
+      return instance.getMemberIdToReadDateMap().containsKey(key);
     }
 
-    public Builder clearMemberIdAndReadDate() {
+    public Builder clearMemberIdToReadDate() {
       copyOnWrite();
-      instance.getMutableMemberIdAndReadDateMap().clear();
+      instance.getMutableMemberIdToReadDateMap().clear();
       return this;
     }
     /**
-     * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+     * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
 
-    public Builder removeMemberIdAndReadDate(
+    public Builder removeMemberIdToReadDate(
         long key) {
       
       copyOnWrite();
-      instance.getMutableMemberIdAndReadDateMap().remove(key);
+      instance.getMutableMemberIdToReadDateMap().remove(key);
       return this;
     }
     /**
-     * Use {@link #getMemberIdAndReadDateMap()} instead.
+     * Use {@link #getMemberIdToReadDateMap()} instead.
      */
     @java.lang.Override
     @java.lang.Deprecated
-    public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdAndReadDate() {
-      return getMemberIdAndReadDateMap();
+    public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdToReadDate() {
+      return getMemberIdToReadDateMap();
     }
     /**
-     * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+     * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
     @java.lang.Override
-    public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdAndReadDateMap() {
+    public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdToReadDateMap() {
       return java.util.Collections.unmodifiableMap(
-          instance.getMemberIdAndReadDateMap());
+          instance.getMemberIdToReadDateMap());
     }
     /**
-     * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+     * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
     @java.lang.Override
 
-    public long getMemberIdAndReadDateOrDefault(
+    public long getMemberIdToReadDateOrDefault(
         long key,
         long defaultValue) {
       
       java.util.Map<java.lang.Long, java.lang.Long> map =
-          instance.getMemberIdAndReadDateMap();
+          instance.getMemberIdToReadDateMap();
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+     * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
     @java.lang.Override
 
-    public long getMemberIdAndReadDateOrThrow(
+    public long getMemberIdToReadDateOrThrow(
         long key) {
       
       java.util.Map<java.lang.Long, java.lang.Long> map =
-          instance.getMemberIdAndReadDateMap();
+          instance.getMemberIdToReadDateMap();
       if (!map.containsKey(key)) {
         throw new java.lang.IllegalArgumentException();
       }
       return map.get(key);
     }
     /**
-     * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+     * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
-    public Builder putMemberIdAndReadDate(
+    public Builder putMemberIdToReadDate(
         long key,
         long value) {
       
       
       copyOnWrite();
-      instance.getMutableMemberIdAndReadDateMap().put(key, value);
+      instance.getMutableMemberIdToReadDateMap().put(key, value);
       return this;
     }
     /**
-     * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+     * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
-    public Builder putAllMemberIdAndReadDate(
+    public Builder putAllMemberIdToReadDate(
         java.util.Map<java.lang.Long, java.lang.Long> values) {
       copyOnWrite();
-      instance.getMutableMemberIdAndReadDateMap().putAll(values);
+      instance.getMutableMemberIdToReadDateMap().putAll(values);
       return this;
     }
 
@@ -387,8 +387,8 @@ public  final class GroupConversation extends
       case BUILD_MESSAGE_INFO: {
           java.lang.Object[] objects = new java.lang.Object[] {
             "groupId_",
-            "memberIdAndReadDate_",
-            MemberIdAndReadDateDefaultEntryHolder.defaultEntry,
+            "memberIdToReadDate_",
+            MemberIdToReadDateDefaultEntryHolder.defaultEntry,
           };
           java.lang.String info =
               "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0001\u0000\u0000\u0001\u0002\u00022";

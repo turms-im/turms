@@ -332,12 +332,12 @@ public class GroupServiceController {
         return clientRequest -> {
             CheckGroupJoinQuestionsAnswersRequest request = clientRequest.turmsRequest()
                     .getCheckGroupJoinQuestionsAnswersRequest();
-            Set<GroupQuestionIdAndAnswer> idAndAnswers =
-                    CollectionUtil.newSetWithExpectedSize(request.getQuestionIdAndAnswerCount());
-            for (Map.Entry<Long, String> entry : request.getQuestionIdAndAnswerMap().entrySet()) {
-                idAndAnswers.add(new GroupQuestionIdAndAnswer(entry.getKey(), entry.getValue()));
+            Set<GroupQuestionIdAndAnswer> idAndAnswerPairs =
+                    CollectionUtil.newSetWithExpectedSize(request.getQuestionIdToAnswerCount());
+            for (Map.Entry<Long, String> entry : request.getQuestionIdToAnswerMap().entrySet()) {
+                idAndAnswerPairs.add(new GroupQuestionIdAndAnswer(entry.getKey(), entry.getValue()));
             }
-            return groupQuestionService.checkGroupQuestionAnswerAndJoin(clientRequest.userId(), idAndAnswers)
+            return groupQuestionService.checkGroupQuestionAnswerAndJoin(clientRequest.userId(), idAndAnswerPairs)
                     .map(answerResult -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
                             .setGroupJoinQuestionAnswerResult(answerResult).build()));
         };

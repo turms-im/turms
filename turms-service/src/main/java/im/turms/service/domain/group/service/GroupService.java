@@ -67,6 +67,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -750,21 +751,19 @@ public class GroupService {
                         Set<Long> creatableGroupTypeIds = userPermissionGroup.getCreatableGroupTypeIds();
                         if (!creatableGroupTypeIds.contains(groupTypeId)) {
                             String ids = StringUtils.join(creatableGroupTypeIds, ", ");
-                            String reason = "The requester are only allowed to create groups with the types " + ids;
+                            String reason = "The requester is only allowed to create groups with the types " + ids;
                             return Mono.just(ServicePermission.get(ResponseStatusCode.NO_PERMISSION_TO_CREATE_GROUP_WITH_GROUP_TYPE, reason));
                         }
+                        Map<Long, Integer> groupTypeIdToLimit = userPermissionGroup.getGroupTypeIdToLimit();
                         boolean hasUnlimitedGroups = userPermissionGroup.getOwnedGroupLimitForEachGroupType() == Integer.MAX_VALUE
-                                && (userPermissionGroup.getGroupTypeLimits() == null
-                                || userPermissionGroup.getGroupTypeLimits()
-                                .getOrDefault(groupTypeId, Integer.MAX_VALUE) == Integer.MAX_VALUE);
+                                && (groupTypeIdToLimit == null || groupTypeIdToLimit.getOrDefault(groupTypeId, Integer.MAX_VALUE) == Integer.MAX_VALUE);
                         if (hasUnlimitedGroups) {
                             return Mono.just(ServicePermission.OK);
                         }
                         return countOwnedGroups(requesterId, groupTypeId)
                                 .map(ownedGroupsNumber -> {
                                     boolean canCreate = ownedGroupsNumber < userPermissionGroup.getOwnedGroupLimitForEachGroupType()
-                                            && userPermissionGroup.getGroupTypeLimits().getOrDefault(groupTypeId, Integer.MAX_VALUE) <
-                                            Integer.MAX_VALUE;
+                                            && groupTypeIdToLimit.getOrDefault(groupTypeId, Integer.MAX_VALUE) < Integer.MAX_VALUE;
                                     ResponseStatusCode code = canCreate ? ResponseStatusCode.OK : ResponseStatusCode.MAX_OWNED_GROUPS_REACHED;
                                     return ServicePermission.get(code);
                                 });

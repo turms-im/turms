@@ -1,21 +1,21 @@
 /* eslint-disable */
 import Long from "long";
-import _m0 from "protobufjs/minimal";
+import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "im.turms.proto";
 
 export interface GroupConversation {
   groupId: string;
-  memberIdAndReadDate: { [key: string]: string };
+  memberIdToReadDate: { [key: string]: string };
 }
 
-export interface GroupConversation_MemberIdAndReadDateEntry {
+export interface GroupConversation_MemberIdToReadDateEntry {
   key: string;
   value: string;
 }
 
 function createBaseGroupConversation(): GroupConversation {
-  return { groupId: "0", memberIdAndReadDate: {} };
+  return { groupId: "0", memberIdToReadDate: {} };
 }
 
 export const GroupConversation = {
@@ -26,9 +26,9 @@ export const GroupConversation = {
     if (message.groupId !== "0") {
       writer.uint32(8).int64(message.groupId);
     }
-    Object.keys(message.memberIdAndReadDate).forEach(key => {
-      GroupConversation_MemberIdAndReadDateEntry.encode(
-        { key: key as any, value: message.memberIdAndReadDate[key] },
+    Object.entries(message.memberIdToReadDate).forEach(([key, value]) => {
+      GroupConversation_MemberIdToReadDateEntry.encode(
+        { key: key as any, value },
         writer.uint32(18).fork()
       ).ldelim();
     });
@@ -46,12 +46,12 @@ export const GroupConversation = {
           message.groupId = longToString(reader.int64() as Long);
           break;
         case 2:
-          const entry2 = GroupConversation_MemberIdAndReadDateEntry.decode(
+          const entry2 = GroupConversation_MemberIdToReadDateEntry.decode(
             reader,
             reader.uint32()
           );
           if (entry2.value !== undefined) {
-            message.memberIdAndReadDate[entry2.key] = entry2.value;
+            message.memberIdToReadDate[entry2.key] = entry2.value;
           }
           break;
         default:
@@ -63,13 +63,13 @@ export const GroupConversation = {
   },
 };
 
-function createBaseGroupConversation_MemberIdAndReadDateEntry(): GroupConversation_MemberIdAndReadDateEntry {
+function createBaseGroupConversation_MemberIdToReadDateEntry(): GroupConversation_MemberIdToReadDateEntry {
   return { key: "0", value: "0" };
 }
 
-export const GroupConversation_MemberIdAndReadDateEntry = {
+export const GroupConversation_MemberIdToReadDateEntry = {
   encode(
-    message: GroupConversation_MemberIdAndReadDateEntry,
+    message: GroupConversation_MemberIdToReadDateEntry,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.key !== "0") {
@@ -84,10 +84,10 @@ export const GroupConversation_MemberIdAndReadDateEntry = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number
-  ): GroupConversation_MemberIdAndReadDateEntry {
+  ): GroupConversation_MemberIdToReadDateEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupConversation_MemberIdAndReadDateEntry();
+    const message = createBaseGroupConversation_MemberIdToReadDateEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

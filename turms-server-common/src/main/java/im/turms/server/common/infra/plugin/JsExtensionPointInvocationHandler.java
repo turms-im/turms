@@ -38,10 +38,10 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
             "hashCode",
             "toString");
 
-    private final Map<Class<? extends ExtensionPoint>, Map<String, Value>> functions;
+    private final Map<Class<? extends ExtensionPoint>, Map<String, Value>> extensionPointToFunction;
 
-    public JsExtensionPointInvocationHandler(Map<Class<? extends ExtensionPoint>, Map<String, Value>> functions) {
-        this.functions = functions;
+    public JsExtensionPointInvocationHandler(Map<Class<? extends ExtensionPoint>, Map<String, Value>> extensionPointToFunction) {
+        this.extensionPointToFunction = extensionPointToFunction;
     }
 
     @Override
@@ -49,15 +49,15 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
         if (OBJECT_METHODS.contains(method.getName())) {
             return method.invoke(proxy, args);
         }
-        Map<String, Value> functionMap = functions.get(method.getDeclaringClass());
+        Map<String, Value> nameToFunction = extensionPointToFunction.get(method.getDeclaringClass());
         Class<?> returnType = method.getReturnType();
         // We only check Mono because we never use Flux
         // for the interfaces of extension points
         boolean isAsync = returnType.isAssignableFrom(Mono.class);
-        if (functionMap == null) {
+        if (nameToFunction == null) {
             return isAsync ? Mono.empty() : null;
         }
-        Value function = functionMap.get(method.getName());
+        Value function = nameToFunction.get(method.getName());
         if (function == null) {
             if (isAsync) {
                 // Keep it simple because we have only

@@ -68,12 +68,9 @@ public class MetricsPool {
 
     public Map<String, Double> getMeasurements(Meter meter) {
         Iterable<Measurement> measures = meter.measure();
-        Map<String, Double> measurements;
-        if (measures instanceof Collection<Measurement> measurementCollection) {
-            measurements = Maps.newHashMapWithExpectedSize(measurementCollection.size());
-        } else {
-            measurements = new HashMap<>(8);
-        }
+        Map<String, Double> measurements = measures instanceof Collection<Measurement> measurementCollection
+                ? Maps.newHashMapWithExpectedSize(measurementCollection.size())
+                : new HashMap<>(8);
         for (Measurement measurement : measures) {
             String tag = measurement.getStatistic().getTagValueRepresentation();
             measurements.put(tag, measurement.getValue());
@@ -104,8 +101,8 @@ public class MetricsPool {
                 names.addAll(collectNames(meterRegistry));
             }
         } else {
-            Map<Meter.Id, Meter> meterMap = getMeterMap();
-            for (Meter meter : meterMap.values()) {
+            Map<Meter.Id, Meter> idToMeter = getMeterMap();
+            for (Meter meter : idToMeter.values()) {
                 names.add(meter.getId().getName());
             }
         }

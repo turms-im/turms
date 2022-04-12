@@ -31,36 +31,36 @@ public interface GroupConversationOrBuilder extends
   long getGroupId();
 
   /**
-   * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+   * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
    */
-  int getMemberIdAndReadDateCount();
+  int getMemberIdToReadDateCount();
   /**
-   * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+   * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
    */
-  boolean containsMemberIdAndReadDate(
+  boolean containsMemberIdToReadDate(
       long key);
   /**
-   * Use {@link #getMemberIdAndReadDateMap()} instead.
+   * Use {@link #getMemberIdToReadDateMap()} instead.
    */
   @java.lang.Deprecated
   java.util.Map<java.lang.Long, java.lang.Long>
-  getMemberIdAndReadDate();
+  getMemberIdToReadDate();
   /**
-   * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+   * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
    */
   java.util.Map<java.lang.Long, java.lang.Long>
-  getMemberIdAndReadDateMap();
+  getMemberIdToReadDateMap();
   /**
-   * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+   * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
    */
 
-  long getMemberIdAndReadDateOrDefault(
+  long getMemberIdToReadDateOrDefault(
       long key,
       long defaultValue);
   /**
-   * <code>map&lt;int64, int64&gt; member_id_and_read_date = 2;</code>
+   * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
    */
 
-  long getMemberIdAndReadDateOrThrow(
+  long getMemberIdToReadDateOrThrow(
       long key);
 }

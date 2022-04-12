@@ -466,7 +466,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleCheckGroupQuestionAnswerRequest_answerGroupQuestions_shouldReturnAnswerResult() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setCheckGroupJoinQuestionsAnswersRequest(CheckGroupJoinQuestionsAnswersRequest.newBuilder()
-                        .putQuestionIdAndAnswer(groupJoinQuestionId, "answer"))
+                        .putQuestionIdToAnswer(groupJoinQuestionId, "answer"))
                 .build();
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCheckGroupQuestionAnswerRequest()

@@ -33,7 +33,7 @@ import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.observation.service.StatisticsService;
 import im.turms.service.domain.user.access.admin.dto.request.UpdateOnlineStatusDTO;
-import im.turms.service.domain.user.access.admin.dto.response.OnlineUserNumberDTO;
+import im.turms.service.domain.user.access.admin.dto.response.OnlineUserCountDTO;
 import im.turms.service.domain.user.access.admin.dto.response.UserLocationDTO;
 import im.turms.service.domain.user.service.UserService;
 import im.turms.service.domain.user.service.onlineuser.SessionService;
@@ -88,19 +88,19 @@ public class UserOnlineInfoController extends BaseController {
 
     @GetMapping("/count")
     @RequiredPermission(AdminPermission.STATISTICS_USER_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<OnlineUserNumberDTO>>> countOnlineUsers(
+    public Mono<ResponseEntity<ResponseDTO<OnlineUserCountDTO>>> countOnlineUsers(
             @RequestParam(required = false, defaultValue = "false") boolean countByNodes) {
         if (!countByNodes) {
             return ResponseFactory.okIfTruthy(statisticsService.countOnlineUsers()
-                    .map(total -> new OnlineUserNumberDTO(total, null)));
+                    .map(total -> new OnlineUserCountDTO(total, null)));
         }
         return ResponseFactory.okIfTruthy(statisticsService.countOnlineUsersByNodes()
-                .map(nodeIdAndNumberMap -> {
+                .map(nodeIdToUserCount -> {
                     int sum = 0;
-                    for (int onlineUserNumber : nodeIdAndNumberMap.values()) {
-                        sum += onlineUserNumber;
+                    for (int onlineUserCount : nodeIdToUserCount.values()) {
+                        sum += onlineUserCount;
                     }
-                    return new OnlineUserNumberDTO(sum, nodeIdAndNumberMap);
+                    return new OnlineUserCountDTO(sum, nodeIdToUserCount);
                 }));
     }
 

@@ -42,12 +42,12 @@ public class FileResource extends FileSystemResource {
 
     @Override
     public ReadableByteChannel readableChannel() throws IOException {
-        throw new UnsupportedEncodingException("TemporaryFileResource does not support ReadableByteChannel");
+        throw new UnsupportedEncodingException("FileResource does not support ReadableByteChannel");
     }
 
     @Override
     public InputStream getInputStream() throws IOException {
-        throw new UnsupportedEncodingException("TemporaryFileResource does not support InputStream");
+        throw new UnsupportedEncodingException("FileResource does not support InputStream");
     }
 
     public void cleanup(@Nullable Throwable throwable) {

@@ -67,14 +67,14 @@ public class UserPermissionGroupController extends BaseController {
             @RequestBody AddUserPermissionGroupDTO addUserPermissionGroupDTO) {
         Set<Long> creatableGroupTypesIds = addUserPermissionGroupDTO.creatableGroupTypeIds();
         creatableGroupTypesIds = creatableGroupTypesIds == null ? Collections.emptySet() : creatableGroupTypesIds;
-        Map<Long, Integer> groupTypeLimits = addUserPermissionGroupDTO.groupTypeLimits();
-        groupTypeLimits = groupTypeLimits == null ? Collections.emptyMap() : groupTypeLimits;
+        Map<Long, Integer> groupTypeIdToLimit = addUserPermissionGroupDTO.groupTypeIdToLimit();
+        groupTypeIdToLimit = groupTypeIdToLimit == null ? Collections.emptyMap() : groupTypeIdToLimit;
         Mono<UserPermissionGroup> userPermissionGroupMono = userPermissionGroupService.addUserPermissionGroup(
                 addUserPermissionGroupDTO.id(),
                 creatableGroupTypesIds,
                 addUserPermissionGroupDTO.ownedGroupLimit(),
                 addUserPermissionGroupDTO.ownedGroupLimitForEachGroupType(),
-                groupTypeLimits);
+                groupTypeIdToLimit);
         return ResponseFactory.okIfTruthy(userPermissionGroupMono);
     }
 
@@ -108,7 +108,7 @@ public class UserPermissionGroupController extends BaseController {
                         updateUserPermissionGroupDTO.creatableGroupTypeIds(),
                         updateUserPermissionGroupDTO.ownedGroupLimit(),
                         updateUserPermissionGroupDTO.ownedGroupLimitForEachGroupType(),
-                        updateUserPermissionGroupDTO.groupTypeLimits())
+                        updateUserPermissionGroupDTO.groupTypeIdToLimit())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

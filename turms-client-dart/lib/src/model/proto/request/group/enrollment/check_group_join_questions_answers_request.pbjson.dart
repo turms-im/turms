@@ -12,14 +12,14 @@ import 'dart:typed_data' as $typed_data;
 const CheckGroupJoinQuestionsAnswersRequest$json = const {
   '1': 'CheckGroupJoinQuestionsAnswersRequest',
   '2': const [
-    const {'1': 'question_id_and_answer', '3': 1, '4': 3, '5': 11, '6': '.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest.QuestionIdAndAnswerEntry', '10': 'questionIdAndAnswer'},
+    const {'1': 'question_id_to_answer', '3': 1, '4': 3, '5': 11, '6': '.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest.QuestionIdToAnswerEntry', '10': 'questionIdToAnswer'},
   ],
-  '3': const [CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry$json],
+  '3': const [CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry$json],
 };
 
 @$core.Deprecated('Use checkGroupJoinQuestionsAnswersRequestDescriptor instead')
-const CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry$json = const {
-  '1': 'QuestionIdAndAnswerEntry',
+const CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry$json = const {
+  '1': 'QuestionIdToAnswerEntry',
   '2': const [
     const {'1': 'key', '3': 1, '4': 1, '5': 3, '10': 'key'},
     const {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
@@ -28,4 +28,4 @@ const CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry$json = cons
 };
 
 /// Descriptor for `CheckGroupJoinQuestionsAnswersRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List checkGroupJoinQuestionsAnswersRequestDescriptor = $convert.base64Decode('CiVDaGVja0dyb3VwSm9pblF1ZXN0aW9uc0Fuc3dlcnNSZXF1ZXN0EoMBChZxdWVzdGlvbl9pZF9hbmRfYW5zd2VyGAEgAygLMk4uaW0udHVybXMucHJvdG8uQ2hlY2tHcm91cEpvaW5RdWVzdGlvbnNBbnN3ZXJzUmVxdWVzdC5RdWVzdGlvbklkQW5kQW5zd2VyRW50cnlSE3F1ZXN0aW9uSWRBbmRBbnN3ZXIaRgoYUXVlc3Rpb25JZEFuZEFuc3dlckVudHJ5EhAKA2tleRgBIAEoA1IDa2V5EhQKBXZhbHVlGAIgASgJUgV2YWx1ZToCOAE=');
+final $typed_data.Uint8List checkGroupJoinQuestionsAnswersRequestDescriptor = $convert.base64Decode('CiVDaGVja0dyb3VwSm9pblF1ZXN0aW9uc0Fuc3dlcnNSZXF1ZXN0EoABChVxdWVzdGlvbl9pZF90b19hbnN3ZXIYASADKAsyTS5pbS50dXJtcy5wcm90by5DaGVja0dyb3VwSm9pblF1ZXN0aW9uc0Fuc3dlcnNSZXF1ZXN0LlF1ZXN0aW9uSWRUb0Fuc3dlckVudHJ5UhJxdWVzdGlvbklkVG9BbnN3ZXIaRQoXUXVlc3Rpb25JZFRvQW5zd2VyRW50cnkSEAoDa2V5GAEgASgDUgNrZXkSFAoFdmFsdWUYAiABKAlSBXZhbHVlOgI4AQ==');

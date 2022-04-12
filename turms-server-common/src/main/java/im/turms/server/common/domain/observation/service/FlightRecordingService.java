@@ -67,7 +67,7 @@ public class FlightRecordingService {
     /**
      * Includes not deleted recording sessions
      */
-    private final Map<Long, RecordingSession> sessionMap = new ConcurrentHashMap<>(16);
+    private final Map<Long, RecordingSession> idToSession = new ConcurrentHashMap<>(16);
     private final MpscUnboundedArrayQueue<Long> closedNotDeletedRecordingIds;
 
     public FlightRecordingService(TurmsApplicationContext context,
@@ -92,7 +92,7 @@ public class FlightRecordingService {
         jfrBaseDir.mkdirs();
         for (Recording recording : FlightRecorder.getFlightRecorder().getRecordings()) {
             long id = recording.getId();
-            sessionMap.put(id, new RecordingSession(id, recording, null));
+            idToSession.put(id, new RecordingSession(id, recording, null));
         }
         FlightRecorderProperties recorderProperties = propertiesManager.getLocalProperties().getFlightRecorder();
         closedRecordingRetentionPeriod = recorderProperties.getClosedRecordingRetentionPeriod();
@@ -101,7 +101,7 @@ public class FlightRecordingService {
             taskManager.reschedule("closedRecordingCleanup", CronConst.CLOSED_RECORDINGS_CLEANUP_CRON, () -> {
                 List<Long>[] pendingIds = new List[]{null};
                 closedNotDeletedRecordingIds.drain(id ->
-                        sessionMap.computeIfPresent(id, (key, session) -> {
+                        idToSession.computeIfPresent(id, (key, session) -> {
                             try {
                                 session.deleteFile();
                                 return null;
@@ -169,7 +169,7 @@ public class FlightRecordingService {
                 recording.scheduleStart(Duration.of(delaySeconds, ChronoUnit.SECONDS));
             }
             RecordingSession session = new RecordingSession(id, recording, description);
-            sessionMap.put(id, session);
+            idToSession.put(id, session);
             return session;
         } catch (Exception e) {
             try {
@@ -185,7 +185,7 @@ public class FlightRecordingService {
     public UpdateResultDTO closeRecordings() {
         long matchedCount = 0;
         long modifiedCount = 0;
-        for (RecordingSession session : sessionMap.values()) {
+        for (RecordingSession session : idToSession.values()) {
             matchedCount++;
             if (session.isRunning()) {
                 closeSession(session);
@@ -199,7 +199,7 @@ public class FlightRecordingService {
         long matchedCount = 0;
         long modifiedCount = 0;
         for (Long id : ids) {
-            RecordingSession session = sessionMap.get(id);
+            RecordingSession session = idToSession.get(id);
             if (session == null) {
                 continue;
             }
@@ -213,7 +213,7 @@ public class FlightRecordingService {
     }
 
     public void closeRecording(Long id) {
-        RecordingSession session = sessionMap.get(id);
+        RecordingSession session = idToSession.get(id);
         if (session == null) {
             return;
         }
@@ -225,7 +225,7 @@ public class FlightRecordingService {
     @Nullable
     @SneakyThrows
     public FileSystemResource getRecordingFile(Long id, boolean close) {
-        RecordingSession session = sessionMap.get(id);
+        RecordingSession session = idToSession.get(id);
         if (session == null) {
             return null;
         }
@@ -247,7 +247,7 @@ public class FlightRecordingService {
 
     public int deleteRecordings() {
         int deletedCount = 0;
-        Iterator<RecordingSession> iterator = sessionMap.values().iterator();
+        Iterator<RecordingSession> iterator = idToSession.values().iterator();
         while (iterator.hasNext()) {
             RecordingSession session = iterator.next();
             session.close(false);
@@ -260,7 +260,7 @@ public class FlightRecordingService {
     public int deleteRecordings(Set<Long> ids) {
         int deletedCount = 0;
         for (Long id : ids) {
-            RecordingSession session = sessionMap.remove(id);
+            RecordingSession session = idToSession.remove(id);
             if (session == null) {
                 continue;
             }
@@ -271,13 +271,13 @@ public class FlightRecordingService {
     }
 
     public Collection<RecordingSession> getSessions() {
-        return sessionMap.values();
+        return idToSession.values();
     }
 
     public Collection<RecordingSession> getSessions(Set<Long> ids) {
         List<RecordingSession> sessions = new ArrayList<>(ids.size());
         for (Long id : ids) {
-            RecordingSession session = sessionMap.get(id);
+            RecordingSession session = idToSession.get(id);
             if (session != null) {
                 sessions.add(session);
             }
@@ -291,7 +291,7 @@ public class FlightRecordingService {
             closedNotDeletedRecordingIds.offer(session.id());
         } else if (closedRecordingRetentionPeriod == 0) {
             session.close(false);
-            sessionMap.remove(session.id(), session);
+            idToSession.remove(session.id(), session);
         } else {
             session.close(true);
         }

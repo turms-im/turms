@@ -413,14 +413,14 @@ public class GroupService {
             }
     }
 
-    public func answerGroupQuestions(_ questionIdAndAnswer: [Int64: String]) -> Promise<GroupJoinQuestionsAnswerResult> {
-        if questionIdAndAnswer.isEmpty {
+    public func answerGroupQuestions(_ questionIdToAnswer: [Int64: String]) -> Promise<GroupJoinQuestionsAnswerResult> {
+        if questionIdToAnswer.isEmpty {
             return Promise.value(GroupJoinQuestionsAnswerResult())
         }
         return turmsClient.driver
             .send {
                 $0.checkGroupJoinQuestionsAnswersRequest = .with {
-                    $0.questionIDAndAnswer = questionIdAndAnswer
+                    $0.questionIDToAnswer = questionIdToAnswer
                 }
             }
             .map {

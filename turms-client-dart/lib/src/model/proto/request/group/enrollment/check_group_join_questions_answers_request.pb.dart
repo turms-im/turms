@@ -12,17 +12,17 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 class CheckGroupJoinQuestionsAnswersRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CheckGroupJoinQuestionsAnswersRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
-    ..m<$fixnum.Int64, $core.String>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'questionIdAndAnswer', entryClassName: 'CheckGroupJoinQuestionsAnswersRequest.QuestionIdAndAnswerEntry', keyFieldType: $pb.PbFieldType.O6, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('im.turms.proto'))
+    ..m<$fixnum.Int64, $core.String>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'questionIdToAnswer', entryClassName: 'CheckGroupJoinQuestionsAnswersRequest.QuestionIdToAnswerEntry', keyFieldType: $pb.PbFieldType.O6, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('im.turms.proto'))
     ..hasRequiredFields = false
   ;
 
   CheckGroupJoinQuestionsAnswersRequest._() : super();
   factory CheckGroupJoinQuestionsAnswersRequest({
-    $core.Map<$fixnum.Int64, $core.String>? questionIdAndAnswer,
+    $core.Map<$fixnum.Int64, $core.String>? questionIdToAnswer,
   }) {
     final _result = create();
-    if (questionIdAndAnswer != null) {
-      _result.questionIdAndAnswer.addAll(questionIdAndAnswer);
+    if (questionIdToAnswer != null) {
+      _result.questionIdToAnswer.addAll(questionIdToAnswer);
     }
     return _result;
   }
@@ -48,6 +48,6 @@ class CheckGroupJoinQuestionsAnswersRequest extends $pb.GeneratedMessage {
   static CheckGroupJoinQuestionsAnswersRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.Map<$fixnum.Int64, $core.String> get questionIdAndAnswer => $_getMap(0);
+  $core.Map<$fixnum.Int64, $core.String> get questionIdToAnswer => $_getMap(0);
 }
 
