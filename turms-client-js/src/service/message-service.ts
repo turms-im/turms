@@ -1,18 +1,18 @@
 import * as Long from 'long';
 
-import TurmsClient from '../turms-client';
-import Validator from '../util/validator';
-import { ParsedModel } from '../model/parsed-model';
-import NotificationUtil from '../util/notification-util';
-import BuiltinSystemMessageType from '../model/builtin-system-message-type';
-import MessageAddition from '../model/message-addition';
-import ResponseError from '../error/response-error';
-import { UserLocation } from '../model/proto/model/user/user_location';
 import { AudioFile } from '../model/proto/model/file/audio_file';
-import { VideoFile } from '../model/proto/model/file/video_file';
-import { ImageFile } from '../model/proto/model/file/image_file';
-import { File } from '../model/proto/model/file/file';
+import BuiltinSystemMessageType from '../model/builtin-system-message-type';
 import DataParser from '../util/data-parser';
+import { File } from '../model/proto/model/file/file';
+import { ImageFile } from '../model/proto/model/file/image_file';
+import MessageAddition from '../model/message-addition';
+import NotificationUtil from '../util/notification-util';
+import { ParsedModel } from '../model/parsed-model';
+import ResponseError from '../error/response-error';
+import TurmsClient from '../turms-client';
+import { UserLocation } from '../model/proto/model/user/user_location';
+import Validator from '../util/validator';
+import { VideoFile } from '../model/proto/model/file/video_file';
 
 export default class MessageService {
     /**

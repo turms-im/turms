@@ -15,9 +15,9 @@
     </a-layout>
 </template>
 <script>
+import LoginModal from '../modals/login-modal';
 import LayoutHeader from './layout-header';
 import LayoutSider from './layout-sider';
-import LoginModal from '../modals/login-modal';
 
 export default {
     components: {

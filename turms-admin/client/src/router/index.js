@@ -1,14 +1,14 @@
 import {createRouter, createWebHistory} from 'vue-router';
-import ContentUser from '../components/pages/content/user/index';
-import ContentGroup from '../components/pages/content/group/index';
-import ContentConversation from '../components/pages/content/conversation/index';
-import ContentMessage from '../components/pages/content/message/index';
-import Blocklist from '../components/pages/blocklist/index';
+import About from '../components/pages/about/index';
 import AccessControl from '../components/pages/access/index';
+import Blocklist from '../components/pages/blocklist/index';
+import ClientTerminal from '../components/pages/terminal';
 import ClusterConfig from '../components/pages/cluster/config';
 import ClusterDashboard from '../components/pages/cluster/dashboard';
-import ClientTerminal from '../components/pages/terminal';
-import About from '../components/pages/about/index';
+import ContentConversation from '../components/pages/content/conversation/index';
+import ContentGroup from '../components/pages/content/group/index';
+import ContentMessage from '../components/pages/content/message/index';
+import ContentUser from '../components/pages/content/user/index';
 
 const routes = [
     {

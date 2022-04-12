@@ -1,20 +1,20 @@
-import TurmsClient from '../turms-client';
-import Validator from '../util/validator';
-import { ParsedModel } from '../model/parsed-model';
-import NotificationUtil from '../util/notification-util';
-import SystemUtil from '../util/system-util';
-import UserLocation from '../model/user-location';
-import ResponseStatusCode from '../model/response-status-code';
-import ResponseError from '../error/response-error';
-import StateStore from '../driver/state-store';
-import SessionCloseInfo from '../model/session-close-info';
-import SessionCloseStatus from '../model/session-close-status';
-import { UserStatus } from '../model/proto/constant/user_status';
-import { DeviceType } from '../model/proto/constant/device_type';
-import { ProfileAccessStrategy } from '../model/proto/constant/profile_access_strategy';
-import { ResponseAction } from '../model/proto/constant/response_action';
 import { NotificationType, RequestType } from '../driver/service/shared-context-service';
 import DataParser from '../util/data-parser';
+import { DeviceType } from '../model/proto/constant/device_type';
+import NotificationUtil from '../util/notification-util';
+import { ParsedModel } from '../model/parsed-model';
+import { ProfileAccessStrategy } from '../model/proto/constant/profile_access_strategy';
+import { ResponseAction } from '../model/proto/constant/response_action';
+import ResponseError from '../error/response-error';
+import ResponseStatusCode from '../model/response-status-code';
+import SessionCloseInfo from '../model/session-close-info';
+import SessionCloseStatus from '../model/session-close-status';
+import StateStore from '../driver/state-store';
+import SystemUtil from '../util/system-util';
+import TurmsClient from '../turms-client';
+import UserLocation from '../model/user-location';
+import { UserStatus } from '../model/proto/constant/user_status';
+import Validator from '../util/validator';
 
 export interface UserInfo {
     userId?: string;

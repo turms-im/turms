@@ -15,16 +15,17 @@
  * limitations under the License.
  */
 
-import MessageService from './service/message-service';
-import HeartbeatService from './service/heartbeat-service';
-import ConnectionService, { ConnectionDisconnectInfo, ConnectOptions } from './service/connection-service';
-import SharedContextService, { Notification, NotificationType, Request } from './service/shared-context-service';
-import StateStore from './state-store';
+import { ParsedNotification } from '../model/parsed-notification';
+import ResponseStatusCode from '../model/response-status-code';
+import SystemUtil from '../util/system-util';
 import { TurmsNotification } from '../model/proto/notification/turms_notification';
 import { TurmsRequest } from '../model/proto/request/turms_request';
-import { ParsedNotification } from '../model/parsed-notification';
-import SystemUtil from '../util/system-util';
 import WebSocketMetrics from '../transport/websocket-metrics';
+import StateStore from './state-store';
+import MessageService from './service/message-service';
+import HeartbeatService from './service/heartbeat-service';
+import SharedContextService, { Notification, NotificationType, Request } from './service/shared-context-service';
+import ConnectionService, { ConnectOptions, ConnectionDisconnectInfo } from './service/connection-service';
 
 export default class TurmsDriver {
 

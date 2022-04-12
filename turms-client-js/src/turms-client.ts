@@ -1,15 +1,12 @@
 import { version } from '../package.json';
-
 import TurmsDriver from './driver/turms-driver';
-
-import UserService from './service/user-service';
-import GroupService from './service/group-service';
+import ClientOptions from './client-options';
 import ConversationService from './service/conversation-service';
+import GroupService from './service/group-service';
 import MessageService from './service/message-service';
 import NotificationService from './service/notification-service';
 import StorageService from './service/storage-service';
-
-import ClientOptions from './client-options';
+import UserService from './service/user-service';
 
 class TurmsClient {
     static readonly version = version;

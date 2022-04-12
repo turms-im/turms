@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-import BaseService from './base-service';
-import ResponseStatusCode from '../../model/response-status-code';
+import PromiseSeal from '../../model/promise-seal';
 import ResponseError from '../../error/response-error';
+import ResponseStatusCode from '../../model/response-status-code';
 import StateStore from '../state-store';
 import Timer from '../../util/timer';
 import { TurmsNotification } from '../../model/proto/notification/turms_notification';
-import PromiseSeal from '../../model/promise-seal';
+import BaseService from './base-service';
 
 export default class HeartbeatService extends BaseService {
 

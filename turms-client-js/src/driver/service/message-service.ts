@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-import BaseService from './base-service';
 import NotificationUtil from '../../util/notification-util';
-import ResponseStatusCode from '../../model/response-status-code';
-import ResponseError from '../../error/response-error';
-import StateStore from '../state-store';
 import { ParsedNotification } from '../../model/parsed-notification';
+import ResponseError from '../../error/response-error';
+import ResponseStatusCode from '../../model/response-status-code';
+import StateStore from '../state-store';
 import { TurmsNotification } from '../../model/proto/notification/turms_notification';
 import { TurmsRequest } from '../../model/proto/request/turms_request';
+import BaseService from './base-service';
 
 interface RequestPromiseSeal {
     timeoutId?: number,

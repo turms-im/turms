@@ -93,8 +93,8 @@
 
 <script>
 import icon from '../../../../common/icon';
-import COLUMNS from './default-overview-table-columns';
 import ProgressBar from '../progress-bar';
+import COLUMNS from './default-overview-table-columns';
 
 export default {
     name: 'cluster-dashboard-overview',

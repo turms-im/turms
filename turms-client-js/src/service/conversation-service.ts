@@ -1,8 +1,8 @@
+import NotificationUtil from '../util/notification-util';
+import { ParsedModel } from '../model/parsed-model';
+import ResponseError from '../error/response-error';
 import TurmsClient from '../turms-client';
 import Validator from '../util/validator';
-import { ParsedModel } from '../model/parsed-model';
-import NotificationUtil from '../util/notification-util';
-import ResponseError from '../error/response-error';
 
 export default class ConversationService {
 

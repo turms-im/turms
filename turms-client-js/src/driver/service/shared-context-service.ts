@@ -1,6 +1,6 @@
+import StateStore from '../state-store';
 import BaseService from './base-service';
 import SharedContextWorker from './shared-context-worker';
-import StateStore from '../state-store';
 
 // Use 'string' values because it's useful for debugging
 export const enum RequestType {

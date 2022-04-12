@@ -1,12 +1,12 @@
-import TurmsClient from '../turms-client';
-import Validator from '../util/validator';
-import { ParsedModel } from '../model/parsed-model';
-import NotificationUtil from '../util/notification-util';
-import ResponseStatusCode from '../model/response-status-code';
-import ResponseError from '../error/response-error';
+import DataParser from '../util/data-parser';
 import { GroupJoinQuestionsAnswerResult } from '../model/proto/model/group/group_join_questions_answer_result';
 import { GroupMemberRole } from '../model/proto/constant/group_member_role';
-import DataParser from '../util/data-parser';
+import NotificationUtil from '../util/notification-util';
+import { ParsedModel } from '../model/parsed-model';
+import ResponseError from '../error/response-error';
+import ResponseStatusCode from '../model/response-status-code';
+import TurmsClient from '../turms-client';
+import Validator from '../util/validator';
 
 export default class GroupService {
     private _turmsClient: TurmsClient;

@@ -10,16 +10,19 @@ module.exports = {
     extends: [
         'eslint:recommended',
         'plugin:cypress/recommended',
+        'plugin:import/recommended',
         'plugin:vue/recommended'
     ],
     rules: {
+        'array-element-newline': ['error', 'consistent'],
+        'comma-dangle': ['error', 'never'],
+        'import/order': 'error',
+        'import/no-unresolved': 'off',
+        'indent': ['error', 4, {'SwitchCase': 1}],
+        'no-var': ['error'],
+        'prefer-const': ['error'],
         'quotes': ['error', 'single', { 'avoidEscape': true }],
         'semi': ['error', 'always'],
-        'indent': ['error', 4, {'SwitchCase': 1}],
-        'comma-dangle': ['error', 'never'],
-        'prefer-const': ['error'],
-        'no-var': ['error'],
-        'array-element-newline': ['error', 'consistent'],
         'vue/custom-event-name-casing': 0,
         'vue/component-definition-name-casing': ['error', 'kebab-case'],
         'vue/html-indent': ['error', 4, {

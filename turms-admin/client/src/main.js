@@ -1,19 +1,17 @@
+import JSONbig from 'json-bigint';
+import _ from 'lodash';
+import axios from 'axios';
 import {createApp} from 'vue';
+import dayjs from 'dayjs';
 import enUS from 'ant-design-vue/es/locale/en_US';
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
-import axios from 'axios';
-import dayjs from 'dayjs';
-import _ from 'lodash';
-import resources from './configs/resources';
 import App from './App.vue';
-
-// Plugins
-import router from './router';
-import i18n from './i18n';
 import antd from './antd';
-import utils from './utils';
+import i18n from './i18n';
+import resources from './configs/resources';
+import router from './router';
 import store from './store';
-import JSONbig from 'json-bigint';
+import utils from './utils';
 
 const isProd = process.env.NODE_ENV === 'production';
 if (isProd) {

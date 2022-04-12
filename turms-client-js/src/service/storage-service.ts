@@ -1,7 +1,7 @@
 import unfetch from 'unfetch';
 import { ContentType } from '../model/proto/constant/content_type';
-import ResponseStatusCode from '../model/response-status-code';
 import ResponseError from '../error/response-error';
+import ResponseStatusCode from '../model/response-status-code';
 import TurmsClient from '../turms-client';
 
 export default class StorageService {

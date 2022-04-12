@@ -1,7 +1,7 @@
-import ResponseStatusCode from '../model/response-status-code';
-import ResponseError from '../error/response-error';
-import { TurmsNotification } from '../model/proto/notification/turms_notification';
 import { ParsedModel } from '../model/parsed-model';
+import ResponseError from '../error/response-error';
+import ResponseStatusCode from '../model/response-status-code';
+import { TurmsNotification } from '../model/proto/notification/turms_notification';
 
 export default class NotificationUtil {
 

@@ -34,11 +34,11 @@
     </div>
 </template>
 <script>
+import TrieSearch from 'trie-search';
+import Icon from '../../common/icon';
 import AstMixin from './ast-mixin';
 import Autocomplete from './autocomplete';
-import Icon from '../../common/icon';
 import Terminal from './terminal';
-import TrieSearch from 'trie-search';
 
 export default {
     name: 'client-terminal',

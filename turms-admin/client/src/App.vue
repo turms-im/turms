@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import Layout from './components/layout/index';
 import dayjs from 'dayjs';
+import Layout from './components/layout/index';
 import 'dayjs/locale/es-us';
 import 'dayjs/locale/zh-cn';
 

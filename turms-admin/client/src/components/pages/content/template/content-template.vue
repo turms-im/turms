@@ -41,9 +41,9 @@
 
 <script>
 import JSONBig from 'json-bigint';
+import Skeleton from '../../../common/skeleton';
 import ActionGroup from './action-group';
 import ContentTable from './table';
-import Skeleton from '../../../common/skeleton';
 import UiMixin from './ui-mixin';
 import FilterGroup from './filter-group';
 

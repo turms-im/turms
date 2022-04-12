@@ -10,12 +10,12 @@ import {
     Dropdown,
     Empty,
     Form,
+    // eslint-disable-next-line import/named
     Icon,
     Input,
     InputNumber,
     Layout,
     Menu,
-    message,
     Modal,
     Pagination,
     Popconfirm,
@@ -29,7 +29,8 @@ import {
     Tabs,
     Tooltip,
     Tree,
-    TreeSelect
+    TreeSelect,
+    message
 } from 'ant-design-vue';
 
 function loadAntd(app) {

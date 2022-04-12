@@ -46,9 +46,9 @@
 </template>
 
 <script>
-import StatisticsCard from './statistics-card';
 import RefreshButton from '../../../common/refresh-button';
 import ExportButton from '../../../common/export-button';
+import StatisticsCard from './statistics-card';
 
 export default {
     name: 'daily-statistics-collapse',

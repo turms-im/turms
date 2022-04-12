@@ -32,13 +32,13 @@
 </template>
 
 <script>
+import exportExcel from '../../../../utils/excel-export-util';
+import Skeleton from '../../../common/skeleton';
 import DashboardHeader from './cluster-dashboard-header';
 import DashboardActions from './cluster-dashboard-actions';
 import DashboardOverview from './overview/cluster-dashboard-overview';
 import DashboardServerDetails from './server-details/cluster-dashboard-server-details';
-import exportExcel from '../../../../utils/excel-export-util';
 import SERVER_DETAILS_ITEMS from './server-details/server-details-items';
-import Skeleton from '../../../common/skeleton';
 import ResourceRequestMixin from './resource-request-mixin';
 import METRICS from './metrics';
 

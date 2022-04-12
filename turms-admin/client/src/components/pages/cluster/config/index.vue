@@ -85,8 +85,8 @@
 
 <script>
 import diff from 'deep-diff';
-import ClusterConfigPane from './cluster-config-pane';
 import Skeleton from '../../../common/skeleton';
+import ClusterConfigPane from './cluster-config-pane';
 
 export default {
     name: 'cluster-config',

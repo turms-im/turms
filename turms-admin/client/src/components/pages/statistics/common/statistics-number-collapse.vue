@@ -75,10 +75,10 @@
 </template>
 
 <script>
-import DateRangePicker from '../../../common/date-range-picker';
-import StatisticsChartLine from './statistics-chart-line';
-import ExportButton from '../../../common/export-button';
 import {saveSvg, saveSvgAsPng} from 'save-svg-as-png';
+import DateRangePicker from '../../../common/date-range-picker';
+import ExportButton from '../../../common/export-button';
+import StatisticsChartLine from './statistics-chart-line';
 
 export default {
     name: 'statistics-number-collapse',

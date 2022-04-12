@@ -1,9 +1,9 @@
-import { RequestStatus } from './proto/constant/request_status';
-import { ProfileAccessStrategy } from './proto/constant/profile_access_strategy';
-import { UserStatus } from './proto/constant/user_status';
 import { DeviceType } from './proto/constant/device_type';
 import { GroupMemberRole } from './proto/constant/group_member_role';
+import { ProfileAccessStrategy } from './proto/constant/profile_access_strategy';
+import { RequestStatus } from './proto/constant/request_status';
 import { UserLocation } from './proto/model/user/user_location';
+import { UserStatus } from './proto/constant/user_status';
 
 export declare namespace ParsedModel {
 

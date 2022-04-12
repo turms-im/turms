@@ -53,8 +53,8 @@
 
 <script>
 import TurmsClient from 'turms-client-js';
-import ClientTerminal from './client-terminal';
 import Ast from '../../../assets/turms-client-ast.json';
+import ClientTerminal from './client-terminal';
 
 const ONBOARD_MESSAGES = [
     `Current version of turms-client-js: ${TurmsClient.version}`,

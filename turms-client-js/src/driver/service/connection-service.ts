@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-import BaseService from './base-service';
-import ResponseStatusCode from '../../model/response-status-code';
 import ResponseError from '../../error/response-error';
+import ResponseStatusCode from '../../model/response-status-code';
 import StateStore from '../state-store';
 import WebSocketFactory from '../../transport/websocket-factory';
+import BaseService from './base-service';
 
 export interface ConnectOptions {
     wsUrl?: string,
