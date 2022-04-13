@@ -35,22 +35,22 @@ public class OpeningHandshakeRequestCodec extends RpcRequestCodec<OpeningHandsha
 
     @Override
     public int initialCapacityForRequest(OpeningHandshakeRequest data) {
-        return StringUtil.getLength(data.getNodeId()) + 1;
+        return StringUtil.getLength(data.getNodeId());
     }
 
     @Override
     protected void writeRequestData(ByteBuf output, OpeningHandshakeRequest data) {
         String nodeId = data.getNodeId();
-        output.writeBytes(StringUtil.getBytes(nodeId))
-                .writeByte(StringUtil.getCoder(nodeId));
+        // The note ID should be always encoded in LATIN1
+        output.writeBytes(StringUtil.getBytes(nodeId));
     }
 
     @Override
     public OpeningHandshakeRequest readRequestData(ByteBuf input) {
         int length = input.readableBytes();
-        byte[] bytes = new byte[length - 1];
+        byte[] bytes = new byte[length];
         input.readBytes(bytes);
-        String nodeId = StringUtil.newString(bytes, input.readByte());
+        String nodeId = StringUtil.newLatin1String(bytes);
         return new OpeningHandshakeRequest(nodeId);
     }
 
