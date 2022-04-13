@@ -97,7 +97,7 @@ public class UserStatusService {
     /**
      * Note that both online and offline information will be cached
      */
-    private final Cache<Long, UserSessionsStatus> userSessionsStatusCache;
+    private final Cache<Long, UserSessionsStatus> userIdToStatusCache;
 
     private final Duration operationTimeout;
     private final boolean cacheUserSessionsStatus;
@@ -123,9 +123,9 @@ public class UserStatusService {
             if (expireAfter > -1) {
                 builder.expireAfterWrite(Duration.ofSeconds(expireAfter));
             }
-            userSessionsStatusCache = builder.build();
+            userIdToStatusCache = builder.build();
         } else {
-            userSessionsStatusCache = null;
+            userIdToStatusCache = null;
         }
     }
 
@@ -154,7 +154,7 @@ public class UserStatusService {
             return Mono.error(e);
         }
         if (cacheUserSessionsStatus) {
-            UserSessionsStatus sessionsStatus = userSessionsStatusCache.getIfPresent(userId);
+            UserSessionsStatus sessionsStatus = userIdToStatusCache.getIfPresent(userId);
             if (sessionsStatus != null) {
                 Map<DeviceType, String> deviceTypeToNodeId = sessionsStatus.deviceTypeToNodeId();
                 return deviceTypeToNodeId == null || deviceTypeToNodeId.isEmpty()
@@ -243,7 +243,7 @@ public class UserStatusService {
             return Mono.error(e);
         }
         if (cacheUserSessionsStatus) {
-            UserSessionsStatus sessionsStatus = userSessionsStatusCache.getIfPresent(userId);
+            UserSessionsStatus sessionsStatus = userIdToStatusCache.getIfPresent(userId);
             if (sessionsStatus != null) {
                 return Mono.just(sessionsStatus);
             }
@@ -286,7 +286,7 @@ public class UserStatusService {
                     }
                     UserSessionsStatus userSessionsStatus = new UserSessionsStatus(userId, userStatus, onlineDeviceTypeToNodeId);
                     if (cacheUserSessionsStatus) {
-                        userSessionsStatusCache.put(userId, userSessionsStatus);
+                        userIdToStatusCache.put(userId, userSessionsStatus);
                     }
                     return userSessionsStatus;
                 });

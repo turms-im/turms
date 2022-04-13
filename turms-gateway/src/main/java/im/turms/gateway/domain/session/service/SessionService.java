@@ -34,6 +34,8 @@ import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
+import im.turms.server.common.domain.session.bo.UserSessionInfo;
+import im.turms.server.common.domain.session.bo.UserSessionsInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.rpc.SetUserOfflineRequest;
 import im.turms.server.common.domain.session.service.ISessionService;
@@ -68,6 +70,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -427,6 +430,49 @@ public class SessionService implements ISessionService {
     @Override
     public Mono<Boolean> setLocalUserOffline(Long userId, CloseReason closeReason) {
         return setLocalSessionOffline(userId, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeReason);
+    }
+
+    @Override
+    public List<UserSessionsInfo> getUserSessions(Set<Long> userIds) {
+        List<UserSessionsInfo> sessions = new ArrayList<>(userIds.size());
+        for (Long userId : userIds) {
+            UserSessionsInfo info = getUserSessions(userId);
+            if (info != null) {
+                sessions.add(info);
+            }
+        }
+        return sessions;
+    }
+
+    @Nullable
+    private UserSessionsInfo getUserSessions(Long userId) {
+        UserSessionsManager manager = userIdToSessionsManager.get(userId);
+        if (manager == null) {
+            return null;
+        }
+        Collection<UserSession> sessions = manager.getDeviceTypeToSession().values();
+        int size = sessions.size();
+        if (size == 0) {
+            return null;
+        }
+        ArrayList<UserSessionInfo> sessionInfos = new ArrayList<>(size);
+        for (UserSession session : sessions) {
+            ByteArrayWrapper ip = session.getIp();
+            sessionInfos.add(new UserSessionInfo(
+                    session.getId(),
+                    session.getVersion(),
+                    session.getDeviceType(),
+                    session.getDeviceDetails(),
+                    session.getLoginDate(),
+                    session.getLoginLocation(),
+                    new Date(session.getLastHeartbeatRequestTimestampMillis()),
+                    new Date(session.getLastRequestTimestampMillis()),
+                    session.isSessionOpen(),
+                    ip == null ? null : ip.getBytes(),
+                    null
+            ));
+        }
+        return new UserSessionsInfo(userId, manager.getUserStatus(), sessionInfos);
     }
 
     public void updateHeartbeatTimestamp(UserSession session) {

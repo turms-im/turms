@@ -113,6 +113,7 @@ public final class UserSession {
         this.loginLocation = loginLocation;
         this.loginDate = now;
         this.lastHeartbeatRequestTimestampMillis = now.getTime();
+        this.lastRequestTimestampMillis = now.getTime();
     }
 
     public void setConnection(NetConnection connection, ByteArrayWrapper ip) {

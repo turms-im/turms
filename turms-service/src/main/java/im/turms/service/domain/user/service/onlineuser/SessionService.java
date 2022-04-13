@@ -19,10 +19,16 @@ package im.turms.service.domain.user.service.onlineuser;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
+import im.turms.server.common.domain.session.bo.UserSessionsInfo;
+import im.turms.server.common.domain.session.bo.UserSessionsStatus;
+import im.turms.server.common.domain.session.rpc.QueryUserSessionsRequest;
 import im.turms.server.common.domain.session.rpc.SetUserOfflineRequest;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.cluster.service.rpc.RpcService;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.collection.CollectorUtil;
+import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.reactor.ReactorUtil;
@@ -30,12 +36,14 @@ import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.service.domain.common.validation.DataValidator;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,12 +56,14 @@ public class SessionService {
 
     private final Node node;
     private final UserStatusService userStatusService;
+    private final RpcService rpcService;
 
     public SessionService(
             Node node,
             UserStatusService userStatusService) {
         this.node = node;
         this.userStatusService = userStatusService;
+        rpcService = node.getRpcService();
     }
 
     /**
@@ -180,6 +190,64 @@ public class SessionService {
                 yield ReactorUtil.atLeastOneTrue(monos);
             }
         };
+    }
+
+    public Mono<Collection<UserSessionsInfo>> queryUserSessions(Set<Long> userIds) {
+        int userCount = userIds.size();
+        if (userCount == 0) {
+            return PublisherPool.emptyCollection();
+        }
+        List<Mono<UserSessionsStatus>> sessionStatusMonos = new ArrayList<>(userCount);
+        for (Long userId : userIds) {
+            sessionStatusMonos.add(userStatusService.getUserSessionsStatus(userId));
+        }
+        return Flux.merge(sessionStatusMonos)
+                .collect(CollectorUtil.toList(userCount))
+                .flatMap(statuses -> {
+                    // Find which nodes the users are in
+                    Map<String, Set<Long>> nodeIdToUserIds = new HashMap<>(16);
+                    for (UserSessionsStatus status : statuses) {
+                        for (String nodeId : status.deviceTypeToNodeId().values()) {
+                            nodeIdToUserIds.computeIfAbsent(nodeId, key -> CollectionUtil.newSetWithExpectedSize(userCount))
+                                    .add(status.userId());
+                        }
+                    }
+                    int nodeIdCount = nodeIdToUserIds.size();
+                    if (nodeIdCount == 0) {
+                        return PublisherPool.emptyCollection();
+                    }
+                    List<Mono<List<UserSessionsInfo>>> querySessionsRequests = new ArrayList<>(nodeIdCount);
+                    // Send RPC to the nodes to query sessions
+                    for (Map.Entry<String, Set<Long>> nodeIdAndUserIds : nodeIdToUserIds.entrySet()) {
+                        querySessionsRequests.add(rpcService
+                                .requestResponse(nodeIdAndUserIds.getKey(), new QueryUserSessionsRequest(nodeIdAndUserIds.getValue())));
+                    }
+                    return Flux.merge(querySessionsRequests)
+                            .collect(CollectorUtil.toList(nodeIdCount))
+                            .map(sessionsFromNodes -> {
+                                int nodeCount = sessionsFromNodes.size();
+                                // fast path
+                                if (nodeCount == 1) {
+                                    return sessionsFromNodes.get(0);
+                                }
+                                // slow path
+                                // A user may have multiple sessions in different nodes,
+                                // so we need to merge them together
+                                Map<Long, UserSessionsInfo> userIdToSessions = new HashMap<>(MapUtil.getCapability(userCount));
+                                for (List<UserSessionsInfo> sessionsFromNode : sessionsFromNodes) {
+                                    for (UserSessionsInfo sessions : sessionsFromNode) {
+                                        userIdToSessions.compute(sessions.userId(), (userId, existing) -> {
+                                            if (existing == null) {
+                                                return sessions;
+                                            }
+                                            existing.sessions().addAll(sessions.sessions());
+                                            return existing;
+                                        });
+                                    }
+                                }
+                                return userIdToSessions.values();
+                            });
+                });
     }
 
 }

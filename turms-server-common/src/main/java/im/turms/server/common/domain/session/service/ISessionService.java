@@ -19,11 +19,13 @@ package im.turms.server.common.domain.session.service;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.session.bo.CloseReason;
+import im.turms.server.common.domain.session.bo.UserSessionsInfo;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -43,5 +45,7 @@ public interface ISessionService {
     Mono<Boolean> setLocalUserOffline(
             @NotNull Long userId,
             @NotNull CloseReason closeReason);
+
+    List<UserSessionsInfo> getUserSessions(@NotEmpty Set<Long> userIds);
 
 }

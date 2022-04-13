@@ -28,18 +28,18 @@ import java.util.Map;
  */
 public record Location(
         // x, -180 to 180, West to East
-        double longitude,
+        float longitude,
         // y, -85.05112878 to 85.05112878, South to North
-        double latitude,
+        float latitude,
         @Nullable Date timestamp,
         Map<String, String> details
 ) {
 
     // From: https://github.com/redis/redis/blob/unstable/src/geohash.h
-    public static final double LONGITUDE_MIN = -180;
-    public static final double LONGITUDE_MAX = 180;
-    public static final double LATITUDE_MIN = -85.05112878;
-    public static final double LATITUDE_MAX = 85.05112878;
+    public static final float LONGITUDE_MIN = -180;
+    public static final float LONGITUDE_MAX = 180;
+    public static final float LATITUDE_MIN = (float) -85.05112878;
+    public static final float LATITUDE_MAX = (float) 85.05112878;
 
     public Location(float longitude, float latitude) {
         this(longitude, latitude, null, null);

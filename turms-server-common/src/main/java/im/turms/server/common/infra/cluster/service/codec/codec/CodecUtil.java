@@ -18,12 +18,14 @@
 package im.turms.server.common.infra.cluster.service.codec.codec;
 
 import com.google.common.collect.Maps;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,27 +40,6 @@ public final class CodecUtil {
 
     // Common
 
-    public static void writeMap(ByteBuf output, Map map) {
-        int size = map.size();
-        output.writeShort(size);
-        final Set<Map.Entry> set = map.entrySet();
-        for (Map.Entry entry : set) {
-            final Object key = entry.getKey();
-            final Object value = entry.getValue();
-            writeObject(output, key);
-            writeObject(output, value);
-        }
-    }
-
-    public static Map readMaps(ByteBuf input) {
-        final int size = input.readShort();
-        Map map = Maps.newHashMapWithExpectedSize(size);
-        for (int i = 0; i < size; i++) {
-            map.put(readObject(input), readObject(input));
-        }
-        return map;
-    }
-
     public static void writeObject(ByteBuf output, Object obj) {
         Codec<Object> codec = CodecPool.getCodec(obj.getClass());
         codec.write(output, obj);
@@ -70,22 +51,73 @@ public final class CodecUtil {
         return codec.read(input);
     }
 
-    public static void writeString(ByteBuf output, @Nullable String str) {
-        if (str == null) {
+    public static <K, V> void writeMap(ByteBuf output, @Nullable Map<K, V> map) {
+        if (map == null || map.isEmpty()) {
             output.writeShort(0);
-        } else {
-            byte[] bytes = StringUtil.getBytes(str);
-            int length = bytes.length;
-            output.writeShort(length);
-            if (length > 0) {
-                output.writeBytes(bytes)
-                        .writeByte(StringUtil.getCoder(str));
-            }
+            return;
+        }
+        writeVarint32(output, map.size());
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            writeObject(output, entry.getKey());
+            writeObject(output, entry.getValue());
         }
     }
 
+    public static <K, V> Map<K, V> readMap(ByteBuf input) {
+        int size = CodecUtil.readVarint32(input);
+        if (size == 0) {
+            return Collections.emptyMap();
+        }
+        Map<K, V> map = Maps.newHashMapWithExpectedSize(size);
+        for (int i = 0; i < size; i++) {
+            map.put(readObject(input), readObject(input));
+        }
+        return map;
+    }
+
+    // Specific Types
+
+    public static void writeStringMap(ByteBuf output, @Nullable Map<String, String> map) {
+        if (map == null || map.isEmpty()) {
+            output.writeByte(0);
+            return;
+        }
+        writeVarint32(output, map.size());
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            writeString(output, entry.getKey());
+            writeString(output, entry.getValue());
+        }
+    }
+
+    public static Map<String, String> readStringMap(ByteBuf input) {
+        int size = readVarint32(input);
+        if (size == 0) {
+            return Collections.emptyMap();
+        }
+        Map<String, String> map = Maps.newHashMapWithExpectedSize(size);
+        for (int i = 0; i < size; i++) {
+            map.put(readString(input), readString(input));
+        }
+        return map;
+    }
+
+    public static void writeString(ByteBuf output, @Nullable String str) {
+        if (str == null) {
+            output.writeByte(0);
+            return;
+        }
+        byte[] bytes = StringUtil.getBytes(str);
+        int length = bytes.length;
+        writeVarint32(output, length);
+        if (length > 0) {
+            output.writeBytes(bytes)
+                    .writeByte(StringUtil.getCoder(str));
+        }
+    }
+
+    @Nullable
     public static String readString(ByteBuf input) {
-        int length = input.readShort();
+        int length = readVarint32(input);
         if (length == 0) {
             return null;
         }
@@ -96,14 +128,14 @@ public final class CodecUtil {
 
     public static void writeStrings(ByteBuf output, Collection<String> strings) {
         int size = strings.size();
-        output.writeShort(size);
+        writeVarint32(output, size);
         for (String string : strings) {
             writeString(output, string);
         }
     }
 
-    public static List<String> readStringList(ByteBuf input) {
-        int length = input.readShort();
+    public static List<String> readStrings(ByteBuf input) {
+        int length = readVarint32(input);
         List<String> strings = new ArrayList<>(length);
         for (int i = 0; i < length; i++) {
             strings.add(readString(input));
@@ -112,20 +144,44 @@ public final class CodecUtil {
     }
 
     public static void writeInts(ByteBuf output, Collection<Integer> integers) {
-        int size = integers.size();
-        output.writeInt(size);
-        for (Integer integer : integers) {
+        writeVarint32(output, integers.size());
+        for (int integer : integers) {
             output.writeInt(integer);
         }
     }
 
-    public static List<Integer> readIntList(ByteBuf input) {
-        int length = input.readInt();
+    public static List<Integer> readInts(ByteBuf input) {
+        int length = readVarint32(input);
         List<Integer> integers = new ArrayList<>(length);
         for (int i = 0; i < length; i++) {
             integers.add(input.readInt());
         }
         return integers;
+    }
+
+    public static void writeLongs(ByteBuf output, Collection<Long> longs) {
+        writeVarint32(output, longs.size());
+        for (long l : longs) {
+            output.writeLong(l);
+        }
+    }
+
+    public static List<Long> readLongs(ByteBuf input) {
+        int length = readVarint32(input);
+        List<Long> longs = new ArrayList<>(length);
+        for (int i = 0; i < length; i++) {
+            longs.add(input.readLong());
+        }
+        return longs;
+    }
+
+    public static Set<Long> readLongSet(ByteBuf input) {
+        int length = readVarint32(input);
+        Set<Long> longs = CollectionUtil.newSetWithExpectedSize(length);
+        for (int i = 0; i < length; i++) {
+            longs.add(input.readLong());
+        }
+        return longs;
     }
 
     // Varint / ZigZag
@@ -190,6 +246,28 @@ public final class CodecUtil {
             }
         }
         return out;
+    }
+
+    // IP
+
+    public static void writeIp(ByteBuf output, @Nullable byte[] ipBytes) {
+        if (ipBytes == null) {
+            output.writeByte(-1);
+        } else {
+            output.writeByte(ipBytes.length == 4 ? 0 : 1);
+        }
+        output.writeBytes(ipBytes);
+    }
+
+    @Nullable
+    public static byte[] readIp(ByteBuf input) {
+        int flag = input.readByte();
+        if (flag == -1) {
+            return null;
+        }
+        byte[] ipBytes = new byte[flag == 0 ? 4 : 16];
+        input.readBytes(ipBytes);
+        return ipBytes;
     }
 
 }

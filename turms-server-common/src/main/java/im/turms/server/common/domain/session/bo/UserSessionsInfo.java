@@ -15,27 +15,18 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.reactor;
+package im.turms.server.common.domain.session.bo;
 
-import reactor.core.publisher.Mono;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
 
-import java.util.Collections;
+import java.util.List;
 
 /**
  * @author James Chen
  */
-public class PublisherPool {
-
-    private PublisherPool() {
-    }
-
-    public static final Mono<Boolean> TRUE = Mono.just(true);
-    public static final Mono<Boolean> FALSE = Mono.just(false);
-
-    public static final Mono EMPTY_COLLECTION = Mono.just(Collections.emptyList());
-
-    public static <T> Mono<T> emptyCollection() {
-        return EMPTY_COLLECTION;
-    }
-
+public record UserSessionsInfo(
+        Long userId,
+        UserStatus status,
+        List<UserSessionInfo> sessions
+) {
 }

@@ -25,6 +25,7 @@ import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.domain.location.bo.NearbyUser;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
+import im.turms.server.common.domain.session.bo.UserSessionsInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;
@@ -101,27 +102,36 @@ public class UserOnlineInfoController extends BaseController {
                 }));
     }
 
+    @GetMapping("/sessions")
+    @RequiredPermission(AdminPermission.USER_ONLINE_INFO_QUERY)
+    public Mono<ResponseEntity<ResponseDTO<Collection<UserSessionsInfo>>>> queryUserSessions(
+            @RequestParam Set<Long> ids) {
+        return ResponseFactory.okIfTruthy(sessionService.queryUserSessions(ids));
+    }
+
     @GetMapping("/statuses")
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<UserSessionsStatus>>>> queryOnlineUsersStatus(
+    public Mono<ResponseEntity<ResponseDTO<Collection<UserSessionsStatus>>>> queryUserStatuses(
             @RequestParam Set<Long> ids,
             @RequestParam(defaultValue = "false") boolean returnNonExistingUsers) {
-        List<Mono<UserSessionsStatus>> userSessionStatusMonos = new ArrayList<>(ids.size());
+        List<Mono<UserSessionsStatus>> statusMonos = new ArrayList<>(ids.size());
         for (Long userId : ids) {
-            // TODO: Support fetching user session info from turms-gateway
-            Mono<UserSessionsStatus> userOnlineInfoMno = userStatusService.getUserSessionsStatus(userId)
-                    .flatMap(info -> {
-                        if (!returnNonExistingUsers && info.getUserStatus(false) == UserStatus.OFFLINE) {
-                            return userService.checkIfUserExists(userId, false)
-                                    .flatMap(exists -> exists
-                                            ? Mono.just(info)
-                                            : Mono.empty());
-                        }
-                        return Mono.just(info);
-                    });
-            userSessionStatusMonos.add(userOnlineInfoMno);
+            if (returnNonExistingUsers) {
+                statusMonos.add(userStatusService.getUserSessionsStatus(userId));
+            } else {
+                statusMonos.add(userStatusService.getUserSessionsStatus(userId)
+                        .flatMap(info -> {
+                            if (info.getUserStatus(false) == UserStatus.OFFLINE) {
+                                return userService.checkIfUserExists(userId, false)
+                                        .flatMap(exists -> exists
+                                                ? Mono.just(info)
+                                                : Mono.empty());
+                            }
+                            return Mono.just(info);
+                        }));
+            }
         }
-        return ResponseFactory.okIfTruthy(Flux.merge(userSessionStatusMonos));
+        return ResponseFactory.okIfTruthy(Flux.merge(statusMonos));
     }
 
     @GetMapping("/nearby-users")

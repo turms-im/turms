@@ -140,6 +140,13 @@ public final class Validator {
         }
     }
 
+    public static void inRange(float num, String name, double min, double max) {
+        if (num > max || num < min) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    name + " must be less than or equal to " + max + ", and greater than or equal to " + min);
+        }
+    }
+
     public static void length(String s, String name, int min, int max) {
         if (s != null) {
             int length = s.length();

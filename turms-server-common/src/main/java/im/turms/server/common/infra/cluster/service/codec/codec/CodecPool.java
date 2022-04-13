@@ -21,7 +21,9 @@ import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequestCode
 import im.turms.server.common.access.servicerequest.rpc.ServiceResponseCodec;
 import im.turms.server.common.domain.notification.rpc.SendNotificationRequestCodec;
 import im.turms.server.common.domain.observation.rpc.CountOnlineUsersRequestCodec;
+import im.turms.server.common.domain.session.rpc.QueryUserSessionsRequestCodec;
 import im.turms.server.common.domain.session.rpc.SetUserOfflineRequestCodec;
+import im.turms.server.common.domain.session.rpc.UserSessionsInfoCodec;
 import im.turms.server.common.infra.cluster.service.codec.codec.impl.BoolCodec;
 import im.turms.server.common.infra.cluster.service.codec.codec.impl.ByteCodec;
 import im.turms.server.common.infra.cluster.service.codec.codec.impl.CharCodec;
@@ -82,11 +84,13 @@ public final class CodecPool {
 
         register(new CountOnlineUsersRequestCodec());
         register(new HandleServiceRequestCodec());
+        register(new QueryUserSessionsRequestCodec());
         register(new SendNotificationRequestCodec());
         register(new SetUserOfflineRequestCodec());
 
         // DTO
         register(new ServiceResponseCodec());
+        register(new UserSessionsInfoCodec());
     }
 
     private CodecPool() {
