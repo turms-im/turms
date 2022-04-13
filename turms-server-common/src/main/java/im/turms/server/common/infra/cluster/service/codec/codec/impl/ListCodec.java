@@ -25,6 +25,7 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -38,39 +39,56 @@ public class ListCodec implements Codec<List<?>> {
     }
 
     @Override
+    public List<Class<?>> getEncodableClasses() {
+        return List.of(
+                ArrayList.class,
+                List.class,
+                LinkedList.class
+        );
+    }
+
+    @Override
     public void write(ByteBuf output, List<?> data) {
         int size = data.size();
-        output.writeShort(size);
-        if (size != 0) {
-            Class<?> elementClass = data.get(0).getClass();
-            CodecId elementCodecId = CodecPool.getCodec(elementClass).getCodecId();
-            output.writeShort(elementCodecId.getId());
-            for (Object element : data) {
-                CodecUtil.writeObject(output, element);
-            }
+        CodecUtil.writeVarint32(output, size);
+        if (size == 0) {
+            return;
+        }
+        Class<?> elementClass = data.get(0).getClass();
+        Codec<Object> codec = CodecPool.getCodec(elementClass);
+        output.writeShort(codec.getCodecId().getId());
+        for (Object element : data) {
+            codec.write(output, element);
         }
     }
 
     @Override
     public List<?> read(ByteBuf input) {
-        int size = input.readShort();
+        int size = CodecUtil.readVarint32(input);
         if (size == 0) {
             return Collections.emptyList();
-        } else {
-            int elementCodecId = input.readShort();
-            ArrayList<Object> list = new ArrayList<>(size);
-            Codec<Object> codec = CodecPool.getCodec(elementCodecId);
-            for (int i = 0; i < size; i++) {
-                Object obj = codec.read(input);
-                list.add(obj);
-            }
-            return list;
         }
+        ArrayList<Object> list = new ArrayList<>(size);
+        Codec<Object> codec = CodecPool.getCodec(input.readShort());
+        for (int i = 0; i < size; i++) {
+            list.add(codec.read(input));
+        }
+        return list;
     }
 
     @Override
-    public int initialCapacity(List<?> data) {
-        return -1;
+    public int initialCapacity(List<?> items) {
+        int size = items.size();
+        if (size == 0) {
+            // 1 byte for size
+            return 1;
+        }
+        Object item = items.get(0);
+        Codec<Object> codec = CodecPool.getCodec(item.getClass());
+        if (codec == null) {
+            throw new IllegalArgumentException("Unknown codec for class: " + item.getClass());
+        }
+        return CodecUtil.computeVarint32Size(size) + codec.initialCapacity(item) * size;
     }
 
 }

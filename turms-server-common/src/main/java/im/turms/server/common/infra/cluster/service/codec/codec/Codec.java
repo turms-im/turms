@@ -19,12 +19,18 @@ package im.turms.server.common.infra.cluster.service.codec.codec;
 
 import io.netty.buffer.ByteBuf;
 
+import java.util.List;
+
 /**
  * @author James Chen
  */
 public interface Codec<T> {
 
     CodecId getCodecId();
+
+    default List<Class<?>> getEncodableClasses() {
+        return null;
+    }
 
     void write(ByteBuf output, T data);
 

@@ -41,6 +41,7 @@ import io.netty.util.collection.IntObjectHashMap;
 import org.springframework.core.GenericTypeResolver;
 
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -105,19 +106,30 @@ public final class CodecPool {
         return CLASS_TO_CODEC.get(clazz);
     }
 
+    /**
+     * @implNote We don't support something like "instanceof" because of
+     * its bad performance.
+     */
     private static void register(Codec<?> codec) {
-        Class<?> clazz = GenericTypeResolver.resolveTypeArgument(codec.getClass(), Codec.class);
-        if (clazz == null) {
-            throw new IllegalStateException("The codec %s cannot be resolved".formatted(codec));
+        List<Class<?>> encodableClasses = codec.getEncodableClasses();
+        if (encodableClasses == null || encodableClasses.isEmpty()) {
+            Class<?> clazz = GenericTypeResolver.resolveTypeArgument(codec.getClass(), Codec.class);
+            if (clazz == null) {
+                throw new IllegalStateException("The codec %s cannot be resolved".formatted(codec));
+            }
+            encodableClasses = List.of(clazz);
         }
-        if (CLASS_TO_CODEC.containsKey(clazz)) {
-            throw new IllegalStateException("The codec for the class %s has already existed".formatted(clazz.getSimpleName()));
+        for (Class<?> encodableClass : encodableClasses) {
+            if (CLASS_TO_CODEC.containsKey(encodableClass)) {
+                throw new IllegalStateException("The codec for the class %s has already existed"
+                        .formatted(encodableClass.getSimpleName()));
+            }
+            CLASS_TO_CODEC.put(encodableClass, codec);
         }
         int codecId = codec.getCodecId().getId();
         if (ID_TO_CODEC.containsKey(codecId)) {
             throw new IllegalStateException("The codec ID %d has already existed".formatted(codecId));
         }
-        CLASS_TO_CODEC.put(clazz, codec);
         ID_TO_CODEC.put(codecId, codec);
     }
 
