@@ -1,6 +1,6 @@
 import TurmsDriver from '../../src/driver/turms-driver';
 import TurmsClient from '../../src/turms-client';
-import ResponseStatusCode from '../../src/model/turms-status-code';
+import ResponseStatusCode from '../../src/model/response-status-code';
 
 let client: TurmsClient;
 let driver: TurmsDriver;

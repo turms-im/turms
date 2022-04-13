@@ -19,7 +19,7 @@ package im.turms.service.domain.user.access.admin.dto.response;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
-import org.springframework.data.geo.Point;
+import im.turms.server.common.domain.location.bo.Location;
 
 import java.util.Date;
 import java.util.Map;
@@ -32,6 +32,6 @@ public record UserStatusDTO(
         UserStatus status,
         Map<DeviceType, String> deviceTypeToNodeId,
         Date loginDate,
-        Point coordinates
+        Location loginLocation
 ) {
 }

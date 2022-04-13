@@ -165,8 +165,16 @@ export default class UserService {
             return Promise.reject(e);
         }
         if (location) {
-            location = location['coords'] as GeolocationCoordinates || location as UserLocation;
-            userInfo.location = new UserLocation(location.longitude, location.latitude);
+            const parsedLocation = location['coords'] as GeolocationCoordinates || location as UserLocation;
+            if (Validator.isFalsy(parsedLocation.longitude)) {
+                return ResponseError.notFalsyPromise('longitude');
+            }
+            if (Validator.isFalsy(parsedLocation.latitude)) {
+                return ResponseError.notFalsyPromise('latitude');
+            }
+            userInfo.location = new UserLocation(parsedLocation.longitude,
+                parsedLocation.latitude,
+                (parsedLocation as UserLocation).details);
         }
         this._storePassword = storePassword;
         return new Promise((resolve, reject) => {
@@ -216,10 +224,10 @@ export default class UserService {
                             }).finally(() => resolve())
                             : resolve();
                     }).catch(e => useSharedContext
-                            ? driver.requestSharedContext({
-                                type: RequestType.FINISH_LOGIN_REQUEST
-                            }).finally(() => reject(e))
-                            : reject(e));
+                        ? driver.requestSharedContext({
+                            type: RequestType.FINISH_LOGIN_REQUEST
+                        }).finally(() => reject(e))
+                        : reject(e));
                 })
                 .catch(e => reject(e));
         });
@@ -596,7 +604,7 @@ export default class UserService {
      * updateLocation() in UserService sends the location of user to the server only.
      * sendMessage() with records of location sends user's location to both server and its recipients.
      */
-    updateLocation(latitude: number, longitude: number, name?: string, address?: string): Promise<void> {
+    updateLocation(latitude: number, longitude: number, details?: { [k: string]: string }): Promise<void> {
         if (Validator.isFalsy(latitude)) {
             return ResponseError.notFalsyPromise('latitude');
         }
@@ -607,8 +615,7 @@ export default class UserService {
             updateUserLocationRequest: {
                 latitude,
                 longitude,
-                name,
-                address
+                details: details || {}
             }
         }).then(() => null);
     }

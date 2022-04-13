@@ -17,7 +17,6 @@
 
 package im.turms.server.common.storage.redis;
 
-import im.turms.server.common.domain.location.bo.Coordinates;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.storage.redis.codec.TurmsRedisCodecAdapter;
@@ -163,11 +162,11 @@ public class TurmsRedisClient {
 
     // Geo
 
-    public Mono<Long> geoadd(Object key, Coordinates coordinates, Object member) {
+    public Mono<Long> geoadd(Object key, double longitude, double latitude, Object member) {
         return Mono.defer(() -> {
             ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
             ByteBuf memberBuffer = serializationContext.encodeGeoMember(member);
-            return commands.geoadd(keyBuffer, coordinates.longitude(), coordinates.latitude(), memberBuffer)
+            return commands.geoadd(keyBuffer, longitude, latitude, memberBuffer)
                     .doFinally(signal -> {
                         ByteBufUtil.ensureReleased(keyBuffer);
                         ByteBufUtil.ensureReleased(memberBuffer);

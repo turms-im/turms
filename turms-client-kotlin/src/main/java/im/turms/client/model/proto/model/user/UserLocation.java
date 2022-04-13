@@ -29,8 +29,6 @@ public  final class UserLocation extends
     // @@protoc_insertion_point(message_implements:im.turms.proto.UserLocation)
     UserLocationOrBuilder {
   private UserLocation() {
-    name_ = "";
-    address_ = "";
   }
   private int bitField0_;
   public static final int LATITUDE_FIELD_NUMBER = 1;
@@ -85,128 +83,18 @@ public  final class UserLocation extends
     longitude_ = 0F;
   }
 
-  public static final int NAME_FIELD_NUMBER = 3;
-  private java.lang.String name_;
-  /**
-   * <code>optional string name = 3;</code>
-   * @return Whether the name field is set.
-   */
-  @java.lang.Override
-  public boolean hasName() {
-    return ((bitField0_ & 0x00000001) != 0);
-  }
-  /**
-   * <code>optional string name = 3;</code>
-   * @return The name.
-   */
-  @java.lang.Override
-  public java.lang.String getName() {
-    return name_;
-  }
-  /**
-   * <code>optional string name = 3;</code>
-   * @return The bytes for name.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getNameBytes() {
-    return com.google.protobuf.ByteString.copyFromUtf8(name_);
-  }
-  /**
-   * <code>optional string name = 3;</code>
-   * @param value The name to set.
-   */
-  private void setName(
-      java.lang.String value) {
-    java.lang.Class<?> valueClass = value.getClass();
-  bitField0_ |= 0x00000001;
-    name_ = value;
-  }
-  /**
-   * <code>optional string name = 3;</code>
-   */
-  private void clearName() {
-    bitField0_ = (bitField0_ & ~0x00000001);
-    name_ = getDefaultInstance().getName();
-  }
-  /**
-   * <code>optional string name = 3;</code>
-   * @param value The bytes for name to set.
-   */
-  private void setNameBytes(
-      com.google.protobuf.ByteString value) {
-    checkByteStringIsUtf8(value);
-    name_ = value.toStringUtf8();
-    bitField0_ |= 0x00000001;
-  }
-
-  public static final int ADDRESS_FIELD_NUMBER = 4;
-  private java.lang.String address_;
-  /**
-   * <code>optional string address = 4;</code>
-   * @return Whether the address field is set.
-   */
-  @java.lang.Override
-  public boolean hasAddress() {
-    return ((bitField0_ & 0x00000002) != 0);
-  }
-  /**
-   * <code>optional string address = 4;</code>
-   * @return The address.
-   */
-  @java.lang.Override
-  public java.lang.String getAddress() {
-    return address_;
-  }
-  /**
-   * <code>optional string address = 4;</code>
-   * @return The bytes for address.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getAddressBytes() {
-    return com.google.protobuf.ByteString.copyFromUtf8(address_);
-  }
-  /**
-   * <code>optional string address = 4;</code>
-   * @param value The address to set.
-   */
-  private void setAddress(
-      java.lang.String value) {
-    java.lang.Class<?> valueClass = value.getClass();
-  bitField0_ |= 0x00000002;
-    address_ = value;
-  }
-  /**
-   * <code>optional string address = 4;</code>
-   */
-  private void clearAddress() {
-    bitField0_ = (bitField0_ & ~0x00000002);
-    address_ = getDefaultInstance().getAddress();
-  }
-  /**
-   * <code>optional string address = 4;</code>
-   * @param value The bytes for address to set.
-   */
-  private void setAddressBytes(
-      com.google.protobuf.ByteString value) {
-    checkByteStringIsUtf8(value);
-    address_ = value.toStringUtf8();
-    bitField0_ |= 0x00000002;
-  }
-
-  public static final int TIMESTAMP_FIELD_NUMBER = 5;
+  public static final int TIMESTAMP_FIELD_NUMBER = 3;
   private long timestamp_;
   /**
-   * <code>optional int64 timestamp = 5;</code>
+   * <code>optional int64 timestamp = 3;</code>
    * @return Whether the timestamp field is set.
    */
   @java.lang.Override
   public boolean hasTimestamp() {
-    return ((bitField0_ & 0x00000004) != 0);
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>optional int64 timestamp = 5;</code>
+   * <code>optional int64 timestamp = 3;</code>
    * @return The timestamp.
    */
   @java.lang.Override
@@ -214,19 +102,132 @@ public  final class UserLocation extends
     return timestamp_;
   }
   /**
-   * <code>optional int64 timestamp = 5;</code>
+   * <code>optional int64 timestamp = 3;</code>
    * @param value The timestamp to set.
    */
   private void setTimestamp(long value) {
-    bitField0_ |= 0x00000004;
+    bitField0_ |= 0x00000001;
     timestamp_ = value;
   }
   /**
-   * <code>optional int64 timestamp = 5;</code>
+   * <code>optional int64 timestamp = 3;</code>
    */
   private void clearTimestamp() {
-    bitField0_ = (bitField0_ & ~0x00000004);
+    bitField0_ = (bitField0_ & ~0x00000001);
     timestamp_ = 0L;
+  }
+
+  public static final int DETAILS_FIELD_NUMBER = 4;
+  private static final class DetailsDefaultEntryHolder {
+    static final com.google.protobuf.MapEntryLite<
+        java.lang.String, java.lang.String> defaultEntry =
+            com.google.protobuf.MapEntryLite
+            .<java.lang.String, java.lang.String>newDefaultInstance(
+                com.google.protobuf.WireFormat.FieldType.STRING,
+                "",
+                com.google.protobuf.WireFormat.FieldType.STRING,
+                "");
+  }
+  private com.google.protobuf.MapFieldLite<
+      java.lang.String, java.lang.String> details_ =
+          com.google.protobuf.MapFieldLite.emptyMapField();
+  private com.google.protobuf.MapFieldLite<java.lang.String, java.lang.String>
+  internalGetDetails() {
+    return details_;
+  }
+  private com.google.protobuf.MapFieldLite<java.lang.String, java.lang.String>
+  internalGetMutableDetails() {
+    if (!details_.isMutable()) {
+      details_ = details_.mutableCopy();
+    }
+    return details_;
+  }
+  @java.lang.Override
+
+  public int getDetailsCount() {
+    return internalGetDetails().size();
+  }
+  /**
+   * <pre>
+   * e.g. street address, city, state, country, etc.
+   * </pre>
+   *
+   * <code>map&lt;string, string&gt; details = 4;</code>
+   */
+  @java.lang.Override
+
+  public boolean containsDetails(
+      java.lang.String key) {
+    java.lang.Class<?> keyClass = key.getClass();
+    return internalGetDetails().containsKey(key);
+  }
+  /**
+   * Use {@link #getDetailsMap()} instead.
+   */
+  @java.lang.Override
+  @java.lang.Deprecated
+  public java.util.Map<java.lang.String, java.lang.String> getDetails() {
+    return getDetailsMap();
+  }
+  /**
+   * <pre>
+   * e.g. street address, city, state, country, etc.
+   * </pre>
+   *
+   * <code>map&lt;string, string&gt; details = 4;</code>
+   */
+  @java.lang.Override
+
+  public java.util.Map<java.lang.String, java.lang.String> getDetailsMap() {
+    return java.util.Collections.unmodifiableMap(
+        internalGetDetails());
+  }
+  /**
+   * <pre>
+   * e.g. street address, city, state, country, etc.
+   * </pre>
+   *
+   * <code>map&lt;string, string&gt; details = 4;</code>
+   */
+  @java.lang.Override
+
+  public java.lang.String getDetailsOrDefault(
+      java.lang.String key,
+      java.lang.String defaultValue) {
+    java.lang.Class<?> keyClass = key.getClass();
+    java.util.Map<java.lang.String, java.lang.String> map =
+        internalGetDetails();
+    return map.containsKey(key) ? map.get(key) : defaultValue;
+  }
+  /**
+   * <pre>
+   * e.g. street address, city, state, country, etc.
+   * </pre>
+   *
+   * <code>map&lt;string, string&gt; details = 4;</code>
+   */
+  @java.lang.Override
+
+  public java.lang.String getDetailsOrThrow(
+      java.lang.String key) {
+    java.lang.Class<?> keyClass = key.getClass();
+    java.util.Map<java.lang.String, java.lang.String> map =
+        internalGetDetails();
+    if (!map.containsKey(key)) {
+      throw new java.lang.IllegalArgumentException();
+    }
+    return map.get(key);
+  }
+  /**
+   * <pre>
+   * e.g. street address, city, state, country, etc.
+   * </pre>
+   *
+   * <code>map&lt;string, string&gt; details = 4;</code>
+   */
+  private java.util.Map<java.lang.String, java.lang.String>
+  getMutableDetailsMap() {
+    return internalGetMutableDetails();
   }
 
   public static im.turms.client.model.proto.model.user.UserLocation parseFrom(
@@ -381,121 +382,7 @@ public  final class UserLocation extends
     }
 
     /**
-     * <code>optional string name = 3;</code>
-     * @return Whether the name field is set.
-     */
-    @java.lang.Override
-    public boolean hasName() {
-      return instance.hasName();
-    }
-    /**
-     * <code>optional string name = 3;</code>
-     * @return The name.
-     */
-    @java.lang.Override
-    public java.lang.String getName() {
-      return instance.getName();
-    }
-    /**
-     * <code>optional string name = 3;</code>
-     * @return The bytes for name.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getNameBytes() {
-      return instance.getNameBytes();
-    }
-    /**
-     * <code>optional string name = 3;</code>
-     * @param value The name to set.
-     * @return This builder for chaining.
-     */
-    public Builder setName(
-        java.lang.String value) {
-      copyOnWrite();
-      instance.setName(value);
-      return this;
-    }
-    /**
-     * <code>optional string name = 3;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearName() {
-      copyOnWrite();
-      instance.clearName();
-      return this;
-    }
-    /**
-     * <code>optional string name = 3;</code>
-     * @param value The bytes for name to set.
-     * @return This builder for chaining.
-     */
-    public Builder setNameBytes(
-        com.google.protobuf.ByteString value) {
-      copyOnWrite();
-      instance.setNameBytes(value);
-      return this;
-    }
-
-    /**
-     * <code>optional string address = 4;</code>
-     * @return Whether the address field is set.
-     */
-    @java.lang.Override
-    public boolean hasAddress() {
-      return instance.hasAddress();
-    }
-    /**
-     * <code>optional string address = 4;</code>
-     * @return The address.
-     */
-    @java.lang.Override
-    public java.lang.String getAddress() {
-      return instance.getAddress();
-    }
-    /**
-     * <code>optional string address = 4;</code>
-     * @return The bytes for address.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getAddressBytes() {
-      return instance.getAddressBytes();
-    }
-    /**
-     * <code>optional string address = 4;</code>
-     * @param value The address to set.
-     * @return This builder for chaining.
-     */
-    public Builder setAddress(
-        java.lang.String value) {
-      copyOnWrite();
-      instance.setAddress(value);
-      return this;
-    }
-    /**
-     * <code>optional string address = 4;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearAddress() {
-      copyOnWrite();
-      instance.clearAddress();
-      return this;
-    }
-    /**
-     * <code>optional string address = 4;</code>
-     * @param value The bytes for address to set.
-     * @return This builder for chaining.
-     */
-    public Builder setAddressBytes(
-        com.google.protobuf.ByteString value) {
-      copyOnWrite();
-      instance.setAddressBytes(value);
-      return this;
-    }
-
-    /**
-     * <code>optional int64 timestamp = 5;</code>
+     * <code>optional int64 timestamp = 3;</code>
      * @return Whether the timestamp field is set.
      */
     @java.lang.Override
@@ -503,7 +390,7 @@ public  final class UserLocation extends
       return instance.hasTimestamp();
     }
     /**
-     * <code>optional int64 timestamp = 5;</code>
+     * <code>optional int64 timestamp = 3;</code>
      * @return The timestamp.
      */
     @java.lang.Override
@@ -511,7 +398,7 @@ public  final class UserLocation extends
       return instance.getTimestamp();
     }
     /**
-     * <code>optional int64 timestamp = 5;</code>
+     * <code>optional int64 timestamp = 3;</code>
      * @param value The timestamp to set.
      * @return This builder for chaining.
      */
@@ -521,12 +408,138 @@ public  final class UserLocation extends
       return this;
     }
     /**
-     * <code>optional int64 timestamp = 5;</code>
+     * <code>optional int64 timestamp = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearTimestamp() {
       copyOnWrite();
       instance.clearTimestamp();
+      return this;
+    }
+
+    @java.lang.Override
+
+    public int getDetailsCount() {
+      return instance.getDetailsMap().size();
+    }
+    /**
+     * <pre>
+     * e.g. street address, city, state, country, etc.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; details = 4;</code>
+     */
+    @java.lang.Override
+
+    public boolean containsDetails(
+        java.lang.String key) {
+      java.lang.Class<?> keyClass = key.getClass();
+      return instance.getDetailsMap().containsKey(key);
+    }
+
+    public Builder clearDetails() {
+      copyOnWrite();
+      instance.getMutableDetailsMap().clear();
+      return this;
+    }
+    /**
+     * <pre>
+     * e.g. street address, city, state, country, etc.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; details = 4;</code>
+     */
+
+    public Builder removeDetails(
+        java.lang.String key) {
+      java.lang.Class<?> keyClass = key.getClass();
+      copyOnWrite();
+      instance.getMutableDetailsMap().remove(key);
+      return this;
+    }
+    /**
+     * Use {@link #getDetailsMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String> getDetails() {
+      return getDetailsMap();
+    }
+    /**
+     * <pre>
+     * e.g. street address, city, state, country, etc.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; details = 4;</code>
+     */
+    @java.lang.Override
+    public java.util.Map<java.lang.String, java.lang.String> getDetailsMap() {
+      return java.util.Collections.unmodifiableMap(
+          instance.getDetailsMap());
+    }
+    /**
+     * <pre>
+     * e.g. street address, city, state, country, etc.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; details = 4;</code>
+     */
+    @java.lang.Override
+
+    public java.lang.String getDetailsOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue) {
+      java.lang.Class<?> keyClass = key.getClass();
+      java.util.Map<java.lang.String, java.lang.String> map =
+          instance.getDetailsMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * e.g. street address, city, state, country, etc.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; details = 4;</code>
+     */
+    @java.lang.Override
+
+    public java.lang.String getDetailsOrThrow(
+        java.lang.String key) {
+      java.lang.Class<?> keyClass = key.getClass();
+      java.util.Map<java.lang.String, java.lang.String> map =
+          instance.getDetailsMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+    /**
+     * <pre>
+     * e.g. street address, city, state, country, etc.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; details = 4;</code>
+     */
+    public Builder putDetails(
+        java.lang.String key,
+        java.lang.String value) {
+      java.lang.Class<?> keyClass = key.getClass();
+      java.lang.Class<?> valueClass = value.getClass();
+      copyOnWrite();
+      instance.getMutableDetailsMap().put(key, value);
+      return this;
+    }
+    /**
+     * <pre>
+     * e.g. street address, city, state, country, etc.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; details = 4;</code>
+     */
+    public Builder putAllDetails(
+        java.util.Map<java.lang.String, java.lang.String> values) {
+      copyOnWrite();
+      instance.getMutableDetailsMap().putAll(values);
       return this;
     }
 
@@ -549,13 +562,13 @@ public  final class UserLocation extends
             "bitField0_",
             "latitude_",
             "longitude_",
-            "name_",
-            "address_",
             "timestamp_",
+            "details_",
+            DetailsDefaultEntryHolder.defaultEntry,
           };
           java.lang.String info =
-              "\u0000\u0005\u0000\u0001\u0001\u0005\u0005\u0000\u0000\u0000\u0001\u0001\u0002\u0001" +
-              "\u0003\u1208\u0000\u0004\u1208\u0001\u0005\u1002\u0002";
+              "\u0000\u0004\u0000\u0001\u0001\u0004\u0004\u0001\u0000\u0000\u0001\u0001\u0002\u0001" +
+              "\u0003\u1002\u0000\u00042";
           return newMessageInfo(DEFAULT_INSTANCE, info, objects);
       }
       // fall through

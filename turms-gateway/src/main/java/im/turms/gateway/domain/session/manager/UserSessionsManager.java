@@ -21,7 +21,7 @@ import im.turms.gateway.access.client.common.UserSession;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
-import im.turms.server.common.domain.location.bo.Coordinates;
+import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.collection.ConcurrentEnumMap;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -65,14 +65,14 @@ public final class UserSessionsManager {
     public UserSession addSessionIfAbsent(int version,
                                           DeviceType loggingInDeviceType,
                                           Map<String, String> deviceDetails,
-                                          @Nullable Coordinates coordinates) {
+                                          @Nullable Location location) {
         Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
         UserSession userSession = new UserSession(
                 version,
                 userId,
                 loggingInDeviceType,
                 deviceDetails,
-                coordinates);
+                location);
         boolean added = deviceTypeToSession.putIfAbsent(loggingInDeviceType, userSession) == null;
         return added ? userSession : null;
     }

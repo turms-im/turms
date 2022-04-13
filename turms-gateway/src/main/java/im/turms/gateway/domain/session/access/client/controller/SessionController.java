@@ -28,7 +28,7 @@ import im.turms.server.common.access.client.dto.model.user.UserLocation;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.user.CreateSessionRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.domain.location.bo.Coordinates;
+import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -36,6 +36,7 @@ import io.netty.util.Timeout;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -83,11 +84,13 @@ public class SessionController {
         }
         // TODO: Log deviceDetails in API logs
         Map<String, String> deviceDetails = createSessionRequest.getDeviceDetailsMap();
-        Coordinates coordinates = null;
+        Location location = null;
         if (createSessionRequest.hasLocation()) {
-            // TODO: make full use of the data in location
-            UserLocation location = createSessionRequest.getLocation();
-            coordinates = new Coordinates(location.getLongitude(), location.getLatitude());
+            UserLocation userLocation = createSessionRequest.getLocation();
+            location = new Location(userLocation.getLongitude(),
+                    userLocation.getLatitude(),
+                    userLocation.hasTimestamp() ? new Date(userLocation.getTimestamp()) : null,
+                    userLocation.getDetailsMap());
         }
         Mono<UserSession> handleLoginRequestMono = sessionService.handleLoginRequest(createSessionRequest.getVersion(),
                 sessionWrapper.getIp(),
@@ -96,7 +99,7 @@ public class SessionController {
                 deviceType,
                 deviceDetails,
                 userStatus,
-                coordinates,
+                location,
                 sessionWrapper.getIpStr());
         Timeout idleConnectionTimeout = sessionWrapper.getConnectionTimeoutTask();
         DeviceType finalDeviceType = deviceType;

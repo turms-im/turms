@@ -14,9 +14,8 @@ class UserLocation extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'UserLocation', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
     ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'latitude', $pb.PbFieldType.OF)
     ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'longitude', $pb.PbFieldType.OF)
-    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
-    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'address')
-    ..aInt64(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'timestamp')
+    ..aInt64(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'timestamp')
+    ..m<$core.String, $core.String>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'details', entryClassName: 'UserLocation.DetailsEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('im.turms.proto'))
     ..hasRequiredFields = false
   ;
 
@@ -24,9 +23,8 @@ class UserLocation extends $pb.GeneratedMessage {
   factory UserLocation({
     $core.double? latitude,
     $core.double? longitude,
-    $core.String? name,
-    $core.String? address,
     $fixnum.Int64? timestamp,
+    $core.Map<$core.String, $core.String>? details,
   }) {
     final _result = create();
     if (latitude != null) {
@@ -35,14 +33,11 @@ class UserLocation extends $pb.GeneratedMessage {
     if (longitude != null) {
       _result.longitude = longitude;
     }
-    if (name != null) {
-      _result.name = name;
-    }
-    if (address != null) {
-      _result.address = address;
-    }
     if (timestamp != null) {
       _result.timestamp = timestamp;
+    }
+    if (details != null) {
+      _result.details.addAll(details);
     }
     return _result;
   }
@@ -86,30 +81,15 @@ class UserLocation extends $pb.GeneratedMessage {
   void clearLongitude() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get name => $_getSZ(2);
+  $fixnum.Int64 get timestamp => $_getI64(2);
   @$pb.TagNumber(3)
-  set name($core.String v) { $_setString(2, v); }
+  set timestamp($fixnum.Int64 v) { $_setInt64(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasName() => $_has(2);
+  $core.bool hasTimestamp() => $_has(2);
   @$pb.TagNumber(3)
-  void clearName() => clearField(3);
+  void clearTimestamp() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get address => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set address($core.String v) { $_setString(3, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasAddress() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearAddress() => clearField(4);
-
-  @$pb.TagNumber(5)
-  $fixnum.Int64 get timestamp => $_getI64(4);
-  @$pb.TagNumber(5)
-  set timestamp($fixnum.Int64 v) { $_setInt64(4, v); }
-  @$pb.TagNumber(5)
-  $core.bool hasTimestamp() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearTimestamp() => clearField(5);
+  $core.Map<$core.String, $core.String> get details => $_getMap(3);
 }
 

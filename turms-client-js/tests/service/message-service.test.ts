@@ -78,7 +78,9 @@ describe('Query', () => {
 
 describe('Util', () => {
     it('generateLocationRecord', () => {
-        const data = MessageService.generateLocationRecord(1, 1, 'name', 'address');
+        const data = MessageService.generateLocationRecord(1, 1, {
+            'name': 'value'
+        });
         expect(data).toBeTruthy();
     });
     it('generateAudioRecordByDescription', () => {

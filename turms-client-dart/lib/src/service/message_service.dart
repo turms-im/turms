@@ -147,12 +147,8 @@ class DriverMessageService {
   }
 
   static Uint8List generateLocationRecord(double latitude, double longitude,
-          {String? locationName, String? address}) =>
-      UserLocation(
-              latitude: latitude,
-              longitude: longitude,
-              name: locationName,
-              address: address)
+          {Map<String, String>? details}) =>
+      UserLocation(latitude: latitude, longitude: longitude, details: details)
           .writeToBuffer();
 
   static Uint8List generateAudioRecordByDescription(String url,

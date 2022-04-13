@@ -29,7 +29,6 @@ import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;
-import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.observation.service.StatisticsService;
 import im.turms.service.domain.user.access.admin.dto.request.UpdateOnlineStatusDTO;
@@ -38,8 +37,6 @@ import im.turms.service.domain.user.access.admin.dto.response.UserLocationDTO;
 import im.turms.service.domain.user.service.UserService;
 import im.turms.service.domain.user.service.onlineuser.SessionService;
 import im.turms.service.domain.user.service.onlineuser.UsersNearbyService;
-import org.springframework.data.geo.Point;
-import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -108,12 +105,13 @@ public class UserOnlineInfoController extends BaseController {
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_QUERY)
     public Mono<ResponseEntity<ResponseDTO<Collection<UserSessionsStatus>>>> queryOnlineUsersStatus(
             @RequestParam Set<Long> ids,
-            @RequestParam(defaultValue = "true") boolean checkIfExists) {
+            @RequestParam(defaultValue = "false") boolean returnNonExistingUsers) {
         List<Mono<UserSessionsStatus>> userSessionStatusMonos = new ArrayList<>(ids.size());
         for (Long userId : ids) {
+            // TODO: Support fetching user session info from turms-gateway
             Mono<UserSessionsStatus> userOnlineInfoMno = userStatusService.getUserSessionsStatus(userId)
                     .flatMap(info -> {
-                        if (info.getUserStatus(false) == UserStatus.OFFLINE && checkIfExists) {
+                        if (!returnNonExistingUsers && info.getUserStatus(false) == UserStatus.OFFLINE) {
                             return userService.checkIfUserExists(userId, false)
                                     .flatMap(exists -> exists
                                             ? Mono.just(info)
@@ -137,30 +135,33 @@ public class UserOnlineInfoController extends BaseController {
             @RequestParam(defaultValue = "false") boolean withDistance,
             @RequestParam(defaultValue = "false") boolean withUserInfo) {
         Mono<List<NearbyUser>> usersNearby = usersNearbyService
-                .queryNearbyUsers(userId, deviceType, null, maxNumber, maxDistance, withCoordinates, withDistance, withUserInfo);
+                .queryNearbyUsers(userId,
+                        deviceType,
+                        null,
+                        null,
+                        maxNumber,
+                        maxDistance,
+                        withCoordinates,
+                        withDistance,
+                        withUserInfo);
         return ResponseFactory.okIfTruthy(usersNearby);
     }
 
     @GetMapping("/locations")
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<List<UserLocationDTO>>>> queryUserLocations(
+    public Mono<ResponseEntity<ResponseDTO<Collection<UserLocationDTO>>>> queryUserLocations(
             @RequestParam Set<Long> ids,
             @RequestParam(required = false) DeviceType deviceType) {
-        List<Mono<Pair<Long, Point>>> monos = new ArrayList<>(ids.size());
+        int size = ids.size();
+        List<Mono<UserLocationDTO>> monos = new ArrayList<>(size);
         for (Long userId : ids) {
             monos.add(sessionLocationService.getUserLocation(userId, deviceType)
-                    .map(coordinates -> Pair.of(userId, new Point(coordinates.getX().doubleValue(), coordinates.getY().doubleValue()))));
+                    .map(coordinates -> new UserLocationDTO(userId,
+                            deviceType,
+                            coordinates.getX().doubleValue(),
+                            coordinates.getY().doubleValue())));
         }
-        Mono<List<UserLocationDTO>> resultMono = Flux.merge(monos)
-                .collect(CollectorUtil.toList(monos.size()))
-                .map(pairs -> {
-                    List<UserLocationDTO> userLocations = new ArrayList<>(pairs.size());
-                    for (Pair<Long, Point> pair : pairs) {
-                        userLocations.add(new UserLocationDTO(pair.getFirst(), deviceType, pair.getSecond()));
-                    }
-                    return userLocations;
-                });
-        return ResponseFactory.okIfTruthy(resultMono);
+        return ResponseFactory.okIfTruthy(Flux.merge(monos), size);
     }
 
     @PutMapping("/statuses")

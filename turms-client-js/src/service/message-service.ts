@@ -200,15 +200,13 @@ export default class MessageService {
     static generateLocationRecord(
         latitude: number,
         longitude: number,
-        locationName?: string,
-        address?: string
+        details?: { [k: string]: string }
     ): Uint8Array {
         Validator.throwIfAnyFalsy(latitude, longitude);
         return UserLocation.encode({
             latitude,
             longitude,
-            address,
-            name: locationName
+            details: details || {}
         }).finish();
     }
 

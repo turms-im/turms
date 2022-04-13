@@ -19,7 +19,7 @@ package unit.im.turms.gateway.access.client.common;
 
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.domain.location.bo.Coordinates;
+import im.turms.server.common.domain.location.bo.Location;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -36,7 +36,7 @@ class UserSessionTests {
     private final Long userId = 1L;
     private final DeviceType deviceType = DeviceType.ANDROID;
     private final Map<String, String> deviceDetails = Collections.emptyMap();
-    private final Coordinates coordinates = new Coordinates(1F, 1F);
+    private final Location location = new Location(1F, 1F);
 
     @Test
     void constructor_shouldReturnInstance() {
@@ -45,7 +45,7 @@ class UserSessionTests {
                 userId,
                 deviceType,
                 deviceDetails,
-                coordinates);
+                location);
         assertThat(userSession).isNotNull();
     }
 
@@ -56,9 +56,9 @@ class UserSessionTests {
                 userId,
                 deviceType,
                 deviceDetails,
-                coordinates);
+                location);
         assertThat(userSession.getDeviceType()).isEqualTo(deviceType);
-        assertThat(userSession.getLoginCoordinates()).isEqualTo(coordinates);
+        assertThat(userSession.getLoginLocation()).isEqualTo(location);
     }
 
 }

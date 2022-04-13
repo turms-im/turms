@@ -254,13 +254,11 @@ class MessageService(private val turmsClient: TurmsClient) {
         fun generateLocationRecord(
             latitude: Float,
             longitude: Float,
-            locationName: String? = null,
-            address: String? = null
+            details: Map<String, String>? = null
         ): ByteBuffer = UserLocation.newBuilder().run {
             setLatitude(latitude)
             setLongitude(longitude)
-            locationName?.let { this.name = it }
-            address?.let { this.address = it }
+            details?.let { putAllDetails(it) }
             build().toByteString().asReadOnlyByteBuffer()
         }
 

@@ -17,16 +17,17 @@
 
 package im.turms.server.common.domain.location.bo;
 
-import im.turms.server.common.domain.session.bo.UserSessionId;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.user.po.User;
-import io.lettuce.core.GeoCoordinates;
 
 /**
  * @author James Chen
  */
 public record NearbyUser(
-        UserSessionId sessionId,
-        GeoCoordinates coordinates,
+        Long userId,
+        DeviceType deviceType,
+        Double longitude,
+        Double latitude,
         Integer distance,
         User info
 ) {

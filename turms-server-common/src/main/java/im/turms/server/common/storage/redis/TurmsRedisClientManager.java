@@ -17,7 +17,6 @@
 
 package im.turms.server.common.storage.redis;
 
-import im.turms.server.common.domain.location.bo.Coordinates;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -118,8 +117,8 @@ public class TurmsRedisClientManager {
 
     // Geo
 
-    public Mono<Long> geoadd(Long shardKey, Object key, Coordinates coordinates, Object member) {
-        return getClient(shardKey).geoadd(key, coordinates, member);
+    public Mono<Long> geoadd(Long shardKey, Object key, double longitude, double latitude, Object member) {
+        return getClient(shardKey).geoadd(key, longitude, latitude, member);
     }
 
     public Flux<GeoCoordinates> geopos(Long shardKey, Object key, Object... members) {

@@ -7,12 +7,16 @@ export const protobufPackage = "im.turms.proto";
 export interface UpdateUserLocationRequest {
   latitude: number;
   longitude: number;
-  name?: string | undefined;
-  address?: string | undefined;
+  details: { [key: string]: string };
+}
+
+export interface UpdateUserLocationRequest_DetailsEntry {
+  key: string;
+  value: string;
 }
 
 function createBaseUpdateUserLocationRequest(): UpdateUserLocationRequest {
-  return { latitude: 0, longitude: 0, name: undefined, address: undefined };
+  return { latitude: 0, longitude: 0, details: {} };
 }
 
 export const UpdateUserLocationRequest = {
@@ -26,12 +30,12 @@ export const UpdateUserLocationRequest = {
     if (message.longitude !== 0) {
       writer.uint32(21).float(message.longitude);
     }
-    if (message.name !== undefined) {
-      writer.uint32(26).string(message.name);
-    }
-    if (message.address !== undefined) {
-      writer.uint32(34).string(message.address);
-    }
+    Object.entries(message.details).forEach(([key, value]) => {
+      UpdateUserLocationRequest_DetailsEntry.encode(
+        { key: key as any, value },
+        writer.uint32(26).fork()
+      ).ldelim();
+    });
     return writer;
   },
 
@@ -52,10 +56,56 @@ export const UpdateUserLocationRequest = {
           message.longitude = reader.float();
           break;
         case 3:
-          message.name = reader.string();
+          const entry3 = UpdateUserLocationRequest_DetailsEntry.decode(
+            reader,
+            reader.uint32()
+          );
+          if (entry3.value !== undefined) {
+            message.details[entry3.key] = entry3.value;
+          }
           break;
-        case 4:
-          message.address = reader.string();
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+};
+
+function createBaseUpdateUserLocationRequest_DetailsEntry(): UpdateUserLocationRequest_DetailsEntry {
+  return { key: "", value: "" };
+}
+
+export const UpdateUserLocationRequest_DetailsEntry = {
+  encode(
+    message: UpdateUserLocationRequest_DetailsEntry,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== "") {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== "") {
+      writer.uint32(18).string(message.value);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): UpdateUserLocationRequest_DetailsEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateUserLocationRequest_DetailsEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = reader.string();
           break;
         default:
           reader.skipType(tag & 7);

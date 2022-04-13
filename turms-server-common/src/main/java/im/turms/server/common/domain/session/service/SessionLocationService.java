@@ -21,7 +21,7 @@ package im.turms.server.common.domain.session.service;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
-import im.turms.server.common.domain.location.bo.Coordinates;
+import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.exception.ResponseException;
@@ -73,16 +73,16 @@ public class SessionLocationService {
      */
     public Mono<Void> upsertUserLocation(@NotNull Long userId,
                                          @NotNull @ValidDeviceType DeviceType deviceType,
-                                         @NotNull Coordinates coordinates,
-                                         @NotNull Date timestamp) {
+                                         @NotNull Date timestamp,
+                                         double longitude,
+                                         double latitude) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
-            Validator.notNull(coordinates, "coordinates");
-            Validator.inRange(coordinates.longitude(), "longitude", Coordinates.LONGITUDE_MIN, Coordinates.LONGITUDE_MAX);
-            Validator.inRange(coordinates.latitude(), "latitude", Coordinates.LATITUDE_MIN, Coordinates.LATITUDE_MAX);
             Validator.notNull(timestamp, "timestamp");
+            Validator.inRange(longitude, "longitude", Location.LONGITUDE_MIN, Location.LONGITUDE_MAX);
+            Validator.inRange(longitude, "latitude", Location.LATITUDE_MIN, Location.LATITUDE_MAX);
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -92,7 +92,7 @@ public class SessionLocationService {
         Object member = treatUserIdAndDeviceTypeAsUniqueUser
                 ? new UserSessionId(userId, deviceType)
                 : userId;
-        return locationRedisClientManager.geoadd(userId, RedisEntryId.LOCATION_BUFFER, coordinates, member)
+        return locationRedisClientManager.geoadd(userId, RedisEntryId.LOCATION_BUFFER, longitude, latitude, member)
                 .then();
     }
 

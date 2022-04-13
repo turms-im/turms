@@ -20,6 +20,7 @@ package im.turms.server.common.domain.common.dto.response;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import lombok.Data;
@@ -84,6 +85,12 @@ public final class ResponseFactory {
     public static <T> Mono<ResponseEntity<ResponseDTO<Collection<T>>>> okIfTruthy(Flux<T> data) {
         return data
                 .collectList()
+                .map(ResponseFactory::okIfTruthy);
+    }
+
+    public static <T> Mono<ResponseEntity<ResponseDTO<Collection<T>>>> okIfTruthy(Flux<T> data, int estimatedSize) {
+        return data
+                .collect(CollectorUtil.toList(estimatedSize))
                 .map(ResponseFactory::okIfTruthy);
     }
 

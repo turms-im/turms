@@ -25,7 +25,7 @@ import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.infra.logging.ApiLoggingContext;
 import im.turms.gateway.infra.plugin.extension.NotificationHandler;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.domain.location.bo.Coordinates;
+import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsProperties;
@@ -65,7 +65,7 @@ class NotificationServiceTests {
     void sendNotificationToLocalClients_shouldReleaseAndReturnTrue_ifRecipientsAreOnline() {
         UserSessionsManager sessionsManager = mock(UserSessionsManager.class);
         TcpConnection connection = mock(TcpConnection.class);
-        UserSession session = new UserSession(1, 1L, DeviceType.ANDROID, null, new Coordinates(1F, 1F));
+        UserSession session = new UserSession(1, 1L, DeviceType.ANDROID, null, new Location(1F, 1F));
         session.setConnection(connection, new ByteArrayWrapper(new byte[]{}));
         Sinks.One<ByteBuf> sink = Sinks.one();
         session.setNotificationConsumer((notification, tracingContext) -> sink.tryEmitValue(notification));

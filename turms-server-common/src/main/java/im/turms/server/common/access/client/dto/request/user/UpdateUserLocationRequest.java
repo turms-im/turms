@@ -33,8 +33,6 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private UpdateUserLocationRequest() {
-    name_ = "";
-    address_ = "";
   }
 
   @java.lang.Override
@@ -79,15 +77,16 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 26: {
-            java.lang.String s = input.readStringRequireUtf8();
-            bitField0_ |= 0x00000001;
-            name_ = s;
-            break;
-          }
-          case 34: {
-            java.lang.String s = input.readStringRequireUtf8();
-            bitField0_ |= 0x00000002;
-            address_ = s;
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              details_ = com.google.protobuf.MapField.newMapField(
+                  DetailsDefaultEntryHolder.defaultEntry);
+              mutable_bitField0_ |= 0x00000001;
+            }
+            com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+            details__ = input.readMessage(
+                DetailsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+            details_.getMutableMap().put(
+                details__.getKey(), details__.getValue());
             break;
           }
           default: {
@@ -114,6 +113,18 @@ private static final long serialVersionUID = 0L;
     return im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequestOuterClass.internal_static_im_turms_proto_UpdateUserLocationRequest_descriptor;
   }
 
+  @SuppressWarnings({"rawtypes"})
+  @java.lang.Override
+  protected com.google.protobuf.MapField internalGetMapField(
+      int number) {
+    switch (number) {
+      case 3:
+        return internalGetDetails();
+      default:
+        throw new RuntimeException(
+            "Invalid map field number: " + number);
+    }
+  }
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
@@ -122,7 +133,6 @@ private static final long serialVersionUID = 0L;
             im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.class, im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.Builder.class);
   }
 
-  private int bitField0_;
   public static final int LATITUDE_FIELD_NUMBER = 1;
   private float latitude_;
   /**
@@ -145,96 +155,85 @@ private static final long serialVersionUID = 0L;
     return longitude_;
   }
 
-  public static final int NAME_FIELD_NUMBER = 3;
-  private volatile java.lang.Object name_;
-  /**
-   * <code>optional string name = 3;</code>
-   * @return Whether the name field is set.
-   */
-  @java.lang.Override
-  public boolean hasName() {
-    return ((bitField0_ & 0x00000001) != 0);
+  public static final int DETAILS_FIELD_NUMBER = 3;
+  private static final class DetailsDefaultEntryHolder {
+    static final com.google.protobuf.MapEntry<
+        java.lang.String, java.lang.String> defaultEntry =
+            com.google.protobuf.MapEntry
+            .<java.lang.String, java.lang.String>newDefaultInstance(
+                im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequestOuterClass.internal_static_im_turms_proto_UpdateUserLocationRequest_DetailsEntry_descriptor, 
+                com.google.protobuf.WireFormat.FieldType.STRING,
+                "",
+                com.google.protobuf.WireFormat.FieldType.STRING,
+                "");
   }
-  /**
-   * <code>optional string name = 3;</code>
-   * @return The name.
-   */
-  @java.lang.Override
-  public java.lang.String getName() {
-    java.lang.Object ref = name_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      name_ = s;
-      return s;
+  private com.google.protobuf.MapField<
+      java.lang.String, java.lang.String> details_;
+  private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+  internalGetDetails() {
+    if (details_ == null) {
+      return com.google.protobuf.MapField.emptyMapField(
+          DetailsDefaultEntryHolder.defaultEntry);
     }
-  }
-  /**
-   * <code>optional string name = 3;</code>
-   * @return The bytes for name.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getNameBytes() {
-    java.lang.Object ref = name_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      name_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+    return details_;
   }
 
-  public static final int ADDRESS_FIELD_NUMBER = 4;
-  private volatile java.lang.Object address_;
-  /**
-   * <code>optional string address = 4;</code>
-   * @return Whether the address field is set.
-   */
-  @java.lang.Override
-  public boolean hasAddress() {
-    return ((bitField0_ & 0x00000002) != 0);
+  public int getDetailsCount() {
+    return internalGetDetails().getMap().size();
   }
   /**
-   * <code>optional string address = 4;</code>
-   * @return The address.
+   * <code>map&lt;string, string&gt; details = 3;</code>
    */
+
   @java.lang.Override
-  public java.lang.String getAddress() {
-    java.lang.Object ref = address_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      address_ = s;
-      return s;
-    }
+  public boolean containsDetails(
+      java.lang.String key) {
+    if (key == null) { throw new NullPointerException("map key"); }
+    return internalGetDetails().getMap().containsKey(key);
   }
   /**
-   * <code>optional string address = 4;</code>
-   * @return The bytes for address.
+   * Use {@link #getDetailsMap()} instead.
    */
   @java.lang.Override
-  public com.google.protobuf.ByteString
-      getAddressBytes() {
-    java.lang.Object ref = address_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      address_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
+  @java.lang.Deprecated
+  public java.util.Map<java.lang.String, java.lang.String> getDetails() {
+    return getDetailsMap();
+  }
+  /**
+   * <code>map&lt;string, string&gt; details = 3;</code>
+   */
+  @java.lang.Override
+
+  public java.util.Map<java.lang.String, java.lang.String> getDetailsMap() {
+    return internalGetDetails().getMap();
+  }
+  /**
+   * <code>map&lt;string, string&gt; details = 3;</code>
+   */
+  @java.lang.Override
+
+  public java.lang.String getDetailsOrDefault(
+      java.lang.String key,
+      java.lang.String defaultValue) {
+    if (key == null) { throw new NullPointerException("map key"); }
+    java.util.Map<java.lang.String, java.lang.String> map =
+        internalGetDetails().getMap();
+    return map.containsKey(key) ? map.get(key) : defaultValue;
+  }
+  /**
+   * <code>map&lt;string, string&gt; details = 3;</code>
+   */
+  @java.lang.Override
+
+  public java.lang.String getDetailsOrThrow(
+      java.lang.String key) {
+    if (key == null) { throw new NullPointerException("map key"); }
+    java.util.Map<java.lang.String, java.lang.String> map =
+        internalGetDetails().getMap();
+    if (!map.containsKey(key)) {
+      throw new java.lang.IllegalArgumentException();
     }
+    return map.get(key);
   }
 
   private byte memoizedIsInitialized = -1;
@@ -257,12 +256,12 @@ private static final long serialVersionUID = 0L;
     if (java.lang.Float.floatToRawIntBits(longitude_) != 0) {
       output.writeFloat(2, longitude_);
     }
-    if (((bitField0_ & 0x00000001) != 0)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, name_);
-    }
-    if (((bitField0_ & 0x00000002) != 0)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, address_);
-    }
+    com.google.protobuf.GeneratedMessageV3
+      .serializeStringMapTo(
+        output,
+        internalGetDetails(),
+        DetailsDefaultEntryHolder.defaultEntry,
+        3);
     unknownFields.writeTo(output);
   }
 
@@ -280,11 +279,15 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeFloatSize(2, longitude_);
     }
-    if (((bitField0_ & 0x00000001) != 0)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, name_);
-    }
-    if (((bitField0_ & 0x00000002) != 0)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, address_);
+    for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+         : internalGetDetails().getMap().entrySet()) {
+      com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+      details__ = DetailsDefaultEntryHolder.defaultEntry.newBuilderForType()
+          .setKey(entry.getKey())
+          .setValue(entry.getValue())
+          .build();
+      size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, details__);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -307,16 +310,8 @@ private static final long serialVersionUID = 0L;
     if (java.lang.Float.floatToIntBits(getLongitude())
         != java.lang.Float.floatToIntBits(
             other.getLongitude())) return false;
-    if (hasName() != other.hasName()) return false;
-    if (hasName()) {
-      if (!getName()
-          .equals(other.getName())) return false;
-    }
-    if (hasAddress() != other.hasAddress()) return false;
-    if (hasAddress()) {
-      if (!getAddress()
-          .equals(other.getAddress())) return false;
-    }
+    if (!internalGetDetails().equals(
+        other.internalGetDetails())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -334,13 +329,9 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + LONGITUDE_FIELD_NUMBER;
     hash = (53 * hash) + java.lang.Float.floatToIntBits(
         getLongitude());
-    if (hasName()) {
-      hash = (37 * hash) + NAME_FIELD_NUMBER;
-      hash = (53 * hash) + getName().hashCode();
-    }
-    if (hasAddress()) {
-      hash = (37 * hash) + ADDRESS_FIELD_NUMBER;
-      hash = (53 * hash) + getAddress().hashCode();
+    if (!internalGetDetails().getMap().isEmpty()) {
+      hash = (37 * hash) + DETAILS_FIELD_NUMBER;
+      hash = (53 * hash) + internalGetDetails().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -449,6 +440,28 @@ private static final long serialVersionUID = 0L;
       return im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequestOuterClass.internal_static_im_turms_proto_UpdateUserLocationRequest_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 3:
+          return internalGetDetails();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMutableMapField(
+        int number) {
+      switch (number) {
+        case 3:
+          return internalGetMutableDetails();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
@@ -479,10 +492,7 @@ private static final long serialVersionUID = 0L;
 
       longitude_ = 0F;
 
-      name_ = "";
-      bitField0_ = (bitField0_ & ~0x00000001);
-      address_ = "";
-      bitField0_ = (bitField0_ & ~0x00000002);
+      internalGetMutableDetails().clear();
       return this;
     }
 
@@ -510,18 +520,10 @@ private static final long serialVersionUID = 0L;
     public im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest buildPartial() {
       im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest result = new im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest(this);
       int from_bitField0_ = bitField0_;
-      int to_bitField0_ = 0;
       result.latitude_ = latitude_;
       result.longitude_ = longitude_;
-      if (((from_bitField0_ & 0x00000001) != 0)) {
-        to_bitField0_ |= 0x00000001;
-      }
-      result.name_ = name_;
-      if (((from_bitField0_ & 0x00000002) != 0)) {
-        to_bitField0_ |= 0x00000002;
-      }
-      result.address_ = address_;
-      result.bitField0_ = to_bitField0_;
+      result.details_ = internalGetDetails();
+      result.details_.makeImmutable();
       onBuilt();
       return result;
     }
@@ -576,16 +578,8 @@ private static final long serialVersionUID = 0L;
       if (other.getLongitude() != 0F) {
         setLongitude(other.getLongitude());
       }
-      if (other.hasName()) {
-        bitField0_ |= 0x00000001;
-        name_ = other.name_;
-        onChanged();
-      }
-      if (other.hasAddress()) {
-        bitField0_ |= 0x00000002;
-        address_ = other.address_;
-        onChanged();
-      }
+      internalGetMutableDetails().mergeFrom(
+          other.internalGetDetails());
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -678,169 +672,134 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object name_ = "";
-    /**
-     * <code>optional string name = 3;</code>
-     * @return Whether the name field is set.
-     */
-    public boolean hasName() {
-      return ((bitField0_ & 0x00000001) != 0);
-    }
-    /**
-     * <code>optional string name = 3;</code>
-     * @return The name.
-     */
-    public java.lang.String getName() {
-      java.lang.Object ref = name_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        name_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
+    private com.google.protobuf.MapField<
+        java.lang.String, java.lang.String> details_;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    internalGetDetails() {
+      if (details_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            DetailsDefaultEntryHolder.defaultEntry);
       }
+      return details_;
     }
-    /**
-     * <code>optional string name = 3;</code>
-     * @return The bytes for name.
-     */
-    public com.google.protobuf.ByteString
-        getNameBytes() {
-      java.lang.Object ref = name_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        name_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    internalGetMutableDetails() {
+      onChanged();;
+      if (details_ == null) {
+        details_ = com.google.protobuf.MapField.newMapField(
+            DetailsDefaultEntryHolder.defaultEntry);
       }
-    }
-    /**
-     * <code>optional string name = 3;</code>
-     * @param value The name to set.
-     * @return This builder for chaining.
-     */
-    public Builder setName(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-      name_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>optional string name = 3;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearName() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      name_ = getDefaultInstance().getName();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>optional string name = 3;</code>
-     * @param value The bytes for name to set.
-     * @return This builder for chaining.
-     */
-    public Builder setNameBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      bitField0_ |= 0x00000001;
-      name_ = value;
-      onChanged();
-      return this;
+      if (!details_.isMutable()) {
+        details_ = details_.copy();
+      }
+      return details_;
     }
 
-    private java.lang.Object address_ = "";
-    /**
-     * <code>optional string address = 4;</code>
-     * @return Whether the address field is set.
-     */
-    public boolean hasAddress() {
-      return ((bitField0_ & 0x00000002) != 0);
+    public int getDetailsCount() {
+      return internalGetDetails().getMap().size();
     }
     /**
-     * <code>optional string address = 4;</code>
-     * @return The address.
+     * <code>map&lt;string, string&gt; details = 3;</code>
      */
-    public java.lang.String getAddress() {
-      java.lang.Object ref = address_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        address_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
+
+    @java.lang.Override
+    public boolean containsDetails(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetDetails().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getDetailsMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String> getDetails() {
+      return getDetailsMap();
+    }
+    /**
+     * <code>map&lt;string, string&gt; details = 3;</code>
+     */
+    @java.lang.Override
+
+    public java.util.Map<java.lang.String, java.lang.String> getDetailsMap() {
+      return internalGetDetails().getMap();
+    }
+    /**
+     * <code>map&lt;string, string&gt; details = 3;</code>
+     */
+    @java.lang.Override
+
+    public java.lang.String getDetailsOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetDetails().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;string, string&gt; details = 3;</code>
+     */
+    @java.lang.Override
+
+    public java.lang.String getDetailsOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetDetails().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
       }
+      return map.get(key);
+    }
+
+    public Builder clearDetails() {
+      internalGetMutableDetails().getMutableMap()
+          .clear();
+      return this;
     }
     /**
-     * <code>optional string address = 4;</code>
-     * @return The bytes for address.
+     * <code>map&lt;string, string&gt; details = 3;</code>
      */
-    public com.google.protobuf.ByteString
-        getAddressBytes() {
-      java.lang.Object ref = address_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        address_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+
+    public Builder removeDetails(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      internalGetMutableDetails().getMutableMap()
+          .remove(key);
+      return this;
     }
     /**
-     * <code>optional string address = 4;</code>
-     * @param value The address to set.
-     * @return This builder for chaining.
+     * Use alternate mutation accessors instead.
      */
-    public Builder setAddress(
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String>
+    getMutableDetails() {
+      return internalGetMutableDetails().getMutableMap();
+    }
+    /**
+     * <code>map&lt;string, string&gt; details = 3;</code>
+     */
+    public Builder putDetails(
+        java.lang.String key,
         java.lang.String value) {
+      if (key == null) { throw new NullPointerException("map key"); }
       if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-      address_ = value;
-      onChanged();
+  throw new NullPointerException("map value");
+}
+
+      internalGetMutableDetails().getMutableMap()
+          .put(key, value);
       return this;
     }
     /**
-     * <code>optional string address = 4;</code>
-     * @return This builder for chaining.
+     * <code>map&lt;string, string&gt; details = 3;</code>
      */
-    public Builder clearAddress() {
-      bitField0_ = (bitField0_ & ~0x00000002);
-      address_ = getDefaultInstance().getAddress();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>optional string address = 4;</code>
-     * @param value The bytes for address to set.
-     * @return This builder for chaining.
-     */
-    public Builder setAddressBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      bitField0_ |= 0x00000002;
-      address_ = value;
-      onChanged();
+
+    public Builder putAllDetails(
+        java.util.Map<java.lang.String, java.lang.String> values) {
+      internalGetMutableDetails().getMutableMap()
+          .putAll(values);
       return this;
     }
     @java.lang.Override

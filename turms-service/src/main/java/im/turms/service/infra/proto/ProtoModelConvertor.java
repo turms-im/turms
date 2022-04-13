@@ -39,11 +39,9 @@ import im.turms.server.common.access.client.dto.model.user.UserRelationship;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup;
 import im.turms.server.common.access.client.dto.model.user.UserStatusDetail;
 import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
-import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.service.domain.message.po.Message;
-import io.lettuce.core.GeoCoordinates;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -175,10 +173,10 @@ public final class ProtoModelConvertor {
     public static NearbyUser.Builder nearbyUser2proto(@NotNull im.turms.server.common.domain.location.bo.NearbyUser nearbyUser) {
         NearbyUser.Builder builder = NearbyUser
                 .newBuilder();
-        UserSessionId sessionId = nearbyUser.sessionId();
-        Long userId = sessionId.userId();
-        DeviceType deviceType = sessionId.deviceType();
-        GeoCoordinates coordinates = nearbyUser.coordinates();
+        Long userId = nearbyUser.userId();
+        DeviceType deviceType = nearbyUser.deviceType();
+        Double longitude = nearbyUser.longitude();
+        Double latitude = nearbyUser.latitude();
         Integer distance = nearbyUser.distance();
         User info = nearbyUser.info();
         if (userId != null) {
@@ -187,10 +185,10 @@ public final class ProtoModelConvertor {
         if (deviceType != null) {
             builder.setDeviceType(deviceType);
         }
-        if (coordinates != null) {
+        if (longitude != null && latitude != null) {
             builder.setLocation(UserLocation.newBuilder()
-                    .setLongitude(coordinates.getX().floatValue())
-                    .setLatitude(coordinates.getY().floatValue())
+                    .setLongitude(longitude.floatValue())
+                    .setLatitude(latitude.floatValue())
                     .build());
         }
         if (distance != null) {

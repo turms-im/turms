@@ -195,7 +195,7 @@ const zh_CN = {
     'groupSizeLimit': '群成员上限人数',
     'groupType': '群组类型',
     'groupTypeId': '群组类型ID',
-    'groupTypeLimit': '群组类型上限表',
+    'groupTypeIdToLimit': '群组类型上限表',
     'groupsThatSentMessagesNumber': '活跃群组数',
     'guest': '游客',
     'guestSpeakable': '允许游客发送消息',

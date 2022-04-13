@@ -37,36 +37,36 @@ public interface UpdateUserLocationRequestOrBuilder extends
   float getLongitude();
 
   /**
-   * <code>optional string name = 3;</code>
-   * @return Whether the name field is set.
+   * <code>map&lt;string, string&gt; details = 3;</code>
    */
-  boolean hasName();
+  int getDetailsCount();
   /**
-   * <code>optional string name = 3;</code>
-   * @return The name.
+   * <code>map&lt;string, string&gt; details = 3;</code>
    */
-  java.lang.String getName();
+  boolean containsDetails(
+      java.lang.String key);
   /**
-   * <code>optional string name = 3;</code>
-   * @return The bytes for name.
+   * Use {@link #getDetailsMap()} instead.
    */
-  com.google.protobuf.ByteString
-      getNameBytes();
+  @java.lang.Deprecated
+  java.util.Map<java.lang.String, java.lang.String>
+  getDetails();
+  /**
+   * <code>map&lt;string, string&gt; details = 3;</code>
+   */
+  java.util.Map<java.lang.String, java.lang.String>
+  getDetailsMap();
+  /**
+   * <code>map&lt;string, string&gt; details = 3;</code>
+   */
 
+  java.lang.String getDetailsOrDefault(
+      java.lang.String key,
+      java.lang.String defaultValue);
   /**
-   * <code>optional string address = 4;</code>
-   * @return Whether the address field is set.
+   * <code>map&lt;string, string&gt; details = 3;</code>
    */
-  boolean hasAddress();
-  /**
-   * <code>optional string address = 4;</code>
-   * @return The address.
-   */
-  java.lang.String getAddress();
-  /**
-   * <code>optional string address = 4;</code>
-   * @return The bytes for address.
-   */
-  com.google.protobuf.ByteString
-      getAddressBytes();
+
+  java.lang.String getDetailsOrThrow(
+      java.lang.String key);
 }

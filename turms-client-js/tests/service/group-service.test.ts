@@ -1,6 +1,6 @@
 import Constants from '../helper/constants';
 import TurmsClient from '../../src/turms-client';
-import ResponseStatusCode from '../../src/model/turms-status-code'
+import ResponseStatusCode from '../../src/model/response-status-code';
 import {GroupMemberRole} from '../../src/model/proto/constant/group_member_role';
 
 const GROUP_MEMBER_ID = '3';

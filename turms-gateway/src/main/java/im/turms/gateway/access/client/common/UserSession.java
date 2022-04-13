@@ -20,7 +20,7 @@ package im.turms.gateway.access.client.common;
 import im.turms.gateway.access.client.common.connection.NetConnection;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
-import im.turms.server.common.domain.location.bo.Coordinates;
+import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -65,7 +65,7 @@ public final class UserSession {
     private final Map<String, String> deviceDetails;
     private final Date loginDate;
     @Nullable
-    private Coordinates loginCoordinates;
+    private Location loginLocation;
     /**
      * 1. Use {@link ByteBuf} instead of {@link TurmsNotification}
      * so that turms-gateway can:
@@ -104,15 +104,15 @@ public final class UserSession {
                        Long userId,
                        DeviceType loggingInDeviceType,
                        @Nullable Map<String, String> deviceDetails,
-                       @Nullable Coordinates loginCoordinates) {
+                       @Nullable Location loginLocation) {
         Date now = new Date();
         this.version = version;
         this.userId = userId;
         this.deviceType = loggingInDeviceType;
-        this.loginDate = now;
-        this.loginCoordinates = loginCoordinates;
-        this.lastHeartbeatRequestTimestampMillis = now.getTime();
         this.deviceDetails = deviceDetails == null ? Collections.emptyMap() : deviceDetails;
+        this.loginLocation = loginLocation;
+        this.loginDate = now;
+        this.lastHeartbeatRequestTimestampMillis = now.getTime();
     }
 
     public void setConnection(NetConnection connection, ByteArrayWrapper ip) {
@@ -170,7 +170,7 @@ public final class UserSession {
                 ", userId=" + userId +
                 ", deviceType=" + deviceType +
                 ", loginDate=" + loginDate +
-                ", loginCoordinates=" + loginCoordinates +
+                ", loginLocation=" + loginLocation +
                 ", isSessionOpen=" + isSessionOpen +
                 ", connection=" + connection +
                 '}';

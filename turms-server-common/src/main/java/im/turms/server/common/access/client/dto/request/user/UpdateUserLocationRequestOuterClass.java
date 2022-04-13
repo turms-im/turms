@@ -36,6 +36,11 @@ public final class UpdateUserLocationRequestOuterClass {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_UpdateUserLocationRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_im_turms_proto_UpdateUserLocationRequest_DetailsEntry_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_im_turms_proto_UpdateUserLocationRequest_DetailsEntry_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -46,12 +51,14 @@ public final class UpdateUserLocationRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n/request/user/update_user_location_requ" +
-      "est.proto\022\016im.turms.proto\"~\n\031UpdateUserL" +
-      "ocationRequest\022\020\n\010latitude\030\001 \001(\002\022\021\n\tlong" +
-      "itude\030\002 \001(\002\022\021\n\004name\030\003 \001(\tH\000\210\001\001\022\024\n\007addres" +
-      "s\030\004 \001(\tH\001\210\001\001B\007\n\005_nameB\n\n\010_addressB<\n5im." +
-      "turms.server.common.access.client.dto.re" +
-      "quest.userP\001\272\002\000b\006proto3"
+      "est.proto\022\016im.turms.proto\"\271\001\n\031UpdateUser" +
+      "LocationRequest\022\020\n\010latitude\030\001 \001(\002\022\021\n\tlon" +
+      "gitude\030\002 \001(\002\022G\n\007details\030\003 \003(\01326.im.turms" +
+      ".proto.UpdateUserLocationRequest.Details" +
+      "Entry\032.\n\014DetailsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005va" +
+      "lue\030\002 \001(\t:\0028\001B<\n5im.turms.server.common." +
+      "access.client.dto.request.userP\001\272\002\000b\006pro" +
+      "to3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -62,7 +69,13 @@ public final class UpdateUserLocationRequestOuterClass {
     internal_static_im_turms_proto_UpdateUserLocationRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateUserLocationRequest_descriptor,
-        new java.lang.String[] { "Latitude", "Longitude", "Name", "Address", "Name", "Address", });
+        new java.lang.String[] { "Latitude", "Longitude", "Details", });
+    internal_static_im_turms_proto_UpdateUserLocationRequest_DetailsEntry_descriptor =
+      internal_static_im_turms_proto_UpdateUserLocationRequest_descriptor.getNestedTypes().get(0);
+    internal_static_im_turms_proto_UpdateUserLocationRequest_DetailsEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_im_turms_proto_UpdateUserLocationRequest_DetailsEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -225,15 +225,12 @@ public class MessageService {
         }
     }
 
-    public static func generateLocationRecord(latitude: Float, longitude: Float, locationName: String? = nil, address: String? = nil) -> Data {
+    public static func generateLocationRecord(latitude: Float, longitude: Float, details: [String: String]? = nil) -> Data {
         return try! UserLocation.with {
             $0.latitude = latitude
             $0.longitude = longitude
-            if locationName != nil {
-                $0.name = locationName!
-            }
-            if address != nil {
-                $0.address = address!
+            if let v = details {
+                $0.details = v
             }
         }.serializedData()
     }
@@ -241,14 +238,14 @@ public class MessageService {
     public static func generateAudioRecordByDescription(url: String, duration: Int32? = nil, format: String? = nil, size: Int32? = nil) -> Data {
         return try! AudioFile.with {
             $0.description_p.url = url
-            if duration != nil {
-                $0.description_p.duration = duration!
+            if let v = duration {
+                $0.description_p.duration = v
             }
-            if format != nil {
-                $0.description_p.format = format!
+            if let v = format {
+                $0.description_p.format = v
             }
-            if size != nil {
-                $0.description_p.size = size!
+            if let v = size {
+                $0.description_p.size = v
             }
         }.serializedData()
     }
@@ -262,14 +259,14 @@ public class MessageService {
     public static func generateVideoRecordByDescription(url: String, duration: Int32? = nil, format: String? = nil, size: Int32? = nil) -> Data {
         return try! VideoFile.with {
             $0.description_p.url = url
-            if duration != nil {
-                $0.description_p.duration = duration!
+            if let v = duration {
+                $0.description_p.duration = v
             }
-            if format != nil {
-                $0.description_p.format = format!
+            if let v = format {
+                $0.description_p.format = v
             }
-            if size != nil {
-                $0.description_p.size = size!
+            if let v = size {
+                $0.description_p.size = v
             }
         }.serializedData()
     }
@@ -289,14 +286,14 @@ public class MessageService {
     public static func generateImageRecordByDescription(url: String, fileSize: Int32? = nil, imageSize: Int32? = nil, original: Bool? = nil) -> Data {
         return try! ImageFile.with {
             $0.description_p.url = url
-            if fileSize != nil {
-                $0.description_p.fileSize = fileSize!
+            if let v = fileSize {
+                $0.description_p.fileSize = v
             }
-            if imageSize != nil {
-                $0.description_p.imageSize = imageSize!
+            if let v = imageSize {
+                $0.description_p.imageSize = v
             }
-            if original != nil {
-                $0.description_p.original = original!
+            if let v = original {
+                $0.description_p.original = v
             }
         }.serializedData()
     }
@@ -310,11 +307,11 @@ public class MessageService {
     public static func generateFileRecordByDescription(url: String, format: String? = nil, size: Int32? = nil) -> Data {
         return try! File.with {
             $0.description_p.url = url
-            if format != nil {
-                $0.description_p.format = format!
+            if let v = format {
+                $0.description_p.format = v
             }
-            if size != nil {
-                $0.description_p.size = size!
+            if let v = size {
+                $0.description_p.size = v
             }
         }.serializedData()
     }

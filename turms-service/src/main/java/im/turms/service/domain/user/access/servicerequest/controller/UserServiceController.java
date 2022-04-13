@@ -32,7 +32,6 @@ import im.turms.server.common.access.client.dto.request.user.UpdateUserLocationR
 import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.server.common.access.client.dto.request.user.UpdateUserRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.domain.location.bo.Coordinates;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
@@ -130,7 +129,8 @@ public class UserServiceController {
             return usersNearbyService.queryNearbyUsers(
                             clientRequest.userId(),
                             clientRequest.deviceType(),
-                            new Coordinates(request.getLongitude(), request.getLatitude()),
+                            (double) request.getLongitude(),
+                            (double) request.getLatitude(),
                             maxNumber,
                             distance,
                             request.getWithCoordinates(),
@@ -192,8 +192,9 @@ public class UserServiceController {
             Mono<Void> updateMono = sessionLocationService.upsertUserLocation(
                     clientRequest.userId(),
                     clientRequest.deviceType(),
-                    new Coordinates(request.getLongitude(), request.getLatitude()),
-                    new Date());
+                    new Date(),
+                    request.getLongitude(),
+                    request.getLatitude());
             return updateMono.thenReturn(RequestHandlerResultFactory.OK);
         };
     }

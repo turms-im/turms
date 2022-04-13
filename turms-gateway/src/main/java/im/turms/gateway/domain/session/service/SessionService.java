@@ -31,7 +31,7 @@ import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.admin.constant.AdminConst;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
-import im.turms.server.common.domain.location.bo.Coordinates;
+import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
@@ -185,7 +185,7 @@ public class SessionService implements ISessionService {
             @NotNull DeviceType deviceType,
             @Nullable Map<String, String> deviceDetails,
             @Nullable UserStatus userStatus,
-            @Nullable Coordinates coordinates,
+            @Nullable Location location,
             @Nullable String ipStr) {
         if (version != 1) {
             return Mono.error(ResponseException.get(ResponseStatusCode.UNSUPPORTED_CLIENT_VERSION, "The supported versions are: 1"));
@@ -193,9 +193,9 @@ public class SessionService implements ISessionService {
         if (userSimultaneousLoginService.isForbiddenDeviceType(deviceType)) {
             return Mono.error(ResponseException.get(ResponseStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE));
         }
-        return authenticate(version, userId, password, deviceType, deviceDetails, userStatus, coordinates, ipStr)
+        return authenticate(version, userId, password, deviceType, deviceDetails, userStatus, location, ipStr)
                 .flatMap(statusCode -> statusCode == ResponseStatusCode.OK
-                        ? tryRegisterOnlineUser(version, ip, userId, deviceType, deviceDetails, userStatus, coordinates)
+                        ? tryRegisterOnlineUser(version, ip, userId, deviceType, deviceDetails, userStatus, location)
                         : Mono.error(ResponseException.get(statusCode)));
     }
 
@@ -209,7 +209,7 @@ public class SessionService implements ISessionService {
             @NotNull DeviceType deviceType,
             @Nullable Map<String, String> deviceDetails,
             @Nullable UserStatus userStatus,
-            @Nullable Coordinates coordinates,
+            @Nullable Location location,
             @Nullable String ip) {
         if (userId.equals(AdminConst.ADMIN_REQUESTER_ID)) {
             return Mono.just(ResponseStatusCode.LOGIN_AUTHENTICATION_FAILED);
@@ -226,7 +226,7 @@ public class SessionService implements ISessionService {
                     deviceType,
                     deviceDetails,
                     userStatus,
-                    coordinates,
+                    location,
                     ip);
             Mono<ResponseStatusCode> authenticate = pluginManager.invokeExtensionPointsSequentially(
                             UserAuthenticator.class,
@@ -459,16 +459,16 @@ public class SessionService implements ISessionService {
             @NotNull DeviceType deviceType,
             @Nullable Map<String, String> deviceDetails,
             @Nullable UserStatus userStatus,
-            @Nullable Coordinates coordinates) {
+            @Nullable Location location) {
         try {
             Validator.notNull(ip, "ip");
             Validator.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
             Validator.state(userStatus != UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
             Validator.state(userStatus != UserStatus.OFFLINE, "The user status must not be OFFLINE");
-            if (coordinates != null) {
-                Validator.inRange(coordinates.longitude(), "longitude", Coordinates.LONGITUDE_MIN, Coordinates.LONGITUDE_MAX);
-                Validator.inRange(coordinates.latitude(), "latitude", Coordinates.LATITUDE_MIN, Coordinates.LATITUDE_MAX);
+            if (location != null) {
+                Validator.inRange(location.longitude(), "longitude", Location.LONGITUDE_MIN, Location.LONGITUDE_MAX);
+                Validator.inRange(location.latitude(), "latitude", Location.LATITUDE_MIN, Location.LATITUDE_MAX);
             }
         } catch (ResponseException e) {
             return Mono.error(e);
@@ -488,7 +488,7 @@ public class SessionService implements ISessionService {
                     // Check the current sessions status
                     UserStatus existingUserStatus = sessionsStatus.userStatus();
                     if (existingUserStatus == UserStatus.OFFLINE) {
-                        return addOnlineDeviceIfAbsent(version, ip, userId, deviceType, deviceDetails, userStatus, coordinates);
+                        return addOnlineDeviceIfAbsent(version, ip, userId, deviceType, deviceDetails, userStatus, location);
                     }
                     boolean conflicts = sessionsStatus.getLoggedInDeviceTypes().contains(deviceType);
                     if (conflicts) {
@@ -507,10 +507,10 @@ public class SessionService implements ISessionService {
                                         LOGGER.error("Failed to update the online status of the user " + userId, t);
                                         return Mono.empty();
                                     });
-                            if (coordinates != null) {
+                            if (location != null) {
                                 updateSessionInfoMono = updateSessionInfoMono
                                         .flatMap(unused -> sessionLocationService
-                                                .upsertUserLocation(userId, deviceType, coordinates, new Date())
+                                                .upsertUserLocation(userId, deviceType, new Date(), location.longitude(), location.latitude())
                                                 .onErrorResume(t -> {
                                                     LOGGER.error("Failed to upsert the location of the user " + userId, t);
                                                     return Mono.empty();
@@ -523,7 +523,7 @@ public class SessionService implements ISessionService {
                     }
                     return disconnectConflictedDeviceTypes(userId, deviceType, sessionsStatus)
                             .flatMap(wasSuccessful -> wasSuccessful
-                                    ? addOnlineDeviceIfAbsent(version, ip, userId, deviceType, deviceDetails, userStatus, coordinates)
+                                    ? addOnlineDeviceIfAbsent(version, ip, userId, deviceType, deviceDetails, userStatus, location)
                                     : Mono.error(ResponseException.get(ResponseStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
                 });
     }
@@ -616,7 +616,7 @@ public class SessionService implements ISessionService {
             @NotNull DeviceType deviceType,
             @Nullable Map<String, String> deviceDetails,
             @Nullable UserStatus userStatus,
-            @Nullable Coordinates coordinates) {
+            @Nullable Location location) {
         // Try to update the global user status
         return userStatusService.addOnlineDeviceIfAbsent(userId, deviceType, userStatus, closeIdleSessionAfterSeconds)
                 .flatMap(wasSuccessful -> {
@@ -626,7 +626,7 @@ public class SessionService implements ISessionService {
                     UserStatus finalUserStatus = null == userStatus ? UserStatus.AVAILABLE : userStatus;
                     UserSessionsManager manager = userIdToSessionsManager
                             .computeIfAbsent(userId, key -> new UserSessionsManager(key, finalUserStatus));
-                    UserSession session = manager.addSessionIfAbsent(version, deviceType, deviceDetails, coordinates);
+                    UserSession session = manager.addSessionIfAbsent(version, deviceType, deviceDetails, location);
                     // This should never happen
                     if (null == session) {
                         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE));
@@ -638,7 +638,7 @@ public class SessionService implements ISessionService {
                                     ? (sessions.isEmpty() ? null : sessions)
                                     : sessions;
                         });
-                        session = manager.addSessionIfAbsent(version, deviceType, deviceDetails, coordinates);
+                        session = manager.addSessionIfAbsent(version, deviceType, deviceDetails, location);
                         if (null == session) {
                             return Mono.error(ResponseException.get(ResponseStatusCode.SERVER_INTERNAL_ERROR));
                         }
@@ -652,8 +652,12 @@ public class SessionService implements ISessionService {
                         return sessions;
                     });
                     Date now = new Date();
-                    if (null != coordinates && sessionLocationService.isLocationEnabled()) {
-                        return sessionLocationService.upsertUserLocation(userId, deviceType, coordinates, now)
+                    if (null != location && sessionLocationService.isLocationEnabled()) {
+                        return sessionLocationService.upsertUserLocation(userId,
+                                        deviceType,
+                                        now,
+                                        location.longitude(),
+                                        location.latitude())
                                 .thenReturn(session);
                     }
                     return Mono.just(session);

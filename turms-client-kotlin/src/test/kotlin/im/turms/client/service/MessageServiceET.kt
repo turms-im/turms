@@ -42,7 +42,7 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import org.junit.jupiter.api.Timeout
-import java.util.*
+import java.util.Date
 import kotlin.properties.Delegates
 
 @TestMethodOrder(OrderAnnotation::class)
@@ -133,7 +133,12 @@ internal class MessageServiceET {
 
     @Test
     fun generateLocationRecord() {
-        val data = generateLocationRecord(1.0f, 1.0f, "name", "address")
+        val data = generateLocationRecord(
+            1.0f, 1.0f, mapOf(
+                "name" to "value1",
+                "address" to "value2"
+            )
+        )
         assertNotNull(data)
     }
 

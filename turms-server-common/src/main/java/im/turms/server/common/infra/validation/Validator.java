@@ -39,22 +39,23 @@ public final class Validator {
             return true;
         }
         for (Object o : array) {
-            if (o != null) {
-                if (o instanceof String) {
-                    if (!((String) o).isEmpty()) {
-                        return false;
-                    }
-                } else if (o instanceof Collection) {
-                    if (!((Collection<?>) o).isEmpty()) {
-                        return false;
-                    }
-                } else if (o.getClass().isArray()) {
-                    if (Array.getLength(o) > 0) {
-                        return false;
-                    }
-                } else {
+            if (o == null) {
+                continue;
+            }
+            if (o instanceof String str) {
+                if (!str.isEmpty()) {
                     return false;
                 }
+            } else if (o instanceof Collection collection) {
+                if (!collection.isEmpty()) {
+                    return false;
+                }
+            } else if (o.getClass().isArray()) {
+                if (Array.getLength(o) > 0) {
+                    return false;
+                }
+            } else {
+                return false;
             }
         }
         return true;
@@ -63,11 +64,22 @@ public final class Validator {
     public static boolean areAllNull(Object... array) {
         if (array == null) {
             return true;
-        } else {
-            for (Object o : array) {
-                if (o != null) {
-                    return false;
-                }
+        }
+        for (Object o : array) {
+            if (o != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean areAllNullOrNotNull(Object... array) {
+        if (array == null) {
+            return true;
+        }
+        for (int i = 1; i < array.length; i++) {
+            if (array[0] != array[i]) {
+                return false;
             }
         }
         return true;

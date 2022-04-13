@@ -13,8 +13,7 @@ class UpdateUserLocationRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'UpdateUserLocationRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
     ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'latitude', $pb.PbFieldType.OF)
     ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'longitude', $pb.PbFieldType.OF)
-    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
-    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'address')
+    ..m<$core.String, $core.String>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'details', entryClassName: 'UpdateUserLocationRequest.DetailsEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('im.turms.proto'))
     ..hasRequiredFields = false
   ;
 
@@ -22,8 +21,7 @@ class UpdateUserLocationRequest extends $pb.GeneratedMessage {
   factory UpdateUserLocationRequest({
     $core.double? latitude,
     $core.double? longitude,
-    $core.String? name,
-    $core.String? address,
+    $core.Map<$core.String, $core.String>? details,
   }) {
     final _result = create();
     if (latitude != null) {
@@ -32,11 +30,8 @@ class UpdateUserLocationRequest extends $pb.GeneratedMessage {
     if (longitude != null) {
       _result.longitude = longitude;
     }
-    if (name != null) {
-      _result.name = name;
-    }
-    if (address != null) {
-      _result.address = address;
+    if (details != null) {
+      _result.details.addAll(details);
     }
     return _result;
   }
@@ -80,21 +75,6 @@ class UpdateUserLocationRequest extends $pb.GeneratedMessage {
   void clearLongitude() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get name => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set name($core.String v) { $_setString(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasName() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearName() => clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.String get address => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set address($core.String v) { $_setString(3, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasAddress() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearAddress() => clearField(4);
+  $core.Map<$core.String, $core.String> get details => $_getMap(2);
 }
 

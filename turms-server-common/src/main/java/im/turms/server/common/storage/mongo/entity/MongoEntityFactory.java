@@ -31,7 +31,6 @@ import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.PropertySetter;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import im.turms.server.common.storage.mongo.entity.annotation.TieredStorage;
-import lombok.Data;
 import lombok.SneakyThrows;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
@@ -74,9 +73,9 @@ public final class MongoEntityFactory {
                 shardKey,
                 parseZone(clazz, shardKey),
                 parseCompoundIndex(clazz),
-                entityFieldsInfo.getIndexes(),
-                entityFieldsInfo.getIdFieldName(),
-                entityFieldsInfo.getFields()
+                entityFieldsInfo.indexes,
+                entityFieldsInfo.idFieldName,
+                entityFieldsInfo.fields
         );
     }
 
@@ -346,12 +345,10 @@ public final class MongoEntityFactory {
         return new IndexModel(new BsonDocument(name, index), options);
     }
 
-    @Data
-    private static class EntityFieldsInfo {
-        @Nullable
-        private final String idFieldName;
-        private final Map<String, EntityField<?>> fields;
-        private final List<Index> indexes;
+    private record EntityFieldsInfo(
+            @Nullable String idFieldName,
+            Map<String, EntityField<?>> fields,
+            List<Index> indexes) {
     }
 
 }

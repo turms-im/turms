@@ -18,7 +18,7 @@
 package integration.im.turms.server.common.domain.session.service;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.domain.location.bo.Coordinates;
+import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.infra.cluster.node.Node;
@@ -58,16 +58,16 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
 
     static final long USER_1_ID = 1;
     static final DeviceType USER_1_DEVICE = DeviceType.ANDROID;
-    static final Coordinates USER_1_COORDINATES_1 = new Coordinates(10, 10);
-    static final Coordinates USER_1_COORDINATES_2 = new Coordinates(10, 20);
+    static final Location USER_1_COORDINATES_1 = new Location(10, 10);
+    static final Location USER_1_COORDINATES_2 = new Location(10, 20);
 
     static final long USER_2_ID = 2;
     static final DeviceType USER_2_DEVICE = DeviceType.ANDROID;
-    static final Coordinates USER_2_COORDINATES = new Coordinates(10, 30);
+    static final Location USER_2_COORDINATES = new Location(10, 30);
 
     static final long USER_3_ID = 3;
     static final DeviceType USER_3_DEVICE = DeviceType.ANDROID;
-    static final Coordinates USER_3_COORDINATES = new Coordinates(10, 40);
+    static final Location USER_3_COORDINATES = new Location(10, 40);
 
     static final long NONEXISTENT_USER_ID = 99999;
     static final DeviceType NONEXISTENT_USER_DEVICE = DeviceType.ANDROID;
@@ -110,17 +110,29 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     @Test
     void upsertUserLocation_shouldInsert_ifNotExists() {
         StepVerifier
-                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_1_ID, USER_1_DEVICE, USER_1_COORDINATES_1, new Date()))
+                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_1_ID,
+                        USER_1_DEVICE,
+                        new Date(),
+                        USER_1_COORDINATES_1.longitude(),
+                        USER_1_COORDINATES_1.latitude()))
                 .as("The location of user " + USER_1_ID + " should be inserted")
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
         StepVerifier
-                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_2_ID, USER_2_DEVICE, USER_2_COORDINATES, new Date()))
+                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_2_ID,
+                        USER_2_DEVICE,
+                        new Date(),
+                        USER_2_COORDINATES.longitude(),
+                        USER_2_COORDINATES.latitude()))
                 .as("The location of user " + USER_2_ID + " should be inserted")
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
         StepVerifier
-                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_3_ID, USER_3_DEVICE, USER_3_COORDINATES, new Date()))
+                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_3_ID,
+                        USER_3_DEVICE,
+                        new Date(),
+                        USER_3_COORDINATES.longitude(),
+                        USER_3_COORDINATES.latitude()))
                 .as("The location of user " + USER_3_ID + " should be inserted")
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
@@ -130,7 +142,11 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     @Test
     void upsertUserLocation_shouldUpdate_ifExists() {
         Mono<Void> upsertUserLocation =
-                SESSION_LOCATION_SERVICE.upsertUserLocation(USER_1_ID, USER_1_DEVICE, USER_1_COORDINATES_2, new Date());
+                SESSION_LOCATION_SERVICE.upsertUserLocation(USER_1_ID,
+                        USER_1_DEVICE,
+                        new Date(),
+                        USER_1_COORDINATES_2.longitude(),
+                        USER_1_COORDINATES_2.latitude());
         StepVerifier
                 .create(upsertUserLocation)
                 .expectComplete()

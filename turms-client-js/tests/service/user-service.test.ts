@@ -1,6 +1,6 @@
 import Constants from '../helper/constants';
 import TurmsClient from '../../src/turms-client';
-import ResponseStatusCode from '../../src/model/turms-status-code'
+import ResponseStatusCode from '../../src/model/response-status-code';
 import {UserStatus} from '../../src/model/proto/constant/user_status';
 import {ResponseAction} from '../../src/model/proto/constant/response_action';
 

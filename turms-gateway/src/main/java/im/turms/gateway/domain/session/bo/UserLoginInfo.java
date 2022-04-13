@@ -19,7 +19,7 @@ package im.turms.gateway.domain.session.bo;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
-import im.turms.server.common.domain.location.bo.Coordinates;
+import im.turms.server.common.domain.location.bo.Location;
 
 import java.util.Map;
 
@@ -33,6 +33,6 @@ public record UserLoginInfo(
         DeviceType loggingInDeviceType,
         Map<String, String> deviceDetails,
         UserStatus userStatus,
-        Coordinates coordinates,
+        Location location,
         String ip) {
 }

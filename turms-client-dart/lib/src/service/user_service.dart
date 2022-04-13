@@ -305,12 +305,9 @@ class UserService {
   /// sendMessage() with records of location sends user's location to
   /// both server and its recipients.
   Future<void> updateLocation(double latitude, double longitude,
-      {String? name, String? address}) async {
+      {Map<String, String>? details}) async {
     await _turmsClient.driver.send(UpdateUserLocationRequest(
-        latitude: latitude,
-        longitude: longitude,
-        name: name,
-        address: address));
+        latitude: latitude, longitude: longitude, details: details));
   }
 
   void _changeToOnline() {

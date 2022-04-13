@@ -18,7 +18,6 @@
 package im.turms.service.domain.user.access.admin.dto.response;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
-import org.springframework.data.geo.Point;
 
 /**
  * @author James Chen
@@ -26,6 +25,7 @@ import org.springframework.data.geo.Point;
 public record UserLocationDTO(
         Long userId,
         DeviceType deviceType,
-        Point coordinates
+        Double longitude,
+        Double latitude
 ) {
 }

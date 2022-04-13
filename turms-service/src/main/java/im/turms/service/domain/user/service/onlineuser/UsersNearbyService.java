@@ -18,12 +18,15 @@
 package im.turms.service.domain.user.service.onlineuser;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.domain.location.bo.Coordinates;
+import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.location.bo.NearbyUser;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.user.po.User;
+import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.validation.Validator;
 import im.turms.service.domain.user.service.UserService;
+import io.lettuce.core.GeoCoordinates;
 import io.lettuce.core.GeoWithin;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -54,19 +57,25 @@ public class UsersNearbyService {
     public Mono<List<NearbyUser>> queryNearbyUsers(
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
-            @Nullable Coordinates coordinates,
+            @Nullable Double longitude,
+            @Nullable Double latitude,
             @Nullable Short maxNumber,
             @Nullable Integer maxDistance,
             boolean withCoordinates,
             boolean withDistance,
             boolean withUserInfo) {
-        Mono<Void> upsertMono = coordinates == null
+        if (!Validator.areAllNullOrNotNull(longitude, latitude)) {
+            return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "longitude and latitude must be both null or both not null"));
+        }
+        Mono<Void> upsertLocation = longitude == null
                 ? Mono.empty()
                 : sessionLocationService.upsertUserLocation(
                 userId,
                 deviceType,
-                coordinates,
-                new Date());
+                new Date(),
+                longitude,
+                latitude);
         Flux<GeoWithin<Object>> nearbyUserFlux = sessionLocationService.queryNearbyUsers(
                 userId,
                 deviceType,
@@ -96,30 +105,38 @@ public class UsersNearbyService {
                                         if (geo == null) {
                                             continue;
                                         }
-                                        Double distance = geo.getDistance();
-                                        Integer dis = distance == null ? null : distance.intValue();
-                                        NearbyUser nearbyUser = new NearbyUser(getUserSessionId(geo.getMember()),
-                                                geo.getCoordinates(), dis, user);
-                                        nearbyUsers.add(nearbyUser);
+                                        nearbyUsers.add(getNearbyUser(geo, user));
                                     }
                                     return nearbyUsers;
                                 });
                     });
         } else {
             resultMono = nearbyUserFlux
-                    .map(geo -> new NearbyUser(getUserSessionId(geo.getMember()),
-                            geo.getCoordinates(),
-                            geo.getDistance().intValue(),
-                            null))
+                    .map(geo -> getNearbyUser(geo, null))
                     .collectList();
         }
-        return upsertMono.then(resultMono);
+        return upsertLocation.then(resultMono);
     }
 
-    private UserSessionId getUserSessionId(Object value) {
-        return value instanceof UserSessionId sessionId
-                ? sessionId
-                : new UserSessionId((Long) value, null);
+    private NearbyUser getNearbyUser(GeoWithin<Object> geo, @Nullable User user) {
+        Object id = geo.getMember();
+        GeoCoordinates coordinates = geo.getCoordinates();
+        Double distance = geo.getDistance();
+        if (id instanceof UserSessionId sessionId) {
+            return new NearbyUser(sessionId.userId(),
+                    sessionId.deviceType(),
+                    coordinates == null ? null : coordinates.getX().doubleValue(),
+                    coordinates == null ? null : coordinates.getY().doubleValue(),
+                    distance == null ? null : distance.intValue(),
+                    user);
+        } else {
+            return new NearbyUser((Long) id,
+                    null,
+                    coordinates == null ? null : coordinates.getX().doubleValue(),
+                    coordinates == null ? null : coordinates.getY().doubleValue(),
+                    distance == null ? null : distance.intValue(),
+                    user);
+        }
     }
 
 }

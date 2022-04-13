@@ -20,7 +20,7 @@ package unit.im.turms.gateway.domain.session.bo;
 import im.turms.gateway.domain.session.bo.UserLoginInfo;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
-import im.turms.server.common.domain.location.bo.Coordinates;
+import im.turms.server.common.domain.location.bo.Location;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.junit.jupiter.api.Test;
@@ -42,26 +42,26 @@ class UserLoginInfoTests {
     private final DeviceType loggingInDeviceType = DeviceType.ANDROID;
     private final Map<String, String> deviceDetails = Map.of("id", "ABC123456789");
     private final UserStatus userStatus = UserStatus.BUSY;
-    private final Coordinates coordinates = new Coordinates(1L, 1L);
+    private final Location location = new Location(1L, 1L);
     private final String ip = "1.1.1.1";
 
     @Test
     void constructor_shouldReturnInstance() {
         UserLoginInfo userLoginInfo =
-                new UserLoginInfo(version, userId, password, loggingInDeviceType, deviceDetails, userStatus, coordinates, ip);
+                new UserLoginInfo(version, userId, password, loggingInDeviceType, deviceDetails, userStatus, location, ip);
         assertThat(userLoginInfo).isNotNull();
     }
 
     @Test
     void getters_shouldGetValues() {
         UserLoginInfo userLoginInfo =
-                new UserLoginInfo(version, userId, password, loggingInDeviceType, deviceDetails, userStatus, coordinates, ip);
+                new UserLoginInfo(version, userId, password, loggingInDeviceType, deviceDetails, userStatus, location, ip);
         assertThat(userLoginInfo.version()).isEqualTo(version);
         assertThat(userLoginInfo.userId()).isEqualTo(userId);
         assertThat(userLoginInfo.password()).isEqualTo(password);
         assertThat(userLoginInfo.loggingInDeviceType()).isEqualTo(loggingInDeviceType);
         assertThat(userLoginInfo.userStatus()).isEqualTo(userStatus);
-        assertThat(userLoginInfo.coordinates()).isEqualTo(coordinates);
+        assertThat(userLoginInfo.location()).isEqualTo(location);
         assertThat(userLoginInfo.ip()).isEqualTo(ip);
         assertThat(userLoginInfo.deviceDetails()).isEqualTo(deviceDetails);
     }

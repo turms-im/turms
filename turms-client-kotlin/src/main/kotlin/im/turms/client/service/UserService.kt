@@ -439,15 +439,13 @@ class UserService(private val turmsClient: TurmsClient) {
     suspend fun updateLocation(
         latitude: Float,
         longitude: Float,
-        name: String? = null,
-        address: String? = null
+        details: Map<String, String>? = null
     ) = turmsClient.driver
         .send(
             UpdateUserLocationRequest.newBuilder().apply {
                 this.latitude = latitude
                 this.longitude = longitude
-                name?.let { this.name = it }
-                address?.let { this.address = it }
+                details?.let { putAllDetails(it) }
             }
         ).run {}
 

@@ -195,7 +195,7 @@ const en_US = {
     'groupSizeLimit': 'Group Size Limit',
     'groupType': 'Group Type',
     'groupTypeId': 'Group Type ID',
-    'groupTypeLimit': 'Group Type Limit Table',
+    'groupTypeIdToLimit': 'Group Type Limit Table',
     'groupsThatSentMessagesNumber': '-',
     'guest': 'Guest',
     'guestSpeakable': 'Guest Speakable',
