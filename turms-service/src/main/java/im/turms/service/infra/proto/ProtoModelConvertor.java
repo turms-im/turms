@@ -175,8 +175,8 @@ public final class ProtoModelConvertor {
                 .newBuilder();
         Long userId = nearbyUser.userId();
         DeviceType deviceType = nearbyUser.deviceType();
-        Double longitude = nearbyUser.longitude();
-        Double latitude = nearbyUser.latitude();
+        Float longitude = nearbyUser.longitude();
+        Float latitude = nearbyUser.latitude();
         Integer distance = nearbyUser.distance();
         User info = nearbyUser.info();
         if (userId != null) {
@@ -187,8 +187,8 @@ public final class ProtoModelConvertor {
         }
         if (longitude != null && latitude != null) {
             builder.setLocation(UserLocation.newBuilder()
-                    .setLongitude(longitude.floatValue())
-                    .setLatitude(latitude.floatValue())
+                    .setLongitude(longitude)
+                    .setLatitude(latitude)
                     .build());
         }
         if (distance != null) {

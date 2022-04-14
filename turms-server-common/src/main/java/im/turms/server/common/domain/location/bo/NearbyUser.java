@@ -26,8 +26,8 @@ import im.turms.server.common.domain.user.po.User;
 public record NearbyUser(
         Long userId,
         DeviceType deviceType,
-        Double longitude,
-        Double latitude,
+        Float longitude,
+        Float latitude,
         Integer distance,
         User info
 ) {

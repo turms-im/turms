@@ -129,8 +129,8 @@ public class UserServiceController {
             return usersNearbyService.queryNearbyUsers(
                             clientRequest.userId(),
                             clientRequest.deviceType(),
-                            (double) request.getLongitude(),
-                            (double) request.getLatitude(),
+                            request.getLongitude(),
+                            request.getLatitude(),
                             maxNumber,
                             distance,
                             request.getWithCoordinates(),

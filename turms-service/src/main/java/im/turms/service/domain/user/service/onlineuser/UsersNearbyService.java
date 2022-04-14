@@ -57,8 +57,8 @@ public class UsersNearbyService {
     public Mono<List<NearbyUser>> queryNearbyUsers(
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
-            @Nullable Double longitude,
-            @Nullable Double latitude,
+            @Nullable Float longitude,
+            @Nullable Float latitude,
             @Nullable Short maxNumber,
             @Nullable Integer maxDistance,
             boolean withCoordinates,
@@ -92,16 +92,16 @@ public class UsersNearbyService {
                         }
                         return (Long) geo.getMember();
                     }, geo -> geo)
-                    .flatMap(geoMap -> {
-                        if (geoMap.isEmpty()) {
+                    .flatMap(userIdToGeo -> {
+                        if (userIdToGeo.isEmpty()) {
                             return Mono.empty();
                         }
-                        return userService.queryUsersProfile(geoMap.keySet(), false)
+                        return userService.queryUsersProfile(userIdToGeo.keySet(), false)
                                 .collectList()
                                 .map(users -> {
                                     List<NearbyUser> nearbyUsers = new ArrayList<>(users.size());
                                     for (User user : users) {
-                                        GeoWithin<Object> geo = geoMap.get(user.getId());
+                                        GeoWithin<Object> geo = userIdToGeo.get(user.getId());
                                         if (geo == null) {
                                             continue;
                                         }
@@ -125,15 +125,15 @@ public class UsersNearbyService {
         if (id instanceof UserSessionId sessionId) {
             return new NearbyUser(sessionId.userId(),
                     sessionId.deviceType(),
-                    coordinates == null ? null : coordinates.getX().doubleValue(),
-                    coordinates == null ? null : coordinates.getY().doubleValue(),
+                    coordinates == null ? null : coordinates.getX().floatValue(),
+                    coordinates == null ? null : coordinates.getY().floatValue(),
                     distance == null ? null : distance.intValue(),
                     user);
         } else {
             return new NearbyUser((Long) id,
                     null,
-                    coordinates == null ? null : coordinates.getX().doubleValue(),
-                    coordinates == null ? null : coordinates.getY().doubleValue(),
+                    coordinates == null ? null : coordinates.getX().floatValue(),
+                    coordinates == null ? null : coordinates.getY().floatValue(),
                     distance == null ? null : distance.intValue(),
                     user);
         }

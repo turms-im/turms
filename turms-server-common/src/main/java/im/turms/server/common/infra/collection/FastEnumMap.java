@@ -108,7 +108,7 @@ public final class FastEnumMap<K extends Enum<K>, V> implements Map<K, V> {
             return Collections.emptySet();
         }
         Set<K> set = CollectionUtil.newSetWithExpectedSize(size);
-        for (int i = 0, elementsLength = values.length; i < elementsLength; i++) {
+        for (int i = 0, length = values.length; i < length; i++) {
             V element = values[i];
             if (element != null) {
                 set.add(keys[i]);

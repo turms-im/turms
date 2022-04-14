@@ -246,16 +246,16 @@ public class SessionService {
     }
 
     private Collection<UserSessionsInfo> mergeUserSessions(List<List<UserSessionsInfo>> sessionsFromNodes,
-                                                           @Nullable List<UserSessionsInfo> offlineUserSession,
+                                                           @Nullable List<UserSessionsInfo> offlineUserSessions,
                                                            int userCount) {
         int nodeCount = sessionsFromNodes.size();
         // fast path
         if (nodeCount == 1) {
-            if (offlineUserSession == null) {
+            if (offlineUserSessions == null) {
                 return sessionsFromNodes.get(0);
             } else {
-                offlineUserSession.addAll(sessionsFromNodes.get(0));
-                return offlineUserSession;
+                offlineUserSessions.addAll(sessionsFromNodes.get(0));
+                return offlineUserSessions;
             }
         }
         // slow path
@@ -282,11 +282,11 @@ public class SessionService {
                 });
             }
         }
-        if (offlineUserSession == null) {
+        if (offlineUserSessions == null) {
             return userIdToSessions.values();
         } else {
-            offlineUserSession.addAll(userIdToSessions.values());
-            return offlineUserSession;
+            offlineUserSessions.addAll(userIdToSessions.values());
+            return offlineUserSessions;
         }
     }
 

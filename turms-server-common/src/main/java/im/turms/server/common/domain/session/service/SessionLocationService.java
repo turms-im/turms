@@ -74,8 +74,8 @@ public class SessionLocationService {
     public Mono<Void> upsertUserLocation(@NotNull Long userId,
                                          @NotNull @ValidDeviceType DeviceType deviceType,
                                          @NotNull Date timestamp,
-                                         double longitude,
-                                         double latitude) {
+                                         float longitude,
+                                         float latitude) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(deviceType, "deviceType");
