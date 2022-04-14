@@ -436,24 +436,20 @@ public class SessionService implements ISessionService {
     public List<UserSessionsInfo> getUserSessions(Set<Long> userIds) {
         List<UserSessionsInfo> sessions = new ArrayList<>(userIds.size());
         for (Long userId : userIds) {
-            UserSessionsInfo info = getUserSessions(userId);
-            if (info != null) {
-                sessions.add(info);
-            }
+            sessions.add(getUserSessions(userId));
         }
         return sessions;
     }
 
-    @Nullable
     private UserSessionsInfo getUserSessions(Long userId) {
         UserSessionsManager manager = userIdToSessionsManager.get(userId);
         if (manager == null) {
-            return null;
+            return new UserSessionsInfo(userId, UserStatus.OFFLINE, Collections.emptyList());
         }
         Collection<UserSession> sessions = manager.getDeviceTypeToSession().values();
         int size = sessions.size();
         if (size == 0) {
-            return null;
+            return new UserSessionsInfo(userId, UserStatus.OFFLINE, Collections.emptyList());
         }
         ArrayList<UserSessionInfo> sessionInfos = new ArrayList<>(size);
         for (UserSession session : sessions) {

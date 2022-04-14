@@ -5,6 +5,7 @@ import {createApp} from 'vue';
 import dayjs from 'dayjs';
 import enUS from 'ant-design-vue/es/locale/en_US';
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
+import RelativeTime from 'dayjs/plugin/relativeTime';
 import App from './App.vue';
 import antd from './antd';
 import i18n from './i18n';
@@ -24,6 +25,8 @@ if (isProd) {
         window.console = {};
     }
 }
+
+dayjs.extend(RelativeTime);
 
 createApp(App)
     .use(i18n)

@@ -176,10 +176,11 @@
 
         "user": "/users",
         "userOnline": "/users/online-infos/count",
-        "userStatus": "/users/online-infos/statuses",
         "userPermissionGroup": "/users/permission-groups",
         "userRelationship": "/users/relationships",
         "userRelationshipGroup": "/users/relationships/groups",
+        "userSession": "/users/online-infos/sessions",
+        "userStatus": "/users/online-infos/statuses",
         "friendRequest": "/users/relationships/friend-requests",
 
         "group": "/groups",

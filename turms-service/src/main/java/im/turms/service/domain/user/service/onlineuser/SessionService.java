@@ -18,7 +18,9 @@
 package im.turms.service.domain.user.service.onlineuser;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
+import im.turms.server.common.domain.session.bo.UserSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.rpc.QueryUserSessionsRequest;
@@ -36,6 +38,7 @@ import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.service.domain.common.validation.DataValidator;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -192,6 +195,9 @@ public class SessionService {
         };
     }
 
+    /**
+     * @return includes the sessions with the OFFLINE status for offline users
+     */
     public Mono<Collection<UserSessionsInfo>> queryUserSessions(Set<Long> userIds) {
         int userCount = userIds.size();
         if (userCount == 0) {
@@ -205,16 +211,27 @@ public class SessionService {
                 .collect(CollectorUtil.toList(userCount))
                 .flatMap(statuses -> {
                     // Find which nodes the users are in
+                    List<UserSessionsInfo>[] offlineUserSessions = new List[]{null};
                     Map<String, Set<Long>> nodeIdToUserIds = new HashMap<>(16);
                     for (UserSessionsStatus status : statuses) {
-                        for (String nodeId : status.deviceTypeToNodeId().values()) {
-                            nodeIdToUserIds.computeIfAbsent(nodeId, key -> CollectionUtil.newSetWithExpectedSize(userCount))
-                                    .add(status.userId());
+                        Map<DeviceType, String> deviceTypeToNodeId = status.deviceTypeToNodeId();
+                        if (deviceTypeToNodeId.isEmpty()) {
+                            if (offlineUserSessions[0] == null) {
+                                offlineUserSessions[0] = new ArrayList<>(userCount);
+                            }
+                            offlineUserSessions[0].add(new UserSessionsInfo(status.userId(), UserStatus.OFFLINE, null));
+                        } else {
+                            for (String nodeId : deviceTypeToNodeId.values()) {
+                                nodeIdToUserIds.computeIfAbsent(nodeId, key -> CollectionUtil.newSetWithExpectedSize(userCount))
+                                        .add(status.userId());
+                            }
                         }
                     }
                     int nodeIdCount = nodeIdToUserIds.size();
                     if (nodeIdCount == 0) {
-                        return PublisherPool.emptyCollection();
+                        return offlineUserSessions[0] == null
+                                ? PublisherPool.emptyCollection()
+                                : Mono.just(offlineUserSessions[0]);
                     }
                     List<Mono<List<UserSessionsInfo>>> querySessionsRequests = new ArrayList<>(nodeIdCount);
                     // Send RPC to the nodes to query sessions
@@ -224,30 +241,53 @@ public class SessionService {
                     }
                     return Flux.merge(querySessionsRequests)
                             .collect(CollectorUtil.toList(nodeIdCount))
-                            .map(sessionsFromNodes -> {
-                                int nodeCount = sessionsFromNodes.size();
-                                // fast path
-                                if (nodeCount == 1) {
-                                    return sessionsFromNodes.get(0);
-                                }
-                                // slow path
-                                // A user may have multiple sessions in different nodes,
-                                // so we need to merge them together
-                                Map<Long, UserSessionsInfo> userIdToSessions = new HashMap<>(MapUtil.getCapability(userCount));
-                                for (List<UserSessionsInfo> sessionsFromNode : sessionsFromNodes) {
-                                    for (UserSessionsInfo sessions : sessionsFromNode) {
-                                        userIdToSessions.compute(sessions.userId(), (userId, existing) -> {
-                                            if (existing == null) {
-                                                return sessions;
-                                            }
-                                            existing.sessions().addAll(sessions.sessions());
-                                            return existing;
-                                        });
-                                    }
-                                }
-                                return userIdToSessions.values();
-                            });
+                            .map(sessionsFromNodes -> mergeUserSessions(sessionsFromNodes, offlineUserSessions[0], userCount));
                 });
+    }
+
+    private Collection<UserSessionsInfo> mergeUserSessions(List<List<UserSessionsInfo>> sessionsFromNodes,
+                                                           @Nullable List<UserSessionsInfo> offlineUserSession,
+                                                           int userCount) {
+        int nodeCount = sessionsFromNodes.size();
+        // fast path
+        if (nodeCount == 1) {
+            if (offlineUserSession == null) {
+                return sessionsFromNodes.get(0);
+            } else {
+                offlineUserSession.addAll(sessionsFromNodes.get(0));
+                return offlineUserSession;
+            }
+        }
+        // slow path
+        // A user may have multiple sessions in different nodes,
+        // so we need to merge them together
+        Map<Long, UserSessionsInfo> userIdToSessions = new HashMap<>(MapUtil.getCapability(userCount));
+        for (List<UserSessionsInfo> sessionsFromNode : sessionsFromNodes) {
+            for (UserSessionsInfo sessions : sessionsFromNode) {
+                userIdToSessions.compute(sessions.userId(), (userId, existing) -> {
+                    if (existing == null) {
+                        return sessions;
+                    }
+                    List<UserSessionInfo> existingSessions = existing.sessions();
+                    if (CollectionUtils.isEmpty(existingSessions)) {
+                        return sessions;
+                    }
+                    List<UserSessionInfo> newSessions = sessions.sessions();
+                    if (CollectionUtils.isEmpty(newSessions)) {
+                        return existing;
+                    }
+                    // Note that we assume existingSessions is mutable
+                    existingSessions.addAll(newSessions);
+                    return existing;
+                });
+            }
+        }
+        if (offlineUserSession == null) {
+            return userIdToSessions.values();
+        } else {
+            offlineUserSession.addAll(userIdToSessions.values());
+            return offlineUserSession;
+        }
     }
 
 }

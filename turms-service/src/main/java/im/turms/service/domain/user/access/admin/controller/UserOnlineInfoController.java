@@ -30,6 +30,7 @@ import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.observation.service.StatisticsService;
 import im.turms.service.domain.user.access.admin.dto.request.UpdateOnlineStatusDTO;
@@ -105,8 +106,31 @@ public class UserOnlineInfoController extends BaseController {
     @GetMapping("/sessions")
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_QUERY)
     public Mono<ResponseEntity<ResponseDTO<Collection<UserSessionsInfo>>>> queryUserSessions(
-            @RequestParam Set<Long> ids) {
-        return ResponseFactory.okIfTruthy(sessionService.queryUserSessions(ids));
+            @RequestParam Set<Long> ids,
+            @RequestParam(defaultValue = "false") boolean returnNonExistingUsers) {
+        Mono<Collection<UserSessionsInfo>> queryUserSessions;
+        if (returnNonExistingUsers) {
+            queryUserSessions = sessionService.queryUserSessions(ids);
+        } else {
+            queryUserSessions = sessionService.queryUserSessions(ids)
+                    .flatMap(infos -> {
+                        int size = infos.size();
+                        List<Mono<UserSessionsInfo>> newInfos = new ArrayList<>(size);
+                        for (UserSessionsInfo info : infos) {
+                            if (info.status() == UserStatus.OFFLINE) {
+                                newInfos.add(userService.checkIfUserExists(info.userId(), false)
+                                        .flatMap(exists -> exists
+                                                ? Mono.just(info)
+                                                : Mono.empty()));
+                            } else {
+                                newInfos.add(Mono.just(info));
+                            }
+                        }
+                        return Flux.merge(newInfos)
+                                .collect(CollectorUtil.toList(size));
+                    });
+        }
+        return ResponseFactory.okIfTruthy(queryUserSessions);
     }
 
     @GetMapping("/statuses")
@@ -121,7 +145,7 @@ public class UserOnlineInfoController extends BaseController {
             } else {
                 statusMonos.add(userStatusService.getUserSessionsStatus(userId)
                         .flatMap(info -> {
-                            if (info.getUserStatus(false) == UserStatus.OFFLINE) {
+                            if (info.userStatus() == UserStatus.OFFLINE) {
                                 return userService.checkIfUserExists(userId, false)
                                         .flatMap(exists -> exists
                                                 ? Mono.just(info)

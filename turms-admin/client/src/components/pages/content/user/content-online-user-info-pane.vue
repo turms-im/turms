@@ -28,28 +28,35 @@
             </a-button>
         </div>
         <a-table
+            ref="table"
             bordered
             class="content-table"
-            size="middle"
+            size="small"
             :columns="columns"
-            :data-source="records"
+            :data-source="tableData"
             :loading="loading"
             :scroll="{ y: scrollMaxHeight }"
             :row-selection="rowSelection"
             :pagination="false"
         >
             <template
-                #operation="{ record }"
+                #bodyCell="{ column, record, text }"
             >
-                <div class="editable-row-operations">
-                    <span v-if="!['OFFLINE', 'NONEXISTENT'].includes(record.userStatus)">
+                <div
+                    v-if="column.dataIndex === 'operation'"
+                    class="editable-row-operations"
+                >
+                    <span v-if="!['OFFLINE', 'NONEXISTENT'].includes(record.status)">
                         <a-popconfirm
                             :title="$t('confirmDisconnect')"
-                            @confirm="() => disconnectUsers([record.id], [record.deviceType])"
+                            @confirm="() => confirmDisconnectUsers([record.userId], [record.deviceType])"
                         >
                             <a>{{ $t('disconnect') }}</a>
                         </a-popconfirm>
                     </span>
+                </div>
+                <div v-else>
+                    {{ text }}
                 </div>
             </template>
         </a-table>
@@ -60,6 +67,8 @@
 import formatCoords from 'formatcoords';
 import CustomInput from '../../../common/custom-input';
 import UiMixin from '../template/ui-mixin';
+
+const isOnlineStatus = (status) => status && !['OFFLINE', 'NONEXISTENT'].includes(status);
 
 export default {
     name: 'content-online-user-info-pane',
@@ -89,57 +98,91 @@ export default {
         },
         columns() {
             const columns = [{
-                title: this.$t('userId'),
                 dataIndex: 'userId',
-                width: '20%',
-                slots: {customRender: 'userId'}
+                width: '10%'
             },
             {
-                title: this.$t('userStatus'),
-                dataIndex: 'userStatus',
-                width: '15%',
-                slots: {customRender: 'userStatus'}
-            },
-            {
-                title: this.$t('onlineDevice'),
+                title: 'onlineDevice',
                 dataIndex: 'deviceType',
-                width: '15%',
-                slots: {customRender: 'deviceType'}
+                width: '5%'
+            },
+            {
+                dataIndex: 'deviceDetails',
+                width: '10%'
+            },
+            {
+                title: 'userStatus',
+                dataIndex: 'status',
+                width: '5%'
+            },
+            {
+                dataIndex: 'sessionId',
+                width: '10%'
+            },
+            {
+                dataIndex: 'ip',
+                width: '10%'
             },
             {
                 title: this.$t('loginDateAndOnlineTime'),
                 dataIndex: 'loginDate',
-                width: '20%',
-                slots: {customRender: 'loginDate'}
+                width: '10%'
             },
             {
-                title: this.$t('currentLocation'),
-                dataIndex: 'location',
-                width: '20%',
-                slots: {customRender: 'location'}
+                dataIndex: 'loginLocation',
+                width: '10%'
             },
             {
-                title: this.$t('operation'),
+                title: 'lastHeartbeatDate',
+                dataIndex: 'lastHeartbeatRequestDate',
+                width: '10%'
+            },
+            {
+                dataIndex: 'lastRequestDate',
+                width: '10%'
+            },
+            {
+                dataIndex: 'isSessionOpen',
+                width: '5%'
+            },
+            {
                 dataIndex: 'operation',
-                width: '10%',
-                slots: {customRender: 'operation'}
+                width: '5%'
             }];
-            columns.forEach(column => {
+            return columns.map(column => {
                 if (column.key !== 'operation' && !['TREE'].includes(String(column.type).toUpperCase())) {
                     column.sorter = (a, b) => this.$util.sort(a[column.key], b[column.key]);
                 }
-                return columns;
+                column.title = this.$t(column.title || column.dataIndex);
+                return column;
             });
-            return columns;
+        },
+        tableData() {
+            this.records.forEach(record => {
+                if (record.loginDate) {
+                    record.rawLoginDate = record.rawLoginDate || record.loginDate;
+                    const fromNow = this.$date(record.rawLoginDate).fromNow();
+                    // "this.$t('')" is used to listen to the changes of i18n
+                    record.loginDate = `${record.rawLoginDate} (${fromNow})${this.$t('')}`;
+                }
+            });
+            return this.records;
         }
     },
     watch: {
+        dataSource: {
+            handler() {
+                // refresh in the next tick to ensure table is loaded first
+                this.$nextTick(() => this.refreshTableUi());
+            },
+            immediate: true
+        },
         records() {
             this.updateSelectedRecordKeys();
         },
         '$store.getters.tab'(val) {
             if (this.myTab === val) {
-                setTimeout(() => this.$refs.table?.refreshTableUi());
+                setTimeout(() => this.refreshTableUi());
             }
         }
     },
@@ -156,105 +199,125 @@ export default {
     methods: {
         search() {
             this.loading = true;
-            const userIds = this.ids
-                .split(',')
-                .filter(value => !isNaN(parseInt(value)))
-                .map(value => parseInt(value));
-            this.$http.get(this.$rs.apis.userStatus, {
-                params: {
-                    ids: userIds?.join(',')
-                }
-            })
+            const userIds = this.ids.split(',').filter(Boolean);
+            const params = {
+                ids: userIds.join(',')
+            };
+            this.$http.get(this.$rs.apis.userSession, {params})
                 .then(response => {
-                    if (response.status === 204) {
-                        this.records = [];
-                        return;
-                    }
-                    const records = response.data.data.flatMap(record => {
-                        const array = [];
-                        record.key = record.userId;
-                        if (record.sessionMap) {
-                            for (const key of Object.keys(record.sessionMap)) {
-                                const target = this.$util.copy(record);
-                                const source = target.sessionMap[key];
-                                const friendlyDate = this.$moment(source.loginDate).fromNow();
-                                source.loginDate = `${source.loginDate} (${friendlyDate})`;
-                                if (source.location?.longitude && source.location?.latitude) {
-                                    source.location = formatCoords(source.location.latitude, source.location.longitude).format();
-                                }
-                                delete target.sessionMap;
-                                array.push(Object.assign(target, source));
+                    const existingUserIds = {};
+                    const sessions = response.data.data.flatMap(record => {
+                        existingUserIds[record.userId] = true;
+                        const allSessions = record.sessions?.length ? record.sessions : [{}];
+                        return allSessions.map(session => {
+                            const loginLocation = session.loginLocation;
+                            if (loginLocation?.longitude && loginLocation?.latitude) {
+                                loginLocation.coordinates = formatCoords(loginLocation.latitude, loginLocation.longitude).format();
                             }
-                        } else {
-                            array.push(record);
-                        }
-                        return array;
+                            const isValidDeviceDetails = session.deviceDetails && Object.keys(session.deviceDetails).length;
+                            return {
+                                key: `${record.userId}-${session.deviceType || ''}`,
+                                userId: record.userId,
+                                status: record.status,
+                                deviceType: session.deviceType,
+                                deviceDetails: isValidDeviceDetails ? session.deviceDetails : null,
+                                sessionId: session.id,
+                                ip: session.ip,
+                                lastHeartbeatRequestDate: session.lastHeartbeatRequestDate,
+                                lastRequestDate: session.lastRequestDate,
+                                isSessionOpen: session.isSessionOpen,
+                                loginDate: session.loginDate,
+                                loginLocation
+                            };
+                        });
                     });
-                    this.records = userIds.map(userId => (records.find(record => record.key === userId) || {
-                        key: userId,
-                        userId,
-                        userStatus: 'NONEXISTENT'
-                    }));
-                })
-                .catch(error => {
-                    if (error.response?.status === 404) {
-                        this.records = [];
+                    for (const userId of userIds) {
+                        if (!existingUserIds[userId]) {
+                            sessions.push({
+                                key: userId,
+                                userId,
+                                status: 'NONEXISTENT'
+                            });
+                        }
                     }
-                    this.$error(this.$t('updateFailed'), error);
+                    this.records = sessions;
                 })
-                .finally(() => {
-                    this.loading = false;
-                });
+                .catch(error => this.$error(this.$t('updateFailed'), error))
+                .finally(() => this.loading = false);
         },
         setSelectedDevicesOffline() {
             if (!this.selectedRows.length) {
                 this.$message.error(this.$t('noRecordsSelected'));
                 return;
             }
-            if (!this.selectedRows.some(value => !['OFFLINE', 'NONEXISTENT'].includes(value.userStatus))) {
+            if (!this.selectedRows.some(value => isOnlineStatus(value.status))) {
                 this.$message.success(this.$t('disconnectSuccessfully'));
                 return;
             }
-            const userIds = this.selectedRowKeys.filter((v, i, a) => a.indexOf(v) === i);
-            const deviceTypes = this.selectedRows
-                .filter(record => record.deviceType)
-                .map(record => record.deviceType);
-            this.disconnectUsers(userIds, deviceTypes);
-        },
-        disconnectUsers(ids, deviceTypes) {
-            if (!deviceTypes.length) {
-                console.error('The device types to disconnect must not be empty');
-                return;
-            }
+            const deviceTypeToUserIds = {};
+            this.selectedRows.forEach(record => {
+                if (isOnlineStatus(record.status)) {
+                    const userIds = deviceTypeToUserIds[record.deviceType] || [];
+                    userIds.push(record.userId);
+                    deviceTypeToUserIds[record.deviceType] = userIds;
+                }
+            });
             this.loading = true;
-            const params = {
-                ids: ids.join(','),
-                deviceTypes: deviceTypes ? deviceTypes.join(',') : undefined
-            };
-            this.$http.put(`${this.$rs.apis.userStatus}?${this.$qs.encode(params)}`, {
-                onlineStatus: 'OFFLINE'
-            })
+            const requests = Object.entries(deviceTypeToUserIds)
+                .map(([deviceType, userIds]) => this.disconnectUsers(userIds, [deviceType]));
+            Promise.all(requests)
                 .then(() => {
                     this.$message.success(this.$t('disconnectSuccessfully'));
-                    this.records = this.records.map(record => {
-                        if (!ids.includes(record.id)) {
-                            record.userStatus = 'OFFLINE';
-                        }
-                    });
                 })
                 .catch(error => {
                     this.$error(this.$t('failedToDisconnect'), error);
                 })
                 .finally(() => this.loading = false);
         },
+        confirmDisconnectUsers(userIds, deviceTypes) {
+            this.loading = true;
+            this.disconnectUsers(userIds, deviceTypes)
+                .then(() => {
+                    this.$message.success(this.$t('disconnectSuccessfully'));
+                })
+                .catch(error => {
+                    this.$error(this.$t('failedToDisconnect'), error);
+                })
+                .finally(() => this.loading = false);
+        },
+        disconnectUsers(userIds, deviceTypes) {
+            if (!deviceTypes.length) {
+                console.error('The device types to disconnect must not be empty');
+                return;
+            }
+            const params = {
+                ids: userIds.join(','),
+                deviceTypes: deviceTypes.join(',')
+            };
+            return this.$http.put(`${this.$rs.apis.userStatus}?${this.$qs.encode(params)}`, {
+                onlineStatus: 'OFFLINE'
+            })
+                .then(() => {
+                    const records = this.records.map(record => {
+                        if (userIds.includes(record.userId)) {
+                            return {
+                                key: `${record.userId}-`,
+                                userId: record.userId,
+                                status: 'OFFLINE'
+                            };
+                        }
+                        return record;
+                    });
+                    this.records = this.$_.uniq(records, v => v.key);
+                });
+        },
         updateSelectedRecordKeys(keys) {
             if (!keys) {
                 keys = this.selectedRowKeys
-                    .filter(key => this.records.some(record => record.rowKey === key));
+                    .filter(key => this.records.some(record => record.key === key));
             }
             this.selectedRowKeys = keys;
-            this.selectedRows = this.selectedRows
-                .filter(row => this.records.some(record => record.rowKey === row.rowKey));
+            this.selectedRows = keys.map(key => this.records.find(record => record.key === key));
             this.rowSelection.selectedRowKeys = keys;
         }
     }
