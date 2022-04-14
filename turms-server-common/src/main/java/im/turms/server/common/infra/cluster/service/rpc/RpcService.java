@@ -163,7 +163,22 @@ public class RpcService implements ClusterService {
                                 try (TracingCloseableContext ignored = ctx.asCloseable()) {
                                     LOGGER.error("Failed to encode response: {}", response, e);
                                 }
-                                return;
+                                if (response instanceof RpcException) {
+                                    return;
+                                }
+                                // Try to fall back to the RpcException response
+                                try {
+                                    RpcException rpcException = RpcException.get(RpcErrorCode.CODEC_FAILED_TO_ENCODE,
+                                            ResponseStatusCode.SERVER_INTERNAL_ERROR,
+                                            "Failed to encode response: " + response);
+                                    buf = RpcFrameEncoder.INSTANCE.encode(request.getRequestId(), rpcException);
+                                } catch (Exception exception) {
+                                    try (TracingCloseableContext ignored = ctx.asCloseable()) {
+                                        LOGGER.error("Failed to fall back to the RpcException since failing to encode: {}",
+                                                response, exception);
+                                    }
+                                    return;
+                                }
                             }
                             if (buf.refCnt() == 0) {
                                 try (TracingCloseableContext ignored = ctx.asCloseable()) {
