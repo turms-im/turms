@@ -18,7 +18,6 @@
 package im.turms.server.common.infra.property.env.gateway.clientapi;
 
 
-import im.turms.server.common.access.client.NotificationFactory;
 import im.turms.server.common.infra.property.metadata.annotation.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,10 +49,5 @@ public class ClientApiProperties {
 
     @NestedConfigurationProperty
     private ClientApiRateLimitingProperties rateLimiting = new ClientApiRateLimitingProperties();
-
-    public void setReturnReasonForServerError(boolean returnReasonForServerError) {
-        this.returnReasonForServerError = returnReasonForServerError;
-        NotificationFactory.returnReasonForServerError = returnReasonForServerError;
-    }
 
 }

@@ -15,13 +15,14 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.access.client;
+package im.turms.gateway.access.client.common;
 
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.exception.ThrowableInfo;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 
 import javax.annotation.Nullable;
 
@@ -30,9 +31,16 @@ import javax.annotation.Nullable;
  */
 public final class NotificationFactory {
 
-    public static boolean returnReasonForServerError;
+    private static boolean returnReasonForServerError;
 
     private NotificationFactory() {
+    }
+
+    public static void init(TurmsPropertiesManager propertiesManager) {
+        propertiesManager.addListeners(properties ->
+                returnReasonForServerError = properties.getGateway()
+                        .getClientApi()
+                        .isReturnReasonForServerError());
     }
 
     public static TurmsNotification create(ResponseStatusCode code, long requestId) {

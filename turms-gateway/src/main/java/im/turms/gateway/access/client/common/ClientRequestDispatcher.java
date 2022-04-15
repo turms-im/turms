@@ -25,7 +25,6 @@ import im.turms.gateway.infra.logging.ApiLoggingContext;
 import im.turms.gateway.infra.logging.ClientApiLogging;
 import im.turms.gateway.infra.proto.SimpleTurmsRequest;
 import im.turms.gateway.infra.proto.TurmsRequestParser;
-import im.turms.server.common.access.client.NotificationFactory;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
@@ -37,6 +36,7 @@ import im.turms.server.common.infra.exception.ThrowableInfo;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.proto.ProtoEncoder;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
@@ -92,7 +92,8 @@ public class ClientRequestDispatcher {
                                    SessionController sessionController,
                                    SessionService sessionService,
                                    ServiceRequestService serviceRequestService,
-                                   ServerStatusManager serverStatusManager) {
+                                   ServerStatusManager serverStatusManager,
+                                   TurmsPropertiesManager propertiesManager) {
         this.apiLoggingContext = apiLoggingContext;
         this.blocklistService = blocklistService;
         this.ipRequestThrottler = ipRequestThrottler;
@@ -100,6 +101,7 @@ public class ClientRequestDispatcher {
         this.sessionService = sessionService;
         this.serviceRequestService = serviceRequestService;
         this.serverStatusManager = serverStatusManager;
+        NotificationFactory.init(propertiesManager);
     }
 
     /**
