@@ -26,6 +26,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -69,12 +71,19 @@ public class TurmsPropertiesInspector {
     private static final String FIELD_NAME_TYPE = "type";
 
     public static final ObjectMapper MAPPER = new ObjectMapper()
+            .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
             .registerModule(new JavaTimeModule())
-            .setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-    public static final ObjectWriter MUTABLE_PROPERTIES_WRITER = new ObjectMapper()
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    public static final ObjectWriter MUTABLE_PROPERTIES_WRITER = JsonMapper.builder()
+            // Only serialize the properties with "MutablePropertiesView"
             .disable(MapperFeature.DEFAULT_VIEW_INCLUSION)
+            // e.g. "SharedConfigProperties" is an empty bean
+            .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+            .build()
             .registerModule(new JavaTimeModule())
-            .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
+            // Use "NON_NULL" instead of "NON_EMPTY"
+            // because we allow admins to apply the properties with empty collection
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .writerWithView(MutablePropertiesView.class);
 
     public static final Map<String, Object> METADATA = ImmutableMap.copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, false));
@@ -109,8 +118,8 @@ public class TurmsPropertiesInspector {
                 : MAPPER.readValue(MAPPER.writeValueAsBytes(turmsProperties), TYPE_REF_MAP);
     }
 
-    public static ObjectNode getNotEmptyPropertiesTree(String propertiesJson) throws JsonProcessingException {
-        ObjectNode jsonNodeTree = (ObjectNode) new ObjectMapper().readTree(propertiesJson);
+    public static ObjectNode getNotNullPropertiesTree(String propertiesJson) throws JsonProcessingException {
+        ObjectNode jsonNodeTree = (ObjectNode) MAPPER.readTree(propertiesJson);
         List<String> emptyFieldNames = new LinkedList<>();
         Iterator<Map.Entry<String, JsonNode>> fields = jsonNodeTree.fields();
         while (fields.hasNext()) {

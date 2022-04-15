@@ -34,8 +34,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.mergeAsProperties;
+import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.mergeProperties;
 import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.toMutablePropertiesString;
+import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.validaPropertiesForUpdating;
 import static im.turms.server.common.infra.property.TurmsPropertiesSerializer.persist;
 import static im.turms.server.common.infra.property.TurmsPropertiesValidator.validate;
 
@@ -102,14 +103,13 @@ public class TurmsPropertiesManager {
             if (propertiesForUpdating == null || propertiesForUpdating.isEmpty()) {
                 return;
             }
-            newPropertiesStr = toMutablePropertiesString(propertiesForUpdating);
-            if ("{}".equals(newPropertiesStr)) {
-                return;
+            InvalidPropertyException exception = validaPropertiesForUpdating(DEFAULT_PROPERTIES, propertiesForUpdating);
+            if (exception != null) {
+                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
             }
-            newLocalProperties = mergeAsProperties(
-                    node.getSharedProperties(),
-                    newPropertiesStr);
-            InvalidPropertyException exception = validate(newLocalProperties);
+            newPropertiesStr = toMutablePropertiesString(propertiesForUpdating);
+            newLocalProperties = mergeProperties(node.getSharedProperties(), newPropertiesStr);
+            exception = validate(newLocalProperties);
             if (exception != null) {
                 throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
             }
@@ -125,16 +125,19 @@ public class TurmsPropertiesManager {
 
     public Mono<Void> updateGlobalProperties(
             boolean reset,
-            Map<String, Object> turmsPropertiesForUpdating) {
+            Map<String, Object> propertiesForUpdating) {
         if (reset) {
             return node.updateSharedProperties(DEFAULT_PROPERTIES);
         }
-        if (turmsPropertiesForUpdating == null || turmsPropertiesForUpdating.isEmpty()) {
+        if (propertiesForUpdating == null || propertiesForUpdating.isEmpty()) {
             return Mono.empty();
         }
-        TurmsProperties properties = mergeAsProperties(node.getSharedProperties(),
-                turmsPropertiesForUpdating);
-        InvalidPropertyException exception = validate(properties);
+        InvalidPropertyException exception = validaPropertiesForUpdating(DEFAULT_PROPERTIES, propertiesForUpdating);
+        if (exception != null) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
+        }
+        TurmsProperties properties = mergeProperties(node.getSharedProperties(), propertiesForUpdating);
+        exception = validate(properties);
         if (exception != null) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
         }

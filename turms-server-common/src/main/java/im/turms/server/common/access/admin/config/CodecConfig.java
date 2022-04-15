@@ -112,7 +112,6 @@ public class CodecConfig {
                     OutputStream byteBuilder = new ByteBufOutputStream(buf);
                     try {
                         JsonEncoding encoding = getJsonEncoding(mimeType);
-
                         try (JsonGenerator generator = mapper.getFactory().createGenerator(byteBuilder, encoding)) {
                             writer.writeValue(generator, value);
                             generator.flush();
@@ -123,10 +122,8 @@ public class CodecConfig {
                         } catch (IOException ex) {
                             throw new IllegalStateException("Unexpected I/O error while writing to byte array builder", ex);
                         }
-
                         NettyDataBuffer buffer = factory.wrap(buf);
                         Hints.touchDataBuffer(buffer, hints, logger);
-
                         return buffer;
                     } catch (Exception e) {
                         buf.release();
@@ -137,7 +134,6 @@ public class CodecConfig {
                 private ObjectWriter createObjectWriter(
                         ObjectMapper mapper, ResolvableType valueType, @Nullable MimeType mimeType,
                         @Nullable Class<?> jsonView, @Nullable Map<String, Object> hints) {
-
                     JavaType javaType = getJavaType(valueType.getType(), null);
                     if (jsonView == null && hints != null) {
                         jsonView = (Class<?>) hints.get(Jackson2CodecSupport.JSON_VIEW_HINT);

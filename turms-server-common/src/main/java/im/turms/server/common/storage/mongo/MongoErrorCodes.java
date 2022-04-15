@@ -17,9 +17,7 @@
 
 package im.turms.server.common.storage.mongo;
 
-import org.eclipse.collections.impl.set.mutable.UnifiedSet;
-
-import java.util.Set;
+import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
 /**
  * https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.yml
@@ -38,7 +36,7 @@ public final class MongoErrorCodes {
 
     public static final int INTERRUPTED = 11601;
 
-    public static final Set<Integer> TRANSLATION_RELATED_ERROR_CODES = UnifiedSet.newSetWith(
+    public static final IntHashSet TRANSLATION_RELATED_ERROR_CODES = new IntHashSet(
             NO_SUCH_TRANSACTION,
             TRANSACTION_COMMITTED,
             TRANSACTION_TOO_LARGE,

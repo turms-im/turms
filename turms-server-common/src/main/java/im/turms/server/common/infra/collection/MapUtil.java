@@ -31,20 +31,26 @@ public final class MapUtil {
     }
 
     public static int getCapability(int expectedSize) {
-        return (int) ((float) expectedSize / 0.75F + 1.0F);
+        return (int) (expectedSize / 0.75F + 1.0F);
     }
 
-    public static <K, V> Map<K, V> deepMerge(Map<K, V> baseMap, Map<? extends K, ? extends V> mapToMerge) {
+    public static <K, V> Map<K, V> deepMerge(Map<K, V> baseMap,
+                                             Map<? extends K, ? extends V> mapToMerge,
+                                             boolean appendCollectionElements) {
         for (Map.Entry<? extends K, ? extends V> entry : mapToMerge.entrySet()) {
             K key = entry.getKey();
             V existingValue = baseMap.get(key);
             V valueToMerge = entry.getValue();
-            if (existingValue instanceof Collection existingValues && valueToMerge instanceof Collection valuesToMerge) {
+            // We don't need to handle the case of arrays
+            // just because we don't use arrays.
+            if (appendCollectionElements
+                    && existingValue instanceof Collection existingValues
+                    && valueToMerge instanceof Collection valuesToMerge) {
                 if (!existingValues.containsAll(valuesToMerge)) {
                     existingValues.addAll(valuesToMerge);
                 }
             } else if (existingValue instanceof Map && valueToMerge instanceof Map) {
-                deepMerge((Map) existingValue, (Map) valueToMerge);
+                deepMerge((Map) existingValue, (Map) valueToMerge, appendCollectionElements);
             } else if (existingValue == null || !existingValue.equals(valueToMerge)) {
                 baseMap.put(key, valueToMerge);
             }

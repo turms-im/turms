@@ -50,7 +50,7 @@ public class TurmsPropertiesSerializer {
     }
 
     public static void persist(Path filePath, String propertiesJson) throws IOException {
-        ObjectNode tree = TurmsPropertiesInspector.getNotEmptyPropertiesTree(propertiesJson);
+        ObjectNode tree = TurmsPropertiesInspector.getNotNullPropertiesTree(propertiesJson);
         Yaml yaml = YAML.get();
         String configYaml = yaml.dump(yaml.load(MUTABLE_PROPERTIES_WRITER.writeValueAsString(tree)));
         Path dir = filePath.getParent();

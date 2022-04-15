@@ -77,7 +77,8 @@ public record RecordingSession(
     @SneakyThrows
     public void close(boolean keepFile) {
         // 1. All states can be changed to closed
-        // 2. close() will call stop() to flush data internally if it is running
+        // 2. close() will call stop() to flush data internally if it is running,
+        // so we don't need to call stop() explicitly
         recording.close();
         if (!keepFile) {
             deleteFile();
