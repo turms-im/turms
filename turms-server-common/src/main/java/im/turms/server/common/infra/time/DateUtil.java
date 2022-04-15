@@ -83,7 +83,7 @@ public final class DateUtil {
 
     public static String toStr(long timeInMillis) {
         byte[] bytes = toBytes(timeInMillis);
-        return StringUtil.newString(bytes, StringUtil.LATIN1);
+        return StringUtil.newLatin1String(bytes);
     }
 
     public static byte[] toBytes(long timeInMillis) {

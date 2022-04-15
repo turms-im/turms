@@ -19,14 +19,18 @@ package unit.im.turms.server.common.infra.property;
 
 import im.turms.server.common.infra.property.InvalidPropertyException;
 import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesConvertor;
+import im.turms.server.common.testing.JsonUtil;
 import org.junit.jupiter.api.Test;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.mergeProperties;
 import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.validaPropertiesForUpdating;
+import static im.turms.server.common.infra.property.TurmsPropertiesInspector.METADATA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -34,6 +38,41 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * @author James Chen
  */
 class TurmsPropertiesConvertorTests {
+
+    @Test
+    void validaPropertiesForUpdating_shouldNotReturnException_whenUpdatingMutableProperties() {
+        InvalidPropertyException exception = validaPropertiesForUpdating(new TurmsProperties(), Map.of(
+                "gateway", Map.of(
+                        "adminApi", Map.of(
+                                "rateLimiting", Map.of(
+                                        "capacity", "9513"
+                                )
+                        )
+                )
+        ));
+        assertThat(exception).isNull();
+    }
+
+    @Test
+    void validaPropertiesForUpdating_shouldReturnException_forNonExistingProperties() {
+        InvalidPropertyException exception = validaPropertiesForUpdating(new TurmsProperties(), Map.of(
+                "gateway", Map.of(
+                        "rateLimiting", Map.of(
+                                "capacity", "9513"
+                        )
+                )
+        ));
+        assertThat(exception).isNotNull();
+    }
+
+    @Test
+    void validaPropertiesForUpdating_shouldReturnException_forImmutableProperties() {
+        InvalidPropertyException exception = validaPropertiesForUpdating(new TurmsProperties(), Map.of(
+                "userStatus", Map.of(
+                        "userSessionsStatusCacheMaxSize", "95175328"
+                )));
+        assertThat(exception).isNotNull();
+    }
 
     @Test
     void mergeProperties_shouldReturnNewProperties_whenMergingEmptyProperties() {
@@ -131,38 +170,11 @@ class TurmsPropertiesConvertorTests {
     }
 
     @Test
-    void validaPropertiesForUpdating_shouldNotReturnException_whenUpdatingMutableProperties() {
-        InvalidPropertyException exception = validaPropertiesForUpdating(new TurmsProperties(), Map.of(
-                "gateway", Map.of(
-                        "adminApi", Map.of(
-                                "rateLimiting", Map.of(
-                                        "capacity", "9513"
-                                )
-                        )
-                )
-        ));
-        assertThat(exception).isNull();
-    }
-
-    @Test
-    void validaPropertiesForUpdating_shouldReturnException_forNonExistingProperties() {
-        InvalidPropertyException exception = validaPropertiesForUpdating(new TurmsProperties(), Map.of(
-                "gateway", Map.of(
-                        "rateLimiting", Map.of(
-                                "capacity", "9513"
-                        )
-                )
-        ));
-        assertThat(exception).isNotNull();
-    }
-
-    @Test
-    void validaPropertiesForUpdating_shouldReturnException_forImmutableProperties() {
-        InvalidPropertyException exception = validaPropertiesForUpdating(new TurmsProperties(), Map.of(
-                "userStatus", Map.of(
-                        "userSessionsStatusCacheMaxSize", "95175328"
-                )));
-        assertThat(exception).isNotNull();
+    void mergeMetadataWithPropertyValue() {
+        Map<String, Object> actual = TurmsPropertiesConvertor
+                .mergeMetadataWithPropertyValue(METADATA, new TurmsProperties());
+        InputStream expected = getClass().getClassLoader().getResourceAsStream("turms-properties-metadata-with-property-value.json");
+        JsonUtil.assertEqual(actual, expected);
     }
 
 }

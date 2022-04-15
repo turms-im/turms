@@ -19,19 +19,18 @@ package im.turms.server.common.infra.property;
 
 import im.turms.server.common.infra.validation.ValidCron;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.scheduling.support.CronExpression;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+
+import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getConstraints;
+import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getFields;
+import static im.turms.server.common.infra.property.TurmsPropertiesInspector.isNestedProperty;
 
 /**
  * @author James Chen
@@ -57,53 +56,49 @@ public class TurmsPropertiesValidator {
         return root;
     }
 
-    @SneakyThrows
-    private static List<String> validateProperties(Object properties) {
+    private static List<String> validateProperties(TurmsProperties properties) {
         List<String> errorMessages = new LinkedList<>();
-        List<Field> fields = FieldUtils.getAllFieldsList(properties.getClass());
-        for (Field field : fields) {
-            if (Modifier.isStatic(field.getModifiers())) {
-                continue;
-            }
-            if (field.isAnnotationPresent(NestedConfigurationProperty.class)) {
-                field.setAccessible(true);
-                Object nestedProperties = field.get(properties);
-                errorMessages.addAll(validateProperties(nestedProperties));
-            } else {
-                validateProperty(properties, field, errorMessages);
-            }
-        }
+        validateProperties(properties, errorMessages);
         return errorMessages;
     }
 
     @SneakyThrows
+    private static void validateProperties(Object properties, List<String> errorMessages) {
+        List<Field> fields = getFields(properties.getClass());
+        for (Field field : fields) {
+            if (isNestedProperty(field)) {
+                Object nestedProperties = field.get(properties);
+                validateProperties(nestedProperties, errorMessages);
+            } else {
+                validateProperty(properties, field, errorMessages);
+            }
+        }
+    }
+
+    @SneakyThrows
     private static void validateProperty(Object properties, Field field, List<String> errorMessages) {
-        Map<Class<? extends Annotation>, Annotation> constraints = TurmsPropertiesInspector.getConstraints(field);
-        Min min = (Min) constraints.get(Min.class);
-        Max max = (Max) constraints.get(Max.class);
-        ValidCron cron = (ValidCron) constraints.get(ValidCron.class);
+        PropertyConstraints constraints = getConstraints(field);
+        Min min = constraints.min();
+        Max max = constraints.max();
+        ValidCron cron = constraints.validCron();
         if (min == null && max == null && cron == null) {
             return;
         }
-        field.setAccessible(true);
         Object value = field.get(properties);
         if (cron != null) {
             String str = (String) value;
             if (!CronExpression.isValidExpression(str)) {
-                String message = "The property \"%s\" has an invalid cron \"%s\""
-                        .formatted(field.getName(), str);
+                String message = "The property \"" + field.getName() + "\" has an invalid cron \"" + str + "\"";
                 errorMessages.add(message);
             }
         } else {
             Number number = (Number) value;
             if (min != null && min.value() > number.longValue()) {
-                String message = "The property \"%s\" must be greater than or equal to %d"
-                        .formatted(field.getName(), min.value());
+                String message = "The property \"" + field.getName() + "\" must be greater than or equal to " + min.value();
                 errorMessages.add(message);
             }
             if (max != null && max.value() < number.longValue()) {
-                String message = "The property \"%s\" must be less than or equal to %d"
-                        .formatted(field.getName(), max.value());
+                String message = "The property \"" + field.getName() + "\" must be less than or equal to " + max.value();
                 errorMessages.add(message);
             }
         }

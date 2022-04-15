@@ -20,7 +20,6 @@ package im.turms.server.common.infra.collection;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -56,22 +55,6 @@ public final class MapUtil {
             }
         }
         return baseMap;
-    }
-
-    public static Map addValueKeyToAllLeaves(Object properties) {
-        if (properties instanceof Map propertyMap) {
-            Set<Map.Entry> entries = propertyMap.entrySet();
-            for (Map.Entry entry : entries) {
-                Object value = entry.getValue();
-                entry.setValue(addValueKeyToAllLeaves(value));
-            }
-            return (Map) properties;
-        } else {
-            // Don't use the immutable map because the code may add elements to it later
-            HashMap<Object, Object> map = new HashMap<>(1, 1);
-            map.put("value", properties);
-            return map;
-        }
     }
 
     public static <K, V> Map<K, V> merge(Map<K, V> map1, Map<K, V> map2) {

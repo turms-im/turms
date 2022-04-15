@@ -21,32 +21,29 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import im.turms.server.common.infra.collection.MapUtil;
-import im.turms.server.common.infra.reflect.ReflectionUtil;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import lombok.SneakyThrows;
 
 import javax.annotation.Nullable;
-import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.MAPPER;
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.MUTABLE_PROPERTIES_WRITER;
+import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getField;
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.isMutableProperty;
+import static im.turms.server.common.infra.property.TurmsPropertiesInspector.isNestedProperty;
 
 /**
  * @author James Chen
  */
 public class TurmsPropertiesConvertor {
 
-    private static final ConcurrentHashMap<ClassAndName, MethodHandle> CLASS_AND_NAME_TO_GETTER =
-            new ConcurrentHashMap<>(512);
-
     private TurmsPropertiesConvertor() {
     }
 
     // Validate
+
     @Nullable
     public static InvalidPropertyException validaPropertiesForUpdating(Object properties,
                                                                        Map<String, Object> propertiesForUpdating) {
@@ -60,30 +57,17 @@ public class TurmsPropertiesConvertor {
         for (Map.Entry<String, Object> entry : propertiesForUpdating.entrySet()) {
             String fieldName = entry.getKey();
             String fieldPath = parentFieldPath == null ? fieldName : parentFieldPath + "." + fieldName;
-            ClassAndName propertiesClassAndFieldName = new ClassAndName(properties.getClass(), fieldName);
-            MethodHandle getter = CLASS_AND_NAME_TO_GETTER.get(propertiesClassAndFieldName);
-            if (getter == null) {
-                try {
-                    // Note that we only cache valid fields because
-                    // caching invalid fields will present a security vulnerability
-                    getter = CLASS_AND_NAME_TO_GETTER.computeIfAbsent(propertiesClassAndFieldName, classAndName -> {
-                        Field field = FieldUtils.getField(classAndName.propertiesClass, classAndName.fieldName, true);
-                        if (field == null) {
-                            throw new InvalidPropertyException("The property doesn't exist: \"" + fieldPath + "\"");
-                        }
-                        if (!isMutableProperty(field) && !field.isAnnotationPresent(NestedConfigurationProperty.class)) {
-                            throw new InvalidPropertyException("Cannot update an immutable property: \"" + fieldPath + "\"");
-                        }
-                        return ReflectionUtil.getGetter(field);
-                    });
-                } catch (InvalidPropertyException e) {
-                    return e;
-                }
+            Field field = getField(properties.getClass(), fieldName);
+            if (field == null) {
+                return new InvalidPropertyException("The property doesn't exist: \"" + fieldPath + "\"");
+            }
+            if (!isMutableProperty(field) && !isNestedProperty(field)) {
+                return new InvalidPropertyException("Cannot update an immutable property: \"" + fieldPath + "\"");
             }
             Object value = entry.getValue();
             if (value instanceof Map nestedPropertiesForUpdating) {
                 try {
-                    InvalidPropertyException exception = validaPropertiesForUpdating(getter.invoke(properties),
+                    InvalidPropertyException exception = validaPropertiesForUpdating(field.get(properties),
                             nestedPropertiesForUpdating,
                             fieldPath);
                     if (exception != null) {
@@ -121,11 +105,33 @@ public class TurmsPropertiesConvertor {
         }
     }
 
-    public static Map<String, Object> mergePropertiesWithMetadata(
-            Map<String, Object> properties,
-            Map<String, Object> metadata) {
-        properties = MapUtil.addValueKeyToAllLeaves(properties);
-        return MapUtil.deepMerge(properties, metadata, false);
+    public static Map<String, Object> mergeMetadataWithPropertyValue(
+            Map<String, Object> metadata,
+            TurmsProperties properties) {
+        return mergeMetadataWithPropertyValue0(metadata, properties);
+    }
+
+    @SneakyThrows
+    private static Map<String, Object> mergeMetadataWithPropertyValue0(Map<String, Object> metadata,
+                                                                       Object properties) {
+        Class<?> propertiesClass = properties.getClass();
+        Map<String, Object> metadataWithValue = new HashMap<>(MapUtil.getCapability(metadata.size() + 1));
+        for (Map.Entry<String, Object> entry : metadata.entrySet()) {
+            String key = entry.getKey();
+            Field field = getField(propertiesClass, key);
+            Map<String, Object> originalValueMetadata = (Map<String, Object>) entry.getValue();
+            // We need to copy a new metadata because
+            // we may add "value" to it later while we should not modify the original metadata
+            Map<String, Object> newValueMetadata = new HashMap<>(originalValueMetadata);
+            Object value = field.get(properties);
+            if (isNestedProperty(field)) {
+                metadataWithValue.put(key, mergeMetadataWithPropertyValue0(originalValueMetadata, value));
+            } else {
+                newValueMetadata.put("value", value);
+                metadataWithValue.put(key, newValueMetadata);
+            }
+        }
+        return metadataWithValue;
     }
 
     // Convert
@@ -144,9 +150,6 @@ public class TurmsPropertiesConvertor {
         } catch (JsonProcessingException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    private record ClassAndName(Class<?> propertiesClass, String fieldName) {
     }
 
 }

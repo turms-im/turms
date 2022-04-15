@@ -33,24 +33,25 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.infra.property.metadata.annotation.Description;
 import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
 import im.turms.server.common.infra.validation.ValidCron;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.springframework.util.ConcurrentReferenceHashMap;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,7 +62,6 @@ import java.util.Map;
  */
 public class TurmsPropertiesInspector {
 
-    private static final String TURMS_PROPERTIES_PACKAGE_NAME = TurmsProperties.class.getPackageName();
     private static final String FIELD_NAME_DEPRECATED = "deprecated";
     private static final String FIELD_NAME_DESC = "desc";
     private static final String FIELD_NAME_ELEMENT_TYPE = "elementType";
@@ -86,14 +86,39 @@ public class TurmsPropertiesInspector {
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .writerWithView(MutablePropertiesView.class);
 
-    public static final Map<String, Object> METADATA = ImmutableMap.copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, false));
-    public static final Map<String, Object> ONLY_MUTABLE_METADATA =
-            ImmutableMap.copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, true));
+    /**
+     * Only includes non-static fields
+     */
+    public static final Map<String, Object> METADATA;
+    public static final Map<String, Object> ONLY_MUTABLE_METADATA;
     public static final TypeReference<HashMap<String, Object>> TYPE_REF_MAP = new TypeReference<>() {
     };
 
-    private static final Map<Field, Map<Class<? extends Annotation>, Annotation>> ANNOTATION_MAP =
-            new ConcurrentReferenceHashMap<>(512);
+    private static final Map<Class<?>, List<Field>> CLASS_TO_FIELDS;
+    private static final Map<Class<?>, Map<String, Field>> CLASS_TO_NAME_TO_FIELD;
+    private static final Map<Field, PropertyConstraints> FIELD_TO_CONSTRAINTS;
+
+    static {
+        IdentityHashMap<Class<?>, List<Field>> classToFields = new IdentityHashMap<>(128);
+        IdentityHashMap<Field, PropertyConstraints> fieldToConstraints = new IdentityHashMap<>(512);
+        collectFieldsInfo(TurmsProperties.class, classToFields, fieldToConstraints);
+
+        CLASS_TO_FIELDS = classToFields;
+        CLASS_TO_NAME_TO_FIELD = new IdentityHashMap<>(CLASS_TO_FIELDS.size());
+        for (Map.Entry<Class<?>, List<Field>> classAndFields : classToFields.entrySet()) {
+            List<Field> fields = classAndFields.getValue();
+            Map<String, Field> nameToField = new HashMap<>(MapUtil.getCapability(fields.size()));
+            for (Field field : fields) {
+                nameToField.put(field.getName(), field);
+            }
+            CLASS_TO_NAME_TO_FIELD.put(classAndFields.getKey(), nameToField);
+        }
+        FIELD_TO_CONSTRAINTS = fieldToConstraints;
+        METADATA = ImmutableMap
+                .copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, false));
+        ONLY_MUTABLE_METADATA = ImmutableMap
+                .copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, true));
+    }
 
     private TurmsPropertiesInspector() {
     }
@@ -110,9 +135,13 @@ public class TurmsPropertiesInspector {
         return false;
     }
 
+    public static boolean isNestedProperty(Field field) {
+        return field.isAnnotationPresent(NestedConfigurationProperty.class);
+    }
+
     @SneakyThrows
-    public static Map<String, Object> getPropertyValueMap(TurmsProperties turmsProperties,
-                                                          boolean returnOnlyMutableProperties) {
+    public static Map<String, Object> getPropertyToValueMap(TurmsProperties turmsProperties,
+                                                            boolean returnOnlyMutableProperties) {
         return returnOnlyMutableProperties
                 ? MAPPER.readValue(MUTABLE_PROPERTIES_WRITER.writeValueAsBytes(turmsProperties), TYPE_REF_MAP)
                 : MAPPER.readValue(MAPPER.writeValueAsBytes(turmsProperties), TYPE_REF_MAP);
@@ -135,70 +164,62 @@ public class TurmsPropertiesInspector {
                 .set("turms", jsonNodeTree);
     }
 
-    public static Map<Class<? extends Annotation>, Annotation> getConstraints(Field field) {
-        Map<Class<? extends Annotation>, Annotation> map = ANNOTATION_MAP.get(field);
-        if (map != null) {
-            return map;
-        }
-        map = ANNOTATION_MAP.computeIfAbsent(field, key -> {
-            Map<Class<? extends Annotation>, Annotation> newMap = null;
-            for (Annotation annotation : key.getDeclaredAnnotations()) {
-                Class<? extends Annotation> annotationType = annotation.annotationType();
-                if (annotationType == Min.class || annotationType == Max.class || annotationType == ValidCron.class) {
-                    if (newMap == null) {
-                        newMap = new HashMap<>(4);
-                    }
-                    newMap.put(annotationType, annotation);
-                }
-            }
-            return newMap == null ? Collections.emptyMap() : newMap;
-        });
-        return map;
+    public static PropertyConstraints getConstraints(Field field) {
+        return FIELD_TO_CONSTRAINTS.get(field);
     }
 
-    private static Map<String, Object> getMetadata(Map<String, Object> outputMetadata, Class<?> clazz, boolean onlyMutable) {
-        List<Field> fieldList = getFields(clazz, onlyMutable);
-        for (Field field : fieldList) {
-            Object fieldMetadata = getFieldMetadata(field, onlyMutable);
-            if (fieldMetadata != null) {
-                outputMetadata.put(field.getName(), fieldMetadata);
-            }
-        }
-        return outputMetadata;
-    }
-
-    private static List<Field> getFields(Class<?> clazz, boolean onlyMutable) {
-        List<Field> fieldList;
-        if (onlyMutable) {
-            fieldList = FieldUtils.getFieldsListWithAnnotation(clazz, JsonView.class)
-                    .stream()
-                    .filter(TurmsPropertiesInspector::isMutableProperty)
-                    .toList();
-        } else {
-            fieldList = FieldUtils.getAllFieldsList(clazz);
-        }
-        if (fieldList.isEmpty()) {
-            return Collections.emptyList();
-        }
-        List<Field> fields = new ArrayList<>(fieldList.size());
-        for (Field field : fieldList) {
-            if (!field.isAnnotationPresent(JsonIgnore.class)) {
-                fields.add(field);
-            }
-        }
-        return fields;
-    }
-
-    private static Object getFieldMetadata(Field field, boolean onlyMutable) {
-        Class<?> type = field.getType();
-        String typeName = type.getTypeName();
-        if (Modifier.isStatic(field.getModifiers())) {
+    @Nullable
+    public static Field getField(Class<?> propertiesClass, String fieldName) {
+        Map<String, Field> map = CLASS_TO_NAME_TO_FIELD.get(propertiesClass);
+        if (map == null) {
             return null;
         }
-        if (typeName.startsWith(TURMS_PROPERTIES_PACKAGE_NAME) && !type.isEnum()) {
-            return getMetadata(new HashMap<>(), type, onlyMutable);
+        return map.get(fieldName);
+    }
+
+    @Nullable
+    public static List<Field> getFields(Class<?> propertiesClass) {
+        return CLASS_TO_FIELDS.get(propertiesClass);
+    }
+
+    private static void collectFieldsInfo(Class<?> propertiesClass,
+                                          Map<Class<?>, List<Field>> classToFieldsOutput,
+                                          Map<Field, PropertyConstraints> fieldToConstraintsOutput) {
+        List<Field> fields = FieldUtils.getAllFieldsList(propertiesClass);
+        List<Field> nonStaticFields = new ArrayList<>(fields.size());
+        for (Field field : fields) {
+            if (Modifier.isStatic(field.getModifiers())) {
+                continue;
+            }
+            field.setAccessible(true);
+            nonStaticFields.add(field);
+            if (isNestedProperty(field)) {
+                collectFieldsInfo(field.getType(), classToFieldsOutput, fieldToConstraintsOutput);
+            }
+            fieldToConstraintsOutput.put(field, PropertyConstraints.of(
+                    field.getDeclaredAnnotation(Min.class),
+                    field.getDeclaredAnnotation(Max.class),
+                    field.getDeclaredAnnotation(ValidCron.class)
+            ));
         }
-        return getFlatFieldMetadata(field);
+        classToFieldsOutput.put(propertiesClass, nonStaticFields);
+    }
+
+    private static Map<String, Object> getMetadata(Map<String, Object> metadataOutput,
+                                                   Class<?> clazz,
+                                                   boolean onlyMutable) {
+        for (Field field : CLASS_TO_FIELDS.get(clazz)) {
+            if (field.isAnnotationPresent(JsonIgnore.class)
+                    || (onlyMutable && !isMutableProperty(field))) {
+                continue;
+            }
+            Class<?> type = field.getType();
+            Object fieldMetadata = isNestedProperty(field)
+                    ? getMetadata(new HashMap<>(), type, onlyMutable)
+                    : getFlatFieldMetadata(field);
+            metadataOutput.put(field.getName(), fieldMetadata);
+        }
+        return metadataOutput;
     }
 
     private static Map<String, Object> getFlatFieldMetadata(Field field) {

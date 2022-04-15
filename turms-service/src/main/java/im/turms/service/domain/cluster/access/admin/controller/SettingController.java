@@ -18,13 +18,10 @@
 package im.turms.service.domain.cluster.access.admin.controller;
 
 import im.turms.server.common.access.admin.permission.RequiredPermission;
-import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.infra.cluster.node.Node;
-import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.property.TurmsProperties;
-import im.turms.server.common.infra.property.TurmsPropertiesConvertor;
 import im.turms.server.common.infra.property.TurmsPropertiesInspector;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
@@ -41,10 +38,11 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLUSTER_SETTING_QUERY;
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLUSTER_SETTING_UPDATE;
+import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.mergeMetadataWithPropertyValue;
+import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getPropertyToValueMap;
 
 /**
  * @author James Chen
@@ -66,8 +64,7 @@ public class SettingController extends BaseController {
     @RequiredPermission(CLUSTER_SETTING_QUERY)
     public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterSettings(
             @RequestParam(defaultValue = "false") boolean onlyMutable) {
-        return ResponseFactory.okIfTruthy(TurmsPropertiesInspector
-                .getPropertyValueMap(node.getSharedProperties(), onlyMutable));
+        return ResponseFactory.okIfTruthy(getPropertyToValueMap(node.getSharedProperties(), onlyMutable));
     }
 
     /**
@@ -100,19 +97,7 @@ public class SettingController extends BaseController {
                 ? TurmsPropertiesInspector.ONLY_MUTABLE_METADATA
                 : TurmsPropertiesInspector.METADATA;
         if (withValue) {
-            try {
-                Map<String, Object> propertyValueMap = TurmsPropertiesInspector
-                        .getPropertyValueMap(node.getSharedProperties(), onlyMutable)
-                        .entrySet()
-                        .stream()
-                        .filter(entry -> metadata.containsKey(entry.getKey()))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-                Map<String, Object> propertiesWithMetadata = TurmsPropertiesConvertor
-                        .mergePropertiesWithMetadata(propertyValueMap, metadata);
-                return ResponseFactory.okIfTruthy(propertiesWithMetadata);
-            } catch (Exception e) {
-                throw ResponseException.get(ResponseStatusCode.SERVER_INTERNAL_ERROR, e);
-            }
+            return ResponseFactory.okIfTruthy(mergeMetadataWithPropertyValue(metadata, node.getSharedProperties()));
         }
         return ResponseFactory.okIfTruthy(metadata);
     }

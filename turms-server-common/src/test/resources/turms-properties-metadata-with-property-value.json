@@ -1,0 +1,2324 @@
+{
+  "cluster": {
+    "node": {
+      "activeByDefault": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false
+      },
+      "id": {
+        "mutable": false,
+        "global": false,
+        "type": "string",
+        "value": "",
+        "deprecated": false,
+        "desc": "The node ID must start with a letter or underscore, and matches zero or more of characters [a-zA-Z0-9_] after the beginning. e.g. \"turms001\", \"turms_002\""
+      },
+      "zone": {
+        "mutable": false,
+        "global": false,
+        "type": "string",
+        "value": "",
+        "deprecated": false,
+        "desc": "e.g. \"us-east-1\" and \"ap-east-1\""
+      },
+      "leaderEligible": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Only works when it's a turms-service node"
+      }
+    },
+    "rpc": {
+      "requestTimeoutMillis": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 30000,
+        "deprecated": false,
+        "desc": "The timeout for RPC requests in milliseconds"
+      }
+    },
+    "discovery": {
+      "heartbeatIntervalSeconds": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 10,
+        "deprecated": false
+      },
+      "heartbeatTimeoutSeconds": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 30,
+        "deprecated": false
+      },
+      "address": {
+        "advertiseStrategy": {
+          "deprecated": false,
+          "mutable": true,
+          "options": [
+            "ADVERTISE_ADDRESS",
+            "BIND_ADDRESS",
+            "LOCAL_ADDRESS",
+            "PUBLIC_ADDRESS"
+          ],
+          "global": false,
+          "type": "enum",
+          "value": "LOCAL_ADDRESS",
+          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs (only provided by turms) and metrics APIs (provided by turms and turms-gateway)"
+        },
+        "advertiseHost": {
+          "mutable": true,
+          "global": false,
+          "type": "string",
+          "value": "",
+          "deprecated": false,
+          "desc": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)"
+        },
+        "attachPortToHost": {
+          "mutable": true,
+          "global": false,
+          "type": "boolean",
+          "value": true,
+          "deprecated": false,
+          "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510"
+        }
+      },
+      "delayToNotifyMembersChangeSeconds": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 3,
+        "deprecated": false,
+        "desc": "Delay notifying listeners on members change. Waits for seconds to avoid thundering herd"
+      }
+    },
+    "connection": {
+      "server": {
+        "host": {
+          "mutable": false,
+          "global": false,
+          "type": "string",
+          "value": "0.0.0.0",
+          "deprecated": false
+        },
+        "portCount": {
+          "mutable": false,
+          "global": false,
+          "type": "int",
+          "value": 100,
+          "deprecated": false
+        },
+        "portAutoIncrement": {
+          "mutable": false,
+          "global": false,
+          "type": "boolean",
+          "value": false,
+          "deprecated": false
+        },
+        "port": {
+          "mutable": false,
+          "global": false,
+          "type": "int",
+          "value": 7510,
+          "deprecated": false
+        }
+      },
+      "client": {
+        "keepaliveTimeoutSeconds": {
+          "mutable": false,
+          "global": false,
+          "type": "int",
+          "value": 15,
+          "deprecated": false
+        },
+        "keepaliveIntervalSeconds": {
+          "mutable": false,
+          "global": false,
+          "type": "int",
+          "value": 5,
+          "deprecated": false
+        },
+        "reconnectIntervalSeconds": {
+          "mutable": false,
+          "global": false,
+          "type": "int",
+          "value": 15,
+          "deprecated": false
+        }
+      }
+    },
+    "sharedConfig": {},
+    "id": {
+      "mutable": false,
+      "global": false,
+      "type": "string",
+      "value": "turms",
+      "deprecated": false
+    }
+  },
+  "userStatus": {
+    "userSessionsStatusExpireAfter": {
+      "mutable": false,
+      "global": false,
+      "type": "int",
+      "value": 60,
+      "deprecated": false,
+      "desc": "The life duration of each remote user's sessions status in the cache. Note that the cache will make the presentation of users' sessions status inconsistent during the time"
+    },
+    "userSessionsStatusCacheMaxSize": {
+      "mutable": false,
+      "global": false,
+      "type": "int",
+      "value": -1,
+      "deprecated": false,
+      "desc": "The maximum size of the cache of users' sessions status"
+    },
+    "cacheUserSessionsStatus": {
+      "mutable": false,
+      "global": false,
+      "type": "boolean",
+      "value": true,
+      "deprecated": false,
+      "desc": "Whether to cache the user sessions status"
+    }
+  },
+  "ip": {
+    "publicIpDetectorAddresses": {
+      "deprecated": false,
+      "mutable": true,
+      "global": false,
+      "type": "java.util.List",
+      "elementType": "string",
+      "value": [
+        "https://checkip.amazonaws.com",
+        "https://bot.whatismyipaddress.com",
+        "https://myip.dnsomatic.com"
+      ],
+      "desc": "The public IP detectors will only be used to query the public IP of the local node if needed (e.g. If the discovery property \"advertiseStrategy\" is \"PUBLIC_ADDRESS\""
+    }
+  },
+  "security": {
+    "blocklist": {
+      "userId": {
+        "syncBlocklistIntervalMillis": {
+          "mutable": false,
+          "global": false,
+          "type": "int",
+          "value": 10000,
+          "deprecated": false
+        },
+        "enabled": {
+          "mutable": false,
+          "global": false,
+          "type": "boolean",
+          "value": true,
+          "deprecated": false
+        },
+        "autoBlock": {
+          "corruptedRequest": {
+            "blockTriggerTimes": {
+              "mutable": false,
+              "global": false,
+              "type": "int",
+              "value": 5,
+              "deprecated": false,
+              "desc": "Block the client when the block condition is triggered the times"
+            },
+            "blockLevels": {
+              "mutable": false,
+              "global": false,
+              "type": "java.util.List",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "value": [
+                {
+                  "blockMinutes": 10,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 1
+                },
+                {
+                  "blockMinutes": 30,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 1
+                },
+                {
+                  "blockMinutes": 60,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 0
+                }
+              ],
+              "deprecated": false
+            },
+            "enabled": {
+              "mutable": false,
+              "global": false,
+              "type": "boolean",
+              "value": false,
+              "deprecated": false
+            }
+          },
+          "corruptedFrame": {
+            "blockTriggerTimes": {
+              "mutable": false,
+              "global": false,
+              "type": "int",
+              "value": 5,
+              "deprecated": false,
+              "desc": "Block the client when the block condition is triggered the times"
+            },
+            "blockLevels": {
+              "mutable": false,
+              "global": false,
+              "type": "java.util.List",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "value": [
+                {
+                  "blockMinutes": 10,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 1
+                },
+                {
+                  "blockMinutes": 30,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 1
+                },
+                {
+                  "blockMinutes": 60,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 0
+                }
+              ],
+              "deprecated": false
+            },
+            "enabled": {
+              "mutable": false,
+              "global": false,
+              "type": "boolean",
+              "value": false,
+              "deprecated": false
+            }
+          },
+          "frequentRequest": {
+            "blockTriggerTimes": {
+              "mutable": false,
+              "global": false,
+              "type": "int",
+              "value": 5,
+              "deprecated": false,
+              "desc": "Block the client when the block condition is triggered the times"
+            },
+            "blockLevels": {
+              "mutable": false,
+              "global": false,
+              "type": "java.util.List",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "value": [
+                {
+                  "blockMinutes": 10,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 1
+                },
+                {
+                  "blockMinutes": 30,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 1
+                },
+                {
+                  "blockMinutes": 60,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 0
+                }
+              ],
+              "deprecated": false
+            },
+            "enabled": {
+              "mutable": false,
+              "global": false,
+              "type": "boolean",
+              "value": false,
+              "deprecated": false
+            }
+          }
+        }
+      },
+      "ip": {
+        "syncBlocklistIntervalMillis": {
+          "mutable": false,
+          "global": false,
+          "type": "int",
+          "value": 10000,
+          "deprecated": false
+        },
+        "enabled": {
+          "mutable": false,
+          "global": false,
+          "type": "boolean",
+          "value": true,
+          "deprecated": false
+        },
+        "autoBlock": {
+          "corruptedRequest": {
+            "blockTriggerTimes": {
+              "mutable": false,
+              "global": false,
+              "type": "int",
+              "value": 5,
+              "deprecated": false,
+              "desc": "Block the client when the block condition is triggered the times"
+            },
+            "blockLevels": {
+              "mutable": false,
+              "global": false,
+              "type": "java.util.List",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "value": [
+                {
+                  "blockMinutes": 10,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 1
+                },
+                {
+                  "blockMinutes": 30,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 1
+                },
+                {
+                  "blockMinutes": 60,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 0
+                }
+              ],
+              "deprecated": false
+            },
+            "enabled": {
+              "mutable": false,
+              "global": false,
+              "type": "boolean",
+              "value": false,
+              "deprecated": false
+            }
+          },
+          "corruptedFrame": {
+            "blockTriggerTimes": {
+              "mutable": false,
+              "global": false,
+              "type": "int",
+              "value": 5,
+              "deprecated": false,
+              "desc": "Block the client when the block condition is triggered the times"
+            },
+            "blockLevels": {
+              "mutable": false,
+              "global": false,
+              "type": "java.util.List",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "value": [
+                {
+                  "blockMinutes": 10,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 1
+                },
+                {
+                  "blockMinutes": 30,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 1
+                },
+                {
+                  "blockMinutes": 60,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 0
+                }
+              ],
+              "deprecated": false
+            },
+            "enabled": {
+              "mutable": false,
+              "global": false,
+              "type": "boolean",
+              "value": false,
+              "deprecated": false
+            }
+          },
+          "frequentRequest": {
+            "blockTriggerTimes": {
+              "mutable": false,
+              "global": false,
+              "type": "int",
+              "value": 5,
+              "deprecated": false,
+              "desc": "Block the client when the block condition is triggered the times"
+            },
+            "blockLevels": {
+              "mutable": false,
+              "global": false,
+              "type": "java.util.List",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "value": [
+                {
+                  "blockMinutes": 10,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 1
+                },
+                {
+                  "blockMinutes": 30,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 1
+                },
+                {
+                  "blockMinutes": 60,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "goNextLevelTriggerTimes": 0
+                }
+              ],
+              "deprecated": false
+            },
+            "enabled": {
+              "mutable": false,
+              "global": false,
+              "type": "boolean",
+              "value": false,
+              "deprecated": false
+            }
+          }
+        }
+      }
+    },
+    "password": {
+      "adminPasswordEncodingAlgorithm": {
+        "deprecated": false,
+        "mutable": false,
+        "options": [
+          "BCRYPT",
+          "SALTED_SHA256",
+          "NOOP"
+        ],
+        "global": false,
+        "type": "enum",
+        "value": "BCRYPT",
+        "desc": "The password encoding algorithm for admins"
+      },
+      "initialRootPassword": {
+        "mutable": false,
+        "global": false,
+        "type": "string",
+        "value": "turms",
+        "deprecated": false,
+        "desc": "The initial password of the root user"
+      },
+      "userPasswordEncodingAlgorithm": {
+        "deprecated": false,
+        "mutable": false,
+        "options": [
+          "BCRYPT",
+          "SALTED_SHA256",
+          "NOOP"
+        ],
+        "global": false,
+        "type": "enum",
+        "value": "SALTED_SHA256",
+        "desc": "The password encoding algorithm for users"
+      }
+    }
+  },
+  "plugin": {
+    "dir": {
+      "mutable": false,
+      "global": false,
+      "type": "string",
+      "value": "plugins",
+      "deprecated": false,
+      "desc": "The relative path of plugins"
+    },
+    "enabled": {
+      "mutable": false,
+      "global": false,
+      "type": "boolean",
+      "value": true,
+      "deprecated": false,
+      "desc": "Whether to enable plugins"
+    }
+  },
+  "service": {
+    "mongo": {},
+    "storage": {
+      "profileExpiration": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 30,
+        "deprecated": false
+      },
+      "groupProfileContentType": {
+        "mutable": false,
+        "global": false,
+        "type": "string",
+        "value": "*/*",
+        "deprecated": false
+      },
+      "groupProfileSizeLimit": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 1048576,
+        "deprecated": false
+      },
+      "profileContentType": {
+        "mutable": false,
+        "global": false,
+        "type": "string",
+        "value": "*/*",
+        "deprecated": false
+      },
+      "profileSizeLimit": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 1048576,
+        "deprecated": false
+      },
+      "attachmentSizeLimit": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 10485760,
+        "deprecated": false
+      },
+      "attachmentExpiration": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 30,
+        "deprecated": false
+      },
+      "signatureDurationForPut": {
+        "mutable": false,
+        "global": false,
+        "type": "java.time.Duration",
+        "value": {
+          "seconds": 300,
+          "nano": 0,
+          "negative": false,
+          "zero": false,
+          "units": [
+            "SECONDS",
+            "NANOS"
+          ]
+        },
+        "deprecated": false
+      },
+      "attachmentContentType": {
+        "mutable": false,
+        "global": false,
+        "type": "string",
+        "value": "*/*",
+        "deprecated": false
+      },
+      "signatureDurationForGet": {
+        "mutable": false,
+        "global": false,
+        "type": "java.time.Duration",
+        "value": {
+          "seconds": 300,
+          "nano": 0,
+          "negative": false,
+          "zero": false,
+          "units": [
+            "SECONDS",
+            "NANOS"
+          ]
+        },
+        "deprecated": false
+      },
+      "groupProfileExpiration": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 30,
+        "deprecated": false
+      }
+    },
+    "message": {
+      "deleteMessageLogicallyByDefault": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to delete messages logically by default"
+      },
+      "allowSendMessagesToOneself": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to allow users to send messages to themselves"
+      },
+      "cache": {
+        "sentMessageExpireAfter": {
+          "mutable": false,
+          "global": false,
+          "type": "int",
+          "value": 30,
+          "deprecated": false,
+          "desc": "The retention period of sent messages in the cache. For a better performance, it is a good practice to keep the value greater than the allowed recall duration"
+        },
+        "sentMessageCacheMaxSize": {
+          "mutable": false,
+          "global": false,
+          "type": "int",
+          "value": 10240,
+          "deprecated": false,
+          "desc": "The maximum size of the cache of sent messages."
+        }
+      },
+      "allowSendMessagesToStranger": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to allow users to send messages to a stranger"
+      },
+      "persistPreMessageId": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to persist the \"preMessageId\" of messages in databases"
+      },
+      "defaultAvailableMessagesNumberWithTotal": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 1,
+        "deprecated": false,
+        "desc": "The default available messages number with the \"total\" field that users request"
+      },
+      "allowRecallMessage": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to allow users to recall messages.\nNote: To recall messages, more system resources are needed"
+      },
+      "timeType": {
+        "deprecated": false,
+        "mutable": true,
+        "options": [
+          "CLIENT_TIME",
+          "LOCAL_SERVER_TIME"
+        ],
+        "global": true,
+        "type": "enum",
+        "value": "LOCAL_SERVER_TIME",
+        "desc": "The time type for the delivery time of message"
+      },
+      "persistMessage": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to persist messages in databases.\nNote: If false, senders will not get the message ID after the message has sent and cannot edit it"
+      },
+      "allowEditMessageBySender": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to allow the sender of a message to edit the message"
+      },
+      "maxTextLimit": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 500,
+        "deprecated": false,
+        "desc": "The maximum allowed length for the text of a message"
+      },
+      "sequenceId": {
+        "useSequenceIdForPrivateConversation": {
+          "mutable": false,
+          "global": true,
+          "type": "boolean",
+          "value": false,
+          "deprecated": false,
+          "desc": "Whether to use the sequence ID for private conversations so that the client can be aware of the loss of messages. Note that the property has a significant impact on performance"
+        },
+        "useSequenceIdForGroupConversation": {
+          "mutable": false,
+          "global": true,
+          "type": "boolean",
+          "value": false,
+          "deprecated": false,
+          "desc": "Whether to use the sequence ID for group conversations so that the client can be aware of the loss of messages. Note that the property has a significant impact on performance"
+        }
+      },
+      "expiredMessagesCleanupCron": {
+        "mutable": false,
+        "global": true,
+        "type": "string",
+        "value": "0 45 2 * * *",
+        "deprecated": false,
+        "desc": "Clean the expired messages when the cron expression is triggered"
+      },
+      "persistRecord": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to persist the records of messages in databases"
+      },
+      "messageRetentionPeriodHours": {
+        "mutable": true,
+        "global": false,
+        "type": "int",
+        "value": 0,
+        "deprecated": false,
+        "desc": "A message will be retained for the given period and will be removed from the database after the retention period"
+      },
+      "maxRecordsSizeBytes": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 15728640,
+        "deprecated": false,
+        "desc": "The maximum allowed size for the records of a message"
+      },
+      "checkIfTargetActiveAndNotDeleted": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to check if the target (recipient or group) of a message is active and not deleted"
+      },
+      "sendMessageToOtherSenderOnlineDevices": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to send the message to the other sender's online devices when sending a message"
+      },
+      "useConversationId": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to use conversation ID so that a user can query the messages sent by themselves in a conversation quickly"
+      },
+      "availableRecallDurationSeconds": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 300,
+        "deprecated": false,
+        "desc": "The available recall duration for the sender of a message"
+      }
+    },
+    "clientApi": {
+      "logging": {
+        "includedNotifications": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.LinkedHashSet",
+          "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingRequestProperties",
+          "value": [],
+          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\""
+        },
+        "includedRequestCategories": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.LinkedHashSet",
+          "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingCategoryProperties",
+          "value": [
+            {
+              "category": "ALL",
+              "sampleRate": 1.0
+            }
+          ],
+          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\""
+        },
+        "includedNotificationCategories": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.LinkedHashSet",
+          "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingCategoryProperties",
+          "value": [],
+          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\""
+        },
+        "excludedNotificationTypes": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.Set",
+          "elementType": "enum",
+          "value": [],
+          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\""
+        },
+        "includedRequests": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.LinkedHashSet",
+          "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingRequestProperties",
+          "value": [],
+          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\""
+        },
+        "excludedRequestCategories": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.Set",
+          "elementType": "enum",
+          "value": [],
+          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\""
+        },
+        "excludedNotificationCategories": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.Set",
+          "elementType": "enum",
+          "value": [],
+          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\""
+        },
+        "excludedRequestTypes": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.Set",
+          "elementType": "enum",
+          "value": [],
+          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\""
+        }
+      },
+      "disabledEndpoints": {
+        "deprecated": false,
+        "mutable": false,
+        "global": false,
+        "type": "java.util.Set",
+        "elementType": "enum",
+        "value": [],
+        "desc": "The disabled endpoints for client requests. Return ILLEGAL_ARGUMENT if a client tries to access them"
+      }
+    },
+    "redis": {},
+    "notification": {
+      "notifyRelatedUserAfterAddedToOneSidedRelationshipGroupByOthers": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to notify the related user after added to a one-sided relationship group by others"
+      },
+      "notifyInviteeAfterGroupInvitationRecalled": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to notify the invitee after a group invitation has been recalled"
+      },
+      "notifyMemberAfterRemovedFromRelationshipGroupByOthers": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to notify the member after removed from a one-sided relationship group by others"
+      },
+      "notifyRecipientsAfterMessageUpdatedBySender": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to notify the recipients after a message has been updated by the sender"
+      },
+      "notifyOwnerAndManagersAfterReceivingJoinRequest": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to notify the owner and managers after a join request has been received"
+      },
+      "notifyMembersAfterGroupUpdated": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to notify members after a group has been updated"
+      },
+      "notifyMembersAfterGroupDeleted": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to notify members after a group has been removed"
+      },
+      "notifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to notify related users after other related user's online status has been updated"
+      },
+      "notifyMemberAfterInfoUpdatedByOthers": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to notify members after its member information has been updated by others"
+      },
+      "notifyPrivateConversationParticipantAfterReadDateUpdated": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to notify the private conversation participant after the read receipt of a conversation has been updated by the recipient"
+      },
+      "notifyRecipientWhenReceivingFriendRequest": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to notify the recipient when receiving a friend request"
+      },
+      "notifyRequesterAfterFriendRequestUpdated": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to notify the requester after a friend request has been updated"
+      },
+      "notifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to notify the related user after a one-sided relationship has benn updated by others"
+      },
+      "notifyUserAfterInvitedByGroup": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to notify the user after invited by a group"
+      },
+      "notifyOwnerAndManagersAfterGroupJoinRequestRecalled": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to notify the owner and managers after a group invitation has been recalled"
+      },
+      "notifyMembersAfterOtherMemberInfoUpdated": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to notify members after other group member's information has been updated"
+      },
+      "notifyUserAfterAddedToGroupByOthers": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to notify the user after added to a group by others"
+      },
+      "notifyUserAfterBlockedByGroup": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to notify the user after blocked by a group"
+      },
+      "notifyUserAfterRemovedFromGroupByOthers": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to notify the user after removed from a group by others"
+      },
+      "notifyMembersAfterOtherMemberOnlineStatusUpdated": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to notify members after other group member's online status has been updated"
+      },
+      "notifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to notify members after a one-sided relationship group has been updated by others"
+      },
+      "notifyUserAfterUnblockedByGroup": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to notify the user after unblocked by a group"
+      },
+      "notifyGroupConversationParticipantsAfterReadDateUpdated": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to notify the group conversation participants after the read receipt of a conversation has been updated by recipients"
+      },
+      "notifyRelatedUsersAfterOtherRelatedUserInfoUpdated": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to notify related users after other related user's information has been updated"
+      }
+    },
+    "adminApi": {
+      "maxAvailableOnlineUsersStatusPerRequest": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 20,
+        "deprecated": false,
+        "desc": "The maximum available online users' status per query request"
+      },
+      "address": {
+        "advertiseStrategy": {
+          "deprecated": false,
+          "mutable": true,
+          "options": [
+            "ADVERTISE_ADDRESS",
+            "BIND_ADDRESS",
+            "LOCAL_ADDRESS",
+            "PUBLIC_ADDRESS"
+          ],
+          "global": false,
+          "type": "enum",
+          "value": "LOCAL_ADDRESS",
+          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs (only provided by turms) and metrics APIs (provided by turms and turms-gateway)"
+        },
+        "advertiseHost": {
+          "mutable": true,
+          "global": false,
+          "type": "string",
+          "value": "",
+          "deprecated": false,
+          "desc": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)"
+        },
+        "attachPortToHost": {
+          "mutable": true,
+          "global": false,
+          "type": "boolean",
+          "value": true,
+          "deprecated": false,
+          "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510"
+        }
+      },
+      "log": {
+        "logRequestParams": {
+          "mutable": true,
+          "global": true,
+          "type": "boolean",
+          "value": true,
+          "deprecated": false,
+          "desc": "Whether to log the parameters of requests"
+        },
+        "enabled": {
+          "mutable": true,
+          "global": true,
+          "type": "boolean",
+          "value": true,
+          "deprecated": false,
+          "desc": "Whether to log API calls"
+        }
+      },
+      "maxDayDifferencePerCountRequest": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 31,
+        "deprecated": false,
+        "desc": "The maximum day difference per count request"
+      },
+      "defaultAvailableRecordsPerRequest": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 10,
+        "deprecated": false,
+        "desc": "The default available records per query request"
+      },
+      "enabled": {
+        "mutable": false,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to enable the APIs for administrators"
+      },
+      "allowDeleteWithoutFilter": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to allow administrators to delete data without any filter. Better false to prevent administrators from deleting all data by accident"
+      },
+      "maxHourDifferencePerCountRequest": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 24,
+        "deprecated": false,
+        "desc": "The maximum hour difference per count request"
+      },
+      "rateLimiting": {
+        "refillIntervalMillis": {
+          "mutable": true,
+          "global": true,
+          "type": "int",
+          "value": 1000,
+          "deprecated": false,
+          "desc": "The time interval to refill. 0 means never refill"
+        },
+        "capacity": {
+          "mutable": true,
+          "global": true,
+          "type": "int",
+          "value": 50,
+          "deprecated": false,
+          "desc": "The maximum number of tokens that the bucket can hold"
+        },
+        "initialTokens": {
+          "mutable": true,
+          "global": true,
+          "type": "int",
+          "value": 50,
+          "deprecated": false,
+          "desc": "The initial number of tokens for new session"
+        },
+        "tokensPerPeriod": {
+          "mutable": true,
+          "global": true,
+          "type": "int",
+          "value": 50,
+          "deprecated": false,
+          "desc": "Refills the bucket with the specified number of tokens per period if the bucket isn't full"
+        }
+      },
+      "maxDayDifferencePerRequest": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 90,
+        "deprecated": false,
+        "desc": "The maximum day difference per query request"
+      },
+      "maxMonthDifferencePerCountRequest": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 12,
+        "deprecated": false,
+        "desc": "The maximum month difference per count request"
+      },
+      "maxAvailableRecordsPerRequest": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 1000,
+        "deprecated": false,
+        "desc": "The maximum available records per query request"
+      }
+    },
+    "fake": {
+      "fakeIfCollectionExists": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to fake data even if the collection has already existed"
+      },
+      "userCount": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 1000,
+        "deprecated": false,
+        "desc": "the total number of users to fake"
+      },
+      "enabled": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to fake data. Note that faking only works in non-production environments"
+      },
+      "clearAllCollectionsBeforeFaking": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to clear all collections before faking at startup"
+      }
+    },
+    "user": {
+      "respondOfflineIfInvisible": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status"
+      },
+      "deleteTwoSidedRelationships": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to delete the two-sided relationships when a user requests to delete a relationship"
+      },
+      "activateUserWhenAdded": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to activate a user when added by default"
+      },
+      "friendRequest": {
+        "allowSendRequestAfterDeclinedOrIgnoredOrExpired": {
+          "mutable": true,
+          "global": true,
+          "type": "boolean",
+          "value": false,
+          "deprecated": false,
+          "desc": "Whether to allow resending a friend request after the previous request has been declined, ignored, or expired"
+        },
+        "expiredUserFriendRequestsCleanupCron": {
+          "mutable": false,
+          "global": false,
+          "type": "string",
+          "value": "0 0 2 * * *",
+          "deprecated": false,
+          "desc": "Clean expired friend requests when the cron expression is triggered if deleteExpiredRequestsWhenCronTriggered is true"
+        },
+        "deleteExpiredRequestsWhenCronTriggered": {
+          "mutable": true,
+          "global": true,
+          "type": "boolean",
+          "value": false,
+          "deprecated": false,
+          "desc": "Whether to delete expired when the cron expression is triggered"
+        },
+        "contentLimit": {
+          "mutable": true,
+          "global": true,
+          "type": "int",
+          "value": 200,
+          "deprecated": false,
+          "desc": "The maximum allowed length for the text of a friend request"
+        },
+        "friendRequestExpireAfterSeconds": {
+          "mutable": true,
+          "global": true,
+          "type": "int",
+          "value": 2592000,
+          "deprecated": false,
+          "desc": "A friend request will become expired after the expireAfter has elapsed"
+        }
+      },
+      "deleteUserLogically": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to delete a user logically"
+      }
+    },
+    "conversation": {
+      "typingStatus": {
+        "enabled": {
+          "mutable": true,
+          "global": true,
+          "type": "boolean",
+          "value": true,
+          "deprecated": false,
+          "desc": "Whether to notify users of typing statuses sent by other users"
+        }
+      },
+      "readReceipt": {
+        "useServerTime": {
+          "mutable": true,
+          "global": true,
+          "type": "boolean",
+          "value": true,
+          "deprecated": false,
+          "desc": "Whether to use the server time to set the last read date when updating"
+        },
+        "allowMoveReadDateForward": {
+          "mutable": true,
+          "global": true,
+          "type": "boolean",
+          "value": false,
+          "deprecated": false,
+          "desc": "Whether to allow to move the last read date forward"
+        },
+        "updateReadDateWhenUserQueryingMessage": {
+          "mutable": true,
+          "global": false,
+          "type": "boolean",
+          "value": false,
+          "deprecated": false,
+          "desc": "Whether to update the read date when a user queries messages"
+        },
+        "updateReadDateAfterMessageSent": {
+          "mutable": true,
+          "global": true,
+          "type": "boolean",
+          "value": true,
+          "deprecated": false,
+          "desc": "Whether to update the read date after a user sent a message"
+        },
+        "enabled": {
+          "mutable": true,
+          "global": true,
+          "type": "boolean",
+          "value": true,
+          "deprecated": false,
+          "desc": "Whether to allow to update the last read date"
+        }
+      }
+    },
+    "statistics": {
+      "logOnlineUsersNumber": {
+        "mutable": false,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to log online users number"
+      },
+      "onlineUsersNumberLoggingCron": {
+        "mutable": false,
+        "global": false,
+        "type": "string",
+        "value": "0/15 * * * * *",
+        "deprecated": false,
+        "desc": "The cron expression to specify the time to log online users' number"
+      }
+    },
+    "group": {
+      "groupJoinRequestExpireAfterSeconds": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 2592000,
+        "deprecated": false,
+        "desc": "A group join request will become expired after the expireAfter has elapsed"
+      },
+      "activateGroupWhenCreated": {
+        "mutable": false,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to activate a group when created by default"
+      },
+      "groupInvitationExpireAfterSeconds": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 2592000,
+        "deprecated": false,
+        "desc": "A group invitation will become expired after the expireAfter has elapsed"
+      },
+      "allowRecallPendingGroupInvitationByOwnerAndManager": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to allow the owner and managers of a group to recall pending group invitations"
+      },
+      "deleteExpiredGroupInvitationsWhenCronTriggered": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to delete expired group invitations when the cron expression is triggered"
+      },
+      "expiredGroupJoinRequestsCleanupCron": {
+        "mutable": false,
+        "global": false,
+        "type": "string",
+        "value": "0 30 2 * * *",
+        "deprecated": false,
+        "desc": "Clean the expired group join requests when the cron expression is triggered if deleteExpiredGroupJoinRequestsWhenCronTriggered is true"
+      },
+      "expiredGroupInvitationsCleanupCron": {
+        "mutable": false,
+        "global": false,
+        "type": "string",
+        "value": "0 15 2 * * *",
+        "deprecated": false,
+        "desc": "Clean the expired group invitations when the cron expression is triggered if deleteExpiredGroupInvitationsWhenCronTriggered is true"
+      },
+      "groupInvitationContentLimit": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 200,
+        "deprecated": false,
+        "desc": "The maximum allowed length for the text of a group invitation"
+      },
+      "allowRecallJoinRequestSentByOneself": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to allow users to recall the join requests sent by themselves"
+      },
+      "groupJoinRequestContentLimit": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 200,
+        "deprecated": false,
+        "desc": "The maximum allowed length for the text of a group join request"
+      },
+      "deleteGroupLogicallyByDefault": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to delete groups logically by default"
+      },
+      "deleteExpiredGroupJoinRequestsWhenCronTriggered": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to delete expired group join requests when the cron expression is triggered"
+      }
+    }
+  },
+  "healthCheck": {
+    "cpu": {
+      "unhealthyLoadThresholdPercentage": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 95,
+        "deprecated": false
+      },
+      "retries": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 5,
+        "deprecated": false
+      }
+    },
+    "memory": {
+      "directMemoryWarningThresholdPercentage": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 50,
+        "deprecated": false,
+        "desc": "Log warning messages if the used direct memory exceeds the max direct memory of the percentage"
+      },
+      "maxAvailableDirectMemoryPercentage": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 95,
+        "deprecated": false,
+        "desc": "The server will refuse to serve when the used direct memory exceeds the max direct memory of the percentage to try to avoid OutOfMemoryError"
+      },
+      "minMemoryWarningIntervalSeconds": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 10,
+        "deprecated": false
+      },
+      "minHeapMemoryGcIntervalSeconds": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 10,
+        "deprecated": false
+      },
+      "heapMemoryWarningThresholdPercentage": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 95,
+        "deprecated": false,
+        "desc": "Log warning messages if the used heap memory exceeds the max heap memory of the percentage"
+      },
+      "heapMemoryGcThresholdPercentage": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 60,
+        "deprecated": false,
+        "desc": "If the used memory has used the reserved memory specified by maxAvailableMemoryPercentage and minFreeSystemMemoryBytes, try to start GC when the used heap memory exceeds the max heap memory of the percentage"
+      },
+      "maxAvailableMemoryPercentage": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 95,
+        "deprecated": false,
+        "desc": "The server will refuse to serve when the used memory (heap memory + JVM internal non-heap memory + direct buffer pool) exceeds the physical memory of the percentage. The server will try to reserve max(maxAvailableMemoryPercentage of the physical memory, minFreeSystemMemoryBytes) for kernel and other processes. Note that the max available memory percentage doesn't conflict with the usage of limiting memory in docker because docker limits the memory of the container, while this memory percentage only limits the available memory for JVM"
+      },
+      "minFreeSystemMemoryBytes": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 134217728,
+        "deprecated": false,
+        "desc": "The server will refuse to serve when the free system memory is less than minFreeSystemMemoryBytes"
+      }
+    },
+    "checkIntervalSeconds": {
+      "mutable": false,
+      "global": false,
+      "type": "int",
+      "value": 3,
+      "deprecated": false
+    }
+  },
+  "logging": {
+    "console": {
+      "level": {
+        "mutable": false,
+        "options": [
+          "TRACE",
+          "DEBUG",
+          "INFO",
+          "WARN",
+          "ERROR",
+          "FATAL"
+        ],
+        "global": false,
+        "type": "enum",
+        "value": "INFO",
+        "deprecated": false
+      },
+      "enabled": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false
+      }
+    },
+    "file": {
+      "level": {
+        "mutable": false,
+        "options": [
+          "TRACE",
+          "DEBUG",
+          "INFO",
+          "WARN",
+          "ERROR",
+          "FATAL"
+        ],
+        "global": false,
+        "type": "enum",
+        "value": "INFO",
+        "deprecated": false
+      },
+      "filePath": {
+        "mutable": false,
+        "global": false,
+        "type": "string",
+        "value": "@HOME/@SERVICE_TYPE_NAME.log",
+        "deprecated": false
+      },
+      "maxFileSizeMb": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 32,
+        "deprecated": false
+      },
+      "enabled": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false
+      },
+      "maxFiles": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 32,
+        "deprecated": false
+      }
+    }
+  },
+  "location": {
+    "treatUserIdAndDeviceTypeAsUniqueUser": {
+      "mutable": false,
+      "global": false,
+      "type": "boolean",
+      "value": false,
+      "deprecated": false,
+      "desc": "Whether to treat the pair of user ID and device type as an unique user when querying users nearby. If false, only the user ID is used to identify an unique user"
+    },
+    "usersNearbyRequest": {
+      "defaultMaxAvailableNearbyUsersNumber": {
+        "mutable": true,
+        "global": false,
+        "type": "short",
+        "value": 20,
+        "deprecated": false,
+        "desc": "The default maximum available number of nearby users"
+      },
+      "maxAvailableUsersNearbyNumberLimit": {
+        "mutable": true,
+        "global": false,
+        "type": "short",
+        "value": 100,
+        "deprecated": false,
+        "desc": "The maximum allowed available number of users nearby records"
+      },
+      "defaultMaxDistanceMeters": {
+        "mutable": true,
+        "global": false,
+        "type": "int",
+        "value": 10000,
+        "deprecated": false,
+        "desc": "The default maximum distance limit in meters"
+      },
+      "maxDistanceMeters": {
+        "mutable": true,
+        "global": false,
+        "type": "int",
+        "value": 10000,
+        "deprecated": false,
+        "desc": "The maximum distance limit in meters"
+      }
+    },
+    "enabled": {
+      "mutable": false,
+      "global": false,
+      "type": "boolean",
+      "value": true,
+      "deprecated": false,
+      "desc": "Whether to handle users' locations"
+    }
+  },
+  "flightRecorder": {
+    "closedRecordingRetentionPeriod": {
+      "mutable": false,
+      "global": false,
+      "type": "int",
+      "value": 0,
+      "deprecated": false,
+      "desc": "A closed recording will be retained for the given period and will be removed from the file system after the retention period. 0 means no retention. -1 means unlimited retention."
+    }
+  },
+  "gateway": {
+    "mongo": {},
+    "udp": {
+      "host": {
+        "mutable": false,
+        "global": false,
+        "type": "string",
+        "value": "0.0.0.0",
+        "deprecated": false
+      },
+      "port": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": -1,
+        "deprecated": false
+      },
+      "enabled": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false
+      }
+    },
+    "tcp": {
+      "backlog": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 4096,
+        "deprecated": false,
+        "desc": "The maximum number of connection requests waiting in the backlog queue. Large enough to handle bursts and GC pauses but don't set too large to prevent SYN-Flood attacks"
+      },
+      "port": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": -1,
+        "deprecated": false
+      },
+      "wiretap": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false
+      },
+      "host": {
+        "mutable": false,
+        "global": false,
+        "type": "string",
+        "value": "0.0.0.0",
+        "deprecated": false
+      },
+      "closeIdleConnectionAfterSeconds": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 300,
+        "deprecated": false,
+        "desc": "A TCP connection will be closed on the server side if a client hasn't established a user session in a specified time. Note that the developers on the client side should take the responsibility to close the TCP connection according to their business requirements"
+      },
+      "connectionTimeout": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 30,
+        "deprecated": false
+      },
+      "enabled": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false
+      }
+    },
+    "notificationLogging": {
+      "enabled": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to parse the buffer of TurmsNotification to log. Note that the property has a impact on performance"
+      }
+    },
+    "session": {
+      "switchProtocolAfterSeconds": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 540,
+        "deprecated": false,
+        "desc": "If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, the TCP/WebSocket connection will be closed with the close status \"SWITCH\" to indicate the client should keep sending heartbeat requests over UDP if they want to keep online. Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP isn't supported"
+      },
+      "clientHeartbeatIntervalSeconds": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 60,
+        "deprecated": false,
+        "desc": "The client heartbeat interval. Note that the value will NOT change the actual heartbeat behavior of clients, and the value is only used to facilitate related operations of turms-gateway"
+      },
+      "closeIdleSessionAfterSeconds": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 180,
+        "deprecated": false,
+        "desc": "A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd"
+      },
+      "notifyClientsOfSessionInfoAfterConnected": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to notify clients of the session information after connected with the server"
+      },
+      "minHeartbeatIntervalSeconds": {
+        "mutable": true,
+        "global": true,
+        "type": "int",
+        "value": 18,
+        "deprecated": false,
+        "desc": "The minimum interval to refresh the heartbeat status by client requests to avoid refreshing the heartbeat status frequently"
+      },
+      "enableAuthentication": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to authenticate users when logging in.Note that user ID is always required even if enableAuthentication is false; If false, turms-gateway won't connect to the MongoDB server for user records"
+      }
+    },
+    "simultaneousLogin": {
+      "loginConflictStrategy": {
+        "deprecated": false,
+        "mutable": true,
+        "options": [
+          "DISCONNECT_LOGGED_IN_DEVICES",
+          "DISCONNECT_LOGGING_IN_DEVICE"
+        ],
+        "global": true,
+        "type": "enum",
+        "value": "DISCONNECT_LOGGED_IN_DEVICES",
+        "desc": "The login conflict strategy is used for servers to know how to behave if a device is logging in when there are conflicted and logged-in devices"
+      },
+      "allowDeviceTypeUnknownLogin": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to allow the devices of DeviceType.UNKNOWN to login"
+      },
+      "allowDeviceTypeOthersLogin": {
+        "mutable": true,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to allow the devices of DeviceType.OTHERS to login"
+      },
+      "strategy": {
+        "deprecated": false,
+        "mutable": true,
+        "options": [
+          "ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE",
+          "ALLOW_ONE_DEVICE_FOR_ALL_DEVICE_TYPES_ONLINE",
+          "ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_MOBILE_ONLINE",
+          "ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE",
+          "ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE",
+          "ALLOW_ONE_DEVICE_OF_DESKTOP_OR_MOBILE_ONLINE",
+          "ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_OR_MOBILE_ONLINE"
+        ],
+        "global": true,
+        "type": "enum",
+        "value": "ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE",
+        "desc": "The simultaneous login strategy is used to control which devices can be online at the same time"
+      }
+    },
+    "clientApi": {
+      "maxRequestSizeBytes": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 16384,
+        "deprecated": false,
+        "desc": "The client session will be closed and may be blocked if it tries to send a request larger than the size. Note: The average size of turms requests is 16~64 bytes"
+      },
+      "logging": {
+        "heartbeatSampleRate": {
+          "mutable": false,
+          "global": false,
+          "type": "float",
+          "value": 0.0,
+          "deprecated": false
+        },
+        "includedNotifications": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.LinkedHashSet",
+          "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingRequestProperties",
+          "value": [],
+          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\""
+        },
+        "includedRequestCategories": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.LinkedHashSet",
+          "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingCategoryProperties",
+          "value": [
+            {
+              "category": "ALL",
+              "sampleRate": 1.0
+            }
+          ],
+          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\""
+        },
+        "includedNotificationCategories": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.LinkedHashSet",
+          "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingCategoryProperties",
+          "value": [],
+          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\""
+        },
+        "excludedNotificationTypes": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.Set",
+          "elementType": "enum",
+          "value": [],
+          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\""
+        },
+        "includedRequests": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.LinkedHashSet",
+          "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingRequestProperties",
+          "value": [],
+          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\""
+        },
+        "excludedRequestCategories": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.Set",
+          "elementType": "enum",
+          "value": [],
+          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\""
+        },
+        "excludedNotificationCategories": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.Set",
+          "elementType": "enum",
+          "value": [],
+          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\""
+        },
+        "excludedRequestTypes": {
+          "deprecated": false,
+          "mutable": false,
+          "global": false,
+          "type": "java.util.Set",
+          "elementType": "enum",
+          "value": [],
+          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\""
+        }
+      },
+      "returnReasonForServerError": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to return the reason for the server error to the client. Note: 1. It may reveal sensitive data like the IP of internal servers if true; 2. turms-gateway never return the information of stack traces no matter it is true or false."
+      },
+      "rateLimiting": {
+        "refillIntervalMillis": {
+          "mutable": true,
+          "global": true,
+          "type": "int",
+          "value": 1000,
+          "deprecated": false,
+          "desc": "The time interval to refill. 0 means never refill"
+        },
+        "capacity": {
+          "mutable": true,
+          "global": true,
+          "type": "int",
+          "value": 50,
+          "deprecated": false,
+          "desc": "The maximum number of tokens that the bucket can hold"
+        },
+        "initialTokens": {
+          "mutable": true,
+          "global": true,
+          "type": "int",
+          "value": 50,
+          "deprecated": false,
+          "desc": "The initial number of tokens for new session"
+        },
+        "tokensPerPeriod": {
+          "mutable": true,
+          "global": true,
+          "type": "int",
+          "value": 1,
+          "deprecated": false,
+          "desc": "Refills the bucket with the specified number of tokens per period if the bucket isn't full"
+        }
+      }
+    },
+    "redis": {},
+    "websocket": {
+      "backlog": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 4096,
+        "deprecated": false,
+        "desc": "The maximum number of connection requests waiting in the backlog queue. Large enough to handle bursts and GC pauses but don't set too large to prevent SYN-Flood attacks"
+      },
+      "port": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": -1,
+        "deprecated": false
+      },
+      "connectTimeout": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 30,
+        "deprecated": false
+      },
+      "host": {
+        "mutable": false,
+        "global": false,
+        "type": "string",
+        "value": "0.0.0.0",
+        "deprecated": false
+      },
+      "closeIdleConnectionAfterSeconds": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 300,
+        "deprecated": false,
+        "desc": "A WebSocket connection will be closed on the server side if a client hasn't established a user session in a specified time. Note that the developers on the client side should take the responsibility to close the WebSocket connection according to their business requirements"
+      },
+      "enabled": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false
+      }
+    },
+    "adminApi": {
+      "address": {
+        "advertiseStrategy": {
+          "deprecated": false,
+          "mutable": true,
+          "options": [
+            "ADVERTISE_ADDRESS",
+            "BIND_ADDRESS",
+            "LOCAL_ADDRESS",
+            "PUBLIC_ADDRESS"
+          ],
+          "global": false,
+          "type": "enum",
+          "value": "LOCAL_ADDRESS",
+          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs (only provided by turms) and metrics APIs (provided by turms and turms-gateway)"
+        },
+        "advertiseHost": {
+          "mutable": true,
+          "global": false,
+          "type": "string",
+          "value": "",
+          "deprecated": false,
+          "desc": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)"
+        },
+        "attachPortToHost": {
+          "mutable": true,
+          "global": false,
+          "type": "boolean",
+          "value": true,
+          "deprecated": false,
+          "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510"
+        }
+      },
+      "log": {
+        "logRequestParams": {
+          "mutable": true,
+          "global": true,
+          "type": "boolean",
+          "value": true,
+          "deprecated": false,
+          "desc": "Whether to log the parameters of requests"
+        },
+        "enabled": {
+          "mutable": true,
+          "global": true,
+          "type": "boolean",
+          "value": true,
+          "deprecated": false,
+          "desc": "Whether to log API calls"
+        }
+      },
+      "enabled": {
+        "mutable": false,
+        "global": true,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to enable the APIs for administrators"
+      },
+      "rateLimiting": {
+        "refillIntervalMillis": {
+          "mutable": true,
+          "global": true,
+          "type": "int",
+          "value": 1000,
+          "deprecated": false,
+          "desc": "The time interval to refill. 0 means never refill"
+        },
+        "capacity": {
+          "mutable": true,
+          "global": true,
+          "type": "int",
+          "value": 50,
+          "deprecated": false,
+          "desc": "The maximum number of tokens that the bucket can hold"
+        },
+        "initialTokens": {
+          "mutable": true,
+          "global": true,
+          "type": "int",
+          "value": 50,
+          "deprecated": false,
+          "desc": "The initial number of tokens for new session"
+        },
+        "tokensPerPeriod": {
+          "mutable": true,
+          "global": true,
+          "type": "int",
+          "value": 50,
+          "deprecated": false,
+          "desc": "Refills the bucket with the specified number of tokens per period if the bucket isn't full"
+        }
+      }
+    },
+    "fake": {
+      "firstUserId": {
+        "mutable": false,
+        "global": false,
+        "type": "long",
+        "value": 100,
+        "deprecated": false
+      },
+      "userCount": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 10,
+        "deprecated": false,
+        "desc": "Run the number of real clients as faked users with an ID from [firstUserId, firstUserId + userCount) to connect to turms-gateway. So please ensure you have set turms.service.fake.userCount to a number larger than or equals to (firstUserId + userCount)"
+      },
+      "requestIntervalMillis": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 1000,
+        "deprecated": false,
+        "desc": "The interval to send request"
+      },
+      "enabled": {
+        "mutable": false,
+        "global": false,
+        "type": "boolean",
+        "value": false,
+        "deprecated": false,
+        "desc": "Whether to fake data. Note that faking only works in non-production environments"
+      },
+      "requestCountPerInterval": {
+        "mutable": false,
+        "global": false,
+        "type": "int",
+        "value": 10,
+        "deprecated": false,
+        "desc": "The number of requests to send per interval. If requestIntervalMillis is 1000, requestCountPerInterval is TPS in fact"
+      }
+    },
+    "serviceDiscovery": {
+      "advertiseStrategy": {
+        "deprecated": false,
+        "mutable": true,
+        "options": [
+          "ADVERTISE_ADDRESS",
+          "BIND_ADDRESS",
+          "LOCAL_ADDRESS",
+          "PUBLIC_ADDRESS"
+        ],
+        "global": false,
+        "type": "enum",
+        "value": "LOCAL_ADDRESS",
+        "desc": "The advertise strategy is used to help clients or load balancing servers to access the local node. Note: For security, do NOT use PUBLIC_ADDRESS in production to prevent from exposing the origin IP address for DDoS attack."
+      },
+      "advertiseHost": {
+        "mutable": true,
+        "global": false,
+        "type": "string",
+        "value": "",
+        "deprecated": false,
+        "desc": "The advertise address of the local node exposed to the public. The property can be used to advertise the DDoS Protected IP address to hide the origin IP address)\n(e.g. 100.131.251.96)"
+      },
+      "identity": {
+        "mutable": true,
+        "global": false,
+        "type": "string",
+        "value": "",
+        "deprecated": false,
+        "desc": "The identity of the local node will be sent to clients as a notification if identity is not blank and turms.gateway.session.notifyClientsOfSessionInfoAfterConnected is true (e.g. \"turms-east-0001\")"
+      },
+      "attachPortToHost": {
+        "mutable": true,
+        "global": false,
+        "type": "boolean",
+        "value": true,
+        "deprecated": false,
+        "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 10510so the service address will be 100.131.251.96:10510"
+      }
+    }
+  }
+}
