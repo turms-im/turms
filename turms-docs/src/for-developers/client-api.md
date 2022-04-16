@@ -21,7 +21,7 @@ Turms客户端目前支持JavaScript、Kotlin、Swift与Dart这四种语言，�
 
    * 对于使用turms-client-kotlin的项目：
 
-     * 安装：在Turms项目的根目录下（而不是turms-client-kotlin子项目的目录），执行`mvn clean install -pl turms-client-kotlin -am`，该命令会将turms-client-kotlin编译并安装其Jar包到本地Maven仓库。
+     * 安装：在turms-client-kotlin子项目的目录下，执行`mvn clean install`，该命令会将turms-client-kotlin编译并安装其Jar包到本地Maven仓库。
 
      * 使用：
 
