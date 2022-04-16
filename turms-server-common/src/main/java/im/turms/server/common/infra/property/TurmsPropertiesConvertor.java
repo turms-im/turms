@@ -20,7 +20,10 @@ package im.turms.server.common.infra.property;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.MapUtil;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import lombok.SneakyThrows;
 
 import javax.annotation.Nullable;
@@ -38,6 +41,8 @@ import static im.turms.server.common.infra.property.TurmsPropertiesInspector.isN
  * @author James Chen
  */
 public class TurmsPropertiesConvertor {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TurmsPropertiesConvertor.class);
 
     private TurmsPropertiesConvertor() {
     }
@@ -118,15 +123,21 @@ public class TurmsPropertiesConvertor {
         Map<String, Object> metadataWithValue = new HashMap<>(MapUtil.getCapability(metadata.size() + 1));
         for (Map.Entry<String, Object> entry : metadata.entrySet()) {
             String key = entry.getKey();
-            Field field = getField(propertiesClass, key);
             Map<String, Object> originalValueMetadata = (Map<String, Object>) entry.getValue();
-            // We need to copy a new metadata because
-            // we may add "value" to it later while we should not modify the original metadata
-            Map<String, Object> newValueMetadata = new HashMap<>(originalValueMetadata);
-            Object value = field.get(properties);
+            Field field = getField(propertiesClass, key);
+            Object value;
+            if (field == null || (value = field.get(properties)) == null) {
+                LOGGER.warn("Skip the unknown property \"" + key + "\" in the properties class \"" + propertiesClass.getName() + "\". "
+                        + "This may happen if the property schema have changed");
+                continue;
+            }
             if (isNestedProperty(field)) {
                 metadataWithValue.put(key, mergeMetadataWithPropertyValue0(originalValueMetadata, value));
             } else {
+                // Clone the metadata because we need to add "value" to it
+                // while we should not modify the original metadata
+                Map<String, Object> newValueMetadata = CollectionUtil.newMapWithExpectedSize(originalValueMetadata.size() + 1);
+                newValueMetadata.putAll(originalValueMetadata);
                 newValueMetadata.put("value", value);
                 metadataWithValue.put(key, newValueMetadata);
             }

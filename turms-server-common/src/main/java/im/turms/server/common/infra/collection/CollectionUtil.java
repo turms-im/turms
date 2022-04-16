@@ -22,7 +22,9 @@ import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.RandomAccess;
 import java.util.Set;
 
@@ -97,15 +99,19 @@ public final class CollectionUtil {
         return result;
     }
 
-    public static <T> Set<T> newSetWithExpectedSize(int expectedSize) {
-        return UnifiedSet.newSet(expectedSize);
-    }
-
     public static <T> Set<T> newSet(Collection<T> keys) {
         if (keys instanceof Set) {
             return (Set<T>) keys;
         }
         return UnifiedSet.newSet(keys);
+    }
+
+    public static <T> Set<T> newSetWithExpectedSize(int expectedSize) {
+        return UnifiedSet.newSet(expectedSize);
+    }
+
+    public static <K, V> Map<K, V> newMapWithExpectedSize(int expectedSize) {
+        return new HashMap<>(MapUtil.getCapability(expectedSize));
     }
 
     public static <T> List<T> toListSupportRandomAccess(Collection<T> collection) {
@@ -118,4 +124,5 @@ public final class CollectionUtil {
     public static <T> boolean isEmpty(@Nullable Collection<T> collection) {
         return collection == null || collection.isEmpty();
     }
+
 }
