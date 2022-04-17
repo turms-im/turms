@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.property;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
@@ -35,8 +36,9 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.mergeProperties;
-import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.toMutablePropertiesString;
-import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.validaPropertiesForUpdating;
+import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.toJsonNode;
+import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.toMutablePropertiesJsonNode;
+import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.validatePropertiesForUpdating;
 import static im.turms.server.common.infra.property.TurmsPropertiesSerializer.persist;
 import static im.turms.server.common.infra.property.TurmsPropertiesValidator.validate;
 
@@ -53,7 +55,7 @@ public class TurmsPropertiesManager {
     public final List<Consumer<TurmsProperties>> propertiesChangeListeners = new LinkedList<>();
 
     private static final TurmsProperties DEFAULT_PROPERTIES = new TurmsProperties();
-    private static final String DEFAULT_PROPERTIES_STR = toMutablePropertiesString(DEFAULT_PROPERTIES);
+    private static final JsonNode DEFAULT_PROPERTIES_JSON_NODE = toMutablePropertiesJsonNode(DEFAULT_PROPERTIES);
 
     private final Path latestConfigFilePath;
     private final Node node;
@@ -93,22 +95,21 @@ public class TurmsPropertiesManager {
             boolean reset,
             Map<String, Object> propertiesForUpdating) {
         TurmsProperties newLocalProperties;
-        // Convert new turms properties to String instead of byte[] because the properties will be saved
-        // as a yaml file in the local file system later
-        String newPropertiesStr;
+        JsonNode newPropertiesJsonNode;
         if (reset) {
             newLocalProperties = DEFAULT_PROPERTIES;
-            newPropertiesStr = DEFAULT_PROPERTIES_STR;
+            newPropertiesJsonNode = DEFAULT_PROPERTIES_JSON_NODE;
         } else {
             if (propertiesForUpdating == null || propertiesForUpdating.isEmpty()) {
                 return;
             }
-            InvalidPropertyException exception = validaPropertiesForUpdating(DEFAULT_PROPERTIES, propertiesForUpdating);
+            InvalidPropertyException exception = validatePropertiesForUpdating(DEFAULT_PROPERTIES,
+                    propertiesForUpdating);
             if (exception != null) {
                 throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
             }
-            newPropertiesStr = toMutablePropertiesString(propertiesForUpdating);
-            newLocalProperties = mergeProperties(node.getSharedProperties(), newPropertiesStr);
+            newPropertiesJsonNode = toJsonNode(propertiesForUpdating);
+            newLocalProperties = mergeProperties(node.getSharedProperties(), newPropertiesJsonNode);
             exception = validate(newLocalProperties);
             if (exception != null) {
                 throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
@@ -116,7 +117,7 @@ public class TurmsPropertiesManager {
         }
         try {
             localTurmsProperties = newLocalProperties;
-            persist(latestConfigFilePath, newPropertiesStr);
+            persist(latestConfigFilePath, newPropertiesJsonNode);
         } catch (IOException e) {
             LOGGER.error("Failed to persist new turms properties", e);
         }
@@ -132,7 +133,7 @@ public class TurmsPropertiesManager {
         if (propertiesForUpdating == null || propertiesForUpdating.isEmpty()) {
             return Mono.empty();
         }
-        InvalidPropertyException exception = validaPropertiesForUpdating(DEFAULT_PROPERTIES, propertiesForUpdating);
+        InvalidPropertyException exception = validatePropertiesForUpdating(DEFAULT_PROPERTIES, propertiesForUpdating);
         if (exception != null) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
         }
@@ -155,7 +156,8 @@ public class TurmsPropertiesManager {
             try {
                 listener.accept(properties);
             } catch (Exception e) {
-                LOGGER.error("The properties listener {} failed to handle the new properties", listener.getClass().getName(), e);
+                LOGGER.error("The properties listener {} failed to handle the new properties",
+                        listener.getClass().getName(), e);
             }
         }
     }

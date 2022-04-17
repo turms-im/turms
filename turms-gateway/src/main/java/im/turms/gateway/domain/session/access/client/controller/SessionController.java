@@ -17,9 +17,9 @@
 
 package im.turms.gateway.domain.session.access.client.controller;
 
+import im.turms.gateway.access.client.common.RequestHandlerResult;
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.access.client.common.UserSessionWrapper;
-import im.turms.gateway.access.client.tcp.RequestHandlerResult;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.server.common.access.client.dto.constant.DeviceType;

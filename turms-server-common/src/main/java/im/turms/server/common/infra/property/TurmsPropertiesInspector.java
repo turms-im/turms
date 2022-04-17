@@ -20,16 +20,12 @@ package im.turms.server.common.infra.property;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -52,8 +48,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -145,23 +139,6 @@ public class TurmsPropertiesInspector {
         return returnOnlyMutableProperties
                 ? MAPPER.readValue(MUTABLE_PROPERTIES_WRITER.writeValueAsBytes(turmsProperties), TYPE_REF_MAP)
                 : MAPPER.readValue(MAPPER.writeValueAsBytes(turmsProperties), TYPE_REF_MAP);
-    }
-
-    public static ObjectNode getNotNullPropertiesTree(String propertiesJson) throws JsonProcessingException {
-        ObjectNode jsonNodeTree = (ObjectNode) MAPPER.readTree(propertiesJson);
-        List<String> emptyFieldNames = new LinkedList<>();
-        Iterator<Map.Entry<String, JsonNode>> fields = jsonNodeTree.fields();
-        while (fields.hasNext()) {
-            Map.Entry<String, JsonNode> entry = fields.next();
-            if (entry.getValue().isEmpty()) {
-                emptyFieldNames.add(entry.getKey());
-            }
-        }
-        for (String name : emptyFieldNames) {
-            jsonNodeTree.remove(name);
-        }
-        return JsonNodeFactory.instance.objectNode()
-                .set("turms", jsonNodeTree);
     }
 
     public static PropertyConstraints getConstraints(Field field) {

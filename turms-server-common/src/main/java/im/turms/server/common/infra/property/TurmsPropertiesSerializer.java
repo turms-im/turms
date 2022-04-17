@@ -17,50 +17,40 @@
 
 package im.turms.server.common.infra.property;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.netty.util.concurrent.FastThreadLocal;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SequenceWriter;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-
-import static im.turms.server.common.infra.property.TurmsPropertiesInspector.MUTABLE_PROPERTIES_WRITER;
 
 /**
  * @author James Chen
  */
 public class TurmsPropertiesSerializer {
 
-    private static final FastThreadLocal<Yaml> YAML = new FastThreadLocal<>() {
-        @Override
-        protected Yaml initialValue() throws Exception {
-            DumperOptions options = new DumperOptions();
-            options.setIndent(2);
-            options.setPrettyFlow(true);
-            options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-            return new Yaml(options);
-        }
-    };
+    private static final YAMLFactory YAML_FACTORY = new YAMLFactory();
+    private static final ObjectWriter YAML_WRITER = new YAMLMapper(YAML_FACTORY)
+            .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
+            .writerWithDefaultPrettyPrinter();
 
     private TurmsPropertiesSerializer() {
     }
 
-    public static void persist(Path filePath, String propertiesJson) throws IOException {
-        ObjectNode tree = TurmsPropertiesInspector.getNotNullPropertiesTree(propertiesJson);
-        Yaml yaml = YAML.get();
-        String configYaml = yaml.dump(yaml.load(MUTABLE_PROPERTIES_WRITER.writeValueAsString(tree)));
+    public static void persist(Path filePath, JsonNode properties) throws IOException {
         Path dir = filePath.getParent();
         if (dir != null) {
             Files.createDirectories(dir);
         }
-        Files.writeString(filePath, configYaml, StandardCharsets.UTF_8,
-                StandardOpenOption.WRITE,
-                StandardOpenOption.TRUNCATE_EXISTING,
-                StandardOpenOption.CREATE);
+        try (SequenceWriter writer = YAML_WRITER.writeValues(filePath.toFile())) {
+            writer.write(JsonNodeFactory.instance.objectNode()
+                    .set("turms", properties));
+        }
     }
 
 }

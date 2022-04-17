@@ -17,7 +17,7 @@
 
 package im.turms.server.common.infra.property;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import im.turms.server.common.infra.collection.CollectionUtil;
@@ -27,6 +27,7 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import lombok.SneakyThrows;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,15 +51,15 @@ public class TurmsPropertiesConvertor {
     // Validate
 
     @Nullable
-    public static InvalidPropertyException validaPropertiesForUpdating(Object properties,
-                                                                       Map<String, Object> propertiesForUpdating) {
-        return validaPropertiesForUpdating(properties, propertiesForUpdating, null);
+    public static InvalidPropertyException validatePropertiesForUpdating(Object properties,
+                                                                         Map<String, Object> propertiesForUpdating) {
+        return validatePropertiesForUpdating(properties, propertiesForUpdating, null);
     }
 
     @Nullable
-    private static InvalidPropertyException validaPropertiesForUpdating(Object properties,
-                                                                        Map<String, Object> propertiesForUpdating,
-                                                                        @Nullable String parentFieldPath) {
+    private static InvalidPropertyException validatePropertiesForUpdating(Object properties,
+                                                                          Map<String, Object> propertiesForUpdating,
+                                                                          @Nullable String parentFieldPath) {
         for (Map.Entry<String, Object> entry : propertiesForUpdating.entrySet()) {
             String fieldName = entry.getKey();
             String fieldPath = parentFieldPath == null ? fieldName : parentFieldPath + "." + fieldName;
@@ -72,7 +73,7 @@ public class TurmsPropertiesConvertor {
             Object value = entry.getValue();
             if (value instanceof Map nestedPropertiesForUpdating) {
                 try {
-                    InvalidPropertyException exception = validaPropertiesForUpdating(field.get(properties),
+                    InvalidPropertyException exception = validatePropertiesForUpdating(field.get(properties),
                             nestedPropertiesForUpdating,
                             fieldPath);
                     if (exception != null) {
@@ -91,12 +92,12 @@ public class TurmsPropertiesConvertor {
     public static TurmsProperties mergeProperties(
             TurmsProperties propertiesToUpdate,
             Map<String, Object> propertiesForUpdating) {
-        return mergeProperties(propertiesToUpdate, toMutablePropertiesString(propertiesForUpdating));
+        return mergeProperties(propertiesToUpdate, toJsonNode(propertiesForUpdating));
     }
 
     public static TurmsProperties mergeProperties(
             TurmsProperties propertiesToUpdate,
-            String propertiesForUpdating) {
+            JsonNode propertiesForUpdating) {
         try {
             // Note that this is a deep clone
             TurmsProperties newProperties = MAPPER
@@ -147,20 +148,16 @@ public class TurmsPropertiesConvertor {
 
     // Convert
 
-    public static String toMutablePropertiesString(TurmsProperties propertiesForUpdating) {
+    public static JsonNode toMutablePropertiesJsonNode(TurmsProperties propertiesForUpdating) {
         try {
-            return MUTABLE_PROPERTIES_WRITER.writeValueAsString(propertiesForUpdating);
-        } catch (JsonProcessingException e) {
+            return MAPPER.readTree(MUTABLE_PROPERTIES_WRITER.writeValueAsBytes(propertiesForUpdating));
+        } catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    public static String toMutablePropertiesString(Map<String, Object> propertiesForUpdating) {
-        try {
-            return MUTABLE_PROPERTIES_WRITER.writeValueAsString(propertiesForUpdating);
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException(e);
-        }
+    public static JsonNode toJsonNode(Object propertiesForUpdating) {
+        return MAPPER.valueToTree(propertiesForUpdating);
     }
 
 }

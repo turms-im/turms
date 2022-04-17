@@ -17,7 +17,6 @@
 
 package im.turms.gateway.access.client.common;
 
-import im.turms.gateway.access.client.tcp.RequestHandlerResult;
 import im.turms.gateway.domain.servicerequest.service.ServiceRequestService;
 import im.turms.gateway.domain.session.access.client.controller.SessionController;
 import im.turms.gateway.domain.session.service.SessionService;

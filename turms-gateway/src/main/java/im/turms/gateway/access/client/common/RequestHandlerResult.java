@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.access.client.tcp;
+package im.turms.gateway.access.client.common;
 
 import im.turms.server.common.access.common.ResponseStatusCode;
 

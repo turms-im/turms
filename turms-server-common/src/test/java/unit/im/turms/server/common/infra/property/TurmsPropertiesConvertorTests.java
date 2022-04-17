@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.mergeProperties;
-import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.validaPropertiesForUpdating;
+import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.validatePropertiesForUpdating;
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.METADATA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -40,8 +40,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class TurmsPropertiesConvertorTests {
 
     @Test
-    void validaPropertiesForUpdating_shouldNotReturnException_whenUpdatingMutableProperties() {
-        InvalidPropertyException exception = validaPropertiesForUpdating(new TurmsProperties(), Map.of(
+    void validatePropertiesForUpdating_shouldNotReturnException_whenUpdatingMutableProperties() {
+        InvalidPropertyException exception = validatePropertiesForUpdating(new TurmsProperties(), Map.of(
                 "gateway", Map.of(
                         "adminApi", Map.of(
                                 "rateLimiting", Map.of(
@@ -54,8 +54,8 @@ class TurmsPropertiesConvertorTests {
     }
 
     @Test
-    void validaPropertiesForUpdating_shouldReturnException_forNonExistingProperties() {
-        InvalidPropertyException exception = validaPropertiesForUpdating(new TurmsProperties(), Map.of(
+    void validatePropertiesForUpdating_shouldReturnException_forNonExistingProperties() {
+        InvalidPropertyException exception = validatePropertiesForUpdating(new TurmsProperties(), Map.of(
                 "gateway", Map.of(
                         "rateLimiting", Map.of(
                                 "capacity", "9513"
@@ -66,8 +66,8 @@ class TurmsPropertiesConvertorTests {
     }
 
     @Test
-    void validaPropertiesForUpdating_shouldReturnException_forImmutableProperties() {
-        InvalidPropertyException exception = validaPropertiesForUpdating(new TurmsProperties(), Map.of(
+    void validatePropertiesForUpdating_shouldReturnException_forImmutableProperties() {
+        InvalidPropertyException exception = validatePropertiesForUpdating(new TurmsProperties(), Map.of(
                 "userStatus", Map.of(
                         "userSessionsStatusCacheMaxSize", "95175328"
                 )));
