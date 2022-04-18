@@ -130,7 +130,10 @@ public class BlocklistService {
                     evictAllBlockedClients, evictExpiredBlockedClients, getBlocklistLogsScript,
                     ip -> {
                         if (sessionService != null) {
-                            sessionService.setLocalSessionsOffline(ip.getBytes(), CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED));
+                            sessionService.setLocalSessionsOffline(ip.getBytes(), CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED))
+                                    .subscribe(null, throwable ->
+                                            LOGGER.error("Caught an error while setting local sessions offline for the IP: {}",
+                                                    InetAddressUtil.ipBytesToString(ip.getBytes()), throwable));
                         }
                         ipAutoBlockManagerForCorruptedRequest.unblockClient(ip);
                         if (isGateway) {
@@ -168,7 +171,10 @@ public class BlocklistService {
                     getBlocklistLogsScript,
                     userId -> {
                         if (sessionService != null) {
-                            sessionService.setLocalUserOffline(userId, CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED));
+                            sessionService.setLocalUserOffline(userId, CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED))
+                                    .subscribe(null, throwable ->
+                                            LOGGER.error("Caught an error while setting sessions offline for the user ID: {}",
+                                                    userId, throwable));
                         }
                         userIdAutoBlockManagerForCorruptedRequest.unblockClient(userId);
                         if (isGateway) {
