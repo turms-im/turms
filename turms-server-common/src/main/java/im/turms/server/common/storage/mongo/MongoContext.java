@@ -30,11 +30,11 @@ import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.thread.ThreadNameConst;
+import im.turms.server.common.storage.mongo.codec.BsonValueEncoder;
 import im.turms.server.common.storage.mongo.codec.MongoCodecProvider;
 import im.turms.server.common.storage.mongo.entity.MongoEntity;
 import im.turms.server.common.storage.mongo.entity.MongoEntityFactory;
 import im.turms.server.common.storage.mongo.operation.MongoCollectionOptions;
-import im.turms.server.common.storage.mongo.util.SerializationUtil;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -124,7 +124,7 @@ public class MongoContext {
         adminDatabase = client.getDatabase("admin");
         configDatabase = client.getDatabase("config");
 
-        SerializationUtil.codecRegistry = codecRegistry;
+        BsonValueEncoder.codecRegistry = codecRegistry;
     }
 
     public void destroy() {

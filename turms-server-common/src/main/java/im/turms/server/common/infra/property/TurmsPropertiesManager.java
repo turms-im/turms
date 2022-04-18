@@ -43,8 +43,6 @@ import static im.turms.server.common.infra.property.TurmsPropertiesSerializer.pe
 import static im.turms.server.common.infra.property.TurmsPropertiesValidator.validate;
 
 /**
- * To make the code of {@link TurmsProperties} clean, we separate the operation methods from it.
- *
  * @author James Chen
  */
 @Component
@@ -147,7 +145,7 @@ public class TurmsPropertiesManager {
 
     // Listener
 
-    public void addListeners(Consumer<TurmsProperties> listener) {
+    public void addChangeListener(Consumer<TurmsProperties> listener) {
         propertiesChangeListeners.add(listener);
     }
 

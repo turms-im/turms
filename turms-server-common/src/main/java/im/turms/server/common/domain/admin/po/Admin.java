@@ -18,7 +18,7 @@
 package im.turms.server.common.domain.admin.po;
 
 import im.turms.server.common.domain.common.po.BaseEntity;
-import im.turms.server.common.infra.property.env.common.security.SecurityProperties;
+import im.turms.server.common.infra.property.env.common.security.PasswordProperties;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
@@ -48,7 +48,7 @@ public final class Admin extends BaseEntity {
     private final String account;
 
     /**
-     * @see SecurityProperties#adminPasswordEncodingAlgorithm
+     * @see PasswordProperties#adminPasswordEncodingAlgorithm
      */
     @Field(Fields.PASSWORD)
     private final byte[] password;

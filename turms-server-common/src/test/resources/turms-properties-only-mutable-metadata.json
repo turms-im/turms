@@ -1,662 +1,26 @@
 {
   "cluster": {
+    "connection": {},
+    "discovery": {},
     "node": {},
     "rpc": {},
-    "discovery": {},
-    "connection": {},
     "sharedConfig": {}
-  },
-  "userStatus": {},
-  "ip": {
-    "publicIpDetectorAddresses": {
-      "deprecated": false,
-      "mutable": true,
-      "global": false,
-      "type": "java.util.List",
-      "elementType": "string",
-      "desc": "The public IP detectors will only be used to query the public IP of the local node if needed (e.g. If the discovery property \"advertiseStrategy\" is \"PUBLIC_ADDRESS\""
-    }
-  },
-  "security": {},
-  "plugin": {},
-  "service": {
-    "mongo": {},
-    "notification": {
-      "notifyRelatedUserAfterAddedToOneSidedRelationshipGroupByOthers": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the related user after added to a one-sided relationship group by others"
-      },
-      "notifyInviteeAfterGroupInvitationRecalled": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the invitee after a group invitation has been recalled"
-      },
-      "notifyMemberAfterRemovedFromRelationshipGroupByOthers": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the member after removed from a one-sided relationship group by others"
-      },
-      "notifyUserAfterAddedToGroupByOthers": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the user after added to a group by others"
-      },
-      "notifyRecipientsAfterMessageUpdatedBySender": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the recipients after a message has been updated by the sender"
-      },
-      "notifyOwnerAndManagersAfterReceivingJoinRequest": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the owner and managers after a join request has been received"
-      },
-      "notifyMembersAfterGroupUpdated": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify members after a group has been updated"
-      },
-      "notifyUserAfterBlockedByGroup": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the user after blocked by a group"
-      },
-      "notifyMembersAfterGroupDeleted": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify members after a group has been removed"
-      },
-      "notifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify related users after other related user's online status has been updated"
-      },
-      "notifyUserAfterRemovedFromGroupByOthers": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the user after removed from a group by others"
-      },
-      "notifyMembersAfterOtherMemberOnlineStatusUpdated": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify members after other group member's online status has been updated"
-      },
-      "notifyMemberAfterInfoUpdatedByOthers": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify members after its member information has been updated by others"
-      },
-      "notifyPrivateConversationParticipantAfterReadDateUpdated": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the private conversation participant after the read receipt of a conversation has been updated by the recipient"
-      },
-      "notifyRecipientWhenReceivingFriendRequest": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the recipient when receiving a friend request"
-      },
-      "notifyRequesterAfterFriendRequestUpdated": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the requester after a friend request has been updated"
-      },
-      "notifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the related user after a one-sided relationship has benn updated by others"
-      },
-      "notifyUserAfterInvitedByGroup": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the user after invited by a group"
-      },
-      "notifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify members after a one-sided relationship group has been updated by others"
-      },
-      "notifyUserAfterUnblockedByGroup": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the user after unblocked by a group"
-      },
-      "notifyGroupConversationParticipantsAfterReadDateUpdated": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the group conversation participants after the read receipt of a conversation has been updated by recipients"
-      },
-      "notifyRelatedUsersAfterOtherRelatedUserInfoUpdated": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify related users after other related user's information has been updated"
-      },
-      "notifyOwnerAndManagersAfterGroupJoinRequestRecalled": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify the owner and managers after a group invitation has been recalled"
-      },
-      "notifyMembersAfterOtherMemberInfoUpdated": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify members after other group member's information has been updated"
-      }
-    },
-    "adminApi": {
-      "maxAvailableOnlineUsersStatusPerRequest": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The maximum available online users' status per query request"
-      },
-      "allowDeleteWithoutFilter": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to allow administrators to delete data without any filter. Better false to prevent administrators from deleting all data by accident"
-      },
-      "maxHourDifferencePerCountRequest": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The maximum hour difference per count request"
-      },
-      "address": {
-        "advertiseStrategy": {
-          "deprecated": false,
-          "mutable": true,
-          "options": [
-            "ADVERTISE_ADDRESS",
-            "BIND_ADDRESS",
-            "LOCAL_ADDRESS",
-            "PUBLIC_ADDRESS"
-          ],
-          "global": false,
-          "type": "enum",
-          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs (only provided by turms) and metrics APIs (provided by turms and turms-gateway)"
-        },
-        "advertiseHost": {
-          "deprecated": false,
-          "mutable": true,
-          "global": false,
-          "type": "string",
-          "desc": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)"
-        },
-        "attachPortToHost": {
-          "deprecated": false,
-          "mutable": true,
-          "global": false,
-          "type": "boolean",
-          "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510"
-        }
-      },
-      "log": {
-        "logRequestParams": {
-          "deprecated": false,
-          "mutable": true,
-          "global": true,
-          "type": "boolean",
-          "desc": "Whether to log the parameters of requests"
-        },
-        "enabled": {
-          "deprecated": false,
-          "mutable": true,
-          "global": true,
-          "type": "boolean",
-          "desc": "Whether to log API calls"
-        }
-      },
-      "rateLimiting": {
-        "refillIntervalMillis": {
-          "deprecated": false,
-          "mutable": true,
-          "global": true,
-          "type": "int",
-          "desc": "The time interval to refill. 0 means never refill"
-        },
-        "capacity": {
-          "deprecated": false,
-          "mutable": true,
-          "global": true,
-          "type": "int",
-          "desc": "The maximum number of tokens that the bucket can hold"
-        },
-        "initialTokens": {
-          "deprecated": false,
-          "mutable": true,
-          "global": true,
-          "type": "int",
-          "desc": "The initial number of tokens for new session"
-        },
-        "tokensPerPeriod": {
-          "deprecated": false,
-          "mutable": true,
-          "global": true,
-          "type": "int",
-          "desc": "Refills the bucket with the specified number of tokens per period if the bucket isn't full"
-        }
-      },
-      "maxDayDifferencePerRequest": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The maximum day difference per query request"
-      },
-      "maxDayDifferencePerCountRequest": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The maximum day difference per count request"
-      },
-      "maxMonthDifferencePerCountRequest": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The maximum month difference per count request"
-      },
-      "defaultAvailableRecordsPerRequest": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The default available records per query request"
-      },
-      "maxAvailableRecordsPerRequest": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The maximum available records per query request"
-      }
-    },
-    "fake": {},
-    "storage": {},
-    "message": {
-      "deleteMessageLogicallyByDefault": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to delete messages logically by default"
-      },
-      "allowSendMessagesToOneself": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to allow users to send messages to themselves"
-      },
-      "allowSendMessagesToStranger": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to allow users to send messages to a stranger"
-      },
-      "persistPreMessageId": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to persist the \"preMessageId\" of messages in databases"
-      },
-      "defaultAvailableMessagesNumberWithTotal": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The default available messages number with the \"total\" field that users request"
-      },
-      "allowRecallMessage": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to allow users to recall messages.\nNote: To recall messages, more system resources are needed"
-      },
-      "timeType": {
-        "deprecated": false,
-        "mutable": true,
-        "options": [
-          "CLIENT_TIME",
-          "LOCAL_SERVER_TIME"
-        ],
-        "global": true,
-        "type": "enum",
-        "desc": "The time type for the delivery time of message"
-      },
-      "persistMessage": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to persist messages in databases.\nNote: If false, senders will not get the message ID after the message has sent and cannot edit it"
-      },
-      "allowEditMessageBySender": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to allow the sender of a message to edit the message"
-      },
-      "maxTextLimit": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The maximum allowed length for the text of a message"
-      },
-      "sequenceId": {},
-      "persistRecord": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to persist the records of messages in databases"
-      },
-      "messageRetentionPeriodHours": {
-        "deprecated": false,
-        "mutable": true,
-        "global": false,
-        "type": "int",
-        "desc": "A message will be retained for the given period and will be removed from the database after the retention period"
-      },
-      "maxRecordsSizeBytes": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The maximum allowed size for the records of a message"
-      },
-      "checkIfTargetActiveAndNotDeleted": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to check if the target (recipient or group) of a message is active and not deleted"
-      },
-      "sendMessageToOtherSenderOnlineDevices": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to send the message to the other sender's online devices when sending a message"
-      },
-      "availableRecallDurationSeconds": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The available recall duration for the sender of a message"
-      }
-    },
-    "user": {
-      "respondOfflineIfInvisible": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status"
-      },
-      "deleteTwoSidedRelationships": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to delete the two-sided relationships when a user requests to delete a relationship"
-      },
-      "activateUserWhenAdded": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to activate a user when added by default"
-      },
-      "friendRequest": {
-        "allowSendRequestAfterDeclinedOrIgnoredOrExpired": {
-          "deprecated": false,
-          "mutable": true,
-          "global": true,
-          "type": "boolean",
-          "desc": "Whether to allow resending a friend request after the previous request has been declined, ignored, or expired"
-        },
-        "deleteExpiredRequestsWhenCronTriggered": {
-          "deprecated": false,
-          "mutable": true,
-          "global": true,
-          "type": "boolean",
-          "desc": "Whether to delete expired when the cron expression is triggered"
-        },
-        "contentLimit": {
-          "deprecated": false,
-          "mutable": true,
-          "global": true,
-          "type": "int",
-          "desc": "The maximum allowed length for the text of a friend request"
-        },
-        "friendRequestExpireAfterSeconds": {
-          "deprecated": false,
-          "mutable": true,
-          "global": true,
-          "type": "int",
-          "desc": "A friend request will become expired after the expireAfter has elapsed"
-        }
-      },
-      "deleteUserLogically": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to delete a user logically"
-      }
-    },
-    "clientApi": {},
-    "redis": {},
-    "conversation": {},
-    "statistics": {},
-    "group": {
-      "groupInvitationContentLimit": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The maximum allowed length for the text of a group invitation"
-      },
-      "groupJoinRequestExpireAfterSeconds": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "A group join request will become expired after the expireAfter has elapsed"
-      },
-      "allowRecallJoinRequestSentByOneself": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to allow users to recall the join requests sent by themselves"
-      },
-      "groupInvitationExpireAfterSeconds": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "A group invitation will become expired after the expireAfter has elapsed"
-      },
-      "groupJoinRequestContentLimit": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The maximum allowed length for the text of a group join request"
-      },
-      "allowRecallPendingGroupInvitationByOwnerAndManager": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to allow the owner and managers of a group to recall pending group invitations"
-      },
-      "deleteGroupLogicallyByDefault": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to delete groups logically by default"
-      },
-      "deleteExpiredGroupJoinRequestsWhenCronTriggered": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to delete expired group join requests when the cron expression is triggered"
-      },
-      "deleteExpiredGroupInvitationsWhenCronTriggered": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to delete expired group invitations when the cron expression is triggered"
-      }
-    }
-  },
-  "healthCheck": {},
-  "logging": {},
-  "location": {
-    "usersNearbyRequest": {
-      "defaultMaxAvailableNearbyUsersNumber": {
-        "deprecated": false,
-        "mutable": true,
-        "global": false,
-        "type": "short",
-        "desc": "The default maximum available number of nearby users"
-      },
-      "maxAvailableUsersNearbyNumberLimit": {
-        "deprecated": false,
-        "mutable": true,
-        "global": false,
-        "type": "short",
-        "desc": "The maximum allowed available number of users nearby records"
-      },
-      "maxDistanceMeters": {
-        "deprecated": false,
-        "mutable": true,
-        "global": false,
-        "type": "int",
-        "desc": "The maximum distance limit in meters"
-      },
-      "defaultMaxDistanceMeters": {
-        "deprecated": false,
-        "mutable": true,
-        "global": false,
-        "type": "int",
-        "desc": "The default maximum distance limit in meters"
-      }
-    }
   },
   "flightRecorder": {},
   "gateway": {
-    "mongo": {},
-    "udp": {},
-    "tcp": {},
-    "notificationLogging": {},
-    "session": {
-      "switchProtocolAfterSeconds": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, the TCP/WebSocket connection will be closed with the close status \"SWITCH\" to indicate the client should keep sending heartbeat requests over UDP if they want to keep online. Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP isn't supported"
-      },
-      "clientHeartbeatIntervalSeconds": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The client heartbeat interval. Note that the value will NOT change the actual heartbeat behavior of clients, and the value is only used to facilitate related operations of turms-gateway"
-      },
-      "closeIdleSessionAfterSeconds": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd"
-      },
-      "notifyClientsOfSessionInfoAfterConnected": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to notify clients of the session information after connected with the server"
-      },
-      "minHeartbeatIntervalSeconds": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "int",
-        "desc": "The minimum interval to refresh the heartbeat status by client requests to avoid refreshing the heartbeat status frequently"
-      }
-    },
-    "websocket": {},
     "adminApi": {
       "address": {
+        "advertiseHost": {
+          "deprecated": false,
+          "desc": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)",
+          "global": false,
+          "mutable": true,
+          "type": "string"
+        },
         "advertiseStrategy": {
           "deprecated": false,
+          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs (only provided by turms) and metrics APIs (provided by turms and turms-gateway)",
+          "global": false,
           "mutable": true,
           "options": [
             "ADVERTISE_ADDRESS",
@@ -664,76 +28,80 @@
             "LOCAL_ADDRESS",
             "PUBLIC_ADDRESS"
           ],
-          "global": false,
-          "type": "enum",
-          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs (only provided by turms) and metrics APIs (provided by turms and turms-gateway)"
-        },
-        "advertiseHost": {
-          "deprecated": false,
-          "mutable": true,
-          "global": false,
-          "type": "string",
-          "desc": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)"
+          "type": "enum"
         },
         "attachPortToHost": {
           "deprecated": false,
-          "mutable": true,
+          "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510",
           "global": false,
-          "type": "boolean",
-          "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510"
+          "mutable": true,
+          "type": "boolean"
         }
       },
       "log": {
-        "logRequestParams": {
-          "deprecated": false,
-          "mutable": true,
-          "global": true,
-          "type": "boolean",
-          "desc": "Whether to log the parameters of requests"
-        },
         "enabled": {
           "deprecated": false,
-          "mutable": true,
+          "desc": "Whether to log API calls",
           "global": true,
-          "type": "boolean",
-          "desc": "Whether to log API calls"
+          "mutable": true,
+          "type": "boolean"
+        },
+        "logRequestParams": {
+          "deprecated": false,
+          "desc": "Whether to log the parameters of requests",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
         }
       },
       "rateLimiting": {
-        "refillIntervalMillis": {
-          "deprecated": false,
-          "mutable": true,
-          "global": true,
-          "type": "int",
-          "desc": "The time interval to refill. 0 means never refill"
-        },
         "capacity": {
           "deprecated": false,
-          "mutable": true,
+          "desc": "The maximum number of tokens that the bucket can hold",
           "global": true,
-          "type": "int",
-          "desc": "The maximum number of tokens that the bucket can hold"
+          "mutable": true,
+          "type": "int"
         },
         "initialTokens": {
           "deprecated": false,
-          "mutable": true,
+          "desc": "The initial number of tokens for new session",
           "global": true,
-          "type": "int",
-          "desc": "The initial number of tokens for new session"
+          "mutable": true,
+          "type": "int"
+        },
+        "refillIntervalMillis": {
+          "deprecated": false,
+          "desc": "The time interval to refill. 0 means never refill",
+          "global": true,
+          "mutable": true,
+          "type": "int"
         },
         "tokensPerPeriod": {
           "deprecated": false,
-          "mutable": true,
+          "desc": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
           "global": true,
-          "type": "int",
-          "desc": "Refills the bucket with the specified number of tokens per period if the bucket isn't full"
+          "mutable": true,
+          "type": "int"
         }
       }
     },
+    "clientApi": {},
     "fake": {},
+    "mongo": {},
+    "notificationLogging": {},
+    "redis": {},
     "serviceDiscovery": {
+      "advertiseHost": {
+        "deprecated": false,
+        "desc": "The advertise address of the local node exposed to the public. The property can be used to advertise the DDoS Protected IP address to hide the origin IP address)\n(e.g. 100.131.251.96)",
+        "global": false,
+        "mutable": true,
+        "type": "string"
+      },
       "advertiseStrategy": {
         "deprecated": false,
+        "desc": "The advertise strategy is used to help clients or load balancing servers to access the local node. Note: For security, do NOT use PUBLIC_ADDRESS in production to prevent from exposing the origin IP address for DDoS attack.",
+        "global": false,
         "mutable": true,
         "options": [
           "ADVERTISE_ADDRESS",
@@ -741,60 +109,90 @@
           "LOCAL_ADDRESS",
           "PUBLIC_ADDRESS"
         ],
-        "global": false,
-        "type": "enum",
-        "desc": "The advertise strategy is used to help clients or load balancing servers to access the local node. Note: For security, do NOT use PUBLIC_ADDRESS in production to prevent from exposing the origin IP address for DDoS attack."
-      },
-      "advertiseHost": {
-        "deprecated": false,
-        "mutable": true,
-        "global": false,
-        "type": "string",
-        "desc": "The advertise address of the local node exposed to the public. The property can be used to advertise the DDoS Protected IP address to hide the origin IP address)\n(e.g. 100.131.251.96)"
-      },
-      "identity": {
-        "deprecated": false,
-        "mutable": true,
-        "global": false,
-        "type": "string",
-        "desc": "The identity of the local node will be sent to clients as a notification if identity is not blank and turms.gateway.session.notifyClientsOfSessionInfoAfterConnected is true (e.g. \"turms-east-0001\")"
+        "type": "enum"
       },
       "attachPortToHost": {
         "deprecated": false,
-        "mutable": true,
+        "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 10510so the service address will be 100.131.251.96:10510",
         "global": false,
-        "type": "boolean",
-        "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 10510so the service address will be 100.131.251.96:10510"
+        "mutable": true,
+        "type": "boolean"
+      },
+      "identity": {
+        "deprecated": false,
+        "desc": "The identity of the local node will be sent to clients as a notification if identity is not blank and turms.gateway.session.notifyClientsOfSessionInfoAfterConnected is true (e.g. \"turms-east-0001\")",
+        "global": false,
+        "mutable": true,
+        "type": "string"
+      }
+    },
+    "session": {
+      "clientHeartbeatIntervalSeconds": {
+        "deprecated": false,
+        "desc": "The client heartbeat interval. Note that the value will NOT change the actual heartbeat behavior of clients, and the value is only used to facilitate related operations of turms-gateway",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "closeIdleSessionAfterSeconds": {
+        "deprecated": false,
+        "desc": "A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "minHeartbeatIntervalSeconds": {
+        "deprecated": false,
+        "desc": "The minimum interval to refresh the heartbeat status by client requests to avoid refreshing the heartbeat status frequently",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "notifyClientsOfSessionInfoAfterConnected": {
+        "deprecated": false,
+        "desc": "Whether to notify clients of the session information after connected with the server",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "switchProtocolAfterSeconds": {
+        "deprecated": false,
+        "desc": "If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, the TCP/WebSocket connection will be closed with the close status \"SWITCH\" to indicate the client should keep sending heartbeat requests over UDP if they want to keep online. Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP isn't supported",
+        "global": true,
+        "mutable": true,
+        "type": "int"
       }
     },
     "simultaneousLogin": {
+      "allowDeviceTypeOthersLogin": {
+        "deprecated": false,
+        "desc": "Whether to allow the devices of DeviceType.OTHERS to login",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "allowDeviceTypeUnknownLogin": {
+        "deprecated": false,
+        "desc": "Whether to allow the devices of DeviceType.UNKNOWN to login",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
       "loginConflictStrategy": {
         "deprecated": false,
+        "desc": "The login conflict strategy is used for servers to know how to behave if a device is logging in when there are conflicted and logged-in devices",
+        "global": true,
         "mutable": true,
         "options": [
           "DISCONNECT_LOGGED_IN_DEVICES",
           "DISCONNECT_LOGGING_IN_DEVICE"
         ],
-        "global": true,
-        "type": "enum",
-        "desc": "The login conflict strategy is used for servers to know how to behave if a device is logging in when there are conflicted and logged-in devices"
-      },
-      "allowDeviceTypeUnknownLogin": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to allow the devices of DeviceType.UNKNOWN to login"
-      },
-      "allowDeviceTypeOthersLogin": {
-        "deprecated": false,
-        "mutable": true,
-        "global": true,
-        "type": "boolean",
-        "desc": "Whether to allow the devices of DeviceType.OTHERS to login"
+        "type": "enum"
       },
       "strategy": {
         "deprecated": false,
+        "desc": "The simultaneous login strategy is used to control which devices can be online at the same time",
+        "global": true,
         "mutable": true,
         "options": [
           "ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE",
@@ -805,12 +203,641 @@
           "ALLOW_ONE_DEVICE_OF_DESKTOP_OR_MOBILE_ONLINE",
           "ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_OR_MOBILE_ONLINE"
         ],
+        "type": "enum"
+      }
+    },
+    "tcp": {},
+    "udp": {},
+    "websocket": {}
+  },
+  "healthCheck": {},
+  "ip": {
+    "publicIpDetectorAddresses": {
+      "deprecated": false,
+      "desc": "The public IP detectors will only be used to query the public IP of the local node if needed (e.g. If the discovery property \"advertiseStrategy\" is \"PUBLIC_ADDRESS\"",
+      "elementType": "string",
+      "global": false,
+      "mutable": true,
+      "type": "java.util.List"
+    }
+  },
+  "location": {
+    "usersNearbyRequest": {
+      "defaultMaxAvailableNearbyUsersNumber": {
+        "deprecated": false,
+        "desc": "The default maximum available number of nearby users",
+        "global": false,
+        "mutable": true,
+        "type": "short"
+      },
+      "defaultMaxDistanceMeters": {
+        "deprecated": false,
+        "desc": "The default maximum distance limit in meters",
+        "global": false,
+        "mutable": true,
+        "type": "int"
+      },
+      "maxAvailableUsersNearbyNumberLimit": {
+        "deprecated": false,
+        "desc": "The maximum allowed available number of users nearby records",
+        "global": false,
+        "mutable": true,
+        "type": "short"
+      },
+      "maxDistanceMeters": {
+        "deprecated": false,
+        "desc": "The maximum distance limit in meters",
+        "global": false,
+        "mutable": true,
+        "type": "int"
+      }
+    }
+  },
+  "logging": {},
+  "plugin": {},
+  "security": {},
+  "service": {
+    "adminApi": {
+      "address": {
+        "advertiseHost": {
+          "deprecated": false,
+          "desc": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)",
+          "global": false,
+          "mutable": true,
+          "type": "string"
+        },
+        "advertiseStrategy": {
+          "deprecated": false,
+          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs (only provided by turms) and metrics APIs (provided by turms and turms-gateway)",
+          "global": false,
+          "mutable": true,
+          "options": [
+            "ADVERTISE_ADDRESS",
+            "BIND_ADDRESS",
+            "LOCAL_ADDRESS",
+            "PUBLIC_ADDRESS"
+          ],
+          "type": "enum"
+        },
+        "attachPortToHost": {
+          "deprecated": false,
+          "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510",
+          "global": false,
+          "mutable": true,
+          "type": "boolean"
+        }
+      },
+      "allowDeleteWithoutFilter": {
+        "deprecated": false,
+        "desc": "Whether to allow administrators to delete data without any filter. Better false to prevent administrators from deleting all data by accident",
         "global": true,
-        "type": "enum",
-        "desc": "The simultaneous login strategy is used to control which devices can be online at the same time"
+        "mutable": true,
+        "type": "boolean"
+      },
+      "defaultAvailableRecordsPerRequest": {
+        "deprecated": false,
+        "desc": "The default available records per query request",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "log": {
+        "enabled": {
+          "deprecated": false,
+          "desc": "Whether to log API calls",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        },
+        "logRequestParams": {
+          "deprecated": false,
+          "desc": "Whether to log the parameters of requests",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        }
+      },
+      "maxAvailableOnlineUsersStatusPerRequest": {
+        "deprecated": false,
+        "desc": "The maximum available online users' status per query request",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "maxAvailableRecordsPerRequest": {
+        "deprecated": false,
+        "desc": "The maximum available records per query request",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "maxDayDifferencePerCountRequest": {
+        "deprecated": false,
+        "desc": "The maximum day difference per count request",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "maxDayDifferencePerRequest": {
+        "deprecated": false,
+        "desc": "The maximum day difference per query request",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "maxHourDifferencePerCountRequest": {
+        "deprecated": false,
+        "desc": "The maximum hour difference per count request",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "maxMonthDifferencePerCountRequest": {
+        "deprecated": false,
+        "desc": "The maximum month difference per count request",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "rateLimiting": {
+        "capacity": {
+          "deprecated": false,
+          "desc": "The maximum number of tokens that the bucket can hold",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        },
+        "initialTokens": {
+          "deprecated": false,
+          "desc": "The initial number of tokens for new session",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        },
+        "refillIntervalMillis": {
+          "deprecated": false,
+          "desc": "The time interval to refill. 0 means never refill",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        },
+        "tokensPerPeriod": {
+          "deprecated": false,
+          "desc": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        }
       }
     },
     "clientApi": {},
-    "redis": {}
-  }
+    "conversation": {},
+    "fake": {},
+    "group": {
+      "deleteGroupLogicallyByDefault": {
+        "deprecated": false,
+        "desc": "Whether to delete groups logically by default",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "invitation": {
+        "allowRecallPendingInvitationByOwnerAndManager": {
+          "deprecated": false,
+          "desc": "Whether to allow the owner and managers of a group to recall pending group invitations",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        },
+        "contentLimit": {
+          "deprecated": false,
+          "desc": "The maximum allowed length for the text of a group invitation",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        },
+        "deleteExpiredInvitationsWhenCronTriggered": {
+          "deprecated": false,
+          "desc": "Whether to delete expired group invitations when the cron expression is triggered",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        },
+        "expireAfterSeconds": {
+          "deprecated": false,
+          "desc": "A group invitation will become expired after the specified time has passed",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        }
+      },
+      "joinRequest": {
+        "allowRecallJoinRequestSentByOneself": {
+          "deprecated": false,
+          "desc": "Whether to allow users to recall the join requests sent by themselves",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        },
+        "contentLimit": {
+          "deprecated": false,
+          "desc": "The maximum allowed length for the text of a group join request",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        },
+        "deleteExpiredJoinRequestsWhenCronTriggered": {
+          "deprecated": false,
+          "desc": "Whether to delete expired group join requests when the cron expression is triggered",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        },
+        "expireAfterSeconds": {
+          "deprecated": false,
+          "desc": "A group join request will become expired after the specified time has elapsed",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        }
+      },
+      "question": {
+        "answerContentLimit": {
+          "deprecated": false,
+          "desc": "The maximum allowed length for the text of a group question's answer",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        },
+        "maxAnswerCount": {
+          "deprecated": false,
+          "desc": "The maximum number of answers for a group question",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        },
+        "questionContentLimit": {
+          "deprecated": false,
+          "desc": "The maximum allowed length for the text of a group question",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        }
+      }
+    },
+    "message": {
+      "allowEditMessageBySender": {
+        "deprecated": false,
+        "desc": "Whether to allow the sender of a message to edit the message",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "allowRecallMessage": {
+        "deprecated": false,
+        "desc": "Whether to allow users to recall messages.\nNote: To recall messages, more system resources are needed",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "allowSendMessagesToOneself": {
+        "deprecated": false,
+        "desc": "Whether to allow users to send messages to themselves",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "allowSendMessagesToStranger": {
+        "deprecated": false,
+        "desc": "Whether to allow users to send messages to a stranger",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "availableRecallDurationSeconds": {
+        "deprecated": false,
+        "desc": "The available recall duration for the sender of a message",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "checkIfTargetActiveAndNotDeleted": {
+        "deprecated": false,
+        "desc": "Whether to check if the target (recipient or group) of a message is active and not deleted",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "defaultAvailableMessagesNumberWithTotal": {
+        "deprecated": false,
+        "desc": "The default available messages number with the \"total\" field that users request",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "deleteMessageLogicallyByDefault": {
+        "deprecated": false,
+        "desc": "Whether to delete messages logically by default",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "maxRecordsSizeBytes": {
+        "deprecated": false,
+        "desc": "The maximum allowed size for the records of a message",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "maxTextLimit": {
+        "deprecated": false,
+        "desc": "The maximum allowed length for the text of a message",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "messageRetentionPeriodHours": {
+        "deprecated": false,
+        "desc": "A message will be retained for the given period and will be removed from the database after the retention period",
+        "global": false,
+        "mutable": true,
+        "type": "int"
+      },
+      "persistMessage": {
+        "deprecated": false,
+        "desc": "Whether to persist messages in databases.\nNote: If false, senders will not get the message ID after the message has sent and cannot edit it",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "persistPreMessageId": {
+        "deprecated": false,
+        "desc": "Whether to persist the \"preMessageId\" of messages in databases",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "persistRecord": {
+        "deprecated": false,
+        "desc": "Whether to persist the records of messages in databases",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "sendMessageToOtherSenderOnlineDevices": {
+        "deprecated": false,
+        "desc": "Whether to send the message to the other sender's online devices when sending a message",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "sequenceId": {},
+      "timeType": {
+        "deprecated": false,
+        "desc": "The time type for the delivery time of message",
+        "global": true,
+        "mutable": true,
+        "options": [
+          "CLIENT_TIME",
+          "LOCAL_SERVER_TIME"
+        ],
+        "type": "enum"
+      }
+    },
+    "mongo": {},
+    "notification": {
+      "notifyGroupConversationParticipantsAfterReadDateUpdated": {
+        "deprecated": false,
+        "desc": "Whether to notify the group conversation participants after the read receipt of a conversation has been updated by recipients",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyInviteeAfterGroupInvitationRecalled": {
+        "deprecated": false,
+        "desc": "Whether to notify the invitee after a group invitation has been recalled",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyMemberAfterInfoUpdatedByOthers": {
+        "deprecated": false,
+        "desc": "Whether to notify members after its member information has been updated by others",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyMemberAfterRemovedFromRelationshipGroupByOthers": {
+        "deprecated": false,
+        "desc": "Whether to notify the member after removed from a one-sided relationship group by others",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyMembersAfterGroupDeleted": {
+        "deprecated": false,
+        "desc": "Whether to notify members after a group has been removed",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyMembersAfterGroupUpdated": {
+        "deprecated": false,
+        "desc": "Whether to notify members after a group has been updated",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers": {
+        "deprecated": false,
+        "desc": "Whether to notify members after a one-sided relationship group has been updated by others",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyMembersAfterOtherMemberInfoUpdated": {
+        "deprecated": false,
+        "desc": "Whether to notify members after other group member's information has been updated",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyMembersAfterOtherMemberOnlineStatusUpdated": {
+        "deprecated": false,
+        "desc": "Whether to notify members after other group member's online status has been updated",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyOwnerAndManagersAfterGroupJoinRequestRecalled": {
+        "deprecated": false,
+        "desc": "Whether to notify the owner and managers after a group invitation has been recalled",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyOwnerAndManagersAfterReceivingJoinRequest": {
+        "deprecated": false,
+        "desc": "Whether to notify the owner and managers after a join request has been received",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyPrivateConversationParticipantAfterReadDateUpdated": {
+        "deprecated": false,
+        "desc": "Whether to notify the private conversation participant after the read receipt of a conversation has been updated by the recipient",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyRecipientWhenReceivingFriendRequest": {
+        "deprecated": false,
+        "desc": "Whether to notify the recipient when receiving a friend request",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyRecipientsAfterMessageUpdatedBySender": {
+        "deprecated": false,
+        "desc": "Whether to notify the recipients after a message has been updated by the sender",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyRelatedUserAfterAddedToOneSidedRelationshipGroupByOthers": {
+        "deprecated": false,
+        "desc": "Whether to notify the related user after added to a one-sided relationship group by others",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers": {
+        "deprecated": false,
+        "desc": "Whether to notify the related user after a one-sided relationship has benn updated by others",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyRelatedUsersAfterOtherRelatedUserInfoUpdated": {
+        "deprecated": false,
+        "desc": "Whether to notify related users after other related user's information has been updated",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated": {
+        "deprecated": false,
+        "desc": "Whether to notify related users after other related user's online status has been updated",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyRequesterAfterFriendRequestUpdated": {
+        "deprecated": false,
+        "desc": "Whether to notify the requester after a friend request has been updated",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyUserAfterAddedToGroupByOthers": {
+        "deprecated": false,
+        "desc": "Whether to notify the user after added to a group by others",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyUserAfterBlockedByGroup": {
+        "deprecated": false,
+        "desc": "Whether to notify the user after blocked by a group",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyUserAfterInvitedByGroup": {
+        "deprecated": false,
+        "desc": "Whether to notify the user after invited by a group",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyUserAfterRemovedFromGroupByOthers": {
+        "deprecated": false,
+        "desc": "Whether to notify the user after removed from a group by others",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "notifyUserAfterUnblockedByGroup": {
+        "deprecated": false,
+        "desc": "Whether to notify the user after unblocked by a group",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      }
+    },
+    "redis": {},
+    "statistics": {},
+    "storage": {},
+    "user": {
+      "activateUserWhenAdded": {
+        "deprecated": false,
+        "desc": "Whether to activate a user when added by default",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "deleteTwoSidedRelationships": {
+        "deprecated": false,
+        "desc": "Whether to delete the two-sided relationships when a user requests to delete a relationship",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "deleteUserLogically": {
+        "deprecated": false,
+        "desc": "Whether to delete a user logically",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "friendRequest": {
+        "allowSendRequestAfterDeclinedOrIgnoredOrExpired": {
+          "deprecated": false,
+          "desc": "Whether to allow resending a friend request after the previous request has been declined, ignored, or expired",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        },
+        "contentLimit": {
+          "deprecated": false,
+          "desc": "The maximum allowed length for the text of a friend request",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        },
+        "deleteExpiredRequestsWhenCronTriggered": {
+          "deprecated": false,
+          "desc": "Whether to delete expired when the cron expression is triggered",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        },
+        "friendRequestExpireAfterSeconds": {
+          "deprecated": false,
+          "desc": "A friend request will become expired after the expireAfter has elapsed",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        }
+      },
+      "respondOfflineIfInvisible": {
+        "deprecated": false,
+        "desc": "Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      }
+    }
+  },
+  "userStatus": {}
 }

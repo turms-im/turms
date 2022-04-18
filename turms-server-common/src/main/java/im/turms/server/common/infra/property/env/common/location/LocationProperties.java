@@ -39,8 +39,8 @@ public class LocationProperties {
     @Description("Whether to handle users' locations")
     private boolean enabled = true;
 
-    @Description("Whether to treat the pair of user ID and device type as an unique user when querying users nearby. " +
-            "If false, only the user ID is used to identify an unique user")
+    @Description("Whether to treat the pair of user ID and device type as a unique user when querying users nearby. " +
+            "If false, only the user ID is used to identify a unique user")
     private boolean treatUserIdAndDeviceTypeAsUniqueUser;
 
     @JsonView(MutablePropertiesView.class)

@@ -63,7 +63,7 @@ public abstract class BaseServiceAddressManager {
         updateMemberHostIfChanged(turmsProperties);
         updateAdminApiAddresses(adminApiServerProperties, getAdminAddressProperties(turmsProperties));
         updateCustomAddresses(adminApiServerProperties, turmsProperties);
-        propertiesManager.addListeners(properties -> {
+        propertiesManager.addChangeListener(properties -> {
             AddressProperties newAdminApiDiscoveryProperties = getAdminAddressProperties(properties);
             boolean areAdminApiAddressPropertiesChange = !adminApiAddressProperties
                     .equals(newAdminApiDiscoveryProperties);

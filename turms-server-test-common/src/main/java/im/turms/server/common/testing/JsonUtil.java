@@ -20,6 +20,7 @@ package im.turms.server.common.testing;
 import lombok.SneakyThrows;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonNode;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.InputStream;
 
@@ -30,7 +31,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public final class JsonUtil {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper()
+            // Order map entries so that we can use the consistent output for comparison
+            .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
 
     private JsonUtil() {
     }

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.storage.mongo.util;
+package im.turms.server.common.storage.mongo.codec;
 
 import im.turms.server.common.storage.mongo.codec.EntityCodec;
 import org.bson.BsonArray;
@@ -43,11 +43,11 @@ import java.util.List;
 /**
  * @author James Chen
  */
-public final class SerializationUtil {
+public final class BsonValueEncoder {
 
     public static CodecRegistry codecRegistry;
 
-    private SerializationUtil() {
+    private BsonValueEncoder() {
     }
 
     public static BsonValue encodeValue(Object value) {

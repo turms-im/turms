@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.lang;
 
+import javax.annotation.Nullable;
 import java.nio.CharBuffer;
 import java.util.Arrays;
 
@@ -93,7 +94,7 @@ public class CharArrayBuffer implements CharSequence {
         length = newLength;
     }
 
-    public void append(String str) {
+    public void append(@Nullable String str) {
         String s = str == null ? "null" : str;
         int strLength = s.length();
         int newLength = length + strLength;
@@ -104,7 +105,7 @@ public class CharArrayBuffer implements CharSequence {
         length = newLength;
     }
 
-    public void append(CharArrayBuffer b) {
+    public void append(@Nullable CharArrayBuffer b) {
         if (b == null) {
             return;
         }

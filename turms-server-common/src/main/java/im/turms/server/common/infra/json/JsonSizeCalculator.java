@@ -107,7 +107,7 @@ public final class JsonSizeCalculator {
         }
         if (val.getClass().getPackageName().startsWith("java.lang")) {
             // We don't use "String.valueOf(val).length()" for better performance
-            return 8;
+            return 16;
         }
         return -1;
     }

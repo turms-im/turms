@@ -34,7 +34,7 @@ import lombok.NoArgsConstructor;
 public class NotificationLoggingProperties {
 
     @Description("Whether to parse the buffer of TurmsNotification to log. " +
-            "Note that the property has a impact on performance")
+            "Note that the property has an impact on performance")
     private boolean enabled;
 
 }

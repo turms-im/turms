@@ -154,11 +154,18 @@ public class BlocklistService {
                 userIdAutoBlockManagerForCorruptedFrame = null;
                 userIdAutoBlockManagerForFrequentRequest = null;
             }
-            userIdBlocklistServiceManager = new BlocklistServiceManager<>(false, maxLogQueueSize,
-                    userIdBlocklistProperties.getSyncBlocklistIntervalMillis(), node,
-                    userIdBlocklistRedisClient, threadPoolExecutor,
-                    blockClientsScript, unblockClientsScript, getBlockedClientsScript,
-                    evictAllBlockedClients, evictExpiredBlockedClients, getBlocklistLogsScript,
+            userIdBlocklistServiceManager = new BlocklistServiceManager<>(false,
+                    maxLogQueueSize,
+                    userIdBlocklistProperties.getSyncBlocklistIntervalMillis(),
+                    node,
+                    userIdBlocklistRedisClient,
+                    threadPoolExecutor,
+                    blockClientsScript,
+                    unblockClientsScript,
+                    getBlockedClientsScript,
+                    evictAllBlockedClients,
+                    evictExpiredBlockedClients,
+                    getBlocklistLogsScript,
                     userId -> {
                         if (sessionService != null) {
                             sessionService.setLocalUserOffline(userId, CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED));

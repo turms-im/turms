@@ -30,6 +30,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static im.turms.server.common.infra.net.InetAddressUtil.IPV4_BYTE_LENGTH;
+import static im.turms.server.common.infra.net.InetAddressUtil.IPV6_BYTE_LENGTH;
+
 /**
  * @author James Chen
  */
@@ -254,7 +257,7 @@ public final class CodecUtil {
         if (ipBytes == null) {
             output.writeByte(-1);
         } else {
-            output.writeByte(ipBytes.length == 4 ? 0 : 1);
+            output.writeByte(ipBytes.length == IPV4_BYTE_LENGTH ? 0 : 1);
         }
         output.writeBytes(ipBytes);
     }
@@ -265,7 +268,7 @@ public final class CodecUtil {
         if (flag == -1) {
             return null;
         }
-        byte[] ipBytes = new byte[flag == 0 ? 4 : 16];
+        byte[] ipBytes = new byte[flag == 0 ? IPV4_BYTE_LENGTH : IPV6_BYTE_LENGTH];
         input.readBytes(ipBytes);
         return ipBytes;
     }

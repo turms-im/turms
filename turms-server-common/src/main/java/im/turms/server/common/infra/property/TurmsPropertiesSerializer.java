@@ -19,9 +19,7 @@ package im.turms.server.common.infra.property;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SequenceWriter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
@@ -34,8 +32,7 @@ import java.nio.file.Path;
  */
 public class TurmsPropertiesSerializer {
 
-    private static final YAMLFactory YAML_FACTORY = new YAMLFactory();
-    private static final ObjectWriter YAML_WRITER = new YAMLMapper(YAML_FACTORY)
+    private static final ObjectWriter YAML_WRITER = new YAMLMapper()
             .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
             .writerWithDefaultPrettyPrinter();
 
@@ -47,10 +44,9 @@ public class TurmsPropertiesSerializer {
         if (dir != null) {
             Files.createDirectories(dir);
         }
-        try (SequenceWriter writer = YAML_WRITER.writeValues(filePath.toFile())) {
-            writer.write(JsonNodeFactory.instance.objectNode()
-                    .set("turms", properties));
-        }
+        JsonNode node = JsonNodeFactory.instance.objectNode()
+                .set("turms", properties);
+        YAML_WRITER.writeValue(filePath.toFile(), node);
     }
 
 }

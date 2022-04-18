@@ -23,12 +23,10 @@ import im.turms.server.common.access.client.dto.request.storage.DeleteResourceRe
 import im.turms.server.common.access.client.dto.request.storage.QuerySignedGetUrlRequest;
 import im.turms.server.common.access.client.dto.request.storage.QuerySignedPutUrlRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
-import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.storage.service.StorageService;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
@@ -41,12 +39,11 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
  * @author James Chen
  */
 @Controller
-public class StorageServiceController extends BaseController {
+public class StorageServiceController {
 
     private final StorageService storageService;
 
-    public StorageServiceController(Node node, StorageService storageService) {
-        super(node);
+    public StorageServiceController(StorageService storageService) {
         this.storageService = storageService;
     }
 

@@ -19,7 +19,7 @@ package im.turms.server.common.storage.mongo.operation.option;
 
 import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.storage.mongo.BsonPool;
-import im.turms.server.common.storage.mongo.util.SerializationUtil;
+import im.turms.server.common.storage.mongo.codec.BsonValueEncoder;
 import org.bson.BsonDocument;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
@@ -104,7 +104,7 @@ public final class Update implements Bson {
             set = new BsonDocument();
             document.append("$set", set);
         }
-        set.put(key, SerializationUtil.encodeValue(value));
+        set.put(key, BsonValueEncoder.encodeValue(value));
         return this;
     }
 

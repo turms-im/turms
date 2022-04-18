@@ -20,7 +20,7 @@ package im.turms.server.common.storage.mongo.operation.option;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.storage.mongo.util.SerializationUtil;
+import im.turms.server.common.storage.mongo.codec.BsonValueEncoder;
 import org.bson.BsonArrayUtil;
 import org.bson.BsonDateTime;
 import org.bson.BsonDocument;
@@ -86,26 +86,26 @@ public class Filter implements Bson {
     }
 
     public Filter eq(String key, Object value) {
-        document.append(key, SerializationUtil.encodeSingleValue(value));
+        document.append(key, BsonValueEncoder.encodeSingleValue(value));
         return this;
     }
 
     public Filter eqIfFalse(@NotNull String key, @Nullable Object obj, boolean condition) {
         if (!condition) {
-            document.append(key, new BsonDocument("$eq", SerializationUtil.encodeSingleValue(obj)));
+            document.append(key, new BsonDocument("$eq", BsonValueEncoder.encodeSingleValue(obj)));
         }
         return this;
     }
 
     public Filter eqIfNotNull(@NotNull String key, @Nullable Object obj) {
         if (obj != null) {
-            document.append(key, new BsonDocument("$eq", SerializationUtil.encodeSingleValue(obj)));
+            document.append(key, new BsonDocument("$eq", BsonValueEncoder.encodeSingleValue(obj)));
         }
         return this;
     }
 
     public Filter gt(String key, Object value) {
-        document.append(key, new BsonDocument("$gt", SerializationUtil.encodeSingleValue(value)));
+        document.append(key, new BsonDocument("$gt", BsonValueEncoder.encodeSingleValue(value)));
         return this;
     }
 
@@ -116,7 +116,7 @@ public class Filter implements Bson {
     }
 
     public Filter gte(String key, Object value) {
-        document.append(key, new BsonDocument("$gte", SerializationUtil.encodeSingleValue(value)));
+        document.append(key, new BsonDocument("$gte", BsonValueEncoder.encodeSingleValue(value)));
         return this;
     }
 
@@ -127,24 +127,24 @@ public class Filter implements Bson {
     }
 
     public <T> Filter in(String key, T... values) {
-        document.append(key, new BsonDocument("$in", SerializationUtil.encodeValue(values)));
+        document.append(key, new BsonDocument("$in", BsonValueEncoder.encodeValue(values)));
         return this;
     }
 
     public <T> Filter in(String key, Collection<T> collection) {
-        document.append(key, new BsonDocument("$in", SerializationUtil.encodeValue(collection)));
+        document.append(key, new BsonDocument("$in", BsonValueEncoder.encodeValue(collection)));
         return this;
     }
 
     public Filter inIfNotNull(@NotNull String key, @Nullable Collection<?> collection) {
         if (collection != null && !collection.isEmpty()) {
-            document.append(key, new BsonDocument("$in", SerializationUtil.encodeValue(collection)));
+            document.append(key, new BsonDocument("$in", BsonValueEncoder.encodeValue(collection)));
         }
         return this;
     }
 
     public Filter lt(String key, Object value) {
-        document.append(key, new BsonDocument("$lt", SerializationUtil.encodeSingleValue(value)));
+        document.append(key, new BsonDocument("$lt", BsonValueEncoder.encodeSingleValue(value)));
         return this;
     }
 
@@ -155,7 +155,7 @@ public class Filter implements Bson {
     }
 
     public Filter ne(String key, Object value) {
-        document.append(key, new BsonDocument("$ne", SerializationUtil.encodeSingleValue(value)));
+        document.append(key, new BsonDocument("$ne", BsonValueEncoder.encodeSingleValue(value)));
         return this;
     }
 

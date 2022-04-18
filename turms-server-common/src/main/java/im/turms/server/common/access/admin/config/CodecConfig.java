@@ -89,7 +89,10 @@ public class CodecConfig {
             configurer.customCodecs().register(new TurmsResourceHttpMessageWriter());
             configurer.defaultCodecs().jackson2JsonEncoder(new Jackson2JsonEncoder(objectMapper, EMPTY_MIME_TYPES) {
                 @Override
-                public DataBuffer encodeValue(Object value, DataBufferFactory bufferFactory, ResolvableType valueType, MimeType mimeType,
+                public DataBuffer encodeValue(Object value,
+                                              DataBufferFactory bufferFactory,
+                                              ResolvableType valueType,
+                                              MimeType mimeType,
                                               Map<String, Object> hints) {
                     ObjectMapper mapper = selectObjectMapper(valueType, mimeType);
                     if (mapper == null) {
@@ -132,8 +135,11 @@ public class CodecConfig {
                 }
 
                 private ObjectWriter createObjectWriter(
-                        ObjectMapper mapper, ResolvableType valueType, @Nullable MimeType mimeType,
-                        @Nullable Class<?> jsonView, @Nullable Map<String, Object> hints) {
+                        ObjectMapper mapper,
+                        ResolvableType valueType,
+                        @Nullable MimeType mimeType,
+                        @Nullable Class<?> jsonView,
+                        @Nullable Map<String, Object> hints) {
                     JavaType javaType = getJavaType(valueType.getType(), null);
                     if (jsonView == null && hints != null) {
                         jsonView = (Class<?>) hints.get(Jackson2CodecSupport.JSON_VIEW_HINT);
