@@ -98,7 +98,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         // Set up a cron job to remove requests if deleting expired docs is enabled
         taskManager.reschedule(
                 "expiredGroupJoinRequestsCleanup",
-                turmsPropertiesManager.getLocalProperties().getService().getGroup().getExpiredGroupJoinRequestsCleanupCron(),
+                turmsPropertiesManager.getLocalProperties().getService().getGroup().getJoinRequest().getExpiredJoinRequestsCleanupCron(),
                 () -> {
                     boolean isLocalNodeLeader = node.isLocalNodeLeader();
                     boolean deleteExpiredRequestsWhenCronTriggered = node.getSharedProperties()
@@ -182,7 +182,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (!node.getSharedProperties().getService().getGroup().isAllowRecallJoinRequestSentByOneself()) {
+        if (!node.getSharedProperties().getService().getGroup().getJoinRequest().isAllowRecallJoinRequestSentByOneself()) {
             return Mono.error(ResponseException.get(ResponseStatusCode.RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED));
         }
         return queryRequesterIdAndStatusAndGroupId(requestId)
@@ -421,7 +421,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         if (content == null) {
             return;
         }
-        int contentLimit = node.getSharedProperties().getService().getGroup().getGroupJoinRequestContentLimit();
+        int contentLimit = node.getSharedProperties().getService().getGroup().getJoinRequest().getContentLimit();
         if (contentLimit > 0) {
             Validator.max(content.length(), "content", contentLimit);
         }

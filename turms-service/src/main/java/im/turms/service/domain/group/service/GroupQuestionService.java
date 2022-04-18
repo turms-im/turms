@@ -30,6 +30,8 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.env.service.business.group.GroupQuestionProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
@@ -73,6 +75,10 @@ public class GroupQuestionService {
     private final GroupService groupService;
     private final GroupVersionService groupVersionService;
 
+    private int questionContentLimit;
+    private int answerContentLimit;
+    private int maxAnswerCount;
+
     public GroupQuestionService(
             Node node,
             GroupBlocklistService groupBlocklistService,
@@ -86,6 +92,19 @@ public class GroupQuestionService {
         this.groupMemberService = groupMemberService;
         this.groupVersionService = groupVersionService;
         this.groupService = groupService;
+
+        updateProperties(node.getSharedProperties());
+        node.addPropertiesChangeListener(this::updateProperties);
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        GroupQuestionProperties questionProperties = properties.getService().getGroup().getQuestion();
+        int questionContentLimit = questionProperties.getQuestionContentLimit();
+        this.questionContentLimit = questionContentLimit > 0 ? questionContentLimit : Integer.MAX_VALUE;
+        int answerContentLimit = questionProperties.getAnswerContentLimit();
+        this.answerContentLimit = answerContentLimit > 0 ? answerContentLimit : Integer.MAX_VALUE;
+        int maxAnswerCount = questionProperties.getMaxAnswerCount();
+        this.maxAnswerCount = maxAnswerCount > 0 ? maxAnswerCount : Integer.MAX_VALUE;
     }
 
     public Mono<Integer> checkGroupQuestionAnswerAndGetScore(
@@ -206,7 +225,10 @@ public class GroupQuestionService {
         try {
             Validator.notNull(groupId, "groupId");
             Validator.notNull(question, "question");
-            Validator.notEmpty(answers, "answers");
+            Validator.maxLength(question, "question", questionContentLimit);
+            Validator.notNull(answers, "answers");
+            Validator.inSizeRange(answers, "answers", 1, maxAnswerCount);
+            Validator.maxLength(answers, "answers", answerContentLimit);
             Validator.notNull(score, "score");
             Validator.min(score, "score", 0);
         } catch (ResponseException e) {
@@ -360,6 +382,9 @@ public class GroupQuestionService {
             @Nullable @Min(0) Integer score) {
         try {
             Validator.notNull(ids, "ids");
+            Validator.maxLength(question, "question", questionContentLimit);
+            Validator.inSizeRange(answers, "answers", 1, maxAnswerCount);
+            Validator.maxLength(answers, "answers", answerContentLimit);
             Validator.min(score, "score", 0);
         } catch (ResponseException e) {
             return Mono.error(e);

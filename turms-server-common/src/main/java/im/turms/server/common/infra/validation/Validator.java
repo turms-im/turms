@@ -21,6 +21,7 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import java.lang.reflect.Array;
 import java.util.Collection;
@@ -34,7 +35,7 @@ public final class Validator {
     private Validator() {
     }
 
-    public static boolean areAllFalsy(Object... array) {
+    public static boolean areAllFalsy(@Nullable Object... array) {
         if (array == null) {
             return true;
         }
@@ -85,19 +86,19 @@ public final class Validator {
         return true;
     }
 
-    public static void notNull(Object object, String name) {
+    public static void notNull(@Nullable Object object, String name) {
         if (object == null) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, name + " must not be null");
         }
     }
 
-    public static void notEmpty(Collection<?> collection, String name) {
+    public static void notEmpty(@Nullable Collection<?> collection, String name) {
         if (collection == null || collection.isEmpty()) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, name + " must not be null or empty");
         }
     }
 
-    public static void notEmpty(Object[] array, String name) {
+    public static void notEmpty(@Nullable Object[] array, String name) {
         if (array == null || array.length == 0) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, name + " must not be null or empty");
         }
@@ -109,7 +110,7 @@ public final class Validator {
         }
     }
 
-    public static void min(Integer num, String name, int min) {
+    public static void min(@Nullable Integer num, String name, int min) {
         if (num != null && num < min) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, name + " must be greater than or equal to " + min);
         }
@@ -121,7 +122,7 @@ public final class Validator {
         }
     }
 
-    public static void max(Integer num, String name, int max) {
+    public static void max(@Nullable Integer num, String name, int max) {
         if (num != null && num > max) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, name + " must be less than or equal to " + max);
         }
@@ -140,6 +141,17 @@ public final class Validator {
         }
     }
 
+    public static void inSizeRange(@Nullable Collection<?> items, String name, int min, int max) {
+        if (items == null) {
+            return;
+        }
+        int size = items.size();
+        if (size > max || size < min) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "The size of " + name + " must be less than or equal to " + max + ", and greater than or equal to " + min);
+        }
+    }
+
     public static void inRange(float num, String name, double min, double max) {
         if (num > max || num < min) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
@@ -147,21 +159,35 @@ public final class Validator {
         }
     }
 
-    public static void length(String s, String name, int min, int max) {
-        if (s != null) {
-            int length = s.length();
-            if (length < min || length > max) {
-                throw ResponseException
-                        .get(ResponseStatusCode.ILLEGAL_ARGUMENT, name + " must have length between " + min + " and " + max);
-            }
+    public static void length(@Nullable String s, String name, int min, int max) {
+        if (s == null) {
+            return;
+        }
+        int length = s.length();
+        if (length < min || length > max) {
+            throw ResponseException
+                    .get(ResponseStatusCode.ILLEGAL_ARGUMENT, name + " must have length between " + min + " and " + max);
         }
     }
 
-    public static void maxLength(String s, String name, int max) {
-        if (s != null) {
-            int length = s.length();
+    public static void maxLength(@Nullable String s, String name, int max) {
+        if (s == null) {
+            return;
+        }
+        int length = s.length();
+        if (length > max) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, name + " must have length less than or equal to " + max);
+        }
+    }
+
+    public static void maxLength(@Nullable Collection<String> items, String name, int max) {
+        if (items == null) {
+            return;
+        }
+        for (String item : items) {
+            int length = item.length();
             if (length > max) {
-                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, name + " must have length less than " + max);
+                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The item of " + name + " must have length less than or equal to " + max);
             }
         }
     }
@@ -172,19 +198,19 @@ public final class Validator {
         }
     }
 
-    public static void maxBytes(byte[] bytes, String name, int max) {
+    public static void maxBytes(@Nullable byte[] bytes, String name, int max) {
         if (bytes != null && bytes.length > max) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, name + " must have length less than " + max);
         }
     }
 
-    public static void pastOrPresent(Date date, String name) {
+    public static void pastOrPresent(@Nullable Date date, String name) {
         if (date != null && date.getTime() > System.currentTimeMillis()) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, name + " must be a date in the past or in the present");
         }
     }
 
-    public static void before(Date startDate, Date endDate, String startDateName, String endDateName) {
+    public static void before(@Nullable Date startDate, @Nullable Date endDate, String startDateName, String endDateName) {
         if (startDate != null && endDate != null && endDate.before(startDate)) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, endDateName + " must not be before " + startDateName);
         }

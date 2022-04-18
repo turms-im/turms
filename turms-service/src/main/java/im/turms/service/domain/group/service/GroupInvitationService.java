@@ -96,13 +96,14 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
         // Set up a cron job to remove invitations if deleting expired docs is enabled
         taskManager.reschedule(
                 "expiredGroupInvitationsCleanup",
-                turmsPropertiesManager.getLocalProperties().getService().getGroup().getExpiredGroupInvitationsCleanupCron(),
+                turmsPropertiesManager.getLocalProperties().getService().getGroup().getInvitation().getExpiredInvitationsCleanupCron(),
                 () -> {
                     boolean isLocalNodeLeader = node.isLocalNodeLeader();
                     boolean deleteExpiredRequestsWhenCronTriggered = node.getSharedProperties()
                             .getService()
                             .getGroup()
-                            .isDeleteExpiredGroupInvitationsWhenCronTriggered();
+                            .getInvitation()
+                            .isDeleteExpiredInvitationsWhenCronTriggered();
                     Date expirationDate = getEntityExpirationDate();
                     if (isLocalNodeLeader && deleteExpiredRequestsWhenCronTriggered && expirationDate != null) {
                         groupInvitationRepository.deleteExpiredData(GroupInvitation.Fields.CREATION_DATE, expirationDate)
@@ -228,7 +229,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
             return Mono.error(e);
         }
         if (!node.getSharedProperties()
-                .getService().getGroup().isAllowRecallPendingGroupInvitationByOwnerAndManager()) {
+                .getService().getGroup().getInvitation().isAllowRecallPendingInvitationByOwnerAndManager()) {
             return Mono.error(ResponseException.get(ResponseStatusCode.RECALLING_GROUP_INVITATION_IS_DISABLED));
         }
         return queryGroupIdAndStatus(invitationId)
@@ -444,7 +445,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
 
     private void validInvitationContentLength(@Nullable String content) {
         if (content != null) {
-            int contentLimit = node.getSharedProperties().getService().getGroup().getGroupInvitationContentLimit();
+            int contentLimit = node.getSharedProperties().getService().getGroup().getInvitation().getContentLimit();
             if (contentLimit > 0) {
                 Validator.max(content.length(), "content", contentLimit);
             }

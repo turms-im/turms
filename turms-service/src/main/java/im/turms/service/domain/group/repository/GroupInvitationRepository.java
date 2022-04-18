@@ -56,7 +56,8 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
         return node.getSharedProperties()
                 .getService()
                 .getGroup()
-                .getGroupInvitationExpireAfterSeconds();
+                .getInvitation()
+                .getExpireAfterSeconds();
     }
 
     public Mono<UpdateResult> updateToCanceledStatus(Long invitationId) {

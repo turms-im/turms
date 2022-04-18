@@ -22,6 +22,7 @@ import im.turms.server.common.infra.property.metadata.annotation.Description;
 import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
 import im.turms.server.common.infra.task.CronConst;
+import im.turms.server.common.infra.validation.ValidCron;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -71,6 +72,7 @@ public class TieredStorageProperties {
         @JsonView(MutablePropertiesView.class)
         private boolean enabled = true;
 
+        @ValidCron
         private String cron = CronConst.DEFAULT_TIERED_STORAGE_TIER_RANGE_UPDATING_CRON;
     }
 

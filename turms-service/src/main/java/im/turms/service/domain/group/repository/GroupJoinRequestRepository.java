@@ -58,7 +58,8 @@ public class GroupJoinRequestRepository extends ExpirableEntityRepository<GroupJ
         return node.getSharedProperties()
                 .getService()
                 .getGroup()
-                .getGroupJoinRequestExpireAfterSeconds();
+                .getJoinRequest()
+                .getExpireAfterSeconds();
     }
 
     public Mono<UpdateResult> updateRequest(Long requestId, RequestStatus status, Long responderId) {

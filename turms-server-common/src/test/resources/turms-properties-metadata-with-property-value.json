@@ -1675,7 +1675,7 @@
         },
         "expiredInvitationsCleanupCron": {
           "deprecated": false,
-          "desc": "Clean the expired group invitations when the cron expression is triggered if deleteExpiredGroupInvitationsWhenCronTriggered is true",
+          "desc": "Clean the expired group invitations when the cron expression is triggered if \"deleteExpiredInvitationsWhenCronTriggered\" is true",
           "global": false,
           "mutable": false,
           "type": "string",
@@ -1717,7 +1717,7 @@
         },
         "expiredJoinRequestsCleanupCron": {
           "deprecated": false,
-          "desc": "Clean the expired group join requests when the cron expression is triggered if deleteExpiredGroupJoinRequestsWhenCronTriggered is true",
+          "desc": "Clean the expired group join requests when the cron expression is triggered if \"deleteExpiredJoinRequestsWhenCronTriggered\" is true",
           "global": false,
           "mutable": false,
           "type": "string",

@@ -18,10 +18,10 @@
 package im.turms.server.common.infra.property.env.service;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.env.service.business.GroupProperties;
 import im.turms.server.common.infra.property.env.service.business.NotificationProperties;
 import im.turms.server.common.infra.property.env.service.business.StorageProperties;
 import im.turms.server.common.infra.property.env.service.business.conversation.ConversationProperties;
+import im.turms.server.common.infra.property.env.service.business.group.GroupProperties;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.infra.property.env.service.business.user.UserProperties;
 import im.turms.server.common.infra.property.env.service.env.FakeProperties;
