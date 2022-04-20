@@ -43,7 +43,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Repository
-public class UserFriendRequestRepository extends ExpirableEntityRepository<UserFriendRequest> {
+public class UserFriendRequestRepository extends ExpirableEntityRepository<UserFriendRequest, Long> {
 
     private final Node node;
 

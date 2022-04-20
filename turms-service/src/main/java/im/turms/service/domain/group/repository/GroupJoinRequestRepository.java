@@ -43,7 +43,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Repository
-public class GroupJoinRequestRepository extends ExpirableEntityRepository<GroupJoinRequest> {
+public class GroupJoinRequestRepository extends ExpirableEntityRepository<GroupJoinRequest, Long> {
 
     private final Node node;
 

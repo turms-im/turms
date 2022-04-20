@@ -36,7 +36,7 @@ import java.util.function.Function;
 /**
  * @author James Chen
  */
-public abstract class BaseRepository<T> {
+public abstract class BaseRepository<T, K> {
 
     protected TurmsMongoClient mongoClient;
     protected Class<T> entityClass;
@@ -70,25 +70,25 @@ public abstract class BaseRepository<T> {
         return mongoClient.deleteAll(entityClass);
     }
 
-    public Mono<DeleteResult> deleteById(Object id) {
+    public Mono<DeleteResult> deleteById(K id) {
         Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, id);
         return mongoClient.deleteOne(entityClass, filter);
     }
 
-    public Mono<DeleteResult> deleteById(Object id, @Nullable ClientSession session) {
+    public Mono<DeleteResult> deleteById(K id, @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, id);
         return mongoClient.deleteOne(session, entityClass, filter);
     }
 
-    public Mono<DeleteResult> deleteByIds(@Nullable Collection<?> ids) {
+    public Mono<DeleteResult> deleteByIds(@Nullable Collection<K> ids) {
         Filter filter = Filter.newBuilder(1)
                 .inIfNotNull(DomainFieldName.ID, ids);
         return mongoClient.deleteMany(entityClass, filter);
     }
 
-    public Mono<DeleteResult> deleteByIds(@Nullable Collection<?> ids, @Nullable ClientSession session) {
+    public Mono<DeleteResult> deleteByIds(@Nullable Collection<K> ids, @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(1)
                 .inIfNotNull(DomainFieldName.ID, ids);
         return mongoClient.deleteMany(session, entityClass, filter);
@@ -98,7 +98,7 @@ public abstract class BaseRepository<T> {
         return mongoClient.countAll(entityClass);
     }
 
-    public Mono<Boolean> existsById(Object key) {
+    public Mono<Boolean> existsById(K key) {
         Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, key);
         return mongoClient.exists(entityClass, filter);
@@ -114,11 +114,11 @@ public abstract class BaseRepository<T> {
         return mongoClient.findAll(entityClass, options);
     }
 
-    public Mono<T> findById(Object id) {
+    public Mono<T> findById(K id) {
         return mongoClient.findById(entityClass, id);
     }
 
-    public Flux<T> findByIds(Collection<?> ids) {
+    public Flux<T> findByIds(Collection<K> ids) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, ids);
         return mongoClient.findMany(entityClass, filter);

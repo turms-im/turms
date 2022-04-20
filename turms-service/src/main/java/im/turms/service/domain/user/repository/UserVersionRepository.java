@@ -38,7 +38,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Repository
-public class UserVersionRepository extends BaseRepository<UserVersion> {
+public class UserVersionRepository extends BaseRepository<UserVersion, Long> {
 
     public UserVersionRepository(@Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, UserVersion.class);

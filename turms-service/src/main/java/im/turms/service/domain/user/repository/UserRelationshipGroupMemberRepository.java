@@ -37,7 +37,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Repository
-public class UserRelationshipGroupMemberRepository extends BaseRepository<UserRelationshipGroupMember> {
+public class UserRelationshipGroupMemberRepository extends BaseRepository<UserRelationshipGroupMember, UserRelationshipGroupMember.Key> {
 
     public UserRelationshipGroupMemberRepository(@Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, UserRelationshipGroupMember.class);

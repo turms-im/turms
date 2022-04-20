@@ -37,7 +37,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Repository
-public class AdminRepository extends BaseRepository<Admin> {
+public class AdminRepository extends BaseRepository<Admin, String> {
 
     public AdminRepository(@Qualifier("adminMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, Admin.class);

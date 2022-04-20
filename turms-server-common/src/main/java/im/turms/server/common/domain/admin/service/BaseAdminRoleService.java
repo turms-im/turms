@@ -25,6 +25,7 @@ import im.turms.server.common.infra.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.validation.Validator;
 import reactor.core.publisher.Mono;
 
@@ -46,9 +47,9 @@ public abstract class BaseAdminRoleService {
             new AdminRole(ADMIN_ROLE_ROOT_ID, "ROOT", AdminPermission.ALL, Integer.MAX_VALUE);
 
     private final Map<Long, AdminRole> idToRole = new ConcurrentHashMap<>(16);
-    private final BaseRepository<AdminRole> adminRoleRepository;
+    private final BaseRepository<AdminRole, Long> adminRoleRepository;
 
-    protected BaseAdminRoleService(BaseRepository<AdminRole> adminRoleRepository) {
+    protected BaseAdminRoleService(BaseRepository<AdminRole, Long> adminRoleRepository) {
         this.adminRoleRepository = adminRoleRepository;
 
         listenAndLoadRoles();

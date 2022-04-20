@@ -44,7 +44,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Repository
-public class GroupMemberRepository extends BaseRepository<GroupMember> {
+public class GroupMemberRepository extends BaseRepository<GroupMember, GroupMember.Key> {
 
     public GroupMemberRepository(@Qualifier("groupMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, GroupMember.class);

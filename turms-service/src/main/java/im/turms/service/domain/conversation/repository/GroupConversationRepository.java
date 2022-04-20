@@ -34,7 +34,7 @@ import java.util.Date;
  * @author James Chen
  */
 @Repository
-public class GroupConversationRepository extends BaseRepository<GroupConversation> {
+public class GroupConversationRepository extends BaseRepository<GroupConversation, Long> {
 
     public GroupConversationRepository(@Qualifier("conversationMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, GroupConversation.class);

@@ -39,7 +39,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Repository
-public class GroupBlocklistRepository extends BaseRepository<GroupBlockedUser> {
+public class GroupBlocklistRepository extends BaseRepository<GroupBlockedUser, GroupBlockedUser.Key> {
 
     public GroupBlocklistRepository(@Qualifier("groupMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, GroupBlockedUser.class);

@@ -41,7 +41,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Repository
-public class GroupInvitationRepository extends ExpirableEntityRepository<GroupInvitation> {
+public class GroupInvitationRepository extends ExpirableEntityRepository<GroupInvitation, Long> {
 
     private final Node node;
 

@@ -48,14 +48,14 @@ public abstract class BaseAdminService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseAdminService.class);
 
     private final PasswordManager passwordManager;
-    private final BaseRepository<Admin> adminRepository;
+    private final BaseRepository<Admin, String> adminRepository;
     private final BaseAdminRoleService adminRoleService;
 
     private final Map<String, AdminInfo> accountToAdmin = new ConcurrentHashMap<>();
 
     protected BaseAdminService(
             PasswordManager passwordManager,
-            BaseRepository<Admin> adminRepository,
+            BaseRepository<Admin, String> adminRepository,
             BaseAdminRoleService adminRoleService) {
         this.passwordManager = passwordManager;
         this.adminRepository = adminRepository;

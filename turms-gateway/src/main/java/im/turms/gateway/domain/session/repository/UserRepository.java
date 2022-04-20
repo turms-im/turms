@@ -17,6 +17,7 @@
 
 package im.turms.gateway.domain.session.repository;
 
+import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
@@ -31,16 +32,14 @@ import reactor.core.publisher.Mono;
  * @author James Chen
  */
 @Repository
-public class UserRepository {
-
-    private final TurmsMongoClient mongoClient;
+public class UserRepository extends BaseRepository<User, Long> {
 
     /**
      * @param mongoClient can be null if SessionProperties#enableAuthentication is false
      */
     public UserRepository(
             @Autowired(required = false) @Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
-        this.mongoClient = mongoClient;
+        super(mongoClient, User.class);
     }
 
     public Mono<byte[]> findPassword(Long userId) {

@@ -38,7 +38,7 @@ import java.util.Date;
 /**
  * @author James Chen
  */
-public abstract class ExpirableEntityRepository<T extends Expirable> extends BaseRepository<T> {
+public abstract class ExpirableEntityRepository<T extends Expirable, K> extends BaseRepository<T, K> {
 
     protected ExpirableEntityRepository(TurmsMongoClient mongoClient, Class<T> entityClass) {
         super(mongoClient, entityClass);

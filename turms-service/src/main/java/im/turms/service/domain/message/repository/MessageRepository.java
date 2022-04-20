@@ -45,7 +45,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Repository
-public class MessageRepository extends BaseRepository<Message> {
+public class MessageRepository extends BaseRepository<Message, Long> {
 
     public MessageRepository(@Qualifier("messageMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, Message.class);

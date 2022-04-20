@@ -39,7 +39,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Repository
-public class PrivateConversationRepository extends BaseRepository<PrivateConversation> {
+public class PrivateConversationRepository extends BaseRepository<PrivateConversation, PrivateConversation.Key> {
 
     public PrivateConversationRepository(@Qualifier("conversationMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, PrivateConversation.class);

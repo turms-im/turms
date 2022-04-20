@@ -30,9 +30,9 @@ import java.util.Date;
  */
 public abstract class ExpirableEntityService<T extends Expirable> {
 
-    private final ExpirableEntityRepository<T> expirableEntityRepository;
+    private final ExpirableEntityRepository<T, ?> expirableEntityRepository;
 
-    protected ExpirableEntityService(ExpirableEntityRepository<T> expirableEntityRepository) {
+    protected ExpirableEntityService(ExpirableEntityRepository<T, ?> expirableEntityRepository) {
         this.expirableEntityRepository = expirableEntityRepository;
     }
 

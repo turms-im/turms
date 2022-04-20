@@ -36,7 +36,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Repository
-public class UserPermissionGroupRepository extends BaseRepository<UserPermissionGroup> {
+public class UserPermissionGroupRepository extends BaseRepository<UserPermissionGroup, Long> {
 
     public UserPermissionGroupRepository(@Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, UserPermissionGroup.class);

@@ -41,7 +41,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Repository
-public class GroupRepository extends BaseRepository<Group> {
+public class GroupRepository extends BaseRepository<Group, Long> {
 
     public GroupRepository(@Qualifier("groupMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, Group.class);
