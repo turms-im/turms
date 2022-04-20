@@ -66,7 +66,9 @@ Java自身是一个很保守的语言，其大生态也非常保守。其设计�
 
 #### 代理与反射
 
-* 禁止使用动态代理技术（如Java动态代理、CGLib、Spring AOP等），尽量不使用代理或使用静态编译技术代替（如Lombok）
+* 禁止使用动态代理技术（如Java动态代理、CGLib、Spring AOP等），尽量不使用代理或使用静态编译技术代替（如Lombok）。
+
+  唯一的例外情况：Turms服务端的插件机制中，使用Java的动态代理去代理JavaScript编写的插件。
 
 * 在客户端请求与管理员API请求的处理过程中，除非不使用反射就需要写大量繁杂代码，其他场景下禁止使用反射技术。如：Turms在对MongoDB的Entity模型的数百个字段进行序列化与反序列化时，使用了反射。
 
@@ -77,12 +79,25 @@ Java自身是一个很保守的语言，其大生态也非常保守。其设计�
 很多依赖库热衷于对底层实现进行抽象与封装，以实现“内部逻辑透明，使用者不用关心背后的逻辑”。这样的设计对于一些逻辑简单、要求快速上线、且不追求性能的应用来说比较实用。但随着一个项目越往后发展，越深入优化，这个不可控的抽象层，会成为问题排查、性能优化、功能定制的绊脚石。抽象层带来的问题，诸如：
 
 * 需求迭代与版本更新严重滞后。如果我们的项目使用了一个抽象层的A依赖，A依赖封装了B依赖。如果我们需要往B依赖添加一个新特性或改Bug，通常的流程是：我们向B依赖的社区提Issue，运气好的话，平均2~4天得到回复。如果运气还很好，对方愿意改。假设改动不大，1周后相关PR被merged。可能等2周、1个月、甚至几个月，B依赖终于发布新版本。然后我们还要等A依赖更新B依赖版本，可能又过了2周、1个月、甚至几个月。等真到我们能使用到新特性，可能几个月已经过了。但更多的情况是，B依赖的维护者压根不愿意修改相关代码。
+* 绝大部分知名依赖库，只关心功能实现，并不关心性能，基本是“功能够用，性能凑合就行”的态度。（Turms通过重构依赖代码，解决了大部分下述问题）诸如：
 
-* 绝大部分知名依赖库，只关心功能实现，并不关心性能，基本是“功能够用，性能凑合就行”的态度。（Turms通过重构依赖代码，解决了大部分下述问题）诸如`mongo-java-driver`在进行API调用时，反反复复创建大量的中间对象；Lettuce在序列化传递给Redis的指令参数时需要反复扩充内存，并且该Cache的内存数据也没Cache；Spring的AOP常用于代理Controller层方法调用，可用于捕获解析后参数，进行日志打印（WebFilter无法获得解析后的参数）。但AOP会给一个方法徒增19个stacks并大量使用反射，从AOP代理开始到Controller方法层的调用所需时间甚至比Turms内部业务处理时间还长（额外补充：AOP是个非常糟糕的设计，Spring应该为Controller层采用的责任链设计）。综上，很多的知名Java依赖库的代码质量并不高，甚至代码性能与质量堪忧。
+  * `mongo-java-driver`在进行API调用时，反反复复创建大量的中间对象。对于默认配置对象，也不做Cache。
+  * Lettuce在序列化传递给Redis的指令参数时需要反复扩充内存，并且该Cache的内存数据也没Cache。
+  * Log4j2竟然使用`getBytes`读取字符串的数据，并使用`StringBuilder`做日志的拼接（对比Turms的日志实现直接使用`String`内部的`byte[] value`数据，并使用Netty提供的`io.netty.buffer.AbstractByteBufAllocator#directBuffer`来拼接日志并做日志输出）。（补充：如果读者对日志实现感兴趣，可以阅读[日志实现](https://turms-im.github.io/docs/for-developers/observability.html#%E8%87%AA%E7%A0%94%E5%AE%9E%E7%8E%B0-%E6%8B%93%E5%B1%95%E7%9F%A5%E8%AF%86)，了解Turms是如何实现日志的）
+  * 在Protobuf的官方Java实现中，其字符串解码实现也是非常地低效，比如它为了兼容低版本Java，采用了`char[]`进行编码，但新版本Java的String内部只存储`byte[]`，因此需要一次无意义的内存拷贝（注意：字符串本身就是客户端请求中最大的数据）。
+  * Spring是低效代码的典型代表，如：
+    * `org.springframework.core.codec.CharSequenceEncoder`在处理`UTF-8`编码的字符串时，会以1个字符对应3字节来开辟DirectByteBuffer用于输出。换言之，上述的8K Prometheus数据，光这块Spring就需要用2.4MB，多用1.6MB。当然，Spring还要更低效，因为它`String#getBytes(...)`的时候还要进行字符串拷贝。
+    * 导出巨大的堆转储文件时，`spring-boot-actuator:v2.6.6`竟然不支持零拷贝（见`org.springframework.boot.actuate.management.HeapDumpWebEndpoint.TemporaryFileSystemResource#isFile`）
+    * Spring的AOP常用于代理Controller层方法调用，可用于捕获解析后参数，进行日志打印（WebFilter无法获得解析后的参数）。但AOP会给一个方法徒增19个stacks并大量使用反射，从AOP代理开始到Controller方法层的调用所需时间甚至比Turms内部业务处理时间还长（额外补充：AOP是个非常糟糕的设计，Spring应该为Controller层采用的责任链设计）。
+
+
+  综上，很多知名Java依赖库的代码质量并不高，甚至代码性能与质量堪忧，源码读得让人触目惊心。相反，读者可以参考Turms服务端是怎么编码，以把各种细节实现优化到极致的。
 
 * 关注于抽象实现的依赖库在与响应式编程结合时，在问题排查问题上，会给开发者带来地狱级的体验，尤其是Bug与需要手动释放的内存相关。在常规问题排查上，我们通常可以通过栈信息来很快的排查出问题。但在响应式编程中，这样的方法通常行不通，我们更多的靠逻辑推理来排查问题。即熟读上下游代码（包括依赖包内的代码），推演代码可能经过的所有流程。
 
-  如果代码的抽象层少、且调用关系扁平，这个排查过程其实很简单，可能我们只用在一个类内的几十行代码上扫几眼，就能大概知道出现问题的原因了。但如果流程中，使用到了大量“封装、抽象，用户无需关注底层实现逻辑”依赖库，地狱级体验就来了。原本我们可能只需要一个小数十行的函数就能实现所有相关逻辑。但如果基于抽象库去实现相关功能，我们在问题排查时，可能要查看的代码可能是A抽象类(A1,A2,A3...)类->B抽象类(B1,B2,B3...)->C抽象类(C1,C2,C3...)->...，在数十个类、数十个方法间跳转，并进行推理。其中最典型的对照例子就是：Turms的`im.turms.gateway.access.client.websocket.WebSocketServerFactory#getHttpRequestHandler`在一个小数十行的函数内实现了一组WebSocket握手逻辑。但如果这套逻辑让Spring来实现，它会将各个不同包下的类，各种逻辑东拼西凑地混在一起，在问题排查时，如果还伴随着一些需要手动释放的内存，地狱级的问题排查体验就来了。
+  如果代码的抽象层少、且调用关系扁平，这个排查过程其实很简单，可能我们只用在一个类内的几十行代码上扫几眼，就能大概知道出现问题的原因了。但如果流程中，使用到了大量“封装、抽象，用户无需关注底层实现逻辑”依赖库，地狱级体验就来了。原本我们可能只需要一个小数十行的函数就能实现所有相关逻辑。但如果基于抽象库去实现相关功能，我们在问题排查时，可能要查看的代码可能是A抽象类(A1,A2,A3...)类->B抽象类(B1,B2,B3...)->C抽象类(C1,C2,C3...)->...，在数十个类、数十个方法间跳转，并进行推理。
+
+  其中最典型的对照例子就是：Turms的`im.turms.gateway.access.client.websocket.WebSocketServerFactory#getHttpRequestHandler`在一个小数十行的函数内实现了一组WebSocket握手逻辑。但如果这套逻辑让Spring来实现，它会将各个不同包下的类，各种逻辑东拼西凑地混在一起，在问题排查时，如果还伴随着一些需要手动释放的内存，地狱级的问题排查体验就来了。原本几十行代码能解决的事情，Spring这样的库需要花上千行代码。比如WebFlux内部就有多套Web底层实现，美其名曰“封装、抽象，用户无需关注底层实现逻辑”。
 
 * 部分依赖库在一些地方会自行Suppress异常，上层应用代码无法感知。由于出问题的时候，底层库代码与上层应用代码在大部分情况下，是跑在不同的栈上的。除非底层依赖库支持全局的异常回调，否则上层应用甚至无法感知异常的发生。对于一些Trivial级别的错误，上层应用感知不到也没关系。但如果是一些上层应用非常关注的异常（如RPC的TCP连接的异常断开），这将是引发整个系统异常与失序的导火索了。
 
@@ -94,14 +109,15 @@ Java自身是一个很保守的语言，其大生态也非常保守。其设计�
 
 补充：
 
-* 如果移除Spring框架，就能让Controller层的实现变得非常清晰、且实现高效（我们可以直接将Response数据写入DirectByteBuf，避免无意义的堆内存拷贝），也能让代码变得非常可控。举例来说：
+* 如果移除Spring框架，就能让Controller层的实现变得非常清晰、且实现高效。举例来说：
 
   1. Turms的日志实现需要读取用户配置，而读取用户配置要先等Spring加载完用户配置，而Spring在加载用户配置之前又会打日志，因此这里有个循环依赖的问题，而我们不得不通过一些迂回手段去避免Spring加载完配置前打印日志。
-  2. 我们预期Valhalla项目能在2023年的Java 20/21版本中，发布[Value Objects](https://openjdk.java.net/jeps/8277163)、[Primitive Classes](https://openjdk.java.net/jeps/401)、[Classes for the Basic Primitives](https://openjdk.java.net/jeps/402)这三个将Java发展到新纪元的特性，但Valhalla项目的Side Effect巨大，而Spring作为Java生态的基石之一，几乎不可能敢如此激进地支持Valhalla项目，因此如果我们还需要等待Spring支持Valhalla项目，那基本是遥遥无期了。相反的，如果我们移除了Spring，由于Turms所有重要模块基本都自研，且我们追踪Valhalla的发展数年，很熟悉其设计，集成Valhalla项目大致只需1~2周时间。
+  2. 自研实现高效。一方面，如上述的Spring示例，Spring的很多实现本身就非常低效。另一方面，如果移除Spring，我们可以直接将Response数据写入DirectByteBuffer，避免无意义的堆内存拷贝。比如对于一些通用HTTP头，我们可以直接把它们编码成DirectByteBuffer并进行缓存，在后续的响应中，我们甚至不需要做HTTP头的编码，自然比Spring的实现高效地多。
+  3. 我们预期Valhalla项目能在2023年的Java 20/21版本中，发布[Value Objects](https://openjdk.java.net/jeps/8277163)、[Primitive Classes](https://openjdk.java.net/jeps/401)、[Classes for the Basic Primitives](https://openjdk.java.net/jeps/402)这三个将Java发展到新纪元的特性，但Valhalla项目的Side Effect巨大，而Spring作为Java生态的基石之一，几乎不可能敢如此激进地支持Valhalla项目，因此如果我们还需要等待Spring支持Valhalla项目，那基本是遥遥无期了。相反的，如果我们移除了Spring，由于Turms所有重要模块基本都自研，且我们追踪Valhalla的发展数年，很熟悉其设计，集成Valhalla项目大致只需1~2周时间。
+  
+  总之，对于Turms服务端来说，Spring不论是在设计理念（封装抽象）还是在代码质量上都是很典型的反面教材，但我们之所以目前还没移除Spring框架，是因为从零写一套Controller/JSON序列化/自动生成Swagger API文档/Actuator/IoC/配置读取实现并适配，估计需要两周至三周时间，而这么长的时间足够我们做IM系统中很多更为重要的优化与特性，且Admin API相比客户端API并不是那么在意性能与可维护性，因此目前只是对Spring相关的低效实现进行了重构，等重要的IM系统优化都完成后再来移除整个Spring。
 
-  但我们之所以目前还没移除Spring框架，是因为从零写一套Controller/JSON序列化/自动生成Swagger API文档/Actuator/IoC/配置读取实现并适配，估计需要两周至三周时间，而这么长的时间足够我们做IM系统中很多更为重要的优化与特性，且Admin API相比客户端API并不是那么在意性能与可维护性，因此目前只是对Spring相关的低效实现进行了重构，等重要的IM系统优化都完成后再来移除整个Spring。
-
-  而在移除Spring之后，我们就能保证Turms服务端能够主动地统筹所有代码，即所有代码都为Turms服务，而不是Turms要去适配其他框架的代码。
+  而在移除Spring之后，我们就能保证Turms服务端能够主动地统筹所有代码，小到各种算法的定制化实现，大到中间件的自研（如Turms的RPC/服务注册发现等），即所有代码都为Turms服务，不需要写Workaround代码，也不需要Turms去适配其他低质量库的代码。
 
 * Turms在整个Java生态中，唯一信任的依赖是：Netty
 
