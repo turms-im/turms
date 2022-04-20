@@ -34,6 +34,7 @@ import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
+import im.turms.server.common.storage.mongo.operation.OperationResultConvertor;
 import im.turms.service.domain.common.suggestion.UsesNonIndexedData;
 import im.turms.service.domain.common.validation.DataValidator;
 import im.turms.service.domain.user.po.UserRelationship;
@@ -57,7 +58,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_RELATIONSHIP_GROUP_INDEX;
@@ -362,7 +365,35 @@ public class UserRelationshipGroupService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Mono<DeleteResult> deleteMono = userRelationshipGroupMemberRepository.deleteByIds(keys, session);
+        Mono<DeleteResult> deleteMono;
+        // fast path
+        if (keys.size() == 1) {
+            UserRelationship.Key key = keys.iterator().next();
+            deleteMono = userRelationshipGroupMemberRepository.deleteRelatedUsersFromAllRelationshipGroups(key.getOwnerId(), Set.of(key.getRelatedUserId()), session);
+        } else {
+            // slow path
+            Map<Long, List<Long>> ownerIdToRelatedUserIds = CollectionUtil.newMapWithExpectedSize(keys.size());
+            for (UserRelationship.Key key : keys) {
+                ownerIdToRelatedUserIds.computeIfAbsent(key.getOwnerId(), ignored -> new LinkedList<>())
+                        .add(key.getRelatedUserId());
+            }
+            Set<Map.Entry<Long, List<Long>>> entries = ownerIdToRelatedUserIds.entrySet();
+            int size = entries.size();
+            if (size == 1) {
+                Map.Entry<Long, List<Long>> ownerIdAndRelatedUserIds = entries.iterator().next();
+                deleteMono = userRelationshipGroupMemberRepository.deleteRelatedUsersFromAllRelationshipGroups(
+                        ownerIdAndRelatedUserIds.getKey(), ownerIdAndRelatedUserIds.getValue(), session);
+            } else {
+                List<Mono<DeleteResult>> deleteMonos = new ArrayList<>(size);
+                for (Map.Entry<Long, List<Long>> ownerIdAndRelatedUserIds : entries) {
+                    deleteMonos.add(userRelationshipGroupMemberRepository.deleteRelatedUsersFromAllRelationshipGroups(
+                            ownerIdAndRelatedUserIds.getKey(), ownerIdAndRelatedUserIds.getValue(), session));
+                }
+                deleteMono = Flux.merge(deleteMonos)
+                        .collect(CollectorUtil.toList(size))
+                        .map(OperationResultConvertor::merge);
+            }
+        }
         if (updateRelationshipGroupsMembersVersion) {
             return deleteMono
                     .flatMap(result -> {

@@ -20,6 +20,8 @@ package im.turms.server.common.storage.mongo.operation;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
+import java.util.Collection;
+
 /**
  * @author James Chen
  */
@@ -52,6 +54,20 @@ public final class OperationResultConvertor {
         if (r2.wasAcknowledged()) {
             count += r2.getDeletedCount();
             wasAcknowledged = true;
+        }
+        return wasAcknowledged
+                ? DeleteResult.acknowledged(count)
+                : DeleteResult.unacknowledged();
+    }
+
+    public static DeleteResult merge(Collection<DeleteResult> results) {
+        boolean wasAcknowledged = false;
+        long count = 0;
+        for (DeleteResult result : results) {
+            if (result.wasAcknowledged()) {
+                wasAcknowledged = true;
+                count += result.getDeletedCount();
+            }
         }
         return wasAcknowledged
                 ? DeleteResult.acknowledged(count)

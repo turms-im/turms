@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.user.repository;
 
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
@@ -28,6 +30,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -38,6 +41,13 @@ public class UserRelationshipGroupMemberRepository extends BaseRepository<UserRe
 
     public UserRelationshipGroupMemberRepository(@Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, UserRelationshipGroupMember.class);
+    }
+
+    public Mono<DeleteResult> deleteRelatedUsersFromAllRelationshipGroups(Long ownerId, Collection<Long> relatedUserIds, @Nullable ClientSession session) {
+        Filter filter = Filter.newBuilder(2)
+                .eq(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerId)
+                .in(UserRelationshipGroupMember.Fields.ID_RELATED_USER_ID, relatedUserIds);
+        return mongoClient.deleteMany(session, entityClass, filter);
     }
 
     public Mono<Long> countMembers(
