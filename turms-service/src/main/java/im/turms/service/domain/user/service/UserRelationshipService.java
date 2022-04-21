@@ -381,7 +381,7 @@ public class UserRelationshipService {
         try {
             Validator.notNull(userOneId, "userOneId");
             Validator.notNull(userTwoId, "userTwoId");
-            Validator.state(!userOneId.equals(userTwoId), "The ID of user one must not equal to the ID of user two");
+            Validator.notEquals(userOneId, userTwoId, "The ID of user one must not equal to the ID of user two");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -414,7 +414,7 @@ public class UserRelationshipService {
             Validator.pastOrPresent(blockDate, "blockDate");
             Validator.pastOrPresent(establishmentDate, "establishmentDate");
             Validator.notNull(upsert, "upsert");
-            Validator.state(!ownerId.equals(relatedUserId), "The owner ID must not equal to the related user ID");
+            Validator.notEquals(ownerId, relatedUserId, "The owner ID must not equal to the related user ID");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -510,7 +510,7 @@ public class UserRelationshipService {
         try {
             Validator.notNull(ownerId, "ownerId");
             Validator.notNull(relatedUserId, "relatedUserId");
-            Validator.state(!ownerId.equals(relatedUserId), "The owner ID must not equal to the related user ID");
+            Validator.notEquals(ownerId, relatedUserId, "The owner ID must not equal to the related user ID");
         } catch (ResponseException e) {
             return Mono.error(e);
         }

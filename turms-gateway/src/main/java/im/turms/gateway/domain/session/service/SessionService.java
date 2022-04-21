@@ -518,8 +518,8 @@ public class SessionService implements ISessionService {
             Validator.notNull(ip, "ip");
             Validator.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
-            Validator.state(userStatus != UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
-            Validator.state(userStatus != UserStatus.OFFLINE, "The user status must not be OFFLINE");
+            Validator.notEquals(userStatus, UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
+            Validator.notEquals(userStatus, UserStatus.OFFLINE, "The user status must not be OFFLINE");
             if (location != null) {
                 Validator.inRange(location.longitude(), "longitude", Location.LONGITUDE_MIN, Location.LONGITUDE_MAX);
                 Validator.inRange(location.latitude(), "latitude", Location.LATITUDE_MIN, Location.LATITUDE_MAX);

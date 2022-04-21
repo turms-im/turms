@@ -122,7 +122,7 @@ public class AdminService extends BaseAdminService {
             Validator.length(name, "name", MIN_NAME_LIMIT, MAX_NAME_LIMIT);
             Validator.pastOrPresent(registrationDate, "registrationDate");
             Validator.notNull(roleId, "roleId");
-            Validator.state(!roleId.equals(ADMIN_ROLE_ROOT_ID),
+            Validator.notEquals(roleId, ADMIN_ROLE_ROOT_ID,
                     "The role ID cannot be the root role ID: " + ADMIN_ROLE_ROOT_ID);
         } catch (ResponseException e) {
             return Mono.error(e);
@@ -199,7 +199,7 @@ public class AdminService extends BaseAdminService {
         try {
             Validator.notNull(requesterAccount, "requesterAccount");
             Validator.notEmpty(accounts, "accounts");
-            Validator.state(!accounts.contains(ROOT_ADMIN_ACCOUNT), "The root admin is reserved and cannot be deleted");
+            Validator.notContains(accounts, ROOT_ADMIN_ACCOUNT, "The root admin is reserved and cannot be deleted");
         } catch (ResponseException e) {
             return Mono.error(e);
         }

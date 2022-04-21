@@ -277,7 +277,7 @@ public class UserRelationshipGroupService {
             Validator.notNull(ownerId, "ownerId");
             Validator.notNull(deleteGroupIndex, "deleteGroupIndex");
             Validator.notNull(newGroupIndex, "newGroupIndex");
-            Validator.state(!deleteGroupIndex.equals(DEFAULT_RELATIONSHIP_GROUP_INDEX),
+            Validator.notEquals(deleteGroupIndex, DEFAULT_RELATIONSHIP_GROUP_INDEX,
                     "The default relationship group cannot be deleted");
         } catch (ResponseException e) {
             return Mono.error(e);

@@ -168,7 +168,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             DataValidator.validRequestStatus(status);
             Validator.pastOrPresent(creationDate, "creationDate");
             Validator.pastOrPresent(responseDate, "responseDate");
-            Validator.state(!requesterId.equals(recipientId), "The requester ID must not equal to the recipient ID");
+            Validator.notEquals(requesterId, recipientId, "The requester ID must not equal to the recipient ID");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -214,7 +214,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             validFriendRequestContentLength(content);
             Validator.notNull(creationDate, "creationDate");
             Validator.pastOrPresent(creationDate, "creationDate");
-            Validator.state(!requesterId.equals(recipientId), "The requester ID must not equal to the recipient ID");
+            Validator.notEquals(requesterId, recipientId, "The requester ID must not equal to the recipient ID");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -247,7 +247,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             Validator.notNull(requestId, "requestId");
             Validator.notNull(requestStatus, "requestStatus");
             DataValidator.validRequestStatus(requestStatus);
-            Validator.state(requestStatus != RequestStatus.PENDING, "The request status must not be PENDING");
+            Validator.notEquals(requestStatus, RequestStatus.PENDING, "The request status must not be PENDING");
         } catch (ResponseException e) {
             return Mono.error(e);
         }

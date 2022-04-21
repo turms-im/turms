@@ -152,7 +152,7 @@ public class AdminRoleService extends BaseAdminRoleService {
     public Mono<DeleteResult> deleteAdminRoles(@NotEmpty Set<Long> roleIds) {
         try {
             Validator.notEmpty(roleIds, "roleIds");
-            Validator.state(!roleIds.contains(ADMIN_ROLE_ROOT_ID), "The root admin is reserved and cannot be deleted");
+            Validator.notContains(roleIds, ADMIN_ROLE_ROOT_ID, "The root admin is reserved and cannot be deleted");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -206,7 +206,7 @@ public class AdminRoleService extends BaseAdminRoleService {
             @Nullable Integer rank) {
         try {
             Validator.notEmpty(roleIds, "roleIds");
-            Validator.state(!roleIds.contains(ADMIN_ROLE_ROOT_ID), "The root admin is reserved and cannot be updated");
+            Validator.notContains(roleIds, ADMIN_ROLE_ROOT_ID, "The root admin is reserved and cannot be updated");
             Validator.noWhitespace(newName, "newName");
             Validator.length(newName, "newName", MIN_ROLE_NAME_LIMIT, MAX_ROLE_NAME_LIMIT);
         } catch (ResponseException e) {

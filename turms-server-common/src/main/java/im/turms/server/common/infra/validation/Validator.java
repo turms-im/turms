@@ -86,9 +86,9 @@ public final class Validator {
         return true;
     }
 
-    public static void notNull(@Nullable Object object, String name) {
-        if (object == null) {
-            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, name + " must not be null");
+    public static void notContains(@Nullable Collection<?> collection, Object value, String message) {
+        if (collection != null && collection.contains(value)) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, message);
         }
     }
 
@@ -101,6 +101,22 @@ public final class Validator {
     public static void notEmpty(@Nullable Object[] array, String name) {
         if (array == null || array.length == 0) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, name + " must not be null or empty");
+        }
+    }
+
+    public static void notEquals(@Nullable Object val1, @Nullable Object val2, String message) {
+        if (val1 == null) {
+            if (val2 == null) {
+                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, message);
+            }
+        } else if (val1.equals(val2)) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, message);
+        }
+    }
+
+    public static void notNull(@Nullable Object object, String name) {
+        if (object == null) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, name + " must not be null");
         }
     }
 

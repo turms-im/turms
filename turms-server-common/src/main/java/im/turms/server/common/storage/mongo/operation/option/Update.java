@@ -21,6 +21,7 @@ import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.storage.mongo.BsonPool;
 import im.turms.server.common.storage.mongo.codec.BsonValueEncoder;
 import org.bson.BsonDocument;
+import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 
@@ -35,8 +36,8 @@ import java.util.Date;
 public final class Update implements Bson {
 
     /**
-     * Use org.bson.BsonDocument instead of org.bson.Document
-     * because Document will be converted to BsonDocument by mongo-java-driver finally,
+     * Use {@link BsonDocument} instead of {@link Document}
+     * because {@link Document} will be converted to {@link BsonDocument} by mongo-java-driver finally,
      * which is a huge waste of system resources because both documents are heavy
      */
     private final BsonDocument document;

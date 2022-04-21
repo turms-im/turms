@@ -186,8 +186,8 @@ public class UserStatusService {
         try {
             Validator.notEmpty(userIds, "userIds");
             Validator.notNull(userStatus, "userStatus");
-            Validator.state(userStatus != UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
-            Validator.state(userStatus != UserStatus.OFFLINE, "The user status must not be OFFLINE");
+            Validator.notEquals(userStatus, UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
+            Validator.notEquals(userStatus, UserStatus.OFFLINE, "The user status must not be OFFLINE");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -212,8 +212,8 @@ public class UserStatusService {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(userStatus, "userStatus");
-            Validator.state(userStatus != UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
-            Validator.state(userStatus != UserStatus.OFFLINE, "The user status must not be OFFLINE");
+            Validator.notEquals(userStatus, UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
+            Validator.notEquals(userStatus, UserStatus.OFFLINE, "The user status must not be OFFLINE");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -326,8 +326,8 @@ public class UserStatusService {
             Validator.notNull(userId, "userId");
             Validator.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
-            Validator.state(userStatus != UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
-            Validator.state(userStatus != UserStatus.OFFLINE, "The user status must not be OFFLINE");
+            Validator.notEquals(userStatus, UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
+            Validator.notEquals(userStatus, UserStatus.OFFLINE, "The user status must not be OFFLINE");
             Validator.notNull(heartbeatSeconds, "heartbeatSeconds");
         } catch (ResponseException e) {
             return Mono.error(e);
