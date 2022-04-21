@@ -17,10 +17,9 @@
 
 package im.turms.server.common.infra.property.env.service.business.group;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import im.turms.server.common.infra.task.CronConst;
 import im.turms.server.common.infra.validation.ValidCron;
 import lombok.AllArgsConstructor;
@@ -41,24 +40,24 @@ public class GroupJoinRequestProperties {
 
     @Description("The maximum allowed length for the text of a group join request")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int contentLimit = 200;
 
     @Description("A group join request will become expired after the specified time has elapsed")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int expireAfterSeconds = 30 * 24 * 3600;
 
     @Description("Whether to allow users to recall the join requests sent by themselves")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean allowRecallJoinRequestSentByOneself;
 
     @Description("Whether to delete expired group join requests when the cron expression is triggered")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean deleteExpiredJoinRequestsWhenCronTriggered;
 
     @Description("Clean the expired group join requests when the cron expression is triggered" +

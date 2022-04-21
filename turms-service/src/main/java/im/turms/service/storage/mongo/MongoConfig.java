@@ -57,8 +57,8 @@ import org.springframework.context.annotation.Configuration;
 public class MongoConfig extends BaseMongoConfig {
 
     @Bean
-    public TurmsMongoClient adminMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
-        AdminMongoProperties properties = turmsPropertiesManager.getLocalProperties().getService().getMongo().getAdmin();
+    public TurmsMongoClient adminMongoClient(TurmsPropertiesManager propertiesManager) {
+        AdminMongoProperties properties = propertiesManager.getLocalProperties().getService().getMongo().getAdmin();
         AdminMongoProperties.WriteConcernProperties writeConcern = properties.getWriteConcern();
         TurmsMongoClient mongoClient = getMongoClient(properties);
         mongoClient.registerEntitiesByOptions(
@@ -68,8 +68,8 @@ public class MongoConfig extends BaseMongoConfig {
     }
 
     @Bean
-    public TurmsMongoClient userMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
-        UserMongoProperties properties = turmsPropertiesManager.getLocalProperties().getService().getMongo().getUser();
+    public TurmsMongoClient userMongoClient(TurmsPropertiesManager propertiesManager) {
+        UserMongoProperties properties = propertiesManager.getLocalProperties().getService().getMongo().getUser();
         UserMongoProperties.WriteConcernProperties writeConcern = properties.getWriteConcern();
         TurmsMongoClient mongoClient = getMongoClient(properties);
         mongoClient.registerEntitiesByOptions(
@@ -84,8 +84,8 @@ public class MongoConfig extends BaseMongoConfig {
     }
 
     @Bean
-    public TurmsMongoClient groupMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
-        GroupMongoProperties properties = turmsPropertiesManager.getLocalProperties().getService().getMongo().getGroup();
+    public TurmsMongoClient groupMongoClient(TurmsPropertiesManager propertiesManager) {
+        GroupMongoProperties properties = propertiesManager.getLocalProperties().getService().getMongo().getGroup();
         GroupMongoProperties.WriteConcernProperties writeConcern = properties.getWriteConcern();
         TurmsMongoClient mongoClient = getMongoClient(properties);
         mongoClient.registerEntitiesByOptions(
@@ -101,8 +101,8 @@ public class MongoConfig extends BaseMongoConfig {
     }
 
     @Bean
-    public TurmsMongoClient conversationMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
-        ConversationMongoProperties properties = turmsPropertiesManager.getLocalProperties().getService().getMongo().getConversation();
+    public TurmsMongoClient conversationMongoClient(TurmsPropertiesManager propertiesManager) {
+        ConversationMongoProperties properties = propertiesManager.getLocalProperties().getService().getMongo().getConversation();
         ConversationMongoProperties.WriteConcernProperties writeConcern = properties.getWriteConcern();
         TurmsMongoClient mongoClient = getMongoClient(properties);
         mongoClient.registerEntitiesByOptions(
@@ -112,8 +112,8 @@ public class MongoConfig extends BaseMongoConfig {
     }
 
     @Bean
-    public TurmsMongoClient messageMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
-        MessageMongoProperties properties = turmsPropertiesManager.getLocalProperties().getService().getMongo().getMessage();
+    public TurmsMongoClient messageMongoClient(TurmsPropertiesManager propertiesManager) {
+        MessageMongoProperties properties = propertiesManager.getLocalProperties().getService().getMongo().getMessage();
         MessageMongoProperties.WriteConcernProperties writeConcern = properties.getWriteConcern();
         TurmsMongoClient mongoClient = getMongoClient(properties);
         mongoClient.registerEntitiesByOptions(

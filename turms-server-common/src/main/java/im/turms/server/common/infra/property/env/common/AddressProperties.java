@@ -18,10 +18,9 @@
 package im.turms.server.common.infra.property.env.common;
 
 
-import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.infra.property.constant.AdvertiseStrategy;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,17 +35,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AddressProperties {
 
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Description("The advertise strategy is used to decide which type of address should be used" +
             " so that admins can access admin APIs (only provided by turms) and metrics APIs (provided by turms and turms-gateway)")
     private AdvertiseStrategy advertiseStrategy = AdvertiseStrategy.LOCAL_ADDRESS;
 
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Description("The advertise address of the local node exposed to admins. " +
             "(e.g. 100.131.251.96)")
     private String advertiseHost = "";
 
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Description("Whether to attach the local port to the host.\n" +
             "e.g. The local host is 100.131.251.96, and the port is 9510" +
             " so the service address will be 100.131.251.96:9510")

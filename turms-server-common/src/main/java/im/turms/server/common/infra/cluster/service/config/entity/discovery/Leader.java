@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.cluster.service.config.domain.discovery;
+package im.turms.server.common.infra.cluster.service.config.entity.discovery;
 
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;

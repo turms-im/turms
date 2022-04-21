@@ -34,6 +34,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.plugin.PluginManager;
+import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.TimeType;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
@@ -50,6 +51,7 @@ import im.turms.service.domain.common.permission.ServicePermission;
 import im.turms.service.domain.conversation.service.ConversationService;
 import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.domain.message.bo.BuiltinSystemMessageType;
+import im.turms.service.domain.message.bo.MessageAndRecipientIds;
 import im.turms.service.domain.message.po.Message;
 import im.turms.service.domain.message.repository.MessageRepository;
 import im.turms.service.domain.observation.service.MetricsService;
@@ -61,7 +63,6 @@ import io.micrometer.core.instrument.Counter;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import lombok.Getter;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
@@ -117,12 +118,25 @@ public class MessageService {
     private final PluginManager pluginManager;
 
     private final boolean useConversationId;
-
     private final boolean useSequenceIdForGroupConversation;
     private final boolean useSequenceIdForPrivateConversation;
 
+    private int availableRecallDurationMillis;
+    private int defaultAvailableMessagesNumberWithTotal;
+    private int maxTextLimit;
+    private int maxRecordsSize;
+    private int messageRetentionPeriodHours;
+    private boolean persistPreMessageId;
+    private boolean persistRecord;
+    private boolean persistMessage;
+    private boolean updateReadDateAfterMessageSent;
+    private boolean deleteMessageLogicallyByDefault;
+    private boolean allowRecallMessage;
+    private boolean allowEditMessageBySender;
+    private boolean sendMessageToOtherSenderOnlineDevices;
     @Getter
     private TimeType timeType;
+
     private final Cache<Long, Message> sentMessageCache;
 
     private final Counter sentMessageCounter;
@@ -131,11 +145,11 @@ public class MessageService {
     public MessageService(
             MessageRepository messageRepository,
             @Nullable @Autowired(required = false) @Qualifier("sequenceIdRedisClientManager")
-                    TurmsRedisClientManager sequenceIdRedisClientManager,
+            TurmsRedisClientManager sequenceIdRedisClientManager,
 
             Node node,
 
-            TurmsPropertiesManager turmsPropertiesManager,
+            TurmsPropertiesManager propertiesManager,
             ConversationService conversationService,
             GroupMemberService groupMemberService,
             UserService userService,
@@ -153,15 +167,15 @@ public class MessageService {
         this.outboundMessageService = outboundMessageService;
         this.pluginManager = pluginManager;
 
-        MessageProperties messageProperties = node.getSharedProperties().getService().getMessage();
+        TurmsProperties globalProperties = propertiesManager.getGlobalProperties();
+        MessageProperties messageProperties = globalProperties.getService().getMessage();
         useConversationId = messageProperties.isUseConversationId();
         SequenceIdProperties sequenceIdProperties = messageProperties.getSequenceId();
         useSequenceIdForGroupConversation = sequenceIdProperties.isUseSequenceIdForGroupConversation();
         useSequenceIdForPrivateConversation = sequenceIdProperties.isUseSequenceIdForPrivateConversation();
-        timeType = messageProperties.getTimeType();
-        MessageProperties.CacheProperties cacheProperties = turmsPropertiesManager.getLocalProperties().getService().getMessage().getCache();
+        MessageProperties.CacheProperties cacheProperties = propertiesManager.getLocalProperties().getService().getMessage().getCache();
         int relayedMessageCacheMaxSize = cacheProperties.getSentMessageCacheMaxSize();
-        if (relayedMessageCacheMaxSize > 0 && turmsPropertiesManager.getLocalProperties().getService().getMessage().isPersistMessage()) {
+        if (relayedMessageCacheMaxSize > 0 && propertiesManager.getLocalProperties().getService().getMessage().isPersistMessage()) {
             this.sentMessageCache = Caffeine
                     .newBuilder()
                     .maximumSize(relayedMessageCacheMaxSize)
@@ -171,23 +185,38 @@ public class MessageService {
             sentMessageCache = null;
         }
         sentMessageCounter = metricsService.getRegistry().counter(SENT_MESSAGES_COUNTER);
-        node.addPropertiesChangeListener(properties -> timeType = properties.getService().getMessage().getTimeType());
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
         // Set up the checker for expired messages join requests
         taskManager.reschedule(
                 "expiredMessagesCleanup",
-                turmsPropertiesManager.getLocalProperties().getService().getMessage().getExpiredMessagesCleanupCron(),
+                propertiesManager.getLocalProperties().getService().getMessage().getExpiredMessagesCleanupCron(),
                 () -> {
                     if (node.isLocalNodeLeader()) {
-                        int retentionPeriodHours = node.getSharedProperties()
-                                .getService()
-                                .getMessage()
-                                .getMessageRetentionPeriodHours();
+                        int retentionPeriodHours = messageRetentionPeriodHours;
                         if (retentionPeriodHours > 0) {
                             deleteExpiredMessages(retentionPeriodHours)
                                     .subscribe(null, t -> LOGGER.error("Caught an error while deleting expired messages", t));
                         }
                     }
                 });
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        MessageProperties messageProperties = properties.getService().getMessage();
+        availableRecallDurationMillis = messageProperties.getAvailableRecallDurationSeconds() * 1000;
+        defaultAvailableMessagesNumberWithTotal = messageProperties.getDefaultAvailableMessagesNumberWithTotal();
+        maxTextLimit = messageProperties.getMaxTextLimit();
+        maxRecordsSize = messageProperties.getMaxRecordsSizeBytes();
+        persistPreMessageId = messageProperties.isPersistPreMessageId();
+        persistRecord = messageProperties.isPersistRecord();
+        persistMessage = messageProperties.isPersistMessage();
+        updateReadDateAfterMessageSent = properties.getService().getConversation().getReadReceipt().isUpdateReadDateAfterMessageSent();
+        deleteMessageLogicallyByDefault = messageProperties.isDeleteMessageLogicallyByDefault();
+        allowRecallMessage = messageProperties.isAllowRecallMessage();
+        allowEditMessageBySender = messageProperties.isAllowEditMessageBySender();
+        sendMessageToOtherSenderOnlineDevices = messageProperties.isSendMessageToOtherSenderOnlineDevices();
+        timeType = messageProperties.getTimeType();
+        messageRetentionPeriodHours = messageProperties.getMessageRetentionPeriodHours();
     }
 
     public Mono<Boolean> isMessageSentByUser(@NotNull Long messageId, @NotNull Long senderId) {
@@ -249,16 +278,9 @@ public class MessageService {
             deliveryDateMono = messageRepository.findDeliveryDate(messageId);
         }
         return deliveryDateMono
-                .map(deliveryDate -> {
-                    long elapsedTime = (deliveryDate.getTime() - System.currentTimeMillis()) / 1000;
-                    boolean isRecallable = elapsedTime < node.getSharedProperties()
-                            .getService()
-                            .getMessage()
-                            .getAvailableRecallDurationSeconds();
-                    return isRecallable
-                            ? ServicePermission.OK
-                            : ServicePermission.get(MESSAGE_RECALL_TIMEOUT);
-                })
+                .map(deliveryDate -> deliveryDate.getTime() - System.currentTimeMillis() < availableRecallDurationMillis
+                        ? ServicePermission.OK
+                        : ServicePermission.get(MESSAGE_RECALL_TIMEOUT))
                 .defaultIfEmpty(ServicePermission.get(RECALL_NON_EXISTING_MESSAGE));
     }
 
@@ -272,7 +294,16 @@ public class MessageService {
             @Nullable DateRange deliveryDateRange,
             @Nullable DateRange deletionDateRange,
             @Nullable Integer page,
-            @Nullable Integer size) {
+            @Nullable Integer size,
+            boolean withTotal) {
+        if (size == null) {
+            size = withTotal
+                    ? defaultAvailableMessagesNumberWithTotal
+                    : null;
+        } else {
+            // TODO: make configurable
+            size = Math.min(size, 1000);
+        }
         return queryMessages(
                 closeToDate,
                 messageIds,
@@ -329,13 +360,12 @@ public class MessageService {
             @Nullable @PastOrPresent Date recallDate,
             @Nullable Long referenceId,
             @Nullable Long preMessageId) {
-        MessageProperties messageProperties = node.getSharedProperties().getService().getMessage();
         try {
             Validator.notNull(senderId, "senderId");
             Validator.notNull(targetId, "targetId");
             Validator.notNull(isGroupMessage, "isGroupMessage");
             Validator.notNull(isSystemMessage, "isSystemMessage");
-            Validator.maxLength(text, "text", messageProperties.getMaxTextLimit());
+            Validator.maxLength(text, "text", maxTextLimit);
             validRecordsLength(records);
             Validator.min(burnAfter, "burnAfter", 0);
             Validator.pastOrPresent(deliveryDate, "deliveryDate");
@@ -350,10 +380,10 @@ public class MessageService {
         if (messageId == null) {
             messageId = node.nextLargeGapId(ServiceType.MESSAGE);
         }
-        if (!messageProperties.isPersistRecord()) {
+        if (!persistRecord) {
             records = null;
         }
-        if (!messageProperties.isPersistPreMessageId()) {
+        if (!persistPreMessageId) {
             preMessageId = null;
         }
         Mono<Long> sequenceId = null;
@@ -414,7 +444,7 @@ public class MessageService {
                                 .thenReturn(message);
                     });
         }
-        if (node.getSharedProperties().getService().getConversation().getReadReceipt().isUpdateReadDateAfterMessageSent()) {
+        if (updateReadDateAfterMessageSent) {
             Mono<Void> upsertConversation = isGroupMessage
                     ? conversationService.upsertGroupConversationReadDate(targetId, senderId, deliveryDate)
                     : conversationService.upsertPrivateConversationReadDate(senderId, targetId, deliveryDate);
@@ -471,9 +501,7 @@ public class MessageService {
             @Nullable Set<Long> messageIds,
             @Nullable Boolean deleteLogically) {
         if (deleteLogically == null) {
-            deleteLogically = node.getSharedProperties()
-                    .getService().getMessage()
-                    .isDeleteMessageLogicallyByDefault();
+            deleteLogically = deleteMessageLogicallyByDefault;
         }
         if (deleteLogically) {
             return messageRepository.updateMessagesDeletionDate(messageIds)
@@ -492,7 +520,7 @@ public class MessageService {
             @Nullable ClientSession session) {
         try {
             Validator.notEmpty(messageIds, "messageIds");
-            Validator.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
+            Validator.maxLength(text, "text", maxTextLimit);
             Validator.min(burnAfter, "burnAfter", 0);
             Validator.pastOrPresent(recallDate, "recallDate");
             validRecordsLength(records);
@@ -661,15 +689,10 @@ public class MessageService {
         if (!updateMessageContent && recallDate == null) {
             return Mono.empty();
         }
-        if (recallDate != null && !node.getSharedProperties()
-                .getService()
-                .getMessage()
-                .isAllowRecallMessage()) {
+        if (recallDate != null && !allowRecallMessage) {
             return Mono.error(ResponseException.get(RECALLING_MESSAGE_IS_DISABLED));
         }
-        if (updateMessageContent && !node.getSharedProperties()
-                .getService()
-                .getMessage().isAllowEditMessageBySender()) {
+        if (updateMessageContent && !allowEditMessageBySender) {
             return Mono.error(ResponseException.get(UPDATING_MESSAGE_BY_SENDER_IS_DISABLED));
         }
         return isMessageSentByUser(messageId, requesterId)
@@ -695,8 +718,7 @@ public class MessageService {
                         : Mono.just(message.getTargetId()));
     }
 
-    // message - recipientIds
-    public Mono<Pair<Message, Set<Long>>> authAndSaveMessage(
+    public Mono<MessageAndRecipientIds> authAndSaveMessage(
             @Nullable Long messageId,
             @NotNull Long senderId,
             @NotNull Long targetId,
@@ -709,7 +731,7 @@ public class MessageService {
             @Nullable Long referenceId,
             @Nullable Long preMessageId) {
         try {
-            Validator.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
+            Validator.maxLength(text, "text", maxTextLimit);
             validRecordsLength(records);
             Validator.pastOrPresent(deliveryDate, "deliveryDate");
         } catch (ResponseException e) {
@@ -725,10 +747,10 @@ public class MessageService {
                             ? groupMemberService.findMemberIdsByGroupId(targetId).collect(Collectors.toSet())
                             : Mono.just(Set.of(targetId));
                     return recipientIdsMono.flatMap(recipientIds -> {
-                        if (!node.getSharedProperties().getService().getMessage().isPersistMessage()) {
+                        if (!persistMessage) {
                             return recipientIds.isEmpty()
                                     ? Mono.empty()
-                                    : Mono.just(Pair.of(null, recipientIds));
+                                    : Mono.just(new MessageAndRecipientIds(null, recipientIds));
                         }
                         Mono<Message> saveMono = saveMessage(messageId, senderId, targetId, isGroupMessage,
                                 isSystemMessage, text, records, burnAfter, deliveryDate, null, referenceId, preMessageId);
@@ -736,7 +758,7 @@ public class MessageService {
                             if (message.getId() != null && sentMessageCache != null) {
                                 cacheSentMessage(message);
                             }
-                            return Pair.of(message, recipientIds);
+                            return new MessageAndRecipientIds(message, recipientIds);
                         });
                     });
                 });
@@ -745,7 +767,7 @@ public class MessageService {
     /**
      * clone a new message rather than using its ID as a reference
      */
-    public Mono<Pair<Message, Set<Long>>> authAndCloneAndSaveMessage(
+    public Mono<MessageAndRecipientIds> authAndCloneAndSaveMessage(
             @NotNull Long requesterId,
             @NotNull Long referenceId,
             @NotNull Boolean isGroupMessage,
@@ -784,7 +806,7 @@ public class MessageService {
             Validator.notNull(targetId, "targetId");
             Validator.min(burnAfter, "burnAfter", 0);
             Validator.throwIfAllFalsy("text and records cannot be both null", text, records);
-            Validator.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
+            Validator.maxLength(text, "text", maxTextLimit);
             validRecordsLength(records);
         } catch (ResponseException e) {
             return Mono.error(e);
@@ -797,20 +819,20 @@ public class MessageService {
             }
         }
         Date deliveryDate = new Date();
-        Mono<Pair<Message, Set<Long>>> saveMono = referenceId == null
+        Mono<MessageAndRecipientIds> saveMono = referenceId == null
                 ? authAndSaveMessage(messageId, senderId, targetId, isGroupMessage, isSystemMessage,
                 text, records, burnAfter, deliveryDate, null, preMessageId)
                 : authAndCloneAndSaveMessage(senderId, referenceId, isGroupMessage, isSystemMessage, targetId);
         return saveMono
                 .doOnNext(pair -> {
-                    Message message = pair.getLeft();
+                    Message message = pair.message();
                     sentMessageCounter.increment();
                     if (message != null && message.getId() != null && sentMessageCache != null) {
                         cacheSentMessage(message);
                     }
                     if (send) {
                         // No need to let the client wait to send notifications to recipients
-                        sendMessage(message, pair.getRight())
+                        sendMessage(message, pair.recipientIds())
                                 .subscribe(null, t -> LOGGER.error("Failed to send message", t));
                     }
                 })
@@ -827,7 +849,7 @@ public class MessageService {
                 .setRelayedRequest(request)
                 .setRequestId(ADMIN_REQUEST_ID)
                 .build();
-        if (node.getSharedProperties().getService().getMessage().isSendMessageToOtherSenderOnlineDevices()) {
+        if (sendMessageToOtherSenderOnlineDevices) {
             recipientIds = CollectionUtil.add(recipientIds, message.getSenderId());
         }
         return outboundMessageService.forwardNotification(
@@ -870,21 +892,20 @@ public class MessageService {
     }
 
     private void validRecordsLength(List<byte[]> records) {
-        if (records != null) {
-            int maxRecordsSize = node.getSharedProperties()
-                    .getService()
-                    .getMessage()
-                    .getMaxRecordsSizeBytes();
-            if (maxRecordsSize > -1) {
-                int count = 0;
-                for (byte[] record : records) {
-                    count += record.length;
-                }
-                if (count > maxRecordsSize) {
-                    throw ResponseException
-                            .get(ILLEGAL_ARGUMENT, "The total size of records must be less than or equal to " + maxRecordsSize);
-                }
-            }
+        if (records == null) {
+            return;
+        }
+        int maxSize = maxRecordsSize;
+        if (maxSize <= -1) {
+            return;
+        }
+        int count = 0;
+        for (byte[] record : records) {
+            count += record.length;
+        }
+        if (count > maxSize) {
+            throw ResponseException
+                    .get(ILLEGAL_ARGUMENT, "The total size of records must be less than or equal to " + maxSize);
         }
     }
 

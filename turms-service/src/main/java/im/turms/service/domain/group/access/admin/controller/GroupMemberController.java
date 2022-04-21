@@ -26,8 +26,8 @@ import im.turms.server.common.domain.common.dto.response.PaginationDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.group.access.admin.dto.request.AddGroupMemberDTO;
@@ -59,8 +59,8 @@ public class GroupMemberController extends BaseController {
 
     private final GroupMemberService groupMemberService;
 
-    public GroupMemberController(Node node, GroupMemberService groupMemberService) {
-        super(node);
+    public GroupMemberController(TurmsPropertiesManager propertiesManager, GroupMemberService groupMemberService) {
+        super(propertiesManager);
         this.groupMemberService = groupMemberService;
     }
 

@@ -24,7 +24,7 @@ import im.turms.server.common.domain.common.dto.response.PaginationDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
-import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.group.access.admin.dto.request.AddGroupJoinQuestionDTO;
 import im.turms.service.domain.group.access.admin.dto.request.UpdateGroupJoinQuestionDTO;
@@ -54,8 +54,8 @@ public class GroupQuestionController extends BaseController {
 
     private final GroupQuestionService groupQuestionService;
 
-    public GroupQuestionController(Node node, GroupQuestionService groupQuestionService) {
-        super(node);
+    public GroupQuestionController(TurmsPropertiesManager propertiesManager, GroupQuestionService groupQuestionService) {
+        super(propertiesManager);
         this.groupQuestionService = groupQuestionService;
     }
 

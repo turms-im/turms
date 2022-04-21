@@ -95,7 +95,7 @@ public final class RequestHandlerResultFactory {
     public static RequestHandlerResult get(
             @NotNull Long id,
             @NotEmpty Set<Long> recipients,
-            boolean relayDataToOtherSenderOnlineDevices,
+            boolean forwardDataForRecipientsToOtherSenderOnlineDevices,
             TurmsRequest dataForRecipients) {
         TurmsNotification.Data data = TurmsNotification.Data
                 .newBuilder()
@@ -103,7 +103,7 @@ public final class RequestHandlerResultFactory {
                 .build();
         return new RequestHandlerResult(
                 data,
-                relayDataToOtherSenderOnlineDevices,
+                forwardDataForRecipientsToOtherSenderOnlineDevices,
                 recipients,
                 dataForRecipients,
                 ResponseStatusCode.OK,
@@ -124,6 +124,13 @@ public final class RequestHandlerResultFactory {
             @NotEmpty Set<Long> recipientIds,
             @NotNull TurmsRequest dataForRecipient) {
         return new RequestHandlerResult(null, false, recipientIds, dataForRecipient, ResponseStatusCode.OK, null);
+    }
+
+    public static RequestHandlerResult get(
+            @NotEmpty Set<Long> recipientIds,
+            @NotNull TurmsRequest dataForRecipient,
+            boolean forwardDataForRecipientsToOtherSenderOnlineDevices) {
+        return new RequestHandlerResult(null, forwardDataForRecipientsToOtherSenderOnlineDevices, recipientIds, dataForRecipient, ResponseStatusCode.OK, null);
     }
 
     public static RequestHandlerResult get(

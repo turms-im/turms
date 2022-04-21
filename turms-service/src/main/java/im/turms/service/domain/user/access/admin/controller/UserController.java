@@ -24,7 +24,7 @@ import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
 import im.turms.server.common.domain.user.po.User;
-import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DivideBy;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
@@ -66,8 +66,8 @@ public class UserController extends BaseController {
     private final UserService userService;
     private final MessageService messageService;
 
-    public UserController(Node node, UserService userService, MessageService messageService) {
-        super(node);
+    public UserController(TurmsPropertiesManager propertiesManager, UserService userService, MessageService messageService) {
+        super(propertiesManager);
         this.userService = userService;
         this.messageService = messageService;
     }

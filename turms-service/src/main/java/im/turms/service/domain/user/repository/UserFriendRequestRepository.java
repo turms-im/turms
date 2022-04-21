@@ -20,7 +20,8 @@ package im.turms.service.domain.user.repository;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
-import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.time.DateConst;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.storage.mongo.DomainFieldName;
@@ -45,21 +46,25 @@ import java.util.Set;
 @Repository
 public class UserFriendRequestRepository extends ExpirableEntityRepository<UserFriendRequest, Long> {
 
-    private final Node node;
+    private int friendRequestExpireAfterSeconds;
 
-    public UserFriendRequestRepository(Node node,
+    public UserFriendRequestRepository(TurmsPropertiesManager propertiesManager,
                                        @Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, UserFriendRequest.class);
-        this.node = node;
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
-    @Override
-    public int getEntityExpireAfterSeconds() {
-        return node.getSharedProperties()
+    private void updateProperties(TurmsProperties properties) {
+        friendRequestExpireAfterSeconds = properties
                 .getService()
                 .getUser()
                 .getFriendRequest()
                 .getFriendRequestExpireAfterSeconds();
+    }
+
+    @Override
+    public int getEntityExpireAfterSeconds() {
+        return friendRequestExpireAfterSeconds;
     }
 
     public Mono<UpdateResult> updateFriendRequests(

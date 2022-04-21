@@ -17,10 +17,9 @@
 
 package im.turms.server.common.infra.property.env.service.business.group;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import im.turms.server.common.infra.task.CronConst;
 import im.turms.server.common.infra.validation.ValidCron;
 import lombok.AllArgsConstructor;
@@ -41,24 +40,24 @@ public class GroupInvitationProperties {
 
     @Description("The maximum allowed length for the text of a group invitation")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int contentLimit = 200;
 
     @Description("A group invitation will become expired after the specified time has passed")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int expireAfterSeconds = 30 * 24 * 3600;
 
     @Description("Whether to allow the owner and managers of a group to recall pending group invitations")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean allowRecallPendingInvitationByOwnerAndManager;
 
     @Description("Whether to delete expired group invitations when the cron expression is triggered")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean deleteExpiredInvitationsWhenCronTriggered;
 
     @Description("Clean the expired group invitations when the cron expression is triggered" +

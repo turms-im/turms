@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.cluster.service.config.domain.discovery;
+package im.turms.server.common.infra.cluster.service.config.entity.discovery;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import im.turms.server.common.infra.cluster.node.NodeType;
@@ -40,8 +40,8 @@ import java.util.Date;
 @FieldNameConstants
 public final class Member {
 
-    public static final String ID_CLUSTER_ID = "_id.clusterId";
-    public static final String ID_NODE_ID = "_id.nodeId";
+    public static final String ID_CLUSTER_ID = "_id." + Key.Fields.clusterId;
+    public static final String ID_NODE_ID = "_id." + Key.Fields.nodeId;
     public static final String STATUS_HAS_JOINED_CLUSTER = Fields.status + "." + MemberStatus.Fields.hasJoinedCluster;
     public static final String STATUS_IS_ACTIVE = Fields.status + "." + MemberStatus.Fields.isActive;
     public static final String STATUS_IS_HEALTHY = Fields.status + "." + MemberStatus.Fields.isHealthy;

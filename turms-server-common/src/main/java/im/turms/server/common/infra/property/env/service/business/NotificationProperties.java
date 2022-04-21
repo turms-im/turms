@@ -17,10 +17,9 @@
 
 package im.turms.server.common.infra.property.env.service.business;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,109 +38,109 @@ public class NotificationProperties {
 
     @Description("Whether to notify related users after other related user's information has been updated")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyRelatedUsersAfterOtherRelatedUserInfoUpdated;
 
     @Description("Whether to notify related users after other related user's online status has been updated")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated;
 
     @Description("Whether to notify the recipient when receiving a friend request")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyRecipientWhenReceivingFriendRequest = true;
 
     @Description("Whether to notify the requester after a friend request has been updated")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyRequesterAfterFriendRequestUpdated = true;
 
     @Description("Whether to notify the related user after a one-sided relationship has benn updated by others")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers;
 
     @Description("Whether to notify the related user after added to a one-sided relationship group by others")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyRelatedUserAfterAddedToOneSidedRelationshipGroupByOthers;
 
     @Description("Whether to notify members after a one-sided relationship group has been updated by others")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers;
 
     @Description("Whether to notify the member after removed from a one-sided relationship group by others")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyMemberAfterRemovedFromRelationshipGroupByOthers;
 
     // Group
 
     @Description("Whether to notify members after a group has been removed")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyMembersAfterGroupDeleted = true;
 
     @Description("Whether to notify members after a group has been updated")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyMembersAfterGroupUpdated = true;
 
     @Description("Whether to notify members after other group member's online status has been updated")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyMembersAfterOtherMemberOnlineStatusUpdated;
 
     @Description("Whether to notify members after other group member's information has been updated")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyMembersAfterOtherMemberInfoUpdated;
 
     @Description("Whether to notify the user after blocked by a group")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyUserAfterBlockedByGroup;
 
     @Description("Whether to notify the user after unblocked by a group")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyUserAfterUnblockedByGroup;
 
     @Description("Whether to notify the user after invited by a group")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyUserAfterInvitedByGroup = true;
 
     @Description("Whether to notify the owner and managers after a join request has been received")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyOwnerAndManagersAfterReceivingJoinRequest = true;
 
     @Description("Whether to notify the invitee after a group invitation has been recalled")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyInviteeAfterGroupInvitationRecalled = true;
 
     @Description("Whether to notify the owner and managers after a group invitation has been recalled")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyOwnerAndManagersAfterGroupJoinRequestRecalled = true;
 
     @Description("Whether to notify the user after added to a group by others")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyUserAfterAddedToGroupByOthers = true;
 
     @Description("Whether to notify the user after removed from a group by others")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyUserAfterRemovedFromGroupByOthers = true;
 
     @Description("Whether to notify members after its member information has been updated by others")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyMemberAfterInfoUpdatedByOthers = true;
 
     // Conversation
@@ -149,20 +148,20 @@ public class NotificationProperties {
     @Description("Whether to notify the private conversation participant " +
             "after the read receipt of a conversation has been updated by the recipient")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyPrivateConversationParticipantAfterReadDateUpdated;
 
     @Description("Whether to notify the group conversation participants " +
             "after the read receipt of a conversation has been updated by recipients")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyGroupConversationParticipantsAfterReadDateUpdated;
 
     // Message
 
     @Description("Whether to notify the recipients after a message has been updated by the sender")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyRecipientsAfterMessageUpdatedBySender = true;
 
 }

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.cluster.service.config.domain.property;
+package im.turms.server.common.infra.cluster.service.config.entity.property;
 
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;

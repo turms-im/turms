@@ -36,8 +36,9 @@ import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
@@ -72,7 +73,6 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 @Controller
 public class UserServiceController {
 
-    private final Node node;
     private final UserService userService;
     private final UserRelationshipService userRelationshipService;
     private final UserStatusService userStatusService;
@@ -81,8 +81,13 @@ public class UserServiceController {
     private final SessionService sessionService;
     private final GroupMemberService groupMemberService;
 
+    private boolean notifyMembersAfterOtherMemberOnlineStatusUpdated;
+    private boolean notifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated;
+    private boolean notifyRelatedUsersAfterOtherRelatedUserInfoUpdated;
+    private boolean respondOfflineIfInvisible;
+
     public UserServiceController(
-            Node node,
+            TurmsPropertiesManager propertiesManager,
             UserService userService,
             SessionLocationService sessionLocationService,
             UsersNearbyService usersNearbyService,
@@ -90,7 +95,6 @@ public class UserServiceController {
             UserRelationshipService userRelationshipService,
             UserStatusService userStatusService,
             SessionService sessionService) {
-        this.node = node;
         this.userService = userService;
         this.sessionLocationService = sessionLocationService;
         this.usersNearbyService = usersNearbyService;
@@ -98,6 +102,18 @@ public class UserServiceController {
         this.userRelationshipService = userRelationshipService;
         this.userStatusService = userStatusService;
         this.sessionService = sessionService;
+
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        notifyMembersAfterOtherMemberOnlineStatusUpdated = properties.getService().getNotification()
+                .isNotifyMembersAfterOtherMemberOnlineStatusUpdated();
+        notifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated = properties.getService().getNotification()
+                .isNotifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated();
+        notifyRelatedUsersAfterOtherRelatedUserInfoUpdated = properties.getService().getNotification()
+                .isNotifyRelatedUsersAfterOtherRelatedUserInfoUpdated();
+        respondOfflineIfInvisible = properties.getService().getUser().isRespondOfflineIfInvisible();
     }
 
     @ServiceRequestMapping(QUERY_USER_PROFILE_REQUEST)
@@ -175,7 +191,7 @@ public class UserServiceController {
                                     .userOnlineInfo2userStatus(
                                             userIdAndSessionsStatus.getFirst(),
                                             userIdAndSessionsStatus.getSecond(),
-                                            node.getSharedProperties().getService().getUser().isRespondOfflineIfInvisible())
+                                            respondOfflineIfInvisible)
                                     .build());
                         }
                         return RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
@@ -222,10 +238,8 @@ public class UserServiceController {
             } else {
                 updateMono = userStatusService.updateOnlineUserStatusIfPresent(clientRequest.userId(), userStatus);
             }
-            boolean notifyMembers =
-                    node.getSharedProperties().getService().getNotification().isNotifyMembersAfterOtherMemberOnlineStatusUpdated();
-            boolean notifyRelatedUser = node.getSharedProperties().getService().getNotification()
-                    .isNotifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated();
+            boolean notifyMembers = notifyMembersAfterOtherMemberOnlineStatusUpdated;
+            boolean notifyRelatedUser = notifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated;
             if (!notifyMembers && !notifyRelatedUser) {
                 return updateMono.thenReturn(RequestHandlerResultFactory.OK);
             }
@@ -264,8 +278,7 @@ public class UserServiceController {
                             null,
                             null)
                     .then(Mono.defer(() -> {
-                        if (node.getSharedProperties().getService().getNotification()
-                                .isNotifyRelatedUsersAfterOtherRelatedUserInfoUpdated()) {
+                        if (notifyRelatedUsersAfterOtherRelatedUserInfoUpdated) {
                             return userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.userId()), false)
                                     .collect(Collectors.toSet())
                                     .map(relatedUserIds -> relatedUserIds.isEmpty()

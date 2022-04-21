@@ -29,8 +29,8 @@ import im.turms.server.common.domain.session.bo.UserSessionsInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectorUtil;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.observation.service.StatisticsService;
 import im.turms.service.domain.user.access.admin.dto.request.UpdateOnlineStatusDTO;
@@ -69,14 +69,14 @@ public class UserOnlineInfoController extends BaseController {
     private final SessionService sessionService;
 
     public UserOnlineInfoController(
-            Node node,
+            TurmsPropertiesManager propertiesManager,
             UserService userService,
             StatisticsService statisticsService,
             SessionLocationService sessionLocationService,
             UserStatusService userStatusService,
             UsersNearbyService usersNearbyService,
             SessionService sessionService) {
-        super(node);
+        super(propertiesManager);
         this.userService = userService;
         this.statisticsService = statisticsService;
         this.sessionLocationService = sessionLocationService;

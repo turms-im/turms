@@ -93,7 +93,8 @@ public class ConnectionServer {
             } catch (Exception e) { // e.g. port in use
                 if (e instanceof ChannelBindException &&
                         portAutoIncrement && currentPort <= proposedPort + portCount) {
-                    LOGGER.warn("Failed to bind on the port {}. Trying to bind on the next port {}", currentPort++, currentPort);
+                    LOGGER.warn("Failed to bind on the port {}. Trying to bind on the next port {}",
+                            currentPort++, currentPort, e);
                 } else {
                     LOGGER.error("Failed to set up the local discovery server", e);
                     throw e;

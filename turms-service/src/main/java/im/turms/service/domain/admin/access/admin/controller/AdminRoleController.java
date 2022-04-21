@@ -27,7 +27,7 @@ import im.turms.server.common.domain.common.dto.response.PaginationDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
-import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.admin.access.admin.dto.request.AddAdminRoleDTO;
 import im.turms.service.domain.admin.access.admin.dto.request.UpdateAdminRoleDTO;
 import im.turms.service.domain.admin.service.AdminRoleService;
@@ -57,8 +57,8 @@ public class AdminRoleController extends BaseController {
 
     private final AdminRoleService adminRoleService;
 
-    public AdminRoleController(Node node, AdminRoleService adminRoleService) {
-        super(node);
+    public AdminRoleController(TurmsPropertiesManager propertiesManager, AdminRoleService adminRoleService) {
+        super(propertiesManager);
         this.adminRoleService = adminRoleService;
     }
 

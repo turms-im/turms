@@ -18,7 +18,7 @@
 package im.turms.server.common.infra.property.env.gateway.clientapi;
 
 
-import im.turms.server.common.infra.property.metadata.annotation.Description;
+import im.turms.server.common.infra.property.metadata.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -24,7 +24,7 @@ import im.turms.server.common.domain.common.dto.response.PaginationDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
-import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.user.access.admin.dto.request.AddUserPermissionGroupDTO;
 import im.turms.service.domain.user.access.admin.dto.request.UpdateUserPermissionGroupDTO;
@@ -56,8 +56,8 @@ public class UserPermissionGroupController extends BaseController {
 
     private final UserPermissionGroupService userPermissionGroupService;
 
-    public UserPermissionGroupController(Node node, UserPermissionGroupService userPermissionGroupService) {
-        super(node);
+    public UserPermissionGroupController(TurmsPropertiesManager propertiesManager, UserPermissionGroupService userPermissionGroupService) {
+        super(propertiesManager);
         this.userPermissionGroupService = userPermissionGroupService;
     }
 

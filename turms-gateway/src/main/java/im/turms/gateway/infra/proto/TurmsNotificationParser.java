@@ -41,6 +41,8 @@ public final class TurmsNotificationParser {
     private static final int CLOSE_STATUS_TAG = 48;
     private static final int RELAYED_REQUEST_TAG = 58;
 
+    private static final long UNSET_VALUE = Long.MIN_VALUE;
+
     private TurmsNotificationParser() {
     }
 
@@ -49,7 +51,7 @@ public final class TurmsNotificationParser {
         // The CodedInputStream.newInstance is efficient because it reuses the direct buffer
         CodedInputStream stream = CodedInputStream.newInstance(turmsNotificationBuffer);
         try {
-            long requesterId = Long.MIN_VALUE;
+            long requesterId = UNSET_VALUE;
             Integer closeStatus = null;
             TurmsRequest.KindCase type = null;
             boolean done = false;
@@ -57,7 +59,7 @@ public final class TurmsNotificationParser {
                 int tag = stream.readTag();
                 switch (tag) {
                     case REQUESTER_ID_TAG -> {
-                        if (requesterId == Long.MIN_VALUE) {
+                        if (requesterId == UNSET_VALUE) {
                             requesterId = stream.readInt64();
                         } else {
                             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
@@ -82,7 +84,7 @@ public final class TurmsNotificationParser {
                     default -> stream.skipField(tag);
                 }
             }
-            if (requesterId == Long.MIN_VALUE) {
+            if (requesterId == UNSET_VALUE) {
                 throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsNotification: No requester ID");
             }
             if (type == null || type == KIND_NOT_SET) {

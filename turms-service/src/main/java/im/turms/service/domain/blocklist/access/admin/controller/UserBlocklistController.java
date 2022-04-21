@@ -23,7 +23,7 @@ import im.turms.server.common.domain.blocklist.service.BlocklistService;
 import im.turms.server.common.domain.common.dto.response.PaginationDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.blocklist.access.admin.dto.request.AddBlockedUserIdsDTO;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import org.springframework.http.ResponseEntity;
@@ -54,8 +54,8 @@ public class UserBlocklistController extends BaseController {
 
     private final BlocklistService blocklistService;
 
-    public UserBlocklistController(Node node, BlocklistService blocklistService) {
-        super(node);
+    public UserBlocklistController(TurmsPropertiesManager propertiesManager, BlocklistService blocklistService) {
+        super(propertiesManager);
         this.blocklistService = blocklistService;
     }
 

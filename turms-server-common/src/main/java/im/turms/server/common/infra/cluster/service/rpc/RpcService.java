@@ -22,7 +22,7 @@ import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.cluster.service.ClusterService;
 import im.turms.server.common.infra.cluster.service.codec.CodecService;
 import im.turms.server.common.infra.cluster.service.config.SharedConfigService;
-import im.turms.server.common.infra.cluster.service.config.domain.discovery.Member;
+import im.turms.server.common.infra.cluster.service.config.entity.discovery.Member;
 import im.turms.server.common.infra.cluster.service.connection.ConnectionService;
 import im.turms.server.common.infra.cluster.service.connection.TurmsConnection;
 import im.turms.server.common.infra.cluster.service.discovery.DiscoveryService;

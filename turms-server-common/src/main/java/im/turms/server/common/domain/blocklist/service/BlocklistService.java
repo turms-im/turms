@@ -85,9 +85,9 @@ public class BlocklistService {
                             TaskManager taskManager,
                             TurmsRedisClient ipBlocklistRedisClient,
                             TurmsRedisClient userIdBlocklistRedisClient,
-                            TurmsPropertiesManager turmsPropertiesManager,
+                            TurmsPropertiesManager propertiesManager,
                             @Autowired(required = false) ISessionService sessionService) {
-        BlocklistProperties blocklistProperties = turmsPropertiesManager.getLocalProperties().getSecurity().getBlocklist();
+        BlocklistProperties blocklistProperties = propertiesManager.getLocalProperties().getSecurity().getBlocklist();
         BlocklistProperties.IpBlocklistTypeProperties ipBlocklistProperties = blocklistProperties.getIp();
         BlocklistProperties.UserIdBlocklistTypeProperties userIdBlocklistProperties = blocklistProperties.getUserId();
 
@@ -190,16 +190,16 @@ public class BlocklistService {
         }
         taskManager.reschedule("expiredBlockedClientCleanup", CronConst.EXPIRED_BLOCKED_CLIENT_CLEANUP_CRON, () -> {
             if (isIpBlocklistEnabled) {
-                ipAutoBlockManagerForCorruptedRequest.evictExpiredBlockedClient();
+                ipAutoBlockManagerForCorruptedRequest.evictExpiredBlockedClients();
                 if (isGateway) {
-                    ipAutoBlockManagerForCorruptedFrame.evictExpiredBlockedClient();
-                    ipAutoBlockManagerForFrequentRequest.evictExpiredBlockedClient();
+                    ipAutoBlockManagerForCorruptedFrame.evictExpiredBlockedClients();
+                    ipAutoBlockManagerForFrequentRequest.evictExpiredBlockedClients();
                 }
             }
             if (isUserIdBlocklistEnabled) {
-                userIdAutoBlockManagerForCorruptedRequest.evictExpiredBlockedClient();
+                userIdAutoBlockManagerForCorruptedRequest.evictExpiredBlockedClients();
                 if (isGateway) {
-                    userIdAutoBlockManagerForFrequentRequest.evictExpiredBlockedClient();
+                    userIdAutoBlockManagerForFrequentRequest.evictExpiredBlockedClients();
                 }
             }
         });

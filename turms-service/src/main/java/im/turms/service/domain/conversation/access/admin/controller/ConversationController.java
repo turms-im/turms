@@ -23,9 +23,9 @@ import im.turms.server.common.access.admin.permission.RequiredPermission;
 import im.turms.server.common.domain.common.dto.response.DeleteResultDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.storage.mongo.operation.OperationResultConvertor;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.conversation.access.admin.dto.request.UpdateConversationDTO;
@@ -59,8 +59,8 @@ public class ConversationController extends BaseController {
 
     private final ConversationService conversationService;
 
-    public ConversationController(Node node, ConversationService conversationService) {
-        super(node);
+    public ConversationController(TurmsPropertiesManager propertiesManager, ConversationService conversationService) {
+        super(propertiesManager);
         this.conversationService = conversationService;
     }
 

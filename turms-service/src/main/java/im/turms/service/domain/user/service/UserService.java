@@ -28,6 +28,10 @@ import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
+import im.turms.server.common.infra.property.env.service.business.user.UserProperties;
 import im.turms.server.common.infra.security.PasswordManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.validation.Validator;
@@ -87,8 +91,16 @@ public class UserService {
     private final Counter registeredUsersCounter;
     private final Counter deletedUsersCounter;
 
+    private boolean activateUserWhenAdded;
+    private boolean deleteUserLogically;
+
+    private boolean allowSendMessagesToOneself;
+    private boolean allowSendMessagesToStranger;
+    private boolean checkIfTargetActiveAndNotDeleted;
+
     public UserService(
             Node node,
+            TurmsPropertiesManager propertiesManager,
             PasswordManager passwordManager,
             UserRepository userRepository,
             UserRelationshipService userRelationshipService,
@@ -113,6 +125,19 @@ public class UserService {
 
         registeredUsersCounter = metricsService.getRegistry().counter(MetricNameConst.REGISTERED_USERS_COUNTER);
         deletedUsersCounter = metricsService.getRegistry().counter(MetricNameConst.DELETED_USERS_COUNTER);
+
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        UserProperties userProperties = properties.getService().getUser();
+        activateUserWhenAdded = userProperties.isActivateUserWhenAdded();
+        deleteUserLogically = userProperties.isDeleteUserLogically();
+
+        MessageProperties messageProperties = properties.getService().getMessage();
+        allowSendMessagesToOneself = messageProperties.isAllowSendMessagesToOneself();
+        allowSendMessagesToStranger = messageProperties.isAllowSendMessagesToStranger();
+        checkIfTargetActiveAndNotDeleted = messageProperties.isCheckIfTargetActiveAndNotDeleted();
     }
 
     public Mono<ServicePermission> isAllowedToSendMessageToTarget(
@@ -135,12 +160,12 @@ public class UserService {
             return groupMemberService.isAllowedToSendMessage(targetId, requesterId)
                     .map(ServicePermission::get);
         } else if (requesterId.equals(targetId)) {
-            return node.getSharedProperties().getService().getMessage().isAllowSendMessagesToOneself()
+            return allowSendMessagesToOneself
                     ? Mono.just(ServicePermission.OK)
                     : Mono.just(ServicePermission.get(ResponseStatusCode.SENDING_MESSAGES_TO_ONESELF_IS_DISABLED));
         }
-        if (node.getSharedProperties().getService().getMessage().isAllowSendMessagesToStranger()) {
-            if (node.getSharedProperties().getService().getMessage().isCheckIfTargetActiveAndNotDeleted()) {
+        if (allowSendMessagesToStranger) {
+            if (checkIfTargetActiveAndNotDeleted) {
                 return userRepository.isActiveAndNotDeleted(targetId)
                         .flatMap(isActiveAndNotDeleted -> {
                             if (!isActiveAndNotDeleted) {
@@ -185,7 +210,7 @@ public class UserService {
         intro = intro == null ? "" : intro;
         profileAccess = profileAccess == null ? ProfileAccessStrategy.ALL : profileAccess;
         permissionGroupId = permissionGroupId == null ? DEFAULT_USER_PERMISSION_GROUP_ID : permissionGroupId;
-        isActive = isActive == null ? node.getSharedProperties().getService().getUser().isActivateUserWhenAdded() : isActive;
+        isActive = isActive == null ? activateUserWhenAdded : isActive;
         Date date = registrationDate == null ? now : registrationDate;
         User user = new User(
                 id,
@@ -286,7 +311,7 @@ public class UserService {
         }
         Mono<DeleteResult> deleteOrUpdateMono;
         if (deleteLogically == null) {
-            deleteLogically = node.getSharedProperties().getService().getUser().isDeleteUserLogically();
+            deleteLogically = deleteUserLogically;
         }
         if (deleteLogically) {
             deleteOrUpdateMono = userRepository.updateUsersDeleted(userIds)

@@ -22,9 +22,11 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.SetMultimap;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
-import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.LoginConflictStrategy;
 import im.turms.server.common.infra.property.constant.SimultaneousLoginStrategy;
+import im.turms.server.common.infra.property.env.gateway.SimultaneousLoginProperties;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import org.springframework.stereotype.Service;
 
@@ -38,8 +40,6 @@ import java.util.Set;
 @Service
 public class UserSimultaneousLoginService {
 
-    private final Node node;
-
     private SetMultimap<DeviceType, DeviceType> deviceTypeToExclusiveDeviceTypes;
 
     /**
@@ -47,19 +47,23 @@ public class UserSimultaneousLoginService {
      */
     private Set<DeviceType> forbiddenDeviceTypes;
 
-    public UserSimultaneousLoginService(Node node) {
-        this.node = node;
-        applyStrategy(node.getSharedProperties()
-                .getGateway()
-                .getSimultaneousLogin()
-                .getStrategy());
-        node.addPropertiesChangeListener(turmsProperties ->
-                applyStrategy(turmsProperties.getGateway().getSimultaneousLogin().getStrategy()));
+    private boolean allowDeviceTypeUnknownLogin;
+    private boolean allowDeviceTypeOthersLogin;
+    private LoginConflictStrategy loginConflictStrategy;
+
+    public UserSimultaneousLoginService(TurmsPropertiesManager propertiesManager) {
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
-    public void applyStrategy(@NotNull SimultaneousLoginStrategy strategy) {
-        deviceTypeToExclusiveDeviceTypes = newExclusiveDeviceFromStrategy(strategy);
-        forbiddenDeviceTypes = newForbiddenDeviceTypesFromStrategy(strategy);
+    private void updateProperties(TurmsProperties properties) {
+        SimultaneousLoginProperties loginProperties = properties.getGateway().getSimultaneousLogin();
+        allowDeviceTypeUnknownLogin = loginProperties.isAllowDeviceTypeUnknownLogin();
+        allowDeviceTypeOthersLogin = loginProperties.isAllowDeviceTypeOthersLogin();
+        loginConflictStrategy = loginProperties.getLoginConflictStrategy();
+
+        SimultaneousLoginStrategy simultaneousLoginStrategy = loginProperties.getStrategy();
+        deviceTypeToExclusiveDeviceTypes = newExclusiveDeviceFromStrategy(simultaneousLoginStrategy);
+        forbiddenDeviceTypes = newForbiddenDeviceTypesFromStrategy(simultaneousLoginStrategy);
     }
 
     public Set<DeviceType> getConflictedDeviceTypes(@NotNull @ValidDeviceType DeviceType deviceType) {
@@ -71,12 +75,7 @@ public class UserSimultaneousLoginService {
     }
 
     public boolean shouldDisconnectLoggingInDeviceIfConflicts() {
-        LoginConflictStrategy conflictStrategy = node
-                .getSharedProperties()
-                .getGateway()
-                .getSimultaneousLogin()
-                .getLoginConflictStrategy();
-        return conflictStrategy == LoginConflictStrategy.DISCONNECT_LOGGING_IN_DEVICE;
+        return loginConflictStrategy == LoginConflictStrategy.DISCONNECT_LOGGING_IN_DEVICE;
     }
 
     private SetMultimap<DeviceType, DeviceType> newExclusiveDeviceFromStrategy(SimultaneousLoginStrategy strategy) {
@@ -133,10 +132,10 @@ public class UserSimultaneousLoginService {
             }
             default -> throw new IllegalStateException("Unexpected value: " + strategy);
         }
-        if (!node.getSharedProperties().getGateway().getSimultaneousLogin().isAllowDeviceTypeUnknownLogin()) {
+        if (!allowDeviceTypeUnknownLogin) {
             newForbiddenDeviceTypes.add(DeviceType.UNKNOWN);
         }
-        if (!node.getSharedProperties().getGateway().getSimultaneousLogin().isAllowDeviceTypeOthersLogin()) {
+        if (!allowDeviceTypeOthersLogin) {
             newForbiddenDeviceTypes.add(DeviceType.OTHERS);
         }
         return newForbiddenDeviceTypes;

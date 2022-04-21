@@ -32,6 +32,9 @@ import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.service.business.group.GroupProperties;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
@@ -98,8 +101,13 @@ public class GroupService {
     private final Counter createdGroupsCounter;
     private final Counter deletedGroupsCounter;
 
+    private boolean activateGroupWhenCreated;
+    private boolean deleteGroupLogicallyByDefault;
+    private boolean notifyMembersAfterGroupDeleted;
+
     public GroupService(
             Node node,
+            TurmsPropertiesManager propertiesManager,
             GroupRepository groupRepository,
             GroupMemberService groupMemberService,
             GroupTypeService groupTypeService,
@@ -121,6 +129,15 @@ public class GroupService {
 
         createdGroupsCounter = metricsService.getRegistry().counter(CREATED_GROUPS_COUNTER);
         deletedGroupsCounter = metricsService.getRegistry().counter(DELETED_GROUPS_COUNTER);
+
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        GroupProperties groupProperties = properties.getService().getGroup();
+        activateGroupWhenCreated = groupProperties.isActivateGroupWhenCreated();
+        deleteGroupLogicallyByDefault = groupProperties.isDeleteGroupLogicallyByDefault();
+        notifyMembersAfterGroupDeleted = properties.getService().getNotification().isNotifyMembersAfterGroupDeleted();
     }
 
     public Mono<Group> createGroup(
@@ -146,7 +163,7 @@ public class GroupService {
             return Mono.error(e);
         }
         isActive = isActive == null
-                ? node.getSharedProperties().getService().getGroup().isActivateGroupWhenCreated()
+                ? activateGroupWhenCreated
                 : isActive;
         Long groupId = node.nextLargeGapId(ServiceType.GROUP);
         Group group = new Group(groupId,
@@ -194,7 +211,7 @@ public class GroupService {
                     if (!authenticated) {
                         return Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_TO_DELETE_GROUP));
                     }
-                    if (node.getSharedProperties().getService().getNotification().isNotifyMembersAfterGroupDeleted()) {
+                    if (notifyMembersAfterGroupDeleted) {
                         return groupMemberService.queryGroupMemberIds(groupId)
                                 .collect(Collectors.toSet())
                                 .flatMap(memberIds -> deleteGroupsAndGroupMembers(Set.of(groupId), null))
@@ -256,10 +273,7 @@ public class GroupService {
             @Nullable Set<Long> groupIds,
             @Nullable Boolean deleteLogically) {
         if (deleteLogically == null) {
-            deleteLogically = node.getSharedProperties()
-                    .getService()
-                    .getGroup()
-                    .isDeleteGroupLogicallyByDefault();
+            deleteLogically = deleteGroupLogicallyByDefault;
         }
         boolean finalShouldDeleteLogically = deleteLogically;
         return groupRepository

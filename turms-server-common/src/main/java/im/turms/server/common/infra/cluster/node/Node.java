@@ -89,19 +89,19 @@ public class Node {
     private final IdService idService;
 
     /**
-     * @param turmsPropertiesManager is used to get local properties and listen to their changes
+     * @param propertiesManager is used to get local properties and listen to their changes
      */
     public Node(
             ApplicationContext context,
             NodeType nodeType,
             TurmsApplicationContext turmsContext,
-            TurmsPropertiesManager turmsPropertiesManager,
+            TurmsPropertiesManager propertiesManager,
             BaseServiceAddressManager serviceAddressManager,
             HealthCheckManager healthCheckManager) {
         // Prepare node information
         this.context = context;
         this.nodeType = nodeType;
-        TurmsProperties turmsProperties = turmsPropertiesManager.getLocalProperties();
+        TurmsProperties turmsProperties = propertiesManager.getLocalProperties();
         ClusterProperties clusterProperties = turmsProperties.getCluster();
         SharedConfigProperties sharedConfigProperties = clusterProperties.getSharedConfig();
         NodeProperties nodeProperties = clusterProperties.getNode();
@@ -144,7 +144,7 @@ public class Node {
                 discoveryProperties,
                 serviceAddressManager,
                 sharedConfigService);
-        sharedPropertyService = new SharedPropertyService(clusterId, nodeType, turmsPropertiesManager);
+        sharedPropertyService = new SharedPropertyService(clusterId, nodeType, propertiesManager);
         idService = new IdService(discoveryService);
 
         List<ClusterService> allServices = List.of(
@@ -224,7 +224,7 @@ public class Node {
     }
 
     public void addPropertiesChangeListener(Consumer<TurmsProperties> listener) {
-        sharedPropertyService.addListeners(listener);
+        sharedPropertyService.addChangeListener(listener);
     }
 
     public boolean isActive() {

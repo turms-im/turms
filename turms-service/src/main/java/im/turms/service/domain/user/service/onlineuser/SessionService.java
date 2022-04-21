@@ -30,7 +30,6 @@ import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
-import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.reactor.ReactorUtil;
@@ -261,7 +260,7 @@ public class SessionService {
         // slow path
         // A user may have multiple sessions in different nodes,
         // so we need to merge them together
-        Map<Long, UserSessionsInfo> userIdToSessions = new HashMap<>(MapUtil.getCapability(userCount));
+        Map<Long, UserSessionsInfo> userIdToSessions = CollectionUtil.newMapWithExpectedSize(userCount);
         for (List<UserSessionsInfo> sessionsFromNode : sessionsFromNodes) {
             for (UserSessionsInfo sessions : sessionsFromNode) {
                 userIdToSessions.compute(sessions.userId(), (userId, existing) -> {

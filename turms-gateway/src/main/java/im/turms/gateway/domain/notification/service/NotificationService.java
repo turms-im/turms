@@ -60,11 +60,11 @@ public class NotificationService implements INotificationService {
             ApiLoggingContext apiLoggingContext,
             SessionService sessionService,
             PluginManager pluginManager,
-            TurmsPropertiesManager turmsPropertiesManager) {
+            TurmsPropertiesManager propertiesManager) {
         this.apiLoggingContext = apiLoggingContext;
         this.sessionService = sessionService;
         this.pluginManager = pluginManager;
-        isNotificationLoggingEnabled = turmsPropertiesManager
+        isNotificationLoggingEnabled = propertiesManager
                 .getLocalProperties().getGateway().getNotificationLogging().isEnabled();
     }
 

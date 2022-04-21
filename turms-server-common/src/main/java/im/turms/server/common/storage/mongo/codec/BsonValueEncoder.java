@@ -17,7 +17,6 @@
 
 package im.turms.server.common.storage.mongo.codec;
 
-import im.turms.server.common.storage.mongo.codec.EntityCodec;
 import org.bson.BsonArray;
 import org.bson.BsonBinary;
 import org.bson.BsonBoolean;

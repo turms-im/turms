@@ -68,7 +68,7 @@ public class AdminService extends BaseAdminService {
     public static final int MAX_PASSWORD_LIMIT = 32;
     public static final int MAX_NAME_LIMIT = 32;
     private final PasswordManager passwordManager;
-    private final TurmsPropertiesManager turmsPropertiesManager;
+    private final TurmsPropertiesManager propertiesManager;
     private final AdminRepository adminRepository;
     private final AdminRoleService adminRoleService;
 
@@ -76,12 +76,12 @@ public class AdminService extends BaseAdminService {
 
     public AdminService(
             PasswordManager passwordManager,
-            TurmsPropertiesManager turmsPropertiesManager,
+            TurmsPropertiesManager propertiesManager,
             AdminRepository adminRepository,
             AdminRoleService adminRoleService) {
         super(passwordManager, adminRepository, adminRoleService);
         this.passwordManager = passwordManager;
-        this.turmsPropertiesManager = turmsPropertiesManager;
+        this.propertiesManager = propertiesManager;
         this.adminRepository = adminRepository;
         this.adminRoleService = adminRoleService;
     }
@@ -178,7 +178,7 @@ public class AdminService extends BaseAdminService {
 
     public Mono<Admin> addRootAdmin() {
         return addAdmin(ROOT_ADMIN_ACCOUNT,
-                turmsPropertiesManager.getLocalProperties().getSecurity().getPassword().getInitialRootPassword(),
+                propertiesManager.getLocalProperties().getSecurity().getPassword().getInitialRootPassword(),
                 ADMIN_ROLE_ROOT_ID,
                 ROOT_ADMIN_ACCOUNT,
                 new Date(),

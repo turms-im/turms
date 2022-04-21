@@ -17,7 +17,6 @@
 
 package im.turms.server.common.infra.property.env.service;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.infra.property.env.service.business.NotificationProperties;
 import im.turms.server.common.infra.property.env.service.business.StorageProperties;
 import im.turms.server.common.infra.property.env.service.business.conversation.ConversationProperties;
@@ -30,7 +29,6 @@ import im.turms.server.common.infra.property.env.service.env.adminapi.AdminApiPr
 import im.turms.server.common.infra.property.env.service.env.clientapi.ClientApiProperties;
 import im.turms.server.common.infra.property.env.service.env.database.MongoProperties;
 import im.turms.server.common.infra.property.env.service.env.redis.TurmsRedisProperties;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -48,53 +46,41 @@ public class ServiceProperties {
 
     // Env
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private AdminApiProperties adminApi = new AdminApiProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private ClientApiProperties clientApi = new ClientApiProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private FakeProperties fake = new FakeProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private MongoProperties mongo = new MongoProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private TurmsRedisProperties redis = new TurmsRedisProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private StatisticsProperties statistics = new StatisticsProperties();
 
     // Business
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private ConversationProperties conversation = new ConversationProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private MessageProperties message = new MessageProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private GroupProperties group = new GroupProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private UserProperties user = new UserProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private StorageProperties storage = new StorageProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private NotificationProperties notification = new NotificationProperties();
 

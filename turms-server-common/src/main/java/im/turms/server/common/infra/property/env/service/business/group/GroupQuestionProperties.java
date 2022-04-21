@@ -17,10 +17,9 @@
 
 package im.turms.server.common.infra.property.env.service.business.group;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,19 +38,19 @@ public class GroupQuestionProperties {
 
     @Description("The maximum allowed length for the text of a group question")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int questionContentLimit = 200;
 
     @Description("The maximum allowed length for the text of a group question's answer")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int answerContentLimit = 50;
 
     @Description("The maximum number of answers for a group question")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int maxAnswerCount = 10;
 

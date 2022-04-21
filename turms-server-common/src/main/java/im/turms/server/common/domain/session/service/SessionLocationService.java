@@ -23,8 +23,8 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.UserSessionId;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.location.LocationProperties;
 import im.turms.server.common.infra.property.env.common.location.UsersNearbyRequestProperties;
@@ -50,22 +50,34 @@ import java.util.Date;
 @Service
 public class SessionLocationService {
 
-    private final Node node;
+    private final TurmsRedisClientManager locationRedisClientManager;
+
     @Getter
     private final boolean locationEnabled;
     @Getter
     private final boolean treatUserIdAndDeviceTypeAsUniqueUser;
-    private final TurmsRedisClientManager locationRedisClientManager;
+    private short defaultMaxAvailableNearbyUsersNumber;
+    private int defaultMaxDistanceMeters;
+    private int maxAvailableUsersNearbyNumberLimitPerQuery;
+    private int maxDistanceMeters;
 
     public SessionLocationService(
-            Node node,
-            TurmsPropertiesManager turmsPropertiesManager,
+            TurmsPropertiesManager propertiesManager,
             TurmsRedisClientManager locationRedisClientManager) {
-        this.node = node;
         this.locationRedisClientManager = locationRedisClientManager;
-        LocationProperties locationProperties = turmsPropertiesManager.getLocalProperties().getLocation();
+        LocationProperties locationProperties = propertiesManager.getLocalProperties().getLocation();
         locationEnabled = locationProperties.isEnabled();
         treatUserIdAndDeviceTypeAsUniqueUser = locationProperties.isTreatUserIdAndDeviceTypeAsUniqueUser();
+
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        UsersNearbyRequestProperties requestProperties = properties.getLocation().getUsersNearbyRequest();
+        defaultMaxAvailableNearbyUsersNumber = requestProperties.getDefaultMaxAvailableNearbyUsersNumber();
+        defaultMaxDistanceMeters = requestProperties.getDefaultMaxDistanceMeters();
+        maxAvailableUsersNearbyNumberLimitPerQuery = requestProperties.getMaxAvailableUsersNearbyNumberLimit();
+        maxDistanceMeters = requestProperties.getMaxDistanceMeters();
     }
 
     /**
@@ -134,21 +146,20 @@ public class SessionLocationService {
         if (!locationEnabled) {
             return Flux.error(ResponseException.get(ResponseStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
-        UsersNearbyRequestProperties usersNearbyRequest = node.getSharedProperties().getLocation().getUsersNearbyRequest();
         if (maxNumber == null) {
-            maxNumber = usersNearbyRequest.getDefaultMaxAvailableNearbyUsersNumber();
+            maxNumber = defaultMaxAvailableNearbyUsersNumber;
         }
-        short maxAvailableUsersNearbyNumberLimitPerQuery = usersNearbyRequest.getMaxAvailableUsersNearbyNumberLimit();
-        if (maxNumber > maxAvailableUsersNearbyNumberLimitPerQuery) {
-            String reason = "The maximum available users nearby number is " + maxAvailableUsersNearbyNumberLimitPerQuery;
+        int maxAvailableUsersNearbyNumberLimit = maxAvailableUsersNearbyNumberLimitPerQuery;
+        if (maxNumber > maxAvailableUsersNearbyNumberLimit) {
+            String reason = "The maximum available users nearby number is " + maxAvailableUsersNearbyNumberLimit;
             return Flux.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, reason));
         }
         if (maxDistance == null) {
-            maxDistance = usersNearbyRequest.getDefaultMaxDistanceMeters();
+            maxDistance = defaultMaxDistanceMeters;
         }
-        double maxDistanceMeters = usersNearbyRequest.getMaxDistanceMeters();
-        if (maxDistance > maxDistanceMeters) {
-            String reason = "The maximum allowed distance in meters is " + maxDistanceMeters;
+        int localMaxDistanceMeters = maxDistanceMeters;
+        if (maxDistance > localMaxDistanceMeters) {
+            String reason = "The maximum allowed distance in meters is " + localMaxDistanceMeters;
             return Flux.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, reason));
         }
         Object currentUserSessionId = treatUserIdAndDeviceTypeAsUniqueUser

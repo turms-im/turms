@@ -23,8 +23,9 @@ import im.turms.server.common.access.client.dto.request.conversation.QueryConver
 import im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest;
 import im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectorUtil;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
@@ -47,17 +48,29 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 @Controller
 public class ConversationServiceController {
 
-    private final Node node;
     private final ConversationService conversationService;
     private final GroupMemberService groupMemberService;
 
+    private boolean isTypingStatusEnabled;
+    private boolean notifyPrivateConversationParticipantAfterReadDateUpdated;
+    private boolean notifyGroupConversationParticipantsAfterReadDateUpdated;
+
     public ConversationServiceController(
-            Node node,
+            TurmsPropertiesManager propertiesManager,
             ConversationService conversationService,
             GroupMemberService groupMemberService) {
-        this.node = node;
         this.conversationService = conversationService;
         this.groupMemberService = groupMemberService;
+
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        isTypingStatusEnabled = properties.getService().getConversation().getTypingStatus().isEnabled();
+        notifyPrivateConversationParticipantAfterReadDateUpdated = properties.getService().getNotification()
+                .isNotifyPrivateConversationParticipantAfterReadDateUpdated();
+        notifyGroupConversationParticipantsAfterReadDateUpdated = properties.getService().getNotification()
+                .isNotifyGroupConversationParticipantsAfterReadDateUpdated();
     }
 
     @ServiceRequestMapping(QUERY_CONVERSATIONS_REQUEST)
@@ -108,7 +121,7 @@ public class ConversationServiceController {
     @ServiceRequestMapping(UPDATE_TYPING_STATUS_REQUEST)
     public ClientRequestHandler handleUpdateTypingStatusRequest() {
         return clientRequest -> {
-            if (!node.getSharedProperties().getService().getConversation().getTypingStatus().isEnabled()) {
+            if (!isTypingStatusEnabled) {
                 return Mono.just(RequestHandlerResultFactory.get(ResponseStatusCode.UPDATING_TYPING_STATUS_IS_DISABLED));
             }
             UpdateTypingStatusRequest request = clientRequest.turmsRequest()
@@ -144,15 +157,13 @@ public class ConversationServiceController {
             }
             return mono.then(Mono.defer(() -> {
                 if (isUpdatePrivateConversationRequest) {
-                    if (node.getSharedProperties().getService().getNotification()
-                            .isNotifyPrivateConversationParticipantAfterReadDateUpdated()) {
+                    if (notifyPrivateConversationParticipantAfterReadDateUpdated) {
                         return Mono.just(RequestHandlerResultFactory.get(
                                 targetId,
                                 clientRequest.turmsRequest(),
                                 ResponseStatusCode.OK));
                     }
-                } else if (node.getSharedProperties().getService().getNotification()
-                        .isNotifyGroupConversationParticipantsAfterReadDateUpdated()) {
+                } else if (notifyGroupConversationParticipantsAfterReadDateUpdated) {
                     return groupMemberService.queryGroupMemberIds(targetId)
                             .collect(CollectorUtil.toSet(50))
                             .map(memberIds -> RequestHandlerResultFactory.get(

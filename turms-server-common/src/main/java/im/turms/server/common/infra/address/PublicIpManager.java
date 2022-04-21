@@ -34,15 +34,15 @@ import java.util.List;
 @Component
 public class PublicIpManager {
 
-    private final TurmsPropertiesManager turmsPropertiesManager;
+    private final TurmsPropertiesManager propertiesManager;
     private HttpClient client;
 
-    public PublicIpManager(TurmsPropertiesManager turmsPropertiesManager) {
-        this.turmsPropertiesManager = turmsPropertiesManager;
+    public PublicIpManager(TurmsPropertiesManager propertiesManager) {
+        this.propertiesManager = propertiesManager;
     }
 
     public Mono<String> getPublicIp() {
-        List<String> ipDetectorAddresses = turmsPropertiesManager.getLocalProperties().getIp().getPublicIpDetectorAddresses();
+        List<String> ipDetectorAddresses = propertiesManager.getLocalProperties().getIp().getPublicIpDetectorAddresses();
         if (ipDetectorAddresses.isEmpty()) {
             throw new IllegalStateException("Failed to detect the public IP because cannot find an IP detector address");
         }

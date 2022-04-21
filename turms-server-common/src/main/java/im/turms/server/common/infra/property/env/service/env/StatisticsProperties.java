@@ -17,8 +17,9 @@
 
 package im.turms.server.common.infra.property.env.service.env;
 
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import im.turms.server.common.infra.task.CronConst;
 import im.turms.server.common.infra.validation.ValidCron;
 import lombok.AllArgsConstructor;
@@ -41,6 +42,7 @@ public class StatisticsProperties {
 
     @Description("Whether to log online users number")
     @GlobalProperty
+    @MutableProperty
     private boolean logOnlineUsersNumber = true;
 
 }

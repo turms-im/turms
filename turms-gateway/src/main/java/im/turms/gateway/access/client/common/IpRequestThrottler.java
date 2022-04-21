@@ -19,10 +19,10 @@ package im.turms.gateway.access.client.common;
 
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.infra.thread.ThreadNameConst;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.clientapi.ClientApiProperties;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.throttle.TokenBucket;
@@ -57,7 +57,7 @@ public class IpRequestThrottler {
      */
     private final ConcurrentHashMap<ByteArrayWrapper, TokenBucket> ipToRequestTokenBucket = new ConcurrentHashMap<>(256);
 
-    public IpRequestThrottler(Node node, SessionService sessionService) {
+    public IpRequestThrottler(TurmsPropertiesManager propertiesManager, SessionService sessionService) {
         sessionService.addOnSessionClosedListeners(session ->
                 // Try to remove the buckets with enough tokens
                 // because most clients won't log in again once they have gone offline,
@@ -65,10 +65,11 @@ public class IpRequestThrottler {
                 ipToRequestTokenBucket.computeIfPresent(session.getIp(), (key, bucket) ->
                         bucket.isTokensMoreThanOrEqualsToInitialTokens() ? null : bucket));
 
-        ClientApiProperties clientApiProperties = node.getSharedProperties().getGateway().getClientApi();
+        ClientApiProperties clientApiProperties = propertiesManager.getGlobalProperties().getGateway().getClientApi();
         requestTokenBucketContext = new TokenBucketContext(clientApiProperties.getRateLimiting());
 
-        node.addPropertiesChangeListener(newProperties -> requestTokenBucketContext.updateRequestTokenBucket(clientApiProperties.getRateLimiting()));
+        propertiesManager.addGlobalPropertiesChangeListener(newProperties -> requestTokenBucketContext
+                .updateRequestTokenBucket(newProperties.getGateway().getClientApi().getRateLimiting()));
 
         new NamedThreadFactory(ThreadNameConst.IP_REQUEST_TOKEN_BUCKET_CLEANER, true)
                 .newThread(() -> {

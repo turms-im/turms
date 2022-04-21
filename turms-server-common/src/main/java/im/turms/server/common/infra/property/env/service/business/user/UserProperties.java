@@ -17,10 +17,9 @@
 
 package im.turms.server.common.infra.property.env.service.business.user;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,28 +35,27 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @NoArgsConstructor
 public class UserProperties {
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private FriendRequestProperties friendRequest = new FriendRequestProperties();
 
     @Description("Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean respondOfflineIfInvisible;
 
     @Description("Whether to delete the two-sided relationships when a user requests to delete a relationship")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean deleteTwoSidedRelationships;
 
     @Description("Whether to delete a user logically")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean deleteUserLogically = true;
 
     @Description("Whether to activate a user when added by default")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean activateUserWhenAdded = true;
 
 }

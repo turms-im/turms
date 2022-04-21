@@ -17,10 +17,9 @@
 
 package im.turms.server.common.infra.property.env.gateway;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,7 +40,7 @@ public class SessionProperties {
             "(including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: " +
             "https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int closeIdleSessionAfterSeconds = 180;
 
@@ -50,14 +49,14 @@ public class SessionProperties {
             "should keep sending heartbeat requests over UDP if they want to keep online. " +
             "Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP isn't supported")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int switchProtocolAfterSeconds = closeIdleSessionAfterSeconds * 3;
 
     @Description("The minimum interval to refresh the heartbeat status by client requests " +
             "to avoid refreshing the heartbeat status frequently")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int minHeartbeatIntervalSeconds = closeIdleSessionAfterSeconds / 10;
 
@@ -65,18 +64,20 @@ public class SessionProperties {
             "Note that the value will NOT change the actual heartbeat behavior of clients, " +
             "and the value is only used to facilitate related operations of turms-gateway")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int clientHeartbeatIntervalSeconds = closeIdleSessionAfterSeconds / 3;
 
     @Description("Whether to notify clients of the session information after connected with the server")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean notifyClientsOfSessionInfoAfterConnected = true;
 
     @Description("Whether to authenticate users when logging in." +
             "Note that user ID is always required even if enableAuthentication is false; " +
             "If false, turms-gateway won't connect to the MongoDB server for user records")
+    @GlobalProperty
+    @MutableProperty
     private boolean enableAuthentication;
 
 }

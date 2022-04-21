@@ -22,9 +22,10 @@ import com.google.common.collect.Multimap;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.business.conversation.ReadReceiptProperties;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -55,28 +56,38 @@ import java.util.Set;
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class ConversationService {
 
-    private final Node node;
     private final GroupConversationRepository groupConversationRepository;
     private final PrivateConversationRepository privateConversationRepository;
 
+    private boolean allowMoveReadDateForward;
+    private boolean isReadReceiptEnabled;
+    private boolean useServerTime;
+
     public ConversationService(
-            Node node,
+            TurmsPropertiesManager propertiesManager,
             GroupConversationRepository groupConversationRepository,
             PrivateConversationRepository privateConversationRepository) {
-        this.node = node;
         this.groupConversationRepository = groupConversationRepository;
         this.privateConversationRepository = privateConversationRepository;
+
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        ReadReceiptProperties readReceiptProperties = properties.getService().getConversation().getReadReceipt();
+        allowMoveReadDateForward = readReceiptProperties.isAllowMoveReadDateForward();
+        isReadReceiptEnabled = readReceiptProperties.isEnabled();
+        useServerTime = readReceiptProperties.isUseServerTime();
     }
 
     // TODO: authenticate
     public Mono<Void> authAndUpsertGroupConversationReadDate(@NotNull Long groupId,
                                                              @NotNull Long memberId,
                                                              @Nullable @PastOrPresent Date readDate) {
-        ReadReceiptProperties properties = node.getSharedProperties().getService().getConversation().getReadReceipt();
-        if (!properties.isEnabled()) {
+        if (!isReadReceiptEnabled) {
             return Mono.error(ResponseException.get(ResponseStatusCode.UPDATING_READ_DATE_IS_DISABLED));
         }
-        if (properties.isUseServerTime()) {
+        if (useServerTime) {
             readDate = new Date();
         }
         return upsertGroupConversationReadDate(groupId, memberId, readDate);
@@ -86,11 +97,10 @@ public class ConversationService {
     public Mono<Void> authAndUpsertPrivateConversationReadDate(@NotNull Long ownerId,
                                                                @NotNull Long targetId,
                                                                @Nullable @PastOrPresent Date readDate) {
-        ReadReceiptProperties properties = node.getSharedProperties().getService().getConversation().getReadReceipt();
-        if (!properties.isEnabled()) {
+        if (!isReadReceiptEnabled) {
             return Mono.error(ResponseException.get(ResponseStatusCode.UPDATING_READ_DATE_IS_DISABLED));
         }
-        if (properties.isUseServerTime()) {
+        if (useServerTime) {
             readDate = new Date();
         }
         return upsertPrivateConversationReadDate(ownerId, targetId, readDate);
@@ -107,8 +117,6 @@ public class ConversationService {
             return Mono.error(e);
         }
         Date finalReadDate = readDate == null ? new Date() : readDate;
-        boolean allowMoveReadDateForward =
-                node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward();
         return groupConversationRepository.upsert(groupId, memberId, finalReadDate, allowMoveReadDateForward)
                 .onErrorResume(DuplicateKeyException.class,
                         e -> readDate == null
@@ -169,8 +177,6 @@ public class ConversationService {
             return Mono.error(e);
         }
         Date finalReadDate = readDate == null ? new Date() : readDate;
-        boolean allowMoveReadDateForward =
-                node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward();
         return privateConversationRepository.upsert(keys, finalReadDate, allowMoveReadDateForward)
                 .onErrorResume(DuplicateKeyException.class,
                         e -> readDate == null

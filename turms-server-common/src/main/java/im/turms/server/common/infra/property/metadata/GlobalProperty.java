@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.metadata.annotation;
+package im.turms.server.common.infra.property.metadata;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -17,9 +17,7 @@
 
 package im.turms.server.common.infra.property.env.common.cluster;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.infra.property.env.common.cluster.connection.ConnectionProperties;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,23 +35,18 @@ public class ClusterProperties {
 
     private String id = "turms";
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private NodeProperties node = new NodeProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private ConnectionProperties connection = new ConnectionProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private DiscoveryProperties discovery = new DiscoveryProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private SharedConfigProperties sharedConfig = new SharedConfigProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private RpcProperties rpc = new RpcProperties();
 

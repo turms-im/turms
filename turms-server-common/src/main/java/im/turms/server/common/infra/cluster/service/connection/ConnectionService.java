@@ -20,7 +20,7 @@ package im.turms.server.common.infra.cluster.service.connection;
 import im.turms.server.common.infra.cluster.service.ClusterService;
 import im.turms.server.common.infra.cluster.service.codec.CodecService;
 import im.turms.server.common.infra.cluster.service.config.SharedConfigService;
-import im.turms.server.common.infra.cluster.service.config.domain.discovery.Member;
+import im.turms.server.common.infra.cluster.service.config.entity.discovery.Member;
 import im.turms.server.common.infra.cluster.service.connection.request.ClosingHandshakeRequest;
 import im.turms.server.common.infra.cluster.service.connection.request.KeepaliveRequest;
 import im.turms.server.common.infra.cluster.service.connection.request.OpeningHandshakeRequest;

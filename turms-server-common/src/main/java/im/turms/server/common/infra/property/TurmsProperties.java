@@ -17,7 +17,6 @@
 
 package im.turms.server.common.infra.property;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.infra.property.env.common.FlightRecorderProperties;
 import im.turms.server.common.infra.property.env.common.IpProperties;
 import im.turms.server.common.infra.property.env.common.PluginProperties;
@@ -29,7 +28,6 @@ import im.turms.server.common.infra.property.env.common.logging.LoggingPropertie
 import im.turms.server.common.infra.property.env.common.security.SecurityProperties;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -55,49 +53,38 @@ public class TurmsProperties {
 
     // Common
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private ClusterProperties cluster = new ClusterProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private FlightRecorderProperties flightRecorder = new FlightRecorderProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private HealthCheckProperties healthCheck = new HealthCheckProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private IpProperties ip = new IpProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private LocationProperties location = new LocationProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private LoggingProperties logging = new LoggingProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private PluginProperties plugin = new PluginProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private SecurityProperties security = new SecurityProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private UserStatusProperties userStatus = new UserStatusProperties();
 
     // Gateway and Service
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private GatewayProperties gateway = new GatewayProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private ServiceProperties service = new ServiceProperties();
 

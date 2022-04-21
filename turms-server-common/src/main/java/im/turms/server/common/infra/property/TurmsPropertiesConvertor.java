@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import lombok.SneakyThrows;
@@ -29,7 +28,6 @@ import lombok.SneakyThrows;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.MAPPER;
@@ -121,7 +119,7 @@ public class TurmsPropertiesConvertor {
     private static Map<String, Object> mergeMetadataWithPropertyValue0(Map<String, Object> metadata,
                                                                        Object properties) {
         Class<?> propertiesClass = properties.getClass();
-        Map<String, Object> metadataWithValue = new HashMap<>(MapUtil.getCapability(metadata.size() + 1));
+        Map<String, Object> metadataWithValue = CollectionUtil.newMapWithExpectedSize(metadata.size() + 1);
         for (Map.Entry<String, Object> entry : metadata.entrySet()) {
             String key = entry.getKey();
             Map<String, Object> originalValueMetadata = (Map<String, Object>) entry.getValue();

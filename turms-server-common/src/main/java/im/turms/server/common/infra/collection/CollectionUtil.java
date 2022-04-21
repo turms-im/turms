@@ -90,7 +90,7 @@ public final class CollectionUtil {
     }
 
     public static <T> Set<T> intersection(Set<T> c1, Collection<T> c2) {
-        Set<T> result = UnifiedSet.newSet(MapUtil.getCapability(Math.min(c1.size(), c2.size())));
+        Set<T> result = newSetWithExpectedSize(Math.min(c1.size(), c2.size()));
         for (T value : c2) {
             if (c1.contains(value)) {
                 result.add(value);

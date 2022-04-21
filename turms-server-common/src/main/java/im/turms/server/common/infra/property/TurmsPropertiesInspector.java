@@ -19,20 +19,21 @@ package im.turms.server.common.infra.property;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.AnnotatedField;
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import im.turms.server.common.infra.collection.MapUtil;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import im.turms.server.common.infra.validation.ValidCron;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -69,8 +70,6 @@ public class TurmsPropertiesInspector {
             .registerModule(new JavaTimeModule())
             .setSerializationInclusion(JsonInclude.Include.NON_NULL);
     public static final ObjectWriter MUTABLE_PROPERTIES_WRITER = JsonMapper.builder()
-            // Only serialize the properties with "MutablePropertiesView"
-            .disable(MapperFeature.DEFAULT_VIEW_INCLUSION)
             // e.g. "SharedConfigProperties" is an empty bean
             .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
             .build()
@@ -78,7 +77,19 @@ public class TurmsPropertiesInspector {
             // Use "NON_NULL" instead of "NON_EMPTY"
             // because we allow admins to apply the properties with empty collection
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-            .writerWithView(MutablePropertiesView.class);
+            .setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
+                @Override
+                public boolean hasIgnoreMarker(AnnotatedMember m) {
+                    if (super.hasIgnoreMarker(m)) {
+                        return true;
+                    }
+                    if (m instanceof AnnotatedField) {
+                        return !_hasAnnotation(m, NestedConfigurationProperty.class) && !_hasAnnotation(m, MutableProperty.class);
+                    }
+                    return false;
+                }
+            })
+            .writer();
 
     /**
      * Only includes non-static fields
@@ -101,7 +112,7 @@ public class TurmsPropertiesInspector {
         CLASS_TO_NAME_TO_FIELD = new IdentityHashMap<>(CLASS_TO_FIELDS.size());
         for (Map.Entry<Class<?>, List<Field>> classAndFields : classToFields.entrySet()) {
             List<Field> fields = classAndFields.getValue();
-            Map<String, Field> nameToField = new HashMap<>(MapUtil.getCapability(fields.size()));
+            Map<String, Field> nameToField = CollectionUtil.newMapWithExpectedSize(fields.size());
             for (Field field : fields) {
                 nameToField.put(field.getName(), field);
             }
@@ -118,15 +129,7 @@ public class TurmsPropertiesInspector {
     }
 
     public static boolean isMutableProperty(Field field) {
-        JsonView jsonView = field.getDeclaredAnnotation(JsonView.class);
-        if (jsonView != null) {
-            for (Class<?> clazz : jsonView.value()) {
-                if (clazz == MutablePropertiesView.class) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return field.isAnnotationPresent(MutableProperty.class);
     }
 
     public static boolean isNestedProperty(Field field) {
@@ -186,12 +189,13 @@ public class TurmsPropertiesInspector {
                                                    Class<?> clazz,
                                                    boolean onlyMutable) {
         for (Field field : CLASS_TO_FIELDS.get(clazz)) {
+            boolean isNestedProperty = isNestedProperty(field);
             if (field.isAnnotationPresent(JsonIgnore.class)
-                    || (onlyMutable && !isMutableProperty(field))) {
+                    || (onlyMutable && (!isMutableProperty(field) && !isNestedProperty))) {
                 continue;
             }
             Class<?> type = field.getType();
-            Object fieldMetadata = isNestedProperty(field)
+            Object fieldMetadata = isNestedProperty
                     ? getMetadata(new HashMap<>(), type, onlyMutable)
                     : getFlatFieldMetadata(field);
             metadataOutput.put(field.getName(), fieldMetadata);

@@ -101,7 +101,7 @@ public class AutoBlockManager<T> {
         blockedClientIdToStatus.remove(id);
     }
 
-    public void evictExpiredBlockedClient() {
+    public void evictExpiredBlockedClients() {
         long now = System.currentTimeMillis();
         Iterator<BlockStatus> iterator = blockedClientIdToStatus.values().iterator();
         while (iterator.hasNext()) {

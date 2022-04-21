@@ -52,7 +52,6 @@ import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.plugin.SequentialExtensionPointInvoker;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
 import im.turms.server.common.infra.property.env.gateway.SessionProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.reactor.ReactorUtil;
@@ -95,7 +94,7 @@ public class SessionService implements ISessionService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SessionService.class);
 
     private final Node node;
-    private final TurmsPropertiesManager turmsPropertiesManager;
+    private final TurmsPropertiesManager propertiesManager;
     private final HeartbeatManager heartbeatManager;
     private final PluginManager pluginManager;
 
@@ -103,8 +102,6 @@ public class SessionService implements ISessionService {
     private final UserService userService;
     private final UserStatusService userStatusService;
     private final UserSimultaneousLoginService userSimultaneousLoginService;
-
-    private int closeIdleSessionAfterSeconds;
 
     private final ConcurrentHashMap<Long, UserSessionsManager> userIdToSessionsManager;
     /**
@@ -118,9 +115,14 @@ public class SessionService implements ISessionService {
 
     private final Counter loggedInUsersCounter;
 
+    private int closeIdleSessionAfterSeconds;
+    private boolean enableAuthentication;
+    private boolean notifyClientsOfSessionInfoAfterConnected;
+    private String serverId;
+
     public SessionService(
             Node node,
-            TurmsPropertiesManager turmsPropertiesManager,
+            TurmsPropertiesManager propertiesManager,
             PluginManager pluginManager,
             SessionLocationService sessionLocationService,
             UserService userService,
@@ -129,18 +131,18 @@ public class SessionService implements ISessionService {
             MetricsService metricsService) {
         this.node = node;
         this.sessionLocationService = sessionLocationService;
-        this.turmsPropertiesManager = turmsPropertiesManager;
+        this.propertiesManager = propertiesManager;
         this.pluginManager = pluginManager;
         this.userService = userService;
         this.userStatusService = userStatusService;
         this.userSimultaneousLoginService = userSimultaneousLoginService;
-        TurmsProperties turmsProperties = node.getSharedProperties();
         userIdToSessionsManager = new ConcurrentHashMap<>(4096);
         ipToSessions = new ConcurrentHashMap<>(4096);
 
-        SessionProperties sessionProperties = turmsProperties.getGateway().getSession();
-        closeIdleSessionAfterSeconds = sessionProperties.getCloseIdleSessionAfterSeconds();
+        updateGlobalProperties(propertiesManager.getGlobalProperties());
+        updateLocalProperties(propertiesManager.getLocalProperties());
 
+        SessionProperties sessionProperties = propertiesManager.getGlobalProperties().getGateway().getSession();
         heartbeatManager = new HeartbeatManager(this,
                 userStatusService,
                 userIdToSessionsManager,
@@ -149,19 +151,30 @@ public class SessionService implements ISessionService {
                 sessionProperties.getMinHeartbeatIntervalSeconds(),
                 sessionProperties.getSwitchProtocolAfterSeconds());
 
-        node.addPropertiesChangeListener(newProperties -> {
-            GatewayProperties newGatewayProperties = newProperties.getGateway();
-            SessionProperties newSessionProperties = newGatewayProperties.getSession();
-            closeIdleSessionAfterSeconds = newSessionProperties.getCloseIdleSessionAfterSeconds();
+        propertiesManager.addGlobalPropertiesChangeListener(newProperties -> {
+            updateGlobalProperties(newProperties);
+            SessionProperties newSessionProperties = newProperties.getGateway().getSession();
             heartbeatManager.setClientHeartbeatIntervalSeconds(newSessionProperties.getClientHeartbeatIntervalSeconds());
             heartbeatManager.setCloseIdleSessionAfterSeconds(newSessionProperties.getCloseIdleSessionAfterSeconds());
             heartbeatManager.setMinHeartbeatIntervalMillis(newSessionProperties.getMinHeartbeatIntervalSeconds() * 1000);
             heartbeatManager.setSwitchProtocolAfterMillis(newSessionProperties.getSwitchProtocolAfterSeconds() * 1000);
         });
+        propertiesManager.addLocalPropertiesChangeListener(this::updateLocalProperties);
 
         MeterRegistry registry = metricsService.getRegistry();
         loggedInUsersCounter = registry.counter(LOGGED_IN_USERS_COUNTER);
         registry.gaugeMapSize(ONLINE_USERS_GAUGE, Tags.empty(), userIdToSessionsManager);
+    }
+
+    private void updateGlobalProperties(TurmsProperties properties) {
+        SessionProperties sessionProperties = properties.getGateway().getSession();
+        closeIdleSessionAfterSeconds = sessionProperties.getCloseIdleSessionAfterSeconds();
+        enableAuthentication = sessionProperties.isEnableAuthentication();
+        notifyClientsOfSessionInfoAfterConnected = sessionProperties.isNotifyClientsOfSessionInfoAfterConnected();
+    }
+
+    private void updateLocalProperties(TurmsProperties properties) {
+        serverId = properties.getGateway().getServiceDiscovery().getIdentity();
     }
 
     @PreDestroy
@@ -217,7 +230,6 @@ public class SessionService implements ISessionService {
         if (userId.equals(AdminConst.ADMIN_REQUESTER_ID)) {
             return Mono.just(ResponseStatusCode.LOGIN_AUTHENTICATION_FAILED);
         }
-        boolean enableAuthentication = node.getSharedProperties().getGateway().getSession().isEnableAuthentication();
         if (!enableAuthentication) {
             return Mono.just(ResponseStatusCode.OK);
         }
@@ -645,8 +657,7 @@ public class SessionService implements ISessionService {
     public void onSessionEstablished(@NotNull UserSessionsManager userSessionsManager,
                                      @NotNull @ValidDeviceType DeviceType deviceType) {
         loggedInUsersCounter.increment();
-        if (node.getSharedProperties().getGateway().getSession().isNotifyClientsOfSessionInfoAfterConnected()) {
-            String serverId = turmsPropertiesManager.getLocalProperties().getGateway().getServiceDiscovery().getIdentity();
+        if (notifyClientsOfSessionInfoAfterConnected) {
             userSessionsManager.pushSessionNotification(deviceType, serverId);
         }
     }

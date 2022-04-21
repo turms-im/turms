@@ -24,8 +24,8 @@ import im.turms.server.common.domain.common.dto.response.PaginationDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.user.access.admin.dto.request.AddRelationshipGroupDTO;
@@ -61,8 +61,9 @@ import static im.turms.server.common.access.admin.permission.AdminPermission.USE
 public class UserRelationshipGroupController extends BaseController {
     private final UserRelationshipGroupService userRelationshipGroupService;
 
-    public UserRelationshipGroupController(Node node, UserRelationshipGroupService userRelationshipGroupService) {
-        super(node);
+    public UserRelationshipGroupController(TurmsPropertiesManager propertiesManager,
+                                           UserRelationshipGroupService userRelationshipGroupService) {
+        super(propertiesManager);
         this.userRelationshipGroupService = userRelationshipGroupService;
     }
 

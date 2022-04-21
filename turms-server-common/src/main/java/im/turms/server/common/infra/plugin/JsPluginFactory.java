@@ -17,7 +17,7 @@
 
 package im.turms.server.common.infra.plugin;
 
-import im.turms.server.common.infra.collection.MapUtil;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.plugin.script.CorruptedScriptException;
 import im.turms.server.common.infra.plugin.script.JsContext;
 import im.turms.server.common.infra.plugin.script.ValueInspector;
@@ -34,7 +34,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,7 +137,7 @@ public class JsPluginFactory {
             Method[] methods = extensionPointClass.getMethods();
             for (Method method : methods) {
                 Map<String, Value> nameToFunction = extensionPointToFunction
-                        .computeIfAbsent(extensionPointClass, clazz -> new HashMap<>(MapUtil.getCapability(methods.length)));
+                        .computeIfAbsent(extensionPointClass, clazz -> CollectionUtil.newMapWithExpectedSize(methods.length));
                 String methodName = method.getName();
                 Value function = extension.getMember(methodName);
                 if (function != null && function.canExecute()) {

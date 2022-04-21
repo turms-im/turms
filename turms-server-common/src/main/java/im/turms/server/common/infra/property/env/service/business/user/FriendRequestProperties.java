@@ -17,10 +17,9 @@
 
 package im.turms.server.common.infra.property.env.service.business.user;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import im.turms.server.common.infra.task.CronConst;
 import im.turms.server.common.infra.validation.ValidCron;
 import lombok.AllArgsConstructor;
@@ -41,18 +40,18 @@ public class FriendRequestProperties {
 
     @Description("The maximum allowed length for the text of a friend request")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
-    @Min(1)
+    @MutableProperty
+    @Min(0)
     private int contentLimit = 200;
 
     @Description("Whether to allow resending a friend request after the previous request has been declined, ignored, or expired")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean allowSendRequestAfterDeclinedOrIgnoredOrExpired;
 
     @Description("A friend request will become expired after the expireAfter has elapsed")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int friendRequestExpireAfterSeconds = 30 * 24 * 3600;
 
@@ -63,7 +62,7 @@ public class FriendRequestProperties {
 
     @Description("Whether to delete expired when the cron expression is triggered")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean deleteExpiredRequestsWhenCronTriggered;
 
 }

@@ -45,10 +45,10 @@ public class ClusterConfig {
             ApplicationContext context,
             NodeType nodeType,
             TurmsApplicationContext turmsContext,
-            TurmsPropertiesManager turmsPropertiesManager,
+            TurmsPropertiesManager propertiesManager,
             BaseServiceAddressManager serviceAddressManager,
             HealthCheckManager healthCheckManager) {
-        node = new Node(context, nodeType, turmsContext, turmsPropertiesManager, serviceAddressManager, healthCheckManager);
+        node = new Node(context, nodeType, turmsContext, propertiesManager, serviceAddressManager, healthCheckManager);
         node.start();
         return node;
     }

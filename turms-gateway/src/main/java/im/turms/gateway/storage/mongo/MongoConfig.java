@@ -37,8 +37,8 @@ import org.springframework.context.annotation.Configuration;
 public class MongoConfig extends BaseMongoConfig {
 
     @Bean
-    public TurmsMongoClient adminMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
-        TurmsMongoProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getMongo().getAdmin();
+    public TurmsMongoClient adminMongoClient(TurmsPropertiesManager propertiesManager) {
+        TurmsMongoProperties properties = propertiesManager.getLocalProperties().getGateway().getMongo().getAdmin();
         TurmsMongoClient mongoClient = getMongoClient(properties);
         mongoClient.registerEntitiesByClasses(Admin.class, AdminRole.class);
         return mongoClient;
@@ -46,8 +46,8 @@ public class MongoConfig extends BaseMongoConfig {
 
     @Bean
     @ConditionalOnProperty("turms.gateway.session.enable-authentication")
-    public TurmsMongoClient userMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
-        TurmsMongoProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getMongo().getUser();
+    public TurmsMongoClient userMongoClient(TurmsPropertiesManager propertiesManager) {
+        TurmsMongoProperties properties = propertiesManager.getLocalProperties().getGateway().getMongo().getUser();
         TurmsMongoClient mongoClient = getMongoClient(properties);
         mongoClient.registerEntitiesByClasses(User.class);
         return mongoClient;

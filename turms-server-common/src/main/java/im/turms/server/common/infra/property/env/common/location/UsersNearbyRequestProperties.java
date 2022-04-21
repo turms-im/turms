@@ -18,9 +18,9 @@
 package im.turms.server.common.infra.property.env.common.location;
 
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,23 +37,27 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 public class UsersNearbyRequestProperties {
 
-    @JsonView(MutablePropertiesView.class)
     @Description("The default maximum available number of nearby users")
+    @GlobalProperty
+    @MutableProperty
     @Min(0)
     private short defaultMaxAvailableNearbyUsersNumber = 20;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("The maximum allowed available number of users nearby records")
+    @GlobalProperty
+    @MutableProperty
     @Min(0)
     private short maxAvailableUsersNearbyNumberLimit = 100;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("The default maximum distance limit in meters")
+    @GlobalProperty
+    @MutableProperty
     @Min(0)
     private int defaultMaxDistanceMeters = 10_000;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("The maximum distance limit in meters")
+    @GlobalProperty
+    @MutableProperty
     @Min(0)
     private int maxDistanceMeters = 10_000;
 

@@ -17,7 +17,7 @@
 
 package im.turms.server.common.infra.plugin.script;
 
-import im.turms.server.common.infra.collection.MapUtil;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Value;
 
@@ -86,7 +86,7 @@ public class ValueDecoder {
             return list;
         } else if (value.hasHashEntries()) {
             Value iterator = value.getHashKeysIterator();
-            Map<Object, Object> map = new HashMap<>(MapUtil.getCapability((int) value.getHashSize()));
+            Map<Object, Object> map = CollectionUtil.newMapWithExpectedSize((int) value.getHashSize());
             while (iterator.hasIteratorNextElement()) {
                 Value entry = iterator.getIteratorNextElement();
                 map.put(decode(entry), decode(value.getHashValue(entry)));

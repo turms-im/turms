@@ -106,6 +106,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     private final boolean useConversationId;
 
     private final Node node;
+    private final TurmsPropertiesManager propertiesManager;
 
     public MongoCollectionInitializer(
             @Lazy Node node,
@@ -117,7 +118,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
             PasswordManager passwordManager,
             TaskManager taskManager,
             TurmsApplicationContext context,
-            TurmsPropertiesManager turmsPropertiesManager) {
+            TurmsPropertiesManager propertiesManager) {
         this.node = node;
         this.adminMongoClient = adminMongoClient;
         this.userMongoClient = userMongoClient;
@@ -130,7 +131,8 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 conversationMongoClient,
                 messageMongoClient);
         this.context = context;
-        ServiceProperties serviceProperties = turmsPropertiesManager.getLocalProperties().getService();
+        this.propertiesManager = propertiesManager;
+        ServiceProperties serviceProperties = propertiesManager.getLocalProperties().getService();
         fakingManager = new MongoFakingManager(serviceProperties.getFake(),
                 passwordManager,
                 adminMongoClient,
@@ -162,7 +164,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     }
 
     private boolean isQualifiedToRotateZones() {
-        return node.isLocalNodeLeader() && node.getSharedProperties()
+        return node.isLocalNodeLeader() && propertiesManager.getGlobalProperties()
                 .getService().getMongo().getMessage().getTieredStorage().getAutoRangeUpdater().isEnabled();
     }
 
@@ -236,15 +238,25 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         TurmsMongoClient mongoClient;
         if (clazz == Admin.class || clazz == AdminRole.class) {
             mongoClient = adminMongoClient;
-        } else if (clazz == User.class || clazz == UserFriendRequest.class
-                || clazz == UserPermissionGroup.class || clazz == UserRelationship.class
-                || clazz == UserRelationshipGroup.class || clazz == UserRelationshipGroupMember.class || clazz == UserVersion.class) {
+        } else if (clazz == User.class
+                || clazz == UserFriendRequest.class
+                || clazz == UserPermissionGroup.class
+                || clazz == UserRelationship.class
+                || clazz == UserRelationshipGroup.class
+                || clazz == UserRelationshipGroupMember.class
+                || clazz == UserVersion.class) {
             mongoClient = userMongoClient;
-        } else if (clazz == Group.class || clazz == GroupBlockedUser.class || clazz == GroupInvitation.class
-                || clazz == GroupJoinQuestion.class || clazz == GroupJoinRequest.class || clazz == GroupMember.class
-                || clazz == GroupType.class || clazz == GroupVersion.class) {
+        } else if (clazz == Group.class
+                || clazz == GroupBlockedUser.class
+                || clazz == GroupInvitation.class
+                || clazz == GroupJoinQuestion.class
+                || clazz == GroupJoinRequest.class
+                || clazz == GroupMember.class
+                || clazz == GroupType.class
+                || clazz == GroupVersion.class) {
             mongoClient = groupMongoClient;
-        } else if (clazz == PrivateConversation.class || clazz == GroupConversation.class) {
+        } else if (clazz == PrivateConversation.class
+                || clazz == GroupConversation.class) {
             mongoClient = conversationMongoClient;
         } else if (clazz == Message.class) {
             mongoClient = messageMongoClient;
@@ -253,11 +265,8 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         }
         return mongoClient.collectionExists(clazz)
                 .flatMap(exists -> exists
-                        ? Mono.just(exists)
-                        // Note that we do NOT assign a validator to collections
-                        // because it's very common that business scenarios change over time
-                        // and some new fields need to be added
-                        : mongoClient.createCollection(clazz).thenReturn(exists));
+                        ? Mono.just(true)
+                        : mongoClient.createCollection(clazz).thenReturn(false));
     }
 
     private Mono<Void> dropAllDatabases() {

@@ -18,9 +18,7 @@
 package im.turms.server.common.infra.property.env.common.location;
 
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,7 +41,6 @@ public class LocationProperties {
             "If false, only the user ID is used to identify a unique user")
     private boolean treatUserIdAndDeviceTypeAsUniqueUser;
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private UsersNearbyRequestProperties usersNearbyRequest = new UsersNearbyRequestProperties();
 

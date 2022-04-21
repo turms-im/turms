@@ -17,9 +17,8 @@
 
 package im.turms.server.common.infra.property.env.common;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,7 +35,7 @@ import java.util.List;
 @NoArgsConstructor
 public class IpProperties {
 
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Description("The public IP detectors will only be used to query the public IP of the local node " +
             "if needed (e.g. If the discovery property \"advertiseStrategy\" is \"PUBLIC_ADDRESS\"")
     private List<String> publicIpDetectorAddresses =

@@ -19,8 +19,8 @@ package im.turms.server.common.infra.property.env.common.security;
 
 
 import im.turms.server.common.infra.property.constant.PasswordEncodingAlgorithm;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.ImmutableOnceApplied;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.ImmutableOnceApplied;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

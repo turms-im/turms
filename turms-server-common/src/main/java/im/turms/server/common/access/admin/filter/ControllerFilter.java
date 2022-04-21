@@ -26,8 +26,9 @@ import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.plugin.extension.AdminActionHandler;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.adminapi.CommonAdminApiProperties;
-import im.turms.server.common.infra.property.env.common.adminapi.LogProperties;
 import im.turms.server.common.infra.tracing.TracingContext;
 import org.springdoc.core.SpringDocConfigProperties;
 import org.springdoc.webflux.api.OpenApiWebfluxResource;
@@ -70,7 +71,10 @@ public class ControllerFilter implements WebFilter {
     private final BaseAdminApiRateLimitingManager adminApiRateLimitingManager;
     private final BaseAdminService adminService;
     private final PluginManager pluginManager;
-    private final boolean enableAdminApi;
+
+    private boolean allowDeleteWithoutFilter;
+    private boolean enableAdminApi;
+    private boolean isLogEnabled;
     private final boolean isOpenApiEnabled;
 
     /**
@@ -78,6 +82,7 @@ public class ControllerFilter implements WebFilter {
      */
     public ControllerFilter(
             Node node,
+            TurmsPropertiesManager propertiesManager,
             RequestMappingHandlerMapping requestMappingHandlerMapping,
             BaseAdminApiRateLimitingManager adminApiRateLimitingManager,
             BaseAdminService adminService,
@@ -88,8 +93,17 @@ public class ControllerFilter implements WebFilter {
         this.adminService = adminService;
         this.node = node;
         this.pluginManager = pluginManager;
-        enableAdminApi = getCommonAdminApiProperties().isEnabled();
         isOpenApiEnabled = springDocConfigProperties != null && springDocConfigProperties.getApiDocs().isEnabled();
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        CommonAdminApiProperties apiProperties = node.getNodeType() == NodeType.GATEWAY
+                ? properties.getGateway().getAdminApi()
+                : properties.getService().getAdminApi();
+        allowDeleteWithoutFilter = properties.getService().getAdminApi().isAllowDeleteWithoutFilter();
+        enableAdminApi = apiProperties.isEnabled();
+        isLogEnabled = apiProperties.getLog().isEnabled();
     }
 
     @Override
@@ -219,19 +233,15 @@ public class ControllerFilter implements WebFilter {
             ServerWebExchange exchange,
             WebFilterChain chain,
             TurmsHandlerMethod handlerMethod) {
-        LogProperties logProperties = getCommonAdminApiProperties().getLog();
-        boolean isLogEnabled = logProperties.isEnabled();
         TracingContext tracingContext = new TracingContext();
         if (isLogEnabled || pluginManager.hasRunningExtensions(AdminActionHandler.class)) {
             long requestTime = System.currentTimeMillis();
             ServerHttpRequest request = exchange.getRequest();
             String action = handlerMethod.getMethod().getName();
             String ip = request.getRemoteAddress().getAddress().getHostAddress();
-            boolean allowDeleteWithoutFilter = node.getNodeType() == NodeType.SERVICE
-                    && node.getSharedProperties().getService().getAdminApi().isAllowDeleteWithoutFilter();
             exchange.getAttributes().put(MethodInvokeInterceptor.ATTRIBUTE_INTERCEPTOR,
                     new EndpointInvokeInterceptor(pluginManager,
-                            allowDeleteWithoutFilter,
+                            node.getNodeType() == NodeType.SERVICE && allowDeleteWithoutFilter,
                             handlerMethod,
                             request.getId(),
                             requestTime,
@@ -257,12 +267,6 @@ public class ControllerFilter implements WebFilter {
 
     private boolean isOpenApiEnabledAndOpenApiRequest(ServerWebExchange exchange) {
         return isOpenApiEnabled && exchange.getRequest().getURI().getPath().startsWith("/webjars/swagger-ui");
-    }
-
-    private CommonAdminApiProperties getCommonAdminApiProperties() {
-        return node.getNodeType() == NodeType.GATEWAY
-                ? node.getSharedProperties().getGateway().getAdminApi()
-                : node.getSharedProperties().getService().getAdminApi();
     }
 
 }

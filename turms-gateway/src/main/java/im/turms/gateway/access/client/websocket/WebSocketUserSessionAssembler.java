@@ -55,7 +55,7 @@ public class WebSocketUserSessionAssembler extends UserSessionAssembler {
             SessionService sessionService,
             ClientRequestDispatcher clientRequestDispatcher) {
         super(apiLoggingContext, clientRequestDispatcher, sessionService,
-                node.getSharedProperties().getGateway().getWebsocket().getCloseIdleConnectionAfterSeconds());
+                propertiesManager.getGlobalProperties().getGateway().getWebsocket().getCloseIdleConnectionAfterSeconds());
         GatewayProperties gatewayProperties = propertiesManager.getLocalProperties().getGateway();
         WebSocketProperties webSocketProperties = gatewayProperties.getWebsocket();
         if (webSocketProperties.isEnabled()) {

@@ -31,8 +31,10 @@ import im.turms.server.common.access.client.dto.request.user.relationship.QueryR
 import im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.service.business.NotificationProperties;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
@@ -69,17 +71,42 @@ public class UserRelationshipServiceController {
     private final UserRelationshipService userRelationshipService;
     private final UserRelationshipGroupService userRelationshipGroupService;
     private final UserFriendRequestService userFriendRequestService;
-    private final Node node;
+
+    private boolean deleteTwoSidedRelationships;
+    private boolean notifyRecipientWhenReceivingFriendRequest;
+    private boolean notifyRelatedUserAfterAddedToOneSidedRelationshipGroupByOthers;
+    private boolean notifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers;
+    private boolean notifyMemberAfterRemovedFromRelationshipGroupByOthers;
+    private boolean notifyRequesterAfterFriendRequestUpdated;
+    private boolean notifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers;
 
     public UserRelationshipServiceController(
-            Node node,
+            TurmsPropertiesManager propertiesManager,
             UserRelationshipService userRelationshipService,
             UserRelationshipGroupService userRelationshipGroupService,
             UserFriendRequestService userFriendRequestService) {
-        this.node = node;
         this.userFriendRequestService = userFriendRequestService;
         this.userRelationshipService = userRelationshipService;
         this.userRelationshipGroupService = userRelationshipGroupService;
+
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        deleteTwoSidedRelationships = properties.getService().getUser().isDeleteTwoSidedRelationships();
+        NotificationProperties notificationProperties = properties.getService().getNotification();
+        notifyRecipientWhenReceivingFriendRequest = notificationProperties
+                .isNotifyRecipientWhenReceivingFriendRequest();
+        notifyRelatedUserAfterAddedToOneSidedRelationshipGroupByOthers = notificationProperties
+                .isNotifyRelatedUserAfterAddedToOneSidedRelationshipGroupByOthers();
+        notifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers = notificationProperties
+                .isNotifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers();
+        notifyMemberAfterRemovedFromRelationshipGroupByOthers = notificationProperties
+                .isNotifyMemberAfterRemovedFromRelationshipGroupByOthers();
+        notifyRequesterAfterFriendRequestUpdated = notificationProperties
+                .isNotifyRequesterAfterFriendRequestUpdated();
+        notifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers = notificationProperties
+                .isNotifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers();
     }
 
     @ServiceRequestMapping(CREATE_FRIEND_REQUEST_REQUEST)
@@ -91,9 +118,7 @@ public class UserRelationshipServiceController {
                             request.getRecipientId(),
                             request.getContent(),
                             new Date())
-                    .map(friendRequest -> node.getSharedProperties()
-                            .getService()
-                            .getNotification().isNotifyRecipientWhenReceivingFriendRequest()
+                    .map(friendRequest -> notifyRecipientWhenReceivingFriendRequest
                             ? RequestHandlerResultFactory
                             .get(friendRequest.getId(), request.getRecipientId(), clientRequest.turmsRequest())
                             : RequestHandlerResultFactory.get(friendRequest.getId()));
@@ -123,9 +148,10 @@ public class UserRelationshipServiceController {
             int groupIndex = request.hasGroupIndex() ?
                     request.getGroupIndex() : DEFAULT_RELATIONSHIP_GROUP_INDEX;
             Date blockDate = request.getBlocked() ? new Date() : null;
+            Long relatedUserId = request.getUserId();
             return userRelationshipService.upsertOneSidedRelationship(
                             clientRequest.userId(),
-                            request.getUserId(),
+                            relatedUserId,
                             blockDate,
                             groupIndex,
                             null,
@@ -133,9 +159,8 @@ public class UserRelationshipServiceController {
                             false,
                             null)
                     .then(Mono.fromCallable(() ->
-                            node.getSharedProperties().getService().getNotification()
-                                    .isNotifyRelatedUserAfterAddedToOneSidedRelationshipGroupByOthers()
-                                    ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.turmsRequest())
+                            notifyRelatedUserAfterAddedToOneSidedRelationshipGroupByOthers
+                                    ? RequestHandlerResultFactory.get(relatedUserId, clientRequest.turmsRequest())
                                     : RequestHandlerResultFactory.OK));
         };
     }
@@ -147,8 +172,7 @@ public class UserRelationshipServiceController {
             Integer groupIndex = request.getGroupIndex();
             int targetGroupIndex = request.hasTargetGroupIndex() ?
                     request.getTargetGroupIndex() : DEFAULT_RELATIONSHIP_GROUP_INDEX;
-            if (node.getSharedProperties().getService().getNotification()
-                    .isNotifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers()) {
+            if (notifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers) {
                 return userRelationshipGroupService.queryRelationshipGroupMemberIds(
                                 clientRequest.userId(),
                                 groupIndex)
@@ -173,7 +197,6 @@ public class UserRelationshipServiceController {
     public ClientRequestHandler handleDeleteRelationshipRequest() {
         return clientRequest -> {
             DeleteRelationshipRequest request = clientRequest.turmsRequest().getDeleteRelationshipRequest();
-            boolean deleteTwoSidedRelationships = node.getSharedProperties().getService().getUser().isDeleteTwoSidedRelationships();
             Mono<Void> deleteMono;
             if (deleteTwoSidedRelationships) {
                 deleteMono = userRelationshipService.deleteTwoSidedRelationships(
@@ -185,8 +208,7 @@ public class UserRelationshipServiceController {
                         request.getUserId(),
                         null);
             }
-            return deleteMono.then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification()
-                    .isNotifyMemberAfterRemovedFromRelationshipGroupByOthers()
+            return deleteMono.then(Mono.fromCallable(() -> notifyMemberAfterRemovedFromRelationshipGroupByOthers
                     ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.turmsRequest())
                     : RequestHandlerResultFactory.OK));
         };
@@ -283,7 +305,7 @@ public class UserRelationshipServiceController {
                             action,
                             reason)
                     .then(Mono.fromCallable(
-                            () -> node.getSharedProperties().getService().getNotification().isNotifyRequesterAfterFriendRequestUpdated()
+                            () -> notifyRequesterAfterFriendRequestUpdated
                                     ? RequestHandlerResultFactory.get(request.getRequestId(), clientRequest.turmsRequest())
                                     : RequestHandlerResultFactory.OK));
         };
@@ -317,8 +339,7 @@ public class UserRelationshipServiceController {
                             null,
                             true,
                             null)
-                    .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification()
-                            .isNotifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers()
+                    .then(Mono.fromCallable(() -> notifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers
                             ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.turmsRequest())
                             : RequestHandlerResultFactory.OK));
         };

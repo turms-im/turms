@@ -20,7 +20,7 @@ package im.turms.server.common.infra.property.env.common.cluster;
 
 import im.turms.server.common.infra.cluster.service.config.SharedConfigService;
 import im.turms.server.common.infra.property.env.common.AddressProperties;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
+import im.turms.server.common.infra.property.metadata.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

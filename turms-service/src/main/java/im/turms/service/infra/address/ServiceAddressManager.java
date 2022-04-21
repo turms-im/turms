@@ -34,8 +34,8 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
     public ServiceAddressManager(
             ServerProperties adminApiServerProperties,
             PublicIpManager publicIpManager,
-            TurmsPropertiesManager turmsPropertiesManager) {
-        super(adminApiServerProperties, publicIpManager, turmsPropertiesManager);
+            TurmsPropertiesManager propertiesManager) {
+        super(adminApiServerProperties, publicIpManager, propertiesManager);
     }
 
     @Override

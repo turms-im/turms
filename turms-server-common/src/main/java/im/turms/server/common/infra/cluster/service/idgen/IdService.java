@@ -18,7 +18,7 @@
 package im.turms.server.common.infra.cluster.service.idgen;
 
 import im.turms.server.common.infra.cluster.service.ClusterService;
-import im.turms.server.common.infra.cluster.service.config.domain.discovery.Member;
+import im.turms.server.common.infra.cluster.service.config.entity.discovery.Member;
 import im.turms.server.common.infra.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;

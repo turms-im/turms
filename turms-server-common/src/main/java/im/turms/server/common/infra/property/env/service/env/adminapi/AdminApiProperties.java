@@ -17,11 +17,10 @@
 
 package im.turms.server.common.infra.property.env.service.env.adminapi;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.infra.property.env.common.adminapi.CommonAdminApiProperties;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,50 +40,50 @@ public class AdminApiProperties extends CommonAdminApiProperties {
     @Description("Whether to allow administrators to delete data without any filter. " +
             "Better false to prevent administrators from deleting all data by accident")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean allowDeleteWithoutFilter;
 
     // FIXME: The property is unused
     @Description("The maximum day difference per query request")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int maxDayDifferencePerRequest = 3 * 30;
 
     @Description("The maximum hour difference per count request")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int maxHourDifferencePerCountRequest = 24;
 
     @Description("The maximum day difference per count request")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int maxDayDifferencePerCountRequest = 31;
 
     @Description("The maximum month difference per count request")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int maxMonthDifferencePerCountRequest = 12;
 
     @Description("The maximum available records per query request")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int maxAvailableRecordsPerRequest = 1000;
 
     // FIXME: The property is unused
     @Description("The maximum available online users' status per query request")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int maxAvailableOnlineUsersStatusPerRequest = 20;
 
     @Description("The default available records per query request")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int defaultAvailableRecordsPerRequest = 10;
 

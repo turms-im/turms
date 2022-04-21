@@ -25,12 +25,13 @@ import im.turms.server.common.access.client.dto.model.group.GroupMembersWithVers
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.UserStatusService;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
@@ -77,30 +78,38 @@ public class GroupMemberService {
     private static final Pair<ServicePermission, GroupInvitationStrategy> GROUP_INVITER_NOT_MEMBER =
             Pair.of(ServicePermission.get(ResponseStatusCode.GROUP_INVITER_NOT_MEMBER), null);
 
-    private final Node node;
     private final GroupMemberRepository groupMemberRepository;
     private final GroupService groupService;
     private final GroupBlocklistService groupBlocklistService;
     private final GroupVersionService groupVersionService;
     private final UserStatusService userStatusService;
 
+    private boolean checkIfTargetActiveAndNotDeleted;
+    private boolean respondOfflineIfInvisible;
+
     /**
      * @param groupService          is lazy because: GroupService -> GroupMemberService -> GroupService
      * @param groupBlocklistService is lazy because: GroupMemberService -> GroupBlocklistService -> GroupMemberService
      */
     public GroupMemberService(
-            Node node,
+            TurmsPropertiesManager propertiesManager,
             GroupMemberRepository groupMemberRepository,
             @Lazy GroupService groupService,
             GroupVersionService groupVersionService,
             @Lazy GroupBlocklistService groupBlocklistService,
             UserStatusService userStatusService) {
-        this.node = node;
         this.groupService = groupService;
         this.groupBlocklistService = groupBlocklistService;
         this.groupMemberRepository = groupMemberRepository;
         this.groupVersionService = groupVersionService;
         this.userStatusService = userStatusService;
+
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        checkIfTargetActiveAndNotDeleted = properties.getService().getMessage().isCheckIfTargetActiveAndNotDeleted();
+        respondOfflineIfInvisible = properties.getService().getUser().isRespondOfflineIfInvisible();
     }
 
     public Mono<GroupMember> addGroupMember(
@@ -408,7 +417,7 @@ public class GroupMemberService {
                     if (isGroupMuted) {
                         return Mono.just(ResponseStatusCode.SEND_MESSAGE_TO_MUTED_GROUP);
                     }
-                    if (!node.getSharedProperties().getService().getMessage().isCheckIfTargetActiveAndNotDeleted()) {
+                    if (!checkIfTargetActiveAndNotDeleted) {
                         return Mono.just(ResponseStatusCode.OK);
                     }
                     return groupService.isGroupActiveAndNotDeleted(groupId)
@@ -741,7 +750,7 @@ public class GroupMemberService {
                                 .userOnlineInfo2groupMember(
                                         member.getKey().getUserId(),
                                         info,
-                                        node.getSharedProperties().getService().getUser().isRespondOfflineIfInvisible());
+                                        respondOfflineIfInvisible);
                         builder.addGroupMembers(groupMember);
                     }
                     return builder.build();

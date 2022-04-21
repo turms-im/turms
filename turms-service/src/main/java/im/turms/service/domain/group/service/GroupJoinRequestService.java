@@ -28,7 +28,9 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.service.business.group.GroupJoinRequestProperties;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
@@ -76,9 +78,13 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
     private final GroupMemberService groupMemberService;
     private final UserVersionService userVersionService;
 
+    private boolean allowRecallJoinRequestSentByOneself;
+    private int contentLimit;
+    private boolean deleteExpiredJoinRequestsWhenCronTriggered;
+
     public GroupJoinRequestService(
             Node node,
-            TurmsPropertiesManager turmsPropertiesManager,
+            TurmsPropertiesManager propertiesManager,
             TaskManager taskManager,
             GroupBlocklistService groupBlocklistService,
             GroupJoinRequestRepository groupJoinRequestRepository,
@@ -95,23 +101,28 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         this.groupService = groupService;
         this.userVersionService = userVersionService;
 
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+
         // Set up a cron job to remove requests if deleting expired docs is enabled
         taskManager.reschedule(
                 "expiredGroupJoinRequestsCleanup",
-                turmsPropertiesManager.getLocalProperties().getService().getGroup().getJoinRequest().getExpiredJoinRequestsCleanupCron(),
+                propertiesManager.getLocalProperties().getService().getGroup().getJoinRequest().getExpiredJoinRequestsCleanupCron(),
                 () -> {
                     boolean isLocalNodeLeader = node.isLocalNodeLeader();
-                    boolean deleteExpiredRequestsWhenCronTriggered = node.getSharedProperties()
-                            .getService()
-                            .getUser()
-                            .getFriendRequest()
-                            .isDeleteExpiredRequestsWhenCronTriggered();
                     Date expirationDate = getEntityExpirationDate();
-                    if (isLocalNodeLeader && deleteExpiredRequestsWhenCronTriggered && expirationDate != null) {
+                    if (isLocalNodeLeader && deleteExpiredJoinRequestsWhenCronTriggered && expirationDate != null) {
                         groupJoinRequestRepository.deleteExpiredData(GroupJoinRequest.Fields.CREATION_DATE, expirationDate)
                                 .subscribe(null, t -> LOGGER.error("Caught an error while deleting expired messages", t));
                     }
                 });
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        GroupJoinRequestProperties joinRequestProperties = properties.getService().getGroup().getJoinRequest();
+        allowRecallJoinRequestSentByOneself = joinRequestProperties.isAllowRecallJoinRequestSentByOneself();
+        int localContentLimit = joinRequestProperties.getContentLimit();
+        contentLimit = localContentLimit > 0 ? localContentLimit : Integer.MAX_VALUE;
+        deleteExpiredJoinRequestsWhenCronTriggered = joinRequestProperties.isDeleteExpiredJoinRequestsWhenCronTriggered();
     }
 
     public Mono<GroupJoinRequest> authAndCreateGroupJoinRequest(
@@ -182,7 +193,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (!node.getSharedProperties().getService().getGroup().getJoinRequest().isAllowRecallJoinRequestSentByOneself()) {
+        if (!allowRecallJoinRequestSentByOneself) {
             return Mono.error(ResponseException.get(ResponseStatusCode.RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED));
         }
         return queryRequesterIdAndStatusAndGroupId(requestId)
@@ -418,11 +429,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
     // Validation
 
     private void validJoinRequestContentLength(@Nullable String content) {
-        if (content == null) {
-            return;
-        }
-        int contentLimit = node.getSharedProperties().getService().getGroup().getJoinRequest().getContentLimit();
-        if (contentLimit > 0) {
+        if (content != null) {
             Validator.max(content.length(), "content", contentLimit);
         }
     }

@@ -17,10 +17,9 @@
 
 package im.turms.server.common.infra.property.env.service.env.database;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import im.turms.server.common.infra.task.CronConst;
 import im.turms.server.common.infra.validation.ValidCron;
 import lombok.Data;
@@ -69,7 +68,7 @@ public class TieredStorageProperties {
     @Data
     public static class AutoRangeUpdaterProperties {
         @GlobalProperty
-        @JsonView(MutablePropertiesView.class)
+        @MutableProperty
         private boolean enabled = true;
 
         @ValidCron

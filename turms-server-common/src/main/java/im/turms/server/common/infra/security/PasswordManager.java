@@ -38,8 +38,8 @@ public class PasswordManager {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final SaltedSha256PasswordEncoder sha256PasswordEncoder;
 
-    public PasswordManager(TurmsPropertiesManager turmsPropertiesManager) {
-        TurmsProperties turmsProperties = turmsPropertiesManager.getLocalProperties();
+    public PasswordManager(TurmsPropertiesManager propertiesManager) {
+        TurmsProperties turmsProperties = propertiesManager.getLocalProperties();
         adminPasswordEncodingAlgorithm = turmsProperties.getSecurity().getPassword().getAdminPasswordEncodingAlgorithm();
         userPasswordEncodingAlgorithm = turmsProperties.getSecurity().getPassword().getUserPasswordEncodingAlgorithm();
         bCryptPasswordEncoder = adminPasswordEncodingAlgorithm == PasswordEncodingAlgorithm.BCRYPT

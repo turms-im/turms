@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.metadata.annotation;
+package im.turms.server.common.infra.property.metadata;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,10 +23,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * The properties marked with this annotation should not be changed once applied,
+ * or turms servers will get in trouble.
+ *
  * @author James Chen
  */
 @Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Description {
-    String value();
+@Retention(RetentionPolicy.SOURCE)
+public @interface ImmutableOnceApplied {
 }

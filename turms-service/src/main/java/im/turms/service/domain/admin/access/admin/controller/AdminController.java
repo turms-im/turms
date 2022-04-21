@@ -26,7 +26,7 @@ import im.turms.server.common.domain.common.dto.response.PaginationDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
-import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.admin.access.admin.dto.request.AddAdminDTO;
 import im.turms.service.domain.admin.access.admin.dto.request.UpdateAdminDTO;
 import im.turms.service.domain.admin.service.AdminService;
@@ -63,8 +63,8 @@ public class AdminController extends BaseController {
 
     private final AdminService adminService;
 
-    public AdminController(Node node, AdminService adminService) {
-        super(node);
+    public AdminController(TurmsPropertiesManager propertiesManager, AdminService adminService) {
+        super(propertiesManager);
         this.adminService = adminService;
     }
 

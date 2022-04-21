@@ -48,16 +48,16 @@ public class StatisticsService {
 
     public StatisticsService(
             Node node,
-            TurmsPropertiesManager turmsPropertiesManager,
+            TurmsPropertiesManager propertiesManager,
             TaskManager taskManager) {
         this.node = node;
         taskManager.reschedule(
                 "onlineUsersNumberLogging",
-                turmsPropertiesManager.getLocalProperties().getService().getStatistics()
+                propertiesManager.getLocalProperties().getService().getStatistics()
                         .getOnlineUsersNumberLoggingCron(),
                 () -> {
                     if (node.isLocalNodeLeader() &&
-                            node.getSharedProperties().getService().getStatistics().isLogOnlineUsersNumber()) {
+                            propertiesManager.getGlobalProperties().getService().getStatistics().isLogOnlineUsersNumber()) {
                         countOnlineUsers()
                                 .subscribe(count -> LOGGER.info(ONLINE_USERS_NUMBER_LOGGING_FORMAT, count),
                                         t -> LOGGER.error("Failed to count online users", t));

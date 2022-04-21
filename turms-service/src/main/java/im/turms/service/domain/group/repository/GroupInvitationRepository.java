@@ -19,7 +19,8 @@ package im.turms.service.domain.group.repository;
 
 import com.mongodb.client.result.UpdateResult;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
-import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
@@ -43,21 +44,25 @@ import java.util.Set;
 @Repository
 public class GroupInvitationRepository extends ExpirableEntityRepository<GroupInvitation, Long> {
 
-    private final Node node;
+    private int expireAfterSeconds;
 
-    public GroupInvitationRepository(Node node,
+    public GroupInvitationRepository(TurmsPropertiesManager propertiesManager,
                                      @Qualifier("groupMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, GroupInvitation.class);
-        this.node = node;
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
-    @Override
-    public int getEntityExpireAfterSeconds() {
-        return node.getSharedProperties()
+    private void updateProperties(TurmsProperties properties) {
+        expireAfterSeconds = properties
                 .getService()
                 .getGroup()
                 .getInvitation()
                 .getExpireAfterSeconds();
+    }
+
+    @Override
+    public int getEntityExpireAfterSeconds() {
+        return expireAfterSeconds;
     }
 
     public Mono<UpdateResult> updateToCanceledStatus(Long invitationId) {

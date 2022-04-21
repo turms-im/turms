@@ -31,6 +31,7 @@ import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.business.group.GroupQuestionProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.time.DateUtil;
@@ -81,6 +82,7 @@ public class GroupQuestionService {
 
     public GroupQuestionService(
             Node node,
+            TurmsPropertiesManager propertiesManager,
             GroupBlocklistService groupBlocklistService,
             GroupQuestionRepository groupQuestionRepository,
             GroupMemberService groupMemberService,
@@ -93,8 +95,7 @@ public class GroupQuestionService {
         this.groupVersionService = groupVersionService;
         this.groupService = groupService;
 
-        updateProperties(node.getSharedProperties());
-        node.addPropertiesChangeListener(this::updateProperties);
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {

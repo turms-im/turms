@@ -106,10 +106,10 @@ public class UserStatusService {
 
     public UserStatusService(
             Node node,
-            TurmsPropertiesManager turmsPropertiesManager,
+            TurmsPropertiesManager propertiesManager,
             TurmsRedisClientManager sessionRedisClientManager) {
         localNodeId = ByteBufUtil.getUnreleasableDirectBuffer(node.getLocalMemberId().getBytes(StandardCharsets.US_ASCII));
-        TurmsProperties turmsProperties = turmsPropertiesManager.getLocalProperties();
+        TurmsProperties turmsProperties = propertiesManager.getLocalProperties();
         cacheUserSessionsStatus = turmsProperties.getUserStatus().isCacheUserSessionsStatus();
         operationTimeout = Duration.ofSeconds(10);
         this.sessionRedisClientManager = sessionRedisClientManager;

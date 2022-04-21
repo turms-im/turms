@@ -28,7 +28,9 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.service.business.group.GroupInvitationProperties;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
@@ -78,9 +80,13 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
     private final GroupVersionService groupVersionService;
     private final UserVersionService userVersionService;
 
+    private boolean allowRecallPendingInvitationByOwnerAndManager;
+    private int contentLimit;
+    private boolean deleteExpiredInvitationsWhenCronTriggered;
+
     public GroupInvitationService(
             Node node,
-            TurmsPropertiesManager turmsPropertiesManager,
+            TurmsPropertiesManager propertiesManager,
             GroupInvitationRepository groupInvitationRepository,
             GroupMemberService groupMemberService,
             UserVersionService userVersionService,
@@ -93,23 +99,27 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
         this.userVersionService = userVersionService;
         this.groupVersionService = groupVersionService;
 
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
         // Set up a cron job to remove invitations if deleting expired docs is enabled
         taskManager.reschedule(
                 "expiredGroupInvitationsCleanup",
-                turmsPropertiesManager.getLocalProperties().getService().getGroup().getInvitation().getExpiredInvitationsCleanupCron(),
+                propertiesManager.getLocalProperties().getService().getGroup().getInvitation().getExpiredInvitationsCleanupCron(),
                 () -> {
                     boolean isLocalNodeLeader = node.isLocalNodeLeader();
-                    boolean deleteExpiredRequestsWhenCronTriggered = node.getSharedProperties()
-                            .getService()
-                            .getGroup()
-                            .getInvitation()
-                            .isDeleteExpiredInvitationsWhenCronTriggered();
                     Date expirationDate = getEntityExpirationDate();
-                    if (isLocalNodeLeader && deleteExpiredRequestsWhenCronTriggered && expirationDate != null) {
+                    if (isLocalNodeLeader && deleteExpiredInvitationsWhenCronTriggered && expirationDate != null) {
                         groupInvitationRepository.deleteExpiredData(GroupInvitation.Fields.CREATION_DATE, expirationDate)
                                 .subscribe(null, t -> LOGGER.error("Caught an error while deleting expired group invitations", t));
                     }
                 });
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        GroupInvitationProperties invitationProperties = properties.getService().getGroup().getInvitation();
+        allowRecallPendingInvitationByOwnerAndManager = invitationProperties.isAllowRecallPendingInvitationByOwnerAndManager();
+        int localContentLimit = invitationProperties.getContentLimit();
+        contentLimit = localContentLimit > 0 ? localContentLimit : Integer.MAX_VALUE;
+        deleteExpiredInvitationsWhenCronTriggered = invitationProperties.isDeleteExpiredInvitationsWhenCronTriggered();
     }
 
     public Mono<GroupInvitation> authAndCreateGroupInvitation(
@@ -228,8 +238,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (!node.getSharedProperties()
-                .getService().getGroup().getInvitation().isAllowRecallPendingInvitationByOwnerAndManager()) {
+        if (!allowRecallPendingInvitationByOwnerAndManager) {
             return Mono.error(ResponseException.get(ResponseStatusCode.RECALLING_GROUP_INVITATION_IS_DISABLED));
         }
         return queryGroupIdAndStatus(invitationId)
@@ -445,10 +454,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
 
     private void validInvitationContentLength(@Nullable String content) {
         if (content != null) {
-            int contentLimit = node.getSharedProperties().getService().getGroup().getInvitation().getContentLimit();
-            if (contentLimit > 0) {
-                Validator.max(content.length(), "content", contentLimit);
-            }
+            Validator.max(content.length(), "content", contentLimit);
         }
     }
 

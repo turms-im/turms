@@ -24,11 +24,12 @@ import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.cluster.node.NodeVersion;
-import im.turms.server.common.infra.cluster.service.config.domain.discovery.Leader;
-import im.turms.server.common.infra.cluster.service.config.domain.discovery.Member;
+import im.turms.server.common.infra.cluster.service.config.entity.discovery.Leader;
+import im.turms.server.common.infra.cluster.service.config.entity.discovery.Member;
 import im.turms.server.common.infra.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.cluster.access.admin.dto.request.AddMemberDTO;
 import im.turms.service.domain.cluster.access.admin.dto.request.UpdateMemberDTO;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
@@ -61,30 +62,30 @@ import static im.turms.server.common.access.admin.permission.AdminPermission.CLU
 @RequestMapping("/cluster/members")
 public class MemberController extends BaseController {
 
-    private final Node node;
+    private final DiscoveryService discoveryService;
 
-    public MemberController(Node node) {
-        super(node);
-        this.node = node;
+    public MemberController(Node node, TurmsPropertiesManager propertiesManager) {
+        super(propertiesManager);
+        discoveryService = node.getDiscoveryService();
     }
 
     @GetMapping
     @RequiredPermission(CLUSTER_MEMBER_QUERY)
     public ResponseEntity<ResponseDTO<Collection<Member>>> queryMembers() {
-        return ResponseFactory.okIfTruthy(node.getDiscoveryService().getAllKnownMembers().values());
+        return ResponseFactory.okIfTruthy(discoveryService.getAllKnownMembers().values());
     }
 
     @DeleteMapping
     @RequiredPermission(CLUSTER_MEMBER_DELETE)
     public Mono<ResponseEntity<ResponseDTO<Void>>> removeMembers(@RequestParam List<String> ids) {
-        Mono<Void> unregisterMembers = node.getDiscoveryService().unregisterMembers(CollectionUtil.newSet(ids));
+        Mono<Void> unregisterMembers = discoveryService.unregisterMembers(CollectionUtil.newSet(ids));
         return unregisterMembers.thenReturn(ResponseFactory.OK);
     }
 
     @PostMapping
     @RequiredPermission(CLUSTER_MEMBER_CREATE)
     public Mono<ResponseEntity<ResponseDTO<Void>>> addMember(@RequestBody AddMemberDTO addMemberDTO) {
-        String clusterId = node.getDiscoveryService().getLocalMember().getClusterId();
+        String clusterId = discoveryService.getLocalMember().getClusterId();
         NodeType nodeType = addMemberDTO.nodeType();
         if (nodeType != NodeType.SERVICE && addMemberDTO.isLeaderEligible()) {
             return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "Only turms-service servers can be the leader"));
@@ -109,7 +110,7 @@ public class MemberController extends BaseController {
                 false,
                 addMemberDTO.isActive(),
                 addMemberDTO.isHealthy());
-        return node.getDiscoveryService()
+        return discoveryService
                 .registerMember(member)
                 .thenReturn(ResponseFactory.OK);
     }
@@ -119,7 +120,7 @@ public class MemberController extends BaseController {
     public Mono<ResponseEntity<ResponseDTO<Void>>> updateMember(
             @RequestParam String id,
             @RequestBody UpdateMemberDTO updateMemberDTO) {
-        Mono<Void> addMemberMono = node.getDiscoveryService().updateMemberInfo(
+        Mono<Void> addMemberMono = discoveryService.updateMemberInfo(
                 id,
                 updateMemberDTO.zone(),
                 updateMemberDTO.isSeed(),
@@ -134,7 +135,6 @@ public class MemberController extends BaseController {
     @GetMapping("/leader")
     @RequiredPermission(CLUSTER_LEADER_QUERY)
     public ResponseEntity<ResponseDTO<Member>> queryLeader() {
-        DiscoveryService discoveryService = node.getDiscoveryService();
         Leader leader = discoveryService.getLeader();
         if (leader == null) {
             throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
@@ -148,8 +148,8 @@ public class MemberController extends BaseController {
     @RequiredPermission(CLUSTER_LEADER_UPDATE)
     public Mono<ResponseEntity<ResponseDTO<Member>>> electNewLeader(@RequestParam(required = false) String id) {
         Mono<Member> leader = id == null
-                ? node.getDiscoveryService().electNewLeaderByPriority()
-                : node.getDiscoveryService().electNewLeaderByNodeId(id);
+                ? discoveryService.electNewLeaderByPriority()
+                : discoveryService.electNewLeaderByNodeId(id);
         return ResponseFactory.okIfTruthy(leader);
     }
 

@@ -71,22 +71,10 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
         this.command = notNull("command", command);
     }
 
-    /**
-     * Gets the namespace.
-     *
-     * @return the namespace
-     */
     public MongoNamespace getNamespace() {
         return namespace;
     }
 
-    /**
-     * Enables retryable reads if a read fails due to a network error.
-     *
-     * @param retryReads true if reads should be retried
-     * @return this
-     * @since 3.11
-     */
     public TurmsFindOperation<T> retryReads(final boolean retryReads) {
         this.retryReads = retryReads;
         return this;

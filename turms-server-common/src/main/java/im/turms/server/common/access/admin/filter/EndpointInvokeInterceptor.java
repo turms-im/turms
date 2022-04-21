@@ -19,7 +19,7 @@ package im.turms.server.common.access.admin.filter;
 
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.admin.bo.AdminAction;
-import im.turms.server.common.infra.collection.MapUtil;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.AdminApiLogging;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -40,7 +40,6 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -172,7 +171,7 @@ public class EndpointInvokeInterceptor extends MethodInvokeInterceptor {
             Object[] args,
             int processingTime,
             Throwable throwable) {
-        Map<String, Object> params = new HashMap<>(MapUtil.getCapability(args.length));
+        Map<String, Object> params = CollectionUtil.newMapWithExpectedSize(args.length);
         for (int i = 0; i < args.length; i++) {
             Object arg = args[i];
             if (arg == null) {

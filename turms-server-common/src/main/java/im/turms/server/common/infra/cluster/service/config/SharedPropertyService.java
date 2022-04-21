@@ -21,8 +21,8 @@ import com.mongodb.client.model.changestream.FullDocument;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.cluster.service.ClusterService;
 import im.turms.server.common.infra.cluster.service.codec.CodecService;
-import im.turms.server.common.infra.cluster.service.config.domain.property.CommonProperties;
-import im.turms.server.common.infra.cluster.service.config.domain.property.SharedClusterProperties;
+import im.turms.server.common.infra.cluster.service.config.entity.property.CommonProperties;
+import im.turms.server.common.infra.cluster.service.config.entity.property.SharedClusterProperties;
 import im.turms.server.common.infra.cluster.service.connection.ConnectionService;
 import im.turms.server.common.infra.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.infra.cluster.service.idgen.IdService;
@@ -55,7 +55,7 @@ public class SharedPropertyService implements ClusterService {
     private final String clusterId;
     private final NodeType nodeType;
 
-    private final TurmsPropertiesManager turmsPropertiesManager;
+    private final TurmsPropertiesManager propertiesManager;
     private SharedClusterProperties sharedClusterProperties;
     private SharedConfigService sharedConfigService;
 
@@ -63,10 +63,10 @@ public class SharedPropertyService implements ClusterService {
 
     public SharedPropertyService(String clusterId,
                                  NodeType nodeType,
-                                 TurmsPropertiesManager turmsPropertiesManager) {
+                                 TurmsPropertiesManager propertiesManager) {
         this.clusterId = clusterId;
         this.nodeType = nodeType;
-        this.turmsPropertiesManager = turmsPropertiesManager;
+        this.propertiesManager = propertiesManager;
     }
 
     public TurmsProperties getSharedProperties() {
@@ -145,7 +145,7 @@ public class SharedPropertyService implements ClusterService {
                 }));
     }
 
-    public void addListeners(Consumer<TurmsProperties> listener) {
+    public void addChangeListener(Consumer<TurmsProperties> listener) {
         propertiesChangeListeners.add(listener);
     }
 
@@ -154,14 +154,15 @@ public class SharedPropertyService implements ClusterService {
             try {
                 listener.accept(properties);
             } catch (Exception e) {
-                LOGGER.error("The properties listener {} failed to handle the new properties", listener.getClass().getName(), e);
+                LOGGER.error("The global properties listener {} failed to handle the new properties",
+                        listener.getClass().getName(), e);
             }
         }
     }
 
     private Mono<SharedClusterProperties> initializeSharedProperties() {
         LOGGER.info("Trying to get shared properties");
-        TurmsProperties localProperties = turmsPropertiesManager.getLocalProperties();
+        TurmsProperties localProperties = propertiesManager.getLocalProperties();
         SharedClusterProperties clusterProperties = new SharedClusterProperties(clusterId, localProperties, new Date());
         if (nodeType == NodeType.GATEWAY) {
             clusterProperties.setServiceProperties(null);

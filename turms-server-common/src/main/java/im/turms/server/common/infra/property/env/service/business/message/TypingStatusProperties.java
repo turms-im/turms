@@ -17,10 +17,9 @@
 
 package im.turms.server.common.infra.property.env.service.business.message;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,7 +36,7 @@ public class TypingStatusProperties {
 
     @Description("Whether to notify users of typing statuses sent by other users")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     boolean enabled = true;
 
 }

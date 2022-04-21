@@ -17,7 +17,8 @@
 
 package im.turms.service.domain.common.access.admin.controller;
 
-import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.env.adminapi.AdminApiProperties;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
@@ -41,19 +42,33 @@ import java.util.function.Function;
  */
 public abstract class BaseController {
 
-    private final Node node;
+    protected final TurmsPropertiesManager propertiesManager;
 
-    protected BaseController(Node node) {
-        this.node = node;
+    private int defaultAvailableRecordsPerRequest;
+    private int maxAvailableRecordsPerRequest;
+    private int maxHourDifferencePerCountRequest;
+    private int maxDayDifferencePerCountRequest;
+    private int maxMonthDifferencePerCountRequest;
+
+    protected BaseController(TurmsPropertiesManager propertiesManager) {
+        this.propertiesManager = propertiesManager;
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        AdminApiProperties apiProperties = properties.getService().getAdminApi();
+        defaultAvailableRecordsPerRequest = apiProperties.getDefaultAvailableRecordsPerRequest();
+        maxAvailableRecordsPerRequest = apiProperties.getMaxAvailableRecordsPerRequest();
+        maxHourDifferencePerCountRequest = apiProperties.getMaxHourDifferencePerCountRequest();
+        maxDayDifferencePerCountRequest = apiProperties.getMaxDayDifferencePerCountRequest();
+        maxMonthDifferencePerCountRequest = apiProperties.getMaxMonthDifferencePerCountRequest();
     }
 
     public int getPageSize(@Nullable Integer size) {
-        AdminApiProperties properties = node.getSharedProperties().getService().getAdminApi();
         if (size == null || size <= 0) {
-            return properties.getDefaultAvailableRecordsPerRequest();
+            return defaultAvailableRecordsPerRequest;
         }
-        int maxLimit = properties.getMaxAvailableRecordsPerRequest();
-        return size > maxLimit ? maxLimit : size;
+        return Math.min(size, maxAvailableRecordsPerRequest);
     }
 
     public Mono<List<StatisticsRecordDTO>> queryBetweenDate(
@@ -97,13 +112,8 @@ public abstract class BaseController {
             Function3<DateRange, Boolean, Boolean, Mono<Long>> function,
             @Nullable Boolean areGroupMessages,
             @Nullable Boolean areSystemMessages) {
-        AdminApiProperties properties = node.getSharedProperties().getService().getAdminApi();
-        int maxHourRanges = properties.getMaxHourDifferencePerCountRequest();
-        int maxDayRanges = properties.getMaxDayDifferencePerCountRequest();
-        int maxMonthRanges = properties.getMaxMonthDifferencePerCountRequest();
-        boolean checked = isDurationNotGreaterThanMax(dateRange, divideBy,
-                maxHourRanges, maxDayRanges, maxMonthRanges);
-        if (checked) {
+        if (isDurationNotGreaterThanMax(dateRange, divideBy,
+                maxHourDifferencePerCountRequest, maxDayDifferencePerCountRequest, maxMonthDifferencePerCountRequest)) {
             return queryBetweenDate(dateRange, divideBy, function, areGroupMessages, areSystemMessages);
         }
         throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS);
@@ -113,12 +123,8 @@ public abstract class BaseController {
             DateRange dateRange,
             DivideBy divideBy,
             Function<DateRange, Mono<Long>> function) {
-        AdminApiProperties properties = node.getSharedProperties().getService().getAdminApi();
-        int maxHourRanges = properties.getMaxHourDifferencePerCountRequest();
-        int maxDayRanges = properties.getMaxDayDifferencePerCountRequest();
-        int maxMonthRanges = properties.getMaxMonthDifferencePerCountRequest();
-        boolean checked = isDurationNotGreaterThanMax(dateRange, divideBy, maxHourRanges, maxDayRanges, maxMonthRanges);
-        if (checked) {
+        if (isDurationNotGreaterThanMax(dateRange, divideBy,
+                maxHourDifferencePerCountRequest, maxDayDifferencePerCountRequest, maxMonthDifferencePerCountRequest)) {
             return queryBetweenDate(dateRange, divideBy, function);
         }
         throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS);

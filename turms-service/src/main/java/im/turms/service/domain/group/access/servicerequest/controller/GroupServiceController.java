@@ -45,8 +45,10 @@ import im.turms.server.common.access.client.dto.request.group.member.DeleteGroup
 import im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequest;
 import im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.service.business.NotificationProperties;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
@@ -97,7 +99,6 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 @Controller
 public class GroupServiceController {
 
-    private final Node node;
     private final GroupService groupService;
     private final GroupBlocklistService groupBlocklistService;
     private final GroupQuestionService groupQuestionService;
@@ -105,21 +106,51 @@ public class GroupServiceController {
     private final GroupJoinRequestService groupJoinRequestService;
     private final GroupMemberService groupMemberService;
 
+    private boolean notifyInviteeAfterGroupInvitationRecalled;
+    private boolean notifyMembersAfterGroupDeleted;
+    private boolean notifyMembersAfterGroupUpdated;
+    private boolean notifyMembersAfterOtherMemberInfoUpdated;
+    private boolean notifyMemberAfterInfoUpdatedByOthers;
+    private boolean notifyOwnerAndManagersAfterReceivingJoinRequest;
+    private boolean notifyOwnerAndManagersAfterGroupJoinRequestRecalled;
+    private boolean notifyUserAfterBlockedByGroup;
+    private boolean notifyUserAfterUnblockedByGroup;
+    private boolean notifyUserAfterInvitedByGroup;
+    private boolean notifyUserAfterAddedToGroupByOthers;
+    private boolean notifyUserAfterRemovedFromGroupByOthers;
+
     public GroupServiceController(
-            Node node,
+            TurmsPropertiesManager propertiesManager,
             GroupService groupService,
             GroupBlocklistService groupBlocklistService,
             GroupQuestionService groupQuestionService,
             GroupInvitationService groupInvitationService,
             GroupJoinRequestService groupJoinRequestService,
             GroupMemberService groupMemberService) {
-        this.node = node;
         this.groupService = groupService;
         this.groupBlocklistService = groupBlocklistService;
         this.groupQuestionService = groupQuestionService;
         this.groupInvitationService = groupInvitationService;
         this.groupJoinRequestService = groupJoinRequestService;
         this.groupMemberService = groupMemberService;
+
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        NotificationProperties notificationProperties = properties.getService().getNotification();
+        notifyInviteeAfterGroupInvitationRecalled = notificationProperties.isNotifyInviteeAfterGroupInvitationRecalled();
+        notifyMembersAfterGroupDeleted = notificationProperties.isNotifyMembersAfterGroupDeleted();
+        notifyMembersAfterGroupUpdated = notificationProperties.isNotifyMembersAfterGroupUpdated();
+        notifyMembersAfterOtherMemberInfoUpdated = notificationProperties.isNotifyMembersAfterOtherMemberInfoUpdated();
+        notifyMemberAfterInfoUpdatedByOthers = notificationProperties.isNotifyMemberAfterInfoUpdatedByOthers();
+        notifyOwnerAndManagersAfterReceivingJoinRequest = notificationProperties.isNotifyOwnerAndManagersAfterReceivingJoinRequest();
+        notifyOwnerAndManagersAfterGroupJoinRequestRecalled = notificationProperties.isNotifyOwnerAndManagersAfterGroupJoinRequestRecalled();
+        notifyUserAfterBlockedByGroup = notificationProperties.isNotifyUserAfterBlockedByGroup();
+        notifyUserAfterUnblockedByGroup = notificationProperties.isNotifyUserAfterUnblockedByGroup();
+        notifyUserAfterInvitedByGroup = notificationProperties.isNotifyUserAfterInvitedByGroup();
+        notifyUserAfterAddedToGroupByOthers = notificationProperties.isNotifyUserAfterAddedToGroupByOthers();
+        notifyUserAfterRemovedFromGroupByOthers = notificationProperties.isNotifyUserAfterRemovedFromGroupByOthers();
     }
 
     @ServiceRequestMapping(CREATE_GROUP_REQUEST)
@@ -143,7 +174,7 @@ public class GroupServiceController {
                             muteEndDate,
                             null,
                             null,
-                            node.getSharedProperties().getService().getGroup().isActivateGroupWhenCreated())
+                            null)
                     .map(group -> RequestHandlerResultFactory.get(group.getId()));
         };
     }
@@ -154,7 +185,7 @@ public class GroupServiceController {
             DeleteGroupRequest request = clientRequest.turmsRequest().getDeleteGroupRequest();
             return groupService.authAndDeleteGroup(clientRequest.userId(), request.getGroupId())
                     .then(Mono.defer(() -> {
-                        if (node.getSharedProperties().getService().getNotification().isNotifyMembersAfterGroupDeleted()) {
+                        if (notifyMembersAfterGroupDeleted) {
                             return groupMemberService.queryGroupMemberIds(request.getGroupId())
                                     .collect(Collectors.toSet())
                                     .map(memberIds -> memberIds.isEmpty()
@@ -247,7 +278,7 @@ public class GroupServiceController {
                                 null);
             }
             return updateMono.then(Mono.defer(() -> {
-                if (node.getSharedProperties().getService().getNotification().isNotifyMembersAfterGroupUpdated()) {
+                if (notifyMembersAfterGroupUpdated) {
                     return groupMemberService.queryGroupMemberIds(request.getGroupId())
                             .collect(Collectors.toSet())
                             .map(memberIds -> memberIds.isEmpty()
@@ -270,7 +301,7 @@ public class GroupServiceController {
                             request.getUserId(),
                             null)
                     .then(Mono.fromCallable(() ->
-                            node.getSharedProperties().getService().getNotification().isNotifyUserAfterBlockedByGroup()
+                            notifyUserAfterBlockedByGroup
                                     ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.turmsRequest())
                                     : RequestHandlerResultFactory.OK));
         };
@@ -288,7 +319,7 @@ public class GroupServiceController {
                             null,
                             true)
                     .then(Mono.fromCallable(() ->
-                            node.getSharedProperties().getService().getNotification().isNotifyUserAfterUnblockedByGroup()
+                            notifyUserAfterUnblockedByGroup
                                     ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.turmsRequest())
                                     : RequestHandlerResultFactory.OK));
         };
@@ -353,7 +384,7 @@ public class GroupServiceController {
                             clientRequest.userId(),
                             request.getInviteeId(),
                             request.getContent())
-                    .map(invitation -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterInvitedByGroup()
+                    .map(invitation -> notifyUserAfterInvitedByGroup
                             ? RequestHandlerResultFactory.get(invitation.getId(), request.getInviteeId(), clientRequest.turmsRequest())
                             : RequestHandlerResultFactory.OK);
         };
@@ -369,7 +400,7 @@ public class GroupServiceController {
                             request.getGroupId(),
                             request.getContent())
                     .flatMap(joinRequest -> {
-                        if (node.getSharedProperties().getService().getNotification().isNotifyOwnerAndManagersAfterReceivingJoinRequest()) {
+                        if (notifyOwnerAndManagersAfterReceivingJoinRequest) {
                             return groupMemberService.queryGroupManagersAndOwnerId(request.getGroupId())
                                     .collect(Collectors.toSet())
                                     .map(recipientIds -> recipientIds.isEmpty()
@@ -410,8 +441,7 @@ public class GroupServiceController {
                     .flatMap(inviteeId -> groupInvitationService.recallPendingGroupInvitation(
                                     clientRequest.userId(),
                                     request.getInvitationId())
-                            .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification()
-                                    .isNotifyInviteeAfterGroupInvitationRecalled()
+                            .then(Mono.fromCallable(() -> notifyInviteeAfterGroupInvitationRecalled
                                     ? RequestHandlerResultFactory.get(inviteeId, clientRequest.turmsRequest())
                                     : RequestHandlerResultFactory.OK)));
         };
@@ -426,8 +456,7 @@ public class GroupServiceController {
                             clientRequest.userId(),
                             request.getRequestId())
                     .then(Mono.defer(() -> {
-                        if (node.getSharedProperties().getService().getNotification()
-                                .isNotifyOwnerAndManagersAfterGroupJoinRequestRecalled()) {
+                        if (notifyOwnerAndManagersAfterGroupJoinRequestRecalled) {
                             return groupJoinRequestService.queryGroupId(request.getRequestId())
                                     .flatMap(groupId -> groupMemberService.queryGroupManagersAndOwnerId(groupId)
                                             .collect(Collectors.toSet())
@@ -555,7 +584,7 @@ public class GroupServiceController {
                             muteEndDate,
                             null)
                     .map(member -> member != null &&
-                            node.getSharedProperties().getService().getNotification().isNotifyUserAfterAddedToGroupByOthers()
+                            notifyUserAfterAddedToGroupByOthers
                             ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.turmsRequest())
                             : RequestHandlerResultFactory.OK);
         };
@@ -574,8 +603,7 @@ public class GroupServiceController {
                             successorId,
                             quitAfterTransfer)
                     .then(Mono.fromCallable(
-                            () -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterRemovedFromGroupByOthers()
-                                    && !clientRequest.userId().equals(request.getMemberId())
+                            () -> notifyUserAfterRemovedFromGroupByOthers && !clientRequest.userId().equals(request.getMemberId())
                                     ? RequestHandlerResultFactory.get(request.getMemberId(), clientRequest.turmsRequest())
                                     : RequestHandlerResultFactory.OK));
         };
@@ -627,15 +655,14 @@ public class GroupServiceController {
                             role,
                             muteEndDate)
                     .then(Mono.defer(() -> {
-                        if (node.getSharedProperties().getService().getNotification()
-                                .isNotifyMembersAfterOtherMemberInfoUpdated()) {
+                        if (notifyMembersAfterOtherMemberInfoUpdated) {
                             return groupMemberService.queryGroupMemberIds(request.getGroupId())
                                     .collect(Collectors.toSet())
                                     .map(groupMemberIds -> groupMemberIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
                                             : RequestHandlerResultFactory.get(groupMemberIds, clientRequest.turmsRequest()));
                         } else if (!clientRequest.userId().equals(request.getMemberId())
-                                && node.getSharedProperties().getService().getNotification().isNotifyMemberAfterInfoUpdatedByOthers()) {
+                                && notifyMemberAfterInfoUpdatedByOthers) {
                             return Mono.just(RequestHandlerResultFactory.get(
                                     clientRequest.userId(),
                                     clientRequest.turmsRequest()));

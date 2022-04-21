@@ -37,10 +37,10 @@ public class RedisConfig extends CommonRedisConfig {
 
     private final TurmsRedisClientManager sequenceIdRedisClientManager;
 
-    protected RedisConfig(TurmsPropertiesManager turmsPropertiesManager) {
-        super(turmsPropertiesManager.getLocalProperties().getService().getRedis(),
-                turmsPropertiesManager.getLocalProperties().getLocation().isTreatUserIdAndDeviceTypeAsUniqueUser());
-        ServiceProperties serviceProperties = turmsPropertiesManager.getLocalProperties().getService();
+    protected RedisConfig(TurmsPropertiesManager propertiesManager) {
+        super(propertiesManager.getLocalProperties().getService().getRedis(),
+                propertiesManager.getLocalProperties().getLocation().isTreatUserIdAndDeviceTypeAsUniqueUser());
+        ServiceProperties serviceProperties = propertiesManager.getLocalProperties().getService();
         SequenceIdProperties sequenceIdProperties = serviceProperties.getMessage().getSequenceId();
         sequenceIdRedisClientManager = sequenceIdProperties.isUseSequenceIdForGroupConversation()
                 || sequenceIdProperties.isUseSequenceIdForPrivateConversation()

@@ -50,7 +50,7 @@ public class TurmsPropertiesManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TurmsPropertiesManager.class);
 
-    public final List<Consumer<TurmsProperties>> propertiesChangeListeners = new LinkedList<>();
+    public final List<Consumer<TurmsProperties>> localPropertiesChangeListeners = new LinkedList<>();
 
     private static final TurmsProperties DEFAULT_PROPERTIES = new TurmsProperties();
     private static final JsonNode DEFAULT_PROPERTIES_JSON_NODE = toMutablePropertiesJsonNode(DEFAULT_PROPERTIES);
@@ -79,6 +79,10 @@ public class TurmsPropertiesManager {
         }
     }
 
+    public TurmsProperties getGlobalProperties() {
+        return node.getSharedProperties();
+    }
+
     /**
      * Use the instance of TurmsPropertiesManager instead of TurmsProperties instance
      * so that we can update the global TurmsProperties instance easily by replacing its reference
@@ -88,6 +92,27 @@ public class TurmsPropertiesManager {
     }
 
     // Update
+
+    public Mono<Void> updateGlobalProperties(
+            boolean reset,
+            Map<String, Object> propertiesForUpdating) {
+        if (reset) {
+            return node.updateSharedProperties(DEFAULT_PROPERTIES);
+        }
+        if (propertiesForUpdating == null || propertiesForUpdating.isEmpty()) {
+            return Mono.empty();
+        }
+        InvalidPropertyException exception = validatePropertiesForUpdating(DEFAULT_PROPERTIES, propertiesForUpdating);
+        if (exception != null) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
+        }
+        TurmsProperties properties = mergeProperties(getGlobalProperties(), propertiesForUpdating);
+        exception = validate(properties);
+        if (exception != null) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
+        }
+        return node.updateSharedProperties(properties);
+    }
 
     public void updateLocalProperties(
             boolean reset,
@@ -107,7 +132,7 @@ public class TurmsPropertiesManager {
                 throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
             }
             newPropertiesJsonNode = toJsonNode(propertiesForUpdating);
-            newLocalProperties = mergeProperties(node.getSharedProperties(), newPropertiesJsonNode);
+            newLocalProperties = mergeProperties(getGlobalProperties(), newPropertiesJsonNode);
             exception = validate(newLocalProperties);
             if (exception != null) {
                 throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
@@ -119,42 +144,35 @@ public class TurmsPropertiesManager {
         } catch (IOException e) {
             LOGGER.error("Failed to persist new turms properties", e);
         }
-        notifyListeners(newLocalProperties);
-    }
-
-    public Mono<Void> updateGlobalProperties(
-            boolean reset,
-            Map<String, Object> propertiesForUpdating) {
-        if (reset) {
-            return node.updateSharedProperties(DEFAULT_PROPERTIES);
-        }
-        if (propertiesForUpdating == null || propertiesForUpdating.isEmpty()) {
-            return Mono.empty();
-        }
-        InvalidPropertyException exception = validatePropertiesForUpdating(DEFAULT_PROPERTIES, propertiesForUpdating);
-        if (exception != null) {
-            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
-        }
-        TurmsProperties properties = mergeProperties(node.getSharedProperties(), propertiesForUpdating);
-        exception = validate(properties);
-        if (exception != null) {
-            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
-        }
-        return node.updateSharedProperties(properties);
+        notifyLocalPropertiesChangeListeners(newLocalProperties);
     }
 
     // Listener
 
-    public void addChangeListener(Consumer<TurmsProperties> listener) {
-        propertiesChangeListeners.add(listener);
+    public void addGlobalPropertiesChangeListener(Consumer<TurmsProperties> listener) {
+        node.addPropertiesChangeListener(listener);
     }
 
-    public void notifyListeners(TurmsProperties properties) {
-        for (Consumer<TurmsProperties> listener : propertiesChangeListeners) {
+    public void triggerAndAddGlobalPropertiesChangeListener(Consumer<TurmsProperties> listener) {
+        listener.accept(getGlobalProperties());
+        addGlobalPropertiesChangeListener(listener);
+    }
+
+    public void addLocalPropertiesChangeListener(Consumer<TurmsProperties> listener) {
+        localPropertiesChangeListeners.add(listener);
+    }
+
+    public void triggerAndAddLocalPropertiesChangeListener(Consumer<TurmsProperties> listener) {
+        listener.accept(getLocalProperties());
+        localPropertiesChangeListeners.add(listener);
+    }
+
+    public void notifyLocalPropertiesChangeListeners(TurmsProperties properties) {
+        for (Consumer<TurmsProperties> listener : localPropertiesChangeListeners) {
             try {
                 listener.accept(properties);
             } catch (Exception e) {
-                LOGGER.error("The properties listener {} failed to handle the new properties",
+                LOGGER.error("The local properties listener {} failed to handle the new properties",
                         listener.getClass().getName(), e);
             }
         }

@@ -86,14 +86,14 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                     ServerStatusManager serverStatusManager,
                                     OutboundMessageService outboundMessageService,
                                     PluginManager pluginManager,
-                                    TurmsPropertiesManager turmsPropertiesManager) {
+                                    TurmsPropertiesManager propertiesManager) {
         this.apiLoggingContext = apiLoggingContext;
         this.blocklistService = blocklistService;
         this.serverStatusManager = serverStatusManager;
         this.outboundMessageService = outboundMessageService;
         this.pluginManager = pluginManager;
-        Set<TurmsRequest.KindCase> disabledEndpoints =
-                turmsPropertiesManager.getLocalProperties().getService().getClientApi().getDisabledEndpoints();
+        Set<TurmsRequest.KindCase> disabledEndpoints = propertiesManager.getLocalProperties()
+                .getService().getClientApi().getDisabledEndpoints();
         requestTypeToHandler = getMappings((ConfigurableApplicationContext) context, disabledEndpoints);
         for (TurmsRequest.KindCase requestType : TurmsRequest.KindCase.values()) {
             if (!requestTypeToHandler.containsKey(requestType) && requestType != KIND_NOT_SET && !isRequestForGateway(requestType)) {
@@ -103,7 +103,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     }
 
     private FastEnumMap<TurmsRequest.KindCase, ClientRequestHandler> getMappings(ConfigurableApplicationContext context,
-                                                                         Set<TurmsRequest.KindCase> disabledEndpoints) {
+                                                                                 Set<TurmsRequest.KindCase> disabledEndpoints) {
         FastEnumMap<TurmsRequest.KindCase, ClientRequestHandler> mappingMap = new FastEnumMap<>(TurmsRequest.KindCase.class);
         ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
         String[] definitionNames = beanFactory.getBeanDefinitionNames();

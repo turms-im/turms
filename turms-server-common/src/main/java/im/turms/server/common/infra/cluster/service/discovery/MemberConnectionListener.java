@@ -17,7 +17,7 @@
 
 package im.turms.server.common.infra.cluster.service.discovery;
 
-import im.turms.server.common.infra.cluster.service.config.domain.discovery.Member;
+import im.turms.server.common.infra.cluster.service.config.entity.discovery.Member;
 import im.turms.server.common.infra.cluster.service.connection.TurmsConnection;
 
 /**

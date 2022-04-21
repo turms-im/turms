@@ -17,11 +17,10 @@
 
 package im.turms.server.common.infra.property.env.common.adminapi;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.infra.property.env.common.AddressProperties;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -33,17 +32,15 @@ public abstract class CommonAdminApiProperties {
 
     @Description("Whether to enable the APIs for administrators")
     @GlobalProperty
+    @MutableProperty
     private boolean enabled = true;
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private AddressProperties address = new AddressProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private AdminApiRateLimitingProperties rateLimiting = new AdminApiRateLimitingProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private LogProperties log = new LogProperties();
 

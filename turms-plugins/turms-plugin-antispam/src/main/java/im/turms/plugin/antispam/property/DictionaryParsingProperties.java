@@ -17,7 +17,7 @@
 
 package im.turms.plugin.antispam.property;
 
-import im.turms.server.common.infra.property.metadata.annotation.Description;
+import im.turms.server.common.infra.property.metadata.Description;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 

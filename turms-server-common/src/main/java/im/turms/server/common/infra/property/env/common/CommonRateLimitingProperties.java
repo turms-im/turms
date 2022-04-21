@@ -17,10 +17,9 @@
 
 package im.turms.server.common.infra.property.env.common;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,25 +36,25 @@ public abstract class CommonRateLimitingProperties {
 
     @Description("The maximum number of tokens that the bucket can hold")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(1)
     private int capacity = 50;
 
     @Description("The initial number of tokens for new session")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int initialTokens = 50;
 
     @Description("Refills the bucket with the specified number of tokens per period if the bucket isn't full")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(1)
     private int tokensPerPeriod = 1;
 
     @Description("The time interval to refill. 0 means never refill")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Min(0)
     private int refillIntervalMillis = 1000;
 

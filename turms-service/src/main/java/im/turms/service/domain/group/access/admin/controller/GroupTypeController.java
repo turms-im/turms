@@ -24,7 +24,7 @@ import im.turms.server.common.domain.common.dto.response.PaginationDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
-import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.group.access.admin.dto.request.AddGroupTypeDTO;
 import im.turms.service.domain.group.access.admin.dto.request.UpdateGroupTypeDTO;
@@ -54,8 +54,8 @@ public class GroupTypeController extends BaseController {
 
     private final GroupTypeService groupTypeService;
 
-    public GroupTypeController(Node node, GroupTypeService groupTypeService) {
-        super(node);
+    public GroupTypeController(TurmsPropertiesManager propertiesManager, GroupTypeService groupTypeService) {
+        super(propertiesManager);
         this.groupTypeService = groupTypeService;
     }
 

@@ -21,7 +21,6 @@ import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.domain.session.service.SessionLocationService;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -36,13 +35,17 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.stubbing.Answer;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -73,16 +76,6 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     static final DeviceType NONEXISTENT_USER_DEVICE = DeviceType.ANDROID;
 
     static {
-        Node node = mock(Node.class);
-        when(node.getSharedProperties()).thenReturn(new TurmsProperties().toBuilder()
-                .location(new LocationProperties().toBuilder()
-                        .usersNearbyRequest(new UsersNearbyRequestProperties()
-                                .toBuilder()
-                                .maxDistanceMeters(Integer.MAX_VALUE)
-                                .build())
-                        .build())
-                .build());
-
         PluginManager pluginManager = mock(PluginManager.class);
         when(pluginManager.isEnabled()).thenReturn(false);
 
@@ -94,6 +87,18 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
                                 .treatUserIdAndDeviceTypeAsUniqueUser(true)
                                 .build())
                         .build());
+        doAnswer((Answer<Void>) invocation -> {
+            Consumer<TurmsProperties> listener = invocation.getArgument(0);
+            listener.accept(new TurmsProperties().toBuilder()
+                    .location(new LocationProperties().toBuilder()
+                            .usersNearbyRequest(new UsersNearbyRequestProperties()
+                                    .toBuilder()
+                                    .maxDistanceMeters(Integer.MAX_VALUE)
+                                    .build())
+                            .build())
+                    .build());
+            return null;
+        }).when(propertiesManager).triggerAndAddGlobalPropertiesChangeListener(any());
 
         RedisProperties redisProperties = new RedisProperties()
                 .toBuilder()
@@ -101,9 +106,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
                 .build();
         TurmsRedisClientManager manager =
                 new TurmsRedisClientManager(redisProperties, RedisCodecContextPool.GEO_USER_SESSION_ID_CODEC_CONTEXT);
-        SESSION_LOCATION_SERVICE = new SessionLocationService(node,
-                propertiesManager,
-                manager);
+        SESSION_LOCATION_SERVICE = new SessionLocationService(propertiesManager, manager);
     }
 
     @Order(0)

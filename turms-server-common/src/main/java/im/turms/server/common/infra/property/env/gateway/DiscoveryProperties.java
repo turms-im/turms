@@ -18,10 +18,9 @@
 package im.turms.server.common.infra.property.env.gateway;
 
 
-import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.infra.property.constant.AdvertiseStrategy;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,25 +35,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DiscoveryProperties {
 
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Description("The identity of the local node will be sent to clients as a notification if identity is not blank" +
             " and turms.gateway.session.notifyClientsOfSessionInfoAfterConnected is true" +
             " (e.g. \"turms-east-0001\")")
     private String identity = "";
 
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Description("The advertise strategy is used to help clients or load balancing servers to access the local node. " +
             "Note: For security, do NOT use PUBLIC_ADDRESS in production " +
             "to prevent from exposing the origin IP address for DDoS attack.")
     private AdvertiseStrategy advertiseStrategy = AdvertiseStrategy.LOCAL_ADDRESS;
 
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Description("The advertise address of the local node exposed to the public. " +
             "The property can be used to advertise the DDoS Protected IP address to hide the origin IP address)\n" +
             "(e.g. 100.131.251.96)")
     private String advertiseHost = "";
 
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     @Description("Whether to attach the local port to the host.\n" +
             "e.g. The local host is 100.131.251.96, and the port is 10510" +
             "so the service address will be 100.131.251.96:10510")

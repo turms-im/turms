@@ -27,9 +27,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RedisConfig extends CommonRedisConfig {
 
-    protected RedisConfig(TurmsPropertiesManager turmsPropertiesManager) {
-        super(turmsPropertiesManager.getLocalProperties().getGateway().getRedis(),
-                turmsPropertiesManager.getLocalProperties().getLocation().isTreatUserIdAndDeviceTypeAsUniqueUser());
+    protected RedisConfig(TurmsPropertiesManager propertiesManager) {
+        super(propertiesManager.getLocalProperties().getGateway().getRedis(),
+                propertiesManager.getLocalProperties().getLocation().isTreatUserIdAndDeviceTypeAsUniqueUser());
     }
 
 }

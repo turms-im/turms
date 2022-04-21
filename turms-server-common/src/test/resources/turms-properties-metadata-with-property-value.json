@@ -211,7 +211,7 @@
         "deprecated": false,
         "desc": "Whether to enable the APIs for administrators",
         "global": true,
-        "mutable": false,
+        "mutable": true,
         "type": "boolean",
         "value": true
       },
@@ -519,8 +519,8 @@
       "enableAuthentication": {
         "deprecated": false,
         "desc": "Whether to authenticate users when logging in.Note that user ID is always required even if enableAuthentication is false; If false, turms-gateway won't connect to the MongoDB server for user records",
-        "global": false,
-        "mutable": false,
+        "global": true,
+        "mutable": true,
         "type": "boolean",
         "value": false
       },
@@ -844,7 +844,7 @@
       "defaultMaxAvailableNearbyUsersNumber": {
         "deprecated": false,
         "desc": "The default maximum available number of nearby users",
-        "global": false,
+        "global": true,
         "mutable": true,
         "type": "short",
         "value": 20
@@ -852,7 +852,7 @@
       "defaultMaxDistanceMeters": {
         "deprecated": false,
         "desc": "The default maximum distance limit in meters",
-        "global": false,
+        "global": true,
         "mutable": true,
         "type": "int",
         "value": 10000
@@ -860,7 +860,7 @@
       "maxAvailableUsersNearbyNumberLimit": {
         "deprecated": false,
         "desc": "The maximum allowed available number of users nearby records",
-        "global": false,
+        "global": true,
         "mutable": true,
         "type": "short",
         "value": 100
@@ -868,7 +868,7 @@
       "maxDistanceMeters": {
         "deprecated": false,
         "desc": "The maximum distance limit in meters",
-        "global": false,
+        "global": true,
         "mutable": true,
         "type": "int",
         "value": 10000
@@ -1340,7 +1340,7 @@
         "deprecated": false,
         "desc": "Whether to enable the APIs for administrators",
         "global": true,
-        "mutable": false,
+        "mutable": true,
         "type": "boolean",
         "value": true
       },
@@ -1564,7 +1564,7 @@
         "updateReadDateWhenUserQueryingMessage": {
           "deprecated": false,
           "desc": "Whether to update the read date when a user queries messages",
-          "global": false,
+          "global": true,
           "mutable": true,
           "type": "boolean",
           "value": false
@@ -1628,7 +1628,7 @@
         "deprecated": false,
         "desc": "Whether to activate a group when created by default",
         "global": true,
-        "mutable": false,
+        "mutable": true,
         "type": "boolean",
         "value": true
       },
@@ -1837,7 +1837,7 @@
       "expiredMessagesCleanupCron": {
         "deprecated": false,
         "desc": "Clean the expired messages when the cron expression is triggered",
-        "global": true,
+        "global": false,
         "mutable": false,
         "type": "string",
         "value": "0 45 2 * * *"
@@ -1861,7 +1861,7 @@
       "messageRetentionPeriodHours": {
         "deprecated": false,
         "desc": "A message will be retained for the given period and will be removed from the database after the retention period",
-        "global": false,
+        "global": true,
         "mutable": true,
         "type": "int",
         "value": 0
@@ -2138,7 +2138,7 @@
         "deprecated": false,
         "desc": "Whether to log online users number",
         "global": true,
-        "mutable": false,
+        "mutable": true,
         "type": "boolean",
         "value": true
       },

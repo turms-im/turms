@@ -24,7 +24,7 @@ import im.turms.server.common.domain.common.dto.response.PaginationDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
-import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DivideBy;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
@@ -67,8 +67,8 @@ public class GroupController extends BaseController {
     private final GroupService groupService;
     private final MessageService messageService;
 
-    public GroupController(Node node, GroupService groupService, MessageService messageService) {
-        super(node);
+    public GroupController(TurmsPropertiesManager propertiesManager, GroupService groupService, MessageService messageService) {
+        super(propertiesManager);
         this.groupService = groupService;
         this.messageService = messageService;
     }

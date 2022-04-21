@@ -17,10 +17,9 @@
 
 package im.turms.server.common.infra.property.env.service.business.group;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,22 +37,20 @@ public class GroupProperties {
 
     @Description("Whether to delete groups logically by default")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean deleteGroupLogicallyByDefault = true;
 
     @Description("Whether to activate a group when created by default")
     @GlobalProperty
+    @MutableProperty
     private boolean activateGroupWhenCreated = true;
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private GroupInvitationProperties invitation = new GroupInvitationProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private GroupJoinRequestProperties joinRequest = new GroupJoinRequestProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private GroupQuestionProperties question = new GroupQuestionProperties();
 

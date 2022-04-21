@@ -1,7 +1,40 @@
 {
   "cluster": {
-    "connection": {},
-    "discovery": {},
+    "connection": {
+      "client": {},
+      "server": {}
+    },
+    "discovery": {
+      "address": {
+        "advertiseHost": {
+          "deprecated": false,
+          "desc": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)",
+          "global": false,
+          "mutable": true,
+          "type": "string"
+        },
+        "advertiseStrategy": {
+          "deprecated": false,
+          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs (only provided by turms) and metrics APIs (provided by turms and turms-gateway)",
+          "global": false,
+          "mutable": true,
+          "options": [
+            "ADVERTISE_ADDRESS",
+            "BIND_ADDRESS",
+            "LOCAL_ADDRESS",
+            "PUBLIC_ADDRESS"
+          ],
+          "type": "enum"
+        },
+        "attachPortToHost": {
+          "deprecated": false,
+          "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510",
+          "global": false,
+          "mutable": true,
+          "type": "boolean"
+        }
+      }
+    },
     "node": {},
     "rpc": {},
     "sharedConfig": {}
@@ -37,6 +70,13 @@
           "mutable": true,
           "type": "boolean"
         }
+      },
+      "enabled": {
+        "deprecated": false,
+        "desc": "Whether to enable the APIs for administrators",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
       },
       "log": {
         "enabled": {
@@ -85,7 +125,39 @@
         }
       }
     },
-    "clientApi": {},
+    "clientApi": {
+      "logging": {},
+      "rateLimiting": {
+        "capacity": {
+          "deprecated": false,
+          "desc": "The maximum number of tokens that the bucket can hold",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        },
+        "initialTokens": {
+          "deprecated": false,
+          "desc": "The initial number of tokens for new session",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        },
+        "refillIntervalMillis": {
+          "deprecated": false,
+          "desc": "The time interval to refill. 0 means never refill",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        },
+        "tokensPerPeriod": {
+          "deprecated": false,
+          "desc": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
+          "global": true,
+          "mutable": true,
+          "type": "int"
+        }
+      }
+    },
     "fake": {},
     "mongo": {},
     "notificationLogging": {},
@@ -140,6 +212,13 @@
         "global": true,
         "mutable": true,
         "type": "int"
+      },
+      "enableAuthentication": {
+        "deprecated": false,
+        "desc": "Whether to authenticate users when logging in.Note that user ID is always required even if enableAuthentication is false; If false, turms-gateway won't connect to the MongoDB server for user records",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
       },
       "minHeartbeatIntervalSeconds": {
         "deprecated": false,
@@ -210,7 +289,10 @@
     "udp": {},
     "websocket": {}
   },
-  "healthCheck": {},
+  "healthCheck": {
+    "cpu": {},
+    "memory": {}
+  },
   "ip": {
     "publicIpDetectorAddresses": {
       "deprecated": false,
@@ -226,36 +308,57 @@
       "defaultMaxAvailableNearbyUsersNumber": {
         "deprecated": false,
         "desc": "The default maximum available number of nearby users",
-        "global": false,
+        "global": true,
         "mutable": true,
         "type": "short"
       },
       "defaultMaxDistanceMeters": {
         "deprecated": false,
         "desc": "The default maximum distance limit in meters",
-        "global": false,
+        "global": true,
         "mutable": true,
         "type": "int"
       },
       "maxAvailableUsersNearbyNumberLimit": {
         "deprecated": false,
         "desc": "The maximum allowed available number of users nearby records",
-        "global": false,
+        "global": true,
         "mutable": true,
         "type": "short"
       },
       "maxDistanceMeters": {
         "deprecated": false,
         "desc": "The maximum distance limit in meters",
-        "global": false,
+        "global": true,
         "mutable": true,
         "type": "int"
       }
     }
   },
-  "logging": {},
+  "logging": {
+    "console": {},
+    "file": {}
+  },
   "plugin": {},
-  "security": {},
+  "security": {
+    "blocklist": {
+      "ip": {
+        "autoBlock": {
+          "corruptedFrame": {},
+          "corruptedRequest": {},
+          "frequentRequest": {}
+        }
+      },
+      "userId": {
+        "autoBlock": {
+          "corruptedFrame": {},
+          "corruptedRequest": {},
+          "frequentRequest": {}
+        }
+      }
+    },
+    "password": {}
+  },
   "service": {
     "adminApi": {
       "address": {
@@ -300,6 +403,13 @@
         "global": true,
         "mutable": true,
         "type": "int"
+      },
+      "enabled": {
+        "deprecated": false,
+        "desc": "Whether to enable the APIs for administrators",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
       },
       "log": {
         "enabled": {
@@ -390,10 +500,66 @@
         }
       }
     },
-    "clientApi": {},
-    "conversation": {},
+    "clientApi": {
+      "logging": {}
+    },
+    "conversation": {
+      "readReceipt": {
+        "allowMoveReadDateForward": {
+          "deprecated": false,
+          "desc": "Whether to allow to move the last read date forward",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        },
+        "enabled": {
+          "deprecated": false,
+          "desc": "Whether to allow to update the last read date",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        },
+        "updateReadDateAfterMessageSent": {
+          "deprecated": false,
+          "desc": "Whether to update the read date after a user sent a message",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        },
+        "updateReadDateWhenUserQueryingMessage": {
+          "deprecated": false,
+          "desc": "Whether to update the read date when a user queries messages",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        },
+        "useServerTime": {
+          "deprecated": false,
+          "desc": "Whether to use the server time to set the last read date when updating",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        }
+      },
+      "typingStatus": {
+        "enabled": {
+          "deprecated": false,
+          "desc": "Whether to notify users of typing statuses sent by other users",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        }
+      }
+    },
     "fake": {},
     "group": {
+      "activateGroupWhenCreated": {
+        "deprecated": false,
+        "desc": "Whether to activate a group when created by default",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
       "deleteGroupLogicallyByDefault": {
         "deprecated": false,
         "desc": "Whether to delete groups logically by default",
@@ -521,6 +687,7 @@
         "mutable": true,
         "type": "int"
       },
+      "cache": {},
       "checkIfTargetActiveAndNotDeleted": {
         "deprecated": false,
         "desc": "Whether to check if the target (recipient or group) of a message is active and not deleted",
@@ -559,7 +726,7 @@
       "messageRetentionPeriodHours": {
         "deprecated": false,
         "desc": "A message will be retained for the given period and will be removed from the database after the retention period",
-        "global": false,
+        "global": true,
         "mutable": true,
         "type": "int"
       },
@@ -776,7 +943,15 @@
       }
     },
     "redis": {},
-    "statistics": {},
+    "statistics": {
+      "logOnlineUsersNumber": {
+        "deprecated": false,
+        "desc": "Whether to log online users number",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      }
+    },
     "storage": {},
     "user": {
       "activateUserWhenAdded": {

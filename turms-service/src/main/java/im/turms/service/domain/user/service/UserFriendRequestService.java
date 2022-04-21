@@ -30,6 +30,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.time.DateRange;
@@ -78,10 +79,14 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
     private final UserVersionService userVersionService;
     private final UserRelationshipService userRelationshipService;
 
+    private boolean allowSendRequestAfterDeclinedOrIgnoredOrExpired;
+    private int contentLimit;
+    private boolean deleteExpiredRequestsWhenCronTriggered;
+
     public UserFriendRequestService(
             Node node,
+            TurmsPropertiesManager propertiesManager,
             UserFriendRequestRepository userFriendRequestRepository,
-            TurmsPropertiesManager turmsPropertiesManager,
             UserVersionService userVersionService,
             UserRelationshipService userRelationshipService,
             TaskManager taskManager) {
@@ -91,24 +96,29 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
         this.userVersionService = userVersionService;
         this.userRelationshipService = userRelationshipService;
 
+        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
         // Set up a cron job to remove requests if deleting expired docs is enabled
         taskManager.reschedule(
                 "expiredUserFriendRequestsCleanup",
-                turmsPropertiesManager.getLocalProperties().getService().getUser().getFriendRequest()
+                propertiesManager.getLocalProperties().getService().getUser().getFriendRequest()
                         .getExpiredUserFriendRequestsCleanupCron(),
                 () -> {
                     boolean isLocalNodeLeader = node.isLocalNodeLeader();
-                    boolean deleteExpiredRequestsWhenCronTriggered = node.getSharedProperties()
-                            .getService()
-                            .getUser()
-                            .getFriendRequest()
-                            .isDeleteExpiredRequestsWhenCronTriggered();
                     Date expirationDate = getEntityExpirationDate();
                     if (isLocalNodeLeader && deleteExpiredRequestsWhenCronTriggered && expirationDate != null) {
                         removeAllExpiredFriendRequests(expirationDate)
                                 .subscribe(null, t -> LOGGER.error("Caught an error while removing expired friend requests", t));
                     }
                 });
+    }
+
+    private void updateProperties(TurmsProperties properties) {
+        allowSendRequestAfterDeclinedOrIgnoredOrExpired = properties.getService().getUser().getFriendRequest()
+                .isAllowSendRequestAfterDeclinedOrIgnoredOrExpired();
+        int localContentLimit = properties.getService().getUser().getFriendRequest().getContentLimit();
+        contentLimit = localContentLimit > 0 ? localContentLimit : contentLimit;
+        deleteExpiredRequestsWhenCronTriggered = properties.getService().getUser().getFriendRequest()
+                .isDeleteExpiredRequestsWhenCronTriggered();
     }
 
     public Mono<Void> removeAllExpiredFriendRequests(Date expirationDate) {
@@ -215,8 +225,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
                     }
                     // Allow to create a friend request even there is already an accepted request
                     // because the relationships can be deleted and rebuilt
-                    Mono<Boolean> requestExistsMono = node.getSharedProperties().getService().getUser().getFriendRequest()
-                            .isAllowSendRequestAfterDeclinedOrIgnoredOrExpired()
+                    Mono<Boolean> requestExistsMono = allowSendRequestAfterDeclinedOrIgnoredOrExpired
                             ? hasPendingFriendRequest(requesterId, recipientId)
                             : hasPendingOrDeclinedOrIgnoredOrExpiredRequest(requesterId, recipientId);
                     return requestExistsMono.flatMap(requestExists -> {
@@ -438,11 +447,6 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
 
     private void validFriendRequestContentLength(@Nullable String content) {
         if (content != null) {
-            int contentLimit = node.getSharedProperties()
-                    .getService()
-                    .getUser()
-                    .getFriendRequest()
-                    .getContentLimit();
             Validator.max(content.length(), "content", contentLimit);
         }
     }

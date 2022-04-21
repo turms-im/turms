@@ -24,7 +24,7 @@ import im.turms.server.common.domain.common.dto.response.PaginationDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
-import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.group.access.admin.dto.request.AddGroupInvitationDTO;
@@ -61,8 +61,8 @@ public class GroupInvitationController extends BaseController {
 
     private final GroupInvitationService groupInvitationService;
 
-    public GroupInvitationController(Node node, GroupInvitationService groupInvitationService) {
-        super(node);
+    public GroupInvitationController(TurmsPropertiesManager propertiesManager, GroupInvitationService groupInvitationService) {
+        super(propertiesManager);
         this.groupInvitationService = groupInvitationService;
     }
 

@@ -17,10 +17,9 @@
 
 package im.turms.server.common.infra.property.env.service.business.conversation;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
-import im.turms.server.common.infra.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,26 +36,27 @@ public class ReadReceiptProperties {
 
     @Description("Whether to allow to update the last read date")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean enabled = true;
 
     @Description("Whether to allow to move the last read date forward")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean allowMoveReadDateForward;
 
     @Description("Whether to use the server time to set the last read date when updating")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean useServerTime = true;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to update the read date when a user queries messages")
+    @GlobalProperty
+    @MutableProperty
     private boolean updateReadDateWhenUserQueryingMessage;
 
     @Description("Whether to update the read date after a user sent a message")
     @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
+    @MutableProperty
     private boolean updateReadDateAfterMessageSent = true;
 
 }

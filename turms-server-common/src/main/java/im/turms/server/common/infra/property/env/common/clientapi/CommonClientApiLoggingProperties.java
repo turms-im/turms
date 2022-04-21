@@ -21,7 +21,7 @@ import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.property.constant.LoggingRequestCategory;
 import im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingCategoryProperties;
 import im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingRequestProperties;
-import im.turms.server.common.infra.property.metadata.annotation.Description;
+import im.turms.server.common.infra.property.metadata.Description;
 import lombok.Data;
 
 import java.util.Collections;

@@ -15,10 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.metadata.view;
+package im.turms.server.common.infra.property.metadata;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author James Chen
  */
-public interface MutablePropertiesView {
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface MutableProperty {
 }

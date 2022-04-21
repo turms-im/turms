@@ -175,6 +175,8 @@ class SessionServiceTests {
             boolean isActiveAndNotDeleted,
             boolean isAuthenticated,
             boolean isForbiddenDeviceType) {
+        Node node = mock(Node.class);
+
         TurmsProperties properties = new TurmsProperties().toBuilder()
                 .gateway(new GatewayProperties().toBuilder()
                         .session(new SessionProperties().toBuilder()
@@ -183,11 +185,9 @@ class SessionServiceTests {
                                 .build())
                         .build())
                 .build();
-        Node node = mock(Node.class);
-        when(node.getSharedProperties())
-                .thenReturn(properties);
-
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
+        when(propertiesManager.getGlobalProperties())
+                .thenReturn(properties);
         when(propertiesManager.getLocalProperties())
                 .thenReturn(properties);
 

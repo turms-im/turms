@@ -31,7 +31,6 @@ import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequest;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
 import im.turms.server.common.infra.exception.ResponseException;
-import im.turms.server.common.infra.property.TurmsProperties;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import org.junit.jupiter.api.Test;
@@ -100,8 +99,6 @@ class ServiceRequestServiceTests {
             boolean handleRequestSuccessfully) {
         // Node
         Node node = mockNode(handleRequestSuccessfully);
-        when(node.getSharedProperties())
-                .thenReturn(new TurmsProperties());
 
         // SessionService
         UserSession session = null;
@@ -133,8 +130,6 @@ class ServiceRequestServiceTests {
         }
         when(node.getRpcService())
                 .thenReturn(rpcService);
-        when(node.getSharedProperties())
-                .thenReturn(new TurmsProperties());
         return node;
     }
 

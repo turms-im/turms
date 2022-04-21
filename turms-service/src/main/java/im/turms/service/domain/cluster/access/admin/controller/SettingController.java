@@ -20,7 +20,6 @@ package im.turms.service.domain.cluster.access.admin.controller;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
 import im.turms.server.common.domain.common.dto.response.ResponseDTO;
 import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesInspector;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -51,20 +50,15 @@ import static im.turms.server.common.infra.property.TurmsPropertiesInspector.get
 @RequestMapping("/cluster/settings")
 public class SettingController extends BaseController {
 
-    private final Node node;
-    private final TurmsPropertiesManager turmsPropertiesManager;
-
-    public SettingController(Node node, TurmsPropertiesManager turmsPropertiesManager) {
-        super(node);
-        this.node = node;
-        this.turmsPropertiesManager = turmsPropertiesManager;
+    public SettingController(TurmsPropertiesManager propertiesManager) {
+        super(propertiesManager);
     }
 
     @GetMapping
     @RequiredPermission(CLUSTER_SETTING_QUERY)
     public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterSettings(
             @RequestParam(defaultValue = "false") boolean onlyMutable) {
-        return ResponseFactory.okIfTruthy(getPropertyToValueMap(node.getSharedProperties(), onlyMutable));
+        return ResponseFactory.okIfTruthy(getPropertyToValueMap(propertiesManager.getGlobalProperties(), onlyMutable));
     }
 
     /**
@@ -80,10 +74,10 @@ public class SettingController extends BaseController {
             @RequestParam(defaultValue = "false") boolean updateGlobalSettings,
             @RequestBody(required = false) Map<String, Object> turmsProperties) {
         if (updateGlobalSettings) {
-            Mono<Void> updatePropertiesMono = turmsPropertiesManager.updateGlobalProperties(reset, turmsProperties);
+            Mono<Void> updatePropertiesMono = propertiesManager.updateGlobalProperties(reset, turmsProperties);
             return updatePropertiesMono.thenReturn(ResponseFactory.OK);
         } else {
-            turmsPropertiesManager.updateLocalProperties(reset, turmsProperties);
+            propertiesManager.updateLocalProperties(reset, turmsProperties);
             return Mono.just(ResponseFactory.OK);
         }
     }
@@ -97,7 +91,7 @@ public class SettingController extends BaseController {
                 ? TurmsPropertiesInspector.ONLY_MUTABLE_METADATA
                 : TurmsPropertiesInspector.METADATA;
         if (withValue) {
-            return ResponseFactory.okIfTruthy(mergeMetadataWithPropertyValue(metadata, node.getSharedProperties()));
+            return ResponseFactory.okIfTruthy(mergeMetadataWithPropertyValue(metadata, propertiesManager.getGlobalProperties()));
         }
         return ResponseFactory.okIfTruthy(metadata);
     }
