@@ -10,15 +10,15 @@
 
 ## 项目结构
 
-本文讲解Turms服务端的包结构，以帮忙开发者更好地理解包之间的关系与层次。
+我们常说代码即文档，代码可以让读者从微观视角了解各功能的实现细节与逻辑关系，而包则像是文档的目录。好的分包应该在宏观上清晰地展示“文档”的层次与结构，以便于读者理解。本文讲解Turms服务端的包结构，以帮忙开发者更好地理解包之间的关系与层次。
 
-### 背景
+### 背景（拓展内容）
 
 不管是什么样的分包理念，其实基础的分包类别就只有四种：按特性分（Feature）、按类型分（Type）、按层分（Layer）与不分包，各种上层的设计理念只是对这些基础分包类别的不同组合。
 
 另外就算是同一个项目，其在不同的发展阶段通常也是会适用不同的包结构。我们经常说架构是演进式发展的，包分类其实也需要演进式发展。比如说Turms服务端在早期阶段，一共也没几个模块，而按今天Turms服务端给一堆模块分包的思路去给早期Turms服务端做包结构设计，那结果就是：包结构可读性不升反降，为了设计而设计，即过度设计。
 
-### 分包目标
+### 分包目标（拓展内容）
 
 做分包设计时必须要有明确目标，不然很容易陷入到`为了套某种包设计，而强行分包`的情况，诸如一些项目Service层先写接口类再写实现类，而不去思考设计规范中为什么需要这样的接口，又或者强行套用DDD分层模板，而不去思考一些设计是不是已经严重违背约定俗成的惯例了，导致编程时反而束手束脚。
 
@@ -61,6 +61,7 @@ flowchart LR
             service-->repository
             service-->manager
             service-->bo
+            service-->rpc
             
             repository-->po
             
@@ -88,13 +89,25 @@ flowchart LR
 第一层按层来分包，分别是`access`、`domain`、`storage`与`infra`这四层，其中：
 
 * access：接入层，负责管理员与客户端的会话管理与请求调度。该层会将用户请求分发给`domain`层的`access`层。
+
 * domain：业务域层，负责处理各种业务域相关的逻辑。domain层内部按照常见的分层分包设计，分为`access`、`service`与`repository`三层。
   * 其中，相对比较特别的是`domain`层中的`access`层。因为`service`的上层不仅有调度管理员HTTP请求的Controller层`admin`，还有调度客户端请求的Controller层`client`或`servicerequest`（对于turms-gateway来说是`client`包，而对于turms-service来说是`servicerequest`包）。二者共享Service层，因此使用一个单独的`accecss`层来涵盖这两层。
-  * 关于为什么要单独抽个`model`出来。像是上图中`dto`（Data Transfer Object）/`bo`（Business Object）/`po`（Persistent Object）都是贫血模型，只有`model`是充血模型，它们不仅要存储状态（数据），还自带些行为（逻辑），用于处理各种高内聚的逻辑，比较特别，因此单独分包。
+  
+  * 关于为什么要单独抽个`model`出来
+  
+    像是上图中`dto`（Data Transfer Object）/`bo`（Business Object）/`po`（Persistent Object）都是贫血模型，只有`model`是充血模型，它们不仅要存储状态（数据），还自带些行为（逻辑），用于处理各种高内聚的逻辑，比较特别，因此单独分包。
+  
+  * 关于`rpc`包
+  
+    一些域（domain）具有它自己独有的RPC请求，则这些RPC请求都会被归到该域下。如`Session`域下的`im.turms.server.common.domain.session.rpc.SetUserOfflineRequest`这一RPC请求。
+  
+    额外一提，集群RPC的实现在`im.turms.server.common.infra.cluster.service.rpc`包下。
+  
 * storage：存储层，提供MongoDB客户端管理与Redis客户端管理，分别对应`mongo`包与`redis`包。
+
 * infra：基础服务层，负责为`access`与`domain`层提供基础功能实现，如日志处理、配置管理等。infra层内部按照功能特性分包。
 
-综上，Turms服务端的分包设计其实设计得很巧妙：
+综上，Turms服务端的分包其实设计得很巧妙：
 
 * 通过`access`、`domain`、`storage`与`infra`这四层，开发者可以基于已掌握的MVC分层知识，快速理解Turms服务端的源码层次，并能根据包名清楚地明白每层包跟用户会话与用户请求是什么关系。
 * 而`domain`层的各业务域又可以帮助开发者快速区分各Turms服务端有哪些业务域。而每个域的内部又基于常见的MVC分层设计，开发者可以基于以往知识，快速理解一个业务域的内部上下游逻辑关系。
@@ -104,8 +117,24 @@ flowchart LR
 
 补充：
 
-* 关于为什么不把第一层包拆分成模块，这是因为现阶段既没分模块的必要，分模块还会增加项目结构的复杂度，如无必要，勿增实体。
+* 关于为什么不把第一层包拆分成模块（Java Modules），这是因为现阶段既没分模块的必要，分模块还会增加项目结构的复杂度，如无必要，勿增实体。
 * Turms服务端的贫血模型大部分是用Java的`record`表示的，但还有些贫血模型因为性能原因（改动一个字段是否需要重新new个新对象），仍用`class`表示。
+
+### 请求处理在包之间的流转过程
+
+读者在理解上文的Turms分包设计之后，应该已经能对Turms服务端的请求处理流程有比较清晰的认识了。这里以最经典的“客户端登陆”为例，并以包的视角简要地串讲相关流程（读者可结合上述的分包示意图进行阅读），帮忙读者更清晰地理解包的分层设计。
+
+* 客户端登陆时，首先要与turms-gateway服务端建立纯TCP或WebSocket连接，此时处理网络连接的是`access`层，因为它是客户端连接，因此是`access/client`层（而不是`access/admin`）。
+
+* 建立完网络连接后，客户端发送给turms-gateway登陆请求时，turms-gateway会将解析后的请求经由`access`层传递给`domain/session/access/client/controller`层的Controller进行处理，Controller再将具体业务逻辑交由`domain/session/access/client/service`层的Service进行处理，而Service又会将：1. 相关的MongoDB数据库的查询操作，交由`domain/session/access/client/repository`层的Repository进行处理，Repository只是对相关CRUD语句的拼接，而这些语句又会传递给`storage/mongo`这层的MongoDB客户端实现，它们会向MongoDB服务端发送最终的请求；2. 相关的Redis操作则交由`storage/redis`这层处理。
+
+  等请求处理完毕，则通过回调并根据包的上下游关系，依次返回。
+
+* 而对于`infra`这层与其他各种子包，绝大部分也就是为上面的各层提供各种能力的支持，如`infra/logging`日志包与`infra/cluster`集群实现包。
+
+其他各类请求（管理员HTTP请求、客户端基于TCP/WebSocket连接的业务请求）的处理流程也大致同上，读者可以自行举一反三。
+
+下面的篇章会继续以更为细致的源码视角，对客户端请求的处理流程进行讲解。
 
 ## 客户端请求处理流程
 
@@ -205,7 +234,7 @@ sequenceDiagram
 
    其中，`userSession.setNotificationConsumer`用于设置监听`通知`的回调函数，该回调函数会将接收到的`通知`字节数据，发送给客户端。这个回调函数也是重点，因为我们之后讲到的turms-service给turms-gateway发送`通知`的流程，其最终会回到这里。
 
-   而`respondToRequests`函数则用于监听`请求`输入字节流，并对返回对应的`响应`输出字节流，该函数源码如下：
+   而`respondToRequests`函数则用于监听`请求`输入字节流，并在下游代码处理完`请求`后，转发其返回的`响应`输出字节流。该函数源码如下：
 
    ```java
    void respondToRequests(Connection connection,
@@ -251,7 +280,7 @@ sequenceDiagram
 
 #### 业务层——请求调度层
 
-经由网络层的操作，来到了`im.turms.gateway.access.client.common.ClientRequestDispatcher#handleRequest`。该函数完成：调度心跳请求、业务请求；简单校验请求，如果是非法请求，则尝试拉黑等。
+经由网络层的操作，来到了`im.turms.gateway.access.client.common.ClientRequestDispatcher#handleRequest`。该函数完成：调度心跳请求、业务请求；简单校验请求，如果是非法请求，则尝试封禁用户ID与IP等。
 
 该函数的代码虽多，但其实很容易读，我们这里主要关注的是`handleServiceRequest(sessionWrapper, request, serviceRequestBuffer, tracingContext)`这行代码，`handleServiceRequest`函数的主要源码如下：
 
@@ -290,13 +319,15 @@ return switch (requestType) {
 
 1. 请求调度层
 
-   经由RPC层的处理，turms-service会首先通过`im.turms.service.access.servicerequest.dispatcher.ServiceRequestDispatcher#dispatch`拿到客户端请求的字节数据。该函数会调用`im.turms.service.access.servicerequest.dispatcher.ServiceRequestDispatcher#dispatch0`函数，完成诸如：请求校验、客户端拉黑、判断服务端监控状态、触发插件与调用Controller层接口函数、触发上游等任务。代码虽多，但其实还是比较易读的，这里我们主要看到其中的`result = result.switchIfEmpty(Mono.defer(() -> handler.handle(lastClientRequest)));`这行代码，`handler#handle`函数其实是`im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler#handle`函数，而`handle`函数的实现，其实就是各Controller层接口的实现。
+   经由RPC层的处理，turms-service会首先通过`im.turms.service.access.servicerequest.dispatcher.ServiceRequestDispatcher#dispatch`拿到客户端请求的字节数据。该函数会调用`im.turms.service.access.servicerequest.dispatcher.ServiceRequestDispatcher#dispatch0`函数，完成诸如：请求校验、客户端封禁、判断服务端监控状态、触发插件与调用Controller层接口函数、触发上游等任务。
+
+   该函数的代码虽多，但其实还是比较容易读的，这里我们主要看到其中的`result = result.switchIfEmpty(Mono.defer(() -> handler.handle(lastClientRequest)));`这行代码，其中的`handler#handle`函数其实就是`im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler#handle`函数，而`handle`函数的实现，也就是各Controller层接口的实现。
 
 2. 请求Controller层
 
    各Controller通过上述的`handle`函数，拿到了传来的`im.turms.service.access.servicerequest.dto.ClientRequest`对象后，就开始执行相关的业务逻辑，并向MongoDB服务端发送各种CRUD请求。业务逻辑处理并非本篇重点，这里就不展开讲解了。等Controller层处理完相关业务逻辑，就会返回一个`im.turms.service.access.servicerequest.dto.RequestHandlerResult`对象。简单来说，该对象描述了：要发回给客户端的`响应`，与要发给其他用户的`通知`（比如：如果该请求是发送群聊消息请求，那么对于消息的接收客户端，这些发送给它们的输出字节流就是`通知`）。
 
-   对于`响应`，会借由上述的RPC操作，将字节数据发回给turms-gateway，而turms-gateway再通过上述已经提及过的`respondToRequests`函数里的`.flatMap(turmsNotificationBuffer -> {`，最终将响应字节数据发送给客户端。
+   对于`响应`，会借由上述的RPC操作，将字节数据发回给turms-gateway，而turms-gateway再通过上述已经提及过的`respondToRequests`函数里的`.flatMap(turmsNotificationBuffer -> {`回调函数，最终将响应字节数据发送给客户端。
 
 至此，一个请求就被处理完了。
 
@@ -304,7 +335,7 @@ return switch (requestType) {
 
 通知模型：`im.turms.server.common.access.client.dto.notification.TurmsNotification`
 
-`通知`有且仅会被turms-service生成，turms-gateway不会自行生成`通知`。
+`通知`有且仅会被turms-service生成，turms-gateway不会自行生成`通知`，并且只会转发`通知`。
 
 ### UML顺序图
 
@@ -381,7 +412,7 @@ Mono<Boolean> forwardNotification(
         ByteBuf notificationData,
         Long recipientId,
         DeviceType excludedDeviceType) {
-    return userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
+    return userStatusService.getDeviceToNodeIdMapByUserId(recipientId)
             .doOnError(t -> notificationData.release())
             .flatMap(deviceTypeAndNodeIdMap -> {
                 Set<String> nodeIds = CollectionUtil.newSetWithExpectedSize(deviceTypeAndNodeIdMap.size());
