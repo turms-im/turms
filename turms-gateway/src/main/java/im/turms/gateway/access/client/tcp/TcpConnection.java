@@ -19,7 +19,6 @@ package im.turms.gateway.access.client.tcp;
 
 import im.turms.gateway.access.client.common.NotificationFactory;
 import im.turms.gateway.access.client.common.connection.NetConnection;
-import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -56,9 +55,8 @@ public class TcpConnection extends NetConnection {
             return;
         }
         super.close(closeReason);
-        TurmsNotification closeNotification = NotificationFactory.create(closeReason);
         connection
-                .sendObject(closeNotification)
+                .sendObject(NotificationFactory.createBuffer(closeReason))
                 .then()
                 .doOnError(throwable -> {
                     if (!ThrowableUtil.isDisconnectedClientError(throwable)) {

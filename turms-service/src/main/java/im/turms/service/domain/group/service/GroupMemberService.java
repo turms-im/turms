@@ -20,6 +20,7 @@ package im.turms.service.domain.group.service;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -631,7 +632,7 @@ public class GroupMemberService {
                     if (members.isEmpty()) {
                         return ResponseExceptionPublisherPool.noContent();
                     }
-                    GroupMembersWithVersion.Builder builder = GroupMembersWithVersion.newBuilder();
+                    GroupMembersWithVersion.Builder builder = ClientMessagePool.getGroupMembersWithVersionBuilder();
                     if (withStatus) {
                         return fillMembersBuilderWithStatus(members, builder);
                     }
@@ -661,7 +662,7 @@ public class GroupMemberService {
                                 if (members.isEmpty()) {
                                     return ResponseExceptionPublisherPool.noContent();
                                 }
-                                GroupMembersWithVersion.Builder builder = GroupMembersWithVersion.newBuilder();
+                                GroupMembersWithVersion.Builder builder = ClientMessagePool.getGroupMembersWithVersionBuilder();
                                 if (withStatus) {
                                     return fillMembersBuilderWithStatus(members, builder);
                                 }

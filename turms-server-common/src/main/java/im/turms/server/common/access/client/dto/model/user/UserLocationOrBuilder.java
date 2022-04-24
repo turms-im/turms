@@ -87,9 +87,11 @@ public interface UserLocationOrBuilder extends
    * <code>map&lt;string, string&gt; details = 4;</code>
    */
 
-  java.lang.String getDetailsOrDefault(
+  /* nullable */
+java.lang.String getDetailsOrDefault(
       java.lang.String key,
-      java.lang.String defaultValue);
+      /* nullable */
+java.lang.String defaultValue);
   /**
    * <pre>
    * e.g. street address, city, state, country, etc.

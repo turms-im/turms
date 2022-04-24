@@ -20,6 +20,7 @@ package im.turms.service.domain.group.service;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion;
 import im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -231,8 +232,8 @@ public class GroupBlocklistService {
                                 if (ids.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                return Int64ValuesWithVersion
-                                        .newBuilder()
+                                return ClientMessagePool
+                                        .getInt64ValuesWithVersionBuilder()
                                         .setLastUpdatedDate(version.getTime())
                                         .addAllValues(ids)
                                         .build();
@@ -269,8 +270,9 @@ public class GroupBlocklistService {
                                 if (users.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                UsersInfosWithVersion.Builder builder = UsersInfosWithVersion.newBuilder();
-                                builder.setLastUpdatedDate(version.getTime());
+                                UsersInfosWithVersion.Builder builder = ClientMessagePool
+                                        .getUsersInfosWithVersionBuilder()
+                                        .setLastUpdatedDate(version.getTime());
                                 for (User user : users) {
                                     builder.addUserInfos(ProtoModelConvertor.userProfile2proto(user));
                                 }

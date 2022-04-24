@@ -842,6 +842,8 @@ private static final long serialVersionUID = 0L;
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
       throw e.setUnfinishedMessage(this);
+    } catch (com.google.protobuf.UninitializedMessageException e) {
+      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
     } catch (java.io.IOException e) {
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
@@ -3890,383 +3892,385 @@ private static final long serialVersionUID = 0L;
         result.requestId_ = requestId_;
         to_bitField0_ |= 0x00000001;
       }
-      if (kindCase_ == 3) {
-        if (createSessionRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = createSessionRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 4) {
-        if (deleteSessionRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = deleteSessionRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 5) {
-        if (queryConversationsRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryConversationsRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 6) {
-        if (updateConversationRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = updateConversationRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 7) {
-        if (updateTypingStatusRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = updateTypingStatusRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 8) {
-        if (createMessageRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = createMessageRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 9) {
-        if (queryMessagesRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryMessagesRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 10) {
-        if (updateMessageRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = updateMessageRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 11) {
-        if (createGroupMemberRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = createGroupMemberRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 12) {
-        if (deleteGroupMemberRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = deleteGroupMemberRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 13) {
-        if (queryGroupMembersRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryGroupMembersRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 14) {
-        if (updateGroupMemberRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = updateGroupMemberRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 100) {
-        if (queryUserProfileRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryUserProfileRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 101) {
-        if (queryNearbyUsersRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryNearbyUsersRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 102) {
-        if (queryUserOnlineStatusesRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryUserOnlineStatusesRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 103) {
-        if (updateUserLocationRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = updateUserLocationRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 104) {
-        if (updateUserOnlineStatusRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = updateUserOnlineStatusRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 105) {
-        if (updateUserRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = updateUserRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 200) {
-        if (createFriendRequestRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = createFriendRequestRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 201) {
-        if (createRelationshipGroupRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = createRelationshipGroupRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 202) {
-        if (createRelationshipRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = createRelationshipRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 203) {
-        if (deleteRelationshipGroupRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = deleteRelationshipGroupRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 204) {
-        if (deleteRelationshipRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = deleteRelationshipRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 205) {
-        if (queryFriendRequestsRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryFriendRequestsRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 206) {
-        if (queryRelatedUserIdsRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryRelatedUserIdsRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 207) {
-        if (queryRelationshipGroupsRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryRelationshipGroupsRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 208) {
-        if (queryRelationshipsRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryRelationshipsRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 209) {
-        if (updateFriendRequestRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = updateFriendRequestRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 210) {
-        if (updateRelationshipGroupRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = updateRelationshipGroupRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 211) {
-        if (updateRelationshipRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = updateRelationshipRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 300) {
-        if (createGroupRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = createGroupRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 301) {
-        if (deleteGroupRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = deleteGroupRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 302) {
-        if (queryGroupRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryGroupRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 303) {
-        if (queryJoinedGroupIdsRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryJoinedGroupIdsRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 304) {
-        if (queryJoinedGroupInfosRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryJoinedGroupInfosRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 305) {
-        if (updateGroupRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = updateGroupRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 400) {
-        if (createGroupBlockedUserRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = createGroupBlockedUserRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 401) {
-        if (deleteGroupBlockedUserRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = deleteGroupBlockedUserRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 402) {
-        if (queryGroupBlockedUserIdsRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryGroupBlockedUserIdsRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 403) {
-        if (queryGroupBlockedUserInfosRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryGroupBlockedUserInfosRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 500) {
-        if (checkGroupJoinQuestionsAnswersRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = checkGroupJoinQuestionsAnswersRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 501) {
-        if (createGroupInvitationRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = createGroupInvitationRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 502) {
-        if (createGroupJoinRequestRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = createGroupJoinRequestRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 503) {
-        if (createGroupJoinQuestionRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = createGroupJoinQuestionRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 504) {
-        if (deleteGroupInvitationRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = deleteGroupInvitationRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 505) {
-        if (deleteGroupJoinRequestRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = deleteGroupJoinRequestRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 506) {
-        if (deleteGroupJoinQuestionRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = deleteGroupJoinQuestionRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 507) {
-        if (queryGroupInvitationsRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryGroupInvitationsRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 508) {
-        if (queryGroupJoinRequestsRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryGroupJoinRequestsRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 509) {
-        if (queryGroupJoinQuestionsRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryGroupJoinQuestionsRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 510) {
-        if (updateGroupJoinQuestionRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = updateGroupJoinQuestionRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 1000) {
-        if (deleteResourceRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = deleteResourceRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 1001) {
-        if (querySignedGetUrlRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = querySignedGetUrlRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 1002) {
-        if (querySignedPutUrlRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = querySignedPutUrlRequestBuilder_.build();
-        }
+      switch (kindCase_) {
+        case 3:
+          if (createSessionRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = createSessionRequestBuilder_.build();
+          }
+          break;
+        case 4:
+          if (deleteSessionRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = deleteSessionRequestBuilder_.build();
+          }
+          break;
+        case 5:
+          if (queryConversationsRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryConversationsRequestBuilder_.build();
+          }
+          break;
+        case 6:
+          if (updateConversationRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = updateConversationRequestBuilder_.build();
+          }
+          break;
+        case 7:
+          if (updateTypingStatusRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = updateTypingStatusRequestBuilder_.build();
+          }
+          break;
+        case 8:
+          if (createMessageRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = createMessageRequestBuilder_.build();
+          }
+          break;
+        case 9:
+          if (queryMessagesRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryMessagesRequestBuilder_.build();
+          }
+          break;
+        case 10:
+          if (updateMessageRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = updateMessageRequestBuilder_.build();
+          }
+          break;
+        case 11:
+          if (createGroupMemberRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = createGroupMemberRequestBuilder_.build();
+          }
+          break;
+        case 12:
+          if (deleteGroupMemberRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = deleteGroupMemberRequestBuilder_.build();
+          }
+          break;
+        case 13:
+          if (queryGroupMembersRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryGroupMembersRequestBuilder_.build();
+          }
+          break;
+        case 14:
+          if (updateGroupMemberRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = updateGroupMemberRequestBuilder_.build();
+          }
+          break;
+        case 100:
+          if (queryUserProfileRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryUserProfileRequestBuilder_.build();
+          }
+          break;
+        case 101:
+          if (queryNearbyUsersRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryNearbyUsersRequestBuilder_.build();
+          }
+          break;
+        case 102:
+          if (queryUserOnlineStatusesRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryUserOnlineStatusesRequestBuilder_.build();
+          }
+          break;
+        case 103:
+          if (updateUserLocationRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = updateUserLocationRequestBuilder_.build();
+          }
+          break;
+        case 104:
+          if (updateUserOnlineStatusRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = updateUserOnlineStatusRequestBuilder_.build();
+          }
+          break;
+        case 105:
+          if (updateUserRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = updateUserRequestBuilder_.build();
+          }
+          break;
+        case 200:
+          if (createFriendRequestRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = createFriendRequestRequestBuilder_.build();
+          }
+          break;
+        case 201:
+          if (createRelationshipGroupRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = createRelationshipGroupRequestBuilder_.build();
+          }
+          break;
+        case 202:
+          if (createRelationshipRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = createRelationshipRequestBuilder_.build();
+          }
+          break;
+        case 203:
+          if (deleteRelationshipGroupRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = deleteRelationshipGroupRequestBuilder_.build();
+          }
+          break;
+        case 204:
+          if (deleteRelationshipRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = deleteRelationshipRequestBuilder_.build();
+          }
+          break;
+        case 205:
+          if (queryFriendRequestsRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryFriendRequestsRequestBuilder_.build();
+          }
+          break;
+        case 206:
+          if (queryRelatedUserIdsRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryRelatedUserIdsRequestBuilder_.build();
+          }
+          break;
+        case 207:
+          if (queryRelationshipGroupsRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryRelationshipGroupsRequestBuilder_.build();
+          }
+          break;
+        case 208:
+          if (queryRelationshipsRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryRelationshipsRequestBuilder_.build();
+          }
+          break;
+        case 209:
+          if (updateFriendRequestRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = updateFriendRequestRequestBuilder_.build();
+          }
+          break;
+        case 210:
+          if (updateRelationshipGroupRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = updateRelationshipGroupRequestBuilder_.build();
+          }
+          break;
+        case 211:
+          if (updateRelationshipRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = updateRelationshipRequestBuilder_.build();
+          }
+          break;
+        case 300:
+          if (createGroupRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = createGroupRequestBuilder_.build();
+          }
+          break;
+        case 301:
+          if (deleteGroupRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = deleteGroupRequestBuilder_.build();
+          }
+          break;
+        case 302:
+          if (queryGroupRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryGroupRequestBuilder_.build();
+          }
+          break;
+        case 303:
+          if (queryJoinedGroupIdsRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryJoinedGroupIdsRequestBuilder_.build();
+          }
+          break;
+        case 304:
+          if (queryJoinedGroupInfosRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryJoinedGroupInfosRequestBuilder_.build();
+          }
+          break;
+        case 305:
+          if (updateGroupRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = updateGroupRequestBuilder_.build();
+          }
+          break;
+        case 400:
+          if (createGroupBlockedUserRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = createGroupBlockedUserRequestBuilder_.build();
+          }
+          break;
+        case 401:
+          if (deleteGroupBlockedUserRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = deleteGroupBlockedUserRequestBuilder_.build();
+          }
+          break;
+        case 402:
+          if (queryGroupBlockedUserIdsRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryGroupBlockedUserIdsRequestBuilder_.build();
+          }
+          break;
+        case 403:
+          if (queryGroupBlockedUserInfosRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryGroupBlockedUserInfosRequestBuilder_.build();
+          }
+          break;
+        case 500:
+          if (checkGroupJoinQuestionsAnswersRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = checkGroupJoinQuestionsAnswersRequestBuilder_.build();
+          }
+          break;
+        case 501:
+          if (createGroupInvitationRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = createGroupInvitationRequestBuilder_.build();
+          }
+          break;
+        case 502:
+          if (createGroupJoinRequestRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = createGroupJoinRequestRequestBuilder_.build();
+          }
+          break;
+        case 503:
+          if (createGroupJoinQuestionRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = createGroupJoinQuestionRequestBuilder_.build();
+          }
+          break;
+        case 504:
+          if (deleteGroupInvitationRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = deleteGroupInvitationRequestBuilder_.build();
+          }
+          break;
+        case 505:
+          if (deleteGroupJoinRequestRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = deleteGroupJoinRequestRequestBuilder_.build();
+          }
+          break;
+        case 506:
+          if (deleteGroupJoinQuestionRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = deleteGroupJoinQuestionRequestBuilder_.build();
+          }
+          break;
+        case 507:
+          if (queryGroupInvitationsRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryGroupInvitationsRequestBuilder_.build();
+          }
+          break;
+        case 508:
+          if (queryGroupJoinRequestsRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryGroupJoinRequestsRequestBuilder_.build();
+          }
+          break;
+        case 509:
+          if (queryGroupJoinQuestionsRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = queryGroupJoinQuestionsRequestBuilder_.build();
+          }
+          break;
+        case 510:
+          if (updateGroupJoinQuestionRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = updateGroupJoinQuestionRequestBuilder_.build();
+          }
+          break;
+        case 1000:
+          if (deleteResourceRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = deleteResourceRequestBuilder_.build();
+          }
+          break;
+        case 1001:
+          if (querySignedGetUrlRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = querySignedGetUrlRequestBuilder_.build();
+          }
+          break;
+        case 1002:
+          if (querySignedPutUrlRequestBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = querySignedPutUrlRequestBuilder_.build();
+          }
+          break;
       }
       result.bitField0_ = to_bitField0_;
       result.kindCase_ = kindCase_;
@@ -4740,8 +4744,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 3) {
           createSessionRequestBuilder_.mergeFrom(value);
+        } else {
+          createSessionRequestBuilder_.setMessage(value);
         }
-        createSessionRequestBuilder_.setMessage(value);
       }
       kindCase_ = 3;
       return this;
@@ -4897,8 +4902,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 4) {
           deleteSessionRequestBuilder_.mergeFrom(value);
+        } else {
+          deleteSessionRequestBuilder_.setMessage(value);
         }
-        deleteSessionRequestBuilder_.setMessage(value);
       }
       kindCase_ = 4;
       return this;
@@ -5058,8 +5064,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 5) {
           queryConversationsRequestBuilder_.mergeFrom(value);
+        } else {
+          queryConversationsRequestBuilder_.setMessage(value);
         }
-        queryConversationsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 5;
       return this;
@@ -5215,8 +5222,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 6) {
           updateConversationRequestBuilder_.mergeFrom(value);
+        } else {
+          updateConversationRequestBuilder_.setMessage(value);
         }
-        updateConversationRequestBuilder_.setMessage(value);
       }
       kindCase_ = 6;
       return this;
@@ -5356,8 +5364,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 7) {
           updateTypingStatusRequestBuilder_.mergeFrom(value);
+        } else {
+          updateTypingStatusRequestBuilder_.setMessage(value);
         }
-        updateTypingStatusRequestBuilder_.setMessage(value);
       }
       kindCase_ = 7;
       return this;
@@ -5517,8 +5526,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 8) {
           createMessageRequestBuilder_.mergeFrom(value);
+        } else {
+          createMessageRequestBuilder_.setMessage(value);
         }
-        createMessageRequestBuilder_.setMessage(value);
       }
       kindCase_ = 8;
       return this;
@@ -5674,8 +5684,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 9) {
           queryMessagesRequestBuilder_.mergeFrom(value);
+        } else {
+          queryMessagesRequestBuilder_.setMessage(value);
         }
-        queryMessagesRequestBuilder_.setMessage(value);
       }
       kindCase_ = 9;
       return this;
@@ -5815,8 +5826,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 10) {
           updateMessageRequestBuilder_.mergeFrom(value);
+        } else {
+          updateMessageRequestBuilder_.setMessage(value);
         }
-        updateMessageRequestBuilder_.setMessage(value);
       }
       kindCase_ = 10;
       return this;
@@ -5976,8 +5988,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 11) {
           createGroupMemberRequestBuilder_.mergeFrom(value);
+        } else {
+          createGroupMemberRequestBuilder_.setMessage(value);
         }
-        createGroupMemberRequestBuilder_.setMessage(value);
       }
       kindCase_ = 11;
       return this;
@@ -6133,8 +6146,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 12) {
           deleteGroupMemberRequestBuilder_.mergeFrom(value);
+        } else {
+          deleteGroupMemberRequestBuilder_.setMessage(value);
         }
-        deleteGroupMemberRequestBuilder_.setMessage(value);
       }
       kindCase_ = 12;
       return this;
@@ -6274,8 +6288,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 13) {
           queryGroupMembersRequestBuilder_.mergeFrom(value);
+        } else {
+          queryGroupMembersRequestBuilder_.setMessage(value);
         }
-        queryGroupMembersRequestBuilder_.setMessage(value);
       }
       kindCase_ = 13;
       return this;
@@ -6415,8 +6430,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 14) {
           updateGroupMemberRequestBuilder_.mergeFrom(value);
+        } else {
+          updateGroupMemberRequestBuilder_.setMessage(value);
         }
-        updateGroupMemberRequestBuilder_.setMessage(value);
       }
       kindCase_ = 14;
       return this;
@@ -6576,8 +6592,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 100) {
           queryUserProfileRequestBuilder_.mergeFrom(value);
+        } else {
+          queryUserProfileRequestBuilder_.setMessage(value);
         }
-        queryUserProfileRequestBuilder_.setMessage(value);
       }
       kindCase_ = 100;
       return this;
@@ -6733,8 +6750,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 101) {
           queryNearbyUsersRequestBuilder_.mergeFrom(value);
+        } else {
+          queryNearbyUsersRequestBuilder_.setMessage(value);
         }
-        queryNearbyUsersRequestBuilder_.setMessage(value);
       }
       kindCase_ = 101;
       return this;
@@ -6874,8 +6892,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 102) {
           queryUserOnlineStatusesRequestBuilder_.mergeFrom(value);
+        } else {
+          queryUserOnlineStatusesRequestBuilder_.setMessage(value);
         }
-        queryUserOnlineStatusesRequestBuilder_.setMessage(value);
       }
       kindCase_ = 102;
       return this;
@@ -7015,8 +7034,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 103) {
           updateUserLocationRequestBuilder_.mergeFrom(value);
+        } else {
+          updateUserLocationRequestBuilder_.setMessage(value);
         }
-        updateUserLocationRequestBuilder_.setMessage(value);
       }
       kindCase_ = 103;
       return this;
@@ -7156,8 +7176,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 104) {
           updateUserOnlineStatusRequestBuilder_.mergeFrom(value);
+        } else {
+          updateUserOnlineStatusRequestBuilder_.setMessage(value);
         }
-        updateUserOnlineStatusRequestBuilder_.setMessage(value);
       }
       kindCase_ = 104;
       return this;
@@ -7297,8 +7318,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 105) {
           updateUserRequestBuilder_.mergeFrom(value);
+        } else {
+          updateUserRequestBuilder_.setMessage(value);
         }
-        updateUserRequestBuilder_.setMessage(value);
       }
       kindCase_ = 105;
       return this;
@@ -7458,8 +7480,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 200) {
           createFriendRequestRequestBuilder_.mergeFrom(value);
+        } else {
+          createFriendRequestRequestBuilder_.setMessage(value);
         }
-        createFriendRequestRequestBuilder_.setMessage(value);
       }
       kindCase_ = 200;
       return this;
@@ -7615,8 +7638,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 201) {
           createRelationshipGroupRequestBuilder_.mergeFrom(value);
+        } else {
+          createRelationshipGroupRequestBuilder_.setMessage(value);
         }
-        createRelationshipGroupRequestBuilder_.setMessage(value);
       }
       kindCase_ = 201;
       return this;
@@ -7756,8 +7780,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 202) {
           createRelationshipRequestBuilder_.mergeFrom(value);
+        } else {
+          createRelationshipRequestBuilder_.setMessage(value);
         }
-        createRelationshipRequestBuilder_.setMessage(value);
       }
       kindCase_ = 202;
       return this;
@@ -7897,8 +7922,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 203) {
           deleteRelationshipGroupRequestBuilder_.mergeFrom(value);
+        } else {
+          deleteRelationshipGroupRequestBuilder_.setMessage(value);
         }
-        deleteRelationshipGroupRequestBuilder_.setMessage(value);
       }
       kindCase_ = 203;
       return this;
@@ -8038,8 +8064,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 204) {
           deleteRelationshipRequestBuilder_.mergeFrom(value);
+        } else {
+          deleteRelationshipRequestBuilder_.setMessage(value);
         }
-        deleteRelationshipRequestBuilder_.setMessage(value);
       }
       kindCase_ = 204;
       return this;
@@ -8179,8 +8206,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 205) {
           queryFriendRequestsRequestBuilder_.mergeFrom(value);
+        } else {
+          queryFriendRequestsRequestBuilder_.setMessage(value);
         }
-        queryFriendRequestsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 205;
       return this;
@@ -8320,8 +8348,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 206) {
           queryRelatedUserIdsRequestBuilder_.mergeFrom(value);
+        } else {
+          queryRelatedUserIdsRequestBuilder_.setMessage(value);
         }
-        queryRelatedUserIdsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 206;
       return this;
@@ -8461,8 +8490,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 207) {
           queryRelationshipGroupsRequestBuilder_.mergeFrom(value);
+        } else {
+          queryRelationshipGroupsRequestBuilder_.setMessage(value);
         }
-        queryRelationshipGroupsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 207;
       return this;
@@ -8602,8 +8632,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 208) {
           queryRelationshipsRequestBuilder_.mergeFrom(value);
+        } else {
+          queryRelationshipsRequestBuilder_.setMessage(value);
         }
-        queryRelationshipsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 208;
       return this;
@@ -8743,8 +8774,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 209) {
           updateFriendRequestRequestBuilder_.mergeFrom(value);
+        } else {
+          updateFriendRequestRequestBuilder_.setMessage(value);
         }
-        updateFriendRequestRequestBuilder_.setMessage(value);
       }
       kindCase_ = 209;
       return this;
@@ -8884,8 +8916,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 210) {
           updateRelationshipGroupRequestBuilder_.mergeFrom(value);
+        } else {
+          updateRelationshipGroupRequestBuilder_.setMessage(value);
         }
-        updateRelationshipGroupRequestBuilder_.setMessage(value);
       }
       kindCase_ = 210;
       return this;
@@ -9025,8 +9058,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 211) {
           updateRelationshipRequestBuilder_.mergeFrom(value);
+        } else {
+          updateRelationshipRequestBuilder_.setMessage(value);
         }
-        updateRelationshipRequestBuilder_.setMessage(value);
       }
       kindCase_ = 211;
       return this;
@@ -9186,8 +9220,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 300) {
           createGroupRequestBuilder_.mergeFrom(value);
+        } else {
+          createGroupRequestBuilder_.setMessage(value);
         }
-        createGroupRequestBuilder_.setMessage(value);
       }
       kindCase_ = 300;
       return this;
@@ -9343,8 +9378,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 301) {
           deleteGroupRequestBuilder_.mergeFrom(value);
+        } else {
+          deleteGroupRequestBuilder_.setMessage(value);
         }
-        deleteGroupRequestBuilder_.setMessage(value);
       }
       kindCase_ = 301;
       return this;
@@ -9484,8 +9520,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 302) {
           queryGroupRequestBuilder_.mergeFrom(value);
+        } else {
+          queryGroupRequestBuilder_.setMessage(value);
         }
-        queryGroupRequestBuilder_.setMessage(value);
       }
       kindCase_ = 302;
       return this;
@@ -9625,8 +9662,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 303) {
           queryJoinedGroupIdsRequestBuilder_.mergeFrom(value);
+        } else {
+          queryJoinedGroupIdsRequestBuilder_.setMessage(value);
         }
-        queryJoinedGroupIdsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 303;
       return this;
@@ -9766,8 +9804,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 304) {
           queryJoinedGroupInfosRequestBuilder_.mergeFrom(value);
+        } else {
+          queryJoinedGroupInfosRequestBuilder_.setMessage(value);
         }
-        queryJoinedGroupInfosRequestBuilder_.setMessage(value);
       }
       kindCase_ = 304;
       return this;
@@ -9907,8 +9946,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 305) {
           updateGroupRequestBuilder_.mergeFrom(value);
+        } else {
+          updateGroupRequestBuilder_.setMessage(value);
         }
-        updateGroupRequestBuilder_.setMessage(value);
       }
       kindCase_ = 305;
       return this;
@@ -10068,8 +10108,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 400) {
           createGroupBlockedUserRequestBuilder_.mergeFrom(value);
+        } else {
+          createGroupBlockedUserRequestBuilder_.setMessage(value);
         }
-        createGroupBlockedUserRequestBuilder_.setMessage(value);
       }
       kindCase_ = 400;
       return this;
@@ -10225,8 +10266,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 401) {
           deleteGroupBlockedUserRequestBuilder_.mergeFrom(value);
+        } else {
+          deleteGroupBlockedUserRequestBuilder_.setMessage(value);
         }
-        deleteGroupBlockedUserRequestBuilder_.setMessage(value);
       }
       kindCase_ = 401;
       return this;
@@ -10366,8 +10408,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 402) {
           queryGroupBlockedUserIdsRequestBuilder_.mergeFrom(value);
+        } else {
+          queryGroupBlockedUserIdsRequestBuilder_.setMessage(value);
         }
-        queryGroupBlockedUserIdsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 402;
       return this;
@@ -10507,8 +10550,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 403) {
           queryGroupBlockedUserInfosRequestBuilder_.mergeFrom(value);
+        } else {
+          queryGroupBlockedUserInfosRequestBuilder_.setMessage(value);
         }
-        queryGroupBlockedUserInfosRequestBuilder_.setMessage(value);
       }
       kindCase_ = 403;
       return this;
@@ -10668,8 +10712,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 500) {
           checkGroupJoinQuestionsAnswersRequestBuilder_.mergeFrom(value);
+        } else {
+          checkGroupJoinQuestionsAnswersRequestBuilder_.setMessage(value);
         }
-        checkGroupJoinQuestionsAnswersRequestBuilder_.setMessage(value);
       }
       kindCase_ = 500;
       return this;
@@ -10825,8 +10870,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 501) {
           createGroupInvitationRequestBuilder_.mergeFrom(value);
+        } else {
+          createGroupInvitationRequestBuilder_.setMessage(value);
         }
-        createGroupInvitationRequestBuilder_.setMessage(value);
       }
       kindCase_ = 501;
       return this;
@@ -10966,8 +11012,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 502) {
           createGroupJoinRequestRequestBuilder_.mergeFrom(value);
+        } else {
+          createGroupJoinRequestRequestBuilder_.setMessage(value);
         }
-        createGroupJoinRequestRequestBuilder_.setMessage(value);
       }
       kindCase_ = 502;
       return this;
@@ -11107,8 +11154,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 503) {
           createGroupJoinQuestionRequestBuilder_.mergeFrom(value);
+        } else {
+          createGroupJoinQuestionRequestBuilder_.setMessage(value);
         }
-        createGroupJoinQuestionRequestBuilder_.setMessage(value);
       }
       kindCase_ = 503;
       return this;
@@ -11248,8 +11296,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 504) {
           deleteGroupInvitationRequestBuilder_.mergeFrom(value);
+        } else {
+          deleteGroupInvitationRequestBuilder_.setMessage(value);
         }
-        deleteGroupInvitationRequestBuilder_.setMessage(value);
       }
       kindCase_ = 504;
       return this;
@@ -11389,8 +11438,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 505) {
           deleteGroupJoinRequestRequestBuilder_.mergeFrom(value);
+        } else {
+          deleteGroupJoinRequestRequestBuilder_.setMessage(value);
         }
-        deleteGroupJoinRequestRequestBuilder_.setMessage(value);
       }
       kindCase_ = 505;
       return this;
@@ -11530,8 +11580,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 506) {
           deleteGroupJoinQuestionRequestBuilder_.mergeFrom(value);
+        } else {
+          deleteGroupJoinQuestionRequestBuilder_.setMessage(value);
         }
-        deleteGroupJoinQuestionRequestBuilder_.setMessage(value);
       }
       kindCase_ = 506;
       return this;
@@ -11671,8 +11722,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 507) {
           queryGroupInvitationsRequestBuilder_.mergeFrom(value);
+        } else {
+          queryGroupInvitationsRequestBuilder_.setMessage(value);
         }
-        queryGroupInvitationsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 507;
       return this;
@@ -11812,8 +11864,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 508) {
           queryGroupJoinRequestsRequestBuilder_.mergeFrom(value);
+        } else {
+          queryGroupJoinRequestsRequestBuilder_.setMessage(value);
         }
-        queryGroupJoinRequestsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 508;
       return this;
@@ -11953,8 +12006,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 509) {
           queryGroupJoinQuestionsRequestBuilder_.mergeFrom(value);
+        } else {
+          queryGroupJoinQuestionsRequestBuilder_.setMessage(value);
         }
-        queryGroupJoinQuestionsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 509;
       return this;
@@ -12094,8 +12148,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 510) {
           updateGroupJoinQuestionRequestBuilder_.mergeFrom(value);
+        } else {
+          updateGroupJoinQuestionRequestBuilder_.setMessage(value);
         }
-        updateGroupJoinQuestionRequestBuilder_.setMessage(value);
       }
       kindCase_ = 510;
       return this;
@@ -12255,8 +12310,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 1000) {
           deleteResourceRequestBuilder_.mergeFrom(value);
+        } else {
+          deleteResourceRequestBuilder_.setMessage(value);
         }
-        deleteResourceRequestBuilder_.setMessage(value);
       }
       kindCase_ = 1000;
       return this;
@@ -12412,8 +12468,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 1001) {
           querySignedGetUrlRequestBuilder_.mergeFrom(value);
+        } else {
+          querySignedGetUrlRequestBuilder_.setMessage(value);
         }
-        querySignedGetUrlRequestBuilder_.setMessage(value);
       }
       kindCase_ = 1001;
       return this;
@@ -12553,8 +12610,9 @@ private static final long serialVersionUID = 0L;
       } else {
         if (kindCase_ == 1002) {
           querySignedPutUrlRequestBuilder_.mergeFrom(value);
+        } else {
+          querySignedPutUrlRequestBuilder_.setMessage(value);
         }
-        querySignedPutUrlRequestBuilder_.setMessage(value);
       }
       kindCase_ = 1002;
       return this;

@@ -17,7 +17,7 @@
 
 package im.turms.service.domain.conversation.access.servicerequest.controller;
 
-import im.turms.server.common.access.client.dto.model.conversation.Conversations;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest;
 import im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest;
@@ -88,21 +88,21 @@ public class ConversationServiceController {
                 dataFlux = conversationService.queryGroupConversations(groupIds)
                         .map(conversation -> ProtoModelConvertor.groupConversations2proto(conversation).build())
                         .collect(CollectorUtil.toList(targetIds.size()))
-                        .map(conversations -> TurmsNotification.Data
-                                .newBuilder()
-                                .setConversations(Conversations.newBuilder()
-                                        .addAllGroupConversations(conversations)
-                                        .build())
+                        .map(conversations -> ClientMessagePool
+                                .getTurmsNotificationDataBuilder()
+                                .setConversations(ClientMessagePool
+                                        .getConversationsBuilder()
+                                        .addAllGroupConversations(conversations))
                                 .build());
             } else {
                 dataFlux = conversationService.queryPrivateConversations(clientRequest.userId(), targetIds)
                         .map(conversation -> ProtoModelConvertor.privateConversation2proto(conversation).build())
                         .collect(CollectorUtil.toList(targetIds.size()))
-                        .map(conversations -> TurmsNotification.Data
-                                .newBuilder()
-                                .setConversations(Conversations.newBuilder()
-                                        .addAllPrivateConversations(conversations)
-                                        .build())
+                        .map(conversations -> ClientMessagePool
+                                .getTurmsNotificationDataBuilder()
+                                .setConversations(ClientMessagePool
+                                        .getConversationsBuilder()
+                                        .addAllPrivateConversations(conversations))
                                 .build());
             }
             return dataFlux.map(RequestHandlerResultFactory::get);

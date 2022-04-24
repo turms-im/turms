@@ -20,6 +20,7 @@ package im.turms.service.domain.user.service;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -211,7 +212,8 @@ public class UserRelationshipService {
                                 if (ids.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                return Int64ValuesWithVersion.newBuilder()
+                                return ClientMessagePool
+                                        .getInt64ValuesWithVersionBuilder()
                                         .setLastUpdatedDate(date.getTime())
                                         .addAllValues(ids)
                                         .build();
@@ -244,7 +246,8 @@ public class UserRelationshipService {
                                 if (relationships.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                UserRelationshipsWithVersion.Builder builder = UserRelationshipsWithVersion.newBuilder()
+                                UserRelationshipsWithVersion.Builder builder = ClientMessagePool
+                                        .getUserRelationshipsWithVersionBuilder()
                                         .setLastUpdatedDate(date.getTime());
                                 for (UserRelationship relationship : relationships) {
                                     builder.addUserRelationships(ProtoModelConvertor.relationship2proto(relationship));

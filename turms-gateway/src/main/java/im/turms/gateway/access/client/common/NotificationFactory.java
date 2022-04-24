@@ -17,12 +17,14 @@
 
 package im.turms.gateway.access.client.common;
 
+import im.turms.server.common.access.client.dto.ClientMessageEncoder;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.CloseReason;
-import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.exception.ThrowableInfo;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
 
@@ -44,53 +46,43 @@ public final class NotificationFactory {
     }
 
     public static TurmsNotification create(ResponseStatusCode code, long requestId) {
-        TurmsNotification.Builder builder = TurmsNotification
-                .newBuilder()
+        TurmsNotification.Builder builder = ClientMessagePool
+                .getTurmsNotificationBuilder()
                 .setRequestId(requestId)
                 .setCode(code.getBusinessCode());
-        String reason = code.getReason();
-        trySetReason(builder, code, reason);
+        trySetReason(builder, code, code.getReason());
         return builder.build();
     }
 
     public static TurmsNotification create(ResponseStatusCode code, String reason, long requestId) {
-        TurmsNotification.Builder builder = TurmsNotification
-                .newBuilder()
+        TurmsNotification.Builder builder = ClientMessagePool
+                .getTurmsNotificationBuilder()
                 .setRequestId(requestId)
                 .setCode(code.getBusinessCode());
-        reason = reason == null ? code.getReason() : reason;
-        trySetReason(builder, code, reason);
+        trySetReason(builder, code, reason == null ? code.getReason() : reason);
         return builder.build();
     }
 
     public static TurmsNotification create(ThrowableInfo info, long requestId) {
         ResponseStatusCode code = info.code();
-        TurmsNotification.Builder builder = TurmsNotification
-                .newBuilder()
+        TurmsNotification.Builder builder = ClientMessagePool
+                .getTurmsNotificationBuilder()
                 .setRequestId(requestId)
                 .setCode(code.getBusinessCode());
-        String reason = info.reason();
-        trySetReason(builder, code, reason);
+        trySetReason(builder, code, info.reason());
         return builder.build();
     }
 
-    public static TurmsNotification create(CloseReason closeReason) {
-        ResponseStatusCode statusCode = closeReason.businessStatusCode();
-        SessionCloseStatus closeStatus = closeReason.closeStatus();
-        String reason = closeReason.reason();
-        TurmsNotification.Builder builder = TurmsNotification
-                .newBuilder()
-                .setCloseStatus(closeStatus.getCode());
-        if (statusCode != null) {
-            builder.setCode(statusCode.getBusinessCode());
-        }
-        trySetReason(builder, statusCode, reason);
-        return builder.build();
+    public static ByteBuf createBuffer(CloseReason closeReason) {
+        ResponseStatusCode code = closeReason.businessStatusCode();
+        return ClientMessageEncoder.encodeCloseNotification(closeReason.closeStatus(),
+                code,
+                getReason(code, closeReason.reason()));
     }
 
     public static TurmsNotification sessionClosed(long requestId) {
-        return TurmsNotification
-                .newBuilder()
+        return ClientMessagePool
+                .getTurmsNotificationBuilder()
                 .setRequestId(requestId)
                 .setCode(ResponseStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode())
                 .build();
@@ -109,6 +101,21 @@ public final class NotificationFactory {
         } else {
             builder.setReason(reason);
         }
+    }
+
+    @Nullable
+    private static String getReason(ResponseStatusCode code, @Nullable String reason) {
+        if (reason == null) {
+            return null;
+        }
+        if (code.isServerError()) {
+            if (returnReasonForServerError) {
+                return reason;
+            }
+        } else {
+            return reason;
+        }
+        return null;
     }
 
 }

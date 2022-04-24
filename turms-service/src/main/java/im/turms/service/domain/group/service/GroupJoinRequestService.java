@@ -19,6 +19,7 @@ package im.turms.service.domain.group.service;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -258,7 +259,8 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                                 if (groupJoinRequests.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                GroupJoinRequestsWithVersion.Builder builder = GroupJoinRequestsWithVersion.newBuilder();
+                                GroupJoinRequestsWithVersion.Builder builder = ClientMessagePool
+                                        .getGroupJoinRequestsWithVersionBuilder();
                                 int expireAfterSeconds = groupJoinRequestRepository.getEntityExpireAfterSeconds();
                                 for (GroupJoinRequest groupJoinRequest : groupJoinRequests) {
                                     builder.addGroupJoinRequests(

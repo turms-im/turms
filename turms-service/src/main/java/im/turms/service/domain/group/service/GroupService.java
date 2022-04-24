@@ -20,6 +20,7 @@ package im.turms.service.domain.group.service;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion;
 import im.turms.server.common.access.client.dto.model.group.GroupsWithVersion;
@@ -616,7 +617,8 @@ public class GroupService {
                 .flatMap(version -> DateUtil.isAfterOrSame(lastUpdatedDate, version)
                         ? ResponseExceptionPublisherPool.alreadyUpToUpdate()
                         : groupRepository.findById(groupId)
-                        .map(group -> GroupsWithVersion.newBuilder()
+                        .map(group -> ClientMessagePool
+                                .getGroupsWithVersionBuilder()
                                 .addGroups(ProtoModelConvertor.group2proto(group))
                                 .setLastUpdatedDate(version.getTime())
                                 .build()))
@@ -655,8 +657,8 @@ public class GroupService {
                                 if (ids.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                return Int64ValuesWithVersion
-                                        .newBuilder()
+                                return ClientMessagePool
+                                        .getInt64ValuesWithVersionBuilder()
                                         .addAllValues(ids)
                                         .setLastUpdatedDate(version.getTime())
                                         .build();
@@ -680,7 +682,7 @@ public class GroupService {
                                 if (groups.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                GroupsWithVersion.Builder builder = GroupsWithVersion.newBuilder();
+                                GroupsWithVersion.Builder builder = ClientMessagePool.getGroupsWithVersionBuilder();
                                 for (Group group : groups) {
                                     builder.addGroups(ProtoModelConvertor.group2proto(group));
                                 }

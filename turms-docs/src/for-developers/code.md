@@ -66,7 +66,6 @@ flowchart LR
             repository-->po
             
             model
-            rpc
         end
     end
     

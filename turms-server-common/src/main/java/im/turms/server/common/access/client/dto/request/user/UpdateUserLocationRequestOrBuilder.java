@@ -60,9 +60,11 @@ public interface UpdateUserLocationRequestOrBuilder extends
    * <code>map&lt;string, string&gt; details = 3;</code>
    */
 
-  java.lang.String getDetailsOrDefault(
+  /* nullable */
+java.lang.String getDetailsOrDefault(
       java.lang.String key,
-      java.lang.String defaultValue);
+      /* nullable */
+java.lang.String defaultValue);
   /**
    * <code>map&lt;string, string&gt; details = 3;</code>
    */

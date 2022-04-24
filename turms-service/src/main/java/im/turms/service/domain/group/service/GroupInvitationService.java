@@ -19,6 +19,7 @@ package im.turms.service.domain.group.service;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -325,7 +326,8 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                                 if (groupInvitations.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                GroupInvitationsWithVersion.Builder builder = GroupInvitationsWithVersion.newBuilder();
+                                GroupInvitationsWithVersion.Builder builder = ClientMessagePool
+                                        .getGroupInvitationsWithVersionBuilder();
                                 int expireAfterSeconds = groupInvitationRepository.getEntityExpireAfterSeconds();
                                 for (GroupInvitation groupInvitation : groupInvitations) {
                                     builder.addGroupInvitations(ProtoModelConvertor.groupInvitation2proto(groupInvitation, expireAfterSeconds));
@@ -364,7 +366,8 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                                             if (groupInvitations.isEmpty()) {
                                                 throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                             }
-                                            GroupInvitationsWithVersion.Builder builder = GroupInvitationsWithVersion.newBuilder()
+                                            GroupInvitationsWithVersion.Builder builder = ClientMessagePool
+                                                    .getGroupInvitationsWithVersionBuilder()
                                                     .setLastUpdatedDate(version.getTime());
                                             int expireAfterSeconds = groupInvitationRepository.getEntityExpireAfterSeconds();
                                             for (GroupInvitation invitation : groupInvitations) {

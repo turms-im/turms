@@ -17,8 +17,8 @@
 
 package im.turms.service.domain.user.access.servicerequest.controller;
 
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.ResponseAction;
-import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest;
@@ -224,8 +224,8 @@ public class UserRelationshipServiceController {
                             request.getAreSentByMe(),
                             lastUpdatedDate)
                     .map(friendRequestsWithVersion -> RequestHandlerResultFactory
-                            .get(TurmsNotification.Data
-                                    .newBuilder()
+                            .get(ClientMessagePool
+                                    .getTurmsNotificationDataBuilder()
                                     .setUserFriendRequestsWithVersion(friendRequestsWithVersion)
                                     .build()));
         };
@@ -244,8 +244,8 @@ public class UserRelationshipServiceController {
                             isBlocked,
                             lastUpdatedDate)
                     .map(idsWithVersion -> RequestHandlerResultFactory
-                            .get(TurmsNotification.Data
-                                    .newBuilder()
+                            .get(ClientMessagePool
+                                    .getTurmsNotificationDataBuilder()
                                     .setIdsWithVersion(idsWithVersion)
                                     .build()));
         };
@@ -262,8 +262,8 @@ public class UserRelationshipServiceController {
                             clientRequest.userId(),
                             lastUpdatedDate)
                     .map(groupsWithVersion -> RequestHandlerResultFactory
-                            .get(TurmsNotification.Data
-                                    .newBuilder()
+                            .get(ClientMessagePool
+                                    .getTurmsNotificationDataBuilder()
                                     .setUserRelationshipGroupsWithVersion(groupsWithVersion)
                                     .build()));
         };
@@ -286,8 +286,8 @@ public class UserRelationshipServiceController {
                             isBlocked,
                             lastUpdatedDate)
                     .map(relationshipsWithVersion -> RequestHandlerResultFactory
-                            .get(TurmsNotification.Data
-                                    .newBuilder()
+                            .get(ClientMessagePool
+                                    .getTurmsNotificationDataBuilder()
                                     .setUserRelationshipsWithVersion(relationshipsWithVersion)
                                     .build()));
         };

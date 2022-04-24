@@ -18,7 +18,8 @@
 package im.turms.service.infra.proto;
 
 import com.google.common.collect.Maps;
-import com.google.protobuf.ByteString;
+import com.google.protobuf.ByteStringUtil;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
@@ -34,7 +35,6 @@ import im.turms.server.common.access.client.dto.model.group.GroupMember;
 import im.turms.server.common.access.client.dto.model.user.NearbyUser;
 import im.turms.server.common.access.client.dto.model.user.UserFriendRequest;
 import im.turms.server.common.access.client.dto.model.user.UserInfo;
-import im.turms.server.common.access.client.dto.model.user.UserLocation;
 import im.turms.server.common.access.client.dto.model.user.UserRelationship;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup;
 import im.turms.server.common.access.client.dto.model.user.UserStatusDetail;
@@ -60,7 +60,7 @@ public final class ProtoModelConvertor {
     // Transformation
 
     public static im.turms.server.common.access.client.dto.model.message.Message.Builder message2proto(Message message) {
-        var builder = im.turms.server.common.access.client.dto.model.message.Message.newBuilder();
+        var builder = ClientMessagePool.getMessageBuilder();
         Long messageId = message.getId();
         Boolean isSystemMessage = message.getIsSystemMessage();
         Date deliveryDate = message.getDeliveryDate();
@@ -98,7 +98,7 @@ public final class ProtoModelConvertor {
         }
         if (records != null && !records.isEmpty()) {
             for (byte[] record : records) {
-                builder.addRecords(ByteString.copyFrom(record));
+                builder.addRecords(ByteStringUtil.wrap(record));
             }
         }
         if (sequenceId != null) {
@@ -111,7 +111,7 @@ public final class ProtoModelConvertor {
     }
 
     public static UserInfo.Builder userProfile2proto(@NotNull User user) {
-        UserInfo.Builder builder = UserInfo.newBuilder();
+        UserInfo.Builder builder = ClientMessagePool.getUserInfoBuilder();
         Long userId = user.getId();
         String name = user.getName();
         String intro = user.getIntro();
@@ -143,7 +143,8 @@ public final class ProtoModelConvertor {
             @NotNull Long userId,
             @Nullable UserSessionsStatus userSessionsStatus,
             boolean convertInvisibleToOffline) {
-        UserStatusDetail.Builder builder = UserStatusDetail.newBuilder()
+        UserStatusDetail.Builder builder = ClientMessagePool
+                .getUserStatusDetailBuilder()
                 .setUserId(userId);
         if (userSessionsStatus == null) {
             builder.setUserStatus(UserStatus.OFFLINE);
@@ -158,8 +159,8 @@ public final class ProtoModelConvertor {
             @NotNull Long userId,
             @Nullable UserSessionsStatus userSessionsStatus,
             boolean convertInvisibleToOffline) {
-        GroupMember.Builder builder = GroupMember
-                .newBuilder()
+        GroupMember.Builder builder = ClientMessagePool
+                .getGroupMemberBuilder()
                 .setUserId(userId);
         if (userSessionsStatus == null) {
             builder.setUserStatus(UserStatus.OFFLINE);
@@ -171,8 +172,7 @@ public final class ProtoModelConvertor {
     }
 
     public static NearbyUser.Builder nearbyUser2proto(@NotNull im.turms.server.common.domain.location.bo.NearbyUser nearbyUser) {
-        NearbyUser.Builder builder = NearbyUser
-                .newBuilder();
+        NearbyUser.Builder builder = ClientMessagePool.getNearbyUserBuilder();
         Long userId = nearbyUser.userId();
         DeviceType deviceType = nearbyUser.deviceType();
         Float longitude = nearbyUser.longitude();
@@ -186,7 +186,8 @@ public final class ProtoModelConvertor {
             builder.setDeviceType(deviceType);
         }
         if (longitude != null && latitude != null) {
-            builder.setLocation(UserLocation.newBuilder()
+            builder.setLocation(ClientMessagePool
+                    .getUserLocationBuilder()
                     .setLongitude(longitude)
                     .setLatitude(latitude)
                     .build());
@@ -203,7 +204,7 @@ public final class ProtoModelConvertor {
     public static UserFriendRequest.Builder friendRequest2proto(
             @NotNull im.turms.service.domain.user.po.UserFriendRequest userFriendRequest,
             int expireAfterSeconds) {
-        UserFriendRequest.Builder builder = UserFriendRequest.newBuilder();
+        UserFriendRequest.Builder builder = ClientMessagePool.getUserFriendRequestBuilder();
         Long requestId = userFriendRequest.getId();
         Date creationDate = userFriendRequest.getCreationDate();
         String content = userFriendRequest.getContent();
@@ -240,7 +241,7 @@ public final class ProtoModelConvertor {
 
     public static UserRelationship.Builder relationship2proto(
             @NotNull im.turms.service.domain.user.po.UserRelationship relationship) {
-        UserRelationship.Builder builder = UserRelationship.newBuilder();
+        UserRelationship.Builder builder = ClientMessagePool.getUserRelationshipBuilder();
         im.turms.service.domain.user.po.UserRelationship.Key key = relationship.getKey();
         Date establishmentDate = relationship.getEstablishmentDate();
         Date blockDate = relationship.getBlockDate();
@@ -265,7 +266,7 @@ public final class ProtoModelConvertor {
 
     public static UserRelationshipGroup.Builder relationshipGroup2proto(
             @NotNull im.turms.service.domain.user.po.UserRelationshipGroup relationshipGroup) {
-        UserRelationshipGroup.Builder builder = UserRelationshipGroup.newBuilder();
+        UserRelationshipGroup.Builder builder = ClientMessagePool.getUserRelationshipGroupBuilder();
         im.turms.service.domain.user.po.UserRelationshipGroup.Key key = relationshipGroup.getKey();
         if (key != null) {
             Integer index = key.getGroupIndex();
@@ -281,7 +282,7 @@ public final class ProtoModelConvertor {
     }
 
     public static Group.Builder group2proto(@NotNull im.turms.service.domain.group.po.Group group) {
-        Group.Builder builder = Group.newBuilder();
+        Group.Builder builder = ClientMessagePool.getGroupBuilder();
         Long groupId = group.getId();
         Long typeId = group.getTypeId();
         Long creatorId = group.getCreatorId();
@@ -328,7 +329,7 @@ public final class ProtoModelConvertor {
     public static GroupInvitation.Builder groupInvitation2proto(
             @NotNull im.turms.service.domain.group.po.GroupInvitation invitation,
             int expireAfterSeconds) {
-        GroupInvitation.Builder builder = GroupInvitation.newBuilder();
+        GroupInvitation.Builder builder = ClientMessagePool.getGroupInvitationBuilder();
         Long invitationId = invitation.getId();
         Date creationDate = invitation.getCreationDate();
         String content = invitation.getContent();
@@ -366,7 +367,7 @@ public final class ProtoModelConvertor {
     public static GroupJoinRequest.Builder groupJoinRequest2proto(
             @NotNull im.turms.service.domain.group.po.GroupJoinRequest groupJoinRequest,
             int expireAfterSeconds) {
-        GroupJoinRequest.Builder builder = GroupJoinRequest.newBuilder();
+        GroupJoinRequest.Builder builder = ClientMessagePool.getGroupJoinRequestBuilder();
         Long requestId = groupJoinRequest.getId();
         Date creationDate = groupJoinRequest.getCreationDate();
         String content = groupJoinRequest.getContent();
@@ -403,7 +404,7 @@ public final class ProtoModelConvertor {
 
     public static GroupJoinQuestion.Builder groupJoinQuestion2proto(
             @NotNull im.turms.service.domain.group.po.GroupJoinQuestion question) {
-        GroupJoinQuestion.Builder builder = GroupJoinQuestion.newBuilder();
+        GroupJoinQuestion.Builder builder = ClientMessagePool.getGroupJoinQuestionBuilder();
         Long questionId = question.getId();
         Long groupId = question.getGroupId();
         String content = question.getQuestion();
@@ -423,7 +424,7 @@ public final class ProtoModelConvertor {
     }
 
     public static GroupMember.Builder groupMember2proto(@NotNull im.turms.service.domain.group.po.GroupMember groupMember) {
-        GroupMember.Builder builder = GroupMember.newBuilder();
+        GroupMember.Builder builder = ClientMessagePool.getGroupMemberBuilder();
         im.turms.service.domain.group.po.GroupMember.Key key = groupMember.getKey();
         if (key != null) {
             Long groupId = key.getGroupId();
@@ -458,7 +459,7 @@ public final class ProtoModelConvertor {
 
     public static PrivateConversation.Builder privateConversation2proto(
             im.turms.service.domain.conversation.po.PrivateConversation privateConversation) {
-        PrivateConversation.Builder builder = PrivateConversation.newBuilder();
+        PrivateConversation.Builder builder = ClientMessagePool.getPrivateConversationBuilder();
         im.turms.service.domain.conversation.po.PrivateConversation.Key key = privateConversation.getKey();
         if (key != null) {
             Long ownerId = key.getOwnerId();
@@ -479,7 +480,7 @@ public final class ProtoModelConvertor {
 
     public static GroupConversation.Builder groupConversations2proto(
             im.turms.service.domain.conversation.po.GroupConversation groupConversation) {
-        GroupConversation.Builder builder = GroupConversation.newBuilder();
+        GroupConversation.Builder builder = ClientMessagePool.getGroupConversationBuilder();
         Long groupId = groupConversation.getGroupId();
         if (groupId != null) {
             builder.setGroupId(groupId);
@@ -493,7 +494,7 @@ public final class ProtoModelConvertor {
     }
 
     public static CreateMessageRequest.Builder message2createMessageRequest(Message message) {
-        CreateMessageRequest.Builder builder = CreateMessageRequest.newBuilder();
+        CreateMessageRequest.Builder builder = ClientMessagePool.getCreateMessageRequestBuilder();
         Long messageId = message.getId();
         Boolean isGroupMessage = message.getIsGroupMessage();
         Boolean isSystemMessage = message.getIsSystemMessage();
@@ -522,8 +523,7 @@ public final class ProtoModelConvertor {
         }
         if (records != null && !records.isEmpty()) {
             for (byte[] record : records) {
-                ByteString byteString = ByteString.copyFrom(record);
-                builder.addRecords(byteString);
+                builder.addRecords(ByteStringUtil.wrap(record));
             }
         }
         if (burnAfter != null) {
@@ -535,7 +535,9 @@ public final class ProtoModelConvertor {
     public static CreateMessageRequest.Builder cloneAndFillMessageRequest(
             @NotNull CreateMessageRequest request,
             @NotNull Message message) {
-        CreateMessageRequest.Builder builder = request.toBuilder();
+        CreateMessageRequest.Builder builder = ClientMessagePool
+                .getCreateMessageRequestBuilder()
+                .mergeFrom(request);
         Long messageId = message.getId();
         Boolean isSystemMessage = message.getIsSystemMessage();
         Date deliveryDate = message.getDeliveryDate();
@@ -555,7 +557,7 @@ public final class ProtoModelConvertor {
         }
         if (records != null) {
             for (byte[] record : records) {
-                builder.addRecords(ByteString.copyFrom(record));
+                builder.addRecords(ByteStringUtil.wrap(record));
             }
         }
         if (burnAfter != null) {

@@ -19,6 +19,7 @@ package im.turms.server.common.infra.fake;
 
 import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.Message;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.random.RandomUtil;
 import org.springframework.data.util.Pair;
@@ -66,11 +67,11 @@ public final class RandomRequestFactory {
 
     public static TurmsRequest.Builder create(Set<String> excludedRequestNames,
                                               RandomProtobufGenerator.GeneratorOptions options) {
-        TurmsRequest.Builder builder = TurmsRequest.newBuilder();
-        builder.setRequestId(RandomUtil.nextPositiveLong());
         Pair<FieldDescriptor, RandomProtobufGenerator<AbstractMessage>> entry = pickRandomRequestGenerator(excludedRequestNames);
-        builder.setField(entry.getFirst(), entry.getSecond().generate(options));
-        return builder;
+        return ClientMessagePool
+                .getTurmsRequestBuilder()
+                .setRequestId(RandomUtil.nextPositiveLong())
+                .setField(entry.getFirst(), entry.getSecond().generate(options));
     }
 
     private static Pair<FieldDescriptor, RandomProtobufGenerator<AbstractMessage>> pickRandomRequestGenerator(

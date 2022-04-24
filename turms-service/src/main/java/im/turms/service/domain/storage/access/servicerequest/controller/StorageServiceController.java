@@ -17,8 +17,8 @@
 
 package im.turms.service.domain.storage.access.servicerequest.controller;
 
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.ContentType;
-import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest;
 import im.turms.server.common.access.client.dto.request.storage.QuerySignedGetUrlRequest;
 import im.turms.server.common.access.client.dto.request.storage.QuerySignedPutUrlRequest;
@@ -59,7 +59,8 @@ public class StorageServiceController {
             String keyStr = querySignedGetUrlRequest.hasKeyStr() ? querySignedGetUrlRequest.getKeyStr() : null;
             Long keyNum = querySignedGetUrlRequest.hasKeyNum() ? querySignedGetUrlRequest.getKeyNum() : null;
             return storageService.queryPresignedGetUrl(clientRequest.userId(), contentType, keyStr, keyNum)
-                    .map(url -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
+                    .map(url -> RequestHandlerResultFactory.get(ClientMessagePool
+                            .getTurmsNotificationDataBuilder()
                             .setUrl(url)
                             .build()));
         };
@@ -78,7 +79,8 @@ public class StorageServiceController {
             String keyStr = querySignedPutUrlRequest.hasKeyStr() ? querySignedPutUrlRequest.getKeyStr() : null;
             Long keyNum = querySignedPutUrlRequest.hasKeyNum() ? querySignedPutUrlRequest.getKeyNum() : null;
             return storageService.queryPresignedPutUrl(clientRequest.userId(), contentType, keyStr, keyNum, contentLength)
-                    .map(url -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
+                    .map(url -> RequestHandlerResultFactory.get(ClientMessagePool
+                            .getTurmsNotificationDataBuilder()
                             .setUrl(url)
                             .build()));
         };

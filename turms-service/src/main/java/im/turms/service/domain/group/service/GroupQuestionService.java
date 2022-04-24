@@ -19,6 +19,7 @@ package im.turms.service.domain.group.service;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult;
 import im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion;
@@ -190,8 +191,8 @@ public class GroupQuestionService {
                                                 null)
                                         .then(PublisherPool.TRUE)
                                         : PublisherPool.FALSE)
-                                .map(joined -> GroupJoinQuestionsAnswerResult
-                                        .newBuilder()
+                                .map(joined -> ClientMessagePool
+                                        .getGroupJoinQuestionsAnswerResultBuilder()
                                         .setJoined(joined)
                                         .addAllQuestionIds(idsAndScore.getKey())
                                         .setScore(idsAndScore.getRight())
@@ -330,8 +331,9 @@ public class GroupQuestionService {
                                 if (groupJoinQuestions.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                GroupJoinQuestionsWithVersion.Builder builder = GroupJoinQuestionsWithVersion.newBuilder();
-                                builder.setLastUpdatedDate(version.getTime());
+                                GroupJoinQuestionsWithVersion.Builder builder = ClientMessagePool
+                                        .getGroupJoinQuestionsWithVersionBuilder()
+                                        .setLastUpdatedDate(version.getTime());
                                 for (GroupJoinQuestion question : groupJoinQuestions) {
                                     builder.addGroupJoinQuestions(ProtoModelConvertor.groupJoinQuestion2proto(question));
                                 }

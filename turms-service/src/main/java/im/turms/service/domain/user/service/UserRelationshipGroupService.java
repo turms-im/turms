@@ -20,6 +20,7 @@ package im.turms.service.domain.user.service;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.CollectionUtil;
@@ -153,7 +154,8 @@ public class UserRelationshipGroupService {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, date)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
-                    UserRelationshipGroupsWithVersion.Builder builder = UserRelationshipGroupsWithVersion.newBuilder()
+                    UserRelationshipGroupsWithVersion.Builder builder = ClientMessagePool
+                            .getUserRelationshipGroupsWithVersionBuilder()
                             .setLastUpdatedDate(date.getTime());
                     return queryRelationshipGroupsInfos(ownerId)
                             .collect(CollectorUtil.toList())

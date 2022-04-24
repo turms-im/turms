@@ -19,16 +19,12 @@ package im.turms.gateway.access.client.websocket;
 
 import im.turms.gateway.access.client.common.NotificationFactory;
 import im.turms.gateway.access.client.common.connection.NetConnection;
-import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import im.turms.server.common.infra.proto.ProtoEncoder;
-import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketCloseStatus;
-import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 import reactor.netty.http.websocket.WebsocketOutbound;
 
@@ -62,9 +58,7 @@ public class WebSocketConnection extends NetConnection {
     public void close(CloseReason closeReason) {
         if (isConnected() && !connection.isDisposed()) {
             super.close(closeReason);
-            TurmsNotification closeNotification = NotificationFactory.create(closeReason);
-            ByteBuf message = ProtoEncoder.getDirectByteBuffer(closeNotification);
-            out.sendObject(Mono.just(new BinaryWebSocketFrame(message)), byteBuf -> true)
+            out.sendObject(new BinaryWebSocketFrame(NotificationFactory.createBuffer(closeReason)))
                     .then()
                     .doOnError(throwable -> {
                         if (!ThrowableUtil.isDisconnectedClientError(throwable)) {

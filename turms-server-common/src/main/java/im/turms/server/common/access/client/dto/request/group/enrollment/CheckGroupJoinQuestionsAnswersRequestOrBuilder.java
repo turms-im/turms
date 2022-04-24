@@ -48,9 +48,11 @@ public interface CheckGroupJoinQuestionsAnswersRequestOrBuilder extends
    * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */
 
-  java.lang.String getQuestionIdToAnswerOrDefault(
+  /* nullable */
+java.lang.String getQuestionIdToAnswerOrDefault(
       long key,
-      java.lang.String defaultValue);
+      /* nullable */
+java.lang.String defaultValue);
   /**
    * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
    */

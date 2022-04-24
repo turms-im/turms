@@ -23,8 +23,8 @@ import com.google.common.primitives.Longs;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
-import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
@@ -840,13 +840,11 @@ public class MessageService {
     }
 
     private Mono<Boolean> sendMessage(@NotNull Message message, @NotNull Set<Long> recipientIds) {
-        TurmsRequest request = TurmsRequest
-                .newBuilder()
-                .setCreateMessageRequest(ProtoModelConvertor.message2createMessageRequest(message))
-                .build();
-        TurmsNotification notification = TurmsNotification
-                .newBuilder()
-                .setRelayedRequest(request)
+        TurmsNotification notification = ClientMessagePool
+                .getTurmsNotificationBuilder()
+                .setRelayedRequest(ClientMessagePool
+                        .getTurmsRequestBuilder()
+                        .setCreateMessageRequest(ProtoModelConvertor.message2createMessageRequest(message)))
                 .setRequestId(ADMIN_REQUEST_ID)
                 .build();
         if (sendMessageToOtherSenderOnlineDevices) {

@@ -20,6 +20,7 @@ package im.turms.service.domain.user.service;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.access.client.dto.constant.ResponseAction;
 import im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion;
@@ -369,7 +370,8 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
                                 if (requests.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                UserFriendRequestsWithVersion.Builder builder = UserFriendRequestsWithVersion.newBuilder();
+                                UserFriendRequestsWithVersion.Builder builder = ClientMessagePool
+                                        .getUserFriendRequestsWithVersionBuilder();
                                 int expireAfterSeconds = userFriendRequestRepository.getEntityExpireAfterSeconds();
                                 for (UserFriendRequest request : requests) {
                                     builder.addUserFriendRequests(ProtoModelConvertor.friendRequest2proto(request, expireAfterSeconds));

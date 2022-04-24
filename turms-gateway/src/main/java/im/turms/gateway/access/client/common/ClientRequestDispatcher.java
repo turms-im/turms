@@ -24,6 +24,8 @@ import im.turms.gateway.infra.logging.ApiLoggingContext;
 import im.turms.gateway.infra.logging.ClientApiLogging;
 import im.turms.gateway.infra.proto.SimpleTurmsRequest;
 import im.turms.gateway.infra.proto.TurmsRequestParser;
+import im.turms.server.common.access.client.dto.ClientMessageEncoder;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
@@ -67,11 +69,14 @@ public class ClientRequestDispatcher {
     private static final long HEARTBEAT_FAILURE_REQUEST_ID = -100;
 
     static {
-        TurmsNotification notification = NotificationFactory
-                .create(ResponseStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT, HEARTBEAT_FAILURE_REQUEST_ID);
-        HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT = Unpooled.unreleasableBuffer(ProtoEncoder.getDirectByteBuffer(notification));
-        notification = NotificationFactory.create(ResponseStatusCode.SERVER_UNAVAILABLE, HEARTBEAT_FAILURE_REQUEST_ID);
-        HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE = Unpooled.unreleasableBuffer(ProtoEncoder.getDirectByteBuffer(notification));
+        HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT = Unpooled
+                .unreleasableBuffer(ClientMessageEncoder.encodeResponse(
+                        HEARTBEAT_FAILURE_REQUEST_ID,
+                        ResponseStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT));
+        HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE = Unpooled
+                .unreleasableBuffer(ClientMessageEncoder.encodeResponse(
+                        HEARTBEAT_FAILURE_REQUEST_ID,
+                        ResponseStatusCode.SERVER_UNAVAILABLE));
     }
 
     private final ApiLoggingContext apiLoggingContext;
@@ -215,15 +220,13 @@ public class ClientRequestDispatcher {
             // Validate
             long requestId = request.requestId();
             if (requestId <= 0) {
-                TurmsNotification notification = NotificationFactory.create(ResponseStatusCode.INVALID_REQUEST,
-                        "The request ID must be greater than 0",
-                        requestId);
-                return Mono.just(notification);
+                return Mono.just(NotificationFactory
+                        .create(ResponseStatusCode.INVALID_REQUEST, "The request ID must be greater than 0", requestId));
             }
             // Check server status
             if (!serverStatusManager.isActive()) {
-                TurmsNotification notification = NotificationFactory.create(ResponseStatusCode.SERVER_UNAVAILABLE, requestId);
-                return Mono.just(notification);
+                return Mono.just(NotificationFactory
+                        .create(ResponseStatusCode.SERVER_UNAVAILABLE, requestId));
             }
 
             // Rate limiting
@@ -234,8 +237,8 @@ public class ClientRequestDispatcher {
                 if (userSession != null) {
                     blocklistService.tryBlockUserIdForFrequentRequest(userSession.getUserId());
                 }
-                TurmsNotification notification = NotificationFactory.create(ResponseStatusCode.CLIENT_REQUESTS_TOO_FREQUENT, requestId);
-                return Mono.just(notification);
+                return Mono.just(NotificationFactory
+                        .create(ResponseStatusCode.CLIENT_REQUESTS_TOO_FREQUENT, requestId));
             }
 
             // Handle the request to get a response
@@ -252,9 +255,8 @@ public class ClientRequestDispatcher {
                 }
             };
         } catch (Exception e) {
-            TurmsNotification notification = NotificationFactory
-                    .create(ThrowableInfo.get(e), request.requestId());
-            return Mono.just(notification);
+            return Mono.just(NotificationFactory
+                    .create(ThrowableInfo.get(e), request.requestId()));
         } finally {
             serviceRequestBuffer.release();
             tracingContext.clearThreadContext();
@@ -318,7 +320,8 @@ public class ClientRequestDispatcher {
     }
 
     private TurmsNotification getNotificationFromHandlerResult(RequestHandlerResult result, long requestId) {
-        TurmsNotification.Builder builder = TurmsNotification.newBuilder()
+        TurmsNotification.Builder builder = ClientMessagePool
+                .getTurmsNotificationBuilder()
                 .setRequestId(requestId)
                 .setCode(result.code().getBusinessCode());
         String reason = result.reason();

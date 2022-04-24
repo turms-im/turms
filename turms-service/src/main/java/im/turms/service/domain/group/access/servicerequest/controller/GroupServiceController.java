@@ -17,8 +17,8 @@
 
 package im.turms.service.domain.group.access.servicerequest.controller;
 
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
-import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.group.CreateGroupRequest;
 import im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest;
 import im.turms.server.common.access.client.dto.request.group.QueryGroupRequest;
@@ -205,7 +205,8 @@ public class GroupServiceController {
                     ? new Date(request.getLastUpdatedDate())
                     : null;
             return groupService.queryGroupWithVersion(request.getGroupId(), lastUpdatedDate)
-                    .map(groupsWithVersion -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
+                    .map(groupsWithVersion -> RequestHandlerResultFactory.get(ClientMessagePool
+                            .getTurmsNotificationDataBuilder()
                             .setGroupsWithVersion(groupsWithVersion)
                             .build()));
         };
@@ -220,8 +221,8 @@ public class GroupServiceController {
             return groupService.queryJoinedGroupIdsWithVersion(
                             clientRequest.userId(),
                             lastUpdatedDate)
-                    .map(idsWithVersion -> RequestHandlerResultFactory.get(TurmsNotification.Data
-                            .newBuilder()
+                    .map(idsWithVersion -> RequestHandlerResultFactory.get(ClientMessagePool
+                            .getTurmsNotificationDataBuilder()
                             .setIdsWithVersion(idsWithVersion)
                             .build()));
         };
@@ -236,8 +237,8 @@ public class GroupServiceController {
             return groupService.queryJoinedGroupsWithVersion(
                             clientRequest.userId(),
                             lastUpdatedDate)
-                    .map(groupsWithVersion -> RequestHandlerResultFactory.get(TurmsNotification.Data
-                            .newBuilder()
+                    .map(groupsWithVersion -> RequestHandlerResultFactory.get(ClientMessagePool
+                            .getTurmsNotificationDataBuilder()
                             .setGroupsWithVersion(groupsWithVersion)
                             .build()));
         };
@@ -335,8 +336,8 @@ public class GroupServiceController {
             return groupBlocklistService.queryGroupBlockedUserIdsWithVersion(
                             request.getGroupId(),
                             lastUpdatedDate)
-                    .map(version -> RequestHandlerResultFactory.get(TurmsNotification.Data
-                            .newBuilder()
+                    .map(version -> RequestHandlerResultFactory.get(ClientMessagePool
+                            .getTurmsNotificationDataBuilder()
                             .setIdsWithVersion(version)
                             .build()));
         };
@@ -351,8 +352,8 @@ public class GroupServiceController {
             return groupBlocklistService.queryGroupBlockedUserInfosWithVersion(
                             request.getGroupId(),
                             lastUpdatedDate)
-                    .map(version -> RequestHandlerResultFactory.get(TurmsNotification.Data
-                            .newBuilder()
+                    .map(version -> RequestHandlerResultFactory.get(ClientMessagePool
+                            .getTurmsNotificationDataBuilder()
                             .setUsersInfosWithVersion(version)
                             .build()));
         };
@@ -369,7 +370,8 @@ public class GroupServiceController {
                 idAndAnswerPairs.add(new GroupQuestionIdAndAnswer(entry.getKey(), entry.getValue()));
             }
             return groupQuestionService.checkGroupQuestionAnswerAndJoin(clientRequest.userId(), idAndAnswerPairs)
-                    .map(answerResult -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
+                    .map(answerResult -> RequestHandlerResultFactory.get(ClientMessagePool
+                            .getTurmsNotificationDataBuilder()
                             .setGroupJoinQuestionAnswerResult(answerResult).build()));
         };
     }
@@ -493,8 +495,8 @@ public class GroupServiceController {
                                 clientRequest.userId(),
                                 request.hasAreSentByMe() && request.getAreSentByMe(),
                                 lastUpdatedDate)
-                        .map(groupInvitationsWithVersion -> RequestHandlerResultFactory.get(TurmsNotification.Data
-                                .newBuilder()
+                        .map(groupInvitationsWithVersion -> RequestHandlerResultFactory.get(ClientMessagePool
+                                .getTurmsNotificationDataBuilder()
                                 .setGroupInvitationsWithVersion(groupInvitationsWithVersion)
                                 .build()));
             }
@@ -503,7 +505,8 @@ public class GroupServiceController {
                             groupId,
                             lastUpdatedDate)
                     .map(groupInvitationsWithVersion -> RequestHandlerResultFactory.get(
-                            TurmsNotification.Data.newBuilder()
+                            ClientMessagePool
+                                    .getTurmsNotificationDataBuilder()
                                     .setGroupInvitationsWithVersion(groupInvitationsWithVersion)
                                     .build()));
         };
@@ -520,7 +523,8 @@ public class GroupServiceController {
                             clientRequest.userId(),
                             groupId,
                             lastUpdatedDate)
-                    .map(groupJoinRequestsWithVersion -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
+                    .map(groupJoinRequestsWithVersion -> RequestHandlerResultFactory.get(ClientMessagePool
+                            .getTurmsNotificationDataBuilder()
                             .setGroupJoinRequestsWithVersion(groupJoinRequestsWithVersion)
                             .build()));
         };
@@ -537,7 +541,8 @@ public class GroupServiceController {
                             request.getGroupId(),
                             request.getWithAnswers(),
                             lastUpdatedDate)
-                    .map(groupJoinQuestionsWithVersion -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
+                    .map(groupJoinQuestionsWithVersion -> RequestHandlerResultFactory.get(ClientMessagePool
+                            .getTurmsNotificationDataBuilder()
                             .setGroupJoinQuestionsWithVersion(groupJoinQuestionsWithVersion)
                             .build()));
         };
@@ -624,7 +629,8 @@ public class GroupServiceController {
                                 memberIds,
                                 withStatus)
                         .map(groupMembersWithVersion -> RequestHandlerResultFactory.get(
-                                TurmsNotification.Data.newBuilder()
+                                ClientMessagePool
+                                        .getTurmsNotificationDataBuilder()
                                         .setGroupMembersWithVersion(groupMembersWithVersion)
                                         .build()));
             }
@@ -634,7 +640,8 @@ public class GroupServiceController {
                             lastUpdatedDate,
                             withStatus)
                     .map(groupMembersWithVersion -> RequestHandlerResultFactory.get(
-                            TurmsNotification.Data.newBuilder()
+                            ClientMessagePool
+                                    .getTurmsNotificationDataBuilder()
                                     .setGroupMembersWithVersion(groupMembersWithVersion)
                                     .build()));
         };

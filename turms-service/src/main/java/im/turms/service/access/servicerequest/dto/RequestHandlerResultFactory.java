@@ -17,7 +17,7 @@
 
 package im.turms.service.access.servicerequest.dto;
 
-import im.turms.server.common.access.client.dto.model.common.Int64Values;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -68,9 +68,9 @@ public final class RequestHandlerResultFactory {
     }
 
     public static RequestHandlerResult get(@NotNull Long id) {
-        TurmsNotification.Data data = TurmsNotification.Data
-                .newBuilder()
-                .setIds(Int64Values.newBuilder().addValues(id).build())
+        TurmsNotification.Data data = ClientMessagePool
+                .getTurmsNotificationDataBuilder()
+                .setIds(ClientMessagePool.getInt64ValuesBuilder().addValues(id))
                 .build();
         return new RequestHandlerResult(
                 data,
@@ -85,9 +85,9 @@ public final class RequestHandlerResultFactory {
             @NotNull Long id,
             @NotNull Long recipientId,
             @NotNull TurmsRequest dataForRecipient) {
-        TurmsNotification.Data data = TurmsNotification.Data
-                .newBuilder()
-                .setIds(Int64Values.newBuilder().addValues(id).build())
+        TurmsNotification.Data data = ClientMessagePool
+                .getTurmsNotificationDataBuilder()
+                .setIds(ClientMessagePool.getInt64ValuesBuilder().addValues(id))
                 .build();
         return new RequestHandlerResult(data, false, Collections.singleton(recipientId), dataForRecipient, ResponseStatusCode.OK, null);
     }
@@ -97,9 +97,9 @@ public final class RequestHandlerResultFactory {
             @NotEmpty Set<Long> recipients,
             boolean forwardDataForRecipientsToOtherSenderOnlineDevices,
             TurmsRequest dataForRecipients) {
-        TurmsNotification.Data data = TurmsNotification.Data
-                .newBuilder()
-                .setIds(Int64Values.newBuilder().addValues(id).build())
+        TurmsNotification.Data data = ClientMessagePool
+                .getTurmsNotificationDataBuilder()
+                .setIds(ClientMessagePool.getInt64ValuesBuilder().addValues(id))
                 .build();
         return new RequestHandlerResult(
                 data,

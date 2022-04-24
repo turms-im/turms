@@ -18,16 +18,14 @@
 package im.turms.gateway.domain.session.manager;
 
 import im.turms.gateway.access.client.common.UserSession;
+import im.turms.server.common.access.client.dto.ClientMessageEncoder;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
-import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.collection.ConcurrentEnumMap;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import im.turms.server.common.infra.proto.ProtoEncoder;
-import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import org.springframework.util.Assert;
 
@@ -94,16 +92,9 @@ public final class UserSessionsManager {
         if (userSession == null) {
             return false;
         }
-        var session = im.turms.server.common.access.client.dto.model.user.UserSession.newBuilder()
-                .setSessionId(Integer.toString(userSession.getId()))
-                .setServerId(serverId)
-                .build();
-        TurmsNotification notification = TurmsNotification.newBuilder()
-                .setData(TurmsNotification.Data.newBuilder().setUserSession(session))
-                .build();
-        ByteBuf byteBuffer = ProtoEncoder.getDirectByteBuffer(notification);
         try {
-            userSession.sendNotification(byteBuffer);
+            userSession.sendNotification(ClientMessageEncoder
+                    .encodeUserSessionNotification(Integer.toString(userSession.getId()), serverId));
             return true;
         } catch (Exception e) {
             LOGGER.error("Failed to send the session notification", e);

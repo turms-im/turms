@@ -18,9 +18,11 @@
 package im.turms.service.access.servicerequest.dispatcher;
 
 import com.google.protobuf.CodedInputStream;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.TurmsRequestOrBuilder;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dispatcher.IServiceRequestDispatcher;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
@@ -169,33 +171,46 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         if (!serverStatusManager.isActive()) {
             return Mono.just(ServiceResponseFactory.get(ResponseStatusCode.SERVER_UNAVAILABLE));
         }
-        TurmsRequest.Builder requestBuilder;
+        boolean hasRunningExtensions = pluginManager.hasRunningExtensions(ClientRequestTransformer.class);
+        TurmsRequestOrBuilder request;
         ByteBuf turmsRequestBuffer = serviceRequest.getTurmsRequestBuffer();
         int requestSize = turmsRequestBuffer.readableBytes();
         try {
             // Note that "mergeFrom" won't block because the buffer is fully read
             CodedInputStream stream = CodedInputStream.newInstance(turmsRequestBuffer.nioBuffer());
-            requestBuilder = TurmsRequest.newBuilder().mergeFrom(stream);
+            request = hasRunningExtensions
+                    ? TurmsRequest.newBuilder().mergeFrom(stream)
+                    : ClientMessagePool.getTurmsRequestBuilder().mergeFrom(stream).build();
         } catch (IOException e) {
             blocklistService.tryBlockIpForCorruptedRequest(new ByteArrayWrapper(serviceRequest.getIp()));
             blocklistService.tryBlockUserIdForCorruptedRequest(serviceRequest.getUserId());
             return Mono.just(ServiceResponseFactory.get(ResponseStatusCode.INVALID_REQUEST, e.getMessage()));
         }
-        turmsRequestBuffer.touch(requestBuilder);
+        turmsRequestBuffer.touch(request);
 
         // 2. Transform and handle the request
-        ClientRequest clientRequest = new ClientRequest(
-                serviceRequest.getUserId(),
-                serviceRequest.getDeviceType(),
-                requestBuilder.getRequestId(),
-                requestBuilder,
-                null);
-        Mono<ClientRequest> clientRequestMono = pluginManager.invokeExtensionPointsSequentially(
-                        ClientRequestTransformer.class,
-                        "transform",
-                        clientRequest,
-                        (transformer, request) -> request.flatMap(transformer::transform))
-                .defaultIfEmpty(clientRequest);
+        Mono<ClientRequest> clientRequestMono;
+        if (hasRunningExtensions) {
+            ClientRequest clientRequest = new ClientRequest(
+                    serviceRequest.getUserId(),
+                    serviceRequest.getDeviceType(),
+                    request.getRequestId(),
+                    (TurmsRequest.Builder) request,
+                    null);
+            clientRequestMono = pluginManager.invokeExtensionPointsSequentially(
+                            ClientRequestTransformer.class,
+                            "transform",
+                            clientRequest,
+                            (transformer, req) -> req.flatMap(transformer::transform))
+                    .defaultIfEmpty(clientRequest);
+        } else {
+            clientRequestMono = Mono.just(new ClientRequest(
+                    serviceRequest.getUserId(),
+                    serviceRequest.getDeviceType(),
+                    request.getRequestId(),
+                    null,
+                    (TurmsRequest) request));
+        }
         return clientRequestMono.flatMap(lastClientRequest -> {
             // 3. Validate ClientRequest
             TurmsRequest lastRequest = lastClientRequest.turmsRequest();
@@ -282,8 +297,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         if (dataForRecipients == null || recipients.isEmpty()) {
             return Mono.empty();
         }
-        TurmsNotification notificationForRecipients = TurmsNotification
-                .newBuilder()
+        TurmsNotification notificationForRecipients = ClientMessagePool
+                .getTurmsNotificationBuilder()
                 .setRelayedRequest(dataForRecipients)
                 .setRequesterId(requesterId)
                 .build();

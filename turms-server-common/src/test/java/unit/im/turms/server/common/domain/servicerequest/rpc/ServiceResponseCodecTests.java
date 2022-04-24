@@ -32,7 +32,7 @@ class ServiceResponseCodecTests extends BaseCodecTest {
     @Test
     void shouldGetTheSameRequest_afterWriteAndRead_forLegalRequest() {
         TurmsNotification.Data dataForRequester = TurmsNotification.Data.newBuilder()
-                .setIds(Int64Values.newBuilder().addValues(100).build())
+                .setIds(Int64Values.newBuilder().addValues(100))
                 .build();
         ServiceResponse expectedResponse = new ServiceResponse(dataForRequester,
                 ResponseStatusCode.OK, "response for the status code");

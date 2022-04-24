@@ -18,13 +18,13 @@
 package im.turms.service.domain.user.access.servicerequest.controller;
 
 import com.google.common.collect.Sets;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.client.dto.model.user.NearbyUsers;
 import im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion;
 import im.turms.server.common.access.client.dto.model.user.UsersOnlineStatuses;
-import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest;
 import im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest;
 import im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest;
@@ -125,11 +125,11 @@ public class UserServiceController {
                             request.getUserId(),
                             false)
                     .map(user -> {
-                        UsersInfosWithVersion.Builder userBuilder = UsersInfosWithVersion
-                                .newBuilder()
+                        UsersInfosWithVersion.Builder userBuilder = ClientMessagePool
+                                .getUsersInfosWithVersionBuilder()
                                 .addUserInfos(ProtoModelConvertor.userProfile2proto(user).build());
-                        return RequestHandlerResultFactory.get(TurmsNotification.Data
-                                .newBuilder()
+                        return RequestHandlerResultFactory.get(ClientMessagePool
+                                .getTurmsNotificationDataBuilder()
                                 .setUsersInfosWithVersion(userBuilder)
                                 .build());
                     });
@@ -156,12 +156,12 @@ public class UserServiceController {
                         if (nearbyUsers.isEmpty()) {
                             return RequestHandlerResultFactory.NO_CONTENT;
                         }
-                        NearbyUsers.Builder builder = NearbyUsers.newBuilder();
+                        NearbyUsers.Builder builder = ClientMessagePool.getNearbyUsersBuilder();
                         for (var nearbyUser : nearbyUsers) {
                             builder.addNearbyUsers(ProtoModelConvertor.nearbyUser2proto(nearbyUser));
                         }
-                        return RequestHandlerResultFactory.get(TurmsNotification.Data
-                                .newBuilder()
+                        return RequestHandlerResultFactory.get(ClientMessagePool
+                                .getTurmsNotificationDataBuilder()
                                 .setNearbyUsers(builder.build())
                                 .build());
                     });
@@ -177,7 +177,6 @@ public class UserServiceController {
             }
             //TODO : Access Control
             List<Long> userIds = request.getUserIdsList();
-            UsersOnlineStatuses.Builder statusesBuilder = UsersOnlineStatuses.newBuilder();
             List<Mono<Pair<Long, UserSessionsStatus>>> monos = new ArrayList<>(userIds.size());
             for (Long targetUserId : userIds) {
                 monos.add(userStatusService.getUserSessionsStatus(targetUserId)
@@ -186,6 +185,7 @@ public class UserServiceController {
             return Flux.merge(monos)
                     .collectList()
                     .map(userIdAndSessionsStatusList -> {
+                        UsersOnlineStatuses.Builder statusesBuilder = ClientMessagePool.getUsersOnlineStatusesBuilder();
                         for (Pair<Long, UserSessionsStatus> userIdAndSessionsStatus : userIdAndSessionsStatusList) {
                             statusesBuilder.addUserStatuses(ProtoModelConvertor
                                     .userOnlineInfo2userStatus(
@@ -194,7 +194,8 @@ public class UserServiceController {
                                             respondOfflineIfInvisible)
                                     .build());
                         }
-                        return RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
+                        return RequestHandlerResultFactory.get(ClientMessagePool
+                                .getTurmsNotificationDataBuilder()
                                 .setUsersOnlineStatuses(statusesBuilder)
                                 .build());
                     });

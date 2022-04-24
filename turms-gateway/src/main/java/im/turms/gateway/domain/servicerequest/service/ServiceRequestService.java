@@ -19,6 +19,7 @@ package im.turms.gateway.domain.servicerequest.service;
 
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.session.service.SessionService;
+import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -88,7 +89,7 @@ public class ServiceRequestService {
         if (code == null) {
             throw new IllegalArgumentException("The business code should not be null in the service response: " + response);
         }
-        TurmsNotification.Builder builder = TurmsNotification.newBuilder();
+        TurmsNotification.Builder builder = ClientMessagePool.getTurmsNotificationBuilder();
         String reason = response.reason();
         if (reason != null) {
             builder.setReason(reason);
