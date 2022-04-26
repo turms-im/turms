@@ -47,8 +47,9 @@ public class PublicIpManager {
             throw new IllegalStateException("Failed to detect the public IP because cannot find an IP detector address");
         }
         List<Mono<String>> monos = new ArrayList<>(ipDetectorAddresses.size());
+        HttpClient httpClient = getClient();
         for (String checkerAddress : ipDetectorAddresses) {
-            Mono<String> ipMono = getClient().get()
+            Mono<String> ipMono = httpClient.get()
                     .uri(checkerAddress)
                     .responseSingle((response, body) -> response.status().codeClass().equals(HttpStatusClass.SUCCESS)
                             ? body.asString()

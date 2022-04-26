@@ -38,6 +38,7 @@ import im.turms.server.common.infra.healthcheck.ServerStatusManager;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.proto.ProtoDecoder;
 import im.turms.server.common.infra.proto.ProtoEncoder;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
@@ -130,7 +131,7 @@ public class ClientRequestDispatcher {
         SimpleTurmsRequest tempRequest;
         Mono<TurmsNotification> notificationMono = null;
         try {
-            tempRequest = TurmsRequestParser.parseSimpleRequest(serviceRequestBuffer.nioBuffer());
+            tempRequest = TurmsRequestParser.parseSimpleRequest(ProtoDecoder.newInputStream(serviceRequestBuffer));
         } catch (Exception e) {
             serviceRequestBuffer.release();
             tempRequest = UNRECOGNIZED_REQUEST;

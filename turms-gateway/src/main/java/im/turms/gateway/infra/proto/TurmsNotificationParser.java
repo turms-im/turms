@@ -46,21 +46,20 @@ public final class TurmsNotificationParser {
     private TurmsNotificationParser() {
     }
 
-    public static SimpleTurmsNotification parseSimpleNotification(ByteBuffer turmsNotificationBuffer) {
-        Assert.notNull(turmsNotificationBuffer, "turmsNotificationBuffer must not be null");
+    public static SimpleTurmsNotification parseSimpleNotification(CodedInputStream turmsRequestInputStream) {
+        Assert.notNull(turmsRequestInputStream, "turmsRequestInputStream must not be null");
         // The CodedInputStream.newInstance is efficient because it reuses the direct buffer
-        CodedInputStream stream = CodedInputStream.newInstance(turmsNotificationBuffer);
         try {
             long requesterId = UNSET_VALUE;
             Integer closeStatus = null;
             TurmsRequest.KindCase type = null;
             boolean done = false;
             while (!done) {
-                int tag = stream.readTag();
+                int tag = turmsRequestInputStream.readTag();
                 switch (tag) {
                     case REQUESTER_ID_TAG -> {
                         if (requesterId == UNSET_VALUE) {
-                            requesterId = stream.readInt64();
+                            requesterId = turmsRequestInputStream.readInt64();
                         } else {
                             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                                     "Not a valid TurmsNotification: Duplicate requester ID");
@@ -68,20 +67,20 @@ public final class TurmsNotificationParser {
                     }
                     case CLOSE_STATUS_TAG -> {
                         if (closeStatus == null) {
-                            closeStatus = stream.readInt32();
+                            closeStatus = turmsRequestInputStream.readInt32();
                         } else {
                             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                                     "Not a valid TurmsNotification: Duplicate close status");
                         }
                     }
                     case RELAYED_REQUEST_TAG -> {
-                        stream.readRawVarint32();
-                        int i = stream.readTag();
+                        turmsRequestInputStream.readRawVarint32();
+                        int i = turmsRequestInputStream.readTag();
                         int kindFieldNumber = WireFormat.getTagFieldNumber(i);
                         type = TurmsRequest.KindCase.forNumber(kindFieldNumber);
                         done = true;
                     }
-                    default -> stream.skipField(tag);
+                    default -> turmsRequestInputStream.skipField(tag);
                 }
             }
             if (requesterId == UNSET_VALUE) {

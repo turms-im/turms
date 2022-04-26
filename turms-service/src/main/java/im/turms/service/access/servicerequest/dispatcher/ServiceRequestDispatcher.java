@@ -37,6 +37,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.proto.ProtoDecoder;
 import im.turms.server.common.infra.proto.ProtoEncoder;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
@@ -177,7 +178,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         int requestSize = turmsRequestBuffer.readableBytes();
         try {
             // Note that "mergeFrom" won't block because the buffer is fully read
-            CodedInputStream stream = CodedInputStream.newInstance(turmsRequestBuffer.nioBuffer());
+            CodedInputStream stream = ProtoDecoder.newInputStream(turmsRequestBuffer);
             request = hasRunningExtensions
                     ? TurmsRequest.newBuilder().mergeFrom(stream)
                     : ClientMessagePool.getTurmsRequestBuilder().mergeFrom(stream).build();

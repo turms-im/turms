@@ -27,7 +27,6 @@ import im.turms.server.common.infra.exception.ResponseException;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
@@ -47,18 +46,19 @@ public final class TurmsRequestParser {
     private TurmsRequestParser() {
     }
 
-    public static SimpleTurmsRequest parseSimpleRequest(ByteBuffer turmsRequestBuffer) {
-        Assert.notNull(turmsRequestBuffer, "turmsRequestBuffer must not be null");
-        // The CodedInputStream.newInstance is efficient because it reuses the direct buffer
-        CodedInputStream stream = CodedInputStream.newInstance(turmsRequestBuffer);
+    /**
+     * @implNote {@link CodedInputStream} is efficient because it reuses the underlying buffer
+     */
+    public static SimpleTurmsRequest parseSimpleRequest(CodedInputStream turmsRequestInputStream) {
+        Assert.notNull(turmsRequestInputStream, "turmsRequestInputStream must not be null");
         try {
             long requestId = UNDEFINED_REQUEST_ID;
             TurmsRequest.KindCase type;
             while (true) {
-                int tag = stream.readTag();
+                int tag = turmsRequestInputStream.readTag();
                 if (tag == REQUEST_ID_TAG) {
                     if (requestId == UNDEFINED_REQUEST_ID) {
-                        requestId = stream.readInt64();
+                        requestId = turmsRequestInputStream.readInt64();
                     } else {
                         throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                                 "Not a valid TurmsRequest: Duplicate request ID");
@@ -78,7 +78,7 @@ public final class TurmsRequestParser {
             }
             CreateSessionRequest createSessionRequest = null;
             if (type == CREATE_SESSION_REQUEST) {
-                createSessionRequest = stream.readMessage(CreateSessionRequest.parser(), REGISTRY);
+                createSessionRequest = turmsRequestInputStream.readMessage(CreateSessionRequest.parser(), REGISTRY);
             }
             return new SimpleTurmsRequest(requestId, type, createSessionRequest);
         } catch (IOException e) {

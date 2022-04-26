@@ -32,6 +32,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.proto.ProtoDecoder;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.server.common.infra.validation.Validator;
 import io.netty.buffer.ByteBuf;
@@ -92,7 +93,7 @@ public class NotificationService implements INotificationService {
 
         int notificationSize = notificationData.readableBytes();
         SimpleTurmsNotification notification = isNotificationLoggingEnabled
-                ? TurmsNotificationParser.parseSimpleNotification(notificationData.nioBuffer())
+                ? TurmsNotificationParser.parseSimpleNotification(ProtoDecoder.newInputStream(notificationData))
                 : null;
 
         // RefCntAwareByteBuf is used to release the buffer to 0
@@ -152,7 +153,7 @@ public class NotificationService implements INotificationService {
         TurmsNotification notification;
         try {
             // Note that "parseFrom" won't block because the buffer is fully read
-            notification = TurmsNotification.parseFrom(notificationData.nioBuffer());
+            notification = TurmsNotification.parseFrom(ProtoDecoder.newInputStream(notificationData));
         } catch (Exception e) {
             LOGGER.error("Failed to parse TurmsNotification", e);
             return;

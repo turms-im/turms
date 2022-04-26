@@ -18,6 +18,7 @@
 package im.turms.server.common.access.client.codec;
 
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.infra.proto.ProtoDecoder;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -31,7 +32,7 @@ public class TurmsNotificationDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-        TurmsNotification notification = TurmsNotification.parseFrom(in.nioBuffer());
+        TurmsNotification notification = TurmsNotification.parseFrom(ProtoDecoder.newInputStream(in));
         in.skipBytes(in.readableBytes());
         out.add(notification);
     }

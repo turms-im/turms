@@ -17,6 +17,7 @@
 
 package unit.im.turms.gateway.infra.proto;
 
+import com.google.protobuf.CodedInputStream;
 import im.turms.gateway.infra.proto.SimpleTurmsNotification;
 import im.turms.gateway.infra.proto.TurmsNotificationParser;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
@@ -49,7 +50,8 @@ class TurmsNotificationParserTests {
                 .asReadOnlyByteBuffer();
 
         assertThatExceptionOfType(ResponseException.class)
-                .isThrownBy(() -> TurmsNotificationParser.parseSimpleNotification(emptyRequest));
+                .isThrownBy(() -> TurmsNotificationParser
+                        .parseSimpleNotification(CodedInputStream.newInstance(emptyRequest)));
     }
 
     @Test
@@ -62,7 +64,8 @@ class TurmsNotificationParserTests {
                 .asReadOnlyByteBuffer();
 
         assertThatExceptionOfType(ResponseException.class)
-                .isThrownBy(() -> TurmsNotificationParser.parseSimpleNotification(partialRequestWithoutRequestId));
+                .isThrownBy(() -> TurmsNotificationParser
+                        .parseSimpleNotification(CodedInputStream.newInstance(partialRequestWithoutRequestId)));
     }
 
     @Test
@@ -75,7 +78,8 @@ class TurmsNotificationParserTests {
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
-        SimpleTurmsNotification notification = TurmsNotificationParser.parseSimpleNotification(requestWithRequestId);
+        SimpleTurmsNotification notification = TurmsNotificationParser
+                .parseSimpleNotification(CodedInputStream.newInstance(requestWithRequestId));
         assertThat(notification.requesterId()).isEqualTo(requesterId);
         assertThat(notification.relayedRequestType()).isEqualTo(TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST);
     }
@@ -92,7 +96,8 @@ class TurmsNotificationParserTests {
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
-        SimpleTurmsNotification notification = TurmsNotificationParser.parseSimpleNotification(requestWithRequestId);
+        SimpleTurmsNotification notification = TurmsNotificationParser
+                .parseSimpleNotification(CodedInputStream.newInstance(requestWithRequestId));
         assertThat(notification.requesterId()).isEqualTo(requesterId);
         assertThat(notification.closeStatus()).isEqualTo(closeStatus);
         assertThat(notification.relayedRequestType()).isEqualTo(TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST);

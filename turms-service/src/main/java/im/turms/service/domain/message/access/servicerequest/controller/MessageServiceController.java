@@ -22,9 +22,7 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.protobuf.ByteString;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
-import im.turms.server.common.access.client.dto.model.message.Messages;
 import im.turms.server.common.access.client.dto.model.message.MessagesWithTotal;
-import im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
@@ -258,22 +256,18 @@ public class MessageServiceController {
                             }
                             dataMono = Flux.merge(messagesWithTotalMonos)
                                     .collect(CollectorUtil.toList(messagesWithTotalMonos.size()))
-                                    .map(messagesWithTotals -> {
-                                        MessagesWithTotalList.Builder messagesWithTotalList = ClientMessagePool
-                                                .getMessagesWithTotalListBuilder()
-                                                .addAllMessagesWithTotalList(messagesWithTotals);
-                                        return ClientMessagePool
-                                                .getTurmsNotificationDataBuilder()
-                                                .setMessagesWithTotalList(messagesWithTotalList).build();
-                                    });
+                                    .map(messagesWithTotals -> ClientMessagePool
+                                            .getTurmsNotificationDataBuilder()
+                                            .setMessagesWithTotalList(ClientMessagePool
+                                                    .getMessagesWithTotalListBuilder()
+                                                    .addAllMessagesWithTotalList(messagesWithTotals))
+                                            .build());
                         } else {
-                            Messages messagesList = ClientMessagePool
-                                    .getMessagesBuilder()
-                                    .addAllMessages(Collections2.transform(messages, m -> ProtoModelConvertor.message2proto(m).build()))
-                                    .build();
                             TurmsNotification.Data data = ClientMessagePool
                                     .getTurmsNotificationDataBuilder()
-                                    .setMessages(messagesList)
+                                    .setMessages(ClientMessagePool
+                                            .getMessagesBuilder()
+                                            .addAllMessages(Collections2.transform(messages, m -> ProtoModelConvertor.message2proto(m).build())))
                                     .build();
                             dataMono = Mono.just(data);
                         }

@@ -283,8 +283,7 @@ public final class MongoEntityFactory {
      * @implNote Note that we just follow the original name without any naming convention
      */
     private String parseFieldName(Field field) {
-        im.turms.server.common.storage.mongo.entity.annotation.Field property =
-                field.getAnnotation(im.turms.server.common.storage.mongo.entity.annotation.Field.class);
+        var property = field.getAnnotation(im.turms.server.common.storage.mongo.entity.annotation.Field.class);
         return property == null ? field.getName() : property.value();
     }
 

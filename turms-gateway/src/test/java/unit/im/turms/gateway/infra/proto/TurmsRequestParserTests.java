@@ -17,6 +17,7 @@
 
 package unit.im.turms.gateway.infra.proto;
 
+import com.google.protobuf.CodedInputStream;
 import im.turms.gateway.infra.proto.SimpleTurmsRequest;
 import im.turms.gateway.infra.proto.TurmsRequestParser;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
@@ -48,7 +49,8 @@ class TurmsRequestParserTests {
                 .asReadOnlyByteBuffer();
 
         assertThatExceptionOfType(ResponseException.class)
-                .isThrownBy(() -> TurmsRequestParser.parseSimpleRequest(emptyRequest));
+                .isThrownBy(() -> TurmsRequestParser
+                        .parseSimpleRequest(CodedInputStream.newInstance(emptyRequest)));
     }
 
     @Test
@@ -60,7 +62,8 @@ class TurmsRequestParserTests {
                 .asReadOnlyByteBuffer();
 
         assertThatExceptionOfType(ResponseException.class)
-                .isThrownBy(() -> TurmsRequestParser.parseSimpleRequest(partialRequestWithoutRequestId));
+                .isThrownBy(() -> TurmsRequestParser
+                        .parseSimpleRequest(CodedInputStream.newInstance(partialRequestWithoutRequestId)));
     }
 
     @Test
@@ -73,7 +76,8 @@ class TurmsRequestParserTests {
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
-        SimpleTurmsRequest request = TurmsRequestParser.parseSimpleRequest(requestWithRequestId);
+        SimpleTurmsRequest request = TurmsRequestParser
+                .parseSimpleRequest(CodedInputStream.newInstance(requestWithRequestId));
         assertThat(request.requestId()).isEqualTo(requestId);
         assertThat(request.type()).isEqualTo(TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST);
     }
