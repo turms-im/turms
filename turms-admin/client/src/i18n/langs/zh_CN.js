@@ -62,7 +62,7 @@ const zh_CN = {
     'byDay': '按日',
     'byMonth': '按月',
     'canceled': '已取消',
-    'changeConnectedServerUrl': '修改连接服务端URL',
+    'changeTargetServerUrl': '修改目标服务端URL',
     'changedServerSuccessfully': '成功切换服务端',
     'class': '类',
     'clearFilters': '清空过滤条件',

@@ -62,7 +62,7 @@ const en_US = {
     'byDay': 'By Day',
     'byMonth': 'By Month',
     'canceled': 'Canceled',
-    'changeConnectedServerUrl': 'Change Connected Server URL',
+    'changeTargetServerUrl': 'Change Target Server URL',
     'changedServerSuccessfully': 'Changed server successfully',
     'class': 'Class',
     'clearFilters': 'Clear Filters',

@@ -4,6 +4,7 @@ import axios from 'axios';
 import {createApp} from 'vue';
 import dayjs from 'dayjs';
 import enUS from 'ant-design-vue/es/locale/en_US';
+import jaJP from 'ant-design-vue/es/locale/ja_JP';
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import RelativeTime from 'dayjs/plugin/relativeTime';
 import App from './App.vue';
@@ -49,6 +50,7 @@ createApp(App)
             });
             globalProperties.$locales = {
                 enUS,
+                jaJP,
                 zhCN
             };
             globalProperties.$date = dayjs;

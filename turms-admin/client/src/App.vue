@@ -8,6 +8,7 @@
 import dayjs from 'dayjs';
 import Layout from './components/layout/index';
 import 'dayjs/locale/es-us';
+import 'dayjs/locale/ja';
 import 'dayjs/locale/zh-cn';
 
 export default {

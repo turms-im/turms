@@ -5,7 +5,7 @@
             :mask-closable="false"
             :keyboard="false"
             :visible="visible"
-            :title="$t('changeConnectedServerUrl')"
+            :title="$t('changeTargetServerUrl')"
             @ok="changeServer"
             @cancel="closeChangeServerModal"
         >
@@ -85,6 +85,9 @@ export default {
             locales: [{
                 label: 'English',
                 value: this.$locales.enUS.locale
+            }, {
+                label: '日本語',
+                value: this.$locales.jaJP.locale
             }, {
                 label: '中文',
                 value: this.$locales.zhCN.locale
