@@ -71,8 +71,7 @@ public class IpRequestThrottler {
         propertiesManager.addGlobalPropertiesChangeListener(newProperties -> requestTokenBucketContext
                 .updateRequestTokenBucket(newProperties.getGateway().getClientApi().getRateLimiting()));
 
-        new NamedThreadFactory(ThreadNameConst.IP_REQUEST_TOKEN_BUCKET_CLEANER, true)
-                .newThread(() -> {
+        NamedThreadFactory.newThread(ThreadNameConst.IP_REQUEST_TOKEN_BUCKET_CLEANER, true, () -> {
                     Thread thread = Thread.currentThread();
                     while (!thread.isInterrupted()) {
                         try {

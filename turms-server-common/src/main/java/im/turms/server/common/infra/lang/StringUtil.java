@@ -76,8 +76,7 @@ public final class StringUtil {
      */
     public static byte[] getUTF8Bytes(String s) {
         try {
-            byte coder = getCoder(s);
-            return coder == LATIN1 ? getBytes(s) : s.getBytes(StandardCharsets.UTF_8);
+            return getCoder(s) == LATIN1 ? getBytes(s) : s.getBytes(StandardCharsets.UTF_8);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
@@ -101,8 +100,7 @@ public final class StringUtil {
 
     public static boolean isLatin1(String s) {
         try {
-            byte coder = UNSAFE.getByte(s, STRING_CODER_OFFSET);
-            return coder == LATIN1;
+            return UNSAFE.getByte(s, STRING_CODER_OFFSET) == LATIN1;
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }

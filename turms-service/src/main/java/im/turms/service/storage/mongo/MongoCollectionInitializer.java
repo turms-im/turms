@@ -30,7 +30,7 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
 import im.turms.server.common.infra.property.env.service.env.database.MongoProperties;
 import im.turms.server.common.infra.property.env.service.env.database.TieredStorageProperties;
-import im.turms.server.common.infra.reactor.ReactorUtil;
+import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.security.PasswordManager;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.storage.mongo.BsonPool;
@@ -205,7 +205,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
      * @return True if all collections have existed
      */
     private Mono<Boolean> createCollectionsIfNotExist() {
-        return ReactorUtil.areAllTrue(
+        return PublisherUtil.areAllTrue(
                 createCollectionIfNotExist(Admin.class),
                 createCollectionIfNotExist(AdminRole.class),
 

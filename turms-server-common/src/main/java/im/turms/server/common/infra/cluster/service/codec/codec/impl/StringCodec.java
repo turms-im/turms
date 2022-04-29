@@ -19,6 +19,7 @@ package im.turms.server.common.infra.cluster.service.codec.codec.impl;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
+import im.turms.server.common.infra.cluster.service.codec.codec.CodecUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
 
@@ -40,7 +41,7 @@ public class StringCodec implements Codec<String> {
         if (length > Short.MAX_VALUE) {
             throw new IllegalArgumentException("The bytes length of the string cannot be greater than " + Short.MAX_VALUE);
         }
-        output.writeShort(length);
+        CodecUtil.writeVarint32(output, length);
         if (length > 0) {
             output.writeBytes(bytes)
                     .writeByte(coder);
@@ -49,7 +50,7 @@ public class StringCodec implements Codec<String> {
 
     @Override
     public String read(ByteBuf input) {
-        int length = input.readShort();
+        int length = CodecUtil.readVarint32(input);
         if (length <= 0) {
             return "";
         }

@@ -345,12 +345,10 @@ public class PluginManager {
                 continue;
             }
             try {
-                Mono<Void> mono = invoker.invoke((T) extensionPoint)
-                        .onErrorMap(t -> translateException(t, methodName, extension));
-                list.add(mono);
+                list.add(invoker.invoke((T) extensionPoint)
+                        .onErrorMap(t -> translateException(t, methodName, extension)));
             } catch (Exception e) {
-                Mono<Void> error = Mono.error(translateException(e, methodName, extension));
-                list.add(error);
+                list.add(Mono.error(translateException(e, methodName, extension)));
             }
         }
         if (list.isEmpty()) {

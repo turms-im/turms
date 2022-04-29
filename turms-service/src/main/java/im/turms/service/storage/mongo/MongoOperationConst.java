@@ -40,24 +40,21 @@ public final class MongoOperationConst {
     public static final List<Class<? extends Throwable>> NON_RETRYABLE_EXCEPTIONS =
             List.of(DuplicateKeyException.class, ResponseException.class);
     public static final Retry TRANSACTION_RETRY = Retry
-            .withThrowable(reactor.retry.Retry
-                    .onlyIf(context -> {
-                        Throwable exception = context.exception();
-                        if (exception == null) {
-                            return true;
-                        }
-                        for (Class<? extends Throwable> clazz : NON_RETRYABLE_EXCEPTIONS) {
-                            if (clazz.isInstance(exception)) {
-                                return false;
-                            }
-                        }
-                        if (exception instanceof MongoCommandException e
-                                && MongoErrorCodes.TRANSLATION_RELATED_ERROR_CODES.contains(e.getErrorCode())) {
-                            return false;
-                        }
-                        return true;
-                    })
-                    .retryMax(MONGO_TRANSACTION_RETRIES_NUMBER)
-                    .fixedBackoff(MONGO_TRANSACTION_BACKOFF));
+            .fixedDelay(MONGO_TRANSACTION_RETRIES_NUMBER, MONGO_TRANSACTION_BACKOFF)
+            .filter(throwable -> {
+                if (throwable == null) {
+                    return true;
+                }
+                for (Class<? extends Throwable> clazz : NON_RETRYABLE_EXCEPTIONS) {
+                    if (clazz.isInstance(throwable)) {
+                        return false;
+                    }
+                }
+                if (throwable instanceof MongoCommandException e
+                        && MongoErrorCodes.TRANSLATION_RELATED_ERROR_CODES.contains(e.getErrorCode())) {
+                    return false;
+                }
+                return true;
+            });
 
 }

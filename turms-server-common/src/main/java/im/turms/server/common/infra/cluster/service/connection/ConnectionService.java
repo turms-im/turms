@@ -136,8 +136,8 @@ public class ConnectionService implements ClusterService {
                 new DefaultThreadFactory(ThreadNameConst.NODE_CONNECTION_CLIENT_IO));
         connectionRetryScheduler = Executors.newScheduledThreadPool(1,
                 new NamedThreadFactory(ThreadNameConst.NODE_CONNECTION_RETRY, true));
-        keepaliveThread = new NamedThreadFactory(ThreadNameConst.NODE_CONNECTION_KEEPALIVE, true)
-                .newThread(() -> {
+        keepaliveThread = NamedThreadFactory.newThread(ThreadNameConst.NODE_CONNECTION_KEEPALIVE, true,
+                () -> {
                     sendKeepaliveToConnectionsForever();
                     LOGGER.warn("Keepalive thread has been stopped");
                 });

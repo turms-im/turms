@@ -22,8 +22,10 @@ import com.mongodb.ExplainVerbosity;
 import com.mongodb.MongoNamespace;
 import com.mongodb.client.model.Collation;
 import com.mongodb.internal.async.AsyncBatchCursor;
+import com.mongodb.internal.client.model.FindOptions;
 import com.mongodb.internal.operation.AsyncExplainableReadOperation;
 import com.mongodb.internal.operation.AsyncReadOperation;
+import com.mongodb.internal.operation.FindOperation;
 import com.mongodb.internal.operation.TurmsFindOperation;
 import com.mongodb.lang.Nullable;
 import com.mongodb.reactivestreams.client.ClientSession;
@@ -43,8 +45,7 @@ import static com.mongodb.assertions.Assertions.notNull;
 /**
  * @author James Chen
  * @implNote The heavy objects that we have eliminated:
- * 1. FindOptions
- * 2. FindOperation
+ * 1. {@link FindOptions} and {@link FindOperation}
  * 3. A lot of intermediate operations
  * 4. A lot of intermediate objects (especially documents)
  * @see FindPublisherImpl

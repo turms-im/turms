@@ -17,7 +17,7 @@
 
 package unit.im.turms.server.common.infra.reactor;
 
-import im.turms.server.common.infra.reactor.ReactorUtil;
+import im.turms.server.common.infra.reactor.PublisherUtil;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -37,16 +37,16 @@ class ReactorUtilTests {
         List<Mono<Boolean>> allTrue = List.of(Mono.just(true), Mono.just(true), Mono.just(true));
         List<Mono<Boolean>> empty = Collections.emptyList();
 
-        StepVerifier.create(ReactorUtil.areAllTrue(allFalse))
+        StepVerifier.create(PublisherUtil.areAllTrue(allFalse))
                 .expectNext(false)
                 .verifyComplete();
-        StepVerifier.create(ReactorUtil.areAllTrue(notAllTrue))
+        StepVerifier.create(PublisherUtil.areAllTrue(notAllTrue))
                 .expectNext(false)
                 .verifyComplete();
-        StepVerifier.create(ReactorUtil.areAllTrue(allTrue))
+        StepVerifier.create(PublisherUtil.areAllTrue(allTrue))
                 .expectNext(true)
                 .verifyComplete();
-        StepVerifier.create(ReactorUtil.areAllTrue(empty))
+        StepVerifier.create(PublisherUtil.areAllTrue(empty))
                 .expectNext(false)
                 .verifyComplete();
     }
@@ -58,16 +58,16 @@ class ReactorUtilTests {
         List<Mono<Boolean>> allTrue = List.of(Mono.just(true), Mono.just(true), Mono.just(true));
         List<Mono<Boolean>> empty = Collections.emptyList();
 
-        StepVerifier.create(ReactorUtil.atLeastOneTrue(allFalse))
+        StepVerifier.create(PublisherUtil.atLeastOneTrue(allFalse))
                 .expectNext(false)
                 .verifyComplete();
-        StepVerifier.create(ReactorUtil.atLeastOneTrue(notAllTrue))
+        StepVerifier.create(PublisherUtil.atLeastOneTrue(notAllTrue))
                 .expectNext(true)
                 .verifyComplete();
-        StepVerifier.create(ReactorUtil.atLeastOneTrue(allTrue))
+        StepVerifier.create(PublisherUtil.atLeastOneTrue(allTrue))
                 .expectNext(true)
                 .verifyComplete();
-        StepVerifier.create(ReactorUtil.atLeastOneTrue(empty))
+        StepVerifier.create(PublisherUtil.atLeastOneTrue(empty))
                 .expectNext(false)
                 .verifyComplete();
     }

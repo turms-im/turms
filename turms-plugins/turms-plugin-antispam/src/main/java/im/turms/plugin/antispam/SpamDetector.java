@@ -21,6 +21,7 @@ import im.turms.plugin.antispam.ac.AhoCorasickDoubleArrayTrie;
 import im.turms.server.common.infra.lang.FastStringBuilder;
 import im.turms.server.common.infra.lang.StringUtil;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
@@ -28,7 +29,10 @@ import java.util.Arrays;
  */
 public class SpamDetector extends AhoCorasickDoubleArrayTrie {
 
-    public static final byte UNWANTED_WORD_DELIMITER = 0x1E; // "Record Separator"
+    /**
+     * "Record Separator"
+     */
+    public static final byte UNWANTED_WORD_DELIMITER = 0x1E;
 
     private final TextPreprocessor textPreprocessor;
 
@@ -37,6 +41,7 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
         this.textPreprocessor = textPreprocessor;
     }
 
+    @Nullable
     public String mask(String str, byte mask) {
         char code;
         Object newChars;
@@ -138,6 +143,7 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
     /**
      * @param maxNumberOfUnwantedWordsToReturn should be greater than 0
      */
+    @Nullable
     public String findUnwantedWords(String text, int maxNumberOfUnwantedWordsToReturn) {
         char code;
         Object newChars;

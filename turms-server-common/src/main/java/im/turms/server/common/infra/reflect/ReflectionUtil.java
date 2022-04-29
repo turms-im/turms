@@ -38,6 +38,7 @@ public final class ReflectionUtil {
      * "UNSAFE.objectFieldOffset(AccessibleObject.class.getDeclaredField("override"))" won't work
      * because Java hides {@link java.lang.reflect.AccessibleObject#override} in
      * https://bugs.openjdk.java.net/browse/JDK-8210522
+     * https://github.com/openjdk/jdk/commit/9c70e26c146ae4c5a2e2311948efec9bf662bb8c
      * So we get the offset via:
      * "jdk.internal.misc.Unsafe#objectFieldOffset(AccessibleObject.class, "override")"
      */

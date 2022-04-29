@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.property.metadata.Description;
@@ -119,10 +118,8 @@ public class TurmsPropertiesInspector {
             CLASS_TO_NAME_TO_FIELD.put(classAndFields.getKey(), nameToField);
         }
         FIELD_TO_CONSTRAINTS = fieldToConstraints;
-        METADATA = ImmutableMap
-                .copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, false));
-        ONLY_MUTABLE_METADATA = ImmutableMap
-                .copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, true));
+        METADATA = getMetadata(new HashMap<>(32), TurmsProperties.class, false);
+        ONLY_MUTABLE_METADATA = getMetadata(new HashMap<>(32), TurmsProperties.class, true);
     }
 
     private TurmsPropertiesInspector() {

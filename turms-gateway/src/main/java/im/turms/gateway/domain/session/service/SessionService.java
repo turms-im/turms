@@ -54,7 +54,7 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.SessionProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
-import im.turms.server.common.infra.reactor.ReactorUtil;
+import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
 import io.micrometer.core.instrument.Counter;
@@ -304,7 +304,7 @@ public class SessionService implements ISessionService {
                     DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
                     closeReason));
         }
-        return ReactorUtil.atLeastOneTrue(list);
+        return PublisherUtil.atLeastOneTrue(list);
     }
 
     /**
@@ -651,7 +651,7 @@ public class SessionService implements ISessionService {
                         return PublisherPool.TRUE;
                     }));
         }
-        return ReactorUtil.areAllTrue(disconnectionRequests);
+        return PublisherUtil.areAllTrue(disconnectionRequests);
     }
 
     public void onSessionEstablished(@NotNull UserSessionsManager userSessionsManager,

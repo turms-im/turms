@@ -46,9 +46,6 @@ public final class TurmsRequestParser {
     private TurmsRequestParser() {
     }
 
-    /**
-     * @implNote {@link CodedInputStream} is efficient because it reuses the underlying buffer
-     */
     public static SimpleTurmsRequest parseSimpleRequest(CodedInputStream turmsRequestInputStream) {
         Assert.notNull(turmsRequestInputStream, "turmsRequestInputStream must not be null");
         try {

@@ -94,7 +94,11 @@ public class OsConfigurationAdvisor {
             if (!Files.exists(path)) {
                 return null;
             }
-            return Integer.parseInt(readLine(path));
+            String line = readLine(path);
+            if (line == null) {
+                return null;
+            }
+            return Integer.parseInt(line);
         } catch (Exception ignored) {
             return null;
         }

@@ -28,6 +28,13 @@ public enum LogLevel {
     ERROR,
     FATAL;
 
+    public static final int TRACE_VALUE = 0;
+    public static final int DEBUG_VALUE = 1;
+    public static final int INFO_VALUE = 2;
+    public static final int WARN_VALUE = 3;
+    public static final int ERROR_VALUE = 4;
+    public static final int FATAL_VALUE = 5;
+
     public boolean isLoggable(LogLevel enabledLevel) {
         return enabledLevel.ordinal() <= ordinal();
     }

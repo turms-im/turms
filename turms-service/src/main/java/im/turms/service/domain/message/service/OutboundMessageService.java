@@ -29,7 +29,7 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.proto.ProtoEncoder;
 import im.turms.server.common.infra.reactor.PublisherPool;
-import im.turms.server.common.infra.reactor.ReactorUtil;
+import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -214,7 +214,7 @@ public class OutboundMessageService {
             Set<Long> recipientIds = nodeIdToRecipientIds.get(nodeId);
             monos.add(forwardClientMessageToNode(messageData, nodeId, recipientIds));
         }
-        return ReactorUtil.atLeastOneTrue(monos)
+        return PublisherUtil.atLeastOneTrue(monos)
                 .doFinally(signal -> messageData.release());
     }
 
@@ -238,7 +238,7 @@ public class OutboundMessageService {
         for (String nodeId : nodeIds) {
             monos.add(node.getRpcService().requestResponse(nodeId, request));
         }
-        return ReactorUtil.atLeastOneTrue(monos)
+        return PublisherUtil.atLeastOneTrue(monos)
                 .doFinally(signal -> messageData.release());
     }
 

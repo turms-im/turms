@@ -154,8 +154,7 @@ public class ClientFakingManager {
         int jitter = userCount / 10;
         Range<Long> fakedNumberRange = Range
                 .closedOpen(Math.max(0, userIdRange.lowerEndpoint() - jitter), userIdRange.upperEndpoint() + jitter);
-        NamedThreadFactory threadFactory = new NamedThreadFactory(ThreadNameConst.FAKE_CLIENT_MANAGER, true);
-        thread = threadFactory.newThread(() -> {
+        thread = NamedThreadFactory.newThread(ThreadNameConst.FAKE_CLIENT_MANAGER, true, () -> {
             Iterator<TurmsClient> clientIterator = Iterators.cycle(clients);
             Set<String> excludedRequestNames = Set.of(RandomRequestFactory.CREATE_SESSION_REQUEST_FILED_NAME,
                     RandomRequestFactory.DELETE_SESSION_REQUEST_FILED_NAME);

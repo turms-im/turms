@@ -60,13 +60,13 @@ import java.util.function.Consumer;
  * add "log time" for each action to distinguish which actions come first,
  * which makes thing complex, we will implement it in the future)
  * <p>
- * By comparing the latest log id, and fetching and applying the delta logs,
+ * By comparing the latest log ID, fetching and applying the delta logs,
  * other nodes can get a weak consistent map of blocklist.
  * <p>
  * If a node just starts, or lags behind and cannot catch up,
  * it will perform a full sync (We do NOT support sync by cursor currently).
  * <p>
- * The implementation of blocklist is similar to the one of replicated map,
+ * The implementation of blocklist is similar to the implementation of replicated map,
  * and both of them use a full map and logs to perform full and delta sync.
  * <p>
  * Data in Redis, taking IP blocklist as an example:
@@ -112,7 +112,7 @@ public class BlocklistServiceManager<T> {
     private final Consumer<T> onTargetBlocked;
 
     /**
-     * Used to check if a user is blocked or not fastly
+     * Used to check if a user is blocked or not quickly
      */
     private final ConcurrentHashMap<T, Long> blockedClientIdToBlockEndTime;
     /**

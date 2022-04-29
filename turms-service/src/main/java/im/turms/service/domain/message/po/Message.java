@@ -27,6 +27,7 @@ import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import im.turms.server.common.storage.mongo.entity.annotation.TieredStorage;
 import lombok.Data;
 
+import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.List;
 
@@ -122,6 +123,7 @@ public final class Message extends BaseEntity {
     @Field(Fields.PRE_MESSAGE_ID)
     private final Long preMessageId;
 
+    @Nullable
     public Long groupId() {
         return isGroupMessage != null && isGroupMessage ? targetId : null;
     }

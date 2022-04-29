@@ -33,9 +33,14 @@ public class NamedThreadFactory implements ThreadFactory {
 
     @Override
     public Thread newThread(Runnable runnable) {
+        return newThread(name, daemon, runnable);
+    }
+
+    public static Thread newThread(String name, boolean daemon, Runnable runnable) {
         Thread thread = new Thread(runnable);
         thread.setName(name);
         thread.setDaemon(daemon);
         return thread;
     }
+
 }

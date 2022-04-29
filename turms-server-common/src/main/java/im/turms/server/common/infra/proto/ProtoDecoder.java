@@ -32,7 +32,8 @@ public final class ProtoDecoder {
     }
 
     /**
-     * @implNote Don't use {@link CodedInputStream#newInstance(InputStream)}
+     * @implNote 1. {@link CodedInputStream} is efficient because it reuses the underlying buffers
+     * 2. Don't use {@link CodedInputStream#newInstance(InputStream)}
      * for {@link io.netty.buffer.ByteBufInputStream}
      * because it is inefficient.
      */

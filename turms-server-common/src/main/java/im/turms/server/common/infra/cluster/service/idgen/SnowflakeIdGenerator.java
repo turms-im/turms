@@ -99,7 +99,7 @@ public class SnowflakeIdGenerator {
     public long nextIncreasingId() {
         // prepare each part of ID
         long sequenceNum = sequenceNumber.incrementAndGet() & SEQUENCE_NUMBER_MASK;
-        long timestamp = this.lastTimestamp.updateAndGet(lastTs -> {
+        long timestamp = lastTimestamp.updateAndGet(lastTs -> {
             // Don't let timestamp go backwards at least while this JVM is running.
             long nonBackwardsTimestamp = Math.max(lastTs, System.currentTimeMillis());
             if (sequenceNum == 0) {
@@ -127,7 +127,7 @@ public class SnowflakeIdGenerator {
     public long nextLargeGapId() {
         // prepare each part of ID
         long sequenceNum = sequenceNumber.incrementAndGet() & SEQUENCE_NUMBER_MASK;
-        long timestamp = this.lastTimestamp.updateAndGet(now -> {
+        long timestamp = lastTimestamp.updateAndGet(now -> {
             // Don't let timestamp go backwards at least while this JVM is running.
             long nonBackwardsTimestamp = Math.max(now, System.currentTimeMillis());
             if (sequenceNum == 0) {

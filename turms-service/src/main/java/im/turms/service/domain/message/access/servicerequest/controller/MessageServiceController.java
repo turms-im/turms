@@ -151,8 +151,13 @@ public class MessageServiceController {
                     if (hasDataForRecipients) {
                         TurmsRequest dataForRecipients = clientRequest.turmsRequest();
                         if (messageService.getTimeType() == TimeType.LOCAL_SERVER_TIME) {
-                            dataForRecipients = clientRequest.turmsRequest().toBuilder()
-                                    .setCreateMessageRequest(request.toBuilder().setDeliveryDate(System.currentTimeMillis()))
+                            dataForRecipients = ClientMessagePool
+                                    .getTurmsRequestBuilder()
+                                    .mergeFrom(clientRequest.turmsRequest())
+                                    .setCreateMessageRequest(ClientMessagePool
+                                            .getCreateMessageRequestBuilder()
+                                            .mergeFrom(request)
+                                            .setDeliveryDate(System.currentTimeMillis()))
                                     .build();
                         }
                         return RequestHandlerResultFactory.get(
@@ -165,18 +170,22 @@ public class MessageServiceController {
                     }
                     TurmsRequest dataForRecipients;
                     if (request.hasMessageId()) {
-                        dataForRecipients = clientRequest.turmsRequest()
-                                .toBuilder()
+                        dataForRecipients = ClientMessagePool
+                                .getTurmsRequestBuilder()
+                                .mergeFrom(clientRequest.turmsRequest())
                                 .setCreateMessageRequest(ProtoModelConvertor.cloneAndFillMessageRequest(request, message))
                                 .build();
                     } else {
-                        CreateMessageRequest.Builder requestBuilder = request.toBuilder()
+                        CreateMessageRequest.Builder requestBuilder = ClientMessagePool
+                                .getCreateMessageRequestBuilder()
+                                .mergeFrom(request)
                                 .setMessageId(messageId);
                         if (messageService.getTimeType() == TimeType.LOCAL_SERVER_TIME) {
                             requestBuilder.setDeliveryDate(message.getDeliveryDate().getTime());
                         }
-                        dataForRecipients = clientRequest.turmsRequest()
-                                .toBuilder()
+                        dataForRecipients = ClientMessagePool
+                                .getTurmsRequestBuilder()
+                                .mergeFrom(clientRequest.turmsRequest())
                                 .setCreateMessageRequest(requestBuilder)
                                 .build();
                     }

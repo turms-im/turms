@@ -50,7 +50,7 @@ public abstract class BaseTurmsApplication {
             SpringApplication.run(applicationClass, args);
         } catch (Exception e) {
             // Note that org.springframework.boot.SpringApplication.handleRunFailure may not trigger
-            // im.turms.service.context.ApplicationContextConfig.handleContextClosedEvent
+            // im.turms.server.common.infra.context.TurmsApplicationContext.handleContextClosedEvent
             // if the context hadn't been initialized.
             if (LoggerFactory.isInitialized()) {
                 try {

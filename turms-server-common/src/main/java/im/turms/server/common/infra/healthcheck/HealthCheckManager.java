@@ -64,13 +64,14 @@ public class HealthCheckManager {
                     cpuHealthChecker.updateHealthStatus();
                     memoryHealthChecker.updateHealthStatus();
                     node.getDiscoveryService().getLocalNodeStatusManager().updateHealthStatus(isHealthy());
+                    long now = System.currentTimeMillis();
                     long previousUpdateTimestamp = lastUpdateTimestamp + intervalMillis;
-                    lastUpdateTimestamp = System.currentTimeMillis();
-                    if (previousUpdateTimestamp > lastUpdateTimestamp) {
+                    lastUpdateTimestamp = now;
+                    if (previousUpdateTimestamp > now) {
                         // There are a lof of modules heavily depending on the system time, e.g. logging, snowflake ID.
                         // So we log a warning message for troubleshooting if the time goes backwards.
                         LOGGER.warn("The system time goes backwards. The time drift is {} millis",
-                                previousUpdateTimestamp - lastUpdateTimestamp);
+                                previousUpdateTimestamp - now);
                     }
                 }, 0, intervalSeconds, TimeUnit.SECONDS);
     }

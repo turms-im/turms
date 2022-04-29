@@ -27,9 +27,9 @@ import java.util.List;
 /**
  * @author James Chen
  */
-public final class ReactorUtil {
+public final class PublisherUtil {
 
-    private ReactorUtil() {
+    private PublisherUtil() {
     }
 
     public static Mono<Boolean> areAllTrue(Mono<Boolean>... monos) {

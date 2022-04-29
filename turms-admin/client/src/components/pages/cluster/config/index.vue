@@ -88,6 +88,8 @@ import diff from 'deep-diff';
 import Skeleton from '../../../common/skeleton';
 import ClusterConfigPane from './cluster-config-pane';
 
+const WORDS_TO_UPPERCASE = ['ip'];
+
 export default {
     name: 'cluster-config',
     components: {
@@ -115,7 +117,9 @@ export default {
                 .flatMap(([title, properties]) => {
                     if (Object.keys(properties).length) {
                         return {
-                            text: this.$util.splitByCapitals(this.$util.upperFirst(title)),
+                            text: WORDS_TO_UPPERCASE.includes(title)
+                                ? title.toUpperCase()
+                                : this.$util.splitByCapitals(this.$util.upperFirst(title)),
                             key: title
                         };
                     }

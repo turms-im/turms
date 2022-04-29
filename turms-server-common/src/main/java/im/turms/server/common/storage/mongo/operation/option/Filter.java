@@ -229,12 +229,10 @@ public class Filter implements Bson {
                 if (expirationDate.getTime() > date.getValue()) {
                     doc.append("$gte", new BsonDateTime(expirationDate.getTime()));
                 }
+            } else if (doc.isEmpty()) {
+                gteOrNull(creationDateFieldName, expirationDate);
             } else {
-                if (doc.isEmpty()) {
-                    gteOrNull(creationDateFieldName, expirationDate);
-                } else {
-                    doc.append("$gte", new BsonDateTime(expirationDate.getTime()));
-                }
+                doc.append("$gte", new BsonDateTime(expirationDate.getTime()));
             }
         } else {
             gteOrNull(creationDateFieldName, expirationDate);

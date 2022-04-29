@@ -53,6 +53,7 @@ import im.turms.server.common.access.client.dto.model.user.UsersOnlineStatuses;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
+import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
 import io.netty.util.concurrent.FastThreadLocal;
 
 /**
@@ -250,6 +251,13 @@ public class ClientMessagePool {
         }
     };
 
+    private static final FastThreadLocal<UpdateUserOnlineStatusRequest.Builder> UPDATE_USER_ONLINE_STATUS_REQUEST = new FastThreadLocal<>() {
+        @Override
+        protected UpdateUserOnlineStatusRequest.Builder initialValue() {
+            return UpdateUserOnlineStatusRequest.newBuilder();
+        }
+    };
+
     private static final FastThreadLocal<UserFriendRequest.Builder> USER_FRIEND_REQUEST = new FastThreadLocal<>() {
         @Override
         protected UserFriendRequest.Builder initialValue() {
@@ -429,6 +437,10 @@ public class ClientMessagePool {
 
     public static TurmsRequest.Builder getTurmsRequestBuilder() {
         return TURMS_REQUEST.get().clear();
+    }
+
+    public static UpdateUserOnlineStatusRequest.Builder getUpdateUserOnlineStatusRequestBuilder() {
+        return UPDATE_USER_ONLINE_STATUS_REQUEST.get().clear();
     }
 
     public static UserFriendRequest.Builder getUserFriendRequestBuilder() {

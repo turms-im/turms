@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.netty;
 
+import com.google.common.annotations.VisibleForTesting;
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
@@ -51,9 +52,7 @@ public final class ByteBufUtil {
     private ByteBufUtil() {
     }
 
-    /**
-     * The method is used for debugging purposes
-     */
+    @VisibleForTesting
     public static String getString(ByteBuf buffer) {
         buffer.markReaderIndex();
         byte[] bytes = new byte[buffer.readableBytes()];
@@ -180,7 +179,7 @@ public final class ByteBufUtil {
 
     public static ByteBuf join(int estimatedSize, int delimiter, Object... elements) {
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(estimatedSize);
-        for (int i = 0, length = elements.length; i < length; i++) {
+        for (int i = 0, length = elements.length, last = length - 1; i < length; i++) {
             Object element = elements[i];
             if (element instanceof Integer num) {
                 buffer.writeBytes(NumberFormatter.toCharBytes(num));
@@ -196,7 +195,7 @@ public final class ByteBufUtil {
                 buffer.release();
                 throw new IllegalArgumentException("Unsupported type: " + element.getClass().getName());
             }
-            if (i != length - 1) {
+            if (i != last) {
                 buffer.writeByte(delimiter);
             }
         }

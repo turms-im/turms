@@ -96,13 +96,14 @@ public final class QueryOptions {
      * @implNote filter count: 2 or 0
      */
     public QueryOptions paginateIfNotNull(@Nullable Integer page, @Nullable Integer size) {
-        if (size != null) {
-            if (page == null) {
-                page = 0;
-            }
-            document.put("skip", new BsonInt32(size * page));
-            document.put("limit", new BsonInt32(size));
+        if (size == null) {
+            return this;
         }
+        if (page == null) {
+            page = 0;
+        }
+        document.put("skip", new BsonInt32(size * page));
+        document.put("limit", new BsonInt32(size));
         return this;
     }
 

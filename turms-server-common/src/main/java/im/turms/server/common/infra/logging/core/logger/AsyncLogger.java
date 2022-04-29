@@ -29,6 +29,13 @@ import org.jctools.queues.MpscUnboundedArrayQueue;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static im.turms.server.common.infra.logging.core.model.LogLevel.DEBUG_VALUE;
+import static im.turms.server.common.infra.logging.core.model.LogLevel.ERROR_VALUE;
+import static im.turms.server.common.infra.logging.core.model.LogLevel.FATAL_VALUE;
+import static im.turms.server.common.infra.logging.core.model.LogLevel.INFO_VALUE;
+import static im.turms.server.common.infra.logging.core.model.LogLevel.TRACE_VALUE;
+import static im.turms.server.common.infra.logging.core.model.LogLevel.WARN_VALUE;
+
 /**
  * @author James Chen
  */
@@ -70,32 +77,32 @@ public final class AsyncLogger implements Logger {
 
     @Override
     public boolean isTraceEnabled() {
-        return level <= 0;
+        return level <= TRACE_VALUE;
     }
 
     @Override
     public boolean isDebugEnabled() {
-        return level <= 1;
+        return level <= DEBUG_VALUE;
     }
 
     @Override
     public boolean isInfoEnabled() {
-        return level <= 2;
+        return level <= INFO_VALUE;
     }
 
     @Override
     public boolean isWarnEnabled() {
-        return level <= 3;
+        return level <= WARN_VALUE;
     }
 
     @Override
     public boolean isErrorEnabled() {
-        return level <= 4;
+        return level <= ERROR_VALUE;
     }
 
     @Override
     public boolean isFatalEnabled() {
-        return level <= 5;
+        return level <= FATAL_VALUE;
     }
 
     @Override

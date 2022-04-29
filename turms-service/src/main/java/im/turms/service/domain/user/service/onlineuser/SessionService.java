@@ -32,7 +32,7 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.reactor.PublisherPool;
-import im.turms.server.common.infra.reactor.ReactorUtil;
+import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.service.domain.common.validation.DataValidator;
@@ -85,7 +85,7 @@ public class SessionService {
                         SetUserOfflineRequest request = new SetUserOfflineRequest(userId, (Set<DeviceType>) entry.getValue(), closeStatus);
                         monos.add(node.getRpcService().requestResponse(entry.getKey(), request));
                     }
-                    return ReactorUtil.atLeastOneTrue(monos);
+                    return PublisherUtil.atLeastOneTrue(monos);
                 })
                 .defaultIfEmpty(false);
     }
@@ -124,7 +124,7 @@ public class SessionService {
                             monos.add(node.getRpcService().requestResponse(entry.getKey(), request));
                         }
                     }
-                    return ReactorUtil.atLeastOneTrue(monos);
+                    return PublisherUtil.atLeastOneTrue(monos);
                 })
                 .defaultIfEmpty(false);
     }
@@ -163,7 +163,7 @@ public class SessionService {
                 for (Long userId : userIds) {
                     monos.add(disconnect(userId, closeStatus));
                 }
-                yield ReactorUtil.atLeastOneTrue(monos);
+                yield PublisherUtil.atLeastOneTrue(monos);
             }
         };
     }
@@ -189,7 +189,7 @@ public class SessionService {
                 for (Long userId : userIds) {
                     monos.add(disconnect(userId, deviceTypes, closeStatus));
                 }
-                yield ReactorUtil.atLeastOneTrue(monos);
+                yield PublisherUtil.atLeastOneTrue(monos);
             }
         };
     }
