@@ -37,6 +37,7 @@ import org.bson.BsonValue;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mapping.PreferredConstructor;
 import org.springframework.data.mapping.model.PreferredConstructorDiscoverer;
+import org.springframework.data.util.Pair;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
@@ -46,8 +47,6 @@ import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,6 +61,9 @@ public final class MongoEntityFactory {
 
     public <T> MongoEntity<T> parse(Class<T> clazz) {
         PreferredConstructor<T, ?> constructor = PreferredConstructorDiscoverer.discover(clazz);
+        if (constructor == null) {
+            throw new IllegalArgumentException("Cannot find a preferred constructor for the class: " + clazz.getName());
+        }
         EntityFieldsInfo entityFieldsInfo = parseFields(clazz, constructor, clazz.getDeclaredMethods());
         ShardKey shardKey = parseShardKey(clazz);
         String collectionName = parseCollectionName(clazz);
@@ -201,14 +203,13 @@ public final class MongoEntityFactory {
             Class keyClass = null;
             Class elementClass = null;
             if (Iterable.class.isAssignableFrom(fieldClass)) {
-                elementClass = (Class) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+                elementClass = ReflectionUtil.getIterableElementClass(field);
             } else if (Map.class.isAssignableFrom(fieldClass)) {
-                ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
-                Type[] actualTypes = parameterizedType.getActualTypeArguments();
-                keyClass = (Class) actualTypes[0];
-                elementClass = (Class) actualTypes[1];
+                Pair<Class<?>, Class<?>> keyAndElement = ReflectionUtil.getMapKeyClassAndElementClass(field);
+                keyClass = keyAndElement.getFirst();
+                elementClass = keyAndElement.getSecond();
             }
-            // Id and field name
+            // ID and field name
             String fieldName = parseFieldName(field);
             boolean isIdField = field.isAnnotationPresent(Id.class);
             if (isIdField) {

@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -92,7 +92,7 @@ public final class ThrowableUtil {
                 runnable.run();
             } catch (Exception e) {
                 if (exceptions == null) {
-                    exceptions = new ArrayList<>(4);
+                    exceptions = new LinkedList<>();
                 }
                 exceptions.add(e);
             }

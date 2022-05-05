@@ -17,6 +17,7 @@
 
 package im.turms.server.common.domain.observation.model;
 
+import im.turms.server.common.domain.observation.exception.DumpIllegalStateException;
 import jdk.jfr.Recording;
 import jdk.jfr.RecordingState;
 import lombok.SneakyThrows;
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Date;
 
 /**
@@ -44,20 +46,21 @@ public record RecordingSession(
                 ? Date.from(recording.getStopTime()) : null;
     }
 
-    public File getFile() {
-        return recording().getDestination().toFile();
+    public Path getFilePath() {
+        return recording().getDestination();
     }
 
-    public File getFile(File tempFile) throws IOException {
+    public Path getFilePath(File tempFile) throws IOException {
         synchronized (recording) {
             RecordingState state = recording.getState();
             if (state == RecordingState.RUNNING) {
-                recording.dump(tempFile.toPath());
-                return tempFile;
+                Path destination = tempFile.toPath();
+                recording.dump(destination);
+                return destination;
             } else if (state == RecordingState.STOPPED || state == RecordingState.CLOSED) {
-                return recording.getDestination().toFile();
+                return recording.getDestination();
             } else {
-                throw new IllegalStateException("Failed to dump the recording ["
+                throw new DumpIllegalStateException("Failed to dump the recording ["
                         + id
                         + "] because it is in the state of \""
                         + state

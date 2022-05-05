@@ -17,12 +17,16 @@
 
 package im.turms.server.common.domain.observation.access.admin.controller;
 
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.domain.observation.access.admin.dto.response.MetricDTO;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.io.ByteBufFileResource;
 import im.turms.server.common.infra.metrics.CsvReporter;
 import im.turms.server.common.infra.metrics.MetricsPool;
 import io.micrometer.core.instrument.Meter;
@@ -33,17 +37,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.prometheus.client.exporter.common.TextFormat;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -55,20 +50,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * We implement our own metrics endpoint for better performance and fine-grained control
- * (the MetricsEndpoint of Spring has a terrible performance)
- *
- * @author James Chen
- * @see org.springframework.boot.actuate.autoconfigure.metrics.MetricsEndpointAutoConfiguration
- * @see org.springframework.boot.actuate.endpoint.web.reactive.AbstractWebFluxEndpointHandlerMapping
- * @see org.springframework.boot.actuate.metrics.MetricsEndpoint
- */
-@RestController
-@RequestMapping("/metrics")
-public class MetricsController {
+import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_CSV_UTF_8;
+import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_PLAIN_UTF_8;
 
-    private static final MediaType MEDIA_TYPE_CSV = MediaType.parseMediaType("text/csv");
+/**
+ * @author James Chen
+ */
+@RestController("metrics")
+public class MetricsController {
 
     private final MetricsPool pool;
     private final PrometheusMeterRegistry prometheusMeterRegistry;
@@ -85,11 +74,10 @@ public class MetricsController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDTO<Collection<MetricDTO>>> getMetrics(@RequestParam(required = false) Set<String> names,
-                                                                         @RequestParam(required = false) List<String> tags,
-                                                                         @RequestParam(defaultValue = "false") Boolean returnDescription,
-                                                                         @RequestParam(defaultValue = "false")
-                                                                                 Boolean returnAvailableTags) {
+    public HttpHandlerResult<ResponseDTO<Collection<MetricDTO>>> getMetrics(@QueryParam(required = false) Set<String> names,
+                                                                            @QueryParam(required = false) List<String> tags,
+                                                                            boolean returnDescription,
+                                                                            boolean returnAvailableTags) {
         boolean isNamesEmpty = CollectionUtils.isEmpty(names);
         if (isNamesEmpty) {
             if (!CollectionUtils.isEmpty(tags)) {
@@ -104,7 +92,7 @@ public class MetricsController {
                     .stream()
                     .map(meters -> meters2Dto(meters.get(0).getId().getName(), meters, returnDescription, returnAvailableTags))
                     .collect(CollectorUtil.toList(metersList.size()));
-            return ResponseFactory.okIfTruthy(list);
+            return HttpHandlerResult.okIfTruthy(list);
         }
         List<MetricDTO> list = new ArrayList<>(names.size());
         for (String name : names) {
@@ -118,28 +106,24 @@ public class MetricsController {
                 list.add(meters2Dto(name, meters, returnDescription, returnAvailableTags));
             }
         }
-        return ResponseFactory.okIfTruthy(list);
+        return HttpHandlerResult.okIfTruthy(list);
     }
 
-    @GetMapping("/names")
-    public ResponseEntity<ResponseDTO<Collection<String>>> getNames() {
+    @GetMapping("names")
+    public HttpHandlerResult<ResponseDTO<Collection<String>>> getNames() {
         Set<String> names = pool.collectNames();
-        return ResponseFactory.okIfTruthy(names);
+        return HttpHandlerResult.okIfTruthy(names);
     }
 
-    @GetMapping("/csv")
-    @ApiResponse(content = @Content(schema = @Schema(implementation = String.class)))
-    public ResponseEntity<ByteBuf> getCsv(@RequestParam(required = false) Set<String> names) {
+    @GetMapping(value = "csv", produces = TEXT_CSV_UTF_8)
+    public ByteBufFileResource getCsv(Set<String> names) {
         ByteBuf csv = CsvReporter.scrape(pool, names);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"turms-metrics.csv\"")
-                .contentType(MEDIA_TYPE_CSV)
-                .body(csv);
+        return new ByteBufFileResource("turms-metrics.csv", csv);
     }
 
-    @GetMapping("/prometheus")
-    @ApiResponse(content = @Content(schema = @Schema(implementation = String.class)))
-    public ByteBuf scrape(@RequestParam(required = false) Set<String> names) throws IOException {
+    @GetMapping(value = "prometheus", produces = TEXT_PLAIN_UTF_8)
+    @Schema(implementation = String.class)
+    public ByteBuf scrape(@QueryParam(required = false) Set<String> names) throws IOException {
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(expectedPrometheusDataSize);
         Writer writer = new OutputStreamWriter(new ByteBufOutputStream(buffer));
         prometheusMeterRegistry.scrape(writer, TextFormat.CONTENT_TYPE_OPENMETRICS_100, names);
@@ -152,7 +136,10 @@ public class MetricsController {
         return buffer;
     }
 
-    private MetricDTO meters2Dto(String name, Collection<Meter> meters, boolean returnDescription, boolean returnAvailableTags) {
+    private MetricDTO meters2Dto(String name,
+                                 Collection<Meter> meters,
+                                 boolean returnDescription,
+                                 boolean returnAvailableTags) {
         Meter.Id meterId = meters.iterator().next().getId();
         String description = returnDescription
                 ? meterId.getDescription()

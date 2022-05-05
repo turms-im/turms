@@ -22,7 +22,6 @@ package im.turms.server.common.infra.address;
  */
 public record AddressCollection(
         String memberHost,
-        String metricsApiAddress,
         String adminApiAddress,
         String wsAddress,
         String tcpAddress,

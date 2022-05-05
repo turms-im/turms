@@ -17,13 +17,20 @@
 
 package im.turms.service.domain.user.access.admin.controller.relationship;
 
+import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.PaginationDTO;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
+import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
+import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PostMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
-import im.turms.server.common.domain.common.dto.response.DeleteResultDTO;
-import im.turms.server.common.domain.common.dto.response.PaginationDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
@@ -31,15 +38,6 @@ import im.turms.service.domain.user.access.admin.dto.request.AddFriendRequestDTO
 import im.turms.service.domain.user.access.admin.dto.request.UpdateFriendRequestDTO;
 import im.turms.service.domain.user.access.admin.dto.response.UserFriendRequestDTO;
 import im.turms.service.domain.user.service.UserFriendRequestService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -55,8 +53,7 @@ import static im.turms.server.common.access.admin.permission.AdminPermission.USE
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/users/relationships/friend-requests")
+@RestController("users/relationships/friend-requests")
 public class UserFriendRequestController extends BaseController {
 
     private final UserFriendRequestService userFriendRequestService;
@@ -68,7 +65,7 @@ public class UserFriendRequestController extends BaseController {
 
     @PostMapping
     @RequiredPermission(USER_FRIEND_REQUEST_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<UserFriendRequestDTO>>> createFriendRequest(
+    public Mono<HttpHandlerResult<ResponseDTO<UserFriendRequestDTO>>> createFriendRequest(
             @RequestBody AddFriendRequestDTO addFriendRequestDTO) {
         Mono<UserFriendRequestDTO> createMono = userFriendRequestService.createFriendRequest(
                         addFriendRequestDTO.id(),
@@ -80,23 +77,23 @@ public class UserFriendRequestController extends BaseController {
                         addFriendRequestDTO.responseDate(),
                         addFriendRequestDTO.reason())
                 .map(request -> new UserFriendRequestDTO(request, userFriendRequestService.getEntityExpirationDate()));
-        return ResponseFactory.okIfTruthy(createMono);
+        return HttpHandlerResult.okIfTruthy(createMono);
     }
 
     @GetMapping
     @RequiredPermission(USER_FRIEND_REQUEST_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<UserFriendRequestDTO>>>> queryFriendRequests(
-            @RequestParam(required = false) Set<Long> ids,
-            @RequestParam(required = false) Set<Long> requesterIds,
-            @RequestParam(required = false) Set<Long> recipientIds,
-            @RequestParam(required = false) Set<RequestStatus> statuses,
-            @RequestParam(required = false) Date creationDateStart,
-            @RequestParam(required = false) Date creationDateEnd,
-            @RequestParam(required = false) Date responseDateStart,
-            @RequestParam(required = false) Date responseDateEnd,
-            @RequestParam(required = false) Date expirationDateStart,
-            @RequestParam(required = false) Date expirationDateEnd,
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<Collection<UserFriendRequestDTO>>>> queryFriendRequests(
+            @QueryParam(required = false) Set<Long> ids,
+            @QueryParam(required = false) Set<Long> requesterIds,
+            @QueryParam(required = false) Set<Long> recipientIds,
+            @QueryParam(required = false) Set<RequestStatus> statuses,
+            @QueryParam(required = false) Date creationDateStart,
+            @QueryParam(required = false) Date creationDateEnd,
+            @QueryParam(required = false) Date responseDateStart,
+            @QueryParam(required = false) Date responseDateEnd,
+            @QueryParam(required = false) Date expirationDateStart,
+            @QueryParam(required = false) Date expirationDateEnd,
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Flux<UserFriendRequestDTO> userFriendRequestFlux = userFriendRequestService.queryFriendRequests(
                         ids,
@@ -109,24 +106,24 @@ public class UserFriendRequestController extends BaseController {
                         0,
                         size)
                 .map(request -> new UserFriendRequestDTO(request, userFriendRequestService.getEntityExpirationDate()));
-        return ResponseFactory.okIfTruthy(userFriendRequestFlux);
+        return HttpHandlerResult.okIfTruthy(userFriendRequestFlux);
     }
 
-    @GetMapping("/page")
+    @GetMapping("page")
     @RequiredPermission(USER_FRIEND_REQUEST_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<PaginationDTO<UserFriendRequestDTO>>>> queryFriendRequests(
-            @RequestParam(required = false) Set<Long> ids,
-            @RequestParam(required = false) Set<Long> requesterIds,
-            @RequestParam(required = false) Set<Long> recipientIds,
-            @RequestParam(required = false) Set<RequestStatus> statuses,
-            @RequestParam(required = false) Date creationDateStart,
-            @RequestParam(required = false) Date creationDateEnd,
-            @RequestParam(required = false) Date responseDateStart,
-            @RequestParam(required = false) Date responseDateEnd,
-            @RequestParam(required = false) Date expirationDateStart,
-            @RequestParam(required = false) Date expirationDateEnd,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<PaginationDTO<UserFriendRequestDTO>>>> queryFriendRequests(
+            @QueryParam(required = false) Set<Long> ids,
+            @QueryParam(required = false) Set<Long> requesterIds,
+            @QueryParam(required = false) Set<Long> recipientIds,
+            @QueryParam(required = false) Set<RequestStatus> statuses,
+            @QueryParam(required = false) Date creationDateStart,
+            @QueryParam(required = false) Date creationDateEnd,
+            @QueryParam(required = false) Date responseDateStart,
+            @QueryParam(required = false) Date responseDateEnd,
+            @QueryParam(required = false) Date expirationDateStart,
+            @QueryParam(required = false) Date expirationDateEnd,
+            int page,
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Mono<Long> count = userFriendRequestService.countFriendRequests(
                 ids,
@@ -147,13 +144,13 @@ public class UserFriendRequestController extends BaseController {
                         page,
                         size)
                 .map(request -> new UserFriendRequestDTO(request, userFriendRequestService.getEntityExpirationDate()));
-        return ResponseFactory.page(count, userFriendRequestFlux);
+        return HttpHandlerResult.page(count, userFriendRequestFlux);
     }
 
     @PutMapping
     @RequiredPermission(USER_FRIEND_REQUEST_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateFriendRequests(
-            @RequestParam Set<Long> ids,
+    public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateFriendRequests(
+            Set<Long> ids,
             @RequestBody UpdateFriendRequestDTO updateFriendRequestDTO) {
         Mono<UpdateResultDTO> updateMono = userFriendRequestService.updateFriendRequests(
                         ids,
@@ -165,16 +162,16 @@ public class UserFriendRequestController extends BaseController {
                         updateFriendRequestDTO.creationDate(),
                         updateFriendRequestDTO.responseDate())
                 .map(UpdateResultDTO::get);
-        return ResponseFactory.okIfTruthy(updateMono);
+        return HttpHandlerResult.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(USER_FRIEND_REQUEST_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteFriendRequests(@RequestParam(required = false) Set<Long> ids) {
+    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteFriendRequests(@QueryParam(required = false) Set<Long> ids) {
         Mono<DeleteResultDTO> deleteMono = userFriendRequestService
                 .deleteFriendRequests(ids)
                 .map(DeleteResultDTO::get);
-        return ResponseFactory.okIfTruthy(deleteMono);
+        return HttpHandlerResult.okIfTruthy(deleteMono);
     }
 
 }

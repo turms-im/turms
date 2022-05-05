@@ -25,7 +25,6 @@ import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
-import org.springframework.boot.actuate.endpoint.InvalidEndpointRequestException;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
@@ -125,9 +124,7 @@ public class MetricsPool {
         for (String tag : tags) {
             String[] parts = StringUtils.split(tag, ":");
             if (parts == null) {
-                throw new InvalidEndpointRequestException(
-                        "Each tag parameter must be in the form 'key:value' but was: " + tag,
-                        "Each tag parameter must be in the form 'key:value'");
+                throw new IllegalArgumentException("Each tag parameter must be in the form 'key:value' but was: " + tag);
             }
             tagList.add(Tag.of(parts[0], parts[1]));
         }

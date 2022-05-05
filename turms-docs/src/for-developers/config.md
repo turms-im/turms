@@ -54,7 +54,7 @@ Turms属性分为三大类配置：Turms Service配置、Turms Gateway配置，�
 
 | 类别      | 类                            | 字段名              | 描述                                                         |
 | --------- | ----------------------------- | ------------------- | ------------------------------------------------------------ |
-| 管理员API | AddressProperties             | metricsApiAddress   | 度量API地址相关配置                                          |
+| 管理员API | AdminApiProperties            | adminApi            | 管理员API接口相关配置                                        |
 | 客户端API | ClientApiProperties           | clientApi           | 面向客户端的HTTP接入层相关配置（即ReasonController的相关配置） |
 |           | NotificationLoggingProperties | notificationLogging | 通知日志相关配置                                             |
 | 服务接口  | UdpProperties                 | udp                 | UDP服务端相关配置                                            |

@@ -24,7 +24,6 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 
@@ -34,7 +33,6 @@ import javax.validation.constraints.Min;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Data
-@NoArgsConstructor
 public class AdminApiProperties extends CommonAdminApiProperties {
 
     @Description("Whether to allow administrators to delete data without any filter. " +
@@ -86,5 +84,9 @@ public class AdminApiProperties extends CommonAdminApiProperties {
     @MutableProperty
     @Min(0)
     private int defaultAvailableRecordsPerRequest = 10;
+
+    public AdminApiProperties() {
+        http.setPort(8510);
+    }
 
 }

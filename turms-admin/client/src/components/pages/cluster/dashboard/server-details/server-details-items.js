@@ -42,9 +42,6 @@ export default [
         formatter: (item) => `${item.memberHost}:${item.memberPort}`
     },
     {
-        dataIndex: 'metricsApiAddress'
-    },
-    {
         dataIndex: 'adminApiAddress'
     },
     {

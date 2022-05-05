@@ -22,7 +22,6 @@ import im.turms.server.common.infra.address.PublicIpManager;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.AddressProperties;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,10 +31,11 @@ import org.springframework.stereotype.Component;
 public class ServiceAddressManager extends BaseServiceAddressManager {
 
     public ServiceAddressManager(
-            ServerProperties adminApiServerProperties,
             PublicIpManager publicIpManager,
             TurmsPropertiesManager propertiesManager) {
-        super(adminApiServerProperties, publicIpManager, propertiesManager);
+        super(propertiesManager.getLocalProperties().getService().getAdminApi().getHttp(),
+                publicIpManager,
+                propertiesManager);
     }
 
     @Override

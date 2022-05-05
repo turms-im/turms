@@ -29,6 +29,7 @@ import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import io.netty.buffer.ByteBuf;
@@ -73,6 +74,7 @@ public abstract class UserSessionAssembler {
             NetConnection netConnection = createConnection(connection);
             UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, address, closeIdleConnectionAfterSeconds,
                     userSession -> userSession.setNotificationConsumer((turmsNotificationBuffer, tracingContext) -> {
+                        turmsNotificationBuffer = ByteBufUtil.duplicateIfUnreleasable(turmsNotificationBuffer);
                         turmsNotificationBuffer.touch(turmsNotificationBuffer);
                         // sendObject() will release the buffer no matter it succeeds or fails
                         NettyOutbound outbound = isWebSocketConnection
@@ -110,6 +112,7 @@ public abstract class UserSessionAssembler {
                                 return Mono.empty();
                             })
                             .flatMap(turmsNotificationBuffer -> {
+                                turmsNotificationBuffer = ByteBufUtil.duplicateIfUnreleasable(turmsNotificationBuffer);
                                 NettyOutbound outbound = isWebSocketConnection
                                         ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
                                         : out.sendObject(turmsNotificationBuffer);

@@ -17,32 +17,29 @@
 
 package im.turms.server.common.domain.observation.access.admin.controller;
 
+import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
+import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
-import im.turms.server.common.domain.common.dto.response.DeleteResultDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.admin.web.HttpResponseException;
+import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PostMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
+import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.observation.access.admin.dto.request.CreateRecordingDTO;
 import im.turms.server.common.domain.observation.access.admin.dto.response.RecordingSessionDTO;
+import im.turms.server.common.domain.observation.exception.DumpIllegalStateException;
 import im.turms.server.common.domain.observation.model.RecordingSession;
 import im.turms.server.common.domain.observation.service.FlightRecordingService;
+import im.turms.server.common.infra.io.FileResource;
 import jdk.jfr.Recording;
 import jdk.jfr.RecordingState;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,8 +50,7 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/flight-recordings")
+@RestController("flight-recordings")
 public class FlightRecordingController {
 
     private final FlightRecordingService flightRecordingService;
@@ -65,8 +61,8 @@ public class FlightRecordingController {
 
     @RequiredPermission(AdminPermission.FLIGHT_RECORDING_QUERY)
     @GetMapping
-    public ResponseEntity<ResponseDTO<Collection<RecordingSessionDTO>>> getRecordings(
-            @RequestParam(required = false) Set<Long> ids) {
+    public HttpHandlerResult<ResponseDTO<Collection<RecordingSessionDTO>>> getRecordings(
+            @QueryParam(required = false) Set<Long> ids) {
         Collection<RecordingSession> sessions = ids == null
                 ? flightRecordingService.getSessions()
                 : flightRecordingService.getSessions(ids);
@@ -82,60 +78,56 @@ public class FlightRecordingController {
                     session.description()
             ));
         }
-        return ResponseFactory.okIfTruthy(result);
+        return HttpHandlerResult.okIfTruthy(result);
     }
 
     @RequiredPermission(AdminPermission.FLIGHT_RECORDING_CREATE)
     @PostMapping
-    public ResponseEntity<ResponseDTO<Long>> startRecording(@RequestBody CreateRecordingDTO createRecording) {
+    public HttpHandlerResult<ResponseDTO<Long>> startRecording(@RequestBody CreateRecordingDTO createRecording) {
         RecordingSession session = flightRecordingService.startRecording(createRecording.durationSeconds(),
                 createRecording.maxAgeSeconds(),
                 createRecording.maxSizeBytes(),
                 createRecording.delaySeconds(),
                 createRecording.customSettings(),
                 createRecording.description());
-        return ResponseFactory.okIfTruthy(session.id());
+        return HttpHandlerResult.okIfTruthy(session.id());
     }
 
     @RequiredPermission(AdminPermission.FLIGHT_RECORDING_DELETE)
     @DeleteMapping
-    public ResponseEntity<ResponseDTO<DeleteResultDTO>> deleteRecordings(
-            @RequestParam(required = false) Set<Long> ids) {
+    public HttpHandlerResult<ResponseDTO<DeleteResultDTO>> deleteRecordings(
+            @QueryParam(required = false) Set<Long> ids) {
         int deletedCount = ids == null
                 ? flightRecordingService.deleteRecordings()
                 : flightRecordingService.deleteRecordings(ids);
-        return ResponseFactory.deleteResult(deletedCount);
+        return HttpHandlerResult.deleteResult(deletedCount);
     }
 
     @RequiredPermission(AdminPermission.FLIGHT_RECORDING_UPDATE)
     @PutMapping
-    public ResponseEntity<ResponseDTO<UpdateResultDTO>> closeRecordings(
-            @RequestParam(required = false) Set<Long> ids) {
+    public HttpHandlerResult<ResponseDTO<UpdateResultDTO>> closeRecordings(
+            @QueryParam(required = false) Set<Long> ids) {
         UpdateResultDTO result = ids == null
                 ? flightRecordingService.closeRecordings()
                 : flightRecordingService.closeRecordings(ids);
-        return ResponseFactory.okIfTruthy(result);
+        return HttpHandlerResult.okIfTruthy(result);
     }
 
     @RequiredPermission(AdminPermission.FLIGHT_RECORDING_QUERY)
-    @GetMapping("/jfr")
-    public ResponseEntity<FileSystemResource> downloadJfr(
-            @RequestParam Long id,
-            @RequestParam(required = false) boolean close) {
-        FileSystemResource file;
+    @GetMapping("jfr")
+    public FileResource downloadJfr(
+            Long id,
+            boolean close) {
+        FileResource file;
         try {
             file = flightRecordingService.getRecordingFile(id, close);
-        } catch (IllegalStateException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+        } catch (DumpIllegalStateException e) {
+            throw new HttpResponseException(ResponseStatusCode.DUMP_JFR_IN_ILLEGAL_STATUS, e);
         }
         if (file == null) {
-            // Don't use 404, which is confusing
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Recording not found");
+            throw new HttpResponseException(ResponseStatusCode.RESOURCE_NOT_FOUND, "Recording not found");
         }
-        return ResponseEntity.ok()
-                .headers(headers -> headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=flight-recording-" + id + ".jfr"))
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(file);
+        return file;
     }
 
 }

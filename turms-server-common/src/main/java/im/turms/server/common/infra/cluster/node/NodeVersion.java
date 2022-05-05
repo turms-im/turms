@@ -20,6 +20,7 @@ package im.turms.server.common.infra.cluster.node;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.primitives.Ints;
 import lombok.Getter;
+import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.annotation.Transient;
 
 import java.util.Objects;
@@ -41,12 +42,14 @@ public class NodeVersion implements Comparable<NodeVersion> {
     private final byte minor;
     private final byte patch;
     private final byte qualifier;
+    private final String version;
 
     @JsonIgnore
     @Transient
-    private final int version;
+    private final int versionNumber;
 
-    public NodeVersion(byte major, byte minor, byte patch, byte qualifier) {
+    @PersistenceConstructor
+    public NodeVersion(byte major, byte minor, byte patch, byte qualifier, String version) {
         if (major < 0 || minor < 0 || patch < 0 || qualifier < 0) {
             throw new IllegalArgumentException(WRONG_VERSION_FORMAT_ERROR_MESSAGE);
         }
@@ -54,23 +57,27 @@ public class NodeVersion implements Comparable<NodeVersion> {
         this.minor = minor;
         this.patch = patch;
         this.qualifier = qualifier;
+        this.version = version;
+        versionNumber = Ints.fromBytes(major, minor, patch, qualifier);
+    }
 
-        version = Ints.fromBytes(major, minor, patch, qualifier);
+    public NodeVersion(byte major, byte minor, byte patch, byte qualifier) {
+        this(major, minor, patch, qualifier, qualifier == 0
+                ? "%d.%d.%d".formatted(major, minor, patch)
+                : "%d.%d.%d-SNAPSHOT".formatted(major, minor, patch));
     }
 
     @Override
     public int compareTo(NodeVersion that) {
-        if (version > that.version) {
+        if (versionNumber > that.versionNumber) {
             return 1;
         }
-        return version == that.version ? 0 : -1;
+        return versionNumber == that.versionNumber ? 0 : -1;
     }
 
     @Override
     public String toString() {
-        return qualifier == 0
-                ? "%d.%d.%d".formatted(major, minor, patch)
-                : "%d.%d.%d-SNAPSHOT".formatted(major, minor, patch);
+        return version;
     }
 
     @Override
@@ -82,12 +89,12 @@ public class NodeVersion implements Comparable<NodeVersion> {
             return false;
         }
         NodeVersion that = (NodeVersion) o;
-        return version == that.version;
+        return versionNumber == that.versionNumber;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(version);
+        return Objects.hash(versionNumber);
     }
 
     public static NodeVersion parse(String version) {

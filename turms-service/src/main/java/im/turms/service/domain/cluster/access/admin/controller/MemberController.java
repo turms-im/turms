@@ -17,10 +17,17 @@
 
 package im.turms.service.domain.cluster.access.admin.controller;
 
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
+import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PostMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.cluster.node.NodeVersion;
@@ -33,15 +40,6 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.cluster.access.admin.dto.request.AddMemberDTO;
 import im.turms.service.domain.cluster.access.admin.dto.request.UpdateMemberDTO;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
@@ -58,8 +56,7 @@ import static im.turms.server.common.access.admin.permission.AdminPermission.CLU
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/cluster/members")
+@RestController("cluster/members")
 public class MemberController extends BaseController {
 
     private final DiscoveryService discoveryService;
@@ -71,20 +68,20 @@ public class MemberController extends BaseController {
 
     @GetMapping
     @RequiredPermission(CLUSTER_MEMBER_QUERY)
-    public ResponseEntity<ResponseDTO<Collection<Member>>> queryMembers() {
-        return ResponseFactory.okIfTruthy(discoveryService.getAllKnownMembers().values());
+    public HttpHandlerResult<ResponseDTO<Collection<Member>>> queryMembers() {
+        return HttpHandlerResult.okIfTruthy(discoveryService.getAllKnownMembers().values());
     }
 
     @DeleteMapping
     @RequiredPermission(CLUSTER_MEMBER_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<Void>>> removeMembers(@RequestParam List<String> ids) {
+    public Mono<HttpHandlerResult<ResponseDTO<Void>>> removeMembers(List<String> ids) {
         Mono<Void> unregisterMembers = discoveryService.unregisterMembers(CollectionUtil.newSet(ids));
-        return unregisterMembers.thenReturn(ResponseFactory.OK);
+        return unregisterMembers.thenReturn(HttpHandlerResult.RESPONSE_OK);
     }
 
     @PostMapping
     @RequiredPermission(CLUSTER_MEMBER_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<Void>>> addMember(@RequestBody AddMemberDTO addMemberDTO) {
+    public Mono<HttpHandlerResult<ResponseDTO<Void>>> addMember(@RequestBody AddMemberDTO addMemberDTO) {
         String clusterId = discoveryService.getLocalMember().getClusterId();
         NodeType nodeType = addMemberDTO.nodeType();
         if (nodeType != NodeType.SERVICE && addMemberDTO.isLeaderEligible()) {
@@ -102,7 +99,6 @@ public class MemberController extends BaseController {
                 addMemberDTO.priority(),
                 addMemberDTO.memberHost(),
                 addMemberDTO.memberPort(),
-                addMemberDTO.metricsApiAddress(),
                 addMemberDTO.adminApiAddress(),
                 addMemberDTO.wsAddress(),
                 addMemberDTO.tcpAddress(),
@@ -112,13 +108,13 @@ public class MemberController extends BaseController {
                 addMemberDTO.isHealthy());
         return discoveryService
                 .registerMember(member)
-                .thenReturn(ResponseFactory.OK);
+                .thenReturn(HttpHandlerResult.RESPONSE_OK);
     }
 
     @PutMapping
     @RequiredPermission(CLUSTER_MEMBER_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<Void>>> updateMember(
-            @RequestParam String id,
+    public Mono<HttpHandlerResult<ResponseDTO<Void>>> updateMember(
+            String id,
             @RequestBody UpdateMemberDTO updateMemberDTO) {
         Mono<Void> addMemberMono = discoveryService.updateMemberInfo(
                 id,
@@ -127,30 +123,30 @@ public class MemberController extends BaseController {
                 updateMemberDTO.isLeaderEligible(),
                 updateMemberDTO.isActive(),
                 updateMemberDTO.priority());
-        return addMemberMono.thenReturn(ResponseFactory.OK);
+        return addMemberMono.thenReturn(HttpHandlerResult.RESPONSE_OK);
     }
 
     // Leader
 
-    @GetMapping("/leader")
+    @GetMapping("leader")
     @RequiredPermission(CLUSTER_LEADER_QUERY)
-    public ResponseEntity<ResponseDTO<Member>> queryLeader() {
+    public HttpHandlerResult<ResponseDTO<Member>> queryLeader() {
         Leader leader = discoveryService.getLeader();
         if (leader == null) {
             throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
         }
         String nodeId = leader.getNodeId();
         Member member = discoveryService.getAllKnownMembers().get(nodeId);
-        return ResponseFactory.okIfTruthy(member);
+        return HttpHandlerResult.okIfTruthy(member);
     }
 
-    @PostMapping("/leader")
+    @PostMapping("leader")
     @RequiredPermission(CLUSTER_LEADER_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<Member>>> electNewLeader(@RequestParam(required = false) String id) {
+    public Mono<HttpHandlerResult<ResponseDTO<Member>>> electNewLeader(@QueryParam(required = false) String id) {
         Mono<Member> leader = id == null
                 ? discoveryService.electNewLeaderByPriority()
                 : discoveryService.electNewLeaderByNodeId(id);
-        return ResponseFactory.okIfTruthy(leader);
+        return HttpHandlerResult.okIfTruthy(leader);
     }
 
 }

@@ -18,11 +18,10 @@
 package system.im.turms.service.domain.user.access.admin.controller;
 
 import helper.SpringAwareIntegrationTest;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.domain.user.po.User;
 import org.junit.jupiter.api.Test;
 
-import java.time.Instant;
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,10 +30,7 @@ class UserControllerST extends SpringAwareIntegrationTest {
 
     @Test
     void queryUsers_shouldReturnNotEmptyData() {
-        ResponseDTO<Collection<User>> response = getResponse(webClient.get()
-                .uri(builder -> builder.path("/users")
-                        .queryParam("registrationDateStart", Instant.EPOCH)
-                        .build()));
+        ResponseDTO<Collection<User>> response = getResponse("/users?registrationDateStart=2020-01-01T00:00:00Z");
         assertThat(response.getData()).isNotEmpty();
     }
 

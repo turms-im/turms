@@ -114,6 +114,9 @@
                                 <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor
                                 </annotationProcessor>
                             </annotationProcessors>
+                            <compilerArgs>
+                                <arg>-parameters</arg>
+                            </compilerArgs>
                         </configuration>
                     </plugin>
                     <plugin>

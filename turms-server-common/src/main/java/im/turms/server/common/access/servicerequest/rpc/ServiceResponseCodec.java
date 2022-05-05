@@ -17,7 +17,6 @@
 
 package im.turms.server.common.access.servicerequest.rpc;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;

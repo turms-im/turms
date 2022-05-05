@@ -146,7 +146,6 @@ public class DiscoveryService implements ClusterService {
                 (int) now.getTime(),
                 serviceAddressManager.getMemberHost(),
                 memberBindPort,
-                serviceAddressManager.getMetricsApiAddress(),
                 serviceAddressManager.getAdminApiAddress(),
                 serviceAddressManager.getWsAddress(),
                 serviceAddressManager.getTcpAddress(),
@@ -164,14 +163,12 @@ public class DiscoveryService implements ClusterService {
                 discoveryProperties.getHeartbeatIntervalSeconds());
         serviceAddressManager.addOnAddressesChangedListener(addresses -> {
             String nodeHost = addresses.memberHost();
-            String metricsApiAddress = addresses.metricsApiAddress();
             String adminApiAddress = addresses.adminApiAddress();
             String wsAddress = addresses.wsAddress();
             String tcpAddress = addresses.tcpAddress();
             String udpAddress = addresses.udpAddress();
             Update update = Update.newBuilder(6)
                     .setIfNotNull(Member.Fields.memberHost, nodeHost)
-                    .setIfNotNull(Member.Fields.metricsApiAddress, metricsApiAddress)
                     .setIfNotNull(Member.Fields.adminApiAddress, adminApiAddress)
                     .setIfNotNull(Member.Fields.wsAddress, wsAddress)
                     .setIfNotNull(Member.Fields.tcpAddress, tcpAddress)
@@ -382,8 +379,6 @@ public class DiscoveryService implements ClusterService {
                 memberToUpdate.setPriority(value.asInt32().getValue());
             } else if (fieldName.equals(Member.Fields.memberHost)) {
                 memberToUpdate.setMemberHost(value.asString().getValue());
-            } else if (fieldName.equals(Member.Fields.metricsApiAddress)) {
-                memberToUpdate.setMetricsApiAddress(value.asString().getValue());
             } else if (fieldName.equals(Member.Fields.adminApiAddress)) {
                 memberToUpdate.setAdminApiAddress(value.asString().getValue());
             } else if (fieldName.equals(Member.Fields.wsAddress)) {

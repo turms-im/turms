@@ -191,8 +191,7 @@ public class UserServiceController {
                                     .userOnlineInfo2userStatus(
                                             userIdAndSessionsStatus.getFirst(),
                                             userIdAndSessionsStatus.getSecond(),
-                                            respondOfflineIfInvisible)
-                                    .build());
+                                            respondOfflineIfInvisible));
                         }
                         return RequestHandlerResultFactory.get(ClientMessagePool
                                 .getTurmsNotificationDataBuilder()

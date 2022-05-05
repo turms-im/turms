@@ -30,7 +30,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author James Chen
@@ -70,12 +69,6 @@ public final class PrivateConversation extends BaseEntity {
             private Fields() {
             }
         }
-    }
-
-    @Data
-    @AllArgsConstructor
-    public static final class KeyList {
-        private List<Key> privateConversationKeys;
     }
 
     public static final class Fields {

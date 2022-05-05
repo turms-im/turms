@@ -17,13 +17,20 @@
 
 package im.turms.service.domain.group.access.admin.controller;
 
+import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.PaginationDTO;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
+import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
+import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PostMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
-import im.turms.server.common.domain.common.dto.response.DeleteResultDTO;
-import im.turms.server.common.domain.common.dto.response.PaginationDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
@@ -31,15 +38,6 @@ import im.turms.service.domain.group.access.admin.dto.request.AddGroupJoinReques
 import im.turms.service.domain.group.access.admin.dto.request.UpdateGroupJoinRequestDTO;
 import im.turms.service.domain.group.access.admin.dto.response.GroupJoinRequestDTO;
 import im.turms.service.domain.group.service.GroupJoinRequestService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -55,8 +53,7 @@ import static im.turms.server.common.access.admin.permission.AdminPermission.GRO
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/groups/join-requests")
+@RestController("groups/join-requests")
 public class GroupJoinRequestController extends BaseController {
 
     private final GroupJoinRequestService groupJoinRequestService;
@@ -68,7 +65,7 @@ public class GroupJoinRequestController extends BaseController {
 
     @PostMapping
     @RequiredPermission(GROUP_JOIN_REQUEST_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<GroupJoinRequestDTO>>> addGroupJoinRequest(
+    public Mono<HttpHandlerResult<ResponseDTO<GroupJoinRequestDTO>>> addGroupJoinRequest(
             @RequestBody AddGroupJoinRequestDTO addGroupJoinRequestDTO) {
         Mono<GroupJoinRequestDTO> createMono = groupJoinRequestService.createGroupJoinRequest(
                         addGroupJoinRequestDTO.id(),
@@ -80,24 +77,24 @@ public class GroupJoinRequestController extends BaseController {
                         addGroupJoinRequestDTO.creationDate(),
                         addGroupJoinRequestDTO.responseDate())
                 .map(request -> new GroupJoinRequestDTO(request, groupJoinRequestService.getEntityExpirationDate()));
-        return ResponseFactory.okIfTruthy(createMono);
+        return HttpHandlerResult.okIfTruthy(createMono);
     }
 
     @GetMapping
     @RequiredPermission(GROUP_JOIN_REQUEST_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<GroupJoinRequestDTO>>>> queryGroupJoinRequests(
-            @RequestParam(required = false) Set<Long> ids,
-            @RequestParam(required = false) Set<Long> groupIds,
-            @RequestParam(required = false) Set<Long> requesterIds,
-            @RequestParam(required = false) Set<Long> responderIds,
-            @RequestParam(required = false) Set<RequestStatus> statuses,
-            @RequestParam(required = false) Date creationDateStart,
-            @RequestParam(required = false) Date creationDateEnd,
-            @RequestParam(required = false) Date responseDateStart,
-            @RequestParam(required = false) Date responseDateEnd,
-            @RequestParam(required = false) Date expirationDateStart,
-            @RequestParam(required = false) Date expirationDateEnd,
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<Collection<GroupJoinRequestDTO>>>> queryGroupJoinRequests(
+            @QueryParam(required = false) Set<Long> ids,
+            @QueryParam(required = false) Set<Long> groupIds,
+            @QueryParam(required = false) Set<Long> requesterIds,
+            @QueryParam(required = false) Set<Long> responderIds,
+            @QueryParam(required = false) Set<RequestStatus> statuses,
+            @QueryParam(required = false) Date creationDateStart,
+            @QueryParam(required = false) Date creationDateEnd,
+            @QueryParam(required = false) Date responseDateStart,
+            @QueryParam(required = false) Date responseDateEnd,
+            @QueryParam(required = false) Date expirationDateStart,
+            @QueryParam(required = false) Date expirationDateEnd,
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Flux<GroupJoinRequestDTO> joinRequestFlux = groupJoinRequestService.queryJoinRequests(
                         ids,
@@ -111,25 +108,25 @@ public class GroupJoinRequestController extends BaseController {
                         0,
                         size)
                 .map(request -> new GroupJoinRequestDTO(request, groupJoinRequestService.getEntityExpirationDate()));
-        return ResponseFactory.okIfTruthy(joinRequestFlux);
+        return HttpHandlerResult.okIfTruthy(joinRequestFlux);
     }
 
-    @GetMapping("/page")
+    @GetMapping("page")
     @RequiredPermission(GROUP_JOIN_REQUEST_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<PaginationDTO<GroupJoinRequestDTO>>>> queryGroupJoinRequests(
-            @RequestParam(required = false) Set<Long> ids,
-            @RequestParam(required = false) Set<Long> groupIds,
-            @RequestParam(required = false) Set<Long> requesterIds,
-            @RequestParam(required = false) Set<Long> responderIds,
-            @RequestParam(required = false) Set<RequestStatus> statuses,
-            @RequestParam(required = false) Date creationDateStart,
-            @RequestParam(required = false) Date creationDateEnd,
-            @RequestParam(required = false) Date responseDateStart,
-            @RequestParam(required = false) Date responseDateEnd,
-            @RequestParam(required = false) Date expirationDateStart,
-            @RequestParam(required = false) Date expirationDateEnd,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<PaginationDTO<GroupJoinRequestDTO>>>> queryGroupJoinRequests(
+            @QueryParam(required = false) Set<Long> ids,
+            @QueryParam(required = false) Set<Long> groupIds,
+            @QueryParam(required = false) Set<Long> requesterIds,
+            @QueryParam(required = false) Set<Long> responderIds,
+            @QueryParam(required = false) Set<RequestStatus> statuses,
+            @QueryParam(required = false) Date creationDateStart,
+            @QueryParam(required = false) Date creationDateEnd,
+            @QueryParam(required = false) Date responseDateStart,
+            @QueryParam(required = false) Date responseDateEnd,
+            @QueryParam(required = false) Date expirationDateStart,
+            @QueryParam(required = false) Date expirationDateEnd,
+            int page,
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Mono<Long> count = groupJoinRequestService.countJoinRequests(
                 ids,
@@ -152,13 +149,13 @@ public class GroupJoinRequestController extends BaseController {
                         page,
                         size)
                 .map(request -> new GroupJoinRequestDTO(request, groupJoinRequestService.getEntityExpirationDate()));
-        return ResponseFactory.page(count, joinRequestFlux);
+        return HttpHandlerResult.page(count, joinRequestFlux);
     }
 
     @PutMapping
     @RequiredPermission(GROUP_JOIN_REQUEST_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateGroupJoinRequests(
-            @RequestParam Set<Long> ids,
+    public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateGroupJoinRequests(
+            Set<Long> ids,
             @RequestBody UpdateGroupJoinRequestDTO updateGroupJoinRequestDTO) {
         Mono<UpdateResultDTO> updateMono = groupJoinRequestService.updateJoinRequests(
                         ids,
@@ -169,17 +166,17 @@ public class GroupJoinRequestController extends BaseController {
                         updateGroupJoinRequestDTO.creationDate(),
                         updateGroupJoinRequestDTO.responseDate())
                 .map(UpdateResultDTO::get);
-        return ResponseFactory.okIfTruthy(updateMono);
+        return HttpHandlerResult.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(GROUP_JOIN_REQUEST_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteGroupJoinRequests(
-            @RequestParam(required = false) Set<Long> ids) {
+    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteGroupJoinRequests(
+            @QueryParam(required = false) Set<Long> ids) {
         Mono<DeleteResultDTO> deleteMono = groupJoinRequestService
                 .deleteJoinRequests(ids)
                 .map(DeleteResultDTO::get);
-        return ResponseFactory.okIfTruthy(deleteMono);
+        return HttpHandlerResult.okIfTruthy(deleteMono);
     }
 
 }

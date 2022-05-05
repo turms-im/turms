@@ -19,6 +19,7 @@ package im.turms.server.common.domain.admin.service;
 
 import com.mongodb.client.model.changestream.FullDocument;
 import im.turms.server.common.access.admin.permission.AdminPermission;
+import im.turms.server.common.access.admin.web.MethodParameterInfo;
 import im.turms.server.common.domain.admin.bo.AdminInfo;
 import im.turms.server.common.domain.admin.po.Admin;
 import im.turms.server.common.domain.common.repository.BaseRepository;
@@ -30,11 +31,10 @@ import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.security.PasswordManager;
 import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
-import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -123,23 +123,32 @@ public abstract class BaseAdminService {
     }
 
     public Mono<Boolean> isAdminAuthorized(
-            @NotNull ServerWebExchange exchange,
+            @NotNull MethodParameterInfo[] params,
+            @NotNull Object[] paramValues,
             @NotNull String account,
             @NotNull AdminPermission permission) {
         try {
-            Validator.notNull(exchange, "exchange");
+            Validator.notNull(params, "params");
+            Validator.notNull(paramValues, "paramValues");
             Validator.notNull(account, "account");
             Validator.notNull(permission, "permission");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        boolean isQueryingSelfInfo;
-        // Even if the account doesn't have the permission ADMIN_QUERY, it can still query its own information
+        boolean isQueryingSelfInfo = false;
+        // Even if the account doesn't have the permission ADMIN_QUERY,
+        // it can still query its own information
         if (permission == AdminPermission.ADMIN_QUERY) {
-            List<String> accounts = exchange.getRequest().getQueryParams().get("accounts");
-            isQueryingSelfInfo = accounts != null && accounts.size() == 1 && accounts.get(0).equals(account);
-        } else {
-            isQueryingSelfInfo = false;
+            for (int i = 0, length = params.length; i < length; i++) {
+                MethodParameterInfo param = params[i];
+                if (param.name().equals("account")) {
+                    Object value = paramValues[i];
+                    if (value instanceof Collection<?> collection && collection.size() == 1 && collection.iterator().next().equals(account)) {
+                        isQueryingSelfInfo = true;
+                    }
+                    break;
+                }
+            }
         }
         return isQueryingSelfInfo
                 ? PublisherPool.TRUE

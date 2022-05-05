@@ -31,7 +31,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 
@@ -101,9 +100,4 @@ public final class UserRelationship extends BaseEntity {
         }
     }
 
-    @Data
-    @AllArgsConstructor
-    public static final class KeyList {
-        private List<Key> keys;
-    }
 }

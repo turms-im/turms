@@ -81,7 +81,7 @@ services:
         -Dturms.gateway.redis.ip-blocklist.uri=redis://redis:6379
         -Dturms.gateway.redis.user-id-blocklist.uri=redis://redis:6379
     healthcheck:
-      test: "curl --fail --silent --user turms:turms turms-gateway:9510/actuator/health | grep UP || exit 1"
+      test: "curl --fail --silent --user turms:turms turms-gateway:9510/health | grep UP || exit 1"
       interval: 10s
       timeout: 5s
       retries: 5
@@ -119,7 +119,7 @@ services:
         -Dturms.service.redis.ip-blocklist.uri=redis://redis:6379
         -Dturms.service.redis.user-id-blocklist.uri=redis://redis:6379
     healthcheck:
-      test: "curl --fail --silent --user turms:turms turms-service:8510/actuator/health | grep UP || exit 1"
+      test: "curl --fail --silent --user turms:turms turms-service:8510/health | grep UP || exit 1"
       interval: 10s
       timeout: 5s
       retries: 5

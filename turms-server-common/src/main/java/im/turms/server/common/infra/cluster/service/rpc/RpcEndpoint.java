@@ -23,6 +23,7 @@ import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcResponse;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.netty.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.IllegalReferenceCountException;
 import lombok.Getter;
@@ -90,7 +91,7 @@ public final class RpcEndpoint {
                 break;
             }
             // sendObject() will release the buffer no matter it succeeds or fails
-            conn.sendObject(buffer)
+            conn.sendObject(ByteBufUtil.duplicateIfUnreleasable(buffer))
                     .then()
                     .subscribe(null, t -> resolveRequest(requestId, null, t));
             break;

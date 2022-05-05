@@ -17,7 +17,7 @@
 
 package im.turms.server.common.domain.observation.service;
 
-import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.domain.observation.model.RecordingSession;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.io.FileResource;
@@ -35,7 +35,6 @@ import jdk.jfr.FlightRecorder;
 import jdk.jfr.Recording;
 import lombok.SneakyThrows;
 import org.jctools.queues.MpscUnboundedArrayQueue;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
@@ -222,16 +221,17 @@ public class FlightRecordingService {
         }
     }
 
-    @Nullable
     @SneakyThrows
-    public FileSystemResource getRecordingFile(Long id, boolean close) {
+    @Nullable
+    public FileResource getRecordingFile(Long id, boolean close) {
         RecordingSession session = idToSession.get(id);
         if (session == null) {
             return null;
         }
+        String fileName = id + ".jfr";
         if (close) {
             session.close(true);
-            return new FileResource(session.getFile(), throwable -> {
+            return new FileResource(fileName, session.getFilePath(), throwable -> {
                 if (throwable == null) {
                     closeRecording(id);
                 } else {
@@ -241,7 +241,7 @@ public class FlightRecordingService {
         } else {
             String prefix = "temp-" + id + "-" + RandomUtil.nextPositiveInt();
             File tempFile = FileUtil.createTempFile(prefix, ".jfr", jfrBaseDir);
-            return new FileSystemResource(session.getFile(tempFile));
+            return new FileResource(fileName, session.getFilePath(tempFile));
         }
     }
 

@@ -282,7 +282,6 @@ const ja_JP = {
     'messageId': 'メッセージID',
     'messageInfo': 'メッセージ情報',
     'metrics': 'メトリクス',
-    'metricsApiAddress': 'メトリックスAPI',
     'minimumScore': '最小スコア',
     'missingAdminInfo': '管理者情報がありません',
     'modificationDate': '更新タイムスタンプ',

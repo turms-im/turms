@@ -17,12 +17,17 @@
 
 package im.turms.service.domain.user.access.admin.controller;
 
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
 import im.turms.server.common.domain.location.bo.NearbyUser;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.bo.UserSessionsInfo;
@@ -39,13 +44,6 @@ import im.turms.service.domain.user.access.admin.dto.response.UserLocationDTO;
 import im.turms.service.domain.user.service.UserService;
 import im.turms.service.domain.user.service.onlineuser.SessionService;
 import im.turms.service.domain.user.service.onlineuser.UsersNearbyService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -57,8 +55,7 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/users/online-infos")
+@RestController("users/online-infos")
 public class UserOnlineInfoController extends BaseController {
 
     private final UserService userService;
@@ -85,15 +82,14 @@ public class UserOnlineInfoController extends BaseController {
         this.sessionService = sessionService;
     }
 
-    @GetMapping("/count")
+    @GetMapping("count")
     @RequiredPermission(AdminPermission.STATISTICS_USER_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<OnlineUserCountDTO>>> countOnlineUsers(
-            @RequestParam(required = false, defaultValue = "false") boolean countByNodes) {
+    public Mono<HttpHandlerResult<ResponseDTO<OnlineUserCountDTO>>> countOnlineUsers(boolean countByNodes) {
         if (!countByNodes) {
-            return ResponseFactory.okIfTruthy(statisticsService.countOnlineUsers()
+            return HttpHandlerResult.okIfTruthy(statisticsService.countOnlineUsers()
                     .map(total -> new OnlineUserCountDTO(total, null)));
         }
-        return ResponseFactory.okIfTruthy(statisticsService.countOnlineUsersByNodes()
+        return HttpHandlerResult.okIfTruthy(statisticsService.countOnlineUsersByNodes()
                 .map(nodeIdToUserCount -> {
                     int sum = 0;
                     for (int onlineUserCount : nodeIdToUserCount.values()) {
@@ -103,11 +99,11 @@ public class UserOnlineInfoController extends BaseController {
                 }));
     }
 
-    @GetMapping("/sessions")
+    @GetMapping("sessions")
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<UserSessionsInfo>>>> queryUserSessions(
-            @RequestParam Set<Long> ids,
-            @RequestParam(defaultValue = "false") boolean returnNonExistingUsers) {
+    public Mono<HttpHandlerResult<ResponseDTO<Collection<UserSessionsInfo>>>> queryUserSessions(
+            Set<Long> ids,
+            boolean returnNonExistingUsers) {
         Mono<Collection<UserSessionsInfo>> queryUserSessions;
         if (returnNonExistingUsers) {
             queryUserSessions = sessionService.queryUserSessions(ids);
@@ -130,14 +126,14 @@ public class UserOnlineInfoController extends BaseController {
                                 .collect(CollectorUtil.toList(size));
                     });
         }
-        return ResponseFactory.okIfTruthy(queryUserSessions);
+        return HttpHandlerResult.okIfTruthy(queryUserSessions);
     }
 
-    @GetMapping("/statuses")
+    @GetMapping("statuses")
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<UserSessionsStatus>>>> queryUserStatuses(
-            @RequestParam Set<Long> ids,
-            @RequestParam(defaultValue = "false") boolean returnNonExistingUsers) {
+    public Mono<HttpHandlerResult<ResponseDTO<Collection<UserSessionsStatus>>>> queryUserStatuses(
+            Set<Long> ids,
+            boolean returnNonExistingUsers) {
         List<Mono<UserSessionsStatus>> statusMonos = new ArrayList<>(ids.size());
         for (Long userId : ids) {
             if (returnNonExistingUsers) {
@@ -155,19 +151,19 @@ public class UserOnlineInfoController extends BaseController {
                         }));
             }
         }
-        return ResponseFactory.okIfTruthy(Flux.merge(statusMonos));
+        return HttpHandlerResult.okIfTruthy(Flux.merge(statusMonos));
     }
 
-    @GetMapping("/nearby-users")
+    @GetMapping("nearby-users")
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<List<NearbyUser>>>> queryUsersNearby(
-            @RequestParam Long userId,
-            @RequestParam(required = false) DeviceType deviceType,
-            @RequestParam(required = false) Short maxNumber,
-            @RequestParam(required = false) Integer maxDistance,
-            @RequestParam(defaultValue = "false") boolean withCoordinates,
-            @RequestParam(defaultValue = "false") boolean withDistance,
-            @RequestParam(defaultValue = "false") boolean withUserInfo) {
+    public Mono<HttpHandlerResult<ResponseDTO<List<NearbyUser>>>> queryUsersNearby(
+            Long userId,
+            @QueryParam(required = false) DeviceType deviceType,
+            @QueryParam(required = false) Short maxNumber,
+            @QueryParam(required = false) Integer maxDistance,
+            boolean withCoordinates,
+            boolean withDistance,
+            boolean withUserInfo) {
         Mono<List<NearbyUser>> usersNearby = usersNearbyService
                 .queryNearbyUsers(userId,
                         deviceType,
@@ -178,14 +174,14 @@ public class UserOnlineInfoController extends BaseController {
                         withCoordinates,
                         withDistance,
                         withUserInfo);
-        return ResponseFactory.okIfTruthy(usersNearby);
+        return HttpHandlerResult.okIfTruthy(usersNearby);
     }
 
-    @GetMapping("/locations")
+    @GetMapping("locations")
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<UserLocationDTO>>>> queryUserLocations(
-            @RequestParam Set<Long> ids,
-            @RequestParam(required = false) DeviceType deviceType) {
+    public Mono<HttpHandlerResult<ResponseDTO<Collection<UserLocationDTO>>>> queryUserLocations(
+            Set<Long> ids,
+            @QueryParam(required = false) DeviceType deviceType) {
         int size = ids.size();
         List<Mono<UserLocationDTO>> monos = new ArrayList<>(size);
         for (Long userId : ids) {
@@ -195,14 +191,14 @@ public class UserOnlineInfoController extends BaseController {
                             coordinates.getX().doubleValue(),
                             coordinates.getY().doubleValue())));
         }
-        return ResponseFactory.okIfTruthy(Flux.merge(monos), size);
+        return HttpHandlerResult.okIfTruthy(Flux.merge(monos), size);
     }
 
-    @PutMapping("/statuses")
+    @PutMapping("statuses")
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<Void>>> updateUserOnlineStatus(
-            @RequestParam Set<Long> ids,
-            @RequestParam(required = false) Set<DeviceType> deviceTypes,
+    public Mono<HttpHandlerResult<ResponseDTO<Void>>> updateUserOnlineStatus(
+            Set<Long> ids,
+            @QueryParam(required = false) Set<DeviceType> deviceTypes,
             @RequestBody UpdateOnlineStatusDTO updateOnlineStatusDTO) {
         Mono<Boolean> updateMono;
         UserStatus onlineStatus = updateOnlineStatusDTO.onlineStatus();
@@ -213,7 +209,7 @@ public class UserOnlineInfoController extends BaseController {
         } else {
             updateMono = userStatusService.updateOnlineUsersStatus(ids, onlineStatus);
         }
-        return updateMono.thenReturn(ResponseFactory.OK);
+        return updateMono.thenReturn(HttpHandlerResult.RESPONSE_OK);
     }
 
 }

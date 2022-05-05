@@ -17,48 +17,38 @@
 
 package im.turms.server.common.infra.io;
 
-import org.springframework.core.io.FileSystemResource;
+import lombok.Getter;
 
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
 /**
  * @author James Chen
  */
-public class FileResource extends FileSystemResource {
+public class FileResource extends BaseFileResource {
 
+    @Getter
+    private final Path file;
     @Nullable
     private final Consumer<Throwable> cleanup;
 
-    public FileResource(File file, @Nullable Consumer<Throwable> cleanup) {
-        super(file);
+    public FileResource(String name, Path file) {
+        super(name, FileUtil.size(file));
+        this.file = file;
+        this.cleanup = null;
+    }
+
+    public FileResource(String name, Path file, @Nullable Consumer<Throwable> cleanup) {
+        super(name, FileUtil.size(file));
+        this.file = file;
         this.cleanup = cleanup;
-    }
-
-    @Override
-    public ReadableByteChannel readableChannel() throws IOException {
-        throw new UnsupportedEncodingException("FileResource does not support ReadableByteChannel");
-    }
-
-    @Override
-    public InputStream getInputStream() throws IOException {
-        throw new UnsupportedEncodingException("FileResource does not support InputStream");
     }
 
     public void cleanup(@Nullable Throwable throwable) {
         if (cleanup != null) {
             cleanup.accept(throwable);
         }
-    }
-
-    @Override
-    public boolean isFile() {
-        return true;
     }
 
 }

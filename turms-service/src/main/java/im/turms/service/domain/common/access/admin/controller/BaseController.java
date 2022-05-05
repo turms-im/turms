@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.common.access.admin.controller;
 
+import im.turms.server.common.access.admin.web.HttpResponseException;
+import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.env.adminapi.AdminApiProperties;
@@ -25,8 +27,6 @@ import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.time.DivideBy;
 import im.turms.service.domain.common.access.admin.dto.response.StatisticsRecordDTO;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.function.Function3;
@@ -116,7 +116,7 @@ public abstract class BaseController {
                 maxHourDifferencePerCountRequest, maxDayDifferencePerCountRequest, maxMonthDifferencePerCountRequest)) {
             return queryBetweenDate(dateRange, divideBy, function, areGroupMessages, areSystemMessages);
         }
-        throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS);
+        return Mono.error(new HttpResponseException(ResponseStatusCode.ADMIN_REQUESTS_TOO_FREQUENT));
     }
 
     public Mono<List<StatisticsRecordDTO>> checkAndQueryBetweenDate(
@@ -127,7 +127,7 @@ public abstract class BaseController {
                 maxHourDifferencePerCountRequest, maxDayDifferencePerCountRequest, maxMonthDifferencePerCountRequest)) {
             return queryBetweenDate(dateRange, divideBy, function);
         }
-        throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS);
+        return Mono.error(new HttpResponseException(ResponseStatusCode.ADMIN_REQUESTS_TOO_FREQUENT));
     }
 
     private Mono<List<StatisticsRecordDTO>> mergeStaticsRecords(List<Mono<StatisticsRecordDTO>> recordMonos) {

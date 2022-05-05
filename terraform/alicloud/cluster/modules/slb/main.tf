@@ -50,7 +50,7 @@ resource "alicloud_slb_listener" "default" {
   health_check_type         = "http"
   health_check_connect_port = local.turms_gateway_metrics_api_port
   health_check_http_code    = "http_2xx,http_3xx,http_4xx"
-  health_check_uri          = "/actuator/health"
+  health_check_uri          = "/health"
 }
 
 resource "alicloud_slb_backend_server" "default" {

@@ -79,8 +79,7 @@ TODO
 |              | priority          | 优先级。主要用于在Leader选举时，高位值的节点能被优先选举为Leader |
 | RPC地址信息  | memberHost        | RPC主机号。用于保证其他节点能够通过该主机号，与其进行通信    |
 |              | memberPort        | RPC端口号。用于保证其他节点能够通过该端口号，与其进行通信    |
-| 补充地址信息 | metricsApiAddress | 无实际作用。仅用于管理员能够通过Admin API得知Metrics API的地址信息 |
-|              | adminApiAddress   | 无实际作用。仅用于管理员能够通过Admin API得知Admin API的地址信息 |
+| 补充地址信息 | adminApiAddress   | 无实际作用。仅用于管理员能够通过Admin API得知Admin API的地址信息 |
 |              | wsAddress         | 无实际作用。仅用于管理员能够通过Admin API得知客户端WebSocket服务的地址信息 |
 |              | tcpAddress        | 无实际作用。仅用于管理员能够通过Admin API得知客户端TCP服务的地址信息 |
 |              | udpAddress        | 无实际作用。仅用于管理员能够通过Admin API得知客户端UDP服务的地址信息 |

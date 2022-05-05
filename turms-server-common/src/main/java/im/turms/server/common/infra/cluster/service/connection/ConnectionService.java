@@ -33,6 +33,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
 import im.turms.server.common.infra.net.SslUtil;
+import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.property.env.common.cluster.connection.ConnectionClientProperties;
 import im.turms.server.common.infra.property.env.common.cluster.connection.ConnectionProperties;
 import im.turms.server.common.infra.property.env.common.cluster.connection.ConnectionServerProperties;
@@ -41,7 +42,6 @@ import im.turms.server.common.infra.thread.ThreadNameConst;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Getter;
-import org.springframework.boot.web.server.Ssl;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 import reactor.netty.channel.ChannelOperations;
@@ -90,7 +90,7 @@ public class ConnectionService implements ClusterService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionService.class);
 
-    private final Ssl clientSsl;
+    private final SslProperties clientSsl;
     private final long keepaliveIntervalMillis;
     private final long keepaliveTimeoutMillis;
     private final Duration reconnectInterval;

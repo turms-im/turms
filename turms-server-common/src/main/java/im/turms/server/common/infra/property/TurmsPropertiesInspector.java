@@ -20,7 +20,6 @@ package im.turms.server.common.infra.property;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
@@ -51,6 +50,8 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static im.turms.server.common.infra.json.JsonCodecPool.MAPPER;
+
 /**
  * @author James Chen
  */
@@ -64,10 +65,6 @@ public class TurmsPropertiesInspector {
     private static final String FIELD_NAME_OPTIONS = "options";
     private static final String FIELD_NAME_TYPE = "type";
 
-    public static final ObjectMapper MAPPER = new ObjectMapper()
-            .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-            .registerModule(new JavaTimeModule())
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL);
     public static final ObjectWriter MUTABLE_PROPERTIES_WRITER = JsonMapper.builder()
             // e.g. "SharedConfigProperties" is an empty bean
             .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)

@@ -17,11 +17,18 @@
 
 package im.turms.server.common.domain.plugin.access.admin.controller;
 
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
+import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PostMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.domain.plugin.access.admin.dto.request.AddJsPluginDTO;
 import im.turms.server.common.domain.plugin.access.admin.dto.request.UpdatePluginDTO;
 import im.turms.server.common.domain.plugin.access.admin.dto.response.ExtensionDTO;
@@ -32,15 +39,6 @@ import im.turms.server.common.infra.plugin.Plugin;
 import im.turms.server.common.infra.plugin.PluginDescriptor;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.plugin.TurmsExtension;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,8 +48,7 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/plugins")
+@RestController("plugins")
 public class PluginController {
 
     private final PluginManager pluginManager;
@@ -62,7 +59,7 @@ public class PluginController {
 
     @GetMapping
     @RequiredPermission(AdminPermission.PLUGIN_QUERY)
-    public ResponseEntity<ResponseDTO<Collection<PluginDTO>>> getPlugins(@RequestParam(required = false) Set<String> ids) {
+    public HttpHandlerResult<ResponseDTO<Collection<PluginDTO>>> getPlugins(@QueryParam(required = false) Set<String> ids) {
         Collection<Plugin> plugins = CollectionUtil.isEmpty(ids)
                 ? pluginManager.getPlugins()
                 : pluginManager.getPlugins(ids);
@@ -90,17 +87,17 @@ public class PluginController {
                     descriptor.getDescription(),
                     extensionDTOs));
         }
-        return ResponseFactory.okIfTruthy(pluginInfoList);
+        return HttpHandlerResult.okIfTruthy(pluginInfoList);
     }
 
     @PutMapping
     @RequiredPermission(AdminPermission.PLUGIN_UPDATE)
-    public ResponseEntity<ResponseDTO<UpdateResultDTO>> updatePlugins(
-            @RequestParam Set<String> ids,
+    public HttpHandlerResult<ResponseDTO<UpdateResultDTO>> updatePlugins(
+            Set<String> ids,
             @RequestBody UpdatePluginDTO updatePluginDTO) {
         UpdatePluginDTO.PluginStatus status = updatePluginDTO.status();
         if (status == null) {
-            return ResponseFactory.okIfTruthy(UpdateResultDTO.NONE);
+            return HttpHandlerResult.okIfTruthy(UpdateResultDTO.NONE);
         }
         long count = switch (status) {
             case STARTED -> pluginManager.startPlugins(ids);
@@ -108,26 +105,26 @@ public class PluginController {
             case RESUMED -> pluginManager.resumePlugins(ids);
             case PAUSED -> pluginManager.pausePlugins(ids);
         };
-        return ResponseFactory.okIfTruthy(new UpdateResultDTO(count, count));
+        return HttpHandlerResult.okIfTruthy(new UpdateResultDTO(count, count));
     }
 
-    @PostMapping("/js")
+    @PostMapping("js")
     @RequiredPermission(AdminPermission.PLUGIN_CREATE)
-    public ResponseEntity<ResponseDTO<Void>> createJsPlugins(
-            @RequestParam(defaultValue = "false") boolean save,
+    public HttpHandlerResult<ResponseDTO<Void>> createJsPlugins(
+            boolean save,
             @RequestBody AddJsPluginDTO addJsPluginDTO) {
         Set<String> scripts = addJsPluginDTO.scripts();
         pluginManager.loadJsPlugins(scripts, save);
-        return ResponseFactory.OK;
+        return HttpHandlerResult.RESPONSE_OK;
     }
 
     @DeleteMapping
     @RequiredPermission(AdminPermission.PLUGIN_DELETE)
-    public ResponseEntity<ResponseDTO<Void>> deletePlugins(
-            @RequestParam Set<String> ids,
-            @RequestParam(required = false) boolean deleteLocalFiles) {
+    public HttpHandlerResult<ResponseDTO<Void>> deletePlugins(
+            Set<String> ids,
+            boolean deleteLocalFiles) {
         pluginManager.deletePlugins(ids, deleteLocalFiles);
-        return ResponseFactory.OK;
+        return HttpHandlerResult.RESPONSE_OK;
     }
 
 }

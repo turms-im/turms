@@ -52,6 +52,13 @@ public final class ByteBufUtil {
     private ByteBufUtil() {
     }
 
+    public static ByteBuf duplicateIfUnreleasable(ByteBuf byteBuf) {
+        if (ByteBufs.isUnreleasable(byteBuf)) {
+            return byteBuf.duplicate();
+        }
+        return byteBuf;
+    }
+
     @VisibleForTesting
     public static String getString(ByteBuf buffer) {
         buffer.markReaderIndex();
@@ -95,6 +102,12 @@ public final class ByteBufUtil {
         ByteBuf buffer = Unpooled.directBuffer(Integer.BYTES)
                 .writeInt(i);
         return Unpooled.unreleasableBuffer(buffer);
+    }
+
+    public static ByteBuf getUnreleasableDirectBuffer(String string) {
+        byte[] bytes = StringUtil.getBytes(string);
+        return Unpooled.unreleasableBuffer(Unpooled
+                .directBuffer(bytes.length).writeBytes(bytes));
     }
 
     public static ByteBuf obj2Buffer(Object obj) {

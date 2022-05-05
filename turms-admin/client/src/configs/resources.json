@@ -165,7 +165,7 @@
         "clusterMember": "/cluster/members",
 
         "heapdump": "/heapdump",
-        "threaddump": "/actuator/threaddump",
+        "threaddump": "/threaddump",
         "metrics": "/metrics",
 
         "admin": "/admins",

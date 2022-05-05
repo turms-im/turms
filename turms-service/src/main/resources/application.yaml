@@ -1,31 +1,6 @@
-# HTTP(S) configuration for admin APIs + metrics APIs + OpenAPI
-server:
-  address: 0.0.0.0
-  error:
-    whitelabel:
-      enabled: false
-  port: 8510
-  ssl:
-    enabled: false # Enable SSL if needed. Make sure to mutate HTTP requests to HTTPS requests, or Netty will throw NotSslRecordException
-    key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
-    key-store-type: PKCS12
-    key-store-password: imturms
-    key-alias: turms
 spring:
   application:
     name: turms
-  jackson:
-    default-property-inclusion: non_null
-    deserialization:
-      fail-on-unknown-properties: false
-      accept-single-value-as-array: true
-    serialization:
-      fail-on-empty-beans: false
-    time-zone: UTC
-    mapper:
-      propagate-transient-marker: true
-  main:
-    banner-mode: log
   netty:
     leak-detection: simple
   profiles:
@@ -40,38 +15,14 @@ spring:
       prod:
         - prod
         - prod-latest
-  webflux:
-    format:
-      date: yyyy-MM-dd'T'HH:mm:ssX
-      date-time: yyyy-MM-dd'T'HH:mm:ssX
   codec:
     max-in-memory-size: 64KB
   autoconfigure:
     exclude:
-      - org.springframework.boot.actuate.autoconfigure.metrics.CompositeMeterRegistryAutoConfiguration
-      - org.springframework.boot.actuate.autoconfigure.metrics.data.RepositoryMetricsAutoConfiguration
-      - org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration
-      - org.springframework.boot.actuate.autoconfigure.metrics.MetricsEndpointAutoConfiguration
       - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
       - org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
       - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
       - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
-management:
-  endpoint:
-    metrics:
-      # We use our own implementation
-      enabled: false
-  endpoints:
-    jmx:
-      exposure:
-        exclude: "*"
-    web:
-      exposure:
-        include: info,health,env,threaddump
-springdoc:
-  show-actuator: true
-  swagger-ui:
-    doc-expansion: none
 
 ############################### Turms ###############################
 

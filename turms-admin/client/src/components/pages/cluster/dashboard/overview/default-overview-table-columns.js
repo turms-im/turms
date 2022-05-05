@@ -55,9 +55,6 @@ export default [
         dataIndex: 'memberAddress'
     },
     {
-        dataIndex: 'metricsApiAddress'
-    },
-    {
         dataIndex: 'adminApiAddress'
     },
     {

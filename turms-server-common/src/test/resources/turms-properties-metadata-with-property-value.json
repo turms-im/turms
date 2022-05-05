@@ -210,10 +210,26 @@
       "enabled": {
         "deprecated": false,
         "desc": "Whether to enable the APIs for administrators",
-        "global": true,
-        "mutable": true,
+        "global": false,
+        "mutable": false,
         "type": "boolean",
         "value": true
+      },
+      "http": {
+        "host": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "string",
+          "value": "0.0.0.0"
+        },
+        "port": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "int",
+          "value": 9510
+        }
       },
       "log": {
         "enabled": {
@@ -691,6 +707,7 @@
       },
       "connectTimeout": {
         "deprecated": false,
+        "desc": "Used to mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake",
         "global": false,
         "mutable": false,
         "type": "int",
@@ -1339,10 +1356,26 @@
       "enabled": {
         "deprecated": false,
         "desc": "Whether to enable the APIs for administrators",
-        "global": true,
-        "mutable": true,
+        "global": false,
+        "mutable": false,
         "type": "boolean",
         "value": true
+      },
+      "http": {
+        "host": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "string",
+          "value": "0.0.0.0"
+        },
+        "port": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "int",
+          "value": 8510
+        }
       },
       "log": {
         "enabled": {

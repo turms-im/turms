@@ -8,7 +8,7 @@ const RESOURCE_UTILIZATION_METRICS_NAMES = {
 
 const formatBytesToGiB = bytes => bytes / 1024 / 1024 / 1024;
 
-const getMemberAdminBaseUrl = member => new URL(member.metricsApiAddress).origin;
+const getMemberAdminBaseUrl = member => new URL(member.adminApiAddress).origin;
 
 export default {
     methods: {

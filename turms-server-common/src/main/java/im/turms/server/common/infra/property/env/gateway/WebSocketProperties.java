@@ -40,9 +40,7 @@ public class WebSocketProperties extends BaseServerProperties {
             "but don't set too large to prevent SYN-Flood attacks")
     private int backlog = 4096;
 
-    /**
-     * To mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake
-     */
+    @Description("Used to mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake")
     private int connectTimeout = 30;
 
     @Description("A WebSocket connection will be closed on the server side " +

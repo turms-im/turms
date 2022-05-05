@@ -27,6 +27,7 @@ import im.turms.server.common.domain.blocklist.service.BlocklistService;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
 import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.server.common.infra.net.SslUtil;
+import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.property.env.gateway.WebSocketProperties;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpHeaders;
@@ -34,7 +35,6 @@ import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import org.reactivestreams.Publisher;
-import org.springframework.boot.web.server.Ssl;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
@@ -51,28 +51,18 @@ import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS;
 import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS;
 import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN;
 import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_MAX_AGE;
-import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD;
 import static com.google.common.net.HttpHeaders.CONNECTION;
-import static com.google.common.net.HttpHeaders.ORIGIN;
 import static com.google.common.net.HttpHeaders.SEC_WEBSOCKET_KEY;
 import static com.google.common.net.HttpHeaders.UPGRADE;
+import static im.turms.server.common.access.admin.web.HttpUtil.isPreFlightRequest;
 import static io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS;
 import static io.netty.channel.ChannelOption.SO_BACKLOG;
 import static io.netty.channel.ChannelOption.SO_LINGER;
 import static io.netty.channel.ChannelOption.SO_REUSEADDR;
 import static io.netty.channel.ChannelOption.TCP_NODELAY;
-import static io.netty.handler.codec.http.HttpMethod.OPTIONS;
 
 /**
  * @author James Chen
- * @implNote We don't use spring-reactive-websocket because it always makes
- * the code abstract and the workflow really complex in non-blocking programming.
- * People will realize that it's a disaster for a large application to debug
- * and troubleshoot with spring-reactive-websocket.
- * <p>
- * On the other hand, we can just use tens of code to do what
- * spring-reactive-websocket can do for us with really clear code
- * @see WebSocketServerFactory#getHttpRequestHandler
  */
 public final class WebSocketServerFactory {
 
@@ -105,7 +95,7 @@ public final class WebSocketServerFactory {
                 .handle(getHttpRequestHandler(connectionListener, serverSpec))
                 .doOnChannelInit((connectionObserver, channel, remoteAddress) ->
                         channel.pipeline().addFirst("serviceAvailabilityHandler", serviceAvailabilityHandler));
-        Ssl ssl = webSocketProperties.getSsl();
+        SslProperties ssl = webSocketProperties.getSsl();
         if (ssl.isEnabled()) {
             server.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true), true);
         }
@@ -118,9 +108,6 @@ public final class WebSocketServerFactory {
         }
     }
 
-    /**
-     * @see ReactorNettyRequestUpgradeStrategy#upgrade
-     */
     private static BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>> getHttpRequestHandler(
             ConnectionListener connectionListener,
             WebsocketServerSpec serverSpec) {
@@ -165,18 +152,6 @@ public final class WebSocketServerFactory {
         };
     }
 
-    private static boolean isPreFlightRequest(HttpServerRequest request) {
-        if (!OPTIONS.equals(request.method())) {
-            return false;
-        }
-        HttpHeaders headers = request.requestHeaders();
-        return headers.contains(ORIGIN) && headers.contains(ACCESS_CONTROL_REQUEST_METHOD);
-    }
-
-    /**
-     * @see HandshakeWebSocketService#handleRequest
-     * @see org.springframework.web.server.handler.ExceptionHandlingWebHandler
-     */
     private static HttpResponseStatus validateHandshakeRequest(HttpServerRequest request) {
         HttpMethod method = request.method();
         HttpHeaders headers = request.requestHeaders();

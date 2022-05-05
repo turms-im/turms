@@ -40,6 +40,7 @@ import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.lang.Null;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.property.env.common.cluster.RpcProperties;
 import im.turms.server.common.infra.random.RandomUtil;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
@@ -186,7 +187,7 @@ public class RpcService implements ClusterService {
                                 }
                                 return;
                             }
-                            conn.sendObject(buf)
+                            conn.sendObject(ByteBufUtil.duplicateIfUnreleasable(buf))
                                     .then()
                                     .subscribe(null, t -> {
                                         try (TracingCloseableContext ignored = ctx.asCloseable()) {

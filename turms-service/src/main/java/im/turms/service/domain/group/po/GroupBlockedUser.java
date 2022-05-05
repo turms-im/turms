@@ -30,7 +30,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 import static im.turms.server.common.storage.mongo.entity.IndexType.HASH;
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
@@ -82,12 +81,6 @@ public final class GroupBlockedUser extends BaseEntity {
             private Fields() {
             }
         }
-    }
-
-    @Data
-    @AllArgsConstructor
-    public static final class KeyList {
-        private List<Key> keys;
     }
 
     public static final class Fields {

@@ -21,9 +21,9 @@ import im.turms.server.common.access.common.LoopResourcesFactory;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.net.SslUtil;
+import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import lombok.Getter;
-import org.springframework.boot.web.server.Ssl;
 import reactor.netty.ChannelBindException;
 import reactor.netty.DisposableServer;
 import reactor.netty.channel.ChannelOperations;
@@ -47,7 +47,7 @@ public class ConnectionServer {
     private final int proposedPort;
     private final boolean portAutoIncrement;
     private final int portCount;
-    private final Ssl ssl;
+    private final SslProperties ssl;
     private final Consumer<ChannelOperations<?, ?>> connectionConsumer;
 
     @Getter
@@ -59,7 +59,7 @@ public class ConnectionServer {
                             int port,
                             boolean portAutoIncrement,
                             int portCount,
-                            Ssl ssl,
+                            SslProperties ssl,
                             Consumer<ChannelOperations<?, ?>> connectionConsumer) {
         this.host = host;
         this.proposedPort = port;
@@ -93,11 +93,10 @@ public class ConnectionServer {
             } catch (Exception e) { // e.g. port in use
                 if (e instanceof ChannelBindException &&
                         portAutoIncrement && currentPort <= proposedPort + portCount) {
-                    LOGGER.warn("Failed to bind on the port {}. Trying to bind on the next port {}",
-                            currentPort++, currentPort, e);
+                    LOGGER.warn("Failed to bind on the port {} because [{}]. Trying to bind on the next port {}",
+                            currentPort++, e.toString(), currentPort);
                 } else {
-                    LOGGER.error("Failed to set up the local discovery server", e);
-                    throw e;
+                    throw new IllegalStateException("Failed to set up the local discovery server", e);
                 }
             }
         }

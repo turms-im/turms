@@ -202,8 +202,7 @@ export default {
                 error: 'failedToGenerateThreadDump',
                 successCb: data => this.$fs.saveAs({
                     fileName: `Thread Dump - ${member.nodeId}`,
-                    data,
-                    type: 'text/plain;charset=utf-8'
+                    data
                 }),
                 finallyCb: () => this.generatingThreadDump = false
             });

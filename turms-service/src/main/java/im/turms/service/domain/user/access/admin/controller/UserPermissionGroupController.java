@@ -17,28 +17,26 @@
 
 package im.turms.service.domain.user.access.admin.controller;
 
+import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.PaginationDTO;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
+import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
-import im.turms.server.common.domain.common.dto.response.DeleteResultDTO;
-import im.turms.server.common.domain.common.dto.response.PaginationDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PostMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.user.access.admin.dto.request.AddUserPermissionGroupDTO;
 import im.turms.service.domain.user.access.admin.dto.request.UpdateUserPermissionGroupDTO;
 import im.turms.service.domain.user.po.UserPermissionGroup;
 import im.turms.service.domain.user.service.UserPermissionGroupService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -50,8 +48,7 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/users/permission-groups")
+@RestController("users/permission-groups")
 public class UserPermissionGroupController extends BaseController {
 
     private final UserPermissionGroupService userPermissionGroupService;
@@ -63,7 +60,7 @@ public class UserPermissionGroupController extends BaseController {
 
     @PostMapping
     @RequiredPermission(AdminPermission.USER_PERMISSION_GROUP_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<UserPermissionGroup>>> addUserPermissionGroup(
+    public Mono<HttpHandlerResult<ResponseDTO<UserPermissionGroup>>> addUserPermissionGroup(
             @RequestBody AddUserPermissionGroupDTO addUserPermissionGroupDTO) {
         Set<Long> creatableGroupTypesIds = addUserPermissionGroupDTO.creatableGroupTypeIds();
         creatableGroupTypesIds = creatableGroupTypesIds == null ? Collections.emptySet() : creatableGroupTypesIds;
@@ -75,33 +72,33 @@ public class UserPermissionGroupController extends BaseController {
                 addUserPermissionGroupDTO.ownedGroupLimit(),
                 addUserPermissionGroupDTO.ownedGroupLimitForEachGroupType(),
                 groupTypeIdToLimit);
-        return ResponseFactory.okIfTruthy(userPermissionGroupMono);
+        return HttpHandlerResult.okIfTruthy(userPermissionGroupMono);
     }
 
     @GetMapping
     @RequiredPermission(AdminPermission.USER_PERMISSION_GROUP_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<UserPermissionGroup>>>> queryUserPermissionGroups(
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<Collection<UserPermissionGroup>>>> queryUserPermissionGroups(
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Flux<UserPermissionGroup> groupTypesFlux = userPermissionGroupService.queryUserPermissionGroups(0, size);
-        return ResponseFactory.okIfTruthy(groupTypesFlux);
+        return HttpHandlerResult.okIfTruthy(groupTypesFlux);
     }
 
-    @GetMapping("/page")
+    @GetMapping("page")
     @RequiredPermission(AdminPermission.USER_PERMISSION_GROUP_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<PaginationDTO<UserPermissionGroup>>>> queryUserPermissionGroups(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<PaginationDTO<UserPermissionGroup>>>> queryUserPermissionGroups(
+            int page,
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Mono<Long> count = userPermissionGroupService.countUserPermissionGroups();
         Flux<UserPermissionGroup> groupTypesFlux = userPermissionGroupService.queryUserPermissionGroups(page, size);
-        return ResponseFactory.page(count, groupTypesFlux);
+        return HttpHandlerResult.page(count, groupTypesFlux);
     }
 
     @PutMapping
     @RequiredPermission(AdminPermission.USER_PERMISSION_GROUP_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateUserPermissionGroup(
-            @RequestParam Set<Long> ids,
+    public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateUserPermissionGroup(
+            Set<Long> ids,
             @RequestBody UpdateUserPermissionGroupDTO updateUserPermissionGroupDTO) {
         Mono<UpdateResultDTO> updateMono = userPermissionGroupService.updateUserPermissionGroups(
                         ids,
@@ -110,16 +107,16 @@ public class UserPermissionGroupController extends BaseController {
                         updateUserPermissionGroupDTO.ownedGroupLimitForEachGroupType(),
                         updateUserPermissionGroupDTO.groupTypeIdToLimit())
                 .map(UpdateResultDTO::get);
-        return ResponseFactory.okIfTruthy(updateMono);
+        return HttpHandlerResult.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(AdminPermission.USER_PERMISSION_GROUP_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteUserPermissionGroup(@RequestParam Set<Long> ids) {
+    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteUserPermissionGroup(Set<Long> ids) {
         Mono<DeleteResultDTO> deleteMono = userPermissionGroupService
                 .deleteUserPermissionGroups(ids)
                 .map(DeleteResultDTO::get);
-        return ResponseFactory.okIfTruthy(deleteMono);
+        return HttpHandlerResult.okIfTruthy(deleteMono);
     }
 
 }

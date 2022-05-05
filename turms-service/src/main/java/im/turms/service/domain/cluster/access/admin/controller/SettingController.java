@@ -17,23 +17,18 @@
 
 package im.turms.service.domain.cluster.access.admin.controller;
 
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesInspector;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
@@ -46,8 +41,7 @@ import static im.turms.server.common.infra.property.TurmsPropertiesInspector.get
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/cluster/settings")
+@RestController("cluster/settings")
 public class SettingController extends BaseController {
 
     public SettingController(TurmsPropertiesManager propertiesManager) {
@@ -56,9 +50,9 @@ public class SettingController extends BaseController {
 
     @GetMapping
     @RequiredPermission(CLUSTER_SETTING_QUERY)
-    public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterSettings(
-            @RequestParam(defaultValue = "false") boolean onlyMutable) {
-        return ResponseFactory.okIfTruthy(getPropertyToValueMap(propertiesManager.getGlobalProperties(), onlyMutable));
+    public HttpHandlerResult<ResponseDTO<Map<String, Object>>> queryClusterSettings(
+            boolean onlyMutable) {
+        return HttpHandlerResult.okIfTruthy(getPropertyToValueMap(propertiesManager.getGlobalProperties(), onlyMutable));
     }
 
     /**
@@ -66,34 +60,32 @@ public class SettingController extends BaseController {
      */
     @PutMapping
     @RequiredPermission(CLUSTER_SETTING_UPDATE)
-    @Operation(description = "Do not call this method frequently because it costs a lot of resources",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content =
-            @Content(schema = @Schema(implementation = TurmsProperties.class))))
-    public Mono<ResponseEntity<ResponseDTO<Void>>> updateClusterSettings(
-            @RequestParam(defaultValue = "false") boolean reset,
-            @RequestParam(defaultValue = "false") boolean updateGlobalSettings,
+    @Schema(implementation = TurmsProperties.class)
+    public Mono<HttpHandlerResult<ResponseDTO<Void>>> updateClusterSettings(
+            boolean reset,
+            boolean updateGlobalSettings,
             @RequestBody(required = false) Map<String, Object> turmsProperties) {
         if (updateGlobalSettings) {
             Mono<Void> updatePropertiesMono = propertiesManager.updateGlobalProperties(reset, turmsProperties);
-            return updatePropertiesMono.thenReturn(ResponseFactory.OK);
+            return updatePropertiesMono.thenReturn(HttpHandlerResult.RESPONSE_OK);
         } else {
             propertiesManager.updateLocalProperties(reset, turmsProperties);
-            return Mono.just(ResponseFactory.OK);
+            return Mono.just(HttpHandlerResult.RESPONSE_OK);
         }
     }
 
-    @GetMapping("/metadata")
+    @GetMapping("metadata")
     @RequiredPermission(CLUSTER_SETTING_QUERY)
-    public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterConfigMetadata(
-            @RequestParam(defaultValue = "false") boolean onlyMutable,
-            @RequestParam(defaultValue = "false") boolean withValue) {
+    public HttpHandlerResult<ResponseDTO<Map<String, Object>>> queryClusterConfigMetadata(
+            boolean onlyMutable,
+            boolean withValue) {
         Map<String, Object> metadata = onlyMutable
                 ? TurmsPropertiesInspector.ONLY_MUTABLE_METADATA
                 : TurmsPropertiesInspector.METADATA;
         if (withValue) {
-            return ResponseFactory.okIfTruthy(mergeMetadataWithPropertyValue(metadata, propertiesManager.getGlobalProperties()));
+            return HttpHandlerResult.okIfTruthy(mergeMetadataWithPropertyValue(metadata, propertiesManager.getGlobalProperties()));
         }
-        return ResponseFactory.okIfTruthy(metadata);
+        return HttpHandlerResult.okIfTruthy(metadata);
     }
 
 }

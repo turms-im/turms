@@ -19,9 +19,9 @@ package im.turms.server.common.infra.property.env.gateway;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import im.turms.server.common.infra.property.env.common.SslProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.boot.web.server.Ssl;
 import org.springframework.data.annotation.Transient;
 
 /**
@@ -37,6 +37,6 @@ public abstract class BaseServerProperties {
     @JsonIgnore
     @NestedConfigurationProperty
     @Transient
-    private Ssl ssl = new Ssl();
+    private SslProperties ssl = new SslProperties();
 
 }

@@ -1,8 +1,3 @@
-# The server properties for metrics APIs (not for WebSocket)
-server:
-  address: 0.0.0.0
-  port: 9510
-
 turms:
   cluster:
     connection:
@@ -53,35 +48,9 @@ spring:
     active: prod
   autoconfigure:
     exclude:
-      - org.springframework.boot.actuate.autoconfigure.metrics.CompositeMeterRegistryAutoConfiguration
-      - org.springframework.boot.actuate.autoconfigure.metrics.data.RepositoryMetricsAutoConfiguration
-      - org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration
-      - org.springframework.boot.actuate.autoconfigure.metrics.MetricsEndpointAutoConfiguration
       - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
       - org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
       - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
       - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
-  jackson:
-    default-property-inclusion: non_null
-    deserialization:
-      fail-on-unknown-properties: false
-      accept-single-value-as-array: true
-    serialization:
-      fail-on-empty-beans: false
-    time-zone: UTC
-    mapper:
-      propagate-transient-marker: true
   netty:
     leak-detection: simple
-management:
-  endpoint:
-    metrics:
-      # We use our own implementation
-      enabled: false
-  endpoints:
-    jmx:
-      exposure:
-        exclude: "*"
-    web:
-      exposure:
-        include: info,health,env,threaddump

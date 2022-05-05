@@ -19,29 +19,27 @@ package im.turms.service.domain.admin.access.admin.controller;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.PaginationDTO;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
+import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
+import im.turms.server.common.access.admin.web.RequestContext;
+import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.HeadMapping;
+import im.turms.server.common.access.admin.web.annotation.PostMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.domain.admin.po.Admin;
-import im.turms.server.common.domain.common.dto.response.DeleteResultDTO;
-import im.turms.server.common.domain.common.dto.response.PaginationDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.admin.access.admin.dto.request.AddAdminDTO;
 import im.turms.service.domain.admin.access.admin.dto.request.UpdateAdminDTO;
 import im.turms.service.domain.admin.service.AdminService;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -57,8 +55,7 @@ import static im.turms.server.common.access.admin.permission.AdminPermission.ADM
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/admins")
+@RestController("admins")
 public class AdminController extends BaseController {
 
     private final AdminService adminService;
@@ -68,34 +65,34 @@ public class AdminController extends BaseController {
         this.adminService = adminService;
     }
 
-    @RequestMapping(method = RequestMethod.HEAD)
-    public ResponseEntity<Void> checkAccountAndPassword() {
-        return ResponseEntity.ok().build();
+    @HeadMapping
+    public HttpHandlerResult<Void> checkAccountAndPassword() {
+        return HttpHandlerResult.OK;
     }
 
     @PostMapping
     @RequiredPermission(ADMIN_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<Admin>>> addAdmin(
-            @RequestAttribute("account") String requesterAccount,
+    public Mono<HttpHandlerResult<ResponseDTO<Admin>>> addAdmin(
+            RequestContext requestContext,
             @RequestBody AddAdminDTO addAdminDTO) {
         Mono<Admin> generatedAdmin = adminService.authAndAddAdmin(
-                requesterAccount,
+                requestContext.getAccount(),
                 addAdminDTO.account(),
                 addAdminDTO.password(),
                 addAdminDTO.roleId(),
                 addAdminDTO.name(),
                 new Date(),
                 false);
-        return ResponseFactory.okIfTruthy(generatedAdmin);
+        return HttpHandlerResult.okIfTruthy(generatedAdmin);
     }
 
     @GetMapping
     @RequiredPermission(ADMIN_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<Admin>>>> queryAdmins(
-            @RequestParam(required = false) Set<String> accounts,
-            @RequestParam(required = false) Set<Long> roleIds,
-            @RequestParam(defaultValue = "false") boolean withPassword,
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<Collection<Admin>>>> queryAdmins(
+            @QueryParam(required = false) Set<String> accounts,
+            @QueryParam(required = false) Set<Long> roleIds,
+            boolean withPassword,
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Flux<Admin> admins = adminService.queryAdmins(accounts, roleIds, 0, size)
                 .map(admin -> withPassword
@@ -103,17 +100,17 @@ public class AdminController extends BaseController {
                         : admin.toBuilder()
                         .password(null)
                         .build());
-        return ResponseFactory.okIfTruthy(admins);
+        return HttpHandlerResult.okIfTruthy(admins);
     }
 
-    @GetMapping("/page")
+    @GetMapping("page")
     @RequiredPermission(ADMIN_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<PaginationDTO<Admin>>>> queryAdmins(
-            @RequestParam(required = false) Set<String> accounts,
-            @RequestParam(required = false) Set<Long> roleIds,
-            @RequestParam(defaultValue = "false") boolean withPassword,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<PaginationDTO<Admin>>>> queryAdmins(
+            @QueryParam(required = false) Set<String> accounts,
+            @QueryParam(required = false) Set<Long> roleIds,
+            boolean withPassword,
+            int page,
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Mono<Long> count = adminService.countAdmins(accounts, roleIds);
         Flux<Admin> admins = adminService.queryAdmins(accounts, roleIds, page, size)
@@ -122,31 +119,31 @@ public class AdminController extends BaseController {
                         : admin.toBuilder()
                         .password(null)
                         .build());
-        return ResponseFactory.page(count, admins);
+        return HttpHandlerResult.page(count, admins);
     }
 
     @PutMapping
     @RequiredPermission(ADMIN_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateAdmins(
-            @RequestAttribute("account") String requesterAccount,
-            @RequestParam Set<String> accounts,
+    public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateAdmins(
+            RequestContext requestContext,
+            Set<String> accounts,
             @RequestBody UpdateAdminDTO updateAdminDTO) {
         Mono<UpdateResult> updateMono = adminService.authAndUpdateAdmins(
-                requesterAccount,
+                requestContext.getAccount(),
                 accounts,
                 updateAdminDTO.password(),
                 updateAdminDTO.name(),
                 updateAdminDTO.roleId());
-        return ResponseFactory.updateResult(updateMono);
+        return HttpHandlerResult.updateResult(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(ADMIN_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteAdmins(
-            @RequestAttribute("account") String requesterAccount,
-            @RequestParam Set<String> accounts) {
-        Mono<DeleteResult> deleteMono = adminService.authAndDeleteAdmins(requesterAccount, accounts);
-        return ResponseFactory.deleteResult(deleteMono);
+    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteAdmins(
+            RequestContext requestContext,
+            Set<String> accounts) {
+        Mono<DeleteResult> deleteMono = adminService.authAndDeleteAdmins(requestContext.getAccount(), accounts);
+        return HttpHandlerResult.deleteResult(deleteMono);
     }
 
 }

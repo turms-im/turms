@@ -194,7 +194,6 @@ public class LocalNodeStatusManager {
                 member.isLeaderEligible(),
                 member.getPriority(),
                 member.getMemberHost(),
-                member.getMetricsApiAddress(),
                 member.getAdminApiAddress(),
                 member.getWsAddress(),
                 member.getTcpAddress(),

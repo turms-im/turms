@@ -19,8 +19,6 @@ package im.turms.server.common.infra.property.env.common.adminapi;
 
 import im.turms.server.common.infra.property.env.common.AddressProperties;
 import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -31,9 +29,10 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public abstract class CommonAdminApiProperties {
 
     @Description("Whether to enable the APIs for administrators")
-    @GlobalProperty
-    @MutableProperty
     private boolean enabled = true;
+
+    @NestedConfigurationProperty
+    protected AdminHttpProperties http = new AdminHttpProperties();
 
     @NestedConfigurationProperty
     private AddressProperties address = new AddressProperties();

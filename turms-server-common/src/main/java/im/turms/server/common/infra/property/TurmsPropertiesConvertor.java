@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import static im.turms.server.common.infra.property.TurmsPropertiesInspector.MAPPER;
+import static im.turms.server.common.infra.json.JsonCodecPool.MAPPER;
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.MUTABLE_PROPERTIES_WRITER;
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getField;
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.isMutableProperty;

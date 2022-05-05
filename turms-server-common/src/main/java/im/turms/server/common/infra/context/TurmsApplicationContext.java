@@ -85,7 +85,7 @@ public class TurmsApplicationContext {
 
         activeEnvProfile = getActiveEnvProfile(activeProfiles, devEnvs, localTestEnvs, testEnvs, prodEnvs);
         isDevOrLocalTest = isInProfiles(devEnvs, activeProfiles) || isInProfiles(localTestEnvs, activeProfiles);
-        // Prefer isProduction to be true to avoid getting trouble in production
+        // Prefer "isProduction" to be true to avoid getting trouble in production
         isProduction = !isDevOrLocalTest && !isInProfiles(testEnvs, activeProfiles);
         version = getVersion(isProduction, buildProperties);
 
@@ -137,7 +137,7 @@ public class TurmsApplicationContext {
             return buildProperties.getVersion();
         }
         if (buildProperties == null) {
-            // We allow build-info.properties not exist in non-production
+            // We allow "build-info.properties" not exist in non-production
             // environments for a better development experience
             LOGGER.warn("Cannot find " + BUILD_INFO_PROPS_PATH +
                     ", fall back to the default version " + DEFAULT_VERSION +

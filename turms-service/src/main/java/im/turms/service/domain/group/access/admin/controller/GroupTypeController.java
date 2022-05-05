@@ -17,28 +17,26 @@
 
 package im.turms.service.domain.group.access.admin.controller;
 
+import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.PaginationDTO;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
+import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
-import im.turms.server.common.domain.common.dto.response.DeleteResultDTO;
-import im.turms.server.common.domain.common.dto.response.PaginationDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PostMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.group.access.admin.dto.request.AddGroupTypeDTO;
 import im.turms.service.domain.group.access.admin.dto.request.UpdateGroupTypeDTO;
 import im.turms.service.domain.group.po.GroupType;
 import im.turms.service.domain.group.service.GroupTypeService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -48,8 +46,7 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/groups/types")
+@RestController("groups/types")
 public class GroupTypeController extends BaseController {
 
     private final GroupTypeService groupTypeService;
@@ -61,7 +58,7 @@ public class GroupTypeController extends BaseController {
 
     @PostMapping
     @RequiredPermission(AdminPermission.GROUP_TYPE_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<GroupType>>> addGroupType(@RequestBody AddGroupTypeDTO addGroupTypeDTO) {
+    public Mono<HttpHandlerResult<ResponseDTO<GroupType>>> addGroupType(@RequestBody AddGroupTypeDTO addGroupTypeDTO) {
         Mono<GroupType> addedGroupType = groupTypeService.addGroupType(
                 addGroupTypeDTO.name(),
                 addGroupTypeDTO.groupSizeLimit(),
@@ -73,33 +70,33 @@ public class GroupTypeController extends BaseController {
                 addGroupTypeDTO.selfInfoUpdatable(),
                 addGroupTypeDTO.enableReadReceipt(),
                 addGroupTypeDTO.messageEditable());
-        return ResponseFactory.okIfTruthy(addedGroupType);
+        return HttpHandlerResult.okIfTruthy(addedGroupType);
     }
 
     @GetMapping
     @RequiredPermission(AdminPermission.GROUP_TYPE_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<GroupType>>>> queryGroupTypes(
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<Collection<GroupType>>>> queryGroupTypes(
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Flux<GroupType> groupTypesFlux = groupTypeService.queryGroupTypes(0, size);
-        return ResponseFactory.okIfTruthy(groupTypesFlux);
+        return HttpHandlerResult.okIfTruthy(groupTypesFlux);
     }
 
-    @GetMapping("/page")
+    @GetMapping("page")
     @RequiredPermission(AdminPermission.GROUP_TYPE_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<PaginationDTO<GroupType>>>> queryGroupTypes(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<PaginationDTO<GroupType>>>> queryGroupTypes(
+            int page,
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Mono<Long> count = groupTypeService.countGroupTypes();
         Flux<GroupType> groupTypesFlux = groupTypeService.queryGroupTypes(page, size);
-        return ResponseFactory.page(count, groupTypesFlux);
+        return HttpHandlerResult.page(count, groupTypesFlux);
     }
 
     @PutMapping
     @RequiredPermission(AdminPermission.GROUP_TYPE_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateGroupType(
-            @RequestParam Set<Long> ids,
+    public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateGroupType(
+            Set<Long> ids,
             @RequestBody UpdateGroupTypeDTO updateGroupTypeDTO) {
         Mono<UpdateResultDTO> updateMono = groupTypeService.updateGroupTypes(
                         ids,
@@ -114,16 +111,16 @@ public class GroupTypeController extends BaseController {
                         updateGroupTypeDTO.enableReadReceipt(),
                         updateGroupTypeDTO.messageEditable())
                 .map(UpdateResultDTO::get);
-        return ResponseFactory.okIfTruthy(updateMono);
+        return HttpHandlerResult.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(AdminPermission.GROUP_TYPE_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteGroupType(@RequestParam Set<Long> ids) {
+    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteGroupType(Set<Long> ids) {
         Mono<DeleteResultDTO> deleteMono = groupTypeService
                 .deleteGroupTypes(ids)
                 .map(DeleteResultDTO::get);
-        return ResponseFactory.okIfTruthy(deleteMono);
+        return HttpHandlerResult.okIfTruthy(deleteMono);
     }
 
 }

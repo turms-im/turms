@@ -34,7 +34,6 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
 
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 
@@ -118,9 +117,4 @@ public final class GroupMember extends BaseEntity {
         }
     }
 
-    @Data
-    @AllArgsConstructor
-    public static final class KeyList {
-        private List<Key> keys;
-    }
 }

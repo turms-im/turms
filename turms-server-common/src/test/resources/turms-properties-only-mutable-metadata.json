@@ -71,13 +71,7 @@
           "type": "boolean"
         }
       },
-      "enabled": {
-        "deprecated": false,
-        "desc": "Whether to enable the APIs for administrators",
-        "global": true,
-        "mutable": true,
-        "type": "boolean"
-      },
+      "http": {},
       "log": {
         "enabled": {
           "deprecated": false,
@@ -404,13 +398,7 @@
         "mutable": true,
         "type": "int"
       },
-      "enabled": {
-        "deprecated": false,
-        "desc": "Whether to enable the APIs for administrators",
-        "global": true,
-        "mutable": true,
-        "type": "boolean"
-      },
+      "http": {},
       "log": {
         "enabled": {
           "deprecated": false,

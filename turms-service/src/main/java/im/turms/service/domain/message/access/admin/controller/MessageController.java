@@ -17,12 +17,19 @@
 
 package im.turms.service.domain.message.access.admin.controller;
 
+import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.PaginationDTO;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
+import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
-import im.turms.server.common.domain.common.dto.response.DeleteResultDTO;
-import im.turms.server.common.domain.common.dto.response.PaginationDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PostMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DivideBy;
@@ -32,15 +39,6 @@ import im.turms.service.domain.message.access.admin.dto.request.UpdateMessageDTO
 import im.turms.service.domain.message.access.admin.dto.response.MessageStatisticsDTO;
 import im.turms.service.domain.message.po.Message;
 import im.turms.service.domain.message.service.MessageService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -58,8 +56,7 @@ import static im.turms.server.common.access.admin.permission.AdminPermission.MES
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/messages")
+@RestController("messages")
 public class MessageController extends BaseController {
 
     private final MessageService messageService;
@@ -71,8 +68,8 @@ public class MessageController extends BaseController {
 
     @PostMapping
     @RequiredPermission(MESSAGE_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<Void>>> createMessages(
-            @RequestParam(defaultValue = "true") boolean send,
+    public Mono<HttpHandlerResult<ResponseDTO<Void>>> createMessages(
+            @QueryParam(defaultValue = "true") boolean send,
             @RequestBody CreateMessageDTO createMessageDTO) {
         Mono<Void> sendMono = messageService.authAndSaveAndSendMessage(
                 send,
@@ -86,22 +83,22 @@ public class MessageController extends BaseController {
                 createMessageDTO.burnAfter(),
                 createMessageDTO.referenceId(),
                 createMessageDTO.preMessageId());
-        return sendMono.thenReturn(ResponseFactory.OK);
+        return sendMono.thenReturn(HttpHandlerResult.RESPONSE_OK);
     }
 
     @GetMapping
     @RequiredPermission(MESSAGE_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<Message>>>> queryMessages(
-            @RequestParam(required = false) Set<Long> ids,
-            @RequestParam(required = false) Boolean areGroupMessages,
-            @RequestParam(required = false) Boolean areSystemMessages,
-            @RequestParam(required = false) Set<Long> senderIds,
-            @RequestParam(required = false) Set<Long> targetIds,
-            @RequestParam(required = false) Date deliveryDateStart,
-            @RequestParam(required = false) Date deliveryDateEnd,
-            @RequestParam(required = false) Date deletionDateStart,
-            @RequestParam(required = false) Date deletionDateEnd,
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<Collection<Message>>>> queryMessages(
+            @QueryParam(required = false) Set<Long> ids,
+            @QueryParam(required = false) Boolean areGroupMessages,
+            @QueryParam(required = false) Boolean areSystemMessages,
+            @QueryParam(required = false) Set<Long> senderIds,
+            @QueryParam(required = false) Set<Long> targetIds,
+            @QueryParam(required = false) Date deliveryDateStart,
+            @QueryParam(required = false) Date deliveryDateEnd,
+            @QueryParam(required = false) Date deletionDateStart,
+            @QueryParam(required = false) Date deletionDateEnd,
+            @QueryParam(required = false) Integer size) {
         Flux<Message> completeMessagesFlux = messageService.queryMessages(
                 false,
                 ids,
@@ -113,23 +110,23 @@ public class MessageController extends BaseController {
                 DateRange.of(deletionDateStart, deletionDateEnd),
                 0,
                 getPageSize(size));
-        return ResponseFactory.okIfTruthy(completeMessagesFlux);
+        return HttpHandlerResult.okIfTruthy(completeMessagesFlux);
     }
 
-    @GetMapping("/page")
+    @GetMapping("page")
     @RequiredPermission(MESSAGE_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<PaginationDTO<Message>>>> queryMessages(
-            @RequestParam(required = false) Set<Long> ids,
-            @RequestParam(required = false) Boolean areGroupMessages,
-            @RequestParam(required = false) Boolean areSystemMessages,
-            @RequestParam(required = false) Set<Long> senderIds,
-            @RequestParam(required = false) Set<Long> targetIds,
-            @RequestParam(required = false) Date deliveryDateStart,
-            @RequestParam(required = false) Date deliveryDateEnd,
-            @RequestParam(required = false) Date deletionDateStart,
-            @RequestParam(required = false) Date deletionDateEnd,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<PaginationDTO<Message>>>> queryMessages(
+            @QueryParam(required = false) Set<Long> ids,
+            @QueryParam(required = false) Boolean areGroupMessages,
+            @QueryParam(required = false) Boolean areSystemMessages,
+            @QueryParam(required = false) Set<Long> senderIds,
+            @QueryParam(required = false) Set<Long> targetIds,
+            @QueryParam(required = false) Date deliveryDateStart,
+            @QueryParam(required = false) Date deliveryDateEnd,
+            @QueryParam(required = false) Date deletionDateStart,
+            @QueryParam(required = false) Date deletionDateEnd,
+            int page,
+            @QueryParam(required = false) Integer size) {
         Mono<Long> count = messageService.countMessages(
                 ids,
                 areGroupMessages,
@@ -149,23 +146,23 @@ public class MessageController extends BaseController {
                 DateRange.of(deletionDateStart, deletionDateEnd),
                 page,
                 getPageSize(size));
-        return ResponseFactory.page(count, completeMessagesFlux);
+        return HttpHandlerResult.page(count, completeMessagesFlux);
     }
 
-    @GetMapping("/count")
+    @GetMapping("count")
     @RequiredPermission(MESSAGE_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<MessageStatisticsDTO>>> countMessages(
-            @RequestParam(required = false) Boolean areGroupMessages,
-            @RequestParam(required = false) Boolean areSystemMessages,
-            @RequestParam(required = false) Date sentStartDate,
-            @RequestParam(required = false) Date sentEndDate,
-            @RequestParam(required = false) Date sentOnAverageStartDate,
-            @RequestParam(required = false) Date sentOnAverageEndDate,
-            @RequestParam(required = false) Date acknowledgedStartDate,
-            @RequestParam(required = false) Date acknowledgedEndDate,
-            @RequestParam(required = false) Date acknowledgedOnAverageStartDate,
-            @RequestParam(required = false) Date acknowledgedOnAverageEndDate,
-            @RequestParam(defaultValue = "NOOP") DivideBy divideBy) {
+    public Mono<HttpHandlerResult<ResponseDTO<MessageStatisticsDTO>>> countMessages(
+            @QueryParam(required = false) Boolean areGroupMessages,
+            @QueryParam(required = false) Boolean areSystemMessages,
+            @QueryParam(required = false) Date sentStartDate,
+            @QueryParam(required = false) Date sentEndDate,
+            @QueryParam(required = false) Date sentOnAverageStartDate,
+            @QueryParam(required = false) Date sentOnAverageEndDate,
+            @QueryParam(required = false) Date acknowledgedStartDate,
+            @QueryParam(required = false) Date acknowledgedEndDate,
+            @QueryParam(required = false) Date acknowledgedOnAverageStartDate,
+            @QueryParam(required = false) Date acknowledgedOnAverageEndDate,
+            @QueryParam(defaultValue = "NOOP") DivideBy divideBy) {
         List<Mono<?>> counts = new LinkedList<>();
         MessageStatisticsDTO statistics = new MessageStatisticsDTO();
         if (divideBy == null || divideBy == DivideBy.NOOP) {
@@ -238,13 +235,13 @@ public class MessageController extends BaseController {
                 return Mono.empty();
             }
         }
-        return ResponseFactory.okIfTruthy(Mono.when(counts).thenReturn(statistics));
+        return HttpHandlerResult.okIfTruthy(Mono.when(counts).thenReturn(statistics));
     }
 
     @PutMapping
     @RequiredPermission(MESSAGE_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateMessages(
-            @RequestParam Set<Long> ids,
+    public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateMessages(
+            Set<Long> ids,
             @RequestBody UpdateMessageDTO updateMessageDTO) {
         Mono<UpdateResultDTO> updateMono = messageService.updateMessages(
                         ids,
@@ -255,18 +252,18 @@ public class MessageController extends BaseController {
                         updateMessageDTO.recallDate(),
                         null)
                 .map(UpdateResultDTO::get);
-        return ResponseFactory.okIfTruthy(updateMono);
+        return HttpHandlerResult.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(MESSAGE_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteMessages(
-            @RequestParam Set<Long> ids,
-            @RequestParam(required = false) Boolean deleteLogically) {
+    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteMessages(
+            Set<Long> ids,
+            @QueryParam(required = false) Boolean deleteLogically) {
         Mono<DeleteResultDTO> deleteMono = messageService
                 .deleteMessages(ids, deleteLogically)
                 .map(DeleteResultDTO::get);
-        return ResponseFactory.okIfTruthy(deleteMono);
+        return HttpHandlerResult.okIfTruthy(deleteMono);
     }
 
 }

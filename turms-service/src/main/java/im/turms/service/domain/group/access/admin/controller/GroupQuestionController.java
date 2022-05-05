@@ -17,28 +17,26 @@
 
 package im.turms.service.domain.group.access.admin.controller;
 
+import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.PaginationDTO;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
+import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
-import im.turms.server.common.domain.common.dto.response.DeleteResultDTO;
-import im.turms.server.common.domain.common.dto.response.PaginationDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PostMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.group.access.admin.dto.request.AddGroupJoinQuestionDTO;
 import im.turms.service.domain.group.access.admin.dto.request.UpdateGroupJoinQuestionDTO;
 import im.turms.service.domain.group.po.GroupJoinQuestion;
 import im.turms.service.domain.group.service.GroupQuestionService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -48,8 +46,7 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/groups/questions")
+@RestController("groups/questions")
 public class GroupQuestionController extends BaseController {
 
     private final GroupQuestionService groupQuestionService;
@@ -61,46 +58,46 @@ public class GroupQuestionController extends BaseController {
 
     @GetMapping
     @RequiredPermission(AdminPermission.GROUP_QUESTION_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<GroupJoinQuestion>>>> queryGroupJoinQuestions(
-            @RequestParam(required = false) Set<Long> ids,
-            @RequestParam(required = false) Set<Long> groupIds,
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<Collection<GroupJoinQuestion>>>> queryGroupJoinQuestions(
+            @QueryParam(required = false) Set<Long> ids,
+            @QueryParam(required = false) Set<Long> groupIds,
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Flux<GroupJoinQuestion> groupJoinQuestionFlux = groupQuestionService
                 .queryGroupJoinQuestions(ids, groupIds, 0, size, true);
-        return ResponseFactory.okIfTruthy(groupJoinQuestionFlux);
+        return HttpHandlerResult.okIfTruthy(groupJoinQuestionFlux);
     }
 
-    @GetMapping("/page")
+    @GetMapping("page")
     @RequiredPermission(AdminPermission.GROUP_QUESTION_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<PaginationDTO<GroupJoinQuestion>>>> queryGroupJoinQuestions(
-            @RequestParam(required = false) Set<Long> ids,
-            @RequestParam(required = false) Set<Long> groupIds,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<PaginationDTO<GroupJoinQuestion>>>> queryGroupJoinQuestions(
+            @QueryParam(required = false) Set<Long> ids,
+            @QueryParam(required = false) Set<Long> groupIds,
+            int page,
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Mono<Long> count = groupQuestionService.countGroupJoinQuestions(ids, groupIds);
         Flux<GroupJoinQuestion> groupJoinQuestionFlux = groupQuestionService
                 .queryGroupJoinQuestions(ids, groupIds, page, size, true);
-        return ResponseFactory.page(count, groupJoinQuestionFlux);
+        return HttpHandlerResult.page(count, groupJoinQuestionFlux);
     }
 
     @PostMapping
     @RequiredPermission(AdminPermission.GROUP_QUESTION_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<GroupJoinQuestion>>> addGroupJoinQuestion(
+    public Mono<HttpHandlerResult<ResponseDTO<GroupJoinQuestion>>> addGroupJoinQuestion(
             @RequestBody AddGroupJoinQuestionDTO addGroupJoinQuestionDTO) {
         Mono<GroupJoinQuestion> createMono = groupQuestionService.createGroupJoinQuestion(
                 addGroupJoinQuestionDTO.groupId(),
                 addGroupJoinQuestionDTO.question(),
                 addGroupJoinQuestionDTO.answers(),
                 addGroupJoinQuestionDTO.score());
-        return ResponseFactory.okIfTruthy(createMono);
+        return HttpHandlerResult.okIfTruthy(createMono);
     }
 
     @PutMapping
     @RequiredPermission(AdminPermission.GROUP_QUESTION_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateGroupJoinQuestions(
-            @RequestParam Set<Long> ids,
+    public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateGroupJoinQuestions(
+            Set<Long> ids,
             @RequestBody UpdateGroupJoinQuestionDTO updateGroupJoinQuestionDTO) {
         Mono<UpdateResultDTO> updateMono = groupQuestionService.updateGroupJoinQuestions(
                         ids,
@@ -109,17 +106,17 @@ public class GroupQuestionController extends BaseController {
                         updateGroupJoinQuestionDTO.answers(),
                         updateGroupJoinQuestionDTO.score())
                 .map(UpdateResultDTO::get);
-        return ResponseFactory.okIfTruthy(updateMono);
+        return HttpHandlerResult.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(AdminPermission.GROUP_QUESTION_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteGroupJoinQuestions(
-            @RequestParam(required = false) Set<Long> ids) {
+    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteGroupJoinQuestions(
+            @QueryParam(required = false) Set<Long> ids) {
         Mono<DeleteResultDTO> deleteMono = groupQuestionService
                 .deleteGroupJoinQuestions(ids)
                 .map(DeleteResultDTO::get);
-        return ResponseFactory.okIfTruthy(deleteMono);
+        return HttpHandlerResult.okIfTruthy(deleteMono);
     }
 
 }

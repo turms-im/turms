@@ -42,6 +42,7 @@ public abstract class BaseTurmsApplication {
         // so that we can get the used direct memory via BufferPoolMXBean without depending on ByteBufAllocator of Netty
         System.setProperty("io.netty.maxDirectMemory", "0");
         System.setProperty("spring.main.banner-mode", "off");
+        System.setProperty("spring.main.web-application-type", "none");
     }
 
     protected static void bootstrap(Class<?> applicationClass, String[] args) {

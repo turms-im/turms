@@ -32,7 +32,6 @@ import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author James Chen
@@ -102,9 +101,4 @@ public final class UserRelationshipGroup extends BaseEntity {
         }
     }
 
-    @Data
-    @AllArgsConstructor
-    public static final class KeyList {
-        private List<Key> keys;
-    }
 }

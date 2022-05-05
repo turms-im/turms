@@ -25,7 +25,6 @@ import im.turms.server.common.infra.exception.ResponseException;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
 

@@ -27,4 +27,9 @@ import lombok.Data;
 @Builder(toBuilder = true)
 @Data
 public class AdminApiProperties extends CommonAdminApiProperties {
+
+    public AdminApiProperties() {
+        http.setPort(9510);
+    }
+
 }

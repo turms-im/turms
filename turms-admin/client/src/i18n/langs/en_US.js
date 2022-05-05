@@ -279,7 +279,6 @@ const en_US = {
     'messageId': 'Message ID',
     'messageInfo': 'Message Info',
     'metrics': 'Metrics',
-    'metricsApiAddress': 'Metrics API',
     'minimumScore': 'Minimum Score',
     'missingAdminInfo': 'Admin info is missing',
     'modificationDate': 'Update Date',

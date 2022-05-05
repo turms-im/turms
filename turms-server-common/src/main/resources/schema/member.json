@@ -2,7 +2,6 @@
   "$jsonSchema": {
     "bsonType": "object",
     "required": [
-      "metricsApiAddress",
       "isLeaderEligible",
       "memberHost",
       "nodeVersion",
@@ -29,9 +28,6 @@
             "bsonType": "string"
           }
         }
-      },
-      "metricsApiAddress": {
-        "bsonType": "string"
       },
       "isLeaderEligible": {
         "bsonType": "bool"

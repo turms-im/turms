@@ -17,6 +17,7 @@
 
 package im.turms.server.common.domain.admin.bo;
 
+import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.Map;
 
@@ -24,10 +25,10 @@ import java.util.Map;
  * @author James Chen
  */
 public record AdminAction(
-        String account,
+        @Nullable String account,
         String ip,
         Date requestTime,
-        String action,
+        @Nullable String action,
         Map<String, Object> params,
         int processingTime
 ) {

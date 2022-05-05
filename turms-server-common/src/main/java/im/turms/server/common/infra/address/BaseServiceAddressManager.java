@@ -23,12 +23,11 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.AdvertiseStrategy;
 import im.turms.server.common.infra.property.env.common.AddressProperties;
+import im.turms.server.common.infra.property.env.common.SslProperties;
+import im.turms.server.common.infra.property.env.common.adminapi.AdminHttpProperties;
 import lombok.SneakyThrows;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.boot.web.server.Ssl;
 
 import javax.annotation.Nullable;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,18 +50,17 @@ public abstract class BaseServiceAddressManager {
 
     // admin address
     private AddressProperties adminApiAddressProperties;
-    private String metricsApiAddress;
     private String adminApiAddress;
 
-    protected BaseServiceAddressManager(ServerProperties adminApiServerProperties,
+    protected BaseServiceAddressManager(AdminHttpProperties adminHttpProperties,
                                         PublicIpManager publicIpManager,
                                         TurmsPropertiesManager propertiesManager) {
         this.publicIpManager = publicIpManager;
         TurmsProperties turmsProperties = propertiesManager.getLocalProperties();
         memberBindHost = turmsProperties.getCluster().getConnection().getServer().getHost();
         updateMemberHostIfChanged(turmsProperties);
-        updateAdminApiAddresses(adminApiServerProperties, getAdminAddressProperties(turmsProperties));
-        updateCustomAddresses(adminApiServerProperties, turmsProperties);
+        updateAdminApiAddresses(adminHttpProperties, getAdminAddressProperties(turmsProperties));
+        updateCustomAddresses(adminHttpProperties, turmsProperties);
         propertiesManager.addLocalPropertiesChangeListener(properties -> {
             AddressProperties newAdminApiDiscoveryProperties = getAdminAddressProperties(properties);
             boolean areAdminApiAddressPropertiesChange = !adminApiAddressProperties
@@ -70,20 +68,19 @@ public abstract class BaseServiceAddressManager {
             boolean isMemberHostChanged = updateMemberHostIfChanged(properties);
             if (areAdminApiAddressPropertiesChange) {
                 try {
-                    updateAdminApiAddresses(adminApiServerProperties, newAdminApiDiscoveryProperties);
+                    updateAdminApiAddresses(adminHttpProperties, newAdminApiDiscoveryProperties);
                 } catch (Exception e) {
                     LOGGER.error("Failed to update admin API addresses", e);
                 }
             }
             boolean areCustomAddressesChanged = false;
             try {
-                areCustomAddressesChanged = updateCustomAddresses(adminApiServerProperties, turmsProperties);
+                areCustomAddressesChanged = updateCustomAddresses(adminHttpProperties, turmsProperties);
             } catch (Exception e) {
                 LOGGER.error("Failed to update custom addresses", e);
             }
             if (areAdminApiAddressPropertiesChange || isMemberHostChanged || areCustomAddressesChanged) {
                 AddressCollection addresses = new AddressCollection(getMemberHost(),
-                        metricsApiAddress,
                         adminApiAddress,
                         getWsAddress(),
                         getTcpAddress(),
@@ -95,11 +92,6 @@ public abstract class BaseServiceAddressManager {
 
     public String getMemberHost() {
         return memberHost;
-    }
-
-    @Nullable
-    public String getMetricsApiAddress() {
-        return metricsApiAddress;
     }
 
     @Nullable
@@ -142,27 +134,26 @@ public abstract class BaseServiceAddressManager {
 
     protected abstract AddressProperties getAdminAddressProperties(TurmsProperties properties);
 
-    protected boolean updateCustomAddresses(ServerProperties adminApiServerProperties,
+    protected boolean updateCustomAddresses(AdminHttpProperties adminHttpProperties,
                                             TurmsProperties properties) {
         return false;
     }
 
     @SneakyThrows
-    private void updateAdminApiAddresses(ServerProperties adminApiServerProperties,
+    private void updateAdminApiAddresses(AdminHttpProperties adminHttpProperties,
                                          AddressProperties newAdminApiAddressProperties) {
 
-        InetAddress address = adminApiServerProperties.getAddress();
-        Integer port = adminApiServerProperties.getPort();
-        if (address == null) {
+        String host = adminHttpProperties.getHost();
+        int port = adminHttpProperties.getPort();
+        if (host == null) {
             throw new IllegalStateException("The bind host isn't specified");
         }
-        if (port == null || port <= 0) {
+        if (port <= 0) {
             throw new UnknownHostException("Invalid service port: " + port);
         }
-        Ssl ssl = adminApiServerProperties.getSsl();
+        SslProperties ssl = adminHttpProperties.getSsl();
         boolean isSslEnabled = ssl != null && ssl.isEnabled();
-        AddressCollector collector = getAddressCollector(newAdminApiAddressProperties, address.getHostAddress(), port, isSslEnabled);
-        metricsApiAddress = collector.getHttpAddress() + "/actuator";
+        AddressCollector collector = getAddressCollector(newAdminApiAddressProperties, host, port, isSslEnabled);
         adminApiAddress = collector.getHttpAddress();
         adminApiAddressProperties = newAdminApiAddressProperties;
     }

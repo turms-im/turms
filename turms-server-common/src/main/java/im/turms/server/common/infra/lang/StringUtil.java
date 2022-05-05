@@ -115,6 +115,12 @@ public final class StringUtil {
         return (String) NEW_STRING.invokeExact(bytes, coder);
     }
 
+    public static String newLatin1String(byte[] srcBytes, int srcPos, int length) {
+        byte[] bytes = new byte[length];
+        System.arraycopy(srcBytes, srcPos, bytes, 0, length);
+        return StringUtil.newLatin1String(bytes);
+    }
+
     @SneakyThrows
     public static String newLatin1String(byte[] bytes) {
         return (String) NEW_STRING.invokeExact(bytes, LATIN1);

@@ -18,11 +18,17 @@
 package im.turms.service.domain.conversation.access.admin.controller;
 
 import com.mongodb.client.result.DeleteResult;
+import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
-import im.turms.server.common.domain.common.dto.response.DeleteResultDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
+import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -34,15 +40,7 @@ import im.turms.service.domain.conversation.po.GroupConversation;
 import im.turms.service.domain.conversation.po.PrivateConversation;
 import im.turms.service.domain.conversation.service.ConversationService;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -53,8 +51,7 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/conversations")
+@RestController("conversations")
 public class ConversationController extends BaseController {
 
     private final ConversationService conversationService;
@@ -66,18 +63,18 @@ public class ConversationController extends BaseController {
 
     @GetMapping
     @RequiredPermission(AdminPermission.CONVERSATION_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<ConversationsDTO>>> queryConversations(
-            PrivateConversation.KeyList privateConversationKeys,
-            @RequestParam(required = false) Set<Long> ownerIds,
-            @RequestParam(required = false) Set<Long> groupIds) {
+    public Mono<HttpHandlerResult<ResponseDTO<ConversationsDTO>>> queryConversations(
+            @QueryParam(required = false) List<PrivateConversation.Key> privateConversationKeys,
+            @QueryParam(required = false) Set<Long> ownerIds,
+            @QueryParam(required = false) Set<Long> groupIds) {
         Flux<PrivateConversation> privateConversationsFlux;
         int privateConversationsSize = 0;
-        if (isEmptyPrivateConversationKeys(privateConversationKeys)) {
+        if (CollectionUtil.isEmpty(privateConversationKeys)) {
             privateConversationsFlux = Flux.empty();
         } else {
-            List<PrivateConversation.Key> keys = privateConversationKeys.getPrivateConversationKeys();
-            privateConversationsFlux = conversationService.queryPrivateConversations(CollectionUtil.newSet(keys));
-            privateConversationsSize += keys.size();
+            privateConversationsFlux = conversationService
+                    .queryPrivateConversations(CollectionUtil.newSet(privateConversationKeys));
+            privateConversationsSize += privateConversationKeys.size();
         }
         if (ownerIds != null && !ownerIds.isEmpty()) {
             privateConversationsSize += ownerIds.size();
@@ -92,19 +89,19 @@ public class ConversationController extends BaseController {
                 .collect(CollectorUtil.toList(groupIds.size()));
         Mono<ConversationsDTO> conversationsMono = privateConversations.zipWith(groupConversations)
                 .map(tuple -> new ConversationsDTO(tuple.getT1(), tuple.getT2()));
-        return ResponseFactory.okIfTruthy(conversationsMono);
+        return HttpHandlerResult.okIfTruthy(conversationsMono);
     }
 
     @DeleteMapping
     @RequiredPermission(AdminPermission.CONVERSATION_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteConversations(
-            PrivateConversation.KeyList privateConversationKeys,
-            @RequestParam(required = false) Set<Long> ownerIds,
-            @RequestParam(required = false) Set<Long> groupIds) {
-        Mono<DeleteResult> resultMono = isEmptyPrivateConversationKeys(privateConversationKeys)
+    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteConversations(
+            @QueryParam(required = false) List<PrivateConversation.Key> privateConversationKeys,
+            @QueryParam(required = false) Set<Long> ownerIds,
+            @QueryParam(required = false) Set<Long> groupIds) {
+        Mono<DeleteResult> resultMono = CollectionUtil.isEmpty(privateConversationKeys)
                 ? OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT
                 : conversationService
-                .deletePrivateConversations(CollectionUtil.newSet(privateConversationKeys.getPrivateConversationKeys()));
+                .deletePrivateConversations(CollectionUtil.newSet(privateConversationKeys));
         if (!CollectionUtils.isEmpty(ownerIds)) {
             resultMono = resultMono.zipWith(conversationService.deletePrivateConversations(ownerIds, null))
                     .map(tuple -> OperationResultConvertor.merge(tuple.getT1(), tuple.getT2()));
@@ -113,43 +110,27 @@ public class ConversationController extends BaseController {
             resultMono = resultMono.zipWith(conversationService.deleteGroupConversations(groupIds, null))
                     .map(tuple -> OperationResultConvertor.merge(tuple.getT1(), tuple.getT2()));
         }
-        return ResponseFactory.deleteResult(resultMono);
+        return HttpHandlerResult.deleteResult(resultMono);
     }
 
     @PutMapping
     @RequiredPermission(AdminPermission.CONVERSATION_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<Void>>> updateConversations(
-            PrivateConversation.KeyList privateConversationKeys,
-            GroupConversation.GroupConversionMemberKey.KeyList groupConversationMemberKeys,
+    public Mono<HttpHandlerResult<ResponseDTO<Void>>> updateConversations(
+            @QueryParam(required = false) List<PrivateConversation.Key> privateConversationKeys,
+            @QueryParam(required = false) List<GroupConversation.GroupConversionMemberKey> groupConversationMemberKeys,
             @RequestBody UpdateConversationDTO updateConversationDTO) {
-        Mono<Void> updatePrivateConversions = isEmptyPrivateConversationKeys(privateConversationKeys)
+        Mono<Void> updatePrivateConversions = CollectionUtil.isEmpty(privateConversationKeys)
                 ? Mono.empty()
                 : conversationService
-                .upsertPrivateConversationsReadDate(CollectionUtil.newSet(privateConversationKeys.getPrivateConversationKeys()),
+                .upsertPrivateConversationsReadDate(CollectionUtil.newSet(privateConversationKeys),
                         updateConversationDTO.readDate());
-        Mono<Void> updateGroupConversationsMono = isEmptyGroupConversationKeys(groupConversationMemberKeys)
+        Mono<Void> updateGroupConversationsMono = CollectionUtil.isEmpty(groupConversationMemberKeys)
                 ? Mono.empty()
                 : conversationService
-                .upsertGroupConversationsReadDate(CollectionUtil.newSet(groupConversationMemberKeys.getGroupConversationMemberKeys()),
+                .upsertGroupConversationsReadDate(CollectionUtil.newSet(groupConversationMemberKeys),
                         updateConversationDTO.readDate());
         return Mono.whenDelayError(updatePrivateConversions, updateGroupConversationsMono)
-                .thenReturn(ResponseFactory.OK);
-    }
-
-    private boolean isEmptyPrivateConversationKeys(PrivateConversation.KeyList keys) {
-        if (keys == null) {
-            return true;
-        }
-        List<PrivateConversation.Key> list = keys.getPrivateConversationKeys();
-        return list == null || list.isEmpty();
-    }
-
-    private boolean isEmptyGroupConversationKeys(GroupConversation.GroupConversionMemberKey.KeyList keys) {
-        if (keys == null) {
-            return true;
-        }
-        List<GroupConversation.GroupConversionMemberKey> list = keys.getGroupConversationMemberKeys();
-        return list == null || list.isEmpty();
+                .thenReturn(HttpHandlerResult.RESPONSE_OK);
     }
 
 }

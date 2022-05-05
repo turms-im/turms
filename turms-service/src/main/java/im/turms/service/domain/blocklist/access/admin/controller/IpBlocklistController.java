@@ -17,27 +17,30 @@
 
 package im.turms.service.domain.blocklist.access.admin.controller;
 
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.PaginationDTO;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
+import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PostMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.domain.blocklist.bo.BlockedClient;
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
-import im.turms.server.common.domain.common.dto.response.PaginationDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
+import im.turms.server.common.infra.lang.ByteArrayWrapper;
+import im.turms.server.common.infra.net.InetAddressUtil;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.blocklist.access.admin.dto.request.AddBlockedIpsDTO;
+import im.turms.service.domain.blocklist.access.admin.dto.response.BlockedIpDTO;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -48,8 +51,7 @@ import static im.turms.server.common.access.admin.permission.AdminPermission.CLI
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/blocked-clients/ips")
+@RestController("blocked-clients/ips")
 public class IpBlocklistController extends BaseController {
 
     private final BlocklistService blocklistService;
@@ -61,37 +63,37 @@ public class IpBlocklistController extends BaseController {
 
     @PostMapping
     @RequiredPermission(CLIENT_BLOCKLIST_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<Void>>> addBlockedIps(
+    public Mono<HttpHandlerResult<ResponseDTO<Void>>> addBlockedIps(
             @RequestBody AddBlockedIpsDTO addBlockedIpsDTO) {
         Mono<Void> result = blocklistService.blockIpStrings(addBlockedIpsDTO.ids(),
                 addBlockedIpsDTO.blockMinutes());
-        return ResponseFactory.okIfTruthy(result);
+        return HttpHandlerResult.okIfTruthy(result);
     }
 
     @GetMapping
     @RequiredPermission(CLIENT_BLOCKLIST_QUERY)
-    public ResponseEntity<ResponseDTO<Collection<BlockedClient>>> queryBlockedIps(
-            @RequestParam Set<String> ids) {
+    public HttpHandlerResult<ResponseDTO<Collection<BlockedIpDTO>>> queryBlockedIps(
+            Set<String> ids) {
         List<BlockedClient> blockedIps = blocklistService.getBlockedIpStrings(ids);
-        return ResponseFactory.okIfTruthy(blockedIps);
+        return HttpHandlerResult.okIfTruthy(clients2ips(blockedIps));
     }
 
-    @GetMapping("/page")
+    @GetMapping("page")
     @RequiredPermission(CLIENT_BLOCKLIST_QUERY)
-    public ResponseEntity<ResponseDTO<PaginationDTO<BlockedClient>>> queryBlockedIps(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(required = false) Integer size) {
+    public HttpHandlerResult<ResponseDTO<PaginationDTO<BlockedIpDTO>>> queryBlockedIps(
+            int page,
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         int blockedIpCount = blocklistService.countBlockIps();
         List<BlockedClient> blockedIps = blocklistService.getBlockedIps(page, size);
-        return ResponseFactory.page(blockedIpCount, blockedIps);
+        return HttpHandlerResult.page(blockedIpCount, clients2ips(blockedIps));
     }
 
     @DeleteMapping
     @RequiredPermission(CLIENT_BLOCKLIST_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<Void>>> deleteBlockedIps(
-            @RequestParam(required = false) Set<String> ids,
-            @RequestParam(defaultValue = "false") boolean deleteAll) {
+    public Mono<HttpHandlerResult<ResponseDTO<Void>>> deleteBlockedIps(
+            @QueryParam(required = false) Set<String> ids,
+            boolean deleteAll) {
         Mono<Void> result = Mono.empty();
         if (deleteAll) {
             result = blocklistService.unblockAllIps();
@@ -99,7 +101,16 @@ public class IpBlocklistController extends BaseController {
             result = result
                     .then(blocklistService.unblockIpStrings(ids));
         }
-        return ResponseFactory.okIfTruthy(result);
+        return HttpHandlerResult.okIfTruthy(result);
+    }
+
+    private List<BlockedIpDTO> clients2ips(Collection<BlockedClient> blockedClients) {
+        List<BlockedIpDTO> items = new ArrayList<>(blockedClients.size());
+        for (BlockedClient blockedClient : blockedClients) {
+            items.add(new BlockedIpDTO(InetAddressUtil.ipBytesToString(((ByteArrayWrapper) blockedClient.id()).getBytes()),
+                    new Date(blockedClient.blockEndTime())));
+        }
+        return items;
     }
 
 }

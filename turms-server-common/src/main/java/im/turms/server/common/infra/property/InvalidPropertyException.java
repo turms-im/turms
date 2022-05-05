@@ -20,7 +20,7 @@ package im.turms.server.common.infra.property;
 /**
  * @author James Chen
  */
-public class InvalidPropertyException extends RuntimeException {
+public class InvalidPropertyException extends IllegalArgumentException {
     public InvalidPropertyException(String message) {
         super(message);
     }

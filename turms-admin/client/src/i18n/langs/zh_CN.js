@@ -279,7 +279,6 @@ const zh_CN = {
     'messageId': '消息ID',
     'messageInfo': '消息信息',
     'metrics': '度量',
-    'metricsApiAddress': 'Metrics API地址',
     'minimumScore': '入群分值',
     'missingAdminInfo': '管理员信息丢失',
     'modificationDate': '修改时间',

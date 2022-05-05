@@ -17,12 +17,19 @@
 
 package im.turms.service.domain.user.access.admin.controller.relationship;
 
+import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.PaginationDTO;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
+import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
-import im.turms.server.common.domain.common.dto.response.DeleteResultDTO;
-import im.turms.server.common.domain.common.dto.response.PaginationDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PostMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.time.DateRange;
@@ -33,20 +40,12 @@ import im.turms.service.domain.user.access.admin.dto.response.UserRelationshipDT
 import im.turms.service.domain.user.po.UserRelationship;
 import im.turms.service.domain.user.service.UserRelationshipGroupService;
 import im.turms.service.domain.user.service.UserRelationshipService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -59,8 +58,7 @@ import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_RELA
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/users/relationships")
+@RestController("users/relationships")
 public class UserRelationshipController extends BaseController {
 
     private final UserRelationshipService userRelationshipService;
@@ -76,7 +74,7 @@ public class UserRelationshipController extends BaseController {
 
     @PostMapping
     @RequiredPermission(USER_RELATIONSHIP_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<Void>>> addRelationship(@RequestBody AddRelationshipDTO addRelationshipDTO) {
+    public Mono<HttpHandlerResult<ResponseDTO<Void>>> addRelationship(@RequestBody AddRelationshipDTO addRelationshipDTO) {
         Mono<Void> upsertMono = userRelationshipService.upsertOneSidedRelationship(
                 addRelationshipDTO.ownerId(),
                 addRelationshipDTO.relatedUserId(),
@@ -86,69 +84,69 @@ public class UserRelationshipController extends BaseController {
                 addRelationshipDTO.establishmentDate(),
                 false,
                 null);
-        return upsertMono.thenReturn(ResponseFactory.OK);
+        return upsertMono.thenReturn(HttpHandlerResult.RESPONSE_OK);
     }
 
     @GetMapping
     @RequiredPermission(USER_RELATIONSHIP_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<UserRelationshipDTO>>>> queryRelationships(
-            @RequestParam(required = false) Set<Long> ownerIds,
-            @RequestParam(required = false) Set<Long> relatedUserIds,
-            @RequestParam(required = false) Set<Integer> groupIndexes,
-            @RequestParam(required = false) Boolean isBlocked,
-            @RequestParam(required = false) Date establishmentDateStart,
-            @RequestParam(required = false) Date establishmentDateEnd,
-            @RequestParam(required = false) Integer size,
-            @RequestParam(defaultValue = "false") boolean withGroupIndexes) {
+    public Mono<HttpHandlerResult<ResponseDTO<Collection<UserRelationshipDTO>>>> queryRelationships(
+            @QueryParam(required = false) Set<Long> ownerIds,
+            @QueryParam(required = false) Set<Long> relatedUserIds,
+            @QueryParam(required = false) Set<Integer> groupIndexes,
+            @QueryParam(required = false) Boolean isBlocked,
+            @QueryParam(required = false) Date establishmentDateStart,
+            @QueryParam(required = false) Date establishmentDateEnd,
+            @QueryParam(required = false) Integer size,
+            boolean withGroupIndexes) {
         size = getPageSize(size);
         Flux<UserRelationship> relationshipsFlux = userRelationshipService.queryRelationships(
                 ownerIds, relatedUserIds, groupIndexes, isBlocked, DateRange.of(establishmentDateStart, establishmentDateEnd), 0, size);
         Flux<UserRelationshipDTO> dtoFlux = relationship2dto(withGroupIndexes, relationshipsFlux);
-        return ResponseFactory.okIfTruthy(dtoFlux);
+        return HttpHandlerResult.okIfTruthy(dtoFlux);
     }
 
-    @GetMapping("/page")
+    @GetMapping("page")
     @RequiredPermission(USER_RELATIONSHIP_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<PaginationDTO<UserRelationshipDTO>>>> queryRelationships(
-            @RequestParam(required = false) Set<Long> ownerIds,
-            @RequestParam(required = false) Set<Long> relatedUserIds,
-            @RequestParam(required = false) Set<Integer> groupIndexes,
-            @RequestParam(required = false) Boolean isBlocked,
-            @RequestParam(required = false) Date establishmentDateStart,
-            @RequestParam(required = false) Date establishmentDateEnd,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(required = false) Integer size,
-            @RequestParam(defaultValue = "false") boolean withGroupIndexes) {
+    public Mono<HttpHandlerResult<ResponseDTO<PaginationDTO<UserRelationshipDTO>>>> queryRelationships(
+            @QueryParam(required = false) Set<Long> ownerIds,
+            @QueryParam(required = false) Set<Long> relatedUserIds,
+            @QueryParam(required = false) Set<Integer> groupIndexes,
+            @QueryParam(required = false) Boolean isBlocked,
+            @QueryParam(required = false) Date establishmentDateStart,
+            @QueryParam(required = false) Date establishmentDateEnd,
+            int page,
+            @QueryParam(required = false) Integer size,
+            boolean withGroupIndexes) {
         size = getPageSize(size);
         Mono<Long> count = userRelationshipService.countRelationships(
                 ownerIds, relatedUserIds, groupIndexes, isBlocked);
         Flux<UserRelationship> relationshipsFlux = userRelationshipService.queryRelationships(
                 ownerIds, relatedUserIds, groupIndexes, isBlocked, DateRange.of(establishmentDateStart, establishmentDateEnd), page, size);
         Flux<UserRelationshipDTO> dtoFlux = relationship2dto(withGroupIndexes, relationshipsFlux);
-        return ResponseFactory.page(count, dtoFlux);
+        return HttpHandlerResult.page(count, dtoFlux);
     }
 
     @PutMapping
     @RequiredPermission(USER_RELATIONSHIP_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateRelationships(
-            UserRelationship.KeyList keys,
+    public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateRelationships(
+            List<UserRelationship.Key> keys,
             @RequestBody UpdateRelationshipDTO updateRelationshipDTO) {
         Mono<UpdateResultDTO> updateMono = userRelationshipService.updateUserOneSidedRelationships(
-                        CollectionUtil.newSet(keys.getKeys()),
+                        CollectionUtil.newSet(keys),
                         updateRelationshipDTO.blockDate(),
                         updateRelationshipDTO.establishmentDate())
                 .map(UpdateResultDTO::get);
-        return ResponseFactory.okIfTruthy(updateMono);
+        return HttpHandlerResult.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(USER_RELATIONSHIP_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteRelationships(
-            UserRelationship.KeyList keys) {
+    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteRelationships(
+            List<UserRelationship.Key> keys) {
         Mono<DeleteResultDTO> deleteMono = userRelationshipService
-                .deleteOneSidedRelationships(CollectionUtil.newSet(keys.getKeys()))
+                .deleteOneSidedRelationships(CollectionUtil.newSet(keys))
                 .map(DeleteResultDTO::get);
-        return ResponseFactory.okIfTruthy(deleteMono);
+        return HttpHandlerResult.okIfTruthy(deleteMono);
     }
 
     private Flux<UserRelationshipDTO> relationship2dto(Boolean withGroupIndexes, Flux<UserRelationship> relationshipsFlux) {

@@ -24,6 +24,8 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.AdvertiseStrategy;
 import im.turms.server.common.infra.property.env.common.AddressProperties;
+import im.turms.server.common.infra.property.env.common.SslProperties;
+import im.turms.server.common.infra.property.env.common.adminapi.AdminHttpProperties;
 import im.turms.server.common.infra.property.env.gateway.BaseServerProperties;
 import im.turms.server.common.infra.property.env.gateway.DiscoveryProperties;
 import im.turms.server.common.infra.property.env.gateway.TcpProperties;
@@ -31,8 +33,6 @@ import im.turms.server.common.infra.property.env.gateway.UdpProperties;
 import im.turms.server.common.infra.property.env.gateway.WebSocketProperties;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.boot.web.server.Ssl;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -52,11 +52,10 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
     @Nullable
     private String udpAddress;
 
-    public ServiceAddressManager(
-            ServerProperties adminApiServerProperties,
-            PublicIpManager publicIpManager,
-            TurmsPropertiesManager propertiesManager) {
-        super(adminApiServerProperties, publicIpManager, propertiesManager);
+    public ServiceAddressManager(PublicIpManager publicIpManager, TurmsPropertiesManager propertiesManager) {
+        super(propertiesManager.getLocalProperties().getGateway().getAdminApi().getHttp(),
+                publicIpManager,
+                propertiesManager);
     }
 
     @Nullable
@@ -78,7 +77,7 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
     }
 
     @Override
-    protected boolean updateCustomAddresses(ServerProperties adminApiServerProperties,
+    protected boolean updateCustomAddresses(AdminHttpProperties adminHttpProperties,
                                             TurmsProperties properties) {
         if (!areAddressPropertiesChange(properties)) {
             return false;
@@ -112,9 +111,15 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
         boolean attachPortToHost = gatewayApiDiscoveryProperties.isAttachPortToHost();
         String bindHost = serverProperties.getHost();
         int port = serverProperties.getPort();
-        Ssl ssl = serverProperties.getSsl();
+        SslProperties ssl = serverProperties.getSsl();
         boolean isSslEnabled = ssl != null && ssl.isEnabled();
-        return new AddressCollector(bindHost, advertiseHost, port, isSslEnabled, attachPortToHost, advertiseStrategy, publicIpManager);
+        return new AddressCollector(bindHost,
+                advertiseHost,
+                port,
+                isSslEnabled,
+                attachPortToHost,
+                advertiseStrategy,
+                publicIpManager);
     }
 
     private boolean areAddressPropertiesChange(TurmsProperties newTurmsProperties) {

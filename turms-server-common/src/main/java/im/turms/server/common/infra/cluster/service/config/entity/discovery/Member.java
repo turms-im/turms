@@ -84,7 +84,6 @@ public final class Member {
     private String memberHost;
     private final int memberPort;
 
-    private String metricsApiAddress;
     private String adminApiAddress;
     private String wsAddress;
     private String tcpAddress;
@@ -104,7 +103,6 @@ public final class Member {
             int priority,
             String memberHost,
             int memberPort,
-            String metricsApiAddress,
             String adminApiAddress,
             String wsAddress,
             String tcpAddress,
@@ -120,7 +118,6 @@ public final class Member {
         this.priority = priority;
         this.memberHost = memberHost;
         this.memberPort = memberPort;
-        this.metricsApiAddress = metricsApiAddress;
         this.adminApiAddress = adminApiAddress;
         this.wsAddress = wsAddress;
         this.tcpAddress = tcpAddress;
@@ -140,7 +137,6 @@ public final class Member {
             int priority,
             String memberHost,
             int memberPort,
-            String metricsApiAddress,
             String adminApiAddress,
             String wsAddress,
             String tcpAddress,
@@ -158,7 +154,6 @@ public final class Member {
                 priority,
                 memberHost,
                 memberPort,
-                metricsApiAddress,
                 adminApiAddress,
                 wsAddress,
                 tcpAddress,
@@ -172,7 +167,6 @@ public final class Member {
             Boolean isLeaderEligible,
             Integer priority,
             String memberHost,
-            String metricsApiAddress,
             String adminApiAddress,
             String wsAddress,
             String tcpAddress,
@@ -196,9 +190,6 @@ public final class Member {
         }
         if (memberHost != null) {
             this.memberHost = memberHost;
-        }
-        if (metricsApiAddress != null) {
-            this.metricsApiAddress = metricsApiAddress;
         }
         if (adminApiAddress != null) {
             this.adminApiAddress = adminApiAddress;

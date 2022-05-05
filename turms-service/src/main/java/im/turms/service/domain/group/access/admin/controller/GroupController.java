@@ -18,12 +18,19 @@
 package im.turms.service.domain.group.access.admin.controller;
 
 import com.mongodb.client.result.UpdateResult;
+import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.PaginationDTO;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
+import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
-import im.turms.server.common.domain.common.dto.response.DeleteResultDTO;
-import im.turms.server.common.domain.common.dto.response.PaginationDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseDTO;
-import im.turms.server.common.domain.common.dto.response.ResponseFactory;
-import im.turms.server.common.domain.common.dto.response.UpdateResultDTO;
+import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.PostMapping;
+import im.turms.server.common.access.admin.web.annotation.PutMapping;
+import im.turms.server.common.access.admin.web.annotation.QueryParam;
+import im.turms.server.common.access.admin.web.annotation.RequestBody;
+import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DivideBy;
@@ -34,15 +41,6 @@ import im.turms.service.domain.group.access.admin.dto.response.GroupStatisticsDT
 import im.turms.service.domain.group.po.Group;
 import im.turms.service.domain.group.service.GroupService;
 import im.turms.service.domain.message.service.MessageService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -60,8 +58,7 @@ import static im.turms.server.common.access.admin.permission.AdminPermission.GRO
 /**
  * @author James Chen
  */
-@RestController
-@RequestMapping("/groups")
+@RestController("groups")
 public class GroupController extends BaseController {
 
     private final GroupService groupService;
@@ -75,7 +72,7 @@ public class GroupController extends BaseController {
 
     @PostMapping
     @RequiredPermission(GROUP_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<Group>>> addGroup(@RequestBody AddGroupDTO addGroupDTO) {
+    public Mono<HttpHandlerResult<ResponseDTO<Group>>> addGroup(@RequestBody AddGroupDTO addGroupDTO) {
         Long ownerId = addGroupDTO.ownerId();
         Mono<Group> createdGroup = groupService.authAndCreateGroup(
                 addGroupDTO.creatorId(),
@@ -89,25 +86,25 @@ public class GroupController extends BaseController {
                 addGroupDTO.deletionDate(),
                 addGroupDTO.muteEndDate(),
                 addGroupDTO.isActive());
-        return ResponseFactory.okIfTruthy(createdGroup);
+        return HttpHandlerResult.okIfTruthy(createdGroup);
     }
 
     @GetMapping
     @RequiredPermission(GROUP_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<Group>>>> queryGroups(
-            @RequestParam(required = false) Set<Long> ids,
-            @RequestParam(required = false) Set<Long> typeIds,
-            @RequestParam(required = false) Set<Long> creatorIds,
-            @RequestParam(required = false) Set<Long> ownerIds,
-            @RequestParam(required = false) Boolean isActive,
-            @RequestParam(required = false) Date creationDateStart,
-            @RequestParam(required = false) Date creationDateEnd,
-            @RequestParam(required = false) Date deletionDateStart,
-            @RequestParam(required = false) Date deletionDateEnd,
-            @RequestParam(required = false) Date muteEndDateStart,
-            @RequestParam(required = false) Date muteEndDateEnd,
-            @RequestParam(required = false) Set<Long> memberIds,
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<Collection<Group>>>> queryGroups(
+            @QueryParam(required = false) Set<Long> ids,
+            @QueryParam(required = false) Set<Long> typeIds,
+            @QueryParam(required = false) Set<Long> creatorIds,
+            @QueryParam(required = false) Set<Long> ownerIds,
+            @QueryParam(required = false) Boolean isActive,
+            @QueryParam(required = false) Date creationDateStart,
+            @QueryParam(required = false) Date creationDateEnd,
+            @QueryParam(required = false) Date deletionDateStart,
+            @QueryParam(required = false) Date deletionDateEnd,
+            @QueryParam(required = false) Date muteEndDateStart,
+            @QueryParam(required = false) Date muteEndDateEnd,
+            @QueryParam(required = false) Set<Long> memberIds,
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Flux<Group> groupsFlux = groupService.queryGroups(
                 ids,
@@ -121,26 +118,26 @@ public class GroupController extends BaseController {
                 memberIds,
                 0,
                 size);
-        return ResponseFactory.okIfTruthy(groupsFlux);
+        return HttpHandlerResult.okIfTruthy(groupsFlux);
     }
 
-    @GetMapping("/page")
+    @GetMapping("page")
     @RequiredPermission(GROUP_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<PaginationDTO<Group>>>> queryGroups(
-            @RequestParam(required = false) Set<Long> ids,
-            @RequestParam(required = false) Set<Long> typeIds,
-            @RequestParam(required = false) Set<Long> creatorIds,
-            @RequestParam(required = false) Set<Long> ownerIds,
-            @RequestParam(required = false) Boolean isActive,
-            @RequestParam(required = false) Date creationDateStart,
-            @RequestParam(required = false) Date creationDateEnd,
-            @RequestParam(required = false) Date deletionDateStart,
-            @RequestParam(required = false) Date deletionDateEnd,
-            @RequestParam(required = false) Date muteEndDateStart,
-            @RequestParam(required = false) Date muteEndDateEnd,
-            @RequestParam(required = false) Set<Long> memberIds,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(required = false) Integer size) {
+    public Mono<HttpHandlerResult<ResponseDTO<PaginationDTO<Group>>>> queryGroups(
+            @QueryParam(required = false) Set<Long> ids,
+            @QueryParam(required = false) Set<Long> typeIds,
+            @QueryParam(required = false) Set<Long> creatorIds,
+            @QueryParam(required = false) Set<Long> ownerIds,
+            @QueryParam(required = false) Boolean isActive,
+            @QueryParam(required = false) Date creationDateStart,
+            @QueryParam(required = false) Date creationDateEnd,
+            @QueryParam(required = false) Date deletionDateStart,
+            @QueryParam(required = false) Date deletionDateEnd,
+            @QueryParam(required = false) Date muteEndDateStart,
+            @QueryParam(required = false) Date muteEndDateEnd,
+            @QueryParam(required = false) Set<Long> memberIds,
+            int page,
+            @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Mono<Long> count = groupService.countGroups(
                 ids,
@@ -164,18 +161,18 @@ public class GroupController extends BaseController {
                 memberIds,
                 page,
                 size);
-        return ResponseFactory.page(count, groupsFlux);
+        return HttpHandlerResult.page(count, groupsFlux);
     }
 
-    @GetMapping("/count")
-    public Mono<ResponseEntity<ResponseDTO<GroupStatisticsDTO>>> countGroups(
-            @RequestParam(required = false) Date createdStartDate,
-            @RequestParam(required = false) Date createdEndDate,
-            @RequestParam(required = false) Date deletedStartDate,
-            @RequestParam(required = false) Date deletedEndDate,
-            @RequestParam(required = false) Date sentMessageStartDate,
-            @RequestParam(required = false) Date sentMessageEndDate,
-            @RequestParam(defaultValue = "NOOP") DivideBy divideBy) {
+    @GetMapping("count")
+    public Mono<HttpHandlerResult<ResponseDTO<GroupStatisticsDTO>>> countGroups(
+            @QueryParam(required = false) Date createdStartDate,
+            @QueryParam(required = false) Date createdEndDate,
+            @QueryParam(required = false) Date deletedStartDate,
+            @QueryParam(required = false) Date deletedEndDate,
+            @QueryParam(required = false) Date sentMessageStartDate,
+            @QueryParam(required = false) Date sentMessageEndDate,
+            @QueryParam(defaultValue = "NOOP") DivideBy divideBy) {
         List<Mono<?>> counts = new LinkedList<>();
         GroupStatisticsDTO statistics = new GroupStatisticsDTO();
         if (divideBy == null || divideBy == DivideBy.NOOP) {
@@ -220,13 +217,13 @@ public class GroupController extends BaseController {
                 return Mono.empty();
             }
         }
-        return ResponseFactory.okIfTruthy(Mono.when(counts).thenReturn(statistics));
+        return HttpHandlerResult.okIfTruthy(Mono.when(counts).thenReturn(statistics));
     }
 
     @PutMapping
     @RequiredPermission(GROUP_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateGroups(
-            @RequestParam Set<Long> ids,
+    public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateGroups(
+            Set<Long> ids,
             @RequestBody UpdateGroupDTO updateGroupDTO) {
         Long successorId = updateGroupDTO.successorId();
         Mono<UpdateResult> updateMono = successorId == null
@@ -244,19 +241,19 @@ public class GroupController extends BaseController {
                 updateGroupDTO.muteEndDate(),
                 null)
                 : groupService.checkAndTransferGroupOwnership(ids, successorId, updateGroupDTO.quitAfterTransfer(), null);
-        return ResponseFactory.updateResult(updateMono);
+        return HttpHandlerResult.updateResult(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(GROUP_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteGroups(
-            @RequestParam(required = false) Set<Long> ids,
-            @RequestParam(required = false) Boolean deleteLogically) {
+    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteGroups(
+            @QueryParam(required = false) Set<Long> ids,
+            @QueryParam(required = false) Boolean deleteLogically) {
         Mono<DeleteResultDTO> deleted = groupService.deleteGroupsAndGroupMembers(
                         ids,
                         deleteLogically)
                 .map(DeleteResultDTO::get);
-        return ResponseFactory.okIfTruthy(deleted);
+        return HttpHandlerResult.okIfTruthy(deleted);
     }
 
 }

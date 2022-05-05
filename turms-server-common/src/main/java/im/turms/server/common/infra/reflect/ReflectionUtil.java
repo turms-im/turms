@@ -18,14 +18,19 @@
 package im.turms.server.common.infra.reflect;
 
 import im.turms.server.common.infra.unsafe.UnsafeUtil;
+import org.springframework.data.util.Pair;
 import sun.misc.Unsafe;
 
+import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Map;
 
 /**
  * @author James Chen
@@ -109,6 +114,33 @@ public final class ReflectionUtil {
      */
     public static void setAccessible(AccessibleObject object) {
         UNSAFE.putBoolean(object, OVERRIDE_OFFSET, true);
+    }
+
+    @Nullable
+    public static Class<?> getElementClass(Type type) {
+        return type instanceof ParameterizedType parameterizedType
+                ? (Class<?>) parameterizedType.getActualTypeArguments()[0]
+                : null;
+    }
+
+    @Nullable
+    public static Class<?> getIterableElementClass(Field field) {
+        Class<?> fieldType = field.getType();
+        if (Iterable.class.isAssignableFrom(fieldType)) {
+            return getElementClass(field.getGenericType());
+        }
+        return null;
+    }
+
+    @Nullable
+    public static Pair<Class<?>, Class<?>> getMapKeyClassAndElementClass(Field field) {
+        Class<?> fieldType = field.getType();
+        if (Map.class.isAssignableFrom(fieldType)) {
+            ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
+            Type[] actualTypes = parameterizedType.getActualTypeArguments();
+            return Pair.of((Class) actualTypes[0], (Class) actualTypes[1]);
+        }
+        return null;
     }
 
 }

@@ -22,11 +22,9 @@ import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,11 +56,6 @@ public final class GroupConversation extends BaseEntity {
         private final Long groupId;
         private final Long memberId;
 
-        @Data
-        @AllArgsConstructor
-        public static final class KeyList {
-            private List<GroupConversionMemberKey> groupConversationMemberKeys;
-        }
     }
 
 }

@@ -54,6 +54,10 @@ public enum ResponseStatusCode {
     // Admin
     UNAUTHORIZED(1300, "Unauthorized", 401),
     NO_FILTER_FOR_DELETE_OPERATION(1301, "Delete operation should have at least one filter", 400),
+    RESOURCE_NOT_FOUND(1302, "Resource not found", 404),
+
+    DUMP_JFR_IN_ILLEGAL_STATUS(1310, "Dumping JFR should be executed in a legal status", 406),
+    ADMIN_REQUESTS_TOO_FREQUENT(1311, "The admin requests are too frequent", 429),
 
     // Blocklist
     IP_BLOCKLIST_IS_DISABLED(1400, "Blocking an IP is disabled", 403),

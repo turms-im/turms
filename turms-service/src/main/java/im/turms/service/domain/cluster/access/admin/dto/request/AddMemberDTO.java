@@ -35,7 +35,6 @@ public record AddMemberDTO(
         int priority,
         String memberHost,
         int memberPort,
-        String metricsApiAddress,
         String adminApiAddress,
         String wsAddress,
         String tcpAddress,

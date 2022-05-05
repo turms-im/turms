@@ -65,7 +65,7 @@ sudo docker pull ghcr.io/turms-im/turms-service:latest
 sudo docker run -d --name turms-service --ulimit nofile=100000 \
   --memory-swappiness=0 \
   -p 7510:7510 -p 8510:8510 \
-  --health-cmd="curl -I --silent $${HOST}:8510/actuator/health || exit 1" \
+  --health-cmd="curl -I --silent $${HOST}:8510/health || exit 1" \
   --health-interval=5s \
   --health-timeout=5s \
   --health-retries=3 \

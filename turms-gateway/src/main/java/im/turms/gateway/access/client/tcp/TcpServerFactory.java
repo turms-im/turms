@@ -28,8 +28,8 @@ import im.turms.server.common.domain.blocklist.service.BlocklistService;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
 import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.server.common.infra.net.SslUtil;
+import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.property.env.gateway.TcpProperties;
-import org.springframework.boot.web.server.Ssl;
 import reactor.netty.Connection;
 import reactor.netty.DisposableServer;
 import reactor.netty.tcp.TcpServer;
@@ -88,7 +88,7 @@ public final class TcpServerFactory {
                     // operations will pass TurmsNotification instances down, so we still need to encode them.
                     connection.addHandlerLast("protobufFrameEncoder", CodecFactory.getProtobufFrameEncoder());
                 });
-        Ssl ssl = tcpProperties.getSsl();
+        SslProperties ssl = tcpProperties.getSsl();
         if (ssl.isEnabled()) {
             server.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true));
         }

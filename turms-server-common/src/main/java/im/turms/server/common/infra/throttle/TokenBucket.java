@@ -46,9 +46,6 @@ public class TokenBucket {
         lastRefillTime = System.currentTimeMillis();
     }
 
-    /**
-     * @implNote We don't use synchronized for better performance
-     */
     public boolean tryAcquire(long time) {
         int tokenCount = tokens;
         if (tokenCount > 0) {
