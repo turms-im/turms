@@ -8,10 +8,10 @@ jobs:
     container: cypress/browsers:node14.16.0-chrome89-ff86
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v3
         with:
           working-directory: turms-admin
           build: npm run build
