@@ -17,13 +17,11 @@
 
 package im.turms.server.common.infra.property.env.service.env.database;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.data.annotation.Transient;
 
 /**
  * @author James Chen
@@ -34,28 +32,18 @@ import org.springframework.data.annotation.Transient;
 @NoArgsConstructor
 public class MongoProperties {
 
-    @JsonIgnore
-    @Transient
     @NestedConfigurationProperty
     private AdminMongoProperties admin = new AdminMongoProperties();
 
-    @JsonIgnore
-    @Transient
     @NestedConfigurationProperty
     private UserMongoProperties user = new UserMongoProperties();
 
-    @JsonIgnore
-    @Transient
     @NestedConfigurationProperty
     private GroupMongoProperties group = new GroupMongoProperties();
 
-    @JsonIgnore
-    @Transient
     @NestedConfigurationProperty
     private ConversationMongoProperties conversation = new ConversationMongoProperties();
 
-    @JsonIgnore
-    @Transient
     @NestedConfigurationProperty
     private MessageMongoProperties message = new MessageMongoProperties();
 

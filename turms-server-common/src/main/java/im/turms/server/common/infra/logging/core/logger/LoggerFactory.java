@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.logging.core.logger;
 
 import im.turms.server.common.infra.cluster.node.NodeType;
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.logging.core.appender.Appender;
 import im.turms.server.common.infra.logging.core.appender.ConsoleAppender;
 import im.turms.server.common.infra.logging.core.appender.file.RollingFileAppender;
@@ -31,7 +32,6 @@ import im.turms.server.common.infra.property.env.common.logging.LoggingPropertie
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.jctools.queues.MpscUnboundedArrayQueue;
-import org.springframework.data.util.Pair;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -91,7 +91,7 @@ public class LoggerFactory {
         InternalLogger.INSTANCE.init();
         Pair<LoggerOptions, WrappedLogger> pair;
         while ((pair = UNINITIALIZED_LOGGERS.poll()) != null) {
-            pair.getSecond().setLogger(getLogger(pair.getFirst()));
+            pair.second().setLogger(getLogger(pair.first()));
         }
 
         new LogProcessor(QUEUE).start();

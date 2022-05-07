@@ -28,7 +28,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
-import org.springframework.data.annotation.Transient;
 
 import java.util.Date;
 
@@ -54,8 +53,7 @@ public class SharedClusterProperties {
 
     private Date lastUpdatedTime;
 
-    @Transient
-    private TurmsProperties turmsProperties;
+    private transient TurmsProperties turmsProperties;
 
     public SharedClusterProperties(String clusterId, TurmsProperties localProperties, Date lastUpdatedTime) {
         this.clusterId = clusterId;

@@ -36,7 +36,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class ConversationMongoProperties extends TurmsMongoProperties {
 
     @NestedConfigurationProperty
-    private WriteConcernProperties writeConcern = new WriteConcernProperties();
+    private transient WriteConcernProperties writeConcern = new WriteConcernProperties();
 
     @Data
     public static class WriteConcernProperties {

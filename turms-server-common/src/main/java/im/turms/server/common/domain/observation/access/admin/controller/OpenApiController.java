@@ -35,7 +35,6 @@ import static im.turms.server.common.access.admin.web.MediaTypeConst.IMAGE_PNG;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_CSS;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_HTML;
 
-
 /**
  * @author James Chen
  */

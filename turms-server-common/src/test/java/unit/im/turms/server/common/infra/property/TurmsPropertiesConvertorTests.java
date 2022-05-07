@@ -143,7 +143,7 @@ class TurmsPropertiesConvertorTests {
     void mergeProperties_shouldThrow_whenMergingPropertiesWithWrongType() {
         assertThatThrownBy(() -> mergeProperties(new TurmsProperties(), Map.of(
                 "ip", Map.of(
-                        "publicIpDetectorAddresses", "Wrong Value Type"
+                        "publicIpDetectorAddresses", Map.of(123, 321)
                 ))))
                 .isInstanceOf(InvalidPropertyException.class);
 

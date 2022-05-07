@@ -17,9 +17,8 @@
 
 package unit.im.turms.server.common.access.admin.web.uri;
 
-import im.turms.server.common.access.admin.web.FastUriParser;
+import im.turms.server.common.infra.lang.Pair;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.util.Pair;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,13 +48,13 @@ class FastUriParserTests {
                 .isEqualTo(Pair.of("/hello/world", Collections.emptyMap()));
 
         actual = parsePathAndQueryParams("/hello/world?" +
-                        "singleKey=singleValue&" +
-                        "nestObjects[0].a=1&nestObjects[0].b=2&nestObjects[1].a=3&nestObjects[1].b=4&" +
-                        "firstValues=value&firstValues=value2&firstValues=value3&" +
-                        "secondValues[]=value&secondValues[]=value2&secondValues[]=value3&" +
-                        "thirdValues[0]=1&thirdValues[1]=2&thirdValues[2]=3&thirdValues[3]=4&thirdValues[4]=5&" +
-                        "thirdValues[5]=1&thirdValues[6]=2&thirdValues[7]=3&thirdValues[8]=4&thirdValues[9]=5&" +
-                        "thirdValues[10]=1&thirdValues[11]=2&thirdValues[12]=3&thirdValues[13]=4&thirdValues[14]=5&");
+                "singleKey=singleValue&" +
+                "nestObjects[0].a=1&nestObjects[0].b=2&nestObjects[1].a=3&nestObjects[1].b=4&" +
+                "firstValues=value&firstValues=value2&firstValues=value3&" +
+                "secondValues[]=value&secondValues[]=value2&secondValues[]=value3&" +
+                "thirdValues[0]=1&thirdValues[1]=2&thirdValues[2]=3&thirdValues[3]=4&thirdValues[4]=5&" +
+                "thirdValues[5]=1&thirdValues[6]=2&thirdValues[7]=3&thirdValues[8]=4&thirdValues[9]=5&" +
+                "thirdValues[10]=1&thirdValues[11]=2&thirdValues[12]=3&thirdValues[13]=4&thirdValues[14]=5&");
         assertThat(actual)
                 .isEqualTo(Pair.of("/hello/world", Map.of(
                         "singleKey", List.of("singleValue"),

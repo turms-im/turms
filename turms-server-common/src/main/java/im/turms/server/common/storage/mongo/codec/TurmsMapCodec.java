@@ -25,6 +25,7 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -32,11 +33,13 @@ import java.util.Map;
  */
 public class TurmsMapCodec<K, V> extends MongoCodec<Map> {
 
+    private final boolean isLinkedHashMap;
     private final Class<K> keyClass;
     private final Class<V> valueClass;
 
-    public TurmsMapCodec(Class<K> keyClass, Class<V> valueClass) {
+    public TurmsMapCodec(Class<? extends Map<?, ?>> ownerClass, Class<K> keyClass, Class<V> valueClass) {
         super(Map.class);
+        this.isLinkedHashMap = LinkedHashMap.class.isAssignableFrom(ownerClass);
         this.keyClass = keyClass;
         this.valueClass = valueClass;
     }
@@ -58,7 +61,7 @@ public class TurmsMapCodec<K, V> extends MongoCodec<Map> {
 
     @Override
     public Map decode(final BsonReader reader, final DecoderContext decoderContext) {
-        Map map = new HashMap<>(32);
+        Map map = isLinkedHashMap ? new LinkedHashMap<>(32) : new HashMap<>(32);
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String key = reader.readName();

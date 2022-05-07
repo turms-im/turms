@@ -20,9 +20,9 @@ package im.turms.server.common.infra.cluster.service.rpc.exception;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.service.rpc.RpcErrorCode;
 import im.turms.server.common.infra.exception.StacklessException;
+import im.turms.server.common.infra.lang.Pair;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.springframework.data.util.Pair;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;

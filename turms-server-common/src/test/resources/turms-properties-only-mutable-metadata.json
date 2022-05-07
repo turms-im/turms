@@ -153,7 +153,10 @@
       }
     },
     "fake": {},
-    "mongo": {},
+    "mongo": {
+      "admin": {},
+      "user": {}
+    },
     "notificationLogging": {},
     "redis": {},
     "serviceDiscovery": {
@@ -759,7 +762,45 @@
         "type": "enum"
       }
     },
-    "mongo": {},
+    "mongo": {
+      "admin": {
+        "optionalIndex": {
+          "admin": {}
+        }
+      },
+      "conversation": {},
+      "group": {
+        "optionalIndex": {
+          "group": {},
+          "groupBlockedUser": {},
+          "groupInvitation": {},
+          "groupJoinRequest": {},
+          "groupMember": {}
+        }
+      },
+      "message": {
+        "optionalIndex": {
+          "message": {}
+        },
+        "tieredStorage": {
+          "autoRangeUpdater": {
+            "enabled": {
+              "deprecated": false,
+              "global": true,
+              "mutable": true,
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "user": {
+        "optionalIndex": {
+          "userFriendRequest": {},
+          "userRelationship": {},
+          "userRelationshipGroupMember": {}
+        }
+      }
+    },
     "notification": {
       "notifyGroupConversationParticipantsAfterReadDateUpdated": {
         "deprecated": false,
@@ -930,7 +971,9 @@
         "type": "boolean"
       }
     },
-    "redis": {},
+    "redis": {
+      "sequenceId": {}
+    },
     "statistics": {
       "logOnlineUsersNumber": {
         "deprecated": false,

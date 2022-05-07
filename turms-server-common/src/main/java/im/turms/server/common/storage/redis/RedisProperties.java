@@ -17,6 +17,7 @@
 
 package im.turms.server.common.storage.redis;
 
+import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.storage.redis.sharding.ConsistentHashingShardingAlgorithm;
 import im.turms.server.common.storage.redis.sharding.ShardingAlgorithm;
 import lombok.AllArgsConstructor;
@@ -35,11 +36,9 @@ import java.util.List;
 @NoArgsConstructor
 public class RedisProperties {
 
-    /**
-     * https://lettuce.io/core/release/reference/index.html#redisuri.uri-syntax
-     */
-    private List<String> uriList = List.of("redis://localhost");
+    @Description("Reference: https://lettuce.io/core/release/reference/index.html#redisuri.uri-syntax")
+    private transient List<String> uriList = List.of("redis://localhost");
 
-    private ShardingAlgorithm shardingAlgorithm = new ConsistentHashingShardingAlgorithm();
+    private transient ShardingAlgorithm shardingAlgorithm = new ConsistentHashingShardingAlgorithm();
 
 }

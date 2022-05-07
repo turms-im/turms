@@ -18,7 +18,6 @@
 package im.turms.server.common.infra.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,22 +39,14 @@ public class JsonCodecPool {
     public static final ObjectMapper MAPPER = JsonMapper.builder()
             .enable(MapperFeature.PROPAGATE_TRANSIENT_MARKER)
             .build()
-            .registerModule(new ParameterNamesModule())
             .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            .setDateFormat(new StdDateFormat().withColonInTimeZone(true))
             .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
             .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .registerModule(new JavaTimeModule())
+            .registerModule(new ParameterNamesModule())
+            .setDateFormat(new StdDateFormat().withColonInTimeZone(true))
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .setTimeZone(TimeZoneConst.ZONE);
-
-    public static byte[] writeAsBytes(Object value) {
-        try {
-            return JsonCodecPool.MAPPER.writeValueAsBytes(value);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 }

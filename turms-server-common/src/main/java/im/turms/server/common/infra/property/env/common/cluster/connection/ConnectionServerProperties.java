@@ -18,14 +18,12 @@
 package im.turms.server.common.infra.property.env.common.cluster.connection;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import im.turms.server.common.infra.property.env.common.SslProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.data.annotation.Transient;
 
 /**
  * @author James Chen
@@ -44,9 +42,7 @@ public class ConnectionServerProperties {
 
     private int portCount = 100;
 
-    @JsonIgnore
     @NestedConfigurationProperty
-    @Transient
-    private SslProperties ssl = new SslProperties();
+    private transient SslProperties ssl = new SslProperties();
 
 }

@@ -20,6 +20,7 @@ package im.turms.server.common.storage.mongo.entity;
 import com.google.common.base.CaseFormat;
 import com.mongodb.client.model.IndexModel;
 import com.mongodb.client.model.IndexOptions;
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
 import im.turms.server.common.storage.mongo.BsonPool;
@@ -28,22 +29,20 @@ import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
+import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstructor;
 import im.turms.server.common.storage.mongo.entity.annotation.PropertySetter;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import im.turms.server.common.storage.mongo.entity.annotation.TieredStorage;
 import lombok.SneakyThrows;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.mapping.PreferredConstructor;
-import org.springframework.data.mapping.model.PreferredConstructorDiscoverer;
-import org.springframework.data.util.Pair;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -59,11 +58,11 @@ import java.util.concurrent.TimeUnit;
  */
 public final class MongoEntityFactory {
 
-    public <T> MongoEntity<T> parse(Class<T> clazz) {
-        PreferredConstructor<T, ?> constructor = PreferredConstructorDiscoverer.discover(clazz);
-        if (constructor == null) {
-            throw new IllegalArgumentException("Cannot find a preferred constructor for the class: " + clazz.getName());
-        }
+    private MongoEntityFactory() {
+    }
+
+    public static <T> MongoEntity<T> parse(Class<T> clazz) {
+        Constructor<T> constructor = findConstructor(clazz);
         EntityFieldsInfo entityFieldsInfo = parseFields(clazz, constructor, clazz.getDeclaredMethods());
         ShardKey shardKey = parseShardKey(clazz);
         String collectionName = parseCollectionName(clazz);
@@ -81,7 +80,27 @@ public final class MongoEntityFactory {
         );
     }
 
-    private <T> Zone parseZone(Class<T> clazz, ShardKey shardKey) {
+    private static <T> Constructor<T> findConstructor(Class<T> entityClass) {
+        Constructor<T>[] declaredConstructors = (Constructor<T>[]) entityClass.getDeclaredConstructors();
+        Constructor<T> constructor = null;
+        if (declaredConstructors.length == 1) {
+            constructor = declaredConstructors[0];
+        }
+        for (Constructor<T> candidate : declaredConstructors) {
+            if (candidate.isAnnotationPresent(PersistenceConstructor.class)
+                    || candidate.getParameterCount() == 0) {
+                constructor = candidate;
+                break;
+            }
+        }
+        if (constructor == null) {
+            throw new IllegalArgumentException("Cannot find a constructor for the entity class: " + entityClass.getName());
+        }
+        constructor.trySetAccessible();
+        return constructor;
+    }
+
+    private static <T> Zone parseZone(Class<T> clazz, ShardKey shardKey) {
         TieredStorage storage = clazz.getAnnotation(TieredStorage.class);
         if (storage == null) {
             return null;
@@ -98,7 +117,7 @@ public final class MongoEntityFactory {
         return new Zone(creationDateFieldName);
     }
 
-    private String parseCollectionName(Class<?> clazz) {
+    private static String parseCollectionName(Class<?> clazz) {
         Document document = clazz.getAnnotation(Document.class);
         String name = document != null && StringUtils.hasText(document.value())
                 ? document.value()
@@ -111,7 +130,7 @@ public final class MongoEntityFactory {
 
     @SneakyThrows
     @Nullable
-    private BsonDocument findCollectionSchema(String name) {
+    private static BsonDocument findCollectionSchema(String name) {
         String resourceName = "schema/" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, name) + ".json";
         InputStream stream = ClassUtils.getDefaultClassLoader()
                 .getResourceAsStream(resourceName);
@@ -125,7 +144,7 @@ public final class MongoEntityFactory {
     /**
      * @implNote The method doesn't the support shard keys that contains a hashed key supported in 4.4
      */
-    private <T> List<im.turms.server.common.storage.mongo.entity.CompoundIndex> parseCompoundIndex(Class<T> clazz) {
+    private static <T> List<im.turms.server.common.storage.mongo.entity.CompoundIndex> parseCompoundIndex(Class<T> clazz) {
         CompoundIndex[] indexes = clazz.getAnnotationsByType(CompoundIndex.class);
         if (indexes.length == 0) {
             return Collections.emptyList();
@@ -149,7 +168,7 @@ public final class MongoEntityFactory {
      * @implNote The method doesn't the support shard keys that contains a hashed key supported in 4.4
      */
     @Nullable
-    private ShardKey parseShardKey(Class<?> clazz) {
+    private static ShardKey parseShardKey(Class<?> clazz) {
         Sharded sharded = clazz.getAnnotation(Sharded.class);
         if (sharded == null) {
             return null;
@@ -187,7 +206,7 @@ public final class MongoEntityFactory {
         return new ShardKey(document, paths);
     }
 
-    private <T> EntityFieldsInfo parseFields(Class<?> clazz, PreferredConstructor<T, ?> constructor, Method[] allClassMethods) {
+    private static <T> EntityFieldsInfo parseFields(Class<?> clazz, Constructor<T> constructor, Method[] allClassMethods) {
         Field[] fields = clazz.getDeclaredFields();
         String idField = null;
         Map<String, EntityField<?>> entityFields = null;
@@ -195,7 +214,7 @@ public final class MongoEntityFactory {
         Map<String, MethodHandle> setterMethods = parseSetterMethods(allClassMethods);
         for (Field field : fields) {
             int modifiers = field.getModifiers();
-            if (Modifier.isStatic(modifiers) || field.isAnnotationPresent(Transient.class)) {
+            if (Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers)) {
                 continue;
             }
             // Classes
@@ -206,8 +225,8 @@ public final class MongoEntityFactory {
                 elementClass = ReflectionUtil.getIterableElementClass(field);
             } else if (Map.class.isAssignableFrom(fieldClass)) {
                 Pair<Class<?>, Class<?>> keyAndElement = ReflectionUtil.getMapKeyClassAndElementClass(field);
-                keyClass = keyAndElement.getFirst();
-                elementClass = keyAndElement.getSecond();
+                keyClass = keyAndElement.first();
+                elementClass = keyAndElement.second();
             }
             // ID and field name
             String fieldName = parseFieldName(field);
@@ -234,7 +253,7 @@ public final class MongoEntityFactory {
                 setter = ReflectionUtil.getSetter(field);
             }
             // Constructor
-            int ctorParamIndex = constructor.isNoArgConstructor()
+            int ctorParamIndex = constructor.getParameterCount() == 0
                     ? EntityField.UNSET_CTOR_PARAM_INDEX
                     : parseCtorParamIndex(constructor, field);
             if (entityFields == null) {
@@ -249,7 +268,7 @@ public final class MongoEntityFactory {
                 entityIndexes == null ? Collections.emptyList() : entityIndexes);
     }
 
-    private Map<String, MethodHandle> parseSetterMethods(Method[] methods) {
+    private static Map<String, MethodHandle> parseSetterMethods(Method[] methods) {
         Map<String, MethodHandle> setterMethods = null;
         for (Method method : methods) {
             if (method.isAnnotationPresent(PropertySetter.class)) {
@@ -266,13 +285,12 @@ public final class MongoEntityFactory {
         return setterMethods;
     }
 
-    private <T> int parseCtorParamIndex(PreferredConstructor<T, ?> constructor, Field field) {
+    private static <T> int parseCtorParamIndex(Constructor<T> constructor, Field field) {
         String fieldName = parseFieldName(field);
         String propertyName = field.getName();
         var params = constructor.getParameters();
-        for (int i = 0; i < params.size(); i++) {
-            var param = params.get(i);
-            String paramName = param.getName();
+        for (int i = 0; i < params.length; i++) {
+            String paramName = params[i].getName();
             if (paramName.equals(fieldName) || paramName.equals(propertyName)) {
                 return i;
             }
@@ -283,7 +301,7 @@ public final class MongoEntityFactory {
     /**
      * @implNote Note that we just follow the original name without any naming convention
      */
-    private String parseFieldName(Field field) {
+    private static String parseFieldName(Field field) {
         var property = field.getAnnotation(im.turms.server.common.storage.mongo.entity.annotation.Field.class);
         return property == null ? field.getName() : property.value();
     }
@@ -291,7 +309,7 @@ public final class MongoEntityFactory {
     /**
      * @return The indexes of the current field with its nested fields
      */
-    private List<Index> parseIndexes(Field field) {
+    private static List<Index> parseIndexes(Field field) {
         List<Index> indexes = null;
         Indexed indexed = field.getAnnotation(Indexed.class);
         IndexModel index = parseIndex(null, field, indexed);
@@ -321,7 +339,7 @@ public final class MongoEntityFactory {
      * @return The index of the current field without its nested fields
      */
     @Nullable
-    private IndexModel parseIndex(String parentFieldName, Field field, @Nullable Indexed indexed) {
+    private static IndexModel parseIndex(String parentFieldName, Field field, @Nullable Indexed indexed) {
         if (indexed == null) {
             return null;
         }

@@ -24,6 +24,7 @@ import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -61,7 +62,6 @@ import org.bson.BsonDateTime;
 import org.bson.Document;
 import org.bson.types.MinKey;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
@@ -407,8 +407,8 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         String creationDateFieldName = zone.creationDateFieldName();
         for (int i = 0, tierSize = tiers.size(); i < tierSize; i++) {
             Pair<String, StorageTierProperties> entry = tiers.get(i);
-            String zoneName = entry.getFirst();
-            StorageTierProperties properties = entry.getSecond();
+            String zoneName = entry.first();
+            StorageTierProperties properties = entry.second();
             int days = properties.getDays();
             Object max;
             if (i == 0) {
@@ -489,7 +489,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         long now = System.currentTimeMillis();
         long elapsedTime = 0;
         for (Pair<String, StorageTierProperties> pair : propertiesPairs) {
-            Tag tag = nameToTag.get(pair.getFirst());
+            Tag tag = nameToTag.get(pair.first());
             if (tag == null) {
                 return true;
             }
@@ -505,7 +505,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                     return true;
                 }
             }
-            int days = pair.getSecond().getDays();
+            int days = pair.second().getDays();
             if (days > 0 && elapsedTime > Duration.ofDays(days).toMillis()) {
                 return true;
             }

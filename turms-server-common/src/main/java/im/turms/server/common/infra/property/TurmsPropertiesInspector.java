@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.property;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
@@ -66,6 +66,7 @@ public class TurmsPropertiesInspector {
     private static final String FIELD_NAME_TYPE = "type";
 
     public static final ObjectWriter MUTABLE_PROPERTIES_WRITER = JsonMapper.builder()
+            .enable(MapperFeature.PROPAGATE_TRANSIENT_MARKER)
             // e.g. "SharedConfigProperties" is an empty bean
             .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
             .build()
@@ -184,7 +185,7 @@ public class TurmsPropertiesInspector {
                                                    boolean onlyMutable) {
         for (Field field : CLASS_TO_FIELDS.get(clazz)) {
             boolean isNestedProperty = isNestedProperty(field);
-            if (field.isAnnotationPresent(JsonIgnore.class)
+            if (Modifier.isTransient(field.getModifiers())
                     || (onlyMutable && (!isMutableProperty(field) && !isNestedProperty))) {
                 continue;
             }

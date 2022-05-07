@@ -21,8 +21,8 @@ import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.Message;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.random.RandomUtil;
-import org.springframework.data.util.Pair;
 
 import java.util.Random;
 import java.util.Set;
@@ -71,7 +71,7 @@ public final class RandomRequestFactory {
         return ClientMessagePool
                 .getTurmsRequestBuilder()
                 .setRequestId(RandomUtil.nextPositiveLong())
-                .setField(entry.getFirst(), entry.getSecond().generate(options));
+                .setField(entry.first(), entry.second().generate(options));
     }
 
     private static Pair<FieldDescriptor, RandomProtobufGenerator<AbstractMessage>> pickRandomRequestGenerator(
@@ -81,7 +81,7 @@ public final class RandomRequestFactory {
                     REQUEST_GENERATORS[RANDOM.nextInt(REQUEST_TYPE_DESC.getFieldCount())];
             if (excludedRequestNames == null
                     || excludedRequestNames.isEmpty()
-                    || !excludedRequestNames.contains(pair.getFirst().getName())) {
+                    || !excludedRequestNames.contains(pair.first().getName())) {
                 return pair;
             }
         }

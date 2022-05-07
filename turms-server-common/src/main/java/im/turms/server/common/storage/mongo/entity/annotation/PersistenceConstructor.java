@@ -15,23 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.env.database;
+package im.turms.server.common.storage.mongo.entity.annotation;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author James Chen
  */
-@Data
-@NoArgsConstructor
-public class TurmsMongoProperties {
-
-    private transient String uri = "mongodb://localhost:27017/turms";
-
-    public TurmsMongoProperties(String uri) {
-        if (uri != null) {
-            this.uri = uri;
-        }
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.CONSTRUCTOR)
+public @interface PersistenceConstructor {
 }

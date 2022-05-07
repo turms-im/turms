@@ -17,11 +17,9 @@
 
 package im.turms.server.common.infra.cluster.node;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.primitives.Ints;
+import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstructor;
 import lombok.Getter;
-import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.annotation.Transient;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -44,9 +42,7 @@ public class NodeVersion implements Comparable<NodeVersion> {
     private final byte qualifier;
     private final String version;
 
-    @JsonIgnore
-    @Transient
-    private final int versionNumber;
+    private final transient int versionNumber;
 
     @PersistenceConstructor
     public NodeVersion(byte major, byte minor, byte patch, byte qualifier, String version) {
@@ -69,10 +65,7 @@ public class NodeVersion implements Comparable<NodeVersion> {
 
     @Override
     public int compareTo(NodeVersion that) {
-        if (versionNumber > that.versionNumber) {
-            return 1;
-        }
-        return versionNumber == that.versionNumber ? 0 : -1;
+        return Integer.compare(versionNumber, that.versionNumber);
     }
 
     @Override

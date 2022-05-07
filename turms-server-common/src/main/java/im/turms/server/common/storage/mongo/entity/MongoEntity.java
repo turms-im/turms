@@ -18,9 +18,9 @@
 package im.turms.server.common.storage.mongo.entity;
 
 import org.bson.BsonDocument;
-import org.springframework.data.mapping.PreferredConstructor;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +30,7 @@ import java.util.Map;
 public record MongoEntity<T>(
         // Meta
         Class<T> entityClass,
-        PreferredConstructor<T, ?> constructor,
+        Constructor<T> constructor,
         // Collection
         String collectionName,
         BsonDocument jsonSchema,

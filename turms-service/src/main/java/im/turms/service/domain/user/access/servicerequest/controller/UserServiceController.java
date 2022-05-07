@@ -37,6 +37,7 @@ import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
@@ -48,7 +49,6 @@ import im.turms.service.domain.user.service.UserService;
 import im.turms.service.domain.user.service.onlineuser.SessionService;
 import im.turms.service.domain.user.service.onlineuser.UsersNearbyService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -189,8 +189,8 @@ public class UserServiceController {
                         for (Pair<Long, UserSessionsStatus> userIdAndSessionsStatus : userIdAndSessionsStatusList) {
                             statusesBuilder.addUserStatuses(ProtoModelConvertor
                                     .userOnlineInfo2userStatus(
-                                            userIdAndSessionsStatus.getFirst(),
-                                            userIdAndSessionsStatus.getSecond(),
+                                            userIdAndSessionsStatus.first(),
+                                            userIdAndSessionsStatus.second(),
                                             respondOfflineIfInvisible));
                         }
                         return RequestHandlerResultFactory.get(ClientMessagePool

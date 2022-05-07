@@ -18,7 +18,6 @@
 package im.turms.server.common.infra.property;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -100,7 +99,7 @@ public class TurmsPropertiesConvertor {
             // Note that this is a deep clone
             TurmsProperties newProperties = MAPPER
                     .convertValue(propertiesToUpdate, TurmsProperties.class);
-            ObjectReader objectReader = new ObjectMapper()
+            ObjectReader objectReader = MAPPER
                     .readerForUpdating(newProperties)
                     .forType(TurmsProperties.class);
             return objectReader.readValue(propertiesForUpdating);

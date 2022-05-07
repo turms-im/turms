@@ -35,12 +35,8 @@ import java.util.Set;
  */
 public class FileUtil {
 
-    private static final Set<String> WEB_JAR_ASSETS;
+    private static final Set<String> WEB_JAR_ASSETS = new WebJarAssetLocator().listAssets();
     private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
-
-    static {
-        WEB_JAR_ASSETS = new WebJarAssetLocator().listAssets();
-    }
 
     private FileUtil() {
     }

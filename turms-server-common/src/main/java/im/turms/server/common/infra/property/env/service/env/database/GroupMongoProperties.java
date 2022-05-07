@@ -39,7 +39,7 @@ public class GroupMongoProperties extends TurmsMongoProperties {
     private OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
 
     @NestedConfigurationProperty
-    private WriteConcernProperties writeConcern = new WriteConcernProperties();
+    private transient WriteConcernProperties writeConcern = new WriteConcernProperties();
 
     @Data
     public static class OptionalIndexProperties {

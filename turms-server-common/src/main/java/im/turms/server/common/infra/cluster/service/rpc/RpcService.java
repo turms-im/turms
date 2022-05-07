@@ -38,6 +38,7 @@ import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.lang.Null;
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.netty.ByteBufUtil;
@@ -49,7 +50,6 @@ import io.micrometer.core.instrument.Tag;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.util.Pair;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.channel.ChannelOperations;
@@ -528,7 +528,7 @@ public class RpcService implements ClusterService {
             }
             return resultFlux
                     .timeout(timeout)
-                    .collectMap(Pair::getFirst, Pair::getSecond, CollectorUtil.toMap(MapUtil.getCapability(size)))
+                    .collectMap(Pair::first, Pair::second, CollectorUtil.toMap(MapUtil.getCapability(size)))
                     .onErrorMap(t -> mapThrowable(t, request))
                     .doFinally(signal -> requestBody.release());
         });

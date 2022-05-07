@@ -406,7 +406,10 @@
         "type": "int"
       }
     },
-    "mongo": {},
+    "mongo": {
+      "admin": {},
+      "user": {}
+    },
     "notificationLogging": {
       "enabled": {
         "deprecated": false,
@@ -1649,7 +1652,248 @@
         "type": "boolean"
       }
     },
-    "mongo": {},
+    "mongo": {
+      "admin": {
+        "optionalIndex": {
+          "admin": {
+            "registrationDate": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "roleId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "conversation": {},
+      "group": {
+        "optionalIndex": {
+          "group": {
+            "creationDate": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "creatorId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "deletionDate": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "muteEndDate": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "ownerId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "typeId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            }
+          },
+          "groupBlockedUser": {
+            "blockDate": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "requesterId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            }
+          },
+          "groupInvitation": {
+            "groupId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "inviterId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "responseDate": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            }
+          },
+          "groupJoinRequest": {
+            "creationDate": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "groupId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "responderId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "responseDate": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            }
+          },
+          "groupMember": {
+            "joinDate": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "muteEndDate": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "message": {
+        "optionalIndex": {
+          "message": {
+            "deletionDate": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "referenceId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "senderId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            }
+          }
+        },
+        "tieredStorage": {
+          "autoRangeUpdater": {
+            "cron": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "string"
+            },
+            "enabled": {
+              "deprecated": false,
+              "global": true,
+              "mutable": true,
+              "type": "boolean"
+            }
+          },
+          "enabled": {
+            "deprecated": false,
+            "global": false,
+            "mutable": false,
+            "type": "boolean"
+          },
+          "tiers": {
+            "deprecated": false,
+            "desc": "The storage properties for tiers from hot to cold. Note that the order of the tiers is important",
+            "global": false,
+            "mutable": false,
+            "type": "java.util.LinkedHashMap"
+          }
+        }
+      },
+      "user": {
+        "optionalIndex": {
+          "userFriendRequest": {
+            "recipientId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "requesterId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "responseDate": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            }
+          },
+          "userRelationship": {
+            "establishmentDate": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            }
+          },
+          "userRelationshipGroupMember": {
+            "groupIndex": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "joinDate": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "relatedUserId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
     "notification": {
       "notifyGroupConversationParticipantsAfterReadDateUpdated": {
         "deprecated": false,
@@ -1820,7 +2064,9 @@
         "type": "boolean"
       }
     },
-    "redis": {},
+    "redis": {
+      "sequenceId": {}
+    },
     "statistics": {
       "logOnlineUsersNumber": {
         "deprecated": false,

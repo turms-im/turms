@@ -29,12 +29,12 @@ import im.turms.server.common.access.admin.web.annotation.RequestBody;
 import im.turms.server.common.access.admin.web.annotation.RequestHeader;
 import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.io.BaseFileResource;
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.openapi.OpenApiBuilder;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpMethod;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.util.Pair;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
@@ -70,10 +70,10 @@ public class HttpEndpointCollector {
                     continue;
                 }
                 String path = "/" + basePath;
-                if (!methodAndPath.getSecond().isBlank()) {
-                    path += "/" + methodAndPath.getSecond();
+                if (!methodAndPath.second().isBlank()) {
+                    path += "/" + methodAndPath.second();
                 }
-                HttpMethod httpMethod = methodAndPath.getFirst();
+                HttpMethod httpMethod = methodAndPath.first();
                 String encoding = null;
                 if (httpMethod == HttpMethod.GET) {
                     GetMapping mapping = method.getDeclaredAnnotation(GetMapping.class);
@@ -144,9 +144,9 @@ public class HttpEndpointCollector {
 
 
     private static MethodParameterInfo parseAsRequestParam(Parameter parameter) {
-        QueryParam requestParam = parameter.getDeclaredAnnotation(QueryParam.class);
+        QueryParam queryParam = parameter.getDeclaredAnnotation(QueryParam.class);
         Class<?> type = parameter.getType();
-        if (requestParam == null) {
+        if (queryParam == null) {
             return new MethodParameterInfo(parameter.getName(),
                     type,
                     ReflectionUtil.getElementClass(parameter.getParameterizedType()),
@@ -155,14 +155,14 @@ public class HttpEndpointCollector {
                     false,
                     Defaults.defaultValue(type));
         }
-        String name = requestParam.value().isBlank() ? parameter.getName() : requestParam.value();
-        Object parsedDefaultValue = requestParam.defaultValue().isBlank()
+        String name = queryParam.value().isBlank() ? parameter.getName() : queryParam.value();
+        Object parsedDefaultValue = queryParam.defaultValue().isBlank()
                 ? Defaults.defaultValue(type)
-                : HttpRequestParamParser.parsePlainValue(requestParam.defaultValue(), type);
+                : HttpRequestParamParser.parsePlainValue(queryParam.defaultValue(), type);
         return new MethodParameterInfo(name,
                 type,
                 ReflectionUtil.getElementClass(parameter.getParameterizedType()),
-                requestParam.required(),
+                queryParam.required(),
                 false,
                 false,
                 parsedDefaultValue);

@@ -23,11 +23,11 @@ import im.turms.server.common.infra.cluster.node.NodeVersion;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
+import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
-import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.util.Date;
 

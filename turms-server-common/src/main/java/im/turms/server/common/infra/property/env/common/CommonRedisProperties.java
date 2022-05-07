@@ -17,7 +17,6 @@
 
 package im.turms.server.common.infra.property.env.common;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import im.turms.server.common.storage.redis.RedisProperties;
 import im.turms.server.common.storage.redis.SimpleRedisProperties;
 import lombok.AllArgsConstructor;
@@ -25,7 +24,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.data.annotation.Transient;
 
 /**
  * @author James Chen
@@ -36,24 +34,16 @@ import org.springframework.data.annotation.Transient;
 @NoArgsConstructor
 public class CommonRedisProperties {
 
-    @JsonIgnore
     @NestedConfigurationProperty
-    @Transient
-    private RedisProperties session = new RedisProperties();
+    private transient RedisProperties session = new RedisProperties();
 
-    @JsonIgnore
     @NestedConfigurationProperty
-    @Transient
-    private RedisProperties location = new RedisProperties();
+    private transient RedisProperties location = new RedisProperties();
 
-    @JsonIgnore
     @NestedConfigurationProperty
-    @Transient
-    private SimpleRedisProperties ipBlocklist = new SimpleRedisProperties();
+    private transient SimpleRedisProperties ipBlocklist = new SimpleRedisProperties();
 
-    @JsonIgnore
     @NestedConfigurationProperty
-    @Transient
-    private SimpleRedisProperties userIdBlocklist = new SimpleRedisProperties();
+    private transient SimpleRedisProperties userIdBlocklist = new SimpleRedisProperties();
 
 }

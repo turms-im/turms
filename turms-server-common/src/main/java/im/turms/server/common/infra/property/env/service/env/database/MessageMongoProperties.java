@@ -42,7 +42,7 @@ public class MessageMongoProperties extends TurmsMongoProperties {
     private TieredStorageProperties tieredStorage = new TieredStorageProperties();
 
     @NestedConfigurationProperty
-    private WriteConcernProperties writeConcern = new WriteConcernProperties();
+    private transient WriteConcernProperties writeConcern = new WriteConcernProperties();
 
     @Data
     public static class WriteConcernProperties {

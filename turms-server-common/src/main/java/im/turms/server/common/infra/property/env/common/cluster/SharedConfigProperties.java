@@ -17,14 +17,12 @@
 
 package im.turms.server.common.infra.property.env.common.cluster;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.data.annotation.Transient;
 
 /**
  * @author James Chen
@@ -35,9 +33,7 @@ import org.springframework.data.annotation.Transient;
 @NoArgsConstructor
 public class SharedConfigProperties {
 
-    @JsonIgnore
-    @Transient
     @NestedConfigurationProperty
-    private TurmsMongoProperties mongo = new TurmsMongoProperties("mongodb://localhost:27017/turms-config");
+    private transient TurmsMongoProperties mongo = new TurmsMongoProperties("mongodb://localhost:27017/turms-config");
 
 }

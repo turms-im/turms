@@ -15,23 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.env.database;
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package im.turms.server.common.infra.lang;
 
 /**
  * @author James Chen
  */
-@Data
-@NoArgsConstructor
-public class TurmsMongoProperties {
+public record Pair<S, T>(S first, T second) {
 
-    private transient String uri = "mongodb://localhost:27017/turms";
-
-    public TurmsMongoProperties(String uri) {
-        if (uri != null) {
-            this.uri = uri;
-        }
+    public static <S, T> Pair<S, T> of(S first, T second) {
+        return new Pair<>(first, second);
     }
+
 }

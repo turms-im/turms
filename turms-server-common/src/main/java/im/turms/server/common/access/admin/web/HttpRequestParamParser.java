@@ -110,8 +110,9 @@ public class HttpRequestParamParser {
                                     MethodParameterInfo parameter) {
         List<Object> paramValues = null;
         if (parameter.isHeader()) {
-            String value = request.requestHeaders().get(parameter.name());
-            parseSingleValue(parameter, value);
+            String valueStr = request.requestHeaders().get(parameter.name());
+            // TODO: support multiple values when we need in the future
+            Object value = parseSingleValue(parameter, valueStr);
             if (value != null) {
                 paramValues = List.of(value);
             }

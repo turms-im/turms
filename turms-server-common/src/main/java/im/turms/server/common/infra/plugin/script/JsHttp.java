@@ -17,11 +17,11 @@
 
 package im.turms.server.common.infra.plugin.script;
 
+import im.turms.server.common.infra.lang.Pair;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.data.util.Pair;
 import reactor.core.publisher.Mono;
 import reactor.netty.ByteBufFlux;
 import reactor.netty.http.client.HttpClient;
@@ -67,10 +67,10 @@ public class JsHttp {
                         .map(data -> Pair.of(response, data)));
             }
             responseMono.subscribe(pair -> {
-                        HttpClientResponse response = pair.getFirst();
+                        HttpClientResponse response = pair.first();
                         FetchResponse fetchResponse = new FetchResponse(response.status().code(),
                                 response.responseHeaders(),
-                                pair.getSecond());
+                                pair.second());
                         resolve.execute(fetchResponse);
                     },
                     reject::execute);

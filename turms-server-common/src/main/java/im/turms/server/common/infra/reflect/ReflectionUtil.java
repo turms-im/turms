@@ -17,8 +17,8 @@
 
 package im.turms.server.common.infra.reflect;
 
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.unsafe.UnsafeUtil;
-import org.springframework.data.util.Pair;
 import sun.misc.Unsafe;
 
 import javax.annotation.Nullable;

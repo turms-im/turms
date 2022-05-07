@@ -63,7 +63,8 @@ public final class JsonSizeCalculator {
             }
         } else if (val instanceof Map<?, ?> map) {
             for (Map.Entry<?, ?> entry : map.entrySet()) {
-                size += entry.getKey().toString().length();
+                Object key = entry.getKey();
+                size += key instanceof String str ? StringUtil.getLength(str) : 16;
                 size += estimateJson(entry.getValue());
             }
         } else {

@@ -22,6 +22,7 @@ import com.mongodb.connection.ServerDescription;
 import com.mongodb.internal.operation.ServerVersionHelper;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import im.turms.server.common.infra.collection.CollectorUtil;
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
@@ -30,7 +31,6 @@ import im.turms.server.common.storage.mongo.operation.MongoCollectionOptions;
 import im.turms.server.common.storage.mongo.operation.MongoOperationsSupport;
 import im.turms.server.common.storage.mongo.operation.TurmsMongoOperations;
 import lombok.experimental.Delegate;
-import org.springframework.data.util.Pair;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
@@ -91,7 +91,7 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
     public List<MongoEntity<?>> registerEntitiesByOptions(Collection<MongoCollectionOptions> optionsList) {
         List<Pair<MongoEntity<?>, MongoCollection<?>>> pairs = context.registerEntitiesByOptions(optionsList);
         return pairs.stream()
-                .map(Pair::getFirst)
+                .map(Pair::first)
                 .collect(CollectorUtil.toList(pairs.size()));
     }
 
@@ -103,7 +103,7 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
     public List<MongoEntity<?>> registerEntitiesByClasses(Collection<Class<?>> classes) {
         List<Pair<MongoEntity<?>, MongoCollection<?>>> pairs = context.registerEntitiesByClasses(classes);
         return pairs.stream()
-                .map(Pair::getFirst)
+                .map(Pair::first)
                 .collect(CollectorUtil.toList(pairs.size()));
     }
 

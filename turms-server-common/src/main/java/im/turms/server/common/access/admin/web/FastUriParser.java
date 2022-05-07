@@ -17,8 +17,8 @@
 
 package im.turms.server.common.access.admin.web;
 
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
-import org.springframework.data.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +37,7 @@ public class FastUriParser {
     /**
      * @implNote Note that this method only handles the cases for turms servers,
      * meaning it will throw and won't waste resources to parse if a URI is meaningless
-     * for turms servers even if it is valid URI.
+     * for turms servers even if it is a valid URI.
      */
     public static Pair<String, Map<String, List<Object>>> parsePathAndQueryParams(String uri) {
         if (!StringUtil.isLatin1(uri)) {
@@ -45,7 +45,7 @@ public class FastUriParser {
         }
         byte[] srcBytes = StringUtil.getBytes(uri);
         String path = null;
-        Map<String, List<Object>> queryParams = new HashMap<>(16);
+        Map<String, List<Object>> queryParams = new HashMap<>(srcBytes.length >> 3);
         int itemBeginIndex = -1;
         int arrayIndexBeginIndex = -1;
         int previousArrayIndex = -1;
@@ -68,9 +68,7 @@ public class FastUriParser {
                             return Pair.of(StringUtil.newLatin1String(srcBytes, 0, srcBytesLength - 1),
                                     Collections.emptyMap());
                         }
-                        byte[] pathBytes = new byte[i];
-                        System.arraycopy(srcBytes, 0, pathBytes, 0, i);
-                        path = StringUtil.newLatin1String(pathBytes);
+                        path = StringUtil.newLatin1String(srcBytes, 0, i);
                         itemBeginIndex = i + 1;
                         currentState = ParseState.PARSING_QUERY_PARAM_KEY;
                     }
@@ -225,6 +223,7 @@ public class FastUriParser {
                     } else if (i == srcBytesLength - 1) {
                         length = i - itemBeginIndex + 1;
                     } else if (b == '%') {
+                        // %2C => &
                         if (i + 2 < srcBytesLength && srcBytes[i + 1] == '2' && srcBytes[i + 2] == 'C') {
                             isValueDelimiter = true;
                             length = i - itemBeginIndex;

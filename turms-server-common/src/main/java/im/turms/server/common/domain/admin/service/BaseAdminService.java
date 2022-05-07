@@ -141,7 +141,7 @@ public abstract class BaseAdminService {
         if (permission == AdminPermission.ADMIN_QUERY) {
             for (int i = 0, length = params.length; i < length; i++) {
                 MethodParameterInfo param = params[i];
-                if (param.name().equals("account")) {
+                if (param.name().equals("accounts")) {
                     Object value = paramValues[i];
                     if (value instanceof Collection<?> collection && collection.size() == 1 && collection.iterator().next().equals(account)) {
                         isQueryingSelfInfo = true;

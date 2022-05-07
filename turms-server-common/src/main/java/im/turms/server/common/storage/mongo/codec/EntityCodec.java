@@ -20,9 +20,9 @@ package im.turms.server.common.storage.mongo.codec;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.storage.mongo.DomainFieldName;
-import im.turms.server.common.storage.mongo.MongoContext;
 import im.turms.server.common.storage.mongo.entity.EntityField;
 import im.turms.server.common.storage.mongo.entity.MongoEntity;
+import im.turms.server.common.storage.mongo.entity.MongoEntityFactory;
 import org.apache.commons.lang3.ClassUtils;
 import org.bson.BsonReader;
 import org.bson.BsonType;
@@ -31,10 +31,8 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.springframework.data.mapping.PreferredConstructor;
 
 import java.lang.reflect.Constructor;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,21 +50,20 @@ public class EntityCodec<T> implements Codec<T> {
     public EntityCodec(CodecRegistry registry, Class<T> entityClass) {
         this.registry = registry;
         this.entityClass = entityClass;
-        entity = MongoContext.ENTITY_FACTORY.parse(entityClass);
+        entity = MongoEntityFactory.parse(entityClass);
     }
 
     @Override
     public T decode(BsonReader reader, DecoderContext decoderContext) {
         try {
-            PreferredConstructor<T, ?> constructor = entity.constructor();
-            Constructor<T> ctor = constructor.getConstructor();
-            if (constructor.isNoArgConstructor()) {
-                T instance = ctor.newInstance();
+            Constructor<T> constructor = entity.constructor();
+            if (constructor.getParameterCount() == 0) {
+                T instance = constructor.newInstance();
                 initInstance(instance, reader, decoderContext);
                 return instance;
             } else {
                 Object[] ctorValues = parseCtorValues(reader, decoderContext);
-                return ctor.newInstance(ctorValues);
+                return constructor.newInstance(ctorValues);
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to decode Bson to " + entity.entityClass().getName(), e);
@@ -89,7 +86,7 @@ public class EntityCodec<T> implements Codec<T> {
                 }
                 Class<?> fieldValueClass = fieldValue.getClass();
                 if (Map.class.isAssignableFrom(fieldValueClass)) {
-                    TurmsMapCodec codec = new TurmsMapCodec(field.getKeyClass(), field.getElementClass());
+                    TurmsMapCodec codec = new TurmsMapCodec(fieldValueClass, field.getKeyClass(), field.getElementClass());
                     codec.setRegistry(registry);
                     encoderContext.encodeWithChildContext(codec, writer, (Map) fieldValue);
                 } else {
@@ -126,7 +123,7 @@ public class EntityCodec<T> implements Codec<T> {
                     try {
                         value = decode(field, reader, decoderContext);
                     } catch (Exception e) {
-                        String message = "Failed to decode the field %s of the class %s"
+                        String message = "Failed to decode the field \"%s\" of the class: %s"
                                 .formatted(fieldName, entity.entityClass().getName());
                         throw new IllegalStateException(message, e);
                     }
@@ -134,7 +131,7 @@ public class EntityCodec<T> implements Codec<T> {
                 try {
                     field.set(instance, value);
                 } catch (Exception e) {
-                    String message = "Failed to set the field %s of the class %s"
+                    String message = "Failed to set the field \"%s\" of the class: %s"
                             .formatted(fieldName, entity.entityClass().getName());
                     throw new IllegalStateException(message, e);
                 }
@@ -144,8 +141,7 @@ public class EntityCodec<T> implements Codec<T> {
     }
 
     private Object[] parseCtorValues(BsonReader reader, DecoderContext decoderContext) {
-        List<?> parameters = entity.constructor().getParameters();
-        Object[] values = new Object[parameters.size()];
+        Object[] values = new Object[entity.constructor().getParameters().length];
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String fieldName = reader.readName();
@@ -163,7 +159,7 @@ public class EntityCodec<T> implements Codec<T> {
                     try {
                         value = decode(field, reader, decoderContext);
                     } catch (Exception e) {
-                        String message = "Failed to decode the field %s of the class %s"
+                        String message = "Failed to decode the field \"%s\" of the class: %s"
                                 .formatted(fieldName, entity.entityClass().getName());
                         throw new IllegalStateException(message, e);
                     }
@@ -182,7 +178,7 @@ public class EntityCodec<T> implements Codec<T> {
             codec.setRegistry(registry);
             return decoderContext.decodeWithChildContext(codec, reader);
         } else if (Map.class.isAssignableFrom(fieldClass)) {
-            TurmsMapCodec codec = new TurmsMapCodec(field.getKeyClass(), field.getElementClass());
+            TurmsMapCodec codec = new TurmsMapCodec(fieldClass, field.getKeyClass(), field.getElementClass());
             codec.setRegistry(registry);
             return decoderContext.decodeWithChildContext(codec, reader);
         } else {

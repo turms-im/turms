@@ -24,10 +24,10 @@ import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
+import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstructor;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;

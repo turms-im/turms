@@ -29,6 +29,7 @@ import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import im.turms.server.common.infra.collection.CollectorUtil;
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.storage.mongo.codec.BsonValueEncoder;
 import im.turms.server.common.storage.mongo.codec.MongoCodecProvider;
@@ -50,7 +51,6 @@ import org.bson.codecs.ValueCodecProvider;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.jsr310.Jsr310CodecProvider;
-import org.springframework.data.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,8 +63,6 @@ import java.util.function.Consumer;
  * @author James Chen
  */
 public class MongoContext {
-
-    public static final MongoEntityFactory ENTITY_FACTORY = new MongoEntityFactory();
 
     @Getter
     private final MongoClient client;
@@ -140,7 +138,7 @@ public class MongoContext {
         MongoCollection<T> collection = (MongoCollection<T>) collectionMap.get(clazz);
         if (collection == null) {
             return (MongoCollection<T>) registerEntitiesByClasses(List.of(clazz))
-                    .get(0).getSecond();
+                    .get(0).second();
         }
         return collection;
     }
@@ -153,7 +151,7 @@ public class MongoContext {
         MongoEntity<T> entity = (MongoEntity<T>) entityMap.get(clazz);
         if (entity == null) {
             return (MongoEntity<T>) registerEntitiesByClasses(List.of(clazz))
-                    .get(0).getFirst();
+                    .get(0).first();
         }
         return entity;
     }
@@ -174,7 +172,7 @@ public class MongoContext {
                 MongoCollection<?> collection = collectionMap.get(clazz);
                 pairs.add(Pair.of(entity, collection));
             } else {
-                entity = ENTITY_FACTORY.parse(clazz);
+                entity = MongoEntityFactory.parse(clazz);
                 MongoCollection<?> collection = database.getCollection(entity.collectionName(), clazz)
                         .withWriteConcern(properties.getWriteConcern());
                 entityMap.put(clazz, entity);

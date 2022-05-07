@@ -33,6 +33,7 @@ import im.turms.server.common.infra.io.ByteBufFileResource;
 import im.turms.server.common.infra.io.FileResource;
 import im.turms.server.common.infra.json.JsonCodecPool;
 import im.turms.server.common.infra.json.JsonSizeCalculator;
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.AdminApiLogging;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -58,7 +59,6 @@ import lombok.Getter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.buffer.DataBufferLimitException;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -154,11 +154,11 @@ public class HttpRequestDispatcher {
     }
     //endregion
 
-    //region Dispatcher
+    //region Dispatch
     private Mono<Void> handle(HttpServerRequest request, HttpServerResponse response) {
         // 1. We don't expose configs for developers to customize the CORS config
         // because it's better to be done by firewall/ECS/EC2
-        // 2. Note that both CORS requests and some normal requests need these headers
+        // 2. Note that both CORS requests and some other requests need these headers
         HttpUtil.allowAnyRequest(response.responseHeaders()
                 .set(X_REQUEST_ID, request.requestId()));
         if (isPreFlightRequest(request)) {
@@ -221,7 +221,7 @@ public class HttpRequestDispatcher {
                                                      RequestContext requestContext) {
         String uri = request.uri();
         Pair<String, Map<String, List<Object>>> pathAndQueryParams = FastUriParser.parsePathAndQueryParams(uri);
-        ApiEndpoint endpoint = keyToEndpoint.get(new ApiEndpointKey(pathAndQueryParams.getFirst(), request.method()));
+        ApiEndpoint endpoint = keyToEndpoint.get(new ApiEndpointKey(pathAndQueryParams.first(), request.method()));
         if (endpoint == null) {
             return Mono.just(HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
                     new ResponseDTO<>(ResponseStatusCode.ILLEGAL_ARGUMENT, "There is no any resources matched to request path: " + uri)));
@@ -232,7 +232,7 @@ public class HttpRequestDispatcher {
         return checkFrequency(ip)
                 .then(Mono.defer(() -> HttpRequestParamParser.parse(request,
                         requestContext,
-                        pathAndQueryParams.getSecond(),
+                        pathAndQueryParams.second(),
                         endpoint.parameters())))
                 .flatMap(params -> {
                     requestContext.setParamValues(params);
@@ -320,7 +320,7 @@ public class HttpRequestDispatcher {
         }
         Pair<String, ByteBuf> mediaTypeAndBuffer = encodeResponseBody(body);
         String mediaType = endpoint == null || endpoint.mediaType() == null
-                ? mediaTypeAndBuffer.getFirst()
+                ? mediaTypeAndBuffer.first()
                 : endpoint.mediaType();
         // TODO: cache common responses
         response.header(HttpHeaderNames.CONTENT_TYPE, mediaType);
@@ -328,7 +328,7 @@ public class HttpRequestDispatcher {
             response.header(HttpHeaderNames.CONTENT_ENCODING, endpoint.encoding());
         }
         return response
-                .sendObject(ByteBufUtil.duplicateIfUnreleasable(mediaTypeAndBuffer.getSecond()))
+                .sendObject(ByteBufUtil.duplicateIfUnreleasable(mediaTypeAndBuffer.second()))
                 .then();
     }
 
