@@ -99,6 +99,13 @@ public final class CollectionUtil {
         return result;
     }
 
+    public static <T> List<T> union(List<? extends T> list1, List<? extends T> list2) {
+        ArrayList<T> result = new ArrayList<>(list1.size() + list2.size());
+        result.addAll(list1);
+        result.addAll(list2);
+        return result;
+    }
+
     public static <T> Set<T> newSet(Collection<T> keys) {
         if (keys instanceof Set) {
             return (Set<T>) keys;

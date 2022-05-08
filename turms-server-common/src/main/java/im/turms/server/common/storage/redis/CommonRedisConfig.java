@@ -17,12 +17,12 @@
 
 package im.turms.server.common.storage.redis;
 
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.env.common.CommonRedisProperties;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContextPool;
-import org.apache.commons.collections4.ListUtils;
 import org.springframework.context.annotation.Bean;
 
 import javax.annotation.PreDestroy;
@@ -86,14 +86,14 @@ public abstract class CommonRedisConfig {
 
     @PreDestroy
     public void destroy() {
-        for (TurmsRedisClientManager manager : ListUtils.union(registeredClientManagers, List.of(sessionRedisClientManager, locationRedisClientManager))) {
+        for (TurmsRedisClientManager manager : CollectionUtil.union(registeredClientManagers, List.of(sessionRedisClientManager, locationRedisClientManager))) {
             try {
                 manager.destroy();
             } catch (Exception e) {
                 LOGGER.error("Failed to destroy a redis client", e);
             }
         }
-        for (TurmsRedisClient client : ListUtils.union(registeredClients, List.of(ipBlocklistRedisClient, userIdBlocklistRedisClient))) {
+        for (TurmsRedisClient client : CollectionUtil.union(registeredClients, List.of(ipBlocklistRedisClient, userIdBlocklistRedisClient))) {
             try {
                 client.destroy();
             } catch (Exception e) {

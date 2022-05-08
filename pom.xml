@@ -34,7 +34,6 @@
         <awssdk.version>2.17.160</awssdk.version>
         <blockhound.version>1.0.6.RELEASE</blockhound.version>
         <commons-collections4.version>4.4</commons-collections4.version>
-        <commons-io.version>2.11.0</commons-io.version>
         <disruptor.version>3.4.4</disruptor.version>
         <eclipse-collections.version>11.0.0</eclipse-collections.version>
         <graalvm.version>22.0.0.2</graalvm.version>
@@ -43,7 +42,6 @@
         <jctools-core.version>3.3.0</jctools-core.version>
         <log4j.version>2.17.2</log4j.version>
         <protobuf.version>3.20.1</protobuf.version>
-        <springdoc.version>1.6.7</springdoc.version>
         <swagger.version>2.2.0</swagger.version>
         <swagger-ui.version>4.10.3</swagger-ui.version>
 
@@ -141,16 +139,6 @@
             </dependency>
 
             <!-- Miscellaneous -->
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-collections4</artifactId>
-                <version>${commons-collections4.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commons-io.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.lmax</groupId>
                 <artifactId>disruptor</artifactId>

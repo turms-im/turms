@@ -32,6 +32,7 @@ import im.turms.server.common.infra.cluster.service.config.entity.discovery.Memb
 import im.turms.server.common.infra.cluster.service.connection.ConnectionService;
 import im.turms.server.common.infra.cluster.service.idgen.IdService;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
@@ -43,7 +44,6 @@ import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import lombok.Getter;
-import org.apache.commons.collections4.ListUtils;
 import org.bson.BsonValue;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -468,7 +468,7 @@ public class DiscoveryService implements ClusterService {
         } else {
             otherActiveConnectedGatewayMembers = tempOtherActiveConnectedMembers;
         }
-        otherActiveConnectedMembers = ListUtils.union(otherActiveConnectedServiceMembers,
+        otherActiveConnectedMembers = CollectionUtil.union(otherActiveConnectedServiceMembers,
                 otherActiveConnectedGatewayMembers);
     }
 
