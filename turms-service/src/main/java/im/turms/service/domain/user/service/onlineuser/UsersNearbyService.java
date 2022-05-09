@@ -23,6 +23,7 @@ import im.turms.server.common.domain.location.bo.NearbyUser;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.user.po.User;
+import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.service.domain.user.service.UserService;
@@ -97,7 +98,7 @@ public class UsersNearbyService {
                             return Mono.empty();
                         }
                         return userService.queryUsersProfile(userIdToGeo.keySet(), false)
-                                .collectList()
+                                .collect(CollectorUtil.toChunkedList())
                                 .map(users -> {
                                     List<NearbyUser> nearbyUsers = new ArrayList<>(users.size());
                                     for (User user : users) {
@@ -113,7 +114,7 @@ public class UsersNearbyService {
         } else {
             resultMono = nearbyUserFlux
                     .map(geo -> getNearbyUser(geo, null))
-                    .collectList();
+                    .collect(CollectorUtil.toChunkedList());
         }
         return upsertLocation.then(resultMono);
     }

@@ -158,7 +158,7 @@ public class UserRelationshipGroupService {
                             .getUserRelationshipGroupsWithVersionBuilder()
                             .setLastUpdatedDate(date.getTime());
                     return queryRelationshipGroupsInfos(ownerId)
-                            .collect(CollectorUtil.toList())
+                            .collect(CollectorUtil.toChunkedList())
                             .map(groups -> {
                                 for (UserRelationshipGroup group : groups) {
                                     builder.addUserRelationshipGroups(ProtoModelConvertor.relationshipGroup2proto(group));
@@ -289,7 +289,7 @@ public class UserRelationshipGroupService {
         }
         // Don't use transaction for better performance
         return userRelationshipGroupMemberRepository.findRelationshipGroupMembers(ownerId, deleteGroupIndex)
-                .collectList()
+                .collect(CollectorUtil.toChunkedList())
                 .flatMap(members -> {
                     if (members.isEmpty()) {
                         return Mono.empty();

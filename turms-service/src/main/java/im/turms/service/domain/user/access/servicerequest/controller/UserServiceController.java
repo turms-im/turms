@@ -37,6 +37,7 @@ import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -177,13 +178,14 @@ public class UserServiceController {
             }
             //TODO : Access Control
             List<Long> userIds = request.getUserIdsList();
-            List<Mono<Pair<Long, UserSessionsStatus>>> monos = new ArrayList<>(userIds.size());
+            int size = userIds.size();
+            List<Mono<Pair<Long, UserSessionsStatus>>> monos = new ArrayList<>(size);
             for (Long targetUserId : userIds) {
                 monos.add(userStatusService.getUserSessionsStatus(targetUserId)
                         .map(sessionsStatus -> Pair.of(targetUserId, sessionsStatus)));
             }
             return Flux.merge(monos)
-                    .collectList()
+                    .collect(CollectorUtil.toList(size))
                     .map(userIdAndSessionsStatusList -> {
                         UsersOnlineStatuses.Builder statusesBuilder = ClientMessagePool.getUsersOnlineStatusesBuilder();
                         for (Pair<Long, UserSessionsStatus> userIdAndSessionsStatus : userIdAndSessionsStatusList) {

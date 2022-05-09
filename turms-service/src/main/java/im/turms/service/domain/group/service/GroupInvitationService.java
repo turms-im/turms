@@ -25,6 +25,7 @@ import im.turms.server.common.access.client.dto.model.group.GroupInvitationsWith
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
+import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -321,7 +322,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                             ? queryGroupInvitationsByInviterId(userId)
                             : queryGroupInvitationsByInviteeId(userId);
                     return invitationFlux
-                            .collectList()
+                            .collect(CollectorUtil.toChunkedList())
                             .map(groupInvitations -> {
                                 if (groupInvitations.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);

@@ -23,7 +23,6 @@ import lombok.SneakyThrows;
 import sun.misc.Unsafe;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 
@@ -44,7 +43,7 @@ public final class StringUtil {
         try {
             Constructor<String> constructor = String.class.getDeclaredConstructor(byte[].class, byte.class);
             ReflectionUtil.setAccessible(constructor);
-            NEW_STRING = MethodHandles.lookup().unreflectConstructor(constructor);
+            NEW_STRING = ReflectionUtil.LOOKUP.unreflectConstructor(constructor);
             STRING_VALUE_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("value"));
             STRING_CODER_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("coder"));
 

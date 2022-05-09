@@ -227,7 +227,7 @@ public class MessageServiceController {
                             0,
                             size,
                             withTotal)
-                    .collectList()
+                    .collect(CollectorUtil.toChunkedList())
                     .flatMap(messages -> {
                         if (messages.isEmpty()) {
                             return Mono.empty();

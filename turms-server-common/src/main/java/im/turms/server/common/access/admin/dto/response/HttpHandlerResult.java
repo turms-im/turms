@@ -100,7 +100,7 @@ public record HttpHandlerResult<T>(
 
     public static <T> Mono<HttpHandlerResult<ResponseDTO<PaginationDTO<T>>>> page(Mono<Long> totalMono, Flux<T> data) {
         Mono<PaginationDTO<T>> mono = Mono
-                .zip(totalMono, data.collectList())
+                .zip(totalMono, data.collect(CollectorUtil.toChunkedList()))
                 .map(tuple -> {
                     Long total = tuple.getT1();
                     if (total <= 0L) {
@@ -129,7 +129,7 @@ public record HttpHandlerResult<T>(
 
     public static <T> Mono<HttpHandlerResult<ResponseDTO<Collection<T>>>> okIfTruthy(Flux<T> data) {
         return data
-                .collectList()
+                .collect(CollectorUtil.toChunkedList())
                 .map(HttpHandlerResult::okIfTruthy);
     }
 

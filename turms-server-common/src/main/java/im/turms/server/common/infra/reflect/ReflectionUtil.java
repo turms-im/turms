@@ -37,8 +37,9 @@ import java.util.Map;
  */
 public final class ReflectionUtil {
 
+    public static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+
     private static final Unsafe UNSAFE = UnsafeUtil.UNSAFE;
-    private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
     /**
      * "UNSAFE.objectFieldOffset(AccessibleObject.class.getDeclaredField("override"))" won't work
      * because Java hides {@link java.lang.reflect.AccessibleObject#override} in

@@ -23,7 +23,6 @@ import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.observation.access.admin.dto.response.HealthDTO;
 
-
 /**
  * @author James Chen
  */

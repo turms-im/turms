@@ -28,6 +28,7 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.exception.ThrowableUtil;
@@ -377,7 +378,8 @@ public class GroupService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        List<Mono<Signal<Void>>> monos = new ArrayList<>(groupIds.size());
+        int size = groupIds.size();
+        List<Mono<Signal<Void>>> monos = new ArrayList<>(size);
         for (Long groupId : groupIds) {
             Mono<Signal<Void>> mono = checkAndTransferGroupOwnership(
                     null,
@@ -389,7 +391,7 @@ public class GroupService {
             monos.add(mono);
         }
         return Flux.merge(monos)
-                .collectList()
+                .collect(CollectorUtil.toList(size))
                 .map(signals -> {
                     int matched = 0;
                     long modified = 0;
@@ -636,7 +638,7 @@ public class GroupService {
 
     public Flux<Group> queryJoinedGroups(@NotNull Long memberId) {
         return groupMemberService.queryUserJoinedGroupIds(memberId)
-                .collectList()
+                .collect(CollectorUtil.toChunkedList())
                 .flatMapMany(groupIds -> groupIds.isEmpty()
                         ? Flux.empty()
                         : this.queryGroups(groupIds));
@@ -652,7 +654,7 @@ public class GroupService {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     return groupMemberService.queryUserJoinedGroupIds(memberId)
-                            .collectList()
+                            .collect(CollectorUtil.toChunkedList())
                             .map(ids -> {
                                 if (ids.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
@@ -677,7 +679,7 @@ public class GroupService {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     return queryJoinedGroups(memberId)
-                            .collectList()
+                            .collect(CollectorUtil.toChunkedList())
                             .map(groups -> {
                                 if (groups.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);

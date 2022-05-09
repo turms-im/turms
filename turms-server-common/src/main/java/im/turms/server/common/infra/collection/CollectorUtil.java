@@ -37,6 +37,10 @@ public final class CollectorUtil {
     private CollectorUtil() {
     }
 
+    public static <T> Collector<T, ?, List<T>> toChunkedList() {
+        return Collectors.toCollection(ChunkedArrayList::new);
+    }
+
     public static <T> Collector<T, ?, List<T>> toList() {
         return Collectors.toCollection(LinkedList::new);
     }

@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.collection;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.util.AbstractMap;
@@ -29,6 +30,7 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 /**
  * @author James Chen
  */
+@ThreadSafe
 public final class ConcurrentEnumMap<K extends Enum<K>, V> implements Map<K, V> {
 
     private static final VarHandle VALUES_HANDLE

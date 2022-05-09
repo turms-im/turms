@@ -25,6 +25,7 @@ import im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWit
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
+import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -254,7 +255,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                             ? queryGroupJoinRequestsByGroupId(groupId)
                             : queryGroupJoinRequestsByRequesterId(requesterId);
                     return requestFlux
-                            .collectList()
+                            .collect(CollectorUtil.toChunkedList())
                             .map(groupJoinRequests -> {
                                 if (groupJoinRequests.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);

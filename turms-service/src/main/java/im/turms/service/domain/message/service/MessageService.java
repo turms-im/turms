@@ -470,7 +470,7 @@ public class MessageService {
 
     public Mono<Void> deleteExpiredMessages(@NotNull Integer retentionPeriodHours) {
         return queryExpiredMessageIds(retentionPeriodHours)
-                .collectList()
+                .collect(CollectorUtil.toChunkedList())
                 .flatMap(expiredMessageIds -> {
                     if (expiredMessageIds.isEmpty()) {
                         return Mono.empty();
@@ -478,7 +478,7 @@ public class MessageService {
                     Mono<List<Long>> messageIdsToDeleteMono = Mono.just(expiredMessageIds);
                     if (pluginManager.hasRunningExtensions(ExpiredMessageDeletionNotifier.class)) {
                         messageIdsToDeleteMono = messageRepository.findByIds(expiredMessageIds)
-                                .collectList()
+                                .collect(CollectorUtil.toChunkedList())
                                 .flatMap(messages -> pluginManager.invokeExtensionPointsSequentially(
                                         ExpiredMessageDeletionNotifier.class,
                                         "getMessagesToDelete",

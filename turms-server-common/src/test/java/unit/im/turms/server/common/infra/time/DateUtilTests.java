@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -36,7 +37,7 @@ class DateUtilTests {
     void test() {
         DateTimeFormatter formatter = DateTimeFormatter
                 .ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-                .withZone(ZoneId.of("UTC"));
+                .withZone(ZoneOffset.UTC);
         List<String> dateTimes = List.of(
                 "1970-01-01 00:00:00.000",
                 "1970-01-01 00:00:00.001",

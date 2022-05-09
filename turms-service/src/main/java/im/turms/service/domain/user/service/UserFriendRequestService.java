@@ -27,6 +27,7 @@ import im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWit
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
+import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -365,7 +366,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
                             ? queryFriendRequestsByRequesterId(userId)
                             : queryFriendRequestsByRecipientId(userId);
                     return requestFlux
-                            .collectList()
+                            .collect(CollectorUtil.toChunkedList())
                             .map(requests -> {
                                 if (requests.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);

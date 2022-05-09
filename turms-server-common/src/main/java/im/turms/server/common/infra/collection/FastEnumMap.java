@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.collection;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,6 +27,7 @@ import java.util.Set;
 /**
  * @author James Chen
  */
+@NotThreadSafe
 public final class FastEnumMap<K extends Enum<K>, V> implements Map<K, V> {
 
     private final K[] keys;

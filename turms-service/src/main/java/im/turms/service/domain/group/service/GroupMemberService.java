@@ -27,6 +27,7 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -627,7 +628,7 @@ public class GroupMemberService {
         return isGroupMember(groupId, requesterId)
                 .flatMap(isGroupMember -> isGroupMember == null || !isGroupMember
                         ? Mono.error(ResponseException.get(ResponseStatusCode.NOT_MEMBER_TO_QUERY_MEMBER_INFO))
-                        : queryGroupMembers(groupId, memberIds).collectList())
+                        : queryGroupMembers(groupId, memberIds).collect(CollectorUtil.toChunkedList()))
                 .flatMap(members -> {
                     if (members.isEmpty()) {
                         return ResponseExceptionPublisherPool.noContent();
@@ -657,7 +658,7 @@ public class GroupMemberService {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     return queryGroupsMembers(Set.of(groupId), null, null, null, null, null, null)
-                            .collectList()
+                            .collect(CollectorUtil.toChunkedList())
                             .flatMap(members -> {
                                 if (members.isEmpty()) {
                                     return ResponseExceptionPublisherPool.noContent();

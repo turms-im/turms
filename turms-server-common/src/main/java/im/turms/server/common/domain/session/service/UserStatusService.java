@@ -262,7 +262,7 @@ public class UserStatusService {
         }
         return sessionRedisClientManager.hgetall(userId, userId)
                 .timeout(operationTimeout)
-                .collect(CollectorUtil.toList())
+                .collect(CollectorUtil.toList(8))
                 .map(entries -> {
                     UserStatus userStatus = null;
                     Map<DeviceType, String> onlineDeviceTypeToNodeId = null;
