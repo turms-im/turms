@@ -17,6 +17,7 @@
 
 package im.turms.gateway.storage.redis;
 
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.storage.redis.CommonRedisConfig;
 import org.springframework.context.annotation.Configuration;
@@ -27,8 +28,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RedisConfig extends CommonRedisConfig {
 
-    protected RedisConfig(TurmsPropertiesManager propertiesManager) {
-        super(propertiesManager.getLocalProperties().getGateway().getRedis(),
+    protected RedisConfig(TurmsApplicationContext context, TurmsPropertiesManager propertiesManager) {
+        super(context,
+                propertiesManager.getLocalProperties().getGateway().getRedis(),
                 propertiesManager.getLocalProperties().getLocation().isTreatUserIdAndDeviceTypeAsUniqueUser());
     }
 

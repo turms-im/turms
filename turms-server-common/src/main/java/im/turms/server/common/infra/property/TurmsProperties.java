@@ -20,6 +20,7 @@ package im.turms.server.common.infra.property;
 import im.turms.server.common.infra.property.env.common.FlightRecorderProperties;
 import im.turms.server.common.infra.property.env.common.IpProperties;
 import im.turms.server.common.infra.property.env.common.PluginProperties;
+import im.turms.server.common.infra.property.env.common.ShutdownProperties;
 import im.turms.server.common.infra.property.env.common.UserStatusProperties;
 import im.turms.server.common.infra.property.env.common.cluster.ClusterProperties;
 import im.turms.server.common.infra.property.env.common.healthcheck.HealthCheckProperties;
@@ -76,6 +77,9 @@ public class TurmsProperties {
 
     @NestedConfigurationProperty
     private SecurityProperties security = new SecurityProperties();
+
+    @NestedConfigurationProperty
+    private ShutdownProperties shutdown = new ShutdownProperties();
 
     @NestedConfigurationProperty
     private UserStatusProperties userStatus = new UserStatusProperties();

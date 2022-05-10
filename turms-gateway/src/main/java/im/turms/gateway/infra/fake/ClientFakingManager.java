@@ -28,6 +28,7 @@ import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.client.TurmsClient;
+import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.fake.RandomProtobufGenerator;
@@ -46,7 +47,6 @@ import reactor.netty.resources.LoopResources;
 import reactor.util.retry.Retry;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -82,6 +82,10 @@ public class ClientFakingManager {
         if (!tcpUserSessionDispatcher.isEnabled()) {
             throw new IllegalStateException("Cannot run clients because the TCP server is disabled");
         }
+        context.addShutdownHook(JobShutdownOrder.CLOSE_FAKE_CLIENTS, timeoutMillis -> {
+            shutdown(timeoutMillis);
+            return Mono.empty();
+        });
     }
 
     @PostConstruct
@@ -97,10 +101,14 @@ public class ClientFakingManager {
         }
     }
 
-    @PreDestroy
-    private void shutdown() {
+    private void shutdown(long timeoutMillis) {
         if (thread != null) {
             thread.interrupt();
+            try {
+                thread.join(timeoutMillis);
+            } catch (InterruptedException e) {
+                // ignore
+            }
         }
     }
 

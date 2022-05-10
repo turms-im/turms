@@ -20,6 +20,7 @@ package im.turms.server.common.infra.cluster.service.config.entity.property;
 import im.turms.server.common.infra.property.env.common.FlightRecorderProperties;
 import im.turms.server.common.infra.property.env.common.IpProperties;
 import im.turms.server.common.infra.property.env.common.PluginProperties;
+import im.turms.server.common.infra.property.env.common.ShutdownProperties;
 import im.turms.server.common.infra.property.env.common.UserStatusProperties;
 import im.turms.server.common.infra.property.env.common.cluster.ClusterProperties;
 import im.turms.server.common.infra.property.env.common.healthcheck.HealthCheckProperties;
@@ -51,6 +52,8 @@ public class CommonProperties {
     private PluginProperties plugin;
 
     private SecurityProperties security;
+
+    private ShutdownProperties shutdown;
 
     private UserStatusProperties userStatus;
 

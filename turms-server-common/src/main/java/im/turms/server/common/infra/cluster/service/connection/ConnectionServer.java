@@ -24,6 +24,7 @@ import im.turms.server.common.infra.net.SslUtil;
 import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import lombok.Getter;
+import reactor.core.publisher.Mono;
 import reactor.netty.ChannelBindException;
 import reactor.netty.DisposableServer;
 import reactor.netty.channel.ChannelOperations;
@@ -103,8 +104,9 @@ public class ConnectionServer {
         port = currentPort;
     }
 
-    public void dispose() {
-        server.disposeNow(Duration.ofSeconds(30));
+    public Mono<Void> dispose() {
+        server.dispose();
+        return server.onDispose();
     }
 
 }

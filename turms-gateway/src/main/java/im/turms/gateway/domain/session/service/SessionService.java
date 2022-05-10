@@ -44,6 +44,8 @@ import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.rpc.exception.ConnectionNotFound;
 import im.turms.server.common.infra.collection.MapUtil;
+import im.turms.server.common.infra.context.JobShutdownOrder;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -64,10 +66,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
-import javax.annotation.PreDestroy;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -122,6 +122,7 @@ public class SessionService implements ISessionService {
 
     public SessionService(
             Node node,
+            TurmsApplicationContext context,
             TurmsPropertiesManager propertiesManager,
             PluginManager pluginManager,
             SessionLocationService sessionLocationService,
@@ -164,6 +165,8 @@ public class SessionService implements ISessionService {
         MeterRegistry registry = metricsService.getRegistry();
         loggedInUsersCounter = registry.counter(LOGGED_IN_USERS_COUNTER);
         registry.gaugeMapSize(ONLINE_USERS_GAUGE, Tags.empty(), userIdToSessionsManager);
+
+        context.addShutdownHook(JobShutdownOrder.CLOSE_SESSIONS, this::destroy);
     }
 
     private void updateGlobalProperties(TurmsProperties properties) {
@@ -177,16 +180,11 @@ public class SessionService implements ISessionService {
         serverId = properties.getGateway().getServiceDiscovery().getIdentity();
     }
 
-    @PreDestroy
-    public void destroy() {
-        heartbeatManager.destroy();
+    public Mono<Void> destroy(long timeoutMillis) {
+        heartbeatManager.destroy(timeoutMillis);
         CloseReason closeReason = CloseReason.get(SessionCloseStatus.SERVER_CLOSED);
-        try {
-            clearAllLocalSessions(closeReason)
-                    .block(Duration.ofSeconds(60));
-        } catch (Exception e) {
-            throw new IllegalStateException("Caught an error while clearing local sessions", e);
-        }
+        return clearAllLocalSessions(closeReason)
+                .onErrorMap(t -> new IllegalStateException("Caught an error while clearing local sessions", t));
     }
 
     public void handleHeartbeatUpdateRequest(UserSession session) {

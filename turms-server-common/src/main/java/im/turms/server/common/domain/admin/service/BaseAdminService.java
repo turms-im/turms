@@ -24,6 +24,7 @@ import im.turms.server.common.domain.admin.bo.AdminInfo;
 import im.turms.server.common.domain.admin.po.Admin;
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.infra.cluster.service.config.ChangeStreamUtil;
+import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -85,13 +86,18 @@ public abstract class BaseAdminService {
 
         // Load
         adminRepository.findAll()
-                .collectList()
+                .collect(CollectorUtil.toChunkedList())
                 .doOnNext(admins -> {
                     for (Admin admin : admins) {
                         accountToAdmin.put(admin.getAccount(), new AdminInfo(admin, null));
                     }
-                    boolean rootAdminExists = admins.stream()
-                            .anyMatch(admin -> admin.getRoleId().equals(ADMIN_ROLE_ROOT_ID));
+                    boolean rootAdminExists = false;
+                    for (Admin admin : admins) {
+                        if (admin.getRoleId().equals(ADMIN_ROLE_ROOT_ID)) {
+                            rootAdminExists = true;
+                            break;
+                        }
+                    }
                     if (!rootAdminExists) {
                         addRootAdmin()
                                 .subscribe(null, t -> LOGGER.error("Caught an error while adding the root admin", t));

@@ -482,17 +482,19 @@ public class DiscoveryService implements ClusterService {
     }
 
     @Override
-    public void stop() {
+    public Mono<Void> stop(long timeoutMillis) {
         localNodeStatusManager.setClosing(true);
-        scheduler.shutdownNow();
-        if (localNodeStatusManager.isLocalNodeRegistered()) {
-            try {
-                localNodeStatusManager.unregisterLocalMember()
-                        .block(CRUD_TIMEOUT_DURATION);
-            } catch (Exception e) {
-                throw new IllegalStateException("Caught an error while unregistering the local node", e);
-            }
+        scheduler.shutdown();
+        try {
+            scheduler.awaitTermination(timeoutMillis, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            // ignored
         }
+        if (localNodeStatusManager.isLocalNodeRegistered()) {
+            return localNodeStatusManager.unregisterLocalMember()
+                    .onErrorMap(t -> new IllegalStateException("Caught an error while unregistering the local node", t));
+        }
+        return Mono.empty();
     }
 
     // Registration

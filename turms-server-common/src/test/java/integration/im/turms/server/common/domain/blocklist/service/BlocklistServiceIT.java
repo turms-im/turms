@@ -19,6 +19,7 @@ package integration.im.turms.server.common.domain.blocklist.service;
 
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
 import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.security.BlocklistProperties;
@@ -273,6 +274,7 @@ class BlocklistServiceIT extends BaseIntegrationTest {
         BlocklistService.maxLogQueueSize = maxLogSize;
         return new BlocklistService(node,
                 new TaskManager(),
+                mock(TurmsApplicationContext.class),
                 CommonRedisConfig.newIpBlocklistRedisClient(uri),
                 CommonRedisConfig.newUserIdBlocklistRedisClient(uri),
                 propertiesManager,

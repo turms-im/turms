@@ -2666,6 +2666,16 @@
       }
     }
   },
+  "shutdown": {
+    "jobTimeoutMillis": {
+      "deprecated": false,
+      "desc": "Wait for a job 2 minutes at most for extreme cases by default. Though it's a long time, graceful shutdown is usually better than force shutdown.",
+      "global": false,
+      "mutable": false,
+      "type": "long",
+      "value": 120000
+    }
+  },
   "userStatus": {
     "cacheUserSessionsStatus": {
       "deprecated": false,

@@ -79,8 +79,8 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
         operations = new TurmsMongoOperations(context);
     }
 
-    public void destroy() {
-        context.destroy();
+    public Mono<Void> destroy(long timeoutMillis) {
+        return context.destroy(timeoutMillis);
     }
 
     public List<MongoEntity<?>> registerEntitiesByOptions(MongoCollectionOptions... optionsList) {

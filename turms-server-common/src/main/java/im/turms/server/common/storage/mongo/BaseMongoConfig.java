@@ -17,13 +17,16 @@
 
 package im.turms.server.common.storage.mongo;
 
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.context.JobShutdownOrder;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
+import im.turms.server.common.infra.time.DurationConst;
+import reactor.core.publisher.Mono;
 
-import javax.annotation.PreDestroy;
-import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,26 +34,30 @@ import java.util.Map;
  */
 public abstract class BaseMongoConfig {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseMongoConfig.class);
-
     private final Map<String, TurmsMongoClient> uriToClient = new HashMap<>(8);
 
-    @PreDestroy
-    public void destroy() {
-        for (TurmsMongoClient client : uriToClient.values()) {
-            try {
-                client.destroy();
-            } catch (Exception ignored) {
-                LOGGER.error("Failed to destroy a mongo client");
-            }
+    protected BaseMongoConfig(TurmsApplicationContext applicationContext) {
+        applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_MONGODB_CONNECTIONS, this::destroy);
+    }
+
+    public Mono<Void> destroy(long timeoutMillis) {
+        Collection<TurmsMongoClient> clients = uriToClient.values();
+        int size = clients.size();
+        if (size == 0) {
+            return Mono.empty();
         }
+        List<Mono<Void>> monos = new ArrayList<>(size);
+        for (TurmsMongoClient client : clients) {
+            monos.add(client.destroy(timeoutMillis));
+        }
+        return Mono.whenDelayError(monos);
     }
 
     protected synchronized TurmsMongoClient getMongoClient(TurmsMongoProperties properties) {
         return uriToClient.computeIfAbsent(properties.getUri(), key -> {
             try {
                 return TurmsMongoClient.of(properties)
-                        .block(Duration.ofMinutes(1));
+                        .block(DurationConst.ONE_MINUTE);
             } catch (Exception e) {
                 throw new IllegalStateException("Failed to create the mongo client", e);
             }

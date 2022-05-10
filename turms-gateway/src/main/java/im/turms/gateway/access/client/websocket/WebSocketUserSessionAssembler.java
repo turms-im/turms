@@ -23,7 +23,8 @@ import im.turms.gateway.access.client.common.connection.NetConnection;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.infra.logging.ApiLoggingContext;
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
-import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.context.JobShutdownOrder;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -33,8 +34,6 @@ import im.turms.server.common.infra.property.env.gateway.WebSocketProperties;
 import org.springframework.stereotype.Component;
 import reactor.netty.Connection;
 import reactor.netty.DisposableServer;
-
-import javax.annotation.PreDestroy;
 
 /**
  * @author James Chen
@@ -47,9 +46,9 @@ public class WebSocketUserSessionAssembler extends UserSessionAssembler {
     private final DisposableServer server;
 
     public WebSocketUserSessionAssembler(
-            Node node,
             ApiLoggingContext apiLoggingContext,
             BlocklistService blocklistService,
+            TurmsApplicationContext applicationContext,
             TurmsPropertiesManager propertiesManager,
             ServerStatusManager serverStatusManager,
             SessionService sessionService,
@@ -67,6 +66,10 @@ public class WebSocketUserSessionAssembler extends UserSessionAssembler {
                     bindConnectionWithSessionWrapper(),
                     gatewayProperties.getClientApi().getMaxRequestSizeBytes());
             LOGGER.info("WebSocket server started on {}:{}", server.host(), server.port());
+            applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_GATEWAY_WEBSOCKET_SERVER, timeoutMillis -> {
+                server.dispose();
+                return server.onDispose();
+            });
         } else {
             server = null;
         }
@@ -75,14 +78,6 @@ public class WebSocketUserSessionAssembler extends UserSessionAssembler {
     @Override
     protected NetConnection createConnection(Connection connection) {
         return new WebSocketConnection(connection, true);
-    }
-
-    @PreDestroy
-    public void preDestroy() {
-        if (server != null) {
-            LOGGER.info("Closing WebSocket server");
-            server.dispose();
-        }
     }
 
 }

@@ -65,14 +65,16 @@ public class TurmsRedisClientManager {
         }
     }
 
-    public void destroy() {
-        for (TurmsRedisClient client : clients) {
-            try {
-                client.destroy();
-            } catch (Exception e) {
-                LOGGER.error("Failed to shutdown a connection", e);
-            }
+    public Mono<Void> destroy(long timeoutMillis) {
+        int size = clients.size();
+        if (size == 0) {
+            return Mono.empty();
         }
+        List<Mono<Void>> monos = new ArrayList<>(size);
+        for (TurmsRedisClient client : clients) {
+            monos.add(client.destroy(timeoutMillis));
+        }
+        return Mono.whenDelayError(monos);
     }
 
     public <T> Mono<Void> execute(Set<Long> shardKeys, BiFunction<TurmsRedisClient, Collection<Long>, Mono<T>> execute) {

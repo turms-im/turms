@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
@@ -95,7 +96,7 @@ public class DictionaryParser {
     private List<Word> parseExtendedWords(BufferedReader reader, boolean skipInvalidCharacter) {
         List<Word> words = new LinkedList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        dateFormat.setTimeZone(TimeZone.getTimeZone(ZoneOffset.UTC));
         CharArrayBuffer buffer = new CharArrayBuffer(64);
         int result;
         char character;

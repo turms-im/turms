@@ -17,6 +17,7 @@
 
 package im.turms.service.storage.redis;
 
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
 import im.turms.server.common.infra.property.env.service.business.message.SequenceIdProperties;
@@ -37,8 +38,9 @@ public class RedisConfig extends CommonRedisConfig {
 
     private final TurmsRedisClientManager sequenceIdRedisClientManager;
 
-    protected RedisConfig(TurmsPropertiesManager propertiesManager) {
-        super(propertiesManager.getLocalProperties().getService().getRedis(),
+    protected RedisConfig(TurmsApplicationContext context, TurmsPropertiesManager propertiesManager) {
+        super(context,
+                propertiesManager.getLocalProperties().getService().getRedis(),
                 propertiesManager.getLocalProperties().getLocation().isTreatUserIdAndDeviceTypeAsUniqueUser());
         ServiceProperties serviceProperties = propertiesManager.getLocalProperties().getService();
         SequenceIdProperties sequenceIdProperties = serviceProperties.getMessage().getSequenceId();

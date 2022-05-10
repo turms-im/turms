@@ -46,8 +46,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * The lifecycle of the local node is roughly the same with
@@ -197,7 +199,7 @@ public class Node {
         idService.start();
     }
 
-    public void stop() {
+    public Mono<Void> stop(long timeoutMillis) {
         List<ClusterService> services = List.of(
                 // Note that discoveryService should be stopped before sharedConfigService
                 // because discoveryService needs to unregister the local member info in the shared config
@@ -208,9 +210,18 @@ public class Node {
                 rpcService,
                 idService,
                 connectionService);
+        List<Mono<Void>> monos = new LinkedList<>();
         for (ClusterService service : services) {
-            shutdownService(service);
+            try {
+                Mono<Void> stop = service.stop(timeoutMillis);
+                monos.add(stop);
+            } catch (Exception e) {
+                LOGGER.error("Caught an error while stopping service {}", service.getClass().getName(), e);
+            }
         }
+        return Mono
+                .zipDelayError(monos, Function.identity())
+                .then();
     }
 
     // Frequently used methods for external classes
@@ -245,16 +256,6 @@ public class Node {
 
     public String getLocalMemberId() {
         return discoveryService.getLocalMember().getNodeId();
-    }
-
-    // Private
-
-    private void shutdownService(ClusterService service) {
-        try {
-            service.stop();
-        } catch (Exception e) {
-            LOGGER.error("Failed to stop service {}", service.getClass().getName(), e);
-        }
     }
 
 }

@@ -18,6 +18,7 @@
 package integration.im.turms.gateway.storage.mongo;
 
 import im.turms.gateway.storage.mongo.MongoConfig;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
@@ -38,7 +39,7 @@ class MongoConfigIT extends BaseIntegrationTest {
 
     @Test
     void userMongoClient_shouldReturnNotNullInstance() {
-        MongoConfig mongoConfig = new MongoConfig();
+        MongoConfig mongoConfig = new MongoConfig(mock(TurmsApplicationContext.class));
         TurmsProperties properties = new TurmsProperties().toBuilder()
                 .gateway(new GatewayProperties().toBuilder()
                         .mongo(new MongoProperties().toBuilder()

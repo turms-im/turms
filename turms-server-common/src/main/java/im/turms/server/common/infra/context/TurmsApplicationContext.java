@@ -20,20 +20,34 @@ package im.turms.server.common.infra.context;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.common.ShutdownProperties;
 import im.turms.server.common.infra.suggestion.OsConfigurationAdvisor;
+import im.turms.server.common.infra.thread.NamedThreadFactory;
+import im.turms.server.common.infra.thread.ThreadNameConst;
 import io.lettuce.core.RedisException;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.event.ContextClosedEvent;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Hooks;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author James Chen
@@ -56,9 +70,14 @@ public class TurmsApplicationContext {
     private final String activeEnvProfile;
     private final String version;
 
+    private long shutdownJobTimeoutMillis = 0;
+    private final TreeMap<JobShutdownOrder, ShutdownHook> shutdownHooks = new TreeMap<>();
+
     public TurmsApplicationContext(Environment environment,
                                    NodeType nodeType,
                                    @Autowired(required = false) BuildProperties buildProperties) {
+        LoggerFactory.bindContext(this);
+
         String homeDir = nodeType == NodeType.SERVICE
                 ? System.getenv("TURMS_SERVICE_HOME")
                 : System.getenv("TURMS_GATEWAY_HOME");
@@ -97,9 +116,56 @@ public class TurmsApplicationContext {
         printOsConfigurationSuggestions();
     }
 
+    @EventListener(classes = ContextRefreshedEvent.class)
+    public void handleContextRefreshedEvent(ContextRefreshedEvent event) {
+//    public void handleContextRefreshedEvent(TurmsPropertiesManager propertiesManager) {
+        TurmsPropertiesManager propertiesManager = event.getApplicationContext().getBean(TurmsPropertiesManager.class);
+        ShutdownProperties properties = propertiesManager.getLocalProperties().getShutdown();
+        shutdownJobTimeoutMillis = properties.getJobTimeoutMillis();
+    }
+
     @EventListener(classes = ContextClosedEvent.class)
     public void handleContextClosedEvent() {
         isClosing = true;
+        ExecutorService executor = Executors
+                .newSingleThreadExecutor(new NamedThreadFactory(ThreadNameConst.SHUTDOWN, false));
+        for (Map.Entry<JobShutdownOrder, ShutdownHook> orderAndJob : shutdownHooks.entrySet()) {
+            JobShutdownOrder key = orderAndJob.getKey();
+            String jobName = key.name();
+            boolean isClosingLogProcessor = key == JobShutdownOrder.CLOSE_LOG_PROCESSOR;
+            Future<Mono<Void>> shutdownFuture = executor.submit(() -> orderAndJob.getValue().run(shutdownJobTimeoutMillis));
+            try {
+                long time = System.currentTimeMillis();
+                Mono<Void> mono = shutdownFuture.get(shutdownJobTimeoutMillis, TimeUnit.MILLISECONDS);
+                if (mono == null) {
+                    throw new IllegalArgumentException("The job result should not be null: " + jobName);
+                }
+                time = shutdownJobTimeoutMillis - (System.currentTimeMillis() - time);
+                if (time <= 0) {
+                    throw new TimeoutException();
+                }
+                mono.block(Duration.ofMillis(time));
+            } catch (TimeoutException e) {
+                shutdownFuture.cancel(true);
+                if (!isClosingLogProcessor) {
+                    LOGGER.error("Failed to run the shutdown job in time: " + jobName);
+                }
+            } catch (Exception e) {
+                if (!isClosingLogProcessor) {
+                    LOGGER.error("Caught an error while running the shutdown job: " + jobName, e);
+                }
+            }
+        }
+        executor.shutdownNow();
+    }
+
+    public synchronized void addShutdownHook(JobShutdownOrder order, ShutdownHook job) {
+        if (shutdownHooks.containsKey(order)) {
+            String formatted = "Failed to add a shutdown hook for \"%s\" because it has been registered"
+                    .formatted(order.name());
+            throw new IllegalStateException(formatted);
+        }
+        shutdownHooks.put(order, job);
     }
 
     private String getActiveEnvProfile(String[] activeProfiles, List<String>... knownEnvProfiles) {

@@ -36,10 +36,12 @@ import im.turms.server.common.storage.mongo.codec.MongoCodecProvider;
 import im.turms.server.common.storage.mongo.entity.MongoEntity;
 import im.turms.server.common.storage.mongo.entity.MongoEntityFactory;
 import im.turms.server.common.storage.mongo.operation.MongoCollectionOptions;
+import io.lettuce.core.internal.Futures;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.DefaultThreadFactory;
+import io.netty.util.concurrent.Future;
 import lombok.Getter;
 import org.bson.codecs.BsonCodecProvider;
 import org.bson.codecs.BsonValueCodecProvider;
@@ -51,12 +53,14 @@ import org.bson.codecs.ValueCodecProvider;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.jsr310.Jsr310CodecProvider;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -125,9 +129,12 @@ public class MongoContext {
         BsonValueEncoder.codecRegistry = codecRegistry;
     }
 
-    public void destroy() {
+    public Mono<Void> destroy(long timeoutMillis) {
         client.close();
-        eventLoopGroup.shutdownGracefully().awaitUninterruptibly();
+        Future<?> future = eventLoopGroup.shutdownGracefully(0, timeoutMillis, TimeUnit.MILLISECONDS);
+        return Mono
+                .fromCompletionStage(Futures.toCompletionStage(future))
+                .then();
     }
 
     public <T> Codec<T> getCodec(Class<T> clazz) {

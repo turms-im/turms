@@ -23,6 +23,8 @@ import im.turms.gateway.access.client.common.connection.NetConnection;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.infra.logging.ApiLoggingContext;
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
+import im.turms.server.common.infra.context.JobShutdownOrder;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -34,8 +36,6 @@ import org.springframework.stereotype.Component;
 import reactor.netty.Connection;
 import reactor.netty.DisposableServer;
 import reactor.netty.channel.ChannelOperations;
-
-import javax.annotation.PreDestroy;
 
 /**
  * @author James Chen
@@ -52,6 +52,7 @@ public class TcpUserSessionAssembler extends UserSessionAssembler {
     private final int port;
 
     public TcpUserSessionAssembler(ApiLoggingContext apiLoggingContext,
+                                   TurmsApplicationContext applicationContext,
                                    TurmsPropertiesManager propertiesManager,
                                    BlocklistService blocklistService,
                                    ServerStatusManager serverStatusManager,
@@ -74,6 +75,10 @@ public class TcpUserSessionAssembler extends UserSessionAssembler {
             host = server.host();
             port = server.port();
             LOGGER.info("TCP server started on {}:{}", host, port);
+            applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_GATEWAY_TCP_SERVER, timeoutMillis -> {
+                server.dispose();
+                return server.onDispose();
+            });
         } else {
             server = null;
             host = null;
@@ -84,14 +89,6 @@ public class TcpUserSessionAssembler extends UserSessionAssembler {
     @Override
     protected NetConnection createConnection(Connection connection) {
         return new TcpConnection((ChannelOperations<?, ?>) connection, true);
-    }
-
-    @PreDestroy
-    public void preDestroy() {
-        if (server != null) {
-            LOGGER.info("Closing TCP server");
-            server.dispose();
-        }
     }
 
     public String getHost() {

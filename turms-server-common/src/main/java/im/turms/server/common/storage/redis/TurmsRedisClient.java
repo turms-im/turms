@@ -51,6 +51,7 @@ import reactor.core.publisher.Mono;
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static io.lettuce.core.protocol.CommandType.GEORADIUSBYMEMBER;
 
@@ -118,8 +119,8 @@ public class TurmsRedisClient {
         commands = (RedisReactiveCommandsImpl<ByteBuf, ByteBuf>) nativeConnection.reactive();
     }
 
-    public void destroy() {
-        nativeClient.shutdown();
+    public Mono<Void> destroy(long timeoutMillis) {
+        return Mono.fromFuture(nativeClient.shutdownAsync(0, timeoutMillis, TimeUnit.MILLISECONDS));
     }
 
     public Mono<Long> del(Collection<ByteBuf> keys) {

@@ -20,6 +20,7 @@ package im.turms.gateway.storage.mongo;
 import im.turms.server.common.domain.admin.po.Admin;
 import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.user.po.User;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.storage.mongo.BaseMongoConfig;
@@ -35,6 +36,10 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class MongoConfig extends BaseMongoConfig {
+
+    public MongoConfig(TurmsApplicationContext applicationContext) {
+        super(applicationContext);
+    }
 
     @Bean
     public TurmsMongoClient adminMongoClient(TurmsPropertiesManager propertiesManager) {

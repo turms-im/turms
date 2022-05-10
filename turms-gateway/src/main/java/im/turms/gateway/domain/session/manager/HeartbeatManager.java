@@ -114,8 +114,13 @@ public class HeartbeatManager {
                 : 30;
     }
 
-    public void destroy() {
+    public void destroy(long timeoutMillis) {
         workerThread.interrupt();
+        try {
+            workerThread.join(timeoutMillis);
+        } catch (InterruptedException e) {
+            // ignore
+        }
     }
 
     private void updateOnlineUsersTtl() {

@@ -82,9 +82,9 @@ public class SetUserOfflineRequest extends RpcRequest<Boolean> {
     @Override
     public Mono<Boolean> callAsync() {
         CloseReason reason = CloseReason.get(closeStatus);
-        return deviceTypes != null && !deviceTypes.isEmpty()
-                ? sessionService.setLocalSessionOffline(userId, deviceTypes, reason)
-                : sessionService.setLocalUserOffline(userId, reason);
+        return deviceTypes == null || deviceTypes.isEmpty()
+                ? sessionService.setLocalUserOffline(userId, reason)
+                : sessionService.setLocalSessionOffline(userId, deviceTypes, reason);
     }
 
 }

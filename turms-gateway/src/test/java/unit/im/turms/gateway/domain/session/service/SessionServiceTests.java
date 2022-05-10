@@ -31,6 +31,7 @@ import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import im.turms.server.common.infra.plugin.PluginManager;
@@ -216,6 +217,7 @@ class SessionServiceTests {
                 .thenReturn(isForbiddenDeviceType);
 
         return new SessionService(node,
+                mock(TurmsApplicationContext.class),
                 propertiesManager,
                 pluginManager,
                 locationService,

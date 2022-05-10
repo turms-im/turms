@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.healthcheck;
 
 import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,16 +27,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServerStatusManager {
 
+    private final TurmsApplicationContext context;
     private final Node node;
     private final HealthCheckManager healthCheckManager;
 
-    public ServerStatusManager(Node node, HealthCheckManager healthCheckManager) {
+    public ServerStatusManager(TurmsApplicationContext context, Node node, HealthCheckManager healthCheckManager) {
+        this.context = context;
         this.node = node;
         this.healthCheckManager = healthCheckManager;
     }
 
     public boolean isActive() {
-        return node.isActive() && healthCheckManager.isHealthy();
+        return !context.isClosing() && node.isActive() && healthCheckManager.isHealthy();
     }
 
 }

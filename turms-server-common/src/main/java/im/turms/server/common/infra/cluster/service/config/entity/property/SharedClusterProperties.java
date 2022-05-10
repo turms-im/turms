@@ -74,6 +74,7 @@ public class SharedClusterProperties {
                 turmsProperties.getLogging(),
                 turmsProperties.getPlugin(),
                 turmsProperties.getSecurity(),
+                turmsProperties.getShutdown(),
                 turmsProperties.getUserStatus());
     }
 
@@ -88,6 +89,7 @@ public class SharedClusterProperties {
                     commonProperties.getLogging(),
                     commonProperties.getPlugin(),
                     commonProperties.getSecurity(),
+                    commonProperties.getShutdown(),
                     commonProperties.getUserStatus(),
                     gatewayProperties,
                     serviceProperties);

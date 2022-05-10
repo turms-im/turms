@@ -71,11 +71,6 @@ public class SharedConfigService implements ClusterService {
         }
     }
 
-    @Override
-    public void stop() {
-        mongoClient.destroy();
-    }
-
     /**
      * Note that only listen to the change in the same cluster
      */

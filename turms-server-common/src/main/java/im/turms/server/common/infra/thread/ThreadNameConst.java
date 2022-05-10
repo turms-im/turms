@@ -42,7 +42,6 @@ public class ThreadNameConst {
 
     // Log
     public static final String LOG_PROCESSOR = "turms-log-processor";
-    public static final String LOG_SHUTDOWN = "turms-log-shutdown";
 
     // MongoDB
     public static final String MONGO_CHANGE_WATCHER = "turms-mongo-change-watcher";
@@ -58,5 +57,8 @@ public class ThreadNameConst {
 
     // Task
     public static final String TASK_MANAGER = "turms-task-manager";
+
+    // Shutdown
+    public static final String SHUTDOWN = "turms-shutdown";
 
 }

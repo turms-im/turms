@@ -52,6 +52,7 @@ import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -146,14 +147,12 @@ public class ConnectionService implements ClusterService {
     }
 
     @Override
-    public void stop() {
+    public Mono<Void> stop(long timeoutMillis) {
+        List<Mono<Void>> monos = new LinkedList<>();
         keepaliveThread.interrupt();
         if (server != null) {
-            try {
-                server.dispose();
-            } catch (Exception e) {
-                LOGGER.error("Failed to stop the local server", e);
-            }
+            monos.add(server.dispose()
+                    .onErrorMap(t -> new IllegalStateException("Failed to stop the local server", t)));
         }
         ClosingHandshakeRequest request = new ClosingHandshakeRequest(ClosingHandshakeRequest.CLOSE_STATUS_CODE_SERVER_SHUTTING_DOWN);
         for (TurmsConnection connection : nodeIdToConnection.values()) {
@@ -165,13 +164,23 @@ public class ConnectionService implements ClusterService {
             String nodeId = connection.getNodeId();
             if (nodeId == null) {
                 conn.dispose();
+                monos.add(conn.onDispose());
             } else {
-                rpcService.requestResponse(nodeId, request)
-                        .doOnTerminate(conn::dispose)
-                        .subscribe(null, t -> LOGGER.error("Failed to send a closing handshake request", t));
+                monos.add(rpcService.requestResponse(nodeId, request)
+                        .onErrorMap(t -> new IllegalStateException("Failed to send closing handshake to the node " + nodeId, t))
+                        .flatMap(unused -> {
+                            conn.dispose();
+                            return conn.onDispose();
+                        }));
             }
         }
         nodeIdToConnection.clear();
+        try {
+            keepaliveThread.join(timeoutMillis);
+        } catch (InterruptedException e) {
+            // ignored
+        }
+        return Mono.whenDelayError(monos);
     }
 
     @Override
@@ -352,6 +361,7 @@ public class ConnectionService implements ClusterService {
             return;
         }
         if (elapsedTime < keepaliveIntervalMillis) {
+//        if (elapsedTime < keepaliveIntervalMillis || connection.handshakeDoned) {
             return;
         }
         rpcService.requestResponse(nodeId, new KeepaliveRequest())

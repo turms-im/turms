@@ -26,7 +26,10 @@ import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.service.ISessionService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
+import im.turms.server.common.infra.collection.ChunkedArrayList;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.context.JobShutdownOrder;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
@@ -47,13 +50,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.PreDestroy;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author James Chen
@@ -83,6 +85,7 @@ public class BlocklistService {
 
     public BlocklistService(Node node,
                             TaskManager taskManager,
+                            TurmsApplicationContext context,
                             TurmsRedisClient ipBlocklistRedisClient,
                             TurmsRedisClient userIdBlocklistRedisClient,
                             TurmsPropertiesManager propertiesManager,
@@ -203,11 +206,17 @@ public class BlocklistService {
                 }
             }
         });
+        context.addShutdownHook(JobShutdownOrder.CLOSE_BLOCKLIST, this::destroy);
     }
 
-    @PreDestroy
-    public void destroy() {
+    private Mono<Void> destroy(long timeoutMillis) {
         threadPoolExecutor.shutdown();
+        try {
+            threadPoolExecutor.awaitTermination(timeoutMillis, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            // ignore
+        }
+        return Mono.empty();
     }
 
     // Block
@@ -333,7 +342,7 @@ public class BlocklistService {
     }
 
     public List<BlockedClient> getBlockedIpStrings(Set<String> ips) {
-        List<BlockedClient> ipList = new LinkedList<>();
+        List<BlockedClient> ipList = new ChunkedArrayList<>();
         for (String ip : ips) {
             ByteArrayWrapper address = new ByteArrayWrapper(InetAddressUtil.ipStringToBytes(ip));
             BlockedClient blockedClient = ipBlocklistServiceManager.getBlockedClient(address);
@@ -348,7 +357,7 @@ public class BlocklistService {
         if (!isIpBlocklistEnabled) {
             return Collections.emptyList();
         }
-        List<BlockedClient> result = new LinkedList<>();
+        List<BlockedClient> result = new ChunkedArrayList<>();
         for (ByteArrayWrapper ip : ips) {
             BlockedClient blockedClient = ipBlocklistServiceManager.getBlockedClient(ip);
             if (blockedClient != null) {
@@ -369,7 +378,7 @@ public class BlocklistService {
         if (!isUserIdBlocklistEnabled) {
             return Collections.emptyList();
         }
-        List<BlockedClient> result = new LinkedList<>();
+        List<BlockedClient> result = new ChunkedArrayList<>();
         for (Long userId : userIds) {
             BlockedClient blockedClient = userIdBlocklistServiceManager.getBlockedClient(userId);
             if (blockedClient != null) {

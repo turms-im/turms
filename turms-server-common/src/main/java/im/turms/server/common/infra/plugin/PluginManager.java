@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.plugin;
 
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.lang.ClassUtil;
@@ -37,7 +38,6 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
-import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -99,6 +99,7 @@ public class PluginManager {
         if (enabled) {
             startPlugins();
         }
+        applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_PLUGINS, timeoutMillis -> destroy());
     }
 
     private Path getPluginDir(Path home, String pluginsDir) {
@@ -117,8 +118,7 @@ public class PluginManager {
         }
     }
 
-    @PreDestroy
-    public void destroy() {
+    private Mono<Void> destroy() {
         for (Plugin plugin : getPlugins()) {
             for (TurmsExtension extension : plugin.extensions()) {
                 try {
@@ -131,6 +131,7 @@ public class PluginManager {
         if (engine != null) {
             ((Engine) engine).close();
         }
+        return Mono.empty();
     }
 
     public void loadJavaPlugins(List<ZipFile> zipFiles) throws ClassNotFoundException {

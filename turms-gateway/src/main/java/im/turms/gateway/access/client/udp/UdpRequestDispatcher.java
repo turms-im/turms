@@ -30,6 +30,8 @@ import im.turms.server.common.access.common.LoopResourcesFactory;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
+import im.turms.server.common.infra.context.JobShutdownOrder;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -47,7 +49,6 @@ import reactor.core.publisher.Sinks;
 import reactor.netty.Connection;
 import reactor.netty.udp.UdpServer;
 
-import javax.annotation.PreDestroy;
 import java.net.InetSocketAddress;
 
 /**
@@ -67,7 +68,9 @@ public class UdpRequestDispatcher {
     private final Sinks.Many<UdpNotification> notificationSink;
     private final Connection connection;
 
-    public UdpRequestDispatcher(SessionService sessionService, TurmsPropertiesManager propertiesManager) {
+    public UdpRequestDispatcher(SessionService sessionService,
+                                TurmsApplicationContext applicationContext,
+                                TurmsPropertiesManager propertiesManager) {
         instance = this;
         UdpProperties udpProperties = propertiesManager.getLocalProperties().getGateway().getUdp();
         this.sessionService = sessionService;
@@ -103,16 +106,13 @@ public class UdpRequestDispatcher {
                 throw new IllegalStateException("Failed to bind the UDP server", e);
             }
             LOGGER.info("UDP server started on {}:{}", host, port);
+            applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_GATEWAY_UDP_SERVER, timeoutMillis -> {
+                connection.dispose();
+                return connection.onDispose();
+            });
         } else {
             notificationSink = null;
             connection = null;
-        }
-    }
-
-    @PreDestroy
-    public void preDestroy() {
-        if (connection != null) {
-            connection.disposeNow();
         }
     }
 

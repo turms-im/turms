@@ -27,6 +27,8 @@ import im.turms.server.common.domain.admin.service.BaseAdminService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.context.JobShutdownOrder;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.io.BaseFileResource;
 import im.turms.server.common.infra.io.ByteBufFileResource;
@@ -68,7 +70,6 @@ import reactor.netty.http.server.HttpServerRequest;
 import reactor.netty.http.server.HttpServerResponse;
 
 import javax.annotation.Nullable;
-import javax.annotation.PreDestroy;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -108,6 +109,7 @@ public class HttpRequestDispatcher {
 
     public HttpRequestDispatcher(Node node,
                                  ApplicationContext context,
+                                 TurmsApplicationContext applicationContext,
                                  TurmsPropertiesManager propertiesManager,
                                  PluginManager pluginManager,
                                  BaseAdminApiRateLimitingManager adminApiRateLimitingManager,
@@ -132,24 +134,22 @@ public class HttpRequestDispatcher {
                         return Mono.never();
                     })
                     .bindNow(Duration.ofMinutes(1));
+            applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_ADMIN_SERVER, timeoutMillis -> {
+                server.dispose();
+                return server.onDispose();
+            });
         } else {
             server = null;
         }
     }
 
-    @PreDestroy
-    private void destroy() {
-        if (server != null) {
-            server.disposeNow();
-        }
-    }
-
     //region Properties
     private void updateGlobalProperties(TurmsProperties properties) {
-        CommonAdminApiProperties apiProperties = node.getNodeType() == NodeType.GATEWAY
+        boolean isGateway = node.getNodeType() == NodeType.GATEWAY;
+        CommonAdminApiProperties apiProperties = isGateway
                 ? properties.getGateway().getAdminApi()
                 : properties.getService().getAdminApi();
-        allowDeleteWithoutFilter = properties.getService().getAdminApi().isAllowDeleteWithoutFilter();
+        allowDeleteWithoutFilter = !isGateway && properties.getService().getAdminApi().isAllowDeleteWithoutFilter();
         isLogEnabled = apiProperties.getLog().isEnabled();
     }
     //endregion

@@ -141,7 +141,8 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
         int chunkIndex = index / elementSizePerChunk;
         int elementIndex = index & elementSizePerChunkMask;
         List<E> chunk;
-        while (chunkIndex < chunks.size()) {
+        int chunkCount = chunks.size();
+        while (chunkIndex < chunkCount) {
             chunk = chunks.get(chunkIndex);
             if (chunk.size() < elementSizePerChunk) {
                 chunk.add(elementIndex, element);
@@ -165,8 +166,8 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
         int chunkIndex = index / elementSizePerChunk;
         int elementIndex = index & elementSizePerChunkMask;
         List<E> chunk = chunks.get(chunkIndex);
-        E result = chunk.remove(elementIndex);
-        if (result == null) {
+        E removedElement = chunk.remove(elementIndex);
+        if (removedElement == null) {
             return null;
         }
         itemCount--;
@@ -175,7 +176,8 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
         if (elementCount == 0) {
             chunks.remove(chunkIndex);
         } else if (elementCount == elementSizePerChunkMask) {
-            while (++chunkIndex < chunks.size()) {
+            int chunkCount = chunks.size();
+            while (++chunkIndex < chunkCount) {
                 nextChunk = chunks.get(chunkIndex);
                 chunk.add(nextChunk.remove(0));
                 if (nextChunk.isEmpty()) {
@@ -185,7 +187,7 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
                 chunk = nextChunk;
             }
         }
-        return result;
+        return removedElement;
     }
 
     @Override

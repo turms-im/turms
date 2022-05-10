@@ -18,14 +18,15 @@
 package im.turms.server.common.storage.redis;
 
 import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.context.JobShutdownOrder;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.env.common.CommonRedisProperties;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContextPool;
 import org.springframework.context.annotation.Bean;
+import reactor.core.publisher.Mono;
 
-import javax.annotation.PreDestroy;
+import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,8 +39,6 @@ import java.util.List;
  */
 public abstract class CommonRedisConfig {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommonRedisConfig.class);
-
     private final TurmsRedisClientManager sessionRedisClientManager;
     private final TurmsRedisClientManager locationRedisClientManager;
 
@@ -49,11 +48,15 @@ public abstract class CommonRedisConfig {
     private final List<TurmsRedisClientManager> registeredClientManagers = new LinkedList<>();
     private final List<TurmsRedisClient> registeredClients = new LinkedList<>();
 
-    protected CommonRedisConfig(CommonRedisProperties redisProperties, boolean treatUserIdAndDeviceTypeAsUniqueUser) {
+    protected CommonRedisConfig(TurmsApplicationContext context,
+                                CommonRedisProperties redisProperties,
+                                boolean treatUserIdAndDeviceTypeAsUniqueUser) {
         sessionRedisClientManager = newSessionRedisClientManager(redisProperties.getSession());
         locationRedisClientManager = newLocationRedisClientManager(redisProperties.getLocation(), treatUserIdAndDeviceTypeAsUniqueUser);
         ipBlocklistRedisClient = newIpBlocklistRedisClient(redisProperties.getIpBlocklist().getUri());
         userIdBlocklistRedisClient = newUserIdBlocklistRedisClient(redisProperties.getUserIdBlocklist().getUri());
+
+        context.addShutdownHook(JobShutdownOrder.CLOSE_REDIS_CONNECTIONS, this::destroy);
     }
 
     public static TurmsRedisClientManager newSessionRedisClientManager(RedisProperties properties) {
@@ -84,22 +87,15 @@ public abstract class CommonRedisConfig {
         registeredClients.addAll(clients);
     }
 
-    @PreDestroy
-    public void destroy() {
+    public Mono<Void> destroy(long timeoutMillis) {
+        List<Mono<Void>> monos = new LinkedList<>();
         for (TurmsRedisClientManager manager : CollectionUtil.union(registeredClientManagers, List.of(sessionRedisClientManager, locationRedisClientManager))) {
-            try {
-                manager.destroy();
-            } catch (Exception e) {
-                LOGGER.error("Failed to destroy a redis client", e);
-            }
+            monos.add(manager.destroy(timeoutMillis));
         }
         for (TurmsRedisClient client : CollectionUtil.union(registeredClients, List.of(ipBlocklistRedisClient, userIdBlocklistRedisClient))) {
-            try {
-                client.destroy();
-            } catch (Exception e) {
-                LOGGER.error("Failed to destroy a redis client", e);
-            }
+            monos.add(client.destroy(timeoutMillis));
         }
+        return Mono.whenDelayError(monos);
     }
 
     @Bean

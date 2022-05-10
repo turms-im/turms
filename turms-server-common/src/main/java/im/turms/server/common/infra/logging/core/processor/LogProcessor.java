@@ -42,8 +42,6 @@ public final class LogProcessor {
     public LogProcessor(MpscUnboundedArrayQueue<LogRecord> recordQueue) {
         thread = new Thread(() -> drainLogsForever(recordQueue),
                 ThreadNameConst.LOG_PROCESSOR);
-        Runtime.getRuntime()
-                .addShutdownHook(new Thread(this::close, ThreadNameConst.LOG_SHUTDOWN));
         active = true;
     }
 
@@ -53,8 +51,13 @@ public final class LogProcessor {
         }
     }
 
-    public void close() {
+    public void waitClose(long timeoutMillis) {
         active = false;
+        try {
+            thread.join(timeoutMillis);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void drainLogsForever(MpscUnboundedArrayQueue<LogRecord> recordQueue) {
@@ -63,7 +66,6 @@ public final class LogProcessor {
                 1024000,
                 1024000);
         LogRecord logRecord;
-        Thread currentThread = Thread.currentThread();
         while (true) {
             while ((logRecord = recordQueue.relaxedPoll()) != null) {
                 idleStrategy.reset();
@@ -77,13 +79,12 @@ public final class LogProcessor {
                 }
                 ByteBufUtil.safeEnsureReleased(logRecord.data());
             }
-            if (!active || currentThread.isInterrupted()) {
+            if (!active) {
                 break;
             }
             idleStrategy.idle();
         }
-        List<Appender> appenders = LoggerFactory.getAllAppenders();
-        for (Appender appender : appenders) {
+        for (Appender appender : LoggerFactory.getAllAppenders()) {
             try {
                 appender.close();
             } catch (Exception e) {

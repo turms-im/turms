@@ -20,6 +20,7 @@ package im.turms.server.common.infra.cluster;
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
+import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.healthcheck.HealthCheckManager;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -29,16 +30,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-import javax.annotation.PreDestroy;
-
 /**
  * @author James Chen
  */
 @Configuration
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class ClusterConfig {
-
-    private Node node;
 
     @Bean
     public Node node(
@@ -48,16 +45,10 @@ public class ClusterConfig {
             TurmsPropertiesManager propertiesManager,
             BaseServiceAddressManager serviceAddressManager,
             HealthCheckManager healthCheckManager) {
-        node = new Node(context, nodeType, turmsContext, propertiesManager, serviceAddressManager, healthCheckManager);
+        Node node = new Node(context, nodeType, turmsContext, propertiesManager, serviceAddressManager, healthCheckManager);
         node.start();
+        turmsContext.addShutdownHook(JobShutdownOrder.CLOSE_NODE, node::stop);
         return node;
-    }
-
-    @PreDestroy
-    public void destroy() {
-        if (node != null) {
-            node.stop();
-        }
     }
 
 }

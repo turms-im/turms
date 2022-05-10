@@ -23,6 +23,7 @@ import im.turms.server.common.infra.cluster.service.connection.ConnectionService
 import im.turms.server.common.infra.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.infra.cluster.service.idgen.IdService;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
+import reactor.core.publisher.Mono;
 
 /**
  * @author James Chen
@@ -32,7 +33,8 @@ public interface ClusterService {
     default void start() {
     }
 
-    default void stop() {
+    default Mono<Void> stop(long timeoutMillis) {
+        return Mono.empty();
     }
 
     default void lazyInit(CodecService codecService,

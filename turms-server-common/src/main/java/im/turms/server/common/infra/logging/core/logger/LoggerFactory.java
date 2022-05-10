@@ -18,6 +18,8 @@
 package im.turms.server.common.infra.logging.core.logger;
 
 import im.turms.server.common.infra.cluster.node.NodeType;
+import im.turms.server.common.infra.context.JobShutdownOrder;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.logging.core.appender.Appender;
 import im.turms.server.common.infra.logging.core.appender.ConsoleAppender;
@@ -32,6 +34,7 @@ import im.turms.server.common.infra.property.env.common.logging.LoggingPropertie
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.jctools.queues.MpscUnboundedArrayQueue;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -55,6 +58,8 @@ public class LoggerFactory {
     private static String serverTypeName;
     private static FileLoggingProperties fileLoggingProperties;
     private static ConsoleAppender defaultConsoleAppender;
+
+    private static LogProcessor processor;
 
     @SneakyThrows
     public static synchronized void init(NodeType nodeType, String nodeId, LoggingProperties properties) {
@@ -93,8 +98,17 @@ public class LoggerFactory {
         while ((pair = UNINITIALIZED_LOGGERS.poll()) != null) {
             pair.second().setLogger(getLogger(pair.first()));
         }
+        processor = new LogProcessor(QUEUE);
+        processor.start();
+    }
 
-        new LogProcessor(QUEUE).start();
+    public static void bindContext(TurmsApplicationContext context) {
+        context.addShutdownHook(JobShutdownOrder.CLOSE_LOG_PROCESSOR, timeoutMillis -> {
+            if (processor == null) {
+                return Mono.empty();
+            }
+            return Mono.fromRunnable(() -> processor.waitClose(timeoutMillis));
+        });
     }
 
     private static synchronized void initForTest() {
@@ -127,6 +141,7 @@ public class LoggerFactory {
         return getLogger(LoggerOptions.builder()
                 .loggerClass(clazz)
                 .shouldParse(true)
+                .level(clazz.getName().startsWith("org.mongodb") ? LogLevel.DEBUG : null)
                 .build());
     }
 

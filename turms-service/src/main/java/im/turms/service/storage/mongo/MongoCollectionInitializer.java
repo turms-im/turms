@@ -34,6 +34,7 @@ import im.turms.server.common.infra.property.env.service.env.database.TieredStor
 import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.security.PasswordManager;
 import im.turms.server.common.infra.task.TaskManager;
+import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.storage.mongo.BsonPool;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
@@ -169,11 +170,10 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     }
 
     private void initCollections() {
-        Duration timeout = Duration.ofMinutes(1);
         if (!context.isProduction() && fakingManager.isClearAllCollectionsBeforeFaking()) {
             LOGGER.info("Start dropping databases...");
             try {
-                dropAllDatabases().block(timeout);
+                dropAllDatabases().block(DurationConst.ONE_MINUTE);
             } catch (Exception e) {
                 throw new IllegalStateException("Caught an error while dropping databases", e);
             }
@@ -195,7 +195,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                                     : Mono.empty())));
                 });
         try {
-            createCollections.block(timeout);
+            createCollections.block(DurationConst.ONE_MINUTE);
         } catch (Exception e) {
             throw new IllegalStateException("Caught an error while creating collections", e);
         }
