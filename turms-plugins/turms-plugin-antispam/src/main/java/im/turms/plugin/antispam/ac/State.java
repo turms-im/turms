@@ -24,6 +24,7 @@ import org.eclipse.collections.api.map.primitive.MutableCharObjectMap;
 import org.eclipse.collections.impl.factory.primitive.CharObjectMaps;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
@@ -79,10 +80,11 @@ public class State {
         return depth > 0 && emits != null;
     }
 
+    @Nullable
     State findNextState(char code) {
         State nextState = success.get(code);
         if (nextState == null && depth == 0) {
-            nextState = this;
+            return this;
         }
         return nextState;
     }

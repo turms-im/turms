@@ -51,6 +51,7 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
         byte[] maskedBytes = null;
         int length = str.length();
         byte coder = StringUtil.getCoder(str);
+        boolean isLatin1 = StringUtil.isLatin1(coder);
         for (int i = 0; i < length; i++) {
             code = str.charAt(i);
             newChars = textPreprocessor.process(code);
@@ -73,10 +74,12 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
                             byte[] bytes = StringUtil.getBytes(str);
                             maskedBytes = Arrays.copyOf(bytes, bytes.length);
                         }
-                        for (int j = firstCharIndex; j <= i; j++) {
-                            if (coder == StringUtil.LATIN1) {
+                        if (isLatin1) {
+                            for (int j = firstCharIndex; j <= i; j++) {
                                 maskedBytes[j] = mask;
-                            } else {
+                            }
+                        } else {
+                            for (int j = firstCharIndex; j <= i; j++) {
                                 int k = j << 1;
                                 maskedBytes[k] = mask;
                                 maskedBytes[k + 1] = 0;
@@ -99,10 +102,12 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
                         byte[] bytes = StringUtil.getBytes(str);
                         maskedBytes = Arrays.copyOf(bytes, bytes.length);
                     }
-                    for (int j = firstCharIndex; j <= i; j++) {
-                        if (coder == StringUtil.LATIN1) {
+                    if (isLatin1) {
+                        for (int j = firstCharIndex; j <= i; j++) {
                             maskedBytes[j] = mask;
-                        } else {
+                        }
+                    } else {
+                        for (int j = firstCharIndex; j <= i; j++) {
                             int k = j << 1;
                             maskedBytes[k] = mask;
                             maskedBytes[k + 1] = 0;

@@ -39,7 +39,7 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
     private final int elementSizePerChunkMask;
     private final List<List<E>> chunks;
 
-    private int itemCount;
+    private int elementCount;
 
     public ChunkedArrayList(int elementSizePerChunk, int initialChunks) {
         this.elementSizePerChunk = Pow2.roundToPowerOfTwo(elementSizePerChunk);
@@ -57,7 +57,7 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
 
     @Override
     public int size() {
-        return itemCount;
+        return elementCount;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
             chunks.add(chunk);
         }
         chunk.add(element);
-        itemCount++;
+        elementCount++;
         return true;
     }
 
@@ -87,24 +87,23 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
     public boolean remove(Object element) {
         List<E> chunk;
         List<E> nextChunk;
-        for (int i = 0, chunkCount = chunks.size(); i < chunkCount; i++) {
-            chunk = chunks.get(i);
+        for (int chunkIndex = 0, chunkCount = chunks.size(); chunkIndex < chunkCount; chunkIndex++) {
+            chunk = chunks.get(chunkIndex);
             if (chunk.remove(element)) {
-                int elementCount = chunk.size();
-                if (elementCount == 0) {
-                    chunks.remove(i);
-                } else if (elementCount == elementSizePerChunkMask) {
-                    while (++i < chunkCount) {
-                        nextChunk = chunks.get(i);
+                if (chunk.isEmpty()) {
+                    chunks.remove(chunkIndex);
+                } else {
+                    while (++chunkIndex < chunkCount) {
+                        nextChunk = chunks.get(chunkIndex);
                         chunk.add(nextChunk.remove(0));
                         if (nextChunk.isEmpty()) {
-                            chunks.remove(i);
+                            chunks.remove(chunkIndex);
                             break;
                         }
                         chunk = nextChunk;
                     }
                 }
-                itemCount--;
+                elementCount--;
                 return true;
             }
         }
@@ -117,7 +116,7 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
             chunk.clear();
         }
         chunks.clear();
-        itemCount = 0;
+        elementCount = 0;
     }
 
     @Override
@@ -131,7 +130,7 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
         int elementIndex = index & elementSizePerChunkMask;
         E existingElement = chunk.get(elementIndex);
         if (existingElement != null) {
-            itemCount++;
+            elementCount++;
         }
         return chunk.set(elementIndex, element);
     }
@@ -146,7 +145,7 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
             chunk = chunks.get(chunkIndex);
             if (chunk.size() < elementSizePerChunk) {
                 chunk.add(elementIndex, element);
-                itemCount++;
+                elementCount++;
                 return;
             }
             E removedElement = chunk.remove(elementSizePerChunkMask);
@@ -158,7 +157,7 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
         chunk = new ArrayList<>(elementSizePerChunk);
         chunks.add(chunk);
         chunk.add(element);
-        itemCount++;
+        elementCount++;
     }
 
     @Override
@@ -170,12 +169,11 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
         if (removedElement == null) {
             return null;
         }
-        itemCount--;
+        elementCount--;
         List<E> nextChunk;
-        int elementCount = chunk.size();
-        if (elementCount == 0) {
+        if (chunk.isEmpty()) {
             chunks.remove(chunkIndex);
-        } else if (elementCount == elementSizePerChunkMask) {
+        } else {
             int chunkCount = chunks.size();
             while (++chunkIndex < chunkCount) {
                 nextChunk = chunks.get(chunkIndex);

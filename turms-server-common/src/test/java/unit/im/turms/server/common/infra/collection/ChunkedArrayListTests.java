@@ -21,6 +21,7 @@ import im.turms.server.common.infra.collection.ChunkedArrayList;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -108,6 +109,21 @@ class ChunkedArrayListTests {
         list.remove(0);
         assertThat(list)
                 .hasSize(expectedList.size())
+                .containsExactlyElementsOf(expectedList);
+    }
+
+    @Test
+    void iterator() {
+        int elementSizePerChunk = 32;
+        ChunkedArrayList<Object> list = new ChunkedArrayList<>(elementSizePerChunk, 1);
+        ArrayList<Integer> expectedList = new ArrayList<>(elementSizePerChunk);
+        for (int i = 0; i < elementSizePerChunk * 2 + 1; i++) {
+            expectedList.add(i);
+            list.add(i);
+        }
+        Iterator<Object> iterator = list.iterator();
+        assertThat(iterator)
+                .toIterable()
                 .containsExactlyElementsOf(expectedList);
     }
 }
