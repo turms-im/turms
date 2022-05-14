@@ -174,7 +174,9 @@ export default {
         font-size: 24px;
         cursor: pointer;
     }
+}
 
+.layout-header {
     &__current-server-url {
         margin-bottom: 16px;
     }

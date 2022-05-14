@@ -25,7 +25,8 @@ export default {
                             ...item.key,
                             ...item.status,
                             key: JSON.stringify(item.key), // as the row key
-                            memberAddress: `${item.memberHost}:${item.memberPort}`
+                            memberAddress: `${item.memberHost}:${item.memberPort}`,
+                            nodeVersion: item.nodeVersion.version
                         }));
                     const metricsRequests = members
                         .map(member => this.fetchResourceUtilization(member));
