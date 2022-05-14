@@ -20,6 +20,7 @@ package im.turms.server.common.domain.blocklist.manager;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.blocklist.bo.BlockedClient;
 import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.collection.ChunkedArrayList;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -319,7 +320,7 @@ public class BlocklistServiceManager<T> {
         if (size <= 0) {
             return Collections.emptyList();
         }
-        List<BlockedClient> blockedClients = new LinkedList<>();
+        List<BlockedClient> blockedClients = new ChunkedArrayList<>();
         Iterator<Map.Entry<T, Long>> iterator = blockedClientIdToBlockEndTime.entrySet().iterator();
         long now = System.currentTimeMillis();
         int i = 0;

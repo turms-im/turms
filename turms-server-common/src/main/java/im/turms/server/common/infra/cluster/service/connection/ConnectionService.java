@@ -361,7 +361,6 @@ public class ConnectionService implements ClusterService {
             return;
         }
         if (elapsedTime < keepaliveIntervalMillis) {
-//        if (elapsedTime < keepaliveIntervalMillis || connection.handshakeDoned) {
             return;
         }
         rpcService.requestResponse(nodeId, new KeepaliveRequest())

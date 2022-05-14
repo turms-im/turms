@@ -127,7 +127,7 @@ public final class ByteBufUtil {
             return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES).writeLong(element);
         }
         if (obj instanceof String element) {
-            byte[] bytes = element.getBytes(StandardCharsets.UTF_8);
+            byte[] bytes = StringUtil.getUTF8Bytes(element);
             return PooledByteBufAllocator.DEFAULT.directBuffer(bytes.length).writeBytes(bytes);
         }
         if (obj instanceof Float element) {

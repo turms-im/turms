@@ -216,7 +216,7 @@ public class Node {
                 Mono<Void> stop = service.stop(timeoutMillis);
                 monos.add(stop);
             } catch (Exception e) {
-                LOGGER.error("Caught an error while stopping service {}", service.getClass().getName(), e);
+                monos.add(Mono.error(new RuntimeException("Caught an error while stopping service " + service.getClass().getName(), e)));
             }
         }
         return Mono

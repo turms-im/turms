@@ -21,20 +21,18 @@ import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * @author James Chen
  */
 public class TemplateLayout {
 
-    static final byte[] AT = "at ".getBytes(StandardCharsets.US_ASCII);
-    static final byte[] CAUSED_BY = "caused by: ".getBytes(StandardCharsets.US_ASCII);
-    static final byte[] COLON = ": ".getBytes(StandardCharsets.US_ASCII);
-    static final byte[] CYCLIC_EXCEPTION = ">>(Cyclic Exception?)>>".getBytes(StandardCharsets.US_ASCII);
-    static final byte[] NATIVE = "native".getBytes(StandardCharsets.US_ASCII);
-    static final byte[] SUPPRESSED = "suppressed: ".getBytes(StandardCharsets.US_ASCII);
-    static final byte[] UNKNOWN = "unknown".getBytes(StandardCharsets.US_ASCII);
+    static final byte[] AT = StringUtil.getBytes("at ");
+    static final byte[] CAUSED_BY = StringUtil.getBytes("caused by: ");
+    static final byte[] COLON = StringUtil.getBytes(": ");
+    static final byte[] CYCLIC_EXCEPTION = StringUtil.getBytes(">>(Cyclic Exception?)>>");
+    static final byte[] NATIVE = StringUtil.getBytes("native");
+    static final byte[] SUPPRESSED = StringUtil.getBytes("suppressed: ");
+    static final byte[] UNKNOWN = StringUtil.getBytes("unknown");
 
     static final int DEPTH_LIMIT = 16;
     static final int WHITESPACE = ' ';

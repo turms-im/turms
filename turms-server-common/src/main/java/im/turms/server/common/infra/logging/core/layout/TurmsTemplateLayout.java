@@ -74,7 +74,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
 
     public TurmsTemplateLayout(NodeType nodeType, String nodeId) {
         this.nodeType = nodeType == NodeType.GATEWAY ? 'G' : 'S';
-        this.nodeId = nodeId.getBytes(StandardCharsets.UTF_8);
+        this.nodeId = StringUtil.getUTF8Bytes(nodeId);
     }
 
     public ByteBuf format(@Nullable byte[] className, LogLevel level, ByteBuf msg) {
@@ -95,8 +95,8 @@ public class TurmsTemplateLayout extends TemplateLayout {
                           @Nullable byte[] className,
                           LogLevel level,
                           @Nullable CharSequence msg,
-                          Object[] args,
-                          Throwable throwable) {
+                          @Nullable Object[] args,
+                          @Nullable Throwable throwable) {
         int estimatedThrowableLength = 0;
         if (throwable != null) {
             int causes = ThrowableUtil.countCauses(throwable);
