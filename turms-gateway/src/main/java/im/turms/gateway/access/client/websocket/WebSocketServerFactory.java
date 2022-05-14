@@ -81,9 +81,11 @@ public final class WebSocketServerFactory {
                 .build();
         // Don't set SO_SNDBUF and SO_RCVBUF because of
         // the reasons mentioned in https://developer.aliyun.com/article/724580
+        String host = webSocketProperties.getHost();
+        int port = webSocketProperties.getPort();
         HttpServer server = HttpServer.create()
-                .host(webSocketProperties.getHost())
-                .port(webSocketProperties.getPort())
+                .host(host)
+                .port(port)
                 .option(CONNECT_TIMEOUT_MILLIS, webSocketProperties.getConnectTimeout())
                 .option(SO_REUSEADDR, true)
                 .option(SO_BACKLOG, webSocketProperties.getBacklog())
@@ -104,7 +106,9 @@ public final class WebSocketServerFactory {
                     .bind()
                     .block();
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to bind the WebSocket server", e);
+            String message = "Failed to bind the WebSocket server on %s:%d"
+                    .formatted(host, port);
+            throw new IllegalStateException(message, e);
         }
     }
 

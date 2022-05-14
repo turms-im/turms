@@ -75,10 +75,10 @@ public class UdpRequestDispatcher {
         UdpProperties udpProperties = propertiesManager.getLocalProperties().getGateway().getUdp();
         this.sessionService = sessionService;
         isEnabled = udpProperties.isEnabled();
+        String host = udpProperties.getHost();
+        int port = udpProperties.getPort();
         if (udpProperties.isEnabled()) {
             notificationSink = Sinks.many().unicast().onBackpressureBuffer();
-            int port = udpProperties.getPort();
-            String host = udpProperties.getHost();
             UdpServer udpServer = UdpServer.create()
                     .host(host)
                     .port(port)
@@ -103,7 +103,9 @@ public class UdpRequestDispatcher {
             try {
                 connection = udpServer.bind().block();
             } catch (Exception e) {
-                throw new IllegalStateException("Failed to bind the UDP server", e);
+                String message = "Failed to bind the UDP server on %s:%d"
+                        .formatted(host, port);
+                throw new IllegalStateException(message, e);
             }
             LOGGER.info("UDP server started on {}:{}", host, port);
             applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_GATEWAY_UDP_SERVER, timeoutMillis -> {

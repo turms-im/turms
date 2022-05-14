@@ -58,9 +58,11 @@ public final class TcpServerFactory {
                                           ConnectionListener connectionListener,
                                           int maxFrameLength) {
         ServiceAvailabilityHandler serviceAvailabilityHandler = new ServiceAvailabilityHandler(blocklistService, serverStatusManager, sessionService);
+        String host = tcpProperties.getHost();
+        int port = tcpProperties.getPort();
         TcpServer server = TcpServer.create()
-                .host(tcpProperties.getHost())
-                .port(tcpProperties.getPort())
+                .host(host)
+                .port(port)
                 .option(CONNECT_TIMEOUT_MILLIS, tcpProperties.getConnectionTimeout())
                 // Don't set SO_SNDBUF and SO_RCVBUF because of
                 // the reasons mentioned in https://developer.aliyun.com/article/724580
@@ -97,7 +99,9 @@ public final class TcpServerFactory {
                     .bind()
                     .block();
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to bind the TCP server", e);
+            String message = "Failed to bind the TCP server on %s:%d"
+                    .formatted(host, port);
+            throw new IllegalStateException(message, e);
         }
     }
 
