@@ -170,7 +170,9 @@ terraform apply
 * turms-service服务端在启动时，会自动检测数据库中是否已存在一个角色为`ROOT`，且账号为`turms`的超级管理员账号。如果不存在，则turms-service服务端会自动创建一个角色为`ROOT`、名称为`turms`与密码为`turms.security.password.initial-root-password`（默认为：`turms`）的管理员账号。在生产环境中，请务必记得要修改默认密码。
 * 上述操作主要用于您初次体验Turms集群使用，若您需将Turms部署在生产环境当中，请务必查阅Wiki手册，了解各种配置参数的意义，以最小的资源消耗，来定制属于您自己的业务需求与业务组合。
 
-## Turms服务端启动的大致流程
+## Turms服务端启动与关闭的大致流程
+
+### 启动流程
 
 1. 连接并校验mongos与Redis服务端。
 2. 检测MongoDB是否已建表，如果已经建好表了，则跳过这步。如果没有就进行：建表、添加索引、添加分片键、添加Zones用于冷热数据分离存储。如果开启了MongoDB的Fake数据，则turms-service会自动向MongoDB生成Fake数据，用于开发测试。
@@ -180,3 +182,19 @@ terraform apply
 6. 对于turms-gateway，如果开启了Fake客户端，则生成真实的客户端连接并随机发送真实客户端请求（请求类型随机、请求参数随机），用于开发测试。
 
 至此，服务端启动完毕。
+
+### 关闭流程
+
+（对于turms-gateway）
+1. 拒绝新客户端网络连接与客户端请求
+2. 关闭Fake客户端，关闭已建立的客户端会话连接
+3. 关闭TCP/UDP/WebSocket客户端服务端，与HTTP管理员API服务端
+
+（对于turms-gateway与turms-service）
+4. 关闭黑名单同步机制
+5. 关闭集群服务（如RPC网络连接、服务注册与发现服务）
+6. 关闭插件机制
+7. 发送完Redis/MongoDB客户端请求后，关闭Redis与MongoDB的客户端网络连接
+8. 打印完日志，关闭日志服务
+
+至此，服务端关闭完成。
