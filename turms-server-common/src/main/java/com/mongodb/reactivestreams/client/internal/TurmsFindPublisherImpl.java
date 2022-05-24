@@ -32,6 +32,7 @@ import com.mongodb.reactivestreams.client.ClientSession;
 import com.mongodb.reactivestreams.client.FindPublisher;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import org.bson.BsonDocument;
+import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -138,12 +139,22 @@ public class TurmsFindPublisherImpl<T> extends BatchCursorPublisher<T> implement
     }
 
     @Override
+    public FindPublisher<T> comment(BsonValue comment) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public FindPublisher<T> hint(@Nullable final Bson hint) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public FindPublisher<T> hintString(@Nullable final String hint) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public FindPublisher<T> let(Bson variables) {
         throw new UnsupportedOperationException();
     }
 

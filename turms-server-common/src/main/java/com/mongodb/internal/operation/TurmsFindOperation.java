@@ -167,7 +167,7 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
         return (result, source, connection) -> {
             QueryResult<T> queryResult = cursorDocumentToQueryResult(result.getDocument("cursor"),
                     connection.getDescription().getServerAddress());
-            return new QueryBatchCursor<>(queryResult, getLimit(), getBatchSize(), 0, decoder, source, connection, result);
+            return new QueryBatchCursor<>(queryResult, getLimit(), getBatchSize(), 0, decoder, null, source, connection, result);
         };
     }
 
@@ -175,7 +175,7 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
         return (result, source, connection) -> {
             QueryResult<T> queryResult = cursorDocumentToQueryResult(result.getDocument("cursor"),
                     connection.getDescription().getServerAddress());
-            return new AsyncQueryBatchCursor<>(queryResult, getLimit(), getBatchSize(), 0, decoder, source, connection,
+            return new AsyncQueryBatchCursor<>(queryResult, getLimit(), getBatchSize(), 0, decoder, null, source, connection,
                     result);
         };
     }
