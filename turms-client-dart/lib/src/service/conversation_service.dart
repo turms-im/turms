@@ -7,47 +7,53 @@ class ConversationService {
 
   ConversationService(this._turmsClient);
 
-  Future<List<PrivateConversation>> queryPrivateConversations(
+  Future<Response<List<PrivateConversation>>> queryPrivateConversations(
       List<Int64> targetIds) async {
     if (targetIds.isEmpty) {
-      return [];
+      return Response.emptyList();
     }
     final n = await _turmsClient.driver
         .send(QueryConversationsRequest(targetIds: targetIds));
-    return n.data.conversations.privateConversations;
+    return n.toResponse((data) => data.conversations.privateConversations);
   }
 
-  Future<List<GroupConversation>> queryGroupConversations(
+  Future<Response<List<GroupConversation>>> queryGroupConversations(
       List<Int64> groupIds) async {
     if (groupIds.isEmpty) {
-      return [];
+      return Response.emptyList();
     }
     final n = await _turmsClient.driver
         .send(QueryConversationsRequest(groupIds: groupIds));
-    return n.data.conversations.groupConversations;
+    return n.toResponse((data) => data.conversations.groupConversations);
   }
 
-  Future<void> updatePrivateConversationReadDate(Int64 targetId,
+  Future<Response<void>> updatePrivateConversationReadDate(Int64 targetId,
       {DateTime? readDate}) async {
     readDate = readDate ?? DateTime.now();
-    await _turmsClient.driver.send(UpdateConversationRequest(
+    final n = await _turmsClient.driver.send(UpdateConversationRequest(
         targetId: targetId, readDate: readDate.toInt64()));
+    return n.toNullResponse();
   }
 
-  Future<void> updateGroupConversationReadDate(Int64 groupId,
+  Future<Response<void>> updateGroupConversationReadDate(Int64 groupId,
       {DateTime? readDate}) async {
     readDate = readDate ?? DateTime.now();
-    await _turmsClient.driver.send(UpdateConversationRequest(
+    final n = await _turmsClient.driver.send(UpdateConversationRequest(
         groupId: groupId, readDate: readDate.toInt64()));
+    return n.toNullResponse();
   }
 
-  Future<void> updatePrivateConversationTypingStatus(Int64 targetId) async {
-    await _turmsClient.driver
+  Future<Response<void>> updatePrivateConversationTypingStatus(
+      Int64 targetId) async {
+    final n = await _turmsClient.driver
         .send(UpdateTypingStatusRequest(toId: targetId, isGroupMessage: false));
+    return n.toNullResponse();
   }
 
-  Future<void> updateGroupConversationTypingStatus(Int64 groupId) async {
-    await _turmsClient.driver
+  Future<Response<void>> updateGroupConversationTypingStatus(
+      Int64 groupId) async {
+    final n = await _turmsClient.driver
         .send(UpdateTypingStatusRequest(toId: groupId, isGroupMessage: true));
+    return n.toNullResponse();
   }
 }

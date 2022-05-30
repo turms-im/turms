@@ -15,20 +15,28 @@
  * limitations under the License.
  */
 
+import 'package:fixnum/fixnum.dart';
+
 import '../model/proto/notification/turms_notification.pb.dart';
 
 class ResponseException implements Exception {
+  final Int64? requestId;
   final int code;
   final String? reason;
 
-  ResponseException(this.code, this.reason);
+  ResponseException(this.requestId, this.code, this.reason);
 
-  ResponseException.fromCode(int code) : this(code, null);
+  ResponseException.fromCode(int code) : this(null, code, null);
+
+  ResponseException.fromCodeAndReason(int code, String? reason)
+      : this(null, code, reason);
 
   ResponseException.fromNotification(TurmsNotification notification)
-      : this(notification.code,
+      : this(
+            notification.hasRequestId() ? notification.requestId : null,
+            notification.code,
             notification.hasReason() ? notification.reason : null);
 
   @override
-  String toString() => '$code:$reason';
+  String toString() => '$requestId:$code:$reason';
 }

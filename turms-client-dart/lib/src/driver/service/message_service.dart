@@ -112,7 +112,9 @@ class MessageService extends BaseService {
           }
         } else {
           context.completer.completeError(ResponseException(
-              ResponseStatusCode.invalidNotification, 'The code is missing'));
+              notification.hasRequestId() ? notification.requestId : null,
+              ResponseStatusCode.invalidNotification,
+              'The code is missing'));
         }
       }
     }

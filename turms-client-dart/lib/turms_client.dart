@@ -202,6 +202,7 @@ export 'src/model/proto/request/user/update_user_online_status_request.pb.dart'
     show UpdateUserOnlineStatusRequest;
 export 'src/model/proto/request/user/update_user_request.pb.dart'
     show UpdateUserRequest;
+export 'src/model/response.dart' show Response;
 export 'src/model/response_status_code.dart' show ResponseStatusCode;
 export 'src/model/session_close_info.dart' show SessionCloseInfo;
 export 'src/model/session_close_status.dart' show SessionCloseStatus;

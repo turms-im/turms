@@ -2,6 +2,7 @@ import 'package:fixnum/fixnum.dart';
 
 import '../../turms_client.dart';
 import '../extension/int_extensions.dart';
+import '../extension/notification_extensions.dart';
 import '../util/system.dart';
 
 class Location {
@@ -64,7 +65,7 @@ class UserService {
   void removeOnOfflineListener(OnOfflineListener listener) =>
       _onOfflineListeners.remove(listener);
 
-  Future<void> login(Int64 userId,
+  Future<Response<void>> login(Int64 userId,
       {String? password,
       DeviceType? deviceType,
       Map<String, String>? deviceDetails,
@@ -76,7 +77,7 @@ class UserService {
     if (!_turmsClient.driver.isConnected) {
       await _turmsClient.driver.connect();
     }
-    await _turmsClient.driver.send(CreateSessionRequest(
+    final n = await _turmsClient.driver.send(CreateSessionRequest(
         version: 1,
         userId: userId,
         password: password,
@@ -90,9 +91,10 @@ class UserService {
     _changeToOnline();
     _storePassword = storePassword;
     _userInfo = user;
+    return n.toNullResponse();
   }
 
-  Future<void> logout({bool disconnect = true}) async {
+  Future<Response<void>> logout({bool disconnect = true}) async {
     if (disconnect) {
       await _turmsClient.driver.disconnect();
     } else {
@@ -100,58 +102,69 @@ class UserService {
     }
     _changeToOffline(SessionCloseInfo.fromCloseStatus(
         SessionCloseStatus.disconnectedByClient));
+    return Response.nullValue();
   }
 
-  Future<void> updateOnlineStatus(UserStatus onlineStatus) async {
-    await _turmsClient.driver
+  Future<Response<void>> updateOnlineStatus(UserStatus onlineStatus) async {
+    final n = await _turmsClient.driver
         .send(UpdateUserOnlineStatusRequest(userStatus: onlineStatus));
     _userInfo?.onlineStatus = onlineStatus;
+    return n.toNullResponse();
   }
 
-  Future<void> disconnectOnlineDevices(List<DeviceType> deviceTypes) async {
+  Future<Response<void>> disconnectOnlineDevices(
+      List<DeviceType> deviceTypes) async {
     if (deviceTypes.isEmpty) {
-      throw ResponseException(
-          ResponseStatusCode.illegalArgument, 'deviceTypes must not be empty');
+      throw ResponseException.fromCodeAndReason(
+          ResponseStatusCode.illegalArgument,
+          '"deviceTypes" must not be empty');
     }
-    await _turmsClient.driver.send(UpdateUserOnlineStatusRequest(
+    final n = await _turmsClient.driver.send(UpdateUserOnlineStatusRequest(
         userStatus: UserStatus.OFFLINE, deviceTypes: deviceTypes));
+    return n.toNullResponse();
   }
 
-  Future<void> updatePassword(String password) async {
-    await _turmsClient.driver.send(UpdateUserRequest(password: password));
+  Future<Response<void>> updatePassword(String password) async {
+    final n =
+        await _turmsClient.driver.send(UpdateUserRequest(password: password));
     if (_storePassword) {
       _userInfo?.password = password;
     }
+    return n.toNullResponse();
   }
 
-  Future<void> updateProfile(
+  Future<Response<void>> updateProfile(
       {String? name,
       String? intro,
       ProfileAccessStrategy? profileAccessStrategy}) async {
     if ([name, intro, profileAccessStrategy].areAllNull) {
-      return;
+      return Response.nullValue();
     }
-    await _turmsClient.driver.send(UpdateUserRequest(
+    final n = await _turmsClient.driver.send(UpdateUserRequest(
         name: name,
         intro: intro,
         profileAccessStrategy: profileAccessStrategy));
+    return n.toNullResponse();
   }
 
-  Future<UserInfoWithVersion?> queryUserProfile(Int64 userId,
+  Future<Response<UserInfoWithVersion?>> queryUserProfile(Int64 userId,
       {DateTime? lastUpdatedDate}) async {
     final n = await _turmsClient.driver.send(QueryUserProfileRequest(
         userId: userId, lastUpdatedDate: lastUpdatedDate?.toInt64()));
     if (!n.data.hasUsersInfosWithVersion()) {
-      return null;
+      return Response.nullValue();
     }
-    final usersInfosWithVersion = n.data.usersInfosWithVersion;
-    final date = usersInfosWithVersion.hasLastUpdatedDate()
-        ? usersInfosWithVersion.lastUpdatedDate.toDateTime()
-        : null;
-    return UserInfoWithVersion(usersInfosWithVersion.userInfos[0], date);
+    return n.toResponse((data) {
+      final usersInfosWithVersion = data.usersInfosWithVersion;
+      final date = usersInfosWithVersion.hasLastUpdatedDate()
+          ? usersInfosWithVersion.lastUpdatedDate.toDateTime()
+          : null;
+      return UserInfoWithVersion(usersInfosWithVersion.userInfos[0], date);
+    });
   }
 
-  Future<List<NearbyUser>> queryNearbyUsers(double latitude, double longitude,
+  Future<Response<List<NearbyUser>>> queryNearbyUsers(
+      double latitude, double longitude,
       {int? distance,
       int? maxNumber,
       bool? withCoordinates,
@@ -165,19 +178,19 @@ class UserService {
         withCoordinates: withCoordinates,
         withDistance: withDistance,
         withInfo: withInfo));
-    return n.data.nearbyUsers.nearbyUsers;
+    return n.toResponse((data) => data.nearbyUsers.nearbyUsers);
   }
 
-  Future<List<UserStatusDetail>> queryOnlineStatusesRequest(
+  Future<Response<List<UserStatusDetail>>> queryOnlineStatusesRequest(
       Set<Int64> userIds) async {
     final n = await _turmsClient.driver
         .send(QueryUserOnlineStatusesRequest(userIds: userIds));
-    return n.data.usersOnlineStatuses.userStatuses;
+    return n.toResponse((data) => data.usersOnlineStatuses.userStatuses);
   }
 
   // Relationship
 
-  Future<UserRelationshipsWithVersion?> queryRelationships(
+  Future<Response<UserRelationshipsWithVersion?>> queryRelationships(
       {Set<Int64>? relatedUserIds,
       bool? isBlocked,
       int? groupIndex,
@@ -187,115 +200,128 @@ class UserService {
         blocked: isBlocked,
         groupIndex: groupIndex,
         lastUpdatedDate: lastUpdatedDate?.toInt64()));
-    return n.data.hasUserRelationshipsWithVersion()
-        ? n.data.userRelationshipsWithVersion
-        : null;
+    return n.toResponse((data) => data.hasUserRelationshipsWithVersion()
+        ? data.userRelationshipsWithVersion
+        : null);
   }
 
-  Future<Int64ValuesWithVersion?> queryRelatedUserIds(
+  Future<Response<Int64ValuesWithVersion?>> queryRelatedUserIds(
       {bool? isBlocked, int? groupIndex, DateTime? lastUpdatedDate}) async {
     final n = await _turmsClient.driver.send(QueryRelatedUserIdsRequest(
         blocked: isBlocked,
         groupIndex: groupIndex,
         lastUpdatedDate: lastUpdatedDate?.toInt64()));
-    return n.data.hasIdsWithVersion() ? n.data.idsWithVersion : null;
+    return n.toResponse(
+        (data) => data.hasIdsWithVersion() ? data.idsWithVersion : null);
   }
 
-  Future<UserRelationshipsWithVersion?> queryFriends(
+  Future<Response<UserRelationshipsWithVersion?>> queryFriends(
           {int? groupIndex, DateTime? lastUpdatedDate}) =>
       queryRelationships(
           isBlocked: false,
           groupIndex: groupIndex,
           lastUpdatedDate: lastUpdatedDate);
 
-  Future<UserRelationshipsWithVersion?> queryBlockedUsers(
+  Future<Response<UserRelationshipsWithVersion?>> queryBlockedUsers(
           {int? groupIndex, DateTime? lastUpdatedDate}) =>
       queryRelationships(
           isBlocked: true,
           groupIndex: groupIndex,
           lastUpdatedDate: lastUpdatedDate);
 
-  Future<void> createRelationship(Int64 userId, bool isBlocked,
+  Future<Response<void>> createRelationship(Int64 userId, bool isBlocked,
       {int? groupIndex}) async {
-    await _turmsClient.driver.send(CreateRelationshipRequest(
+    final n = await _turmsClient.driver.send(CreateRelationshipRequest(
         userId: userId, blocked: isBlocked, groupIndex: groupIndex));
+    return n.toNullResponse();
   }
 
-  Future<void> createFriendRelationship(Int64 userId, {int? groupIndex}) =>
+  Future<Response<void>> createFriendRelationship(Int64 userId,
+          {int? groupIndex}) =>
       createRelationship(userId, false, groupIndex: groupIndex);
 
-  Future<void> createBlockedUserRelationship(Int64 userId, {int? groupIndex}) =>
+  Future<Response<void>> createBlockedUserRelationship(Int64 userId,
+          {int? groupIndex}) =>
       createRelationship(userId, true, groupIndex: groupIndex);
 
-  Future<void> deleteRelationship(Int64 relatedUserId,
+  Future<Response<void>> deleteRelationship(Int64 relatedUserId,
       {int? deleteGroupIndex, int? targetGroupIndex}) async {
-    await _turmsClient.driver.send(DeleteRelationshipRequest(
+    final n = await _turmsClient.driver.send(DeleteRelationshipRequest(
         userId: relatedUserId,
         groupIndex: deleteGroupIndex,
         targetGroupIndex: targetGroupIndex));
+    return n.toNullResponse();
   }
 
-  Future<void> updateRelationship(Int64 relatedUserId,
+  Future<Response<void>> updateRelationship(Int64 relatedUserId,
       {bool? isBlocked, int? groupIndex}) async {
     if ([isBlocked, groupIndex].areAllNull) {
-      return;
+      return Response.nullValue();
     }
-    await _turmsClient.driver.send(UpdateRelationshipRequest(
+    final n = await _turmsClient.driver.send(UpdateRelationshipRequest(
         userId: relatedUserId, blocked: isBlocked, newGroupIndex: groupIndex));
+    return n.toNullResponse();
   }
 
-  Future<Int64> sendFriendRequest(Int64 recipientId, String content) async {
+  Future<Response<Int64>> sendFriendRequest(
+      Int64 recipientId, String content) async {
     final n = await _turmsClient.driver.send(
         CreateFriendRequestRequest(recipientId: recipientId, content: content));
-    return n.getFirstIdOrThrow();
+    return n.toResponse((data) => data.getFirstIdOrThrow());
   }
 
-  Future<void> replyFriendRequest(
+  Future<Response<void>> replyFriendRequest(
       Int64 requestId, ResponseAction responseAction,
       {String? reason}) async {
-    await _turmsClient.driver.send(UpdateFriendRequestRequest(
+    final n = await _turmsClient.driver.send(UpdateFriendRequestRequest(
         requestId: requestId, responseAction: responseAction, reason: reason));
+    return n.toResponse((data) {});
   }
 
-  Future<UserFriendRequestsWithVersion?> queryFriendRequests(bool areSentByMe,
+  Future<Response<UserFriendRequestsWithVersion?>> queryFriendRequests(
+      bool areSentByMe,
       {DateTime? lastUpdatedDate}) async {
     final n = await _turmsClient.driver.send(QueryFriendRequestsRequest(
         areSentByMe: areSentByMe, lastUpdatedDate: lastUpdatedDate?.toInt64()));
-    return n.data.hasUserFriendRequestsWithVersion()
-        ? n.data.userFriendRequestsWithVersion
-        : null;
+    return n.toResponse((data) => data.hasUserFriendRequestsWithVersion()
+        ? data.userFriendRequestsWithVersion
+        : null);
   }
 
-  Future<Int64> createRelationshipGroup(String name) async {
+  Future<Response<Int64>> createRelationshipGroup(String name) async {
     final n = await _turmsClient.driver
         .send(CreateRelationshipGroupRequest(name: name));
-    return n.getFirstIdOrThrow();
+    return n.toResponse((data) => data.getFirstIdOrThrow());
   }
 
-  Future<void> deleteRelationshipGroups(int groupIndex,
+  Future<Response<void>> deleteRelationshipGroups(int groupIndex,
       {int? targetGroupIndex}) async {
-    await _turmsClient.driver.send(DeleteRelationshipGroupRequest(
+    final n = await _turmsClient.driver.send(DeleteRelationshipGroupRequest(
         groupIndex: groupIndex, targetGroupIndex: targetGroupIndex));
+    return n.toNullResponse();
   }
 
-  Future<void> updateRelationshipGroup(int groupIndex, String newName) async {
-    await _turmsClient.driver.send(UpdateRelationshipGroupRequest(
+  Future<Response<void>> updateRelationshipGroup(
+      int groupIndex, String newName) async {
+    final n = await _turmsClient.driver.send(UpdateRelationshipGroupRequest(
         groupIndex: groupIndex, newName: newName));
+    return n.toNullResponse();
   }
 
-  Future<UserRelationshipGroupsWithVersion?> queryRelationshipGroups(
+  Future<Response<UserRelationshipGroupsWithVersion?>> queryRelationshipGroups(
       {DateTime? lastUpdatedDate}) async {
     final n = await _turmsClient.driver.send(QueryRelationshipGroupsRequest(
         lastUpdatedDate: lastUpdatedDate?.toInt64()));
-    return n.data.hasUserRelationshipGroupsWithVersion()
-        ? n.data.userRelationshipGroupsWithVersion
-        : null;
+    return n.toResponse((data) => data.hasUserRelationshipGroupsWithVersion()
+        ? data.userRelationshipGroupsWithVersion
+        : null);
   }
 
-  Future<void> moveRelatedUserToGroup(
+  Future<Response<void>> moveRelatedUserToGroup(
       Int64 relatedUserId, int groupIndex) async {
-    await _turmsClient.driver.send(UpdateRelationshipRequest(
+    final n = await _turmsClient.driver.send(UpdateRelationshipRequest(
         userId: relatedUserId, newGroupIndex: groupIndex));
+    return n.toNullResponse();
   }
 
   /// updateLocation() in UserService is different from sendMessage()
@@ -304,10 +330,11 @@ class UserService {
   /// the server only.
   /// sendMessage() with records of location sends user's location to
   /// both server and its recipients.
-  Future<void> updateLocation(double latitude, double longitude,
+  Future<Response<void>> updateLocation(double latitude, double longitude,
       {Map<String, String>? details}) async {
-    await _turmsClient.driver.send(UpdateUserLocationRequest(
+    final n = await _turmsClient.driver.send(UpdateUserLocationRequest(
         latitude: latitude, longitude: longitude, details: details));
+    return n.toNullResponse();
   }
 
   void _changeToOnline() {

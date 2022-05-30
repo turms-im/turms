@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:fixnum/fixnum.dart' show Int64;
 
 import '../../turms_client.dart';
+import '../extension/notification_extensions.dart';
 
 typedef MentionedUserIdsParser = Set<Int64> Function(Message message);
 typedef MessageListener = void Function(
@@ -52,15 +53,16 @@ class DriverMessageService {
   void removeMessageListener(MessageListener listener) =>
       _messageListeners.remove(listener);
 
-  Future<Int64> sendMessage(bool isGroupMessage, Int64 targetId,
+  Future<Response<Int64>> sendMessage(bool isGroupMessage, Int64 targetId,
       {DateTime? deliveryDate,
       String? text,
       List<Uint8List>? records,
       int? burnAfter,
       Int64? preMessageId}) async {
     if (text == null && (records?.isEmpty ?? true)) {
-      throw ResponseException(ResponseStatusCode.illegalArgument,
-          'text and records must not all be null');
+      throw ResponseException.fromCodeAndReason(
+          ResponseStatusCode.illegalArgument,
+          '"text" and "records" must not all be null');
     }
     deliveryDate ??= DateTime.now();
     final n = await _turmsClient.driver.send(CreateMessageRequest(
@@ -71,28 +73,29 @@ class DriverMessageService {
         records: records,
         burnAfter: burnAfter,
         preMessageId: preMessageId));
-    return n.getFirstIdOrThrow();
+    return n.toResponse((data) => data.getFirstIdOrThrow());
   }
 
-  Future<Int64> forwardMessage(
+  Future<Response<Int64>> forwardMessage(
       Int64 messageId, bool isGroupMessage, Int64 targetId) async {
     final n = await _turmsClient.driver.send(CreateMessageRequest(
         messageId: messageId,
         groupId: isGroupMessage ? targetId : null,
         recipientId: !isGroupMessage ? targetId : null));
-    return n.getFirstIdOrThrow();
+    return n.toResponse((data) => data.getFirstIdOrThrow());
   }
 
-  Future<void> updateSentMessage(Int64 messageId,
+  Future<Response<void>> updateSentMessage(Int64 messageId,
       {String? text, List<Uint8List>? records}) async {
     if ([text, records].areAllNull) {
-      return;
+      return Response.nullValue();
     }
-    await _turmsClient.driver.send(UpdateMessageRequest(
+    final n = await _turmsClient.driver.send(UpdateMessageRequest(
         messageId: messageId, text: text, records: records));
+    return n.toNullResponse();
   }
 
-  Future<List<Message>> queryMessages(
+  Future<Response<List<Message>>> queryMessages(
       {Set<Int64>? ids,
       bool? areGroupMessages,
       bool? areSystemMessages,
@@ -109,10 +112,10 @@ class DriverMessageService {
         deliveryDateBefore: deliveryDateBefore?.toInt64(),
         size: size,
         withTotal: false));
-    return n.data.messages.messages;
+    return n.toResponse((data) => data.messages.messages);
   }
 
-  Future<List<MessagesWithTotal>> queryMessagesWithTotal(
+  Future<Response<List<MessagesWithTotal>>> queryMessagesWithTotal(
       {Set<Int64>? ids,
       bool? areGroupMessages,
       bool? areSystemMessages,
@@ -129,14 +132,18 @@ class DriverMessageService {
         deliveryDateBefore: deliveryDateBefore?.toInt64(),
         size: size,
         withTotal: true));
-    return n.data.messagesWithTotalList.messagesWithTotalList;
+    return n
+        .toResponse((data) => data.messagesWithTotalList.messagesWithTotalList);
   }
 
-  Future<void> recallMessage(Int64 messageId, {DateTime? recallDate}) =>
-      _turmsClient.driver.send(UpdateMessageRequest(
-          messageId: messageId,
-          recallDate:
-              Int64((recallDate ?? DateTime.now()).millisecondsSinceEpoch)));
+  Future<Response<void>> recallMessage(Int64 messageId,
+      {DateTime? recallDate}) async {
+    final n = await _turmsClient.driver.send(UpdateMessageRequest(
+        messageId: messageId,
+        recallDate:
+            Int64((recallDate ?? DateTime.now()).millisecondsSinceEpoch)));
+    return n.toNullResponse();
+  }
 
   bool isMentionEnabled() => _mentionedUserIdsParser != null;
 
