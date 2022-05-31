@@ -19,17 +19,23 @@ import ResponseStatusCode from '../model/response-status-code';
 import { TurmsNotification } from '../model/proto/notification/turms_notification';
 
 export default class ResponseError extends Error {
+    private readonly _requestId: string;
     private readonly _code: number;
     private readonly _reason: string;
 
-    private constructor(code: number, reason: string) {
-        super(`${code}:${reason}`);
+    private constructor(requestId: string, code: number, reason: string) {
+        super(`${requestId}:${code}:${reason}`);
+        this._requestId = requestId;
         this._code = code;
         this._reason = reason;
     }
 
     get isResponseError(): boolean {
         return true;
+    }
+
+    get requestId(): string {
+        return this._requestId;
     }
 
     get code(): number {
@@ -45,33 +51,33 @@ export default class ResponseError extends Error {
     }
 
     static fromNotification(notification: TurmsNotification): ResponseError {
-        return new ResponseError(notification.code, notification.reason);
-    }
-
-    static from(code: number, reason?: string): ResponseError {
-        return new ResponseError(code, reason);
+        return new ResponseError(notification.requestId, notification.code, notification.reason);
     }
 
     static fromCode(code: number): ResponseError {
-        return new ResponseError(code, null);
+        return new ResponseError(null, code, null);
+    }
+
+    static fromCodeAndReason(code: number, reason?: string): ResponseError {
+        return new ResponseError(null, code, reason);
     }
 
     static illegalParam(reason: string): never {
-        throw new ResponseError(ResponseStatusCode.ILLEGAL_ARGUMENT, reason);
+        throw new ResponseError(null, ResponseStatusCode.ILLEGAL_ARGUMENT, reason);
     }
 
     static notFalsy(name: string, notEmpty = false): never {
         const emptyPlaceholder = notEmpty ? ' or empty' : '';
-        ResponseError.illegalParam(`${name} must not be null${emptyPlaceholder} or an invalid param`);
+        ResponseError.illegalParam(`"${name}" must not be null${emptyPlaceholder} or an invalid param`);
     }
 
     static illegalParamPromise<T = never>(reason: string): Promise<T> {
-        const exception = new ResponseError(ResponseStatusCode.ILLEGAL_ARGUMENT, reason);
+        const exception = new ResponseError(null, ResponseStatusCode.ILLEGAL_ARGUMENT, reason);
         return Promise.reject(exception);
     }
 
     static notFalsyPromise<T = never>(name: string, notEmpty = false): Promise<T> {
         const emptyPlaceholder = notEmpty ? ' or empty' : '';
-        return ResponseError.illegalParamPromise(`${name} must not be null${emptyPlaceholder} or an invalid param`);
+        return ResponseError.illegalParamPromise(`"${name}" must not be null${emptyPlaceholder} or an invalid param`);
     }
 }

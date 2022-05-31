@@ -79,7 +79,7 @@ export default class MessageService extends BaseService {
                     return reject(ResponseError.fromCode(ResponseStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
                 }
             } else if (!this._stateStore.isConnected || !this._stateStore.isSessionOpen) {
-                return reject(ResponseError.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
+                return reject(ResponseError.fromCode(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
             }
             const now = new Date().getTime();
             const difference = now - this._stateStore.lastRequestDate;
@@ -133,7 +133,7 @@ export default class MessageService extends BaseService {
                             cb.reject(ResponseError.fromNotification(notification));
                         }
                     } else {
-                        cb.reject(ResponseError.from(ResponseStatusCode.INVALID_NOTIFICATION, 'The code is missing'));
+                        cb.reject(ResponseError.fromCodeAndReason(ResponseStatusCode.INVALID_NOTIFICATION, 'The code is missing'));
                     }
                 }
             }

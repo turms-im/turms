@@ -21,13 +21,13 @@ client.messageService.addMessageListener(message => {
 
 client.userService.login('1', '123')
     .then(() => {
-        client.userService.queryUserIdsNearby(
+        client.userService.queryNearbyUsers(
             139.667651,
             35.792657,
             100,
             10)
-            .then(ids => {
-                console.log(`user ids: ${ids}`);
+            .then(response => {
+                console.log(`user ids: ${response.data}`);
             });
         client.messageService.sendMessage(
             false,
@@ -36,15 +36,15 @@ client.userService.login('1', '123')
             'Hello Turms',
             null,
             30)
-            .then(id => {
-                console.log(`message ${id} has been sent`);
+            .then(response => {
+                console.log(`message ${response.data} has been sent`);
             });
         client.groupService.createGroup(
             'Turms Developers Group',
             'This is a group for the developers who are interested in Turms',
             'nope')
-            .then(id => {
-                console.log(`group ${id} has been created`);
+            .then(response => {
+                console.log(`group ${response.data} has been created`);
             });
     })
     .catch(reason => {

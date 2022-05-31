@@ -37,6 +37,9 @@
     "skipLibCheck": true
   },
   "include": [
-    "src/**/*"
+    // Added for eslint to lint ".eslintrc.js"
+    ".eslintrc.js",
+    "src/**/*",
+    "tests/**/*"
   ]
 }

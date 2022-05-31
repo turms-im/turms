@@ -8,6 +8,7 @@ import { ImageFile } from '../model/proto/model/file/image_file';
 import MessageAddition from '../model/message-addition';
 import NotificationUtil from '../util/notification-util';
 import { ParsedModel } from '../model/parsed-model';
+import Response from '../model/response';
 import ResponseError from '../error/response-error';
 import TurmsClient from '../turms-client';
 import { UserLocation } from '../model/proto/model/user/user_location';
@@ -66,7 +67,7 @@ export default class MessageService {
         text?: string,
         records?: Uint8Array[],
         burnAfter?: number,
-        preMessageId?: string): Promise<string> {
+        preMessageId?: string): Promise<Response<string>> {
         if (Validator.isFalsy(targetId)) {
             return ResponseError.notFalsyPromise('targetId');
         }
@@ -86,13 +87,13 @@ export default class MessageService {
                 burnAfter,
                 preMessageId
             }
-        }).then(n => NotificationUtil.getFirstIdOrThrow(n));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
     }
 
     forwardMessage(
         messageId: string,
         isGroupMessage: boolean,
-        targetId: string): Promise<string> {
+        targetId: string): Promise<Response<string>> {
         if (Validator.isFalsy(messageId)) {
             return ResponseError.notFalsyPromise('messageId');
         }
@@ -106,18 +107,18 @@ export default class MessageService {
                 recipientId: !isGroupMessage ? targetId : undefined,
                 records: []
             }
-        }).then(n => NotificationUtil.getFirstIdOrThrow(n));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
     }
 
     updateSentMessage(
         messageId: string,
         text?: string,
-        records?: Uint8Array[]): Promise<void> {
+        records?: Uint8Array[]): Promise<Response<void>> {
         if (Validator.isFalsy(messageId)) {
             return ResponseError.notFalsyPromise('messageId');
         }
         if (Validator.areAllFalsy(text, records)) {
-            return Promise.resolve();
+            return Promise.resolve(Response.nullValue());
         }
         return this._turmsClient.driver.send({
             updateMessageRequest: {
@@ -125,7 +126,7 @@ export default class MessageService {
                 text,
                 records: records || []
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
     queryMessages(
@@ -135,7 +136,7 @@ export default class MessageService {
         fromId?: string,
         deliveryDateAfter?: Date,
         deliveryDateBefore?: Date,
-        size = 50): Promise<ParsedModel.Message[]> {
+        size = 50): Promise<Response<ParsedModel.Message[]>> {
         return this._turmsClient.driver.send({
             queryMessagesRequest: {
                 ids: ids || [],
@@ -147,7 +148,7 @@ export default class MessageService {
                 size,
                 withTotal: false
             }
-        }).then(n => NotificationUtil.transformOrEmpty(n.data?.messages?.messages));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.messages?.messages)));
     }
 
     queryMessagesWithTotal(
@@ -157,7 +158,7 @@ export default class MessageService {
         fromId?: string,
         deliveryDateAfter?: Date,
         deliveryDateBefore?: Date,
-        size = 1): Promise<ParsedModel.MessagesWithTotal[]> {
+        size = 1): Promise<Response<ParsedModel.MessagesWithTotal[]>> {
         return this._turmsClient.driver.send({
             queryMessagesRequest: {
                 ids: ids || [],
@@ -169,10 +170,10 @@ export default class MessageService {
                 size,
                 withTotal: true
             }
-        }).then(n => NotificationUtil.transformOrEmpty(n.data?.messagesWithTotalList?.messagesWithTotalList));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.messagesWithTotalList?.messagesWithTotalList)));
     }
 
-    recallMessage(messageId: string, recallDate = new Date()): Promise<void> {
+    recallMessage(messageId: string, recallDate = new Date()): Promise<Response<void>> {
         if (Validator.isFalsy(messageId)) {
             return ResponseError.notFalsyPromise('messageId');
         }
@@ -182,7 +183,7 @@ export default class MessageService {
                 recallDate: DataParser.getDateTimeStr(recallDate),
                 records: []
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
     isMentionEnabled(): boolean {

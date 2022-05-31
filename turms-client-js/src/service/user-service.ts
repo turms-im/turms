@@ -5,6 +5,7 @@ import NotificationUtil from '../util/notification-util';
 import { ParsedModel } from '../model/parsed-model';
 import { ProfileAccessStrategy } from '../model/proto/constant/profile_access_strategy';
 import { ResponseAction } from '../model/proto/constant/response_action';
+import Response from '../model/response';
 import ResponseError from '../error/response-error';
 import ResponseStatusCode from '../model/response-status-code';
 import SessionCloseInfo from '../model/session-close-info';
@@ -126,9 +127,9 @@ export default class UserService {
         deviceDetails?: Record<string, string>,
         onlineStatus?: string | UserStatus,
         location?: GeolocationPosition | UserLocation,
-        storePassword?: boolean): Promise<void>;
+        storePassword?: boolean): Promise<Response<void>>;
 
-    login(options: LoginOptions): Promise<void>;
+    login(options: LoginOptions): Promise<Response<void>>;
 
     login(
         userIdOrOptions: string | LoginOptions,
@@ -137,7 +138,7 @@ export default class UserService {
         deviceDetails?: Record<string, string>,
         onlineStatus?: string | UserStatus,
         location?: GeolocationPosition | UserLocation,
-        storePassword = false): Promise<void> {
+        storePassword = false): Promise<Response<void>> {
         const userId = userIdOrOptions['userId'] || userIdOrOptions;
         if (typeof userIdOrOptions === 'object') {
             password = userIdOrOptions.password;
@@ -202,7 +203,7 @@ export default class UserService {
                 .then(needLogin => {
                     if (!needLogin) {
                         this._changeToOnline();
-                        return resolve();
+                        return resolve(Response.nullValue());
                     }
                     return driver.send({
                         createSessionRequest: {
@@ -214,15 +215,15 @@ export default class UserService {
                             userStatus: userInfo.onlineStatus,
                             location: userInfo.location
                         }
-                    }).then(() => {
+                    }).then(n => {
                         this._changeToOnline();
                         this._userInfo = userInfo;
                         this._updateSharedUserInfo();
                         return useSharedContext
                             ? driver.requestSharedContext({
                                 type: RequestType.FINISH_LOGIN_REQUEST
-                            }).finally(() => resolve())
-                            : resolve();
+                            }).finally(() => resolve(Response.fromNotification(n)))
+                            : resolve(Response.fromNotification(n));
                     }).catch(e => useSharedContext
                         ? driver.requestSharedContext({
                             type: RequestType.FINISH_LOGIN_REQUEST
@@ -252,23 +253,28 @@ export default class UserService {
         return connect;
     }
 
-    logout(disconnect = true): Promise<void> {
+    logout(disconnect = true): Promise<Response<void>> {
         let promise: Promise<any>;
         if (disconnect) {
             promise = this._turmsClient.driver.disconnect();
         } else {
             promise = this._turmsClient.driver.send({
                 deleteSessionRequest: {}
+            }).catch(e => {
+                if (e?.code !== ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED) {
+                    throw e;
+                }
             });
         }
         return promise.then(() => {
             this._changeToOffline({
                 closeStatus: SessionCloseStatus.DISCONNECTED_BY_CLIENT
             });
+            return Response.nullValue();
         });
     }
 
-    updateOnlineStatus(onlineStatus: string | UserStatus): Promise<void> {
+    updateOnlineStatus(onlineStatus: string | UserStatus): Promise<Response<void>> {
         if (Validator.isFalsy(onlineStatus)) {
             return ResponseError.notFalsyPromise('onlineStatus');
         }
@@ -282,13 +288,14 @@ export default class UserService {
                 deviceTypes: [],
                 userStatus: onlineStatus
             }
-        }).then(() => {
+        }).then(n => {
             this._userInfo.onlineStatus = onlineStatus as UserStatus;
             this._updateSharedUserInfo();
+            return Response.fromNotification(n);
         });
     }
 
-    disconnectOnlineDevices(deviceTypes: string[] | DeviceType[]): Promise<void> {
+    disconnectOnlineDevices(deviceTypes: string[] | DeviceType[]): Promise<Response<void>> {
         if (Validator.isFalsy(deviceTypes)) {
             return ResponseError.notFalsyPromise('deviceTypes', true);
         }
@@ -302,10 +309,10 @@ export default class UserService {
                 userStatus: UserStatus.OFFLINE,
                 deviceTypes: deviceTypes as DeviceType[]
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
-    updatePassword(password: string): Promise<void> {
+    updatePassword(password: string): Promise<Response<void>> {
         if (Validator.isFalsy(password)) {
             return ResponseError.notFalsyPromise('password');
         }
@@ -313,20 +320,21 @@ export default class UserService {
             updateUserRequest: {
                 password
             }
-        }).then(() => {
+        }).then(n => {
             if (this._storePassword) {
                 this._userInfo.password = password;
                 this._updateSharedUserInfo();
             }
+            return Response.fromNotification(n);
         });
     }
 
     updateProfile(
         name?: string,
         intro?: string,
-        profileAccessStrategy?: string | ProfileAccessStrategy): Promise<void> {
+        profileAccessStrategy?: string | ProfileAccessStrategy): Promise<Response<void>> {
         if (Validator.areAllFalsy(name, intro, profileAccessStrategy)) {
-            return Promise.resolve();
+            return Promise.resolve(Response.nullValue());
         }
         if (typeof profileAccessStrategy === 'string') {
             profileAccessStrategy = ProfileAccessStrategy[profileAccessStrategy] as ProfileAccessStrategy;
@@ -340,10 +348,10 @@ export default class UserService {
                 intro,
                 profileAccessStrategy
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
-    queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UserInfoWithVersion | undefined> {
+    queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<Response<ParsedModel.UserInfoWithVersion | undefined>> {
         if (Validator.isFalsy(userId)) {
             return ResponseError.notFalsyPromise('userId');
         }
@@ -352,16 +360,16 @@ export default class UserService {
                 userId: userId,
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => {
-            const usersInfosWithVersion = n.data?.usersInfosWithVersion;
-            const userInfo = NotificationUtil.transform(usersInfosWithVersion?.userInfos?.[0]);
-            if (userInfo) {
-                return {
-                    userInfo,
-                    lastUpdatedDate: NotificationUtil.transformDate(usersInfosWithVersion.lastUpdatedDate)
-                };
-            }
-        });
+        }).then(n => Response.fromNotification(n, data => {
+                const usersInfosWithVersion = data.usersInfosWithVersion;
+                const userInfo = NotificationUtil.transform(usersInfosWithVersion?.userInfos?.[0]);
+                if (userInfo) {
+                    return {
+                        userInfo,
+                        lastUpdatedDate: NotificationUtil.transformDate(usersInfosWithVersion.lastUpdatedDate)
+                    };
+                }
+            }));
     }
 
     queryNearbyUsers(latitude: number,
@@ -370,7 +378,7 @@ export default class UserService {
                      maxNumber?: number,
                      withCoordinates?: boolean,
                      withDistance?: boolean,
-                     withInfo?: boolean): Promise<ParsedModel.NearbyUser[]> {
+                     withInfo?: boolean): Promise<Response<ParsedModel.NearbyUser[]>> {
         if (Validator.isFalsy(latitude)) {
             return ResponseError.notFalsyPromise('latitude');
         }
@@ -387,10 +395,10 @@ export default class UserService {
                 withDistance,
                 withInfo
             }
-        }).then(n => NotificationUtil.transformOrEmpty(n.data?.nearbyUsers?.nearbyUsers));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.nearbyUsers?.nearbyUsers)));
     }
 
-    queryOnlineStatusesRequest(userIds: string[]): Promise<ParsedModel.UserStatusDetail[]> {
+    queryOnlineStatusesRequest(userIds: string[]): Promise<Response<ParsedModel.UserStatusDetail[]>> {
         if (Validator.isFalsy(userIds)) {
             return ResponseError.notFalsyPromise('userIds', true);
         }
@@ -398,7 +406,7 @@ export default class UserService {
             queryUserOnlineStatusesRequest: {
                 userIds
             }
-        }).then(n => NotificationUtil.transformOrEmpty(n.data?.usersOnlineStatuses?.userStatuses));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.usersOnlineStatuses?.userStatuses)));
     }
 
     // Relationship
@@ -407,7 +415,7 @@ export default class UserService {
         relatedUserIds?: string[],
         isBlocked?: boolean,
         groupIndex?: number,
-        lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined> {
+        lastUpdatedDate?: Date): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryRelationshipsRequest: {
                 userIds: relatedUserIds || [],
@@ -415,31 +423,31 @@ export default class UserService {
                 groupIndex,
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => NotificationUtil.transform(n.data?.userRelationshipsWithVersion));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userRelationshipsWithVersion)));
     }
 
     queryRelatedUserIds(
         isBlocked?: boolean,
         groupIndex?: number,
-        lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined> {
+        lastUpdatedDate?: Date): Promise<Response<ParsedModel.IdsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryRelatedUserIdsRequest: {
                 blocked: isBlocked,
                 groupIndex,
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => NotificationUtil.getIdsWithVer(n));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.getIdsWithVer(data)));
     }
 
-    queryFriends(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined> {
+    queryFriends(groupIndex?: number, lastUpdatedDate?: Date): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
         return this.queryRelationships(undefined, false, groupIndex, lastUpdatedDate);
     }
 
-    queryBlockedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined> {
+    queryBlockedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
         return this.queryRelationships(undefined, true, groupIndex, lastUpdatedDate);
     }
 
-    createRelationship(userId: string, isBlocked: boolean, groupIndex?: number): Promise<void> {
+    createRelationship(userId: string, isBlocked: boolean, groupIndex?: number): Promise<Response<void>> {
         if (Validator.isFalsy(userId)) {
             return ResponseError.notFalsyPromise('userId');
         }
@@ -452,18 +460,18 @@ export default class UserService {
                 blocked: isBlocked,
                 groupIndex
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
-    createFriendRelationship(userId: string, groupIndex?: number): Promise<void> {
+    createFriendRelationship(userId: string, groupIndex?: number): Promise<Response<void>> {
         return this.createRelationship(userId, false, groupIndex);
     }
 
-    createBlockedUserRelationship(userId: string, groupIndex?: number): Promise<void> {
+    createBlockedUserRelationship(userId: string, groupIndex?: number): Promise<Response<void>> {
         return this.createRelationship(userId, true, groupIndex);
     }
 
-    deleteRelationship(relatedUserId: string, deleteGroupIndex?: number, targetGroupIndex?: number): Promise<void> {
+    deleteRelationship(relatedUserId: string, deleteGroupIndex?: number, targetGroupIndex?: number): Promise<Response<void>> {
         if (Validator.isFalsy(relatedUserId)) {
             return ResponseError.notFalsyPromise('relatedUserId');
         }
@@ -473,15 +481,15 @@ export default class UserService {
                 groupIndex: deleteGroupIndex,
                 targetGroupIndex
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
-    updateRelationship(relatedUserId: string, isBlocked?: boolean, groupIndex?: number): Promise<void> {
+    updateRelationship(relatedUserId: string, isBlocked?: boolean, groupIndex?: number): Promise<Response<void>> {
         if (Validator.isFalsy(relatedUserId)) {
             return ResponseError.notFalsyPromise('relatedUserId');
         }
         if (Validator.areAllFalsy(isBlocked, groupIndex)) {
-            return Promise.resolve();
+            return Promise.resolve(Response.nullValue());
         }
         return this._turmsClient.driver.send({
             updateRelationshipRequest: {
@@ -489,10 +497,10 @@ export default class UserService {
                 blocked: isBlocked,
                 newGroupIndex: groupIndex
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
-    sendFriendRequest(recipientId: string, content: string): Promise<string> {
+    sendFriendRequest(recipientId: string, content: string): Promise<Response<string>> {
         if (Validator.isFalsy(recipientId)) {
             return ResponseError.notFalsyPromise('recipientId');
         }
@@ -504,10 +512,10 @@ export default class UserService {
                 recipientId,
                 content
             }
-        }).then(n => NotificationUtil.getFirstIdOrThrow(n));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
     }
 
-    replyFriendRequest(requestId: string, responseAction: string | ResponseAction, reason?: string): Promise<void> {
+    replyFriendRequest(requestId: string, responseAction: string | ResponseAction, reason?: string): Promise<Response<void>> {
         if (Validator.isFalsy(requestId)) {
             return ResponseError.notFalsyPromise('requestId');
         }
@@ -526,19 +534,19 @@ export default class UserService {
                 responseAction: responseAction,
                 reason
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
-    queryFriendRequests(areSentByMe: boolean, lastUpdatedDate?: Date): Promise<ParsedModel.UserFriendRequestsWithVersion | undefined> {
+    queryFriendRequests(areSentByMe: boolean, lastUpdatedDate?: Date): Promise<Response<ParsedModel.UserFriendRequestsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryFriendRequestsRequest: {
                 areSentByMe,
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => NotificationUtil.transform(n.data?.userFriendRequestsWithVersion));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userFriendRequestsWithVersion)));
     }
 
-    createRelationshipGroup(name: string): Promise<string> {
+    createRelationshipGroup(name: string): Promise<Response<number>> {
         if (Validator.isFalsy(name)) {
             return ResponseError.notFalsyPromise('name');
         }
@@ -546,10 +554,10 @@ export default class UserService {
             createRelationshipGroupRequest: {
                 name
             }
-        }).then(n => NotificationUtil.getFirstIdOrThrow(n));
+        }).then(n => Response.fromNotification(n, data => parseInt(NotificationUtil.getFirstIdOrThrow(data))));
     }
 
-    deleteRelationshipGroups(groupIndex: number, targetGroupIndex?: number): Promise<void> {
+    deleteRelationshipGroups(groupIndex: number, targetGroupIndex?: number): Promise<Response<void>> {
         if (Validator.isFalsy(groupIndex)) {
             return ResponseError.notFalsyPromise('groupIndex');
         }
@@ -558,10 +566,10 @@ export default class UserService {
                 groupIndex,
                 targetGroupIndex
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
-    updateRelationshipGroup(groupIndex: number, newName: string): Promise<void> {
+    updateRelationshipGroup(groupIndex: number, newName: string): Promise<Response<void>> {
         if (Validator.isFalsy(groupIndex)) {
             return ResponseError.notFalsyPromise('groupIndex');
         }
@@ -573,18 +581,18 @@ export default class UserService {
                 groupIndex,
                 newName
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
-    queryRelationshipGroups(lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipGroupsWithVersion | undefined> {
+    queryRelationshipGroups(lastUpdatedDate?: Date): Promise<Response<ParsedModel.UserRelationshipGroupsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryRelationshipGroupsRequest: {
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => NotificationUtil.transform(n.data?.userRelationshipGroupsWithVersion));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userRelationshipGroupsWithVersion)));
     }
 
-    moveRelatedUserToGroup(relatedUserId: string, groupIndex: number): Promise<void> {
+    moveRelatedUserToGroup(relatedUserId: string, groupIndex: number): Promise<Response<void>> {
         if (Validator.isFalsy(relatedUserId)) {
             return ResponseError.notFalsyPromise('relatedUserId');
         }
@@ -596,7 +604,7 @@ export default class UserService {
                 userId: relatedUserId,
                 newGroupIndex: groupIndex
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
     /**
@@ -604,7 +612,7 @@ export default class UserService {
      * updateLocation() in UserService sends the location of user to the server only.
      * sendMessage() with records of location sends user's location to both server and its recipients.
      */
-    updateLocation(latitude: number, longitude: number, details?: { [k: string]: string }): Promise<void> {
+    updateLocation(latitude: number, longitude: number, details?: { [k: string]: string }): Promise<Response<void>> {
         if (Validator.isFalsy(latitude)) {
             return ResponseError.notFalsyPromise('latitude');
         }
@@ -617,21 +625,21 @@ export default class UserService {
                 longitude,
                 details: details || {}
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
     private static _parseDeviceType(deviceType: string | DeviceType): DeviceType {
         if (typeof deviceType === 'string') {
             deviceType = DeviceType[deviceType] as DeviceType;
             if (Validator.isFalsy(deviceType)) {
-                throw ResponseError.from(ResponseStatusCode.ILLEGAL_ARGUMENT, 'illegal DeviceType');
+                throw ResponseError.fromCodeAndReason(ResponseStatusCode.ILLEGAL_ARGUMENT, 'illegal DeviceType');
             }
             return deviceType;
         } else if (typeof deviceType === 'number') {
             if (deviceType >= 0 && deviceType <= DeviceType.UNKNOWN) {
                 return deviceType;
             } else {
-                throw ResponseError.from(ResponseStatusCode.ILLEGAL_ARGUMENT, 'illegal DeviceType');
+                throw ResponseError.fromCodeAndReason(ResponseStatusCode.ILLEGAL_ARGUMENT, 'illegal DeviceType');
             }
         }
     }

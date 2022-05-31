@@ -109,7 +109,7 @@ export default class HeartbeatService extends BaseService {
 
     override onDisconnected(): void {
         this.stop();
-        const error = ResponseError.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
+        const error = ResponseError.fromCode(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
         this._rejectHeartbeatPromises(error);
     }
 }

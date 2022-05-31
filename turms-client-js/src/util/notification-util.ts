@@ -1,7 +1,7 @@
 import { ParsedModel } from '../model/parsed-model';
 import ResponseError from '../error/response-error';
 import ResponseStatusCode from '../model/response-status-code';
-import { TurmsNotification } from '../model/proto/notification/turms_notification';
+import { TurmsNotification, TurmsNotification_Data } from '../model/proto/notification/turms_notification';
 
 export default class NotificationUtil {
 
@@ -52,17 +52,17 @@ export default class NotificationUtil {
         return newMap;
     }
 
-    static getFirstIdOrThrow(notification: TurmsNotification): any {
-        const value = notification.data?.ids?.values?.[0];
+    static getFirstIdOrThrow(data?: TurmsNotification_Data): string {
+        const value = data?.ids?.values?.[0];
         if (value == null) {
-            const reason = `Cannot get ID from the invalid response: ${JSON.stringify(notification)}`;
-            throw ResponseError.from(ResponseStatusCode.INVALID_RESPONSE, reason);
+            const reason = `Cannot get ID from the invalid response: ${JSON.stringify(data)}`;
+            throw ResponseError.fromCodeAndReason(ResponseStatusCode.INVALID_RESPONSE, reason);
         }
         return value;
     }
 
-    static getIdsWithVer(n: TurmsNotification): ParsedModel.IdsWithVersion | undefined {
-        const idsWithVersion = n.data?.idsWithVersion;
+    static getIdsWithVer(data?: TurmsNotification_Data): ParsedModel.IdsWithVersion | undefined {
+        const idsWithVersion = data?.idsWithVersion;
         const arr = idsWithVersion?.values;
         if (arr?.length) {
             return {

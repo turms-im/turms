@@ -1,5 +1,6 @@
 import NotificationUtil from '../util/notification-util';
 import { ParsedModel } from '../model/parsed-model';
+import Response from '../model/response';
 import ResponseError from '../error/response-error';
 import TurmsClient from '../turms-client';
 import Validator from '../util/validator';
@@ -12,34 +13,34 @@ export default class ConversationService {
         this._turmsClient = turmsClient;
     }
 
-    queryPrivateConversations(targetIds: string[]): Promise<ParsedModel.PrivateConversation[]> {
+    queryPrivateConversations(targetIds: string[]): Promise<Response<ParsedModel.PrivateConversation[]>> {
         if (Validator.isFalsy(targetIds)) {
-            return Promise.resolve([]);
+            return Promise.resolve(Response.emptyList());
         }
         return this._turmsClient.driver.send({
             queryConversationsRequest: {
                 targetIds,
                 groupIds: []
             }
-        }).then(n => NotificationUtil.transformOrEmpty(n.data?.conversations?.privateConversations));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.conversations?.privateConversations)));
     }
 
-    queryGroupConversations(groupIds: string[]): Promise<ParsedModel.GroupConversation[]> {
+    queryGroupConversations(groupIds: string[]): Promise<Response<ParsedModel.GroupConversation[]>> {
         if (Validator.isFalsy(groupIds)) {
-            return Promise.resolve([]);
+            return Promise.resolve(Response.emptyList());
         }
         return this._turmsClient.driver.send({
             queryConversationsRequest: {
                 groupIds,
                 targetIds: []
             }
-        }).then(n => NotificationUtil.transform(n.data?.conversations?.groupConversations)?.map(c => ({
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.conversations?.groupConversations)?.map(c => ({
             groupId: c.groupId,
             memberIdAndReadDate: NotificationUtil.transformMapValToDate(c.memberIdAndReadDate)
-        })) || []);
+        })) || []));
     }
 
-    updatePrivateConversationReadDate(targetId: string, readDate?: Date): Promise<void> {
+    updatePrivateConversationReadDate(targetId: string, readDate?: Date): Promise<Response<void>> {
         if (Validator.isFalsy(targetId)) {
             return ResponseError.notFalsyPromise('targetId');
         }
@@ -49,10 +50,10 @@ export default class ConversationService {
                 targetId,
                 readDate: '' + readDate.getTime()
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
-    updateGroupConversationReadDate(groupId: string, readDate?: Date): Promise<void> {
+    updateGroupConversationReadDate(groupId: string, readDate?: Date): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -62,10 +63,10 @@ export default class ConversationService {
                 groupId,
                 readDate: '' + readDate.getTime()
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
-    updatePrivateConversationTypingStatus(targetId: string): Promise<void> {
+    updatePrivateConversationTypingStatus(targetId: string): Promise<Response<void>> {
         if (Validator.isFalsy(targetId)) {
             return ResponseError.notFalsyPromise('targetId');
         }
@@ -74,10 +75,10 @@ export default class ConversationService {
                 toId: targetId,
                 isGroupMessage: false
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
-    updateGroupConversationTypingStatus(groupId: string): Promise<void> {
+    updateGroupConversationTypingStatus(groupId: string): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -86,7 +87,7 @@ export default class ConversationService {
                 toId: groupId,
                 isGroupMessage: true
             }
-        }).then(() => null);
+        }).then(n => Response.fromNotification(n));
     }
 
 }

@@ -9,8 +9,8 @@ const SENDER_ID = '1';
 const RECIPIENT_ID = '2';
 const GROUP_MEMBER_ID = '3';
 const TARGET_GROUP_ID = '1';
-let privateMessageId;
-let groupMessageId;
+let privateMessageId: string;
+let groupMessageId: string;
 
 beforeAll(async () => {
     senderClient = new TurmsClient(Constants.WS_URL);
@@ -37,41 +37,47 @@ describe('Constructor', () => {
 
 describe('Create', () => {
     it('sendPrivateMessage_shouldReturnMessageId', async () => {
-        privateMessageId = await senderClient.messageService.sendMessage(false, RECIPIENT_ID, new Date(), 'hello');
+        const response = await senderClient.messageService.sendMessage(false, RECIPIENT_ID, new Date(), 'hello');
+        privateMessageId = response.data;
         expect(privateMessageId).toBeTruthy();
     });
     it('sendGroupMessage_shouldReturnMessageId', async () => {
-        groupMessageId = await senderClient.messageService.sendMessage(true, TARGET_GROUP_ID, new Date(), 'hello');
+        const response = await senderClient.messageService.sendMessage(true, TARGET_GROUP_ID, new Date(), 'hello');
+        groupMessageId = response.data;
         expect(privateMessageId).toBeTruthy();
     });
     it('forwardPrivateMessage_shouldReturnForwardedMessageId', async () => {
-        const messageId = await senderClient.messageService.forwardMessage(privateMessageId, false, RECIPIENT_ID);
+        const response = await senderClient.messageService.forwardMessage(privateMessageId, false, RECIPIENT_ID);
+        const messageId = response.data;
         expect(messageId).toBeTruthy();
     });
     it('forwardGroupMessage_shouldReturnForwardedMessageId', async () => {
-        const messageId = await senderClient.messageService.forwardMessage(groupMessageId, true, TARGET_GROUP_ID);
+        const response = await senderClient.messageService.forwardMessage(groupMessageId, true, TARGET_GROUP_ID);
+        const messageId = response.data;
         expect(messageId).toBeTruthy();
     });
 });
 
 describe('Update', () => {
     it('recallMessage_shouldSucceed', async () => {
-        const result = await senderClient.messageService.recallMessage(groupMessageId);
-        expect(result).toBeFalsy();
+        const response = await senderClient.messageService.recallMessage(groupMessageId);
+        expect(response.data).toBeFalsy();
     });
     it('updateSentMessage_shouldSucceed', async () => {
-        const result = await senderClient.messageService.updateSentMessage(privateMessageId, 'I have modified the message');
-        expect(result).toBeFalsy();
+        const response = await senderClient.messageService.updateSentMessage(privateMessageId, 'I have modified the message');
+        expect(response.data).toBeFalsy();
     });
 });
 
 describe('Query', () => {
     it('queryMessages_shouldReturnNotEmptyMessages', async () => {
-        const messages = await recipientClient.messageService.queryMessages(null, false, null, SENDER_ID, null, null, 10);
+        const response = await recipientClient.messageService.queryMessages(null, false, null, SENDER_ID, null, null, 10);
+        const messages = response.data;
         expect(messages.length).toBeGreaterThan(0);
     });
     it('queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal', async () => {
-        const messagesWithTotals = await recipientClient.messageService.queryMessages(null, false, null, SENDER_ID, null, null, 1);
+        const response = await recipientClient.messageService.queryMessages(null, false, null, SENDER_ID, null, null, 1);
+        const messagesWithTotals = response.data;
         expect(messagesWithTotals.length).toBeGreaterThan(0);
     });
 });

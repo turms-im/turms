@@ -23,16 +23,20 @@ afterAll(async () => {
 
 describe('Create', async () => {
     it('uploadProfilePicture_shouldReturnUrl', async () => {
-        const url = await turmsClient.storageService.uploadProfilePicture(PROFILE_PICTURE);
+        const response = await turmsClient.storageService.uploadProfilePicture(PROFILE_PICTURE);
+        const url = response.data;
         expect(url).toBeTruthy();
     });
     it('uploadGroupProfilePicture_shouldReturnUrl', async () => {
-        const url = await turmsClient.storageService.uploadGroupProfilePicture(PROFILE_PICTURE, GROUP_ID);
+        const response = await turmsClient.storageService.uploadGroupProfilePicture(PROFILE_PICTURE, GROUP_ID);
+        const url = response.data;
         expect(url).toBeTruthy();
     });
     it('uploadAttachment_shouldReturnUrl', async () => {
-        messageId = await turmsClient.messageService.sendMessage(false, '2', null, "I've attached a picture")
-        const url = await turmsClient.storageService.uploadAttachment(messageId, ATTACHMENT);
+        const sendMessageResponse = await turmsClient.messageService.sendMessage(false, '2', null, 'I\'ve attached a picture');
+        messageId = sendMessageResponse.data;
+        const uploadAttachmentResponse = await turmsClient.storageService.uploadAttachment(messageId, ATTACHMENT);
+        const url = uploadAttachmentResponse.data;
         expect(url).toBeTruthy();
     });
 });
@@ -55,11 +59,11 @@ describe('Query', () => {
 
 describe('Delete', () => {
     it('deleteProfile_shouldSucceed', async () => {
-        await turmsClient.storageService.deleteProfile();
-        expect(true).toBeTruthy();
+        const response = await turmsClient.storageService.deleteProfile();
+        expect(response.data).toBeFalsy();
     });
     it('deleteGroupProfile_shouldSucceed', async () => {
-        await turmsClient.storageService.deleteGroupProfile(GROUP_ID);
-        expect(true).toBeTruthy();
+        const response = await turmsClient.storageService.deleteGroupProfile(GROUP_ID);
+        expect(response.data).toBeFalsy();
     });
 });
