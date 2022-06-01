@@ -73,7 +73,7 @@ class HeartbeatService(
 
     suspend fun send() = suspendCoroutine<Unit> { cont ->
         if (!stateStore.isConnected || !stateStore.isSessionOpen) {
-            cont.resumeWithException(ResponseException(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
+            cont.resumeWithException(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
             return@suspendCoroutine
         }
         launch {
@@ -94,7 +94,7 @@ class HeartbeatService(
 
     fun rejectHeartbeatPromisesIfFail(notification: TurmsNotification): Boolean {
         if (notification.hasRequestId() && notification.requestId == HEARTBEAT_FAILURE_REQUEST_ID) {
-            rejectHeartbeatRequests(ResponseException.get(notification))
+            rejectHeartbeatRequests(ResponseException.from(notification))
             return true
         }
         return false
@@ -112,7 +112,7 @@ class HeartbeatService(
 
     override fun onDisconnected() {
         stop()
-        rejectHeartbeatRequests(ResponseException(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
+        rejectHeartbeatRequests(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
     }
 
     companion object {

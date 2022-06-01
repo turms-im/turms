@@ -18,7 +18,7 @@ package im.turms.client.driver.service
 
 import im.turms.client.driver.StateStore
 import im.turms.client.exception.ResponseException
-import im.turms.client.extension.isSuccessful
+import im.turms.client.extension.isSuccess
 import im.turms.client.extension.tryResumeWithException
 import im.turms.client.model.ResponseStatusCode
 import im.turms.client.model.proto.notification.TurmsNotification
@@ -70,18 +70,18 @@ class MessageService(
     suspend fun sendRequest(requestBuilder: TurmsRequest.Builder): TurmsNotification = suspendCoroutine { cont ->
         if (requestBuilder.hasCreateSessionRequest()) {
             if (stateStore.isSessionOpen) {
-                cont.resumeWithException(ResponseException(ResponseStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED))
+                cont.resumeWithException(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED))
                 return@suspendCoroutine
             }
         } else if (!stateStore.isConnected || !stateStore.isSessionOpen) {
-            cont.resumeWithException(ResponseException(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
+            cont.resumeWithException(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
             return@suspendCoroutine
         }
         val now = Date()
         val difference = now.time - stateStore.lastRequestDate
         val isFrequent = minRequestInterval > 0 && difference <= minRequestInterval
         if (isFrequent) {
-            cont.resumeWithException(ResponseException(ResponseStatusCode.CLIENT_REQUESTS_TOO_FREQUENT))
+            cont.resumeWithException(ResponseException.from(ResponseStatusCode.CLIENT_REQUESTS_TOO_FREQUENT))
             return@suspendCoroutine
         }
         val requestContext = TurmsRequestContext(cont, null)
@@ -107,7 +107,7 @@ class MessageService(
                     delay(requestTimeout.toLong())
                     requestMap.remove(requestId)?.let {
                         if (!requestContext.timeoutDeferred!!.isCompleted) {
-                            cont.tryResumeWithException(ResponseException(ResponseStatusCode.REQUEST_TIMEOUT))
+                            cont.tryResumeWithException(ResponseException.from(ResponseStatusCode.REQUEST_TIMEOUT))
                         }
                     }
                 }
@@ -123,14 +123,14 @@ class MessageService(
                 val cont = it.cont
                 if (notification.hasCode()) {
                     it.timeoutDeferred?.cancel()
-                    if (notification.isSuccessful()) {
+                    if (notification.isSuccess) {
                         cont.resume(notification)
                     } else {
-                        cont.resumeWithException(ResponseException.get(notification))
+                        cont.resumeWithException(ResponseException.from(notification))
                     }
                 } else {
                     cont.resumeWithException(
-                        ResponseException(
+                        ResponseException.from(
                             ResponseStatusCode.INVALID_NOTIFICATION,
                             "The code is missing"
                         )
@@ -160,7 +160,7 @@ class MessageService(
     override suspend fun close() = onDisconnected()
 
     override fun onDisconnected() =
-        rejectRequests(ResponseException(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
+        rejectRequests(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
 
     private data class TurmsRequestContext(
         val cont: Continuation<TurmsNotification>,

@@ -27,12 +27,8 @@ class GroupWithVersion {
     var lastUpdatedDate: Long = 0
 
     companion object {
-        fun from(notification: TurmsNotification?): GroupWithVersion? {
-            if (notification == null) {
-                return null
-            }
-            val data = notification.data
-            if (!notification.hasData() || !data.hasGroupsWithVersion()) {
+        fun from(data: TurmsNotification.Data): GroupWithVersion? {
+            if (!data.hasGroupsWithVersion()) {
                 return null
             }
             val groupsWithVersion = data.groupsWithVersion

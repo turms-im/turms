@@ -42,6 +42,7 @@ internal class StorageServiceET {
     @Timeout(5)
     fun uploadProfilePicture_shouldReturnUrl() = runBlocking {
         val url = turmsClient.storageService.uploadProfilePicture(PROFILE_PICTURE)
+            .data
         assertNotNull(url)
     }
 
@@ -50,6 +51,7 @@ internal class StorageServiceET {
     @Timeout(5)
     fun uploadGroupProfilePicture_shouldReturnUrl() = runBlocking {
         val url = turmsClient.storageService.uploadGroupProfilePicture(PROFILE_PICTURE, GROUP_ID)
+            .data
         assertNotNull(url)
     }
 
@@ -58,6 +60,7 @@ internal class StorageServiceET {
     @Timeout(5)
     fun uploadAttachment_shouldReturnUrl() = runBlocking {
         messageId = turmsClient.messageService.sendMessage(false, targetId = 2L, text = "I've attached a picture")
+            .data
         val url = turmsClient.storageService.uploadAttachment(messageId, ATTACHMENT)
         assertNotNull(url)
     }
@@ -69,6 +72,7 @@ internal class StorageServiceET {
     @Timeout(5)
     fun queryProfilePicture_shouldEqualUploadedPicture() = runBlocking {
         val bytes = turmsClient.storageService.queryProfilePicture(USER_ID)
+            .data
         assertArrayEquals(PROFILE_PICTURE, bytes)
     }
 
@@ -77,6 +81,7 @@ internal class StorageServiceET {
     @Timeout(5)
     fun queryGroupProfilePicture_shouldEqualUploadedPicture() = runBlocking {
         val bytes = turmsClient.storageService.queryGroupProfilePicture(GROUP_ID)
+            .data
         assertArrayEquals(PROFILE_PICTURE, bytes)
     }
 
@@ -85,6 +90,7 @@ internal class StorageServiceET {
     @Timeout(5)
     fun queryAttachment_shouldEqualUploadedAttachment() = runBlocking {
         val bytes = turmsClient.storageService.queryAttachment(messageId)
+            .data
         assertArrayEquals(PROFILE_PICTURE, bytes)
     }
 
@@ -95,6 +101,7 @@ internal class StorageServiceET {
     @Timeout(5)
     fun deleteProfile_shouldSucceed() = runBlocking {
         val result = turmsClient.storageService.deleteProfile()
+            .data
         assertNotNull(result)
     }
 
@@ -103,6 +110,7 @@ internal class StorageServiceET {
     @Timeout(5)
     fun deleteGroupProfile_shouldSucceed() = runBlocking {
         val result = turmsClient.storageService.deleteGroupProfile(GROUP_ID)
+            .data
         assertNotNull(result)
     }
 

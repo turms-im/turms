@@ -21,7 +21,6 @@ import com.google.protobuf.MessageLite
 import im.turms.client.driver.service.ConnectionService
 import im.turms.client.driver.service.HeartbeatService
 import im.turms.client.driver.service.MessageService
-import im.turms.client.extension.isSuccessful
 import im.turms.client.model.proto.notification.TurmsNotification
 import im.turms.client.model.proto.request.TurmsRequest
 import im.turms.client.transport.Pin

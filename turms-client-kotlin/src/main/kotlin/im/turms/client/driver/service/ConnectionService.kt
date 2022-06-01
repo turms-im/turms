@@ -119,7 +119,7 @@ class ConnectionService(
             if (host == stateStore.tcp?.host && port == stateStore.tcp?.port) {
                 return
             } else {
-                throw ResponseException(ResponseStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED)
+                throw ResponseException.from(ResponseStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED)
             }
         }
         resetStates()

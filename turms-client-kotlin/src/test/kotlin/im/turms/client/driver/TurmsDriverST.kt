@@ -23,7 +23,7 @@ import helper.Constants.ORDER_HIGH_PRIORITY
 import helper.Constants.ORDER_LOWEST_PRIORITY
 import helper.Constants.ORDER_MIDDLE_PRIORITY
 import im.turms.client.TurmsClient
-import im.turms.client.extension.isSuccessful
+import im.turms.client.extension.isSuccess
 import im.turms.client.model.proto.request.TurmsRequest
 import im.turms.client.model.proto.request.user.QueryUserProfileRequest
 import kotlinx.coroutines.runBlocking
@@ -81,7 +81,7 @@ internal class TurmsDriverST {
         val builder = TurmsRequest.newBuilder()
             .setQueryUserProfileRequest(profileRequest)
         val result = driver.send(builder)
-        assertTrue(result.isSuccessful())
+        assertTrue(result.isSuccess)
     }
 
     @Test

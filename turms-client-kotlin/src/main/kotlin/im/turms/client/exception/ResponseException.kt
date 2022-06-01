@@ -22,6 +22,7 @@ import im.turms.client.model.proto.notification.TurmsNotification
  * @author James Chen
  */
 data class ResponseException internal constructor(
+    val requestId: Long?,
     val code: Int,
     val reason: String? = null,
     override val cause: Throwable? = null
@@ -36,12 +37,16 @@ data class ResponseException internal constructor(
             }
         }
 
-        fun get(notification: TurmsNotification): ResponseException {
+        fun from(notification: TurmsNotification): ResponseException {
             val code = notification.code
             return if (notification.hasReason())
-                ResponseException(code, notification.reason)
+                ResponseException(null, code, notification.reason)
             else
-                ResponseException(code)
+                ResponseException(null, code)
+        }
+
+        fun from(code: Int, reason: String? = null): ResponseException {
+            return ResponseException(null, code, reason)
         }
     }
 

@@ -19,8 +19,10 @@ package im.turms.client.service
 import com.google.protobuf.ByteString
 import im.turms.client.TurmsClient
 import im.turms.client.exception.ResponseException
+import im.turms.client.extension.toResponse
 import im.turms.client.model.BuiltinSystemMessageType
 import im.turms.client.model.MessageAddition
+import im.turms.client.model.Response
 import im.turms.client.model.ResponseStatusCode
 import im.turms.client.model.proto.model.file.AudioFile
 import im.turms.client.model.proto.model.file.File
@@ -59,9 +61,9 @@ class MessageService(private val turmsClient: TurmsClient) {
         records: List<ByteBuffer>? = null,
         burnAfter: Int? = null,
         preMessageId: Long? = null
-    ): Long {
+    ): Response<Long> {
         if (text == null && records == null) {
-            throw ResponseException(ResponseStatusCode.ILLEGAL_ARGUMENT, "text and records must not all be null")
+            throw ResponseException.from(ResponseStatusCode.ILLEGAL_ARGUMENT, "\"text\" and \"records\" must not all be null")
         }
         return turmsClient.driver
             .send(
@@ -77,14 +79,16 @@ class MessageService(private val turmsClient: TurmsClient) {
                     burnAfter?.let { this.burnAfter = it }
                     preMessageId?.let { this.preMessageId = it }
                 }
-            ).data.ids.getValues(0)
+            ).toResponse {
+                it.ids.getValues(0)
+            }
     }
 
     suspend fun forwardMessage(
         messageId: Long,
         isGroupMessage: Boolean,
         targetId: Long
-    ): Long = turmsClient.driver
+    ): Response<Long> = turmsClient.driver
         .send(
             CreateMessageRequest.newBuilder().apply {
                 this.messageId = messageId
@@ -94,23 +98,26 @@ class MessageService(private val turmsClient: TurmsClient) {
                     recipientId = targetId
                 }
             }
-        ).data.ids.getValues(0)
+        ).toResponse {
+            it.ids.getValues(0)
+        }
 
     suspend fun updateSentMessage(
         messageId: Long,
         text: String? = null,
         records: List<ByteBuffer>? = null
-    ) {
-        if (!Validator.areAllFalsy(text, records)) {
-            return turmsClient.driver
-                .send(
-                    UpdateMessageRequest.newBuilder().apply {
-                        this.messageId = messageId
-                        text?.let { this.text = it }
-                        records?.let { this.addAllRecords(it.map { buffer -> ByteString.copyFrom(buffer) }) }
-                    }
-                ).run {}
-        }
+    ): Response<Unit> = if (Validator.areAllFalsy(text, records)) {
+        Response.unitValue()
+    } else {
+        turmsClient.driver
+            .send(
+                UpdateMessageRequest.newBuilder().apply {
+                    this.messageId = messageId
+                    text?.let { this.text = it }
+                    records?.let { this.addAllRecords(it.map { buffer -> ByteString.copyFrom(buffer) }) }
+                }
+            )
+            .toResponse()
     }
 
     suspend fun queryMessages(
@@ -121,7 +128,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         deliveryDateStart: Date? = null,
         deliveryDateEnd: Date? = null,
         size: Int = 50
-    ): List<Message> = turmsClient.driver
+    ): Response<List<Message>> = turmsClient.driver
         .send(
             QueryMessagesRequest.newBuilder().apply {
                 ids?.let { this.addAllIds(it) }
@@ -133,7 +140,9 @@ class MessageService(private val turmsClient: TurmsClient) {
                 this.size = size
                 withTotal = false
             }
-        ).data.messages.messagesList
+        ).toResponse {
+            it.messages.messagesList
+        }
 
     suspend fun queryMessagesWithTotal(
         ids: Set<Long?>? = null,
@@ -143,7 +152,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         deliveryDateStart: Date? = null,
         deliveryDateEnd: Date? = null,
         size: Int = 1
-    ): List<MessagesWithTotal> = turmsClient.driver
+    ): Response<List<MessagesWithTotal>> = turmsClient.driver
         .send(
             QueryMessagesRequest.newBuilder().apply {
                 ids?.let { this.addAllIds(it) }
@@ -155,15 +164,18 @@ class MessageService(private val turmsClient: TurmsClient) {
                 this.size = size
                 withTotal = true
             }
-        ).data.messagesWithTotalList.messagesWithTotalListList
+        ).toResponse {
+            it.messagesWithTotalList.messagesWithTotalListList
+        }
 
-    suspend fun recallMessage(messageId: Long, recallDate: Date = Date()) = turmsClient.driver
+    suspend fun recallMessage(messageId: Long, recallDate: Date = Date()): Response<Unit> = turmsClient.driver
         .send(
             UpdateMessageRequest.newBuilder().apply {
                 this.messageId = messageId
                 this.recallDate = recallDate.time
             }
-        ).run {}
+        )
+        .toResponse()
 
     val isMentionEnabled: Boolean
         get() = mentionedUserIdsParser != null

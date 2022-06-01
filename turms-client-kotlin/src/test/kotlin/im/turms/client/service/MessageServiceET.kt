@@ -65,6 +65,7 @@ internal class MessageServiceET {
     @Timeout(5)
     fun sendPrivateMessage_shouldReturnMessageId() = runBlocking {
         privateMessageId = senderClient.messageService.sendMessage(false, RECIPIENT_ID, Date(), "hello")
+            .data
         assertNotNull(privateMessageId)
     }
 
@@ -73,6 +74,7 @@ internal class MessageServiceET {
     @Timeout(5)
     fun sendGroupMessage_shouldReturnMessageId() = runBlocking {
         groupMessageId = senderClient.messageService.sendMessage(true, TARGET_GROUP_ID, Date(), "hello")
+            .data
         assertNotNull(groupMessageId)
     }
 
@@ -80,7 +82,8 @@ internal class MessageServiceET {
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
     fun forwardPrivateMessage_shouldReturnForwardedMessageId() = runBlocking {
-        val messageId: Long = senderClient.messageService.forwardMessage(privateMessageId, false, RECIPIENT_ID)
+        val messageId = senderClient.messageService.forwardMessage(privateMessageId, false, RECIPIENT_ID)
+            .data
         assertNotNull(messageId)
     }
 
@@ -88,7 +91,8 @@ internal class MessageServiceET {
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
     fun forwardGroupMessage_shouldReturnForwardedMessageId() = runBlocking {
-        val messageId: Long = senderClient.messageService.forwardMessage(groupMessageId, true, TARGET_GROUP_ID)
+        val messageId = senderClient.messageService.forwardMessage(groupMessageId, true, TARGET_GROUP_ID)
+            .data
         assertNotNull(messageId)
     }
 
@@ -99,6 +103,7 @@ internal class MessageServiceET {
     @Timeout(5)
     fun recallMessage_shouldSucceed() = runBlocking {
         val result = senderClient.messageService.recallMessage(groupMessageId)
+            .data
         assertNotNull(result)
     }
 
@@ -107,6 +112,7 @@ internal class MessageServiceET {
     @Timeout(5)
     fun updateSentMessage_shouldSucceed() = runBlocking {
         val result = senderClient.messageService.updateSentMessage(privateMessageId, "I have modified the message")
+            .data
         assertNotNull(result)
     }
 
@@ -118,6 +124,7 @@ internal class MessageServiceET {
     fun queryMessages_shouldReturnNotEmptyMessages() = runBlocking {
         val messages =
             recipientClient.messageService.queryMessages(areGroupMessages = false, senderId = SENDER_ID, size = 10)
+                .data
         assertTrue(messages.isNotEmpty())
     }
 
@@ -126,6 +133,7 @@ internal class MessageServiceET {
     @Timeout(5)
     fun queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal() = runBlocking {
         val messagesWithTotals = senderClient.messageService.queryMessagesWithTotal(size = 1)
+            .data
         assertTrue(messagesWithTotals.isNotEmpty())
     }
 

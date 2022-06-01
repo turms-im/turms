@@ -226,7 +226,7 @@ object ResponseStatusCode {
     }
 
     @JvmStatic
-    fun isServerError(businessCode: Int): Boolean {
-        return businessCode in 1200..1299 || businessCode in 200..299
+    fun isErrorCode(businessCode: Int): Boolean {
+        return !isSuccessCode(businessCode)
     }
 }

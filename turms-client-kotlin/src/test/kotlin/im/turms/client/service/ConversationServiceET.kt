@@ -84,6 +84,7 @@ internal class ConversationServiceET {
         val targetIds = setOf(RELATED_USER_ID)
         val conversations: List<PrivateConversation> =
             client.conversationService.queryPrivateConversations(targetIds)
+                .data
         assertTrue(conversations.isNotEmpty())
     }
 
@@ -93,6 +94,7 @@ internal class ConversationServiceET {
     fun queryGroupConversations_shouldReturnNotEmptyConversations() = runBlocking {
         val groupIds = setOf(GROUP_ID)
         val conversations: List<GroupConversation> = client.conversationService.queryGroupConversations(groupIds)
+            .data
         assertTrue(conversations.isNotEmpty())
     }
 

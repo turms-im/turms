@@ -19,6 +19,8 @@ package im.turms.client.service
 import im.turms.client.TurmsClient
 import im.turms.client.annotation.NotEmpty
 import im.turms.client.exception.ResponseException
+import im.turms.client.extension.toResponse
+import im.turms.client.model.Response
 import im.turms.client.model.ResponseStatusCode
 import im.turms.client.model.SessionCloseInfo
 import im.turms.client.model.SessionCloseStatus
@@ -35,7 +37,6 @@ import im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion
 import im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion
 import im.turms.client.model.proto.model.user.UserRelationshipsWithVersion
 import im.turms.client.model.proto.model.user.UserStatusDetail
-import im.turms.client.model.proto.notification.TurmsNotification
 import im.turms.client.model.proto.request.user.CreateSessionRequest
 import im.turms.client.model.proto.request.user.DeleteSessionRequest
 import im.turms.client.model.proto.request.user.QueryNearbyUsersRequest
@@ -107,7 +108,7 @@ class UserService(private val turmsClient: TurmsClient) {
         onlineStatus: UserStatus = UserStatus.AVAILABLE,
         location: UserLocation? = null,
         storePassword: Boolean = false
-    ) {
+    ): Response<Unit> {
         val user = User(userId)
         if (storePassword) {
             user.password = password
@@ -118,7 +119,7 @@ class UserService(private val turmsClient: TurmsClient) {
         if (!turmsClient.driver.isConnected) {
             turmsClient.driver.connect()
         }
-        turmsClient.driver.send(CreateSessionRequest.newBuilder().apply {
+        val notification = turmsClient.driver.send(CreateSessionRequest.newBuilder().apply {
             this.version = 1
             this.userId = userId
             password?.let { this.password = it }
@@ -135,20 +136,28 @@ class UserService(private val turmsClient: TurmsClient) {
         changeToOnline()
         this.storePassword = storePassword
         userInfo = user
+        return notification.toResponse()
     }
 
-    suspend fun logout(disconnect: Boolean = true) {
+    suspend fun logout(disconnect: Boolean = true): Response<Unit> {
         if (disconnect) {
             turmsClient.driver.disconnect()
         } else {
-            turmsClient.driver.send(DeleteSessionRequest.newBuilder())
+            try {
+                turmsClient.driver.send(DeleteSessionRequest.newBuilder())
+            } catch (e: ResponseException) {
+                if (e.code != ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED) {
+                    throw e
+                }
+            }
         }
         changeToOffline(SessionCloseInfo(SessionCloseStatus.DISCONNECTED_BY_CLIENT))
+        return Response.unitValue()
     }
 
-    suspend fun updateOnlineStatus(onlineStatus: UserStatus) =
+    suspend fun updateOnlineStatus(onlineStatus: UserStatus): Response<Unit> =
         if (onlineStatus == UserStatus.OFFLINE) {
-            throw ResponseException(
+            throw ResponseException.from(
                 ResponseStatusCode.ILLEGAL_ARGUMENT,
                 "The online status must not be $onlineStatus"
             )
@@ -157,27 +166,29 @@ class UserService(private val turmsClient: TurmsClient) {
                 UpdateUserOnlineStatusRequest.newBuilder().apply {
                     this.userStatus = onlineStatus
                 }
-            ).run {
+            ).toResponse<Unit>()
+            .apply {
                 userInfo?.onlineStatus = onlineStatus
             }
 
-    suspend fun disconnectOnlineDevices(@NotEmpty deviceTypes: Set<DeviceType>) =
+    suspend fun disconnectOnlineDevices(@NotEmpty deviceTypes: Set<DeviceType>): Response<Unit> =
         if (deviceTypes.isEmpty()) {
-            throw ResponseException(ResponseStatusCode.ILLEGAL_ARGUMENT, "deviceTypes must not be null or empty")
+            throw ResponseException.from(ResponseStatusCode.ILLEGAL_ARGUMENT, "\"deviceTypes\" must not be null or empty")
         } else turmsClient.driver
             .send(
                 UpdateUserOnlineStatusRequest.newBuilder().apply {
                     this.userStatus = UserStatus.OFFLINE
                     this.addAllDeviceTypes(deviceTypes)
                 }
-            ).run { }
+            ).toResponse()
 
-    suspend fun updatePassword(password: String) = turmsClient.driver
+    suspend fun updatePassword(password: String): Response<Unit> = turmsClient.driver
         .send(
             UpdateUserRequest.newBuilder().apply {
                 this.password = password
             }
-        ).run {
+        ).toResponse<Unit>()
+        .apply {
             if (storePassword) {
                 userInfo?.password = password
             }
@@ -187,29 +198,32 @@ class UserService(private val turmsClient: TurmsClient) {
         name: String? = null,
         intro: String? = null,
         profileAccessStrategy: ProfileAccessStrategy? = null
-    ) {
-        if (!Validator.areAllNull(name, intro, profileAccessStrategy)) {
-            return turmsClient.driver
-                .send(
-                    UpdateUserRequest.newBuilder().apply {
-                        name?.let { this.name = it }
-                        intro?.let { this.intro = it }
-                        profileAccessStrategy?.let { this.profileAccessStrategy = it }
-                    }
-                ).run {}
-        }
+    ): Response<Unit> = if (Validator.areAllNull(name, intro, profileAccessStrategy)) {
+        Response.unitValue()
+    } else {
+        turmsClient.driver
+            .send(
+                UpdateUserRequest.newBuilder().apply {
+                    name?.let { this.name = it }
+                    intro?.let { this.intro = it }
+                    profileAccessStrategy?.let { this.profileAccessStrategy = it }
+                }
+            )
+            .toResponse()
     }
 
     suspend fun queryUserProfile(
         userId: Long,
         lastUpdatedDate: Date? = null
-    ): UserInfoWithVersion? = turmsClient.driver
+    ): Response<UserInfoWithVersion?> = turmsClient.driver
         .send(
             QueryUserProfileRequest.newBuilder().apply {
                 this.userId = userId
                 lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
             }
-        ).let { UserInfoWithVersion.from(it) }
+        ).toResponse {
+            UserInfoWithVersion.from(it)
+        }
 
     suspend fun queryNearbyUsers(
         latitude: Float,
@@ -219,7 +233,7 @@ class UserService(private val turmsClient: TurmsClient) {
         withCoordinates: Boolean? = null,
         withDistance: Boolean? = null,
         withInfo: Boolean? = null,
-    ): List<NearbyUser> = turmsClient.driver
+    ): Response<List<NearbyUser>> = turmsClient.driver
         .send(
             QueryNearbyUsersRequest.newBuilder().apply {
                 this.latitude = latitude
@@ -230,17 +244,21 @@ class UserService(private val turmsClient: TurmsClient) {
                 withDistance?.let { this.withDistance = it }
                 withInfo?.let { this.withInfo = it }
             }
-        ).data.nearbyUsers.nearbyUsersList
+        ).toResponse {
+            it.nearbyUsers.nearbyUsersList
+        }
 
-    suspend fun queryOnlineStatusesRequest(@NotEmpty userIds: Set<Long>): List<UserStatusDetail> =
+    suspend fun queryOnlineStatusesRequest(@NotEmpty userIds: Set<Long>): Response<List<UserStatusDetail>> =
         if (userIds.isEmpty()) {
-            throw ResponseException(ResponseStatusCode.ILLEGAL_ARGUMENT, "userIds must not be null or empty")
+            throw ResponseException.from(ResponseStatusCode.ILLEGAL_ARGUMENT, "\"userIds\" must not be null or empty")
         } else turmsClient.driver
             .send(
                 QueryUserOnlineStatusesRequest.newBuilder().apply {
                     addAllUserIds(userIds)
                 }
-            ).data.usersOnlineStatuses.userStatusesList
+            ).toResponse {
+                it.usersOnlineStatuses.userStatusesList
+            }
 
     // Relationship
     suspend fun queryRelationships(
@@ -248,7 +266,7 @@ class UserService(private val turmsClient: TurmsClient) {
         isBlocked: Boolean? = null,
         groupIndex: Int? = null,
         lastUpdatedDate: Date? = null
-    ): UserRelationshipsWithVersion? = turmsClient.driver
+    ): Response<UserRelationshipsWithVersion?> = turmsClient.driver
         .send(
             QueryRelationshipsRequest.newBuilder().apply {
                 relatedUserIds?.let { addAllUserIds(it) }
@@ -256,180 +274,187 @@ class UserService(private val turmsClient: TurmsClient) {
                 groupIndex?.let { this.groupIndex = it }
                 lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
             }
-        ).let {
-            val data: TurmsNotification.Data = it.data
-            if (data.hasUserRelationshipsWithVersion()) data.userRelationshipsWithVersion else null
+        ).toResponse {
+            if (it.hasUserRelationshipsWithVersion()) it.userRelationshipsWithVersion else null
         }
 
     suspend fun queryRelatedUserIds(
         isBlocked: Boolean? = null,
         groupIndex: Int? = null,
         lastUpdatedDate: Date? = null
-    ): Int64ValuesWithVersion? = turmsClient.driver
+    ): Response<Int64ValuesWithVersion?> = turmsClient.driver
         .send(
             QueryRelatedUserIdsRequest.newBuilder().apply {
                 isBlocked?.let { this.blocked = it }
                 groupIndex?.let { this.groupIndex = it }
                 lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
             }
-        ).let {
-            val data: TurmsNotification.Data = it.data
-            if (data.hasIdsWithVersion()) data.idsWithVersion else null
+        ).toResponse {
+            if (it.hasIdsWithVersion()) it.idsWithVersion else null
         }
 
     suspend fun queryFriends(
         groupIndex: Int? = null,
         lastUpdatedDate: Date? = null
-    ): UserRelationshipsWithVersion? =
+    ): Response<UserRelationshipsWithVersion?> =
         queryRelationships(isBlocked = false, groupIndex = groupIndex, lastUpdatedDate = lastUpdatedDate)
 
     suspend fun queryBlockedUsers(
         groupIndex: Int? = null,
         lastUpdatedDate: Date? = null
-    ): UserRelationshipsWithVersion? =
+    ): Response<UserRelationshipsWithVersion?> =
         queryRelationships(isBlocked = true, groupIndex = groupIndex, lastUpdatedDate = lastUpdatedDate)
 
     suspend fun createRelationship(
         userId: Long,
         isBlocked: Boolean,
         groupIndex: Int? = null
-    ) = turmsClient.driver
+    ): Response<Unit> = turmsClient.driver
         .send(
             CreateRelationshipRequest.newBuilder().apply {
                 this.userId = userId
                 this.blocked = isBlocked
                 groupIndex?.let { this.groupIndex = it }
             }
-        ).run {}
+        )
+        .toResponse()
 
     suspend fun createFriendRelationship(
         userId: Long,
         groupIndex: Int? = null
-    ) = createRelationship(userId, false, groupIndex)
+    ): Response<Unit> = createRelationship(userId, false, groupIndex)
 
     suspend fun createBlockedUserRelationship(
         userId: Long,
         groupIndex: Int? = null
-    ) = createRelationship(userId, true, groupIndex)
+    ): Response<Unit> = createRelationship(userId, true, groupIndex)
 
     suspend fun deleteRelationship(
         relatedUserId: Long,
         deleteGroupIndex: Int? = null,
         targetGroupIndex: Int? = null
-    ) = turmsClient.driver
+    ): Response<Unit> = turmsClient.driver
         .send(
             DeleteRelationshipRequest.newBuilder().apply {
                 this.userId = relatedUserId
                 deleteGroupIndex?.let { this.groupIndex = it }
                 targetGroupIndex?.let { this.targetGroupIndex = it }
             }
-        ).run {}
+        )
+        .toResponse()
 
     suspend fun updateRelationship(
         relatedUserId: Long,
         isBlocked: Boolean? = null,
         groupIndex: Int? = null
-    ) {
-        if (!Validator.areAllFalsy(isBlocked, groupIndex)) {
-            return turmsClient.driver
-                .send(
-                    UpdateRelationshipRequest.newBuilder().apply {
-                        this.userId = relatedUserId
-                        isBlocked?.let { this.blocked = it }
-                        groupIndex?.let { this.newGroupIndex = it }
-                    }
-                ).run {}
-        }
+    ): Response<Unit> = if (Validator.areAllFalsy(isBlocked, groupIndex)) {
+        Response.unitValue()
+    } else {
+        turmsClient.driver
+            .send(
+                UpdateRelationshipRequest.newBuilder().apply {
+                    this.userId = relatedUserId
+                    isBlocked?.let { this.blocked = it }
+                    groupIndex?.let { this.newGroupIndex = it }
+                }
+            )
+            .toResponse()
     }
 
     suspend fun sendFriendRequest(
         recipientId: Long,
         content: String
-    ): Long = turmsClient.driver
+    ): Response<Long> = turmsClient.driver
         .send(
             CreateFriendRequestRequest.newBuilder().apply {
                 this.recipientId = recipientId
                 this.content = content
             }
-        ).data.ids.getValues(0)
+        ).toResponse {
+            it.ids.getValues(0)
+        }
 
     suspend fun replyFriendRequest(
         requestId: Long,
         responseAction: ResponseAction,
         reason: String? = null
-    ) = turmsClient.driver
+    ): Response<Unit> = turmsClient.driver
         .send(
             UpdateFriendRequestRequest.newBuilder().apply {
                 this.requestId = requestId
                 this.responseAction = responseAction
                 reason?.let { this.reason = it }
             }
-        ).run {}
+        )
+        .toResponse()
 
     suspend fun queryFriendRequests(
         areSentByMe: Boolean,
         lastUpdatedDate: Date? = null
-    ): UserFriendRequestsWithVersion? = turmsClient.driver
+    ): Response<UserFriendRequestsWithVersion?> = turmsClient.driver
         .send(
             QueryFriendRequestsRequest.newBuilder().apply {
                 this.areSentByMe = areSentByMe
                 lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
             }
-        ).let {
-            val data: TurmsNotification.Data = it.data
-            if (data.hasUserFriendRequestsWithVersion()) data.userFriendRequestsWithVersion else null
+        ).toResponse {
+            if (it.hasUserFriendRequestsWithVersion()) it.userFriendRequestsWithVersion else null
         }
 
-    suspend fun createRelationshipGroup(name: String): Int = turmsClient.driver
+    suspend fun createRelationshipGroup(name: String): Response<Int> = turmsClient.driver
         .send(
             CreateRelationshipGroupRequest.newBuilder().apply {
                 this.name = name
             }
-        ).data.ids.getValues(0).toInt()
+        ).toResponse {
+            it.ids.getValues(0).toInt()
+        }
 
     suspend fun deleteRelationshipGroups(
         groupIndex: Int,
         targetGroupIndex: Int? = null
-    ) = turmsClient.driver
+    ): Response<Unit> = turmsClient.driver
         .send(
             DeleteRelationshipGroupRequest.newBuilder().apply {
                 this.groupIndex = groupIndex
                 targetGroupIndex?.let { this.targetGroupIndex = it }
             }
-        ).run {}
+        )
+        .toResponse()
 
     suspend fun updateRelationshipGroup(
         groupIndex: Int,
         newName: String
-    ) = turmsClient.driver
+    ): Response<Unit> = turmsClient.driver
         .send(
             UpdateRelationshipGroupRequest.newBuilder().apply {
                 this.groupIndex = groupIndex
                 this.newName = newName
             }
-        ).run {}
+        )
+        .toResponse()
 
-    suspend fun queryRelationshipGroups(lastUpdatedDate: Date? = null): UserRelationshipGroupsWithVersion? =
+    suspend fun queryRelationshipGroups(lastUpdatedDate: Date? = null): Response<UserRelationshipGroupsWithVersion?> =
         turmsClient.driver
             .send(
                 QueryRelationshipGroupsRequest.newBuilder().apply {
                     lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
                 }
-            ).let {
-                val data: TurmsNotification.Data = it.data
-                if (data.hasUserRelationshipGroupsWithVersion()) data.userRelationshipGroupsWithVersion else null
+            ).toResponse {
+                if (it.hasUserRelationshipGroupsWithVersion()) it.userRelationshipGroupsWithVersion else null
             }
 
     suspend fun moveRelatedUserToGroup(
         relatedUserId: Long,
         groupIndex: Int
-    ) = turmsClient.driver
+    ): Response<Unit> = turmsClient.driver
         .send(
             UpdateRelationshipRequest.newBuilder().apply {
                 this.userId = relatedUserId
                 this.newGroupIndex = groupIndex
             }
-        ).run {}
+        )
+        .toResponse()
 
     /**
      * updateLocation() in UserService is different from sendMessage() with records of location in MessageService
@@ -440,14 +465,15 @@ class UserService(private val turmsClient: TurmsClient) {
         latitude: Float,
         longitude: Float,
         details: Map<String, String>? = null
-    ) = turmsClient.driver
+    ): Response<Unit> = turmsClient.driver
         .send(
             UpdateUserLocationRequest.newBuilder().apply {
                 this.latitude = latitude
                 this.longitude = longitude
                 details?.let { putAllDetails(it) }
             }
-        ).run {}
+        )
+        .toResponse()
 
     private fun changeToOnline() {
         if (!isLoggedIn) {

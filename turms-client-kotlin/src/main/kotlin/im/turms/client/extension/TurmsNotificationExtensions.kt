@@ -17,14 +17,19 @@
 
 package im.turms.client.extension
 
+import im.turms.client.model.Response
 import im.turms.client.model.ResponseStatusCode
 import im.turms.client.model.proto.notification.TurmsNotification
 
 /**
  * @author James Chen
  */
-fun TurmsNotification.isSuccessful(): Boolean =
-    hasCode() && ResponseStatusCode.isSuccessCode(this.code)
+val TurmsNotification.isSuccess: Boolean
+    get() = hasCode() && ResponseStatusCode.isSuccessCode(code)
 
-fun TurmsNotification.isServerError(): Boolean =
-    hasCode() && ResponseStatusCode.isServerError(this.code)
+val TurmsNotification.isError: Boolean
+    get() = hasCode() && ResponseStatusCode.isErrorCode(code)
+
+fun <T> TurmsNotification.toResponse(
+    dataTransformer: ((TurmsNotification.Data) -> T)? = null
+): Response<T> = Response.fromNotification(this, dataTransformer)

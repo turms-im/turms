@@ -61,6 +61,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun login_shouldSucceed() = runBlocking {
         val result = turmsClient.userService.login(1, "123")
+            .data
         assertNotNull(result)
     }
 
@@ -71,6 +72,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun logout_shouldSucceed() = runBlocking {
         val result = turmsClient.userService.logout()
+            .data
         assertNotNull(result)
     }
 
@@ -82,6 +84,7 @@ internal class UserServiceET {
     fun createRelationship_shouldSucceed() = runBlocking {
         try {
             val result = turmsClient.userService.createRelationship(10L, true)
+                .data
             assertNotNull(result)
         } catch (e: ExecutionException) {
             assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP))
@@ -94,6 +97,7 @@ internal class UserServiceET {
     fun createFriendRelationship_shouldSucceed() = runBlocking {
         try {
             val result = turmsClient.userService.createFriendRelationship(10L)
+                .data
             assertNotNull(result)
         } catch (e: ExecutionException) {
             assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP))
@@ -106,6 +110,7 @@ internal class UserServiceET {
     fun createBlockedUserRelationship_shouldSucceed() = runBlocking {
         try {
             val result = turmsClient.userService.createBlockedUserRelationship(10L)
+                .data
             assertNotNull(result)
         } catch (e: ExecutionException) {
             assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP))
@@ -118,6 +123,7 @@ internal class UserServiceET {
     fun sendFriendRequest_shouldReturnFriendRequestId() = runBlocking {
         try {
             val friendRequestId = turmsClient.userService.sendFriendRequest(11L, "content")
+                .data
             assertNotNull(friendRequestId)
         } catch (e: ExecutionException) {
             assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_FRIEND_REQUEST))
@@ -129,6 +135,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun createRelationshipGroup_shouldReturnRelationshipGroupIndex() = runBlocking {
         relationshipGroupIndex = turmsClient.userService.createRelationshipGroup("newGroup")
+            .data
         assertNotNull(relationshipGroupIndex)
     }
 
@@ -139,6 +146,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun updateUserOnlineStatus_shouldSucceed() = runBlocking {
         val result = turmsClient.userService.updateOnlineStatus(userStatus)
+            .data
         assertNotNull(result)
     }
 
@@ -147,6 +155,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun updatePassword_shouldSucceed() = runBlocking {
         val result = turmsClient.userService.updatePassword("123")
+            .data
         assertNotNull(result)
     }
 
@@ -155,6 +164,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun updateProfile_shouldSucceed() = runBlocking {
         val result = turmsClient.userService.updateProfile("123", "123")
+            .data
         assertNotNull(result)
     }
 
@@ -163,6 +173,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun updateRelationship_shouldSucceed() = runBlocking {
         val result = turmsClient.userService.updateRelationship(10L, null, 1)
+            .data
         assertNotNull(result)
     }
 
@@ -171,6 +182,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun replyFriendRequest_shouldSucceed() = runBlocking {
         val result = turmsClient.userService.replyFriendRequest(10L, ResponseAction.ACCEPT, "reason")
+            .data
         assertNotNull(result)
     }
 
@@ -179,6 +191,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun updateRelationshipGroup_shouldSucceed() = runBlocking {
         val result = turmsClient.userService.updateRelationshipGroup(relationshipGroupIndex, "newGroupName")
+            .data
         assertNotNull(result)
     }
 
@@ -187,8 +200,10 @@ internal class UserServiceET {
     @Timeout(5)
     fun moveRelatedUserToGroup_shouldSucceed() = runBlocking {
         var result = turmsClient.userService.moveRelatedUserToGroup(2L, 1)
+            .data
         assertNotNull(result)
         result = turmsClient.userService.moveRelatedUserToGroup(2L, 0)
+            .data
         assertNotNull(result)
     }
 
@@ -197,6 +212,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun updateLocation_shouldSucceed() = runBlocking {
         val result = turmsClient.userService.updateLocation(2f, 2f)
+            .data
         assertNotNull(result)
     }
 
@@ -207,6 +223,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun queryUserProfile_shouldReturnUserInfoWithVersion() = runBlocking {
         val result = turmsClient.userService.queryUserProfile(1)
+            .data
         assertNotNull(result)
     }
 
@@ -215,6 +232,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun queryNearbyUsers_shouldReturnNearbyUsers() = runBlocking {
         val nearbyUsers = turmsClient.userService.queryNearbyUsers(1f, 1f)
+            .data
         assertNotNull(nearbyUsers)
     }
 
@@ -224,6 +242,7 @@ internal class UserServiceET {
     fun queryUserOnlineStatusesRequest_shouldUsersOnlineStatus() = runBlocking {
         val set = setOf(1L)
         val result = turmsClient.userService.queryOnlineStatusesRequest(set)
+            .data
         assertEquals(userStatus, result[0].userStatus)
     }
 
@@ -233,6 +252,7 @@ internal class UserServiceET {
     fun queryRelationships_shouldReturnUserRelationshipsWithVersion() = runBlocking {
         val set = setOf(2L)
         val result = turmsClient.userService.queryRelationships(set)
+            .data
         assertNotNull(result)
     }
 
@@ -241,6 +261,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun queryRelatedUserIds_shouldReturnRelatedUserIds() = runBlocking {
         val result = turmsClient.userService.queryRelatedUserIds()
+            .data
         assertNotNull(result)
     }
 
@@ -249,6 +270,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun queryFriends_shouldReturnFriendRelationships() = runBlocking {
         val result = turmsClient.userService.queryFriends()
+            .data
         assertNotNull(result)
     }
 
@@ -257,6 +279,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun queryBlockedUsers_shouldReturnRelationshipsWithBlockedUsers() = runBlocking {
         val result = turmsClient.userService.queryBlockedUsers()
+            .data
         assertNotNull(result)
     }
 
@@ -265,6 +288,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun queryFriendRequests_shouldReturnFriendRequests() = runBlocking {
         val result = turmsClient.userService.queryFriendRequests(true)
+            .data
         assertNotNull(result)
     }
 
@@ -273,6 +297,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun queryRelationshipGroups_shouldReturnRelationshipGroups() = runBlocking {
         val result = turmsClient.userService.queryRelationshipGroups()
+            .data
         assertNotNull(result)
     }
 
@@ -283,6 +308,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun deleteRelationship_shouldSucceed() = runBlocking {
         val result = turmsClient.userService.deleteRelationship(10L)
+            .data
         assertNotNull(result)
     }
 
@@ -291,6 +317,7 @@ internal class UserServiceET {
     @Timeout(5)
     fun deleteRelationshipGroups_shouldSucceed() = runBlocking {
         val result = turmsClient.userService.deleteRelationshipGroups(relationshipGroupIndex)
+            .data
         assertNotNull(result)
     }
 

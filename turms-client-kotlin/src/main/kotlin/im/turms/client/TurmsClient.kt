@@ -55,7 +55,7 @@ class TurmsClient constructor(
     val notificationService: NotificationService = NotificationService(this)
 
     suspend fun close() {
-        return this.driver.close();
+        return this.driver.close()
     }
 
 }

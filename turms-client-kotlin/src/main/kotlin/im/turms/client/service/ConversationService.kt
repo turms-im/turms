@@ -17,13 +17,14 @@
 package im.turms.client.service
 
 import im.turms.client.TurmsClient
+import im.turms.client.extension.toResponse
+import im.turms.client.model.Response
 import im.turms.client.model.proto.model.conversation.GroupConversation
 import im.turms.client.model.proto.model.conversation.PrivateConversation
 import im.turms.client.model.proto.request.conversation.QueryConversationsRequest
 import im.turms.client.model.proto.request.conversation.UpdateConversationRequest
 import im.turms.client.model.proto.request.conversation.UpdateTypingStatusRequest
 import im.turms.client.util.Validator
-import java.util.Collections
 import java.util.Date
 
 /**
@@ -31,48 +32,56 @@ import java.util.Date
  */
 class ConversationService(private val turmsClient: TurmsClient) {
 
-    suspend fun queryPrivateConversations(targetIds: Set<Long>?): List<PrivateConversation> =
+    suspend fun queryPrivateConversations(targetIds: Set<Long>?): Response<List<PrivateConversation>> =
         if (Validator.areAllFalsy(targetIds)) {
-            Collections.emptyList()
+            Response.emptyList()
         } else turmsClient.driver
             .send(QueryConversationsRequest.newBuilder().apply {
                 addAllTargetIds(targetIds)
-            }).data.conversations.privateConversationsList
+            }).toResponse {
+                it.conversations.privateConversationsList
+            }
 
-    suspend fun queryGroupConversations(groupIds: Set<Long>?): List<GroupConversation> =
+    suspend fun queryGroupConversations(groupIds: Set<Long>?): Response<List<GroupConversation>> =
         if (Validator.areAllFalsy(groupIds)) {
-            Collections.emptyList()
+            Response.emptyList()
         } else turmsClient.driver
             .send(QueryConversationsRequest.newBuilder().apply {
                 addAllGroupIds(groupIds)
-            }).data.conversations.groupConversationsList
+            }).toResponse {
+                it.conversations.groupConversationsList
+            }
 
-    suspend fun updatePrivateConversationReadDate(targetId: Long, readDate: Date? = null) =
+    suspend fun updatePrivateConversationReadDate(targetId: Long, readDate: Date? = null): Response<Unit> =
         turmsClient.driver
             .send(UpdateConversationRequest.newBuilder().apply {
                 this.targetId = targetId
                 this.readDate = readDate?.time ?: Date().time
-            }).run {}
+            })
+            .toResponse()
 
-    suspend fun updateGroupConversationReadDate(groupId: Long, readDate: Date? = null) =
+    suspend fun updateGroupConversationReadDate(groupId: Long, readDate: Date? = null): Response<Unit> =
         turmsClient.driver
             .send(UpdateConversationRequest.newBuilder().apply {
                 this.groupId = groupId
                 this.readDate = readDate?.time ?: Date().time
-            }).run {}
+            })
+            .toResponse()
 
-    suspend fun updatePrivateConversationTypingStatus(targetId: Long) =
+    suspend fun updatePrivateConversationTypingStatus(targetId: Long): Response<Unit> =
         turmsClient.driver
             .send(UpdateTypingStatusRequest.newBuilder().apply {
                 toId = targetId
                 isGroupMessage = false
-            }).run {}
+            })
+            .toResponse()
 
-    suspend fun updateGroupConversationTypingStatus(groupId: Long) =
+    suspend fun updateGroupConversationTypingStatus(groupId: Long): Response<Unit> =
         turmsClient.driver
             .send(UpdateTypingStatusRequest.newBuilder().apply {
                 toId = groupId
                 isGroupMessage = true
-            }).run {}
+            })
+            .toResponse()
 
 }
