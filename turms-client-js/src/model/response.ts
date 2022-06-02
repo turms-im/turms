@@ -13,6 +13,10 @@ export default class Response<T> {
         this.data = data;
     }
 
+    get isTurmsResponse(): boolean {
+        return true;
+    }
+
     static value<T>(data: T): Response<T> {
         return new Response(null, ResponseStatusCode.OK, data);
     }

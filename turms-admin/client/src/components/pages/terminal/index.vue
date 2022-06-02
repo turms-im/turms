@@ -212,7 +212,7 @@ export default {
                 }
                 result = result == null && isFunction
                     ? MESSAGE_FOR_VOID_FUNCTION
-                    : this.stringify(result);
+                    : this.stringify(result.isTurmsResponse ? result.data : result);
                 return {
                     type: isFunction ? 'success' : 'info',
                     msg: result,

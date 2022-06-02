@@ -5,13 +5,13 @@ on: [ push, pull_request ]
 jobs:
   ui-tests:
     runs-on: ubuntu-20.04
-    container: cypress/browsers:node14.16.0-chrome89-ff86
+    container: cypress/browsers:node16.14.0-chrome99-ff97
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Cypress run
-        uses: cypress-io/github-action@v3
+        uses: cypress-io/github-action@v4
         with:
           working-directory: turms-admin
           build: npm run build

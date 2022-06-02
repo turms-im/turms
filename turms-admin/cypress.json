@@ -1,6 +1,0 @@
-{
-  "baseUrl": "http://localhost:6510",
-  "env": {
-    "baseUrl": "http://localhost:8510"
-  }
-}
