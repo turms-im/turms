@@ -28,7 +28,7 @@ public class UnsafeUtil {
 
     /**
      * Though {@link jdk.internal.misc.Unsafe} is more powerful,
-     * we don't want to "add-exports" everywhere, which makes the development more difficult
+     * we don't want to "add-exports" everywhere, which causes a bad development experience
      */
     public static final Unsafe UNSAFE;
 

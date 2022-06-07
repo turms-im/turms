@@ -141,10 +141,10 @@
             "CLIENT_BLOCKLIST_QUERY"
         ],
         "CLUSTER_MEMBER": [
-            "CLUSTER_MEMBERS_CREATE",
-            "CLUSTER_MEMBERS_DELETE",
-            "CLUSTER_MEMBERS_UPDATE",
-            "CLUSTER_MEMBERS_QUERY"
+            "CLUSTER_MEMBER_CREATE",
+            "CLUSTER_MEMBER_DELETE",
+            "CLUSTER_MEMBER_UPDATE",
+            "CLUSTER_MEMBER_QUERY"
         ],
         "CLUSTER_LEADER": [
             "CLUSTER_LEADER_UPDATE",
@@ -159,6 +159,9 @@
             "PLUGIN_DELETE",
             "PLUGIN_UPDATE",
             "PLUGIN_QUERY"
+        ],
+        "SHUTDOWN": [
+            "SHUTDOWN"
         ]
     },
     "apis": {

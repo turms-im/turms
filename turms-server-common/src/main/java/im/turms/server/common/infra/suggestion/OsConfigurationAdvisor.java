@@ -113,9 +113,11 @@ public class OsConfigurationAdvisor {
 
     private record Suggestion(
             String name,
+
             Integer min,
             Integer max,
             Integer defaultValue,
+
             Integer option
     ) {
         static Suggestion newRange(String name, int min, int max, int defaultValue) {

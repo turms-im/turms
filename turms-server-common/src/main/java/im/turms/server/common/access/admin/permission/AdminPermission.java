@@ -132,7 +132,9 @@ public enum AdminPermission {
     PLUGIN_CREATE,
     PLUGIN_DELETE,
     PLUGIN_UPDATE,
-    PLUGIN_QUERY;
+    PLUGIN_QUERY,
+
+    SHUTDOWN;
 
     public static final Set<AdminPermission> ALL = Set.of(AdminPermission.values());
 
