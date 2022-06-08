@@ -81,18 +81,23 @@ public class TurmsRedisClient {
 
     private final RedisCodecContext serializationContext;
 
+    private final DefaultEventExecutorGroup eventExecutorGroup;
+    private final DefaultEventLoopGroupProvider eventLoopGroupProvider;
+
     public TurmsRedisClient(String uri,
                             RedisCodecContext serializationContext) {
         this.serializationContext = serializationContext;
         commandBuilder = new TurmsRedisCommandBuilder(serializationContext);
-        DefaultEventExecutorGroup eventExecutorGroup = new DefaultEventExecutorGroup(DefaultClientResources.MIN_COMPUTATION_THREADS,
-                new DefaultThreadFactory(ThreadNameConst.LETTUCE_EVENT_LOOP));
-        DefaultEventLoopGroupProvider eventLoopGroupProvider =
-                new DefaultEventLoopGroupProvider(DefaultClientResources.MIN_IO_THREADS,
-                        (ThreadFactoryProvider) poolName -> new DefaultThreadFactory(poolName, true));
+        eventExecutorGroup = new DefaultEventExecutorGroup(
+                DefaultClientResources.MIN_COMPUTATION_THREADS,
+                new DefaultThreadFactory(ThreadNameConst.LETTUCE_EVENT_LOOP, false));
+        eventLoopGroupProvider = new DefaultEventLoopGroupProvider(
+                DefaultClientResources.DEFAULT_IO_THREADS,
+                (ThreadFactoryProvider) poolName -> new DefaultThreadFactory(poolName, false));
         resources = DefaultClientResources
                 .builder()
                 // For event bus: io.lettuce.core.event.DefaultEventBus
+                // Search "eventBus.publish(" for usages
                 .eventExecutorGroup(eventExecutorGroup)
                 .eventLoopGroupProvider(eventLoopGroupProvider)
                 .nettyCustomizer(new NettyCustomizer() {
@@ -120,7 +125,15 @@ public class TurmsRedisClient {
     }
 
     public Mono<Void> destroy(long timeoutMillis) {
-        return Mono.fromFuture(nativeClient.shutdownAsync(0, timeoutMillis, TimeUnit.MILLISECONDS));
+        long startTime = System.currentTimeMillis();
+        return Mono.fromFuture(nativeClient.shutdownAsync(0, timeoutMillis, TimeUnit.MILLISECONDS))
+                .doFinally(signalType -> {
+                    long timestamp = System.currentTimeMillis();
+                    long elapsedTime = timestamp - startTime;
+                    eventExecutorGroup.shutdownGracefully(0, Math.max(1, timeoutMillis - elapsedTime), TimeUnit.MILLISECONDS);
+                    elapsedTime = System.currentTimeMillis() - timestamp;
+                    eventLoopGroupProvider.shutdown(0, Math.max(1, timeoutMillis - elapsedTime), TimeUnit.MILLISECONDS);
+                });
     }
 
     public Mono<Long> del(Collection<ByteBuf> keys) {
