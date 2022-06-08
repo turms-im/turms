@@ -148,7 +148,9 @@ Java的内存占用一直为人所诟病，诸如一个Integer对象所存放的
 
 ## 线程
 
-由于Turms服务端不存在阻塞I/O，诸如RPC、MongoDB与Redis的网络请求都是基于Netty异步实现的，如果更往下看，在Linux系统上，即都为epoll相关操作，因此服务端所需的线程数远远少于传统Java Web应用。以16核CPU为例，turms-gateway与turms-service的线程数峰值的范围约在80~140（含JVM内部线程）之间，具体峰值数要根据服务器的CPU内核数与所运行的服务端个数（如一个turms-gateway可以同时启动TCP/WebSocket/UDP服务端）而定。
+由于Turms服务端不存在阻塞I/O，诸如RPC、MongoDB与Redis的网络请求都是基于Netty异步实现的，如果更往下看，在Linux系统上，即都为epoll相关操作，因此服务端所需的线程数远远少于传统Java Web应用。
+
+以16核CPU为例，turms-gateway与turms-service的线程数峰值的范围约在80~140（含JVM内部线程）之间，具体峰值数要根据服务器的CPU内核数与所运行的服务端个数（如一个turms-gateway可以同时启动TCP/WebSocket/UDP服务端）而定。
 
 特别值得一提的是：Turms的线程峰值数与同时在线用户规模与请求QPS无关。
 
@@ -162,7 +164,36 @@ Java的内存占用一直为人所诟病，诸如一个Integer对象所存放的
 
 ### Turms线程列表
 
-TODO
+| 使用范围      | 类别                 | 线程名                                      | 数量    | 作用                                                     |
+| ------------- | -------------------- | ------------------------------------------- | ------- | -------------------------------------------------------- |
+| 通用          | Admin HTTP服务端线程 | turms-admin-http-accptor                    | 1       | Admin HTTP服务端Acceptor线程                             |
+|               |                      | turms-admin-http-worker                     | CPU核数 | Admin HTTP服务端Worker线程                               |
+|               | 用户黑名单           | turms-client-blocklist-sync                 | 1       | 用于同步集群间的黑名单数据                               |
+|               | 健康检测             | turms-health-checker                        | 1       |                                                          |
+|               | 日志                 | turms-log-processor                         | 1       | 用于日志格式化与输出                                     |
+|               | Shutdown             | turms-shutdown                              | 1       | 服务端关闭时，调度各组件的Shutdown任务                   |
+|               | 定时任务             | turms-task-manager                          | 1       | 用于调度定时任务                                         |
+|               | 集群实现             | turms-node-connection-client-io             | CPU核数 | 节点通信I/O线程                                          |
+|               |                      | turms-node-connection-keepalive             | 1       | 用于定时发送节点间的心跳，剔除心跳过期的对端节点         |
+|               |                      | turms-node-connection-retry                 | 1       | 节点连接重连线程                                         |
+|               |                      | turms-node-connection-server-acceptor       | 1       | 节点连接服务端Acceptor线程                               |
+|               |                      | turms-node-connection-server-worker         | CPU核数 | 节点连接服务端Worker线程                                 |
+|               |                      | turms-node-discovery-change-notifier        | 1       | 节点增删改事件通知线程                                   |
+|               |                      | turms-node-discovery-heartbeat-refresher    | 1       | 用于Leader节点在服务注册中心刷新心跳时间，               |
+|               | Redis客户端          | lettuce-event-loop                          |         | Redis客户端I/O线程                                       |
+|               | MongoDB              | turms-mongo-change-watcher                  | 1       | 用于执行MongoDB Change Stream回调函数                    |
+|               |                      | mongo-event-loop                            |         | MongoDB客户端I/O线程                                     |
+| turms-gateway | Fake客户端           | turms-fake-client                           | CPU核数 | Fake Turms客户端I/O线程                                  |
+|               |                      | turms-fake-client-manager                   | 1       | 调度Fake Turms客户端发送请求                             |
+|               |                      | turms-client-heartbeat-refresher            | 1       | 用于定时批量刷新客户端心跳                               |
+|               | Gateway服务端        | turms-gateway-udp-acceptor                  | 1       | UDP服务端Acceptor线程                                    |
+|               |                      | turms-gateway-udp-worker                    | CPU核数 | UDP服务端Worker线程                                      |
+|               |                      | turms-gateway-tcp-acceptor                  | 1       | TCP服务端Acceptor线程                                    |
+|               |                      | turms-gateway-tcp-worker                    | CPU核数 | TCP服务端Worker线程                                      |
+|               |                      | turms-gateway-ws-acceptor                   | 1       | WebSocket服务端Acceptor线程                              |
+|               |                      | turms-gateway-ws-worker                     | CPU核数 | WebSocket服务端Worker线程                                |
+|               |                      | turms-gateway-idle-connection-timeout-timer | 1       | 用于监听并关闭长期没与服务端建立应用层用户会话的网络连接 |
+|               | 客户端限流防刷       | turms-ip-request-token-bucket-cleaner       | 1       | 用于清除过期了的Token Bucket数据                         |
 
 ### 线程模型
 
