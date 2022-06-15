@@ -100,7 +100,7 @@ class MessageService extends BaseService {
         !notification.hasRelayedRequest() && notification.hasRequestId();
     if (isResponse) {
       final requestId = notification.requestId;
-      final context = _requestMap.remove(requestId);
+      final context = _idToRequest.remove(requestId);
       if (context != null) {
         context.timeoutTimer?.cancel();
         if (notification.hasCode()) {

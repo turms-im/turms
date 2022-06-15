@@ -19,18 +19,22 @@ Future<void> main() async {
 
   await client.userService.login(Int64(1), password: '123');
 
-  final users = await client.userService
-      .queryNearbyUsers(35.792657, 139.667651, distance: 100, maxNumber: 10);
+  final users = (await client.userService.queryNearbyUsers(
+          35.792657, 139.667651,
+          distance: 100, maxNumber: 10))
+      .data;
   print('nearby users: $users');
 
-  final msgId = await client.messageService
-      .sendMessage(false, Int64(1), text: 'Hello Turms', burnAfter: 30);
+  final msgId = (await client.messageService
+          .sendMessage(false, Int64(1), text: 'Hello Turms', burnAfter: 30))
+      .data;
   print('message $msgId has been sent');
 
-  final groupId = await client.groupService.createGroup(
-      'Turms Developers Group',
-      announcement:
-          'This is a group for the developers who are interested in Turms',
-      intro: 'nope');
+  final groupId = (await client.groupService.createGroup(
+          'Turms Developers Group',
+          announcement:
+              'This is a group for the developers who are interested in Turms',
+          intro: 'nope'))
+      .data;
   print('group $groupId has been created');
 }
