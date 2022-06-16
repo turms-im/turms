@@ -25,6 +25,7 @@ import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
 
 import java.util.Set;
 
@@ -73,8 +74,7 @@ class UserSessionsManagerTests {
     void pushSessionNotification_shouldReturnTrue_ifSessionExists() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
         manager.addSessionIfAbsent(version, deviceType, null, null)
-                .setNotificationConsumer((byteBuf, tracingContext) -> {
-                });
+                .setNotificationConsumer((byteBuf, tracingContext) -> Mono.empty());
         assertThat(manager.pushSessionNotification(deviceType, serverId)).isTrue();
     }
 

@@ -219,6 +219,7 @@ sequenceDiagram
            UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, address, closeIdleConnectionAfterSeconds,
                    userSession -> userSession.setNotificationConsumer((turmsNotificationBuffer, tracingContext) -> {
                        turmsNotificationBuffer.touch(turmsNotificationBuffer);
+                       turmsNotificationBuffer = turmsNotificationBuffer.duplicate();
                        NettyOutbound outbound = isWebSocketConnection
                                ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
                                : out.sendObject(turmsNotificationBuffer);
@@ -255,6 +256,8 @@ sequenceDiagram
                                return Mono.empty();
                            })
                            .flatMap(turmsNotificationBuffer -> {
+                               turmsNotificationBuffer.touch(turmsNotificationBuffer);
+                               turmsNotificationBuffer = turmsNotificationBuffer.duplicate();
                                NettyOutbound outbound = isWebSocketConnection
                                        ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
                                        : out.sendObject(turmsNotificationBuffer);
@@ -443,6 +446,7 @@ Mono<Boolean> forwardNotification(
 UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, address, closeIdleConnectionAfterSeconds,
         userSession -> userSession.setNotificationConsumer((turmsNotificationBuffer, tracingContext) -> {
             turmsNotificationBuffer.touch(turmsNotificationBuffer);
+            turmsNotificationBuffer = turmsNotificationBuffer.duplicate();
             NettyOutbound outbound = isWebSocketConnection
                     ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
                     : out.sendObject(turmsNotificationBuffer);

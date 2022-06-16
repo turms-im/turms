@@ -36,11 +36,13 @@ import im.turms.server.common.infra.proto.ProtoDecoder;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.server.common.infra.validation.Validator;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.RefCntAwareByteBuf;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -96,11 +98,7 @@ public class NotificationService implements INotificationService {
                 ? TurmsNotificationParser.parseSimpleNotification(ProtoDecoder.newInputStream(notificationData))
                 : null;
 
-        // RefCntAwareByteBuf is used to release the buffer to 0
-        // because when the method returns, Netty may not flush the buffer to recipients
-        RefCntAwareByteBuf wrappedNotificationData = new RefCntAwareByteBuf(notificationData, notificationData::release);
-
-        wrappedNotificationData.startRetainCounter();
+        List<Mono<Void>> monos = new ArrayList<>(recipientIds.size() >> 2);
 
         // Send notification
         for (Long recipientId : recipientIds) {
@@ -111,30 +109,32 @@ public class NotificationService implements INotificationService {
                 }
             } else {
                 for (UserSession userSession : userSessionsManager.getDeviceTypeToSession().values()) {
-                    wrappedNotificationData.retain();
+                    notificationData.retain();
                     // It's the responsibility of the downstream to decrease the reference count of the notification by 1
                     // when the notification is queued successfully and released by Netty, or fails to be queued.
-                    // Otherwise, there is a memory leak
-                    try {
-                        userSession.sendNotification(wrappedNotificationData, tracingContext);
-                    } catch (Exception e) {
-                        if (userSession.isSessionOpen()) {
-                            LOGGER.warn("Failed to send a notification to the session: {}", userSession);
-                        }
-                    }
-                    // Keep the logic easy, and we don't care about whether the notification is really flushed
+                    // Otherwise, there is a memory leak.
+                    monos.add(userSession.sendNotification(notificationData, tracingContext)
+                            .onErrorResume(t -> {
+                                if (userSession.isSessionOpen()) {
+                                    LOGGER.warn("Failed to send a notification to the session: {}", userSession);
+                                }
+                                return Mono.empty();
+                            }));
+                    // Keep the logic simple, and we don't care about whether the notification is really flushed
                     hasForwardedMessageToOneRecipient = true;
                     userSession.getConnection().tryNotifyClientToRecover();
                 }
             }
         }
 
-        wrappedNotificationData.stopRetainCounter();
-
         // Trigger plugins
         if (triggerHandlers) {
-            triggerPlugins(wrappedNotificationData, recipientIds, offlineRecipientIds);
+            triggerPlugins(notificationData, recipientIds, offlineRecipientIds);
         }
+
+        Mono.whenDelayError(monos)
+                .doFinally(signalType -> notificationData.release())
+                .subscribe(null, t -> LOGGER.error("Caugh an unexpected error while sending a notification to user sessions", t));
 
         if (isNotificationLoggingEnabled
                 && apiLoggingContext.shouldLogNotification(notification.relayedRequestType())) {

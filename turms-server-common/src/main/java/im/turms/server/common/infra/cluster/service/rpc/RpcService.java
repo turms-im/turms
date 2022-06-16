@@ -41,7 +41,6 @@ import im.turms.server.common.infra.lang.Null;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.property.env.common.cluster.RpcProperties;
 import im.turms.server.common.infra.random.RandomUtil;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
@@ -187,7 +186,11 @@ public class RpcService implements ClusterService {
                                 }
                                 return;
                             }
-                            conn.sendObject(ByteBufUtil.duplicateIfUnreleasable(buf))
+                            // Duplicate the buffer to use an independent reader index
+                            // because we don't want to modify the reader index of the original buffer
+                            // if it's an unreleasable buffer internally, or it may be sent to multiple endpoints.
+                            // Note that the content of the buffer is not copied, so "duplicate()" is efficient.
+                            conn.sendObject(buf.duplicate())
                                     .then()
                                     .subscribe(null, t -> {
                                         try (TracingCloseableContext ignored = ctx.asCloseable()) {

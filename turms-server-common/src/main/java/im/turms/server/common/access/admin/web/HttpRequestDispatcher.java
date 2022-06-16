@@ -328,7 +328,11 @@ public class HttpRequestDispatcher {
             response.header(HttpHeaderNames.CONTENT_ENCODING, endpoint.encoding());
         }
         return response
-                .sendObject(ByteBufUtil.duplicateIfUnreleasable(mediaTypeAndBuffer.second()))
+                // Duplicate the buffer to use an independent reader index
+                // because we don't want to modify the reader index of the original buffer
+                // if it's an unreleasable buffer internally, or it may be sent to multiple endpoints.
+                // Note that the content of the buffer is not copied, so "duplicate()" is efficient.
+                .sendObject(mediaTypeAndBuffer.second().duplicate())
                 .then();
     }
 

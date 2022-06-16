@@ -26,8 +26,6 @@ import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.RefCntCorrectorByteBuf;
 import io.netty.buffer.Unpooled;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * @author James Chen
  */
@@ -50,13 +48,6 @@ public final class ByteBufUtil {
     }
 
     private ByteBufUtil() {
-    }
-
-    public static ByteBuf duplicateIfUnreleasable(ByteBuf byteBuf) {
-        if (ByteBufs.isUnreleasable(byteBuf)) {
-            return byteBuf.duplicate();
-        }
-        return byteBuf;
     }
 
     @VisibleForTesting

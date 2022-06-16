@@ -68,7 +68,10 @@ class NotificationServiceTests {
         UserSession session = new UserSession(1, 1L, DeviceType.ANDROID, null, new Location(1F, 1F));
         session.setConnection(connection, new ByteArrayWrapper(new byte[]{}));
         Sinks.One<ByteBuf> sink = Sinks.one();
-        session.setNotificationConsumer((notification, tracingContext) -> sink.tryEmitValue(notification));
+        session.setNotificationConsumer((notification, tracingContext) -> {
+            sink.tryEmitValue(notification);
+            return Mono.empty();
+        });
         Mono<ByteBuf> result = sink.asMono()
                 .flatMap(byteBuf -> Mono
                         // Wait 1s to simulate the async process

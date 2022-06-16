@@ -91,7 +91,12 @@ public final class RpcEndpoint {
                 break;
             }
             // sendObject() will release the buffer no matter it succeeds or fails
-            conn.sendObject(ByteBufUtil.duplicateIfUnreleasable(buffer))
+
+            // Duplicate the buffer to use an independent reader index
+            // because we don't want to modify the reader index of the original buffer
+            // if it's an unreleasable buffer internally, or it may be sent to multiple endpoints.
+            // Note that the content of the buffer is not copied, so "duplicate()" is efficient.
+            conn.sendObject(buffer.duplicate())
                     .then()
                     .subscribe(null, t -> resolveRequest(requestId, null, t));
             break;

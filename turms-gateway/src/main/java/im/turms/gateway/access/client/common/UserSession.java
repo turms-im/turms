@@ -31,6 +31,7 @@ import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -38,7 +39,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
-import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 /**
  * @author James Chen
@@ -77,7 +78,7 @@ public final class UserSession {
      * 2. The ByteBuf (TurmsNotification) comes from turms-services servers in most scenarios.
      */
     @Getter(AccessLevel.PRIVATE)
-    private BiConsumer<ByteBuf, TracingContext> notificationConsumer;
+    private BiFunction<ByteBuf, TracingContext, Mono<Void>> notificationConsumer;
     private volatile long lastHeartbeatRequestTimestampMillis;
     private volatile long lastRequestTimestampMillis;
     // No need to add volatile because it can only be accessed by one thread
@@ -149,14 +150,14 @@ public final class UserSession {
         return deviceType != DeviceType.BROWSER;
     }
 
-    public void sendNotification(ByteBuf byteBuf) {
+    public Mono<Void> sendNotification(ByteBuf byteBuf) {
         // Note that we do not check if the consumer is null
-        notificationConsumer.accept(byteBuf, TracingContext.NOOP);
+        return notificationConsumer.apply(byteBuf, TracingContext.NOOP);
     }
 
-    public void sendNotification(ByteBuf byteBuf, TracingContext tracingContext) {
+    public Mono<Void> sendNotification(ByteBuf byteBuf, TracingContext tracingContext) {
         // Note that we do not check if the consumer is null
-        notificationConsumer.accept(byteBuf, tracingContext);
+        return notificationConsumer.apply(byteBuf, tracingContext);
     }
 
     public boolean acquireDeleteSessionRequestLoggingLock() {
