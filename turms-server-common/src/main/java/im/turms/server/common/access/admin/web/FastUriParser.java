@@ -17,10 +17,10 @@
 
 package im.turms.server.common.access.admin.web;
 
+import im.turms.server.common.infra.collection.ChunkedArrayList;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -85,7 +85,7 @@ public class FastUriParser {
                             currentParamKey = newParamKey;
                             i += 2;
                             arrayIndexBeginIndex = i + 1;
-                            currentParamValues = queryParams.computeIfAbsent(currentParamKey, s -> new ArrayList<>(16));
+                            currentParamValues = queryParams.computeIfAbsent(currentParamKey, s -> new ChunkedArrayList<>(16, 4));
                             currentState = ParseState.PARSING_QUERY_PARAM_KEY_ARRAY_INDEX;
                         } else {
                             // %5B => [
@@ -100,7 +100,7 @@ public class FastUriParser {
                             hasArrayWithIndexes = false;
                         }
                         currentParamKey = newParamKey;
-                        currentParamValues = queryParams.computeIfAbsent(currentParamKey, s -> new ArrayList<>(16));
+                        currentParamValues = queryParams.computeIfAbsent(currentParamKey, s -> new ChunkedArrayList<>(16, 4));
                         arrayIndexBeginIndex = i + 1;
                         currentState = ParseState.PARSING_QUERY_PARAM_KEY_ARRAY_INDEX;
                     } else if (b == '=') {
@@ -111,7 +111,7 @@ public class FastUriParser {
                             hasArrayWithIndexes = false;
                         }
                         currentParamKey = newParamKey;
-                        currentParamValues = queryParams.computeIfAbsent(currentParamKey, s -> new ArrayList<>(16));
+                        currentParamValues = queryParams.computeIfAbsent(currentParamKey, s -> new ChunkedArrayList<>(16, 4));
                         itemBeginIndex = i + 1;
                         currentState = ParseState.PARSING_QUERY_PARAM_VALUE;
                     } else if (b == '.') {
@@ -231,6 +231,12 @@ public class FastUriParser {
                         } else {
                             throw new IllegalArgumentException("The query parameters can only contain escape codes of %2C");
                         }
+                    } else if (b == ',') {
+                        if (currentParamNestedKey != null) {
+                            throw new IllegalArgumentException("The array query parameter cannot contain nested keys");
+                        }
+                        length = i - itemBeginIndex;
+                        isValueDelimiter = true;
                     }
                     if (length != -1) {
                         value = StringUtil.newLatin1String(srcBytes, itemBeginIndex, length);

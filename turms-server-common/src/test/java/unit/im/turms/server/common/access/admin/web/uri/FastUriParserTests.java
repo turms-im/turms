@@ -48,6 +48,17 @@ class FastUriParserTests {
                 .isEqualTo(Pair.of("/hello/world", Collections.emptyMap()));
 
         actual = parsePathAndQueryParams("/hello/world?" +
+                "empty=&" +
+                "ids=123,321,789,987&" +
+                "mybool=true");
+        assertThat(actual)
+                .isEqualTo(Pair.of("/hello/world", Map.of(
+                        "empty", List.of(""),
+                        "ids", List.of("123", "321", "789", "987"),
+                        "mybool", List.of("true")
+                )));
+
+        actual = parsePathAndQueryParams("/hello/world?" +
                 "singleKey=singleValue&" +
                 "nestObjects[0].a=1&nestObjects[0].b=2&nestObjects[1].a=3&nestObjects[1].b=4&" +
                 "firstValues=value&firstValues=value2&firstValues=value3&" +
