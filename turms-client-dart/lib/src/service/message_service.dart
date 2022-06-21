@@ -64,11 +64,10 @@ class DriverMessageService {
           ResponseStatusCode.illegalArgument,
           '"text" and "records" must not all be null');
     }
-    deliveryDate ??= DateTime.now();
     final n = await _turmsClient.driver.send(CreateMessageRequest(
         groupId: isGroupMessage ? targetId : null,
         recipientId: !isGroupMessage ? targetId : null,
-        deliveryDate: deliveryDate.toInt64(),
+        deliveryDate: deliveryDate?.toInt64(),
         text: text,
         records: records,
         burnAfter: burnAfter,

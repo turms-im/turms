@@ -56,7 +56,7 @@ class MessageService(private val turmsClient: TurmsClient) {
     suspend fun sendMessage(
         isGroupMessage: Boolean,
         targetId: Long,
-        deliveryDate: Date = Date(),
+        deliveryDate: Date? = null,
         text: String? = null,
         records: List<ByteBuffer>? = null,
         burnAfter: Int? = null,
@@ -73,7 +73,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                     } else {
                         this.recipientId = targetId
                     }
-                    this.deliveryDate = deliveryDate.time
+                    deliveryDate?.let { this.deliveryDate = it.time }
                     text?.let { this.text = it }
                     records?.let { this.addAllRecords(it.map { buffer -> ByteString.copyFrom(buffer) }) }
                     burnAfter?.let { this.burnAfter = it }

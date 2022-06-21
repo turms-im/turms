@@ -74,9 +74,6 @@ export default class MessageService {
         if (Validator.isFalsy(text) && Validator.isFalsy(records)) {
             return ResponseError.illegalParamPromise('text and records must not all be null');
         }
-        if (!deliveryDate) {
-            deliveryDate = new Date();
-        }
         return this._turmsClient.driver.send({
             createMessageRequest: {
                 groupId: isGroupMessage ? targetId : undefined,

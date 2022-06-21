@@ -127,7 +127,7 @@ public class MessageServiceController {
                     }
                 }
                 Integer burnAfter = request.hasBurnAfter() ? request.getBurnAfter() : null;
-                Date deliveryDate = new Date(request.getDeliveryDate());
+                Date deliveryDate = request.hasDeliveryDate() ? new Date(request.getDeliveryDate()) : null;
                 Long preMessageId = request.hasPreMessageId() ? request.getPreMessageId() : null;
                 messageAndRelatedUserIdsMono = messageService.authAndSaveMessage(
                         null,
@@ -144,26 +144,28 @@ public class MessageServiceController {
             }
             return messageAndRelatedUserIdsMono.map(pair -> {
                 Message message = pair.message();
+                // "message" is null if persisting messages is disabled
                 Long messageId = message == null ? null : message.getId();
                 Set<Long> recipientIds = pair.recipientIds();
                 boolean hasDataForRecipients = recipientIds != null && !recipientIds.isEmpty();
                 if (messageId == null) {
-                    if (hasDataForRecipients) {
-                        TurmsRequest dataForRecipients = clientRequest.turmsRequest();
-                        if (messageService.getTimeType() == TimeType.LOCAL_SERVER_TIME) {
-                            dataForRecipients = ClientMessagePool
-                                    .getTurmsRequestBuilder()
-                                    .mergeFrom(clientRequest.turmsRequest())
-                                    .setCreateMessageRequest(ClientMessagePool
-                                            .getCreateMessageRequestBuilder()
-                                            .mergeFrom(request)
-                                            .setDeliveryDate(System.currentTimeMillis()))
-                                    .build();
-                        }
-                        return RequestHandlerResultFactory.get(
-                                recipientIds,
-                                dataForRecipients);
+                    if (!hasDataForRecipients) {
+                        return RequestHandlerResultFactory.get(ResponseStatusCode.OK);
                     }
+                    TurmsRequest dataForRecipients = clientRequest.turmsRequest();
+                    if (messageService.getTimeType() == TimeType.LOCAL_SERVER_TIME) {
+                        dataForRecipients = ClientMessagePool
+                                .getTurmsRequestBuilder()
+                                .mergeFrom(clientRequest.turmsRequest())
+                                .setCreateMessageRequest(ClientMessagePool
+                                        .getCreateMessageRequestBuilder()
+                                        .mergeFrom(request)
+                                        .setDeliveryDate(System.currentTimeMillis()))
+                                .build();
+                    }
+                    return RequestHandlerResultFactory.get(
+                            recipientIds,
+                            dataForRecipients);
                 } else {
                     if (!hasDataForRecipients) {
                         return RequestHandlerResultFactory.get(messageId);
@@ -195,7 +197,6 @@ public class MessageServiceController {
                             sendMessageToOtherSenderOnlineDevices,
                             dataForRecipients);
                 }
-                return RequestHandlerResultFactory.get(ResponseStatusCode.OK);
             });
         };
     }
