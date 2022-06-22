@@ -110,3 +110,7 @@ Turms服务端的接口文档采用[OpenAPI 3.0](https://swagger.io/specificatio
 ## 统计
 
 当前对外暴露的统计相关接口多为Legacy API，不推荐使用。我们会在之后对其进行调整与重构。具体原因请查阅[数据分析](https://turms-im.github.io/docs/for-developers/data-analytics.html)章节。
+
+## 管理员API接口安全
+
+用户向Turms服务端发送的每个HTTP请求都会经过Turms服务端的认证与授权流程，具体内容可见[管理员安全](https://turms-im.github.io/docs/for-developers/security.html#%E7%AE%A1%E7%90%86%E5%91%98%E5%AE%89%E5%85%A8)。

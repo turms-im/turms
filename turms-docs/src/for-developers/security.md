@@ -146,11 +146,44 @@ TODO
 
 ### 管理员认证与授权
 
-TODO
+#### 认证（Authentication）
 
-### 管理员API接口安全
+认证：服务端基于常见的HTTP Basic authentication实现，确认HTTP请求的发送者是哪位管理员。
 
-TODO
+配置项：`turms.security.password.admin-password-encoding-algorithm`，其可选值为：`bcrypt`（默认）、`salted_sha256`与`noop`。
+
+##### 支持的密钥加密算法
+
+* BCrypt。其`cost`为硬编码的`10`（2^10 rounds），用于避免被脱库时，黑客通过彩虹表轻松破解出明文密码。
+  
+  其具体算法实现可查看`turms-server-common`子项目下Fork的`Bouncy Castle`源码实现：`org.bouncycastle.crypto.generators.BCrypt#generate`
+  
+* 加盐Sha256
+
+* NOOP（明文存储）
+
+特别一提：`admin`集合里的`password`字段，其存储形式并不是`string`（如常见的Base64编码的字符串），而是原始的`byte[]`字节数据。
+
+#### 授权（Authorization）
+
+授权：服务端确认HTTP请求的发送者有什么权限做什么事
+
+由于Turms自身权限管理的需求很简单，因此其设计与实现也比较简单，比如没有用户组、组角色、角色继承等概念，没有用户与角色的多对多关系。具体而言，Turms采用RBAC（基于角色的访问控制）设计方案。
+
+##### Turms的RBAC模型
+
+Turms的RBAC模型由`管理员（Admin）`、`角色（Role）`以及`权限（Permission）`这三个主体构成。一个用户只可以有一个角色，一个角色可以有多个权限。其中：
+
+* 每个角色还具有一个字段`rank`，只有相对高rank的管理员可以增、删与修改相对低rank的管理员账号信息，如密码。
+* 权限用于描述角色可以对什么资源进行什么操作，如对用户资源进行增删改查操作
+
+##### 特殊角色——Root
+
+`Root`是Turms内置的管理员角色，拥有所有管理员权限，并且不能被修改与删除。
+
+##### 特殊根账号——turms
+
+根账号`turms`用户拥有`Root`根角色权限，其账号名暂不支持修改（但可以通过修改硬编码的`im.turms.server.common.domain.admin.constant.AdminConst#ROOT_ADMIN_ACCOUNT`值来修改根账号名），其初始密码默认为`turms`，但用户可以通过配置项`turms.security.password.initial-root-password`在`admin`集合尚未创建、turms-service启动时，应用自定义的初始密码。
 
 ## 日志脱敏
 
