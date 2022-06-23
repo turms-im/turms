@@ -158,7 +158,7 @@ TODO
   
   其具体算法实现可查看`turms-server-common`子项目下Fork的`Bouncy Castle`源码实现：`org.bouncycastle.crypto.generators.BCrypt#generate`
   
-* 加盐Sha256
+* 加盐SHA-256
 
 * NOOP（明文存储）
 

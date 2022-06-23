@@ -223,8 +223,8 @@ sequenceDiagram
                        NettyOutbound outbound = isWebSocketConnection
                                ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
                                : out.sendObject(turmsNotificationBuffer);
-                       Mono.from(outbound)
-                               .subscribe(null, t -> handleConnectionError(t, netConnection, userSession, tracingContext));
+                       return Mono.from(outbound)
+                               .doOnError(t -> handleConnectionError(t, netConnection, userSession, tracingContext));
                    }));
            respondToRequests(connection, isWebSocketConnection, in, out, sessionWrapper);
            return tryRemoveSessionInfoOnConnectionClosed(onClose, sessionWrapper);
@@ -450,8 +450,8 @@ UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, addres
             NettyOutbound outbound = isWebSocketConnection
                     ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
                     : out.sendObject(turmsNotificationBuffer);
-            Mono.from(outbound)
-                    .subscribe(null, t -> handleConnectionError(t, netConnection, userSession, tracingContext));
+            return Mono.from(outbound)
+                    .doOnError(t -> handleConnectionError(t, netConnection, userSession, tracingContext));
         }));
 ```
 

@@ -21,11 +21,19 @@
 
   * 对比A应用需要消息存储功能，而B应用不用。因此在B应用的架构设计中甚至都不要用到存储消息的表（当然，实际应用中一般还是会存储用户消息来做用户行为分析）。因此二者对硬件需求也截然不同。
 
+## 本地配置与全局配置
+
+Turms服务端具有本地配置与全局配置两大类配置，其中：
+
+|          | 本地配置                                                     | 全局配置                                                     |
+| -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 应用域   | 仅对当前节点生效                                             | 对集群中所有节点生效                                         |
+| 存储位置 | 存储在本地的`application-[profile].yaml`文件中               | 存储在MongoDB数据库中`turms-config/shared-cluster-properties`集合中 |
+| 可变     | 对于标有`MutableProperty`注释的属性，用户都能通过供管理员专用的API接口在Turms集群运行时进行零停机实时更新 | 同左                                                         |
+
 ## 配置分类
 
 Turms属性分为三大类配置：Turms Service配置、Turms Gateway配置，以及Common通用配置。Turms Service配置对应turms服务端独有的配置，Turms Gateway配置对应turms-gateway服务端独有的配置，而Common通用配置可以被turms和turms-gateway服务端共用。
-
-每个类别中的属性都能通过`application.yaml`配置，并且对于标有`MutablePropertiesView`注释的属性，您都能通过供管理员专用的API接口在Turms集群运行时进行零停机实时更新。
 
 由于所有的配置项高达上百个，直接看代码比看文档更加直观，因此推荐您直接查阅`im.turms.server.common.infra.property`目录下各配置类，下文仅对大的分类做简要介绍。
 
