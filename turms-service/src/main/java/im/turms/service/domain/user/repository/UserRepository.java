@@ -148,6 +148,21 @@ public class UserRepository extends BaseRepository<User, Long> {
         return mongoClient.findMany(entityClass, filter, options);
     }
 
+    public Mono<User> findNotDeletedUserProfile(Long userId) {
+        Filter filter = Filter.newBuilder(2)
+                .eq(DomainFieldName.ID, userId)
+                .eq(User.Fields.DELETION_DATE, null);
+        QueryOptions options = QueryOptions.newBuilder(1)
+                .include(DomainFieldName.ID,
+                        User.Fields.NAME,
+                        User.Fields.INTRO,
+                        User.Fields.REGISTRATION_DATE,
+                        User.Fields.PROFILE_ACCESS,
+                        User.Fields.PERMISSION_GROUP_ID,
+                        User.Fields.IS_ACTIVE);
+        return mongoClient.findOne(entityClass, filter, options);
+    }
+
     public Flux<User> findUsersProfile(Collection<Long> userIds, boolean queryDeletedRecords) {
         Filter filter = Filter.newBuilder(2)
                 .in(DomainFieldName.ID, userIds)

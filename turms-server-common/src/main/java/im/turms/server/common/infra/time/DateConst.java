@@ -27,6 +27,11 @@ public final class DateConst {
     private DateConst() {
     }
 
-    public static final Date EPOCH = new Date(0);
+    public static final Date EPOCH = new Date(0) {
+        @Override
+        public void setTime(long time) {
+            throw new UnsupportedOperationException("Should not modify the time of epoch");
+        }
+    };
 
 }

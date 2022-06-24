@@ -224,7 +224,6 @@ public class MessageServiceController {
                             fromId,
                             userId,
                             dateRange,
-                            null,
                             0,
                             size,
                             withTotal)

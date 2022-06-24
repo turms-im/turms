@@ -27,6 +27,8 @@ import java.util.Date;
  */
 public record DateRange(Date start, Date end) {
 
+    public static final DateRange NULL = new DateRange(null, null);
+
     public DateRange {
         if (start != null && end != null && end.before(start)) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The end date must not be before the start date");

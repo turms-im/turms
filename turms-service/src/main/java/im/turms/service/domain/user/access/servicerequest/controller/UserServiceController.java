@@ -123,8 +123,7 @@ public class UserServiceController {
             QueryUserProfileRequest request = clientRequest.turmsRequest().getQueryUserProfileRequest();
             return userService.authAndQueryUserProfile(
                             clientRequest.userId(),
-                            request.getUserId(),
-                            false)
+                            request.getUserId())
                     .map(user -> {
                         UsersInfosWithVersion.Builder userBuilder = ClientMessagePool
                                 .getUsersInfosWithVersionBuilder()

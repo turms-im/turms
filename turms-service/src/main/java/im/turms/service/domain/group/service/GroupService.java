@@ -612,18 +612,23 @@ public class GroupService {
                         : Mono.error(ResponseException.get(code)));
     }
 
-    public Mono<GroupsWithVersion> queryGroupWithVersion(
+    public Mono<GroupsWithVersion> authAndQueryGroupWithVersion(
             @NotNull Long groupId,
             @Nullable Date lastUpdatedDate) {
         return groupVersionService.queryInfoVersion(groupId)
                 .flatMap(version -> DateUtil.isAfterOrSame(lastUpdatedDate, version)
                         ? ResponseExceptionPublisherPool.alreadyUpToUpdate()
                         : groupRepository.findById(groupId)
-                        .map(group -> ClientMessagePool
-                                .getGroupsWithVersionBuilder()
-                                .addGroups(ProtoModelConvertor.group2proto(group))
-                                .setLastUpdatedDate(version.getTime())
-                                .build()))
+                        .flatMap(group -> {
+                            if (group.getDeletionDate() == null) {
+                                return Mono.just(ClientMessagePool
+                                        .getGroupsWithVersionBuilder()
+                                        .addGroups(ProtoModelConvertor.group2proto(group))
+                                        .setLastUpdatedDate(version.getTime())
+                                        .build());
+                            }
+                            return ResponseExceptionPublisherPool.alreadyUpToUpdate();
+                        }))
                 .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
     }
 

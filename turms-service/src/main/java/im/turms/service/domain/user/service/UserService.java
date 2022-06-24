@@ -265,8 +265,7 @@ public class UserService {
 
     public Mono<User> authAndQueryUserProfile(
             @NotNull Long requesterId,
-            @NotNull Long userId,
-            boolean queryDeletedRecords) {
+            @NotNull Long userId) {
         try {
             Validator.notNull(requesterId, "requesterId");
             Validator.notNull(userId, "userId");
@@ -279,7 +278,7 @@ public class UserService {
                     if (code != ResponseStatusCode.OK) {
                         return Mono.error(ResponseException.get(code, permission.reason()));
                     }
-                    return queryUsersProfile(Set.of(userId), queryDeletedRecords).singleOrEmpty();
+                    return userRepository.findNotDeletedUserProfile(userId);
                 });
     }
 

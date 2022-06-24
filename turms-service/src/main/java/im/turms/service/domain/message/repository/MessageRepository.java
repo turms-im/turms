@@ -177,8 +177,12 @@ public class MessageRepository extends BaseRepository<Message, Long> {
                 .eqIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)
                 .inIfNotNull(Message.Fields.SENDER_ID, senderIds)
                 .inIfNotNull(Message.Fields.TARGET_ID, targetIds)
-                .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, deliveryDateRange)
-                .addBetweenIfNotNull(Message.Fields.DELETION_DATE, deletionDateRange);
+                .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, deliveryDateRange);
+        if (deletionDateRange == DateRange.NULL) {
+            filter.eq(Message.Fields.DELETION_DATE, null);
+        } else {
+            filter.addBetweenIfNotNull(Message.Fields.DELETION_DATE, deletionDateRange);
+        }
         if (enableConversationId) {
             int conversationIdSize = CollectionUtil.getSize(senderIds) * CollectionUtil.getSize(targetIds);
             // fast path

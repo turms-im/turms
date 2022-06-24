@@ -127,14 +127,16 @@ public class MessageController extends BaseController {
             @QueryParam(required = false) Date deletionDateEnd,
             int page,
             @QueryParam(required = false) Integer size) {
+        DateRange deliveryDateRange = DateRange.of(deliveryDateStart, deliveryDateEnd);
+        DateRange deletionDateRange = DateRange.of(deletionDateStart, deletionDateEnd);
         Mono<Long> count = messageService.countMessages(
                 ids,
                 areGroupMessages,
                 areSystemMessages,
                 senderIds,
                 targetIds,
-                DateRange.of(deliveryDateStart, deliveryDateEnd),
-                DateRange.of(deletionDateStart, deletionDateEnd));
+                deliveryDateRange,
+                deletionDateRange);
         Flux<Message> completeMessagesFlux = messageService.queryMessages(
                 false,
                 ids,
@@ -142,8 +144,8 @@ public class MessageController extends BaseController {
                 areSystemMessages,
                 senderIds,
                 targetIds,
-                DateRange.of(deliveryDateStart, deliveryDateEnd),
-                DateRange.of(deletionDateStart, deletionDateEnd),
+                deliveryDateRange,
+                deletionDateRange,
                 page,
                 getPageSize(size));
         return HttpHandlerResult.page(count, completeMessagesFlux);

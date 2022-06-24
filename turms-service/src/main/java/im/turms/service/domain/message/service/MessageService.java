@@ -292,7 +292,6 @@ public class MessageService {
             @Nullable Long senderId,
             @Nullable Long targetId,
             @Nullable DateRange deliveryDateRange,
-            @Nullable DateRange deletionDateRange,
             @Nullable Integer page,
             @Nullable Integer size,
             boolean withTotal) {
@@ -312,7 +311,7 @@ public class MessageService {
                 senderId == null ? null : Set.of(senderId),
                 targetId == null ? null : Set.of(targetId),
                 deliveryDateRange,
-                deletionDateRange,
+                DateRange.NULL,
                 page,
                 size);
     }
@@ -337,8 +336,12 @@ public class MessageService {
             @Nullable DateRange deletionDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
-        return messageRepository.findMessages(useConversationId, closeToDate,
-                messageIds, areGroupMessages, areSystemMessages,
+        return messageRepository.findMessages(
+                useConversationId,
+                closeToDate,
+                messageIds,
+                areGroupMessages,
+                areSystemMessages,
                 senderIds,
                 targetIds,
                 deliveryDateRange,
@@ -764,9 +767,6 @@ public class MessageService {
                 });
     }
 
-    /**
-     * clone a new message rather than using its ID as a reference
-     */
     public Mono<MessageAndRecipientIds> authAndCloneAndSaveMessage(
             @NotNull Long requesterId,
             @NotNull Long referenceId,

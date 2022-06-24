@@ -204,7 +204,7 @@ public class GroupServiceController {
             Date lastUpdatedDate = request.hasLastUpdatedDate()
                     ? new Date(request.getLastUpdatedDate())
                     : null;
-            return groupService.queryGroupWithVersion(request.getGroupId(), lastUpdatedDate)
+            return groupService.authAndQueryGroupWithVersion(request.getGroupId(), lastUpdatedDate)
                     .map(groupsWithVersion -> RequestHandlerResultFactory.get(ClientMessagePool
                             .getTurmsNotificationDataBuilder()
                             .setGroupsWithVersion(groupsWithVersion)
