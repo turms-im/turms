@@ -178,12 +178,14 @@ public final class MongoFakingManager {
                 1L,
                 "ADMIN",
                 AdminPermission.ALL,
-                0);
+                0,
+                now);
         AdminRole guestRole = new AdminRole(
                 guestRoleId,
                 "GUEST",
                 Sets.union(AdminPermission.ALL_QUERY, AdminPermission.ALL_CREATE),
-                0);
+                0,
+                now);
         adminRelatedObjs.add(adminRole);
         adminRelatedObjs.add(guestRole);
 

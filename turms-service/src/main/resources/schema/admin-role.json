@@ -4,7 +4,8 @@
     "required": [
       "perm",
       "rank",
-      "n"
+      "n",
+      "cd"
     ],
     "properties": {
       "_id": {
@@ -21,6 +22,9 @@
       },
       "n": {
         "bsonType": "string"
+      },
+      "cd": {
+        "bsonType": "date"
       }
     }
   }

@@ -24,6 +24,7 @@ import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -60,10 +61,14 @@ public final class AdminRole extends BaseEntity {
     @Field(Fields.RANK)
     private final Integer rank;
 
+    @Field(Fields.CREATION_DATE)
+    private final Date creationDate;
+
     public static final class Fields {
         public static final String NAME = "n";
         public static final String PERMISSIONS = "perm";
         public static final String RANK = "rank";
+        public static final String CREATION_DATE = "cd";
 
         private Fields() {
         }

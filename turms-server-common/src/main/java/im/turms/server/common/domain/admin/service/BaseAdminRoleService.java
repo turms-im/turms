@@ -26,6 +26,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.reactor.PublisherPool;
+import im.turms.server.common.infra.time.DateConst;
 import im.turms.server.common.infra.validation.Validator;
 import reactor.core.publisher.Mono;
 
@@ -44,7 +45,7 @@ public abstract class BaseAdminRoleService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseAdminRoleService.class);
 
     private static final AdminRole ROOT_ROLE =
-            new AdminRole(ADMIN_ROLE_ROOT_ID, "ROOT", AdminPermission.ALL, Integer.MAX_VALUE);
+            new AdminRole(ADMIN_ROLE_ROOT_ID, "ROOT", AdminPermission.ALL, Integer.MAX_VALUE, DateConst.EPOCH);
 
     private final Map<Long, AdminRole> idToRole = new ConcurrentHashMap<>(16);
     private final BaseRepository<AdminRole, Long> adminRoleRepository;

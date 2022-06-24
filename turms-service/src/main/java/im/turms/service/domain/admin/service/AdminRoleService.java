@@ -41,6 +41,7 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -118,10 +119,10 @@ public class AdminRoleService extends BaseAdminRoleService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        AdminRole adminRole = new AdminRole(roleId, name, permissions, rank);
-        if (adminRole.getId().equals(ADMIN_ROLE_ROOT_ID)) {
+        if (roleId.equals(ADMIN_ROLE_ROOT_ID)) {
             return Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED, "The new role ID cannot be the root role ID"));
         }
+        AdminRole adminRole = new AdminRole(roleId, name, permissions, rank, new Date());
         return adminRoleRepository.insert(adminRole)
                 .then(Mono.fromCallable(() -> {
                     idToRole.put(adminRole.getId(), adminRole);

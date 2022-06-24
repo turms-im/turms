@@ -97,10 +97,14 @@ export default {
                         width: '15%'
                     },
                     {
+                        key: 'creationDate',
+                        width: '15%'
+                    },
+                    {
                         title: 'permission',
                         key: 'permissions',
                         type: 'TREE',
-                        width: '45%'
+                        width: '30%'
                     },
                     {
                         key: 'operation',
