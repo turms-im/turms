@@ -17,9 +17,11 @@
 
 package im.turms.server.common.domain.notification.service;
 
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.infra.tracing.TracingContext;
 import io.netty.buffer.ByteBuf;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -32,6 +34,7 @@ public interface INotificationService {
     boolean sendNotificationToLocalClients(
             @NotNull TracingContext context,
             @NotNull ByteBuf notificationData,
-            @NotEmpty Set<Long> recipientIds);
+            @NotEmpty Set<Long> recipientIds,
+            @Nullable DeviceType excludedDeviceType);
 
 }

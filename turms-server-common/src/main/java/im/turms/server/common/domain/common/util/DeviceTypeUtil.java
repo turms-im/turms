@@ -23,6 +23,7 @@ import org.eclipse.collections.api.map.primitive.ByteObjectMap;
 import org.eclipse.collections.api.map.primitive.MutableByteObjectMap;
 import org.eclipse.collections.impl.factory.primitive.ByteObjectMaps;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
@@ -45,7 +46,23 @@ public final class DeviceTypeUtil {
     // No need to use volatile or CAS
     private static ByteObjectMap<Set<DeviceType>> byteToDeviceTypes = ByteObjectMaps.immutable.empty();
 
+    static {
+        if (DEVICE_TYPE_COUNT > Byte.SIZE) {
+            throw new IllegalStateException("Too many device types to support. Maximum supported device types: " + Byte.SIZE);
+        }
+    }
+
     private DeviceTypeUtil() {
+    }
+
+    @Nullable
+    public static DeviceType byte2DeviceType(byte deviceTypesByte) {
+        for (int i = 0; i < DEVICE_TYPE_COUNT; i++) {
+            if (BitUtil.isBitSet(deviceTypesByte, i)) {
+                return ALL_DEVICE_TYPES[i];
+            }
+        }
+        return null;
     }
 
     public static Set<DeviceType> byte2DeviceTypes(byte deviceTypesByte) {
@@ -60,7 +77,12 @@ public final class DeviceTypeUtil {
         return deviceTypes;
     }
 
-    public static byte deviceTypesToByte(Set<DeviceType> deviceTypes) {
+    public static byte deviceType2Byte(DeviceType deviceType) {
+        validDeviceType(deviceType);
+        return (byte) (1 << deviceType.getNumber());
+    }
+
+    public static byte deviceTypes2Byte(Set<DeviceType> deviceTypes) {
         if (deviceTypes == null || deviceTypes.isEmpty()) {
             return 0;
         }

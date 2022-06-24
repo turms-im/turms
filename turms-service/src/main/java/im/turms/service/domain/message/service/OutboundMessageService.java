@@ -41,6 +41,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -119,7 +120,7 @@ public class OutboundMessageService {
                         notificationData.release();
                         return PublisherPool.FALSE;
                     }
-                    Mono<Boolean> mono = forwardClientMessageToNodes(notificationData, nodeIds, recipientId);
+                    Mono<Boolean> mono = forwardClientMessageToNodes(notificationData, nodeIds, recipientId, excludedDeviceType);
                     return tryLogNotification(mono, notificationForLogging, 1);
                 })
                 .switchIfEmpty(Mono.fromCallable(() -> {
@@ -187,7 +188,7 @@ public class OutboundMessageService {
                         notificationData.release();
                         return PublisherPool.FALSE;
                     }
-                    return forwardClientMessageToNodes(notificationData, nodeIds, recipientId);
+                    return forwardClientMessageToNodes(notificationData, nodeIds, recipientId, null);
                 })
                 .switchIfEmpty(Mono.fromCallable(() -> {
                     notificationData.release();
@@ -206,13 +207,13 @@ public class OutboundMessageService {
         }
         if (size == 1) {
             String nodeId = nodeIds.iterator().next();
-            return forwardClientMessageToNode(messageData, nodeId, nodeIdToRecipientIds.get(nodeId));
+            return forwardClientMessageToNode(messageData, nodeId, nodeIdToRecipientIds.get(nodeId), null);
         }
         List<Mono<Boolean>> monos = new ArrayList<>(size);
         messageData.retain(size);
         for (String nodeId : nodeIds) {
             Set<Long> recipientIds = nodeIdToRecipientIds.get(nodeId);
-            monos.add(forwardClientMessageToNode(messageData, nodeId, recipientIds));
+            monos.add(forwardClientMessageToNode(messageData, nodeId, recipientIds, null));
         }
         return PublisherUtil.atLeastOneTrue(monos)
                 .doFinally(signal -> messageData.release());
@@ -221,18 +222,20 @@ public class OutboundMessageService {
     private Mono<Boolean> forwardClientMessageToNodes(
             @NotNull ByteBuf messageData,
             @NotNull Set<String> nodeIds,
-            @NotNull Long recipientId) {
+            @NotNull Long recipientId,
+            @Nullable DeviceType excludedDeviceType) {
         int size = nodeIds.size();
         if (size == 0) {
             messageData.release();
             return PublisherPool.FALSE;
         }
         if (size == 1) {
-            return forwardClientMessageToNode(messageData, nodeIds.iterator().next(), Set.of(recipientId));
+            return forwardClientMessageToNode(messageData, nodeIds.iterator().next(), Set.of(recipientId), excludedDeviceType);
         }
         SendNotificationRequest request = new SendNotificationRequest(
                 messageData,
-                Set.of(recipientId));
+                Set.of(recipientId),
+                excludedDeviceType);
         messageData.retain(size);
         List<Mono<Boolean>> monos = new ArrayList<>(size);
         for (String nodeId : nodeIds) {
@@ -245,7 +248,8 @@ public class OutboundMessageService {
     private Mono<Boolean> forwardClientMessageToNode(
             @NotNull ByteBuf messageData,
             @NotNull String nodeId,
-            @NotNull Set<Long> recipients) {
+            @NotNull Set<Long> recipients,
+            @Nullable DeviceType excludedDeviceType) {
         int size = recipients.size();
         if (size == 0) {
             messageData.release();
@@ -253,7 +257,8 @@ public class OutboundMessageService {
         }
         SendNotificationRequest request = new SendNotificationRequest(
                 messageData,
-                recipients);
+                recipients,
+                excludedDeviceType);
         return node.getRpcService().requestResponse(nodeId, request);
     }
 

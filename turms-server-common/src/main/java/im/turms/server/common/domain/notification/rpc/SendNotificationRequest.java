@@ -17,6 +17,7 @@
 
 package im.turms.server.common.domain.notification.rpc;
 
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.notification.service.INotificationService;
 import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
@@ -24,6 +25,7 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import org.springframework.context.ApplicationContext;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -39,13 +41,18 @@ public class SendNotificationRequest extends RpcRequest<Boolean> {
 
     private final ByteBuf notificationBuffer;
     private final Set<Long> recipientIds;
+    @Nullable
+    private final DeviceType excludedDeviceType;
 
     /**
      * @param notificationBuffer should be a direct byte buffer of TurmsNotification
      */
-    public SendNotificationRequest(@NotNull ByteBuf notificationBuffer, @NotEmpty Set<Long> recipientIds) {
+    public SendNotificationRequest(@NotNull ByteBuf notificationBuffer,
+                                   @NotEmpty Set<Long> recipientIds,
+                                   @Nullable DeviceType excludedDeviceType) {
         this.notificationBuffer = notificationBuffer;
         this.recipientIds = recipientIds;
+        this.excludedDeviceType = excludedDeviceType;
         setBoundBuffer(notificationBuffer);
     }
 
@@ -82,7 +89,10 @@ public class SendNotificationRequest extends RpcRequest<Boolean> {
      */
     @Override
     public Boolean call() {
-        return notificationService.sendNotificationToLocalClients(this.getTracingContext(), notificationBuffer, recipientIds);
+        return notificationService.sendNotificationToLocalClients(getTracingContext(),
+                notificationBuffer,
+                recipientIds,
+                excludedDeviceType);
     }
 
 }

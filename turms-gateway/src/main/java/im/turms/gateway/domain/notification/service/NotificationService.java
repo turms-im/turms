@@ -25,6 +25,7 @@ import im.turms.gateway.infra.logging.NotificationLogging;
 import im.turms.gateway.infra.plugin.extension.NotificationHandler;
 import im.turms.gateway.infra.proto.SimpleTurmsNotification;
 import im.turms.gateway.infra.proto.TurmsNotificationParser;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.domain.notification.service.INotificationService;
 import im.turms.server.common.infra.collection.CollectionUtil;
@@ -39,6 +40,7 @@ import io.netty.buffer.ByteBuf;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,7 +85,8 @@ public class NotificationService implements INotificationService {
     @Override
     public boolean sendNotificationToLocalClients(TracingContext tracingContext,
                                                   ByteBuf notificationData,
-                                                  Set<Long> recipientIds) {
+                                                  Set<Long> recipientIds,
+                                                  @Nullable DeviceType excludedDeviceType) {
         Validator.notNull(notificationData, "notificationData");
         Validator.notEmpty(recipientIds, "recipientIds");
         // Prepare data
@@ -109,6 +112,9 @@ public class NotificationService implements INotificationService {
                 }
             } else {
                 for (UserSession userSession : userSessionsManager.getDeviceTypeToSession().values()) {
+                    if (excludedDeviceType == userSession.getDeviceType()) {
+                        continue;
+                    }
                     notificationData.retain();
                     // It's the responsibility of the downstream to decrease the reference count of the notification by 1
                     // when the notification is queued successfully and released by Netty, or fails to be queued.

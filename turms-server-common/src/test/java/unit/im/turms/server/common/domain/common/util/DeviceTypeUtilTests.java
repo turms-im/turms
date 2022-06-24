@@ -42,7 +42,7 @@ class DeviceTypeUtilTests {
 
     @Test
     void deviceTypesToByte_shouldReturnCorrespondingByte_forNotEmptyDeviceTypes() {
-        byte deviceTypesByte = DeviceTypeUtil.deviceTypesToByte(DEVICE_TYPES);
+        byte deviceTypesByte = DeviceTypeUtil.deviceTypes2Byte(DEVICE_TYPES);
         assertThat(deviceTypesByte).isEqualTo(DEVICE_TYPES_BYTES);
     }
 
@@ -54,7 +54,7 @@ class DeviceTypeUtilTests {
 
     @Test
     void deviceTypesToByte_shouldReturn0_forEmptyDeviceTypes() {
-        byte deviceTypesByte = DeviceTypeUtil.deviceTypesToByte(Collections.emptySet());
+        byte deviceTypesByte = DeviceTypeUtil.deviceTypes2Byte(Collections.emptySet());
         assertThat(deviceTypesByte).isZero();
     }
 

@@ -17,6 +17,8 @@
 
 package im.turms.server.common.domain.notification.rpc;
 
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecUtil;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
@@ -41,19 +43,29 @@ public class SendNotificationRequestCodec extends RpcRequestCodec<SendNotificati
             throw new IllegalArgumentException("The number of recipients must be greater than 0");
         }
         CodecUtil.writeLongs(out, recipientIds);
+        DeviceType excludedDeviceType = data.getExcludedDeviceType();
+        if (excludedDeviceType == null) {
+            out.writeByte(-1);
+        } else {
+            out.writeByte(DeviceTypeUtil.deviceType2Byte(excludedDeviceType));
+        }
     }
 
     @Override
     public SendNotificationRequest readRequestData(ByteBuf in) {
         Set<Long> recipientIds = CodecUtil.readLongSet(in);
+        byte excludedDeviceTypeByte = in.readByte();
+        DeviceType excludedDeviceType = excludedDeviceTypeByte == -1
+                ? null
+                : DeviceTypeUtil.byte2DeviceType(excludedDeviceTypeByte);
         ByteBuf notificationBuffer = in.readRetainedSlice(in.readableBytes());
-        return new SendNotificationRequest(notificationBuffer, recipientIds);
+        return new SendNotificationRequest(notificationBuffer, recipientIds, excludedDeviceType);
     }
 
     @Override
     public int initialCapacityForRequest(SendNotificationRequest data) {
         int size = data.getRecipientIds().size();
-        return CodecUtil.computeVarint32Size(size) + size * Long.BYTES;
+        return CodecUtil.computeVarint32Size(size) + size * Long.BYTES + Byte.BYTES;
     }
 
     @Override

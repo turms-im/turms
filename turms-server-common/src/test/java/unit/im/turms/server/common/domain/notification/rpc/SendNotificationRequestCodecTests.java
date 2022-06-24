@@ -17,6 +17,7 @@
 
 package unit.im.turms.server.common.domain.notification.rpc;
 
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.notification.rpc.SendNotificationRequest;
 import im.turms.server.common.domain.notification.rpc.SendNotificationRequestCodec;
 import io.netty.buffer.ByteBufUtil;
@@ -35,7 +36,8 @@ class SendNotificationRequestCodecTests extends BaseCodecTest {
         byte[] expectedNotificationBytes = {1, 2, 3, 4};
         SendNotificationRequest expectedRequest = new SendNotificationRequest(
                 Unpooled.wrappedBuffer(expectedNotificationBytes),
-                Set.of(1L, 2L, 3L));
+                Set.of(1L, 2L, 3L),
+                DeviceType.ANDROID);
         SendNotificationRequest actualRequest = writeRequestAndReadBuffer(new SendNotificationRequestCodec(),
                 expectedRequest);
 

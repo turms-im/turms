@@ -44,7 +44,7 @@ public class SetUserOfflineRequestCodec extends RpcRequestCodec<SetUserOfflineRe
         output.writeShort(code);
         Set<DeviceType> deviceTypes = data.getDeviceTypes();
         if (!deviceTypes.isEmpty()) {
-            byte deviceTypesByte = DeviceTypeUtil.deviceTypesToByte(deviceTypes);
+            byte deviceTypesByte = DeviceTypeUtil.deviceTypes2Byte(deviceTypes);
             output.writeByte(deviceTypesByte);
         }
     }

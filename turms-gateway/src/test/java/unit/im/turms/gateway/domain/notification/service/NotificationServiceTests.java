@@ -84,7 +84,7 @@ class NotificationServiceTests {
 
         ByteBuf byteBuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
-        boolean sent = notificationService.sendNotificationToLocalClients(TracingContext.NOOP, byteBuf, recipientIds);
+        boolean sent = notificationService.sendNotificationToLocalClients(TracingContext.NOOP, byteBuf, recipientIds, null);
 
         assertThat(byteBuf.refCnt())
                 .as("Buffer should not be released if the notification hasn't been sent")
@@ -104,7 +104,7 @@ class NotificationServiceTests {
 
         ByteBuf byteBuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
-        boolean sent = notificationService.sendNotificationToLocalClients(TracingContext.NOOP, byteBuf, recipientIds);
+        boolean sent = notificationService.sendNotificationToLocalClients(TracingContext.NOOP, byteBuf, recipientIds, null);
 
         assertThat(byteBuf.refCnt())
                 .as("Buffer should be released if recipients are offline")
