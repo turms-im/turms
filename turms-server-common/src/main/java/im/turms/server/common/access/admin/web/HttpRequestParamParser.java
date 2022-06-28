@@ -24,6 +24,8 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.json.JsonCodecPool;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.CompositeByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.server.HttpServerRequest;
@@ -44,10 +46,10 @@ public class HttpRequestParamParser {
 
     private static final int MAX_BODY_SIZE = 10 * 1024 * 1024;
 
-    private static final Mono<Object> BODY_TOO_LARGE = Mono
-            .error(new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.REQUEST_ENTITY_TOO_LARGE,
+    private static final HttpResponseException BODY_TOO_LARGE_EXCEPTION =
+            new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.REQUEST_ENTITY_TOO_LARGE,
                     new ResponseDTO<>(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                            "Request body size should not exceed " + MAX_BODY_SIZE + " bytes"))));
+                            "Request body size should not exceed " + MAX_BODY_SIZE + " bytes")));
 
     private static final Mono<Object[]> BODY_IS_REQUIRED = Mono
             .error(new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
@@ -179,24 +181,29 @@ public class HttpRequestParamParser {
     }
 
     private static Mono<Object> parseBody(HttpServerRequest request, Class<?> parameterType) {
+        CompositeByteBuf body = Unpooled.compositeBuffer();
         return request.receive()
-                .aggregate()
-                .flatMap(body -> {
-                    // TODO: reject earlier
+                .doOnNext(buffer -> {
+                    body.addComponent(true, buffer);
                     if (body.readableBytes() > MAX_BODY_SIZE) {
                         body.release();
-                        return BODY_TOO_LARGE;
+                        throw BODY_TOO_LARGE_EXCEPTION;
                     }
+                    buffer.retain();
+                })
+                .singleOrEmpty()
+                .map(unused -> {
                     try {
                         Object value = JsonCodecPool.MAPPER
                                 .readValue((InputStream) new ByteBufInputStream(body), parameterType);
                         body.release();
-                        return Mono.just(value);
+                        return value;
                     } catch (IOException e) {
                         ByteBufUtil.ensureReleased(body);
-                        return Mono.error(new HttpResponseException(HttpHandlerResult.badRequest("Illegal request body"), e));
+                        throw new HttpResponseException(HttpHandlerResult.badRequest("Illegal request body"), e);
                     }
-                });
+                })
+                .doFinally(signalType -> ByteBufUtil.safeEnsureReleased(body));
     }
 
 }
