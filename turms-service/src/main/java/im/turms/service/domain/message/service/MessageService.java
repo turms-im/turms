@@ -747,7 +747,9 @@ public class MessageService {
                         return Mono.error(ResponseException.get(code, permission.reason()));
                     }
                     Mono<Set<Long>> recipientIdsMono = isGroupMessage
-                            ? groupMemberService.findMemberIdsByGroupId(targetId).collect(Collectors.toSet())
+                            ? groupMemberService.findMemberIdsByGroupId(targetId)
+                            .filter(memberId -> !memberId.equals(senderId))
+                            .collect(Collectors.toSet())
                             : Mono.just(Set.of(targetId));
                     return recipientIdsMono.flatMap(recipientIds -> {
                         if (!persistMessage) {
