@@ -22,7 +22,6 @@ import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
-import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import lombok.Data;
 
@@ -66,7 +65,6 @@ public final class User extends BaseEntity {
     private final Boolean isActive;
 
     @Field(Fields.LAST_UPDATED_DATE)
-    @Indexed
     private final Date lastUpdatedDate;
 
     public static final class Fields {
