@@ -73,12 +73,13 @@ public class MessageController extends BaseController {
             @RequestBody CreateMessageDTO createMessageDTO) {
         Mono<Void> sendMono = messageService.authAndSaveAndSendMessage(
                 send,
+                createMessageDTO.senderId(),
+                createMessageDTO.senderDeviceType(),
                 createMessageDTO.id(),
                 createMessageDTO.isGroupMessage(),
                 createMessageDTO.isSystemMessage(),
                 createMessageDTO.text(),
                 createMessageDTO.records(),
-                createMessageDTO.senderId(),
                 createMessageDTO.targetId(),
                 createMessageDTO.burnAfter(),
                 createMessageDTO.referenceId(),
@@ -246,6 +247,8 @@ public class MessageController extends BaseController {
             Set<Long> ids,
             @RequestBody UpdateMessageDTO updateMessageDTO) {
         Mono<UpdateResultDTO> updateMono = messageService.updateMessages(
+                        updateMessageDTO.senderId(),
+                        updateMessageDTO.senderDeviceType(),
                         ids,
                         updateMessageDTO.isSystemMessage(),
                         updateMessageDTO.text(),

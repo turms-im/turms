@@ -19,11 +19,14 @@ package im.turms.server.common.domain.notification.rpc;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
+import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecUtil;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import io.netty.buffer.ByteBuf;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -38,11 +41,20 @@ public class SendNotificationRequestCodec extends RpcRequestCodec<SendNotificati
 
     @Override
     public void writeRequestData(ByteBuf out, SendNotificationRequest data) {
+        // write "recipientIds"
         Set<Long> recipientIds = data.getRecipientIds();
         if (recipientIds.isEmpty()) {
             throw new IllegalArgumentException("The number of recipients must be greater than 0");
         }
         CodecUtil.writeLongs(out, recipientIds);
+        // write "excludedUserSessionIds"
+        Set<UserSessionId> excludedUserSessionIds = data.getExcludedUserSessionIds();
+        CodecUtil.writeVarint32(out, excludedUserSessionIds.size());
+        for (UserSessionId id : excludedUserSessionIds) {
+            out.writeLong(id.userId());
+            out.writeByte(DeviceTypeUtil.deviceType2Byte(id.deviceType()));
+        }
+        // write "excludedDeviceType"
         DeviceType excludedDeviceType = data.getExcludedDeviceType();
         if (excludedDeviceType == null) {
             out.writeByte(-1);
@@ -53,19 +65,38 @@ public class SendNotificationRequestCodec extends RpcRequestCodec<SendNotificati
 
     @Override
     public SendNotificationRequest readRequestData(ByteBuf in) {
+        // read "recipientIds"
         Set<Long> recipientIds = CodecUtil.readLongSet(in);
+        // read "excludedUserSessionIds"
+        int excludedUserSessionIdCount = CodecUtil.readVarint32(in);
+        Set<UserSessionId> excludedUserSessionIds;
+        if (excludedUserSessionIdCount > 0) {
+            excludedUserSessionIds = CollectionUtil.newSetWithExpectedSize(excludedUserSessionIdCount);
+            for (int i = 0; i < excludedUserSessionIdCount; i++) {
+                long userId = in.readLong();
+                DeviceType deviceType = DeviceTypeUtil.byte2DeviceType(in.readByte());
+                excludedUserSessionIds.add(new UserSessionId(userId, deviceType));
+            }
+        } else {
+            excludedUserSessionIds = Collections.emptySet();
+        }
+        // read "excludedDeviceType"
         byte excludedDeviceTypeByte = in.readByte();
         DeviceType excludedDeviceType = excludedDeviceTypeByte == -1
                 ? null
                 : DeviceTypeUtil.byte2DeviceType(excludedDeviceTypeByte);
+        // read "notificationBuffer"
         ByteBuf notificationBuffer = in.readRetainedSlice(in.readableBytes());
-        return new SendNotificationRequest(notificationBuffer, recipientIds, excludedDeviceType);
+        return new SendNotificationRequest(notificationBuffer, recipientIds, excludedUserSessionIds, excludedDeviceType);
     }
 
     @Override
     public int initialCapacityForRequest(SendNotificationRequest data) {
-        int size = data.getRecipientIds().size();
-        return CodecUtil.computeVarint32Size(size) + size * Long.BYTES + Byte.BYTES;
+        int recipientCount = data.getRecipientIds().size();
+        int excludedUserSessionIdCount = data.getExcludedUserSessionIds().size();
+        return CodecUtil.computeVarint32Size(recipientCount) + recipientCount * Long.BYTES
+                + CodecUtil.computeVarint32Size(excludedUserSessionIdCount) + excludedUserSessionIdCount * (Long.BYTES + Byte.SIZE)
+                + Byte.BYTES;
     }
 
     @Override

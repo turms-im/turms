@@ -24,8 +24,10 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
 import im.turms.server.common.infra.collection.CollectionUtil;
@@ -79,6 +81,7 @@ import javax.validation.constraints.PastOrPresent;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -514,6 +517,8 @@ public class MessageService {
     }
 
     public Mono<UpdateResult> updateMessages(
+            @Nullable Long senderId,
+            @Nullable DeviceType senderDeviceType,
             @NotEmpty Set<Long> messageIds,
             @Nullable Boolean isSystemMessage,
             @Nullable String text,
@@ -541,12 +546,13 @@ public class MessageService {
                     byte[] messageType = {BuiltinSystemMessageType.RECALL_MESSAGE};
                     byte[] messageId = Longs.toByteArray(message.getId());
                     return authAndSaveAndSendMessage(true,
+                            senderId,
+                            senderDeviceType,
                             null,
                             message.getIsGroupMessage(),
                             true,
                             null,
                             List.of(messageType, messageId),
-                            null,
                             message.getTargetId(),
                             null,
                             null,
@@ -561,6 +567,8 @@ public class MessageService {
     }
 
     public Mono<UpdateResult> updateMessage(
+            @Nullable Long senderId,
+            @Nullable DeviceType senderDeviceType,
             @NotNull Long messageId,
             @Nullable Boolean isSystemMessage,
             @Nullable String text,
@@ -573,7 +581,15 @@ public class MessageService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return updateMessages(Set.of(messageId), isSystemMessage, text, records, burnAfter, recallDate, session);
+        return updateMessages(senderId,
+                senderDeviceType,
+                Set.of(messageId),
+                isSystemMessage,
+                text,
+                records,
+                burnAfter,
+                recallDate,
+                session);
     }
 
     public Mono<Long> countMessages(
@@ -683,7 +699,8 @@ public class MessageService {
 //    }
 
     public Mono<UpdateResult> authAndUpdateMessage(
-            @NotNull Long requesterId,
+            @NotNull Long senderId,
+            @NotNull DeviceType senderDeviceType,
             @NotNull Long messageId,
             @Nullable String text,
             @Nullable List<byte[]> records,
@@ -698,14 +715,14 @@ public class MessageService {
         if (updateMessageContent && !allowEditMessageBySender) {
             return Mono.error(ResponseException.get(UPDATING_MESSAGE_BY_SENDER_IS_DISABLED));
         }
-        return isMessageSentByUser(messageId, requesterId)
+        return isMessageSentByUser(messageId, senderId)
                 .flatMap(isSentByUser -> {
                     if (!isSentByUser) {
                         return Mono.error(ResponseException.get(NOT_SENDER_TO_UPDATE_MESSAGE));
                     }
                     return recallDate == null
-                            ? updateMessage(messageId, null, text, records, null, null, null)
-                            : updateMessageRecallDate(messageId, text, records, recallDate);
+                            ? updateMessage(senderId, senderDeviceType, messageId, null, text, records, null, null, null)
+                            : updateMessageRecallDate(senderId, senderDeviceType, messageId, text, records, recallDate);
                 });
     }
 
@@ -792,12 +809,13 @@ public class MessageService {
 
     public Mono<Void> authAndSaveAndSendMessage(
             boolean send,
+            @Nullable Long senderId,
+            @Nullable DeviceType senderDeviceType,
             @Nullable Long messageId,
             @NotNull Boolean isGroupMessage,
             @NotNull Boolean isSystemMessage,
             @Nullable String text,
             @Nullable List<byte[]> records,
-            @Nullable Long senderId,
             @NotNull Long targetId,
             @Nullable @Min(0) Integer burnAfter,
             @Nullable Long referenceId,
@@ -820,6 +838,9 @@ public class MessageService {
                 return Mono.error(ResponseException.get(ILLEGAL_ARGUMENT, "senderId must not be null for user messages"));
             }
         }
+        if (!isSystemMessage && senderDeviceType == null) {
+            return Mono.error(ResponseException.get(ILLEGAL_ARGUMENT, "senderDeviceType must not be null for user messages"));
+        }
         Date deliveryDate = new Date();
         Mono<MessageAndRecipientIds> saveMono = referenceId == null
                 ? authAndSaveMessage(messageId, senderId, targetId, isGroupMessage, isSystemMessage,
@@ -834,14 +855,19 @@ public class MessageService {
                     }
                     if (send) {
                         // No need to let the client wait to send notifications to recipients
-                        sendMessage(message, pair.recipientIds())
+                        sendMessage(message, senderDeviceType, pair.recipientIds())
                                 .subscribe(null, t -> LOGGER.error("Failed to send message", t));
                     }
                 })
                 .then();
     }
 
-    private Mono<Boolean> sendMessage(@NotNull Message message, @NotNull Set<Long> recipientIds) {
+    /**
+     * @param senderDeviceType can be null when it's a system message
+     */
+    private Mono<Boolean> sendMessage(@NotNull Message message,
+                                      @Nullable DeviceType senderDeviceType,
+                                      @NotNull Set<Long> recipientIds) {
         TurmsNotification notification = ClientMessagePool
                 .getTurmsNotificationBuilder()
                 .setRelayedRequest(ClientMessagePool
@@ -849,12 +875,21 @@ public class MessageService {
                         .setCreateMessageRequest(ProtoModelConvertor.message2createMessageRequest(message)))
                 .setRequestId(ADMIN_REQUEST_ID)
                 .build();
+        Set<UserSessionId> excludedUserSessionIds;
         if (sendMessageToOtherSenderOnlineDevices) {
-            recipientIds = CollectionUtil.add(recipientIds, message.getSenderId());
+            if (senderDeviceType == null) {
+                return Mono.error(ResponseException.get(ILLEGAL_ARGUMENT, "senderDeviceType must not be null for user messages"));
+            }
+            Long senderId = message.getSenderId();
+            recipientIds = CollectionUtil.add(recipientIds, senderId);
+            excludedUserSessionIds = Set.of(new UserSessionId(senderId, senderDeviceType));
+        } else {
+            excludedUserSessionIds = Collections.emptySet();
         }
         return outboundMessageService.forwardNotification(
                 notification,
-                recipientIds);
+                recipientIds,
+                excludedUserSessionIds);
     }
 
     private void cacheSentMessage(@NotNull Message message) {
@@ -877,7 +912,9 @@ public class MessageService {
                 null));
     }
 
-    private Mono<UpdateResult> updateMessageRecallDate(@NotNull Long messageId,
+    private Mono<UpdateResult> updateMessageRecallDate(@Nullable Long senderId,
+                                                       @Nullable DeviceType senderDeviceType,
+                                                       @NotNull Long messageId,
                                                        String text,
                                                        List<byte[]> records,
                                                        @PastOrPresent Date recallDate) {
@@ -887,7 +924,15 @@ public class MessageService {
                     if (code != OK) {
                         return Mono.error(ResponseException.get(code, permission.reason()));
                     }
-                    return updateMessage(messageId, null, text, records, null, recallDate, null);
+                    return updateMessage(senderId,
+                            senderDeviceType,
+                            messageId,
+                            null,
+                            text,
+                            records,
+                            null,
+                            recallDate,
+                            null);
                 });
     }
 

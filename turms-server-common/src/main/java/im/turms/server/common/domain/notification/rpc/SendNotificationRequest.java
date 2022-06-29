@@ -19,6 +19,7 @@ package im.turms.server.common.domain.notification.rpc;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.notification.service.INotificationService;
+import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 import io.netty.buffer.ByteBuf;
@@ -41,6 +42,7 @@ public class SendNotificationRequest extends RpcRequest<Boolean> {
 
     private final ByteBuf notificationBuffer;
     private final Set<Long> recipientIds;
+    private final Set<UserSessionId> excludedUserSessionIds;
     @Nullable
     private final DeviceType excludedDeviceType;
 
@@ -49,9 +51,11 @@ public class SendNotificationRequest extends RpcRequest<Boolean> {
      */
     public SendNotificationRequest(@NotNull ByteBuf notificationBuffer,
                                    @NotEmpty Set<Long> recipientIds,
+                                   @NotNull Set<UserSessionId> excludedUserSessionIds,
                                    @Nullable DeviceType excludedDeviceType) {
         this.notificationBuffer = notificationBuffer;
         this.recipientIds = recipientIds;
+        this.excludedUserSessionIds = excludedUserSessionIds;
         this.excludedDeviceType = excludedDeviceType;
         setBoundBuffer(notificationBuffer);
     }
@@ -92,6 +96,7 @@ public class SendNotificationRequest extends RpcRequest<Boolean> {
         return notificationService.sendNotificationToLocalClients(getTracingContext(),
                 notificationBuffer,
                 recipientIds,
+                excludedUserSessionIds,
                 excludedDeviceType);
     }
 

@@ -28,6 +28,7 @@ import im.turms.gateway.infra.proto.TurmsNotificationParser;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.domain.notification.service.INotificationService;
+import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -86,9 +87,11 @@ public class NotificationService implements INotificationService {
     public boolean sendNotificationToLocalClients(TracingContext tracingContext,
                                                   ByteBuf notificationData,
                                                   Set<Long> recipientIds,
+                                                  Set<UserSessionId> excludedUserSessionIds,
                                                   @Nullable DeviceType excludedDeviceType) {
         Validator.notNull(notificationData, "notificationData");
         Validator.notEmpty(recipientIds, "recipientIds");
+        Validator.notNull(excludedUserSessionIds, "excludedUserSessionIds");
         // Prepare data
         boolean hasForwardedMessageToOneRecipient = false;
         boolean triggerHandlers = pluginManager.hasRunningExtensions(NotificationHandler.class);
@@ -104,6 +107,7 @@ public class NotificationService implements INotificationService {
         List<Mono<Void>> monos = new ArrayList<>(recipientIds.size() >> 2);
 
         // Send notification
+        boolean hasExcludedUserSessionIds = !excludedUserSessionIds.isEmpty();
         for (Long recipientId : recipientIds) {
             UserSessionsManager userSessionsManager = sessionService.getUserSessionsManager(recipientId);
             if (userSessionsManager == null) {
@@ -112,7 +116,9 @@ public class NotificationService implements INotificationService {
                 }
             } else {
                 for (UserSession userSession : userSessionsManager.getDeviceTypeToSession().values()) {
-                    if (excludedDeviceType == userSession.getDeviceType()) {
+                    if (excludedDeviceType == userSession.getDeviceType()
+                            || (hasExcludedUserSessionIds && excludedUserSessionIds.contains(new UserSessionId(
+                            userSession.getUserId(), userSession.getDeviceType())))) {
                         continue;
                     }
                     notificationData.retain();

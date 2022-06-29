@@ -18,6 +18,7 @@
 package im.turms.server.common.domain.notification.service;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.infra.tracing.TracingContext;
 import io.netty.buffer.ByteBuf;
 
@@ -35,6 +36,7 @@ public interface INotificationService {
             @NotNull TracingContext context,
             @NotNull ByteBuf notificationData,
             @NotEmpty Set<Long> recipientIds,
+            @NotNull Set<UserSessionId> excludedUserSessionIds,
             @Nullable DeviceType excludedDeviceType);
 
 }

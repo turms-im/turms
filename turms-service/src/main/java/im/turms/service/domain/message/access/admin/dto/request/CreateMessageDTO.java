@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.message.access.admin.dto.request;
 
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+
 import java.util.List;
 
 /**
@@ -29,6 +31,7 @@ public record CreateMessageDTO(
         String text,
         List<byte[]> records,
         Long senderId,
+        DeviceType senderDeviceType,
         Long targetId,
         Integer burnAfter,
         Long referenceId,

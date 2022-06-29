@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.message.access.admin.dto.request;
 
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +26,8 @@ import java.util.List;
  * @author James Chen
  */
 public record UpdateMessageDTO(
+        Long senderId,
+        DeviceType senderDeviceType,
         Boolean isSystemMessage,
         String text,
         List<byte[]> records,

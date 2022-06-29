@@ -314,6 +314,7 @@ public class MessageServiceController {
             Date recallDate = request.hasRecallDate() ? new Date(request.getRecallDate()) : null;
             return messageService.authAndUpdateMessage(
                             clientRequest.userId(),
+                            clientRequest.deviceType(),
                             messageId,
                             text,
                             records,

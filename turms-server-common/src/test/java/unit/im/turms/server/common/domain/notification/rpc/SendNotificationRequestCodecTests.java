@@ -25,6 +25,7 @@ import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;
 import unit.im.turms.server.common.infra.cluster.service.rpc.codec.BaseCodecTest;
 
+import java.util.Collections;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,6 +38,7 @@ class SendNotificationRequestCodecTests extends BaseCodecTest {
         SendNotificationRequest expectedRequest = new SendNotificationRequest(
                 Unpooled.wrappedBuffer(expectedNotificationBytes),
                 Set.of(1L, 2L, 3L),
+                Collections.emptySet(),
                 DeviceType.ANDROID);
         SendNotificationRequest actualRequest = writeRequestAndReadBuffer(new SendNotificationRequestCodec(),
                 expectedRequest);

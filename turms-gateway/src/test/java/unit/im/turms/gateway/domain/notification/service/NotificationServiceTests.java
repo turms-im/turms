@@ -39,6 +39,7 @@ import reactor.core.publisher.Sinks;
 import reactor.test.StepVerifier;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -84,7 +85,11 @@ class NotificationServiceTests {
 
         ByteBuf byteBuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
-        boolean sent = notificationService.sendNotificationToLocalClients(TracingContext.NOOP, byteBuf, recipientIds, null);
+        boolean sent = notificationService.sendNotificationToLocalClients(TracingContext.NOOP,
+                byteBuf,
+                recipientIds,
+                Collections.emptySet(),
+                null);
 
         assertThat(byteBuf.refCnt())
                 .as("Buffer should not be released if the notification hasn't been sent")
@@ -104,7 +109,11 @@ class NotificationServiceTests {
 
         ByteBuf byteBuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
-        boolean sent = notificationService.sendNotificationToLocalClients(TracingContext.NOOP, byteBuf, recipientIds, null);
+        boolean sent = notificationService.sendNotificationToLocalClients(TracingContext.NOOP,
+                byteBuf,
+                recipientIds,
+                Collections.emptySet(),
+                null);
 
         assertThat(byteBuf.refCnt())
                 .as("Buffer should be released if recipients are offline")
