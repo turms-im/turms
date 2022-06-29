@@ -18,7 +18,6 @@
 package im.turms.service.domain.message.service;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multiset;
 import com.google.common.collect.SetMultimap;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
@@ -199,7 +198,7 @@ public class OutboundMessageService {
     // Network transmission methods
 
     private Mono<Boolean> forwardClientMessageToNodes(ByteBuf messageData, SetMultimap<String, Long> nodeIdToRecipientIds) {
-        Multiset<String> nodeIds = nodeIdToRecipientIds.keys();
+        Set<String> nodeIds = nodeIdToRecipientIds.keySet();
         int size = nodeIds.size();
         if (size == 0) {
             messageData.release();
