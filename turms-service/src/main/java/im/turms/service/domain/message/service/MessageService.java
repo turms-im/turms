@@ -700,7 +700,7 @@ public class MessageService {
 
     public Mono<UpdateResult> authAndUpdateMessage(
             @NotNull Long senderId,
-            @NotNull DeviceType senderDeviceType,
+            @Nullable DeviceType senderDeviceType,
             @NotNull Long messageId,
             @Nullable String text,
             @Nullable List<byte[]> records,
@@ -838,9 +838,6 @@ public class MessageService {
                 return Mono.error(ResponseException.get(ILLEGAL_ARGUMENT, "senderId must not be null for user messages"));
             }
         }
-        if (!isSystemMessage && senderDeviceType == null) {
-            return Mono.error(ResponseException.get(ILLEGAL_ARGUMENT, "senderDeviceType must not be null for user messages"));
-        }
         Date deliveryDate = new Date();
         Mono<MessageAndRecipientIds> saveMono = referenceId == null
                 ? authAndSaveMessage(messageId, senderId, targetId, isGroupMessage, isSystemMessage,
@@ -855,7 +852,7 @@ public class MessageService {
                     }
                     if (send) {
                         // No need to let the client wait to send notifications to recipients
-                        sendMessage(message, senderDeviceType, pair.recipientIds())
+                        sendMessage(message, pair.recipientIds(), senderDeviceType)
                                 .subscribe(null, t -> LOGGER.error("Failed to send message", t));
                     }
                 })
@@ -866,8 +863,8 @@ public class MessageService {
      * @param senderDeviceType can be null when it's a system message
      */
     private Mono<Boolean> sendMessage(@NotNull Message message,
-                                      @Nullable DeviceType senderDeviceType,
-                                      @NotNull Set<Long> recipientIds) {
+                                      @NotNull Set<Long> recipientIds,
+                                      @Nullable DeviceType senderDeviceType) {
         TurmsNotification notification = ClientMessagePool
                 .getTurmsNotificationBuilder()
                 .setRelayedRequest(ClientMessagePool
@@ -876,10 +873,7 @@ public class MessageService {
                 .setRequestId(ADMIN_REQUEST_ID)
                 .build();
         Set<UserSessionId> excludedUserSessionIds;
-        if (sendMessageToOtherSenderOnlineDevices) {
-            if (senderDeviceType == null) {
-                return Mono.error(ResponseException.get(ILLEGAL_ARGUMENT, "senderDeviceType must not be null for user messages"));
-            }
+        if (sendMessageToOtherSenderOnlineDevices && senderDeviceType != null) {
             Long senderId = message.getSenderId();
             recipientIds = CollectionUtil.add(recipientIds, senderId);
             excludedUserSessionIds = Set.of(new UserSessionId(senderId, senderDeviceType));
