@@ -41,10 +41,8 @@ import im.turms.service.domain.group.access.admin.dto.request.AddGroupMemberDTO;
 import im.turms.service.domain.group.access.admin.dto.request.UpdateGroupMemberDTO;
 import im.turms.service.domain.group.po.GroupMember;
 import im.turms.service.domain.group.service.GroupMemberService;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -78,7 +76,7 @@ public class GroupMemberController extends BaseController {
 
     @GetMapping
     @RequiredPermission(AdminPermission.GROUP_MEMBER_QUERY)
-    public Mono<HttpHandlerResult<ResponseDTO<Collection<GroupMember>>>> queryGroupMembers(
+    public Mono<HttpHandlerResult<ResponseDTO<List<GroupMember>>>> queryGroupMembers(
             @QueryParam(required = false) Set<Long> groupIds,
             @QueryParam(required = false) Set<Long> userIds,
             @QueryParam(required = false) Set<GroupMemberRole> roles,
@@ -88,7 +86,7 @@ public class GroupMemberController extends BaseController {
             @QueryParam(required = false) Date muteEndDateEnd,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Flux<GroupMember> groupMemberFlux = groupMemberService.queryGroupsMembers(
+        Mono<List<GroupMember>> groupMemberFlux = groupMemberService.queryGroupMembers(
                 groupIds,
                 userIds,
                 roles,
@@ -118,7 +116,7 @@ public class GroupMemberController extends BaseController {
                 roles,
                 DateRange.of(joinDateStart, joinDateEnd),
                 DateRange.of(muteEndDateStart, muteEndDateEnd));
-        Flux<GroupMember> userFlux = groupMemberService.queryGroupsMembers(
+        Mono<List<GroupMember>> userFlux = groupMemberService.queryGroupMembers(
                 groupIds,
                 userIds,
                 roles,

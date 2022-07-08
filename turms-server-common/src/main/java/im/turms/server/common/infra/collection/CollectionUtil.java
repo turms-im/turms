@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.collection;
 
+import org.eclipse.collections.api.collection.ImmutableCollection;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
 import javax.annotation.Nullable;
@@ -46,7 +47,7 @@ public final class CollectionUtil {
     }
 
     public static <T> List<T> add(List<T> list, List<T> values) {
-        if (IMMUTABLE_COLLECTION_CLASS.isInstance(list)) {
+        if (isImmutable(list)) {
             List<T> newList = new ArrayList<>(list.size() + values.size());
             newList.addAll(list);
             list = newList;
@@ -56,7 +57,7 @@ public final class CollectionUtil {
     }
 
     public static <T> Set<T> add(Set<T> set, Set<T> values) {
-        if (IMMUTABLE_COLLECTION_CLASS.isInstance(set)) {
+        if (isImmutable(set)) {
             Set<T> newSet = UnifiedSet.newSet(set.size() + values.size());
             newSet.addAll(set);
             set = newSet;
@@ -66,12 +67,22 @@ public final class CollectionUtil {
     }
 
     public static <T> Set<T> add(Set<T> set, T value) {
-        if (IMMUTABLE_COLLECTION_CLASS.isInstance(set)) {
+        if (isImmutable(set)) {
             Set<T> newSet = newSetWithExpectedSize(set.size() + 1);
             newSet.addAll(set);
             set = newSet;
         }
         set.add(value);
+        return set;
+    }
+
+    public static <T> Set<T> remove(Set<T> set, T value) {
+        if (isImmutable(set)) {
+            Set<T> newSet = newSetWithExpectedSize(set.size());
+            newSet.addAll(set);
+            set = newSet;
+        }
+        set.remove(value);
         return set;
     }
 
@@ -130,6 +141,14 @@ public final class CollectionUtil {
 
     public static <T> boolean isEmpty(@Nullable Collection<T> collection) {
         return collection == null || collection.isEmpty();
+    }
+
+    public static <T> boolean isNotEmpty(@Nullable Collection<T> collection) {
+        return collection != null && !collection.isEmpty();
+    }
+
+    public static boolean isImmutable(Iterable<?> iterable) {
+        return IMMUTABLE_COLLECTION_CLASS.isInstance(iterable) || iterable instanceof ImmutableCollection;
     }
 
 }

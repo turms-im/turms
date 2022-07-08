@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.group.service;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
@@ -26,6 +28,7 @@ import im.turms.server.common.access.client.dto.model.group.GroupMembersWithVers
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.UserStatusService;
+import im.turms.server.common.infra.collection.ChunkedArrayList;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
@@ -34,6 +37,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.service.business.group.GroupProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
@@ -48,6 +52,7 @@ import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidGroupMemberRole;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.apache.commons.lang3.tuple.Pair;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -58,11 +63,15 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -89,6 +98,9 @@ public class GroupMemberService {
     private boolean checkIfTargetActiveAndNotDeleted;
     private boolean respondOfflineIfInvisible;
 
+    private final boolean isMemberCacheEnabled;
+    private final Cache<Long, Map<GroupMember.Key, GroupMember>> groupIdToMembersCache;
+
     /**
      * @param groupService          is lazy because: GroupService -> GroupMemberService -> GroupService
      * @param groupBlocklistService is lazy because: GroupMemberService -> GroupBlocklistService -> GroupMemberService
@@ -107,6 +119,17 @@ public class GroupMemberService {
         this.userStatusService = userStatusService;
 
         propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+
+        GroupProperties groupProperties = propertiesManager.getGlobalProperties().getService().getGroup();
+        int memberCacheExpireAfterSeconds = groupProperties.getMemberCacheExpireAfterSeconds();
+        isMemberCacheEnabled = memberCacheExpireAfterSeconds > 0;
+        groupIdToMembersCache = isMemberCacheEnabled
+                ? Caffeine.newBuilder()
+                // TODO: support dynamic expiration time
+                .expireAfterWrite(Duration.ofSeconds(memberCacheExpireAfterSeconds))
+                .maximumSize(100_000)
+                .build()
+                : null;
     }
 
     private void updateProperties(TurmsProperties properties) {
@@ -148,7 +171,10 @@ public class GroupMemberService {
                                     groupId, t);
                             return Mono.empty();
                         }))
-                .thenReturn(groupMember);
+                .then(Mono.fromCallable(() -> {
+                    cacheMember(groupMember.getKey().getGroupId(), groupMember);
+                    return groupMember;
+                }));
     }
 
     public Mono<GroupMember> authAndAddGroupMember(
@@ -245,7 +271,11 @@ public class GroupMemberService {
         }
         return groupMemberRepository.deleteByIds(keys, session)
                 .flatMap(result -> {
-                    if (!updateGroupMembersVersion || result.getDeletedCount() == 0) {
+                    long deletedCount = result.getDeletedCount();
+                    if (deletedCount == keys.size()) {
+                        invalidMemberCache(keys);
+                    }
+                    if (!updateGroupMembersVersion || deletedCount == 0) {
                         return Mono.just(result);
                     }
                     return groupVersionService.updateMembersVersion(groupIds)
@@ -295,15 +325,19 @@ public class GroupMemberService {
         }
         return groupMemberRepository.updateGroupMembers(keys, name, role, joinDate, muteEndDate, session)
                 .flatMap(result -> {
-                    if (!updateGroupMembersVersion || result.getModifiedCount() == 0) {
+                    long modifiedCount = result.getModifiedCount();
+                    if (modifiedCount == keys.size()) {
+                        updateMembersCache(keys, name, role, joinDate, muteEndDate);
+                    }
+                    if (!updateGroupMembersVersion && modifiedCount == 0) {
                         return Mono.just(result);
                     }
-                    int size = keys.size();
-                    Set<Long> groupIds = CollectionUtil.newSetWithExpectedSize(size);
+                    int keyCount = keys.size();
+                    Set<Long> groupIds = CollectionUtil.newSetWithExpectedSize(keyCount);
                     for (GroupMember.Key key : keys) {
                         groupIds.add(key.getGroupId());
                     }
-                    Mono<?> updateMono = size == 1
+                    Mono<?> updateMono = keyCount == 1
                             ? groupVersionService.updateMembersVersion(groupIds.iterator().next())
                             : groupVersionService.updateMembersVersion(groupIds);
                     return updateMono
@@ -338,15 +372,6 @@ public class GroupMemberService {
         return updateGroupMembers(keys, name, role, joinDate, muteEndDate, session, updateGroupMembersVersion);
     }
 
-    public Flux<Long> findMemberIdsByGroupId(@NotNull Long groupId) {
-        try {
-            Validator.notNull(groupId, "groupId");
-        } catch (ResponseException e) {
-            return Flux.error(e);
-        }
-        return groupMemberRepository.findMemberIdsByGroupId(groupId);
-    }
-
     public Mono<Boolean> isGroupMember(@NotNull Long groupId, @NotNull Long userId) {
         try {
             Validator.notNull(groupId, "groupId");
@@ -355,6 +380,13 @@ public class GroupMemberService {
             return Mono.error(e);
         }
         GroupMember.Key key = new GroupMember.Key(groupId, userId);
+        if (isMemberCacheEnabled) {
+            Map<GroupMember.Key, GroupMember> keyToMember = groupIdToMembersCache.getIfPresent(groupId);
+            if (keyToMember != null) {
+                GroupMember member = keyToMember.get(key);
+                return Mono.just(member != null);
+            }
+        }
         return groupMemberRepository.existsById(key);
     }
 
@@ -411,7 +443,11 @@ public class GroupMemberService {
     }
 
     /**
-     * @return Possible codes: OK, GROUP_HAS_BEEN_MUTED, GROUP_NOT_ACTIVE, MEMBER_HAS_BEEN_MUTED
+     * @return Possible codes:
+     * {@link ResponseStatusCode#OK}
+     * {@link ResponseStatusCode#SEND_MESSAGE_TO_MUTED_GROUP}
+     * {@link ResponseStatusCode#SEND_MESSAGE_TO_INACTIVE_GROUP}
+     * {@link ResponseStatusCode#MUTED_MEMBER_SEND_MESSAGE}
      */
     private Mono<ResponseStatusCode> isGroupMemberAllowedToSendMessage(@NotNull Long groupId, @NotNull Long senderId) {
         return groupService.isGroupMuted(groupId)
@@ -464,6 +500,13 @@ public class GroupMemberService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
+        if (isMemberCacheEnabled) {
+            Map<GroupMember.Key, GroupMember> keyToMember = groupIdToMembersCache.getIfPresent(groupId);
+            if (keyToMember != null) {
+                GroupMember member = keyToMember.get(new GroupMember.Key(groupId, userId));
+                return Mono.just(member != null && member.getMuteEndDate() != null);
+            }
+        }
         return groupMemberRepository.isMemberMuted(groupId, userId);
     }
 
@@ -473,6 +516,15 @@ public class GroupMemberService {
             Validator.notNull(userId, "userId");
         } catch (ResponseException e) {
             return Mono.error(e);
+        }
+        if (isMemberCacheEnabled) {
+            Map<GroupMember.Key, GroupMember> keyToMember = groupIdToMembersCache.getIfPresent(groupId);
+            if (keyToMember != null) {
+                GroupMember member = keyToMember.get(new GroupMember.Key(groupId, userId));
+                return member == null
+                        ? Mono.empty()
+                        : Mono.just(member.getRole());
+            }
         }
         return groupMemberRepository.findGroupMemberRole(userId, groupId);
     }
@@ -526,31 +578,74 @@ public class GroupMemberService {
             return Mono.error(e);
         }
         return queryUsersJoinedGroupIds(userIds, null, null)
-                .collect(Collectors.toSet())
+                .collect(CollectorUtil.toSet(50))
                 .flatMap(groupIds -> groupIds.isEmpty()
                         ? Mono.just(Collections.emptySet())
-                        : queryGroupMemberIds(groupIds).collect(Collectors.toSet()));
+                        : queryGroupMemberIds(groupIds));
     }
 
-    public Flux<Long> queryGroupMemberIds(@NotNull Long groupId) {
+    public Mono<Set<Long>> queryGroupMemberIds(@NotNull Long groupId) {
         try {
             Validator.notNull(groupId, "groupId");
         } catch (ResponseException e) {
-            return Flux.error(e);
+            return Mono.error(e);
         }
-        return groupMemberRepository.findGroupMemberIds(groupId);
+        if (isMemberCacheEnabled) {
+            Map<GroupMember.Key, GroupMember> keyToMember = groupIdToMembersCache.getIfPresent(groupId);
+            if (keyToMember != null) {
+                Collection<GroupMember> members = keyToMember.values();
+                Set<Long> memberIds = CollectionUtil.newSetWithExpectedSize(members.size());
+                for (GroupMember member : members) {
+                    memberIds.add(member.getKey().getUserId());
+                }
+                return Mono.just(memberIds);
+            }
+        }
+        return groupMemberRepository.findMemberIdsByGroupId(groupId)
+                .collect(CollectorUtil.toSet(50));
     }
 
-    public Flux<Long> queryGroupMemberIds(@NotEmpty Set<Long> groupIds) {
+    public Mono<Set<Long>> queryGroupMemberIds(@NotEmpty Set<Long> groupIds) {
         try {
             Validator.notEmpty(groupIds, "groupIds");
         } catch (ResponseException e) {
-            return Flux.error(e);
+            return Mono.error(e);
         }
-        return groupMemberRepository.findGroupMemberIds(groupIds);
+        if (isMemberCacheEnabled) {
+            Map<Long, Map<GroupMember.Key, GroupMember>> cachedGroupIdToMembers =
+                    groupIdToMembersCache.getAllPresent(groupIds);
+            int cachedGroupCount = cachedGroupIdToMembers.size();
+            if (cachedGroupCount == groupIds.size()) {
+                int memberCount = 0;
+                Collection<Map<GroupMember.Key, GroupMember>> idToMemberCache = cachedGroupIdToMembers.values();
+                for (Map<GroupMember.Key, GroupMember> idToMember : idToMemberCache) {
+                    memberCount += idToMember.size();
+                }
+                Set<Long> memberIds = CollectionUtil.newSetWithExpectedSize(memberCount);
+                for (Map<GroupMember.Key, GroupMember> keyToMember : idToMemberCache) {
+                    for (GroupMember member : keyToMember.values()) {
+                        memberIds.add(member.getKey().getUserId());
+                    }
+                }
+                return Mono.just(memberIds);
+            } else if (cachedGroupCount > 0) {
+                Set<Long> memberIds = UnifiedSet.newSet(groupIds.size() * 50);
+                for (Map<GroupMember.Key, GroupMember> keyToMember : cachedGroupIdToMembers.values()) {
+                    for (GroupMember.Key key : keyToMember.keySet()) {
+                        memberIds.add(key.getUserId());
+                    }
+                }
+                groupIds = UnifiedSet.newSet(groupIds);
+                groupIds.removeAll(cachedGroupIdToMembers.keySet());
+                return groupMemberRepository.findGroupMemberIds(groupIds)
+                        .collect(Collectors.toCollection(() -> memberIds));
+            }
+        }
+        return groupMemberRepository.findGroupMemberIds(groupIds)
+                .collect(CollectorUtil.toSet(groupIds.size() * 50));
     }
 
-    public Flux<GroupMember> queryGroupsMembers(
+    public Mono<List<GroupMember>> queryGroupMembers(
             @Nullable Set<Long> groupIds,
             @Nullable Set<Long> userIds,
             @Nullable Set<@ValidGroupMemberRole GroupMemberRole> roles,
@@ -564,16 +659,50 @@ public class GroupMemberService {
                     DataValidator.validGroupMemberRole(role);
                 }
             } catch (ResponseException e) {
-                return Flux.error(e);
+                return Mono.error(e);
             }
         }
-        return groupMemberRepository.findGroupsMembers(groupIds,
+        Flux<GroupMember> groupsMemberFlux = groupMemberRepository.findGroupsMembers(groupIds,
                 userIds,
                 roles,
                 joinDateRange,
                 muteEndDateRange,
                 page,
                 size);
+        if (isMemberCacheEnabled
+                && CollectionUtil.isNotEmpty(groupIds)
+                && userIds == null
+                && roles == null
+                && joinDateRange == null
+                && muteEndDateRange == null
+                && page == null
+                && size == null) {
+            return groupsMemberFlux
+                    .collect(CollectorUtil.toChunkedList())
+                    .doOnNext(members -> {
+                        int groupCount = groupIds.size();
+                        if (groupCount == 1) {
+                            cacheMembers(groupIds.iterator().next(), members);
+                        } else {
+                            Map<Long, List<GroupMember>> groupIdToMembers = CollectionUtil
+                                    .newMapWithExpectedSize(groupCount);
+                            for (GroupMember member : members) {
+                                Long groupId = member.getKey().getGroupId();
+                                List<GroupMember> groupMembers = groupIdToMembers.get(groupId);
+                                if (groupMembers == null) {
+                                    groupMembers = new ChunkedArrayList<>();
+                                    groupIdToMembers.put(groupId, groupMembers);
+                                }
+                                groupMembers.add(member);
+                            }
+                            for (Map.Entry<Long, List<GroupMember>> entry : groupIdToMembers.entrySet()) {
+                                cacheMembers(entry.getKey(), entry.getValue());
+                            }
+                        }
+                    });
+        }
+        return groupsMemberFlux
+                .collect(CollectorUtil.toChunkedList());
     }
 
     public Mono<Long> countMembers(
@@ -605,14 +734,28 @@ public class GroupMemberService {
                         : OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT);
     }
 
-    public Flux<GroupMember> queryGroupMembers(@NotNull Long groupId, @NotEmpty Set<Long> memberIds) {
+    public Mono<List<GroupMember>> queryGroupMembers(@NotNull Long groupId, @NotEmpty Set<Long> memberIds) {
         try {
             Validator.notNull(groupId, "groupId");
             Validator.notEmpty(memberIds, "memberIds");
         } catch (ResponseException e) {
-            return Flux.error(e);
+            return Mono.error(e);
         }
-        return groupMemberRepository.findGroupMembers(groupId, memberIds);
+        if (isMemberCacheEnabled) {
+            Map<GroupMember.Key, GroupMember> keyToMember = groupIdToMembersCache.getIfPresent(groupId);
+            if (keyToMember != null) {
+                List<GroupMember> members = new ArrayList<>(memberIds.size());
+                for (Long memberId : memberIds) {
+                    GroupMember member = keyToMember.get(new GroupMember.Key(groupId, memberId));
+                    if (member != null) {
+                        members.add(member);
+                    }
+                }
+                return Mono.just(members);
+            }
+        }
+        return groupMemberRepository.findGroupMembers(groupId, memberIds)
+                .collect(CollectorUtil.toList(memberIds.size()));
     }
 
     public Mono<GroupMembersWithVersion> authAndQueryGroupMembers(
@@ -628,7 +771,7 @@ public class GroupMemberService {
         return isGroupMember(groupId, requesterId)
                 .flatMap(isGroupMember -> isGroupMember == null || !isGroupMember
                         ? Mono.error(ResponseException.get(ResponseStatusCode.NOT_MEMBER_TO_QUERY_MEMBER_INFO))
-                        : queryGroupMembers(groupId, memberIds).collect(CollectorUtil.toChunkedList()))
+                        : queryGroupMembers(groupId, memberIds))
                 .flatMap(members -> {
                     if (members.isEmpty()) {
                         return ResponseExceptionPublisherPool.noContent();
@@ -657,8 +800,7 @@ public class GroupMemberService {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
-                    return queryGroupsMembers(Set.of(groupId), null, null, null, null, null, null)
-                            .collect(CollectorUtil.toChunkedList())
+                    return queryGroupMembers(Set.of(groupId), null, null, null, null, null, null)
                             .flatMap(members -> {
                                 if (members.isEmpty()) {
                                     return ResponseExceptionPublisherPool.noContent();
@@ -713,9 +855,21 @@ public class GroupMemberService {
             @Nullable ClientSession session,
             boolean updateMembersVersion) {
         return groupMemberRepository.deleteAllGroupMembers(groupIds, session)
-                .flatMap(result -> updateMembersVersion && result.getDeletedCount() > 0
-                        ? groupVersionService.updateMembersVersion(groupIds).thenReturn(result)
-                        : OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT);
+                .flatMap(result -> {
+                    long deletedCount = result.getDeletedCount();
+                    if (deletedCount == 0) {
+                        return OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT;
+                    }
+                    if (groupIds == null) {
+                        groupIdToMembersCache.invalidateAll();
+                    } else {
+                        groupIdToMembersCache.invalidateAll(groupIds);
+                    }
+                    if (updateMembersVersion) {
+                        return groupVersionService.updateMembersVersion(groupIds).thenReturn(result);
+                    }
+                    return OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT;
+                });
     }
 
     public Flux<Long> queryGroupManagersAndOwnerId(@NotNull Long groupId) {
@@ -725,7 +879,11 @@ public class GroupMemberService {
             return Flux.error(e);
         }
         return groupMemberRepository.findGroupManagersAndOwnerId(groupId)
-                .map(member -> member.getKey().getUserId());
+                .map(member -> {
+                    GroupMember.Key key = member.getKey();
+                    cacheMember(key.getGroupId(), member);
+                    return key.getUserId();
+                });
     }
 
     private Mono<GroupMembersWithVersion> fillMembersBuilderWithStatus(
@@ -786,6 +944,71 @@ public class GroupMemberService {
             return ResponseStatusCode.ADD_NEW_MEMBER_WITH_ROLE_HIGHER_THAN_REQUESTER;
         }
         return isAllowToAddRole;
+    }
+
+    // Cache
+
+    private void cacheMember(Long groupId, GroupMember member) {
+        if (!isMemberCacheEnabled) {
+            return;
+        }
+        Map<GroupMember.Key, GroupMember> keyAndMember = groupIdToMembersCache.getIfPresent(groupId);
+        if (keyAndMember != null) {
+            keyAndMember.put(member.getKey(), member);
+        }
+    }
+
+    private void cacheMembers(Long groupId, List<GroupMember> members) {
+        if (!isMemberCacheEnabled) {
+            return;
+        }
+        Map<GroupMember.Key, GroupMember> keyAndMember = groupIdToMembersCache
+                .get(groupId, id -> new ConcurrentHashMap<>(16));
+        for (GroupMember member : members) {
+            keyAndMember.put(member.getKey(), member);
+        }
+    }
+
+    private void updateMembersCache(Set<GroupMember.Key> keys,
+                                    @Nullable String name,
+                                    @Nullable GroupMemberRole role,
+                                    @Nullable Date joinDate,
+                                    @Nullable Date muteEndDate) {
+        if (!isMemberCacheEnabled) {
+            return;
+        }
+        for (GroupMember.Key key : keys) {
+            Map<GroupMember.Key, GroupMember> keyAndMember = groupIdToMembersCache.getIfPresent(key.getGroupId());
+            if (keyAndMember != null) {
+                GroupMember member = keyAndMember.get(key);
+                if (member != null) {
+                    if (name != null) {
+                        member.setName(name);
+                    }
+                    if (role != null) {
+                        member.setRole(role);
+                    }
+                    if (joinDate != null) {
+                        member.setJoinDate(joinDate);
+                    }
+                    if (muteEndDate != null) {
+                        member.setMuteEndDate(muteEndDate);
+                    }
+                }
+            }
+        }
+    }
+
+    private void invalidMemberCache(Set<GroupMember.Key> keys) {
+        if (!isMemberCacheEnabled) {
+            return;
+        }
+        for (GroupMember.Key key : keys) {
+            Map<GroupMember.Key, GroupMember> keyAndMember = groupIdToMembersCache.getIfPresent(key.getGroupId());
+            if (keyAndMember != null) {
+                keyAndMember.remove(key);
+            }
+        }
     }
 
 }

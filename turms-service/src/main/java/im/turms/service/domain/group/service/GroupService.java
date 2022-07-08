@@ -215,7 +215,6 @@ public class GroupService {
                     }
                     if (notifyMembersAfterGroupDeleted) {
                         return groupMemberService.queryGroupMemberIds(groupId)
-                                .collect(Collectors.toSet())
                                 .flatMap(memberIds -> deleteGroupsAndGroupMembers(Set.of(groupId), null))
                                 .then();
                     }
@@ -370,8 +369,7 @@ public class GroupService {
     public Mono<UpdateResult> checkAndTransferGroupOwnership(
             @NotEmpty Set<Long> groupIds,
             @NotNull Long successorId,
-            boolean quitAfterTransfer,
-            @Nullable ClientSession session) {
+            boolean quitAfterTransfer) {
         try {
             Validator.notEmpty(groupIds, "groupIds");
             Validator.notNull(successorId, "successorId");

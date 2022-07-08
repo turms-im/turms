@@ -53,18 +53,18 @@ public final class GroupMember extends BaseEntity {
     private final Key key;
 
     @Field(Fields.NAME)
-    private final String name;
+    private String name;
 
     @Field(Fields.ROLE)
-    private final GroupMemberRole role;
+    private GroupMemberRole role;
 
     @Field(Fields.JOIN_DATE)
     @Indexed(optional = true, reason = EXTENDED_FEATURE)
-    private final Date joinDate;
+    private Date joinDate;
 
     @Field(Fields.MUTE_END_DATE)
     @Indexed(optional = true, reason = EXTENDED_FEATURE)
-    private final Date muteEndDate;
+    private Date muteEndDate;
 
     public GroupMember(
             @NotNull Long groupId,

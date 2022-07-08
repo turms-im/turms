@@ -240,7 +240,7 @@ public class GroupController extends BaseController {
                 updateGroupDTO.deletionDate(),
                 updateGroupDTO.muteEndDate(),
                 null)
-                : groupService.checkAndTransferGroupOwnership(ids, successorId, updateGroupDTO.quitAfterTransfer(), null);
+                : groupService.checkAndTransferGroupOwnership(ids, successorId, updateGroupDTO.quitAfterTransfer());
         return HttpHandlerResult.updateResult(updateMono);
     }
 

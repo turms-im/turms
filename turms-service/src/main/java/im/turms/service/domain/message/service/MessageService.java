@@ -85,7 +85,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static im.turms.server.common.access.common.ResponseStatusCode.ILLEGAL_ARGUMENT;
 import static im.turms.server.common.access.common.ResponseStatusCode.MESSAGE_RECALL_TIMEOUT;
@@ -726,16 +725,16 @@ public class MessageService {
                 });
     }
 
-    public Flux<Long> queryMessageRecipients(@NotNull Long messageId) {
+    public Mono<Set<Long>> queryMessageRecipients(@NotNull Long messageId) {
         try {
             Validator.notNull(messageId, "messageId");
         } catch (ResponseException e) {
-            return Flux.error(e);
+            return Mono.error(e);
         }
         return messageRepository.findMessageGroupId(messageId)
-                .flatMapMany(message -> message.getIsGroupMessage()
+                .flatMap(message -> message.getIsGroupMessage()
                         ? groupMemberService.queryGroupMemberIds(message.groupId())
-                        : Mono.just(message.getTargetId()));
+                        : Mono.just(Set.of(message.getTargetId())));
     }
 
     public Mono<MessageAndRecipientIds> authAndSaveMessage(
@@ -764,9 +763,8 @@ public class MessageService {
                         return Mono.error(ResponseException.get(code, permission.reason()));
                     }
                     Mono<Set<Long>> recipientIdsMono = isGroupMessage
-                            ? groupMemberService.findMemberIdsByGroupId(targetId)
-                            .filter(memberId -> !memberId.equals(senderId))
-                            .collect(Collectors.toSet())
+                            ? groupMemberService.queryGroupMemberIds(targetId)
+                            .map(memberIds -> CollectionUtil.remove(memberIds, senderId))
                             : Mono.just(Set.of(targetId));
                     return recipientIdsMono.flatMap(recipientIds -> {
                         if (!persistMessage) {
@@ -976,10 +974,10 @@ public class MessageService {
         byte[] prefix = isGroupConversation
                 ? GROUP_CONVERSATION_SEQUENCE_ID_PREFIX
                 : PRIVATE_CONVERSATION_SEQUENCE_ID_PREFIX;
-        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(prefix.length + Long.BYTES)
+        ByteBuf keyBuffer = PooledByteBufAllocator.DEFAULT.directBuffer(prefix.length + Long.BYTES)
                 .writeBytes(prefix)
                 .writeLong(targetId);
-        return redisClientManager.incr(targetId, buffer);
+        return redisClientManager.incr(targetId, keyBuffer);
     }
 
     // conversation ID

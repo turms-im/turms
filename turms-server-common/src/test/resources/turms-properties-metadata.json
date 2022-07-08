@@ -1464,6 +1464,13 @@
           "type": "string"
         }
       },
+      "memberCacheExpireAfterSeconds": {
+        "deprecated": false,
+        "desc": "The group member cache will expire after the specified seconds. If 0, no group member cache",
+        "global": true,
+        "mutable": false,
+        "type": "int"
+      },
       "question": {
         "answerContentLimit": {
           "deprecated": false,

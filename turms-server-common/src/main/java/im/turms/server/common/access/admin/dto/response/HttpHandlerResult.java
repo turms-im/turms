@@ -30,6 +30,7 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -101,6 +102,19 @@ public record HttpHandlerResult<T>(
     public static <T> Mono<HttpHandlerResult<ResponseDTO<PaginationDTO<T>>>> page(Mono<Long> totalMono, Flux<T> data) {
         Mono<PaginationDTO<T>> mono = Mono
                 .zip(totalMono, data.collect(CollectorUtil.toChunkedList()))
+                .map(tuple -> {
+                    Long total = tuple.getT1();
+                    if (total <= 0L) {
+                        throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
+                    }
+                    return new PaginationDTO<>(total, tuple.getT2());
+                });
+        return okIfTruthy(mono);
+    }
+
+    public static <T> Mono<HttpHandlerResult<ResponseDTO<PaginationDTO<T>>>> page(Mono<Long> totalMono, Mono<List<T>> data) {
+        Mono<PaginationDTO<T>> mono = Mono
+                .zip(totalMono, data)
                 .map(tuple -> {
                     Long total = tuple.getT1();
                     if (total <= 0L) {

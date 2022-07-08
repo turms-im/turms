@@ -187,7 +187,6 @@ public class GroupServiceController {
                     .then(Mono.defer(() -> {
                         if (notifyMembersAfterGroupDeleted) {
                             return groupMemberService.queryGroupMemberIds(request.getGroupId())
-                                    .collect(Collectors.toSet())
                                     .map(memberIds -> memberIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
                                             : RequestHandlerResultFactory.get(memberIds, clientRequest.turmsRequest()));
@@ -281,7 +280,6 @@ public class GroupServiceController {
             return updateMono.then(Mono.defer(() -> {
                 if (notifyMembersAfterGroupUpdated) {
                     return groupMemberService.queryGroupMemberIds(request.getGroupId())
-                            .collect(Collectors.toSet())
                             .map(memberIds -> memberIds.isEmpty()
                                     ? RequestHandlerResultFactory.OK
                                     : RequestHandlerResultFactory.get(memberIds, clientRequest.turmsRequest()));
@@ -664,7 +662,6 @@ public class GroupServiceController {
                     .then(Mono.defer(() -> {
                         if (notifyMembersAfterOtherMemberInfoUpdated) {
                             return groupMemberService.queryGroupMemberIds(request.getGroupId())
-                                    .collect(Collectors.toSet())
                                     .map(groupMemberIds -> groupMemberIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
                                             : RequestHandlerResultFactory.get(groupMemberIds, clientRequest.turmsRequest()));

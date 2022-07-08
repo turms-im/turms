@@ -322,7 +322,6 @@ public class MessageServiceController {
                     .then(Mono.defer(() -> {
                         if (notifyRecipientsAfterMessageUpdatedBySender) {
                             return messageService.queryMessageRecipients(messageId)
-                                    .collect(Collectors.toSet())
                                     .map(recipientIds -> recipientIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
                                             : RequestHandlerResultFactory.get(recipientIds, clientRequest.turmsRequest(), sendMessageToOtherSenderOnlineDevices));

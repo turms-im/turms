@@ -165,7 +165,6 @@ public class ConversationServiceController {
                     }
                 } else if (notifyGroupConversationParticipantsAfterReadDateUpdated) {
                     return groupMemberService.queryGroupMemberIds(targetId)
-                            .collect(CollectorUtil.toSet(50))
                             .map(memberIds -> RequestHandlerResultFactory.get(
                                     memberIds,
                                     clientRequest.turmsRequest()));

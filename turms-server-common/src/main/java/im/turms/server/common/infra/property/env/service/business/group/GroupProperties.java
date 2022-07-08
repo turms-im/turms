@@ -26,6 +26,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import javax.validation.constraints.Min;
+
 /**
  * @author James Chen
  */
@@ -44,6 +46,12 @@ public class GroupProperties {
     @GlobalProperty
     @MutableProperty
     private boolean activateGroupWhenCreated = true;
+
+    @Description("The group member cache will expire after the specified seconds. " +
+            "If 0, no group member cache")
+    @GlobalProperty
+    @Min(0)
+    private int memberCacheExpireAfterSeconds = 15;
 
     @NestedConfigurationProperty
     private GroupInvitationProperties invitation = new GroupInvitationProperties();
