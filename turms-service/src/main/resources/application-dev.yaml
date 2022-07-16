@@ -1,8 +1,3 @@
-logging:
-  level:
-    im:
-      turms: DEBUG
-
 spring:
   netty:
     leak-detection: paranoid
@@ -20,6 +15,10 @@ turms:
   logging:
     console:
       enabled: true
+  plugin:
+    js:
+      debug:
+        enabled: true
   service:
     client-api:
       logging:

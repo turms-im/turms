@@ -336,7 +336,11 @@
     "console": {},
     "file": {}
   },
-  "plugin": {},
+  "plugin": {
+    "js": {
+      "debug": {}
+    }
+  },
   "security": {
     "blocklist": {
       "ip": {

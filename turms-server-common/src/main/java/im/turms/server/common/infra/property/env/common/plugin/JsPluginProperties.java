@@ -15,29 +15,24 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.common;
+package im.turms.server.common.infra.property.env.common.plugin;
 
-import im.turms.server.common.infra.property.metadata.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
- * Convention over configuration
- *
  * @author James Chen
  */
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class PluginProperties {
+public class JsPluginProperties {
 
-    @Description("Whether to enable plugins")
-    private boolean enabled = true;
-
-    @Description("The relative path of plugins")
-    private String dir = "plugins";
+    @NestedConfigurationProperty
+    private JsPluginDebugProperties debug = new JsPluginDebugProperties();
 
 }

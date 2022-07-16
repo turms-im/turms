@@ -25,7 +25,7 @@ import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.plugin.script.ScriptExecutionException;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import im.turms.server.common.infra.property.env.common.PluginProperties;
+import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;

@@ -863,6 +863,31 @@
       "global": false,
       "mutable": false,
       "type": "boolean"
+    },
+    "js": {
+      "debug": {
+        "enabled": {
+          "deprecated": false,
+          "desc": "Whether to enable debugging",
+          "global": false,
+          "mutable": false,
+          "type": "boolean"
+        },
+        "inspectHost": {
+          "deprecated": false,
+          "desc": "The inspect host",
+          "global": false,
+          "mutable": false,
+          "type": "string"
+        },
+        "inspectPort": {
+          "deprecated": false,
+          "desc": "The inspect port",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        }
+      }
     }
   },
   "security": {

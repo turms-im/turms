@@ -240,9 +240,23 @@ class MyTurmsExtension extends TurmsExtension {
 
 TODO
 
-#### 插件Debug步骤（基于IntelliJ IDEA）
+#### 插件Debug步骤
 
-TODO
+在Debug模式下（配置`turms.plugin.js.debug.enabled`为`true`，可以启动Debug模式）：
+
+1. 当插件宿主Turms Java服务端调用由Java `Proxy`类代理后的JavaScript插件函数实现时（其代理实现源码在：`im.turms.server.common.infra.plugin.JsExtensionPointInvocationHandler`），监听JavaScript插件的WebSocket Debugger服务端会等待开发者启动Chrome浏览器的Debugger，以保证在开发者绑定完Debugger后，才开始执行JavaScript插件代码。此时调用JavaScript插件函数的Java调用线程会进入`WAITING`状态，并等待JavaScript插件函数执行完成。
+
+2. 为了监听JavaScript插件代码实现，开发者需要自行打开Chrome浏览器，并输入监听JavaScript插件的WebSocket Debugger服务端监听地址，开发者可以在该页面上给JavaScript插件代码打上断点供调试。其中，服务端监听地址会被Turms服务端打印在控制台上，类似于：
+
+   > Debugger listening on ws://127.0.0.1:24242/bd62b7be-bdec-48a6-9ad0-9314af33d531
+   > For help, see: https://www.graalvm.org/tools/chrome-debugger
+   > E.g. in Chrome open: devtools://devtools/bundled/js_app.html?ws=127.0.0.1:24242/bd62b7be-bdec-48a6-9ad0-9314af33d531
+
+   其中的`devtools://devtools/bundled/js_app.html?ws=127.0.0.1:24242/bd62b7be-bdec-48a6-9ad0-9314af33d531`即是监听地址。
+
+3. 在绑定完Chrome Debugger后，JavaScript插件函数就会开始执行
+
+4. 等JavaScript插件函数执行完毕后，Java调用线程会进入`RUNNABLE`状态，而Java的代理函数也会接着返回JavaScript插件函数返回的数据。
 
 ## 插件相关API接口
 

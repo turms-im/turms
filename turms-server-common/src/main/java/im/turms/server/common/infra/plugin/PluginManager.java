@@ -25,7 +25,8 @@ import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import im.turms.server.common.infra.property.env.common.PluginProperties;
+import im.turms.server.common.infra.property.env.common.plugin.JsPluginDebugProperties;
+import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 import im.turms.server.common.infra.security.MessageDigestPool;
 import io.lettuce.core.codec.Base16;
 import lombok.Getter;
@@ -62,8 +63,12 @@ public class PluginManager {
 
     @Getter
     private final boolean enabled;
-    private final boolean isJsScriptEnabled;
     private final Path pluginDir;
+
+    private final boolean isJsScriptEnabled;
+    private final boolean isJsDebugEnabled;
+    private final String jsInspectHost;
+    private final int jsInspectPort;
 
     private final PluginRepository pluginRepository;
     private final ApplicationContext context;
@@ -91,10 +96,18 @@ public class PluginManager {
         PluginFinder.FindResult findResult = PluginFinder.find(pluginDir, isJsScriptEnabled);
         loadJavaPlugins(findResult.zipFiles());
         if (isJsScriptEnabled) {
+            JsPluginDebugProperties debugProperties = pluginProperties.getJs().getDebug();
+            isJsDebugEnabled = debugProperties.isEnabled();
+            jsInspectHost = debugProperties.getInspectHost();
+            jsInspectPort = debugProperties.getInspectPort();
             engine = Engine.newBuilder()
                     .option("engine.WarnInterpreterOnly", "false")
                     .build();
             loadJsPlugins(findResult.jsFiles());
+        } else {
+            isJsDebugEnabled = false;
+            jsInspectHost = null;
+            jsInspectPort = 0;
         }
         if (enabled) {
             startPlugins();
@@ -168,7 +181,7 @@ public class PluginManager {
         if (!isJsScriptEnabled) {
             throw new UnsupportedOperationException("JavaScript plugins are disabled because the classes of GraalJS aren't loaded");
         }
-        JsPlugin jsPlugin = JsPluginFactory.create((Engine) engine, script, path);
+        JsPlugin jsPlugin = JsPluginFactory.create((Engine) engine, script, path, isJsDebugEnabled, jsInspectHost, jsInspectPort);
         Plugin plugin = JavaPluginFactory.create(jsPlugin.descriptor(), jsPlugin.extensions(), context);
         pluginRepository.register(plugin);
     }

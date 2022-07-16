@@ -38,6 +38,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author James Chen
@@ -73,13 +74,24 @@ public class JsPluginFactory {
         }
     }
 
-    public static JsPlugin create(Engine engine, String script, @Nullable Path path) {
-        Context context = Context.newBuilder(JS_LANGUAGE_TYPE)
-                .allowHostAccess(HostAccess.ALL)
-                .allowHostClassLookup(className -> true)
-                .engine(engine)
-                .build();
+    public static JsPlugin create(Engine engine,
+                                  String script,
+                                  @Nullable Path path,
+                                  boolean isDebugEnabled,
+                                  String inspectHost,
+                                  int inspectPort) {
         Source source = parseScript(script);
+        Context.Builder builder = Context.newBuilder(JS_LANGUAGE_TYPE)
+                .allowHostAccess(HostAccess.ALL)
+                .allowHostClassLookup(className -> true);
+        if (isDebugEnabled) {
+            String inspectPath = UUID.randomUUID().toString();
+            builder.option("inspect", inspectHost + ":" + inspectPort)
+                    .option("inspect.Path", inspectPath);
+        } else {
+            builder.engine(engine);
+        }
+        Context context = builder.build();
         context.eval(PLUGIN_CONTEXT);
         context.eval(source);
         Value bindings = context.getBindings(JS_LANGUAGE_TYPE);
