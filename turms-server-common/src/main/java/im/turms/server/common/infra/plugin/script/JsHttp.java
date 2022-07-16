@@ -18,15 +18,20 @@
 package im.turms.server.common.infra.plugin.script;
 
 import im.turms.server.common.infra.lang.Pair;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.UnpooledByteBufAllocator;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
+import io.netty.util.concurrent.FastThreadLocal;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.graalvm.polyglot.Value;
 import reactor.core.publisher.Mono;
-import reactor.netty.ByteBufFlux;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.http.client.HttpClientResponse;
+import reactor.netty.resources.ConnectionProvider;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -34,47 +39,82 @@ import java.util.Map;
  */
 public class JsHttp {
 
-    private static final HttpClient HTTP_CLIENT = HttpClient.create();
-    private static final FetchOptions OPTIONS = new FetchOptions();
+    private static final ConnectionProvider CONNECTION_PROVIDER = ConnectionProvider
+            .builder("turms-js-http")
+            .maxConnections(100)
+            .build();
+    private static final FetchOptions DEFAULT_OPTIONS = new FetchOptions();
+    private static final FastThreadLocal<HttpClient> HTTP_CLIENT_POOL = new FastThreadLocal<>() {
+        @Override
+        protected HttpClient initialValue() {
+            return HttpClient.create(CONNECTION_PROVIDER);
+        }
+    };
 
     public Thenable fetch(String uri) {
-        return fetch(uri, OPTIONS);
+        return fetch(uri, DEFAULT_OPTIONS);
     }
 
     public Thenable fetch(String uri, FetchOptions options) {
         return (resolve, reject) -> {
-            String method = options.method;
-            HttpMethod httpMethod = method == null
-                    ? HttpMethod.GET
-                    : HttpMethod.valueOf(method);
-            if (options.headers != null) {
-                HTTP_CLIENT.headers(entries -> {
-                    for (Map.Entry<String, String> entry : options.headers.entrySet()) {
-                        entries.add(entry.getKey(), entry.getValue());
-                    }
-                });
+            try {
+                fetch0(resolve, reject, uri, options);
+            } catch (Exception e) {
+                reject.execute(e);
             }
-            HttpClient.RequestSender sender = HTTP_CLIENT
-                    .request(httpMethod)
-                    .uri(uri);
-            Mono<Pair<HttpClientResponse, String>> responseMono;
-            if (options.body == null) {
-                responseMono = sender.responseSingle((response, buffer) -> buffer.asString()
-                        .map(data -> Pair.of(response, data)));
-            } else {
-                ByteBufFlux body = ByteBufFlux.fromString(Mono.just(options.body));
-                responseMono = sender.send(body).responseSingle((response, buffer) -> buffer.asString()
-                        .map(data -> Pair.of(response, data)));
-            }
-            responseMono.subscribe(pair -> {
-                        HttpClientResponse response = pair.first();
-                        FetchResponse fetchResponse = new FetchResponse(response.status().code(),
-                                response.responseHeaders(),
-                                pair.second());
-                        resolve.execute(fetchResponse);
-                    },
-                    reject::execute);
         };
+    }
+
+    private void fetch0(Value resolve, Value reject, String uri, FetchOptions options) {
+        if (uri == null) {
+            reject.execute(new IllegalArgumentException("uri should not be null"));
+            return;
+        }
+        if (options == null) {
+            options = DEFAULT_OPTIONS;
+        }
+        String method = options.method;
+        HttpMethod httpMethod = method == null
+                ? HttpMethod.GET
+                : HttpMethod.valueOf(method);
+        HttpClient httpClient = HTTP_CLIENT_POOL.get();
+        Map<String, String> headers = options.headers;
+        if (headers != null) {
+            httpClient.headers(entries -> {
+                entries.clear();
+                for (Map.Entry<String, String> entry : headers.entrySet()) {
+                    entries.add(entry.getKey(), entry.getValue());
+                }
+            });
+        }
+        HttpClient.RequestSender sender = httpClient
+                .request(httpMethod)
+                .uri(uri);
+        Mono<Pair<HttpClientResponse, String>> responseMono;
+        String body = options.body;
+        if (body == null) {
+            responseMono = sender
+                    .responseSingle((response, buffer) -> buffer.asString()
+                            .map(data -> Pair.of(response, data)));
+        } else {
+            responseMono = sender
+                    .send(Mono.fromCallable(() -> {
+                        ByteBuf bodyBuffer = UnpooledByteBufAllocator.DEFAULT.directBuffer(body.length());
+                        bodyBuffer.writeCharSequence(body, StandardCharsets.UTF_8);
+                        return bodyBuffer;
+                    }))
+                    .responseSingle((response, buffer) -> buffer
+                            .asString()
+                            .map(data -> Pair.of(response, data)));
+        }
+        responseMono.subscribe(pair -> {
+                    HttpClientResponse response = pair.first();
+                    FetchResponse fetchResponse = new FetchResponse(response.status().code(),
+                            response.responseHeaders(),
+                            pair.second());
+                    resolve.execute(fetchResponse);
+                },
+                reject::execute);
     }
 
     @AllArgsConstructor
