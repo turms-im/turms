@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.conversation.repository;
 
+import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
@@ -63,6 +65,14 @@ public class GroupConversationRepository extends BaseRepository<GroupConversatio
             update.set(fieldKey, readDate);
         }
         return mongoClient.upsert(entityClass, filter, update);
+    }
+
+    public Mono<UpdateResult> deleteMemberConversations(Collection<Long> groupIds, Long memberId, ClientSession session) {
+        Filter filter = Filter.newBuilder(1)
+                .in(DomainFieldName.ID, groupIds);
+        Update update = Update.newBuilder(1)
+                .unset(GroupConversation.Fields.MEMBER_ID_TO_READ_DATE + "." + memberId);
+        return mongoClient.updateMany(session, entityClass, filter, update);
     }
 
 }

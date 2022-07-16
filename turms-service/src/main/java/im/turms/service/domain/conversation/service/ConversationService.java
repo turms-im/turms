@@ -23,6 +23,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -34,6 +35,7 @@ import im.turms.service.domain.conversation.po.GroupConversation;
 import im.turms.service.domain.conversation.po.PrivateConversation;
 import im.turms.service.domain.conversation.repository.GroupConversationRepository;
 import im.turms.service.domain.conversation.repository.PrivateConversationRepository;
+import im.turms.service.domain.group.service.GroupMemberService;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -56,6 +58,8 @@ import java.util.Set;
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class ConversationService {
 
+    private final GroupMemberService groupMemberService;
+
     private final GroupConversationRepository groupConversationRepository;
     private final PrivateConversationRepository privateConversationRepository;
 
@@ -65,8 +69,10 @@ public class ConversationService {
 
     public ConversationService(
             TurmsPropertiesManager propertiesManager,
+            GroupMemberService groupMemberService,
             GroupConversationRepository groupConversationRepository,
             PrivateConversationRepository privateConversationRepository) {
+        this.groupMemberService = groupMemberService;
         this.groupConversationRepository = groupConversationRepository;
         this.privateConversationRepository = privateConversationRepository;
 
@@ -263,6 +269,27 @@ public class ConversationService {
             return Mono.error(e);
         }
         return groupConversationRepository.deleteByIds(groupIds, session);
+    }
+
+    public Mono<Void> deleteGroupMemberConversations(@NotNull Collection<Long> userIds, @Nullable ClientSession session) {
+        try {
+            Validator.notNull(userIds, "userIds");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        Mono<Void> delete = Mono.empty();
+        for (Long userId : userIds) {
+            delete = delete.then(groupMemberService.queryUserJoinedGroupIds(userId)
+                            .collect(CollectorUtil.toChunkedList())
+                            // it's expected there are some cases that the user just joined a group,
+                            // and sent a message to the group after "queryUserJoinedGroupIds", meaning
+                            // there may some deleted members' conversations that should be deleted
+                            // but not deleted in the following "deleteGroupConversations".
+                            // TODO: support detecting deleted members' conversations when querying conversations in a efficient way.
+                            .flatMap(groupIds -> groupConversationRepository.deleteMemberConversations(groupIds, userId, session)))
+                    .then();
+        }
+        return delete;
     }
 
 }

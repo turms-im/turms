@@ -326,7 +326,7 @@ public class UserService {
                                 return userRelationshipService.deleteAllRelationships(userIds, session, false)
                                         .then(userRelationshipGroupService.deleteAllRelationshipGroups(userIds, session, false))
                                         .then(conversationService.deletePrivateConversations(userIds, session))
-//                                        .then(conversationService.deleteGroupConversations(userIds, session)) TODO
+                                        .then(conversationService.deleteGroupMemberConversations(userIds, session))
                                         .then(userVersionService.delete(userIds, session)
                                                 .onErrorResume(t -> {
                                                     LOGGER.error("Caught an error while deleting the version for the users {} after deleting the users", userIds, t);
