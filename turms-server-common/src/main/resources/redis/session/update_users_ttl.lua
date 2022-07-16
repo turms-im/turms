@@ -1,8 +1,4 @@
-local ttl
-for i, val in ipairs(KEYS) do
-    if i == 1 then
-        ttl = struct.unpack('>h', val)
-    else
-        redis.call('expire', val, ttl)
-    end
+local ttl = struct.unpack('>h', KEYS[1])
+for i = 2, #KEYS do
+    redis.call('expire', KEYS[i], ttl)
 end
