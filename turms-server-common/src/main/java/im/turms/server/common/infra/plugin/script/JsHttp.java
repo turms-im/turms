@@ -18,21 +18,27 @@
 package im.turms.server.common.infra.plugin.script;
 
 import im.turms.server.common.infra.lang.Pair;
+import im.turms.server.common.infra.time.DurationConst;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.UnpooledByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.util.concurrent.FastThreadLocal;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.graalvm.polyglot.Value;
+import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
+import reactor.netty.NettyOutbound;
 import reactor.netty.http.client.HttpClient;
+import reactor.netty.http.client.HttpClientRequest;
 import reactor.netty.http.client.HttpClientResponse;
 import reactor.netty.resources.ConnectionProvider;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 /**
  * @author James Chen
@@ -77,6 +83,10 @@ public class JsHttp {
         HttpMethod httpMethod = method == null
                 ? HttpMethod.GET
                 : HttpMethod.valueOf(method);
+        Integer timeoutMillis = options.timeout;
+        Duration timeout = timeoutMillis == null
+                ? DurationConst.FIVE_MINUTES
+                : Duration.ofMillis(timeoutMillis);
         HttpClient httpClient = HTTP_CLIENT_POOL.get();
         Map<String, String> headers = options.headers;
         if (headers != null) {
@@ -90,31 +100,35 @@ public class JsHttp {
         HttpClient.RequestSender sender = httpClient
                 .request(httpMethod)
                 .uri(uri);
-        Mono<Pair<HttpClientResponse, String>> responseMono;
+        BiFunction<HttpClientRequest, NettyOutbound, Publisher<Void>> sendConfigurer;
         String body = options.body;
         if (body == null) {
-            responseMono = sender
-                    .responseSingle((response, buffer) -> buffer.asString()
-                            .map(data -> Pair.of(response, data)));
+            sendConfigurer = (request, outbound) -> {
+                request.responseTimeout(timeout);
+                return Mono.empty();
+            };
         } else {
-            responseMono = sender
-                    .send(Mono.fromCallable(() -> {
-                        ByteBuf bodyBuffer = UnpooledByteBufAllocator.DEFAULT.directBuffer(body.length());
-                        bodyBuffer.writeCharSequence(body, StandardCharsets.UTF_8);
-                        return bodyBuffer;
-                    }))
-                    .responseSingle((response, buffer) -> buffer
-                            .asString()
-                            .map(data -> Pair.of(response, data)));
+            sendConfigurer = (request, outbound) -> {
+                request.responseTimeout(timeout);
+                return outbound.send(Mono.fromCallable(() -> {
+                    ByteBuf bodyBuffer = PooledByteBufAllocator.DEFAULT.directBuffer(body.length());
+                    bodyBuffer.writeCharSequence(body, StandardCharsets.UTF_8);
+                    return bodyBuffer;
+                }));
+            };
         }
-        responseMono.subscribe(pair -> {
-                    HttpClientResponse response = pair.first();
-                    FetchResponse fetchResponse = new FetchResponse(response.status().code(),
-                            response.responseHeaders(),
-                            pair.second());
-                    resolve.execute(fetchResponse);
-                },
-                reject::execute);
+        sender.send(sendConfigurer)
+                .responseSingle((response, buffer) -> buffer
+                        .asString()
+                        .map(data -> Pair.of(response, data)))
+                .subscribe(pair -> {
+                            HttpClientResponse response = pair.first();
+                            FetchResponse fetchResponse = new FetchResponse(response.status().code(),
+                                    response.responseHeaders(),
+                                    pair.second());
+                            resolve.execute(fetchResponse);
+                        },
+                        reject::execute);
     }
 
     @AllArgsConstructor
@@ -123,6 +137,7 @@ public class JsHttp {
         public String method;
         public Map<String, String> headers;
         public String body;
+        public Integer timeout;
     }
 
     @AllArgsConstructor
