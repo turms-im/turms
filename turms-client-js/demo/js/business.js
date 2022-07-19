@@ -37,7 +37,7 @@ function setupClient(container, client, userId, password, targetId) {
         .then(() => {
             appendContainer(container, `login: User ${userId} has logged in`);
             client.messageService.queryMessagesWithTotal([1])
-                .then(messages => appendContainer(container, `Offline messages: ${beautify(messages)}`))
+                .then(res => appendContainer(container, `Offline messages: ${beautify(res.data)}`))
                 .catch(error => appendContainer(container, `failed to query offline messages ${beautify(error)}`, true));
             const intervalId = setInterval(() => {
                 if (client.driver.isConnected) {
@@ -48,7 +48,7 @@ function setupClient(container, client, userId, password, targetId) {
                         "Hello Turms, My userId is " + userId,
                         null,
                         30)
-                        .then(id => appendContainer(container, `message ${id} has been sent`))
+                        .then(res => appendContainer(container, `message ${res.data} has been sent`))
                         .catch(error => appendContainer(container, `failed to send message: ${beautify(error)}`, true));
                 } else {
                     clearInterval(intervalId);
@@ -58,7 +58,7 @@ function setupClient(container, client, userId, password, targetId) {
                 'Turms Developers Group',
                 'This is a group for the developers who are interested in Turms',
                 'nope')
-                .then(id => appendContainer(container, `group ${id} has been created`))
+                .then(res => appendContainer(container, `group ${res.data} has been created`))
                 .catch(error => appendContainer(container, `failed to create group: ${beautify(error)}`, true));
         })
         .catch(reason => appendContainer(container, `failed to log in ${beautify(reason)}`, true));
