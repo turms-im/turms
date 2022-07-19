@@ -63,7 +63,7 @@ x-logging-turms: &logging-turms
 services:
   # MongoDB
   mongodb-config:
-    image: mongo:4.4.10-focal
+    image: mongo:4.4.15-focal
 #    depends_on:
 #      - loki
     entrypoint: [ "mongod", "--port", "27017", "--configsvr", "--replSet", "rs-config", "--bind_ip_all" ]
@@ -76,7 +76,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-shard:
-    image: mongo:4.4.10-focal
+    image: mongo:4.4.15-focal
 #    depends_on:
 #      - loki
     entrypoint: [ "mongod", "--port", "27017", "--shardsvr", "--replSet", "shard01", "--bind_ip_all" ]
@@ -89,7 +89,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-router:
-    image: mongo:4.4.10-focal
+    image: mongo:4.4.15-focal
 #    depends_on:
 #      - loki
     entrypoint: [ "mongos", "--port", "27017", "--configdb", "rs-config/mongodb-config:27017", "--bind_ip_all" ]
@@ -104,7 +104,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-setup:
-    image: "mongo:4.4.10-focal"
+    image: mongo:4.4.15-focal
     depends_on:
       mongodb-config:
         condition: service_healthy
@@ -125,7 +125,7 @@ services:
 
   # Redis
   redis:
-    image: redis:6.2-alpine
+    image: redis:6.2.7-alpine
 #    depends_on:
 #      - loki
     healthcheck:
@@ -277,7 +277,7 @@ services:
   # optional services for observability - metrics
 
   grafana:
-    image: grafana/grafana:8.3.3
+    image: grafana/grafana:9.0.3
     depends_on:
       - prometheus
     environment:
@@ -292,7 +292,7 @@ services:
       - ./ops/grafana/provisioning/:/etc/grafana/provisioning/
 
   prometheus:
-    image: prom/prometheus:v2.32.1
+    image: prom/prometheus:v2.37.0
     ports:
       - "9090:9090"
     profiles:
@@ -310,9 +310,9 @@ services:
 
   cadvisor:
     # If your server is in China and suffers from the network problem,
-    # try "gcr.lank8s.cn/cadvisor/cadvisor:v0.43.0"
+    # try "gcr.lank8s.cn/cadvisor/cadvisor:v0.44.1"
     # or just comment out "cadvisor"
-    image: gcr.io/cadvisor/cadvisor:v0.43.0
+    image: gcr.io/cadvisor/cadvisor:v0.44.1
     ports:
       - "8080:8080"
     profiles:
@@ -324,10 +324,8 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
 
-  # The exporter does NOT support ARM64 currently
-  # https://github.com/percona/mongodb_exporter/issues/362
   mongo-exporter:
-    image: percona/mongodb_exporter:0.30.0
+    image: percona/mongodb_exporter:0.33.0
     command:
       - '--mongodb.uri=mongodb://mongodb-router:27017'
     ports:
@@ -336,7 +334,7 @@ services:
       - monitoring
 
   redis-exporter:
-    image: oliver006/redis_exporter:v1.33.0
+    image: oliver006/redis_exporter:v1.43.0
     depends_on:
       - redis
     environment:
