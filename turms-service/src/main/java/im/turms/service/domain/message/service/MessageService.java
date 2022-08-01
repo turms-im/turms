@@ -35,6 +35,7 @@ import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.net.InetAddressUtil;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -131,6 +132,7 @@ public class MessageService {
     private boolean persistPreMessageId;
     private boolean persistRecord;
     private boolean persistMessage;
+    private boolean persistSenderIp;
     private boolean updateReadDateAfterMessageSent;
     private boolean deleteMessageLogicallyByDefault;
     private boolean allowRecallMessage;
@@ -212,6 +214,7 @@ public class MessageService {
         persistPreMessageId = messageProperties.isPersistPreMessageId();
         persistRecord = messageProperties.isPersistRecord();
         persistMessage = messageProperties.isPersistMessage();
+        persistSenderIp = messageProperties.isPersistSenderIp();
         updateReadDateAfterMessageSent = properties.getService().getConversation().getReadReceipt().isUpdateReadDateAfterMessageSent();
         deleteMessageLogicallyByDefault = messageProperties.isDeleteMessageLogicallyByDefault();
         allowRecallMessage = messageProperties.isAllowRecallMessage();
@@ -355,6 +358,7 @@ public class MessageService {
     public Mono<Message> saveMessage(
             @Nullable Long messageId,
             @NotNull Long senderId,
+            @Nullable byte[] senderIp,
             @NotNull Long targetId,
             @NotNull Boolean isGroupMessage,
             @NotNull Boolean isSystemMessage,
@@ -391,6 +395,9 @@ public class MessageService {
         if (!persistPreMessageId) {
             preMessageId = null;
         }
+        if (!persistSenderIp) {
+            senderIp = null;
+        }
         Mono<Long> sequenceId = null;
         if (isGroupMessage) {
             if (useSequenceIdForGroupConversation) {
@@ -413,6 +420,7 @@ public class MessageService {
                     null,
                     text,
                     senderId,
+                    senderIp == null ? null : InetAddressUtil.ipBytesToInt(senderIp),
                     targetId,
                     records,
                     burnAfter,
@@ -426,6 +434,7 @@ public class MessageService {
             Date finalDeliveryDate = deliveryDate;
             List<byte[]> finalRecords = records;
             Long finalPreMessageId = preMessageId;
+            byte[] finalSenderIp = senderIp;
             saveMessage = sequenceId
                     .flatMap(seqId -> {
                         Message message = new Message(
@@ -439,6 +448,7 @@ public class MessageService {
                                 null,
                                 text,
                                 senderId,
+                                finalSenderIp == null ? null : InetAddressUtil.ipBytesToInt(finalSenderIp),
                                 targetId,
                                 finalRecords,
                                 burnAfter,
@@ -524,6 +534,7 @@ public class MessageService {
             @Nullable List<byte[]> records,
             @Nullable @Min(0) Integer burnAfter,
             @Nullable @PastOrPresent Date recallDate,
+            @Nullable byte[] senderIp,
             @Nullable ClientSession session) {
         try {
             Validator.notEmpty(messageIds, "messageIds");
@@ -531,14 +542,21 @@ public class MessageService {
             Validator.min(burnAfter, "burnAfter", 0);
             Validator.pastOrPresent(recallDate, "recallDate");
             validRecordsLength(records);
+            Validator.ip(senderIp, "senderIp");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (Validator.areAllNull(isSystemMessage, text, records, burnAfter, recallDate)) {
+        if (Validator.areAllNull(isSystemMessage, text, records, burnAfter, recallDate, senderIp)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         if (recallDate == null) {
-            return messageRepository.updateMessages(messageIds, isSystemMessage, text, records, burnAfter, session);
+            return messageRepository.updateMessages(messageIds,
+                    isSystemMessage,
+                    senderIp == null ? null : InetAddressUtil.ipBytesToInt(senderIp),
+                    text,
+                    records,
+                    burnAfter,
+                    session);
         }
         return messageRepository.findByIds(messageIds)
                 .map(message -> {
@@ -547,6 +565,7 @@ public class MessageService {
                     return authAndSaveAndSendMessage(true,
                             senderId,
                             senderDeviceType,
+                            senderIp,
                             null,
                             message.getIsGroupMessage(),
                             true,
@@ -574,6 +593,7 @@ public class MessageService {
             @Nullable List<byte[]> records,
             @Nullable @Min(0) Integer burnAfter,
             @Nullable @PastOrPresent Date recallDate,
+            @Nullable byte[] senderIp,
             @Nullable ClientSession session) {
         try {
             Validator.notNull(messageId, "messageId");
@@ -588,6 +608,7 @@ public class MessageService {
                 records,
                 burnAfter,
                 recallDate,
+                senderIp,
                 session);
     }
 
@@ -720,7 +741,7 @@ public class MessageService {
                         return Mono.error(ResponseException.get(NOT_SENDER_TO_UPDATE_MESSAGE));
                     }
                     return recallDate == null
-                            ? updateMessage(senderId, senderDeviceType, messageId, null, text, records, null, null, null)
+                            ? updateMessage(senderId, senderDeviceType, messageId, null, text, records, null, null, null, null)
                             : updateMessageRecallDate(senderId, senderDeviceType, messageId, text, records, recallDate);
                 });
     }
@@ -740,6 +761,7 @@ public class MessageService {
     public Mono<MessageAndRecipientIds> authAndSaveMessage(
             @Nullable Long messageId,
             @NotNull Long senderId,
+            @Nullable byte[] senderIp,
             @NotNull Long targetId,
             @NotNull Boolean isGroupMessage,
             @NotNull Boolean isSystemMessage,
@@ -772,7 +794,7 @@ public class MessageService {
                                     ? Mono.empty()
                                     : Mono.just(new MessageAndRecipientIds(null, recipientIds));
                         }
-                        Mono<Message> saveMono = saveMessage(messageId, senderId, targetId, isGroupMessage,
+                        Mono<Message> saveMono = saveMessage(messageId, senderId, senderIp, targetId, isGroupMessage,
                                 isSystemMessage, text, records, burnAfter, deliveryDate, null, referenceId, preMessageId);
                         return saveMono.map(message -> {
                             if (message.getId() != null && sentMessageCache != null) {
@@ -786,6 +808,7 @@ public class MessageService {
 
     public Mono<MessageAndRecipientIds> authAndCloneAndSaveMessage(
             @NotNull Long requesterId,
+            @Nullable byte[] requesterIp,
             @NotNull Long referenceId,
             @NotNull Boolean isGroupMessage,
             @NotNull Boolean isSystemMessage,
@@ -794,6 +817,7 @@ public class MessageService {
                 .flatMap(message -> authAndSaveMessage(
                         node.nextLargeGapId(ServiceType.MESSAGE),
                         requesterId,
+                        requesterIp,
                         targetId,
                         isGroupMessage,
                         isSystemMessage,
@@ -809,6 +833,7 @@ public class MessageService {
             boolean send,
             @Nullable Long senderId,
             @Nullable DeviceType senderDeviceType,
+            @Nullable byte[] senderIp,
             @Nullable Long messageId,
             @NotNull Boolean isGroupMessage,
             @NotNull Boolean isSystemMessage,
@@ -838,9 +863,9 @@ public class MessageService {
         }
         Date deliveryDate = new Date();
         Mono<MessageAndRecipientIds> saveMono = referenceId == null
-                ? authAndSaveMessage(messageId, senderId, targetId, isGroupMessage, isSystemMessage,
+                ? authAndSaveMessage(messageId, senderId, senderIp, targetId, isGroupMessage, isSystemMessage,
                 text, records, burnAfter, deliveryDate, null, preMessageId)
-                : authAndCloneAndSaveMessage(senderId, referenceId, isGroupMessage, isSystemMessage, targetId);
+                : authAndCloneAndSaveMessage(senderId, senderIp, referenceId, isGroupMessage, isSystemMessage, targetId);
         return saveMono
                 .doOnNext(pair -> {
                     Message message = pair.message();
@@ -896,6 +921,7 @@ public class MessageService {
                 null,
                 null,
                 message.getSenderId(),
+                null,
                 message.getTargetId(),
                 null,
                 null,
@@ -924,6 +950,7 @@ public class MessageService {
                             records,
                             null,
                             recallDate,
+                            null,
                             null);
                 });
     }

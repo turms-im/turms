@@ -21,6 +21,7 @@ import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.proto.ProtoFormatter;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -29,6 +30,7 @@ import java.util.Objects;
 public final class ClientRequest {
     private final Long userId;
     private final DeviceType deviceType;
+    private final byte[] clientIp;
     private final Long requestId;
     private final TurmsRequest.Builder turmsRequestBuilder;
     private TurmsRequest turmsRequest;
@@ -36,11 +38,13 @@ public final class ClientRequest {
     public ClientRequest(
             Long userId,
             DeviceType deviceType,
+            byte[] clientIp,
             Long requestId,
             TurmsRequest.Builder turmsRequestBuilder,
             TurmsRequest turmsRequest) {
         this.userId = userId;
         this.deviceType = deviceType;
+        this.clientIp = clientIp;
         this.requestId = requestId;
         this.turmsRequestBuilder = turmsRequestBuilder;
         this.turmsRequest = turmsRequest;
@@ -49,10 +53,12 @@ public final class ClientRequest {
     public ClientRequest(
             Long userId,
             DeviceType deviceType,
+            byte[] clientIp,
             Long requestId,
             TurmsRequest turmsRequest) {
         this.userId = userId;
         this.deviceType = deviceType;
+        this.clientIp = clientIp;
         this.requestId = requestId;
         this.turmsRequestBuilder = null;
         this.turmsRequest = turmsRequest;
@@ -63,6 +69,7 @@ public final class ClientRequest {
         return "ClientRequest[" +
                 "userId=" + userId +
                 ", deviceType=" + deviceType +
+                ", clientIp=" + Arrays.toString(clientIp) +
                 ", requestId=" + requestId +
                 ", turmsRequest=" + ProtoFormatter.toLogString(turmsRequest()) +
                 ']';
@@ -83,6 +90,10 @@ public final class ClientRequest {
         return deviceType;
     }
 
+    public byte[] clientIp() {
+        return clientIp;
+    }
+
     public Long requestId() {
         return requestId;
     }
@@ -93,11 +104,16 @@ public final class ClientRequest {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
         var that = (ClientRequest) obj;
         return Objects.equals(this.userId, that.userId) &&
                 Objects.equals(this.deviceType, that.deviceType) &&
+                Arrays.equals(this.clientIp, that.clientIp) &&
                 Objects.equals(this.requestId, that.requestId) &&
                 Objects.equals(this.turmsRequestBuilder, that.turmsRequestBuilder) &&
                 Objects.equals(this.turmsRequest, that.turmsRequest);
@@ -105,8 +121,7 @@ public final class ClientRequest {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, deviceType, requestId, turmsRequestBuilder, turmsRequest);
+        return 31 * Objects.hash(userId, deviceType, requestId, turmsRequestBuilder, turmsRequest) + Arrays.hashCode(clientIp);
     }
-
 
 }

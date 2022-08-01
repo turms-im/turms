@@ -44,6 +44,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class AntiSpamHandlerTests {
 
+    private static final byte[] CLIENT_IP = new byte[]{127, 0, 0, 1};
+
     Path path = Path.of("./anti-spam-handler-tests.tmp");
 
     @Test
@@ -55,7 +57,7 @@ class AntiSpamHandlerTests {
                 .setCreateGroupRequest(CreateGroupRequest.newBuilder()
                         .setName(new String(Store.UNWANTED_WORDS.get(0).getWord()))
                         .build());
-        ClientRequest clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, 1L, builder, null);
+        ClientRequest clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, CLIENT_IP, 1L, builder, null);
         Mono<ClientRequest> result = handler.transform(clientRequest);
         StepVerifier.create(result)
                 .expectErrorSatisfies(t -> {
@@ -132,7 +134,7 @@ class AntiSpamHandlerTests {
                 .newBuilder()
                 .setCreateGroupRequest(CreateGroupRequest.newBuilder()
                         .setName(original));
-        ClientRequest clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, 1L, builder, null);
+        ClientRequest clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, CLIENT_IP, 1L, builder, null);
         Mono<ClientRequest> result = handler.transform(clientRequest);
         StepVerifier.create(result)
                 .expectNextMatches(request -> {
@@ -149,7 +151,7 @@ class AntiSpamHandlerTests {
                 .newBuilder()
                 .setCreateGroupRequest(CreateGroupRequest.newBuilder()
                         .setName(original));
-        ClientRequest clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, 1L, builder, null);
+        ClientRequest clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, CLIENT_IP, 1L, builder, null);
         Mono<ClientRequest> result = handler.transform(clientRequest);
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> {

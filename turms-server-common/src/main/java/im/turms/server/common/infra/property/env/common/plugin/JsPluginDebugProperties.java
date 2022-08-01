@@ -23,6 +23,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 /**
@@ -41,6 +42,7 @@ public class JsPluginDebugProperties {
     private String inspectHost = "localhost";
 
     @Description("The inspect port")
+    @Max(65535)
     @Min(1)
     private int inspectPort = 24242;
 

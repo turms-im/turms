@@ -29,6 +29,7 @@ import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.net.InetAddressUtil;
 import im.turms.server.common.infra.property.env.service.env.FakeProperties;
 import im.turms.server.common.infra.security.PasswordManager;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
@@ -274,6 +275,7 @@ public final class MongoFakingManager {
         // Message
         long senderId = 1L;
         Set<Long> targetIds = CollectionUtil.newSetWithExpectedSize(100);
+        byte[] senderIp = new byte[]{127, 0, 0, 1};
         for (int i = 1; i <= 100; i++) {
             long id = nextId();
             long targetId = (long) 2 + (i % 9);
@@ -289,6 +291,7 @@ public final class MongoFakingManager {
                     null,
                     "private-message-text" + RandomStringUtils.randomAlphanumeric(16),
                     senderId,
+                    InetAddressUtil.ipBytesToInt(senderIp),
                     targetId,
                     null,
                     30,
@@ -307,6 +310,7 @@ public final class MongoFakingManager {
                     null,
                     "group-message-text" + RandomStringUtils.randomAlphanumeric(16),
                     1L,
+                    InetAddressUtil.ipBytesToInt(senderIp),
                     1L,
                     null,
                     30,

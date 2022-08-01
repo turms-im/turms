@@ -40,6 +40,7 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
 
     private static final long USER_ID = 1;
     private static final DeviceType USER_DEVICE = DeviceType.DESKTOP;
+    private static final byte[] USER_IP = new byte[]{127, 0, 0, 1};
     private static final long RELATED_USER_ID = 2;
     private static final long GROUP_ID = 1;
     private static final long REQUEST_ID = 9999;
@@ -54,7 +55,7 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
                         .setReadDate(System.currentTimeMillis())
                         .setTargetId(RELATED_USER_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateConversationRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -68,7 +69,7 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
                         .setReadDate(System.currentTimeMillis())
                         .setGroupId(GROUP_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateConversationRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -82,7 +83,7 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
                         .setIsGroupMessage(false)
                         .setToId(RELATED_USER_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateTypingStatusRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -96,7 +97,7 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
                         .setIsGroupMessage(true)
                         .setToId(GROUP_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateTypingStatusRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -111,7 +112,7 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
                 .setQueryConversationsRequest(QueryConversationsRequest.newBuilder()
                         .addTargetIds(RELATED_USER_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryConversationsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().hasConversations()).isTrue());
@@ -124,7 +125,7 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
                 .setQueryConversationsRequest(QueryConversationsRequest.newBuilder()
                         .addGroupIds(GROUP_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryConversationsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().hasConversations()).isTrue());

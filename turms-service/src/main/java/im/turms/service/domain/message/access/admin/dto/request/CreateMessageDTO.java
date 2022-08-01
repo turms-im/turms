@@ -31,6 +31,7 @@ public record CreateMessageDTO(
         String text,
         List<byte[]> records,
         Long senderId,
+        String senderIp,
         DeviceType senderDeviceType,
         Long targetId,
         Integer burnAfter,

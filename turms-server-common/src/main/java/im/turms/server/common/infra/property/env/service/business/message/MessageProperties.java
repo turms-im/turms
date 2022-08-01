@@ -80,10 +80,15 @@ public class MessageProperties {
     @MutableProperty
     private boolean persistRecord;
 
-    @Description("Whether to persist the \"preMessageId\" of messages in databases")
+    @Description("Whether to persist the previous message ID of messages in databases")
     @GlobalProperty
     @MutableProperty
     private boolean persistPreMessageId;
+
+    @Description("Whether to persist the sender IP of messages in databases")
+    @GlobalProperty
+    @MutableProperty
+    private boolean persistSenderIp;
 
     @Description("A message will be retained for the given period and will be removed from the database after the retention period")
     @GlobalProperty

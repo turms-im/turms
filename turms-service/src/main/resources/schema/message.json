@@ -27,6 +27,9 @@
       "sid": {
         "bsonType": "long"
       },
+      "sip": {
+        "bsonType": "int"
+      },
       "txt": {
         "bsonType": "string"
       },

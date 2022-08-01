@@ -223,12 +223,7 @@ public class RpcService implements ClusterService {
         if (endpoint != null && (connection == null || connection == endpoint.getConnection())) {
             return endpoint;
         }
-        endpoint = createEndpoint(nodeId, connection);
-        RpcEndpoint previous = nodeIdToEndpoint.putIfAbsent(nodeId, endpoint);
-        if (previous != null) {
-            return previous;
-        }
-        return endpoint;
+        return nodeIdToEndpoint.computeIfAbsent(nodeId, id -> createEndpoint(id, connection));
     }
 
     public RpcEndpoint createEndpoint(String nodeId, @Nullable TurmsConnection connection) {
@@ -374,7 +369,7 @@ public class RpcService implements ClusterService {
     }
 
     /**
-     * @return 1. an non-empty publisher that publishes an empty map if all peers respond with an empty payload;
+     * @return 1. a non-empty publisher that publishes an empty map if all peers respond with an empty payload;
      * 2. a non-empty publisher that publishes a non-empty map if any peer responds with a non-empty valid payload;
      * 3. error for other cases (e.g. no peer exists).
      * The key is the member node ID, and the value is the response

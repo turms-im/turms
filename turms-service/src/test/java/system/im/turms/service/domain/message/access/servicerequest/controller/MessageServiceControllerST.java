@@ -42,6 +42,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
 
     private static final long SENDER_ID = 1;
     private static final DeviceType SENDER_DEVICE_TYPE = DeviceType.DESKTOP;
+    private static final byte[] SENDER_IP = new byte[]{127, 0, 0, 1};
     private static final long RECIPIENT_ID = 2;
     private static final long TARGET_GROUP_ID = 1;
     private static final long REQUEST_ID = 1;
@@ -60,7 +61,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
                         .setDeliveryDate(System.currentTimeMillis())
                         .setText("hello"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, SENDER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
         assertResultIsOkAndRecipients(resultMono,
@@ -77,7 +78,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
                         .setDeliveryDate(System.currentTimeMillis())
                         .setText("hello"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, SENDER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> groupMessageId = result.dataForRequester().getIds().getValues(0));
@@ -91,7 +92,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
                         .setMessageId(privateMessageId)
                         .setRecipientId(RECIPIENT_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, SENDER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getIds().getValuesList()).isNotEmpty());
@@ -105,7 +106,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
                         .setMessageId(privateMessageId)
                         .setGroupId(TARGET_GROUP_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, SENDER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getIds().getValuesList()).isNotEmpty());
@@ -121,7 +122,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
                         .setMessageId(groupMessageId)
                         .setRecallDate(System.currentTimeMillis()))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, SENDER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateMessageRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -135,7 +136,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
                         .setMessageId(privateMessageId)
                         .setText("I have modified the message"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, SENDER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateMessageRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -152,7 +153,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
                         .setFromId(SENDER_ID)
                         .setSize(10))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(RECIPIENT_ID, SENDER_DEVICE_TYPE, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(RECIPIENT_ID, SENDER_DEVICE_TYPE, SENDER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryMessagesRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getMessages().getMessagesList()).isNotEmpty());
@@ -166,7 +167,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
                         .setSize(1)
                         .setWithTotal(true))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, SENDER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryMessagesRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,

@@ -21,6 +21,7 @@ import com.google.common.net.InetAddresses;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
 
+import javax.annotation.Nullable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -50,6 +51,26 @@ public final class InetAddressUtil {
         } catch (UnknownHostException e) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The IP bytes " + Arrays.toString(ip) + " is invalid");
         }
+    }
+
+    @Nullable
+    public static Integer ipBytesToInt(byte[] ip) {
+        if (ip.length != IPV4_BYTE_LENGTH) {
+            return null;
+        }
+        return ip[3] & 0xFF
+                | ((ip[2] << 8) & 0xFF00)
+                | ((ip[1] << 16) & 0xFF_0000)
+                | ((ip[0] << 24) & 0xFF00_0000);
+    }
+
+    public static byte[] ipIntToBytes(int ip) {
+        return new byte[]{
+                (byte) ((ip >>> 24) & 0xFF),
+                (byte) ((ip >>> 16) & 0xFF),
+                (byte) ((ip >>> 8) & 0xFF),
+                (byte) (ip & 0xFF)
+        };
     }
 
     public static boolean isIpV4OrV6(byte[] ip) {

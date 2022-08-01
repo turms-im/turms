@@ -32,15 +32,15 @@ import lombok.EqualsAndHashCode;
 public class MongoCollectionOptions {
 
     @EqualsAndHashCode.Include
-    private final Class<?> clazz;
+    private final Class<?> entityClass;
     private final WriteConcern writeConcern;
 
-    public static MongoCollectionOptions of(Class<?> clazz) {
-        return new MongoCollectionOptions(clazz, WriteConcern.MAJORITY);
+    public static MongoCollectionOptions of(Class<?> entityClass) {
+        return new MongoCollectionOptions(entityClass, WriteConcern.MAJORITY);
     }
 
-    public static MongoCollectionOptions of(Class<?> clazz, WriteConcern writeConcern) {
-        return new MongoCollectionOptions(clazz, writeConcern);
+    public static MongoCollectionOptions of(Class<?> entityClass, WriteConcern writeConcern) {
+        return new MongoCollectionOptions(entityClass, writeConcern);
     }
 
 }

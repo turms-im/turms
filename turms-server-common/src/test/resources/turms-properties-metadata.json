@@ -1630,7 +1630,7 @@
       },
       "persistPreMessageId": {
         "deprecated": false,
-        "desc": "Whether to persist the \"preMessageId\" of messages in databases",
+        "desc": "Whether to persist the previous message ID of messages in databases",
         "global": true,
         "mutable": true,
         "type": "boolean"
@@ -1638,6 +1638,13 @@
       "persistRecord": {
         "deprecated": false,
         "desc": "Whether to persist the records of messages in databases",
+        "global": true,
+        "mutable": true,
+        "type": "boolean"
+      },
+      "persistSenderIp": {
+        "deprecated": false,
+        "desc": "Whether to persist the sender IP of messages in databases",
         "global": true,
         "mutable": true,
         "type": "boolean"
@@ -1836,6 +1843,12 @@
               "type": "boolean"
             },
             "senderId": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "boolean"
+            },
+            "senderIp": {
               "deprecated": false,
               "global": false,
               "mutable": false,

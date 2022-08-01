@@ -19,6 +19,7 @@ package im.turms.server.common.infra.validation;
 
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.net.InetAddressUtil;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
@@ -40,21 +41,13 @@ public final class Validator {
             return true;
         }
         if (item instanceof String str) {
-            if (!str.isEmpty()) {
-                return false;
-            }
+            return str.isEmpty();
         } else if (item instanceof Collection collection) {
-            if (!collection.isEmpty()) {
-                return false;
-            }
+            return collection.isEmpty();
         } else if (item.getClass().isArray()) {
-            if (Array.getLength(item) > 0) {
-                return false;
-            }
-        } else {
-            return false;
+            return Array.getLength(item) <= 0;
         }
-        return true;
+        return false;
     }
 
     public static boolean areAllFalsy(@Nullable Object... array) {
@@ -264,13 +257,20 @@ public final class Validator {
     public static void before(@Nullable Date startDate, @Nullable Date endDate, String startDateName, String endDateName) {
         if (startDate != null && endDate != null && endDate.before(startDate)) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                    "\"" + endDateName + "\" must not be before \"" + startDateName + "\"");
+                    ("\"" + endDateName + "\" must not be before \"" + startDateName + "\"").intern());
         }
     }
 
     public static void state(boolean expression, String message) {
         if (!expression) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, message);
+        }
+    }
+
+    public static void ip(@Nullable byte[] ip, String name) {
+        if (ip != null && !InetAddressUtil.isIpV4OrV6(ip)) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    ("\"" + name + "\" must be a valid IP").intern());
         }
     }
 

@@ -53,6 +53,7 @@ public class MessageRepository extends BaseRepository<Message, Long> {
 
     public Mono<UpdateResult> updateMessages(Set<Long> messageIds,
                                              @Nullable Boolean isSystemMessage,
+                                             @Nullable Integer senderIp,
                                              @Nullable String text,
                                              @Nullable List<byte[]> records,
                                              @Nullable Integer burnAfter,
@@ -62,6 +63,7 @@ public class MessageRepository extends BaseRepository<Message, Long> {
         Update update = Update.newBuilder(5)
                 .setIfNotNull(Message.Fields.MODIFICATION_DATE, new Date())
                 .setIfNotNull(Message.Fields.TEXT, text)
+                .setIfNotNull(Message.Fields.SENDER_IP, senderIp)
                 .setIfNotNull(Message.Fields.RECORDS, records)
                 .setIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, isSystemMessage)
                 .setIfNotNull(Message.Fields.BURN_AFTER, burnAfter);

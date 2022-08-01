@@ -30,6 +30,7 @@ import im.turms.server.common.access.admin.web.annotation.PutMapping;
 import im.turms.server.common.access.admin.web.annotation.QueryParam;
 import im.turms.server.common.access.admin.web.annotation.RequestBody;
 import im.turms.server.common.access.admin.web.annotation.RestController;
+import im.turms.server.common.infra.net.InetAddressUtil;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DivideBy;
@@ -71,10 +72,12 @@ public class MessageController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<Void>>> createMessages(
             @QueryParam(defaultValue = "true") boolean send,
             @RequestBody CreateMessageDTO createMessageDTO) {
+        String ip = createMessageDTO.senderIp();
         Mono<Void> sendMono = messageService.authAndSaveAndSendMessage(
                 send,
                 createMessageDTO.senderId(),
                 createMessageDTO.senderDeviceType(),
+                ip == null ? null : InetAddressUtil.ipStringToBytes(ip),
                 createMessageDTO.id(),
                 createMessageDTO.isGroupMessage(),
                 createMessageDTO.isSystemMessage(),
@@ -246,6 +249,7 @@ public class MessageController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateMessages(
             Set<Long> ids,
             @RequestBody UpdateMessageDTO updateMessageDTO) {
+        String ip = updateMessageDTO.senderIp();
         Mono<UpdateResultDTO> updateMono = messageService.updateMessages(
                         updateMessageDTO.senderId(),
                         updateMessageDTO.senderDeviceType(),
@@ -255,6 +259,7 @@ public class MessageController extends BaseController {
                         updateMessageDTO.records(),
                         updateMessageDTO.burnAfter(),
                         updateMessageDTO.recallDate(),
+                        ip == null ? null : InetAddressUtil.ipStringToBytes(ip),
                         null)
                 .map(UpdateResultDTO::get);
         return HttpHandlerResult.okIfTruthy(updateMono);

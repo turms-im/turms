@@ -99,6 +99,15 @@ public final class Message extends BaseEntity {
     private final Long senderId;
 
     /**
+     * Use {@link Integer} instead of {@link byte[]} to support IP range query
+     * in an efficient way at the cost of not supporting IPv6.
+     * TODO: DTO model conversion
+     */
+    @Field(Fields.SENDER_IP)
+    @Indexed(optional = true, reason = EXTENDED_FEATURE)
+    private final Integer senderIp;
+
+    /**
      * Use "target" rather than "recipient" because the target may be a recipient or a group.
      */
     @Field(Fields.TARGET_ID)
@@ -138,6 +147,7 @@ public final class Message extends BaseEntity {
         public static final String RECALL_DATE = "rd";
         public static final String TEXT = "txt";
         public static final String SENDER_ID = "sid";
+        public static final String SENDER_IP = "sip";
         public static final String TARGET_ID = "tid";
         public static final String RECORDS = "rec";
         public static final String BURN_AFTER = "bf";

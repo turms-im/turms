@@ -58,7 +58,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_MESSAGES_REQUEST;
@@ -113,6 +112,7 @@ public class MessageServiceController {
             if (request.hasMessageId()) {
                 messageAndRelatedUserIdsMono = messageService.authAndCloneAndSaveMessage(
                         clientRequest.userId(),
+                        clientRequest.clientIp(),
                         request.getMessageId(),
                         isGroupMessage,
                         false,
@@ -132,6 +132,7 @@ public class MessageServiceController {
                 messageAndRelatedUserIdsMono = messageService.authAndSaveMessage(
                         null,
                         clientRequest.userId(),
+                        clientRequest.clientIp(),
                         targetId,
                         isGroupMessage,
                         false,

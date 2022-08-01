@@ -27,6 +27,7 @@ import java.util.List;
  */
 public record UpdateMessageDTO(
         Long senderId,
+        String senderIp,
         DeviceType senderDeviceType,
         Boolean isSystemMessage,
         String text,

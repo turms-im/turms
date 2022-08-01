@@ -195,6 +195,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             ClientRequest clientRequest = new ClientRequest(
                     serviceRequest.getUserId(),
                     serviceRequest.getDeviceType(),
+                    serviceRequest.getIp(),
                     request.getRequestId(),
                     (TurmsRequest.Builder) request,
                     null);
@@ -208,6 +209,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             clientRequestMono = Mono.just(new ClientRequest(
                     serviceRequest.getUserId(),
                     serviceRequest.getDeviceType(),
+                    serviceRequest.getIp(),
                     request.getRequestId(),
                     null,
                     (TurmsRequest) request));

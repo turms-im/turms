@@ -172,8 +172,8 @@ public class MongoContext {
     public synchronized List<Pair<MongoEntity<?>, MongoCollection<?>>> registerEntitiesByOptions(
             Collection<MongoCollectionOptions> optionsList) {
         List<Pair<MongoEntity<?>, MongoCollection<?>>> pairs = new ArrayList<>(optionsList.size());
-        for (MongoCollectionOptions properties : optionsList) {
-            Class<?> clazz = properties.getClazz();
+        for (MongoCollectionOptions options : optionsList) {
+            Class<?> clazz = options.getEntityClass();
             MongoEntity<?> entity = entityMap.get(clazz);
             if (entity != null) {
                 MongoCollection<?> collection = collectionMap.get(clazz);
@@ -181,7 +181,7 @@ public class MongoContext {
             } else {
                 entity = MongoEntityFactory.parse(clazz);
                 MongoCollection<?> collection = database.getCollection(entity.collectionName(), clazz)
-                        .withWriteConcern(properties.getWriteConcern());
+                        .withWriteConcern(options.getWriteConcern());
                 entityMap.put(clazz, entity);
                 collectionMap.put(clazz, collection);
                 pairs.add(Pair.of(entity, collection));
