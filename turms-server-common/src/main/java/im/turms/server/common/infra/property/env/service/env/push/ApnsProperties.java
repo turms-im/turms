@@ -15,31 +15,32 @@
  * limitations under the License.
  */
 
-package im.turms.service.infra.metrics;
+package im.turms.server.common.infra.property.env.service.env.push;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
-public final class MetricNameConst {
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@Data
+@NoArgsConstructor
+public class ApnsProperties {
 
-    private MetricNameConst() {
-    }
+    private boolean enabled;
 
-    // User
+    private String bundleId = "";
 
-    public static final String REGISTERED_USERS_COUNTER = "user.registered";
-    public static final String DELETED_USERS_COUNTER = "user.deleted";
+    private String signingKey = "";
 
-    // Group
+    private String teamId = "";
 
-    public static final String CREATED_GROUPS_COUNTER = "group.created";
-    public static final String DELETED_GROUPS_COUNTER = "group.deleted";
+    private String keyId = "";
 
-    // Message
-
-    public static final String SENT_MESSAGES_COUNTER = "message.sent";
-
-    // Push notification
-    public static final String PUSH_NOTIFICATION_REQUEST = "turms.push.request";
+    private boolean sandboxEnabled;
 
 }

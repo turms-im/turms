@@ -28,6 +28,7 @@ import im.turms.server.common.infra.property.env.service.env.StatisticsPropertie
 import im.turms.server.common.infra.property.env.service.env.adminapi.AdminApiProperties;
 import im.turms.server.common.infra.property.env.service.env.clientapi.ClientApiProperties;
 import im.turms.server.common.infra.property.env.service.env.database.MongoProperties;
+import im.turms.server.common.infra.property.env.service.env.push.PushNotificationProperties;
 import im.turms.server.common.infra.property.env.service.env.redis.TurmsRedisProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,6 +58,9 @@ public class ServiceProperties {
 
     @NestedConfigurationProperty
     private MongoProperties mongo = new MongoProperties();
+
+    @NestedConfigurationProperty
+    private PushNotificationProperties pushNotification = new PushNotificationProperties();
 
     @NestedConfigurationProperty
     private TurmsRedisProperties redis = new TurmsRedisProperties();

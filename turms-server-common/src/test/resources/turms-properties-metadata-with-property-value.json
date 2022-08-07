@@ -2522,6 +2522,68 @@
         "value": false
       }
     },
+    "pushNotification": {
+      "apns": {
+        "bundleId": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "string",
+          "value": ""
+        },
+        "enabled": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "boolean",
+          "value": false
+        },
+        "keyId": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "string",
+          "value": ""
+        },
+        "sandboxEnabled": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "boolean",
+          "value": false
+        },
+        "signingKey": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "string",
+          "value": ""
+        },
+        "teamId": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "string",
+          "value": ""
+        }
+      },
+      "fcm": {
+        "credentials": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "string",
+          "value": ""
+        },
+        "enabled": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "boolean",
+          "value": false
+        }
+      }
+    },
     "redis": {
       "sequenceId": {}
     },

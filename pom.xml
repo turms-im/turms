@@ -36,12 +36,14 @@
         <commons-collections4.version>4.4</commons-collections4.version>
         <disruptor.version>3.4.4</disruptor.version>
         <eclipse-collections.version>11.0.0</eclipse-collections.version>
+        <firebase-admin.version>9.0.0</firebase-admin.version>
         <graalvm.version>22.1.0.1</graalvm.version>
         <guava.version>31.1-jre</guava.version>
         <icu4j.version>71.1</icu4j.version>
         <jctools-core.version>3.3.0</jctools-core.version>
         <log4j.version>2.17.2</log4j.version>
         <protobuf.version>3.20.1</protobuf.version>
+        <pushy.version>0.15.1</pushy.version>
         <swagger.version>2.2.0</swagger.version>
         <swagger-ui.version>4.10.3</swagger-ui.version>
 
@@ -155,6 +157,11 @@
                 <version>${eclipse-collections.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.google.firebase</groupId>
+                <artifactId>firebase-admin</artifactId>
+                <version>${firebase-admin.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
@@ -203,6 +210,11 @@
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java-util</artifactId>
                 <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.eatthepath</groupId>
+                <artifactId>pushy</artifactId>
+                <version>${pushy.version}</version>
             </dependency>
 
             <!-- Testing -->

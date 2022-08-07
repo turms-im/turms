@@ -32,6 +32,7 @@ public enum JobShutdownOrder {
 
     CLOSE_BLOCKLIST,
     CLOSE_NODE,
+    CLOSE_PUSH_NOTIFICATION,
     CLOSE_PLUGINS,
 
     CLOSE_REDIS_CONNECTIONS,

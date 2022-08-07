@@ -41,6 +41,16 @@
             <artifactId>protobuf-java-util</artifactId>
         </dependency>
 
+        <!-- Push Notification -->
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.eatthepath</groupId>
+            <artifactId>pushy</artifactId>
+        </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>im.turms</groupId>

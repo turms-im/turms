@@ -21,6 +21,7 @@ import im.turms.server.common.infra.lang.StringUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author James Chen
@@ -35,6 +36,20 @@ class StringUtilTests {
         String actual = StringUtil.newString(bytes, coder);
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void substitute() {
+        assertThat(StringUtil.substitute("my-{}-string", "test"))
+                .isEqualTo("my-test-string");
+        assertThatThrownBy(() -> StringUtil.substitute("my-{}-string", "test", "string"))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThat(StringUtil.substitute("my-{}-{}", "test", "string"))
+                .isEqualTo("my-test-string");
+        assertThat(StringUtil.substitute("my-{{}-{{}}", "test", "string"))
+                .isEqualTo("my-{test-{string}");
+        assertThatThrownBy(() -> StringUtil.substitute("my-{}-{}", "test"))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
 }

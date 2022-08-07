@@ -982,6 +982,10 @@
         "type": "boolean"
       }
     },
+    "pushNotification": {
+      "apns": {},
+      "fcm": {}
+    },
     "redis": {
       "sequenceId": {}
     },

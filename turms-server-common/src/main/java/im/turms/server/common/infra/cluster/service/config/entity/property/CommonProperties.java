@@ -19,13 +19,13 @@ package im.turms.server.common.infra.cluster.service.config.entity.property;
 
 import im.turms.server.common.infra.property.env.common.FlightRecorderProperties;
 import im.turms.server.common.infra.property.env.common.IpProperties;
-import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 import im.turms.server.common.infra.property.env.common.ShutdownProperties;
 import im.turms.server.common.infra.property.env.common.UserStatusProperties;
 import im.turms.server.common.infra.property.env.common.cluster.ClusterProperties;
 import im.turms.server.common.infra.property.env.common.healthcheck.HealthCheckProperties;
 import im.turms.server.common.infra.property.env.common.location.LocationProperties;
 import im.turms.server.common.infra.property.env.common.logging.LoggingProperties;
+import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 import im.turms.server.common.infra.property.env.common.security.SecurityProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;

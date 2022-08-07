@@ -139,7 +139,7 @@ public final class ReflectionUtil {
         if (Map.class.isAssignableFrom(fieldType)) {
             ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
             Type[] actualTypes = parameterizedType.getActualTypeArguments();
-            return Pair.of((Class) actualTypes[0], (Class) actualTypes[1]);
+            return Pair.of((Class<?>) actualTypes[0], (Class<?>) actualTypes[1]);
         }
         return null;
     }

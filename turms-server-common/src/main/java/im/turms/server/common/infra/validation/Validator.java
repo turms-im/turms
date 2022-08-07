@@ -27,6 +27,7 @@ import javax.validation.constraints.NotEmpty;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author James Chen
@@ -42,12 +43,18 @@ public final class Validator {
         }
         if (item instanceof String str) {
             return str.isEmpty();
-        } else if (item instanceof Collection collection) {
+        } else if (item instanceof Collection<?> collection) {
             return collection.isEmpty();
         } else if (item.getClass().isArray()) {
             return Array.getLength(item) <= 0;
+        } else if (item instanceof Map<?, ?> map) {
+            return map.isEmpty();
         }
         return false;
+    }
+
+    public static boolean isTruthy(@Nullable Object item) {
+        return !isFalsy(item);
     }
 
     public static boolean areAllFalsy(@Nullable Object... array) {
@@ -55,22 +62,7 @@ public final class Validator {
             return true;
         }
         for (Object o : array) {
-            if (o == null) {
-                continue;
-            }
-            if (o instanceof String str) {
-                if (!str.isEmpty()) {
-                    return false;
-                }
-            } else if (o instanceof Collection collection) {
-                if (!collection.isEmpty()) {
-                    return false;
-                }
-            } else if (o.getClass().isArray()) {
-                if (Array.getLength(o) > 0) {
-                    return false;
-                }
-            } else {
+            if (isTruthy(o)) {
                 return false;
             }
         }

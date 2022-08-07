@@ -2109,6 +2109,60 @@
         "type": "boolean"
       }
     },
+    "pushNotification": {
+      "apns": {
+        "bundleId": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "string"
+        },
+        "enabled": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "boolean"
+        },
+        "keyId": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "string"
+        },
+        "sandboxEnabled": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "boolean"
+        },
+        "signingKey": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "string"
+        },
+        "teamId": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "string"
+        }
+      },
+      "fcm": {
+        "credentials": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "string"
+        },
+        "enabled": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "boolean"
+        }
+      }
+    },
     "redis": {
       "sequenceId": {}
     },

@@ -15,31 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.service.infra.metrics;
+package im.turms.service.infra.push;
+
+import javax.annotation.Nullable;
 
 /**
  * @author James Chen
  */
-public final class MetricNameConst {
-
-    private MetricNameConst() {
-    }
-
-    // User
-
-    public static final String REGISTERED_USERS_COUNTER = "user.registered";
-    public static final String DELETED_USERS_COUNTER = "user.deleted";
-
-    // Group
-
-    public static final String CREATED_GROUPS_COUNTER = "group.created";
-    public static final String DELETED_GROUPS_COUNTER = "group.deleted";
-
-    // Message
-
-    public static final String SENT_MESSAGES_COUNTER = "message.sent";
-
-    // Push notification
-    public static final String PUSH_NOTIFICATION_REQUEST = "turms.push.request";
-
+public record SendPushNotificationResult(
+        boolean accepted,
+        @Nullable String errorCode,
+        boolean unregistered
+) {
 }

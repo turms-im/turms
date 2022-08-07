@@ -93,6 +93,44 @@ public final class StringUtil {
         return getBytes(s).length;
     }
 
+    /**
+     * @implNote 1. The strings must be ASCII
+     * and the method won't validate their coder for better performance.
+     * 2. The number of placeholder "{}" must the same as the number of arguments,
+     * or its will throw. We don't support mismatch to avoiding growing or shrinking the result string,
+     * or preprocess the message, which cause a bad performance while it can be avoided.
+     */
+    public static String substitute(String message, String... args) {
+        byte[] bytes = StringUtil.getBytes(message);
+        int length = bytes.length;
+        int argIndex = 0;
+        int argCount = args.length;
+        int argBytesLength = 0;
+        for (String str : args) {
+            argBytesLength += str == null ? 2 : str.length() - 2;
+        }
+        byte[] newBytes = new byte[bytes.length + argBytesLength];
+        int writeIndex = 0;
+        for (int i = 0; i < length; i++) {
+            byte b = bytes[i];
+            if (b == '{' && i < length - 1 && bytes[i + 1] == '}') {
+                if (argIndex >= argCount) {
+                    throw new IllegalArgumentException("The number of placeholder \"{}\" must be the same as the number of arguments");
+                }
+                for (byte argByte : StringUtil.getBytes(String.valueOf(args[argIndex++]))) {
+                    newBytes[writeIndex++] = argByte;
+                }
+                i++;
+            } else {
+                newBytes[writeIndex++] = b;
+            }
+        }
+        if (writeIndex != newBytes.length) {
+            throw new IllegalArgumentException("The number of placeholder \"{}\" must be the same as the number of arguments");
+        }
+        return newString(newBytes, LATIN1);
+    }
+
     public static String toString(Object val) {
         return val == null ? "" : val.toString();
     }

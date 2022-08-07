@@ -15,31 +15,27 @@
  * limitations under the License.
  */
 
-package im.turms.service.infra.metrics;
+package im.turms.server.common.infra.property.env.service.env.push;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
  */
-public final class MetricNameConst {
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@Data
+@NoArgsConstructor
+public class PushNotificationProperties {
 
-    private MetricNameConst() {
-    }
+    @NestedConfigurationProperty
+    private ApnsProperties apns = new ApnsProperties();
 
-    // User
-
-    public static final String REGISTERED_USERS_COUNTER = "user.registered";
-    public static final String DELETED_USERS_COUNTER = "user.deleted";
-
-    // Group
-
-    public static final String CREATED_GROUPS_COUNTER = "group.created";
-    public static final String DELETED_GROUPS_COUNTER = "group.deleted";
-
-    // Message
-
-    public static final String SENT_MESSAGES_COUNTER = "message.sent";
-
-    // Push notification
-    public static final String PUSH_NOTIFICATION_REQUEST = "turms.push.request";
+    @NestedConfigurationProperty
+    private FcmProperties fcm = new FcmProperties();
 
 }

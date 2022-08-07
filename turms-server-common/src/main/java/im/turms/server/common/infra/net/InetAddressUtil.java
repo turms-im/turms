@@ -66,10 +66,10 @@ public final class InetAddressUtil {
 
     public static byte[] ipIntToBytes(int ip) {
         return new byte[]{
-                (byte) ((ip >>> 24) & 0xFF),
-                (byte) ((ip >>> 16) & 0xFF),
-                (byte) ((ip >>> 8) & 0xFF),
-                (byte) (ip & 0xFF)
+                (byte) (ip >>> 24),
+                (byte) (ip >>> 16),
+                (byte) (ip >>> 8),
+                (byte) ip
         };
     }
 
