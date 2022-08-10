@@ -208,6 +208,9 @@ public enum ResponseStatusCode {
     RECALLING_MESSAGE_IS_DISABLED(5201, "The feature to recall messages is disabled", 510),
     MESSAGE_RECALL_TIMEOUT(5202, "The maximum allowed time to recall the message has passed", 403),
 
+    // Message - Query
+    NOT_MEMBER_TO_QUERY_GROUP_MESSAGES(5300, "Only the group members can query its group messages", 403),
+
     // Storage
     STORAGE_NOT_IMPLEMENTED(6000, "The storage feature is enabled but not implemented yet", 501),
     FILE_TOO_LARGE(6001, "The file is too large to upload", 413),

@@ -196,6 +196,9 @@ class ResponseStatusCode {
   static const recallingMessageIsDisabled = 5201;
   static const messageRecallTimeout = 5202;
 
+  // Message - Query
+  static const notMemberToQueryGroupMessages = 5300;
+
   // Storage
   static const storageNotImplemented = 6000;
   static const fileTooLarge = 6001;

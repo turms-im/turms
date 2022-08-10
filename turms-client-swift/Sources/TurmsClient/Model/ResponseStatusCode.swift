@@ -192,6 +192,8 @@ public enum ResponseStatusCode: Int {
     case recallingMessageIsDisabled
     case messageRecallTimeout
 
+    case notMemberToQueryGroupMessages = 5300
+
     // Storage
     case storageNotImplemented = 6000
     case fileTooLarge

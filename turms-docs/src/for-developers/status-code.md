@@ -129,6 +129,7 @@ ResponseStatusCode表明请求响应中的处理状态，类似HTTP的状态码�
 | 消息撤回相关错误     | RECALL_NON_EXISTING_MESSAGE                          | 5200   |      |
 |                      | RECALLING_MESSAGE_IS_DISABLED                        | 5201   |      |
 |                      | MESSAGE_RECALL_TIMEOUT                               | 5202   |      |
+| 消息查询相关错误     | NOT_MEMBER_TO_QUERY_GROUP_MESSAGES                   | 5300   |      |
 | 存储相关错误         | STORAGE_NOT_IMPLEMENTED = 6000                       | 6000   |      |
 |                      | FILE_TOO_LARGE                                       | 6001   |      |
 | 存储相关错误 - 扩展  | REDUNDANT_REQUEST_FOR_PRESIGNED_PROFILE_URL          | 6900   |      |

@@ -290,6 +290,7 @@ public class MessageService {
     }
 
     public Flux<Message> authAndQueryCompleteMessages(
+            Long requesterId,
             boolean closeToDate,
             @Nullable Collection<Long> messageIds,
             @Nullable Boolean areGroupMessages,
@@ -307,6 +308,26 @@ public class MessageService {
         } else {
             // TODO: make configurable
             size = Math.min(size, 1000);
+        }
+        if (Boolean.TRUE.equals(areGroupMessages) && targetId != null) {
+            Integer finalSize = size;
+            return groupMemberService.isGroupMember(targetId, requesterId)
+                    .flatMapMany(isMember -> {
+                        if (!isMember) {
+                            return Mono.error(ResponseException.get(ResponseStatusCode.NOT_MEMBER_TO_QUERY_GROUP_MESSAGES));
+                        }
+                        return queryMessages(
+                                closeToDate,
+                                messageIds,
+                                true,
+                                areSystemMessages,
+                                senderId == null ? null : Set.of(senderId),
+                                Set.of(targetId),
+                                deliveryDateRange,
+                                DateRange.NULL,
+                                page,
+                                finalSize);
+                    });
         }
         return queryMessages(
                 closeToDate,

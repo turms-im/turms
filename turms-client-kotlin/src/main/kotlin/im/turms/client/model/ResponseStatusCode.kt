@@ -213,6 +213,9 @@ object ResponseStatusCode {
     const val RECALLING_MESSAGE_IS_DISABLED = 5201
     const val MESSAGE_RECALL_TIMEOUT = 5202
 
+    // Message - Query
+    const val NOT_MEMBER_TO_QUERY_GROUP_MESSAGES = 5300
+
     // Storage
     const val STORAGE_NOT_IMPLEMENTED = 6000
     const val FILE_TOO_LARGE = 6001

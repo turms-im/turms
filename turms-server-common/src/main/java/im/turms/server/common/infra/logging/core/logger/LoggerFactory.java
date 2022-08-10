@@ -42,6 +42,9 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * @author James Chen
+ */
 public class LoggerFactory {
 
     private static TurmsTemplateLayout layout;
@@ -60,6 +63,9 @@ public class LoggerFactory {
     private static ConsoleAppender defaultConsoleAppender;
 
     private static LogProcessor processor;
+
+    private LoggerFactory() {
+    }
 
     @SneakyThrows
     public static synchronized void init(NodeType nodeType, String nodeId, LoggingProperties properties) {
