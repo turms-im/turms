@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import * as _m0 from "protobufjs/minimal";
 import { GroupMemberRole } from "../../../constant/group_member_role";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "im.turms.proto";
 

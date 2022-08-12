@@ -71,12 +71,12 @@ describe('Update', () => {
 
 describe('Query', () => {
     it('queryMessages_shouldReturnNotEmptyMessages', async () => {
-        const response = await recipientClient.messageService.queryMessages(null, false, null, SENDER_ID, null, null, 10);
+        const response = await recipientClient.messageService.queryMessages(null, false, null, [SENDER_ID], null, null, 10);
         const messages = response.data;
         expect(messages.length).toBeGreaterThan(0);
     });
     it('queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal', async () => {
-        const response = await recipientClient.messageService.queryMessages(null, false, null, SENDER_ID, null, null, 1);
+        const response = await recipientClient.messageService.queryMessages(null, false, null, [SENDER_ID], null, null, 1);
         const messagesWithTotals = response.data;
         expect(messagesWithTotals.length).toBeGreaterThan(0);
     });

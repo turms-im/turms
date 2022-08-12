@@ -75,15 +75,21 @@ public interface QueryMessagesRequestOrBuilder extends
   boolean getAreSystemMessages();
 
   /**
-   * <code>optional int64 from_id = 5;</code>
-   * @return Whether the fromId field is set.
+   * <code>repeated int64 from_ids = 5;</code>
+   * @return A list containing the fromIds.
    */
-  boolean hasFromId();
+  java.util.List<java.lang.Long> getFromIdsList();
   /**
-   * <code>optional int64 from_id = 5;</code>
-   * @return The fromId.
+   * <code>repeated int64 from_ids = 5;</code>
+   * @return The count of fromIds.
    */
-  long getFromId();
+  int getFromIdsCount();
+  /**
+   * <code>repeated int64 from_ids = 5;</code>
+   * @param index The index of the element to return.
+   * @return The fromIds at the given index.
+   */
+  long getFromIds(int index);
 
   /**
    * <code>optional int64 delivery_date_after = 6;</code>

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import Long from "long";
-import * as _m0 from "protobufjs/minimal";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -9,7 +9,7 @@ export interface QueryMessagesRequest {
   size?: number | undefined;
   areGroupMessages?: boolean | undefined;
   areSystemMessages?: boolean | undefined;
-  fromId?: string | undefined;
+  fromIds: string[];
   deliveryDateAfter?: string | undefined;
   deliveryDateBefore?: string | undefined;
   withTotal: boolean;
@@ -21,7 +21,7 @@ function createBaseQueryMessagesRequest(): QueryMessagesRequest {
     size: undefined,
     areGroupMessages: undefined,
     areSystemMessages: undefined,
-    fromId: undefined,
+    fromIds: [],
     deliveryDateAfter: undefined,
     deliveryDateBefore: undefined,
     withTotal: false,
@@ -47,9 +47,11 @@ export const QueryMessagesRequest = {
     if (message.areSystemMessages !== undefined) {
       writer.uint32(32).bool(message.areSystemMessages);
     }
-    if (message.fromId !== undefined) {
-      writer.uint32(40).int64(message.fromId);
+    writer.uint32(42).fork();
+    for (const v of message.fromIds) {
+      writer.int64(v);
     }
+    writer.ldelim();
     if (message.deliveryDateAfter !== undefined) {
       writer.uint32(48).int64(message.deliveryDateAfter);
     }
@@ -92,7 +94,14 @@ export const QueryMessagesRequest = {
           message.areSystemMessages = reader.bool();
           break;
         case 5:
-          message.fromId = longToString(reader.int64() as Long);
+          if ((tag & 7) === 2) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.fromIds.push(longToString(reader.int64() as Long));
+            }
+          } else {
+            message.fromIds.push(longToString(reader.int64() as Long));
+          }
           break;
         case 6:
           message.deliveryDateAfter = longToString(reader.int64() as Long);

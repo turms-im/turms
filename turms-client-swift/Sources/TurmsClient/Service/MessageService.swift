@@ -128,7 +128,7 @@ public class MessageService {
         ids: [Int64]? = nil,
         areGroupMessages: Bool? = nil,
         areSystemMessages: Bool? = nil,
-        fromId: Int64? = nil,
+        fromIds: [Int64]? = nil,
         deliveryDateAfter: Date? = nil,
         deliveryDateBefore: Date? = nil,
         size: Int32 = 50
@@ -145,8 +145,8 @@ public class MessageService {
                     if let v = areSystemMessages {
                         $0.areSystemMessages = v
                     }
-                    if let v = fromId {
-                        $0.fromID = v
+                    if let v = fromIds {
+                        $0.fromIds = v
                     }
                     if let v = deliveryDateAfter {
                         $0.deliveryDateAfter = v.toMillis()
@@ -167,7 +167,7 @@ public class MessageService {
         ids: [Int64]? = nil,
         areGroupMessages: Bool? = nil,
         areSystemMessages: Bool? = nil,
-        fromId: Int64? = nil,
+        fromIds: [Int64]? = nil,
         deliveryDateAfter: Date? = nil,
         deliveryDateBefore: Date? = nil,
         size: Int32 = 1
@@ -184,8 +184,8 @@ public class MessageService {
                     if let v = areSystemMessages {
                         $0.areSystemMessages = v
                     }
-                    if let v = fromId {
-                        $0.fromID = v
+                    if let v = fromIds {
+                        $0.fromIds = v
                     }
                     if let v = deliveryDateAfter {
                         $0.deliveryDateAfter = v.toMillis()

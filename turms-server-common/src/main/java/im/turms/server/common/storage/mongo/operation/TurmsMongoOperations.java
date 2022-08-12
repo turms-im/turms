@@ -120,6 +120,11 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     private static final DeleteOptions DEFAULT_DELETE_OPTIONS = new DeleteOptions();
     private static final InsertManyOptions DEFAULT_INSERT_MANY_OPTIONS = new InsertManyOptions();
     private static final InsertOneOptions DEFAULT_INSERT_ONE_OPTIONS = new InsertOneOptions();
+    private static final QueryOptions ID_ONLY_QUERY_OPTIONS = QueryOptions.newBuilder(2)
+            .projection(ID_ONLY);
+    private static final QueryOptions FIRST_ID_ONLY_QUERY_OPTIONS = QueryOptions.newBuilder(2)
+            .projection(ID_ONLY)
+            .limit(1);
     private static final UpdateOptions DEFAULT_UPDATE_OPTIONS = new UpdateOptions();
     private static final UpdateOptions DEFAULT_UPSERT_OPTIONS = new UpdateOptions().upsert(true);
 
@@ -185,12 +190,16 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     }
 
     @Override
+    public <T> Flux<T> findIds(Class<T> clazz, Filter filter) {
+        MongoCollection<T> collection = context.getCollection(clazz);
+        FindPublisher<T> publisher = find(collection, filter, ID_ONLY_QUERY_OPTIONS);
+        return Flux.from(publisher);
+    }
+
+    @Override
     public <T> Mono<Boolean> exists(Class<T> clazz, Filter filter) {
         MongoCollection<T> collection = context.getCollection(clazz);
-        QueryOptions options = QueryOptions.newBuilder(2)
-                .projection(ID_ONLY)
-                .limit(1);
-        FindPublisher<T> publisher = find(collection, filter, options);
+        FindPublisher<T> publisher = find(collection, filter, FIRST_ID_ONLY_QUERY_OPTIONS);
         return Mono.from(publisher).hasElement();
     }
 
@@ -646,10 +655,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public Mono<Boolean> validate(Class<?> clazz, String jsonSchema) {
         MongoCollection<?> collection = context.getCollection(clazz);
-        QueryOptions options = QueryOptions.newBuilder(2)
-                .projection(ID_ONLY)
-                .limit(1);
-        FindPublisher<?> publisher = find(collection, Document.parse(jsonSchema), options);
+        FindPublisher<?> publisher = find(collection, Document.parse(jsonSchema), FIRST_ID_ONLY_QUERY_OPTIONS);
         return Mono.from(publisher)
                 .hasElement();
     }

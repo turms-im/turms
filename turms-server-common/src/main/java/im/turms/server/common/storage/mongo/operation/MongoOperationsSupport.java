@@ -61,6 +61,8 @@ public interface MongoOperationsSupport {
 
     <T> Flux<T> findAll(Class<T> clazz, @Nullable QueryOptions options);
 
+    <T> Flux<T> findIds(Class<T> clazz, Filter filter);
+
     <T> Mono<Boolean> exists(Class<T> clazz, Filter filter);
 
     <T> Mono<Long> count(Class<T> clazz, Filter filter);

@@ -150,7 +150,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryMessagesRequest(QueryMessagesRequest.newBuilder()
                         .setAreGroupMessages(false)
-                        .setFromId(SENDER_ID)
+                        .addFromIds(SENDER_ID)
                         .setSize(10))
                 .build();
         ClientRequest clientRequest = new ClientRequest(RECIPIENT_ID, SENDER_DEVICE_TYPE, SENDER_IP, REQUEST_ID, request);
@@ -164,6 +164,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
     void handleQueryMessagesRequest_queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryMessagesRequest(QueryMessagesRequest.newBuilder()
+                        .setAreGroupMessages(true)
                         .setSize(1)
                         .setWithTotal(true))
                 .build();

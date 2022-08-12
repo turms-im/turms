@@ -123,7 +123,7 @@ internal class MessageServiceET {
     @Timeout(5)
     fun queryMessages_shouldReturnNotEmptyMessages() = runBlocking {
         val messages =
-            recipientClient.messageService.queryMessages(areGroupMessages = false, senderId = SENDER_ID, size = 10)
+            recipientClient.messageService.queryMessages(areGroupMessages = false, fromIds = setOf(SENDER_ID), size = 10)
                 .data
         assertTrue(messages.isNotEmpty())
     }

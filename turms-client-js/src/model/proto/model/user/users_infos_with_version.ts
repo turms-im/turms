@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import * as _m0 from "protobufjs/minimal";
-import { UserInfo } from "../../model/user/user_info";
+import { UserInfo } from "./user_info";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "im.turms.proto";
 

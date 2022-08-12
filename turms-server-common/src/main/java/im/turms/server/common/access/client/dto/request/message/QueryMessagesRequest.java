@@ -34,6 +34,7 @@ private static final long serialVersionUID = 0L;
   }
   private QueryMessagesRequest() {
     ids_ = emptyLongList();
+    fromIds_ = emptyLongList();
   }
 
   @java.lang.Override
@@ -104,17 +105,33 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 40: {
-            bitField0_ |= 0x00000008;
-            fromId_ = input.readInt64();
+            if (!((mutable_bitField0_ & 0x00000010) != 0)) {
+              fromIds_ = newLongList();
+              mutable_bitField0_ |= 0x00000010;
+            }
+            fromIds_.addLong(input.readInt64());
+            break;
+          }
+          case 42: {
+            int length = input.readRawVarint32();
+            int limit = input.pushLimit(length);
+            if (!((mutable_bitField0_ & 0x00000010) != 0) && input.getBytesUntilLimit() > 0) {
+              fromIds_ = newLongList();
+              mutable_bitField0_ |= 0x00000010;
+            }
+            while (input.getBytesUntilLimit() > 0) {
+              fromIds_.addLong(input.readInt64());
+            }
+            input.popLimit(limit);
             break;
           }
           case 48: {
-            bitField0_ |= 0x00000010;
+            bitField0_ |= 0x00000008;
             deliveryDateAfter_ = input.readInt64();
             break;
           }
           case 56: {
-            bitField0_ |= 0x00000020;
+            bitField0_ |= 0x00000010;
             deliveryDateBefore_ = input.readInt64();
             break;
           }
@@ -142,6 +159,9 @@ private static final long serialVersionUID = 0L;
     } finally {
       if (((mutable_bitField0_ & 0x00000001) != 0)) {
         ids_.makeImmutable(); // C
+      }
+      if (((mutable_bitField0_ & 0x00000010) != 0)) {
+        fromIds_.makeImmutable(); // C
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -246,24 +266,33 @@ private static final long serialVersionUID = 0L;
     return areSystemMessages_;
   }
 
-  public static final int FROM_ID_FIELD_NUMBER = 5;
-  private long fromId_;
+  public static final int FROM_IDS_FIELD_NUMBER = 5;
+  private com.google.protobuf.Internal.LongList fromIds_;
   /**
-   * <code>optional int64 from_id = 5;</code>
-   * @return Whether the fromId field is set.
+   * <code>repeated int64 from_ids = 5;</code>
+   * @return A list containing the fromIds.
    */
   @java.lang.Override
-  public boolean hasFromId() {
-    return ((bitField0_ & 0x00000008) != 0);
+  public java.util.List<java.lang.Long>
+      getFromIdsList() {
+    return fromIds_;
   }
   /**
-   * <code>optional int64 from_id = 5;</code>
-   * @return The fromId.
+   * <code>repeated int64 from_ids = 5;</code>
+   * @return The count of fromIds.
    */
-  @java.lang.Override
-  public long getFromId() {
-    return fromId_;
+  public int getFromIdsCount() {
+    return fromIds_.size();
   }
+  /**
+   * <code>repeated int64 from_ids = 5;</code>
+   * @param index The index of the element to return.
+   * @return The fromIds at the given index.
+   */
+  public long getFromIds(int index) {
+    return fromIds_.getLong(index);
+  }
+  private int fromIdsMemoizedSerializedSize = -1;
 
   public static final int DELIVERY_DATE_AFTER_FIELD_NUMBER = 6;
   private long deliveryDateAfter_;
@@ -273,7 +302,7 @@ private static final long serialVersionUID = 0L;
    */
   @java.lang.Override
   public boolean hasDeliveryDateAfter() {
-    return ((bitField0_ & 0x00000010) != 0);
+    return ((bitField0_ & 0x00000008) != 0);
   }
   /**
    * <code>optional int64 delivery_date_after = 6;</code>
@@ -292,7 +321,7 @@ private static final long serialVersionUID = 0L;
    */
   @java.lang.Override
   public boolean hasDeliveryDateBefore() {
-    return ((bitField0_ & 0x00000020) != 0);
+    return ((bitField0_ & 0x00000010) != 0);
   }
   /**
    * <code>optional int64 delivery_date_before = 7;</code>
@@ -345,13 +374,17 @@ private static final long serialVersionUID = 0L;
     if (((bitField0_ & 0x00000004) != 0)) {
       output.writeBool(4, areSystemMessages_);
     }
-    if (((bitField0_ & 0x00000008) != 0)) {
-      output.writeInt64(5, fromId_);
+    if (getFromIdsList().size() > 0) {
+      output.writeUInt32NoTag(42);
+      output.writeUInt32NoTag(fromIdsMemoizedSerializedSize);
     }
-    if (((bitField0_ & 0x00000010) != 0)) {
+    for (int i = 0; i < fromIds_.size(); i++) {
+      output.writeInt64NoTag(fromIds_.getLong(i));
+    }
+    if (((bitField0_ & 0x00000008) != 0)) {
       output.writeInt64(6, deliveryDateAfter_);
     }
-    if (((bitField0_ & 0x00000020) != 0)) {
+    if (((bitField0_ & 0x00000010) != 0)) {
       output.writeInt64(7, deliveryDateBefore_);
     }
     if (withTotal_ != false) {
@@ -392,15 +425,25 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(4, areSystemMessages_);
     }
-    if (((bitField0_ & 0x00000008) != 0)) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(5, fromId_);
+    {
+      int dataSize = 0;
+      for (int i = 0; i < fromIds_.size(); i++) {
+        dataSize += com.google.protobuf.CodedOutputStream
+          .computeInt64SizeNoTag(fromIds_.getLong(i));
+      }
+      size += dataSize;
+      if (!getFromIdsList().isEmpty()) {
+        size += 1;
+        size += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(dataSize);
+      }
+      fromIdsMemoizedSerializedSize = dataSize;
     }
-    if (((bitField0_ & 0x00000010) != 0)) {
+    if (((bitField0_ & 0x00000008) != 0)) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(6, deliveryDateAfter_);
     }
-    if (((bitField0_ & 0x00000020) != 0)) {
+    if (((bitField0_ & 0x00000010) != 0)) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(7, deliveryDateBefore_);
     }
@@ -440,11 +483,8 @@ private static final long serialVersionUID = 0L;
       if (getAreSystemMessages()
           != other.getAreSystemMessages()) return false;
     }
-    if (hasFromId() != other.hasFromId()) return false;
-    if (hasFromId()) {
-      if (getFromId()
-          != other.getFromId()) return false;
-    }
+    if (!getFromIdsList()
+        .equals(other.getFromIdsList())) return false;
     if (hasDeliveryDateAfter() != other.hasDeliveryDateAfter()) return false;
     if (hasDeliveryDateAfter()) {
       if (getDeliveryDateAfter()
@@ -486,10 +526,9 @@ private static final long serialVersionUID = 0L;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getAreSystemMessages());
     }
-    if (hasFromId()) {
-      hash = (37 * hash) + FROM_ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getFromId());
+    if (getFromIdsCount() > 0) {
+      hash = (37 * hash) + FROM_IDS_FIELD_NUMBER;
+      hash = (53 * hash) + getFromIdsList().hashCode();
     }
     if (hasDeliveryDateAfter()) {
       hash = (37 * hash) + DELIVERY_DATE_AFTER_FIELD_NUMBER;
@@ -645,7 +684,7 @@ private static final long serialVersionUID = 0L;
       bitField0_ = (bitField0_ & ~0x00000004);
       areSystemMessages_ = false;
       bitField0_ = (bitField0_ & ~0x00000008);
-      fromId_ = 0L;
+      fromIds_ = emptyLongList();
       bitField0_ = (bitField0_ & ~0x00000010);
       deliveryDateAfter_ = 0L;
       bitField0_ = (bitField0_ & ~0x00000020);
@@ -698,17 +737,18 @@ private static final long serialVersionUID = 0L;
         result.areSystemMessages_ = areSystemMessages_;
         to_bitField0_ |= 0x00000004;
       }
-      if (((from_bitField0_ & 0x00000010) != 0)) {
-        result.fromId_ = fromId_;
-        to_bitField0_ |= 0x00000008;
+      if (((bitField0_ & 0x00000010) != 0)) {
+        fromIds_.makeImmutable();
+        bitField0_ = (bitField0_ & ~0x00000010);
       }
+      result.fromIds_ = fromIds_;
       if (((from_bitField0_ & 0x00000020) != 0)) {
         result.deliveryDateAfter_ = deliveryDateAfter_;
-        to_bitField0_ |= 0x00000010;
+        to_bitField0_ |= 0x00000008;
       }
       if (((from_bitField0_ & 0x00000040) != 0)) {
         result.deliveryDateBefore_ = deliveryDateBefore_;
-        to_bitField0_ |= 0x00000020;
+        to_bitField0_ |= 0x00000010;
       }
       result.withTotal_ = withTotal_;
       result.bitField0_ = to_bitField0_;
@@ -779,8 +819,15 @@ private static final long serialVersionUID = 0L;
       if (other.hasAreSystemMessages()) {
         setAreSystemMessages(other.getAreSystemMessages());
       }
-      if (other.hasFromId()) {
-        setFromId(other.getFromId());
+      if (!other.fromIds_.isEmpty()) {
+        if (fromIds_.isEmpty()) {
+          fromIds_ = other.fromIds_;
+          bitField0_ = (bitField0_ & ~0x00000010);
+        } else {
+          ensureFromIdsIsMutable();
+          fromIds_.addAll(other.fromIds_);
+        }
+        onChanged();
       }
       if (other.hasDeliveryDateAfter()) {
         setDeliveryDateAfter(other.getDeliveryDateAfter());
@@ -1017,41 +1064,81 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private long fromId_ ;
-    /**
-     * <code>optional int64 from_id = 5;</code>
-     * @return Whether the fromId field is set.
-     */
-    @java.lang.Override
-    public boolean hasFromId() {
-      return ((bitField0_ & 0x00000010) != 0);
+    private com.google.protobuf.Internal.LongList fromIds_ = emptyLongList();
+    private void ensureFromIdsIsMutable() {
+      if (!((bitField0_ & 0x00000010) != 0)) {
+        fromIds_ = mutableCopy(fromIds_);
+        bitField0_ |= 0x00000010;
+       }
     }
     /**
-     * <code>optional int64 from_id = 5;</code>
-     * @return The fromId.
+     * <code>repeated int64 from_ids = 5;</code>
+     * @return A list containing the fromIds.
      */
-    @java.lang.Override
-    public long getFromId() {
-      return fromId_;
+    public java.util.List<java.lang.Long>
+        getFromIdsList() {
+      return ((bitField0_ & 0x00000010) != 0) ?
+               java.util.Collections.unmodifiableList(fromIds_) : fromIds_;
     }
     /**
-     * <code>optional int64 from_id = 5;</code>
-     * @param value The fromId to set.
+     * <code>repeated int64 from_ids = 5;</code>
+     * @return The count of fromIds.
+     */
+    public int getFromIdsCount() {
+      return fromIds_.size();
+    }
+    /**
+     * <code>repeated int64 from_ids = 5;</code>
+     * @param index The index of the element to return.
+     * @return The fromIds at the given index.
+     */
+    public long getFromIds(int index) {
+      return fromIds_.getLong(index);
+    }
+    /**
+     * <code>repeated int64 from_ids = 5;</code>
+     * @param index The index to set the value at.
+     * @param value The fromIds to set.
      * @return This builder for chaining.
      */
-    public Builder setFromId(long value) {
-      bitField0_ |= 0x00000010;
-      fromId_ = value;
+    public Builder setFromIds(
+        int index, long value) {
+      ensureFromIdsIsMutable();
+      fromIds_.setLong(index, value);
       onChanged();
       return this;
     }
     /**
-     * <code>optional int64 from_id = 5;</code>
+     * <code>repeated int64 from_ids = 5;</code>
+     * @param value The fromIds to add.
      * @return This builder for chaining.
      */
-    public Builder clearFromId() {
+    public Builder addFromIds(long value) {
+      ensureFromIdsIsMutable();
+      fromIds_.addLong(value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated int64 from_ids = 5;</code>
+     * @param values The fromIds to add.
+     * @return This builder for chaining.
+     */
+    public Builder addAllFromIds(
+        java.lang.Iterable<? extends java.lang.Long> values) {
+      ensureFromIdsIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, fromIds_);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated int64 from_ids = 5;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearFromIds() {
+      fromIds_ = emptyLongList();
       bitField0_ = (bitField0_ & ~0x00000010);
-      fromId_ = 0L;
       onChanged();
       return this;
     }

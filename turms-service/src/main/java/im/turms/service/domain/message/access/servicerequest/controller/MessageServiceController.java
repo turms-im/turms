@@ -29,6 +29,7 @@ import im.turms.server.common.access.client.dto.request.message.CreateMessageReq
 import im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest;
 import im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -209,7 +210,7 @@ public class MessageServiceController {
             List<Long> ids = request.getIdsCount() > 0 ? request.getIdsList() : null;
             Boolean areGroupMessages = request.hasAreGroupMessages() ? request.getAreGroupMessages() : null;
             Boolean areSystemMessages = request.hasAreSystemMessages() ? request.getAreSystemMessages() : null;
-            Long fromId = request.hasFromId() ? request.getFromId() : null;
+            Set<Long> fromIds = request.getFromIdsCount() > 0 ? CollectionUtil.newSet(request.getFromIdsList()) : null;
             Date deliveryDateAfter = request.hasDeliveryDateAfter() ? new Date(request.getDeliveryDateAfter()) : null;
             Date deliveryDateBefore = request.hasDeliveryDateBefore() && deliveryDateAfter == null ?
                     new Date(request.getDeliveryDateBefore()) : null;
@@ -223,8 +224,7 @@ public class MessageServiceController {
                             ids,
                             areGroupMessages,
                             areSystemMessages,
-                            areGroupMessages == null ? null : (areGroupMessages ? null : fromId),
-                            areGroupMessages == null ? null : (areGroupMessages ? fromId : userId),
+                            fromIds,
                             dateRange,
                             0,
                             size,

@@ -1,4 +1,4 @@
-import * as Long from 'long';
+import Long from 'long';
 
 import { AudioFile } from '../model/proto/model/file/audio_file';
 import BuiltinSystemMessageType from '../model/builtin-system-message-type';
@@ -130,7 +130,7 @@ export default class MessageService {
         ids?: string[],
         areGroupMessages?: boolean,
         areSystemMessages?: boolean,
-        fromId?: string,
+        fromIds?: string[],
         deliveryDateAfter?: Date,
         deliveryDateBefore?: Date,
         size = 50): Promise<Response<ParsedModel.Message[]>> {
@@ -139,7 +139,7 @@ export default class MessageService {
                 ids: ids || [],
                 areGroupMessages,
                 areSystemMessages,
-                fromId,
+                fromIds: fromIds || [],
                 deliveryDateAfter: DataParser.getDateTimeStr(deliveryDateAfter),
                 deliveryDateBefore: DataParser.getDateTimeStr(deliveryDateBefore),
                 size,
@@ -152,7 +152,7 @@ export default class MessageService {
         ids?: string[],
         areGroupMessages?: boolean,
         areSystemMessages?: boolean,
-        fromId?: string,
+        fromIds?: string[],
         deliveryDateAfter?: Date,
         deliveryDateBefore?: Date,
         size = 1): Promise<Response<ParsedModel.MessagesWithTotal[]>> {
@@ -161,7 +161,7 @@ export default class MessageService {
                 ids: ids || [],
                 areGroupMessages,
                 areSystemMessages,
-                fromId,
+                fromIds: fromIds || [],
                 deliveryDateAfter: DataParser.getDateTimeStr(deliveryDateAfter),
                 deliveryDateBefore: DataParser.getDateTimeStr(deliveryDateBefore),
                 size,

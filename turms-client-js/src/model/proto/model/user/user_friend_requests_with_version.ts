@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import * as _m0 from "protobufjs/minimal";
-import { UserFriendRequest } from "../../model/user/user_friend_request";
+import { UserFriendRequest } from "./user_friend_request";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "im.turms.proto";
 

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import * as _m0 from "protobufjs/minimal";
-import { GroupJoinRequest } from "../../model/group/group_join_request";
+import { GroupJoinRequest } from "./group_join_request";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "im.turms.proto";
 

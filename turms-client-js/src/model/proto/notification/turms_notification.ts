@@ -1,7 +1,6 @@
 /* eslint-disable */
-import Long from "long";
-import * as _m0 from "protobufjs/minimal";
 import { TurmsRequest } from "../request/turms_request";
+import Long from "long";
 import { Int64Values } from "../model/common/int64_values";
 import { Int64ValuesWithVersion } from "../model/common/int64_values_with_version";
 import { Conversations } from "../model/conversation/conversations";
@@ -20,6 +19,7 @@ import { GroupJoinRequestsWithVersion } from "../model/group/group_join_requests
 import { GroupJoinQuestionsWithVersion } from "../model/group/group_join_questions_with_version";
 import { GroupMembersWithVersion } from "../model/group/group_members_with_version";
 import { GroupsWithVersion } from "../model/group/groups_with_version";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "im.turms.proto";
 

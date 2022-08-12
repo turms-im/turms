@@ -1,29 +1,31 @@
 import { ParsedModel } from '../model/parsed-model';
 import ResponseError from '../error/response-error';
 import ResponseStatusCode from '../model/response-status-code';
-import { TurmsNotification, TurmsNotification_Data } from '../model/proto/notification/turms_notification';
+import { TurmsNotification_Data } from '../model/proto/notification/turms_notification';
 
 export default class NotificationUtil {
 
     static transform(data?: object | number | string, parentKey?: string): any {
         // Note that data can be 0 or ''
-        if (data != null) {
-            const isDateType = typeof parentKey === 'string'
-                && (parentKey.endsWith('Date') || parentKey.endsWith('_date') || parentKey === 'date')
-                && typeof data === 'string';
-            if (isDateType) {
-                return new Date(parseInt(data as string));
-            } else if (typeof data === 'object') {
-                if (data instanceof Array) {
-                    data = data.map(item => this.transform(item));
-                } else {
-                    const keys = Object.keys(data);
-                    for (const key of keys) {
-                        if ((key === 'value' || key === 'values') && keys.length === 1) {
-                            return data[key];
-                        } else {
-                            data[key] = this.transform(data[key], key);
-                        }
+        if (data == null) {
+            return null;
+        }
+        const isDateType = typeof parentKey === 'string'
+            && (parentKey.endsWith('Date') || parentKey.endsWith('_date') || parentKey === 'date')
+            && typeof data === 'string';
+        if (isDateType) {
+            return new Date(parseInt(data as string));
+        }
+        if (typeof data === 'object') {
+            if (data instanceof Array) {
+                data = data.map(item => this.transform(item));
+            } else {
+                const keys = Object.keys(data);
+                for (const key of keys) {
+                    if ((key === 'value' || key === 'values') && keys.length === 1) {
+                        return data[key];
+                    } else {
+                        data[key] = this.transform(data[key], key);
                     }
                 }
             }

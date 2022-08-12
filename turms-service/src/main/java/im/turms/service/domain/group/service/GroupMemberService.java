@@ -390,6 +390,21 @@ public class GroupMemberService {
         return groupMemberRepository.existsById(key);
     }
 
+    public Flux<Long> findExistentMemberGroupIds(@NotEmpty Set<Long> groupIds, @NotNull Long userId) {
+        try {
+            Validator.notEmpty(groupIds, "groupIds");
+            Validator.notNull(userId, "userId");
+        } catch (ResponseException e) {
+            return Flux.error(e);
+        }
+        Set<GroupMember.Key> keys = CollectionUtil.newSetWithExpectedSize(groupIds.size());
+        for (Long groupId : groupIds) {
+            keys.add(new GroupMember.Key(groupId, userId));
+        }
+        return groupMemberRepository.findIdsByIds(keys)
+                .map(groupMember -> groupMember.getKey().getGroupId());
+    }
+
     public Mono<Pair<ServicePermission, GroupInvitationStrategy>> isAllowedToInviteOrAdd(
             @NotNull Long groupId,
             @NotNull Long inviterId,

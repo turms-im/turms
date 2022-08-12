@@ -57,15 +57,7 @@ public struct QueryMessagesRequest {
     /// Clears the value of `areSystemMessages`. Subsequent reads from it will return its default value.
     public mutating func clearAreSystemMessages() { _areSystemMessages = nil }
 
-    public var fromID: Int64 {
-        get { return _fromID ?? 0 }
-        set { _fromID = newValue }
-    }
-
-    /// Returns true if `fromID` has been explicitly set.
-    public var hasFromID: Bool { return _fromID != nil }
-    /// Clears the value of `fromID`. Subsequent reads from it will return its default value.
-    public mutating func clearFromID() { _fromID = nil }
+    public var fromIds: [Int64] = []
 
     public var deliveryDateAfter: Int64 {
         get { return _deliveryDateAfter ?? 0 }
@@ -96,7 +88,6 @@ public struct QueryMessagesRequest {
     fileprivate var _size: Int32?
     fileprivate var _areGroupMessages: Bool?
     fileprivate var _areSystemMessages: Bool?
-    fileprivate var _fromID: Int64?
     fileprivate var _deliveryDateAfter: Int64?
     fileprivate var _deliveryDateBefore: Int64?
 }
@@ -112,7 +103,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         2: .same(proto: "size"),
         3: .standard(proto: "are_group_messages"),
         4: .standard(proto: "are_system_messages"),
-        5: .standard(proto: "from_id"),
+        5: .standard(proto: "from_ids"),
         6: .standard(proto: "delivery_date_after"),
         7: .standard(proto: "delivery_date_before"),
         8: .standard(proto: "with_total"),
@@ -128,7 +119,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
             case 2: try try decoder.decodeSingularInt32Field(value: &_size)
             case 3: try try decoder.decodeSingularBoolField(value: &_areGroupMessages)
             case 4: try try decoder.decodeSingularBoolField(value: &_areSystemMessages)
-            case 5: try try decoder.decodeSingularInt64Field(value: &_fromID)
+            case 5: try try decoder.decodeRepeatedInt64Field(value: &fromIds)
             case 6: try try decoder.decodeSingularInt64Field(value: &_deliveryDateAfter)
             case 7: try try decoder.decodeSingularInt64Field(value: &_deliveryDateBefore)
             case 8: try try decoder.decodeSingularBoolField(value: &withTotal)
@@ -150,9 +141,9 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         try { if let v = self._areSystemMessages {
             try visitor.visitSingularBoolField(value: v, fieldNumber: 4)
         } }()
-        try { if let v = self._fromID {
-            try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
-        } }()
+        if !fromIds.isEmpty {
+            try visitor.visitPackedInt64Field(value: fromIds, fieldNumber: 5)
+        }
         try { if let v = self._deliveryDateAfter {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
         } }()
@@ -170,7 +161,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         if lhs._size != rhs._size { return false }
         if lhs._areGroupMessages != rhs._areGroupMessages { return false }
         if lhs._areSystemMessages != rhs._areSystemMessages { return false }
-        if lhs._fromID != rhs._fromID { return false }
+        if lhs.fromIds != rhs.fromIds { return false }
         if lhs._deliveryDateAfter != rhs._deliveryDateAfter { return false }
         if lhs._deliveryDateBefore != rhs._deliveryDateBefore { return false }
         if lhs.withTotal != rhs.withTotal { return false }

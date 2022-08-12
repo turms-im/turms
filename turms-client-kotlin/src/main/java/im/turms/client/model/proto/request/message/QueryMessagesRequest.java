@@ -30,6 +30,7 @@ public  final class QueryMessagesRequest extends
     QueryMessagesRequestOrBuilder {
   private QueryMessagesRequest() {
     ids_ = emptyLongList();
+    fromIds_ = emptyLongList();
   }
   private int bitField0_;
   public static final int IDS_FIELD_NUMBER = 1;
@@ -205,38 +206,75 @@ public  final class QueryMessagesRequest extends
     areSystemMessages_ = false;
   }
 
-  public static final int FROM_ID_FIELD_NUMBER = 5;
-  private long fromId_;
+  public static final int FROM_IDS_FIELD_NUMBER = 5;
+  private com.google.protobuf.Internal.LongList fromIds_;
   /**
-   * <code>optional int64 from_id = 5;</code>
-   * @return Whether the fromId field is set.
+   * <code>repeated int64 from_ids = 5;</code>
+   * @return A list containing the fromIds.
    */
   @java.lang.Override
-  public boolean hasFromId() {
-    return ((bitField0_ & 0x00000008) != 0);
+  public java.util.List<java.lang.Long>
+      getFromIdsList() {
+    return fromIds_;
   }
   /**
-   * <code>optional int64 from_id = 5;</code>
-   * @return The fromId.
+   * <code>repeated int64 from_ids = 5;</code>
+   * @return The count of fromIds.
    */
   @java.lang.Override
-  public long getFromId() {
-    return fromId_;
+  public int getFromIdsCount() {
+    return fromIds_.size();
   }
   /**
-   * <code>optional int64 from_id = 5;</code>
-   * @param value The fromId to set.
+   * <code>repeated int64 from_ids = 5;</code>
+   * @param index The index of the element to return.
+   * @return The fromIds at the given index.
    */
-  private void setFromId(long value) {
-    bitField0_ |= 0x00000008;
-    fromId_ = value;
+  @java.lang.Override
+  public long getFromIds(int index) {
+    return fromIds_.getLong(index);
+  }
+  private int fromIdsMemoizedSerializedSize = -1;
+  private void ensureFromIdsIsMutable() {
+    com.google.protobuf.Internal.LongList tmp = fromIds_;
+    if (!tmp.isModifiable()) {
+      fromIds_ =
+          com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+     }
   }
   /**
-   * <code>optional int64 from_id = 5;</code>
+   * <code>repeated int64 from_ids = 5;</code>
+   * @param index The index to set the value at.
+   * @param value The fromIds to set.
    */
-  private void clearFromId() {
-    bitField0_ = (bitField0_ & ~0x00000008);
-    fromId_ = 0L;
+  private void setFromIds(
+      int index, long value) {
+    ensureFromIdsIsMutable();
+    fromIds_.setLong(index, value);
+  }
+  /**
+   * <code>repeated int64 from_ids = 5;</code>
+   * @param value The fromIds to add.
+   */
+  private void addFromIds(long value) {
+    ensureFromIdsIsMutable();
+    fromIds_.addLong(value);
+  }
+  /**
+   * <code>repeated int64 from_ids = 5;</code>
+   * @param values The fromIds to add.
+   */
+  private void addAllFromIds(
+      java.lang.Iterable<? extends java.lang.Long> values) {
+    ensureFromIdsIsMutable();
+    com.google.protobuf.AbstractMessageLite.addAll(
+        values, fromIds_);
+  }
+  /**
+   * <code>repeated int64 from_ids = 5;</code>
+   */
+  private void clearFromIds() {
+    fromIds_ = emptyLongList();
   }
 
   public static final int DELIVERY_DATE_AFTER_FIELD_NUMBER = 6;
@@ -247,7 +285,7 @@ public  final class QueryMessagesRequest extends
    */
   @java.lang.Override
   public boolean hasDeliveryDateAfter() {
-    return ((bitField0_ & 0x00000010) != 0);
+    return ((bitField0_ & 0x00000008) != 0);
   }
   /**
    * <code>optional int64 delivery_date_after = 6;</code>
@@ -262,14 +300,14 @@ public  final class QueryMessagesRequest extends
    * @param value The deliveryDateAfter to set.
    */
   private void setDeliveryDateAfter(long value) {
-    bitField0_ |= 0x00000010;
+    bitField0_ |= 0x00000008;
     deliveryDateAfter_ = value;
   }
   /**
    * <code>optional int64 delivery_date_after = 6;</code>
    */
   private void clearDeliveryDateAfter() {
-    bitField0_ = (bitField0_ & ~0x00000010);
+    bitField0_ = (bitField0_ & ~0x00000008);
     deliveryDateAfter_ = 0L;
   }
 
@@ -281,7 +319,7 @@ public  final class QueryMessagesRequest extends
    */
   @java.lang.Override
   public boolean hasDeliveryDateBefore() {
-    return ((bitField0_ & 0x00000020) != 0);
+    return ((bitField0_ & 0x00000010) != 0);
   }
   /**
    * <code>optional int64 delivery_date_before = 7;</code>
@@ -296,14 +334,14 @@ public  final class QueryMessagesRequest extends
    * @param value The deliveryDateBefore to set.
    */
   private void setDeliveryDateBefore(long value) {
-    bitField0_ |= 0x00000020;
+    bitField0_ |= 0x00000010;
     deliveryDateBefore_ = value;
   }
   /**
    * <code>optional int64 delivery_date_before = 7;</code>
    */
   private void clearDeliveryDateBefore() {
-    bitField0_ = (bitField0_ & ~0x00000020);
+    bitField0_ = (bitField0_ & ~0x00000010);
     deliveryDateBefore_ = 0L;
   }
 
@@ -322,14 +360,14 @@ public  final class QueryMessagesRequest extends
    * @param value The withTotal to set.
    */
   private void setWithTotal(boolean value) {
-    
+
     withTotal_ = value;
   }
   /**
    * <code>bool with_total = 8;</code>
    */
   private void clearWithTotal() {
-    
+
     withTotal_ = false;
   }
 
@@ -606,38 +644,71 @@ public  final class QueryMessagesRequest extends
     }
 
     /**
-     * <code>optional int64 from_id = 5;</code>
-     * @return Whether the fromId field is set.
+     * <code>repeated int64 from_ids = 5;</code>
+     * @return A list containing the fromIds.
      */
     @java.lang.Override
-    public boolean hasFromId() {
-      return instance.hasFromId();
+    public java.util.List<java.lang.Long>
+        getFromIdsList() {
+      return java.util.Collections.unmodifiableList(
+          instance.getFromIdsList());
     }
     /**
-     * <code>optional int64 from_id = 5;</code>
-     * @return The fromId.
+     * <code>repeated int64 from_ids = 5;</code>
+     * @return The count of fromIds.
      */
     @java.lang.Override
-    public long getFromId() {
-      return instance.getFromId();
+    public int getFromIdsCount() {
+      return instance.getFromIdsCount();
     }
     /**
-     * <code>optional int64 from_id = 5;</code>
-     * @param value The fromId to set.
+     * <code>repeated int64 from_ids = 5;</code>
+     * @param index The index of the element to return.
+     * @return The fromIds at the given index.
+     */
+    @java.lang.Override
+    public long getFromIds(int index) {
+      return instance.getFromIds(index);
+    }
+    /**
+     * <code>repeated int64 from_ids = 5;</code>
+     * @param value The fromIds to set.
      * @return This builder for chaining.
      */
-    public Builder setFromId(long value) {
+    public Builder setFromIds(
+        int index, long value) {
       copyOnWrite();
-      instance.setFromId(value);
+      instance.setFromIds(index, value);
       return this;
     }
     /**
-     * <code>optional int64 from_id = 5;</code>
+     * <code>repeated int64 from_ids = 5;</code>
+     * @param value The fromIds to add.
      * @return This builder for chaining.
      */
-    public Builder clearFromId() {
+    public Builder addFromIds(long value) {
       copyOnWrite();
-      instance.clearFromId();
+      instance.addFromIds(value);
+      return this;
+    }
+    /**
+     * <code>repeated int64 from_ids = 5;</code>
+     * @param values The fromIds to add.
+     * @return This builder for chaining.
+     */
+    public Builder addAllFromIds(
+        java.lang.Iterable<? extends java.lang.Long> values) {
+      copyOnWrite();
+      instance.addAllFromIds(values);
+      return this;
+    }
+    /**
+     * <code>repeated int64 from_ids = 5;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearFromIds() {
+      copyOnWrite();
+      instance.clearFromIds();
       return this;
     }
 
@@ -762,15 +833,14 @@ public  final class QueryMessagesRequest extends
             "size_",
             "areGroupMessages_",
             "areSystemMessages_",
-            "fromId_",
+            "fromIds_",
             "deliveryDateAfter_",
             "deliveryDateBefore_",
             "withTotal_",
           };
           java.lang.String info =
-              "\u0000\b\u0000\u0001\u0001\b\b\u0000\u0001\u0000\u0001%\u0002\u1004\u0000\u0003\u1007" +
-              "\u0001\u0004\u1007\u0002\u0005\u1002\u0003\u0006\u1002\u0004\u0007\u1002\u0005\b" +
-              "\u0007";
+              "\u0000\b\u0000\u0001\u0001\b\b\u0000\u0002\u0000\u0001%\u0002\u1004\u0000\u0003\u1007" +
+              "\u0001\u0004\u1007\u0002\u0005%\u0006\u1002\u0003\u0007\u1002\u0004\b\u0007";
           return newMessageInfo(DEFAULT_INSTANCE, info, objects);
       }
       // fall through

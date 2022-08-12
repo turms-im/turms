@@ -293,14 +293,18 @@ public class MessageService {
             Long requesterId,
             boolean closeToDate,
             @Nullable Collection<Long> messageIds,
-            @Nullable Boolean areGroupMessages,
+            @NotNull Boolean areGroupMessages,
             @Nullable Boolean areSystemMessages,
-            @Nullable Long senderId,
-            @Nullable Long targetId,
+            @Nullable Set<Long> fromIds,
             @Nullable DateRange deliveryDateRange,
             @Nullable Integer page,
             @Nullable Integer size,
             boolean withTotal) {
+        // We don't support the case when "areGroupMessages" is null currently (meaning we will support it in the future)
+        // because it makes the pagination implementation complex
+        if (areGroupMessages == null) {
+            return Flux.error(ResponseException.get(ResponseStatusCode.INVALID_REQUEST, "\"areGroupMessages\" must be either true or false currently"));
+        }
         if (size == null) {
             size = withTotal
                     ? defaultAvailableMessagesNumberWithTotal
@@ -309,20 +313,43 @@ public class MessageService {
             // TODO: make configurable
             size = Math.min(size, 1000);
         }
-        if (Boolean.TRUE.equals(areGroupMessages) && targetId != null) {
+        if (areGroupMessages) {
             Integer finalSize = size;
-            return groupMemberService.isGroupMember(targetId, requesterId)
-                    .flatMapMany(isMember -> {
-                        if (!isMember) {
-                            return Mono.error(ResponseException.get(ResponseStatusCode.NOT_MEMBER_TO_QUERY_GROUP_MESSAGES));
+            if (CollectionUtil.isEmpty(fromIds)) {
+                return groupMemberService.queryUserJoinedGroupIds(requesterId)
+                        .collect(CollectorUtil.toSet(50))
+                        .flatMapMany(groupIds -> queryMessages(closeToDate,
+                                messageIds,
+                                true,
+                                areSystemMessages,
+                                null,
+                                groupIds,
+                                deliveryDateRange,
+                                DateRange.NULL,
+                                page,
+                                finalSize));
+            }
+            return groupMemberService.findExistentMemberGroupIds(fromIds, requesterId)
+                    .collect(CollectorUtil.toList(fromIds.size()))
+                    .flatMapMany(existentMemberGroupIds -> {
+                        int diff = fromIds.size() - existentMemberGroupIds.size();
+                        if (diff != 0) {
+                            List<Long> nonGroupMemberGroupIds = new ArrayList<>(diff);
+                            fromIds.forEach(fromId -> {
+                                if (!existentMemberGroupIds.contains(fromId)) {
+                                    nonGroupMemberGroupIds.add(fromId);
+                                }
+                            });
+                            return Flux.error(ResponseException.get(ResponseStatusCode.NOT_MEMBER_TO_QUERY_GROUP_MESSAGES,
+                                    "User isn't the member of the groups: " + nonGroupMemberGroupIds));
                         }
                         return queryMessages(
                                 closeToDate,
                                 messageIds,
                                 true,
                                 areSystemMessages,
-                                senderId == null ? null : Set.of(senderId),
-                                Set.of(targetId),
+                                null,
+                                fromIds,
                                 deliveryDateRange,
                                 DateRange.NULL,
                                 page,
@@ -332,10 +359,10 @@ public class MessageService {
         return queryMessages(
                 closeToDate,
                 messageIds,
-                areGroupMessages,
+                false,
                 areSystemMessages,
-                senderId == null ? null : Set.of(senderId),
-                targetId == null ? null : Set.of(targetId),
+                fromIds,
+                Set.of(requesterId),
                 deliveryDateRange,
                 DateRange.NULL,
                 page,

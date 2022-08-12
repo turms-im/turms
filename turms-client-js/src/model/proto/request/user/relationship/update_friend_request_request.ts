@@ -1,7 +1,7 @@
 /* eslint-disable */
-import Long from "long";
-import * as _m0 from "protobufjs/minimal";
 import { ResponseAction } from "../../../constant/response_action";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "im.turms.proto";
 

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import * as _m0 from "protobufjs/minimal";
-import { UserRelationshipGroup } from "../../model/user/user_relationship_group";
+import { UserRelationshipGroup } from "./user_relationship_group";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "im.turms.proto";
 

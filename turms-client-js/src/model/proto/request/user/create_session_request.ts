@@ -1,9 +1,9 @@
 /* eslint-disable */
-import Long from "long";
-import * as _m0 from "protobufjs/minimal";
 import { DeviceType } from "../../constant/device_type";
+import Long from "long";
 import { UserStatus } from "../../constant/user_status";
 import { UserLocation } from "../../model/user/user_location";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "im.turms.proto";
 

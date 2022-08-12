@@ -114,6 +114,12 @@ public abstract class BaseRepository<T, K> {
         return mongoClient.findAll(entityClass, options);
     }
 
+    public Flux<T> findIdsByIds(Collection<K> ids) {
+        Filter filter = Filter.newBuilder(1)
+                .in(DomainFieldName.ID, ids);
+        return mongoClient.findIds(entityClass, filter);
+    }
+
     public Mono<T> findById(K id) {
         return mongoClient.findById(entityClass, id);
     }

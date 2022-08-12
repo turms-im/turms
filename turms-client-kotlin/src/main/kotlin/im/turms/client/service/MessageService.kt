@@ -124,7 +124,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         ids: Set<Long>? = null,
         areGroupMessages: Boolean? = null,
         areSystemMessages: Boolean? = null,
-        senderId: Long? = null,
+        fromIds: Set<Long>? = null,
         deliveryDateStart: Date? = null,
         deliveryDateEnd: Date? = null,
         size: Int = 50
@@ -134,7 +134,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                 ids?.let { this.addAllIds(it) }
                 areGroupMessages?.let { this.areGroupMessages = it }
                 areSystemMessages?.let { this.areSystemMessages = it }
-                senderId?.let { this.fromId = it }
+                fromIds?.let { this.addAllFromIds(it) }
                 deliveryDateStart?.let { this.deliveryDateAfter = it.time }
                 deliveryDateEnd?.let { this.deliveryDateBefore = it.time }
                 this.size = size
@@ -148,7 +148,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         ids: Set<Long?>? = null,
         areGroupMessages: Boolean? = null,
         areSystemMessages: Boolean? = null,
-        senderId: Long? = null,
+        fromIds: Set<Long>? = null,
         deliveryDateStart: Date? = null,
         deliveryDateEnd: Date? = null,
         size: Int = 1
@@ -158,7 +158,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                 ids?.let { this.addAllIds(it) }
                 areGroupMessages?.let { this.areGroupMessages = it }
                 areSystemMessages?.let { this.areSystemMessages = it }
-                senderId?.let { this.fromId = it }
+                fromIds?.let { this.addAllFromIds(it) }
                 deliveryDateStart?.let { this.deliveryDateAfter = it.time }
                 deliveryDateEnd?.let { this.deliveryDateBefore = it.time }
                 this.size = size
