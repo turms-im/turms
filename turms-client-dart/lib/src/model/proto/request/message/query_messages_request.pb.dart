@@ -16,7 +16,7 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
     ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'size', $pb.PbFieldType.O3)
     ..aOB(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'areGroupMessages')
     ..aOB(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'areSystemMessages')
-    ..aInt64(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fromId')
+    ..p<$fixnum.Int64>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fromIds', $pb.PbFieldType.P6)
     ..aInt64(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deliveryDateAfter')
     ..aInt64(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deliveryDateBefore')
     ..aOB(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'withTotal')
@@ -29,7 +29,7 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
     $core.int? size,
     $core.bool? areGroupMessages,
     $core.bool? areSystemMessages,
-    $fixnum.Int64? fromId,
+    $core.Iterable<$fixnum.Int64>? fromIds,
     $fixnum.Int64? deliveryDateAfter,
     $fixnum.Int64? deliveryDateBefore,
     $core.bool? withTotal,
@@ -47,8 +47,8 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
     if (areSystemMessages != null) {
       _result.areSystemMessages = areSystemMessages;
     }
-    if (fromId != null) {
-      _result.fromId = fromId;
+    if (fromIds != null) {
+      _result.fromIds.addAll(fromIds);
     }
     if (deliveryDateAfter != null) {
       _result.deliveryDateAfter = deliveryDateAfter;
@@ -113,13 +113,7 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
   void clearAreSystemMessages() => clearField(4);
 
   @$pb.TagNumber(5)
-  $fixnum.Int64 get fromId => $_getI64(4);
-  @$pb.TagNumber(5)
-  set fromId($fixnum.Int64 v) { $_setInt64(4, v); }
-  @$pb.TagNumber(5)
-  $core.bool hasFromId() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearFromId() => clearField(5);
+  $core.List<$fixnum.Int64> get fromIds => $_getList(4);
 
   @$pb.TagNumber(6)
   $fixnum.Int64 get deliveryDateAfter => $_getI64(5);
