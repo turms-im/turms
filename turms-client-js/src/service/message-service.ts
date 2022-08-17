@@ -60,14 +60,23 @@ export default class MessageService {
         this._messageListeners = this._messageListeners.filter(cur => cur !== listener);
     }
 
-    sendMessage(
+    sendMessage({
+        isGroupMessage,
+        targetId,
+        deliveryDate,
+        text,
+        records,
+        burnAfter,
+        preMessageId
+    }: {
         isGroupMessage: boolean,
         targetId: string,
         deliveryDate?: Date,
         text?: string,
         records?: Uint8Array[],
         burnAfter?: number,
-        preMessageId?: string): Promise<Response<string>> {
+        preMessageId?: string
+    }): Promise<Response<string>> {
         if (Validator.isFalsy(targetId)) {
             return ResponseError.notFalsyPromise('targetId');
         }
@@ -87,10 +96,15 @@ export default class MessageService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
     }
 
-    forwardMessage(
+    forwardMessage({
+        messageId,
+        isGroupMessage,
+        targetId
+    }: {
         messageId: string,
         isGroupMessage: boolean,
-        targetId: string): Promise<Response<string>> {
+        targetId: string
+    }): Promise<Response<string>> {
         if (Validator.isFalsy(messageId)) {
             return ResponseError.notFalsyPromise('messageId');
         }
@@ -107,10 +121,15 @@ export default class MessageService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
     }
 
-    updateSentMessage(
+    updateSentMessage({
+        messageId,
+        text,
+        records
+    }: {
         messageId: string,
         text?: string,
-        records?: Uint8Array[]): Promise<Response<void>> {
+        records?: Uint8Array[]
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(messageId)) {
             return ResponseError.notFalsyPromise('messageId');
         }
@@ -126,14 +145,23 @@ export default class MessageService {
         }).then(n => Response.fromNotification(n));
     }
 
-    queryMessages(
+    queryMessages({
+        ids,
+        areGroupMessages,
+        areSystemMessages,
+        fromIds,
+        deliveryDateAfter,
+        deliveryDateBefore,
+        size = 50
+    }: {
         ids?: string[],
         areGroupMessages?: boolean,
         areSystemMessages?: boolean,
         fromIds?: string[],
         deliveryDateAfter?: Date,
         deliveryDateBefore?: Date,
-        size = 50): Promise<Response<ParsedModel.Message[]>> {
+        size?: number
+    }): Promise<Response<ParsedModel.Message[]>> {
         return this._turmsClient.driver.send({
             queryMessagesRequest: {
                 ids: ids || [],
@@ -148,14 +176,23 @@ export default class MessageService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.messages?.messages)));
     }
 
-    queryMessagesWithTotal(
+    queryMessagesWithTotal({
+        ids,
+        areGroupMessages,
+        areSystemMessages,
+        fromIds,
+        deliveryDateAfter,
+        deliveryDateBefore,
+        size = 1
+    }: {
         ids?: string[],
         areGroupMessages?: boolean,
         areSystemMessages?: boolean,
         fromIds?: string[],
         deliveryDateAfter?: Date,
         deliveryDateBefore?: Date,
-        size = 1): Promise<Response<ParsedModel.MessagesWithTotal[]>> {
+        size?: number
+    }): Promise<Response<ParsedModel.MessagesWithTotal[]>> {
         return this._turmsClient.driver.send({
             queryMessagesRequest: {
                 ids: ids || [],
@@ -170,7 +207,13 @@ export default class MessageService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.messagesWithTotalList?.messagesWithTotalList)));
     }
 
-    recallMessage(messageId: string, recallDate = new Date()): Promise<Response<void>> {
+    recallMessage({
+        messageId,
+        recallDate = new Date()
+    }: {
+        messageId: string,
+        recallDate?: Date
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(messageId)) {
             return ResponseError.notFalsyPromise('messageId');
         }
@@ -195,11 +238,15 @@ export default class MessageService {
         }
     }
 
-    static generateLocationRecord(
+    static generateLocationRecord({
+        latitude,
+        longitude,
+        details
+    }: {
         latitude: number,
         longitude: number,
-        details?: { [k: string]: string }
-    ): Uint8Array {
+        details?: { [_: string]: string }
+    }): Uint8Array {
         Validator.throwIfAnyFalsy(latitude, longitude);
         return UserLocation.encode({
             latitude,
@@ -208,7 +255,17 @@ export default class MessageService {
         }).finish();
     }
 
-    static generateAudioRecordByDescription(url: string, duration?: number, format?: string, size?: number): Uint8Array {
+    static generateAudioRecordByDescription({
+        url,
+        duration,
+        format,
+        size
+    }: {
+        url: string,
+        duration?: number,
+        format?: string,
+        size?: number
+    }): Uint8Array {
         Validator.throwIfAnyFalsy(url);
         return AudioFile.encode({
             description: {
@@ -220,14 +277,28 @@ export default class MessageService {
         }).finish();
     }
 
-    static generateAudioRecordByData(data: ArrayBuffer): Uint8Array {
+    static generateAudioRecordByData({
+        data
+    }: {
+        data: ArrayBuffer
+    }): Uint8Array {
         Validator.throwIfAnyFalsy(data);
         return AudioFile.encode({
             data: new Uint8Array(data)
         }).finish();
     }
 
-    static generateVideoRecordByDescription(url: string, duration?: number, format?: string, size?: number): Uint8Array {
+    static generateVideoRecordByDescription({
+        url,
+        duration,
+        format,
+        size
+    }: {
+        url: string,
+        duration?: number,
+        format?: string,
+        size?: number
+    }): Uint8Array {
         Validator.throwIfAnyFalsy(url);
         return VideoFile.encode({
             description: {
@@ -239,21 +310,39 @@ export default class MessageService {
         }).finish();
     }
 
-    static generateVideoRecordByData(data: ArrayBuffer): Uint8Array {
+    static generateVideoRecordByData({
+        data
+    }: {
+        data: ArrayBuffer
+    }): Uint8Array {
         Validator.throwIfAnyFalsy(data);
         return VideoFile.encode({
             data: new Uint8Array(data)
         }).finish();
     }
 
-    public static generateImageRecordByData(data: ArrayBuffer): Uint8Array {
+    public static generateImageRecordByData({
+        data
+    }: {
+        data: ArrayBuffer
+    }): Uint8Array {
         Validator.throwIfAnyFalsy(data);
         return ImageFile.encode({
             data: new Uint8Array(data)
         }).finish();
     }
 
-    static generateImageRecordByDescription(url: string, fileSize?: number, imageSize?: number, original?: boolean): Uint8Array {
+    static generateImageRecordByDescription({
+        url,
+        fileSize,
+        imageSize,
+        original
+    }: {
+        url: string,
+        fileSize?: number,
+        imageSize?: number,
+        original?: boolean
+    }): Uint8Array {
         Validator.throwIfAnyFalsy(url);
         return ImageFile.encode({
             description: {
@@ -265,14 +354,26 @@ export default class MessageService {
         }).finish();
     }
 
-    static generateFileRecordByDate(data: ArrayBuffer): Uint8Array {
+    static generateFileRecordByDate({
+        data
+    }: {
+        data: ArrayBuffer
+    }): Uint8Array {
         Validator.throwIfAnyFalsy(data);
         return File.encode({
             data: new Uint8Array(data)
         }).finish();
     }
 
-    static generateFileRecordByDescription(url: string, format?: string, size?: number): Uint8Array {
+    static generateFileRecordByDescription({
+        url,
+        format,
+        size
+    }: {
+        url: string,
+        format?: string,
+        size?: number
+    }): Uint8Array {
         Validator.throwIfAnyFalsy(url);
         return File.encode({
             description: {

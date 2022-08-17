@@ -33,31 +33,37 @@ function setupClient(container, client, userId, password, targetId) {
     client.messageService.addMessageListener(message => {
         appendContainer(container, `Message: Receive a message from other users or server: ${beautify(message)}`);
     });
-    client.userService.login(userId, password)
+    client.userService.login({
+        userId,
+        password
+    })
         .then(() => {
             appendContainer(container, `login: User ${userId} has logged in`);
-            client.messageService.queryMessagesWithTotal([1])
+            client.messageService.queryMessagesWithTotal({
+                ids: ['1']
+            })
                 .then(res => appendContainer(container, `Offline messages: ${beautify(res.data)}`))
                 .catch(error => appendContainer(container, `failed to query offline messages ${beautify(error)}`, true));
             const intervalId = setInterval(() => {
                 if (client.driver.isConnected) {
-                    client.messageService.sendMessage(
-                        false,
+                    client.messageService.sendMessage({
+                        isGroupMessage: false,
                         targetId,
-                        new Date(),
-                        "Hello Turms, My userId is " + userId,
-                        null,
-                        30)
+                        deliveryDate: new Date(),
+                        text: "Hello Turms, My userId is " + userId,
+                        burnAfter: 30
+                    })
                         .then(res => appendContainer(container, `message ${res.data} has been sent`))
                         .catch(error => appendContainer(container, `failed to send message: ${beautify(error)}`, true));
                 } else {
                     clearInterval(intervalId);
                 }
             }, 2000);
-            client.groupService.createGroup(
-                'Turms Developers Group',
-                'This is a group for the developers who are interested in Turms',
-                'nope')
+            client.groupService.createGroup({
+                name: 'Turms Developers Group',
+                intro: 'This is a group for the developers who are interested in Turms',
+                announcement: 'nope'
+            })
                 .then(res => appendContainer(container, `group ${res.data} has been created`))
                 .catch(error => appendContainer(container, `failed to create group: ${beautify(error)}`, true));
         })

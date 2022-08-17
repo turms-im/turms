@@ -16,13 +16,21 @@ export default class GroupService {
         this._turmsClient = turmsClient;
     }
 
-    createGroup(
+    createGroup({
+        name,
+        intro,
+        announcement,
+        minimumScore,
+        muteEndDate,
+        groupTypeId
+    }: {
         name: string,
         intro?: string,
         announcement?: string,
         minimumScore?: number,
         muteEndDate?: Date,
-        groupTypeId?: string): Promise<Response<string>> {
+        groupTypeId?: string
+    }): Promise<Response<string>> {
         if (Validator.isFalsy(name)) {
             return ResponseError.notFalsyPromise('name');
         }
@@ -38,7 +46,11 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
     }
 
-    deleteGroup(groupId: string): Promise<Response<void>> {
+    deleteGroup({
+        groupId
+    }: {
+        groupId: string
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -49,7 +61,17 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n));
     }
 
-    updateGroup(
+    updateGroup({
+        groupId,
+        groupName,
+        intro,
+        announcement,
+        minimumScore,
+        groupTypeId,
+        muteEndDate,
+        successorId,
+        quitAfterTransfer
+    }: {
         groupId: string,
         groupName?: string,
         intro?: string,
@@ -58,7 +80,8 @@ export default class GroupService {
         groupTypeId?: string,
         muteEndDate?: Date,
         successorId?: string,
-        quitAfterTransfer?: boolean): Promise<Response<void>> {
+        quitAfterTransfer?: boolean
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -81,31 +104,65 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n));
     }
 
-    transferOwnership(groupId: string, successorId: string, quitAfterTransfer = false): Promise<Response<void>> {
+    transferOwnership({
+        groupId,
+        successorId,
+        quitAfterTransfer = false
+    }: {
+        groupId: string,
+        successorId: string,
+        quitAfterTransfer: boolean
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
         if (Validator.isFalsy(successorId)) {
             return ResponseError.notFalsyPromise('successorId');
         }
-        return this.updateGroup(groupId, null, null, null, null, null, null, successorId, quitAfterTransfer);
+        return this.updateGroup({
+            groupId,
+            successorId,
+            quitAfterTransfer
+        });
     }
 
-    muteGroup(groupId: string, muteEndDate: Date): Promise<Response<void>> {
+    muteGroup({
+        groupId,
+        muteEndDate
+    }: {
+        groupId: string,
+        muteEndDate: Date
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
         if (Validator.isFalsy(muteEndDate)) {
             return ResponseError.notFalsyPromise('muteEndDate');
         }
-        return this.updateGroup(groupId, null, null, null, null, null, muteEndDate, null);
+        return this.updateGroup({
+            groupId,
+            muteEndDate
+        });
     }
 
-    unmuteGroup(groupId: string): Promise<Response<void>> {
-        return this.muteGroup(groupId, new Date(0));
+    unmuteGroup({
+        groupId
+    }: {
+        groupId: string
+    }): Promise<Response<void>> {
+        return this.muteGroup({
+            groupId,
+            muteEndDate: new Date(0)
+        });
     }
 
-    queryGroup(groupId: string, lastUpdatedDate?: Date): Promise<Response<ParsedModel.GroupWithVersion | undefined>> {
+    queryGroup({
+        groupId,
+        lastUpdatedDate
+    }: {
+        groupId: string,
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.GroupWithVersion | undefined>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -126,7 +183,11 @@ export default class GroupService {
         }));
     }
 
-    queryJoinedGroupIds(lastUpdatedDate?: Date): Promise<Response<ParsedModel.IdsWithVersion | undefined>> {
+    queryJoinedGroupIds({
+        lastUpdatedDate
+    }: {
+        lastUpdatedDate?: Date
+    } = {}): Promise<Response<ParsedModel.IdsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryJoinedGroupIdsRequest: {
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
@@ -134,7 +195,11 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getIdsWithVer(data)));
     }
 
-    queryJoinedGroupInfos(lastUpdatedDate?: Date): Promise<Response<ParsedModel.GroupsWithVersion | undefined>> {
+    queryJoinedGroupInfos({
+        lastUpdatedDate
+    }: {
+        lastUpdatedDate?: Date
+    } = {}): Promise<Response<ParsedModel.GroupsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryJoinedGroupInfosRequest: {
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
@@ -142,7 +207,17 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupsWithVersion)));
     }
 
-    addGroupJoinQuestion(groupId: string, question: string, answers: string[], score: number): Promise<Response<string>> {
+    addGroupJoinQuestion({
+        groupId,
+        question,
+        answers,
+        score
+    }: {
+        groupId: string,
+        question: string,
+        answers: string[],
+        score: number
+    }): Promise<Response<string>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -165,7 +240,11 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
     }
 
-    deleteGroupJoinQuestion(questionId: string): Promise<Response<void>> {
+    deleteGroupJoinQuestion({
+        questionId
+    }: {
+        questionId: string
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(questionId)) {
             return ResponseError.notFalsyPromise('questionId');
         }
@@ -176,7 +255,17 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n));
     }
 
-    updateGroupJoinQuestion(questionId: string, question?: string, answers?: string[], score?: number): Promise<Response<void>> {
+    updateGroupJoinQuestion({
+        questionId,
+        question,
+        answers,
+        score
+    }: {
+        questionId: string,
+        question?: string,
+        answers?: string[],
+        score?: number
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(questionId)) {
             return ResponseError.notFalsyPromise('questionId');
         }
@@ -194,7 +283,13 @@ export default class GroupService {
     }
 
     // Group Blocklist
-    blockUser(groupId: string, userId: string): Promise<Response<void>> {
+    blockUser({
+        groupId,
+        userId
+    }: {
+        groupId: string,
+        userId: string
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -209,7 +304,13 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n));
     }
 
-    unblockUser(groupId: string, userId: string): Promise<Response<void>> {
+    unblockUser({
+        groupId,
+        userId
+    }: {
+        groupId: string,
+        userId: string
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -224,9 +325,13 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n));
     }
 
-    queryBlockedUserIds(
+    queryBlockedUserIds({
+        groupId,
+        lastUpdatedDate
+    }: {
         groupId: string,
-        lastUpdatedDate?: Date): Promise<Response<ParsedModel.IdsWithVersion | undefined>> {
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.IdsWithVersion | undefined>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -238,9 +343,13 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getIdsWithVer(data)));
     }
 
-    queryBlockedUserInfos(
+    queryBlockedUserInfos({
+        groupId,
+        lastUpdatedDate
+    }: {
         groupId: string,
-        lastUpdatedDate?: Date): Promise<Response<ParsedModel.UsersInfosWithVersion | undefined>> {
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.UsersInfosWithVersion | undefined>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -253,7 +362,15 @@ export default class GroupService {
     }
 
     // Group Enrollment
-    createInvitation(groupId: string, inviteeId: string, content: string): Promise<Response<string>> {
+    createInvitation({
+        groupId,
+        inviteeId,
+        content
+    }: {
+        groupId: string,
+        inviteeId: string,
+        content: string
+    }): Promise<Response<string>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -272,7 +389,11 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
     }
 
-    deleteInvitation(invitationId: string): Promise<Response<void>> {
+    deleteInvitation({
+        invitationId
+    }: {
+        invitationId: string
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(invitationId)) {
             return ResponseError.notFalsyPromise('invitationId');
         }
@@ -283,7 +404,13 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n));
     }
 
-    queryInvitationsByGroupId(groupId: string, lastUpdatedDate?: Date): Promise<Response<ParsedModel.GroupInvitationsWithVersion | undefined>> {
+    queryInvitationsByGroupId({
+        groupId,
+        lastUpdatedDate
+    }: {
+        groupId: string,
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.GroupInvitationsWithVersion | undefined>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -295,7 +422,13 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupInvitationsWithVersion)));
     }
 
-    queryInvitations(areSentByMe: boolean, lastUpdatedDate?: Date): Promise<Response<ParsedModel.GroupInvitationsWithVersion | undefined>> {
+    queryInvitations({
+        areSentByMe,
+        lastUpdatedDate
+    }: {
+        areSentByMe: boolean,
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.GroupInvitationsWithVersion | undefined>> {
         if (Validator.isFalsy(areSentByMe)) {
             return ResponseError.notFalsyPromise('areSentByMe');
         }
@@ -307,7 +440,13 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupInvitationsWithVersion)));
     }
 
-    createJoinRequest(groupId: string, content: string): Promise<Response<string>> {
+    createJoinRequest({
+        groupId,
+        content
+    }: {
+        groupId: string,
+        content: string
+    }): Promise<Response<string>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -322,7 +461,11 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
     }
 
-    deleteJoinRequest(requestId: string): Promise<Response<void>> {
+    deleteJoinRequest({
+        requestId
+    }: {
+        requestId: string
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(requestId)) {
             return ResponseError.notFalsyPromise('requestId');
         }
@@ -333,7 +476,13 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n));
     }
 
-    queryJoinRequests(groupId: string, lastUpdatedDate?: Date): Promise<Response<ParsedModel.GroupJoinRequestsWithVersion | undefined>> {
+    queryJoinRequests({
+        groupId,
+        lastUpdatedDate
+    }: {
+        groupId: string,
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.GroupJoinRequestsWithVersion | undefined>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -345,7 +494,11 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupJoinRequestsWithVersion)));
     }
 
-    querySentJoinRequests(lastUpdatedDate?: Date): Promise<Response<ParsedModel.GroupJoinRequestsWithVersion | undefined>> {
+    querySentJoinRequests({
+        lastUpdatedDate
+    }: {
+        lastUpdatedDate?: Date
+    } = {}): Promise<Response<ParsedModel.GroupJoinRequestsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryGroupJoinRequestsRequest: {
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
@@ -356,10 +509,15 @@ export default class GroupService {
     /**
      * Note: Only the owner and managers have the right to fetch questions with answers
      */
-    queryGroupJoinQuestionsRequest(
-        groupId: string,
+    queryGroupJoinQuestionsRequest({
+        groupId,
         withAnswers = false,
-        lastUpdatedDate?: Date): Promise<Response<ParsedModel.GroupJoinQuestionsWithVersion | undefined>> {
+        lastUpdatedDate
+    }: {
+        groupId: string,
+        withAnswers: boolean,
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.GroupJoinQuestionsWithVersion | undefined>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -372,7 +530,11 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupJoinQuestionsWithVersion)));
     }
 
-    answerGroupQuestions(questionIdToAnswer: { [k: string]: string }): Promise<Response<GroupJoinQuestionsAnswerResult | undefined>> {
+    answerGroupQuestions({
+        questionIdToAnswer
+    }: {
+        questionIdToAnswer: Record<string, string>
+    }): Promise<Response<GroupJoinQuestionsAnswerResult | undefined>> {
         if (Validator.isFalsy(questionIdToAnswer)) {
             return ResponseError.notFalsyPromise('questionIdToAnswer', true);
         }
@@ -391,12 +553,19 @@ export default class GroupService {
     }
 
     // Group Member
-    addGroupMember(
+    addGroupMember({
+        groupId,
+        userId,
+        name,
+        role,
+        muteEndDate
+    }: {
         groupId: string,
         userId: string,
         name?: string,
         role?: string | GroupMemberRole,
-        muteEndDate?: Date): Promise<Response<void>> {
+        muteEndDate?: Date
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -420,7 +589,15 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n));
     }
 
-    quitGroup(groupId: string, successorId?: string, quitAfterTransfer?: boolean): Promise<Response<void>> {
+    quitGroup({
+        groupId,
+        successorId,
+        quitAfterTransfer
+    }: {
+        groupId: string,
+        successorId?: string,
+        quitAfterTransfer?: boolean
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -434,7 +611,13 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n));
     }
 
-    removeGroupMember(groupId: string, memberId: string): Promise<Response<void>> {
+    removeGroupMember({
+        groupId,
+        memberId
+    }: {
+        groupId: string,
+        memberId: string
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -449,12 +632,19 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n));
     }
 
-    updateGroupMemberInfo(
+    updateGroupMemberInfo({
+        groupId,
+        memberId,
+        name,
+        role,
+        muteEndDate
+    }: {
         groupId: string,
         memberId: string,
         name?: string,
         role?: string | GroupMemberRole,
-        muteEndDate?: Date): Promise<Response<void>> {
+        muteEndDate?: Date
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -481,7 +671,15 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n));
     }
 
-    muteGroupMember(groupId: string, memberId: string, muteEndDate: Date): Promise<Response<void>> {
+    muteGroupMember({
+        groupId,
+        memberId,
+        muteEndDate
+    }: {
+        groupId: string,
+        memberId: string,
+        muteEndDate: Date
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -491,14 +689,36 @@ export default class GroupService {
         if (Validator.isFalsy(muteEndDate)) {
             return ResponseError.notFalsyPromise('muteEndDate');
         }
-        return this.updateGroupMemberInfo(groupId, memberId, undefined, undefined, muteEndDate);
+        return this.updateGroupMemberInfo({
+            groupId,
+            memberId,
+            muteEndDate
+        });
     }
 
-    unmuteGroupMember(groupId: string, memberId: string): Promise<Response<void>> {
-        return this.muteGroupMember(groupId, memberId, new Date(0));
+    unmuteGroupMember({
+        groupId,
+        memberId
+    }: {
+        groupId: string,
+        memberId: string
+    }): Promise<Response<void>> {
+        return this.muteGroupMember({
+            groupId,
+            memberId,
+            muteEndDate: new Date(0)
+        });
     }
 
-    queryGroupMembers(groupId: string, withStatus = false, lastUpdatedDate?: Date): Promise<Response<ParsedModel.GroupMembersWithVersion | undefined>> {
+    queryGroupMembers({
+        groupId,
+        withStatus = false,
+        lastUpdatedDate
+    }: {
+        groupId: string,
+        withStatus: boolean,
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.GroupMembersWithVersion | undefined>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -512,7 +732,15 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupMembersWithVersion)));
     }
 
-    queryGroupMembersByMemberIds(groupId: string, memberIds: string[], withStatus = false): Promise<Response<ParsedModel.GroupMembersWithVersion | undefined>> {
+    queryGroupMembersByMemberIds({
+        groupId,
+        memberIds,
+        withStatus = false
+    }: {
+        groupId: string,
+        memberIds: string[],
+        withStatus: boolean
+    }): Promise<Response<ParsedModel.GroupMembersWithVersion | undefined>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }

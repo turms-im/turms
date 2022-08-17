@@ -58,7 +58,7 @@ import ClientTerminal from './client-terminal';
 
 const ONBOARD_MESSAGES = [
     `Current version of turms-client-js: ${TurmsClient.version}`,
-    'Input commands, e.g. "user.login(1, \'123\')"',
+    'Input commands, e.g. "user.login({userId: 1, password: \'123\'})"',
     '"help" for details'
 ];
 
@@ -75,8 +75,8 @@ const HELP = `* Builtin Objects:
     * help: print this help message
     * clear: clear screen
 * Command Examples:
-    * user.login(1, '123')
-    * message.sendMessage(false, 1, null, 'This is my message')
+    * user.login({userId: 1, password: '123'})
+    * message.sendMessage({isGroupMessage: false, targetId: 1, text: 'This is my message'})
 `.replace(/\n/g, '\r\n');
 
 const CONTEXT = `

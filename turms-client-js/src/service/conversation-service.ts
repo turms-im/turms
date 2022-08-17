@@ -13,7 +13,11 @@ export default class ConversationService {
         this._turmsClient = turmsClient;
     }
 
-    queryPrivateConversations(targetIds: string[]): Promise<Response<ParsedModel.PrivateConversation[]>> {
+    queryPrivateConversations({
+        targetIds
+    }: {
+        targetIds: string[]
+    }): Promise<Response<ParsedModel.PrivateConversation[]>> {
         if (Validator.isFalsy(targetIds)) {
             return Promise.resolve(Response.emptyList());
         }
@@ -25,7 +29,11 @@ export default class ConversationService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.conversations?.privateConversations)));
     }
 
-    queryGroupConversations(groupIds: string[]): Promise<Response<ParsedModel.GroupConversation[]>> {
+    queryGroupConversations({
+        groupIds
+    }: {
+        groupIds: string[]
+    }): Promise<Response<ParsedModel.GroupConversation[]>> {
         if (Validator.isFalsy(groupIds)) {
             return Promise.resolve(Response.emptyList());
         }
@@ -40,7 +48,13 @@ export default class ConversationService {
         })) || []));
     }
 
-    updatePrivateConversationReadDate(targetId: string, readDate?: Date): Promise<Response<void>> {
+    updatePrivateConversationReadDate({
+        targetId,
+        readDate
+    }: {
+        targetId: string,
+        readDate?: Date
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(targetId)) {
             return ResponseError.notFalsyPromise('targetId');
         }
@@ -53,7 +67,13 @@ export default class ConversationService {
         }).then(n => Response.fromNotification(n));
     }
 
-    updateGroupConversationReadDate(groupId: string, readDate?: Date): Promise<Response<void>> {
+    updateGroupConversationReadDate({
+        groupId,
+        readDate
+    }: {
+        groupId: string,
+        readDate?: Date
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -66,7 +86,11 @@ export default class ConversationService {
         }).then(n => Response.fromNotification(n));
     }
 
-    updatePrivateConversationTypingStatus(targetId: string): Promise<Response<void>> {
+    updatePrivateConversationTypingStatus({
+        targetId
+    }: {
+        targetId: string
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(targetId)) {
             return ResponseError.notFalsyPromise('targetId');
         }
@@ -78,7 +102,11 @@ export default class ConversationService {
         }).then(n => Response.fromNotification(n));
     }
 
-    updateGroupConversationTypingStatus(groupId: string): Promise<Response<void>> {
+    updateGroupConversationTypingStatus({
+        groupId
+    }: {
+        groupId: string
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }

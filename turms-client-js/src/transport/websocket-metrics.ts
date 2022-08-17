@@ -1,6 +1,6 @@
 export default class WebSocketMetrics {
-  connectTime?: number;
+    connectTime?: number;
 
-  dataReceived = 0;
-  dataSent = 0;
+    dataReceived = 0;
+    dataSent = 0;
 }

@@ -26,16 +26,6 @@ export interface UserInfo {
     location?: UserLocation;
 }
 
-export interface LoginOptions {
-    userId: string;
-    password?: string;
-    deviceType?: DeviceType;
-    deviceDetails?: Record<string, string>;
-    onlineStatus?: UserStatus;
-    location?: UserLocation;
-    storePassword?: boolean;
-}
-
 export default class UserService {
     private _turmsClient: TurmsClient;
     private _stateStore: StateStore;
@@ -120,34 +110,23 @@ export default class UserService {
         });
     }
 
-    login(
+    login({
+        userId,
+        password,
+        deviceType,
+        deviceDetails,
+        onlineStatus,
+        location,
+        storePassword
+    }: {
         userId: string,
         password?: string,
         deviceType?: string | DeviceType,
         deviceDetails?: Record<string, string>,
         onlineStatus?: string | UserStatus,
         location?: GeolocationPosition | UserLocation,
-        storePassword?: boolean): Promise<Response<void>>;
-
-    login(options: LoginOptions): Promise<Response<void>>;
-
-    login(
-        userIdOrOptions: string | LoginOptions,
-        password?: string,
-        deviceType?: string | DeviceType,
-        deviceDetails?: Record<string, string>,
-        onlineStatus?: string | UserStatus,
-        location?: GeolocationPosition | UserLocation,
-        storePassword = false): Promise<Response<void>> {
-        const userId = userIdOrOptions['userId'] || userIdOrOptions;
-        if (typeof userIdOrOptions === 'object') {
-            password = userIdOrOptions.password;
-            deviceType = userIdOrOptions.deviceType;
-            deviceDetails = userIdOrOptions.deviceDetails;
-            onlineStatus = userIdOrOptions.onlineStatus;
-            location = userIdOrOptions.location;
-            storePassword = userIdOrOptions.storePassword;
-        }
+        storePassword?: boolean
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(userId)) {
             return ResponseError.notFalsyPromise('userId');
         }
@@ -253,9 +232,13 @@ export default class UserService {
         return connect;
     }
 
-    logout(disconnect = true): Promise<Response<void>> {
+    logout({
+        immediate = true
+    }: {
+        immediate?: boolean
+    } = {}): Promise<Response<void>> {
         let promise: Promise<any>;
-        if (disconnect) {
+        if (immediate) {
             promise = this._turmsClient.driver.disconnect();
         } else {
             promise = this._turmsClient.driver.send({
@@ -274,7 +257,11 @@ export default class UserService {
         });
     }
 
-    updateOnlineStatus(onlineStatus: string | UserStatus): Promise<Response<void>> {
+    updateOnlineStatus({
+        onlineStatus
+    }: {
+        onlineStatus: string | UserStatus
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(onlineStatus)) {
             return ResponseError.notFalsyPromise('onlineStatus');
         }
@@ -295,7 +282,11 @@ export default class UserService {
         });
     }
 
-    disconnectOnlineDevices(deviceTypes: string[] | DeviceType[]): Promise<Response<void>> {
+    disconnectOnlineDevices({
+        deviceTypes
+    }: {
+        deviceTypes: string[] | DeviceType[]
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(deviceTypes)) {
             return ResponseError.notFalsyPromise('deviceTypes', true);
         }
@@ -312,7 +303,11 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
-    updatePassword(password: string): Promise<Response<void>> {
+    updatePassword({
+        password
+    }: {
+        password: string
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(password)) {
             return ResponseError.notFalsyPromise('password');
         }
@@ -329,10 +324,15 @@ export default class UserService {
         });
     }
 
-    updateProfile(
+    updateProfile({
+        name,
+        intro,
+        profileAccessStrategy
+    }: {
         name?: string,
         intro?: string,
-        profileAccessStrategy?: string | ProfileAccessStrategy): Promise<Response<void>> {
+        profileAccessStrategy?: string | ProfileAccessStrategy
+    }): Promise<Response<void>> {
         if (Validator.areAllFalsy(name, intro, profileAccessStrategy)) {
             return Promise.resolve(Response.nullValue());
         }
@@ -351,7 +351,13 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
-    queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<Response<ParsedModel.UserInfoWithVersion | undefined>> {
+    queryUserProfile({
+        userId,
+        lastUpdatedDate
+    }: {
+        userId: string,
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.UserInfoWithVersion | undefined>> {
         if (Validator.isFalsy(userId)) {
             return ResponseError.notFalsyPromise('userId');
         }
@@ -372,13 +378,23 @@ export default class UserService {
             }));
     }
 
-    queryNearbyUsers(latitude: number,
-                     longitude: number,
-                     distance?: number,
-                     maxNumber?: number,
-                     withCoordinates?: boolean,
-                     withDistance?: boolean,
-                     withInfo?: boolean): Promise<Response<ParsedModel.NearbyUser[]>> {
+    queryNearbyUsers({
+        latitude,
+        longitude,
+        distance,
+        maxNumber,
+        withCoordinates,
+        withDistance,
+        withInfo
+    }: {
+        latitude: number,
+        longitude: number,
+        distance?: number,
+        maxNumber?: number,
+        withCoordinates?: boolean,
+        withDistance?: boolean,
+        withInfo?: boolean
+    }): Promise<Response<ParsedModel.NearbyUser[]>> {
         if (Validator.isFalsy(latitude)) {
             return ResponseError.notFalsyPromise('latitude');
         }
@@ -398,7 +414,11 @@ export default class UserService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.nearbyUsers?.nearbyUsers)));
     }
 
-    queryOnlineStatusesRequest(userIds: string[]): Promise<Response<ParsedModel.UserStatusDetail[]>> {
+    queryOnlineStatusesRequest({
+        userIds
+    }: {
+        userIds: string[]
+    }): Promise<Response<ParsedModel.UserStatusDetail[]>> {
         if (Validator.isFalsy(userIds)) {
             return ResponseError.notFalsyPromise('userIds', true);
         }
@@ -411,11 +431,17 @@ export default class UserService {
 
     // Relationship
 
-    queryRelationships(
+    queryRelationships({
+        relatedUserIds,
+        isBlocked,
+        groupIndex,
+        lastUpdatedDate
+    }: {
         relatedUserIds?: string[],
         isBlocked?: boolean,
         groupIndex?: number,
-        lastUpdatedDate?: Date): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryRelationshipsRequest: {
                 userIds: relatedUserIds || [],
@@ -426,10 +452,15 @@ export default class UserService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userRelationshipsWithVersion)));
     }
 
-    queryRelatedUserIds(
+    queryRelatedUserIds({
+        isBlocked,
+        groupIndex,
+        lastUpdatedDate
+    }: {
         isBlocked?: boolean,
         groupIndex?: number,
-        lastUpdatedDate?: Date): Promise<Response<ParsedModel.IdsWithVersion | undefined>> {
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.IdsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryRelatedUserIdsRequest: {
                 blocked: isBlocked,
@@ -439,15 +470,43 @@ export default class UserService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getIdsWithVer(data)));
     }
 
-    queryFriends(groupIndex?: number, lastUpdatedDate?: Date): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
-        return this.queryRelationships(undefined, false, groupIndex, lastUpdatedDate);
+    queryFriends({
+        groupIndex,
+        lastUpdatedDate
+    }: {
+        groupIndex?: number,
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
+        return this.queryRelationships({
+            isBlocked: false,
+            groupIndex,
+            lastUpdatedDate
+        });
     }
 
-    queryBlockedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
-        return this.queryRelationships(undefined, true, groupIndex, lastUpdatedDate);
+    queryBlockedUsers({
+        groupIndex,
+        lastUpdatedDate
+    }: {
+        groupIndex?: number,
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
+        return this.queryRelationships({
+            isBlocked: true,
+            groupIndex,
+            lastUpdatedDate
+        });
     }
 
-    createRelationship(userId: string, isBlocked: boolean, groupIndex?: number): Promise<Response<void>> {
+    createRelationship({
+        userId,
+        isBlocked,
+        groupIndex
+    }: {
+        userId: string,
+        isBlocked: boolean,
+        groupIndex?: number
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(userId)) {
             return ResponseError.notFalsyPromise('userId');
         }
@@ -463,15 +522,43 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
-    createFriendRelationship(userId: string, groupIndex?: number): Promise<Response<void>> {
-        return this.createRelationship(userId, false, groupIndex);
+    createFriendRelationship({
+        userId,
+        groupIndex
+    }: {
+        userId: string,
+        groupIndex?: number
+    }): Promise<Response<void>> {
+        return this.createRelationship({
+            userId,
+            groupIndex,
+            isBlocked: false
+        });
     }
 
-    createBlockedUserRelationship(userId: string, groupIndex?: number): Promise<Response<void>> {
-        return this.createRelationship(userId, true, groupIndex);
+    createBlockedUserRelationship({
+        userId,
+        groupIndex
+    }: {
+        userId: string,
+        groupIndex?: number
+    }): Promise<Response<void>> {
+        return this.createRelationship({
+            userId,
+            groupIndex,
+            isBlocked: true
+        });
     }
 
-    deleteRelationship(relatedUserId: string, deleteGroupIndex?: number, targetGroupIndex?: number): Promise<Response<void>> {
+    deleteRelationship({
+        relatedUserId,
+        deleteGroupIndex,
+        targetGroupIndex
+    }: {
+        relatedUserId: string,
+        deleteGroupIndex?: number,
+        targetGroupIndex?: number
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(relatedUserId)) {
             return ResponseError.notFalsyPromise('relatedUserId');
         }
@@ -484,7 +571,15 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
-    updateRelationship(relatedUserId: string, isBlocked?: boolean, groupIndex?: number): Promise<Response<void>> {
+    updateRelationship({
+        relatedUserId,
+        isBlocked,
+        groupIndex
+    }: {
+        relatedUserId: string,
+        isBlocked?: boolean,
+        groupIndex?: number
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(relatedUserId)) {
             return ResponseError.notFalsyPromise('relatedUserId');
         }
@@ -500,7 +595,13 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
-    sendFriendRequest(recipientId: string, content: string): Promise<Response<string>> {
+    sendFriendRequest({
+        recipientId,
+        content
+    }: {
+        recipientId: string,
+        content: string
+    }): Promise<Response<string>> {
         if (Validator.isFalsy(recipientId)) {
             return ResponseError.notFalsyPromise('recipientId');
         }
@@ -515,7 +616,15 @@ export default class UserService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
     }
 
-    replyFriendRequest(requestId: string, responseAction: string | ResponseAction, reason?: string): Promise<Response<void>> {
+    replyFriendRequest({
+        requestId,
+        responseAction,
+        reason
+    }: {
+        requestId: string,
+        responseAction: string | ResponseAction,
+        reason?: string
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(requestId)) {
             return ResponseError.notFalsyPromise('requestId');
         }
@@ -537,7 +646,13 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
-    queryFriendRequests(areSentByMe: boolean, lastUpdatedDate?: Date): Promise<Response<ParsedModel.UserFriendRequestsWithVersion | undefined>> {
+    queryFriendRequests({
+        areSentByMe,
+        lastUpdatedDate
+    }: {
+        areSentByMe: boolean,
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.UserFriendRequestsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryFriendRequestsRequest: {
                 areSentByMe,
@@ -546,7 +661,11 @@ export default class UserService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userFriendRequestsWithVersion)));
     }
 
-    createRelationshipGroup(name: string): Promise<Response<number>> {
+    createRelationshipGroup({
+        name
+    }: {
+        name: string
+    }): Promise<Response<number>> {
         if (Validator.isFalsy(name)) {
             return ResponseError.notFalsyPromise('name');
         }
@@ -557,7 +676,13 @@ export default class UserService {
         }).then(n => Response.fromNotification(n, data => parseInt(NotificationUtil.getFirstIdOrThrow(data))));
     }
 
-    deleteRelationshipGroups(groupIndex: number, targetGroupIndex?: number): Promise<Response<void>> {
+    deleteRelationshipGroups({
+        groupIndex,
+        targetGroupIndex
+    }: {
+        groupIndex: number,
+        targetGroupIndex?: number
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupIndex)) {
             return ResponseError.notFalsyPromise('groupIndex');
         }
@@ -569,7 +694,13 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
-    updateRelationshipGroup(groupIndex: number, newName: string): Promise<Response<void>> {
+    updateRelationshipGroup({
+        groupIndex,
+        newName
+    }: {
+        groupIndex: number,
+        newName: string
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(groupIndex)) {
             return ResponseError.notFalsyPromise('groupIndex');
         }
@@ -584,7 +715,11 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
-    queryRelationshipGroups(lastUpdatedDate?: Date): Promise<Response<ParsedModel.UserRelationshipGroupsWithVersion | undefined>> {
+    queryRelationshipGroups({
+        lastUpdatedDate
+    }: {
+        lastUpdatedDate?: Date
+    }): Promise<Response<ParsedModel.UserRelationshipGroupsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryRelationshipGroupsRequest: {
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
@@ -592,7 +727,13 @@ export default class UserService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userRelationshipGroupsWithVersion)));
     }
 
-    moveRelatedUserToGroup(relatedUserId: string, groupIndex: number): Promise<Response<void>> {
+    moveRelatedUserToGroup({
+        relatedUserId,
+        groupIndex
+    }: {
+        relatedUserId: string,
+        groupIndex: number
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(relatedUserId)) {
             return ResponseError.notFalsyPromise('relatedUserId');
         }
@@ -612,7 +753,15 @@ export default class UserService {
      * updateLocation() in UserService sends the location of user to the server only.
      * sendMessage() with records of location sends user's location to both server and its recipients.
      */
-    updateLocation(latitude: number, longitude: number, details?: { [k: string]: string }): Promise<Response<void>> {
+    updateLocation({
+        latitude,
+        longitude,
+        details
+    }: {
+        latitude: number,
+        longitude: number,
+        details?: Record<string, string>
+    }): Promise<Response<void>> {
         if (Validator.isFalsy(latitude)) {
             return ResponseError.notFalsyPromise('latitude');
         }

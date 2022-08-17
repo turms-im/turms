@@ -105,9 +105,9 @@ export default class ConnectionService extends BaseService {
     // Connection
 
     connect({
-                wsUrl = this._initialWsUrl,
-                connectTimeout = this._initialConnectTimeout
-            }: ConnectOptions = {}): Promise<void> {
+        wsUrl = this._initialWsUrl,
+        connectTimeout = this._initialConnectTimeout
+    }: ConnectOptions = {}): Promise<void> {
         return new Promise((resolve, reject) => {
             const websocket = this._stateStore.websocket;
             if (websocket?.isConnected) {

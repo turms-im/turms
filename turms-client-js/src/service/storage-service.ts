@@ -27,17 +27,30 @@ export default class StorageService {
 
     // Profile picture
 
-    public queryProfilePictureUrlForAccess(userId: string): Promise<Response<string>> {
+    public queryProfilePictureUrlForAccess({
+        userId
+    }: {
+        userId: string
+    }): Promise<Response<string>> {
         const url = `${this._serverUrl}/${StorageService._getBucketName(ContentType.PROFILE)}/${userId}`;
         return Promise.resolve(Response.value(url));
     }
 
-    public queryProfilePicture(userId: string): Promise<Response<Uint8Array>> {
-        return this.queryProfilePictureUrlForAccess(userId)
-            .then(response => this._getBytesFromGetUrl(response.data));
+    public queryProfilePicture({
+        userId
+    }: {
+        userId: string
+    }): Promise<Response<Uint8Array>> {
+        return this.queryProfilePictureUrlForAccess({
+            userId
+        }).then(response => this._getBytesFromGetUrl(response.data));
     }
 
-    public queryProfilePictureUrlForUpload(pictureSize: number): Promise<Response<string>> {
+    public queryProfilePictureUrlForUpload({
+        pictureSize
+    }: {
+        pictureSize: number
+    }): Promise<Response<string>> {
         const userId = this._turmsClient.userService.userInfo.userId;
         if (userId) {
             return this._getSignedPutUrl(ContentType.PROFILE, pictureSize, null, userId);
@@ -46,9 +59,14 @@ export default class StorageService {
         }
     }
 
-    public uploadProfilePicture(bytes: Uint8Array): Promise<Response<string>> {
-        return this.queryProfilePictureUrlForUpload(bytes.length)
-            .then(response => this._upload(response.data, bytes));
+    public uploadProfilePicture({
+        bytes
+    }: {
+        bytes: Uint8Array
+    }): Promise<Response<string>> {
+        return this.queryProfilePictureUrlForUpload({
+            pictureSize: bytes.length
+        }).then(response => this._upload(response.data, bytes));
     }
 
     public deleteProfile(): Promise<Response<void>> {
@@ -57,47 +75,103 @@ export default class StorageService {
 
     // Group profile picture
 
-    public queryGroupProfilePictureUrlForAccess(groupId: string): Promise<Response<string>> {
+    public queryGroupProfilePictureUrlForAccess({
+        groupId
+    }: {
+        groupId: string
+    }): Promise<Response<string>> {
         const url = `${this._serverUrl}/${StorageService._getBucketName(ContentType.GROUP_PROFILE)}/${groupId}`;
         return Promise.resolve(Response.value(url));
     }
 
-    public queryGroupProfilePicture(groupId: string): Promise<Response<Uint8Array>> {
-        return this.queryGroupProfilePictureUrlForAccess(groupId)
-            .then(response => this._getBytesFromGetUrl(response.data));
+    public queryGroupProfilePicture({
+        groupId
+    }: {
+        groupId: string
+    }): Promise<Response<Uint8Array>> {
+        return this.queryGroupProfilePictureUrlForAccess({
+            groupId
+        }).then(response => this._getBytesFromGetUrl(response.data));
     }
 
-    public queryGroupProfilePictureUrlForUpload(pictureSize: number, groupId: string): Promise<Response<string>> {
+    public queryGroupProfilePictureUrlForUpload({
+        pictureSize,
+        groupId
+    }: {
+        pictureSize: number,
+        groupId: string
+    }): Promise<Response<string>> {
         return this._getSignedPutUrl(ContentType.GROUP_PROFILE, pictureSize, null, groupId);
     }
 
-    public uploadGroupProfilePicture(bytes: Uint8Array, groupId: string): Promise<Response<string>> {
-        return this.queryGroupProfilePictureUrlForUpload(bytes.length, groupId)
+    public uploadGroupProfilePicture({
+        bytes,
+        groupId
+    }: {
+        bytes: Uint8Array,
+        groupId: string
+    }): Promise<Response<string>> {
+        return this.queryGroupProfilePictureUrlForUpload({
+            groupId,
+            pictureSize: bytes.length
+        })
             .then(response => this._upload(response.data, bytes));
     }
 
-    public deleteGroupProfile(groupId: string): Promise<Response<void>> {
+    public deleteGroupProfile({
+        groupId
+    }: {
+        groupId: string
+    }): Promise<Response<void>> {
         return this._deleteResource(ContentType.GROUP_PROFILE, null, groupId);
     }
 
     // Message attachment
 
-    public queryAttachmentUrlForAccess(messageId: string, name?: string): Promise<Response<string>> {
+    public queryAttachmentUrlForAccess({
+        messageId,
+        name
+    }: {
+        messageId: string,
+        name?: string
+    }): Promise<Response<string>> {
         return this._getSignedGetUrl(ContentType.ATTACHMENT, name, messageId);
     }
 
-    public queryAttachment(messageId: string, name?: string): Promise<Response<Uint8Array>> {
-        return this.queryAttachmentUrlForAccess(messageId, name)
-            .then(response => this._getBytesFromGetUrl(response.data));
+    public queryAttachment({
+        messageId,
+        name
+    }: {
+        messageId: string,
+        name?: string
+    }): Promise<Response<Uint8Array>> {
+        return this.queryAttachmentUrlForAccess({
+            messageId,
+            name
+        }).then(response => this._getBytesFromGetUrl(response.data));
     }
 
-    public queryAttachmentUrlForUpload(messageId: string, attachmentSize: number): Promise<Response<string>> {
+    public queryAttachmentUrlForUpload({
+        messageId,
+        attachmentSize
+    }: {
+        messageId: string,
+        attachmentSize: number
+    }): Promise<Response<string>> {
         return this._getSignedPutUrl(ContentType.ATTACHMENT, attachmentSize, null, messageId);
     }
 
-    public uploadAttachment(messageId: string, bytes: Uint8Array): Promise<Response<string>> {
-        return this.queryAttachmentUrlForUpload(messageId, bytes.length)
-            .then(response => this._upload(response.data, bytes));
+    public uploadAttachment({
+        messageId,
+        bytes
+    }: {
+        messageId: string,
+        bytes: Uint8Array
+    }): Promise<Response<string>> {
+        return this.queryAttachmentUrlForUpload({
+            messageId,
+            attachmentSize: bytes.length
+        }).then(response => this._upload(response.data, bytes));
     }
 
     // Base
@@ -135,42 +209,39 @@ export default class StorageService {
 
     private _getBytesFromGetUrl(url: string): Promise<Response<Uint8Array>> {
         return new Promise((resolve, reject) => {
-            try {
-                unfetch(url)
-                    .then(res => {
-                        if (res.status === 200) {
-                            return res.blob();
-                        } else {
-                            throw ResponseError.fromCode(ResponseStatusCode.INVALID_RESPONSE);
-                        }
-                    })
-                    .then(data => {
-                        const reader = new FileReader();
-                        reader.onload = function (e): void {
-                            resolve(Response.value(new Uint8Array(e.target.result as ArrayBuffer)));
-                        };
-                        reader.readAsArrayBuffer(data);
-                    })
-                    .catch(e => reject(e));
-            } catch (e) {
-                reject(e);
-            }
+            unfetch(url)
+                .then(res => {
+                    if (res.status === 200) {
+                        return res.blob();
+                    } else {
+                        throw ResponseError.fromCode(ResponseStatusCode.INVALID_RESPONSE);
+                    }
+                })
+                .then(data => {
+                    const reader = new FileReader();
+                    reader.onload = function (e): void {
+                        resolve(Response.value(new Uint8Array(e.target.result as ArrayBuffer)));
+                    };
+                    reader.readAsArrayBuffer(data);
+                })
+                .catch(e => reject(e));
         });
     }
 
     private _upload(url: string, bytes: Uint8Array): Promise<Response<string>> {
         return new Promise((resolve, reject) => {
-            try {
-                unfetch(url, { method: 'PUT', body: bytes }).then(res => {
+            unfetch(url, {
+                method: 'PUT',
+                body: bytes
+            })
+                .then(res => {
                     if (res.status === 200) {
                         resolve(Response.value(res.url));
                     } else {
                         throw ResponseError.fromCode(ResponseStatusCode.INVALID_RESPONSE);
                     }
-                }).catch(e => reject(e));
-            } catch (e) {
-                reject(e);
-            }
+                })
+                .catch(e => reject(e));
         });
     }
 

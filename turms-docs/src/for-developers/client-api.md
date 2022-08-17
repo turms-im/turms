@@ -220,32 +220,37 @@ client.messageService.addMessageListener(message => {
     console.info(`onMessage: Receive a message from other users or server: ${JSON.stringify(message)}`);
 });
 
-client.userService.login('1', '123')
+client.userService.login({
+    userId: '1',
+    password: '123'
+})
     .then(() => {
-        client.userService.queryNearbyUsers(
-            35.792657,
-            139.667651,
-            100,
-            10)
-            .then(users => {
-                console.log(`nearby users: ${JSON.stringify(users)}`);
+        client.userService.queryNearbyUsers({
+            latitude: 139.667651,
+            longitude: 35.792657,
+            distance: 100,
+            maxNumber: 10
+        })
+            .then(response => {
+                console.log(`nearby users: ${JSON.stringify(response.data)}`);
             });
-        client.messageService.sendMessage(
-            false,
-            '1',
-            new Date(),
-            'Hello Turms',
-            null,
-            30)
-            .then(id => {
-                console.log(`message ${id} has been sent`);
+        client.messageService.sendMessage({
+            isGroupMessage: false,
+            targetId: '1',
+            deliveryDate: new Date(),
+            text: 'Hello Turms',
+            burnAfter: 30
+        })
+            .then(response => {
+                console.log(`message ${response.data} has been sent`);
             });
-        client.groupService.createGroup(
-            'Turms Developers Group',
-            'This is a group for the developers who are interested in Turms',
-            'nope')
-            .then(id => {
-                console.log(`group ${id} has been created`);
+        client.groupService.createGroup({
+            name: 'Turms Developers Group',
+            intro: 'This is a group for the developers who are interested in Turms',
+            announcement: 'nope'
+        })
+            .then(response => {
+                console.log(`group ${response.data} has been created`);
             });
     })
     .catch(reason => {
