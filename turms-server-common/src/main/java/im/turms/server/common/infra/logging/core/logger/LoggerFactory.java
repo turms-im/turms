@@ -147,7 +147,6 @@ public class LoggerFactory {
         return getLogger(LoggerOptions.builder()
                 .loggerClass(clazz)
                 .shouldParse(true)
-                .level(clazz.getName().startsWith("org.mongodb") ? LogLevel.DEBUG : null)
                 .build());
     }
 

@@ -85,9 +85,8 @@ public class JsPluginFactory {
                 .allowHostAccess(HostAccess.ALL)
                 .allowHostClassLookup(className -> true);
         if (isDebugEnabled) {
-            String inspectPath = UUID.randomUUID().toString();
             builder.option("inspect", inspectHost + ":" + inspectPort)
-                    .option("inspect.Path", inspectPath);
+                    .option("inspect.Path", UUID.randomUUID().toString());
         } else {
             builder.engine(engine);
         }

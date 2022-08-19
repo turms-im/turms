@@ -32,11 +32,11 @@ public class JsPluginDescriptorFactory extends PluginDescriptorFactory {
     private static final String GET_PLUGIN_DESCRIPTOR = "getPluginDescriptor";
 
     public static JsPluginDescriptor parsePluginDescriptor(Value bindings, String script, @Nullable Path path) {
-        Map<String, Object> map = executeGetPluginDescriptor(bindings, script);
-        return createJsPluginDescriptor(map, path);
+        Map<String, String> properties = executeGetPluginDescriptor(bindings, script);
+        return createJsPluginDescriptor(properties, path);
     }
 
-    public static Map<String, Object> executeGetPluginDescriptor(Value bindings, String script) {
+    public static Map<String, String> executeGetPluginDescriptor(Value bindings, String script) {
         if (!bindings.hasMember(GET_PLUGIN_DESCRIPTOR)) {
             String message = "The script should have a function called \"%s\". Actual: %n%s"
                     .formatted(GET_PLUGIN_DESCRIPTOR, script);
@@ -65,8 +65,8 @@ public class JsPluginDescriptorFactory extends PluginDescriptorFactory {
         }
     }
 
-    private static JsPluginDescriptor createJsPluginDescriptor(Map<String, Object> map, @Nullable Path path) {
-        PluginDescriptor descriptor = createPluginDescriptor(map);
+    private static JsPluginDescriptor createJsPluginDescriptor(Map<String, String> properties, @Nullable Path path) {
+        PluginDescriptor descriptor = createPluginDescriptor(properties);
         return new JsPluginDescriptor(descriptor.getId(),
                 descriptor.getVersion(),
                 descriptor.getProvider(),

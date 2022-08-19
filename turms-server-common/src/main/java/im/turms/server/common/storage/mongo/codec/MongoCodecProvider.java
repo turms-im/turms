@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class MongoCodecProvider implements CodecProvider {
 
-    private final Map<Class<?>, Codec<?>> codes = new IdentityHashMap<>(64);
+    private final Map<Class<?>, MongoCodec<?>> codes = new IdentityHashMap<>(64);
     private final EntityCodecProvider entityCodecProvider = new EntityCodecProvider();
     @Setter
     private CodecRegistry registry;
@@ -56,24 +56,22 @@ public class MongoCodecProvider implements CodecProvider {
         codes.put(codec.getEncoderClass(), codec);
     }
 
-    private synchronized <T> Codec<T> registerClass(Class<T> clazz) {
-        return (Codec<T>) codes.computeIfAbsent(clazz, key -> {
-            Codec<T> codec = (Codec<T>) createCodec(key);
-            if (codec instanceof MongoCodec mongoCodec) {
-                mongoCodec.setRegistry(registry);
-            }
+    private synchronized <T> MongoCodec<T> registerClass(Class<T> clazz) {
+        return (MongoCodec<T>) codes.computeIfAbsent(clazz, key -> {
+            MongoCodec<T> codec = (MongoCodec<T>) createCodec(key);
+            codec.setRegistry(registry);
             codes.put(key, codec);
             return codec;
         });
     }
 
-    private <T> Codec<T> createCodec(Class<T> clazz) {
+    private <T> MongoCodec<T> createCodec(Class<T> clazz) {
         if (clazz.isEnum()) {
             return new EnumCodec(clazz);
         } else if (clazz.isArray()) {
             return new ArrayCodec(clazz);
         } else {
-            return entityCodecProvider.get(clazz, registry);
+            return (MongoCodec<T>) entityCodecProvider.get(clazz, registry);
         }
     }
 

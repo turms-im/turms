@@ -33,6 +33,9 @@ public final class RpcFrameEncoder extends ProtobufVarint32LengthFieldPrepender 
 
     public static final RpcFrameEncoder INSTANCE = new RpcFrameEncoder();
 
+    private RpcFrameEncoder() {
+    }
+
     public <T> ByteBuf encode(int requestId, T value) {
         if (requestId < 0) {
             throw new IllegalArgumentException("requestId must be larger than 0. Actual: " + requestId);

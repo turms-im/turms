@@ -17,6 +17,7 @@
 
 package im.turms.server.common.storage.mongo.codec;
 
+import im.turms.server.common.infra.collection.ChunkedArrayList;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -25,7 +26,6 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,7 +44,7 @@ public class ArrayCodec<T> extends MongoCodec<T[]> {
 
     @Override
     public T[] decode(BsonReader reader, DecoderContext decoderContext) {
-        List<T> list = new ArrayList<>(8);
+        List<T> list = new ChunkedArrayList<>();
         reader.readStartArray();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             Codec<T> codec = registry.get(componentClazz);

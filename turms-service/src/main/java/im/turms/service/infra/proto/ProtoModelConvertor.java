@@ -149,8 +149,8 @@ public final class ProtoModelConvertor {
         if (userSessionsStatus == null) {
             builder.setUserStatus(UserStatus.OFFLINE);
         } else {
-            builder.setUserStatus(userSessionsStatus.getUserStatus(convertInvisibleToOffline));
-            builder.addAllUsingDeviceTypes(userSessionsStatus.getLoggedInDeviceTypes());
+            builder.setUserStatus(userSessionsStatus.getUserStatus(convertInvisibleToOffline))
+                    .addAllUsingDeviceTypes(userSessionsStatus.getLoggedInDeviceTypes());
         }
         return builder;
     }
@@ -165,8 +165,8 @@ public final class ProtoModelConvertor {
         if (userSessionsStatus == null) {
             builder.setUserStatus(UserStatus.OFFLINE);
         } else {
-            builder.setUserStatus(userSessionsStatus.getUserStatus(convertInvisibleToOffline));
-            builder.addAllUsingDeviceTypes(userSessionsStatus.getLoggedInDeviceTypes());
+            builder.setUserStatus(userSessionsStatus.getUserStatus(convertInvisibleToOffline))
+                    .addAllUsingDeviceTypes(userSessionsStatus.getLoggedInDeviceTypes());
         }
         return builder;
     }

@@ -33,7 +33,7 @@ public abstract class PluginDescriptorFactory {
     static final String PLUGIN_LICENSE = "license";
     static final String PLUGIN_DESCRIPTION = "description";
 
-    public static PluginDescriptor createPluginDescriptor(Map<String, Object> properties) {
+    public static PluginDescriptor createPluginDescriptor(Map<String, String> properties) {
         String id = readPropertiesString(properties, PLUGIN_ID, true);
         String version = readPropertiesString(properties, PLUGIN_VERSION, false);
         String provider = readPropertiesString(properties, PLUGIN_PROVIDER, false);
@@ -43,8 +43,8 @@ public abstract class PluginDescriptorFactory {
     }
 
     @Nullable
-    public static String readPropertiesString(Map<String, Object> properties, String key, boolean required) {
-        String value = (String) properties.get(key);
+    public static String readPropertiesString(Map<String, String> properties, String key, boolean required) {
+        String value = properties.get(key);
         if (StringUtils.hasText(value)) {
             return value;
         }

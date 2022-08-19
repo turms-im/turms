@@ -83,7 +83,7 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
                         .formatted(PROPERTIES_FILE_NAME, filePath), e);
             }
             try {
-                Map map = properties;
+                Map<String, String> map = (Map) properties;
                 String clazz = readPropertiesString(map, PLUGIN_CLASS, true);
                 PluginDescriptor pluginDescriptor = createPluginDescriptor(map);
                 return new JavaPluginDescriptor(pluginDescriptor.getId(),

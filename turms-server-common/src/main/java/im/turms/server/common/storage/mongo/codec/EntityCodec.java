@@ -39,7 +39,7 @@ import java.util.Map;
  * @author James Chen
  * @see org.bson.codecs.pojo.PojoCodecImpl
  */
-public class EntityCodec<T> implements Codec<T> {
+public class EntityCodec<T> extends MongoCodec<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityCodec.class);
 
@@ -48,6 +48,7 @@ public class EntityCodec<T> implements Codec<T> {
     private final MongoEntity<T> entity;
 
     public EntityCodec(CodecRegistry registry, Class<T> entityClass) {
+        super(entityClass);
         this.registry = registry;
         this.entityClass = entityClass;
         entity = MongoEntityFactory.parse(entityClass);

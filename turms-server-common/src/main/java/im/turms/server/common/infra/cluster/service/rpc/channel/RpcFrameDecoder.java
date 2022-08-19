@@ -39,6 +39,7 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
 
     // Header = Codec ID (2 Bytes)
     private static final int HEADER_LENGTH = Short.BYTES;
+    private static final int UNSET_CODEC_ID = Integer.MIN_VALUE;
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
@@ -72,7 +73,7 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
             return decodePayload(ctx, frame);
         } finally {
             // For some RPC requests, we deallocate the frame here,
-            // but for other requests like HandleServiceRequest,
+            // but for other requests like "HandleServiceRequest",
             // they will retain the frame by 1 in their codec so
             // the frame will NOT be just deallocated here
             frame.release();
@@ -80,7 +81,7 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
     }
 
     public Object decodePayload(ChannelHandlerContext ctx, ByteBuf frame) {
-        int codecId = Integer.MIN_VALUE;
+        int codecId = UNSET_CODEC_ID;
         try {
             codecId = frame.readShort() & 0xFFFF;
             Codec<?> codec = CodecPool.getCodec(codecId);
@@ -106,8 +107,8 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
                     : new RpcResponse(requestId, responseValue, null);
         } catch (Exception e) {
             String msg = "Failed to parse the buffer by the codec";
-            if (codecId != Integer.MIN_VALUE) {
-                msg += " with the ID %d".formatted(codecId);
+            if (codecId != UNSET_CODEC_ID) {
+                msg += " with the ID " + codecId;
             }
             String reason = ReactorNetty.format(ctx.channel(), msg);
             throw new CorruptedFrameException(reason, e);

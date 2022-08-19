@@ -37,7 +37,7 @@ public class PluginRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginRepository.class);
 
-    private final Map<String, Plugin> pluginMap = new ConcurrentHashMap<>(16);
+    private final Map<String, Plugin> idToPlugin = new ConcurrentHashMap<>(16);
     private final Map<Class<? extends ExtensionPoint>, List<ExtensionPoint>> extensionPointMap = new IdentityHashMap<>(8);
     private final Set<Class<? extends ExtensionPoint>> singletonExtensionPointClasses;
 
@@ -46,7 +46,7 @@ public class PluginRepository {
     }
 
     public void register(Plugin plugin) {
-        pluginMap.computeIfAbsent(plugin.descriptor().getId(), id -> {
+        idToPlugin.computeIfAbsent(plugin.descriptor().getId(), id -> {
             for (TurmsExtension extension : plugin.extensions()) {
                 ExtensionPoint extensionPoint = extension instanceof JsTurmsExtensionAdaptor jsTurmsExtensionAdaptor
                         ? (ExtensionPoint) jsTurmsExtensionAdaptor.getProxy()
@@ -95,7 +95,7 @@ public class PluginRepository {
     }
 
     public Collection<Plugin> getPlugins() {
-        return pluginMap.values();
+        return idToPlugin.values();
     }
 
     public List<Plugin> getPlugins(Set<String> ids) {
@@ -104,7 +104,7 @@ public class PluginRepository {
         }
         List<Plugin> plugins = new ArrayList<>(ids.size());
         for (String id : ids) {
-            Plugin plugin = pluginMap.get(id);
+            Plugin plugin = idToPlugin.get(id);
             if (plugin != null) {
                 plugins.add(plugin);
             }
@@ -115,7 +115,7 @@ public class PluginRepository {
     public List<Plugin> removePlugins(Set<String> ids) {
         List<Plugin> plugins = new ArrayList<>(ids.size());
         for (String id : ids) {
-            Plugin plugin = pluginMap.remove(id);
+            Plugin plugin = idToPlugin.remove(id);
             if (plugin != null) {
                 plugins.add(plugin);
             }

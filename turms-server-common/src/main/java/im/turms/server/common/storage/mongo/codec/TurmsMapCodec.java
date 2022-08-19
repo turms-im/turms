@@ -23,6 +23,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -36,6 +37,7 @@ public class TurmsMapCodec<K, V> extends MongoCodec<Map> {
     private final boolean isLinkedHashMap;
     private final Class<K> keyClass;
     private final Class<V> valueClass;
+    private Codec<V> valueCodec;
 
     public TurmsMapCodec(Class<? extends Map<?, ?>> ownerClass, Class<K> keyClass, Class<V> valueClass) {
         super(Map.class);
@@ -45,14 +47,19 @@ public class TurmsMapCodec<K, V> extends MongoCodec<Map> {
     }
 
     @Override
+    public void setRegistry(CodecRegistry registry) {
+        super.setRegistry(registry);
+        valueCodec = registry.get(valueClass);
+    }
+
+    @Override
     public void encode(BsonWriter writer, Map map, EncoderContext encoderContext) {
         writer.writeStartDocument();
         for (Object o : map.entrySet()) {
-            Map.Entry entry = (Map.Entry) o;
-            Object value = entry.getValue();
+            Map.Entry<K, V> entry = (Map.Entry<K, V>) o;
+            V value = entry.getValue();
             if (value != null) {
                 writer.writeName(entry.getKey().toString());
-                Codec valueCodec = registry.get(valueClass);
                 encoderContext.encodeWithChildContext(valueCodec, writer, value);
             }
         }
@@ -65,7 +72,6 @@ public class TurmsMapCodec<K, V> extends MongoCodec<Map> {
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String key = reader.readName();
-            Codec<V> valueCodec = registry.get(valueClass);
             V value = valueCodec.decode(reader, decoderContext);
             map.put(parseKeyStr(key, keyClass), value);
         }

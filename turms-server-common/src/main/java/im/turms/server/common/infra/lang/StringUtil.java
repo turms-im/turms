@@ -47,7 +47,8 @@ public final class StringUtil {
             STRING_VALUE_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("value"));
             STRING_CODER_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("coder"));
 
-            String test = StringUtil.newString(StringUtil.getBytes(""), StringUtil.getCoder(""));
+            // Validate
+            StringUtil.newString(StringUtil.getBytes(""), StringUtil.getCoder(""));
         } catch (Throwable e) {
             throw new IllegalStateException(e);
         }

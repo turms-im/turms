@@ -46,7 +46,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -210,7 +210,7 @@ public class Node {
                 rpcService,
                 idService,
                 connectionService);
-        List<Mono<Void>> monos = new LinkedList<>();
+        List<Mono<Void>> monos = new ArrayList<>(services.size());
         for (ClusterService service : services) {
             try {
                 Mono<Void> stop = service.stop(timeoutMillis);

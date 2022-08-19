@@ -25,23 +25,29 @@ import java.util.List;
  */
 public class StrJoiner {
 
-    private final List<CharSequence> elements;
+    private final List<String> elements;
     private int charCount;
 
     public StrJoiner(int size) {
-        this.elements = new ArrayList<>(size);
+        elements = new ArrayList<>(size);
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder(charCount);
-        for (CharSequence element : elements) {
-            builder.append(element);
+        byte[] newBytes = new byte[charCount];
+        int writerIndex = 0;
+        for (String element : elements) {
+            byte[] elementBytes = StringUtil.getBytes(element);
+            System.arraycopy(elementBytes, 0, newBytes, writerIndex, elementBytes.length);
+            writerIndex += elementBytes.length;
         }
-        return builder.toString();
+        return StringUtil.newLatin1String(newBytes);
     }
 
     public StrJoiner add(String element) {
+        if (!StringUtil.isLatin1(element)) {
+            throw new IllegalArgumentException("Only Latin1 string is supported");
+        }
         elements.add(element);
         charCount += element.length();
         return this;

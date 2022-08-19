@@ -18,6 +18,7 @@
 package im.turms.plugin.antispam.dictionary;
 
 import im.turms.plugin.antispam.TextPreprocessor;
+import im.turms.server.common.infra.collection.ChunkedArrayList;
 import im.turms.server.common.infra.lang.CharArrayBuffer;
 import lombok.SneakyThrows;
 
@@ -94,7 +95,7 @@ public class DictionaryParser {
 
     @SneakyThrows
     private List<Word> parseExtendedWords(BufferedReader reader, boolean skipInvalidCharacter) {
-        List<Word> words = new LinkedList<>();
+        List<Word> words = new ChunkedArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         dateFormat.setTimeZone(TimeZone.getTimeZone(ZoneOffset.UTC));
         CharArrayBuffer buffer = new CharArrayBuffer(64);

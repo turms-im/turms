@@ -79,8 +79,9 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
                                 maskedBytes[j] = mask;
                             }
                         } else {
+                            int k;
                             for (int j = firstCharIndex; j <= i; j++) {
-                                int k = j << 1;
+                                k = j << 1;
                                 maskedBytes[k] = mask;
                                 maskedBytes[k + 1] = 0;
                             }
@@ -107,8 +108,9 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
                             maskedBytes[j] = mask;
                         }
                     } else {
+                        int k;
                         for (int j = firstCharIndex; j <= i; j++) {
-                            int k = j << 1;
+                            k = j << 1;
                             maskedBytes[k] = mask;
                             maskedBytes[k + 1] = 0;
                         }

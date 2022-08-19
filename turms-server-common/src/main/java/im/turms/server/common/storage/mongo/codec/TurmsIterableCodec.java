@@ -17,15 +17,16 @@
 
 package im.turms.server.common.storage.mongo.codec;
 
+import im.turms.server.common.infra.collection.ChunkedArrayList;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -36,12 +37,19 @@ import java.util.Set;
 public class TurmsIterableCodec extends MongoCodec<Iterable> {
 
     private final Class iterableClass;
-    private final Class elementClazz;
+    private final Class elementClass;
+    private Codec elementCodec;
 
-    public TurmsIterableCodec(Class iterableClass, Class elementClazz) {
+    public TurmsIterableCodec(Class iterableClass, Class elementClass) {
         super(iterableClass);
         this.iterableClass = iterableClass;
-        this.elementClazz = elementClazz;
+        this.elementClass = elementClass;
+    }
+
+    @Override
+    public void setRegistry(CodecRegistry registry) {
+        super.setRegistry(registry);
+        elementCodec = registry.get(elementClass);
     }
 
     @Override
@@ -53,11 +61,10 @@ public class TurmsIterableCodec extends MongoCodec<Iterable> {
                     ? new LinkedHashSet<>()
                     : UnifiedSet.newSet(8);
         } else {
-            collection = new ArrayList<>(8);
+            collection = new ChunkedArrayList<>();
         }
-        Codec codec = registry.get(elementClazz);
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-            collection.add(codec.decode(reader, decoderContext));
+            collection.add(elementCodec.decode(reader, decoderContext));
         }
         reader.readEndArray();
         return collection;
@@ -66,10 +73,9 @@ public class TurmsIterableCodec extends MongoCodec<Iterable> {
     @Override
     public void encode(final BsonWriter writer, final Iterable values, final EncoderContext encoderContext) {
         writer.writeStartArray();
-        for (final Object value : values) {
+        for (Object value : values) {
             if (value != null) {
-                Codec codec = registry.get(value.getClass());
-                encoderContext.encodeWithChildContext(codec, writer, value);
+                encoderContext.encodeWithChildContext(elementCodec, writer, value);
             }
         }
         writer.writeEndArray();

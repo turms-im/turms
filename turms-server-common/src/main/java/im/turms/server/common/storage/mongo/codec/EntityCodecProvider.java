@@ -39,7 +39,7 @@ public class EntityCodecProvider implements CodecProvider {
         return getEntityCodec(clazz, registry);
     }
 
-    private <T> Codec<T> getEntityCodec(Class<T> clazz, CodecRegistry registry) {
+    private <T> EntityCodec<T> getEntityCodec(Class<T> clazz, CodecRegistry registry) {
         EntityCodec<T> codec = (EntityCodec<T>) codecs.get(clazz);
         if (codec == null) {
             codec = new EntityCodec<>(registry, clazz);

@@ -21,6 +21,7 @@ import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecPool;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecUtil;
+import im.turms.server.common.infra.collection.ChunkedArrayList;
 import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class ListCodec implements Codec<List<?>> {
     public List<Class<?>> getEncodableClasses() {
         return List.of(
                 ArrayList.class,
+                ChunkedArrayList.class,
                 List.class,
                 LinkedList.class
         );
