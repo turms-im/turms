@@ -34,7 +34,7 @@ public final class ServiceResponseFactory {
     public static final ServiceResponse NO_CONTENT;
 
     static {
-        for (ResponseStatusCode status : ResponseStatusCode.values()) {
+        for (ResponseStatusCode status : ResponseStatusCode.VALUES) {
             POOL.put(status, new ServiceResponse(null, status, null));
         }
         NO_CONTENT = POOL.get(ResponseStatusCode.NO_CONTENT);

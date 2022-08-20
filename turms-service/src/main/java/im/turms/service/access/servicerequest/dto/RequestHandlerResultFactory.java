@@ -41,7 +41,7 @@ public final class RequestHandlerResultFactory {
 
     static {
         Set<Long> recipients = Collections.emptySet();
-        for (ResponseStatusCode code : ResponseStatusCode.values()) {
+        for (ResponseStatusCode code : ResponseStatusCode.VALUES) {
             RequestHandlerResult result = new RequestHandlerResult(null,
                     false,
                     recipients,

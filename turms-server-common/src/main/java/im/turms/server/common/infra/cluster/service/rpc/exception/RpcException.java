@@ -43,7 +43,7 @@ public final class RpcException extends StacklessException {
     private static final Map<Pair<RpcErrorCode, ResponseStatusCode>, RpcException> EXCEPTION_POOL;
 
     static {
-        int initialCapacity = (RpcErrorCode.values().length * ResponseStatusCode.values().length) / 2;
+        int initialCapacity = (RpcErrorCode.VALUES.length * ResponseStatusCode.VALUES.length) / 2;
         EXCEPTION_POOL = new ConcurrentHashMap<>(initialCapacity);
     }
 

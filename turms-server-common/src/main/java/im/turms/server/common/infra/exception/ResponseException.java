@@ -36,7 +36,7 @@ public final class ResponseException extends StacklessException {
     private static final FastEnumMap<ResponseStatusCode, ResponseException> POOL = new FastEnumMap<>(ResponseStatusCode.class);
 
     static {
-        for (ResponseStatusCode code : ResponseStatusCode.values()) {
+        for (ResponseStatusCode code : ResponseStatusCode.VALUES) {
             ResponseException exception = new ResponseException(code, code.getReason());
             POOL.put(code, exception);
         }
@@ -64,7 +64,7 @@ public final class ResponseException extends StacklessException {
 
     @Nullable
     public static ResponseException get(int statusCode) {
-        for (ResponseStatusCode value : ResponseStatusCode.values()) {
+        for (ResponseStatusCode value : ResponseStatusCode.VALUES) {
             if (value.getBusinessCode() == statusCode) {
                 return get(value);
             }
@@ -74,7 +74,7 @@ public final class ResponseException extends StacklessException {
 
     @Nullable
     public static ResponseException get(int statusCode, @Nullable String reason) {
-        for (ResponseStatusCode value : ResponseStatusCode.values()) {
+        for (ResponseStatusCode value : ResponseStatusCode.VALUES) {
             if (value.getBusinessCode() == statusCode) {
                 return get(value, reason);
             }

@@ -35,7 +35,7 @@ public record CloseReason(
     private static final FastEnumMap<SessionCloseStatus, CloseReason> POOL = new FastEnumMap<>(SessionCloseStatus.class);
 
     static {
-        for (SessionCloseStatus closeStatus : SessionCloseStatus.values()) {
+        for (SessionCloseStatus closeStatus : SessionCloseStatus.VALUES) {
             POOL.put(closeStatus, new CloseReason(closeStatus, null, null));
         }
     }

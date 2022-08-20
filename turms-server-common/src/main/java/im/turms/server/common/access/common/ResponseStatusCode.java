@@ -219,11 +219,12 @@ public enum ResponseStatusCode {
     REDUNDANT_REQUEST_FOR_PRESIGNED_PROFILE_URL(6900, "The request for the presigned profile URL is redundant", 406);
 
     public static final int STATUS_CODE_LENGTH = 4;
+    public static final ResponseStatusCode[] VALUES = values();
     private static final IntObjectHashMap<ResponseStatusCode> CODE_POOL =
-            new IntObjectHashMap<>((int) (ResponseStatusCode.values().length / 0.5F));
+            new IntObjectHashMap<>((int) (VALUES.length / 0.5F));
 
     static {
-        for (ResponseStatusCode value : ResponseStatusCode.values()) {
+        for (ResponseStatusCode value : VALUES) {
             ResponseStatusCode code = CODE_POOL.put(value.businessCode, value);
             if (code != null) {
                 throw new IllegalStateException("Found duplicate business code " + code.businessCode);

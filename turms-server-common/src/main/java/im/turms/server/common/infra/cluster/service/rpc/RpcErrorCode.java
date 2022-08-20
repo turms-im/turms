@@ -42,6 +42,7 @@ public enum RpcErrorCode {
     CODEC_FAILED_TO_ENCODE(14);
 
     public static final int ERROR_CODE_LENGTH = 1;
+    public static final RpcErrorCode[] VALUES = values();
 
     @Getter
     private final int errorCode;
@@ -51,7 +52,7 @@ public enum RpcErrorCode {
     }
 
     public static RpcErrorCode from(int errorCode) {
-        for (RpcErrorCode code : RpcErrorCode.values()) {
+        for (RpcErrorCode code : VALUES) {
             if (code.errorCode == errorCode) {
                 return code;
             }

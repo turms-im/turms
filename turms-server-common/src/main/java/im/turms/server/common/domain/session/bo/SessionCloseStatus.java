@@ -67,10 +67,11 @@ public enum SessionCloseStatus {
     USER_IS_DELETED_OR_INACTIVATED(700),
     USER_IS_BLOCKED(701);
 
-    private static final IntObjectHashMap<SessionCloseStatus> CODE_POOL = new IntObjectHashMap<>(SessionCloseStatus.values().length);
+    public static final SessionCloseStatus[] VALUES = values();
+    private static final IntObjectHashMap<SessionCloseStatus> CODE_POOL = new IntObjectHashMap<>(VALUES.length);
 
     static {
-        for (SessionCloseStatus status : SessionCloseStatus.values()) {
+        for (SessionCloseStatus status : VALUES) {
             CODE_POOL.put(status.code, status);
         }
     }
