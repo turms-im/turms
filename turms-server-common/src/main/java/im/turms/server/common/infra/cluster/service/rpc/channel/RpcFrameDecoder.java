@@ -20,6 +20,7 @@ package im.turms.server.common.infra.cluster.service.rpc.channel;
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecPool;
 import im.turms.server.common.infra.cluster.service.codec.exception.CodecNotFoundException;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStream;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcResponse;
@@ -97,11 +98,11 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
                 throw new CorruptedFrameException(reason);
             }
             if (codec instanceof RpcRequestCodec<?> requestCodec) {
-                RpcRequest<?> request = requestCodec.read(frame);
+                RpcRequest<?> request = requestCodec.read(new CodecStream(frame));
                 request.setRequestId(requestId);
                 return request;
             }
-            Object responseValue = codec.read(frame);
+            Object responseValue = codec.read(new CodecStream(frame));
             return responseValue instanceof RpcException exception
                     ? new RpcResponse(requestId, null, exception)
                     : new RpcResponse(requestId, responseValue, null);

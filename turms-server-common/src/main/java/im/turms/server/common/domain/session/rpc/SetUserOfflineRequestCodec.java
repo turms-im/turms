@@ -21,8 +21,9 @@ import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
-import io.netty.buffer.ByteBuf;
 
 import java.util.Set;
 
@@ -37,7 +38,7 @@ public class SetUserOfflineRequestCodec extends RpcRequestCodec<SetUserOfflineRe
     }
 
     @Override
-    public void writeRequestData(ByteBuf output, SetUserOfflineRequest data) {
+    public void writeRequestData(CodecStreamOutput output, SetUserOfflineRequest data) {
         output.writeLong(data.getUserId());
         SessionCloseStatus closeStatus = data.getCloseStatus();
         int code = closeStatus.getCode();
@@ -50,7 +51,7 @@ public class SetUserOfflineRequestCodec extends RpcRequestCodec<SetUserOfflineRe
     }
 
     @Override
-    public SetUserOfflineRequest readRequestData(ByteBuf input) {
+    public SetUserOfflineRequest readRequestData(CodecStreamInput input) {
         long userId = input.readLong();
         int code = input.readShort();
         SessionCloseStatus statusCode = SessionCloseStatus.get(code);

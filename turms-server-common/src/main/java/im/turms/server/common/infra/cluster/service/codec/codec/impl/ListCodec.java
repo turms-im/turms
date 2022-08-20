@@ -20,9 +20,10 @@ package im.turms.server.common.infra.cluster.service.codec.codec.impl;
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecPool;
-import im.turms.server.common.infra.cluster.service.codec.codec.CodecUtil;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.collection.ChunkedArrayList;
-import io.netty.buffer.ByteBuf;
+import im.turms.server.common.infra.io.Stream;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,9 +51,9 @@ public class ListCodec implements Codec<List<?>> {
     }
 
     @Override
-    public void write(ByteBuf output, List<?> data) {
+    public void write(CodecStreamOutput output, List<?> data) {
         int size = data.size();
-        CodecUtil.writeVarint32(output, size);
+        output.writeVarint32(size);
         if (size == 0) {
             return;
         }
@@ -65,8 +66,8 @@ public class ListCodec implements Codec<List<?>> {
     }
 
     @Override
-    public List<?> read(ByteBuf input) {
-        int size = CodecUtil.readVarint32(input);
+    public List<?> read(CodecStreamInput input) {
+        int size = input.readVarint32();
         if (size == 0) {
             return Collections.emptyList();
         }
@@ -90,7 +91,7 @@ public class ListCodec implements Codec<List<?>> {
         if (codec == null) {
             throw new IllegalArgumentException("Unknown codec for class: " + item.getClass());
         }
-        return CodecUtil.computeVarint32Size(size) + codec.initialCapacity(item) * size;
+        return Stream.computeVarint32Size(size) + codec.initialCapacity(item) * size;
     }
 
 }

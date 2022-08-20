@@ -19,8 +19,9 @@ package im.turms.server.common.infra.cluster.service.codec.codec.impl;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.lang.Null;
-import io.netty.buffer.ByteBuf;
 
 /**
  * @author James Chen
@@ -33,11 +34,11 @@ public class NullCodec implements Codec<Null> {
     }
 
     @Override
-    public void write(ByteBuf output, Null data) {
+    public void write(CodecStreamOutput output, Null data) {
     }
 
     @Override
-    public Null read(ByteBuf input) {
+    public Null read(CodecStreamInput input) {
         return null;
     }
 

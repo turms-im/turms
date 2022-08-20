@@ -23,7 +23,6 @@ import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcResponse;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import im.turms.server.common.infra.netty.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.IllegalReferenceCountException;
 import lombok.Getter;
@@ -61,9 +60,9 @@ public final class RpcEndpoint {
     // Handle Request
 
     /**
-     * Accept requestBody of ByteBuf so that we can send the same buffer to multiple peers
+     * Accept {@param requestBody} of ByteBuf so that we can send the same buffer to multiple peers
      *
-     * @implNote The method ensures requestBody will be released by 1
+     * @implNote The method ensures {@param requestBody} will be released by 1
      */
     public <T> Mono<T> sendRequest(RpcRequest<T> request, ByteBuf requestBody) {
         ChannelOperations<?, ?> conn = connection.getConnection();

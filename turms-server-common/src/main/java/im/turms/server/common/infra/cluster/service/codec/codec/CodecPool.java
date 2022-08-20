@@ -42,6 +42,7 @@ import im.turms.server.common.infra.cluster.service.rpc.codec.RpcExceptionCodec;
 import io.netty.util.collection.IntObjectHashMap;
 import org.springframework.core.GenericTypeResolver;
 
+import javax.annotation.Nullable;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,7 @@ public final class CodecPool {
     /**
      * Usually used when deserializing
      */
+    @Nullable
     public static <T> Codec<T> getCodec(int id) {
         return ID_TO_CODEC.get(id);
     }
@@ -106,6 +108,7 @@ public final class CodecPool {
     /**
      * Usually used when serializing
      */
+    @Nullable
     public static <T> Codec<T> getCodec(Class<?> clazz) {
         return CLASS_TO_CODEC.get(clazz);
     }

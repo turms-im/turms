@@ -18,9 +18,10 @@
 package im.turms.server.common.infra.cluster.service.rpc.codec;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.infra.tracing.TracingContext;
-import io.netty.buffer.ByteBuf;
 
 /**
  * @author James Chen
@@ -39,7 +40,7 @@ public abstract class RpcRequestCodec<T extends RpcRequest<?>> implements Codec<
     }
 
     @Override
-    public void write(ByteBuf output, T data) {
+    public void write(CodecStreamOutput output, T data) {
         TracingContext tracingContext = data.getTracingContext();
         long traceId = tracingContext.getTraceId();
         if (traceId == TracingContext.UNDEFINED_TRACE_ID) {
@@ -50,7 +51,7 @@ public abstract class RpcRequestCodec<T extends RpcRequest<?>> implements Codec<
     }
 
     @Override
-    public T read(ByteBuf in) {
+    public T read(CodecStreamInput in) {
         long traceId = in.readLong();
         T request = readRequestData(in);
         request.setTracingContext(new TracingContext(traceId));
@@ -59,10 +60,10 @@ public abstract class RpcRequestCodec<T extends RpcRequest<?>> implements Codec<
 
     protected abstract int initialCapacityForRequest(T data);
 
-    protected void writeRequestData(ByteBuf output, T data) {
+    protected void writeRequestData(CodecStreamOutput output, T data) {
         // TODO
     }
 
-    protected abstract T readRequestData(ByteBuf input);
+    protected abstract T readRequestData(CodecStreamInput input);
 
 }

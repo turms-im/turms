@@ -20,10 +20,11 @@ package im.turms.server.common.infra.cluster.service.rpc.codec;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.cluster.service.rpc.RpcErrorCode;
 import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.infra.lang.StringUtil;
-import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
 
@@ -38,7 +39,7 @@ public class RpcExceptionCodec implements Codec<RpcException> {
     }
 
     @Override
-    public void write(ByteBuf out, RpcException data) {
+    public void write(CodecStreamOutput out, RpcException data) {
         out.writeShort(data.getErrorCode().getErrorCode())
                 .writeShort(data.getStatusCode().getBusinessCode());
         String description = data.getDescription();
@@ -51,7 +52,7 @@ public class RpcExceptionCodec implements Codec<RpcException> {
     }
 
     @Override
-    public RpcException read(ByteBuf in) {
+    public RpcException read(CodecStreamInput in) {
         return RpcException.get(
                 parseErrorCode(in),
                 parseStatusCode(in),
@@ -63,7 +64,7 @@ public class RpcExceptionCodec implements Codec<RpcException> {
         return Short.BYTES * 2 + StringUtil.getLength(data.getDescription()) + 1;
     }
 
-    private static RpcErrorCode parseErrorCode(ByteBuf in) {
+    private static RpcErrorCode parseErrorCode(CodecStreamInput in) {
         RpcErrorCode code;
         int errorCode;
         try {
@@ -78,7 +79,7 @@ public class RpcExceptionCodec implements Codec<RpcException> {
         return code;
     }
 
-    private static ResponseStatusCode parseStatusCode(ByteBuf in) {
+    private static ResponseStatusCode parseStatusCode(CodecStreamInput in) {
         ResponseStatusCode code;
         int statusCode;
         try {
@@ -94,15 +95,13 @@ public class RpcExceptionCodec implements Codec<RpcException> {
     }
 
     @Nullable
-    private static String parseDescription(ByteBuf in) {
+    private static String parseDescription(CodecStreamInput in) {
         int length = in.readableBytes();
         if (length == 0) {
             return null;
         }
         try {
-            byte[] bytes = new byte[length - 1];
-            in.readBytes(bytes);
-            return StringUtil.newString(bytes, in.readByte());
+            return StringUtil.newString(in.readBytes(length - 1), in.readByte());
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to parse description", e);
         }

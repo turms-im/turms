@@ -18,10 +18,11 @@
 package im.turms.server.common.infra.cluster.service.connection.codec;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.cluster.service.connection.request.OpeningHandshakeRequest;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
 import im.turms.server.common.infra.lang.StringUtil;
-import io.netty.buffer.ByteBuf;
 
 /**
  * @author James Chen
@@ -39,18 +40,15 @@ public class OpeningHandshakeRequestCodec extends RpcRequestCodec<OpeningHandsha
     }
 
     @Override
-    protected void writeRequestData(ByteBuf output, OpeningHandshakeRequest data) {
+    protected void writeRequestData(CodecStreamOutput output, OpeningHandshakeRequest data) {
         String nodeId = data.getNodeId();
         // The note ID should be always encoded in LATIN1
         output.writeBytes(StringUtil.getBytes(nodeId));
     }
 
     @Override
-    public OpeningHandshakeRequest readRequestData(ByteBuf input) {
-        int length = input.readableBytes();
-        byte[] bytes = new byte[length];
-        input.readBytes(bytes);
-        String nodeId = StringUtil.newLatin1String(bytes);
+    public OpeningHandshakeRequest readRequestData(CodecStreamInput input) {
+        String nodeId = StringUtil.newLatin1String(input.readBytes(input.readableBytes()));
         return new OpeningHandshakeRequest(nodeId);
     }
 

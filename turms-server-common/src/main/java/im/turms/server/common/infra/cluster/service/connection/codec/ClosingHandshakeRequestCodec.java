@@ -18,9 +18,10 @@
 package im.turms.server.common.infra.cluster.service.connection.codec;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.cluster.service.connection.request.ClosingHandshakeRequest;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
-import io.netty.buffer.ByteBuf;
 
 /**
  * @author James Chen
@@ -38,12 +39,12 @@ public class ClosingHandshakeRequestCodec extends RpcRequestCodec<ClosingHandsha
     }
 
     @Override
-    protected void writeRequestData(ByteBuf output, ClosingHandshakeRequest data) {
+    protected void writeRequestData(CodecStreamOutput output, ClosingHandshakeRequest data) {
         output.writeByte(data.getCloseStatusCode());
     }
 
     @Override
-    public ClosingHandshakeRequest readRequestData(ByteBuf input) {
+    public ClosingHandshakeRequest readRequestData(CodecStreamInput input) {
         return new ClosingHandshakeRequest(input.readByte());
     }
 

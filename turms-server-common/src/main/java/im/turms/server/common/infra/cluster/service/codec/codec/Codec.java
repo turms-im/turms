@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.cluster.service.codec.codec;
 
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import io.netty.buffer.ByteBuf;
 
 import java.util.List;
@@ -32,9 +34,9 @@ public interface Codec<T> {
         return null;
     }
 
-    void write(ByteBuf output, T data);
+    void write(CodecStreamOutput output, T data);
 
-    T read(ByteBuf input);
+    T read(CodecStreamInput input);
 
     int initialCapacity(T data);
 

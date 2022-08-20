@@ -20,6 +20,8 @@ package im.turms.server.common.access.servicerequest.rpc;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
 import io.netty.buffer.ByteBuf;
 
@@ -43,7 +45,7 @@ public class HandleServiceRequestCodec extends RpcRequestCodec<HandleServiceRequ
     }
 
     @Override
-    public void writeRequestData(ByteBuf output, HandleServiceRequest data) {
+    public void writeRequestData(CodecStreamOutput output, HandleServiceRequest data) {
         ServiceRequest request = data.getServiceRequest();
         byte[] ip = request.getIp();
         int ipFormatFlag = switch (ip.length) {
@@ -58,11 +60,10 @@ public class HandleServiceRequestCodec extends RpcRequestCodec<HandleServiceRequ
     }
 
     @Override
-    public HandleServiceRequest readRequestData(ByteBuf in) {
+    public HandleServiceRequest readRequestData(CodecStreamInput in) {
         boolean isIpV4 = in.readByte() == IS_IPV4_FLAG;
         int ipByteLength = isIpV4 ? IPV4_BYTE_LENGTH : IPV6_BYTE_LENGTH;
-        byte[] ip = new byte[ipByteLength];
-        in.readBytes(ip);
+        byte[] ip = in.readBytes(ipByteLength);
         long userId = in.readLong();
         DeviceType deviceType = DeviceType.forNumber(in.readByte());
 

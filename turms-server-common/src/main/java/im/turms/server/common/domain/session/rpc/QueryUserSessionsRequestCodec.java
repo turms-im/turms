@@ -18,9 +18,10 @@
 package im.turms.server.common.domain.session.rpc;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
-import im.turms.server.common.infra.cluster.service.codec.codec.CodecUtil;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
-import io.netty.buffer.ByteBuf;
+import im.turms.server.common.infra.io.Stream;
 
 /**
  * @author James Chen
@@ -33,19 +34,19 @@ public class QueryUserSessionsRequestCodec extends RpcRequestCodec<QueryUserSess
     }
 
     @Override
-    public void writeRequestData(ByteBuf output, QueryUserSessionsRequest data) {
-        CodecUtil.writeLongs(output, data.getUserIds());
+    public void writeRequestData(CodecStreamOutput output, QueryUserSessionsRequest data) {
+        output.writeLongs(data.getUserIds());
     }
 
     @Override
-    public QueryUserSessionsRequest readRequestData(ByteBuf input) {
-        return new QueryUserSessionsRequest(CodecUtil.readLongSet(input));
+    public QueryUserSessionsRequest readRequestData(CodecStreamInput input) {
+        return new QueryUserSessionsRequest(input.readLongSet());
     }
 
     @Override
     public int initialCapacityForRequest(QueryUserSessionsRequest data) {
         int size = data.getUserIds().size();
-        return CodecUtil.computeVarint32Size(size) + size * Long.BYTES;
+        return Stream.computeVarint32Size(size) + size * Long.BYTES;
     }
 
 }

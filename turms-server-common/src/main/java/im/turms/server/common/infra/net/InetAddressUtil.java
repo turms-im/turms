@@ -73,7 +73,7 @@ public final class InetAddressUtil {
         };
     }
 
-    public static boolean isIpV4OrV6(byte[] ip) {
+    public static boolean isIpV4OrV6(@Nullable byte[] ip) {
         return ip != null && (ip.length == IPV4_BYTE_LENGTH || ip.length == IPV6_BYTE_LENGTH);
     }
 

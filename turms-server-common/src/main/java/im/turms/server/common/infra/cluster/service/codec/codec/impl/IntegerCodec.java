@@ -19,7 +19,10 @@ package im.turms.server.common.infra.cluster.service.codec.codec.impl;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
-import io.netty.buffer.ByteBuf;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
+
+import java.util.List;
 
 /**
  * @author James Chen
@@ -32,12 +35,17 @@ public class IntegerCodec implements Codec<Integer> {
     }
 
     @Override
-    public void write(ByteBuf output, Integer data) {
+    public List<Class<?>> getEncodableClasses() {
+        return List.of(Integer.class, int.class);
+    }
+
+    @Override
+    public void write(CodecStreamOutput output, Integer data) {
         output.writeInt(data);
     }
 
     @Override
-    public Integer read(ByteBuf input) {
+    public Integer read(CodecStreamInput input) {
         return input.readInt();
     }
 

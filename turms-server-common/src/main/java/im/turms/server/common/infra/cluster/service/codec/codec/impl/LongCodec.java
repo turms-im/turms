@@ -19,7 +19,10 @@ package im.turms.server.common.infra.cluster.service.codec.codec.impl;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
-import io.netty.buffer.ByteBuf;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
+
+import java.util.List;
 
 /**
  * @author James Chen
@@ -32,12 +35,17 @@ public class LongCodec implements Codec<Long> {
     }
 
     @Override
-    public void write(ByteBuf output, Long data) {
+    public List<Class<?>> getEncodableClasses() {
+        return List.of(Long.class, long.class);
+    }
+
+    @Override
+    public void write(CodecStreamOutput output, Long data) {
         output.writeLong(data);
     }
 
     @Override
-    public Long read(ByteBuf input) {
+    public Long read(CodecStreamInput input) {
         return input.readLong();
     }
 

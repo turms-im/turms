@@ -20,6 +20,7 @@ package im.turms.server.common.infra.cluster.service.rpc.channel;
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecPool;
 import im.turms.server.common.infra.cluster.service.codec.exception.CodecNotFoundException;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStream;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -58,7 +59,7 @@ public final class RpcFrameEncoder extends ProtobufVarint32LengthFieldPrepender 
                 .directBuffer(initialCapacity)
                 .writeShort(codecId)
                 .writeInt(requestId);
-        valueCodec.write(outputBuffer, value);
+        valueCodec.write(new CodecStream(outputBuffer), value);
         if (byteBufToComposite != null) {
             outputBuffer = PooledByteBufAllocator.DEFAULT
                     .compositeDirectBuffer(2)

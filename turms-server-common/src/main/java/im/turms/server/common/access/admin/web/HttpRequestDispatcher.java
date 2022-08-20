@@ -40,7 +40,6 @@ import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.AdminApiLogging;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.plugin.extension.AdminActionHandler;
 import im.turms.server.common.infra.property.TurmsProperties;

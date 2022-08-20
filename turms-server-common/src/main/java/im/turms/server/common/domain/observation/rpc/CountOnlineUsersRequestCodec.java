@@ -18,8 +18,8 @@
 package im.turms.server.common.domain.observation.rpc;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
-import io.netty.buffer.ByteBuf;
 
 /**
  * @author James Chen
@@ -37,7 +37,7 @@ public class CountOnlineUsersRequestCodec extends RpcRequestCodec<CountOnlineUse
     }
 
     @Override
-    public CountOnlineUsersRequest readRequestData(ByteBuf input) {
+    public CountOnlineUsersRequest readRequestData(CodecStreamInput input) {
         return new CountOnlineUsersRequest();
     }
 

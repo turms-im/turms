@@ -19,6 +19,7 @@ package unit.im.turms.server.common.infra.cluster.service.rpc.codec;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecPool;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStream;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.infra.tracing.TracingContext;
@@ -48,7 +49,7 @@ public abstract class BaseCodecTest {
     public <T> T writeDataAndReadBuffer(Codec<T> codec, T data) {
         int initialCapacity = codec.initialCapacity(data);
         ByteBuf baseBuffer = UnpooledByteBufAllocator.DEFAULT.buffer(initialCapacity);
-        codec.write(baseBuffer, data);
+        codec.write(new CodecStream(baseBuffer), data);
 
         CompositeByteBuf buffers = UnpooledByteBufAllocator.DEFAULT.compositeBuffer(2)
                 .addComponent(true, baseBuffer);
@@ -58,7 +59,7 @@ public abstract class BaseCodecTest {
             buffers.addComponent(true, buffer);
         }
 
-        T parsedData = codec.read(buffers);
+        T parsedData = codec.read(new CodecStream(buffers));
 
         assertThat(baseBuffer.capacity()).isEqualTo(initialCapacity);
 

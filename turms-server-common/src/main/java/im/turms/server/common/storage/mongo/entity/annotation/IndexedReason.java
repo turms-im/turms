@@ -18,6 +18,9 @@
 package im.turms.server.common.storage.mongo.entity.annotation;
 
 /**
+ * The annotation has no effect and is just used
+ * to tell why a field may need to be indexed or not
+ *
  * @author James Chen
  */
 public enum IndexedReason {

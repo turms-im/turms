@@ -22,6 +22,7 @@ import im.turms.server.common.infra.cluster.service.ClusterService;
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecPool;
 import im.turms.server.common.infra.cluster.service.codec.exception.CodecNotFoundException;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStream;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.util.IllegalReferenceCountException;
@@ -56,7 +57,7 @@ public class CodecService implements ClusterService {
         int initialCapacity = codec.initialCapacity(data);
         ByteBuf output = PooledByteBufAllocator.DEFAULT
                 .directBuffer(initialCapacity > -1 ? initialCapacity : 128);
-        codec.write(output, data);
+        codec.write(new CodecStream(output), data);
         if (byteBufToComposite != null) {
             output = PooledByteBufAllocator.DEFAULT
                     .compositeDirectBuffer(2)

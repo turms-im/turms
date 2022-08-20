@@ -15,17 +15,18 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.logging.core.appender.file;
+package im.turms.server.common.infra.cluster.service.codec.io;
 
-import java.nio.file.Path;
-import java.time.ZonedDateTime;
+import im.turms.server.common.infra.io.StreamOutput;
+
+import javax.annotation.Nullable;
+import java.util.Map;
 
 /**
  * @author James Chen
  */
-public record LogFile(
-        Path path,
-        ZonedDateTime dateTime,
-        long index
-) {
+public interface CodecStreamOutput extends StreamOutput {
+    public void writeObject(Object obj);
+
+    public <K, V> void writeMap(@Nullable Map<K, V> map);
 }

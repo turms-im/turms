@@ -24,8 +24,9 @@ import im.turms.server.common.domain.session.bo.UserSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsInfo;
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
-import im.turms.server.common.infra.cluster.service.codec.codec.CodecUtil;
-import io.netty.buffer.ByteBuf;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
+import im.turms.server.common.infra.io.Stream;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,22 +44,22 @@ public class UserSessionsInfoCodec implements Codec<UserSessionsInfo> {
     }
 
     @Override
-    public void write(ByteBuf output, UserSessionsInfo data) {
+    public void write(CodecStreamOutput output, UserSessionsInfo data) {
         output.writeLong(data.userId());
         output.writeByte(data.status().getNumber());
         List<UserSessionInfo> sessions = data.sessions();
-        CodecUtil.writeVarint32(output, sessions.size());
+        output.writeVarint32(sessions.size());
         for (UserSessionInfo session : sessions) {
             Location location = session.loginLocation();
             output.writeInt(session.id());
             output.writeByte(session.version());
             output.writeByte(session.deviceType().getNumber());
-            CodecUtil.writeStringMap(output, session.deviceDetails());
+            output.writeStringMap(session.deviceDetails());
             output.writeLong(session.loginDate().getTime());
             output.writeLong(session.lastHeartbeatRequestDate().getTime());
             output.writeLong(session.lastRequestDate().getTime());
             output.writeBoolean(session.isSessionOpen());
-            CodecUtil.writeIp(output, session.ipBytes());
+            output.writeIp(session.ipBytes());
             if (location == null) {
                 output.writeByte(0);
             } else {
@@ -67,27 +68,27 @@ public class UserSessionsInfoCodec implements Codec<UserSessionsInfo> {
                 output.writeFloat(location.latitude());
                 Date timestamp = location.timestamp();
                 output.writeLong(timestamp == null ? Long.MIN_VALUE : timestamp.getTime());
-                CodecUtil.writeStringMap(output, location.details());
+                output.writeStringMap(location.details());
             }
         }
     }
 
     @Override
-    public UserSessionsInfo read(ByteBuf input) {
+    public UserSessionsInfo read(CodecStreamInput input) {
         long userId = input.readLong();
         UserStatus status = UserStatus.forNumber(input.readByte());
-        int size = CodecUtil.readVarint32(input);
+        int size = input.readVarint32();
         List<UserSessionInfo> sessions = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             int sessionId = input.readInt();
             int version = input.readByte();
             DeviceType deviceType = DeviceType.forNumber(input.readByte());
-            Map<String, String> deviceDetails = CodecUtil.readStringMap(input);
+            Map<String, String> deviceDetails = input.readStringMap();
             Date loginDate = new Date(input.readLong());
             Date lastHeartbeatRequestDate = new Date(input.readLong());
             Date lastRequestDate = new Date(input.readLong());
             boolean isSessionOpen = input.readBoolean();
-            byte[] ipBytes = CodecUtil.readIp(input);
+            byte[] ipBytes = input.readIp();
             Location loginLocation = null;
             if (input.readByte() == 1) {
                 float longitude = input.readFloat();
@@ -96,7 +97,7 @@ public class UserSessionsInfoCodec implements Codec<UserSessionsInfo> {
                 loginLocation = new Location(longitude,
                         latitude,
                         timestamp == Long.MIN_VALUE ? null : new Date(timestamp),
-                        CodecUtil.readStringMap(input));
+                        input.readStringMap());
             }
             sessions.add(new UserSessionInfo(sessionId,
                     version,
@@ -116,7 +117,7 @@ public class UserSessionsInfoCodec implements Codec<UserSessionsInfo> {
     @Override
     public int initialCapacity(UserSessionsInfo data) {
         int size = data.sessions().size();
-        return Long.BYTES + Byte.BYTES + CodecUtil.computeVarint32Size(size) + 64 * size;
+        return Long.BYTES + Byte.BYTES + Stream.computeVarint32Size(size) + 64 * size;
     }
 
 }

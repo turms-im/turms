@@ -22,7 +22,8 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
-import im.turms.server.common.infra.cluster.service.codec.codec.CodecUtil;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.proto.ProtoDecoder;
 import im.turms.server.common.infra.proto.ProtoEncoder;
@@ -36,15 +37,15 @@ import java.io.IOException;
 public class ServiceResponseCodec implements Codec<ServiceResponse> {
 
     @Override
-    public void write(ByteBuf output, ServiceResponse data) {
+    public void write(CodecStreamOutput output, ServiceResponse data) {
         output.writeShort((short) data.code().getBusinessCode());
-        CodecUtil.writeString(output, data.reason());
+        output.writeString(data.reason());
     }
 
     @Override
-    public ServiceResponse read(ByteBuf input) {
+    public ServiceResponse read(CodecStreamInput input) {
         ResponseStatusCode statusCode = ResponseStatusCode.from(input.readShort());
-        String reason = CodecUtil.readString(input);
+        String reason = input.readString();
         TurmsNotification.Data data;
         if (input.readableBytes() > 0) {
             ByteBuf dataBuffer = input.readSlice(input.readableBytes());

@@ -19,7 +19,10 @@ package im.turms.server.common.infra.cluster.service.codec.codec.impl;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
-import io.netty.buffer.ByteBuf;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
+
+import java.util.List;
 
 /**
  * @author James Chen
@@ -32,12 +35,17 @@ public class BoolCodec implements Codec<Boolean> {
     }
 
     @Override
-    public void write(ByteBuf output, Boolean data) {
+    public List<Class<?>> getEncodableClasses() {
+        return List.of(Boolean.class, boolean.class);
+    }
+
+    @Override
+    public void write(CodecStreamOutput output, Boolean data) {
         output.writeBoolean(data);
     }
 
     @Override
-    public Boolean read(ByteBuf input) {
+    public Boolean read(CodecStreamInput input) {
         return input.readBoolean();
     }
 

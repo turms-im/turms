@@ -19,7 +19,10 @@ package im.turms.server.common.infra.cluster.service.codec.codec.impl;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
-import io.netty.buffer.ByteBuf;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
+
+import java.util.List;
 
 /**
  * @author James Chen
@@ -32,12 +35,17 @@ public class CharCodec implements Codec<Character> {
     }
 
     @Override
-    public void write(ByteBuf output, Character data) {
+    public List<Class<?>> getEncodableClasses() {
+        return List.of(Character.class, char.class);
+    }
+
+    @Override
+    public void write(CodecStreamOutput output, Character data) {
         output.writeChar(data);
     }
 
     @Override
-    public Character read(ByteBuf input) {
+    public Character read(CodecStreamInput input) {
         return input.readChar();
     }
 

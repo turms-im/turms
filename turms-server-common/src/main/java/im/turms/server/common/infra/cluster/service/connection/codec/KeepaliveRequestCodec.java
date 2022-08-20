@@ -18,9 +18,9 @@
 package im.turms.server.common.infra.cluster.service.connection.codec;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
 import im.turms.server.common.infra.cluster.service.connection.request.KeepaliveRequest;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
-import io.netty.buffer.ByteBuf;
 
 /**
  * @author James Chen
@@ -38,7 +38,7 @@ public class KeepaliveRequestCodec extends RpcRequestCodec<KeepaliveRequest> {
     }
 
     @Override
-    public KeepaliveRequest readRequestData(ByteBuf input) {
+    public KeepaliveRequest readRequestData(CodecStreamInput input) {
         return new KeepaliveRequest();
     }
 

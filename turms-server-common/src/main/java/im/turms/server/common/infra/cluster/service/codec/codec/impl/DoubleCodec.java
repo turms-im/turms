@@ -19,7 +19,10 @@ package im.turms.server.common.infra.cluster.service.codec.codec.impl;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
-import io.netty.buffer.ByteBuf;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
+
+import java.util.List;
 
 /**
  * @author James Chen
@@ -32,12 +35,17 @@ public class DoubleCodec implements Codec<Double> {
     }
 
     @Override
-    public void write(ByteBuf output, Double data) {
+    public List<Class<?>> getEncodableClasses() {
+        return List.of(Double.class, double.class);
+    }
+
+    @Override
+    public void write(CodecStreamOutput output, Double data) {
         output.writeDouble(data);
     }
 
     @Override
-    public Double read(ByteBuf input) {
+    public Double read(CodecStreamInput input) {
         return input.readDouble();
     }
 

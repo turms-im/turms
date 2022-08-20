@@ -19,9 +19,9 @@ package im.turms.server.common.infra.cluster.service.codec.codec.impl;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
-import im.turms.server.common.infra.cluster.service.codec.codec.CodecUtil;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.lang.StringUtil;
-import io.netty.buffer.ByteBuf;
 
 /**
  * @author James Chen
@@ -34,14 +34,14 @@ public class StringCodec implements Codec<String> {
     }
 
     @Override
-    public void write(ByteBuf output, String data) {
+    public void write(CodecStreamOutput output, String data) {
         byte[] bytes = StringUtil.getBytes(data);
         byte coder = StringUtil.getCoder(data);
         int length = bytes.length;
         if (length > Short.MAX_VALUE) {
             throw new IllegalArgumentException("The bytes length of the string cannot be greater than " + Short.MAX_VALUE);
         }
-        CodecUtil.writeVarint32(output, length);
+        output.writeVarint32(length);
         if (length > 0) {
             output.writeBytes(bytes)
                     .writeByte(coder);
@@ -49,15 +49,12 @@ public class StringCodec implements Codec<String> {
     }
 
     @Override
-    public String read(ByteBuf input) {
-        int length = CodecUtil.readVarint32(input);
+    public String read(CodecStreamInput input) {
+        int length = input.readVarint32();
         if (length <= 0) {
             return "";
         }
-        byte[] bytes = new byte[length];
-        input.readBytes(bytes);
-        byte coder = input.readByte();
-        return StringUtil.newString(bytes, coder);
+        return StringUtil.newString(input.readBytes(length), input.readByte());
     }
 
     @Override

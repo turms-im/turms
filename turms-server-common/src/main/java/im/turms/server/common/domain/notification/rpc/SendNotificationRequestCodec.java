@@ -21,9 +21,11 @@ import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
-import im.turms.server.common.infra.cluster.service.codec.codec.CodecUtil;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
+import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.io.Stream;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Collections;
@@ -40,16 +42,16 @@ public class SendNotificationRequestCodec extends RpcRequestCodec<SendNotificati
     }
 
     @Override
-    public void writeRequestData(ByteBuf out, SendNotificationRequest data) {
+    public void writeRequestData(CodecStreamOutput out, SendNotificationRequest data) {
         // write "recipientIds"
         Set<Long> recipientIds = data.getRecipientIds();
         if (recipientIds.isEmpty()) {
             throw new IllegalArgumentException("The number of recipients must be greater than 0");
         }
-        CodecUtil.writeLongs(out, recipientIds);
+        out.writeLongs(recipientIds);
         // write "excludedUserSessionIds"
         Set<UserSessionId> excludedUserSessionIds = data.getExcludedUserSessionIds();
-        CodecUtil.writeVarint32(out, excludedUserSessionIds.size());
+        out.writeVarint32(excludedUserSessionIds.size());
         for (UserSessionId id : excludedUserSessionIds) {
             out.writeLong(id.userId());
             out.writeByte(DeviceTypeUtil.deviceType2Byte(id.deviceType()));
@@ -64,11 +66,11 @@ public class SendNotificationRequestCodec extends RpcRequestCodec<SendNotificati
     }
 
     @Override
-    public SendNotificationRequest readRequestData(ByteBuf in) {
+    public SendNotificationRequest readRequestData(CodecStreamInput in) {
         // read "recipientIds"
-        Set<Long> recipientIds = CodecUtil.readLongSet(in);
+        Set<Long> recipientIds = in.readLongSet();
         // read "excludedUserSessionIds"
-        int excludedUserSessionIdCount = CodecUtil.readVarint32(in);
+        int excludedUserSessionIdCount = in.readVarint32();
         Set<UserSessionId> excludedUserSessionIds;
         if (excludedUserSessionIdCount > 0) {
             excludedUserSessionIds = CollectionUtil.newSetWithExpectedSize(excludedUserSessionIdCount);
@@ -94,8 +96,8 @@ public class SendNotificationRequestCodec extends RpcRequestCodec<SendNotificati
     public int initialCapacityForRequest(SendNotificationRequest data) {
         int recipientCount = data.getRecipientIds().size();
         int excludedUserSessionIdCount = data.getExcludedUserSessionIds().size();
-        return CodecUtil.computeVarint32Size(recipientCount) + recipientCount * Long.BYTES
-                + CodecUtil.computeVarint32Size(excludedUserSessionIdCount) + excludedUserSessionIdCount * (Long.BYTES + Byte.SIZE)
+        return Stream.computeVarint32Size(recipientCount) + recipientCount * Long.BYTES
+                + Stream.computeVarint32Size(excludedUserSessionIdCount) + excludedUserSessionIdCount * (Long.BYTES + Byte.SIZE)
                 + Byte.BYTES;
     }
 
