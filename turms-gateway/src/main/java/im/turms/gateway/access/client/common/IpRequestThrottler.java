@@ -108,14 +108,16 @@ public class IpRequestThrottler {
                 processed = 0;
                 if (System.currentTimeMillis() - startTime > 1000) {
                     Thread.sleep(1000);
+                    startTime = System.currentTimeMillis();
                 }
             }
         }
     }
 
     public boolean tryAcquireToken(ByteArrayWrapper ip, long timestamp) {
-        TokenBucket bucket = ipToRequestTokenBucket.computeIfAbsent(ip, key -> new TokenBucket(requestTokenBucketContext));
-        return bucket.tryAcquire(timestamp);
+        return ipToRequestTokenBucket
+                .computeIfAbsent(ip, key -> new TokenBucket(requestTokenBucketContext))
+                .tryAcquire(timestamp);
     }
 
 }

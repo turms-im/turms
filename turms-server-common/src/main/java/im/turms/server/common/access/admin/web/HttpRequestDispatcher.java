@@ -93,6 +93,7 @@ public class HttpRequestDispatcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequestDispatcher.class);
 
     private static final String X_REQUEST_ID = "X-Request-ID";
+    private static final Mono<Credentials> CREDENTIALS_ROOT = Mono.just(Credentials.ROOT);
 
     private final Node node;
     private final PluginManager pluginManager;
@@ -103,6 +104,7 @@ public class HttpRequestDispatcher {
     @Getter
     private final Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint;
 
+    private final boolean useAuthentication;
     private boolean allowDeleteWithoutFilter;
     private boolean isLogEnabled;
 
@@ -122,6 +124,7 @@ public class HttpRequestDispatcher {
         CommonAdminApiProperties apiProperties = node.getNodeType() == NodeType.GATEWAY
                 ? propertiesManager.getLocalProperties().getGateway().getAdminApi()
                 : propertiesManager.getLocalProperties().getService().getAdminApi();
+        useAuthentication = apiProperties.isUseAuthentication();
         if (apiProperties.isEnabled()) {
             propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateGlobalProperties);
             AdminHttpProperties httpProperties = apiProperties.getHttp();
@@ -218,6 +221,7 @@ public class HttpRequestDispatcher {
     private Mono<HttpHandlerResult<?>> handleRequest(HttpServerRequest request,
                                                      String ip,
                                                      RequestContext requestContext) {
+        // 1. parse URI
         String uri = request.uri();
         Pair<String, Map<String, List<Object>>> pathAndQueryParams = FastUriParser.parsePathAndQueryParams(uri);
         ApiEndpoint endpoint = keyToEndpoint.get(new ApiEndpointKey(pathAndQueryParams.first(), request.method()));
@@ -225,26 +229,35 @@ public class HttpRequestDispatcher {
             return Mono.just(HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
                     new ResponseDTO<>(ResponseStatusCode.ILLEGAL_ARGUMENT, "There is no any resources matched to request path: " + uri)));
         }
+        // 2. prepare request context
         requestContext.setEndpoint(endpoint);
         requestContext.setAction(endpoint.method().getName());
         requestContext.setParams(endpoint.parameters());
+        // 3. check frequency
         return checkFrequency(ip)
+                // 4. parse request parameters
                 .then(Mono.defer(() -> HttpRequestParamParser.parse(request,
                         requestContext,
                         pathAndQueryParams.second(),
                         endpoint.parameters())))
                 .flatMap(params -> {
                     requestContext.setParamValues(params);
+                    // 5. validate request
                     if (endpoint.method().isAnnotationPresent(DeleteMapping.class) && !isValidDeleteRequest(params)) {
                         return Mono.error(new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
                                 new ResponseDTO<>(ResponseStatusCode.NO_FILTER_FOR_DELETE_OPERATION))));
                     }
-                    return authenticator.authenticate(endpoint.parameters(),
-                                    params,
-                                    request.requestHeaders(),
-                                    endpoint.permission())
+                    // 6. authenticate + authorize
+                    Mono<Credentials> authenticate = useAuthentication
+                            ? authenticator.authenticate(endpoint.parameters(),
+                            params,
+                            request.requestHeaders(),
+                            endpoint.permission())
+                            : CREDENTIALS_ROOT;
+                    return authenticate
                             .flatMap(credentials -> {
                                 requestContext.setAccount(credentials.account());
+                                // 7. pass to handler
                                 return invokeHandler(endpoint, params);
                             });
                 });

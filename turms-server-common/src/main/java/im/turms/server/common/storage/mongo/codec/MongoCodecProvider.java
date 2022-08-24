@@ -31,7 +31,6 @@ import java.util.Map;
 public class MongoCodecProvider implements CodecProvider {
 
     private final Map<Class<?>, MongoCodec<?>> codes = new IdentityHashMap<>(64);
-    private final EntityCodecProvider entityCodecProvider = new EntityCodecProvider();
     @Setter
     private CodecRegistry registry;
 
@@ -44,7 +43,7 @@ public class MongoCodecProvider implements CodecProvider {
         return getCodec(clazz);
     }
 
-    public <T> Codec<T> getCodec(Class<T> clazz) {
+    public <T> MongoCodec<T> getCodec(Class<T> clazz) {
         MongoCodec<T> codec = (MongoCodec<T>) codes.get(clazz);
         if (codec == null) {
             return registerClass(clazz);
@@ -60,7 +59,6 @@ public class MongoCodecProvider implements CodecProvider {
         return (MongoCodec<T>) codes.computeIfAbsent(clazz, key -> {
             MongoCodec<T> codec = (MongoCodec<T>) createCodec(key);
             codec.setRegistry(registry);
-            codes.put(key, codec);
             return codec;
         });
     }
@@ -71,7 +69,7 @@ public class MongoCodecProvider implements CodecProvider {
         } else if (clazz.isArray()) {
             return new ArrayCodec(clazz);
         } else {
-            return (MongoCodec<T>) entityCodecProvider.get(clazz, registry);
+            return new EntityCodec<>(registry, clazz);
         }
     }
 

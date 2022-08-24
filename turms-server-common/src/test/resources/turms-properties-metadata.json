@@ -250,6 +250,13 @@
           "mutable": true,
           "type": "int"
         }
+      },
+      "useAuthentication": {
+        "deprecated": false,
+        "desc": "Whether to use authentication. If false, all HTTP requesters will personate the root user and all HTTP requests will be passed. You may set it to false when you want to manage authentication via security groups, NACL, etc",
+        "global": false,
+        "mutable": false,
+        "type": "boolean"
       }
     },
     "clientApi": {
@@ -1244,6 +1251,13 @@
           "mutable": true,
           "type": "int"
         }
+      },
+      "useAuthentication": {
+        "deprecated": false,
+        "desc": "Whether to use authentication. If false, all HTTP requesters will personate the root user and all HTTP requests will be passed. You may set it to false when you want to manage authentication via security groups, NACL, etc",
+        "global": false,
+        "mutable": false,
+        "type": "boolean"
       }
     },
     "clientApi": {

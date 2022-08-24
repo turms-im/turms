@@ -31,6 +31,11 @@ public abstract class CommonAdminApiProperties {
     @Description("Whether to enable the APIs for administrators")
     private boolean enabled = true;
 
+    @Description("Whether to use authentication. If false, " +
+            "all HTTP requesters will personate the root user and all HTTP requests will be passed. " +
+            "You may set it to false when you want to manage authentication via security groups, NACL, etc")
+    private boolean useAuthentication = true;
+
     @NestedConfigurationProperty
     protected AdminHttpProperties http = new AdminHttpProperties();
 

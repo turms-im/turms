@@ -104,9 +104,10 @@ public class OpenApiController {
         if (apiBuffer == null) {
             synchronized (this) {
                 if (apiBuffer == null) {
-                    apiBuffer = OpenApiBuilder.build(context.getBean(TurmsApplicationContext.class),
+                    byte[] bytes = OpenApiBuilder.build(context.getBean(TurmsApplicationContext.class),
                             context.getBean(HttpRequestDispatcher.class),
                             context.getBean(BaseServiceAddressManager.class));
+                    apiBuffer = ByteBufUtil.getUnreleasableDirectBuffer(bytes);
                 }
             }
         }

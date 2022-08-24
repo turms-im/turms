@@ -46,6 +46,10 @@ class StringUtilTests {
                 .isInstanceOf(IllegalArgumentException.class);
         assertThat(StringUtil.substitute("my-{}-{}", "test", "string"))
                 .isEqualTo("my-test-string");
+        assertThat(StringUtil.substitute("my-{}-{", "test"))
+                .isEqualTo("my-test-{");
+        assertThat(StringUtil.substitute("my-{}-}", "test"))
+                .isEqualTo("my-test-}");
         assertThat(StringUtil.substitute("my-{{}-{{}}", "test", "string"))
                 .isEqualTo("my-{test-{string}");
         assertThatThrownBy(() -> StringUtil.substitute("my-{}-{}", "test"))

@@ -28,7 +28,6 @@ import im.turms.server.common.access.admin.web.MethodParameterInfo;
 import im.turms.server.common.access.admin.web.RequestContext;
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
-import im.turms.server.common.infra.netty.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpMethod;
 import io.swagger.v3.core.converter.AnnotatedType;
@@ -81,9 +80,9 @@ public class OpenApiBuilder {
     }
 
     @SneakyThrows
-    public static ByteBuf build(TurmsApplicationContext context,
-                                HttpRequestDispatcher httpRequestDispatcher,
-                                BaseServiceAddressManager serviceAddressManager) {
+    public static byte[] build(TurmsApplicationContext context,
+                               HttpRequestDispatcher httpRequestDispatcher,
+                               BaseServiceAddressManager serviceAddressManager) {
         ModelConverters.getInstance().addClassToSkip(RequestContext.class.getName());
 
         OpenAPI api = new OpenAPI()
@@ -120,8 +119,7 @@ public class OpenApiBuilder {
         ObjectWriter writer = ObjectMapperFactory
                 .buildStrictGenericObjectMapper()
                 .writerWithDefaultPrettyPrinter();
-        return ByteBufUtil.getUnreleasableDirectBuffer(writer
-                .writeValueAsBytes(api));
+        return writer.writeValueAsBytes(api);
     }
 
     @Nullable

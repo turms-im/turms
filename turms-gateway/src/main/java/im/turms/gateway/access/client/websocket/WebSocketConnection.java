@@ -56,24 +56,25 @@ public class WebSocketConnection extends NetConnection {
      */
     @Override
     public void close(CloseReason closeReason) {
-        if (isConnected() && !connection.isDisposed()) {
-            super.close(closeReason);
-            out.sendObject(new BinaryWebSocketFrame(NotificationFactory.createBuffer(closeReason)))
-                    .then()
-                    .doOnError(throwable -> {
-                        if (!ThrowableUtil.isDisconnectedClientError(throwable)) {
-                            LOGGER.error("Failed to send the close notification", throwable);
-                        }
-                    })
-                    .retryWhen(RETRY_SEND_CLOSE_NOTIFICATION)
-                    .doFinally(signal -> close())
-                    .subscribe(null, t -> {
-                        if (!ThrowableUtil.isDisconnectedClientError(t)) {
-                            LOGGER.error("Failed to send the close notification with retries exhausted: " +
-                                    RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, t);
-                        }
-                    });
+        if (!isConnected() || connection.isDisposed()) {
+            return;
         }
+        super.close(closeReason);
+        out.sendObject(new BinaryWebSocketFrame(NotificationFactory.createBuffer(closeReason)))
+                .then()
+                .doOnError(throwable -> {
+                    if (!ThrowableUtil.isDisconnectedClientError(throwable)) {
+                        LOGGER.error("Failed to send the close notification", throwable);
+                    }
+                })
+                .retryWhen(RETRY_SEND_CLOSE_NOTIFICATION)
+                .doFinally(signal -> close())
+                .subscribe(null, t -> {
+                    if (!ThrowableUtil.isDisconnectedClientError(t)) {
+                        LOGGER.error("Failed to send the close notification with retries exhausted: " +
+                                RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, t);
+                    }
+                });
     }
 
     @Override

@@ -17,11 +17,17 @@
 
 package im.turms.server.common.access.admin.web;
 
+import im.turms.server.common.domain.admin.constant.AdminConst;
+
 /**
  * @author James Chen
  */
-public record Credentials(String account, String password) {
+public record Credentials(
+        String account,
+        String password
+) {
 
     public static final Credentials EMPTY = new Credentials(null, null);
+    public static final Credentials ROOT = new Credentials(AdminConst.ROOT_ADMIN_ACCOUNT, null);
 
 }
