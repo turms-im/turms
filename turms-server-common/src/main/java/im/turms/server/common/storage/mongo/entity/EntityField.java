@@ -31,7 +31,7 @@ public class EntityField<T> {
 
     static final int UNSET_CTOR_PARAM_INDEX = -1;
 
-    private final Class<T> clazz;
+    private final Class<T> fieldClass;
     /**
      * Key for Map
      */

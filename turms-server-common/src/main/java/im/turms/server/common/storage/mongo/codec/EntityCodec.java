@@ -146,7 +146,7 @@ public class EntityCodec<T> extends MongoCodec<T> {
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String fieldName = reader.readName();
-            EntityField<?> field = DomainFieldName.ID.equals(fieldName)
+            EntityField<T> field = DomainFieldName.ID.equals(fieldName)
                     ? entity.getField(entity.idFieldName())
                     : entity.getField(fieldName);
             if (field == null) {
@@ -172,8 +172,8 @@ public class EntityCodec<T> extends MongoCodec<T> {
         return values;
     }
 
-    private Object decode(EntityField field, BsonReader reader, DecoderContext decoderContext) {
-        Class<?> fieldClass = field.getClazz();
+    private Object decode(EntityField<T> field, BsonReader reader, DecoderContext decoderContext) {
+        Class<?> fieldClass = field.getFieldClass();
         if (Iterable.class.isAssignableFrom(fieldClass)) {
             TurmsIterableCodec codec = new TurmsIterableCodec(fieldClass, field.getElementClass());
             codec.setRegistry(registry);

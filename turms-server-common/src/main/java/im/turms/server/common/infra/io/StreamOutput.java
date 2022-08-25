@@ -28,7 +28,7 @@ public interface StreamOutput {
 
     public Stream writeByte(int value);
 
-    public Stream writeBytes(byte[] src);
+    public Stream writeBytes(byte[] bytes);
 
     public Stream writeShort(int value);
 

@@ -17,6 +17,12 @@
 
 package im.turms.server.common.access.admin.permission;
 
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.lang.StringUtil;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -272,5 +278,31 @@ public enum AdminPermission {
             CLUSTER_MEMBER_QUERY,
             CLUSTER_SETTING_QUERY,
             PLUGIN_QUERY);
+
+    private static final List<String> NAMES;
+
+    static {
+        AdminPermission[] permissions = AdminPermission.values();
+        NAMES = new ArrayList<>(permissions.length);
+        for (AdminPermission value : permissions) {
+            NAMES.add(value.name());
+        }
+    }
+
+    public static Set<AdminPermission> matchPermissions(Set<String> patterns) {
+        int count = patterns.size();
+        if (count == 0) {
+            return Collections.emptySet();
+        }
+        Set<AdminPermission> permissions = CollectionUtil.newSetWithExpectedSize(count);
+        for (String pattern : patterns) {
+            for (String name : NAMES) {
+                if (StringUtil.match(name, pattern)) {
+                    permissions.add(AdminPermission.valueOf(name));
+                }
+            }
+        }
+        return permissions;
+    }
 
 }

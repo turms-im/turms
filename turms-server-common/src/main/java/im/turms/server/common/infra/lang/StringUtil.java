@@ -34,6 +34,9 @@ public final class StringUtil {
     public static final byte LATIN1 = 0;
     public static final byte UTF16 = 1;
 
+    private static final byte SINGLE_TOKEN = '?';
+    private static final byte MULTIPLE_TOKEN = '*';
+
     private static final Unsafe UNSAFE = UnsafeUtil.UNSAFE;
     private static final long STRING_VALUE_OFFSET;
     private static final long STRING_CODER_OFFSET;
@@ -48,7 +51,7 @@ public final class StringUtil {
             STRING_CODER_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("coder"));
 
             // Validate
-            StringUtil.newString(StringUtil.getBytes(""), StringUtil.getCoder(""));
+            newString(getBytes(""), getCoder(""));
         } catch (Throwable e) {
             throw new IllegalStateException(e);
         }
@@ -94,6 +97,37 @@ public final class StringUtil {
         return getBytes(s).length;
     }
 
+    public static boolean match(String text, String pattern) {
+        byte[] textBytes = getBytes(text);
+        byte[] patternBytes = getBytes(pattern);
+        int textReaderIndex = 0;
+        int patternReaderIndex = 0;
+        int textReaderIndexForMultipleToken = -1;
+        int patternReaderIndexForMultipleToken = -1;
+        int textLength = text.length();
+        int patternLength = pattern.length();
+
+        while (textReaderIndex < textLength) {
+            if (patternReaderIndex < patternLength
+                    && (textBytes[textReaderIndex] == patternBytes[patternReaderIndex] || patternBytes[patternReaderIndex] == SINGLE_TOKEN)) {
+                textReaderIndex++;
+                patternReaderIndex++;
+            } else if (patternReaderIndex < patternLength && patternBytes[patternReaderIndex] == MULTIPLE_TOKEN) {
+                textReaderIndexForMultipleToken = textReaderIndex;
+                patternReaderIndexForMultipleToken = patternReaderIndex++;
+            } else if (textReaderIndexForMultipleToken >= 0) {
+                textReaderIndex = ++textReaderIndexForMultipleToken;
+                patternReaderIndex = patternReaderIndexForMultipleToken + 1;
+            } else {
+                return false;
+            }
+        }
+        while (patternReaderIndex < patternLength && patternBytes[patternReaderIndex] == '*') {
+            patternReaderIndex++;
+        }
+        return patternReaderIndex == patternLength;
+    }
+
     /**
      * @implNote 1. The strings must be ASCII
      * and the method won't validate their coder for better performance.
@@ -102,7 +136,7 @@ public final class StringUtil {
      * or preprocess the message, which cause a bad performance while it can be avoided.
      */
     public static String substitute(String message, String... args) {
-        byte[] bytes = StringUtil.getBytes(message);
+        byte[] bytes = getBytes(message);
         int length = bytes.length;
         int argIndex = 0;
         int argCount = args.length;
@@ -118,7 +152,7 @@ public final class StringUtil {
                 if (argIndex >= argCount) {
                     throw new IllegalArgumentException("The number of placeholder \"{}\" must be the same as the number of arguments");
                 }
-                for (byte argByte : StringUtil.getBytes(String.valueOf(args[argIndex++]))) {
+                for (byte argByte : getBytes(String.valueOf(args[argIndex++]))) {
                     newBytes[writeIndex++] = argByte;
                 }
                 i++;
@@ -156,7 +190,7 @@ public final class StringUtil {
     public static String newLatin1String(byte[] srcBytes, int srcPos, int length) {
         byte[] bytes = new byte[length];
         System.arraycopy(srcBytes, srcPos, bytes, 0, length);
-        return StringUtil.newLatin1String(bytes);
+        return newLatin1String(bytes);
     }
 
     @SneakyThrows

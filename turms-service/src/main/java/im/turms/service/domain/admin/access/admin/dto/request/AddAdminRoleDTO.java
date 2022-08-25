@@ -17,8 +17,6 @@
 
 package im.turms.service.domain.admin.access.admin.dto.request;
 
-import im.turms.server.common.access.admin.permission.AdminPermission;
-
 import java.util.Set;
 
 /**
@@ -27,7 +25,7 @@ import java.util.Set;
 public record AddAdminRoleDTO(
         Long id,
         String name,
-        Set<AdminPermission> permissions,
+        Set<String> permissions,
         Integer rank
 ) {
 }

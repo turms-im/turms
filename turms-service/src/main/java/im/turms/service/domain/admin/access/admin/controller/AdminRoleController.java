@@ -68,7 +68,7 @@ public class AdminRoleController extends BaseController {
                 requestContext.getAccount(),
                 addAdminRoleDTO.id(),
                 addAdminRoleDTO.name(),
-                addAdminRoleDTO.permissions(),
+                addAdminRoleDTO.permissions() == null ? null : AdminPermission.matchPermissions(addAdminRoleDTO.permissions()),
                 addAdminRoleDTO.rank());
         return HttpHandlerResult.okIfTruthy(adminRoleMono);
     }
@@ -127,7 +127,7 @@ public class AdminRoleController extends BaseController {
                 requestContext.getAccount(),
                 ids,
                 updateAdminRoleDTO.name(),
-                updateAdminRoleDTO.permissions(),
+                updateAdminRoleDTO.permissions() == null ? null : AdminPermission.matchPermissions(updateAdminRoleDTO.permissions()),
                 updateAdminRoleDTO.rank());
         return HttpHandlerResult.updateResult(updateMono);
     }

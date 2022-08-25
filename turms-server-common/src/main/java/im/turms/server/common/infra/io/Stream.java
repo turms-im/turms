@@ -63,8 +63,8 @@ public class Stream implements StreamInput, StreamOutput {
     }
 
     @Override
-    public Stream writeBytes(byte[] src) {
-        buf.writeBytes(src);
+    public Stream writeBytes(byte[] bytes) {
+        buf.writeBytes(bytes);
         return this;
     }
 

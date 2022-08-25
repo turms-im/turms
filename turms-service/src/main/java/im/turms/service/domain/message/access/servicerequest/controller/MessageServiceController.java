@@ -124,6 +124,8 @@ public class MessageServiceController {
                 if (recordCount > 0) {
                     records = new ArrayList<>(recordCount);
                     for (ByteString byteString : request.getRecordsList()) {
+                        // We don't support storing ByteString as ByteBuffer directly
+                        // because "org.bson.BsonBinaryWriter.doWriteBinaryData" don't support writing ByteBuffer
                         records.add(byteString.toByteArray());
                     }
                 }
@@ -313,6 +315,8 @@ public class MessageServiceController {
             if (request.getRecordsCount() > 0) {
                 records = new ArrayList<>(request.getRecordsCount());
                 for (ByteString byteString : request.getRecordsList()) {
+                    // We don't support storing ByteString as ByteBuffer directly
+                    // because "org.bson.BsonBinaryWriter.doWriteBinaryData" don't support writing ByteBuffer
                     records.add(byteString.toByteArray());
                 }
             }

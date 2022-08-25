@@ -39,6 +39,30 @@ class StringUtilTests {
     }
 
     @Test
+    void match() {
+        assertThat(StringUtil.match("", "")).isTrue();
+        assertThat(StringUtil.match("Foo", "Foo")).isTrue();
+        assertThat(StringUtil.match("Foo", "Bar")).isFalse();
+
+        assertThat(StringUtil.match("Foo", "*")).isTrue();
+        assertThat(StringUtil.match("Foo", "Fo*")).isTrue();
+        assertThat(StringUtil.match("Foo", "Fo**")).isTrue();
+        assertThat(StringUtil.match("Foo Bar", "Fo*")).isTrue();
+        assertThat(StringUtil.match("Foo Bar Foo", "F*o Bar*")).isTrue();
+        assertThat(StringUtil.match("Foo Bar Foo", "F*b Bar*")).isFalse();
+        assertThat(StringUtil.match("Foo", "*Foo")).isTrue();
+        assertThat(StringUtil.match("Foo", "Foo*")).isTrue();
+        assertThat(StringUtil.match("Foo", "*Foo*")).isTrue();
+
+        assertThat(StringUtil.match("Foo", "?")).isFalse();
+        assertThat(StringUtil.match("Foo", "?Foo")).isFalse();
+        assertThat(StringUtil.match("Foo", "Fo?")).isTrue();
+        assertThat(StringUtil.match("Foo", "Fo??")).isFalse();
+        assertThat(StringUtil.match("Foo Bar", "F?o B?r")).isTrue();
+        assertThat(StringUtil.match("Foo Bar", "F?o B??r")).isFalse();
+    }
+
+    @Test
     void substitute() {
         assertThat(StringUtil.substitute("my-{}-string", "test"))
                 .isEqualTo("my-test-string");
