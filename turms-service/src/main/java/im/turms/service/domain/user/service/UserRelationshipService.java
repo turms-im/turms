@@ -37,7 +37,6 @@ import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 import im.turms.service.domain.common.validation.DataValidator;
 import im.turms.service.domain.user.po.UserRelationship;
-import im.turms.service.domain.user.po.UserRelationshipGroupMember;
 import im.turms.service.domain.user.po.UserVersion;
 import im.turms.service.domain.user.repository.UserRelationshipRepository;
 import im.turms.service.infra.proto.ProtoModelConvertor;
@@ -52,7 +51,6 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -130,17 +128,15 @@ public class UserRelationshipService {
             ownerIds.add(key.getOwnerId());
         }
         return userRelationshipRepository
-                .inTransaction(session -> {
-                    return userRelationshipRepository.deleteByIds(keys, session)
-                            .flatMap(result -> userRelationshipGroupService.deleteRelatedUsersFromAllRelationshipGroups(keys, session, true)
-                                    .then(userVersionService.updateRelationshipsVersion(ownerIds, null)
-                                            .onErrorResume(t -> {
-                                                LOGGER.error("Caught an error while updating relationships version of the group owners {} after deleting their relationships",
-                                                        ownerIds, t);
-                                                return Mono.empty();
-                                            }))
-                                    .thenReturn(result));
-                })
+                .inTransaction(session -> userRelationshipRepository.deleteByIds(keys, session)
+                        .flatMap(result -> userRelationshipGroupService.deleteRelatedUsersFromAllRelationshipGroups(keys, session, true)
+                                .then(userVersionService.updateRelationshipsVersion(ownerIds, null)
+                                        .onErrorResume(t -> {
+                                            LOGGER.error("Caught an error while updating relationships version of the group owners {} after deleting their relationships",
+                                                    ownerIds, t);
+                                            return Mono.empty();
+                                        }))
+                                .thenReturn(result)))
                 .retryWhen(TRANSACTION_RETRY);
     }
 
@@ -401,7 +397,6 @@ public class UserRelationshipService {
                 .then(PublisherPool.TRUE);
     }
 
-    // TODO: break down
     public Mono<Void> upsertOneSidedRelationship(
             @NotNull Long ownerId,
             @NotNull Long relatedUserId,
@@ -409,7 +404,7 @@ public class UserRelationshipService {
             @Nullable Integer newGroupIndex,
             @Nullable Integer deleteGroupIndex,
             @Nullable @PastOrPresent Date establishmentDate,
-            @NotNull Boolean upsert,
+            boolean upsert,
             @Nullable ClientSession session) {
         try {
             Validator.notNull(ownerId, "ownerId");
@@ -421,30 +416,30 @@ public class UserRelationshipService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        establishmentDate = establishmentDate == null ? new Date() : establishmentDate;
+        return Mono.whenDelayError(List.of(
+                upsertOneSidedRelationship(ownerId, relatedUserId, blockDate, establishmentDate, upsert, session),
+                userRelationshipGroupService.updateRelationshipGroup(ownerId, relatedUserId, newGroupIndex, deleteGroupIndex, session)
+        ));
+    }
+
+    private Mono<Void> upsertOneSidedRelationship(
+            @NotNull Long ownerId,
+            @NotNull Long relatedUserId,
+            @Nullable @PastOrPresent Date blockDate,
+            @Nullable Date establishmentDate,
+            boolean upsert,
+            @Nullable ClientSession session) {
+        if (establishmentDate == null) {
+            establishmentDate = new Date();
+        }
         UserRelationship userRelationship = new UserRelationship(ownerId, relatedUserId, blockDate, establishmentDate);
-        List<Mono<?>> monos = new ArrayList<>(3);
         if (upsert) {
-            monos.add(userRelationshipRepository.upsert(userRelationship, session));
+            return userRelationshipRepository.upsert(userRelationship, session);
         } else {
-            monos.add(userRelationshipRepository.insert(userRelationship, session)
+            return userRelationshipRepository.insert(userRelationship, session)
                     .onErrorMap(DuplicateKeyException.class,
-                            e -> ResponseException.get(ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP)));
+                            e -> ResponseException.get(ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP));
         }
-        if (newGroupIndex != null && deleteGroupIndex != null) {
-            if (!newGroupIndex.equals(deleteGroupIndex)) {
-                monos.add(userRelationshipGroupService.moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, newGroupIndex));
-            }
-        } else if (newGroupIndex != null) {
-            Mono<UserRelationshipGroupMember> add = userRelationshipGroupService.addRelatedUserToRelationshipGroups(
-                    ownerId, newGroupIndex, relatedUserId, session);
-            monos.add(add);
-        } else if (deleteGroupIndex != null) {
-            Mono<Void> delete = userRelationshipGroupService
-                    .moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, DEFAULT_RELATIONSHIP_GROUP_INDEX);
-            monos.add(delete);
-        }
-        return Mono.whenDelayError(monos);
     }
 
     public Mono<Boolean> isBlocked(@NotNull Long ownerId, @NotNull Long relatedUserId) {

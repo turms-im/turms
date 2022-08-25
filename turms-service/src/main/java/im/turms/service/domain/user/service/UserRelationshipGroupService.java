@@ -224,6 +224,31 @@ public class UserRelationshipGroupService {
                         .thenReturn(result));
     }
 
+    public Mono<Void> updateRelationshipGroup(
+            @NotNull Long ownerId,
+            @NotNull Long relatedUserId,
+            @Nullable Integer newGroupIndex,
+            @Nullable Integer deleteGroupIndex,
+            @Nullable ClientSession session) {
+        try {
+            Validator.notNull(ownerId, "ownerId");
+            Validator.notNull(relatedUserId, "relatedUserId");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        if (newGroupIndex != null && deleteGroupIndex != null) {
+            if (!newGroupIndex.equals(deleteGroupIndex)) {
+                return moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, newGroupIndex, false, session);
+            }
+        } else if (newGroupIndex != null) {
+            return addRelatedUserToRelationshipGroups(ownerId, newGroupIndex, relatedUserId, session)
+                    .then();
+        } else if (deleteGroupIndex != null) {
+            return moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, DEFAULT_RELATIONSHIP_GROUP_INDEX, true, session);
+        }
+        return Mono.empty();
+    }
+
     public Mono<UpdateResult> updateRelationshipGroups(
             @NotEmpty Set<UserRelationshipGroup.@ValidUserRelationshipGroupKey Key> keys,
             @Nullable String name,
@@ -419,7 +444,9 @@ public class UserRelationshipGroupService {
             @NotNull Long ownerId,
             @NotNull Long relatedUserId,
             @NotNull Integer currentGroupIndex,
-            @NotNull Integer targetGroupIndex) {
+            @NotNull Integer targetGroupIndex,
+            boolean suppressIfAlreadyExistsInTargetGroup,
+            @Nullable ClientSession session) {
         try {
             Validator.notNull(ownerId, "ownerId");
             Validator.notNull(relatedUserId, "relatedUserId");
@@ -434,9 +461,12 @@ public class UserRelationshipGroupService {
         UserRelationshipGroupMember.Key key = new UserRelationshipGroupMember.Key(ownerId, currentGroupIndex, relatedUserId);
         UserRelationshipGroupMember.Key newKey = new UserRelationshipGroupMember
                 .Key(ownerId, targetGroupIndex, relatedUserId);
-        // Don't use transaction for better performance
-        return userRelationshipGroupMemberRepository.insert(new UserRelationshipGroupMember(newKey, new Date()))
-                .then(userRelationshipGroupMemberRepository.deleteById(key))
+        Mono<Void> insert = userRelationshipGroupMemberRepository.insert(new UserRelationshipGroupMember(newKey, new Date()), session);
+        if (suppressIfAlreadyExistsInTargetGroup) {
+            insert = insert.onErrorResume(DuplicateKeyException.class, t -> Mono.empty());
+        }
+        return insert
+                .then(userRelationshipGroupMemberRepository.deleteById(key, session))
                 .then(userVersionService.updateRelationshipGroupsVersion(ownerId)
                         .onErrorResume(t -> {
                             LOGGER.error("Caught an error while updating the relationship groups version of the owner {} after moving a user to a new group",
