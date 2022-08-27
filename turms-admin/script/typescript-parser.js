@@ -146,16 +146,28 @@ function parseMethodParams(node) {
                     type: getNodeType(param)
                 });
             } else if (isObjectBindingPattern(param.name) || isArrayBindingPattern(param.name)) {
-                const types = param.type && isTypeLiteralNode(param.type)
-                    ? (param.type.elementTypes.map(type => type.getText())
-                        || param.type.members.filter(member => isPropertySignature(member)).map(signature => signature.type.getText()))
-                    : [];
+                // TODO: support TypeReference = 178
+                let types;
+                let isMember = false;
+                if (param.type && isTypeLiteralNode(param.type)) {
+                    types = param.type.elementTypes?.map(type => type.getText());
+                    if (!types) {
+                        types = param.type.members
+                            .filter(member => isPropertySignature(member))
+                            .map(signature => signature.type.getText());
+                        isMember = true;
+                    }
+                } else {
+                    types = [];
+                }
+                const elements = param.name.elements.map((bindingElement, index) => ({
+                    name: bindingElement.name.getText(),
+                    type: types[index]
+                }));
                 params.push({
                     typeReference: param.type && isTypeReferenceNode(param.type) ? getNodeType(param) : undefined,
-                    parameters: param.name.elements.map((bindingElement, index) => ({
-                        name: bindingElement.name.getText(),
-                        type: types[index]
-                    }))
+                    parameters: isMember ? undefined : elements,
+                    members: isMember ? elements : undefined,
                 });
             }
             return params;
