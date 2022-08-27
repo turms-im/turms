@@ -147,7 +147,7 @@ public final class StringUtil {
         for (String str : args) {
             argBytesLength += str == null ? 2 : str.length() - 2;
         }
-        byte[] newBytes = new byte[bytes.length + argBytesLength];
+        byte[] newBytes = new byte[length + argBytesLength];
         int writeIndex = 0;
         for (int i = 0; i < length; i++) {
             byte b = bytes[i];
@@ -171,6 +171,10 @@ public final class StringUtil {
 
     public static String toString(Object val) {
         return val == null ? "" : val.toString();
+    }
+
+    public static boolean isEmpty(String string) {
+        return string == null || string.isEmpty();
     }
 
     public static boolean isLatin1(String s) {

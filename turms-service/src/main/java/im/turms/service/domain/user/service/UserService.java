@@ -26,6 +26,7 @@ import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsProperties;
@@ -205,7 +206,7 @@ public class UserService {
         }
         Date now = new Date();
         id = id == null ? node.nextLargeGapId(ServiceType.USER) : id;
-        byte[] password = rawPassword == null ? null : passwordManager.encodeUserPassword(rawPassword);
+        byte[] password = StringUtil.isEmpty(rawPassword) ? null : passwordManager.encodeUserPassword(rawPassword);
         name = name == null ? "" : name;
         intro = intro == null ? "" : intro;
         profileAccess = profileAccess == null ? ProfileAccessStrategy.ALL : profileAccess;
@@ -440,7 +441,7 @@ public class UserService {
                 isActive)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
-        byte[] password = rawPassword == null || rawPassword.isEmpty()
+        byte[] password = StringUtil.isEmpty(rawPassword)
                 ? null
                 : passwordManager.encodeUserPassword(rawPassword);
         return userRepository.updateUsers(userIds,
