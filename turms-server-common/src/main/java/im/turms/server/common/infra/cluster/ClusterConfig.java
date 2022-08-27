@@ -46,8 +46,11 @@ public class ClusterConfig {
             BaseServiceAddressManager serviceAddressManager,
             HealthCheckManager healthCheckManager) {
         Node node = new Node(context, nodeType, turmsContext, propertiesManager, serviceAddressManager, healthCheckManager);
-        node.start();
+        // Note that the shutdown hook should be registered before "node#start"
+        // because the node may fail to start and throw while the shutdown job should also run
+        // in this case. e.g. unregister current node.
         turmsContext.addShutdownHook(JobShutdownOrder.CLOSE_NODE, node::stop);
+        node.start();
         return node;
     }
 
