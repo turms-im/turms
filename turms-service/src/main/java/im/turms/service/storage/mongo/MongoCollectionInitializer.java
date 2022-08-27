@@ -32,6 +32,7 @@ import im.turms.server.common.infra.property.env.service.ServiceProperties;
 import im.turms.server.common.infra.property.env.service.env.database.MongoProperties;
 import im.turms.server.common.infra.property.env.service.env.database.TieredStorageProperties;
 import im.turms.server.common.infra.reactor.PublisherUtil;
+import im.turms.server.common.infra.reflect.ReflectionUtil;
 import im.turms.server.common.infra.security.PasswordManager;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.time.DurationConst;
@@ -296,7 +297,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         BiPredicate<String, Object> isCustomIndexEnabled = (fieldName, optionalIndex) -> {
             try {
                 Field field = optionalIndex.getClass().getDeclaredField(fieldName);
-                field.setAccessible(true);
+                ReflectionUtil.setAccessible(field);
                 return (boolean) field.get(optionalIndex);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 String message = "Cannot find the field %s in the optional index properties %s"

@@ -156,6 +156,11 @@
 
         <!-- Processor -->
         <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <scope>provided</scope>
@@ -183,6 +188,9 @@
                     <source>17</source>
                     <target>17</target>
                     <annotationProcessors>
+                        <annotationProcessor>
+                            org.openjdk.jmh.generators.BenchmarkProcessor
+                        </annotationProcessor>
                         <annotationProcessor>
                             org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor
                         </annotationProcessor>

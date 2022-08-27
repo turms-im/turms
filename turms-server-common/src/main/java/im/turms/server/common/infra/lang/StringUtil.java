@@ -25,6 +25,7 @@ import sun.misc.Unsafe;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 /**
  * @author James Chen
@@ -45,15 +46,17 @@ public final class StringUtil {
     static {
         try {
             Constructor<String> constructor = String.class.getDeclaredConstructor(byte[].class, byte.class);
-            ReflectionUtil.setAccessible(constructor);
-            NEW_STRING = ReflectionUtil.LOOKUP.unreflectConstructor(constructor);
+            NEW_STRING = ReflectionUtil.getConstructor(constructor);
             STRING_VALUE_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("value"));
             STRING_CODER_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("coder"));
-
-            // Validate
-            newString(getBytes(""), getCoder(""));
         } catch (Throwable e) {
             throw new IllegalStateException(e);
+        }
+        // Validate
+        String text = "abc";
+        byte[] actual = getBytes(newString(getBytes(text), getCoder(text)));
+        if (!Arrays.equals(actual, text.getBytes())) {
+            throw new IllegalStateException("Validation failed");
         }
     }
 

@@ -20,6 +20,7 @@ package im.turms.server.common.infra.json;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.reflect.ReflectionUtil;
 import im.turms.server.common.infra.time.DateUtil;
 
 import javax.annotation.Nullable;
@@ -79,7 +80,7 @@ public final class JsonSizeCalculator {
                             continue;
                         }
                         try {
-                            field.setAccessible(true);
+                            ReflectionUtil.setAccessible(field);
                             Object o = field.get(val);
                             valSize = estimateJson(o);
                             if (valSize > 0) {

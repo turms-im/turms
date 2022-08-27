@@ -64,7 +64,7 @@ public class HttpEndpointCollector {
             String basePath = annotation.value();
             Method[] methods = controllerClass.getDeclaredMethods();
             for (Method method : methods) {
-                method.setAccessible(true);
+                ReflectionUtil.setAccessible(method);
                 Pair<HttpMethod, String> methodAndPath = parseMethod(method);
                 if (methodAndPath == null) {
                     continue;

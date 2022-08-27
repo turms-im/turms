@@ -26,10 +26,15 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,10 +58,33 @@ public final class ReflectionUtil {
     private ReflectionUtil() {
     }
 
+    public static List<Field> getNonStaticFields(Class<?> clazz) {
+        List<Field> fields = new LinkedList<>();
+        Class<?> currentClass = clazz;
+        while (currentClass != null) {
+            for (Field field : currentClass.getDeclaredFields()) {
+                if (!Modifier.isStatic(field.getModifiers())) {
+                    fields.add(field);
+                }
+            }
+            currentClass = currentClass.getSuperclass();
+        }
+        return fields;
+    }
+
+    public static <T> MethodHandle getConstructor(Constructor<T> constructor) {
+        setAccessible(constructor);
+        try {
+            return LOOKUP.unreflectConstructor(constructor);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     public static MethodHandle getGetter(Class<?> clazz, String fieldName) {
         try {
             Field field = clazz.getDeclaredField(fieldName);
-            field.setAccessible(true);
+            setAccessible(field);
             return LOOKUP.unreflectGetter(field);
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -65,8 +93,21 @@ public final class ReflectionUtil {
 
     public static MethodHandle getGetter(Field field) {
         try {
-            field.setAccessible(true);
+            setAccessible(field);
             return LOOKUP.unreflectGetter(field);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public static List<MethodHandle> getGetters(List<Field> fields) {
+        List<MethodHandle> handles = new ArrayList<>(fields.size());
+        try {
+            for (Field field : fields) {
+                setAccessible(field);
+                handles.add(LOOKUP.unreflectGetter(field));
+            }
+            return handles;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -75,7 +116,7 @@ public final class ReflectionUtil {
     public static MethodHandle getSetter(Class<?> clazz, String fieldName) {
         try {
             Field field = clazz.getDeclaredField(fieldName);
-            field.setAccessible(true);
+            setAccessible(field);
             return LOOKUP.unreflectSetter(field);
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -84,18 +125,31 @@ public final class ReflectionUtil {
 
     public static MethodHandle getSetter(Field field) {
         try {
-            field.setAccessible(true);
+            setAccessible(field);
             return LOOKUP.unreflectSetter(field);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
 
-    public static VarHandle getVarHandle(Class<?> clazz, String fieldName) {
+    public static List<MethodHandle> getSetters(List<Field> fields) {
+        List<MethodHandle> handles = new ArrayList<>(fields.size());
+        try {
+            for (Field field : fields) {
+                setAccessible(field);
+                handles.add(LOOKUP.unreflectSetter(field));
+            }
+            return handles;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public static VarHandle getVarHandle(Class<?> targetClass, String fieldName) {
         try {
             return MethodHandles
-                    .privateLookupIn(clazz, LOOKUP)
-                    .unreflectVarHandle(clazz.getDeclaredField(fieldName));
+                    .privateLookupIn(targetClass, LOOKUP)
+                    .unreflectVarHandle(targetClass.getDeclaredField(fieldName));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -103,7 +157,7 @@ public final class ReflectionUtil {
 
     public static MethodHandle method2Handle(Method method) {
         try {
-            method.setAccessible(true);
+            setAccessible(method);
             return LOOKUP.unreflect(method);
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -111,7 +165,9 @@ public final class ReflectionUtil {
     }
 
     /**
-     * The method can ignore the access control of the module system
+     * 1. Ignore the access control of the module system
+     * 2. Better performance than {@link AccessibleObject#setAccessible(boolean)}:
+     * {@link benchmark.im.turms.server.common.infra.reflect.Reflection}
      */
     public static void setAccessible(AccessibleObject object) {
         UNSAFE.putBoolean(object, OVERRIDE_OFFSET, true);

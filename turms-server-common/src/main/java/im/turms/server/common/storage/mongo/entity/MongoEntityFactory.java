@@ -96,7 +96,7 @@ public final class MongoEntityFactory {
         if (constructor == null) {
             throw new IllegalArgumentException("Cannot find a constructor for the entity class: " + entityClass.getName());
         }
-        constructor.trySetAccessible();
+        ReflectionUtil.setAccessible(constructor);
         return constructor;
     }
 

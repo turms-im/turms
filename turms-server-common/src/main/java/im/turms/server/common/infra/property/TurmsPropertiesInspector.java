@@ -32,9 +32,9 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
+import im.turms.server.common.infra.reflect.ReflectionUtil;
 import im.turms.server.common.infra.validation.ValidCron;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import javax.annotation.Nullable;
@@ -44,7 +44,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -160,14 +159,9 @@ public class TurmsPropertiesInspector {
     private static void collectFieldsInfo(Class<?> propertiesClass,
                                           Map<Class<?>, List<Field>> classToFieldsOutput,
                                           Map<Field, PropertyConstraints> fieldToConstraintsOutput) {
-        List<Field> fields = FieldUtils.getAllFieldsList(propertiesClass);
-        List<Field> nonStaticFields = new ArrayList<>(fields.size());
+        List<Field> fields = ReflectionUtil.getNonStaticFields(propertiesClass);
         for (Field field : fields) {
-            if (Modifier.isStatic(field.getModifiers())) {
-                continue;
-            }
-            field.setAccessible(true);
-            nonStaticFields.add(field);
+            ReflectionUtil.setAccessible(field);
             if (isNestedProperty(field)) {
                 collectFieldsInfo(field.getType(), classToFieldsOutput, fieldToConstraintsOutput);
             }
@@ -177,7 +171,7 @@ public class TurmsPropertiesInspector {
                     field.getDeclaredAnnotation(ValidCron.class)
             ));
         }
-        classToFieldsOutput.put(propertiesClass, nonStaticFields);
+        classToFieldsOutput.put(propertiesClass, fields);
     }
 
     private static Map<String, Object> getMetadata(Map<String, Object> metadataOutput,
