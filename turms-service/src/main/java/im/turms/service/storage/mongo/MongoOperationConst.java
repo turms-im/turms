@@ -20,6 +20,7 @@ package im.turms.service.storage.mongo;
 import com.mongodb.MongoCommandException;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.storage.mongo.MongoErrorCodes;
+import im.turms.server.common.storage.mongo.exception.DocumentValidationFailureException;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 import reactor.util.retry.Retry;
 
@@ -38,7 +39,9 @@ public final class MongoOperationConst {
     public static final Duration MONGO_TRANSACTION_BACKOFF = Duration.ofSeconds(3);
 
     public static final List<Class<? extends Throwable>> NON_RETRYABLE_EXCEPTIONS =
-            List.of(DuplicateKeyException.class, ResponseException.class);
+            List.of(DocumentValidationFailureException.class,
+                    DuplicateKeyException.class,
+                    ResponseException.class);
     public static final Retry TRANSACTION_RETRY = Retry
             .fixedDelay(MONGO_TRANSACTION_RETRIES_NUMBER, MONGO_TRANSACTION_BACKOFF)
             .filter(throwable -> {

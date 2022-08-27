@@ -29,6 +29,8 @@ public final class MongoErrorCodes {
     private MongoErrorCodes() {
     }
 
+    public static final int DOCUMENT_VALIDATION_FAILURE = 121;
+
     public static final int NO_SUCH_TRANSACTION = 251;
     public static final int TRANSACTION_COMMITTED = 256;
     public static final int TRANSACTION_TOO_LARGE = 257;

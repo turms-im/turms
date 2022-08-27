@@ -22,6 +22,7 @@ import com.mongodb.MongoBulkWriteException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteError;
 import com.mongodb.bulk.BulkWriteError;
+import im.turms.server.common.storage.mongo.MongoErrorCodes;
 
 /**
  * @author James Chen
@@ -34,16 +35,30 @@ public class MongoExceptionTranslator {
             if (error.getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
                 return new DuplicateKeyException(t.getMessage(), t);
             }
+            if (error.getCode() == MongoErrorCodes.DOCUMENT_VALIDATION_FAILURE) {
+                throw new DocumentValidationFailureException(t.getMessage(), t);
+            }
         } else if (t instanceof MongoBulkWriteException e) {
-            boolean areAllErrorsDuplicateKeyErrors = true;
+            boolean areAllDuplicateKeyErrors = true;
+            boolean areAllValidationFailureErrors = true;
             for (BulkWriteError error : e.getWriteErrors()) {
                 if (!error.getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
-                    areAllErrorsDuplicateKeyErrors = false;
-                    break;
+                    areAllDuplicateKeyErrors = false;
+                    if (!areAllValidationFailureErrors) {
+                        break;
+                    }
+                }
+                if (error.getCode() != MongoErrorCodes.DOCUMENT_VALIDATION_FAILURE) {
+                    areAllValidationFailureErrors = false;
+                    if (!areAllDuplicateKeyErrors) {
+                        break;
+                    }
                 }
             }
-            if (areAllErrorsDuplicateKeyErrors) {
+            if (areAllDuplicateKeyErrors) {
                 return new DuplicateKeyException(t.getMessage(), t);
+            } else if (areAllValidationFailureErrors) {
+                return new DocumentValidationFailureException(t.getMessage(), t);
             }
         } else if (t instanceof com.mongodb.DuplicateKeyException) {
             return new DuplicateKeyException(t.getMessage(), t);
