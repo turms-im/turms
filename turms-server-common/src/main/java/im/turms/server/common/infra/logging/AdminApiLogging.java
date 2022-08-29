@@ -17,7 +17,9 @@
 
 package im.turms.server.common.infra.logging;
 
+import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.NumberFormatter;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.time.DateUtil;
 import io.netty.buffer.ByteBuf;
@@ -41,7 +43,14 @@ public final class AdminApiLogging {
                            int processingTime,
                            Throwable throwable) {
         boolean isSuccessful = throwable == null;
-        int estimatedSize = 64 + (throwable == null ? 0 : 128);
+        int estimatedSize = 64;
+        String reason;
+        if (isSuccessful) {
+            reason = "";
+        } else {
+            reason = StringUtil.replaceLatin1(throwable.toString(), AsciiCode.NEW_LINE, AsciiCode.SPACE);
+            estimatedSize += reason.length();
+        }
         ByteBuf buffer = ByteBufUtil.join(estimatedSize, CommonLogger.LOG_FIELD_DELIMITER,
                 // Session
                 account,
@@ -54,7 +63,7 @@ public final class AdminApiLogging {
                 // Response
                 isSuccessful ? "TRUE" : "FALSE",
                 NumberFormatter.toCharBytes(processingTime),
-                isSuccessful ? "" : throwable.toString());
+                reason);
         CommonLogger.ADMIN_API_LOGGER.info(buffer);
     }
 

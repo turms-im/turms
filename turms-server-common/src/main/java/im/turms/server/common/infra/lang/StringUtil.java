@@ -131,6 +131,23 @@ public final class StringUtil {
         return patternReaderIndex == patternLength;
     }
 
+    public static String replaceLatin1(String message, byte oldByte, byte newByte) {
+        byte[] bytes = getBytes(message);
+        byte[] newBytes = null;
+        for (int i = 0; i < bytes.length; i++) {
+            if (bytes[i] == oldByte) {
+                if (newBytes == null) {
+                    newBytes = Arrays.copyOf(bytes, bytes.length);
+                }
+                newBytes[i] = newByte;
+            }
+        }
+        if (newBytes == null) {
+            return message;
+        }
+        return newLatin1String(newBytes);
+    }
+
     /**
      * @implNote 1. The strings must be ASCII
      * and the method won't validate their coder for better performance.
