@@ -181,29 +181,35 @@ public class HttpRequestParamParser {
     }
 
     private static Mono<Object> parseBody(HttpServerRequest request, Class<?> parameterType) {
-        CompositeByteBuf body = Unpooled.compositeBuffer();
-        return request.receive()
-                .doOnNext(buffer -> {
-                    body.addComponent(true, buffer);
-                    if (body.readableBytes() > MAX_BODY_SIZE) {
-                        body.release();
-                        throw BODY_TOO_LARGE_EXCEPTION;
-                    }
-                    buffer.retain();
-                })
-                .singleOrEmpty()
-                .map(unused -> {
-                    try {
-                        Object value = JsonCodecPool.MAPPER
-                                .readValue((InputStream) new ByteBufInputStream(body), parameterType);
-                        body.release();
-                        return value;
-                    } catch (IOException e) {
-                        ByteBufUtil.ensureReleased(body);
-                        throw new HttpResponseException(HttpHandlerResult.badRequest("Illegal request body"), e);
-                    }
-                })
-                .doFinally(signalType -> ByteBufUtil.safeEnsureReleased(body));
+        return Mono.defer(() -> {
+            CompositeByteBuf body = Unpooled.compositeBuffer();
+            return request.receive()
+                    .doOnNext(buffer -> {
+                        body.addComponent(true, buffer);
+                        if (body.readableBytes() > MAX_BODY_SIZE) {
+                            body.release();
+                            throw BODY_TOO_LARGE_EXCEPTION;
+                        }
+                        buffer.retain();
+                    })
+                    .hasElements()
+                    .flatMap(hasElements -> {
+                        if (!hasElements) {
+                            return Mono.empty();
+                        }
+                        try {
+                            Object value = JsonCodecPool.MAPPER
+                                    .readValue((InputStream) new ByteBufInputStream(body), parameterType);
+                            body.release();
+                            return Mono.just(value);
+                        } catch (IOException e) {
+                            ByteBufUtil.ensureReleased(body);
+                            HttpHandlerResult<ResponseDTO<?>> result = HttpHandlerResult.badRequest("Illegal request body: " + e.getMessage());
+                            return Mono.error(new HttpResponseException(result, e));
+                        }
+                    })
+                    .doFinally(signalType -> ByteBufUtil.safeEnsureReleased(body));
+        });
     }
 
 }
