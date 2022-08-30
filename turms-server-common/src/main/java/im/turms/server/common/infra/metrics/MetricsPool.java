@@ -19,13 +19,15 @@ package im.turms.server.common.infra.metrics;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import im.turms.server.common.infra.lang.AsciiCode;
+import im.turms.server.common.infra.lang.Pair;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
 import io.micrometer.core.instrument.Measurement;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
 import java.lang.invoke.VarHandle;
@@ -122,11 +124,11 @@ public class MetricsPool {
         }
         List<Tag> tagList = new ArrayList<>(tags.size());
         for (String tag : tags) {
-            String[] parts = StringUtils.split(tag, ":");
-            if (parts == null) {
+            Pair<String, String> keyAndValue = StringUtil.splitLatin1(tag, AsciiCode.COLON);
+            if (keyAndValue == null) {
                 throw new IllegalArgumentException("Each tag parameter must be in the form 'key:value' but was: " + tag);
             }
-            tagList.add(Tag.of(parts[0], parts[1]));
+            tagList.add(Tag.of(keyAndValue.first(), keyAndValue.second()));
         }
         return tagList;
     }

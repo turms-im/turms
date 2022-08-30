@@ -22,6 +22,7 @@ import im.turms.server.common.infra.unsafe.UnsafeUtil;
 import lombok.SneakyThrows;
 import sun.misc.Unsafe;
 
+import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
@@ -146,6 +147,21 @@ public final class StringUtil {
             return message;
         }
         return newLatin1String(newBytes);
+    }
+
+    @Nullable
+    public static Pair<String, String> splitLatin1(String toSplit, byte delimiter) {
+        byte[] bytes = getBytes(toSplit);
+        for (int i = 0; i < bytes.length; i++) {
+            if (bytes[i] == delimiter) {
+                byte[] first = new byte[i];
+                byte[] second = new byte[bytes.length - i - 1];
+                System.arraycopy(bytes, 0, first, 0, first.length);
+                System.arraycopy(bytes, first.length + 1, second, 0, second.length);
+                return Pair.of(newLatin1String(first), newLatin1String(second));
+            }
+        }
+        return null;
     }
 
     /**

@@ -47,7 +47,9 @@ import io.swagger.v3.oas.models.media.FileSchema;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.parameters.HeaderParameter;
 import io.swagger.v3.oas.models.parameters.Parameter;
+import io.swagger.v3.oas.models.parameters.QueryParameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
@@ -76,6 +78,14 @@ import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_HTML;
  */
 public class OpenApiBuilder {
 
+    private static final String TITLE = "Turms";
+    private static final String EXTERNAL_DOCUMENTATION_DESCRIPTION = "Turms Documentation";
+    private static final String EXTERNAL_DOCUMENTATION_URL = "https://turms-im.github.io/docs";
+
+    static {
+        ModelConverters.getInstance().addClassToSkip(RequestContext.class.getName());
+    }
+
     private OpenApiBuilder() {
     }
 
@@ -83,17 +93,15 @@ public class OpenApiBuilder {
     public static byte[] build(TurmsApplicationContext context,
                                HttpRequestDispatcher httpRequestDispatcher,
                                BaseServiceAddressManager serviceAddressManager) {
-        ModelConverters.getInstance().addClassToSkip(RequestContext.class.getName());
-
         OpenAPI api = new OpenAPI()
                 .info(new Info()
-                        .title("Turms")
+                        .title(TITLE)
                         .version(context.getVersion()))
                 .addServersItem(new Server()
                         .url(serviceAddressManager.getAdminApiAddress()))
                 .externalDocs(new ExternalDocumentation()
-                        .description("Turms Documentation")
-                        .url("https://turms-im.github.io/docs"))
+                        .description(EXTERNAL_DOCUMENTATION_DESCRIPTION)
+                        .url(EXTERNAL_DOCUMENTATION_URL))
                 .components(new Components()
                         .addSecuritySchemes("BasicAuth", new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)
@@ -202,10 +210,10 @@ public class OpenApiBuilder {
                                         .schema(elementType == null ? resolvedSchema.schema : new ArraySchema()
                                                 .items(resolvedSchema.schema)))));
             } else {
-                operation.addParametersItem(new Parameter()
+                Parameter parameterItem = parameter.isHeader() ? new HeaderParameter() : new QueryParameter();
+                operation.addParametersItem(parameterItem
                         .name(parameter.name())
                         .required(parameter.isRequired())
-                        .in(parameter.isHeader() ? "header" : "query")
                         .schema(elementType == null ? resolvedSchema.schema : new ArraySchema()
                                 .items(resolvedSchema.schema)));
             }

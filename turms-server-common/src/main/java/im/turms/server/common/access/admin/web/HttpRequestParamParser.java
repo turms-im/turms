@@ -184,6 +184,8 @@ public class HttpRequestParamParser {
         return Mono.defer(() -> {
             CompositeByteBuf body = Unpooled.compositeBuffer();
             return request.receive()
+                    // We don't use "collectList()" because we need to reject
+                    // to receive buffers if it has exceeded the max size.
                     .doOnNext(buffer -> {
                         body.addComponent(true, buffer);
                         if (body.readableBytes() > MAX_BODY_SIZE) {

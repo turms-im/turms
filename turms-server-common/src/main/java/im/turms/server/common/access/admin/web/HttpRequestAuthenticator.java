@@ -20,10 +20,11 @@ package im.turms.server.common.access.admin.web;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
 import im.turms.server.common.domain.admin.service.BaseAdminService;
+import im.turms.server.common.infra.lang.AsciiCode;
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaders;
-import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
@@ -80,11 +81,11 @@ public class HttpRequestAuthenticator {
         try {
             String encodedCredentials = authorization.substring(BASIC_AUTH_PREFIX.length());
             byte[] decode = Base64.getDecoder().decode(StringUtil.getBytes(encodedCredentials));
-            String[] strings = StringUtils.split(StringUtil.newLatin1String(decode), ":");
-            if (strings == null) {
+            Pair<String, String> accountAndPassword = StringUtil.splitLatin1(StringUtil.newLatin1String(decode), AsciiCode.COLON);
+            if (accountAndPassword == null) {
                 return null;
             }
-            return new Credentials(strings[0], strings[1]);
+            return new Credentials(accountAndPassword.first(), accountAndPassword.second());
         } catch (Exception e) {
             return null;
         }

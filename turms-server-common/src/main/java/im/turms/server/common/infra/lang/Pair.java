@@ -20,7 +20,10 @@ package im.turms.server.common.infra.lang;
 /**
  * @author James Chen
  */
-public record Pair<S, T>(S first, T second) {
+public record Pair<S, T>(
+        S first,
+        T second
+) {
 
     public static <S, T> Pair<S, T> of(S first, T second) {
         return new Pair<>(first, second);

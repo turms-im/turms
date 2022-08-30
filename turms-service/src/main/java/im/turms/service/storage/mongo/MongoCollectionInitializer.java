@@ -462,14 +462,14 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         int tierSize = tierEntries.size();
         List<Pair<String, StorageTierProperties>> tiers = new ArrayList<>(tierSize);
         int i = 0;
-        for (Map.Entry<String, StorageTierProperties> tierEntry : tierEntries) {
-            StorageTierProperties properties = tierEntry.getValue();
+        for (Map.Entry<String, StorageTierProperties> nameAndProperties : tierEntries) {
+            StorageTierProperties properties = nameAndProperties.getValue();
             int days = properties.getDays();
             if (days <= 0 && i != tierSize - 1) {
                 throw new IllegalArgumentException("The days of non-latest tiered storage properties must be more than 0");
             }
             if (properties.isEnabled()) {
-                tiers.add(Pair.of(tierEntry.getKey(), tierEntry.getValue()));
+                tiers.add(Pair.of(nameAndProperties.getKey(), nameAndProperties.getValue()));
             }
             i++;
         }

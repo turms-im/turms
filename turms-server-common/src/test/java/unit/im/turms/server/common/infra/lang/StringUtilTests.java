@@ -17,6 +17,7 @@
 
 package unit.im.turms.server.common.infra.lang;
 
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
 import org.junit.jupiter.api.Test;
 
@@ -41,6 +42,7 @@ class StringUtilTests {
     @Test
     void match() {
         assertThat(StringUtil.match("", "")).isTrue();
+        assertThat(StringUtil.match("Foo", "Fo")).isFalse();
         assertThat(StringUtil.match("Foo", "Foo")).isTrue();
         assertThat(StringUtil.match("Foo", "Bar")).isFalse();
 
@@ -54,12 +56,44 @@ class StringUtilTests {
         assertThat(StringUtil.match("Foo", "Foo*")).isTrue();
         assertThat(StringUtil.match("Foo", "*Foo*")).isTrue();
 
+        assertThat(StringUtil.match("Foo", "???")).isTrue();
         assertThat(StringUtil.match("Foo", "?")).isFalse();
         assertThat(StringUtil.match("Foo", "?Foo")).isFalse();
         assertThat(StringUtil.match("Foo", "Fo?")).isTrue();
         assertThat(StringUtil.match("Foo", "Fo??")).isFalse();
         assertThat(StringUtil.match("Foo Bar", "F?o B?r")).isTrue();
         assertThat(StringUtil.match("Foo Bar", "F?o B??r")).isFalse();
+
+        assertThat(StringUtil.match("Foo", "*?")).isTrue();
+        assertThat(StringUtil.match("Foo", "**?")).isTrue();
+        assertThat(StringUtil.match("Foo", "***?")).isTrue();
+        assertThat(StringUtil.match("Foo", "?*")).isTrue();
+        assertThat(StringUtil.match("Foo", "?**")).isTrue();
+        assertThat(StringUtil.match("Foo", "?***")).isTrue();
+        assertThat(StringUtil.match("Foo", "*o?")).isTrue();
+        assertThat(StringUtil.match("Foo", "*?o?")).isTrue();
+        assertThat(StringUtil.match("Foo", "*??o?")).isFalse();
+    }
+
+    @Test
+    void splitLatin1() {
+        byte delimiter = ';';
+        assertThat(StringUtil.splitLatin1("", delimiter))
+                .isNull();
+        assertThat(StringUtil.splitLatin1(";", delimiter))
+                .isEqualTo(Pair.of("", ""));
+        assertThat(StringUtil.splitLatin1(";abc", delimiter))
+                .isEqualTo(Pair.of("", "abc"));
+        assertThat(StringUtil.splitLatin1("abc;", delimiter))
+                .isEqualTo(Pair.of("abc", ""));
+        assertThat(StringUtil.splitLatin1(";abc;", delimiter))
+                .isEqualTo(Pair.of("", "abc;"));
+        assertThat(StringUtil.splitLatin1("123;abc", delimiter))
+                .isEqualTo(Pair.of("123", "abc"));
+        assertThat(StringUtil.splitLatin1("abc;123", delimiter))
+                .isEqualTo(Pair.of("abc", "123"));
+        assertThat(StringUtil.splitLatin1("123;abc;123", delimiter))
+                .isEqualTo(Pair.of("123", "abc;123"));
     }
 
     @Test

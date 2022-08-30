@@ -106,11 +106,11 @@ public class TemplateLayout {
         for (StackTraceElement element : stack) {
             appendTabs(indent, buffer);
 
-            buffer.writeBytes(AT);
-            buffer.writeBytes(StringUtil.getBytes(element.getClassName()));
-            buffer.writeByte('.');
-            buffer.writeBytes(StringUtil.getBytes(element.getMethodName()));
-            buffer.writeByte('(');
+            buffer.writeBytes(AT)
+                    .writeBytes(StringUtil.getBytes(element.getClassName()))
+                    .writeByte('.')
+                    .writeBytes(StringUtil.getBytes(element.getMethodName()))
+                    .writeByte('(');
 
             if (element.isNativeMethod()) {
                 buffer.writeBytes(NATIVE);
@@ -122,13 +122,13 @@ public class TemplateLayout {
                 } else {
                     buffer.writeBytes(StringUtil.getBytes(fileName));
                     if (lineNumber >= 0) {
-                        buffer.writeByte(':');
-                        buffer.writeBytes(NumberFormatter.toCharBytes(lineNumber));
+                        buffer.writeByte(':')
+                                .writeBytes(NumberFormatter.toCharBytes(lineNumber));
                     }
                 }
             }
-            buffer.writeByte(')');
-            buffer.writeByte('\n');
+            buffer.writeByte(')')
+                    .writeByte('\n');
         }
     }
 

@@ -20,6 +20,7 @@ package im.turms.server.common.storage.mongo.entity;
 import com.google.common.base.CaseFormat;
 import com.mongodb.client.model.IndexModel;
 import com.mongodb.client.model.IndexOptions;
+import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
@@ -198,10 +199,11 @@ public final class MongoEntityFactory {
         for (String shardKey : document.keySet()) {
             // Note that we split the shard key one level at most (e.g. "_id.whatever")
             // because we don't have other cases currently
-            String[] path = StringUtils.split(shardKey, ".");
-            paths.add(new ShardKey.Path(shardKey.startsWith(DomainFieldName.ID),
-                    shardKey,
-                    path == null ? new String[]{shardKey} : path));
+            Pair<String, String> pair = StringUtil.splitLatin1(shardKey, AsciiCode.PERIOD);
+            String[] path = pair == null
+                    ? new String[]{shardKey}
+                    : new String[]{pair.first(), pair.second()};
+            paths.add(new ShardKey.Path(shardKey.startsWith(DomainFieldName.ID), shardKey, path));
         }
         return new ShardKey(document, paths);
     }

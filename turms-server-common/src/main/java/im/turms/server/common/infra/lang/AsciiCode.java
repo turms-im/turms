@@ -18,6 +18,8 @@
 package im.turms.server.common.infra.lang;
 
 /**
+ * <a href="https://www.ascii-code.com">ASCII Code</a>
+ *
  * @author James Chen
  */
 public final class AsciiCode {
@@ -34,5 +36,15 @@ public final class AsciiCode {
      * 32
      */
     public static final byte SPACE = (byte) ' ';
+
+    /**
+     * 46
+     */
+    public static final byte PERIOD = (byte) '.';
+
+    /**
+     * 58
+     */
+    public static final byte COLON = (byte) ':';
 
 }
