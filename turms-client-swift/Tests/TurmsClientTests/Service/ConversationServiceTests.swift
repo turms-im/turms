@@ -23,10 +23,10 @@ class ConversationServiceTests: XCTestCase {
 
         // Query
         assertCompleted("queryPrivateConversations_shouldReturnNotEmptyConversations", service.queryPrivateConversations([ConversationServiceTests.RELATED_USER_ID]).done {
-            XCTAssertFalse($0.isEmpty)
+            XCTAssertFalse($0.data.isEmpty)
         })
         assertCompleted("queryGroupConversations_shouldReturnNotEmptyConversations", service.queryGroupConversations([ConversationServiceTests.GROUP_ID]).done {
-            XCTAssertFalse($0.isEmpty)
+            XCTAssertFalse($0.data.isEmpty)
         })
 
         // Tear down

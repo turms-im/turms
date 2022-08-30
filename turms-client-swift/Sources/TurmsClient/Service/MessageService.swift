@@ -29,7 +29,9 @@ public class MessageService {
                 if !self.messageListeners.isEmpty, $0.hasRelayedRequest, case let .createMessageRequest(request) = $0.relayedRequest.kind {
                     let message = MessageService.createMessage2Message($0.requesterID, request)
                     let addition = self.parseMessageAddition(message)
-                    self.messageListeners.forEach { listener in listener(message, addition) }
+                    self.messageListeners.forEach { listener in
+                        listener(message, addition)
+                    }
                 }
             }
     }
@@ -46,7 +48,7 @@ public class MessageService {
         records: [Data]? = nil,
         burnAfter: Int32? = nil,
         preMessageId: Int64? = nil
-    ) -> Promise<Int64> {
+    ) -> Promise<Response<Int64>> {
         if Validator.areAllNil(text, records) {
             return Promise(error: ResponseError(ResponseStatusCode.illegalArgument, "text and records must not all be null"))
         }
@@ -76,7 +78,9 @@ public class MessageService {
                 }
             }
             .map {
-                try $0.getFirstId()
+                try $0.toResponse {
+                    try $0.getFirstId()
+                }
             }
     }
 
@@ -84,7 +88,7 @@ public class MessageService {
         messageId: Int64,
         isGroupMessage: Bool,
         targetId: Int64
-    ) -> Promise<Int64> {
+    ) -> Promise<Response<Int64>> {
         return turmsClient.driver
             .send {
                 $0.createMessageRequest = .with {
@@ -97,7 +101,9 @@ public class MessageService {
                 }
             }
             .map {
-                try $0.getFirstId()
+                try $0.toResponse {
+                    try $0.getFirstId()
+                }
             }
     }
 
@@ -105,9 +111,9 @@ public class MessageService {
         messageId: Int64,
         text: String? = nil,
         records: [Data]? = nil
-    ) -> Promise<Void> {
+    ) -> Promise<Response<Void>> {
         if Validator.areAllNil(text, records) {
-            return Promise.value(())
+            return Promise.value(Response.empty())
         }
         return turmsClient.driver
             .send {
@@ -121,7 +127,9 @@ public class MessageService {
                     }
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
     public func queryMessages(
@@ -132,7 +140,7 @@ public class MessageService {
         deliveryDateAfter: Date? = nil,
         deliveryDateBefore: Date? = nil,
         size: Int32 = 50
-    ) -> Promise<[Message]> {
+    ) -> Promise<Response<[Message]>> {
         return turmsClient.driver
             .send {
                 $0.queryMessagesRequest = .with {
@@ -159,7 +167,9 @@ public class MessageService {
                 }
             }
             .map {
-                $0.data.messages.messages
+                try $0.toResponse {
+                    $0.messages.messages
+                }
             }
     }
 
@@ -171,7 +181,7 @@ public class MessageService {
         deliveryDateAfter: Date? = nil,
         deliveryDateBefore: Date? = nil,
         size: Int32 = 1
-    ) -> Promise<[MessagesWithTotal]> {
+    ) -> Promise<Response<[MessagesWithTotal]>> {
         return turmsClient.driver
             .send {
                 $0.queryMessagesRequest = .with {
@@ -198,11 +208,13 @@ public class MessageService {
                 }
             }
             .map {
-                $0.data.messagesWithTotalList.messagesWithTotalList
+                try $0.toResponse {
+                    $0.messagesWithTotalList.messagesWithTotalList
+                }
             }
     }
 
-    public func recallMessage(messageId: Int64, recallDate: Date = Date()) -> Promise<Void> {
+    public func recallMessage(messageId: Int64, recallDate: Date = Date()) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.updateMessageRequest = .with {
@@ -210,7 +222,9 @@ public class MessageService {
                     $0.recallDate = recallDate.toMillis()
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
     public func isMentionEnabled() -> Bool {
@@ -232,7 +246,8 @@ public class MessageService {
             if let v = details {
                 $0.details = v
             }
-        }.serializedData()
+        }
+        .serializedData()
     }
 
     public static func generateAudioRecordByDescription(url: String, duration: Int32? = nil, format: String? = nil, size: Int32? = nil) -> Data {
@@ -247,13 +262,15 @@ public class MessageService {
             if let v = size {
                 $0.description_p.size = v
             }
-        }.serializedData()
+        }
+        .serializedData()
     }
 
     public static func generateAudioRecordByData(_ data: Data) -> Data {
         return try! AudioFile.with {
             $0.data = data
-        }.serializedData()
+        }
+        .serializedData()
     }
 
     public static func generateVideoRecordByDescription(url: String, duration: Int32? = nil, format: String? = nil, size: Int32? = nil) -> Data {
@@ -268,19 +285,22 @@ public class MessageService {
             if let v = size {
                 $0.description_p.size = v
             }
-        }.serializedData()
+        }
+        .serializedData()
     }
 
     public static func generateVideoRecordByData(_ data: Data) -> Data {
         return try! VideoFile.with {
             $0.data = data
-        }.serializedData()
+        }
+        .serializedData()
     }
 
     public static func generateImageRecordByData(_ data: Data) -> Data {
         return try! ImageFile.with {
             $0.data = data
-        }.serializedData()
+        }
+        .serializedData()
     }
 
     public static func generateImageRecordByDescription(url: String, fileSize: Int32? = nil, imageSize: Int32? = nil, original: Bool? = nil) -> Data {
@@ -295,13 +315,15 @@ public class MessageService {
             if let v = original {
                 $0.description_p.original = v
             }
-        }.serializedData()
+        }
+        .serializedData()
     }
 
     public static func generateFileRecordByDate(_ data: Data) -> Data {
         return try! File.with {
             $0.data = data
-        }.serializedData()
+        }
+        .serializedData()
     }
 
     public static func generateFileRecordByDescription(url: String, format: String? = nil, size: Int32? = nil) -> Data {
@@ -313,7 +335,8 @@ public class MessageService {
             if let v = size {
                 $0.description_p.size = v
             }
-        }.serializedData()
+        }
+        .serializedData()
     }
 
     private func parseMessageAddition(_ message: Message) -> MessageAddition {

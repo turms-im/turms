@@ -8,7 +8,10 @@ public class ConversationService {
         self.turmsClient = turmsClient
     }
 
-    public func queryPrivateConversations(_ targetIds: [Int64]) -> Promise<[PrivateConversation]> {
+    public func queryPrivateConversations(_ targetIds: [Int64]) -> Promise<Response<[PrivateConversation]>> {
+        if targetIds.isEmpty {
+            return Promise.value(Response<[PrivateConversation]>.emptyArray())
+        }
         return turmsClient.driver
             .send {
                 $0.queryConversationsRequest = .with {
@@ -16,11 +19,16 @@ public class ConversationService {
                 }
             }
             .map {
-                $0.data.conversations.privateConversations
+                try $0.toResponse {
+                    $0.conversations.privateConversations
+                }
             }
     }
 
-    public func queryGroupConversations(_ groupIds: [Int64]) -> Promise<[GroupConversation]> {
+    public func queryGroupConversations(_ groupIds: [Int64]) -> Promise<Response<[GroupConversation]>> {
+        if groupIds.isEmpty {
+            return Promise.value(Response<[GroupConversation]>.emptyArray())
+        }
         return turmsClient.driver
             .send {
                 $0.queryConversationsRequest = .with {
@@ -28,11 +36,13 @@ public class ConversationService {
                 }
             }
             .map {
-                $0.data.conversations.groupConversations
+                try $0.toResponse {
+                    $0.conversations.groupConversations
+                }
             }
     }
 
-    public func updatePrivateConversationReadDate(_ targetId: Int64, readDate: Date = Date()) -> Promise<Void> {
+    public func updatePrivateConversationReadDate(_ targetId: Int64, readDate: Date = Date()) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.updateConversationRequest = .with {
@@ -40,10 +50,12 @@ public class ConversationService {
                     $0.readDate = readDate.toMillis()
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
-    public func updateGroupConversationReadDate(_ groupId: Int64, readDate: Date = Date()) -> Promise<Void> {
+    public func updateGroupConversationReadDate(_ groupId: Int64, readDate: Date = Date()) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.updateConversationRequest = .with {
@@ -51,10 +63,12 @@ public class ConversationService {
                     $0.readDate = readDate.toMillis()
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
-    public func updatePrivateConversationTypingStatus(_ targetId: Int64) -> Promise<Void> {
+    public func updatePrivateConversationTypingStatus(_ targetId: Int64) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.updateTypingStatusRequest = .with {
@@ -62,10 +76,12 @@ public class ConversationService {
                     $0.isGroupMessage = false
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
-    public func updateGroupConversationTypingStatus(_ groupId: Int64) -> Promise<Void> {
+    public func updateGroupConversationTypingStatus(_ groupId: Int64) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.updateTypingStatusRequest = .with {
@@ -73,6 +89,8 @@ public class ConversationService {
                     $0.isGroupMessage = true
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 }

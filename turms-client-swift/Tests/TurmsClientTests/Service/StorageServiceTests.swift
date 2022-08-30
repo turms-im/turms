@@ -26,19 +26,19 @@ class StorageServiceTests: XCTestCase {
         assertCompleted("uploadGroupProfilePicture_shouldReturnUrl", turmsClient.storageService.uploadGroupProfilePicture(data: StorageServiceTests.PROFILE_PICTURE, groupId: StorageServiceTests.GROUP_ID))
 
         assertCompleted("uploadAttachment_sendMessage_shouldReturnUrl", turmsClient.messageService.sendMessage(isGroupMessage: false, targetId: 2, text: "I've attached a picture").done {
-            messageId = $0
+            messageId = $0.data
         })
         assertCompleted("uploadAttachment_shouldReturnUrl", turmsClient.storageService.uploadAttachment(messageId: messageId, data: StorageServiceTests.ATTACHMENT))
 
         // Query
         assertCompleted("queryProfilePicture_shouldEqualUploadedPicture", turmsClient.storageService.queryProfilePicture(StorageServiceTests.USER_ID).done {
-            XCTAssertEqual(StorageServiceTests.PROFILE_PICTURE, $0)
+            XCTAssertEqual(StorageServiceTests.PROFILE_PICTURE, $0.data)
         })
         assertCompleted("queryGroupProfilePicture_shouldEqualUploadedPicture", turmsClient.storageService.queryGroupProfilePicture(StorageServiceTests.GROUP_ID).done {
-            XCTAssertEqual(StorageServiceTests.PROFILE_PICTURE, $0)
+            XCTAssertEqual(StorageServiceTests.PROFILE_PICTURE, $0.data)
         })
         assertCompleted("queryAttachment_shouldEqualUploadedAttachment", turmsClient.storageService.queryAttachment(messageId: messageId!).done {
-            XCTAssertEqual(StorageServiceTests.ATTACHMENT, $0)
+            XCTAssertEqual(StorageServiceTests.ATTACHMENT, $0.data)
         })
 
         // Delete

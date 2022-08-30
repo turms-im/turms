@@ -28,10 +28,10 @@ class MessageServiceTests: XCTestCase {
 
         // Create
         assertCompleted("sendPrivateMessage_shouldReturnMessageId", service.sendMessage(isGroupMessage: false, targetId: MessageServiceTests.RECIPIENT_ID, deliveryDate: Date(), text: "hello").done {
-            privateMessageId = $0
+            privateMessageId = $0.data
         })
         assertCompleted("sendGroupMessage_shouldReturnMessageId", service.sendMessage(isGroupMessage: true, targetId: MessageServiceTests.TARGET_GROUP_ID, deliveryDate: Date(), text: "hello").done {
-            groupMessageId = $0
+            groupMessageId = $0.data
         })
         assertCompleted("forwardPrivateMessage_shouldReturnForwardedMessageId", service.forwardMessage(messageId: privateMessageId!, isGroupMessage: false, targetId: MessageServiceTests.RECIPIENT_ID))
         assertCompleted("forwardGroupMessage_shouldReturnForwardedMessageId", service.forwardMessage(messageId: groupMessageId!, isGroupMessage: true, targetId: MessageServiceTests.TARGET_GROUP_ID))
@@ -42,10 +42,10 @@ class MessageServiceTests: XCTestCase {
 
         // Query
         assertCompleted("queryMessages_shouldReturnNotEmptyMessages", recipientClient.messageService.queryMessages(areGroupMessages: false, fromIds: [MessageServiceTests.SENDER_ID], size: 10).done {
-            XCTAssertFalse($0.isEmpty)
+            XCTAssertFalse($0.data.isEmpty)
         })
         assertCompleted("queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal", service.queryMessagesWithTotal(areGroupMessages: false, fromIds: [MessageServiceTests.SENDER_ID], size: 1).done {
-            XCTAssertFalse($0.isEmpty)
+            XCTAssertFalse($0.data.isEmpty)
         })
 
         // Tear down

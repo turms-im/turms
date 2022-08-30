@@ -207,7 +207,7 @@ public extension ResponseStatusCode {
         return code >= 1000 && code < 1100
     }
 
-    static func isServerError(_ code: Int) -> Bool {
-        return (1200 ... 1299).contains(code) || (200 ... 299).contains(code)
+    static func isErrorCode(_ code: Int) -> Bool {
+        return !isSuccessCode(code)
     }
 }

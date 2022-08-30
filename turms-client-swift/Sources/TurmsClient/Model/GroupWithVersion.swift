@@ -7,13 +7,13 @@ public class GroupWithVersion {
         self.lastUpdatedDate = lastUpdatedDate
     }
 
-    public static func from(_ notification: TurmsNotification) throws -> GroupWithVersion? {
-        if notification.data.groupsWithVersion.groups.count <= 0 {
+    public static func from(_ data: TurmsNotification.DataMessage) throws -> GroupWithVersion? {
+        if data.groupsWithVersion.groups.count <= 0 {
             return nil
         }
         return GroupWithVersion(
-            group: notification.data.groupsWithVersion.groups[0],
-            lastUpdatedDate: notification.data.groupsWithVersion.lastUpdatedDate
+            group: data.groupsWithVersion.groups[0],
+            lastUpdatedDate: data.groupsWithVersion.lastUpdatedDate
         )
     }
 }

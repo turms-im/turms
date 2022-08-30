@@ -15,7 +15,7 @@ public class GroupService {
         minimumScore: Int32? = nil,
         muteEndDate: Date? = nil,
         groupTypeId: Int64? = nil
-    ) -> Promise<Int64> {
+    ) -> Promise<Response<Int64>> {
         return turmsClient.driver
             .send {
                 $0.createGroupRequest = .with {
@@ -38,18 +38,22 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.getFirstId()
+                try $0.toResponse {
+                    try $0.getFirstId()
+                }
             }
     }
 
-    public func deleteGroup(_ groupId: Int64) -> Promise<Void> {
+    public func deleteGroup(_ groupId: Int64) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.deleteGroupRequest = .with {
                     $0.groupID = groupId
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
     public func updateGroup(
@@ -62,7 +66,7 @@ public class GroupService {
         muteEndDate: Date? = nil,
         successorId: Int64? = nil,
         quitAfterTransfer: Bool? = nil
-    ) -> Promise<Void> {
+    ) -> Promise<Response<Void>> {
         if Validator.areAllNil(
             groupName,
             intro,
@@ -72,7 +76,7 @@ public class GroupService {
             muteEndDate,
             successorId
         ) {
-            return Promise.value(())
+            return Promise.value(Response.empty())
         }
         return turmsClient.driver
             .send {
@@ -104,10 +108,12 @@ public class GroupService {
                     }
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
-    public func transferOwnership(groupId: Int64, successorId: Int64, quitAfterTransfer: Bool = false) -> Promise<Void> {
+    public func transferOwnership(groupId: Int64, successorId: Int64, quitAfterTransfer: Bool = false) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.updateGroupRequest = .with {
@@ -116,10 +122,12 @@ public class GroupService {
                     $0.quitAfterTransfer = quitAfterTransfer
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
-    public func muteGroup(groupId: Int64, muteEndDate: Date) -> Promise<Void> {
+    public func muteGroup(groupId: Int64, muteEndDate: Date) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.updateGroupRequest = .with {
@@ -127,14 +135,16 @@ public class GroupService {
                     $0.muteEndDate = muteEndDate.toMillis()
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
-    public func unmuteGroup(_ groupId: Int64) -> Promise<Void> {
+    public func unmuteGroup(_ groupId: Int64) -> Promise<Response<Void>> {
         return muteGroup(groupId: groupId, muteEndDate: Date(timeIntervalSince1970: 0))
     }
 
-    public func queryGroup(groupId: Int64, lastUpdatedDate: Date? = nil) -> Promise<GroupWithVersion?> {
+    public func queryGroup(groupId: Int64, lastUpdatedDate: Date? = nil) -> Promise<Response<GroupWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryGroupRequest = .with {
@@ -145,11 +155,13 @@ public class GroupService {
                 }
             }
             .map {
-                try GroupWithVersion.from($0)
+                try $0.toResponse {
+                    try GroupWithVersion.from($0)
+                }
             }
     }
 
-    public func queryJoinedGroupIds(_ lastUpdatedDate: Date? = nil) -> Promise<Int64ValuesWithVersion?> {
+    public func queryJoinedGroupIds(_ lastUpdatedDate: Date? = nil) -> Promise<Response<Int64ValuesWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryJoinedGroupIdsRequest = .with {
@@ -159,11 +171,13 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.data.kind?.getKindData(Int64ValuesWithVersion.self)
+                try $0.toResponse {
+                    try $0.kind?.getKindData(Int64ValuesWithVersion.self)
+                }
             }
     }
 
-    public func queryJoinedGroupInfos(_ lastUpdatedDate: Date? = nil) -> Promise<GroupsWithVersion?> {
+    public func queryJoinedGroupInfos(_ lastUpdatedDate: Date? = nil) -> Promise<Response<GroupsWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryJoinedGroupInfosRequest = .with {
@@ -173,11 +187,13 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.data.kind?.getKindData(GroupsWithVersion.self)
+                try $0.toResponse {
+                    try $0.kind?.getKindData(GroupsWithVersion.self)
+                }
             }
     }
 
-    public func addGroupJoinQuestion(groupId: Int64, question: String, answers: [String], score: Int32) -> Promise<Int64> {
+    public func addGroupJoinQuestion(groupId: Int64, question: String, answers: [String], score: Int32) -> Promise<Response<Int64>> {
         return turmsClient.driver
             .send {
                 $0.createGroupJoinQuestionRequest = .with {
@@ -188,23 +204,27 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.getFirstId()
+                try $0.toResponse {
+                    try $0.getFirstId()
+                }
             }
     }
 
-    public func deleteGroupJoinQuestion(_ questionId: Int64) -> Promise<Void> {
+    public func deleteGroupJoinQuestion(_ questionId: Int64) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.deleteGroupJoinQuestionRequest = .with {
                     $0.questionID = questionId
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
-    public func updateGroupJoinQuestion(questionId: Int64, question: String? = nil, answers: [String]? = nil, score: Int32? = nil) -> Promise<Void> {
+    public func updateGroupJoinQuestion(questionId: Int64, question: String? = nil, answers: [String]? = nil, score: Int32? = nil) -> Promise<Response<Void>> {
         if Validator.areAllNil(question, answers, score) {
-            return Promise.value(())
+            return Promise.value(Response.empty())
         }
         return turmsClient.driver
             .send {
@@ -221,11 +241,13 @@ public class GroupService {
                     }
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
     // Group Blocklist
-    public func blockUser(groupId: Int64, userId: Int64) -> Promise<Void> {
+    public func blockUser(groupId: Int64, userId: Int64) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.createGroupBlockedUserRequest = .with {
@@ -233,10 +255,12 @@ public class GroupService {
                     $0.groupID = groupId
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
-    public func unblockUser(groupId: Int64, userId: Int64) -> Promise<Void> {
+    public func unblockUser(groupId: Int64, userId: Int64) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.deleteGroupBlockedUserRequest = .with {
@@ -244,13 +268,15 @@ public class GroupService {
                     $0.userID = userId
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
     public func queryBlockedUserIds(
         groupId: Int64,
         lastUpdatedDate: Date? = nil
-    ) -> Promise<Int64ValuesWithVersion?> {
+    ) -> Promise<Response<Int64ValuesWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryGroupBlockedUserIdsRequest = .with {
@@ -261,14 +287,16 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.data.kind?.getKindData(Int64ValuesWithVersion.self)
+                try $0.toResponse {
+                    try $0.kind?.getKindData(Int64ValuesWithVersion.self)
+                }
             }
     }
 
     public func queryBlockedUserInfos(
         groupId: Int64,
         lastUpdatedDate: Date? = nil
-    ) -> Promise<UsersInfosWithVersion?> {
+    ) -> Promise<Response<UsersInfosWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryGroupBlockedUserInfosRequest = .with {
@@ -279,12 +307,14 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.data.kind?.getKindData(UsersInfosWithVersion.self)
+                try $0.toResponse {
+                    try $0.kind?.getKindData(UsersInfosWithVersion.self)
+                }
             }
     }
 
     // Group Enrollment
-    public func createInvitation(groupId: Int64, inviteeId: Int64, content: String) -> Promise<Int64> {
+    public func createInvitation(groupId: Int64, inviteeId: Int64, content: String) -> Promise<Response<Int64>> {
         return turmsClient.driver
             .send {
                 $0.createGroupInvitationRequest = .with {
@@ -294,21 +324,25 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.getFirstId()
+                try $0.toResponse {
+                    try $0.getFirstId()
+                }
             }
     }
 
-    public func deleteInvitation(_ invitationId: Int64) -> Promise<Void> {
+    public func deleteInvitation(_ invitationId: Int64) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.deleteGroupInvitationRequest = .with {
                     $0.invitationID = invitationId
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
-    public func queryInvitations(groupId: Int64, lastUpdatedDate: Date? = nil) -> Promise<GroupInvitationsWithVersion?> {
+    public func queryInvitations(groupId: Int64, lastUpdatedDate: Date? = nil) -> Promise<Response<GroupInvitationsWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryGroupInvitationsRequest = .with {
@@ -319,11 +353,13 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.data.kind?.getKindData(GroupInvitationsWithVersion.self)
+                try $0.toResponse {
+                    try $0.kind?.getKindData(GroupInvitationsWithVersion.self)
+                }
             }
     }
 
-    public func queryInvitations(areSentByMe: Bool, lastUpdatedDate: Date? = nil) -> Promise<GroupInvitationsWithVersion?> {
+    public func queryInvitations(areSentByMe: Bool, lastUpdatedDate: Date? = nil) -> Promise<Response<GroupInvitationsWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryGroupInvitationsRequest = .with {
@@ -334,11 +370,13 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.data.kind?.getKindData(GroupInvitationsWithVersion.self)
+                try $0.toResponse {
+                    try $0.kind?.getKindData(GroupInvitationsWithVersion.self)
+                }
             }
     }
 
-    public func createJoinRequest(groupId: Int64, content: String) -> Promise<Int64> {
+    public func createJoinRequest(groupId: Int64, content: String) -> Promise<Response<Int64>> {
         return turmsClient.driver
             .send {
                 $0.createGroupJoinRequestRequest = .with {
@@ -347,21 +385,25 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.getFirstId()
+                try $0.toResponse {
+                    try $0.getFirstId()
+                }
             }
     }
 
-    public func deleteJoinRequest(_ requestId: Int64) -> Promise<Void> {
+    public func deleteJoinRequest(_ requestId: Int64) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.deleteGroupJoinRequestRequest = .with {
                     $0.requestID = requestId
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
-    public func queryJoinRequests(groupId: Int64, lastUpdatedDate: Date? = nil) -> Promise<GroupJoinRequestsWithVersion?> {
+    public func queryJoinRequests(groupId: Int64, lastUpdatedDate: Date? = nil) -> Promise<Response<GroupJoinRequestsWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryGroupJoinRequestsRequest = .with {
@@ -372,11 +414,13 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.data.kind?.getKindData(GroupJoinRequestsWithVersion.self)
+                try $0.toResponse {
+                    try $0.kind?.getKindData(GroupJoinRequestsWithVersion.self)
+                }
             }
     }
 
-    public func querySentJoinRequests(lastUpdatedDate: Date? = nil) -> Promise<GroupJoinRequestsWithVersion?> {
+    public func querySentJoinRequests(lastUpdatedDate: Date? = nil) -> Promise<Response<GroupJoinRequestsWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryGroupJoinRequestsRequest = .with {
@@ -386,7 +430,9 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.data.kind?.getKindData(GroupJoinRequestsWithVersion.self)
+                try $0.toResponse {
+                    try $0.kind?.getKindData(GroupJoinRequestsWithVersion.self)
+                }
             }
     }
 
@@ -397,7 +443,7 @@ public class GroupService {
         groupId: Int64,
         withAnswers: Bool = false,
         lastUpdatedDate: Date? = nil
-    ) -> Promise<GroupJoinQuestionsWithVersion?> {
+    ) -> Promise<Response<GroupJoinQuestionsWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryGroupJoinQuestionsRequest = .with {
@@ -409,13 +455,15 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.data.kind?.getKindData(GroupJoinQuestionsWithVersion.self)
+                try $0.toResponse {
+                    try $0.kind?.getKindData(GroupJoinQuestionsWithVersion.self)
+                }
             }
     }
 
-    public func answerGroupQuestions(_ questionIdToAnswer: [Int64: String]) -> Promise<GroupJoinQuestionsAnswerResult> {
+    public func answerGroupQuestions(_ questionIdToAnswer: [Int64: String]) -> Promise<Response<GroupJoinQuestionsAnswerResult>> {
         if questionIdToAnswer.isEmpty {
-            return Promise.value(GroupJoinQuestionsAnswerResult())
+            return Promise.value(Response.value(GroupJoinQuestionsAnswerResult()))
         }
         return turmsClient.driver
             .send {
@@ -424,11 +472,13 @@ public class GroupService {
                 }
             }
             .map {
-                let result = try $0.data.kind?.getKindData(GroupJoinQuestionsAnswerResult.self)
-                if let value = result {
-                    return value
-                } else {
-                    throw ResponseError(ResponseStatusCode.invalidResponse)
+                try $0.toResponse {
+                    let result = try $0.kind?.getKindData(GroupJoinQuestionsAnswerResult.self)
+                    if let value = result {
+                        return value
+                    } else {
+                        throw ResponseError(ResponseStatusCode.invalidResponse)
+                    }
                 }
             }
     }
@@ -440,7 +490,7 @@ public class GroupService {
         name: String? = nil,
         role: GroupMemberRole? = nil,
         muteEndDate: Date? = nil
-    ) -> Promise<Void> {
+    ) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.createGroupMemberRequest = .with {
@@ -457,10 +507,12 @@ public class GroupService {
                     }
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
-    public func quitGroup(groupId: Int64, successorId: Int64? = nil, quitAfterTransfer: Bool? = nil) -> Promise<Void> {
+    public func quitGroup(groupId: Int64, successorId: Int64? = nil, quitAfterTransfer: Bool? = nil) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.deleteGroupMemberRequest = .with {
@@ -474,10 +526,12 @@ public class GroupService {
                     }
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
-    public func removeGroupMember(groupId: Int64, memberId: Int64) -> Promise<Void> {
+    public func removeGroupMember(groupId: Int64, memberId: Int64) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.deleteGroupMemberRequest = .with {
@@ -485,7 +539,9 @@ public class GroupService {
                     $0.memberID = memberId
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
     public func updateGroupMemberInfo(
@@ -494,9 +550,9 @@ public class GroupService {
         name: String? = nil,
         role: GroupMemberRole? = nil,
         muteEndDate: Date? = nil
-    ) -> Promise<Void> {
+    ) -> Promise<Response<Void>> {
         if Validator.areAllNil(name, role, muteEndDate) {
-            return Promise.value(())
+            return Promise.value(Response.empty())
         }
         return turmsClient.driver
             .send {
@@ -514,10 +570,12 @@ public class GroupService {
                     }
                 }
             }
-            .asVoid()
+            .map {
+                try $0.toResponse()
+            }
     }
 
-    public func muteGroupMember(groupId: Int64, memberId: Int64, muteEndDate: Date) -> Promise<Void> {
+    public func muteGroupMember(groupId: Int64, memberId: Int64, muteEndDate: Date) -> Promise<Response<Void>> {
         return updateGroupMemberInfo(
             groupId: groupId,
             memberId: memberId,
@@ -525,7 +583,7 @@ public class GroupService {
         )
     }
 
-    public func unmuteGroupMember(groupId: Int64, memberId: Int64) -> Promise<Void> {
+    public func unmuteGroupMember(groupId: Int64, memberId: Int64) -> Promise<Response<Void>> {
         return muteGroupMember(
             groupId: groupId,
             memberId: memberId,
@@ -533,7 +591,7 @@ public class GroupService {
         )
     }
 
-    public func queryGroupMembers(groupId: Int64, withStatus: Bool = false, lastUpdatedDate: Date? = nil) -> Promise<GroupMembersWithVersion?> {
+    public func queryGroupMembers(groupId: Int64, withStatus: Bool = false, lastUpdatedDate: Date? = nil) -> Promise<Response<GroupMembersWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryGroupMembersRequest = .with {
@@ -545,11 +603,13 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.data.kind?.getKindData(GroupMembersWithVersion.self)
+                try $0.toResponse {
+                    try $0.kind?.getKindData(GroupMembersWithVersion.self)
+                }
             }
     }
 
-    public func queryGroupMembersByMemberIds(groupId: Int64, memberIds: [Int64], withStatus: Bool = false) -> Promise<GroupMembersWithVersion?> {
+    public func queryGroupMembersByMemberIds(groupId: Int64, memberIds: [Int64], withStatus: Bool = false) -> Promise<Response<GroupMembersWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryGroupMembersRequest = .with {
@@ -559,7 +619,9 @@ public class GroupService {
                 }
             }
             .map {
-                try $0.data.kind?.getKindData(GroupMembersWithVersion.self)
+                try $0.toResponse {
+                    try $0.kind?.getKindData(GroupMembersWithVersion.self)
+                }
             }
     }
 }

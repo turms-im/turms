@@ -13,7 +13,7 @@ export default class Response<T> {
         this.data = data;
     }
 
-    get isTurmsResponse(): boolean {
+    static get isTurmsResponse(): boolean {
         return true;
     }
 
@@ -42,7 +42,14 @@ export default class Response<T> {
                 'Cannot parse a success response from non-success notification');
         }
         const data = notification.data || {} as TurmsNotification_Data;
+        let responseData;
+        try {
+            responseData = dataTransformer?.(data);
+        } catch (e: any) {
+            throw ResponseError.fromCodeAndReason(ResponseStatusCode.INVALID_NOTIFICATION,
+                `Failed to transform notification data: ${notification.data}. Error: ${e?.message}`);
+        }
         return new Response(notification.requestId == null ? null : notification.requestId,
-            notification.code, dataTransformer?.(data));
+            notification.code, responseData);
     }
 }

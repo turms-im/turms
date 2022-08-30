@@ -31,7 +31,15 @@ class Response<T> {
           ResponseStatusCode.invalidNotification,
           'Cannot parse a success response from non-success notification');
     }
+    T data;
+    try {
+      data = dataTransformer(notification.data);
+    } catch (e) {
+      throw ResponseException.fromCodeAndReason(
+          ResponseStatusCode.invalidNotification,
+          'Failed to transform notification data: ${notification.data}. Error: $e');
+    }
     return Response(notification.hasRequestId() ? notification.requestId : null,
-        notification.code, dataTransformer(notification.data));
+        notification.code, data);
   }
 }

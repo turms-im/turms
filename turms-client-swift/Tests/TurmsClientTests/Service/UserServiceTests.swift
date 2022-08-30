@@ -23,36 +23,36 @@ class UserServiceTests: XCTestCase {
         assertCompleted("login_shouldSucceed", service.login(userId: 1, password: "123"))
 
         // Create
-        assertCompleted("createRelationship_shouldSucceed", service.createRelationship(userId: 10, isBlocked: true).recover { error -> Promise<Void> in
+        assertCompleted("createRelationship_shouldSucceed", service.createRelationship(userId: 10, isBlocked: true).recover { error -> Promise<Response<Void>> in
             if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingRelationship.rawValue {
-                return Promise.value(())
+                return Promise.value(Response.empty())
             } else {
                 throw error
             }
         })
-        assertCompleted("createFriendRelationship_shouldSucceed", service.createFriendRelationship(userId: 10).recover { error -> Promise<Void> in
+        assertCompleted("createFriendRelationship_shouldSucceed", service.createFriendRelationship(userId: 10).recover { error -> Promise<Response<Void>> in
             if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingRelationship.rawValue {
-                return Promise.value(())
+                return Promise.value(Response.empty())
             } else {
                 throw error
             }
         })
-        assertCompleted("createBlockedUserRelationship_shouldSucceed", service.createBlockedUserRelationship(userId: 10).recover { error -> Promise<Void> in
+        assertCompleted("createBlockedUserRelationship_shouldSucceed", service.createBlockedUserRelationship(userId: 10).recover { error -> Promise<Response<Void>> in
             if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingRelationship.rawValue {
-                return Promise.value(())
+                return Promise.value(Response.empty())
             } else {
                 throw error
             }
         })
-        assertCompleted("sendFriendRequest_shouldReturnFriendRequestId", service.sendFriendRequest(recipientId: 11, content: "content").recover { error -> Promise<Int64> in
+        assertCompleted("sendFriendRequest_shouldReturnFriendRequestId", service.sendFriendRequest(recipientId: 11, content: "content").recover { error -> Promise<Response<Int64>> in
             if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingFriendRequest.rawValue {
-                return Promise.value(0)
+                return Promise.value(Response.value(0))
             } else {
                 throw error
             }
         })
         assertCompleted("createRelationshipGroup_shouldReturnRelationshipGroupIndex", service.createRelationshipGroup("newGroup").done {
-            relationshipGroupIndex = $0
+            relationshipGroupIndex = $0.data
         })
 
         // Update
@@ -71,7 +71,7 @@ class UserServiceTests: XCTestCase {
         assertCompleted("queryUserProfile_shouldReturnUserInfoWithVersion", service.queryUserProfile(userId: 1))
         assertCompleted("queryNearbyUsers_shouldReturnNearbyUsers", service.queryNearbyUsers(latitude: 1, longitude: 1))
         assertCompleted("queryUserOnlineStatusesRequest_shouldUsersOnlineStatus", service.queryUserOnlineStatusesRequest([1]).done {
-            XCTAssertEqual($0[0].userStatus, userStatus)
+            XCTAssertEqual($0.data[0].userStatus, userStatus)
         })
         assertCompleted("queryRelationships_shouldReturnUserRelationshipsWithVersion", service.queryRelationships(relatedUserIds: [2]))
         assertCompleted("queryRelatedUserIds_shouldReturnRelatedUserIds", service.queryRelatedUserIds())

@@ -30,7 +30,7 @@ export default class ResponseError extends Error {
         this._reason = reason;
     }
 
-    get isResponseError(): boolean {
+    static get isResponseError(): boolean {
         return true;
     }
 

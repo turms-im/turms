@@ -55,7 +55,18 @@ data class Response<T>(
                     "Cannot parse a success response from non-success notification"
                 )
             }
-            val data = if (dataTransformer == null) Unit as T else dataTransformer.invoke(notification.data)
+            val data = if (dataTransformer == null) {
+                Unit as T
+            } else {
+                try {
+                    dataTransformer.invoke(notification.data)
+                } catch (e: Exception) {
+                    throw ResponseException.from(
+                        ResponseStatusCode.INVALID_NOTIFICATION,
+                        "Failed to transform notification data: ${notification.data}. Error: ${e.message}"
+                    )
+                }
+            }
             return Response(
                 if (notification.hasRequestId()) notification.requestId else null,
                 notification.code,
