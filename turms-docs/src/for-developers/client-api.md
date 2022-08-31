@@ -100,9 +100,15 @@ Turms客户端对版本的最低要求，主要是根据：平台全球市场占
 
 #### 对于状态码为10xx的响应（拓展知识）
 
-* 对于增加业务模型的函数，如果该函数的返回值被声明为一个异步模型（如：Promise\<string>），则返回的泛型（如前文的string类型）的值必定不为空，否则会抛出一个状态码为MISSING_DATA的错误（TurmsBusinessError），表明本应该存在的数据点丢失。若出现该错误，则意味着Turms的服务端或客户端自身存在行为不一致的Bug。
-* 对于删除与更新业务模型的函数，它们均返回被异步模型包裹的Void类型（如：Promise\<Void>）。
-* 对于查找业务模型的函数，如果该类函数返回被异步模型包裹的List类型，则当服务端返回空数据时，该查找操作函数会返回一个空List，而非null或undefined。如果被包裹的类型不是List类型，则当服务端返回空数据时，该查找操作函数会返回一个undefined（JavaScript）或null（Kotlin）或nil（Swift）。特例：answerGroupQuestions方法可以算做查询方法，但其返回数据永不为空。
+* 对于增加业务模型的函数，如果该函数的返回值被声明为一个异步模型（如：Promise\<Response\<string>>），则返回的泛型（如前文的string类型）的值必定不为空，否则会抛出一个状态码为`INVALID_RESPONSE`的错误`ResponseError`或`ResponseException`，表明本应该存在的数据点丢失。若出现该错误，则意味着Turms的服务端或客户端自身存在行为不一致的Bug。
+
+* 对于删除与更新业务模型的函数，它们均返回被异步模型包裹的Void类型（如：Promise\<Response\<Void>>）。
+
+* 对于查找业务模型的函数：
+
+  如果该类函数返回被异步模型包裹的List类型，则当服务端返回空数据时，该查找操作函数会返回一个空List，而非null或undefined。
+
+  如果被包裹的类型不是List类型，则当服务端返回空数据时，该查找操作函数会返回一个undefined（JavaScript）或null（Kotlin）或nil（Swift）。特例：answerGroupQuestions方法可以算做查询方法，但其返回数据永不为空。
 
 #### 对于状态非10xx的响应（拓展知识）
 
@@ -286,7 +292,7 @@ val users = client.userService.queryNearbyUsers(
     139.667651f,
     100,
     10
-)
+).data
 println("nearby users: [${users.joinToString(", ")}]")
 
 val msgId = client.messageService.sendMessage(
@@ -296,14 +302,14 @@ val msgId = client.messageService.sendMessage(
     "Hello Turms",
     null,
     30
-)
+).data
 println("message $msgId has been sent")
 
 val groupId = client.groupService.createGroup(
     "Turms Developers Group",
     "This is a group for the developers who are interested in Turms",
     "nope"
-)
+).data
 println("group $groupId has been created")
 ```
 
@@ -337,7 +343,7 @@ client.userService.login(userId: 1, password: "123")
                 distance: 100,
                 maxNumber: 10)
             .done {
-                print("nearby users: \($0)")
+                print("nearby users: \($0.data)")
             }
         client.messageService.sendMessage(
                 isGroupMessage: false,
@@ -347,14 +353,14 @@ client.userService.login(userId: 1, password: "123")
                 records: nil,
                 burnAfter: 30)
             .done {
-                print("message \($0) has been sent")
+                print("message \($0.data) has been sent")
             }
         client.groupService.createGroup(
                 name: "Turms Developers Group",
                 intro: "This is a group for the developers who are interested in Turms",
                 announcement: "nope")
             .done {
-                print("group \($0) has been created")
+                print("group \($0.data) has been created")
             }
     }.catch {
         print($0)
@@ -381,18 +387,23 @@ client.messageService.addMessageListener((message, _) =>
 
 await client.userService.login(Int64(1), password: '123');
 
-final users = await client.userService
-    .queryNearbyUsers(35.792657, 139.667651, distance: 100, maxNumber: 10);
+final users = (await client.userService.queryNearbyUsers(
+        35.792657, 139.667651,
+        distance: 100, maxNumber: 10))
+    .data;
 print('nearby users: $users');
 
-final msgId = await client.messageService
-    .sendMessage(false, Int64(1), text: 'Hello Turms', burnAfter: 30);
+final msgId = (await client.messageService
+        .sendMessage(false, Int64(1), text: 'Hello Turms', burnAfter: 30))
+    .data;
 print('message $msgId has been sent');
 
-final groupId = await client.groupService.createGroup(
-    'Turms Developers Group',
-    announcement: 'This is a group for the developers who are interested in Turms',
-    intro: 'nope');
+final groupId = (await client.groupService.createGroup(
+        'Turms Developers Group',
+        announcement:
+            'This is a group for the developers who are interested in Turms',
+        intro: 'nope'))
+    .data;
 print('group $groupId has been created');
 ```
 
@@ -440,21 +451,33 @@ var client = new TurmsClient({
 var client = new TurmsClient({
     useSharedContext: true
 });
-client.userService.login(1, "123", DeviceType.BROWSER);
+client.userService.login({
+    userId: 1,
+    password: "123",
+    deviceType: DeviceType.BROWSER
+});
 
 // On the second tab of the same origin
 // The client will share the WebSocket connection with the first tab
 var client = new TurmsClient({
     useSharedContext: true
 });
-client.userService.login(1, "123", DeviceType.BROWSER);
+client.userService.login({
+    userId: 1,
+    password: "123",
+    deviceType: DeviceType.BROWSER
+});
 
 // On the third tab of the same origin
 // The client will create a new WebSocket connection because it uses a new device type
 var client = new TurmsClient({
     useSharedContext: true
 });
-client.userService.login(1, "123", DeviceType.ANDROID);
+client.userService.login({
+    userId: 1,
+    password: "123",
+    deviceType: DeviceType.ANDROID
+});
 ```
 
 ## 度量数据

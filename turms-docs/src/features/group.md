@@ -13,19 +13,19 @@
 
 | **<div style="min-width:100px">功能</div>** | **描述**                                                     | **相关配置属性名**                                           |
 | :------------------------------------------ | :----------------------------------------------------------- | ------------------------------------------------------------ |
-| 新建群组                                    | 新建群组                                                     | activateGroupWhenCreated                                     |
-| 群主解散群                                  | 群主可以解散群                                               | shouldDeleteGroupLogicallyByDefault                          |
+| 新建群组                                    | 新建群组                                                     | turms.service.group.activate-group-when-created              |
+| 群主解散群                                  | 群主可以解散群                                               | turms.service.group.delete-group-logically-by-default        |
 | 主动退群                                    | 除群主外，其他用户均可以主动退群。群主需先将群转让给其他群成员才可以进行退群操作 |                                                              |
 | 群主转让群                                  | 群主可以将群的拥有者权限转给群内的其他成员，转移后， 被转让者变为新的群主，原群主变为普通成员。群主还可以选择在转让的同时，直接退出该群 |                                                              |
 | 修改群组资料                                | 支持群组名，群组头像，群组介绍，群组通知，群组类型等字段     |                                                              |
 | 群组禁言                                    | 群组普通成员在禁言时段无法发送消息，仅有群主与管理员能发送消息 |                                                              |
 | 获取群组信息                                | 根据过滤条件（如群组ID），查找群组                           |                                                              |
 | 增加群组成员                                | 增加群组成员                                                 |                                                              |
-| 发送入群邀请                                | 拥有邀请权限角色的群组成员可向指定用户发送入群邀请           | groupInvitationContentLimit<br />groupInvitationTimeToLiveHours<br />expiredGroupInvitationsCheckerCron<br />deleteExpiredGroupInvitationsWhenCronTriggered |
-| 撤销入群邀请                                | 群主、管理员与入群邀请发起者可撤销入群邀请                   | allowRecallingPendingGroupInvitationByOwnerAndManager<br />shouldDeleteExpiredGroupInvitationsAutomatically |
-| 发送入群请求                                |                                                              | groupJoinRequestContentLimit<br />groupJoinRequestTimeToLiveHours<br />expiredGroupJoinRequestsCheckerCron<br />deleteExpiredGroupJoinRequestsWhenCronTriggered |
-| 撤销入群请求                                |                                                              | allowRecallingJoinRequestSentByOneself<br />shouldDeleteExpiredGroupJoinRequestsAutomatically |
-| 设置入群问题                                | 对于入群策略为“入群请求者回答问题正确后加入”的群组，群主与管理员可以设置入群问题。入群问题可以有多个，一个问题可以多个答案 |                                                              |
+| 发送入群邀请                                | 拥有邀请权限角色的群组成员可向指定用户发送入群邀请           | turms.service.group.invitation.content-limit<br />turms.service.group.invitation.expire-after-seconds<br />turms.service.group.invitation.expired-invitations-cleanup-cron<br />turms.service.group.invitation.delete-expired-invitations-when-cron-triggered<br /> |
+| 撤销入群邀请                                | 群主、管理员与入群邀请发起者可撤销入群邀请                   | turms.service.group.invitation.allow-recall-pending-invitation-by-owner-and-manager |
+| 发送入群请求                                |                                                              | turms.service.group.join-request.content-limit<br />turms.service.group.join-request.expire-after-seconds<br />turms.service.group.join-request.expired-join-requests-cleanup-cron<br />turms.service.group.join-request.delete-expired-join-requests-when-cron-triggered |
+| 撤销入群请求                                |                                                              | turms.service.group.join-request.allow-recall-join-request-sent-by-oneself |
+| 设置入群问题                                | 对于入群策略为“入群请求者回答问题正确后加入”的群组，群主与管理员可以设置入群问题。入群问题可以有多个，一个问题可以多个答案 | turms.service.group.question.answer-content-limit<br />turms.service.group.question.max-answer-count<br />turms.service.group.question.question-content-limit |
 | 删除入群问题                                | 删除入群问题                                                 |                                                              |
 | 移除群组成员                                | 群主和管理员可以移除群组成员，且管理员不能移除群主和其他管理员 |                                                              |
 | 更新群组成员信息                            | 根据对应的“群组类型”，指定角色的群组成员可以修改其他群组成员的成员信息（如：群主为群组成员赋予管理员角色） |                                                              |

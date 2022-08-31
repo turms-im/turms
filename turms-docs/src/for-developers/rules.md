@@ -107,7 +107,7 @@ Java自身是一个很保守的语言，其大生态也非常保守。其设计�
 
 综上，Turms项目在引用一个类库时，通常不引入抽象封装库（如Spring），而仅引入实现库。对依赖库中需要性能优化或逻辑优化的点，会直接在Turms项目内部进行重构。结合考虑到自研的难易程度与代码可控性，我们在大部分情况下会尽可能选择自研。
 
-补充：Java的生态虽然繁荣，但高质量的库其实很少。在整个Java生态中，我们目前唯一信任其开发人员技术水平的库是：Netty
+补充：Java的生态虽然繁荣，但高质量的库其实很少，所以大部分对性能有追求的中大型Java开源项目通常也是尽量自研各种功能模块，而不使用第三方依赖库，比如：[Elasticsearch](https://github.com/elastic/elasticsearch)、[Cassandra](https://github.com/apache/cassandra)、[Ignite](https://github.com/apache/ignite)。另外，在整个Java生态中，我们目前唯一信任其开发人员技术水平的库是：Netty
 
 ## 异常捕获与打印
 

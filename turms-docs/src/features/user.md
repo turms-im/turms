@@ -9,14 +9,14 @@
 
 ## 用户信息功能
 
-| **功能**             | **功能描述**                                                 | **相关配置**                                             |
-| :------------------- | :----------------------------------------------------------- | -------------------------------------------------------- |
-| 新增用户             |                                                              | activateUserWhenAdded                                    |
-| 删除用户             |                                                              | deleteUserLogically                                      |
-| 修改用户资料         | 用户修改自己的昵称、介绍、头像URL                            |                                                          |
-| 获取用户资料         | 用户查看自己或其他用户的资料                                 |                                                          |
-| 设置用户资料访问权限 | 用户可以针对个人的每项资料设置访问权限。访问权限有：所有人可见、好友可见、仅自己可见 |                                                          |
-| 用户权限组           | 管理员可以针对不同的用户给予不同的权限                       | 配置模型：im.turms.service.pojo.domain.UserPermissionGroup |
+| **功能**             | **功能描述**                                                 | **相关配置**                                                 |
+| :------------------- | :----------------------------------------------------------- | ------------------------------------------------------------ |
+| 新增用户             |                                                              | turms.service.user.activate-user-when-added                  |
+| 删除用户             |                                                              | turms.service.user.delete-user-logically                     |
+| 修改用户资料         | 用户修改自己的昵称、介绍、头像URL                            |                                                              |
+| 获取用户资料         | 用户查看自己或其他用户的资料                                 |                                                              |
+| 设置用户资料访问权限 | 用户可以针对个人的每项资料设置访问权限。访问权限有：所有人可见、好友可见、仅自己可见 |                                                              |
+| 用户权限组           | 管理员可以针对不同的用户给予不同的权限                       | 配置模型：im.turms.service.domain.user.po.UserPermissionGroup |
 
 ## 用户关系托管
 
@@ -31,7 +31,7 @@
 | **<div style="min-width:100px">功能</div>** | **功能描述**                                                 | **相关配置**                                                 |
 | :------------------------------------------ | :----------------------------------------------------------- | ------------------------------------------------------------ |
 | 获取关系                                    | 根据可选的过滤（如指定用户ID、“是否是联系人”、“是否是好友/拉黑用户”等）与分组条件，获取当前用户所拥有的关系 |                                                              |
-| 添加关系人(+发起好友请求)                   | ①若是添加关系为“好友”的关系人，则根据您自定义的Turms服务端配置，用户既可直接添加"好友"关系，也可以先发起好友请求，待获得被请求人批准后，才自动执行添加“好友”关系操作。<br />②若是添加关系为“拉黑用户”的关系人，则无需批准，直接生效。用户将不再收到拉黑用户发来的任何消息或者请求。 | friendRequest.contentLimit<br />friendRequest.shouldDeleteExpiredRequestsAutomatically<br />friendRequest.allowResendingRequestAfterDeclinedOrIgnoredOrExpired<br />friendRequest.friendRequestTimeToLiveHours<br />friendRequest.expiredUserFriendRequestsCheckerCron<br />friendRequest.deleteExpiredRequestsWhenCronTriggered |
+| 添加关系人(+发起好友请求)                   | ①若是添加关系为“好友”的关系人，则根据您自定义的Turms服务端配置，用户既可直接添加"好友"关系，也可以先发起好友请求，待获得被请求人批准后，才自动执行添加“好友”关系操作。<br />②若是添加关系为“拉黑用户”的关系人，则无需批准，直接生效。用户将不再收到拉黑用户发来的任何消息或者请求。 | turms.service.user.friend-request.content-limit<br />turms.service.user.friend-request.delete-expired-requests-when-cron-triggered<br />turms.service.user.friend-request.allow-send-request-after-declined-or-ignored-or-expired<br />turms.service.user.friend-request.friend-request-expire-after-seconds<br />turms.service.user.friend-request.expired-user-friend-requests-cleanup-cron<br />turms.service.user.friend-request.delete-expired-requests-when-cron-triggered |
 | 通过/拒绝好友请求                           | 用户可以通过或者拒绝好友请求。若同意好友请求，则二者将建立双向的“好友”关系 |                                                              |
 | 删除关系人                                  | 根据可选删除条件（如“是/不是关系人”、“是好友/拉黑用户”），删除某类关系人或指定关系人。 | deleteTwoSidedRelationships                                  |
 | 修改与关系人的关系                          | 修改用户关系（好友/拉黑用户）信息。在修改关系为“好友”时，默认需要先发送好友请求（您可以取消此步骤） |                                                              |
@@ -47,13 +47,15 @@
 
 | **功能**     | **功能描述**                       | **相关配置**                                                 |
 | ------------ | ---------------------------------- | ------------------------------------------------------------ |
-| 用户位置记录 | 定期记录用户所在位置               | enabled<br />treatUserIdAndDeviceTypeAsUniqueUser            |
-| 附近的人     | 根据当前实时坐标搜寻附近的其他用户 | defaultMaxAvailableUsersNearbyNumberPerQuery<br />defaultMaxDistancePerQuery<br />maxAvailableUsersNearbyNumberLimitPerQuery<br />maxDistanceLimitPerQuery |
+| 用户位置记录 | 定期记录用户所在位置               | turms.location.enabled<br />turms.location.treat-user-id-and-device-type-as-unique-user |
+| 附近的人     | 根据当前实时坐标搜寻附近的其他用户 | turms.location.users-nearby-request.default-max-available-nearby-users-number<br />turms.location.users-nearby-request.default-max-distance-meters<br />turms.location.users-nearby-request.max-available-users-nearby-number-limit<br />turms.location.users-nearby-request.max-distance-meters |
 
 ## 统计功能
 
 配置类：`im.turms.server.common.infra.property.env.service.env.StatisticsProperties`
 
-| **功能**       | **功能描述**                                                 | **相关配置**                                           |
-| -------------- | ------------------------------------------------------------ | ------------------------------------------------------ |
-| 在线用户数统计 | Turms集群中的Master节点会定期将集群中的在线用户数以日志形式进行记录 | logOnlineUsersNumber<br />onlineUsersNumberLoggingCron |
+尽管Turms提供一些基础的统计功能，但推荐用户通过云服务采集各种统计数据，如Amazon CloudWatch。
+
+| **功能**       | **功能描述**                                                 | **相关配置**                                                 |
+| -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 在线用户数统计 | Turms集群中的Master节点会定期将集群中的在线用户数以日志形式进行记录 | turms.service.statistics.log-online-users-number<br />turms.service.statistics.online-users-number-logging-cron |
