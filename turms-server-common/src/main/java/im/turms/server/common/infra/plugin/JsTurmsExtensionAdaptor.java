@@ -19,6 +19,7 @@ package im.turms.server.common.infra.plugin;
 
 import im.turms.server.common.infra.plugin.script.ValueInspector;
 import lombok.Getter;
+import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 
 import java.util.List;
@@ -28,16 +29,19 @@ import java.util.List;
  */
 public class JsTurmsExtensionAdaptor extends TurmsExtension {
 
+    private final Context jsContext;
     @Getter
-    private final Object proxy;
+    private final ExtensionPoint proxy;
     @Getter
     private final List<Class<? extends ExtensionPoint>> extensionPointClasses;
     private final Value onStarted;
     private final Value onStopped;
 
-    public JsTurmsExtensionAdaptor(Object proxy,
+    public JsTurmsExtensionAdaptor(Context jsContext,
+                                   ExtensionPoint proxy,
                                    List<Class<? extends ExtensionPoint>> extensionPointClasses,
                                    Value extension) {
+        this.jsContext = jsContext;
         this.proxy = proxy;
         this.extensionPointClasses = extensionPointClasses;
         onStarted = ValueInspector.returnIfFunction(extension.getMember("onStarted"));
@@ -53,8 +57,12 @@ public class JsTurmsExtensionAdaptor extends TurmsExtension {
 
     @Override
     protected void onStopped() {
-        if (onStopped != null) {
-            onStopped.execute();
+        try {
+            if (onStopped != null) {
+                onStopped.execute();
+            }
+        } finally {
+            jsContext.close(true);
         }
     }
 

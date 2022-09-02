@@ -49,10 +49,9 @@ public class PluginRepository {
         idToPlugin.computeIfAbsent(plugin.descriptor().getId(), id -> {
             for (TurmsExtension extension : plugin.extensions()) {
                 ExtensionPoint extensionPoint = extension instanceof JsTurmsExtensionAdaptor jsTurmsExtensionAdaptor
-                        ? (ExtensionPoint) jsTurmsExtensionAdaptor.getProxy()
+                        ? jsTurmsExtensionAdaptor.getProxy()
                         : (ExtensionPoint) extension;
-                Class<? extends ExtensionPoint>[] interfaceClasses = extension.getExtensionPointClasses().toArray(Class[]::new);
-                for (Class<? extends ExtensionPoint> interfaceClass : interfaceClasses) {
+                for (Class<? extends ExtensionPoint> interfaceClass : extension.getExtensionPointClasses()) {
                     extensionPointMap.compute(interfaceClass, (extensionPointClass, extensionPoints) -> {
                         if (extensionPoints == null) {
                             extensionPoints = new ArrayList<>(2);
