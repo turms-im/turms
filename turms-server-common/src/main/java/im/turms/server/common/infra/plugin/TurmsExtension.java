@@ -28,6 +28,7 @@ import java.util.List;
 public abstract class TurmsExtension {
 
     private ApplicationContext context;
+    private boolean initialized;
     private boolean started;
     private boolean running;
     private List<Class<? extends ExtensionPoint>> extensionPointClasses;
@@ -75,37 +76,48 @@ public abstract class TurmsExtension {
         return extensionPointClasses;
     }
 
-    void start() {
-        if (!started) {
-            onStarted();
+    synchronized void start() {
+        if (initialized || started) {
+            return;
         }
+        onStarted();
+        initialized = true;
         started = true;
         running = true;
     }
 
-    void stop() {
-        if (started) {
-            onStopped();
-        }
-        running = false;
-        started = false;
-    }
-
-    void resume() {
+    synchronized void stop() {
         if (!started) {
             return;
         }
-        if (!running) {
-            onResumed();
+        try {
+            onStopped();
+        } finally {
+            running = false;
+            started = false;
         }
-        running = true;
     }
 
-    void pause() {
-        if (running) {
-            onPaused();
+    synchronized void resume() {
+        if (!started || running) {
+            return;
         }
-        running = false;
+        try {
+            onResumed();
+        } finally {
+            running = true;
+        }
+    }
+
+    synchronized void pause() {
+        if (!running) {
+            return;
+        }
+        try {
+            onPaused();
+        } finally {
+            running = false;
+        }
     }
 
     protected void onStarted() {
