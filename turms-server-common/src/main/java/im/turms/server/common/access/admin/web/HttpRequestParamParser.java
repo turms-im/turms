@@ -180,6 +180,9 @@ public class HttpRequestParamParser {
         return parsePlainValue(value, parameter.type());
     }
 
+    /**
+     * TODO: Support more charsets
+     */
     private static Mono<Object> parseBody(HttpServerRequest request, Class<?> parameterType) {
         return Mono.defer(() -> {
             CompositeByteBuf body = Unpooled.compositeBuffer();
@@ -194,22 +197,20 @@ public class HttpRequestParamParser {
                         }
                         buffer.retain();
                     })
-                    .hasElements()
-                    .flatMap(hasElements -> {
-                        if (!hasElements) {
+                    .then(Mono.defer(() -> {
+                        int length = body.readableBytes();
+                        if (length == 0) {
                             return Mono.empty();
                         }
-                        try {
+                        try (ByteBufInputStream stream = new ByteBufInputStream(body, length, true)) {
                             Object value = JsonCodecPool.MAPPER
-                                    .readValue((InputStream) new ByteBufInputStream(body), parameterType);
-                            body.release();
+                                    .readValue((InputStream) stream, parameterType);
                             return Mono.just(value);
                         } catch (IOException e) {
-                            ByteBufUtil.ensureReleased(body);
                             HttpHandlerResult<ResponseDTO<?>> result = HttpHandlerResult.badRequest("Illegal request body: " + e.getMessage());
                             return Mono.error(new HttpResponseException(result, e));
                         }
-                    })
+                    }))
                     .doFinally(signalType -> ByteBufUtil.safeEnsureReleased(body));
         });
     }
