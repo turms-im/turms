@@ -322,7 +322,8 @@ public class ConnectionService implements ClusterService {
     }
 
     private void sendKeepaliveToConnectionsForever() {
-        while (!Thread.currentThread().isInterrupted()) {
+        Thread thread = Thread.currentThread();
+        while (!thread.isInterrupted()) {
             Iterator<Map.Entry<String, TurmsConnection>> iterator = nodeIdToConnection.entrySet().iterator();
             while (iterator.hasNext()) {
                 try {

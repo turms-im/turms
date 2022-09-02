@@ -188,7 +188,7 @@ public class SessionService implements ISessionService {
     }
 
     public void handleHeartbeatUpdateRequest(UserSession session) {
-        updateHeartbeatTimestamp(session);
+        session.setLastHeartbeatRequestTimestampMillis(System.currentTimeMillis());
     }
 
     public Mono<UserSession> handleLoginRequest(
@@ -479,10 +479,6 @@ public class SessionService implements ISessionService {
             ));
         }
         return new UserSessionsInfo(userId, manager.getUserStatus(), sessionInfos);
-    }
-
-    public void updateHeartbeatTimestamp(UserSession session) {
-        session.setLastHeartbeatRequestTimestampMillis(System.currentTimeMillis());
     }
 
     public UserSession authAndUpdateHeartbeatTimestamp(long userId, @NotNull @ValidDeviceType DeviceType deviceType, int sessionId) {

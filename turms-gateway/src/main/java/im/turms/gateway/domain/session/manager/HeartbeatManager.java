@@ -21,7 +21,6 @@ import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.access.client.udp.UdpRequestDispatcher;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.infra.thread.ThreadNameConst;
-import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.service.UserStatusService;
@@ -87,7 +86,8 @@ public class HeartbeatManager {
         this.switchProtocolAfterMillis = switchProtocolAfterSeconds * 1000;
         DefaultThreadFactory factory = new DefaultThreadFactory(ThreadNameConst.CLIENT_HEARTBEAT_REFRESHER, true);
         workerThread = factory.newThread(() -> {
-            while (!Thread.currentThread().isInterrupted()) {
+            Thread thread = Thread.currentThread();
+            while (!thread.isInterrupted()) {
                 try {
                     updateOnlineUsersTtl();
                 } catch (Exception e) {
@@ -145,12 +145,15 @@ public class HeartbeatManager {
             @Override
             public long next() {
                 while (iterator.hasNext()) {
-                    Map<DeviceType, UserSession> deviceTypeToSession = iterator.next().getDeviceTypeToSession();
-                    for (UserSession session : deviceTypeToSession.values()) {
-                        Long userId = closeOrUpdateSession(session, now);
-                        if (userId != null) {
-                            return userId;
+                    Long userId = null;
+                    for (UserSession session : iterator.next().getDeviceTypeToSession().values()) {
+                        Long currentUserId = closeOrUpdateSession(session, now);
+                        if (currentUserId != null && userId == null) {
+                            userId = currentUserId;
                         }
+                    }
+                    if (userId != null) {
+                        return userId;
                     }
                 }
                 return -1;
@@ -177,7 +180,7 @@ public class HeartbeatManager {
                 && now - lastHeartbeatUpdateTimestamp < minHeartbeatIntervalMillis) {
             return null;
         }
-        long lastHeartbeatRequestTimestamp = session.getLastHeartbeatRequestTimestampMillis();
+        long lastHeartbeatRequestTimestamp = Math.max(session.getLastHeartbeatRequestTimestampMillis(), session.getLastRequestTimestampMillis());
         if (lastHeartbeatRequestTimestamp <= lastHeartbeatUpdateTimestamp) {
             return null;
         }

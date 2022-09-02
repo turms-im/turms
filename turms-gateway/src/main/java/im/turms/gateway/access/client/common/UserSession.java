@@ -79,7 +79,14 @@ public final class UserSession {
      */
     @Getter(AccessLevel.PRIVATE)
     private BiFunction<ByteBuf, TracingContext, Mono<Void>> notificationConsumer;
+    /**
+     * Only record the timestamp of the last heartbeat request,
+     * and do NOT record the timestamp of other types of requests
+     */
     private volatile long lastHeartbeatRequestTimestampMillis;
+    /**
+     * Record the timestamp of the last requests except heartbeat requests
+     */
     private volatile long lastRequestTimestampMillis;
     // No need to add volatile because it can only be accessed by one thread
     // (the thread "turms-client-heartbeat-refresher" in HeartbeatManager)

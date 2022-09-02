@@ -69,8 +69,8 @@ public class ServiceRequestService {
             if (session == null) {
                 return ResponseExceptionPublisherPool.sendRequestFromNonExistingSession();
             }
-            // Update heartbeat
-            sessionService.updateHeartbeatTimestamp(session);
+            // Update request timestamp
+            session.setLastRequestTimestampMillis(System.currentTimeMillis());
             // Forward request
             serviceRequest.getTurmsRequestBuffer().retain();
             HandleServiceRequest request = new HandleServiceRequest(serviceRequest);
