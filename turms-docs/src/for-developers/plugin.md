@@ -77,15 +77,15 @@ Turms服务端支持基于Java或JavaScript语言的插件实现。
         </plugin>
         ```
      
-     3. 在`resources`目录下，新建一个名称为`plugin.properties`的文件，并添加以下插件描述信息（具体的参数值是您自定义插件的信息）
+     3. 在`resources`目录下，新建一个名称为`plugin.yaml`的文件，并添加以下插件描述信息（具体的参数值是您自定义插件的信息）
      
-        ```properties
-        id=com.mydomain.MyPlugin
-        class=com.mydomain.MyPlugin
-        version=0.0.1
-        provider=com.mydomain
-        license=MIT
-        description=
+        ```yaml
+        id: com.mydomain.MyPlugin
+        class: com.mydomain.MyPlugin
+        version: 0.0.1
+        provider: com.mydomain
+        license: MIT
+        description: ''
         ```
         其中：
      
@@ -97,7 +97,7 @@ Turms服务端支持基于Java或JavaScript语言的插件实现。
 
    其中：
 
-   * `TurmsPlugin`的自定义子类是插件的入口类，且必须带有public的无参构造函数。在`plugin.properties`的引导下，Turms服务端会找到这个类，并对其进行初始化
+   * `TurmsPlugin`的自定义子类是插件的入口类，且必须带有public的无参构造函数。在`plugin.yaml`的引导下，Turms服务端会找到这个类，并对其进行初始化
    * `TurmsPlugin`带有一个用于指定的`TurmsExtension`类的函数`getExtensions()`。它用于引导Turms服务端加载并初始化插件内自定义的`TurmsExtension`实现
    * `TurmsExtension`是拓展功能点的具体实现类，一个`TurmsExtension`可`implement`一个或多个`ExtensionPoint`，且必须具有public的无参构造函数
    * `ExtensionPoint`是Turms服务端定义的具体拓展功能点的接口，如`UserAuthenticator`与`ClientRequestHandler`
@@ -138,7 +138,7 @@ Turms服务端支持基于Java或JavaScript语言的插件实现。
    插件JAR包内的目录结构类似于：
 
    ```text
-   ├─plugin.properties
+   ├─plugin.yaml
    ├─META-INF
    │  └─MANIFEST.MF
    └─com

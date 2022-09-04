@@ -31,6 +31,9 @@ public class JsPluginDescriptorFactory extends PluginDescriptorFactory {
 
     private static final String GET_PLUGIN_DESCRIPTOR = "getPluginDescriptor";
 
+    private JsPluginDescriptorFactory() {
+    }
+
     public static JsPluginDescriptor parsePluginDescriptor(Value bindings, String script, @Nullable Path path) {
         Map<String, String> properties = executeGetPluginDescriptor(bindings, script);
         return createJsPluginDescriptor(properties, path);

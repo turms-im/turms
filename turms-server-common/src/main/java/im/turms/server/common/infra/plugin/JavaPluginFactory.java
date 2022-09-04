@@ -32,9 +32,8 @@ public class JavaPluginFactory {
     private JavaPluginFactory() {
     }
 
-    public static Plugin create(JavaPluginDescriptor descriptor, ApplicationContext context) throws ClassNotFoundException {
-        PluginClassLoader loader = new PluginClassLoader(descriptor.getJarUrl());
-        try {
+    public static Plugin create(JavaPluginDescriptor descriptor, ApplicationContext context) {
+        try (PluginClassLoader loader = new PluginClassLoader(descriptor.getJarUrl())) {
             Class<? extends TurmsPlugin> pluginClass;
             try {
                 pluginClass = (Class<? extends TurmsPlugin>) loader.loadClass(descriptor.getEntryClass());
@@ -49,12 +48,9 @@ public class JavaPluginFactory {
                         .formatted(pluginClass.getName()), e);
             }
             return create(descriptor, plugin.getExtensions(), context);
-        } catch (Exception e) {
-            try {
-                loader.close();
-            } catch (IOException ignored) {
-            }
-            throw e;
+        } catch (IOException e) {
+            throw new IllegalStateException("Caught an error while closing the plugin class loader for the jar file: "
+                    + descriptor.getJarUrl(), e);
         }
     }
 

@@ -37,7 +37,7 @@ public class PluginClassLoader extends URLClassLoader {
     private static final String PACKAGE_PREFIX_TURMS = "im.turms.";
 
     public PluginClassLoader(URL jarUrl) {
-        super(new URL[] {jarUrl}, ClassLoader.getSystemClassLoader());
+        super(new URL[]{jarUrl}, ClassLoader.getSystemClassLoader());
     }
 
     @Override

@@ -44,7 +44,12 @@ public abstract class PluginDescriptorFactory {
 
     @Nullable
     public static String readPropertiesString(Map<String, String> properties, String key, boolean required) {
-        String value = properties.get(key);
+        String value;
+        try {
+            value = properties.get(key);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Field \"%s\" should be a string".formatted(key), e);
+        }
         if (StringUtils.hasText(value)) {
             return value;
         }

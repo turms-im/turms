@@ -1,0 +1,6 @@
+id: com.mydomain.MyPlugin
+class: com.mydomain.MyPlugin
+version: 0.0.1
+provider: com.mydomain
+license: MIT
+description: ''

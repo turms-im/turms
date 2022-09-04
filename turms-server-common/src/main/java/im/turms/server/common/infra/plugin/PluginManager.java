@@ -147,7 +147,7 @@ public class PluginManager {
         return Mono.empty();
     }
 
-    public void loadJavaPlugins(List<ZipFile> zipFiles) throws ClassNotFoundException {
+    public void loadJavaPlugins(List<ZipFile> zipFiles) {
         List<JavaPluginDescriptor> descriptors = JavaPluginDescriptorFactory.load(zipFiles);
         for (JavaPluginDescriptor descriptor : descriptors) {
             Plugin plugin = JavaPluginFactory.create(descriptor, context);

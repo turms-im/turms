@@ -1,0 +1,6 @@
+id: im.turms.plugin.antispam.AntiSpamPlugin
+class: im.turms.plugin.antispam.AntiSpamPlugin
+version: 0.10.0
+provider: im.turms
+license: MIT
+description: ''

@@ -51,7 +51,7 @@ class JavaPluginManagerTests {
     static {
         JAR_FILE = JarUtil.createJarFile(JAR_NAME,
                 List.of(SpringApplication.class, MyExtension.class, MyExtensionPoint.class, MyPlugin.class),
-                List.of("plugin.properties"));
+                List.of("plugin.yaml"));
     }
 
     @Test

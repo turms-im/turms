@@ -1,0 +1,6 @@
+id: unit.im.turms.server.common.infra.plugin.MyPlugin
+class: unit.im.turms.server.common.infra.plugin.MyPlugin
+version: 0.0.1
+provider: im.turms
+license: MIT
+description: ''

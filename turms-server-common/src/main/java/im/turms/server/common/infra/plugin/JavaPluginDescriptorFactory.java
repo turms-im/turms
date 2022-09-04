@@ -17,15 +17,17 @@
 
 package im.turms.server.common.infra.plugin;
 
+import im.turms.server.common.infra.yaml.YamlUtil;
+
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -36,7 +38,7 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
 
     static final String PLUGIN_CLASS = "class";
 
-    private static final String PROPERTIES_FILE_NAME = "plugin.properties";
+    private static final String PROPERTIES_FILE_PREFIX = "plugin.";
 
     private JavaPluginDescriptorFactory() {
     }
@@ -71,27 +73,25 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
         while (entries.hasMoreElements()) {
             ZipEntry zipEntry = entries.nextElement();
             String name = zipEntry.getName();
-            if (!PROPERTIES_FILE_NAME.equals(name)) {
+            if (!name.startsWith(PROPERTIES_FILE_PREFIX) || (!name.endsWith("yaml") && !name.endsWith("yml"))) {
                 continue;
             }
-            Properties properties;
+            Map<String, String> properties;
             try (InputStream stream = file.getInputStream(zipEntry)) {
-                properties = new Properties();
-                properties.load(stream);
+                properties = YamlUtil.readValue(stream, HashMap.class);
             } catch (IOException e) {
-                throw new IllegalStateException("Failed to read \"%s\" into properties for the jar %s"
-                        .formatted(PROPERTIES_FILE_NAME, filePath), e);
+                throw new IllegalStateException("Failed to read the plugin properties file \"%s\" for the jar %s"
+                        .formatted(name, filePath), e);
             }
             try {
-                Map<String, String> map = (Map) properties;
-                String clazz = readPropertiesString(map, PLUGIN_CLASS, true);
-                PluginDescriptor pluginDescriptor = createPluginDescriptor(map);
+                String entryClass = readPropertiesString(properties, PLUGIN_CLASS, true);
+                PluginDescriptor pluginDescriptor = createPluginDescriptor(properties);
                 return new JavaPluginDescriptor(pluginDescriptor.getId(),
                         pluginDescriptor.getVersion(),
                         pluginDescriptor.getProvider(),
                         pluginDescriptor.getLicense(),
                         pluginDescriptor.getDescription(),
-                        clazz,
+                        entryClass,
                         filePath);
             } catch (Exception e) {
                 throw new IllegalStateException("Cannot parse the jar " + filePath, e);
