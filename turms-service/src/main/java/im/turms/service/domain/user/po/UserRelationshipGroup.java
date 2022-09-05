@@ -28,7 +28,6 @@ import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstru
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -69,7 +68,6 @@ public final class UserRelationshipGroup extends BaseEntity {
 
     @Data
     @AllArgsConstructor
-    @NoArgsConstructor // Make sure spring can initiate the key and use setters
     public static final class Key {
 
         @Field(Fields.OWNER_ID)

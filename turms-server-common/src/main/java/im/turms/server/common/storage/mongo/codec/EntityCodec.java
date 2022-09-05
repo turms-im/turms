@@ -17,6 +17,8 @@
 
 package im.turms.server.common.storage.mongo.codec;
 
+import im.turms.server.common.infra.lang.Pair;
+import im.turms.server.common.infra.lang.Triple;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.storage.mongo.DomainFieldName;
@@ -34,6 +36,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author James Chen
@@ -42,6 +45,11 @@ import java.util.Map;
 public class EntityCodec<T> extends MongoCodec<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityCodec.class);
+
+    private static final Map<Pair<Class<?>, Class<?>>, TurmsIterableCodec> CLASS_TO_ITERABLE_CODEC
+            = new ConcurrentHashMap<>(32);
+    private static final Map<Triple<Class<?>, Class<?>, Class<?>>, TurmsMapCodec> CLASS_TO_MAP_CODEC
+            = new ConcurrentHashMap<>(32);
 
     private final CodecRegistry registry;
     private final Class<T> entityClass;
@@ -87,8 +95,13 @@ public class EntityCodec<T> extends MongoCodec<T> {
                 }
                 Class<?> fieldValueClass = fieldValue.getClass();
                 if (Map.class.isAssignableFrom(fieldValueClass)) {
-                    TurmsMapCodec codec = new TurmsMapCodec(fieldValueClass, field.getKeyClass(), field.getElementClass());
-                    codec.setRegistry(registry);
+                    Triple<Class<?>, Class<?>, Class<?>> key = Triple.of(fieldValueClass, field.getKeyClass(), field.getElementClass());
+                    TurmsMapCodec<?, ?> codec = CLASS_TO_MAP_CODEC.computeIfAbsent(key,
+                            triple -> {
+                                TurmsMapCodec<?, ?> mapCodec = new TurmsMapCodec(triple.first(), triple.second(), triple.third());
+                                mapCodec.setRegistry(registry);
+                                return mapCodec;
+                            });
                     encoderContext.encodeWithChildContext(codec, writer, (Map) fieldValue);
                 } else {
                     Codec codec = registry.get(fieldValueClass);
@@ -175,12 +188,22 @@ public class EntityCodec<T> extends MongoCodec<T> {
     private Object decode(EntityField<T> field, BsonReader reader, DecoderContext decoderContext) {
         Class<?> fieldClass = field.getFieldClass();
         if (Iterable.class.isAssignableFrom(fieldClass)) {
-            TurmsIterableCodec codec = new TurmsIterableCodec(fieldClass, field.getElementClass());
-            codec.setRegistry(registry);
+            Pair<Class<?>, Class<?>> key = Pair.of(fieldClass, field.getElementClass());
+            TurmsIterableCodec codec = CLASS_TO_ITERABLE_CODEC.computeIfAbsent(key,
+                    pair -> {
+                        TurmsIterableCodec iterableCodec = new TurmsIterableCodec(pair.first(), pair.second());
+                        iterableCodec.setRegistry(registry);
+                        return iterableCodec;
+                    });
             return decoderContext.decodeWithChildContext(codec, reader);
         } else if (Map.class.isAssignableFrom(fieldClass)) {
-            TurmsMapCodec codec = new TurmsMapCodec(fieldClass, field.getKeyClass(), field.getElementClass());
-            codec.setRegistry(registry);
+            Triple<Class<?>, Class<?>, Class<?>> key = Triple.of(fieldClass, field.getKeyClass(), field.getElementClass());
+            TurmsMapCodec<?, ?> codec = CLASS_TO_MAP_CODEC.computeIfAbsent(key,
+                    triple -> {
+                        TurmsMapCodec<?, ?> mapCodec = new TurmsMapCodec(triple.first(), triple.second(), triple.third());
+                        mapCodec.setRegistry(registry);
+                        return mapCodec;
+                    });
             return decoderContext.decodeWithChildContext(codec, reader);
         } else {
             if (fieldClass.isPrimitive()) {
