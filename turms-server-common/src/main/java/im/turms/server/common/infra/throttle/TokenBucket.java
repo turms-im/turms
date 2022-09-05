@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.throttle;
 
+import im.turms.server.common.infra.lang.MathUtil;
 import lombok.Getter;
 
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
@@ -66,9 +67,9 @@ public class TokenBucket {
         // We expect tokensPerPeriod is always greater than 0,
         // so tokenCount can be always greater than or equals to 0.
         int capacity = context.capacity;
-        tokenCount = periods * context.tokensPerPeriod - 1;
-        if (tokenCount < 0 || tokenCount > capacity) {
-            tokenCount = capacity;
+        tokenCount = MathUtil.multiply(periods, context.tokensPerPeriod, capacity) - 1;
+        if (tokenCount > capacity) {
+            tokenCount = capacity - 1;
         }
         if (TOKENS_UPDATER.compareAndSet(this, 0, tokenCount)) {
             lastRefillTime = time;
@@ -88,8 +89,8 @@ public class TokenBucket {
         }
         int tokenCount = tokens;
         int capacity = context.capacity;
-        int newTokenCount = tokenCount + periods * context.tokensPerPeriod;
-        if (newTokenCount < 0 || newTokenCount > capacity) {
+        int newTokenCount = MathUtil.add(tokenCount, MathUtil.multiply(periods, context.tokensPerPeriod, capacity), capacity);
+        if (newTokenCount > capacity) {
             newTokenCount = capacity;
         }
         if (TOKENS_UPDATER.compareAndSet(this, tokenCount, newTokenCount)) {
