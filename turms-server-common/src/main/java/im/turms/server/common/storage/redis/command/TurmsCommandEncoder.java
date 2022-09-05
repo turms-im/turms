@@ -33,8 +33,8 @@ import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.EncoderException;
 
 import java.util.Collection;
-import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author James Chen
@@ -47,7 +47,7 @@ public class TurmsCommandEncoder extends ChannelOutboundHandlerAdapter {
 
     private static final int COMMAND_BYTEBUF_COMPONENT_COUNT = 4;
 
-    private final Map<ProtocolKeyword, ByteBuf> protocolKeywordBufferMap = new IdentityHashMap<>(64);
+    private final Map<ProtocolKeyword, ByteBuf> protocolKeywordBufferMap = new ConcurrentHashMap<>(64);
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
@@ -109,18 +109,8 @@ public class TurmsCommandEncoder extends ChannelOutboundHandlerAdapter {
      * e.g. "$7\r\nEVALSHA\r\n"
      */
     private ByteBuf getProtocolKeywordBuffer(ProtocolKeyword keyword) {
-        ByteBuf buf = protocolKeywordBufferMap.get(keyword);
-        if (buf == null) {
-            synchronized (this) {
-                buf = protocolKeywordBufferMap.get(keyword);
-                if (buf == null) {
-                    buf = CommandArgsUtil.writeBytesArg(keyword.getBytes());
-                    buf = Unpooled.unreleasableBuffer(buf);
-                    protocolKeywordBufferMap.put(keyword, buf);
-                }
-            }
-        }
-        return buf;
+        return protocolKeywordBufferMap.computeIfAbsent(keyword, key ->
+                Unpooled.unreleasableBuffer(CommandArgsUtil.writeBytesArg(key.getBytes())));
     }
 
 }

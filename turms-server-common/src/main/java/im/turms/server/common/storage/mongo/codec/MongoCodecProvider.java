@@ -21,8 +21,8 @@ import lombok.Setter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.jctools.maps.NonBlockingIdentityHashMap;
 
-import java.util.IdentityHashMap;
 import java.util.Map;
 
 /**
@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class MongoCodecProvider implements CodecProvider {
 
-    private final Map<Class<?>, MongoCodec<?>> codes = new IdentityHashMap<>(64);
+    private final Map<Class<?>, MongoCodec<?>> codes = new NonBlockingIdentityHashMap<>(64);
     @Setter
     private CodecRegistry registry;
 
@@ -44,23 +44,15 @@ public class MongoCodecProvider implements CodecProvider {
     }
 
     public <T> MongoCodec<T> getCodec(Class<T> clazz) {
-        MongoCodec<T> codec = (MongoCodec<T>) codes.get(clazz);
-        if (codec == null) {
-            return registerClass(clazz);
-        }
-        return codec;
-    }
-
-    private <T> void registerCodec(MongoCodec<T> codec) {
-        codes.put(codec.getEncoderClass(), codec);
-    }
-
-    private synchronized <T> MongoCodec<T> registerClass(Class<T> clazz) {
         return (MongoCodec<T>) codes.computeIfAbsent(clazz, key -> {
             MongoCodec<T> codec = (MongoCodec<T>) createCodec(key);
             codec.setRegistry(registry);
             return codec;
         });
+    }
+
+    private <T> void registerCodec(MongoCodec<T> codec) {
+        codes.put(codec.getEncoderClass(), codec);
     }
 
     private <T> MongoCodec<T> createCodec(Class<T> clazz) {

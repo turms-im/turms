@@ -20,11 +20,11 @@ package im.turms.server.common.infra.plugin;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import org.jctools.maps.NonBlockingIdentityHashMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,7 +38,8 @@ public class PluginRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginRepository.class);
 
     private final Map<String, Plugin> idToPlugin = new ConcurrentHashMap<>(16);
-    private final Map<Class<? extends ExtensionPoint>, List<ExtensionPoint>> extensionPointMap = new IdentityHashMap<>(8);
+    private final Map<Class<? extends ExtensionPoint>, List<ExtensionPoint>> extensionPointMap =
+            new NonBlockingIdentityHashMap<>(16);
     private final Set<Class<? extends ExtensionPoint>> singletonExtensionPointClasses;
 
     public PluginRepository(Set<Class<? extends ExtensionPoint>> singletonExtensionPointClasses) {

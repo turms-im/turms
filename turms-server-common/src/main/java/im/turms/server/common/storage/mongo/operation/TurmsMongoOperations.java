@@ -74,6 +74,7 @@ import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.conversions.Bson;
+import org.jctools.maps.NonBlockingIdentityHashMap;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -84,7 +85,6 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
@@ -130,7 +130,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
 
     private final MongoContext context;
     private final MongoExceptionTranslator translator = new MongoExceptionTranslator();
-    private final Map<Class<?>, MongoOperationPublisher<?>> publisherMap = new IdentityHashMap<>(32);
+    private final Map<Class<?>, MongoOperationPublisher<?>> publisherMap = new NonBlockingIdentityHashMap<>(32);
 
     public TurmsMongoOperations(MongoContext context) {
         this.context = context;
@@ -733,14 +733,8 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
 
     private <T> MongoOperationPublisher<T> getPublisher(MongoCollection<T> collection) {
         Class<T> entityClass = collection.getDocumentClass();
-        MongoOperationPublisher<T> publisher = (MongoOperationPublisher<T>) publisherMap.get(entityClass);
-        if (publisher == null) {
-            synchronized (publisherMap) {
-                return (MongoOperationPublisher<T>) publisherMap
-                        .computeIfAbsent(entityClass, clazz -> MongoCollectionUtil.getPublisher(collection));
-            }
-        }
-        return publisher;
+        return (MongoOperationPublisher<T>) publisherMap
+                .computeIfAbsent(entityClass, clazz -> MongoCollectionUtil.getPublisher(collection));
     }
 
 }

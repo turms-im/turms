@@ -18,10 +18,7 @@
 package im.turms.server.common.infra.property;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import im.turms.server.common.infra.yaml.YamlUtil;
 
 import java.io.IOException;

@@ -201,20 +201,13 @@ public final class ReflectionUtil {
     }
 
     public static boolean isListOf(Type type, Class<?> elementClass) {
-        if (!(type instanceof ParameterizedType parameterizedType)) {
-            return false;
-        }
-        if (!(parameterizedType.getRawType() instanceof Class<?> rawType)) {
-            return false;
-        }
-        if (!List.class.isAssignableFrom(rawType)) {
+        if (!(type instanceof ParameterizedType parameterizedType &&
+                parameterizedType.getRawType() instanceof Class<?> rawType &&
+                List.class.isAssignableFrom(rawType))) {
             return false;
         }
         Type[] arguments = parameterizedType.getActualTypeArguments();
-        if (arguments.length != 1) {
-            return false;
-        }
-        return arguments[0] instanceof Class<?> argClass && elementClass.isAssignableFrom(argClass);
+        return arguments.length == 1 && arguments[0] instanceof Class<?> argClass && elementClass.isAssignableFrom(argClass);
     }
 
 }

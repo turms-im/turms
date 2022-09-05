@@ -53,11 +53,11 @@ import org.bson.codecs.ValueCodecProvider;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.jsr310.Jsr310CodecProvider;
+import org.jctools.maps.NonBlockingIdentityHashMap;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -77,8 +77,8 @@ public class MongoContext {
     @Getter
     private final MongoDatabase configDatabase;
     private final CodecRegistry codecRegistry;
-    private final Map<Class<?>, MongoEntity<?>> entityMap = new IdentityHashMap<>(64);
-    private final Map<Class<?>, MongoCollection<?>> collectionMap = new IdentityHashMap<>(64);
+    private final Map<Class<?>, MongoEntity<?>> classToEntity = new NonBlockingIdentityHashMap<>(64);
+    private final Map<Class<?>, MongoCollection<?>> classToCollection = new NonBlockingIdentityHashMap<>(64);
     private final NioEventLoopGroup eventLoopGroup;
 
     public MongoContext(String connectionString, Consumer<List<ServerDescription>> onServerDescriptionChange) {
@@ -137,27 +137,27 @@ public class MongoContext {
                 .then();
     }
 
-    public <T> Codec<T> getCodec(Class<T> clazz) {
-        return codecRegistry.get(clazz);
+    public <T> Codec<T> getCodec(Class<T> entityClass) {
+        return codecRegistry.get(entityClass);
     }
 
-    public <T> MongoCollection<T> getCollection(Class<T> clazz) {
-        MongoCollection<T> collection = (MongoCollection<T>) collectionMap.get(clazz);
+    public <T> MongoCollection<T> getCollection(Class<T> entityClass) {
+        MongoCollection<T> collection = (MongoCollection<T>) classToCollection.get(entityClass);
         if (collection == null) {
-            return (MongoCollection<T>) registerEntitiesByClasses(List.of(clazz))
+            return (MongoCollection<T>) registerEntitiesByClasses(List.of(entityClass))
                     .get(0).second();
         }
         return collection;
     }
 
     public List<MongoEntity<?>> getEntities() {
-        return new ArrayList<>(entityMap.values());
+        return new ArrayList<>(classToEntity.values());
     }
 
-    public <T> MongoEntity<T> getEntity(Class<T> clazz) {
-        MongoEntity<T> entity = (MongoEntity<T>) entityMap.get(clazz);
+    public <T> MongoEntity<T> getEntity(Class<T> entityClass) {
+        MongoEntity<T> entity = (MongoEntity<T>) classToEntity.get(entityClass);
         if (entity == null) {
-            return (MongoEntity<T>) registerEntitiesByClasses(List.of(clazz))
+            return (MongoEntity<T>) registerEntitiesByClasses(List.of(entityClass))
                     .get(0).first();
         }
         return entity;
@@ -169,21 +169,21 @@ public class MongoContext {
                 .collect(CollectorUtil.toList(classes.size())));
     }
 
-    public synchronized List<Pair<MongoEntity<?>, MongoCollection<?>>> registerEntitiesByOptions(
+    public List<Pair<MongoEntity<?>, MongoCollection<?>>> registerEntitiesByOptions(
             Collection<MongoCollectionOptions> optionsList) {
         List<Pair<MongoEntity<?>, MongoCollection<?>>> pairs = new ArrayList<>(optionsList.size());
         for (MongoCollectionOptions options : optionsList) {
-            Class<?> clazz = options.getEntityClass();
-            MongoEntity<?> entity = entityMap.get(clazz);
+            Class<?> entityClass = options.getEntityClass();
+            MongoEntity<?> entity = classToEntity.get(entityClass);
             if (entity != null) {
-                MongoCollection<?> collection = collectionMap.get(clazz);
+                MongoCollection<?> collection = classToCollection.get(entityClass);
                 pairs.add(Pair.of(entity, collection));
             } else {
-                entity = MongoEntityFactory.parse(clazz);
-                MongoCollection<?> collection = database.getCollection(entity.collectionName(), clazz)
+                entity = MongoEntityFactory.parse(entityClass);
+                MongoCollection<?> collection = database.getCollection(entity.collectionName(), entityClass)
                         .withWriteConcern(options.getWriteConcern());
-                entityMap.put(clazz, entity);
-                collectionMap.put(clazz, collection);
+                classToCollection.put(entityClass, collection);
+                classToEntity.put(entityClass, entity);
                 pairs.add(Pair.of(entity, collection));
             }
         }
