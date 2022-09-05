@@ -3,6 +3,7 @@ package im.turms.server.common.testing;
 import lombok.extern.slf4j.Slf4j;
 import org.testcontainers.containers.ContainerState;
 import org.testcontainers.containers.DockerComposeContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 
@@ -42,19 +43,23 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         withExposedService(MONGO_SERVICE_NAME, MONGO_SERVICE_PORT);
         // FIXME: testcontainers emits the actual STDOUT string as the STDERR string
         withLogConsumer(MONGO_SERVICE_NAME, new ServiceLogConsumer(MONGO_SERVICE_NAME));
+        waitingFor(MONGO_SERVICE_NAME, Wait.forHealthcheck());
 
         withExposedService(REDIS_SERVICE_NAME, REDIS_SERVICE_PORT);
         withLogConsumer(REDIS_SERVICE_NAME, new ServiceLogConsumer(REDIS_SERVICE_NAME));
+        waitingFor(REDIS_SERVICE_NAME, Wait.forHealthcheck());
 
         if (options.isSetupTurmsGateway()) {
             withExposedService(TURMS_GATEWAY_SERVICE_NAME, TURMS_GATEWAY_SERVICE_ADMIN_PORT);
             withExposedService(TURMS_GATEWAY_SERVICE_NAME, TURMS_GATEWAY_SERVICE_WS_PORT);
             withLogConsumer(TURMS_GATEWAY_SERVICE_NAME, new ServiceLogConsumer(TURMS_GATEWAY_SERVICE_NAME));
+            waitingFor(TURMS_GATEWAY_SERVICE_NAME, Wait.forHealthcheck());
         }
 
         if (options.isSetupTurmsService()) {
             withExposedService(TURMS_SERVICE_SERVICE_NAME, TURMS_SERVICE_ADMIN_PORT);
             withLogConsumer(TURMS_SERVICE_SERVICE_NAME, new ServiceLogConsumer(TURMS_SERVICE_SERVICE_NAME));
+            waitingFor(TURMS_SERVICE_SERVICE_NAME, Wait.forHealthcheck());
         }
     }
 
