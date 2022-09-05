@@ -17,13 +17,13 @@
 
 package im.turms.server.common.access.admin.web;
 
-import io.netty.handler.codec.http.HttpMethod;
+import java.util.List;
 
 /**
  * @author James Chen
  */
-public record ApiEndpointKey(
-        String path,
-        HttpMethod method
+public record ParsedParamCollection(
+        Object[] paramValues,
+        List<MultipartFile> tempFiles
 ) {
 }

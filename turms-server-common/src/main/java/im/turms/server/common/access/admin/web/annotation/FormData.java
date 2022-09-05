@@ -15,15 +15,20 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.access.admin.web;
+package im.turms.server.common.access.admin.web.annotation;
 
-import io.netty.handler.codec.http.HttpMethod;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author James Chen
  */
-public record ApiEndpointKey(
-        String path,
-        HttpMethod method
-) {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.PARAMETER)
+public @interface FormData {
+
+    boolean required() default true;
+
 }

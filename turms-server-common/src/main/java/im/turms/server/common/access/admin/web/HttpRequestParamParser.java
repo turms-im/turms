@@ -23,6 +23,7 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.json.JsonCodecPool;
 import im.turms.server.common.infra.netty.ByteBufUtil;
+import im.turms.server.common.infra.lang.StringUtil;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.Unpooled;
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,6 +58,10 @@ public class HttpRequestParamParser {
                     new ResponseDTO<>(ResponseStatusCode.ILLEGAL_ARGUMENT,
                             "Request body is required"))));
 
+    private static final HttpResponseException FORM_DATA_IS_REQUIRED = new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
+            new ResponseDTO<>(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "Form data is required")));
+
     private HttpRequestParamParser() {
     }
 
@@ -74,37 +80,64 @@ public class HttpRequestParamParser {
         }
     }
 
-    public static Mono<Object[]> parse(HttpServerRequest request,
-                                       RequestContext requestContext,
-                                       Map<String, List<Object>> params,
-                                       MethodParameterInfo[] parameters) {
+    public static Mono<ParsedParamCollection> parse(HttpServerRequest request,
+                                                    RequestContext requestContext,
+                                                    Map<String, List<Object>> params,
+                                                    MethodParameterInfo[] parameters) {
         int length = parameters.length;
         Object[] args = new Object[length];
         MethodParameterInfo requestBodyParam = null;
+        MethodParameterInfo requestFormDataParam = null;
         int bodyIndex = -1;
+        int formDataIndex = -1;
         for (int i = 0; i < length; i++) {
             MethodParameterInfo parameter = parameters[i];
             if (parameter.isBody()) {
                 requestBodyParam = parameter;
                 bodyIndex = i;
+            } else if (parameter.isFormData()) {
+                requestFormDataParam = parameter;
+                formDataIndex = i;
             } else if (RequestContext.class.isAssignableFrom(parameter.type())) {
                 args[i] = requestContext;
             } else {
                 args[i] = parseArgs(request, params, parameter);
             }
         }
-        if (requestBodyParam == null) {
-            return Mono.just(args);
+        if (requestBodyParam == null && requestFormDataParam == null) {
+            return Mono.just(new ParsedParamCollection(args, Collections.emptyList()));
         }
-        int finalBodyIndex = bodyIndex;
-        Mono<Object> parseBody = parseBody(request, requestBodyParam.type())
-                .doOnNext(body -> args[finalBodyIndex] = body);
-        if (requestBodyParam.isRequired()) {
-            parseBody = parseBody.switchIfEmpty(BODY_IS_REQUIRED);
+        if (requestBodyParam != null) {
+            int finalBodyIndex = bodyIndex;
+            Mono<Object> parseBody = parseBody(request, requestBodyParam.type())
+                    .doOnNext(body -> args[finalBodyIndex] = body);
+            if (requestBodyParam.isRequired()) {
+                parseBody = parseBody.switchIfEmpty(BODY_IS_REQUIRED);
+            }
+            return parseBody
+                    // Used to ensure returning arguments because parseBody() may return MonoEmpty
+                    .thenReturn(new ParsedParamCollection(args, Collections.emptyList()));
         }
-        return parseBody
-                // Used to ensure returning arguments because parseBody() may return MonoEmpty
-                .thenReturn(args);
+        int finalFormDataIndex = formDataIndex;
+        Mono<List<MultipartFile>> parseFormData = parseFormData(request);
+        Mono<ParsedParamCollection> collectionMono;
+        if (requestFormDataParam.isRequired()) {
+            collectionMono = parseFormData
+                    .map(files -> {
+                        if (files.isEmpty()) {
+                            throw FORM_DATA_IS_REQUIRED;
+                        }
+                        args[finalFormDataIndex] = files;
+                        return new ParsedParamCollection(args, files);
+                    });
+        } else {
+            collectionMono = parseFormData
+                    .map(files -> {
+                        args[finalFormDataIndex] = files;
+                        return new ParsedParamCollection(args, files);
+                    });
+        }
+        return collectionMono;
     }
 
     private static Object parseArgs(HttpServerRequest request,
@@ -213,6 +246,24 @@ public class HttpRequestParamParser {
                     }))
                     .doFinally(signalType -> ByteBufUtil.safeEnsureReleased(body));
         });
+    }
+
+    private static Mono<List<MultipartFile>> parseFormData(HttpServerRequest request) {
+        return request.receiveForm(builder -> builder
+                        // store on disk
+                        .maxInMemorySize(0)
+                        .maxSize(MAX_BODY_SIZE))
+                .map(data -> {
+                    try {
+                        data.retain();
+                        String name = StringUtil.substring(data.getName(), '.');
+                        return new MultipartFile(data, name, data.getFile());
+                    } catch (IOException e) {
+                        // Should never happen because the data should be a file
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collectList();
     }
 
 }

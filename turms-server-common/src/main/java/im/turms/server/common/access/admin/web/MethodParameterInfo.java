@@ -29,6 +29,7 @@ public record MethodParameterInfo(
         boolean isRequired,
         boolean isHeader,
         boolean isBody,
+        boolean isFormData,
         Object defaultValue
 ) {
 }

@@ -26,7 +26,10 @@ import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author James Chen
@@ -200,6 +203,14 @@ public final class StringUtil {
             throw new IllegalArgumentException("The number of placeholder \"{}\" must be the same as the number of arguments");
         }
         return newString(newBytes, LATIN1);
+    }
+
+    public static String substring(String message, char toDelimiter) {
+        int delimiterIndex = message.indexOf(toDelimiter);
+        if (delimiterIndex != -1) {
+            return message.substring(0, delimiterIndex);
+        }
+        return message;
     }
 
     public static String toString(Object val) {

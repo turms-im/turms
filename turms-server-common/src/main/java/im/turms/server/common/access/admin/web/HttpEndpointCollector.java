@@ -20,6 +20,7 @@ package im.turms.server.common.access.admin.web;
 import com.google.common.base.Defaults;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
 import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.FormData;
 import im.turms.server.common.access.admin.web.annotation.GetMapping;
 import im.turms.server.common.access.admin.web.annotation.HeadMapping;
 import im.turms.server.common.access.admin.web.annotation.PostMapping;
@@ -41,6 +42,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION_JSON;
@@ -98,10 +100,9 @@ public class HttpEndpointCollector {
 
     private static String findMediaType(Method method) {
         Type type = OpenApiBuilder.unwrapType(method.getGenericReturnType());
-        if (!(type instanceof Class clazz)) {
+        if (!(type instanceof Class<?> returnValueClass)) {
             return APPLICATION_JSON;
         }
-        Class returnValueClass = clazz;
         if (method.isAnnotationPresent(GetMapping.class)) {
             GetMapping mapping = method.getDeclaredAnnotation(GetMapping.class);
             if (!mapping.produces().isBlank()) {
@@ -120,11 +121,26 @@ public class HttpEndpointCollector {
     private static MethodParameterInfo[] parseParameters(Method method) {
         Parameter[] parameters = method.getParameters();
         MethodParameterInfo[] parameterInfos = new MethodParameterInfo[parameters.length];
+        boolean hasRequestBody = false;
+        boolean hasRequestFormData = false;
         for (int i = 0; i < parameters.length; i++) {
             Parameter parameter = parameters[i];
             MethodParameterInfo info = parseAsRequestBody(parameter);
             if (info != null) {
                 parameterInfos[i] = info;
+                if (hasRequestFormData) {
+                    throw new IllegalArgumentException("The endpoint should not accept both request form data and request body");
+                }
+                hasRequestBody = true;
+                continue;
+            }
+            info = parseAsRequestFormData(parameter);
+            if (info != null) {
+                parameterInfos[i] = info;
+                if (hasRequestBody) {
+                    throw new IllegalArgumentException("The endpoint should not accept both request form data and request body");
+                }
+                hasRequestFormData = true;
                 continue;
             }
             info = parseAsRequestHeader(parameter);
@@ -134,7 +150,7 @@ public class HttpEndpointCollector {
             }
             if (RequestContext.class.isAssignableFrom(parameter.getType())) {
                 parameterInfos[i] = new MethodParameterInfo(parameter.getName(), RequestContext.class,
-                        null, false, false, false, null);
+                        null, false, false, false, false, null);
                 continue;
             }
             parameterInfos[i] = parseAsRequestParam(parameter);
@@ -153,6 +169,7 @@ public class HttpEndpointCollector {
                     true,
                     false,
                     false,
+                    false,
                     Defaults.defaultValue(type));
         }
         String name = queryParam.value().isBlank() ? parameter.getName() : queryParam.value();
@@ -163,6 +180,7 @@ public class HttpEndpointCollector {
                 type,
                 ReflectionUtil.getElementClass(parameter.getParameterizedType()),
                 queryParam.required(),
+                false,
                 false,
                 false,
                 parsedDefaultValue);
@@ -181,6 +199,7 @@ public class HttpEndpointCollector {
                 requestHeader.required(),
                 true,
                 false,
+                false,
                 Defaults.defaultValue(type));
     }
 
@@ -193,6 +212,25 @@ public class HttpEndpointCollector {
                 parameter.getType(),
                 ReflectionUtil.getElementClass(parameter.getParameterizedType()),
                 requestBody.required(),
+                false,
+                true,
+                false,
+                null);
+    }
+
+    private static MethodParameterInfo parseAsRequestFormData(Parameter parameter) {
+        FormData requestFormData = parameter.getDeclaredAnnotation(FormData.class);
+        if (requestFormData == null) {
+            return null;
+        }
+        if (!ReflectionUtil.isListOf(parameter.getParameterizedType(), MultipartFile.class)) {
+            throw new IllegalArgumentException("The type of the form data parameter must be List<MultipartFile>: " + parameter);
+        }
+        return new MethodParameterInfo(parameter.getName(),
+                List.class,
+                MultipartFile.class,
+                requestFormData.required(),
+                false,
                 false,
                 true,
                 null);

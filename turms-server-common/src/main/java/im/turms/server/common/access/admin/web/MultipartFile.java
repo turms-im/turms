@@ -17,13 +17,27 @@
 
 package im.turms.server.common.access.admin.web;
 
-import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.multipart.HttpData;
+
+import java.io.File;
 
 /**
  * @author James Chen
  */
-public record ApiEndpointKey(
-        String path,
-        HttpMethod method
+public record MultipartFile(
+        HttpData data,
+        String name,
+        File file
 ) {
+    public void release() {
+        data.release();
+    }
+
+    @Override
+    public String toString() {
+        return "MultipartFile{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+
 }

@@ -240,27 +240,37 @@ public class HttpRequestDispatcher {
                         requestContext,
                         pathAndQueryParams.second(),
                         endpoint.parameters())))
-                .flatMap(params -> {
-                    requestContext.setParamValues(params);
-                    // 5. validate request
-                    if (endpoint.method().isAnnotationPresent(DeleteMapping.class) && !isValidDeleteRequest(params)) {
-                        return Mono.error(new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
-                                new ResponseDTO<>(ResponseStatusCode.NO_FILTER_FOR_DELETE_OPERATION))));
-                    }
-                    // 6. authenticate + authorize
-                    Mono<Credentials> authenticate = useAuthentication
-                            ? authenticator.authenticate(endpoint.parameters(),
-                            params,
-                            request.requestHeaders(),
-                            endpoint.permission())
-                            : CREDENTIALS_ROOT;
-                    return authenticate
-                            .flatMap(credentials -> {
-                                requestContext.setAccount(credentials.account());
-                                // 7. pass to handler
-                                return invokeHandler(endpoint, params);
-                            });
-                });
+                .flatMap(collection -> Mono.defer(() -> {
+                            Object[] params = collection.paramValues();
+                            requestContext.setParamValues(params);
+                            // 5. validate request
+                            if (endpoint.method().isAnnotationPresent(DeleteMapping.class) && !isValidDeleteRequest(params)) {
+                                return Mono.error(new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
+                                        new ResponseDTO<>(ResponseStatusCode.NO_FILTER_FOR_DELETE_OPERATION))));
+                            }
+                            // 6. authenticate + authorize
+                            Mono<Credentials> authenticate = useAuthentication
+                                    ? authenticator.authenticate(endpoint.parameters(),
+                                    params,
+                                    request.requestHeaders(),
+                                    endpoint.permission())
+                                    : CREDENTIALS_ROOT;
+                            return authenticate
+                                    .flatMap(credentials -> {
+                                        requestContext.setAccount(credentials.account());
+                                        // 7. pass to handler
+                                        return invokeHandler(endpoint, params);
+                                    });
+                        })
+                        .doFinally(signalType -> {
+                            // 8. release
+                            for (MultipartFile file : collection.tempFiles()) {
+                                try {
+                                    file.release();
+                                } catch (Exception ignored) {
+                                }
+                            }
+                        }));
     }
 
     private Mono<Void> checkFrequency(String ip) {
