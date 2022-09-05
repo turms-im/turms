@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.plugin;
 
+import im.turms.server.common.access.admin.web.MultipartFile;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
@@ -60,6 +61,8 @@ import java.util.zip.ZipFile;
 public class PluginManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginManager.class);
+
+    private static final String EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX = "_network_.";
 
     @Getter
     private final boolean enabled;
@@ -147,6 +150,33 @@ public class PluginManager {
         return Mono.empty();
     }
 
+    @SneakyThrows
+    public void loadJavaPlugins(List<MultipartFile> files, boolean save) {
+        for (MultipartFile file : files) {
+            String fileName = file.name();
+            ZipFile zipFile;
+            try {
+                zipFile = new ZipFile(file.file());
+            } catch (IOException e) {
+                throw new MalformedPluginArchiveException("Failed to load the jar file: " + fileName, e);
+            }
+            JavaPluginDescriptor descriptor = JavaPluginDescriptorFactory.load(zipFile);
+            if (descriptor == null) {
+                throw new MalformedPluginArchiveException("Cannot load a Java plugin from the file \"%s\" because it isn't a Java plugin jar file"
+                        .formatted(fileName));
+            }
+            if (save) {
+                Path target = pluginDir.resolve(EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName + ".jar");
+                if (Files.exists(target)) {
+                    throw new IllegalArgumentException("The plugin jar file \"%s\" already exists".formatted(fileName));
+                }
+                Files.move(file.file().toPath(), target);
+            }
+            Plugin plugin = JavaPluginFactory.create(descriptor, context);
+            pluginRepository.register(plugin);
+        }
+    }
+
     public void loadJavaPlugins(List<ZipFile> zipFiles) {
         List<JavaPluginDescriptor> descriptors = JavaPluginDescriptorFactory.load(zipFiles);
         for (JavaPluginDescriptor descriptor : descriptors) {
@@ -169,10 +199,7 @@ public class PluginManager {
             return;
         }
         for (String script : scripts) {
-            Path path = null;
-            if (save) {
-                path = savePlugin(script);
-            }
+            Path path = save ? saveJsPlugin(script) : null;
             loadJsPlugin(script, path);
         }
     }
@@ -195,11 +222,11 @@ public class PluginManager {
     }
 
     @SneakyThrows
-    private Path savePlugin(String script) {
+    private Path saveJsPlugin(String script) {
         byte[] bytes = script.getBytes(StandardCharsets.UTF_8);
         byte[] digest = MessageDigestPool.getSha1().digest(bytes);
         String name = new String(Base16.encode(digest, false));
-        Path path = pluginDir.resolve("_network_" + name + ".js");
+        Path path = pluginDir.resolve(EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + name + ".js");
         synchronized (this) {
             if (Files.notExists(path)) {
                 Files.write(path, bytes, StandardOpenOption.CREATE_NEW);

@@ -22,23 +22,29 @@ import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
+import im.turms.server.common.access.admin.web.HttpResponseException;
+import im.turms.server.common.access.admin.web.MultipartFile;
 import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
+import im.turms.server.common.access.admin.web.annotation.FormData;
 import im.turms.server.common.access.admin.web.annotation.GetMapping;
 import im.turms.server.common.access.admin.web.annotation.PostMapping;
 import im.turms.server.common.access.admin.web.annotation.PutMapping;
 import im.turms.server.common.access.admin.web.annotation.QueryParam;
 import im.turms.server.common.access.admin.web.annotation.RequestBody;
 import im.turms.server.common.access.admin.web.annotation.RestController;
+import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.plugin.access.admin.dto.request.AddJsPluginDTO;
 import im.turms.server.common.domain.plugin.access.admin.dto.request.UpdatePluginDTO;
 import im.turms.server.common.domain.plugin.access.admin.dto.response.ExtensionDTO;
 import im.turms.server.common.domain.plugin.access.admin.dto.response.PluginDTO;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
+import im.turms.server.common.infra.plugin.MalformedPluginArchiveException;
 import im.turms.server.common.infra.plugin.Plugin;
 import im.turms.server.common.infra.plugin.PluginDescriptor;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.plugin.TurmsExtension;
+import im.turms.server.common.infra.plugin.script.CorruptedScriptException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -108,13 +114,30 @@ public class PluginController {
         return HttpHandlerResult.okIfTruthy(new UpdateResultDTO(count, count));
     }
 
+    @PostMapping("java")
+    @RequiredPermission(AdminPermission.PLUGIN_CREATE)
+    public HttpHandlerResult<ResponseDTO<Void>> createJavaPlugins(
+            boolean save,
+            @FormData List<MultipartFile> files) {
+        try {
+            pluginManager.loadJavaPlugins(files, save);
+        } catch (MalformedPluginArchiveException e) {
+            throw new HttpResponseException(ResponseStatusCode.INVALID_REQUEST, e);
+        }
+        return HttpHandlerResult.RESPONSE_OK;
+    }
+
     @PostMapping("js")
     @RequiredPermission(AdminPermission.PLUGIN_CREATE)
     public HttpHandlerResult<ResponseDTO<Void>> createJsPlugins(
             boolean save,
             @RequestBody AddJsPluginDTO addJsPluginDTO) {
         Set<String> scripts = addJsPluginDTO.scripts();
-        pluginManager.loadJsPlugins(scripts, save);
+        try {
+            pluginManager.loadJsPlugins(scripts, save);
+        } catch (CorruptedScriptException e) {
+            throw new HttpResponseException(ResponseStatusCode.INVALID_REQUEST, e);
+        }
         return HttpHandlerResult.RESPONSE_OK;
     }
 

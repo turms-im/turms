@@ -49,22 +49,26 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
         }
         List<JavaPluginDescriptor> descriptors = new ArrayList<>(files.size());
         for (ZipFile file : files) {
-            String name = file.getName();
-            try (file) {
-                JavaPluginDescriptor pluginDescriptor;
-                try {
-                    pluginDescriptor = tryCreatePluginDescriptor(file, name);
-                    if (pluginDescriptor != null) {
-                        descriptors.add(pluginDescriptor);
-                    }
-                } catch (Exception e) {
-                    throw new IllegalStateException("Failed to create plugin descriptor for the jar file: " + name, e);
-                }
-            } catch (IOException e) {
-                throw new IllegalStateException("Failed to load the jar file: " + name, e);
+            JavaPluginDescriptor pluginDescriptor = load(file);
+            if (pluginDescriptor != null) {
+                descriptors.add(pluginDescriptor);
             }
         }
         return descriptors;
+    }
+
+    @Nullable
+    public static JavaPluginDescriptor load(ZipFile file) {
+        String name = file.getName();
+        try (file) {
+            try {
+                return tryCreatePluginDescriptor(file, name);
+            } catch (Exception e) {
+                throw new MalformedPluginArchiveException("Failed to create plugin descriptor for the jar file: " + name, e);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Caught an error while closing the jar file: " + name, e);
+        }
     }
 
     @Nullable
@@ -80,7 +84,7 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
             try (InputStream stream = file.getInputStream(zipEntry)) {
                 properties = YamlUtil.readValue(stream, HashMap.class);
             } catch (IOException e) {
-                throw new IllegalStateException("Failed to read the plugin properties file \"%s\" for the jar %s"
+                throw new MalformedPluginArchiveException("Failed to read the plugin properties file \"%s\" for the jar %s"
                         .formatted(name, filePath), e);
             }
             try {
@@ -94,7 +98,7 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
                         entryClass,
                         filePath);
             } catch (Exception e) {
-                throw new IllegalStateException("Cannot parse the jar " + filePath, e);
+                throw new MalformedPluginArchiveException("Cannot parse the jar " + filePath, e);
             }
         }
         return null;
