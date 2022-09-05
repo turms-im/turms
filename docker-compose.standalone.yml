@@ -277,7 +277,7 @@ services:
   # optional services for observability - metrics
 
   grafana:
-    image: grafana/grafana:9.0.3
+    image: grafana/grafana:9.1.2
     depends_on:
       - prometheus
     environment:
@@ -292,7 +292,7 @@ services:
       - ./ops/grafana/provisioning/:/etc/grafana/provisioning/
 
   prometheus:
-    image: prom/prometheus:v2.37.0
+    image: prom/prometheus:v2.38.0
     ports:
       - "9090:9090"
     profiles:
@@ -310,9 +310,9 @@ services:
 
   cadvisor:
     # If your server is in China and suffers from the network problem,
-    # try "gcr.lank8s.cn/cadvisor/cadvisor:v0.44.1"
+    # try "gcr.lank8s.cn/cadvisor/cadvisor:v0.45.0"
     # or just comment out "cadvisor"
-    image: gcr.io/cadvisor/cadvisor:v0.44.1
+    image: gcr.io/cadvisor/cadvisor:v0.45.0
     ports:
       - "8080:8080"
     profiles:
@@ -325,7 +325,7 @@ services:
       - /dev/disk/:/dev/disk:ro
 
   mongo-exporter:
-    image: percona/mongodb_exporter:0.33.0
+    image: percona/mongodb_exporter:0.34.0
     command:
       - '--mongodb.uri=mongodb://mongodb-router:27017'
     ports:
@@ -334,7 +334,7 @@ services:
       - monitoring
 
   redis-exporter:
-    image: oliver006/redis_exporter:v1.43.0
+    image: oliver006/redis_exporter:v1.44.0
     depends_on:
       - redis
     environment:
