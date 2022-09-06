@@ -25,7 +25,6 @@ import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.admin.service.BaseAdminRoleService;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.reactor.PublisherPool;
-import im.turms.server.common.infra.validation.Length;
 import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -41,6 +40,7 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -80,7 +80,7 @@ public class AdminRoleService extends BaseAdminRoleService {
     public Mono<AdminRole> authAndAddAdminRole(
             @NotNull String requesterAccount,
             @NotNull Long roleId,
-            @NotNull @NoWhitespace @Length(min = MIN_ROLE_NAME_LIMIT, max = MAX_ROLE_NAME_LIMIT) String name,
+            @NotNull @NoWhitespace @Size(min = MIN_ROLE_NAME_LIMIT, max = MAX_ROLE_NAME_LIMIT) String name,
             @NotEmpty Set<AdminPermission> permissions,
             @NotNull Integer rank) {
         try {
@@ -106,7 +106,7 @@ public class AdminRoleService extends BaseAdminRoleService {
 
     public Mono<AdminRole> addAdminRole(
             @NotNull Long roleId,
-            @NotNull @NoWhitespace @Length(min = MIN_ROLE_NAME_LIMIT, max = MAX_ROLE_NAME_LIMIT) String name,
+            @NotNull @NoWhitespace @Size(min = MIN_ROLE_NAME_LIMIT, max = MAX_ROLE_NAME_LIMIT) String name,
             @NotEmpty Set<AdminPermission> permissions,
             @NotNull Integer rank) {
         try {
@@ -169,7 +169,7 @@ public class AdminRoleService extends BaseAdminRoleService {
     public Mono<UpdateResult> authAndUpdateAdminRole(
             @NotNull String requesterAccount,
             @NotEmpty Set<Long> roleIds,
-            @Nullable @NoWhitespace @Length(min = MIN_ROLE_NAME_LIMIT, max = MAX_ROLE_NAME_LIMIT) String newName,
+            @Nullable @NoWhitespace @Size(min = MIN_ROLE_NAME_LIMIT, max = MAX_ROLE_NAME_LIMIT) String newName,
             @Nullable Set<AdminPermission> permissions,
             @Nullable Integer rank) {
         try {
@@ -202,7 +202,7 @@ public class AdminRoleService extends BaseAdminRoleService {
 
     public Mono<UpdateResult> updateAdminRole(
             @NotEmpty Set<Long> roleIds,
-            @Nullable @NoWhitespace @Length(min = MIN_ROLE_NAME_LIMIT, max = MAX_ROLE_NAME_LIMIT) String newName,
+            @Nullable @NoWhitespace @Size(min = MIN_ROLE_NAME_LIMIT, max = MAX_ROLE_NAME_LIMIT) String newName,
             @Nullable Set<AdminPermission> permissions,
             @Nullable Integer rank) {
         try {

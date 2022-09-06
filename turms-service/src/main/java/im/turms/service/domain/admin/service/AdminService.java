@@ -27,7 +27,6 @@ import im.turms.server.common.domain.admin.service.BaseAdminService;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.security.PasswordManager;
-import im.turms.server.common.infra.validation.Length;
 import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -44,6 +43,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -106,10 +106,10 @@ public class AdminService extends BaseAdminService {
 
     public Mono<Admin> authAndAddAdmin(
             @NotNull String requesterAccount,
-            @Nullable @NoWhitespace @Length(min = MIN_ACCOUNT_LIMIT, max = MAX_ACCOUNT_LIMIT) String account,
-            @Nullable @NoWhitespace @Length(min = MIN_PASSWORD_LIMIT, max = MAX_PASSWORD_LIMIT) String rawPassword,
+            @Nullable @NoWhitespace @Size(min = MIN_ACCOUNT_LIMIT, max = MAX_ACCOUNT_LIMIT) String account,
+            @Nullable @NoWhitespace @Size(min = MIN_PASSWORD_LIMIT, max = MAX_PASSWORD_LIMIT) String rawPassword,
             @NotNull Long roleId,
-            @Nullable @NoWhitespace @Length(min = MIN_NAME_LIMIT, max = MAX_NAME_LIMIT) String name,
+            @Nullable @NoWhitespace @Size(min = MIN_NAME_LIMIT, max = MAX_NAME_LIMIT) String name,
             @Nullable @PastOrPresent Date registrationDate,
             boolean upsert) {
         try {
@@ -134,10 +134,10 @@ public class AdminService extends BaseAdminService {
     }
 
     public Mono<Admin> addAdmin(
-            @Nullable @NoWhitespace @Length(min = MIN_ACCOUNT_LIMIT, max = MAX_ACCOUNT_LIMIT) String account,
-            @Nullable @NoWhitespace @Length(min = MIN_PASSWORD_LIMIT, max = MAX_PASSWORD_LIMIT) String rawPassword,
+            @Nullable @NoWhitespace @Size(min = MIN_ACCOUNT_LIMIT, max = MAX_ACCOUNT_LIMIT) String account,
+            @Nullable @NoWhitespace @Size(min = MIN_PASSWORD_LIMIT, max = MAX_PASSWORD_LIMIT) String rawPassword,
             @NotNull Long roleId,
-            @Nullable @NoWhitespace @Length(min = MIN_NAME_LIMIT, max = MAX_NAME_LIMIT) String name,
+            @Nullable @NoWhitespace @Size(min = MIN_NAME_LIMIT, max = MAX_NAME_LIMIT) String name,
             @Nullable @PastOrPresent Date registrationDate,
             boolean upsert) {
         try {
@@ -227,8 +227,8 @@ public class AdminService extends BaseAdminService {
     public Mono<UpdateResult> authAndUpdateAdmins(
             @NotNull String requesterAccount,
             @NotEmpty Set<String> targetAccounts,
-            @Nullable @NoWhitespace @Length(min = MIN_PASSWORD_LIMIT, max = MAX_PASSWORD_LIMIT) String rawPassword,
-            @Nullable @NoWhitespace @Length(min = MIN_NAME_LIMIT, max = MAX_NAME_LIMIT) String name,
+            @Nullable @NoWhitespace @Size(min = MIN_PASSWORD_LIMIT, max = MAX_PASSWORD_LIMIT) String rawPassword,
+            @Nullable @NoWhitespace @Size(min = MIN_NAME_LIMIT, max = MAX_NAME_LIMIT) String name,
             @Nullable Long roleId) {
         try {
             Validator.notNull(requesterAccount, "requesterAccount");
@@ -268,8 +268,8 @@ public class AdminService extends BaseAdminService {
 
     public Mono<UpdateResult> updateAdmins(
             @NotEmpty Set<String> targetAccounts,
-            @Nullable @NoWhitespace @Length(min = MIN_PASSWORD_LIMIT, max = MAX_PASSWORD_LIMIT) String rawPassword,
-            @Nullable @NoWhitespace @Length(min = MIN_NAME_LIMIT, max = MAX_NAME_LIMIT) String name,
+            @Nullable @NoWhitespace @Size(min = MIN_PASSWORD_LIMIT, max = MAX_PASSWORD_LIMIT) String rawPassword,
+            @Nullable @NoWhitespace @Size(min = MIN_NAME_LIMIT, max = MAX_NAME_LIMIT) String name,
             @Nullable Long roleId) {
         try {
             Validator.notEmpty(targetAccounts, "targetAccounts");

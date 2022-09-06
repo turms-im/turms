@@ -40,6 +40,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import javax.annotation.Nullable;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -168,6 +169,7 @@ public class TurmsPropertiesInspector {
             fieldToConstraintsOutput.put(field, PropertyConstraints.of(
                     field.getDeclaredAnnotation(Min.class),
                     field.getDeclaredAnnotation(Max.class),
+                    field.getDeclaredAnnotation(Size.class),
                     field.getDeclaredAnnotation(ValidCron.class)
             ));
         }

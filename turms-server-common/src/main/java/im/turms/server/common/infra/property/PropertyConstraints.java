@@ -22,6 +22,7 @@ import im.turms.server.common.infra.validation.ValidCron;
 import javax.annotation.Nullable;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 /**
  * @author James Chen
@@ -29,18 +30,20 @@ import javax.validation.constraints.Min;
 public record PropertyConstraints(
         Min min,
         Max max,
+        Size size,
         ValidCron validCron
 ) {
 
-    public static final PropertyConstraints NULL = new PropertyConstraints(null, null, null);
+    public static final PropertyConstraints NULL = new PropertyConstraints(null, null, null, null);
 
     public static PropertyConstraints of(@Nullable Min min,
                                          @Nullable Max max,
+                                         @Nullable Size size,
                                          @Nullable ValidCron validCron) {
-        if (min == null && max == null && validCron == null) {
+        if (min == null && max == null && size == null && validCron == null) {
             return NULL;
         }
-        return new PropertyConstraints(min, max, validCron);
+        return new PropertyConstraints(min, max, size, validCron);
     }
 
 }
