@@ -22,8 +22,8 @@ import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.json.JsonCodecPool;
-import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.Unpooled;
@@ -244,7 +244,7 @@ public class HttpRequestParamParser {
                             return Mono.error(new HttpResponseException(result, e));
                         }
                     }))
-                    .doFinally(signalType -> ByteBufUtil.safeEnsureReleased(body));
+                    .doFinally(signalType -> ReferenceCountUtil.safeEnsureReleased(body));
         });
     }
 

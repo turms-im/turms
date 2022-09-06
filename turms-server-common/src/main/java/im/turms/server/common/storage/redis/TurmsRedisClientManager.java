@@ -21,6 +21,7 @@ import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.netty.ByteBufUtil;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
 import im.turms.server.common.storage.redis.script.RedisScript;
 import im.turms.server.common.storage.redis.sharding.ShardingAlgorithm;
@@ -172,7 +173,7 @@ public class TurmsRedisClientManager {
                     key = keyGenerator.next();
                 } while (key != -1);
             } catch (Exception e) {
-                ByteBufUtil.safeEnsureReleased(keysBuffer);
+                ReferenceCountUtil.safeEnsureReleased(keysBuffer);
                 throw e;
             }
             TurmsRedisClient client = clients.get(0);

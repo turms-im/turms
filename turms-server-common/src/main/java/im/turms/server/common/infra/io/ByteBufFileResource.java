@@ -17,7 +17,7 @@
 
 package im.turms.server.common.infra.io;
 
-import im.turms.server.common.infra.netty.ByteBufUtil;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 
@@ -39,6 +39,6 @@ public class ByteBufFileResource extends BaseFileResource {
 
     @Override
     public void cleanup(@Nullable Throwable throwable) {
-        ByteBufUtil.ensureReleased(buffer);
+        ReferenceCountUtil.ensureReleased(buffer);
     }
 }

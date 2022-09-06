@@ -22,7 +22,7 @@ import im.turms.server.common.infra.logging.core.idle.BackoffIdleStrategy;
 import im.turms.server.common.infra.logging.core.logger.InternalLogger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.logging.core.model.LogRecord;
-import im.turms.server.common.infra.netty.ByteBufUtil;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import org.jctools.queues.MpscUnboundedArrayQueue;
 
@@ -77,7 +77,7 @@ public final class LogProcessor {
                         InternalLogger.printException(e);
                     }
                 }
-                ByteBufUtil.safeEnsureReleased(logRecord.data());
+                ReferenceCountUtil.safeEnsureReleased(logRecord.data());
             }
             if (!active) {
                 break;

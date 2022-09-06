@@ -24,7 +24,7 @@ import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.context.LogThreadContext;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
-import im.turms.server.common.infra.netty.ByteBufUtil;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.tracing.TracingContext;
 import io.netty.buffer.ByteBuf;
@@ -82,8 +82,8 @@ public class TurmsTemplateLayout extends TemplateLayout {
         try {
             return format0(buffer, className, level, msg);
         } catch (Exception e) {
-            ByteBufUtil.safeEnsureReleased(buffer);
-            ByteBufUtil.safeEnsureReleased(msg);
+            ReferenceCountUtil.safeEnsureReleased(buffer);
+            ReferenceCountUtil.safeEnsureReleased(msg);
             throw e;
         }
     }
@@ -110,7 +110,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
         try {
             return format0(buffer, shouldParse, className, level, msg, args, throwable);
         } catch (Exception e) {
-            ByteBufUtil.safeEnsureReleased(buffer);
+            ReferenceCountUtil.safeEnsureReleased(buffer);
             throw e;
         }
     }

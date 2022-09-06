@@ -158,29 +158,6 @@ public final class ByteBufUtil {
         return new RefCntCorrectorByteBuf(buf);
     }
 
-    public static void safeEnsureReleased(ByteBuf buffer) {
-        try {
-            int refCnt = buffer.refCnt();
-            if (refCnt > 0) {
-                buffer.release(refCnt);
-            }
-        } catch (Exception ignored) {
-        }
-    }
-
-    public static void ensureReleased(ByteBuf buffer) {
-        int refCnt = buffer.refCnt();
-        if (refCnt > 0) {
-            buffer.release(refCnt);
-        }
-    }
-
-    public static void ensureReleased(ByteBuf[] buffers) {
-        for (ByteBuf buffer : buffers) {
-            ensureReleased(buffer);
-        }
-    }
-
     public static ByteBuf join(int estimatedSize, int delimiter, Object... elements) {
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(estimatedSize);
         for (int i = 0, length = elements.length, last = length - 1; i < length; i++) {

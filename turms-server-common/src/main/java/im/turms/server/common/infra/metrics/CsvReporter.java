@@ -20,7 +20,7 @@ package im.turms.server.common.infra.metrics;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.lang.StrJoiner;
 import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.netty.ByteBufUtil;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import io.micrometer.core.instrument.Measurement;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.Tag;
@@ -96,7 +96,7 @@ public final class CsvReporter {
             }
         } catch (Exception e) {
             if (buffer != null) {
-                ByteBufUtil.safeEnsureReleased(buffer);
+                ReferenceCountUtil.safeEnsureReleased(buffer);
             }
             throw new IllegalStateException("Failed to scrape", e);
         }

@@ -18,6 +18,7 @@
 package im.turms.server.common.storage.redis;
 
 import im.turms.server.common.infra.netty.ByteBufUtil;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.storage.redis.codec.TurmsRedisCodecAdapter;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
@@ -152,8 +153,8 @@ public class TurmsRedisClient {
             ByteBuf[] fieldBuffers = serializationContext.encodeHashFields(fields);
             return commands.hdel(keyBuffer, fieldBuffers)
                     .doFinally(signal -> {
-                        ByteBufUtil.ensureReleased(keyBuffer);
-                        ByteBufUtil.ensureReleased(fieldBuffers);
+                        ReferenceCountUtil.ensureReleased(keyBuffer);
+                        ReferenceCountUtil.ensureReleased(fieldBuffers);
                     });
         });
     }
@@ -170,7 +171,7 @@ public class TurmsRedisClient {
                         return Mono.just(new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue()));
                     });
             return entryFlux
-                    .doFinally(signal -> ByteBufUtil.ensureReleased(keyBuffer));
+                    .doFinally(signal -> ReferenceCountUtil.ensureReleased(keyBuffer));
         });
     }
 
@@ -182,8 +183,8 @@ public class TurmsRedisClient {
             ByteBuf memberBuffer = serializationContext.encodeGeoMember(member);
             return commands.geoadd(keyBuffer, longitude, latitude, memberBuffer)
                     .doFinally(signal -> {
-                        ByteBufUtil.ensureReleased(keyBuffer);
-                        ByteBufUtil.ensureReleased(memberBuffer);
+                        ReferenceCountUtil.ensureReleased(keyBuffer);
+                        ReferenceCountUtil.ensureReleased(memberBuffer);
                     });
         });
     }
@@ -195,8 +196,8 @@ public class TurmsRedisClient {
             return commands.geopos(keyBuffer, memberBuffers)
                     .flatMap(value -> value.isEmpty() ? Mono.empty() : Mono.just(value.getValue()))
                     .doFinally(signal -> {
-                        ByteBufUtil.ensureReleased(keyBuffer);
-                        ByteBufUtil.ensureReleased(memberBuffers);
+                        ReferenceCountUtil.ensureReleased(keyBuffer);
+                        ReferenceCountUtil.ensureReleased(memberBuffers);
                     });
         });
     }
@@ -216,8 +217,8 @@ public class TurmsRedisClient {
                         return Flux.error(e);
                     })
                     .doFinally(signal -> {
-                        ByteBufUtil.ensureReleased(keyBuffer);
-                        ByteBufUtil.ensureReleased(memberBuffer);
+                        ReferenceCountUtil.ensureReleased(keyBuffer);
+                        ReferenceCountUtil.ensureReleased(memberBuffer);
                     });
         });
     }
@@ -228,8 +229,8 @@ public class TurmsRedisClient {
             ByteBuf[] memberBuffers = serializationContext.encodeGeoMembers(members);
             return commands.zrem(keyBuffer, memberBuffers)
                     .doFinally(signal -> {
-                        ByteBufUtil.ensureReleased(keyBuffer);
-                        ByteBufUtil.ensureReleased(memberBuffers);
+                        ReferenceCountUtil.ensureReleased(keyBuffer);
+                        ReferenceCountUtil.ensureReleased(memberBuffers);
                     });
         });
     }
@@ -258,7 +259,7 @@ public class TurmsRedisClient {
                         }
                         return Flux.error(e);
                     })
-                    .doFinally(signal -> ByteBufUtil.ensureReleased(keys))
+                    .doFinally(signal -> ReferenceCountUtil.ensureReleased(keys))
                     .single();
         });
     }
