@@ -149,8 +149,15 @@ public class HttpEndpointCollector {
                 continue;
             }
             if (RequestContext.class.isAssignableFrom(parameter.getType())) {
-                parameterInfos[i] = new MethodParameterInfo(parameter.getName(), RequestContext.class,
-                        null, false, false, false, false, null);
+                parameterInfos[i] = new MethodParameterInfo(parameter.getName(),
+                        RequestContext.class,
+                        null,
+                        false,
+                        false,
+                        false,
+                        false,
+                        null,
+                        null);
                 continue;
             }
             parameterInfos[i] = parseAsRequestParam(parameter);
@@ -163,14 +170,16 @@ public class HttpEndpointCollector {
         QueryParam queryParam = parameter.getDeclaredAnnotation(QueryParam.class);
         Class<?> type = parameter.getType();
         if (queryParam == null) {
+            Object defaultValue = Defaults.defaultValue(type);
             return new MethodParameterInfo(parameter.getName(),
                     type,
                     ReflectionUtil.getElementClass(parameter.getParameterizedType()),
-                    true,
+                    defaultValue == null,
                     false,
                     false,
                     false,
-                    Defaults.defaultValue(type));
+                    defaultValue,
+                    null);
         }
         String name = queryParam.value().isBlank() ? parameter.getName() : queryParam.value();
         Object parsedDefaultValue = queryParam.defaultValue().isBlank()
@@ -183,7 +192,8 @@ public class HttpEndpointCollector {
                 false,
                 false,
                 false,
-                parsedDefaultValue);
+                parsedDefaultValue,
+                null);
     }
 
     private static MethodParameterInfo parseAsRequestHeader(Parameter parameter) {
@@ -200,7 +210,8 @@ public class HttpEndpointCollector {
                 true,
                 false,
                 false,
-                Defaults.defaultValue(type));
+                Defaults.defaultValue(type),
+                null);
     }
 
     private static MethodParameterInfo parseAsRequestBody(Parameter parameter) {
@@ -215,6 +226,7 @@ public class HttpEndpointCollector {
                 false,
                 true,
                 false,
+                null,
                 null);
     }
 
@@ -226,6 +238,7 @@ public class HttpEndpointCollector {
         if (!ReflectionUtil.isListOf(parameter.getParameterizedType(), MultipartFile.class)) {
             throw new IllegalArgumentException("The type of the form data parameter must be List<MultipartFile>: " + parameter);
         }
+        String contentType = requestFormData.contentType();
         return new MethodParameterInfo(parameter.getName(),
                 List.class,
                 MultipartFile.class,
@@ -233,7 +246,8 @@ public class HttpEndpointCollector {
                 false,
                 false,
                 true,
-                null);
+                null,
+                contentType.isBlank() ? null : contentType);
     }
 
     @Nullable

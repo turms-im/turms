@@ -25,9 +25,11 @@ public class MediaTypeConst {
     private MediaTypeConst() {
     }
 
+    public static final String APPLICATION_JAVA_ARCHIVE = "application/java-archive";
     public static final String APPLICATION_JAVASCRIPT = "application/javascript";
     public static final String APPLICATION_JSON = "application/json";
     public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
+    public static final String MULTIPART_FORM_DATA = "multipart/form-data";
     public static final String TEXT_CSV_UTF_8 = "text/csv; charset=UTF-8";
     public static final String TEXT_PLAIN_UTF_8 = "text/plain; charset=UTF-8";
     public static final String TEXT_CSS = "text/css";

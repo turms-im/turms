@@ -23,6 +23,7 @@ import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
 import im.turms.server.common.access.admin.web.HttpResponseException;
+import im.turms.server.common.access.admin.web.MediaTypeConst;
 import im.turms.server.common.access.admin.web.MultipartFile;
 import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
 import im.turms.server.common.access.admin.web.annotation.FormData;
@@ -119,7 +120,7 @@ public class PluginController {
     @RequiredPermission(AdminPermission.PLUGIN_CREATE)
     public HttpHandlerResult<ResponseDTO<Void>> createJavaPlugins(
             boolean save,
-            @FormData List<MultipartFile> files) {
+            @FormData(contentType = MediaTypeConst.APPLICATION_JAVA_ARCHIVE) List<MultipartFile> files) {
         try {
             pluginManager.loadJavaPlugins(files, save);
         } catch (MalformedPluginArchiveException e) {

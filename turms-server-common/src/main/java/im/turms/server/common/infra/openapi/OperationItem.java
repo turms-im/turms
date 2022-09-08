@@ -15,22 +15,20 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.access.admin.web;
+package im.turms.server.common.infra.openapi;
 
-import javax.annotation.Nullable;
+import io.swagger.v3.core.converter.ResolvedSchema;
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.PathItem;
+
+import java.util.List;
 
 /**
  * @author James Chen
  */
-public record MethodParameterInfo(
-        String name,
-        Class<?> type,
-        @Nullable Class<?> elementType,
-        boolean isRequired,
-        boolean isHeader,
-        boolean isBody,
-        boolean isFormData,
-        Object defaultValue,
-        String contentType
+public record OperationItem(
+        PathItem.HttpMethod method,
+        Operation operation,
+        List<ResolvedSchema> schemas
 ) {
 }

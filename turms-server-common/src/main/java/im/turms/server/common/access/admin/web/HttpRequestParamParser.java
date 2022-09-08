@@ -260,6 +260,7 @@ public class HttpRequestParamParser {
                         return new MultipartFile(data, name, data.getFile());
                     } catch (IOException e) {
                         // Should never happen because the data should be a file
+                        // (DiskAttribute or DiskFileUpload)
                         throw new RuntimeException(e);
                     }
                 })

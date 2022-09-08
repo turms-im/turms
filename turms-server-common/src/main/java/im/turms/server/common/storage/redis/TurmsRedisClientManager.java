@@ -18,8 +18,6 @@
 package im.turms.server.common.storage.redis;
 
 import im.turms.server.common.domain.session.service.UserStatusService;
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
@@ -50,8 +48,6 @@ import java.util.function.BiFunction;
  * @author James Chen
  */
 public class TurmsRedisClientManager {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TurmsRedisClientManager.class);
 
     private final List<TurmsRedisClient> clients;
     private final ShardingAlgorithm shardingAlgorithm;

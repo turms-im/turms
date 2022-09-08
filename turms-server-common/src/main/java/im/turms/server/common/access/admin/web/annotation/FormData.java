@@ -31,4 +31,6 @@ public @interface FormData {
 
     boolean required() default true;
 
+    String contentType() default "";
+
 }
