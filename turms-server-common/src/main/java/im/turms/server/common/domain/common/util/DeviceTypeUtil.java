@@ -18,6 +18,7 @@
 package im.turms.server.common.domain.common.util;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.lang.BitUtil;
 import org.eclipse.collections.api.map.primitive.ByteObjectMap;
 import org.eclipse.collections.api.map.primitive.MutableByteObjectMap;
@@ -27,7 +28,6 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author James Chen
@@ -38,8 +38,7 @@ public final class DeviceTypeUtil {
     public static final DeviceType[] ALL_AVAILABLE_DEVICE_TYPES = Arrays.stream(ALL_DEVICE_TYPES)
             .filter(deviceType -> deviceType != DeviceType.UNRECOGNIZED)
             .toArray(DeviceType[]::new);
-    public static final Set<DeviceType> ALL_AVAILABLE_DEVICE_TYPES_SET = Arrays.stream(ALL_AVAILABLE_DEVICE_TYPES)
-            .collect(Collectors.toSet());
+    public static final Set<DeviceType> ALL_AVAILABLE_DEVICE_TYPES_SET = CollectionUtil.newSet(ALL_AVAILABLE_DEVICE_TYPES);
 
     private static final int DEVICE_TYPE_COUNT = ALL_DEVICE_TYPES.length;
 

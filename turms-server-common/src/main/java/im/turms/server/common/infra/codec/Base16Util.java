@@ -19,26 +19,26 @@ package im.turms.server.common.infra.codec;
 
 import im.turms.server.common.infra.lang.StringUtil;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * @author James Chen
  */
 public final class Base16Util {
 
-    private static final byte[] upper = "0123456789ABCDEF".getBytes(StandardCharsets.UTF_8);
+    private static final byte[] UPPER = StringUtil.getBytes("0123456789ABCDEF");
 
-    private static final byte[] lower = "0123456789abcdef".getBytes(StandardCharsets.UTF_8);
+    private static final byte[] LOWER = StringUtil.getBytes("0123456789abcdef");
 
     private Base16Util() {
     }
 
     public static byte[] encode(byte[] bytes, boolean upper) {
-        byte[] table = upper ? Base16Util.upper : Base16Util.lower;
+        byte[] table = upper ? UPPER : LOWER;
         byte[] dst = new byte[bytes.length * 2];
+        byte b;
         for (int i = 0, j = 0; i < bytes.length; i++) {
-            dst[j++] = table[(bytes[i] >> 4) & 0x0f];
-            dst[j++] = table[bytes[i] & 0x0f];
+            b = bytes[i];
+            dst[j++] = table[(b >> 4) & 0x0f];
+            dst[j++] = table[b & 0x0f];
         }
         return dst;
     }

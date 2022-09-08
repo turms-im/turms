@@ -29,6 +29,6 @@ import java.util.List;
 public record OperationItem(
         PathItem.HttpMethod method,
         Operation operation,
-        List<ResolvedSchema> schemas
+        List<ResolvedSchema> paramSchemas
 ) {
 }

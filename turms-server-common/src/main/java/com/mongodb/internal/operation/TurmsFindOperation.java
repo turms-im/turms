@@ -35,13 +35,9 @@ import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.bson.codecs.Decoder;
 
-import java.util.function.Supplier;
-
 import static com.mongodb.assertions.Assertions.notNull;
 import static com.mongodb.internal.async.ErrorHandlingResultCallback.errorHandlingCallback;
-import static com.mongodb.internal.operation.CommandOperationHelper.createReadCommandAndExecute;
 import static com.mongodb.internal.operation.CommandOperationHelper.createReadCommandAndExecuteAsync;
-import static com.mongodb.internal.operation.CommandOperationHelper.decorateReadWithRetries;
 import static com.mongodb.internal.operation.CommandOperationHelper.initialRetryState;
 import static com.mongodb.internal.operation.CommandOperationHelper.logRetryExecute;
 import static com.mongodb.internal.operation.ExplainHelper.asExplainCommand;
@@ -49,7 +45,6 @@ import static com.mongodb.internal.operation.OperationHelper.LOGGER;
 import static com.mongodb.internal.operation.OperationHelper.canRetryRead;
 import static com.mongodb.internal.operation.OperationHelper.cursorDocumentToQueryResult;
 import static com.mongodb.internal.operation.OperationHelper.withAsyncSourceAndConnection;
-import static com.mongodb.internal.operation.OperationHelper.withSourceAndConnection;
 import static com.mongodb.internal.operation.OperationReadConcernHelper.appendReadConcernToCommand;
 import static com.mongodb.internal.operation.ServerVersionHelper.MIN_WIRE_VERSION;
 
@@ -82,22 +77,7 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
 
     @Override
     public BatchCursor<T> execute(final ReadBinding binding) {
-        RetryState retryState = initialRetryState(retryReads);
-        Supplier<BatchCursor<T>> read = decorateReadWithRetries(retryState, () -> {
-            logRetryExecute(retryState);
-            return withSourceAndConnection(binding::getReadConnectionSource, false, (source, connection) -> {
-                retryState.breakAndThrowIfRetryAnd(() -> !canRetryRead(source.getServerDescription(), connection.getDescription(),
-                        binding.getSessionContext()));
-                try {
-                    return createReadCommandAndExecute(retryState, binding, source, namespace.getDatabaseName(),
-                            getCommandCreator(binding.getSessionContext()), CommandResultDocumentCodec.create(decoder, FIRST_BATCH),
-                            transformer(), connection);
-                } catch (MongoCommandException e) {
-                    throw new MongoQueryException(e);
-                }
-            });
-        });
-        return read.get();
+        throw new UnsupportedOperationException("Should execute asynchronously");
     }
 
     @Override

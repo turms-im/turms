@@ -432,7 +432,10 @@ public class GroupMemberService {
     }
 
     /**
-     * @return Possible codes: OK, INVITEE_ALREADY_GROUP_MEMBER, INVITEE_HAS_BEEN_BLOCKED
+     * @return Possible codes:
+     * {@link ResponseStatusCode#OK},
+     * {@link ResponseStatusCode#GROUP_INVITEE_ALREADY_GROUP_MEMBER},
+     * {@link ResponseStatusCode#INVITEE_HAS_BEEN_BLOCKED}
      */
     public Mono<ResponseStatusCode> isAllowedToBeInvited(@NotNull Long groupId, @NotNull Long inviteeId) {
         return isGroupMember(groupId, inviteeId)

@@ -716,7 +716,10 @@ public class GroupService {
     }
 
     /**
-     * @return OK, USER_NOT_ACTIVE, OWNED_RESOURCE_LIMIT_REACHED
+     * @return Possible codes:
+     * {@link ResponseStatusCode#OK},
+     * {@link ResponseStatusCode#LOGGING_IN_USER_NOT_ACTIVE},
+     * {@link ResponseStatusCode#MAX_OWNED_GROUPS_REACHED}
      */
     public Mono<ServicePermission> isAllowedToCreateGroup(
             @NotNull Long requesterId,

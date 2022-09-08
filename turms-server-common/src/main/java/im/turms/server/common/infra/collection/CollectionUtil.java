@@ -23,6 +23,7 @@ import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,11 +118,17 @@ public final class CollectionUtil {
         return result;
     }
 
-    public static <T> Set<T> newSet(Collection<T> keys) {
-        if (keys instanceof Set) {
-            return (Set<T>) keys;
+    public static <T> Set<T> newSet(Collection<T> values) {
+        if (values instanceof Set) {
+            return (Set<T>) values;
         }
-        return UnifiedSet.newSet(keys);
+        return UnifiedSet.newSet(values);
+    }
+
+    public static <T> Set<T> newSet(T[] values) {
+        Set<T> set = UnifiedSet.newSet(values.length);
+        Collections.addAll(set, values);
+        return set;
     }
 
     public static <T> Set<T> newSetWithExpectedSize(int expectedSize) {

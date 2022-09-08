@@ -79,11 +79,14 @@ public class JavaPluginFactory {
             for (Class<?> extensionInterface : interfaces) {
                 if (extensionInterface != ExtensionPoint.class || ExtensionPoint.class.isAssignableFrom(extensionClass)) {
                     foundExtensionPoint = true;
+                    break;
                 }
             }
             if (!foundExtensionPoint) {
-                throw new IllegalStateException("Extension %s should implement at least one subclass of ExtensionPoint"
-                        .formatted(extensionClass.getName()));
+                throw new IllegalStateException("Extension " +
+                        extensionClass.getName() +
+                        " should implement at least one subclass of " +
+                        ExtensionPoint.class.getSimpleName());
             }
             TurmsExtension extension = createExtension(extensionClass, context);
             extensions.add(extension);

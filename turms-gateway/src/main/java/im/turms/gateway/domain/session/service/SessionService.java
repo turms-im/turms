@@ -214,7 +214,10 @@ public class SessionService implements ISessionService {
     }
 
     /**
-     * @return OK, LOGIN_AUTHENTICATION_FAILED, LOGGING_IN_USER_NOT_ACTIVE
+     * @return Possible codes:
+     * {@link ResponseStatusCode#OK},
+     * {@link ResponseStatusCode#LOGIN_AUTHENTICATION_FAILED},
+     * {@link ResponseStatusCode#LOGGING_IN_USER_NOT_ACTIVE}
      */
     private Mono<ResponseStatusCode> authenticate(
             int version,
@@ -254,7 +257,10 @@ public class SessionService implements ISessionService {
     }
 
     /**
-     * @return OK, AUTHENTICATION_FAILED, LOGGING_IN_USER_NOT_ACTIVE
+     * @return Possible codes:
+     * {@link ResponseStatusCode#OK},
+     * {@link ResponseStatusCode#LOGIN_AUTHENTICATION_FAILED},
+     * {@link ResponseStatusCode#LOGGING_IN_USER_NOT_ACTIVE}
      */
     private Mono<ResponseStatusCode> authenticate0(
             @NotNull Long userId,

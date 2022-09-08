@@ -117,14 +117,14 @@ public class OpenApiBuilder {
         Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint = httpRequestDispatcher.getKeyToEndpoint();
         for (Map.Entry<ApiEndpointKey, ApiEndpoint> entry : keyToEndpoint.entrySet()) {
             ApiEndpoint endpoint = entry.getValue();
-            ResolvedSchema resolvedSchema = getResponseSchema(endpoint.method());
-            if (resolvedSchema != null) {
-                schemas.putAll(resolvedSchema.referencedSchemas);
+            ResolvedSchema responseSchema = getResponseSchema(endpoint.method());
+            if (responseSchema != null) {
+                schemas.putAll(responseSchema.referencedSchemas);
             }
             OperationItem operationItem = getOperation(endpoint,
-                    resolvedSchema == null ? null : resolvedSchema.schema);
-            for (ResolvedSchema schema : operationItem.schemas()) {
-                schemas.putAll(schema.referencedSchemas);
+                    responseSchema == null ? null : responseSchema.schema);
+            for (ResolvedSchema paramSchema : operationItem.paramSchemas()) {
+                schemas.putAll(paramSchema.referencedSchemas);
             }
             paths.compute(entry.getKey().path(), (path, pathItem) -> {
                 if (pathItem == null) {
@@ -208,7 +208,7 @@ public class OpenApiBuilder {
                         .addApiResponse("503", new ApiResponse()
                                 .description("Service Unavailable")));
         MethodParameterInfo[] parameters = endpoint.parameters();
-        List<ResolvedSchema> schemas = new ArrayList<>(parameters.length);
+        List<ResolvedSchema> paramSchemas = new ArrayList<>(parameters.length);
         ModelConverters converters = ModelConverters.getInstance();
         for (MethodParameterInfo parameter : parameters) {
             Class<?> elementType = parameter.elementType();
@@ -216,7 +216,7 @@ public class OpenApiBuilder {
             if (!parameter.isFormData()) {
                 paramSchema = converters.resolveAsResolvedSchema(new AnnotatedType(unwrapType(
                         elementType == null ? parameter.type() : elementType)));
-                schemas.add(paramSchema);
+                paramSchemas.add(paramSchema);
             }
             if (parameter.isBody() || parameter.isFormData()) {
                 Content content = new Content();
@@ -253,7 +253,7 @@ public class OpenApiBuilder {
             operation.addSecurityItem(new SecurityRequirement()
                     .addList("BasicAuth"));
         }
-        return new OperationItem(httpMethodEnum, operation, schemas);
+        return new OperationItem(httpMethodEnum, operation, paramSchemas);
     }
 
 }
