@@ -39,6 +39,7 @@ import im.turms.server.common.domain.plugin.access.admin.dto.response.ExtensionD
 import im.turms.server.common.domain.plugin.access.admin.dto.response.PluginDTO;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
+import im.turms.server.common.infra.plugin.JsPluginScript;
 import im.turms.server.common.infra.plugin.MalformedPluginArchiveException;
 import im.turms.server.common.infra.plugin.Plugin;
 import im.turms.server.common.infra.plugin.PluginDescriptor;
@@ -132,7 +133,7 @@ public class PluginController {
     public HttpHandlerResult<ResponseDTO<Void>> createJsPlugins(
             boolean save,
             @RequestBody AddJsPluginDTO addJsPluginDTO) {
-        Set<String> scripts = addJsPluginDTO.scripts();
+        List<JsPluginScript> scripts = addJsPluginDTO.scripts();
         try {
             pluginManager.loadJsPlugins(scripts, save);
         } catch (CorruptedScriptException e) {

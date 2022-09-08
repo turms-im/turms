@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.plugin;
 
 import im.turms.server.common.access.admin.web.MultipartFile;
+import im.turms.server.common.infra.codec.Base16Util;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
@@ -29,7 +30,6 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.plugin.JsPluginDebugProperties;
 import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 import im.turms.server.common.infra.security.MessageDigestPool;
-import io.lettuce.core.codec.Base16;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.graalvm.polyglot.Engine;
@@ -194,13 +194,14 @@ public class PluginManager {
         }
     }
 
-    public void loadJsPlugins(Collection<String> scripts, boolean save) {
+    public void loadJsPlugins(Collection<JsPluginScript> scripts, boolean save) {
         if (CollectionUtil.isEmpty(scripts)) {
             return;
         }
-        for (String script : scripts) {
-            Path path = save ? saveJsPlugin(script) : null;
-            loadJsPlugin(script, path);
+        for (JsPluginScript script : scripts) {
+            String code = script.code();
+            Path path = save ? saveJsPlugin(script.fileName(), code) : null;
+            loadJsPlugin(code, path);
         }
     }
 
@@ -222,16 +223,22 @@ public class PluginManager {
     }
 
     @SneakyThrows
-    private Path saveJsPlugin(String script) {
-        byte[] bytes = script.getBytes(StandardCharsets.UTF_8);
-        byte[] digest = MessageDigestPool.getSha1().digest(bytes);
-        String name = new String(Base16.encode(digest, false));
-        Path path = pluginDir.resolve(EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + name + ".js");
-        synchronized (this) {
-            if (Files.notExists(path)) {
-                Files.write(path, bytes, StandardOpenOption.CREATE_NEW);
+    private Path saveJsPlugin(@Nullable String fileName, String code) {
+        byte[] bytes = code.getBytes(StandardCharsets.UTF_8);
+        boolean isCustomFileName = fileName != null;
+        if (fileName == null) {
+            byte[] digest = MessageDigestPool.getSha1().digest(bytes);
+            fileName = Base16Util.encodeAsString(digest, false);
+        }
+        Path path = pluginDir.resolve(EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName + ".js");
+        if (Files.exists(path)) {
+            if (isCustomFileName) {
+                throw new IllegalArgumentException("The JavaScript plugin file \"%s\" already exists".formatted(fileName));
+            } else {
+                return path;
             }
         }
+        Files.write(path, bytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         return path;
     }
 

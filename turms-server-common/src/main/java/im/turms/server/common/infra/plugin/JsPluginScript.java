@@ -15,16 +15,13 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.domain.plugin.access.admin.dto.request;
-
-import im.turms.server.common.infra.plugin.JsPluginScript;
-
-import java.util.List;
+package im.turms.server.common.infra.plugin;
 
 /**
  * @author James Chen
  */
-public record AddJsPluginDTO(
-        List<JsPluginScript> scripts
+public record JsPluginScript(
+        String fileName,
+        String code
 ) {
 }
