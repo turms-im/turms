@@ -260,4 +260,13 @@ TODO
 
 ## 插件相关API接口
 
-TODO
+OpenAPI地址：http://playground.turms.im:8510/openapi/ui#/plugin-controller
+
+
+| **Controller**   | 路径               | 作用               | 通用 |
+| :--------------- | ------------------ | ------------------ | ---- |
+| PluginController | GET /plugins       | 查询插件           | ✅    |
+|                  | PUT /plugins       | 更新插件           | ✅    |
+|                  | DELETE /plugins    | 删除插件           | ✅    |
+|                  | POST /plugins/java | 添加Java插件       | ✅    |
+|                  | POST /plugins/js   | 添加JavaScript插件 | ✅    |
