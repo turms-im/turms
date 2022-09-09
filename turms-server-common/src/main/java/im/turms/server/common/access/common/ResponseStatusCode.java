@@ -52,18 +52,25 @@ public enum ResponseStatusCode {
     //**********************************************************
 
     // Admin
+    // Admin - Common
     UNAUTHORIZED(1300, "Unauthorized", 401),
     NO_FILTER_FOR_DELETE_OPERATION(1301, "Delete operation should have at least one filter", 400),
     RESOURCE_NOT_FOUND(1302, "Resource not found", 404),
+    ADMIN_REQUESTS_TOO_FREQUENT(1303, "The admin requests are too frequent", 429),
 
+    // Admin - JFR
     DUMP_JFR_IN_ILLEGAL_STATUS(1310, "Dumping JFR should be executed in a legal status", 406),
-    ADMIN_REQUESTS_TOO_FREQUENT(1311, "The admin requests are too frequent", 429),
 
-    // Blocklist
+    // Admin - plugin
+    JAVASCRIPT_PLUGIN_IS_DISABLED(1320, "JavaScript plugin is disabled", 403),
+    SAVING_JAVA_PLUGIN_IS_DISABLED(1321, "Saving a Java plugin is disabled", 403),
+    SAVING_JAVASCRIPT_PLUGIN_IS_DISABLED(1322, "Saving a JavaScript plugin is disabled", 403),
+
+    // Admin - Blocklist
     IP_BLOCKLIST_IS_DISABLED(1400, "Blocking an IP is disabled", 403),
     USER_ID_BLOCKLIST_IS_DISABLED(1401, "Blocking a user ID is disabled", 403),
 
-    // Cluster - Leader
+    // Admin - Cluster - Leader
     NON_EXISTING_MEMBER_TO_BE_LEADER(1800, "Cannot find the node", 404),
     NO_QUALIFIED_MEMBER_TO_BE_LEADER(1801, "No qualified node to be a leader", 503),
     NOT_QUALIFIED_MEMBER_TO_BE_LEADER(1802, "Only qualified node (isLeaderEligible=true, nodeType=SERVICE) can be a leader", 403),

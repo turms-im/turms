@@ -46,6 +46,7 @@ import im.turms.server.common.infra.plugin.Plugin;
 import im.turms.server.common.infra.plugin.PluginDescriptor;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.plugin.TurmsExtension;
+import im.turms.server.common.infra.plugin.UnsupportedSaveOperationException;
 import im.turms.server.common.infra.plugin.script.CorruptedScriptException;
 
 import java.util.ArrayList;
@@ -125,6 +126,8 @@ public class PluginController {
             pluginManager.loadJavaPlugins(files, save);
         } catch (MalformedPluginArchiveException e) {
             throw new HttpResponseException(ResponseStatusCode.INVALID_REQUEST, e);
+        } catch (UnsupportedSaveOperationException e) {
+            throw new HttpResponseException(ResponseStatusCode.SAVING_JAVA_PLUGIN_IS_DISABLED, e);
         }
         return HttpHandlerResult.RESPONSE_OK;
     }
@@ -139,6 +142,10 @@ public class PluginController {
             pluginManager.loadJsPlugins(scripts, save);
         } catch (CorruptedScriptException e) {
             throw new HttpResponseException(ResponseStatusCode.INVALID_REQUEST, e);
+        } catch (UnsupportedSaveOperationException e) {
+            throw new HttpResponseException(ResponseStatusCode.SAVING_JAVASCRIPT_PLUGIN_IS_DISABLED, e);
+        } catch (UnsupportedOperationException e) {
+            throw new HttpResponseException(ResponseStatusCode.JAVASCRIPT_PLUGIN_IS_DISABLED, e);
         }
         return HttpHandlerResult.RESPONSE_OK;
     }

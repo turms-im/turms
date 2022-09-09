@@ -28,6 +28,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.plugin.JsPluginDebugProperties;
+import im.turms.server.common.infra.property.env.common.plugin.JsPluginProperties;
 import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 import im.turms.server.common.infra.security.MessageDigestPool;
 import lombok.Getter;
@@ -68,6 +69,9 @@ public class PluginManager {
     private final boolean enabled;
     private final Path pluginDir;
 
+    private final boolean allowSaveJavaPlugins;
+
+    private final boolean allowSaveJsPlugins;
     private final boolean isJsScriptEnabled;
     private final boolean isJsDebugEnabled;
     private final String jsInspectHost;
@@ -98,8 +102,11 @@ public class PluginManager {
         isJsScriptEnabled = ClassUtil.exists("org.graalvm.polyglot.Engine");
         PluginFinder.FindResult findResult = PluginFinder.find(pluginDir, isJsScriptEnabled);
         loadJavaPlugins(findResult.zipFiles());
+        allowSaveJavaPlugins = pluginProperties.getJava().isAllowSave();
         if (isJsScriptEnabled) {
-            JsPluginDebugProperties debugProperties = pluginProperties.getJs().getDebug();
+            JsPluginProperties jsPluginProperties = pluginProperties.getJs();
+            JsPluginDebugProperties debugProperties = jsPluginProperties.getDebug();
+            allowSaveJsPlugins = jsPluginProperties.isAllowSave();
             isJsDebugEnabled = debugProperties.isEnabled();
             jsInspectHost = debugProperties.getInspectHost();
             jsInspectPort = debugProperties.getInspectPort();
@@ -108,6 +115,7 @@ public class PluginManager {
                     .build();
             loadJsPlugins(findResult.jsFiles());
         } else {
+            allowSaveJsPlugins = false;
             isJsDebugEnabled = false;
             jsInspectHost = null;
             jsInspectPort = 0;
@@ -152,6 +160,9 @@ public class PluginManager {
 
     @SneakyThrows
     public void loadJavaPlugins(List<MultipartFile> files, boolean save) {
+        if (!allowSaveJavaPlugins && save) {
+            throw new UnsupportedSaveOperationException("Cannot save Java plugins since it has been disabled");
+        }
         for (MultipartFile file : files) {
             String fileName = file.name();
             ZipFile zipFile;
@@ -195,6 +206,12 @@ public class PluginManager {
     }
 
     public void loadJsPlugins(Collection<JsPluginScript> scripts, boolean save) {
+        if (!isJsScriptEnabled) {
+            throw new UnsupportedOperationException("JavaScript plugins are disabled because the classes of GraalJS aren't loaded");
+        }
+        if (!allowSaveJsPlugins && save) {
+            throw new UnsupportedSaveOperationException("Cannot save JavaScript plugins since it has been disabled");
+        }
         if (CollectionUtil.isEmpty(scripts)) {
             return;
         }

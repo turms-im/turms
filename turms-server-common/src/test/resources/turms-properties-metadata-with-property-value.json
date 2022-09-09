@@ -991,7 +991,25 @@
       "type": "boolean",
       "value": true
     },
+    "java": {
+      "allowSave": {
+        "deprecated": false,
+        "desc": "Whether to allow to save plugins using HTTP API",
+        "global": false,
+        "mutable": false,
+        "type": "boolean",
+        "value": false
+      }
+    },
     "js": {
+      "allowSave": {
+        "deprecated": false,
+        "desc": "Whether to allow to save plugins using HTTP API",
+        "global": false,
+        "mutable": false,
+        "type": "boolean",
+        "value": false
+      },
       "debug": {
         "enabled": {
           "deprecated": false,

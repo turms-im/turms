@@ -337,6 +337,7 @@
     "file": {}
   },
   "plugin": {
+    "java": {},
     "js": {
       "debug": {}
     }

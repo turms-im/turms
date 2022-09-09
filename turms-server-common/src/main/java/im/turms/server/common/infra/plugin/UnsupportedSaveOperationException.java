@@ -15,28 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.common.plugin;
-
-import im.turms.server.common.infra.property.metadata.Description;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
+package im.turms.server.common.infra.plugin;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@Builder(toBuilder = true)
-@Data
-@NoArgsConstructor
-public class JsPluginProperties {
+public class UnsupportedSaveOperationException extends UnsupportedOperationException {
 
-    @NestedConfigurationProperty
-    private JsPluginDebugProperties debug = new JsPluginDebugProperties();
-
-    @Description("Whether to allow to save plugins using HTTP API")
-    private boolean allowSave;
+    public UnsupportedSaveOperationException(String message) {
+        super(message);
+    }
 
 }
