@@ -14,7 +14,10 @@ beforeAll(async () => {
         wsUrl: Constants.WS_URL,
         storageServerUrl: Constants.STORAGE_SERVER_URL
     });
-    await turmsClient.userService.login(USER_ID, '123');
+    await turmsClient.userService.login({
+        userId: USER_ID,
+        password: '123'
+    });
 });
 
 afterAll(async () => {
@@ -23,19 +26,31 @@ afterAll(async () => {
 
 describe('Create', async () => {
     it('uploadProfilePicture_shouldReturnUrl', async () => {
-        const response = await turmsClient.storageService.uploadProfilePicture(PROFILE_PICTURE);
+        const response = await turmsClient.storageService.uploadProfilePicture({
+            bytes: PROFILE_PICTURE
+        });
         const url = response.data;
         expect(url).toBeTruthy();
     });
     it('uploadGroupProfilePicture_shouldReturnUrl', async () => {
-        const response = await turmsClient.storageService.uploadGroupProfilePicture(PROFILE_PICTURE, GROUP_ID);
+        const response = await turmsClient.storageService.uploadGroupProfilePicture({
+            bytes: PROFILE_PICTURE,
+            groupId: GROUP_ID
+        });
         const url = response.data;
         expect(url).toBeTruthy();
     });
     it('uploadAttachment_shouldReturnUrl', async () => {
-        const sendMessageResponse = await turmsClient.messageService.sendMessage(false, '2', null, 'I\'ve attached a picture');
+        const sendMessageResponse = await turmsClient.messageService.sendMessage({
+            isGroupMessage: false,
+            targetId: '2',
+            text: 'I\'ve attached a picture'
+        });
         messageId = sendMessageResponse.data;
-        const uploadAttachmentResponse = await turmsClient.storageService.uploadAttachment(messageId, ATTACHMENT);
+        const uploadAttachmentResponse = await turmsClient.storageService.uploadAttachment({
+            messageId,
+            bytes: ATTACHMENT
+        });
         const url = uploadAttachmentResponse.data;
         expect(url).toBeTruthy();
     });
@@ -63,7 +78,9 @@ describe('Delete', () => {
         expect(response.data).toBeFalsy();
     });
     it('deleteGroupProfile_shouldSucceed', async () => {
-        const response = await turmsClient.storageService.deleteGroupProfile(GROUP_ID);
+        const response = await turmsClient.storageService.deleteGroupProfile({
+            groupId: GROUP_ID
+        });
         expect(response.data).toBeFalsy();
     });
 });

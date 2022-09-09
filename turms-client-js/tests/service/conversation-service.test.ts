@@ -8,7 +8,10 @@ const GROUP_ID = '1';
 
 beforeAll(async () => {
     turmsClient = new TurmsClient(Constants.WS_URL);
-    await turmsClient.userService.login(USER_ID, '123');
+    await turmsClient.userService.login({
+        userId: USER_ID,
+        password: '123'
+    });
 });
 
 afterAll(async () => {
@@ -23,32 +26,44 @@ describe('Constructor', () => {
 
 describe('Update', () => {
     it('updatePrivateConversationReadDate_shouldSucceed', async () => {
-        const response = await turmsClient.conversationService.updatePrivateConversationReadDate(RELATED_USER_ID);
+        const response = await turmsClient.conversationService.updatePrivateConversationReadDate({
+            targetId: RELATED_USER_ID
+        });
         expect(response.data).toBeFalsy();
     });
     it('updateGroupConversationReadDate_shouldSucceed', async () => {
-        const response = await turmsClient.conversationService.updateGroupConversationReadDate(GROUP_ID);
+        const response = await turmsClient.conversationService.updateGroupConversationReadDate({
+            groupId: GROUP_ID
+        });
         expect(response.data).toBeFalsy();
     });
     it('updatePrivateConversationTypingStatus_shouldSucceed', async () => {
-        const response = await turmsClient.conversationService.updatePrivateConversationTypingStatus(RELATED_USER_ID);
+        const response = await turmsClient.conversationService.updatePrivateConversationTypingStatus({
+            targetId: RELATED_USER_ID
+        });
         expect(response.data).toBeFalsy();
     });
     it('updateGroupConversationTypingStatus_shouldSucceed', async () => {
-        const response = await turmsClient.conversationService.updateGroupConversationTypingStatus(GROUP_ID);
+        const response = await turmsClient.conversationService.updateGroupConversationTypingStatus({
+            groupId: GROUP_ID
+        });
         expect(response.data).toBeFalsy();
     });
 });
 
 describe('Query', () => {
     it('queryPrivateConversations_shouldReturnNotEmptyConversations', async () => {
-        const response = await turmsClient.conversationService.queryPrivateConversations([RELATED_USER_ID]);
+        const response = await turmsClient.conversationService.queryPrivateConversations({
+            targetIds: [RELATED_USER_ID]
+        });
         const conversations = response.data;
         expect(conversations.length).toBeGreaterThan(0);
         expect(conversations[0].readDate).toBeTruthy();
     });
     it('queryGroupConversations_shouldReturnNotEmptyConversations', async () => {
-        const response = await turmsClient.conversationService.queryGroupConversations([GROUP_ID]);
+        const response = await turmsClient.conversationService.queryGroupConversations({
+            groupIds: [GROUP_ID]
+        });
         const conversations = response.data;
         expect(conversations.length).toBeGreaterThan(0);
         expect(conversations[0].memberIdAndReadDate).toBeTruthy();

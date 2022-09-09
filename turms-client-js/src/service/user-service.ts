@@ -460,7 +460,7 @@ export default class UserService {
         isBlocked?: boolean,
         groupIndex?: number,
         lastUpdatedDate?: Date
-    }): Promise<Response<ParsedModel.IdsWithVersion | undefined>> {
+    } = {}): Promise<Response<ParsedModel.IdsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryRelatedUserIdsRequest: {
                 blocked: isBlocked,
@@ -476,7 +476,7 @@ export default class UserService {
     }: {
         groupIndex?: number,
         lastUpdatedDate?: Date
-    }): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
+    } = {}): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
         return this.queryRelationships({
             isBlocked: false,
             groupIndex,
@@ -490,7 +490,7 @@ export default class UserService {
     }: {
         groupIndex?: number,
         lastUpdatedDate?: Date
-    }): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
+    } = {}): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
         return this.queryRelationships({
             isBlocked: true,
             groupIndex,
@@ -719,7 +719,7 @@ export default class UserService {
         lastUpdatedDate
     }: {
         lastUpdatedDate?: Date
-    }): Promise<Response<ParsedModel.UserRelationshipGroupsWithVersion | undefined>> {
+    } = {}): Promise<Response<ParsedModel.UserRelationshipGroupsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryRelationshipGroupsRequest: {
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
