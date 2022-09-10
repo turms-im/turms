@@ -217,18 +217,22 @@ public class PluginManager {
         }
         for (JsPluginScript script : scripts) {
             String code = script.code();
-            Path path = save ? saveJsPlugin(script.fileName(), code) : null;
-            loadJsPlugin(code, path);
+            Plugin plugin = loadJsPlugin(code, null);
+            if (save) {
+                Path path = saveJsPlugin(script.fileName(), code);
+                plugin.descriptor().setPath(path);
+            }
         }
     }
 
-    public void loadJsPlugin(String script, Path path) {
+    public Plugin loadJsPlugin(String script, @Nullable Path path) {
         if (!isJsScriptEnabled) {
             throw new UnsupportedOperationException("JavaScript plugins are disabled because the classes of GraalJS aren't loaded");
         }
         JsPlugin jsPlugin = JsPluginFactory.create((Engine) engine, script, path, isJsDebugEnabled, jsInspectHost, jsInspectPort);
         Plugin plugin = JavaPluginFactory.create(jsPlugin.descriptor(), jsPlugin.extensions(), context);
         pluginRepository.register(plugin);
+        return plugin;
     }
 
     @SneakyThrows

@@ -34,5 +34,5 @@ public class PluginDescriptor {
     private final String license;
     private final String description;
 
-    private final Path path;
+    private Path path;
 }

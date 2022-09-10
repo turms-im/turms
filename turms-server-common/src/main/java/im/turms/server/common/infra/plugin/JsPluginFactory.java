@@ -178,8 +178,7 @@ public class JsPluginFactory {
             return (Class<? extends ExtensionPoint>) Class
                     .forName(extensionPointClassName);
         } catch (Exception e) {
-            String message = "Cannot find the class of the extension point \"%s\""
-                    .formatted(extensionPointClassName);
+            String message = "Cannot find the class of the extension point: " + extensionPointClassName;
             throw new CorruptedScriptException(message, e);
         }
     }
