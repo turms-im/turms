@@ -229,6 +229,9 @@ public class PluginManager {
         if (!isJsScriptEnabled) {
             throw new UnsupportedOperationException("JavaScript plugins are disabled because the classes of GraalJS aren't loaded");
         }
+        if (script.isBlank()) {
+            throw new IllegalArgumentException("The JavaScript plugin script must not be blank");
+        }
         JsPlugin jsPlugin = JsPluginFactory.create((Engine) engine, script, path, isJsDebugEnabled, jsInspectHost, jsInspectPort);
         Plugin plugin = JavaPluginFactory.create(jsPlugin.descriptor(), jsPlugin.extensions(), context);
         pluginRepository.register(plugin);
