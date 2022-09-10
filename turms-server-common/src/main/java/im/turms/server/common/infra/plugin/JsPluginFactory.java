@@ -92,7 +92,15 @@ public class JsPluginFactory {
         }
         Context context = builder.build();
         context.eval(PLUGIN_CONTEXT);
-        context.eval(source);
+        try {
+            context.eval(source);
+        } catch (Exception e) {
+            try {
+                context.close(true);
+            } catch (Exception ignored) {
+            }
+            throw new CorruptedScriptException("Failed to create a JavaScript plugin since the script is corrupted", e);
+        }
         Value bindings = context.getBindings(JS_LANGUAGE_TYPE);
         JsPluginDescriptor descriptor = JsPluginDescriptorFactory.parsePluginDescriptor(bindings, script, path);
         List<TurmsExtension> extensions = createExtensions(context, bindings, bindings.getMemberKeys());
