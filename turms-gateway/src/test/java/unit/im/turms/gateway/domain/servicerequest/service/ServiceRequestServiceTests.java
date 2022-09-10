@@ -17,7 +17,6 @@
 
 package unit.im.turms.gateway.domain.servicerequest.service;
 
-import com.google.common.net.InetAddresses;
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.servicerequest.service.ServiceRequestService;
 import im.turms.gateway.domain.session.service.SessionService;
@@ -31,6 +30,7 @@ import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequest;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.net.InetAddressUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ import static org.mockito.Mockito.when;
  */
 class ServiceRequestServiceTests {
 
-    private static final byte[] IP_ADDRESS = InetAddresses.forString("127.0.0.1").getAddress();
+    private static final byte[] IP_ADDRESS = InetAddressUtil.ipStringToAddress("127.0.0.1").getAddress();
     private static final Throwable HANDLE_REQUEST_FAILURE_EXCEPTION =
             new IllegalStateException("Mocked error for failing to handle request");
 

@@ -17,7 +17,6 @@
 
 package im.turms.server.common.infra.io;
 
-import com.google.common.collect.Maps;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
@@ -244,7 +243,7 @@ public class Stream implements StreamInput, StreamOutput {
         if (size == 0) {
             return Collections.emptyMap();
         }
-        Map<String, String> map = Maps.newHashMapWithExpectedSize(size);
+        Map<String, String> map = CollectionUtil.newMapWithExpectedSize(size);
         for (int i = 0; i < size; i++) {
             map.put(readString(), readString());
         }

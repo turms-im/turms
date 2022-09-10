@@ -17,8 +17,7 @@
 
 package im.turms.server.common.infra.metrics;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
@@ -28,6 +27,7 @@ import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
+import org.eclipse.collections.impl.factory.Sets;
 
 import javax.annotation.Nullable;
 import java.lang.invoke.VarHandle;
@@ -70,7 +70,7 @@ public class MetricsPool {
     public Map<String, Double> getMeasurements(Meter meter) {
         Iterable<Measurement> measures = meter.measure();
         Map<String, Double> measurements = measures instanceof Collection<Measurement> measurementCollection
-                ? Maps.newHashMapWithExpectedSize(measurementCollection.size())
+                ? CollectionUtil.newMapWithExpectedSize(measurementCollection.size())
                 : new HashMap<>(8);
         for (Measurement measurement : measures) {
             String tag = measurement.getStatistic().getTagValueRepresentation();

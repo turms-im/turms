@@ -103,8 +103,7 @@ public class UdpRequestDispatcher {
             try {
                 connection = udpServer.bind().block();
             } catch (Exception e) {
-                String message = "Failed to bind the UDP server on %s:%d"
-                        .formatted(host, port);
+                String message = "Failed to bind the UDP server on " + host + ":" + port;
                 throw new IllegalStateException(message, e);
             }
             LOGGER.info("UDP server started on {}:{}", host, port);

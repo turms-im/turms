@@ -17,7 +17,7 @@
 
 package im.turms.server.common.infra.cluster.node;
 
-import com.google.common.primitives.Ints;
+import im.turms.server.common.infra.lang.IntUtil;
 import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstructor;
 import lombok.Getter;
 
@@ -54,7 +54,7 @@ public class NodeVersion implements Comparable<NodeVersion> {
         this.patch = patch;
         this.qualifier = qualifier;
         this.version = version;
-        versionNumber = Ints.fromBytes(major, minor, patch, qualifier);
+        versionNumber = IntUtil.fromBytes(major, minor, patch, qualifier);
     }
 
     public NodeVersion(byte major, byte minor, byte patch, byte qualifier) {

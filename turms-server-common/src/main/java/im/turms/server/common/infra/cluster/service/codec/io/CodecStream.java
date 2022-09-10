@@ -17,10 +17,10 @@
 
 package im.turms.server.common.infra.cluster.service.codec.io;
 
-import com.google.common.collect.Maps;
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecPool;
 import im.turms.server.common.infra.cluster.service.codec.exception.CodecNotFoundException;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.io.Stream;
 import io.netty.buffer.ByteBuf;
 
@@ -73,7 +73,7 @@ public class CodecStream extends Stream implements CodecStreamInput, CodecStream
         if (valueCodec == null) {
             throw new CodecNotFoundException("Cannot find the map value codec for the ID: " + valueCodecId);
         }
-        Map<K, V> map = Maps.newHashMapWithExpectedSize(size);
+        Map<K, V> map = CollectionUtil.newMapWithExpectedSize(size);
         for (int i = 0; i < size; i++) {
             map.put(keyCodec.read(this), valueCodec.read(this));
         }

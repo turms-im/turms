@@ -47,19 +47,19 @@ import reactor.netty.http.server.WebsocketServerSpec;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS;
-import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS;
-import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN;
-import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_MAX_AGE;
-import static com.google.common.net.HttpHeaders.CONNECTION;
-import static com.google.common.net.HttpHeaders.SEC_WEBSOCKET_KEY;
-import static com.google.common.net.HttpHeaders.UPGRADE;
 import static im.turms.server.common.access.admin.web.HttpUtil.isPreFlightRequest;
 import static io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS;
 import static io.netty.channel.ChannelOption.SO_BACKLOG;
 import static io.netty.channel.ChannelOption.SO_LINGER;
 import static io.netty.channel.ChannelOption.SO_REUSEADDR;
 import static io.netty.channel.ChannelOption.TCP_NODELAY;
+import static io.netty.handler.codec.http.HttpHeaderNames.ACCESS_CONTROL_ALLOW_HEADERS;
+import static io.netty.handler.codec.http.HttpHeaderNames.ACCESS_CONTROL_ALLOW_METHODS;
+import static io.netty.handler.codec.http.HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN;
+import static io.netty.handler.codec.http.HttpHeaderNames.ACCESS_CONTROL_MAX_AGE;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
+import static io.netty.handler.codec.http.HttpHeaderNames.SEC_WEBSOCKET_KEY;
+import static io.netty.handler.codec.http.HttpHeaderNames.UPGRADE;
 
 /**
  * @author James Chen
@@ -106,8 +106,7 @@ public final class WebSocketServerFactory {
                     .bind()
                     .block();
         } catch (Exception e) {
-            String message = "Failed to bind the WebSocket server on %s:%d"
-                    .formatted(host, port);
+            String message = "Failed to bind the WebSocket server on " + host + ":" + port;
             throw new IllegalStateException(message, e);
         }
     }

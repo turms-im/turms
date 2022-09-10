@@ -17,7 +17,6 @@
 
 package integration.im.turms.server.common.domain.session.service;
 
-import com.google.common.collect.SetMultimap;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
@@ -45,7 +44,6 @@ import java.util.Set;
 import static im.turms.server.common.storage.redis.codec.context.RedisCodecContextPool.USER_SESSIONS_STATUS_CODEC_CONTEXT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
-import static org.assertj.guava.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -197,12 +195,11 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Order(ORDER_GET_NODE_ID_TO_DEVICE_TYPE_MAP_BY_USER_ID)
     @Test
     void getNodeIdToDeviceTypeMapByUserId_shouldReturnNodeIdToDeviceTypeMap_forExistingUser() {
-        Mono<SetMultimap<String, DeviceType>> nodeIdAndDevices = USER_STATUS_SERVICE.getNodeIdToDeviceTypeMapByUserId(USER_1_ID);
+        Mono<Map<String, Set<DeviceType>>> nodeIdAndDevices = USER_STATUS_SERVICE.getNodeIdToDeviceTypeMapByUserId(USER_1_ID);
         StepVerifier
                 .create(nodeIdAndDevices)
-                .assertNext(map -> assertThat(map)
-                        .hasSize(2)
-                        .containsValues(USER_1_DEVICE, USER_1_DIFF_DEVICE))
+                .assertNext(map -> assertThat(map.values().stream().findFirst().get())
+                        .containsExactlyInAnyOrder(USER_1_DEVICE, USER_1_DIFF_DEVICE))
                 .expectComplete()
                 .verify();
     }

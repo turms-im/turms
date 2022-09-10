@@ -17,11 +17,9 @@
 
 package im.turms.gateway.domain.session.service;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.SetMultimap;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.LoginConflictStrategy;
@@ -32,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -40,7 +39,7 @@ import java.util.Set;
 @Service
 public class UserSimultaneousLoginService {
 
-    private SetMultimap<DeviceType, DeviceType> deviceTypeToExclusiveDeviceTypes;
+    private Map<DeviceType, Set<DeviceType>> deviceTypeToExclusiveDeviceTypes;
 
     /**
      * Forbidden device types can never connect to turms servers
@@ -78,12 +77,14 @@ public class UserSimultaneousLoginService {
         return loginConflictStrategy == LoginConflictStrategy.DISCONNECT_LOGGING_IN_DEVICE;
     }
 
-    private SetMultimap<DeviceType, DeviceType> newExclusiveDeviceFromStrategy(SimultaneousLoginStrategy strategy) {
-        SetMultimap<DeviceType, DeviceType> newDeviceTypeToExclusiveDeviceTypes =
-                HashMultimap.create(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length);
+    private Map<DeviceType, Set<DeviceType>> newExclusiveDeviceFromStrategy(SimultaneousLoginStrategy strategy) {
+        Map<DeviceType, Set<DeviceType>> newDeviceTypeToExclusiveDeviceTypes = CollectionUtil
+                .newMapWithExpectedSize(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length);
         for (DeviceType deviceType : DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES) {
             // Every device type conflicts with itself
-            newDeviceTypeToExclusiveDeviceTypes.put(deviceType, deviceType);
+            newDeviceTypeToExclusiveDeviceTypes.computeIfAbsent(deviceType, key -> CollectionUtil
+                            .newSetWithExpectedSize(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length))
+                    .add(deviceType);
         }
         switch (strategy) {
             case ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE -> {
@@ -142,7 +143,7 @@ public class UserSimultaneousLoginService {
     }
 
     private void addDeviceTypeConflictedWithAllTypes(
-            Multimap<DeviceType, DeviceType> deviceTypeToExclusiveDeviceTypes,
+            Map<DeviceType, Set<DeviceType>> deviceTypeToExclusiveDeviceTypes,
             @NotNull @ValidDeviceType DeviceType deviceType) {
         for (DeviceType type : DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES) {
             addConflictedDeviceTypes(deviceTypeToExclusiveDeviceTypes, deviceType, type);
@@ -150,11 +151,15 @@ public class UserSimultaneousLoginService {
     }
 
     private void addConflictedDeviceTypes(
-            Multimap<DeviceType, DeviceType> deviceTypeToExclusiveDeviceTypes,
+            Map<DeviceType, Set<DeviceType>> deviceTypeToExclusiveDeviceTypes,
             @NotNull @ValidDeviceType DeviceType deviceTypeOne,
             @NotNull @ValidDeviceType DeviceType deviceTypeTwo) {
-        deviceTypeToExclusiveDeviceTypes.put(deviceTypeOne, deviceTypeTwo);
-        deviceTypeToExclusiveDeviceTypes.put(deviceTypeTwo, deviceTypeOne);
+        deviceTypeToExclusiveDeviceTypes.computeIfAbsent(deviceTypeOne, key -> CollectionUtil
+                        .newSetWithExpectedSize(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length))
+                .add(deviceTypeTwo);
+        deviceTypeToExclusiveDeviceTypes.computeIfAbsent(deviceTypeTwo, key -> CollectionUtil
+                        .newSetWithExpectedSize(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length))
+                .add(deviceTypeOne);
     }
 
 }

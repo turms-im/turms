@@ -17,13 +17,13 @@
 
 package im.turms.server.common.infra.plugin;
 
-import com.google.common.collect.Iterators;
+import im.turms.server.common.infra.collection.CollectionUtil;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Iterator;
 
 /**
  * A parent-last ClassLoader. It loads the classes from the plugin's jars
@@ -72,10 +72,10 @@ public class PluginClassLoader extends URLClassLoader {
 
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
-        Iterator<URL> urlIterator = Iterators.concat(
+        return Collections.enumeration(CollectionUtil.concat(
                 findResources(name).asIterator(),
-                getParent().getResources(name).asIterator());
-        return Iterators.asEnumeration(urlIterator);
+                getParent().getResources(name).asIterator()
+        ));
     }
 
 }

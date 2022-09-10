@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.common.collect.Maps;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
@@ -211,7 +210,7 @@ public class TurmsPropertiesInspector {
             elementType = getTypeName(type.getComponentType());
         }
         // Fill in
-        HashMap<String, Object> metadata = Maps.newHashMapWithExpectedSize(7);
+        Map<String, Object> metadata = CollectionUtil.newMapWithExpectedSize(7);
         if (field.isAnnotationPresent(Description.class)) {
             metadata.put(FIELD_NAME_DESC, field.getDeclaredAnnotation(Description.class).value());
         }

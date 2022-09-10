@@ -99,8 +99,7 @@ public final class TcpServerFactory {
                     .bind()
                     .block();
         } catch (Exception e) {
-            String message = "Failed to bind the TCP server on %s:%d"
-                    .formatted(host, port);
+            String message = "Failed to bind the TCP server on " + host + ":" + port;
             throw new IllegalStateException(message, e);
         }
     }

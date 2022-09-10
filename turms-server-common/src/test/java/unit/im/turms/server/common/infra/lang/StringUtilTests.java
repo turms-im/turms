@@ -21,6 +21,9 @@ import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -37,6 +40,19 @@ class StringUtilTests {
         String actual = StringUtil.newString(bytes, coder);
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void joinLatin1() {
+        String separator = ", ";
+        assertThat(StringUtil.joinLatin1(separator, Collections.emptyList()))
+                .isEqualTo("");
+        assertThat(StringUtil.joinLatin1(separator, List.of(1)))
+                .isEqualTo("1");
+        assertThat(StringUtil.joinLatin1(separator, List.of(1, "abc")))
+                .isEqualTo("1, abc");
+        assertThat(StringUtil.joinLatin1(separator, List.of(1, "abc", Boolean.TRUE)))
+                .isEqualTo("1, abc, true");
     }
 
     @Test
@@ -76,6 +92,45 @@ class StringUtilTests {
     }
 
     @Test
+    void padStartLatin1() {
+        assertThat(StringUtil.padStartLatin1("", 10, (byte) '*'))
+                .isEqualTo("**********");
+        assertThat(StringUtil.padStartLatin1("abc", 10, (byte) '*'))
+                .isEqualTo("*******abc");
+    }
+
+    @Test
+    void caseFormatConversations() {
+        assertThat(StringUtil.lowerCamelToLowerHyphenLatin1("helloWorld"))
+                .isEqualTo("hello-world");
+        assertThat(StringUtil.lowerCamelToLowerHyphenLatin1(""))
+                .isEmpty();
+        assertThat(StringUtil.lowerCamelToLowerHyphenLatin1("h"))
+                .isEqualTo("h");
+
+        assertThat(StringUtil.upperCamelToLowerCamelLatin1("HelloWorld"))
+                .isEqualTo("helloWorld");
+        assertThat(StringUtil.upperCamelToLowerCamelLatin1(""))
+                .isEmpty();
+        assertThat(StringUtil.upperCamelToLowerCamelLatin1("H"))
+                .isEqualTo("h");
+
+        assertThat(StringUtil.upperCamelToUpperUnderscoreLatin1("HelloWorld"))
+                .isEqualTo("HELLO_WORLD");
+        assertThat(StringUtil.upperCamelToUpperUnderscoreLatin1(""))
+                .isEmpty();
+        assertThat(StringUtil.upperCamelToUpperUnderscoreLatin1("H"))
+                .isEqualTo("H");
+
+        assertThat(StringUtil.upperCamelToLowerHyphenLatin1("HelloWorld"))
+                .isEqualTo("hello-world");
+        assertThat(StringUtil.upperCamelToLowerHyphenLatin1(""))
+                .isEmpty();
+        assertThat(StringUtil.upperCamelToLowerHyphenLatin1("H"))
+                .isEqualTo("h");
+    }
+
+    @Test
     void splitLatin1() {
         byte delimiter = ';';
         assertThat(StringUtil.splitLatin1("", delimiter))
@@ -112,6 +167,19 @@ class StringUtilTests {
                 .isEqualTo("my-{test-{string}");
         assertThatThrownBy(() -> StringUtil.substitute("my-{}-{}", "test"))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void substring() {
+        char delimiter = '.';
+        assertThat(StringUtil.substring("", delimiter))
+                .isEmpty();
+        assertThat(StringUtil.substring("abcde", delimiter))
+                .isEqualTo("abcde");
+        assertThat(StringUtil.substring("abcde.", delimiter))
+                .isEqualTo("abcde");
+        assertThat(StringUtil.substring("abcde.abc", delimiter))
+                .isEqualTo("abcde");
     }
 
 }

@@ -17,8 +17,8 @@
 
 package generator;
 
-import com.google.common.base.CaseFormat;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
+import im.turms.server.common.infra.lang.StringUtil;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -84,7 +84,7 @@ class ClientMessagePoolGenerator {
                     };
                     """
                     .formatted(name,
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, nameWithoutDot),
+                            StringUtil.upperCamelToUpperUnderscoreLatin1(nameWithoutDot),
                             name,
                             name));
         }
@@ -98,7 +98,7 @@ class ClientMessagePoolGenerator {
                     """
                     .formatted(name,
                             nameWithoutDot,
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, nameWithoutDot)));
+                            StringUtil.upperCamelToUpperUnderscoreLatin1(nameWithoutDot)));
         }
         String output = builder.toString();
 

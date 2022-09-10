@@ -79,10 +79,10 @@ public class SessionService {
         }
         return userStatusService.getNodeIdToDeviceTypeMapByUserId(userId)
                 .flatMap(nodeIdAndDeviceTypeMap -> {
-                    Set<Map.Entry<String, Collection<DeviceType>>> entries = nodeIdAndDeviceTypeMap.asMap().entrySet();
+                    Set<Map.Entry<String, Set<DeviceType>>> entries = nodeIdAndDeviceTypeMap.entrySet();
                     List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
-                    for (Map.Entry<String, Collection<DeviceType>> entry : entries) {
-                        SetUserOfflineRequest request = new SetUserOfflineRequest(userId, (Set<DeviceType>) entry.getValue(), closeStatus);
+                    for (Map.Entry<String, Set<DeviceType>> entry : entries) {
+                        SetUserOfflineRequest request = new SetUserOfflineRequest(userId, entry.getValue(), closeStatus);
                         monos.add(node.getRpcService().requestResponse(entry.getKey(), request));
                     }
                     return PublisherUtil.atLeastOneTrue(monos);
@@ -115,9 +115,9 @@ public class SessionService {
         }
         return userStatusService.getNodeIdToDeviceTypeMapByUserId(userId)
                 .flatMap(nodeIdAndDeviceTypeMap -> {
-                    Set<Map.Entry<String, Collection<DeviceType>>> entries = nodeIdAndDeviceTypeMap.asMap().entrySet();
+                    Set<Map.Entry<String, Set<DeviceType>>> entries = nodeIdAndDeviceTypeMap.entrySet();
                     List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
-                    for (Map.Entry<String, Collection<DeviceType>> entry : entries) {
+                    for (Map.Entry<String, Set<DeviceType>> entry : entries) {
                         Set<DeviceType> types = CollectionUtil.intersection(deviceTypes, entry.getValue());
                         if (!types.isEmpty()) {
                             SetUserOfflineRequest request = new SetUserOfflineRequest(userId, types, closeStatus);

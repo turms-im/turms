@@ -19,13 +19,12 @@ package im.turms.server.common.domain.session.service;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.exception.ResponseException;
@@ -171,15 +170,9 @@ public class UserStatusService {
                 });
     }
 
-    public Mono<SetMultimap<String, DeviceType>> getNodeIdToDeviceTypeMapByUserId(@NotNull Long userId) {
+    public Mono<Map<String, Set<DeviceType>>> getNodeIdToDeviceTypeMapByUserId(@NotNull Long userId) {
         return getDeviceTypeToNodeIdMapByUserId(userId)
-                .map(deviceTypeAndNodeIdMap -> {
-                    SetMultimap<String, DeviceType> multimap = HashMultimap.create();
-                    for (Map.Entry<DeviceType, String> entry : deviceTypeAndNodeIdMap.entrySet()) {
-                        multimap.put(entry.getValue(), entry.getKey());
-                    }
-                    return multimap;
-                });
+                .map(deviceTypeToNodeId -> CollectionUtil.reverseAsSetValues(deviceTypeToNodeId, 2));
     }
 
     public Mono<Boolean> updateOnlineUsersStatus(@NotEmpty Set<Long> userIds, @NotNull UserStatus userStatus) {

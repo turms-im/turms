@@ -17,8 +17,6 @@
 
 package im.turms.gateway.domain.session.service;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Maps;
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.observation.service.MetricsService;
 import im.turms.gateway.domain.session.bo.UserLoginInfo;
@@ -43,6 +41,7 @@ import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.rpc.exception.ConnectionNotFound;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
@@ -617,14 +616,15 @@ public class SessionService implements ISessionService {
             return Mono.error(e);
         }
         Set<DeviceType> conflictedDeviceTypes = userSimultaneousLoginService.getConflictedDeviceTypes(deviceType);
-        HashMultimap<String, DeviceType> nodeIdToDeviceTypes = null;
+        Map<String, Set<DeviceType>> nodeIdToDeviceTypes = null;
         for (DeviceType conflictedDeviceType : conflictedDeviceTypes) {
             String nodeId = sessionsStatus.getNodeIdByDeviceType(conflictedDeviceType);
             if (nodeId != null) {
                 if (nodeIdToDeviceTypes == null) {
-                    nodeIdToDeviceTypes = HashMultimap.create(3, 3);
+                    nodeIdToDeviceTypes = CollectionUtil.newMapWithExpectedSize(3);
                 }
-                nodeIdToDeviceTypes.put(nodeId, deviceType);
+                nodeIdToDeviceTypes.computeIfAbsent(nodeId, key -> CollectionUtil.newSetWithExpectedSize(3))
+                        .add(deviceType);
             }
         }
         if (nodeIdToDeviceTypes == null) {
@@ -696,14 +696,8 @@ public class SessionService implements ISessionService {
                             return Mono.error(ResponseException.get(ResponseStatusCode.SERVER_INTERNAL_ERROR));
                         }
                     }
-                    UserSession finalSession = session;
-                    ipToSessions.compute(ip, (key, sessions) -> {
-                        if (sessions == null) {
-                            sessions = new ConcurrentLinkedQueue<>();
-                        }
-                        sessions.add(finalSession);
-                        return sessions;
-                    });
+                    ipToSessions.computeIfAbsent(ip, key -> new ConcurrentLinkedQueue<>())
+                            .add(session);
                     Date now = new Date();
                     if (null != location && sessionLocationService.isLocationEnabled()) {
                         return sessionLocationService.upsertUserLocation(userId,
@@ -739,7 +733,7 @@ public class SessionService implements ISessionService {
             // Don't just merge two maps for convenience to avoiding creating a new map
             if (!sharedOnlineDeviceTypeToNodeId.containsKey(deviceType)) {
                 Map<DeviceType, String> onlineDeviceTypeToNodeId = MapUtil.merge(sharedOnlineDeviceTypeToNodeId,
-                        Maps.transformValues(manager.getDeviceTypeToSession(), ignored -> Node.getNodeId()));
+                        CollectionUtil.transformValues(manager.getDeviceTypeToSession(), Node.getNodeId()));
                 return new UserSessionsStatus(userId, manager.getUserStatus(), onlineDeviceTypeToNodeId);
             }
         }

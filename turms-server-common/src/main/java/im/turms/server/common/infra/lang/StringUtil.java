@@ -36,8 +36,8 @@ import java.util.List;
  */
 public final class StringUtil {
 
-    public static final byte LATIN1 = 0;
-    public static final byte UTF16 = 1;
+    private static final byte LATIN1 = 0;
+    private static final byte UTF16 = 1;
 
     private static final byte SINGLE_TOKEN = '?';
     private static final byte MULTIPLE_TOKEN = '*';
@@ -65,6 +65,17 @@ public final class StringUtil {
     }
 
     private StringUtil() {
+    }
+
+    public static int countOccurrencesLatin1(String s, byte character) {
+        int count = 0;
+        byte[] bytes = getBytes(s);
+        for (byte b : bytes) {
+            if (b == character) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**
@@ -104,6 +115,41 @@ public final class StringUtil {
         return getBytes(s).length;
     }
 
+    public static String joinLatin1(String separator, Collection<?> items) {
+        int separatorLength = separator.length();
+        int itemCount = items.size();
+        if (itemCount == 0) {
+            return "";
+        }
+        if (itemCount == 1) {
+            return String.valueOf(items.iterator().next());
+        }
+        List<String> strings = new ArrayList<>(itemCount);
+        int size = 0;
+        String str;
+        for (Object item : items) {
+            str = String.valueOf(item);
+            size += str.length();
+            strings.add(str);
+        }
+        size += separatorLength * (itemCount - 1);
+        byte[] newStringBytes = new byte[size];
+        int writerIndex = 0;
+        byte[] bytes;
+        byte[] separatorBytes = getBytes(separator);
+        for (int i = 0; i < itemCount; i++) {
+            String s = strings.get(i);
+            bytes = getBytes(s);
+            System.arraycopy(bytes, 0, newStringBytes, writerIndex, bytes.length);
+            writerIndex += bytes.length;
+            if (i < itemCount - 1) {
+                System.arraycopy(separatorBytes, 0, newStringBytes, writerIndex, separatorBytes.length);
+                writerIndex += separatorBytes.length;
+            }
+        }
+        return newLatin1String(newStringBytes);
+    }
+
     public static boolean match(String text, String pattern) {
         byte[] textBytes = getBytes(text);
         byte[] patternBytes = getBytes(pattern);
@@ -133,6 +179,21 @@ public final class StringUtil {
             patternReaderIndex++;
         }
         return patternReaderIndex == patternLength;
+    }
+
+    public static String padStartLatin1(String string, int minLength, byte padChar) {
+        int length = string.length();
+        if (length >= minLength) {
+            return string;
+        }
+        byte[] bytes = getBytes(string);
+        byte[] dest = new byte[minLength];
+        int padLength = minLength - length;
+        for (int i = 0; i < padLength; i++) {
+            dest[i] = padChar;
+        }
+        System.arraycopy(bytes, 0, dest, padLength, length);
+        return newLatin1String(dest);
     }
 
     public static String replaceLatin1(String message, byte oldByte, byte newByte) {
@@ -185,15 +246,17 @@ public final class StringUtil {
         }
         byte[] newBytes = new byte[length + argBytesLength];
         int writeIndex = 0;
+        byte b;
+        byte[] argBytes;
         for (int i = 0; i < length; i++) {
-            byte b = bytes[i];
+            b = bytes[i];
             if (b == '{' && i < length - 1 && bytes[i + 1] == '}') {
                 if (argIndex >= argCount) {
                     throw new IllegalArgumentException("The number of placeholder \"{}\" must be the same as the number of arguments");
                 }
-                for (byte argByte : getBytes(String.valueOf(args[argIndex++]))) {
-                    newBytes[writeIndex++] = argByte;
-                }
+                argBytes = getBytes(String.valueOf(args[argIndex++]));
+                System.arraycopy(argBytes, 0, newBytes, writeIndex, argBytes.length);
+                writeIndex += argBytes.length;
                 i++;
             } else {
                 newBytes[writeIndex++] = b;
@@ -203,6 +266,15 @@ public final class StringUtil {
             throw new IllegalArgumentException("The number of placeholder \"{}\" must be the same as the number of arguments");
         }
         return newString(newBytes, LATIN1);
+    }
+
+    public static String substitute(String message, Object... args) {
+        int length = args.length;
+        String[] strings = new String[length];
+        for (int i = 0; i < length; i++) {
+            strings[i] = String.valueOf(args[i]);
+        }
+        return substitute(message, strings);
     }
 
     public static String substring(String message, char toDelimiter) {
@@ -215,6 +287,10 @@ public final class StringUtil {
 
     public static String toString(Object val) {
         return val == null ? "" : val.toString();
+    }
+
+    public static boolean isBlank(String string) {
+        return string == null || string.isBlank();
     }
 
     public static boolean isEmpty(String string) {
@@ -249,4 +325,100 @@ public final class StringUtil {
         return (String) NEW_STRING.invokeExact(bytes, LATIN1);
     }
 
+    // Case format conversion
+
+    /**
+     * e.g. "helloWorld" -> "hello-world"
+     */
+    public static String lowerCamelToLowerHyphenLatin1(String string) {
+        return upperCamelToLowerHyphenLatin1(string);
+    }
+
+    /**
+     * e.g. "HelloWorld" -> "helloWorld"
+     */
+    public static String upperCamelToLowerCamelLatin1(String string) {
+        byte[] bytes = getBytes(string);
+        int length = bytes.length;
+        byte[] dest = new byte[length];
+        if (length > 1) {
+            System.arraycopy(bytes, 1, dest, 1, length - 1);
+            dest[0] = (byte) Character.toLowerCase(bytes[0]);
+        } else if (length == 1) {
+            dest[0] = (byte) Character.toLowerCase(bytes[0]);
+        }
+        return newLatin1String(dest);
+    }
+
+    /**
+     * e.g. "HelloWorld" -> "HELLO_WORLD"
+     */
+    public static String upperCamelToUpperUnderscoreLatin1(String string) {
+        byte[] bytes = getBytes(string);
+        int length = bytes.length;
+        int destLength = length;
+        byte b;
+        for (int i = 0; i < length; i++) {
+            b = bytes[i];
+            if (Character.isUpperCase(b) && shouldAppendHyphenOrUnderscore(bytes, i)) {
+                destLength++;
+            }
+        }
+        byte[] dest = new byte[destLength];
+        for (int i = 0, j = 0; i < length; i++) {
+            b = bytes[i];
+            if (Character.isUpperCase(b)) {
+                if (shouldAppendHyphenOrUnderscore(bytes, i)) {
+                    dest[j++] = '_';
+                }
+            } else {
+                b = (byte) Character.toUpperCase(b);
+            }
+            dest[j++] = b;
+        }
+        return newLatin1String(dest);
+    }
+
+    /**
+     * e.g. "HelloWorld" -> "hello-world"
+     */
+    public static String upperCamelToLowerHyphenLatin1(String string) {
+        byte[] bytes = getBytes(string);
+        int length = bytes.length;
+        int destLength = length;
+        byte b;
+        for (int i = 0, j = 0; i < length; i++) {
+            b = bytes[i];
+            if (Character.isUpperCase(b) && shouldAppendHyphenOrUnderscore(bytes, i)) {
+                destLength++;
+            }
+        }
+        byte[] dest = new byte[destLength];
+        for (int i = 0, j = 0; i < length; i++) {
+            b = bytes[i];
+            if (Character.isUpperCase(b)) {
+                b = (byte) Character.toLowerCase(b);
+                if (shouldAppendHyphenOrUnderscore(bytes, i)) {
+                    dest[j++] = '-';
+                }
+            }
+            dest[j++] = b;
+        }
+        return newLatin1String(dest);
+    }
+
+    private static boolean shouldAppendHyphenOrUnderscore(byte[] bytes, int index) {
+        if (index == 0) {
+            // Never put a hyphen or underscore at the beginning
+            return false;
+        } else if (!Character.isUpperCase(bytes[index - 1])) {
+            // Append if previous char wasn't upper case
+            return true;
+        } else if (index + 1 < bytes.length && !Character.isUpperCase(bytes[index + 1])) {
+            // Append if next char isn't upper case
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

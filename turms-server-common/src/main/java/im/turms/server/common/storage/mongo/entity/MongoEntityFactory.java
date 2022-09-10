@@ -17,7 +17,6 @@
 
 package im.turms.server.common.storage.mongo.entity;
 
-import com.google.common.base.CaseFormat;
 import com.mongodb.client.model.IndexModel;
 import com.mongodb.client.model.IndexOptions;
 import im.turms.server.common.infra.lang.AsciiCode;
@@ -122,7 +121,7 @@ public final class MongoEntityFactory {
         Document document = clazz.getAnnotation(Document.class);
         String name = document != null && StringUtils.hasText(document.value())
                 ? document.value()
-                : CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, clazz.getSimpleName()).intern();
+                : StringUtil.upperCamelToLowerCamelLatin1(clazz.getSimpleName()).intern();
         if (!StringUtils.hasText(name)) {
             throw new IllegalStateException("The collection name must not be blank for the class " + clazz.getName());
         }
@@ -132,7 +131,7 @@ public final class MongoEntityFactory {
     @SneakyThrows
     @Nullable
     private static BsonDocument findCollectionSchema(String name) {
-        String resourceName = "schema/" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, name) + ".json";
+        String resourceName = "schema/" + StringUtil.lowerCamelToLowerHyphenLatin1(name) + ".json";
         InputStream stream = ClassUtils.getDefaultClassLoader()
                 .getResourceAsStream(resourceName);
         if (stream == null) {
@@ -277,7 +276,7 @@ public final class MongoEntityFactory {
                 if (setterMethods == null) {
                     setterMethods = new HashMap<>(8);
                 }
-                String methodName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, method.getName().substring(3));
+                String methodName = StringUtil.upperCamelToLowerCamelLatin1(method.getName().substring(3));
                 setterMethods.put(methodName, ReflectionUtil.method2Handle(method));
             }
         }

@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.netty;
 
-import com.google.common.annotations.VisibleForTesting;
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.test.VisibleForTesting;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufs;
 import io.netty.buffer.PooledByteBufAllocator;

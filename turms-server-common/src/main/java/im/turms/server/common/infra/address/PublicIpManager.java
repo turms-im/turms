@@ -17,7 +17,7 @@
 
 package im.turms.server.common.infra.address;
 
-import com.google.common.net.InetAddresses;
+import im.turms.server.common.infra.net.InetAddressUtil;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import io.netty.handler.codec.http.HttpStatusClass;
 import org.springframework.stereotype.Component;
@@ -55,7 +55,7 @@ public class PublicIpManager {
                             ? body.asString()
                             .flatMap(ip -> {
                                 ip = ip.trim();
-                                return InetAddresses.isInetAddress(ip)
+                                return InetAddressUtil.isInetAddress(ip)
                                         ? Mono.just(ip)
                                         : Mono.empty();
                             })

@@ -17,8 +17,8 @@
 
 package im.turms.server.common.infra.logging;
 
-import com.google.common.collect.Sets;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.property.constant.LoggingRequestCategory;
 import im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingCategoryProperties;
@@ -94,7 +94,7 @@ public abstract class CommonApiLoggingContext {
         if (requestTypes.isEmpty()) {
             return Collections.emptySet();
         }
-        Set<LoggingRequestProperties> loggingRequests = Sets.newHashSetWithExpectedSize(requestTypes.size());
+        Set<LoggingRequestProperties> loggingRequests = CollectionUtil.newSetWithExpectedSize(requestTypes.size());
         for (TurmsRequest.KindCase requestType : requestTypes) {
             loggingRequests.add(new LoggingRequestProperties(requestType, categoryProperties.getSampleRate()));
         }

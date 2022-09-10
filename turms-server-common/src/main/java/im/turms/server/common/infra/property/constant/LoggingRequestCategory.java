@@ -17,8 +17,8 @@
 
 package im.turms.server.common.infra.property.constant;
 
-import com.google.common.collect.Sets;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import lombok.Getter;
 
 import java.util.Collections;
@@ -235,7 +235,7 @@ public enum LoggingRequestCategory {
                 UPDATE_GROUP_MEMBER_REQUEST);
 
         static {
-            Set<TurmsRequest.KindCase> result = Sets.newHashSetWithExpectedSize(
+            Set<TurmsRequest.KindCase> result = CollectionUtil.newSetWithExpectedSize(
                     CREATE.size()
                             + DELETE.size()
                             + UPDATE.size()

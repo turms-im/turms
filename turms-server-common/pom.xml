@@ -82,6 +82,21 @@
             <artifactId>lettuce-core</artifactId>
         </dependency>
 
+        <!-- Plugin -->
+        <dependency>
+            <groupId>org.graalvm.js</groupId>
+            <artifactId>js</artifactId>
+            <!-- Disable by default because the jars are really large (50MB+),
+            developers should remove the scope to use it in their application
+            if they want -->
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.graalvm.tools</groupId>
+            <artifactId>chromeinspector</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Miscellaneous -->
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
@@ -96,10 +111,6 @@
             <artifactId>eclipse-collections</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-parameter-names</artifactId>
         </dependency>
@@ -108,17 +119,8 @@
             <artifactId>jctools-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.graalvm.js</groupId>
-            <artifactId>js</artifactId>
-            <!-- Disable by default because the jars are really large (50MB+),
-            developers should remove the scope to use it in their application
-            if they want -->
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.graalvm.tools</groupId>
-            <artifactId>chromeinspector</artifactId>
-            <scope>provided</scope>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>

@@ -33,22 +33,20 @@
         <!-- Runtime Deps -->
         <awssdk.version>2.17.194</awssdk.version>
         <blockhound.version>1.0.6.RELEASE</blockhound.version>
-        <commons-collections4.version>4.4</commons-collections4.version>
         <disruptor.version>3.4.4</disruptor.version>
         <eclipse-collections.version>11.0.0</eclipse-collections.version>
         <firebase-admin.version>9.0.0</firebase-admin.version>
         <graalvm.version>22.1.0.1</graalvm.version>
-        <guava.version>31.1-jre</guava.version>
         <icu4j.version>71.1</icu4j.version>
         <jctools-core.version>3.3.0</jctools-core.version>
-        <log4j.version>2.17.2</log4j.version>
-        <protobuf.version>3.20.1</protobuf.version>
+        <jsr305.version>3.0.2</jsr305.version>
+        <log4j.version>2.18.0</log4j.version>
+        <protobuf.version>3.21.5</protobuf.version>
         <pushy.version>0.15.1</pushy.version>
         <swagger.version>2.2.0</swagger.version>
         <swagger-ui.version>4.10.3</swagger-ui.version>
 
         <!-- Runtime Deps for Testing -->
-        <assertj-guava.version>3.4.0</assertj-guava.version>
         <jmh.version>1.34</jmh.version>
         <testcontainers.version>1.17.1</testcontainers.version>
 
@@ -140,6 +138,18 @@
                 <version>${blockhound.version}</version>
             </dependency>
 
+            <!-- Plugin -->
+            <dependency>
+                <groupId>org.graalvm.tools</groupId>
+                <artifactId>chromeinspector</artifactId>
+                <version>${graalvm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graalvm.js</groupId>
+                <artifactId>js</artifactId>
+                <version>${graalvm.version}</version>
+            </dependency>
+
             <!-- Miscellaneous -->
             <dependency>
                 <groupId>com.lmax</groupId>
@@ -162,9 +172,9 @@
                 <version>${firebase-admin.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${jsr305.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ibm.icu</groupId>
@@ -175,16 +185,6 @@
                 <groupId>org.jctools</groupId>
                 <artifactId>jctools-core</artifactId>
                 <version>${jctools-core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.graalvm.js</groupId>
-                <artifactId>js</artifactId>
-                <version>${graalvm.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.graalvm.tools</groupId>
-                <artifactId>chromeinspector</artifactId>
-                <version>${graalvm.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
@@ -222,11 +222,6 @@
                 <groupId>im.turms</groupId>
                 <artifactId>server-test-common</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-guava</artifactId>
-                <version>${assertj-guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.openjdk.jmh</groupId>

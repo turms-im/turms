@@ -17,7 +17,6 @@
 
 package im.turms.server.common.access.admin.web;
 
-import com.google.common.base.Defaults;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
 import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
 import im.turms.server.common.access.admin.web.annotation.FormData;
@@ -31,6 +30,7 @@ import im.turms.server.common.access.admin.web.annotation.RequestHeader;
 import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.io.BaseFileResource;
 import im.turms.server.common.infra.lang.Pair;
+import im.turms.server.common.infra.lang.PrimitiveDefaultUtil;
 import im.turms.server.common.infra.openapi.OpenApiBuilder;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
 import io.netty.buffer.ByteBuf;
@@ -170,7 +170,7 @@ public class HttpEndpointCollector {
         QueryParam queryParam = parameter.getDeclaredAnnotation(QueryParam.class);
         Class<?> type = parameter.getType();
         if (queryParam == null) {
-            Object defaultValue = Defaults.defaultValue(type);
+            Object defaultValue = PrimitiveDefaultUtil.getDefaultValue(type);
             return new MethodParameterInfo(parameter.getName(),
                     type,
                     ReflectionUtil.getElementClass(parameter.getParameterizedType()),
@@ -183,7 +183,7 @@ public class HttpEndpointCollector {
         }
         String name = queryParam.value().isBlank() ? parameter.getName() : queryParam.value();
         Object parsedDefaultValue = queryParam.defaultValue().isBlank()
-                ? Defaults.defaultValue(type)
+                ? PrimitiveDefaultUtil.getDefaultValue(type)
                 : HttpRequestParamParser.parsePlainValue(queryParam.defaultValue(), type);
         return new MethodParameterInfo(name,
                 type,
@@ -210,7 +210,7 @@ public class HttpEndpointCollector {
                 true,
                 false,
                 false,
-                Defaults.defaultValue(type),
+                PrimitiveDefaultUtil.getDefaultValue(type),
                 null);
     }
 

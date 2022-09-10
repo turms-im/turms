@@ -25,10 +25,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.RandomAccess;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * @author James Chen
@@ -101,6 +104,11 @@ public final class CollectionUtil {
         }
     }
 
+    public static <T> List<T> concat(Iterator<T> iterator1, Iterator<T> iterator2) {
+        Iterator<T> iterator = new ConcatIterator<>(iterator1, iterator2);
+        return toList(iterator);
+    }
+
     public static <T> Set<T> intersection(Set<T> c1, Collection<T> c2) {
         Set<T> result = newSetWithExpectedSize(Math.min(c1.size(), c2.size()));
         for (T value : c2) {
@@ -139,6 +147,18 @@ public final class CollectionUtil {
         return new HashMap<>(MapUtil.getCapability(expectedSize));
     }
 
+    public static <T> List<T> toList(Iterable<T> iterable) {
+        return toList(iterable.iterator());
+    }
+
+    public static <T> List<T> toList(Iterator<T> iterator) {
+        List<T> list = new LinkedList<>();
+        while (iterator.hasNext()) {
+            list.add(iterator.next());
+        }
+        return list;
+    }
+
     public static <T> List<T> toListSupportRandomAccess(Collection<T> collection) {
         if (collection instanceof List<T> list && collection instanceof RandomAccess) {
             return list;
@@ -156,6 +176,32 @@ public final class CollectionUtil {
 
     public static boolean isImmutable(Iterable<?> iterable) {
         return IMMUTABLE_COLLECTION_CLASS.isInstance(iterable) || iterable instanceof ImmutableCollection;
+    }
+
+    public static <K, V> Map<V, Set<K>> reverseAsSetValues(Map<K, V> map, int expectedValuesPerKey) {
+        Map<V, Set<K>> result = new HashMap<>(map.size());
+        for (Map.Entry<K, V> keyAndValue : map.entrySet()) {
+            result.computeIfAbsent(keyAndValue.getValue(),
+                            key -> CollectionUtil.newSetWithExpectedSize(expectedValuesPerKey))
+                    .add(keyAndValue.getKey());
+        }
+        return result;
+    }
+
+    public static <K, V, R> Map<K, R> transformValues(Map<K, V> map, Function<V, R> supplier) {
+        Map<K, R> result = newMapWithExpectedSize(map.size());
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            result.put(entry.getKey(), supplier.apply(entry.getValue()));
+        }
+        return result;
+    }
+
+    public static <K, V, R> Map<K, R> transformValues(Map<K, V> map, R value) {
+        Map<K, R> result = newMapWithExpectedSize(map.size());
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            result.put(entry.getKey(), value);
+        }
+        return result;
     }
 
 }

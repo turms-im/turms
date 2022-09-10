@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.logging.core.layout;
 
-import com.google.common.base.Strings;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.exception.ThrowableUtil;
+import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.context.LogThreadContext;
@@ -63,7 +63,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
             maxLength = Math.max(level.name().length(), maxLength);
         }
         for (int i = 0; i < levels.length; i++) {
-            String level = Strings.padStart(levels[i].name(), maxLength, ' ')
+            String level = StringUtil.padStartLatin1(levels[i].name(), maxLength, AsciiCode.SPACE)
                     .toUpperCase();
             LEVELS[i] = StringUtil.getBytes(level);
         }
@@ -274,7 +274,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
             Arrays.fill(result, 0, writeIndex, (byte) ' ');
             return result;
         }
-        return StringUtil.getBytes(Strings.padStart(name, CLASS_NAME_LENGTH, ' '));
+        return StringUtil.getBytes(StringUtil.padStartLatin1(name, CLASS_NAME_LENGTH, AsciiCode.SPACE));
     }
 
 }

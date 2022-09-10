@@ -17,10 +17,10 @@
 
 package im.turms.server.common.infra.fake;
 
-import com.google.common.collect.Range;
 import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Message;
+import im.turms.server.common.infra.lang.Range;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ import static com.google.protobuf.Descriptors.FieldDescriptor;
 public class RandomProtobufGenerator<T extends AbstractMessage> {
 
     private static final int MAX_LIST_LENGTH = 10;
-    private static final Range<Long> POSITIVE_NUMBER_RANGE = Range.closedOpen(0L, Long.MAX_VALUE);
+    private static final Range<Long> POSITIVE_NUMBER_RANGE = Range.between(0L, Long.MAX_VALUE);
 
     private final Random random;
     private final Message instance;
@@ -123,9 +123,8 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
     }
 
     private Long getRandomNumberFromRange(Range<Long> numberRange) {
-        long upperBound = numberRange.hasUpperBound() ? numberRange.upperEndpoint() : Long.MAX_VALUE;
-        long lowerBound = numberRange.hasLowerBound() ? numberRange.lowerEndpoint() : Long.MIN_VALUE;
-        return ThreadLocalRandom.current().nextLong(lowerBound, upperBound);
+        return ThreadLocalRandom.current()
+                .nextLong(numberRange.minInclusive(), numberRange.maxInclusive());
     }
 
     public static record GeneratorOptions(

@@ -17,8 +17,6 @@
 
 package im.turms.gateway.infra.fake;
 
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Range;
 import im.turms.gateway.access.client.tcp.TcpUserSessionAssembler;
 import im.turms.gateway.infra.thread.ThreadNameConst;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
@@ -28,11 +26,13 @@ import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.client.TurmsClient;
+import im.turms.server.common.infra.collection.CyclicIterator;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.fake.RandomProtobufGenerator;
 import im.turms.server.common.infra.fake.RandomRequestFactory;
+import im.turms.server.common.infra.lang.Range;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -158,15 +158,17 @@ public class ClientFakingManager {
                                             int requestIntervalMillis,
                                             int requestCountPerInterval) {
         LOGGER.info("Start sending random requests from clients");
-        Range<Long> userIdRange = Range.closedOpen(firstUserId, firstUserId + userCount);
         int jitter = userCount / 10;
-        Range<Long> fakedNumberRange = Range
-                .closedOpen(Math.max(0, userIdRange.lowerEndpoint() - jitter), userIdRange.upperEndpoint() + jitter);
+        Range<Long> fakedNumberRange = Range.between(
+                Math.max(0, firstUserId - jitter),
+                firstUserId + userCount + jitter
+        );
         thread = NamedThreadFactory.newThread(ThreadNameConst.FAKE_CLIENT_MANAGER, true, () -> {
-            Iterator<TurmsClient> clientIterator = Iterators.cycle(clients);
+            CyclicIterator<TurmsClient> clientIterator = new CyclicIterator<>(clients);
             Set<String> excludedRequestNames = Set.of(RandomRequestFactory.CREATE_SESSION_REQUEST_FILED_NAME,
                     RandomRequestFactory.DELETE_SESSION_REQUEST_FILED_NAME);
-            while (!Thread.currentThread().isInterrupted() && clientIterator.hasNext()) {
+            Thread currentThread = Thread.currentThread();
+            while (!currentThread.isInterrupted()) {
                 int sentRequestCount = 0;
                 while (sentRequestCount < requestCountPerInterval) {
                     TurmsClient client = clientIterator.next();

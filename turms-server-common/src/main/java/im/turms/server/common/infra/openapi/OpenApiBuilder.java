@@ -18,7 +18,6 @@
 package im.turms.server.common.infra.openapi;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.google.common.base.CaseFormat;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.web.ApiEndpoint;
 import im.turms.server.common.access.admin.web.ApiEndpointKey;
@@ -28,6 +27,7 @@ import im.turms.server.common.access.admin.web.MethodParameterInfo;
 import im.turms.server.common.access.admin.web.RequestContext;
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpMethod;
 import io.swagger.v3.core.converter.AnnotatedType;
@@ -126,13 +126,8 @@ public class OpenApiBuilder {
             for (ResolvedSchema paramSchema : operationItem.paramSchemas()) {
                 schemas.putAll(paramSchema.referencedSchemas);
             }
-            paths.compute(entry.getKey().path(), (path, pathItem) -> {
-                if (pathItem == null) {
-                    pathItem = new PathItem();
-                }
-                pathItem.operation(operationItem.method(), operationItem.operation());
-                return pathItem;
-            });
+            paths.computeIfAbsent(entry.getKey().path(), path -> new PathItem())
+                    .operation(operationItem.method(), operationItem.operation());
         }
         for (Map.Entry<String, Schema> entry : schemas.entrySet()) {
             api.schema(entry.getKey(), entry.getValue());
@@ -188,7 +183,7 @@ public class OpenApiBuilder {
 
         Operation operation = new Operation()
                 .operationId(method.getName())
-                .addTagsItem(CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, endpoint.controller().getClass().getSimpleName()))
+                .addTagsItem(StringUtil.upperCamelToLowerHyphenLatin1(endpoint.controller().getClass().getSimpleName()))
                 .responses(new ApiResponses()
                         .addApiResponse("200", new ApiResponse()
                                 .description("OK")
