@@ -277,8 +277,16 @@ public final class StringUtil {
         return substitute(message, strings);
     }
 
-    public static String substring(String message, char toDelimiter) {
-        int delimiterIndex = message.indexOf(toDelimiter);
+    public static String substringToFirstDelimiter(String message, char toFirstDelimiter) {
+        int delimiterIndex = message.indexOf(toFirstDelimiter);
+        if (delimiterIndex != -1) {
+            return message.substring(0, delimiterIndex);
+        }
+        return message;
+    }
+
+    public static String substringToLastDelimiter(String message, char toLastDelimiter) {
+        int delimiterIndex = message.lastIndexOf(toLastDelimiter);
         if (delimiterIndex != -1) {
             return message.substring(0, delimiterIndex);
         }
@@ -387,7 +395,7 @@ public final class StringUtil {
         int length = bytes.length;
         int destLength = length;
         byte b;
-        for (int i = 0, j = 0; i < length; i++) {
+        for (int i = 0; i < length; i++) {
             b = bytes[i];
             if (Character.isUpperCase(b) && shouldAppendHyphenOrUnderscore(bytes, i)) {
                 destLength++;

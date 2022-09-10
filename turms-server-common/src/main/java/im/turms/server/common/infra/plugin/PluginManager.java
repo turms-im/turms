@@ -177,7 +177,8 @@ public class PluginManager {
                         .formatted(fileName));
             }
             if (save) {
-                Path target = pluginDir.resolve(EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName + ".jar");
+                fileName = file.basename() + ".jar";
+                Path target = pluginDir.resolve(EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName);
                 if (Files.exists(target)) {
                     throw new IllegalArgumentException("The plugin jar file \"%s\" already exists".formatted(fileName));
                 }

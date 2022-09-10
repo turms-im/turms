@@ -170,15 +170,15 @@ class StringUtilTests {
     }
 
     @Test
-    void substring() {
+    void substringToFirstDelimiter() {
         char delimiter = '.';
-        assertThat(StringUtil.substring("", delimiter))
+        assertThat(StringUtil.substringToFirstDelimiter("", delimiter))
                 .isEmpty();
-        assertThat(StringUtil.substring("abcde", delimiter))
+        assertThat(StringUtil.substringToFirstDelimiter("abcde", delimiter))
                 .isEqualTo("abcde");
-        assertThat(StringUtil.substring("abcde.", delimiter))
+        assertThat(StringUtil.substringToFirstDelimiter("abcde.", delimiter))
                 .isEqualTo("abcde");
-        assertThat(StringUtil.substring("abcde.abc", delimiter))
+        assertThat(StringUtil.substringToFirstDelimiter("abcde.abc", delimiter))
                 .isEqualTo("abcde");
     }
 

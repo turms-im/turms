@@ -22,11 +22,14 @@ import io.netty.handler.codec.http.multipart.HttpData;
 import java.io.File;
 
 /**
+ * @param name     e.g. "file.123.jar"
+ * @param basename e.g. "file.123"
  * @author James Chen
  */
 public record MultipartFile(
         HttpData data,
         String name,
+        String basename,
         File file
 ) {
     public void release() {
@@ -37,6 +40,7 @@ public record MultipartFile(
     public String toString() {
         return "MultipartFile{" +
                 "name='" + name + '\'' +
+                "basename='" + basename + '\'' +
                 '}';
     }
 

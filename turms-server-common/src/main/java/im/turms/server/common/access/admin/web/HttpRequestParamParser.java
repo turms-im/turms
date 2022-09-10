@@ -256,8 +256,9 @@ public class HttpRequestParamParser {
                 .map(data -> {
                     try {
                         data.retain();
-                        String name = StringUtil.substring(data.getName(), '.');
-                        return new MultipartFile(data, name, data.getFile());
+                        String name = data.getName();
+                        String basename = StringUtil.substringToLastDelimiter(name, '.');
+                        return new MultipartFile(data, name, basename, data.getFile());
                     } catch (IOException e) {
                         // Should never happen because the data should be a file
                         // (DiskAttribute or DiskFileUpload)
