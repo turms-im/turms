@@ -30,6 +30,7 @@ import {
     Tooltip,
     Tree,
     TreeSelect,
+    Upload,
     message
 } from 'ant-design-vue';
 
@@ -98,6 +99,7 @@ function loadAntd(app) {
     app.use(Tooltip);
     app.use(Tree);
     app.use(TreeSelect);
+    app.use(Upload);
 
     app.use(ConfigProvider);
 }

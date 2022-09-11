@@ -5,6 +5,7 @@ import Blocklist from '../components/pages/blocklist/index';
 import ClientTerminal from '../components/pages/terminal';
 import ClusterConfig from '../components/pages/cluster/config';
 import ClusterDashboard from '../components/pages/cluster/dashboard';
+import ClusterPlugin from '../components/pages/cluster/plugin';
 import ContentConversation from '../components/pages/content/conversation/index';
 import ContentGroup from '../components/pages/content/group/index';
 import ContentMessage from '../components/pages/content/message/index';
@@ -22,6 +23,10 @@ const routes = [
     {
         path: '/cluster/dashboard',
         component: ClusterDashboard
+    },
+    {
+        path: '/cluster/plugin',
+        component: ClusterPlugin
     },
     // TODO: We hide the statistics pages because the server side isn't ready for it.
     //  And we will integrate Flink to do the job later.

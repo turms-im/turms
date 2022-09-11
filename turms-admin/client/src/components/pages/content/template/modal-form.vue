@@ -17,132 +17,45 @@
         </div>
         <a-form
             ref="form"
-            :model="formState"
+            :model="parsedFormState"
         >
             <template
-                v-for="(field, index) in formItems"
+                v-for="field in extendedFormItems"
             >
-                <a-form-item
-                    v-if="field.type !== 'DYNAMIC-INPUT'"
-                    :key="field.id"
-                    :name="field.id"
-                    :label-col="labelCol"
-                    :wrapper-col="wrapperCol"
-                    :label="$t(field.label || field.id)"
-                    :rules="$validator.parseRules(field.rules)"
-                >
-                    <a-input
-                        v-if="field.type === 'INPUT'"
-                        v-model:value="formState[field.id]"
-                        class="content-modal-form__item"
-                        :placeholder="(field.placeholder && $t(field.placeholder)) || ''"
-                        :date-id="field.id"
-                    />
-                    <a-input-number
-                        v-else-if="field.type === 'INPUT-NUMBER'"
-                        v-model:value="formState[field.id]"
-                        class="content-modal-form__item"
-                        :max="field.max"
-                        :min="field.min"
-                    />
-                    <a-date-picker
-                        v-else-if="field.type === 'DATE'"
-                        v-model:value="formState[field.id]"
-                        class="content-modal-form__item content-modal-form__date-picker"
-                        type="date"
-                        :show-time="true"
-                        :disabled-date="(cur) => isDateDisabled(cur, field.allowFuture, field.allowPast)"
-                        :disabled-time="(cur) => getDisabledTime(cur, field.allowFuture, field.allowPast)"
-                        :date-id="field.id"
-                    />
-                    <a-switch
-                        v-else-if="field.type === 'SWITCH'"
-                        v-model:checked="formState[field.id]"
-                        class="content-modal-form__item"
-                        :default-checked="field.defaultChecked"
-                        :date-id="field.id"
-                    />
-                    <a-textarea
-                        v-else-if="field.type === 'TEXTAREA'"
-                        v-model:value="formState[field.id]"
-                        class="content-modal-form__item"
-                        :rows="field.rows"
-                        :placeholder="(field.placeholder && $t(field.placeholder)) || $t(`${field.id}`)"
-                        :date-id="field.id"
-                    />
-                    <a-select
-                        v-else-if="field.type === 'SELECT'"
-                        v-model:value="formState[field.id]"
-                        class="content-modal-form__item"
-                        :allow-clear="true"
-                        :date-id="field.id"
-                    >
-                        <template
-                            v-if="!field.options?.values"
-                        >
-                            <a-select-option
-                                value="ALL"
-                            >
-                                {{ $t('all') }}
-                            </a-select-option>
-                        </template>
-                        <a-select-option
-                            v-for="value in field.options.values"
-                            v-else
-                            :key="value.id.toString()"
-                            :value="value.id.toString()"
-                        >
-                            {{ $t(value.label) }}
-                        </a-select-option>
-                    </a-select>
-                    <a-tree
-                        v-else-if="field.type === 'TREE'"
-                        v-model:checkedKeys="formState[field.id]"
-                        :date-id="field.id"
-                        class="content-modal-form__item"
-                        :auto-expand-parent="false"
-                        :tree-data="field.data"
-                        :checkable="true"
-                    />
-                </a-form-item>
                 <template
-                    v-if="field.type === 'DYNAMIC-INPUT'"
+                    v-for="subField in (field.fields || [])"
                 >
-                    <a-form-item
-                        v-for="(val, subIndex) in formState[field.id]"
-                        :key="val.key"
-                        :name="[field.id, subIndex, 'value']"
-                        :label="subIndex ? '' : $t(field.label)"
-                        :required="false"
-                        :rules="$validator.parseRules(field.rules)"
-                        v-bind="subIndex ? $layout.formItemLayoutWithoutLabel : $layout.formItemLayout"
-                    >
-                        <a-input
-                            v-model:value="val.value"
-                            class="content-modal-form__item dynamic-input"
-                            :placeholder="field.placeholder ? $t(field.placeholder) : ''"
-                            :date-id="`${field.id}-${val.key}`"
-                        />
-                        <minus-circle-outlined
-                            v-if="formState[field.id].length > 1 || subIndex"
-                            class="dynamic-delete-button"
-                            @click="deleteInput(field, subIndex)"
-                        />
-                    </a-form-item>
-                    <a-form-item
-                        :key="'add' + index"
-                        v-bind="$layout.formItemLayoutWithoutLabel"
-                    >
-                        <a-button
-                            type="dashed"
-                            class="dynamic-input__add"
-                            @click="addNewInput(field)"
-                        >
-                            <plus-outlined />
-                            {{ $t(field.addButtonLabel) }}
-                        </a-button>
-                    </a-form-item>
+                    <modal-form-dynamic-input
+                        v-if="subField.type === 'DYNAMIC-INPUT'"
+                        :key="`${field.id}:${subField.id}`"
+                        :field="subField"
+                        :parent-field-name="field.id"
+                        :form-state="parsedFormState[field.id][subField.id]"
+                    />
+                    <modal-form-item
+                        v-else
+                        :key="`${field.id}:${subField.id}`"
+                        :wrapper-col="wrapperCol"
+                        :label-col="labelCol"
+                        :field="subField"
+                        :parent-field-name="field.id"
+                        :form-state="parsedFormState[field.id]"
+                    />
                 </template>
+                <modal-form-dynamic-input
+                    v-if="field.type === 'DYNAMIC-INPUT'"
+                    :key="field.id"
+                    :field="field"
+                    :form-state="parsedFormState[field.id]"
+                />
+                <modal-form-item
+                    v-else-if="!field.fields"
+                    :key="field.id"
+                    :wrapper-col="wrapperCol"
+                    :label-col="labelCol"
+                    :field="field"
+                    :form-state="parsedFormState"
+                />
             </template>
         </a-form>
     </a-modal>
@@ -150,15 +63,22 @@
 
 <script>
 import JSONBig from 'json-bigint';
-import {MinusCircleOutlined, PlusOutlined} from '@ant-design/icons-vue';
+import ModalFormDynamicInput from './modal-form-dynamic-input';
+import ModalFormItem from './modal-form-item';
+
+const BUILTIN_NODE_ID_SELECT = '__nodeId__';
 
 export default {
     name: 'content-modal-form',
     components: {
-        MinusCircleOutlined,
-        PlusOutlined
+        ModalFormDynamicInput,
+        ModalFormItem
     },
     props: {
+        members: {
+            type: Array,
+            default: () => []
+        },
         type: {
             type: String,
             default: 'CREATE'
@@ -187,9 +107,17 @@ export default {
             type: Array,
             required: true
         },
+        formState: {
+            type: Object,
+            default: null
+        },
         queryKey: {
             type: String,
             default: 'ids'
+        },
+        targetRecords: {
+            type: Array,
+            default: () => []
         },
         targetRecordKeys: {
             type: Array,
@@ -198,42 +126,33 @@ export default {
     },
     emits: ['onRecordCreated', 'onRecordsUpdated', 'hide'],
     data() {
-        const formState = {};
-        for (const item of this.formItems) {
-            formState[item.id] = item.value;
-            if (item.type === 'DYNAMIC-INPUT') {
-                formState[item.id] = [{
-                    value: '',
-                    key: Date.now()
-                }];
-            } else if (item.type === 'SWITCH') {
-                formState[item.id] = false;
-            }
-        }
         return {
             loading: false,
-            formState,
+            parsedFormState: {},
             showNoFieldForUpdateError: false,
             formItemLayout: {
                 labelCol: {
-                    xs: {span: 24},
-                    sm: {span: 4}
+                    xs: { span: 24 },
+                    sm: { span: 4 }
                 },
                 wrapperCol: {
-                    xs: {span: 24},
-                    sm: {span: 20}
+                    xs: { span: 24 },
+                    sm: { span: 20 }
                 }
             },
             formItemLayoutWithOutLabel: {
                 wrapperCol: {
-                    xs: {span: 24, offset: 0},
-                    sm: {span: 20, offset: 4}
+                    xs: { span: 24, offset: 0 },
+                    sm: { span: 20, offset: 4 }
                 }
             },
             dynamicInputId: 1
         };
     },
     computed: {
+        clusterMode() {
+            return this.members?.length;
+        },
         labelCol() {
             switch (this.size) {
                 case 'L':
@@ -253,40 +172,60 @@ export default {
                 default:
                     return this.$layout.formItemLayout.wrapperCol;
             }
+        },
+        extendedFormItems() {
+            if (!this.clusterMode || this.type !== 'CREATE') {
+                return this.formItems;
+            }
+            const memberSelect = {
+                id: BUILTIN_NODE_ID_SELECT,
+                type: 'SELECT',
+                label: 'targetNodeId',
+                value: this.members[0].nodeId,
+                options: {
+                    values: this.members.map(member => ({
+                        id: member.nodeId,
+                        rawLabel: member.nodeId
+                    }))
+                }
+            };
+            return [memberSelect, ...this.formItems];
+        }
+    },
+    watch: {
+        extendedFormItems: {
+            handler() {
+                this.parsedFormState = this.formState || this.initFormState(this.extendedFormItems, {});
+            },
+            immediate: true
         }
     },
     methods: {
-        addNewInput(field) {
-            this.formState[field.id].push({
-                value: '',
-                key: Date.now()
-            });
-        },
-        deleteInput(field, index) {
-            this.formState[field.id].splice(index, 1);
-        },
-        getDisabledTime(current, allowFuture, allowPast = true) {
-            if (allowFuture && allowPast) {
-                return;
+        initFormState(items, state) {
+            for (const item of items) {
+                const itemId = item.id;
+                if (item.fields) {
+                    const nestedState = this.initFormState(item.fields, {});
+                    // state[itemId] = item.dynamicFieldGroups ? [nestedState] : nestedState;
+                    state[itemId] = nestedState;
+                    continue;
+                }
+                state[itemId] = item.value;
+                if (item.type === 'DYNAMIC-INPUT') {
+                    state[itemId] = [{
+                        value: '',
+                        key: Date.now()
+                    }];
+                } else if (item.type === 'SWITCH') {
+                    state[itemId] = false;
+                } else if (item.type === 'UPLOAD') {
+                    state[itemId] = [];
+                }
             }
-            const present = this.$date();
-            const currentStartOfDate = this.$date(current).startOf('day').toDate().getTime();
-            const presentStartOfDate = this.$date().startOf('day').toDate().getTime();
-            if (currentStartOfDate !== presentStartOfDate) {
-                return;
-            }
-            if (allowFuture) {
-                return {
-                    disabledHours: () => this.$util.range(0, present.hour() - 1)
-                };
-            } else {
-                return {
-                    disabledHours: () => this.$util.range(present.hour() + 1, 24)
-                };
-            }
+            return state;
         },
         hide() {
-            this.$emit('hide');
+            this.$emit('hide', this.parsedFormState);
         },
         handleCancel() {
             this.hide();
@@ -298,61 +237,55 @@ export default {
                 // Suppress the error to avoid some browsers logging something like "Uncaught (in promise)"
                 return;
             }
-            const record = this.parseRecord(this.formState);
+            const { form, record } = this.parseFormItems(this.formItems, this.parsedFormState, {});
             if (this.type === 'CREATE') {
-                this.requestCreateNewRecord(record);
+                this.requestCreateNewRecord(form, record);
             } else {
                 this.requestUpdateRecord(record);
             }
         },
-        isDateDisabled(current, allowFuture, allowPast = true) {
-            if (!current) {
-                return true;
-            }
-            current = this.$date(current).startOf('day').toDate().getTime();
-            const present = this.$date().startOf('day').toDate().getTime();
-            if (current === present) {
-                return false;
-            }
-            if (allowFuture && allowPast) {
-                return false;
-            } else if (allowFuture) {
-                return current <= present;
-            } else {
-                return current >= present;
-            }
-        },
-        parseRecord(formState) {
-            const record = this.$util.copy(formState);
-            const dynamicInputFieldIds = [];
-            for (const item of this.formItems) {
+        parseFormItems(items, state, record) {
+            let form;
+            for (const item of items) {
                 const itemType = item.type;
                 const itemId = item.id;
+                const value = state[itemId];
                 if (itemType === 'TREE') {
-                    record[itemId] = item.transform(formState[itemId]);
+                    record[itemId] = item.transform(value);
                 } else if (itemType === 'DYNAMIC-INPUT') {
-                    dynamicInputFieldIds.push(itemId);
-                }
-            }
-            Object.entries(record).forEach(([key, value]) => {
-                if (dynamicInputFieldIds.includes(key)) {
                     const values = value.filter(Boolean)
                         .map(i => i.value);
                     if (values.length) {
-                        record[key] = values;
-                    } else {
-                        delete record[key];
+                        record[itemId] = values;
                     }
-                } else if (this.$date.isDayjs(value)) {
-                    record[key] = value.toISOString();
+                } else if (itemType === 'UPLOAD') {
+                    form = {};
+                    for (const file of value) {
+                        form[file.name] = file.originFileObj;
+                    }
+                } else if (item.fields) {
+                    if (item.fields.length) {
+                        const { record: nestedRecord } = this.parseFormItems(item.fields, value, {});
+                        record[itemId] = item.dynamicFieldGroups ? [nestedRecord] : nestedRecord;
+                    }
+                } else {
+                    record[itemId] = this.$date.isDayjs(value) ? value.toISOString() : value;
                 }
-            });
-            this.$util.removeEmpty(record);
-            return record;
+            }
+            return {
+                form,
+                record
+            };
         },
-        requestCreateNewRecord(record) {
+        requestCreateNewRecord(form, record) {
             this.loading = true;
-            this.$http.post(this.submitUrl, this.getRequestBodyData(record))
+            const selectedNodeId = this.parsedFormState[BUILTIN_NODE_ID_SELECT];
+            const member = this.members.find(m => m.nodeId === selectedNodeId);
+            const baseUrl = member?.adminApiAddress || '';
+            const request = form
+                ? this.$http.postForm(`${baseUrl}${this.submitUrl}?${this.$qs.encode(record)}`, form)
+                : this.$http.post(`${baseUrl}${this.submitUrl}`, this.getRequestBodyData(record));
+            request
                 .then(() => {
                     this.$message.success(this.$t('createdSuccessfully'));
                     this.$emit('onRecordCreated', record);
@@ -372,13 +305,29 @@ export default {
             }
             this.showNoFieldForUpdateError = false;
             this.loading = true;
-            const params = this.$rq.getQueryParams(this.queryKey, this.targetRecordKeys);
-            this.$http.put(`${this.submitUrl}${params}`, this.getRequestBodyData(updatedFields))
-                .then(() => {
-                    this.$emit('onRecordsUpdated', this.targetRecordKeys, updatedFields);
-                    this.hide();
-                    this.$message.success(this.$t('updatedSuccessfully'));
-                })
+            let request;
+            if (this.clusterMode) {
+                const addressToKeys = {};
+                for (const record of this.targetRecords) {
+                    const adminApiAddress = this.members.find(m => m.nodeId === record.nodeId).adminApiAddress;
+                    const keys = addressToKeys[adminApiAddress] || [];
+                    keys.push(record.rowKey);
+                    addressToKeys[adminApiAddress] = keys;
+                }
+                const requests = Object.entries(addressToKeys).map(([address, keys]) => {
+                    const params = this.$rq.getQueryParams(this.queryKey, keys);
+                    return this.$http.put(`${address}${this.submitUrl}${params}`, this.getRequestBodyData(updatedFields));
+                });
+                request = Promise.all(requests);
+            } else {
+                const params = this.$rq.getQueryParams(this.queryKey, this.targetRecordKeys);
+                request = this.$http.put(`${this.submitUrl}${params}`, this.getRequestBodyData(updatedFields));
+            }
+            request.then(() => {
+                this.$emit('onRecordsUpdated', this.targetRecordKeys, updatedFields);
+                this.hide();
+                this.$message.success(this.$t('updatedSuccessfully'));
+            })
                 .catch(err => {
                     this.$error(this.$t('updateFailed'), err);
                 })
@@ -403,7 +352,7 @@ export default {
     }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .content-modal-form {
     &__date-picker {
         width: 100%;

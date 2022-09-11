@@ -15,6 +15,7 @@
 
 <script>
 import {
+    ApiOutlined,
     AreaChartOutlined,
     BarChartOutlined,
     BarsOutlined,
@@ -29,6 +30,7 @@ import {
     DatabaseOutlined,
     DownOutlined,
     ExportOutlined,
+    InboxOutlined,
     InfoCircleOutlined,
     LinkOutlined,
     LockOutlined,
@@ -48,6 +50,7 @@ import {
 export default {
     name: 'icon',
     components: {
+        ApiOutlined,
         AreaChartOutlined,
         BarChartOutlined,
         BarsOutlined,
@@ -62,6 +65,7 @@ export default {
         DatabaseOutlined,
         DownOutlined,
         ExportOutlined,
+        InboxOutlined,
         InfoCircleOutlined,
         LinkOutlined,
         LockOutlined,

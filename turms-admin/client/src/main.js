@@ -7,6 +7,7 @@ import enUS from 'ant-design-vue/es/locale/en_US';
 import jaJP from 'ant-design-vue/es/locale/ja_JP';
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import RelativeTime from 'dayjs/plugin/relativeTime';
+import createApis from './apis';
 import App from './App.vue';
 import antd from './antd';
 import i18n from './i18n';
@@ -62,6 +63,7 @@ createApp(App)
                 uniq: _.uniq
             };
             globalProperties.$sleep = (millis) => new Promise(resolve => setTimeout(resolve, millis));
+            globalProperties.$apis = createApis(globalProperties);
         }
     })
     .mount('#app');

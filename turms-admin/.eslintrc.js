@@ -36,7 +36,6 @@ module.exports = {
             'singleline': 1,
             'multiline': 1
         }],
-        'vue/name-property-casing': ['error', 'kebab-case'],
         'vue/html-closing-bracket-spacing': ['error'],
         'vue/multi-word-component-names': 0,
         'vue/no-static-inline-styles': ['error'],

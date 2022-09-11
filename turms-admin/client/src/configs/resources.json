@@ -171,6 +171,10 @@
         "threaddump": "/threaddump",
         "metrics": "/metrics",
 
+        "plugin": "/plugins",
+        "pluginJava": "/plugins/java",
+        "pluginJavaScript": "/plugins/js",
+
         "admin": "/admins",
         "adminRole": "/admins/roles",
 

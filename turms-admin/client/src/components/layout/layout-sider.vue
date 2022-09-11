@@ -92,6 +92,11 @@ export default {
                         key: '/cluster/config',
                         iconType: 'setting',
                         title: 'clusterConfig'
+                    },
+                    {
+                        key: '/cluster/plugin',
+                        iconType: 'api',
+                        title: 'clusterPlugin'
                     }
                 ]
             },

@@ -5,11 +5,12 @@
         class="content-template"
     >
         <filter-group
-            :filters="filters"
+            :filters="extendedFilters"
             :loading="loading"
             @onSearchClicked="onSearchClicked"
         />
         <action-group
+            :members="members"
             :actions="actions"
             :deletion="deletion"
             :export-file-name="'turms-' + name"
@@ -18,6 +19,7 @@
             :query-params="queryParams"
             :records-to-export="useTableDataForExport ? records : null"
             :resource-url="url + '/page'"
+            :selected-records="selectedRecords"
             :selected-record-keys="selectedRecordKeys"
             :submit-url="url"
             :transform="transformExportData"
@@ -47,6 +49,8 @@ import ContentTable from './table';
 import UiMixin from './ui-mixin';
 import FilterGroup from './filter-group';
 
+const BUILTIN_NODE_ID_FILTER_NAME = '__nodeId__';
+
 export default {
     name: 'content-template',
     components: {
@@ -69,6 +73,10 @@ export default {
         url: {
             type: String,
             default: ''
+        },
+        clusterMode: {
+            type: Boolean,
+            default: false
         },
         disablePaginationIfFilterExists: {
             type: Boolean,
@@ -137,6 +145,7 @@ export default {
             initialData: [],
             records: [],
             sorter: null,
+            selectedRecords: [],
             selectedRecordKeys: [],
             loaded: false,
             initialized: false,
@@ -144,7 +153,10 @@ export default {
                 onChange: (selectedRecordKeys) => {
                     this.updateSelectedRecordKeys(selectedRecordKeys);
                 }
-            }
+            },
+            extendedFilters: this.filters,
+            members: [],
+            selectedMember: null
         };
     },
     computed: {
@@ -286,7 +298,7 @@ export default {
             this.$refs.table.goToFirst();
             this.requestRecords();
         },
-        parseResponseRecords(data) {
+        parseResponseRecords(data, nodeId = '') {
             data = this.transform ? this.transform(data) : data;
             const records = data instanceof Array
                 ? data
@@ -295,13 +307,24 @@ export default {
                 Object.entries(record).forEach(([key, value]) => {
                     if (this.$util.isBigNumber(value)) {
                         record[key] = value.toFixed();
-                    } else if (key === this.recordKey && typeof value === 'object') {
-                        Object.keys(value).forEach(subKey => {
-                            record[`${key}.${subKey}`] = value[subKey];
-                        });
+                    } else if (typeof value === 'object') {
+                        if (key === this.recordKey) {
+                            Object.keys(value).forEach(subKey => {
+                                record[`${key}.${subKey}`] = value[subKey];
+                            });
+                        } else {
+                            record[key] = JSONBig.stringify(value, null, '\t');
+                        }
                     }
                 });
-                record.rowKey = JSONBig.stringify(record[this.recordKey]);
+                let key = record[this.recordKey];
+                if (nodeId) {
+                    key = {
+                        nodeId,
+                        key
+                    };
+                }
+                record.rowKey = JSONBig.stringify(key);
                 return record;
             });
         },
@@ -310,8 +333,25 @@ export default {
                 return;
             }
             this.loading = true;
-            const params = this.$rq.getQueryParams(this.queryKey, recordKeys);
-            return this.$http.delete(`${this.url}${params}`)
+            let request;
+            if (this.clusterMode) {
+                const addressToKeys = {};
+                for (const record of this.selectedRecords) {
+                    const adminApiAddress = this.members.find(m => m.nodeId === record.nodeId).adminApiAddress;
+                    const keys = addressToKeys[adminApiAddress] || [];
+                    keys.push(record.rowKey);
+                    addressToKeys[adminApiAddress] = keys;
+                }
+                const requests = Object.entries(addressToKeys).map(([address, keys]) => {
+                    const params = this.$rq.getQueryParams(this.queryKey, keys);
+                    return this.$http.delete(`${address}${this.url}${params}`);
+                });
+                request = Promise.all(requests);
+            } else {
+                const params = this.$rq.getQueryParams(this.queryKey, recordKeys);
+                request = this.$http.delete(`${this.url}${params}`);
+            }
+            return request
                 .then(() => {
                     this.$message.success(this.$t('deletedSuccessfully'));
                     if (this.deletion.refresh) {
@@ -341,13 +381,16 @@ export default {
                 });
         },
         requestRecords() {
+            if (this.clusterMode) {
+                return this.requestRecordsForCluster();
+            }
             this.loading = true;
             const enablePagination = !this.disablePaginationIfFilterExists
                 || !Object.keys(this.getQueryParamsFromFilters()).length;
             const queryUrl = this.pageable && enablePagination
                 ? this.url + '/page'
                 : this.url;
-            this.$http.get(queryUrl, {params: this.getQueryParams()})
+            this.$http.get(queryUrl, { params: this.getQueryParams() })
                 .then(response => {
                     const data = response.data?.data || {};
                     this.records = this.parseResponseRecords(data);
@@ -365,11 +408,102 @@ export default {
                     this.loading = false;
                 });
         },
-        updateSelectedRecordKeys(keys) {
-            if (!keys) {
-                keys = this.selectedRecordKeys
-                    .filter(key => this.records.some(record => record.rowKey === key));
+        updateExtendedFilters() {
+            if (!this.clusterMode || this.extendedFilters?.[0].id === BUILTIN_NODE_ID_FILTER_NAME) {
+                return;
             }
+            const nodeIdFilter = {
+                id: BUILTIN_NODE_ID_FILTER_NAME,
+                name: 'nodeId',
+                type: 'SELECT',
+                model: 'ALL',
+                options: {
+                    base: [{
+                        id: 'ALL',
+                        label: 'allNodes'
+                    }],
+                    values: this.members.map(member => {
+                        const nodeId = member.nodeId;
+                        return {
+                            id: nodeId,
+                            rawLabel: nodeId
+                        };
+                    })
+                }
+            };
+            this.extendedFilters = [
+                nodeIdFilter,
+                ...this.filters
+            ];
+        },
+        requestRecordsForCluster() {
+            this.loading = true;
+            this.requestMembers()
+                .then(() => {
+                    this.updateExtendedFilters();
+                    const selectedMemberId = this.extendedFilters
+                        .find(filter => filter.id === BUILTIN_NODE_ID_FILTER_NAME).model;
+                    const members = selectedMemberId === 'ALL'
+                        ? this.members
+                        : [this.members.find(member => member.nodeId === selectedMemberId)];
+                    const config = { params: this.getQueryParams() };
+                    const requests = members.map(member => {
+                        const queryUrl = `${member.adminApiAddress}${this.url}`;
+                        return this.$http.get(queryUrl, config)
+                            .then(response => {
+                                response.nodeId = member.nodeId;
+                                return response;
+                            });
+                    });
+                    return Promise.all(requests);
+                })
+                .then(responses => {
+                    const records = [];
+                    let count = 0;
+                    for (const response of responses) {
+                        const data = response.data?.data || {};
+                        const nodeId = response.nodeId;
+                        const items = this.parseResponseRecords(data, nodeId);
+                        for (const item of items) {
+                            item.nodeId = nodeId;
+                            records.push(item);
+                        }
+                        count += data.total ?? 0;
+                    }
+                    this.records = records;
+                    this.$refs.table.updatePaginateTotal(count);
+                    this.loaded = true;
+                })
+                .catch(error => {
+                    this.$error(this.$t('failedToFetchData'), error);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+        requestMembers() {
+            if (this.members.length) {
+                return Promise.resolve();
+            }
+            return this.$apis.fetchMembersInfo()
+                .then(members => {
+                    this.members = members;
+                    this.selectedMember = this.members[0];
+                })
+                .catch(error => {
+                    this.$error(this.$t('failedToFetchClusterMembers'), error);
+                });
+        },
+        updateSelectedRecordKeys(keys) {
+            let records;
+            if (!keys) {
+                records = this.records
+                    .filter(record => this.selectedRecordKeys.includes(record.rowKey));
+                keys = records.map(record => record.rowKey);
+            } else {
+                records = keys.map(key => this.records.find(record => record.rowKey === key));
+            }
+            this.selectedRecords = records;
             this.selectedRecordKeys = keys;
             this.rowSelection.selectedRowKeys = keys;
         }

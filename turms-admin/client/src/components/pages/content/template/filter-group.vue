@@ -24,7 +24,7 @@
                     :key="option.id.toString()"
                     :value="option.id.toString()"
                 >
-                    {{ $t(option.label) }}
+                    {{ option.rawLabel || $t(option.label) }}
                 </a-select-option>
             </a-select>
             <date-range-picker
@@ -139,8 +139,8 @@ export default {
         getSelectWidth(filter) {
             const longestLabel = (filter.options.base || [])
                 .concat(filter.options.values || [])
-                .map(val => this.$t(val.label))
-                .reduce((max, val) => max.length > val.length ? max : val);
+                .map(val => val.rawLabel || this.$t(val.label))
+                .reduce((max, val) => max.length > val.length ? max : val, '');
             return longestLabel.length * 11;
         },
         onSearchClicked() {

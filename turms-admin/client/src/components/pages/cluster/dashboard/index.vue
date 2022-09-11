@@ -39,7 +39,6 @@ import DashboardActions from './cluster-dashboard-actions';
 import DashboardOverview from './overview/cluster-dashboard-overview';
 import DashboardServerDetails from './server-details/cluster-dashboard-server-details';
 import SERVER_DETAILS_ITEMS from './server-details/server-details-items';
-import ResourceRequestMixin from './resource-request-mixin';
 import METRICS from './metrics';
 
 const UPDATE_DASHBOARD_INTERVAL = 30 * 1000;
@@ -59,7 +58,6 @@ export default {
         DashboardServerDetails,
         Skeleton
     },
-    mixins: [ResourceRequestMixin],
     data() {
         return {
             members: [],
@@ -153,7 +151,7 @@ export default {
                 const metrics = this.isMemberGateway(member)
                     ? ALL_METRICS_FOR_GATEWAY
                     : ALL_METRICS_FOR_SERVICE;
-                this.fetchMemberMetrics(member, metrics)
+                this.$apis.fetchMemberMetrics(member, metrics)
                     .then(res => {
                         const list = [...this.metrics[member.nodeId] || [], {
                             timestamp: res.timestamp,
@@ -166,11 +164,11 @@ export default {
             });
         },
         updateOnlineUsers() {
-            return this.fetchOnlineUsers()
+            return this.$apis.fetchOnlineUsers()
                 .then(count => this.onlineUsers = count);
         },
         updateMembersInfo() {
-            return this.fetchMembersInfo()
+            return this.$apis.fetchMembersInfo(true)
                 .then(members => this.members = members);
         },
         generateHeapDump(member) {
@@ -179,7 +177,7 @@ export default {
             }
             this.generatingHeapDump = true;
             this.$loading({
-                promise: this.fetchHeapDump(member),
+                promise: this.$apis.fetchHeapDump(member),
                 loading: 'generatingHeapDump',
                 success: 'generatedHeapDump',
                 error: 'failedToGenerateHeapDump',
@@ -196,7 +194,7 @@ export default {
             }
             this.generatingThreadDump = true;
             this.$loading({
-                promise: this.fetchThreadDump(member),
+                promise: this.$apis.fetchThreadDump(member),
                 loading: 'generatingThreadDump',
                 success: 'generatedThreadDump',
                 error: 'failedToGenerateThreadDump',

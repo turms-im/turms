@@ -39,13 +39,16 @@
         </div>
         <modal-form
             v-if="actions.length"
+            :members="members"
             :visible="activeAction.visible"
             :title="$t(activeAction.title)"
             :form-items="activeAction.fields"
+            :form-state="activeAction.formState"
             :type="activeAction.type"
             :query-key="queryKey"
+            :target-records="selectedRecords"
             :target-record-keys="selectedRecordKeys"
-            :submit-url="submitUrl"
+            :submit-url="activeAction.url ? activeAction.url : submitUrl"
             :size="activeAction.size"
             @hide="hideModalForm"
             @onRecordCreated="onRecordCreated"
@@ -65,6 +68,10 @@ export default {
     },
     mixins: [ExportMixin],
     props: {
+        members: {
+            type: Array,
+            default: () => []
+        },
         actions: {
             type: Array,
             required: true
@@ -83,6 +90,10 @@ export default {
         },
         submitUrl: {
             type: String,
+            required: true
+        },
+        selectedRecords: {
+            type: Array,
             required: true
         },
         selectedRecordKeys: {
@@ -119,8 +130,10 @@ export default {
                 this.$message.error(this.$t('noRecordsSelected'));
             }
         },
-        hideModalForm() {
-            this.activeAction.visible = false;
+        hideModalForm(formState) {
+            const action = this.activeAction;
+            action.visible = false;
+            action.formState = formState;
         },
         onPopconfirmVisibleChanged(visible) {
             this.popconfirmVisible = visible && this.hasSelectedRows;
