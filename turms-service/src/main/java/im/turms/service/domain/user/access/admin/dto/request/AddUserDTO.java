@@ -18,7 +18,7 @@
 package im.turms.service.domain.user.access.admin.dto.request;
 
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
-import im.turms.service.infra.security.SecurityValueConst;
+import im.turms.server.common.infra.security.SecurityValueConst;
 
 import java.util.Date;
 

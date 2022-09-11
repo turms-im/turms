@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.service.infra.security;
+package im.turms.server.common.infra.security;
 
 /**
  * @author James Chen

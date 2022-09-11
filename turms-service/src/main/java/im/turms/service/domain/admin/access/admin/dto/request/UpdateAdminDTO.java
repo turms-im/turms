@@ -18,7 +18,7 @@
 package im.turms.service.domain.admin.access.admin.dto.request;
 
 
-import im.turms.service.infra.security.SecurityValueConst;
+import im.turms.server.common.infra.security.SecurityValueConst;
 
 /**
  * @author James Chen

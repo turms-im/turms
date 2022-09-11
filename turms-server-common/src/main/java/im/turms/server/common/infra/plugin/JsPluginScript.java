@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.plugin;
 
+import im.turms.server.common.infra.security.SecurityValueConst;
+
 /**
  * @author James Chen
  */
@@ -24,4 +26,13 @@ public record JsPluginScript(
         String fileName,
         String code
 ) {
+
+    @Override
+    public String toString() {
+        return "JsPluginScript{" +
+                "fileName='" + fileName + '\'' +
+                ", code='" + SecurityValueConst.SENSITIVE_VALUE + '\'' +
+                '}';
+    }
+
 }
