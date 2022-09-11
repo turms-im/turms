@@ -5,6 +5,7 @@ import Blocklist from '../components/pages/blocklist/index';
 import ClientTerminal from '../components/pages/terminal';
 import ClusterConfig from '../components/pages/cluster/config';
 import ClusterDashboard from '../components/pages/cluster/dashboard';
+import ClusterFlightRecorder from '../components/pages/cluster/flight-recorder';
 import ClusterPlugin from '../components/pages/cluster/plugin';
 import ContentConversation from '../components/pages/content/conversation/index';
 import ContentGroup from '../components/pages/content/group/index';
@@ -23,6 +24,10 @@ const routes = [
     {
         path: '/cluster/dashboard',
         component: ClusterDashboard
+    },
+    {
+        path: '/cluster/flight-recorder',
+        component: ClusterFlightRecorder
     },
     {
         path: '/cluster/plugin',

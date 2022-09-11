@@ -94,6 +94,11 @@ export default {
                         title: 'clusterConfig'
                     },
                     {
+                        key: '/cluster/flight-recorder',
+                        iconType: 'monitor',
+                        title: 'flightRecorder'
+                    },
+                    {
                         key: '/cluster/plugin',
                         iconType: 'api',
                         title: 'clusterPlugin'

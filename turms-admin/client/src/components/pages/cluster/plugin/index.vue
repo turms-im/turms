@@ -8,6 +8,7 @@
         :filters="filters"
         :actions="actions"
         :table="table"
+        :transform="transform"
     />
 </template>
 
@@ -149,6 +150,12 @@ export default {
                         width: '25%'
                     }
                 ]
+            },
+            transform(data) {
+                for (const record of data) {
+                    record.extensions = JSON.stringify(record.extensions);
+                }
+                return data;
             }
         };
     }

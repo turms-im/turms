@@ -167,6 +167,7 @@
     "apis": {
         "clusterMember": "/cluster/members",
 
+        "flightRecordings": "/flight-recordings",
         "heapdump": "/heapdump",
         "threaddump": "/threaddump",
         "metrics": "/metrics",

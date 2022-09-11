@@ -182,6 +182,7 @@ export default {
                 type: 'SELECT',
                 label: 'targetNodeId',
                 value: this.members[0].nodeId,
+                rules: this.$validator.create({required: true}),
                 options: {
                     values: this.members.map(member => ({
                         id: member.nodeId,

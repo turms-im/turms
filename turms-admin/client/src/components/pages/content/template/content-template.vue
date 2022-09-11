@@ -307,14 +307,10 @@ export default {
                 Object.entries(record).forEach(([key, value]) => {
                     if (this.$util.isBigNumber(value)) {
                         record[key] = value.toFixed();
-                    } else if (typeof value === 'object') {
-                        if (key === this.recordKey) {
-                            Object.keys(value).forEach(subKey => {
-                                record[`${key}.${subKey}`] = value[subKey];
-                            });
-                        } else {
-                            record[key] = JSONBig.stringify(value, null, '\t');
-                        }
+                    } else if (key === this.recordKey && typeof value === 'object') {
+                        Object.keys(value).forEach(subKey => {
+                            record[`${key}.${subKey}`] = value[subKey];
+                        });
                     }
                 });
                 let key = record[this.recordKey];
@@ -408,34 +404,6 @@ export default {
                     this.loading = false;
                 });
         },
-        updateExtendedFilters() {
-            if (!this.clusterMode || this.extendedFilters?.[0].id === BUILTIN_NODE_ID_FILTER_NAME) {
-                return;
-            }
-            const nodeIdFilter = {
-                id: BUILTIN_NODE_ID_FILTER_NAME,
-                name: 'nodeId',
-                type: 'SELECT',
-                model: 'ALL',
-                options: {
-                    base: [{
-                        id: 'ALL',
-                        label: 'allNodes'
-                    }],
-                    values: this.members.map(member => {
-                        const nodeId = member.nodeId;
-                        return {
-                            id: nodeId,
-                            rawLabel: nodeId
-                        };
-                    })
-                }
-            };
-            this.extendedFilters = [
-                nodeIdFilter,
-                ...this.filters
-            ];
-        },
         requestRecordsForCluster() {
             this.loading = true;
             this.requestMembers()
@@ -493,6 +461,34 @@ export default {
                 .catch(error => {
                     this.$error(this.$t('failedToFetchClusterMembers'), error);
                 });
+        },
+        updateExtendedFilters() {
+            if (!this.clusterMode || this.extendedFilters?.[0].id === BUILTIN_NODE_ID_FILTER_NAME) {
+                return;
+            }
+            const nodeIdFilter = {
+                id: BUILTIN_NODE_ID_FILTER_NAME,
+                name: 'nodeId',
+                type: 'SELECT',
+                model: 'ALL',
+                options: {
+                    base: [{
+                        id: 'ALL',
+                        label: 'allNodes'
+                    }],
+                    values: this.members.map(member => {
+                        const nodeId = member.nodeId;
+                        return {
+                            id: nodeId,
+                            rawLabel: nodeId
+                        };
+                    })
+                }
+            };
+            this.extendedFilters = [
+                nodeIdFilter,
+                ...this.filters
+            ];
         },
         updateSelectedRecordKeys(keys) {
             let records;
