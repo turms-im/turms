@@ -24,7 +24,7 @@ import lombok.Getter;
  */
 public enum NodeType {
     GATEWAY("Turms Gateway"),
-    SERVICE("Turms");
+    SERVICE("Turms Service");
 
     @Getter
     private final String displayName;

@@ -21,6 +21,7 @@ import im.turms.server.common.access.admin.web.HttpRequestDispatcher;
 import im.turms.server.common.access.admin.web.annotation.GetMapping;
 import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
+import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.io.FileUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
@@ -104,7 +105,8 @@ public class OpenApiController {
         if (apiBuffer == null) {
             synchronized (this) {
                 if (apiBuffer == null) {
-                    byte[] bytes = OpenApiBuilder.build(context.getBean(TurmsApplicationContext.class),
+                    byte[] bytes = OpenApiBuilder.build(context.getBean(TurmsApplicationContext.class).getVersion(),
+                            context.getBean(Node.class).getNodeType().getDisplayName(),
                             context.getBean(HttpRequestDispatcher.class),
                             context.getBean(BaseServiceAddressManager.class));
                     apiBuffer = ByteBufUtil.getUnreleasableDirectBuffer(bytes);

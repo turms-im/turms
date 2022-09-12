@@ -25,7 +25,6 @@ import im.turms.server.common.access.admin.web.HttpRequestDispatcher;
 import im.turms.server.common.access.admin.web.MediaTypeConst;
 import im.turms.server.common.access.admin.web.MethodParameterInfo;
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpMethod;
@@ -91,13 +90,14 @@ public class OpenApiBuilder {
     }
 
     @SneakyThrows
-    public static byte[] build(TurmsApplicationContext context,
+    public static byte[] build(String version,
+                               String nodeType,
                                HttpRequestDispatcher httpRequestDispatcher,
                                BaseServiceAddressManager serviceAddressManager) {
         OpenAPI api = new OpenAPI()
                 .info(new Info()
-                        .title(TITLE)
-                        .version(context.getVersion()))
+                        .title(TITLE + " - " + nodeType)
+                        .version(version))
                 .addServersItem(new Server()
                         .url(serviceAddressManager.getAdminApiAddress()))
                 .externalDocs(new ExternalDocumentation()
