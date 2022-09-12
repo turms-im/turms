@@ -303,7 +303,7 @@ export default {
             const records = data instanceof Array
                 ? data
                 : data.records || [];
-            return records.map(record => {
+            records.forEach(record => {
                 Object.entries(record).forEach(([key, value]) => {
                     if (this.$util.isBigNumber(value)) {
                         record[key] = value.toFixed();
@@ -321,8 +321,8 @@ export default {
                     };
                 }
                 record.rowKey = JSONBig.stringify(key);
-                return record;
             });
+            return records;
         },
         requestDelete(recordKeys) {
             if (!this.url) {
@@ -388,9 +388,9 @@ export default {
                 : this.url;
             this.$http.get(queryUrl, { params: this.getQueryParams() })
                 .then(response => {
-                    const data = response.data?.data || {};
-                    this.records = this.parseResponseRecords(data);
-                    this.$refs.table.updatePaginateTotal(data.total ?? 0);
+                    const data = response.data?.data;
+                    this.records = data ? this.parseResponseRecords(data) : [];
+                    this.$refs.table.updatePaginateTotal(data?.total ?? this.records.length);
                     this.loaded = true;
                 })
                 .catch(error => {
@@ -429,14 +429,14 @@ export default {
                     const records = [];
                     let count = 0;
                     for (const response of responses) {
-                        const data = response.data?.data || {};
+                        const data = response.data?.data;
                         const nodeId = response.nodeId;
-                        const items = this.parseResponseRecords(data, nodeId);
+                        const items = data ? this.parseResponseRecords(data, nodeId) : [];
                         for (const item of items) {
                             item.nodeId = nodeId;
                             records.push(item);
                         }
-                        count += data.total ?? 0;
+                        count += data?.total ?? items.length;
                     }
                     this.records = records;
                     this.$refs.table.updatePaginateTotal(count);
