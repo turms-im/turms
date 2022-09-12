@@ -24,7 +24,6 @@ import im.turms.server.common.access.admin.web.ApiEndpointKey;
 import im.turms.server.common.access.admin.web.HttpRequestDispatcher;
 import im.turms.server.common.access.admin.web.MediaTypeConst;
 import im.turms.server.common.access.admin.web.MethodParameterInfo;
-import im.turms.server.common.access.admin.web.RequestContext;
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.lang.StringUtil;
@@ -87,10 +86,6 @@ public class OpenApiBuilder {
     private static final String EXTERNAL_DOCUMENTATION_URL = "https://turms-im.github.io/docs";
 
     private static final String FORM_DATA_PROPERTY_FILE = "filename";
-
-    static {
-        ModelConverters.getInstance().addClassToSkip(RequestContext.class.getName());
-    }
 
     private OpenApiBuilder() {
     }
@@ -206,6 +201,9 @@ public class OpenApiBuilder {
         List<ResolvedSchema> paramSchemas = new ArrayList<>(parameters.length);
         ModelConverters converters = ModelConverters.getInstance();
         for (MethodParameterInfo parameter : parameters) {
+            if (!parameter.isVisibleForOpenApi()) {
+                continue;
+            }
             Class<?> elementType = parameter.elementType();
             ResolvedSchema paramSchema = null;
             if (!parameter.isFormData()) {

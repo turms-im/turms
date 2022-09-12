@@ -157,7 +157,8 @@ public class HttpEndpointCollector {
                         false,
                         false,
                         null,
-                        null);
+                        null,
+                        false);
                 continue;
             }
             parameterInfos[i] = parseAsRequestParam(parameter);
@@ -179,7 +180,8 @@ public class HttpEndpointCollector {
                     false,
                     false,
                     defaultValue,
-                    null);
+                    null,
+                    true);
         }
         String name = queryParam.value().isBlank() ? parameter.getName() : queryParam.value();
         Object parsedDefaultValue = queryParam.defaultValue().isBlank()
@@ -193,7 +195,8 @@ public class HttpEndpointCollector {
                 false,
                 false,
                 parsedDefaultValue,
-                null);
+                null,
+                true);
     }
 
     private static MethodParameterInfo parseAsRequestHeader(Parameter parameter) {
@@ -211,7 +214,8 @@ public class HttpEndpointCollector {
                 false,
                 false,
                 PrimitiveDefaultUtil.getDefaultValue(type),
-                null);
+                null,
+                true);
     }
 
     private static MethodParameterInfo parseAsRequestBody(Parameter parameter) {
@@ -227,7 +231,8 @@ public class HttpEndpointCollector {
                 true,
                 false,
                 null,
-                null);
+                null,
+                true);
     }
 
     private static MethodParameterInfo parseAsRequestFormData(Parameter parameter) {
@@ -247,7 +252,8 @@ public class HttpEndpointCollector {
                 false,
                 true,
                 null,
-                contentType.isBlank() ? null : contentType);
+                contentType.isBlank() ? null : contentType,
+                true);
     }
 
     @Nullable

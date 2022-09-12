@@ -31,6 +31,7 @@ public record MethodParameterInfo(
         boolean isBody,
         boolean isFormData,
         Object defaultValue,
-        String contentType
+        String contentType,
+        boolean isVisibleForOpenApi
 ) {
 }
