@@ -19,7 +19,7 @@ package org.bson;
 
 import java.util.List;
 
-public class BsonArrayUtil {
+public final class BsonArrayUtil {
 
     private BsonArrayUtil() {
     }

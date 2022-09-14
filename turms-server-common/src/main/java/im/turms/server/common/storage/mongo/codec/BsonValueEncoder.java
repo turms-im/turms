@@ -17,7 +17,8 @@
 
 package im.turms.server.common.storage.mongo.codec;
 
-import org.bson.BsonArray;
+import im.turms.server.common.storage.mongo.MongoContext;
+import org.bson.BsonArrayUtil;
 import org.bson.BsonBinary;
 import org.bson.BsonBoolean;
 import org.bson.BsonDateTime;
@@ -31,7 +32,6 @@ import org.bson.BsonString;
 import org.bson.BsonValue;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecRegistry;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -44,19 +44,17 @@ import java.util.List;
  */
 public final class BsonValueEncoder {
 
-    public static CodecRegistry codecRegistry;
-
     private BsonValueEncoder() {
     }
 
     public static BsonValue encodeValue(Object value) {
-        if (value instanceof Collection values) {
+        if (value instanceof Collection<?> values) {
             int size = values.size();
             List<BsonValue> list = new ArrayList<>(size);
             for (Object val : values) {
                 list.add(encodeSingleValue(val));
             }
-            return new BsonArray(list);
+            return BsonArrayUtil.newArray(list);
         }
         if (value instanceof byte[] bytes) {
             return new BsonBinary(bytes);
@@ -68,7 +66,7 @@ public final class BsonValueEncoder {
             for (int i = 0; i < size; i++) {
                 list.add(encodeSingleValue(Array.get(value, i)));
             }
-            return new BsonArray(list);
+            return BsonArrayUtil.newArray(list);
         }
         return encodeSingleValue(value);
     }
@@ -112,13 +110,13 @@ public final class BsonValueEncoder {
         }
         Class<?> clazz = value.getClass();
         if (clazz.isEnum()) {
-            Enum element = (Enum) value;
+            Enum<?> element = (Enum<?>) value;
             return new BsonInt32(element.ordinal());
         }
         EncoderContext encoderContext = EncoderContext.builder().build();
         BsonDocument document = new BsonDocument();
         BsonWriter writer = new BsonDocumentWriter(document);
-        EntityCodec codec = (EntityCodec) codecRegistry.get(clazz);
+        EntityCodec codec = (EntityCodec) MongoContext.CODEC_REGISTRY.get(clazz);
         codec.encode(writer, value, encoderContext);
         return document;
     }

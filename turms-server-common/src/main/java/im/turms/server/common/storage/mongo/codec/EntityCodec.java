@@ -188,10 +188,12 @@ public class EntityCodec<T> extends MongoCodec<T> {
     private Object decode(EntityField<T> field, BsonReader reader, DecoderContext decoderContext) {
         Class<?> fieldClass = field.getFieldClass();
         if (Iterable.class.isAssignableFrom(fieldClass)) {
-            Pair<Class<?>, Class<?>> key = Pair.of(fieldClass, field.getElementClass());
-            TurmsIterableCodec codec = CLASS_TO_ITERABLE_CODEC.computeIfAbsent(key,
-                    pair -> {
-                        TurmsIterableCodec iterableCodec = new TurmsIterableCodec(pair.first(), pair.second());
+            TurmsIterableCodec codec = CLASS_TO_ITERABLE_CODEC.computeIfAbsent(
+                    Pair.of(fieldClass, field.getElementClass()),
+                    fieldClassAndElementClass -> {
+                        TurmsIterableCodec iterableCodec = new TurmsIterableCodec(
+                                fieldClassAndElementClass.first(),
+                                fieldClassAndElementClass.second());
                         iterableCodec.setRegistry(registry);
                         return iterableCodec;
                     });

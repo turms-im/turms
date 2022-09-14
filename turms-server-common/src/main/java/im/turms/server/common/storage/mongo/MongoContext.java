@@ -28,10 +28,8 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
-import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.thread.ThreadNameConst;
-import im.turms.server.common.storage.mongo.codec.BsonValueEncoder;
 import im.turms.server.common.storage.mongo.codec.MongoCodecProvider;
 import im.turms.server.common.storage.mongo.entity.MongoEntity;
 import im.turms.server.common.storage.mongo.entity.MongoEntityFactory;
@@ -68,6 +66,25 @@ import java.util.function.Consumer;
  */
 public class MongoContext {
 
+    private static final MongoCodecProvider MONGO_CODEC_PROVIDER = new MongoCodecProvider();
+    /**
+     * {@link MongoClientSettings#DEFAULT_CODEC_REGISTRY}
+     */
+    public static final CodecRegistry CODEC_REGISTRY = CodecRegistries.fromProviders(
+            new ValueCodecProvider(),
+            new BsonValueCodecProvider(),
+            new DocumentCodecProvider(),
+            new MapCodecProvider(),
+            new IterableCodecProvider(),
+            new GeoJsonCodecProvider(),
+            new Jsr310CodecProvider(),
+            new BsonCodecProvider(),
+            MONGO_CODEC_PROVIDER);
+
+    static {
+        MONGO_CODEC_PROVIDER.setRegistry(CODEC_REGISTRY);
+    }
+
     @Getter
     private final MongoClient client;
     @Getter
@@ -76,7 +93,6 @@ public class MongoContext {
     private final MongoDatabase adminDatabase;
     @Getter
     private final MongoDatabase configDatabase;
-    private final CodecRegistry codecRegistry;
     private final Map<Class<?>, MongoEntity<?>> classToEntity = new NonBlockingIdentityHashMap<>(64);
     private final Map<Class<?>, MongoCollection<?>> classToCollection = new NonBlockingIdentityHashMap<>(64);
     private final NioEventLoopGroup eventLoopGroup;
@@ -85,20 +101,6 @@ public class MongoContext {
         if (connectionString == null) {
             throw new IllegalArgumentException("The connection string cannot not be null");
         }
-        // MongoClients.getDefaultCodecRegistry()
-        CodecRegistry commonCodecRegistry = CodecRegistries.fromProviders(
-                new ValueCodecProvider(),
-                new BsonValueCodecProvider(),
-                new DocumentCodecProvider(),
-                new MapCodecProvider(),
-                new IterableCodecProvider(),
-                new GeoJsonCodecProvider(),
-                new Jsr310CodecProvider(),
-                new BsonCodecProvider());
-        MongoCodecProvider mongoCodecProvider = new MongoCodecProvider();
-        codecRegistry = CodecRegistries.fromRegistries(commonCodecRegistry,
-                CodecRegistries.fromProviders(mongoCodecProvider));
-        mongoCodecProvider.setRegistry(codecRegistry);
         ConnectionString connectionSettings = new ConnectionString(connectionString);
         eventLoopGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(),
                 // TODO: distinguish thread pool names when there are multiple contexts
@@ -111,7 +113,7 @@ public class MongoContext {
                         onServerDescriptionChange.accept(event.getNewDescription().getServerDescriptions());
                     }
                 }))
-                .codecRegistry(codecRegistry)
+                .codecRegistry(CODEC_REGISTRY)
                 // Do NOT use the default implementation of com.mongodb.connection.AsynchronousSocketChannelStreamFactory,
                 // which use a heap buffer pool "bufferProvider" for BsonWriter for NIO.
                 // They should go back to school to learn how to code efficiently.
@@ -125,8 +127,6 @@ public class MongoContext {
         database = client.getDatabase(connectionSettings.getDatabase());
         adminDatabase = client.getDatabase("admin");
         configDatabase = client.getDatabase("config");
-
-        BsonValueEncoder.codecRegistry = codecRegistry;
     }
 
     public Mono<Void> destroy(long timeoutMillis) {
@@ -138,7 +138,7 @@ public class MongoContext {
     }
 
     public <T> Codec<T> getCodec(Class<T> entityClass) {
-        return codecRegistry.get(entityClass);
+        return CODEC_REGISTRY.get(entityClass);
     }
 
     public <T> MongoCollection<T> getCollection(Class<T> entityClass) {
@@ -164,9 +164,12 @@ public class MongoContext {
     }
 
     public List<Pair<MongoEntity<?>, MongoCollection<?>>> registerEntitiesByClasses(Collection<Class<?>> classes) {
-        return registerEntitiesByOptions(classes.stream()
-                .map(MongoCollectionOptions::of)
-                .collect(CollectorUtil.toList(classes.size())));
+        List<MongoCollectionOptions> optionsList = new ArrayList<>(classes.size());
+        for (Class<?> entityClass : classes) {
+            MongoCollectionOptions options = MongoCollectionOptions.of(entityClass);
+            optionsList.add(options);
+        }
+        return registerEntitiesByOptions(optionsList);
     }
 
     public List<Pair<MongoEntity<?>, MongoCollection<?>>> registerEntitiesByOptions(
@@ -175,17 +178,17 @@ public class MongoContext {
         for (MongoCollectionOptions options : optionsList) {
             Class<?> entityClass = options.getEntityClass();
             MongoEntity<?> entity = classToEntity.get(entityClass);
-            if (entity != null) {
-                MongoCollection<?> collection = classToCollection.get(entityClass);
-                pairs.add(Pair.of(entity, collection));
-            } else {
+            MongoCollection<?> collection;
+            if (entity == null) {
                 entity = MongoEntityFactory.parse(entityClass);
-                MongoCollection<?> collection = database.getCollection(entity.collectionName(), entityClass)
+                collection = database.getCollection(entity.collectionName(), entityClass)
                         .withWriteConcern(options.getWriteConcern());
                 classToCollection.put(entityClass, collection);
                 classToEntity.put(entityClass, entity);
-                pairs.add(Pair.of(entity, collection));
+            } else {
+                collection = classToCollection.get(entityClass);
             }
+            pairs.add(Pair.of(entity, collection));
         }
         return pairs;
     }

@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-public class TurmsMapCodec<K, V> extends MongoCodec<Map> {
+public class TurmsMapCodec<K, V> extends MongoCodec<Map<K, V>> {
 
     private final boolean isLinkedHashMap;
     private final Class<K> keyClass;
@@ -40,7 +40,7 @@ public class TurmsMapCodec<K, V> extends MongoCodec<Map> {
     private Codec<V> valueCodec;
 
     public TurmsMapCodec(Class<? extends Map<?, ?>> ownerClass, Class<K> keyClass, Class<V> valueClass) {
-        super(Map.class);
+        super((Class) Map.class);
         this.isLinkedHashMap = LinkedHashMap.class.isAssignableFrom(ownerClass);
         this.keyClass = keyClass;
         this.valueClass = valueClass;
@@ -53,10 +53,9 @@ public class TurmsMapCodec<K, V> extends MongoCodec<Map> {
     }
 
     @Override
-    public void encode(BsonWriter writer, Map map, EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, Map<K, V> map, EncoderContext encoderContext) {
         writer.writeStartDocument();
-        for (Object o : map.entrySet()) {
-            Map.Entry<K, V> entry = (Map.Entry<K, V>) o;
+        for (Map.Entry<K, V> entry : map.entrySet()) {
             V value = entry.getValue();
             if (value != null) {
                 writer.writeName(entry.getKey().toString());
@@ -67,8 +66,8 @@ public class TurmsMapCodec<K, V> extends MongoCodec<Map> {
     }
 
     @Override
-    public Map decode(final BsonReader reader, final DecoderContext decoderContext) {
-        Map map = isLinkedHashMap ? new LinkedHashMap<>(32) : new HashMap<>(32);
+    public Map<K, V> decode(final BsonReader reader, final DecoderContext decoderContext) {
+        Map<K, V> map = isLinkedHashMap ? new LinkedHashMap<>(32) : new HashMap<>(32);
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String key = reader.readName();
@@ -79,32 +78,32 @@ public class TurmsMapCodec<K, V> extends MongoCodec<Map> {
         return map;
     }
 
-    private Object parseKeyStr(String value, Class<?> keyClass) {
+    private K parseKeyStr(String value, Class<K> keyClass) {
         if (String.class == keyClass) {
-            return value;
+            return (K) value;
         }
         if (Boolean.class == keyClass) {
-            return Boolean.parseBoolean(value);
+            return (K) Boolean.valueOf(value);
         }
         if (Byte.class == keyClass) {
-            return Byte.parseByte(value);
+            return (K) Byte.valueOf(value);
         }
         if (Short.class == keyClass) {
-            return Short.parseShort(value);
+            return (K) Short.valueOf(value);
         }
         if (Integer.class == keyClass) {
-            return Integer.parseInt(value);
+            return (K) Integer.valueOf(value);
         }
         if (Long.class == keyClass) {
-            return Long.parseLong(value);
+            return (K) Long.valueOf(value);
         }
         if (Float.class == keyClass) {
-            return Float.parseFloat(value);
+            return (K) Float.valueOf(value);
         }
         if (Double.class == keyClass) {
-            return Double.parseDouble(value);
+            return (K) Double.valueOf(value);
         }
-        return value;
+        return (K) value;
     }
 
 }

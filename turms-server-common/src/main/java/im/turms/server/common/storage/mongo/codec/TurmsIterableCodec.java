@@ -34,14 +34,14 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-public class TurmsIterableCodec extends MongoCodec<Iterable> {
+public class TurmsIterableCodec<I, E> extends MongoCodec<Iterable<E>> {
 
-    private final Class iterableClass;
-    private final Class elementClass;
-    private Codec elementCodec;
+    private final Class<I> iterableClass;
+    private final Class<E> elementClass;
+    private Codec<E> elementCodec;
 
-    public TurmsIterableCodec(Class iterableClass, Class elementClass) {
-        super(iterableClass);
+    public TurmsIterableCodec(Class<I> iterableClass, Class<E> elementClass) {
+        super((Class<Iterable<E>>) iterableClass);
         this.iterableClass = iterableClass;
         this.elementClass = elementClass;
     }
@@ -53,9 +53,9 @@ public class TurmsIterableCodec extends MongoCodec<Iterable> {
     }
 
     @Override
-    public Iterable decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public Iterable<E> decode(final BsonReader reader, final DecoderContext decoderContext) {
         reader.readStartArray();
-        Collection<Object> collection;
+        Collection<E> collection;
         if (Set.class.isAssignableFrom(iterableClass)) {
             collection = LinkedHashSet.class.isAssignableFrom(iterableClass)
                     ? new LinkedHashSet<>()
@@ -71,9 +71,9 @@ public class TurmsIterableCodec extends MongoCodec<Iterable> {
     }
 
     @Override
-    public void encode(final BsonWriter writer, final Iterable values, final EncoderContext encoderContext) {
+    public void encode(final BsonWriter writer, final Iterable<E> values, final EncoderContext encoderContext) {
         writer.writeStartArray();
-        for (Object value : values) {
+        for (E value : values) {
             if (value != null) {
                 encoderContext.encodeWithChildContext(elementCodec, writer, value);
             }

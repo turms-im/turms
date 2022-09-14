@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class MongoCodecProvider implements CodecProvider {
 
-    private final Map<Class<?>, MongoCodec<?>> codes = new NonBlockingIdentityHashMap<>(64);
+    private final Map<Class<?>, MongoCodec<?>> classToCodec = new NonBlockingIdentityHashMap<>(64);
     @Setter
     private CodecRegistry registry;
 
@@ -44,7 +44,7 @@ public class MongoCodecProvider implements CodecProvider {
     }
 
     public <T> MongoCodec<T> getCodec(Class<T> clazz) {
-        return (MongoCodec<T>) codes.computeIfAbsent(clazz, key -> {
+        return (MongoCodec<T>) classToCodec.computeIfAbsent(clazz, key -> {
             MongoCodec<T> codec = (MongoCodec<T>) createCodec(key);
             codec.setRegistry(registry);
             return codec;
@@ -52,7 +52,7 @@ public class MongoCodecProvider implements CodecProvider {
     }
 
     private <T> void registerCodec(MongoCodec<T> codec) {
-        codes.put(codec.getEncoderClass(), codec);
+        classToCodec.put(codec.getEncoderClass(), codec);
     }
 
     private <T> MongoCodec<T> createCodec(Class<T> clazz) {
