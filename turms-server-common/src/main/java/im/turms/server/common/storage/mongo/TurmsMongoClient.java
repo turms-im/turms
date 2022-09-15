@@ -17,6 +17,7 @@
 
 package im.turms.server.common.storage.mongo;
 
+import com.mongodb.connection.ClusterType;
 import com.mongodb.connection.ServerConnectionState;
 import com.mongodb.connection.ServerDescription;
 import com.mongodb.internal.operation.ServerVersionHelper;
@@ -31,12 +32,15 @@ import im.turms.server.common.storage.mongo.operation.MongoCollectionOptions;
 import im.turms.server.common.storage.mongo.operation.MongoOperationsSupport;
 import im.turms.server.common.storage.mongo.operation.TurmsMongoOperations;
 import lombok.experimental.Delegate;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -44,6 +48,9 @@ import java.util.List;
 public final class TurmsMongoClient implements MongoOperationsSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TurmsMongoClient.class);
+
+    private final Set<String> names = UnifiedSet.newSet(8);
+    private List<ServerDescription> descriptions;
 
     private final MongoContext context;
     @Delegate
@@ -53,26 +60,38 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
         return context.getEntities();
     }
 
-    public static Mono<TurmsMongoClient> of(TurmsMongoProperties properties) {
+    public static Mono<TurmsMongoClient> of(TurmsMongoProperties properties,
+                                            String name) {
+        return of(properties, name, Collections.emptySet());
+    }
+
+    public static Mono<TurmsMongoClient> of(TurmsMongoProperties properties,
+                                            String name,
+                                            Set<ClusterType> requiredClusterTypes) {
         Sinks.One<Void> connect = Sinks.one();
-        TurmsMongoClient client = new TurmsMongoClient(properties, connect);
+        TurmsMongoClient client = new TurmsMongoClient(properties, name, requiredClusterTypes, connect);
         return connect.asMono().thenReturn(client);
     }
 
-    private TurmsMongoClient(TurmsMongoProperties properties, Sinks.One<Void> connect) {
+    private TurmsMongoClient(TurmsMongoProperties properties,
+                             String name,
+                             Set<ClusterType> requiredClusterTypes,
+                             Sinks.One<Void> connect) {
+        names.add(name);
         context = new MongoContext(properties.getUri(), descriptions -> {
             for (ServerDescription description : descriptions) {
                 if (description.getState() == ServerConnectionState.CONNECTING) {
                     return;
                 }
             }
+            this.descriptions = descriptions;
             try {
-                verifyServerVersion(descriptions);
+                verifyServers(descriptions, name, requiredClusterTypes);
                 connect.tryEmitValue(null);
             } catch (Exception e) {
                 Sinks.EmitResult result = connect.tryEmitError(e);
                 if (result.isFailure()) {
-                    LOGGER.fatal("Connected to a MongoDB server with a version less than 4.0, which cannot work well with turms servers");
+                    LOGGER.fatal(e.getMessage());
                 }
             }
         });
@@ -107,12 +126,38 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
                 .collect(CollectorUtil.toList(pairs.size()));
     }
 
-    private void verifyServerVersion(List<ServerDescription> descriptions) {
+    public void verifyClusterType(String name, Set<ClusterType> requiredClusterTypes) {
+        if (descriptions == null) {
+            throw new IllegalStateException("Verification can only work after the mongo client has been initialized");
+        }
+        names.add(name);
+        if (requiredClusterTypes.isEmpty()) {
+            return;
+        }
+        for (ServerDescription description : descriptions) {
+            if (!requiredClusterTypes.contains(description.getClusterType())) {
+                throw new IllegalStateException("The cluster types for \"" +
+                        names +
+                        "\" mongo clients must be one of the type: " +
+                        requiredClusterTypes);
+            }
+        }
+    }
+
+    private void verifyServers(List<ServerDescription> descriptions,
+                               String name,
+                               Set<ClusterType> requiredClusterTypes) {
         for (ServerDescription description : descriptions) {
             if (description.getMaxWireVersion() < ServerVersionHelper.FOUR_DOT_ZERO_WIRE_VERSION) {
                 throw new IllegalStateException("The version of MongoDB server should be at least 4.0. " +
                         "Note that Turms cannot work with Amazon DocumentDB. " +
                         "The description of the unsupported server: " + description.getShortDescription());
+            }
+            if (!requiredClusterTypes.isEmpty() && !requiredClusterTypes.contains(description.getClusterType())) {
+                throw new IllegalStateException("The cluster types for \"" +
+                        name +
+                        "\" mongo client must be one of the type: " +
+                        requiredClusterTypes);
             }
         }
     }

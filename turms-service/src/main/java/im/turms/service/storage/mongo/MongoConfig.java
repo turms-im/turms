@@ -17,6 +17,7 @@
 
 package im.turms.service.storage.mongo;
 
+import com.mongodb.connection.ClusterType;
 import im.turms.server.common.domain.admin.po.Admin;
 import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.user.po.User;
@@ -50,6 +51,9 @@ import im.turms.service.domain.user.po.UserVersion;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Collections;
+import java.util.Set;
+
 /**
  * @author James Chen
  * @see org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
@@ -65,7 +69,7 @@ public class MongoConfig extends BaseMongoConfig {
     public TurmsMongoClient adminMongoClient(TurmsPropertiesManager propertiesManager) {
         AdminMongoProperties properties = propertiesManager.getLocalProperties().getService().getMongo().getAdmin();
         AdminMongoProperties.WriteConcernProperties writeConcern = properties.getWriteConcern();
-        TurmsMongoClient mongoClient = getMongoClient(properties);
+        TurmsMongoClient mongoClient = getMongoClient(properties, "admin", Collections.emptySet());
         mongoClient.registerEntitiesByOptions(
                 MongoCollectionOptions.of(Admin.class, writeConcern.getAdmin()),
                 MongoCollectionOptions.of(AdminRole.class, writeConcern.getAdminRole()));
@@ -76,7 +80,7 @@ public class MongoConfig extends BaseMongoConfig {
     public TurmsMongoClient userMongoClient(TurmsPropertiesManager propertiesManager) {
         UserMongoProperties properties = propertiesManager.getLocalProperties().getService().getMongo().getUser();
         UserMongoProperties.WriteConcernProperties writeConcern = properties.getWriteConcern();
-        TurmsMongoClient mongoClient = getMongoClient(properties);
+        TurmsMongoClient mongoClient = getMongoClient(properties, "user", Set.of(ClusterType.SHARDED, ClusterType.LOAD_BALANCED));
         mongoClient.registerEntitiesByOptions(
                 MongoCollectionOptions.of(User.class, writeConcern.getUser()),
                 MongoCollectionOptions.of(UserFriendRequest.class, writeConcern.getUserFriendRequest()),
@@ -92,7 +96,7 @@ public class MongoConfig extends BaseMongoConfig {
     public TurmsMongoClient groupMongoClient(TurmsPropertiesManager propertiesManager) {
         GroupMongoProperties properties = propertiesManager.getLocalProperties().getService().getMongo().getGroup();
         GroupMongoProperties.WriteConcernProperties writeConcern = properties.getWriteConcern();
-        TurmsMongoClient mongoClient = getMongoClient(properties);
+        TurmsMongoClient mongoClient = getMongoClient(properties, "group", Set.of(ClusterType.SHARDED, ClusterType.LOAD_BALANCED));
         mongoClient.registerEntitiesByOptions(
                 MongoCollectionOptions.of(Group.class, writeConcern.getGroup()),
                 MongoCollectionOptions.of(GroupBlockedUser.class, writeConcern.getGroupBlockedUser()),
@@ -109,7 +113,7 @@ public class MongoConfig extends BaseMongoConfig {
     public TurmsMongoClient conversationMongoClient(TurmsPropertiesManager propertiesManager) {
         ConversationMongoProperties properties = propertiesManager.getLocalProperties().getService().getMongo().getConversation();
         ConversationMongoProperties.WriteConcernProperties writeConcern = properties.getWriteConcern();
-        TurmsMongoClient mongoClient = getMongoClient(properties);
+        TurmsMongoClient mongoClient = getMongoClient(properties, "conversation", Set.of(ClusterType.SHARDED, ClusterType.LOAD_BALANCED));
         mongoClient.registerEntitiesByOptions(
                 MongoCollectionOptions.of(PrivateConversation.class, writeConcern.getConversation()),
                 MongoCollectionOptions.of(GroupConversation.class, writeConcern.getConversation()));
@@ -120,7 +124,7 @@ public class MongoConfig extends BaseMongoConfig {
     public TurmsMongoClient messageMongoClient(TurmsPropertiesManager propertiesManager) {
         MessageMongoProperties properties = propertiesManager.getLocalProperties().getService().getMongo().getMessage();
         MessageMongoProperties.WriteConcernProperties writeConcern = properties.getWriteConcern();
-        TurmsMongoClient mongoClient = getMongoClient(properties);
+        TurmsMongoClient mongoClient = getMongoClient(properties, "message", Set.of(ClusterType.SHARDED, ClusterType.LOAD_BALANCED));
         mongoClient.registerEntitiesByOptions(
                 MongoCollectionOptions.of(Message.class, writeConcern.getMessage()));
         return mongoClient;

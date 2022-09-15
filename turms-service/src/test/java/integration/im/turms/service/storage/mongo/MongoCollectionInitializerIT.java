@@ -88,7 +88,7 @@ class MongoCollectionInitializerIT extends SpringAwareIntegrationTest {
 
     static {
         TurmsMongoProperties mongoProperties = new TurmsMongoProperties(getMongoUri());
-        MONGO_CLIENT = TurmsMongoClient.of(mongoProperties)
+        MONGO_CLIENT = TurmsMongoClient.of(mongoProperties, "test")
                 .block(Duration.ofMinutes(1));
         MONGO_CLIENT.registerEntitiesByClasses(MODEL_CLASSES);
     }

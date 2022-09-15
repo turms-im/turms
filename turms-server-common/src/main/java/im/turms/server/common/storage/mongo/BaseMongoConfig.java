@@ -17,6 +17,7 @@
 
 package im.turms.server.common.storage.mongo;
 
+import com.mongodb.connection.ClusterType;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
@@ -28,6 +29,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -53,14 +55,20 @@ public abstract class BaseMongoConfig {
         return Mono.whenDelayError(monos);
     }
 
-    protected synchronized TurmsMongoClient getMongoClient(TurmsMongoProperties properties) {
-        return uriToClient.computeIfAbsent(properties.getUri(), key -> {
-            try {
-                return TurmsMongoClient.of(properties)
-                        .block(DurationConst.ONE_MINUTE);
-            } catch (Exception e) {
-                throw new IllegalStateException("Failed to create the mongo client", e);
+    protected synchronized TurmsMongoClient getMongoClient(TurmsMongoProperties properties,
+                                                           String name,
+                                                           Set<ClusterType> requiredClusterTypes) {
+        return uriToClient.compute(properties.getUri(), (key, mongoClient) -> {
+            if (mongoClient == null) {
+                try {
+                    return TurmsMongoClient.of(properties, name, requiredClusterTypes)
+                            .block(DurationConst.ONE_MINUTE);
+                } catch (Exception e) {
+                    throw new IllegalStateException("Failed to create the mongo client", e);
+                }
             }
+            mongoClient.verifyClusterType(name, requiredClusterTypes);
+            return mongoClient;
         });
     }
 

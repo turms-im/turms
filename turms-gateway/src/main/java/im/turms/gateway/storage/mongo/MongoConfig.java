@@ -17,6 +17,7 @@
 
 package im.turms.gateway.storage.mongo;
 
+import com.mongodb.connection.ClusterType;
 import im.turms.server.common.domain.admin.po.Admin;
 import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.user.po.User;
@@ -29,6 +30,9 @@ import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -44,7 +48,7 @@ public class MongoConfig extends BaseMongoConfig {
     @Bean
     public TurmsMongoClient adminMongoClient(TurmsPropertiesManager propertiesManager) {
         TurmsMongoProperties properties = propertiesManager.getLocalProperties().getGateway().getMongo().getAdmin();
-        TurmsMongoClient mongoClient = getMongoClient(properties);
+        TurmsMongoClient mongoClient = getMongoClient(properties, "admin", Collections.emptySet());
         mongoClient.registerEntitiesByClasses(Admin.class, AdminRole.class);
         return mongoClient;
     }
@@ -53,7 +57,7 @@ public class MongoConfig extends BaseMongoConfig {
     @ConditionalOnProperty("turms.gateway.session.enable-authentication")
     public TurmsMongoClient userMongoClient(TurmsPropertiesManager propertiesManager) {
         TurmsMongoProperties properties = propertiesManager.getLocalProperties().getGateway().getMongo().getUser();
-        TurmsMongoClient mongoClient = getMongoClient(properties);
+        TurmsMongoClient mongoClient = getMongoClient(properties, "user", Set.of(ClusterType.SHARDED, ClusterType.LOAD_BALANCED));
         mongoClient.registerEntitiesByClasses(User.class);
         return mongoClient;
     }

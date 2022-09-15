@@ -49,7 +49,7 @@ public class SharedConfigService implements ClusterService {
 
     public SharedConfigService(TurmsMongoProperties properties) {
         try {
-            mongoClient = TurmsMongoClient.of(properties)
+            mongoClient = TurmsMongoClient.of(properties, "shared-config")
                     .block(DurationConst.ONE_MINUTE);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to create the shared config service", e);
