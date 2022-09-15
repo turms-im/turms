@@ -46,6 +46,7 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.adminapi.AdminHttpProperties;
 import im.turms.server.common.infra.property.env.common.adminapi.CommonAdminApiProperties;
+import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.server.common.infra.validation.Validator;
@@ -73,7 +74,6 @@ import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.time.Duration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -135,7 +135,7 @@ public class HttpRequestDispatcher {
                                         LOGGER.error("Caught an error while handling the HTTP request: " + request, t));
                         return Mono.never();
                     })
-                    .bindNow(Duration.ofMinutes(1));
+                    .bindNow(DurationConst.ONE_MINUTE);
             applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_ADMIN_SERVER, timeoutMillis -> {
                 server.dispose();
                 return server.onDispose();

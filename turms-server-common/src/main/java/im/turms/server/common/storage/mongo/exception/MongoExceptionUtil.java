@@ -19,6 +19,7 @@ package im.turms.server.common.storage.mongo.exception;
 
 import com.mongodb.ErrorCategory;
 import com.mongodb.MongoBulkWriteException;
+import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteError;
 import com.mongodb.bulk.BulkWriteError;
@@ -27,9 +28,19 @@ import im.turms.server.common.storage.mongo.MongoErrorCodes;
 /**
  * @author James Chen
  */
-public class MongoExceptionTranslator {
+public final class MongoExceptionUtil {
 
-    public Throwable translate(Throwable t) {
+    private MongoExceptionUtil() {
+    }
+
+    public static boolean isErrorOf(Throwable throwable, int errorCode) {
+        if (throwable instanceof MongoException e) {
+            return e.getCode() == errorCode;
+        }
+        return false;
+    }
+
+    public static Throwable translate(Throwable t) {
         if (t instanceof MongoWriteException e) {
             WriteError error = e.getError();
             if (error.getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {

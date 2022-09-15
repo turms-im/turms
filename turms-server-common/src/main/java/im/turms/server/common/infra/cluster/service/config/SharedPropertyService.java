@@ -33,13 +33,13 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
+import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import reactor.core.publisher.Mono;
 
-import java.time.Duration;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -111,7 +111,7 @@ public class SharedPropertyService implements ClusterService {
                         .error("Caught an error while processing the change stream event of SharedProperties: {}", o, throwable))
                 .subscribe();
         try {
-            initializeSharedProperties().block(Duration.ofMinutes(1));
+            initializeSharedProperties().block(DurationConst.ONE_MINUTE);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize the shared properties", e);
         }

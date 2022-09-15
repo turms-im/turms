@@ -26,6 +26,7 @@ import im.turms.server.common.infra.cluster.service.config.entity.discovery.Lead
 import im.turms.server.common.infra.cluster.service.config.entity.discovery.Member;
 import im.turms.server.common.infra.cluster.service.config.entity.property.SharedClusterProperties;
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
+import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
@@ -33,7 +34,6 @@ import im.turms.server.common.storage.mongo.operation.option.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.Duration;
 import java.util.List;
 
 /**
@@ -50,7 +50,7 @@ public class SharedConfigService implements ClusterService {
     public SharedConfigService(TurmsMongoProperties properties) {
         try {
             mongoClient = TurmsMongoClient.of(properties)
-                    .block(Duration.ofMinutes(1));
+                    .block(DurationConst.ONE_MINUTE);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to create the shared config service", e);
         }
@@ -58,13 +58,13 @@ public class SharedConfigService implements ClusterService {
         mongoClient.registerEntitiesByClasses(classes);
         for (Class<?> entityClass : classes) {
             try {
-                mongoClient.createCollection(entityClass).block(Duration.ofMinutes(1));
+                mongoClient.createCollectionIfNotExists(entityClass).block(DurationConst.ONE_MINUTE);
             } catch (Exception e) {
                 throw new IllegalStateException("Failed to create the collection for the class: " + entityClass.getName(), e);
             }
         }
         try {
-            mongoClient.ensureIndexesAndShard(classes).block(Duration.ofMinutes(1));
+            mongoClient.ensureIndexesAndShard(classes).block(DurationConst.ONE_MINUTE);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to ensure the indexes are created for the classes: " + classes.stream()
                     .map(Class::getName).toList(), e);

@@ -81,7 +81,7 @@ public interface MongoOperationsSupport {
 
     Mono<Void> insertAll(List<?> values);
 
-    Mono<Void> insertAllOfSameType(List<?> values);
+    <T> Mono<Void> insertAllOfSameType(List<T> values);
 
     <T> Mono<UpdateResult> updateOne(Class<T> clazz, Filter filter, Update update);
 
@@ -130,7 +130,10 @@ public interface MongoOperationsSupport {
                                   Document minimum,
                                   Document maximum);
 
-    Mono<Void> createCollection(Class<?> clazz);
+    /**
+     * @return whether the collection has already existed
+     */
+    Mono<Boolean> createCollectionIfNotExists(Class<?> clazz);
 
     Mono<Boolean> collectionExists(Class<?> clazz);
 

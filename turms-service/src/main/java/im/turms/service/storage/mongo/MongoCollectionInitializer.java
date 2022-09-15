@@ -207,67 +207,29 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
      */
     private Mono<Boolean> createCollectionsIfNotExist() {
         return PublisherUtil.areAllTrue(
-                createCollectionIfNotExist(Admin.class),
-                createCollectionIfNotExist(AdminRole.class),
+                adminMongoClient.createCollectionIfNotExists(Admin.class),
+                adminMongoClient.createCollectionIfNotExists(AdminRole.class),
 
-                createCollectionIfNotExist(Group.class),
-                createCollectionIfNotExist(GroupBlockedUser.class),
-                createCollectionIfNotExist(GroupInvitation.class),
-                createCollectionIfNotExist(GroupJoinQuestion.class),
-                createCollectionIfNotExist(GroupMember.class),
-                createCollectionIfNotExist(GroupType.class),
-                createCollectionIfNotExist(GroupVersion.class),
+                groupMongoClient.createCollectionIfNotExists(Group.class),
+                groupMongoClient.createCollectionIfNotExists(GroupBlockedUser.class),
+                groupMongoClient.createCollectionIfNotExists(GroupInvitation.class),
+                groupMongoClient.createCollectionIfNotExists(GroupJoinQuestion.class),
+                groupMongoClient.createCollectionIfNotExists(GroupMember.class),
+                groupMongoClient.createCollectionIfNotExists(GroupType.class),
+                groupMongoClient.createCollectionIfNotExists(GroupVersion.class),
 
-                createCollectionIfNotExist(PrivateConversation.class),
-                createCollectionIfNotExist(GroupConversation.class),
+                conversationMongoClient.createCollectionIfNotExists(PrivateConversation.class),
+                conversationMongoClient.createCollectionIfNotExists(GroupConversation.class),
 
-                createCollectionIfNotExist(Message.class),
+                messageMongoClient.createCollectionIfNotExists(Message.class),
 
-                createCollectionIfNotExist(User.class),
-                createCollectionIfNotExist(UserFriendRequest.class),
-                createCollectionIfNotExist(UserPermissionGroup.class),
-                createCollectionIfNotExist(UserRelationship.class),
-                createCollectionIfNotExist(UserRelationshipGroup.class),
-                createCollectionIfNotExist(UserRelationshipGroupMember.class),
-                createCollectionIfNotExist(UserVersion.class));
-    }
-
-    /**
-     * @return whether the collection has already existed
-     */
-    private <T> Mono<Boolean> createCollectionIfNotExist(Class<T> clazz) {
-        TurmsMongoClient mongoClient;
-        if (clazz == Admin.class || clazz == AdminRole.class) {
-            mongoClient = adminMongoClient;
-        } else if (clazz == User.class
-                || clazz == UserFriendRequest.class
-                || clazz == UserPermissionGroup.class
-                || clazz == UserRelationship.class
-                || clazz == UserRelationshipGroup.class
-                || clazz == UserRelationshipGroupMember.class
-                || clazz == UserVersion.class) {
-            mongoClient = userMongoClient;
-        } else if (clazz == Group.class
-                || clazz == GroupBlockedUser.class
-                || clazz == GroupInvitation.class
-                || clazz == GroupJoinQuestion.class
-                || clazz == GroupJoinRequest.class
-                || clazz == GroupMember.class
-                || clazz == GroupType.class
-                || clazz == GroupVersion.class) {
-            mongoClient = groupMongoClient;
-        } else if (clazz == PrivateConversation.class
-                || clazz == GroupConversation.class) {
-            mongoClient = conversationMongoClient;
-        } else if (clazz == Message.class) {
-            mongoClient = messageMongoClient;
-        } else {
-            return Mono.error(new IllegalArgumentException("Unknown collection " + clazz.getName()));
-        }
-        return mongoClient.collectionExists(clazz)
-                .flatMap(exists -> exists
-                        ? Mono.just(true)
-                        : mongoClient.createCollection(clazz).thenReturn(false));
+                userMongoClient.createCollectionIfNotExists(User.class),
+                userMongoClient.createCollectionIfNotExists(UserFriendRequest.class),
+                userMongoClient.createCollectionIfNotExists(UserPermissionGroup.class),
+                userMongoClient.createCollectionIfNotExists(UserRelationship.class),
+                userMongoClient.createCollectionIfNotExists(UserRelationshipGroup.class),
+                userMongoClient.createCollectionIfNotExists(UserRelationshipGroupMember.class),
+                userMongoClient.createCollectionIfNotExists(UserVersion.class));
     }
 
     private Mono<Void> dropAllDatabases() {

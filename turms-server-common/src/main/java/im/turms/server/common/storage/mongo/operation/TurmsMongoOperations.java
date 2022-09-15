@@ -50,16 +50,18 @@ import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.storage.mongo.BsonPool;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.MongoContext;
+import im.turms.server.common.storage.mongo.MongoErrorCodes;
 import im.turms.server.common.storage.mongo.entity.Index;
 import im.turms.server.common.storage.mongo.entity.MongoEntity;
 import im.turms.server.common.storage.mongo.entity.ShardKey;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.storage.mongo.exception.CorruptedDocumentException;
-import im.turms.server.common.storage.mongo.exception.MongoExceptionTranslator;
+import im.turms.server.common.storage.mongo.exception.MongoExceptionUtil;
 import im.turms.server.common.storage.mongo.model.Tag;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
@@ -129,7 +131,6 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     private static final UpdateOptions DEFAULT_UPSERT_OPTIONS = new UpdateOptions().upsert(true);
 
     private final MongoContext context;
-    private final MongoExceptionTranslator translator = new MongoExceptionTranslator();
     private final Map<Class<?>, MongoOperationPublisher<?>> publisherMap = new NonBlockingIdentityHashMap<>(32);
 
     public TurmsMongoOperations(MongoContext context) {
@@ -241,7 +242,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 ? collection.updateOne(filter, update, DEFAULT_UPSERT_OPTIONS)
                 : collection.updateOne(session, filter, update, DEFAULT_UPSERT_OPTIONS);
         return Mono.from(result)
-                .onErrorMap(translator::translate)
+                .onErrorMap(MongoExceptionUtil::translate)
                 .then();
     }
 
@@ -259,7 +260,11 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
             }
             String[] path = shardKeyPath.path();
             // fast path
-            if (path.length == 1) {
+            int pathLength = path.length;
+            if (pathLength == 0) {
+                throw new IllegalArgumentException("The path must not be empty: " + shardKeyPath);
+            }
+            if (pathLength == 1) {
                 BsonValue shardKeyValue = document.get(path[0]);
                 if (shardKeyValue != null) {
                     filter.append(path[0], shardKeyValue);
@@ -267,7 +272,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
             } else {
                 // slow path
                 BsonDocument currentPath = document;
-                for (int i = 0, pathLength = path.length; i < pathLength; i++) {
+                for (int i = 0; i < pathLength; i++) {
                     String p = path[i];
                     BsonValue shardKeyValue = currentPath.get(p);
                     if (shardKeyValue == null) {
@@ -291,7 +296,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         MongoCollection<T> collection = context.getCollection(clazz);
         Publisher<UpdateResult> source = collection.updateOne(filter, update, DEFAULT_UPSERT_OPTIONS);
         return Mono.from(source)
-                .onErrorMap(translator::translate)
+                .onErrorMap(MongoExceptionUtil::translate)
                 .then();
     }
 
@@ -310,7 +315,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 ? collection.insertOne(value, DEFAULT_INSERT_ONE_OPTIONS)
                 : collection.insertOne(session, value, DEFAULT_INSERT_ONE_OPTIONS);
         return Mono.from(source)
-                .onErrorMap(translator::translate)
+                .onErrorMap(MongoExceptionUtil::translate)
                 .then();
     }
 
@@ -328,7 +333,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                     List<?> value = entry.getValue();
                     Publisher<InsertManyResult> source = collection.insertMany(value, DEFAULT_INSERT_MANY_OPTIONS);
                     return Mono.from(source)
-                            .onErrorMap(translator::translate)
+                            .onErrorMap(MongoExceptionUtil::translate)
                             .then();
                 })
                 .toList();
@@ -336,14 +341,14 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     }
 
     @Override
-    public Mono<Void> insertAllOfSameType(List<?> values) {
+    public <T> Mono<Void> insertAllOfSameType(List<T> values) {
         if (values.isEmpty()) {
             return Mono.empty();
         }
         MongoCollection collection = context.getCollection(values.get(0).getClass());
         Publisher<InsertManyResult> source = collection.insertMany(values, DEFAULT_INSERT_MANY_OPTIONS);
         return Mono.from(source)
-                .onErrorMap(translator::translate)
+                .onErrorMap(MongoExceptionUtil::translate)
                 .then();
     }
 
@@ -620,21 +625,32 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     // Collection
 
     @Override
-    public Mono<Void> createCollection(Class<?> clazz) {
+    public Mono<Boolean> createCollectionIfNotExists(Class<?> clazz) {
         MongoEntity<?> entity = context.getEntity(clazz);
-        CreateCollectionOptions options = new CreateCollectionOptions();
         BsonDocument jsonSchema = entity.jsonSchema();
         if (jsonSchema == null) {
             String message = "Failed to create the collection [%s] because no JSON schema specified"
                     .formatted(entity.collectionName());
             return Mono.error(new RuntimeException(message));
         }
-        options.validationOptions(new ValidationOptions()
-                .validator(jsonSchema)
-                .validationAction(ValidationAction.ERROR)
-                .validationLevel(ValidationLevel.STRICT));
-        Publisher<Void> source = context.getDatabase().createCollection(entity.collectionName(), options);
-        return Mono.from(source);
+        return collectionExists(clazz)
+                .flatMap(exists -> {
+                    if (exists) {
+                        return Mono.just(true);
+                    }
+                    CreateCollectionOptions options = new CreateCollectionOptions()
+                            .validationOptions(new ValidationOptions()
+                                    .validator(jsonSchema)
+                                    .validationAction(ValidationAction.ERROR)
+                                    .validationLevel(ValidationLevel.STRICT));
+                    Publisher<Void> source = context.getDatabase().createCollection(entity.collectionName(), options);
+                    return Mono.from(source)
+                            .thenReturn(false)
+                            // https://github.com/turms-im/turms/issues/1010
+                            .onErrorResume(throwable -> MongoExceptionUtil.isErrorOf(throwable, MongoErrorCodes.NAMESPACE_EXISTS)
+                                    ? PublisherPool.TRUE
+                                    : Mono.error(throwable));
+                });
     }
 
     @Override
