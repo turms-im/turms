@@ -67,7 +67,7 @@ public abstract class BaseMongoConfig {
                     throw new IllegalStateException("Failed to create the mongo client", e);
                 }
             }
-            mongoClient.verifyClusterType(name, requiredClusterTypes);
+            mongoClient.verifyClusterTypes(name, requiredClusterTypes);
             return mongoClient;
         });
     }

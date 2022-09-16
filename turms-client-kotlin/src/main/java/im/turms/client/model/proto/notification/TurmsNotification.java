@@ -2428,15 +2428,54 @@ public  final class TurmsNotification extends
   }
 
   private int bitField0_;
-  public static final int REQUEST_ID_FIELD_NUMBER = 1;
+  public static final int TIMESTAMP_FIELD_NUMBER = 1;
+  private long timestamp_;
+  /**
+   * <pre>
+   * Common =&gt; [1, 3]
+   * </pre>
+   *
+   * <code>int64 timestamp = 1;</code>
+   * @return The timestamp.
+   */
+  @java.lang.Override
+  public long getTimestamp() {
+    return timestamp_;
+  }
+  /**
+   * <pre>
+   * Common =&gt; [1, 3]
+   * </pre>
+   *
+   * <code>int64 timestamp = 1;</code>
+   * @param value The timestamp to set.
+   */
+  private void setTimestamp(long value) {
+
+    timestamp_ = value;
+  }
+  /**
+   * <pre>
+   * Common =&gt; [1, 3]
+   * </pre>
+   *
+   * <code>int64 timestamp = 1;</code>
+   */
+  private void clearTimestamp() {
+
+    timestamp_ = 0L;
+  }
+
+  public static final int REQUEST_ID_FIELD_NUMBER = 4;
   private long requestId_;
   /**
    * <pre>
-   * Response
-   * request_id is used to tell the client that this notification is for the specific request
+   * Response =&gt; [4, 9]
+   * "request_id" is used to tell the client that
+   * this notification is a response to the specific request
    * </pre>
    *
-   * <code>optional int64 request_id = 1;</code>
+   * <code>optional int64 request_id = 4;</code>
    * @return Whether the requestId field is set.
    */
   @java.lang.Override
@@ -2445,11 +2484,12 @@ public  final class TurmsNotification extends
   }
   /**
    * <pre>
-   * Response
-   * request_id is used to tell the client that this notification is for the specific request
+   * Response =&gt; [4, 9]
+   * "request_id" is used to tell the client that
+   * this notification is a response to the specific request
    * </pre>
    *
-   * <code>optional int64 request_id = 1;</code>
+   * <code>optional int64 request_id = 4;</code>
    * @return The requestId.
    */
   @java.lang.Override
@@ -2458,11 +2498,12 @@ public  final class TurmsNotification extends
   }
   /**
    * <pre>
-   * Response
-   * request_id is used to tell the client that this notification is for the specific request
+   * Response =&gt; [4, 9]
+   * "request_id" is used to tell the client that
+   * this notification is a response to the specific request
    * </pre>
    *
-   * <code>optional int64 request_id = 1;</code>
+   * <code>optional int64 request_id = 4;</code>
    * @param value The requestId to set.
    */
   private void setRequestId(long value) {
@@ -2471,21 +2512,22 @@ public  final class TurmsNotification extends
   }
   /**
    * <pre>
-   * Response
-   * request_id is used to tell the client that this notification is for the specific request
+   * Response =&gt; [4, 9]
+   * "request_id" is used to tell the client that
+   * this notification is a response to the specific request
    * </pre>
    *
-   * <code>optional int64 request_id = 1;</code>
+   * <code>optional int64 request_id = 4;</code>
    */
   private void clearRequestId() {
     bitField0_ = (bitField0_ & ~0x00000001);
     requestId_ = 0L;
   }
 
-  public static final int CODE_FIELD_NUMBER = 2;
+  public static final int CODE_FIELD_NUMBER = 5;
   private int code_;
   /**
-   * <code>optional int32 code = 2;</code>
+   * <code>optional int32 code = 5;</code>
    * @return Whether the code field is set.
    */
   @java.lang.Override
@@ -2493,7 +2535,7 @@ public  final class TurmsNotification extends
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>optional int32 code = 2;</code>
+   * <code>optional int32 code = 5;</code>
    * @return The code.
    */
   @java.lang.Override
@@ -2501,7 +2543,7 @@ public  final class TurmsNotification extends
     return code_;
   }
   /**
-   * <code>optional int32 code = 2;</code>
+   * <code>optional int32 code = 5;</code>
    * @param value The code to set.
    */
   private void setCode(int value) {
@@ -2509,17 +2551,17 @@ public  final class TurmsNotification extends
     code_ = value;
   }
   /**
-   * <code>optional int32 code = 2;</code>
+   * <code>optional int32 code = 5;</code>
    */
   private void clearCode() {
     bitField0_ = (bitField0_ & ~0x00000002);
     code_ = 0;
   }
 
-  public static final int REASON_FIELD_NUMBER = 3;
+  public static final int REASON_FIELD_NUMBER = 6;
   private java.lang.String reason_;
   /**
-   * <code>optional string reason = 3;</code>
+   * <code>optional string reason = 6;</code>
    * @return Whether the reason field is set.
    */
   @java.lang.Override
@@ -2527,7 +2569,7 @@ public  final class TurmsNotification extends
     return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>optional string reason = 3;</code>
+   * <code>optional string reason = 6;</code>
    * @return The reason.
    */
   @java.lang.Override
@@ -2535,7 +2577,7 @@ public  final class TurmsNotification extends
     return reason_;
   }
   /**
-   * <code>optional string reason = 3;</code>
+   * <code>optional string reason = 6;</code>
    * @return The bytes for reason.
    */
   @java.lang.Override
@@ -2544,7 +2586,7 @@ public  final class TurmsNotification extends
     return com.google.protobuf.ByteString.copyFromUtf8(reason_);
   }
   /**
-   * <code>optional string reason = 3;</code>
+   * <code>optional string reason = 6;</code>
    * @param value The reason to set.
    */
   private void setReason(
@@ -2554,14 +2596,14 @@ public  final class TurmsNotification extends
     reason_ = value;
   }
   /**
-   * <code>optional string reason = 3;</code>
+   * <code>optional string reason = 6;</code>
    */
   private void clearReason() {
     bitField0_ = (bitField0_ & ~0x00000004);
     reason_ = getDefaultInstance().getReason();
   }
   /**
-   * <code>optional string reason = 3;</code>
+   * <code>optional string reason = 6;</code>
    * @param value The bytes for reason to set.
    */
   private void setReasonBytes(
@@ -2571,32 +2613,32 @@ public  final class TurmsNotification extends
     bitField0_ |= 0x00000004;
   }
 
-  public static final int DATA_FIELD_NUMBER = 4;
+  public static final int DATA_FIELD_NUMBER = 7;
   private im.turms.client.model.proto.notification.TurmsNotification.Data data_;
   /**
-   * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
+   * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
    */
   @java.lang.Override
   public boolean hasData() {
     return data_ != null;
   }
   /**
-   * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
+   * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
    */
   @java.lang.Override
   public im.turms.client.model.proto.notification.TurmsNotification.Data getData() {
     return data_ == null ? im.turms.client.model.proto.notification.TurmsNotification.Data.getDefaultInstance() : data_;
   }
   /**
-   * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
+   * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
    */
   private void setData(im.turms.client.model.proto.notification.TurmsNotification.Data value) {
     value.getClass();
   data_ = value;
-    
+
     }
   /**
-   * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
+   * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
    */
   @java.lang.SuppressWarnings({"ReferenceEquality"})
   private void mergeData(im.turms.client.model.proto.notification.TurmsNotification.Data value) {
@@ -2608,26 +2650,26 @@ public  final class TurmsNotification extends
     } else {
       data_ = value;
     }
-    
+
   }
   /**
-   * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
+   * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
    */
   private void clearData() {  data_ = null;
-    
+
   }
 
-  public static final int REQUESTER_ID_FIELD_NUMBER = 5;
+  public static final int REQUESTER_ID_FIELD_NUMBER = 10;
   private long requesterId_;
   /**
    * <pre>
-   * Notification
-   * requester_id only exists when a requester triggers a notification to its recipients
-   * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
-   * a new TurmsNotification when recipients need the requester_id.
+   * Notification =&gt; [10, 15]
+   * "requester_id" only exists when a requester triggers a notification to its recipients
+   * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
+   * a new TurmsNotification when recipients need "requester_id".
    * </pre>
    *
-   * <code>optional int64 requester_id = 5;</code>
+   * <code>optional int64 requester_id = 10;</code>
    * @return Whether the requesterId field is set.
    */
   @java.lang.Override
@@ -2636,13 +2678,13 @@ public  final class TurmsNotification extends
   }
   /**
    * <pre>
-   * Notification
-   * requester_id only exists when a requester triggers a notification to its recipients
-   * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
-   * a new TurmsNotification when recipients need the requester_id.
+   * Notification =&gt; [10, 15]
+   * "requester_id" only exists when a requester triggers a notification to its recipients
+   * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
+   * a new TurmsNotification when recipients need "requester_id".
    * </pre>
    *
-   * <code>optional int64 requester_id = 5;</code>
+   * <code>optional int64 requester_id = 10;</code>
    * @return The requesterId.
    */
   @java.lang.Override
@@ -2651,13 +2693,13 @@ public  final class TurmsNotification extends
   }
   /**
    * <pre>
-   * Notification
-   * requester_id only exists when a requester triggers a notification to its recipients
-   * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
-   * a new TurmsNotification when recipients need the requester_id.
+   * Notification =&gt; [10, 15]
+   * "requester_id" only exists when a requester triggers a notification to its recipients
+   * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
+   * a new TurmsNotification when recipients need "requester_id".
    * </pre>
    *
-   * <code>optional int64 requester_id = 5;</code>
+   * <code>optional int64 requester_id = 10;</code>
    * @param value The requesterId to set.
    */
   private void setRequesterId(long value) {
@@ -2666,23 +2708,23 @@ public  final class TurmsNotification extends
   }
   /**
    * <pre>
-   * Notification
-   * requester_id only exists when a requester triggers a notification to its recipients
-   * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
-   * a new TurmsNotification when recipients need the requester_id.
+   * Notification =&gt; [10, 15]
+   * "requester_id" only exists when a requester triggers a notification to its recipients
+   * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
+   * a new TurmsNotification when recipients need "requester_id".
    * </pre>
    *
-   * <code>optional int64 requester_id = 5;</code>
+   * <code>optional int64 requester_id = 10;</code>
    */
   private void clearRequesterId() {
     bitField0_ = (bitField0_ & ~0x00000008);
     requesterId_ = 0L;
   }
 
-  public static final int CLOSE_STATUS_FIELD_NUMBER = 6;
+  public static final int CLOSE_STATUS_FIELD_NUMBER = 11;
   private int closeStatus_;
   /**
-   * <code>optional int32 close_status = 6;</code>
+   * <code>optional int32 close_status = 11;</code>
    * @return Whether the closeStatus field is set.
    */
   @java.lang.Override
@@ -2690,7 +2732,7 @@ public  final class TurmsNotification extends
     return ((bitField0_ & 0x00000010) != 0);
   }
   /**
-   * <code>optional int32 close_status = 6;</code>
+   * <code>optional int32 close_status = 11;</code>
    * @return The closeStatus.
    */
   @java.lang.Override
@@ -2698,7 +2740,7 @@ public  final class TurmsNotification extends
     return closeStatus_;
   }
   /**
-   * <code>optional int32 close_status = 6;</code>
+   * <code>optional int32 close_status = 11;</code>
    * @param value The closeStatus to set.
    */
   private void setCloseStatus(int value) {
@@ -2706,39 +2748,39 @@ public  final class TurmsNotification extends
     closeStatus_ = value;
   }
   /**
-   * <code>optional int32 close_status = 6;</code>
+   * <code>optional int32 close_status = 11;</code>
    */
   private void clearCloseStatus() {
     bitField0_ = (bitField0_ & ~0x00000010);
     closeStatus_ = 0;
   }
 
-  public static final int RELAYED_REQUEST_FIELD_NUMBER = 7;
+  public static final int RELAYED_REQUEST_FIELD_NUMBER = 12;
   private im.turms.client.model.proto.request.TurmsRequest relayedRequest_;
   /**
-   * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+   * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
    */
   @java.lang.Override
   public boolean hasRelayedRequest() {
     return relayedRequest_ != null;
   }
   /**
-   * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+   * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
    */
   @java.lang.Override
   public im.turms.client.model.proto.request.TurmsRequest getRelayedRequest() {
     return relayedRequest_ == null ? im.turms.client.model.proto.request.TurmsRequest.getDefaultInstance() : relayedRequest_;
   }
   /**
-   * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+   * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
    */
   private void setRelayedRequest(im.turms.client.model.proto.request.TurmsRequest value) {
     value.getClass();
   relayedRequest_ = value;
-    
+
     }
   /**
-   * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+   * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
    */
   @java.lang.SuppressWarnings({"ReferenceEquality"})
   private void mergeRelayedRequest(im.turms.client.model.proto.request.TurmsRequest value) {
@@ -2750,13 +2792,13 @@ public  final class TurmsNotification extends
     } else {
       relayedRequest_ = value;
     }
-    
+
   }
   /**
-   * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+   * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
    */
   private void clearRelayedRequest() {  relayedRequest_ = null;
-    
+
   }
 
   public static im.turms.client.model.proto.notification.TurmsNotification parseFrom(
@@ -2856,11 +2898,52 @@ public  final class TurmsNotification extends
 
     /**
      * <pre>
-     * Response
-     * request_id is used to tell the client that this notification is for the specific request
+     * Common =&gt; [1, 3]
      * </pre>
      *
-     * <code>optional int64 request_id = 1;</code>
+     * <code>int64 timestamp = 1;</code>
+     * @return The timestamp.
+     */
+    @java.lang.Override
+    public long getTimestamp() {
+      return instance.getTimestamp();
+    }
+    /**
+     * <pre>
+     * Common =&gt; [1, 3]
+     * </pre>
+     *
+     * <code>int64 timestamp = 1;</code>
+     * @param value The timestamp to set.
+     * @return This builder for chaining.
+     */
+    public Builder setTimestamp(long value) {
+      copyOnWrite();
+      instance.setTimestamp(value);
+      return this;
+    }
+    /**
+     * <pre>
+     * Common =&gt; [1, 3]
+     * </pre>
+     *
+     * <code>int64 timestamp = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearTimestamp() {
+      copyOnWrite();
+      instance.clearTimestamp();
+      return this;
+    }
+
+    /**
+     * <pre>
+     * Response =&gt; [4, 9]
+     * "request_id" is used to tell the client that
+     * this notification is a response to the specific request
+     * </pre>
+     *
+     * <code>optional int64 request_id = 4;</code>
      * @return Whether the requestId field is set.
      */
     @java.lang.Override
@@ -2869,11 +2952,12 @@ public  final class TurmsNotification extends
     }
     /**
      * <pre>
-     * Response
-     * request_id is used to tell the client that this notification is for the specific request
+     * Response =&gt; [4, 9]
+     * "request_id" is used to tell the client that
+     * this notification is a response to the specific request
      * </pre>
      *
-     * <code>optional int64 request_id = 1;</code>
+     * <code>optional int64 request_id = 4;</code>
      * @return The requestId.
      */
     @java.lang.Override
@@ -2882,11 +2966,12 @@ public  final class TurmsNotification extends
     }
     /**
      * <pre>
-     * Response
-     * request_id is used to tell the client that this notification is for the specific request
+     * Response =&gt; [4, 9]
+     * "request_id" is used to tell the client that
+     * this notification is a response to the specific request
      * </pre>
      *
-     * <code>optional int64 request_id = 1;</code>
+     * <code>optional int64 request_id = 4;</code>
      * @param value The requestId to set.
      * @return This builder for chaining.
      */
@@ -2897,11 +2982,12 @@ public  final class TurmsNotification extends
     }
     /**
      * <pre>
-     * Response
-     * request_id is used to tell the client that this notification is for the specific request
+     * Response =&gt; [4, 9]
+     * "request_id" is used to tell the client that
+     * this notification is a response to the specific request
      * </pre>
      *
-     * <code>optional int64 request_id = 1;</code>
+     * <code>optional int64 request_id = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearRequestId() {
@@ -2911,7 +2997,7 @@ public  final class TurmsNotification extends
     }
 
     /**
-     * <code>optional int32 code = 2;</code>
+     * <code>optional int32 code = 5;</code>
      * @return Whether the code field is set.
      */
     @java.lang.Override
@@ -2919,7 +3005,7 @@ public  final class TurmsNotification extends
       return instance.hasCode();
     }
     /**
-     * <code>optional int32 code = 2;</code>
+     * <code>optional int32 code = 5;</code>
      * @return The code.
      */
     @java.lang.Override
@@ -2927,7 +3013,7 @@ public  final class TurmsNotification extends
       return instance.getCode();
     }
     /**
-     * <code>optional int32 code = 2;</code>
+     * <code>optional int32 code = 5;</code>
      * @param value The code to set.
      * @return This builder for chaining.
      */
@@ -2937,7 +3023,7 @@ public  final class TurmsNotification extends
       return this;
     }
     /**
-     * <code>optional int32 code = 2;</code>
+     * <code>optional int32 code = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearCode() {
@@ -2947,7 +3033,7 @@ public  final class TurmsNotification extends
     }
 
     /**
-     * <code>optional string reason = 3;</code>
+     * <code>optional string reason = 6;</code>
      * @return Whether the reason field is set.
      */
     @java.lang.Override
@@ -2955,7 +3041,7 @@ public  final class TurmsNotification extends
       return instance.hasReason();
     }
     /**
-     * <code>optional string reason = 3;</code>
+     * <code>optional string reason = 6;</code>
      * @return The reason.
      */
     @java.lang.Override
@@ -2963,7 +3049,7 @@ public  final class TurmsNotification extends
       return instance.getReason();
     }
     /**
-     * <code>optional string reason = 3;</code>
+     * <code>optional string reason = 6;</code>
      * @return The bytes for reason.
      */
     @java.lang.Override
@@ -2972,7 +3058,7 @@ public  final class TurmsNotification extends
       return instance.getReasonBytes();
     }
     /**
-     * <code>optional string reason = 3;</code>
+     * <code>optional string reason = 6;</code>
      * @param value The reason to set.
      * @return This builder for chaining.
      */
@@ -2983,7 +3069,7 @@ public  final class TurmsNotification extends
       return this;
     }
     /**
-     * <code>optional string reason = 3;</code>
+     * <code>optional string reason = 6;</code>
      * @return This builder for chaining.
      */
     public Builder clearReason() {
@@ -2992,7 +3078,7 @@ public  final class TurmsNotification extends
       return this;
     }
     /**
-     * <code>optional string reason = 3;</code>
+     * <code>optional string reason = 6;</code>
      * @param value The bytes for reason to set.
      * @return This builder for chaining.
      */
@@ -3004,21 +3090,21 @@ public  final class TurmsNotification extends
     }
 
     /**
-     * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
+     * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
      */
     @java.lang.Override
     public boolean hasData() {
       return instance.hasData();
     }
     /**
-     * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
+     * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.notification.TurmsNotification.Data getData() {
       return instance.getData();
     }
     /**
-     * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
+     * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
      */
     public Builder setData(im.turms.client.model.proto.notification.TurmsNotification.Data value) {
       copyOnWrite();
@@ -3026,7 +3112,7 @@ public  final class TurmsNotification extends
       return this;
       }
     /**
-     * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
+     * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
      */
     public Builder setData(
         im.turms.client.model.proto.notification.TurmsNotification.Data.Builder builderForValue) {
@@ -3035,7 +3121,7 @@ public  final class TurmsNotification extends
       return this;
     }
     /**
-     * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
+     * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
      */
     public Builder mergeData(im.turms.client.model.proto.notification.TurmsNotification.Data value) {
       copyOnWrite();
@@ -3043,7 +3129,7 @@ public  final class TurmsNotification extends
       return this;
     }
     /**
-     * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
+     * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
      */
     public Builder clearData() {  copyOnWrite();
       instance.clearData();
@@ -3052,13 +3138,13 @@ public  final class TurmsNotification extends
 
     /**
      * <pre>
-     * Notification
-     * requester_id only exists when a requester triggers a notification to its recipients
-     * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
-     * a new TurmsNotification when recipients need the requester_id.
+     * Notification =&gt; [10, 15]
+     * "requester_id" only exists when a requester triggers a notification to its recipients
+     * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
+     * a new TurmsNotification when recipients need "requester_id".
      * </pre>
      *
-     * <code>optional int64 requester_id = 5;</code>
+     * <code>optional int64 requester_id = 10;</code>
      * @return Whether the requesterId field is set.
      */
     @java.lang.Override
@@ -3067,13 +3153,13 @@ public  final class TurmsNotification extends
     }
     /**
      * <pre>
-     * Notification
-     * requester_id only exists when a requester triggers a notification to its recipients
-     * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
-     * a new TurmsNotification when recipients need the requester_id.
+     * Notification =&gt; [10, 15]
+     * "requester_id" only exists when a requester triggers a notification to its recipients
+     * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
+     * a new TurmsNotification when recipients need "requester_id".
      * </pre>
      *
-     * <code>optional int64 requester_id = 5;</code>
+     * <code>optional int64 requester_id = 10;</code>
      * @return The requesterId.
      */
     @java.lang.Override
@@ -3082,13 +3168,13 @@ public  final class TurmsNotification extends
     }
     /**
      * <pre>
-     * Notification
-     * requester_id only exists when a requester triggers a notification to its recipients
-     * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
-     * a new TurmsNotification when recipients need the requester_id.
+     * Notification =&gt; [10, 15]
+     * "requester_id" only exists when a requester triggers a notification to its recipients
+     * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
+     * a new TurmsNotification when recipients need "requester_id".
      * </pre>
      *
-     * <code>optional int64 requester_id = 5;</code>
+     * <code>optional int64 requester_id = 10;</code>
      * @param value The requesterId to set.
      * @return This builder for chaining.
      */
@@ -3099,13 +3185,13 @@ public  final class TurmsNotification extends
     }
     /**
      * <pre>
-     * Notification
-     * requester_id only exists when a requester triggers a notification to its recipients
-     * Note: Do not move requester_id to TurmsRequest because it requires rebuilding
-     * a new TurmsNotification when recipients need the requester_id.
+     * Notification =&gt; [10, 15]
+     * "requester_id" only exists when a requester triggers a notification to its recipients
+     * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
+     * a new TurmsNotification when recipients need "requester_id".
      * </pre>
      *
-     * <code>optional int64 requester_id = 5;</code>
+     * <code>optional int64 requester_id = 10;</code>
      * @return This builder for chaining.
      */
     public Builder clearRequesterId() {
@@ -3115,7 +3201,7 @@ public  final class TurmsNotification extends
     }
 
     /**
-     * <code>optional int32 close_status = 6;</code>
+     * <code>optional int32 close_status = 11;</code>
      * @return Whether the closeStatus field is set.
      */
     @java.lang.Override
@@ -3123,7 +3209,7 @@ public  final class TurmsNotification extends
       return instance.hasCloseStatus();
     }
     /**
-     * <code>optional int32 close_status = 6;</code>
+     * <code>optional int32 close_status = 11;</code>
      * @return The closeStatus.
      */
     @java.lang.Override
@@ -3131,7 +3217,7 @@ public  final class TurmsNotification extends
       return instance.getCloseStatus();
     }
     /**
-     * <code>optional int32 close_status = 6;</code>
+     * <code>optional int32 close_status = 11;</code>
      * @param value The closeStatus to set.
      * @return This builder for chaining.
      */
@@ -3141,7 +3227,7 @@ public  final class TurmsNotification extends
       return this;
     }
     /**
-     * <code>optional int32 close_status = 6;</code>
+     * <code>optional int32 close_status = 11;</code>
      * @return This builder for chaining.
      */
     public Builder clearCloseStatus() {
@@ -3151,21 +3237,21 @@ public  final class TurmsNotification extends
     }
 
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
      */
     @java.lang.Override
     public boolean hasRelayedRequest() {
       return instance.hasRelayedRequest();
     }
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.request.TurmsRequest getRelayedRequest() {
       return instance.getRelayedRequest();
     }
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
      */
     public Builder setRelayedRequest(im.turms.client.model.proto.request.TurmsRequest value) {
       copyOnWrite();
@@ -3173,7 +3259,7 @@ public  final class TurmsNotification extends
       return this;
       }
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
      */
     public Builder setRelayedRequest(
         im.turms.client.model.proto.request.TurmsRequest.Builder builderForValue) {
@@ -3182,7 +3268,7 @@ public  final class TurmsNotification extends
       return this;
     }
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
      */
     public Builder mergeRelayedRequest(im.turms.client.model.proto.request.TurmsRequest value) {
       copyOnWrite();
@@ -3190,7 +3276,7 @@ public  final class TurmsNotification extends
       return this;
     }
     /**
-     * <code>.im.turms.proto.TurmsRequest relayed_request = 7;</code>
+     * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
      */
     public Builder clearRelayedRequest() {  copyOnWrite();
       instance.clearRelayedRequest();
@@ -3214,6 +3300,7 @@ public  final class TurmsNotification extends
       case BUILD_MESSAGE_INFO: {
           java.lang.Object[] objects = new java.lang.Object[] {
             "bitField0_",
+            "timestamp_",
             "requestId_",
             "code_",
             "reason_",
@@ -3223,9 +3310,8 @@ public  final class TurmsNotification extends
             "relayedRequest_",
           };
           java.lang.String info =
-              "\u0000\u0007\u0000\u0001\u0001\u0007\u0007\u0000\u0000\u0000\u0001\u1002\u0000\u0002" +
-              "\u1004\u0001\u0003\u1208\u0002\u0004\t\u0005\u1002\u0003\u0006\u1004\u0004\u0007" +
-              "\t";
+              "\u0000\b\u0000\u0001\u0001\f\b\u0000\u0000\u0000\u0001\u0002\u0004\u1002\u0000\u0005" +
+              "\u1004\u0001\u0006\u1208\u0002\u0007\t\n\u1002\u0003\u000b\u1004\u0004\f\t";
           return newMessageInfo(DEFAULT_INSTANCE, info, objects);
       }
       // fall through

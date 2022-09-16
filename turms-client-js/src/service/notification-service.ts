@@ -1,10 +1,10 @@
-import { ParsedRelayedRequest } from '../model/parsed-relayed-request';
 import TurmsClient from '../turms-client';
+import Notification from '../model/notification';
 
 export default class NotificationService {
 
     private _turmsClient: TurmsClient;
-    private _notificationListeners: ((notification: ParsedRelayedRequest) => void)[] = [];
+    private _notificationListeners: ((notification: Notification) => void)[] = [];
 
     constructor(turmsClient: TurmsClient) {
         this._turmsClient = turmsClient;
@@ -14,16 +14,17 @@ export default class NotificationService {
                     && !notification.relayedRequest.createMessageRequest
                     && !notification.closeStatus;
                 if (isBusinessNotification) {
-                    this._notificationListeners.forEach(listener => listener(notification.relayedRequest));
+                    const n = new Notification(new Date(parseInt(notification.timestamp)), notification.relayedRequest);
+                    this._notificationListeners.forEach(listener => listener(n));
                 }
             });
     }
 
-    addNotificationListener(listener: (notification: ParsedRelayedRequest) => void): void {
+    addNotificationListener(listener: (notification: Notification) => void): void {
         this._notificationListeners.push(listener);
     }
 
-    removeNotificationListener(listener: (notification: ParsedRelayedRequest) => void): void {
+    removeNotificationListener(listener: (notification: Notification) => void): void {
         this._notificationListeners = this._notificationListeners
             .filter(cur => cur !== listener);
     }

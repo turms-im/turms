@@ -302,6 +302,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         }
         TurmsNotification notificationForRecipients = ClientMessagePool
                 .getTurmsNotificationBuilder()
+                .setTimestamp(System.currentTimeMillis())
                 .setRelayedRequest(dataForRecipients)
                 .setRequesterId(requesterId)
                 .build();

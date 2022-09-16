@@ -1,26 +1,28 @@
 import Foundation
 
 public struct Response<T> {
+    public let timestamp: Date
     public let requestId: Int64?
     public let code: Int
     public let data: T
 
-    init(requestId: Int64? = nil, code: Int, data: T = () as! T) {
+    init(timestamp: Date, requestId: Int64? = nil, code: Int, data: T = () as! T) {
+        self.timestamp = timestamp
         self.requestId = requestId
         self.code = code
         self.data = data
     }
 
     static func value(_ data: T) -> Response<T> {
-        return Response(code: ResponseStatusCode.ok.rawValue, data: data)
+        return Response(timestamp: Date(), code: ResponseStatusCode.ok.rawValue, data: data)
     }
 
     static func empty() -> Response<T> {
-        return Response(code: ResponseStatusCode.ok.rawValue, data: () as! T)
+        return Response(timestamp: Date(), code: ResponseStatusCode.ok.rawValue, data: () as! T)
     }
 
     static func emptyArray() -> Response<T> {
-        return Response(code: ResponseStatusCode.ok.rawValue, data: [] as! T)
+        return Response(timestamp: Date(), code: ResponseStatusCode.ok.rawValue, data: [] as! T)
     }
 
     static func fromNotification(_ notification: TurmsNotification, _ dataTransformer: ((TurmsNotification.DataMessage) throws -> T)? = nil) throws -> Response<T> {
@@ -43,6 +45,7 @@ public struct Response<T> {
             )
         }
         return Response(
+            timestamp: Date(timeIntervalSince1970: TimeInterval(notification.timestamp)),
             requestId: notification.hasRequestID ? notification.requestID : nil,
             code: Int(notification.code),
             data: data

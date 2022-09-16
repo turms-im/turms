@@ -938,6 +938,7 @@ public class MessageService {
                                       @Nullable DeviceType senderDeviceType) {
         TurmsNotification notification = ClientMessagePool
                 .getTurmsNotificationBuilder()
+                .setTimestamp(System.currentTimeMillis())
                 .setRelayedRequest(ClientMessagePool
                         .getTurmsRequestBuilder()
                         .setCreateMessageRequest(ProtoModelConvertor.message2createMessageRequest(message)))

@@ -34,11 +34,11 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 public final class TurmsNotificationParser {
 
     /**
-     * {@link im.turms.server.common.access.client.dto.notification.TurmsNotification:99}
+     * {@link im.turms.server.common.access.client.dto.notification.TurmsNotification:87}
      */
-    private static final int REQUESTER_ID_TAG = 40;
-    private static final int CLOSE_STATUS_TAG = 48;
-    private static final int RELAYED_REQUEST_TAG = 58;
+    private static final int REQUESTER_ID_TAG = 80;
+    private static final int CLOSE_STATUS_TAG = 88;
+    private static final int RELAYED_REQUEST_TAG = 98;
 
     private static final long UNSET_VALUE = Long.MIN_VALUE;
 

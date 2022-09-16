@@ -99,6 +99,7 @@ public class ServiceRequestService {
             builder.setData(dataForRequester);
         }
         return builder
+                .setTimestamp(System.currentTimeMillis())
                 .setCode(code.getBusinessCode())
                 .setRequestId(requestId)
                 .build();

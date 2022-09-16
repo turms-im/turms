@@ -1,6 +1,7 @@
 import '../../turms_client.dart';
+import '../model/notification.dart';
 
-typedef NotificationListener = void Function(TurmsRequest request);
+typedef NotificationListener = void Function(Notification notification);
 
 class NotificationService {
   final TurmsClient _turmsClient;
@@ -13,7 +14,10 @@ class NotificationService {
           !notification.hasCloseStatus();
       if (isBusinessNotification) {
         for (final listener in _notificationListeners) {
-          listener.call(notification.relayedRequest);
+          listener.call(Notification(
+              DateTime.fromMillisecondsSinceEpoch(
+                  notification.timestamp.toInt()),
+              notification.relayedRequest));
         }
       }
     });

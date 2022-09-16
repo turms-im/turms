@@ -16,7 +16,6 @@
  */
 
 import { ParsedNotification } from '../model/parsed-notification';
-import ResponseStatusCode from '../model/response-status-code';
 import SystemUtil from '../util/system-util';
 import { TurmsNotification } from '../model/proto/notification/turms_notification';
 import { TurmsRequest } from '../model/proto/request/turms_request';
@@ -70,18 +69,11 @@ export default class TurmsDriver {
     }
 
     close(): Promise<void> {
-        return new Promise(resolve => {
-            let totalServices = 3;
-            const tryResolve = (): void => {
-                totalServices--;
-                if (!totalServices) {
-                    resolve();
-                }
-            };
-            this._connectionService.close().finally(() => tryResolve());
-            this._heartbeatService.close().finally(() => tryResolve());
-            this._messageService.close().finally(() => tryResolve());
-        });
+        return Promise.allSettled([
+            this._connectionService.close(),
+            this._heartbeatService.close(),
+            this._messageService.close()]
+        ).then(() => null);
     }
 
     // Shared Context

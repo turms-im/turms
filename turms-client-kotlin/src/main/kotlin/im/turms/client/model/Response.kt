@@ -21,8 +21,10 @@ import im.turms.client.exception.ResponseException
 import im.turms.client.extension.isError
 import im.turms.client.model.proto.notification.TurmsNotification
 import java.util.Collections
+import java.util.Date
 
 data class Response<T>(
+    val timestamp: Date,
     val requestId: Long?,
     val code: Int,
     val data: T
@@ -30,13 +32,13 @@ data class Response<T>(
     companion object {
 
         @JvmStatic
-        fun <T> value(data: T): Response<T> = Response(null, ResponseStatusCode.OK, data)
+        fun <T> value(data: T): Response<T> = Response(Date(), null, ResponseStatusCode.OK, data)
 
         @JvmStatic
-        fun unitValue(): Response<Unit> = Response(null, ResponseStatusCode.OK, Unit)
+        fun unitValue(): Response<Unit> = Response(Date(), null, ResponseStatusCode.OK, Unit)
 
         @JvmStatic
-        fun <T> emptyList(): Response<List<T>> = Response(null, ResponseStatusCode.OK, Collections.emptyList())
+        fun <T> emptyList(): Response<List<T>> = Response(Date(), null, ResponseStatusCode.OK, Collections.emptyList())
 
         @JvmStatic
         fun <T> fromNotification(
@@ -68,6 +70,7 @@ data class Response<T>(
                 }
             }
             return Response(
+                Date(notification.timestamp),
                 if (notification.hasRequestId()) notification.requestId else null,
                 notification.code,
                 data

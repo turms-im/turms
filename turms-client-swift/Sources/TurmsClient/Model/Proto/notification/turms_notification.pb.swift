@@ -25,8 +25,15 @@ public struct TurmsNotification {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
-    /// Response
-    /// request_id is used to tell the client that this notification is for the specific request
+    /// Common => [1, 3]
+    public var timestamp: Int64 {
+        get { return _storage._timestamp }
+        set { _uniqueStorage()._timestamp = newValue }
+    }
+
+    /// Response => [4, 9]
+    /// "request_id" is used to tell the client that
+    /// this notification is a response to the specific request
     public var requestID: Int64 {
         get { return _storage._requestID ?? 0 }
         set { _uniqueStorage()._requestID = newValue }
@@ -67,10 +74,10 @@ public struct TurmsNotification {
     /// Clears the value of `data`. Subsequent reads from it will return its default value.
     public mutating func clearData() { _uniqueStorage()._data = nil }
 
-    /// Notification
-    /// requester_id only exists when a requester triggers a notification to its recipients
-    /// Note: Do not move requester_id to TurmsRequest because it requires rebuilding
-    /// a new TurmsNotification when recipients need the requester_id.
+    /// Notification => [10, 15]
+    /// "requester_id" only exists when a requester triggers a notification to its recipients
+    /// Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
+    /// a new TurmsNotification when recipients need "requester_id".
     public var requesterID: Int64 {
         get { return _storage._requesterID ?? 0 }
         set { _uniqueStorage()._requesterID = newValue }
@@ -388,16 +395,18 @@ private let _protobuf_package = "im.turms.proto"
 extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
     public static let protoMessageName: String = _protobuf_package + ".TurmsNotification"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-        1: .standard(proto: "request_id"),
-        2: .same(proto: "code"),
-        3: .same(proto: "reason"),
-        4: .same(proto: "data"),
-        5: .standard(proto: "requester_id"),
-        6: .standard(proto: "close_status"),
-        7: .standard(proto: "relayed_request"),
+        1: .same(proto: "timestamp"),
+        4: .standard(proto: "request_id"),
+        5: .same(proto: "code"),
+        6: .same(proto: "reason"),
+        7: .same(proto: "data"),
+        10: .standard(proto: "requester_id"),
+        11: .standard(proto: "close_status"),
+        12: .standard(proto: "relayed_request"),
     ]
 
     fileprivate class _StorageClass {
+        var _timestamp: Int64 = 0
         var _requestID: Int64?
         var _code: Int32?
         var _reason: String?
@@ -411,6 +420,7 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         private init() {}
 
         init(copying source: _StorageClass) {
+            _timestamp = source._timestamp
             _requestID = source._requestID
             _code = source._code
             _reason = source._reason
@@ -436,13 +446,14 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
                 // allocates stack space for every case branch when no optimizations are
                 // enabled. https://github.com/apple/swift-protobuf/issues/1034
                 switch fieldNumber {
-                case 1: try try decoder.decodeSingularInt64Field(value: &_storage._requestID)
-                case 2: try try decoder.decodeSingularInt32Field(value: &_storage._code)
-                case 3: try try decoder.decodeSingularStringField(value: &_storage._reason)
-                case 4: try try decoder.decodeSingularMessageField(value: &_storage._data)
-                case 5: try try decoder.decodeSingularInt64Field(value: &_storage._requesterID)
-                case 6: try try decoder.decodeSingularInt32Field(value: &_storage._closeStatus)
-                case 7: try try decoder.decodeSingularMessageField(value: &_storage._relayedRequest)
+                case 1: try try decoder.decodeSingularInt64Field(value: &_storage._timestamp)
+                case 4: try try decoder.decodeSingularInt64Field(value: &_storage._requestID)
+                case 5: try try decoder.decodeSingularInt32Field(value: &_storage._code)
+                case 6: try try decoder.decodeSingularStringField(value: &_storage._reason)
+                case 7: try try decoder.decodeSingularMessageField(value: &_storage._data)
+                case 10: try try decoder.decodeSingularInt64Field(value: &_storage._requesterID)
+                case 11: try try decoder.decodeSingularInt32Field(value: &_storage._closeStatus)
+                case 12: try try decoder.decodeSingularMessageField(value: &_storage._relayedRequest)
                 default: break
                 }
             }
@@ -455,26 +466,29 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
             // allocates stack space for every if/case branch local when no optimizations
             // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
             // https://github.com/apple/swift-protobuf/issues/1182
+            if _storage._timestamp != 0 {
+                try visitor.visitSingularInt64Field(value: _storage._timestamp, fieldNumber: 1)
+            }
             try { if let v = _storage._requestID {
-                try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
+                try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
             } }()
             try { if let v = _storage._code {
-                try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
+                try visitor.visitSingularInt32Field(value: v, fieldNumber: 5)
             } }()
             try { if let v = _storage._reason {
-                try visitor.visitSingularStringField(value: v, fieldNumber: 3)
+                try visitor.visitSingularStringField(value: v, fieldNumber: 6)
             } }()
             try { if let v = _storage._data {
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
             } }()
             try { if let v = _storage._requesterID {
-                try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
+                try visitor.visitSingularInt64Field(value: v, fieldNumber: 10)
             } }()
             try { if let v = _storage._closeStatus {
-                try visitor.visitSingularInt32Field(value: v, fieldNumber: 6)
+                try visitor.visitSingularInt32Field(value: v, fieldNumber: 11)
             } }()
             try { if let v = _storage._relayedRequest {
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 12)
             } }()
         }
         try unknownFields.traverse(visitor: &visitor)
@@ -485,6 +499,7 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
             let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
                 let _storage = _args.0
                 let rhs_storage = _args.1
+                if _storage._timestamp != rhs_storage._timestamp { return false }
                 if _storage._requestID != rhs_storage._requestID { return false }
                 if _storage._code != rhs_storage._code { return false }
                 if _storage._reason != rhs_storage._reason { return false }

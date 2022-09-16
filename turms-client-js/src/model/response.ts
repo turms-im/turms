@@ -3,11 +3,13 @@ import ResponseStatusCode from './response-status-code';
 import { TurmsNotification, TurmsNotification_Data } from './proto/notification/turms_notification';
 
 export default class Response<T> {
+    public readonly timestamp: Date;
     public readonly requestId?: string;
     public readonly code: number;
     public readonly data: T;
 
-    constructor(requestId: string, code: number, data) {
+    constructor(timestamp: Date, requestId: string, code: number, data) {
+        this.timestamp = timestamp;
         this.requestId = requestId;
         this.code = code;
         this.data = data;
@@ -18,15 +20,15 @@ export default class Response<T> {
     }
 
     static value<T>(data: T): Response<T> {
-        return new Response(null, ResponseStatusCode.OK, data);
+        return new Response(new Date(), null, ResponseStatusCode.OK, data);
     }
 
     static nullValue<T>(): Response<T> {
-        return new Response(null, ResponseStatusCode.OK, null);
+        return new Response(new Date(), null, ResponseStatusCode.OK, null);
     }
 
     static emptyList<T>(): Response<T[]> {
-        return new Response(null, ResponseStatusCode.OK, []);
+        return new Response(new Date(), null, ResponseStatusCode.OK, []);
     }
 
     static fromNotification<T>(notification: TurmsNotification, dataTransformer?: (data: TurmsNotification_Data) => T): Response<T> {
@@ -49,7 +51,8 @@ export default class Response<T> {
             throw ResponseError.fromCodeAndReason(ResponseStatusCode.INVALID_NOTIFICATION,
                 `Failed to transform notification data: ${notification.data}. Error: ${e?.message}`);
         }
-        return new Response(notification.requestId == null ? null : notification.requestId,
+        return new Response(new Date(parseInt(notification.timestamp)),
+            notification.requestId == null ? null : notification.requestId,
             notification.code, responseData);
     }
 }

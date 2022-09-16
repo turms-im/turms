@@ -38,5 +38,17 @@ class ResponseException implements Exception {
             notification.hasReason() ? notification.reason : null);
 
   @override
+  int get hashCode => requestId.hashCode ^ code.hashCode ^ reason.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ResponseException &&
+          runtimeType == other.runtimeType &&
+          requestId == other.requestId &&
+          code == other.code &&
+          reason == other.reason;
+
+  @override
   String toString() => '$requestId:$code:$reason';
 }

@@ -26,7 +26,7 @@ import BaseService from './base-service';
 
 interface RequestPromiseSeal {
     timeoutId?: number,
-    resolve: (value?: unknown) => void;
+    resolve: (value?: TurmsNotification) => void;
     reject: (reason?: ResponseError) => void;
 }
 
@@ -81,7 +81,7 @@ export default class MessageService extends BaseService {
             } else if (!this._stateStore.isConnected || !this._stateStore.isSessionOpen) {
                 return reject(ResponseError.fromCode(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
             }
-            const now = new Date().getTime();
+            const now = Date.now();
             const difference = now - this._stateStore.lastRequestDate;
             const isFrequent = this._minRequestInterval > 0 && difference <= this._minRequestInterval;
             if (isFrequent) {

@@ -17,7 +17,8 @@
 package im.turms.client.service
 
 import im.turms.client.TurmsClient
-import im.turms.client.model.proto.request.TurmsRequest
+import im.turms.client.model.Notification
+import java.util.Date
 import java.util.LinkedList
 
 /**
@@ -25,7 +26,7 @@ import java.util.LinkedList
  */
 class NotificationService(turmsClient: TurmsClient) {
 
-    private var notificationListeners: MutableList<((TurmsRequest) -> Unit)> = LinkedList()
+    private var notificationListeners: MutableList<((Notification) -> Unit)> = LinkedList()
 
     init {
         turmsClient.driver
@@ -34,15 +35,16 @@ class NotificationService(turmsClient: TurmsClient) {
                         && !notification.relayedRequest.hasCreateMessageRequest()
                         && !notification.hasCloseStatus()
                 if (isBusinessNotification) {
-                    notificationListeners.forEach { it(notification.relayedRequest) }
+                    val n = Notification(Date(notification.timestamp), notification.relayedRequest)
+                    notificationListeners.forEach { it(n) }
                 }
             }
     }
 
-    fun addNotificationListener(listener: ((TurmsRequest) -> Unit)) =
+    fun addNotificationListener(listener: ((Notification) -> Unit)) =
         this.notificationListeners.add(listener)
 
-    fun removeNotificationListener(listener: ((TurmsRequest) -> Unit)) =
+    fun removeNotificationListener(listener: ((Notification) -> Unit)) =
         this.notificationListeners.remove(listener)
 
 }

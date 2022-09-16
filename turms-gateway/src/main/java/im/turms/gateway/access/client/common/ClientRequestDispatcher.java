@@ -323,6 +323,7 @@ public class ClientRequestDispatcher {
     private TurmsNotification getNotificationFromHandlerResult(RequestHandlerResult result, long requestId) {
         TurmsNotification.Builder builder = ClientMessagePool
                 .getTurmsNotificationBuilder()
+                .setTimestamp(System.currentTimeMillis())
                 .setRequestId(requestId)
                 .setCode(result.code().getBusinessCode());
         String reason = result.reason();

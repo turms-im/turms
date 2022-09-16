@@ -416,18 +416,20 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
 
 class TurmsNotification extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'TurmsNotification', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
-    ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'requestId')
-    ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'code', $pb.PbFieldType.O3)
-    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'reason')
-    ..aOM<TurmsNotification_Data>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'data', subBuilder: TurmsNotification_Data.create)
-    ..aInt64(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'requesterId')
-    ..a<$core.int>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'closeStatus', $pb.PbFieldType.O3)
-    ..aOM<$0.TurmsRequest>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'relayedRequest', subBuilder: $0.TurmsRequest.create)
+    ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'timestamp')
+    ..aInt64(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'requestId')
+    ..a<$core.int>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'code', $pb.PbFieldType.O3)
+    ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'reason')
+    ..aOM<TurmsNotification_Data>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'data', subBuilder: TurmsNotification_Data.create)
+    ..aInt64(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'requesterId')
+    ..a<$core.int>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'closeStatus', $pb.PbFieldType.O3)
+    ..aOM<$0.TurmsRequest>(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'relayedRequest', subBuilder: $0.TurmsRequest.create)
     ..hasRequiredFields = false
   ;
 
   TurmsNotification._() : super();
   factory TurmsNotification({
+    $fixnum.Int64? timestamp,
     $fixnum.Int64? requestId,
     $core.int? code,
     $core.String? reason,
@@ -437,6 +439,9 @@ class TurmsNotification extends $pb.GeneratedMessage {
     $0.TurmsRequest? relayedRequest,
   }) {
     final _result = create();
+    if (timestamp != null) {
+      _result.timestamp = timestamp;
+    }
     if (requestId != null) {
       _result.requestId = requestId;
     }
@@ -482,70 +487,79 @@ class TurmsNotification extends $pb.GeneratedMessage {
   static TurmsNotification? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $fixnum.Int64 get requestId => $_getI64(0);
+  $fixnum.Int64 get timestamp => $_getI64(0);
   @$pb.TagNumber(1)
-  set requestId($fixnum.Int64 v) { $_setInt64(0, v); }
+  set timestamp($fixnum.Int64 v) { $_setInt64(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasRequestId() => $_has(0);
+  $core.bool hasTimestamp() => $_has(0);
   @$pb.TagNumber(1)
-  void clearRequestId() => clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.int get code => $_getIZ(1);
-  @$pb.TagNumber(2)
-  set code($core.int v) { $_setSignedInt32(1, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasCode() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearCode() => clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get reason => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set reason($core.String v) { $_setString(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasReason() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearReason() => clearField(3);
+  void clearTimestamp() => clearField(1);
 
   @$pb.TagNumber(4)
-  TurmsNotification_Data get data => $_getN(3);
+  $fixnum.Int64 get requestId => $_getI64(1);
   @$pb.TagNumber(4)
-  set data(TurmsNotification_Data v) { setField(4, v); }
+  set requestId($fixnum.Int64 v) { $_setInt64(1, v); }
   @$pb.TagNumber(4)
-  $core.bool hasData() => $_has(3);
+  $core.bool hasRequestId() => $_has(1);
   @$pb.TagNumber(4)
-  void clearData() => clearField(4);
-  @$pb.TagNumber(4)
-  TurmsNotification_Data ensureData() => $_ensure(3);
+  void clearRequestId() => clearField(4);
 
   @$pb.TagNumber(5)
-  $fixnum.Int64 get requesterId => $_getI64(4);
+  $core.int get code => $_getIZ(2);
   @$pb.TagNumber(5)
-  set requesterId($fixnum.Int64 v) { $_setInt64(4, v); }
+  set code($core.int v) { $_setSignedInt32(2, v); }
   @$pb.TagNumber(5)
-  $core.bool hasRequesterId() => $_has(4);
+  $core.bool hasCode() => $_has(2);
   @$pb.TagNumber(5)
-  void clearRequesterId() => clearField(5);
+  void clearCode() => clearField(5);
 
   @$pb.TagNumber(6)
-  $core.int get closeStatus => $_getIZ(5);
+  $core.String get reason => $_getSZ(3);
   @$pb.TagNumber(6)
-  set closeStatus($core.int v) { $_setSignedInt32(5, v); }
+  set reason($core.String v) { $_setString(3, v); }
   @$pb.TagNumber(6)
-  $core.bool hasCloseStatus() => $_has(5);
+  $core.bool hasReason() => $_has(3);
   @$pb.TagNumber(6)
-  void clearCloseStatus() => clearField(6);
+  void clearReason() => clearField(6);
 
   @$pb.TagNumber(7)
-  $0.TurmsRequest get relayedRequest => $_getN(6);
+  TurmsNotification_Data get data => $_getN(4);
   @$pb.TagNumber(7)
-  set relayedRequest($0.TurmsRequest v) { setField(7, v); }
+  set data(TurmsNotification_Data v) { setField(7, v); }
   @$pb.TagNumber(7)
-  $core.bool hasRelayedRequest() => $_has(6);
+  $core.bool hasData() => $_has(4);
   @$pb.TagNumber(7)
-  void clearRelayedRequest() => clearField(7);
+  void clearData() => clearField(7);
   @$pb.TagNumber(7)
-  $0.TurmsRequest ensureRelayedRequest() => $_ensure(6);
+  TurmsNotification_Data ensureData() => $_ensure(4);
+
+  @$pb.TagNumber(10)
+  $fixnum.Int64 get requesterId => $_getI64(5);
+  @$pb.TagNumber(10)
+  set requesterId($fixnum.Int64 v) { $_setInt64(5, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasRequesterId() => $_has(5);
+  @$pb.TagNumber(10)
+  void clearRequesterId() => clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.int get closeStatus => $_getIZ(6);
+  @$pb.TagNumber(11)
+  set closeStatus($core.int v) { $_setSignedInt32(6, v); }
+  @$pb.TagNumber(11)
+  $core.bool hasCloseStatus() => $_has(6);
+  @$pb.TagNumber(11)
+  void clearCloseStatus() => clearField(11);
+
+  @$pb.TagNumber(12)
+  $0.TurmsRequest get relayedRequest => $_getN(7);
+  @$pb.TagNumber(12)
+  set relayedRequest($0.TurmsRequest v) { setField(12, v); }
+  @$pb.TagNumber(12)
+  $core.bool hasRelayedRequest() => $_has(7);
+  @$pb.TagNumber(12)
+  void clearRelayedRequest() => clearField(12);
+  @$pb.TagNumber(12)
+  $0.TurmsRequest ensureRelayedRequest() => $_ensure(7);
 }
 

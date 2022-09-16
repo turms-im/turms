@@ -126,7 +126,7 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
                 .collect(CollectorUtil.toList(pairs.size()));
     }
 
-    public void verifyClusterType(String name, Set<ClusterType> requiredClusterTypes) {
+    public void verifyClusterTypes(String name, Set<ClusterType> requiredClusterTypes) {
         if (descriptions == null) {
             throw new IllegalStateException("Verification can only work after the mongo client has been initialized");
         }

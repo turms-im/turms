@@ -48,6 +48,7 @@ public final class NotificationFactory {
     public static TurmsNotification create(ResponseStatusCode code, long requestId) {
         TurmsNotification.Builder builder = ClientMessagePool
                 .getTurmsNotificationBuilder()
+                .setTimestamp(System.currentTimeMillis())
                 .setRequestId(requestId)
                 .setCode(code.getBusinessCode());
         trySetReason(builder, code, code.getReason());
@@ -57,6 +58,7 @@ public final class NotificationFactory {
     public static TurmsNotification create(ResponseStatusCode code, String reason, long requestId) {
         TurmsNotification.Builder builder = ClientMessagePool
                 .getTurmsNotificationBuilder()
+                .setTimestamp(System.currentTimeMillis())
                 .setRequestId(requestId)
                 .setCode(code.getBusinessCode());
         trySetReason(builder, code, reason == null ? code.getReason() : reason);
@@ -67,6 +69,7 @@ public final class NotificationFactory {
         ResponseStatusCode code = info.code();
         TurmsNotification.Builder builder = ClientMessagePool
                 .getTurmsNotificationBuilder()
+                .setTimestamp(System.currentTimeMillis())
                 .setRequestId(requestId)
                 .setCode(code.getBusinessCode());
         trySetReason(builder, code, info.reason());
@@ -83,6 +86,7 @@ public final class NotificationFactory {
     public static TurmsNotification sessionClosed(long requestId) {
         return ClientMessagePool
                 .getTurmsNotificationBuilder()
+                .setTimestamp(System.currentTimeMillis())
                 .setRequestId(requestId)
                 .setCode(ResponseStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode())
                 .build();
