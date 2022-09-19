@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.context;
 
 import im.turms.server.common.infra.cluster.node.NodeType;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -27,8 +28,6 @@ import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import io.lettuce.core.RedisException;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -37,11 +36,14 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Hooks;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -58,7 +60,10 @@ public class TurmsApplicationContext {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TurmsApplicationContext.class);
 
-    private static final String BUILD_INFO_PROPS_PATH = "classpath:META-INF/build-info.properties";
+    private static final String BUILD_INFO_PROPS_PATH = "git.properties";
+    private static final String PROPERTY_BUILD_VERSION = "git.build.version";
+    private static final String PROPERTY_BUILD_TIME = "git.build.time";
+    private static final String PROPERTY_COMMIT_ID = "git.commit.id.full";
     private static final String DEFAULT_VERSION = "0.0.0";
 
     private boolean isClosing;
@@ -68,14 +73,13 @@ public class TurmsApplicationContext {
     private final boolean isProduction;
     private final boolean isDevOrLocalTest;
     private final String activeEnvProfile;
-    private final String version;
+    private final BuildProperties buildProperties;
 
     private long shutdownJobTimeoutMillis = 0;
     private final TreeMap<JobShutdownOrder, ShutdownHook> shutdownHooks = new TreeMap<>();
 
     public TurmsApplicationContext(Environment environment,
-                                   NodeType nodeType,
-                                   @Autowired(required = false) BuildProperties buildProperties) {
+                                   NodeType nodeType) {
         LoggerFactory.bindContext(this);
 
         String homeDir = nodeType == NodeType.SERVICE
@@ -106,10 +110,24 @@ public class TurmsApplicationContext {
         isDevOrLocalTest = isInProfiles(devEnvs, activeProfiles) || isInProfiles(localTestEnvs, activeProfiles);
         // Prefer "isProduction" to be true to avoid getting trouble in production
         isProduction = !isDevOrLocalTest && !isInProfiles(testEnvs, activeProfiles);
-        version = getVersion(isProduction, buildProperties);
+        BuildProperties tempBuildProperties = getGitBuildProperties();
+        if (tempBuildProperties == null) {
+            if (isProduction) {
+                throw new IllegalStateException(BUILD_INFO_PROPS_PATH + " must exist in production");
+            }
+            // We allow "git.properties" not exist in non-production
+            // environments for a better development experience
+            LOGGER.warn("Cannot find " + BUILD_INFO_PROPS_PATH +
+                    ", fall back to the default version " + DEFAULT_VERSION +
+                    " in non-production environments. Fix it by running \"mvn compile\"");
+            tempBuildProperties = new BuildProperties(DEFAULT_VERSION, "", "");
+        }
+        buildProperties = tempBuildProperties;
 
-        LOGGER.info("The local node with version {} is running in a {} environment",
-                version,
+        LOGGER.info("The local node with the build properties [version={}, commitId={}, buildTime={}] is running in a {} environment",
+                buildProperties.version(),
+                buildProperties.commitId(),
+                buildProperties.buildTime(),
                 isProduction ? "production" : "non-production");
 
         setupErrorHandlerContext();
@@ -118,7 +136,6 @@ public class TurmsApplicationContext {
 
     @EventListener(classes = ContextRefreshedEvent.class)
     public void handleContextRefreshedEvent(ContextRefreshedEvent event) {
-//    public void handleContextRefreshedEvent(TurmsPropertiesManager propertiesManager) {
         TurmsPropertiesManager propertiesManager = event.getApplicationContext().getBean(TurmsPropertiesManager.class);
         ShutdownProperties properties = propertiesManager.getLocalProperties().getShutdown();
         shutdownJobTimeoutMillis = properties.getJobTimeoutMillis();
@@ -195,23 +212,31 @@ public class TurmsApplicationContext {
         return false;
     }
 
-    private String getVersion(boolean isProduction, BuildProperties buildProperties) {
-        if (isProduction) {
-            if (buildProperties == null) {
-                throw new IllegalStateException(BUILD_INFO_PROPS_PATH + " must exist in production");
-            }
-            return buildProperties.getVersion();
+    @Nullable
+    private BuildProperties getGitBuildProperties() {
+        InputStream resourceAsStream = TurmsApplicationContext.class.getClassLoader().getResourceAsStream(BUILD_INFO_PROPS_PATH);
+        if (resourceAsStream == null) {
+            return null;
         }
-        if (buildProperties == null) {
-            // We allow "build-info.properties" not exist in non-production
-            // environments for a better development experience
-            LOGGER.warn("Cannot find " + BUILD_INFO_PROPS_PATH +
-                    ", fall back to the default version " + DEFAULT_VERSION +
-                    " in non-production environments." +
-                    " Fix it by running \"mvn compile\"");
-            return DEFAULT_VERSION;
+        Properties properties = new Properties();
+        try {
+            properties.load(resourceAsStream);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
-        return buildProperties.getVersion();
+        String version = properties.getProperty(PROPERTY_BUILD_VERSION);
+        String buildTime = properties.getProperty(PROPERTY_BUILD_TIME);
+        String commitId = properties.getProperty(PROPERTY_COMMIT_ID);
+        if (StringUtil.isBlank(version)) {
+            throw new IllegalArgumentException("The property \"" + PROPERTY_BUILD_VERSION + "\" must exist and be not blank");
+        }
+        if (StringUtil.isBlank(buildTime)) {
+            throw new IllegalArgumentException("The property \"" + PROPERTY_BUILD_TIME + "\" must exist and be not blank");
+        }
+        if (StringUtil.isBlank(commitId)) {
+            throw new IllegalArgumentException("The property \"" + PROPERTY_COMMIT_ID + "\" must exist and be not blank");
+        }
+        return new BuildProperties(version, commitId, buildTime);
     }
 
     private void setupErrorHandlerContext() {

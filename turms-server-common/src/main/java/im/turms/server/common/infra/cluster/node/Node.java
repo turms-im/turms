@@ -113,7 +113,7 @@ public class Node {
 
         NodeVersion nodeVersion;
         try {
-            String version = turmsContext.getVersion();
+            String version = turmsContext.getBuildProperties().version();
             nodeVersion = NodeVersion.parse(version);
             LOGGER.info("The local node version is {}", version);
         } catch (Exception e) {

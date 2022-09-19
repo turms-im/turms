@@ -77,12 +77,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
-                    <execution>
-                        <id>build-info</id>
-                        <goals>
-                            <goal>build-info</goal>
-                        </goals>
-                    </execution>
                     <!-- Generate two jars,
                     the original jar is used as deps for plugins to compile
                     and the repackaged jar is used to run as a server -->
