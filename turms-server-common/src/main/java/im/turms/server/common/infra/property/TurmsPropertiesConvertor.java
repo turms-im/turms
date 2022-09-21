@@ -26,14 +26,11 @@ import lombok.SneakyThrows;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.Map;
 
 import static im.turms.server.common.infra.json.JsonCodecPool.MAPPER;
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.MUTABLE_PROPERTIES_WRITER;
-import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getField;
-import static im.turms.server.common.infra.property.TurmsPropertiesInspector.isMutableProperty;
-import static im.turms.server.common.infra.property.TurmsPropertiesInspector.isNestedProperty;
+import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getFieldInfo;
 
 /**
  * @author James Chen
@@ -60,17 +57,17 @@ public class TurmsPropertiesConvertor {
         for (Map.Entry<String, Object> entry : propertiesForUpdating.entrySet()) {
             String fieldName = entry.getKey();
             String fieldPath = parentFieldPath == null ? fieldName : parentFieldPath + "." + fieldName;
-            Field field = getField(properties.getClass(), fieldName);
-            if (field == null) {
+            PropertyFieldInfo fieldInfo = getFieldInfo(properties.getClass(), fieldName);
+            if (fieldInfo == null) {
                 return new InvalidPropertyException("The property doesn't exist: \"" + fieldPath + "\"");
             }
-            if (!isMutableProperty(field) && !isNestedProperty(field)) {
+            if (!fieldInfo.isMutableProperty() && !fieldInfo.isNestedProperty()) {
                 return new InvalidPropertyException("Cannot update an immutable property: \"" + fieldPath + "\"");
             }
             Object value = entry.getValue();
             if (value instanceof Map nestedPropertiesForUpdating) {
                 try {
-                    InvalidPropertyException exception = validatePropertiesForUpdating(field.get(properties),
+                    InvalidPropertyException exception = validatePropertiesForUpdating(fieldInfo.get(properties),
                             nestedPropertiesForUpdating,
                             fieldPath);
                     if (exception != null) {
@@ -122,14 +119,14 @@ public class TurmsPropertiesConvertor {
         for (Map.Entry<String, Object> entry : metadata.entrySet()) {
             String key = entry.getKey();
             Map<String, Object> originalValueMetadata = (Map<String, Object>) entry.getValue();
-            Field field = getField(propertiesClass, key);
+            PropertyFieldInfo propertyFieldInfo = getFieldInfo(propertiesClass, key);
             Object value;
-            if (field == null || (value = field.get(properties)) == null) {
+            if (propertyFieldInfo == null || (value = propertyFieldInfo.get(properties)) == null) {
                 LOGGER.warn("Skip the unknown property \"" + key + "\" in the properties class \"" + propertiesClass.getName() + "\". "
                         + "This may happen if the property schema have changed");
                 continue;
             }
-            if (isNestedProperty(field)) {
+            if (propertyFieldInfo.isNestedProperty()) {
                 metadataWithValue.put(key, mergeMetadataWithPropertyValue0(originalValueMetadata, value));
             } else {
                 // Clone the metadata because we need to add "value" to it

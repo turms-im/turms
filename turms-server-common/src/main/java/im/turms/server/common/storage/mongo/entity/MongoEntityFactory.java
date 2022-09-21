@@ -23,6 +23,8 @@ import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
+import im.turms.server.common.infra.reflect.VarAccessor;
+import im.turms.server.common.infra.reflect.VarAccessorFactory;
 import im.turms.server.common.storage.mongo.BsonPool;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
@@ -248,11 +250,10 @@ public final class MongoEntityFactory {
                 entityIndexes.addAll(indexes);
             }
             // Getter and Setter
-            MethodHandle getter = ReflectionUtil.getGetter(field);
             MethodHandle setter = setterMethods.get(fieldName);
-            if (setter == null) {
-                setter = ReflectionUtil.getSetter(field);
-            }
+            VarAccessor varAccessor = setter == null
+                    ? VarAccessorFactory.get(field)
+                    : VarAccessorFactory.get(field, setter);
             // Constructor
             int ctorParamIndex = constructor.getParameterCount() == 0
                     ? EntityField.UNSET_CTOR_PARAM_INDEX
@@ -261,7 +262,7 @@ public final class MongoEntityFactory {
                 entityFields = new HashMap<>(16);
             }
             entityFields.put(fieldName,
-                    new EntityField(fieldClass, keyClass, elementClass, fieldName, isIdField, ctorParamIndex, getter, setter));
+                    new EntityField(fieldClass, keyClass, elementClass, fieldName, isIdField, ctorParamIndex, varAccessor));
         }
         return new EntityFieldsInfo(
                 idField,

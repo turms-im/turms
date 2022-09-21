@@ -19,7 +19,11 @@ package im.turms.server.common.infra.reactor;
 
 import reactor.core.publisher.Mono;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -32,10 +36,24 @@ public class PublisherPool {
     public static final Mono<Boolean> TRUE = Mono.just(true);
     public static final Mono<Boolean> FALSE = Mono.just(false);
 
-    public static final Mono EMPTY_COLLECTION = Mono.just(Collections.emptyList());
+    public static final Mono EMPTY_LIST = Mono.just(Collections.emptyList());
+    public static final Mono EMPTY_SET = Mono.just(Collections.emptySet());
+    public static final Mono EMPTY_MAP = Mono.just(Collections.emptyMap());
 
-    public static <T> Mono<T> emptyCollection() {
-        return EMPTY_COLLECTION;
+    public static <T> Mono<Collection<T>> emptyCollection() {
+        return EMPTY_LIST;
+    }
+
+    public static <T> Mono<List<T>> emptyList() {
+        return EMPTY_LIST;
+    }
+
+    public static <T> Mono<Set<T>> emptySet() {
+        return EMPTY_SET;
+    }
+
+    public static <K, V> Mono<Map<K, V>> emptyMap() {
+        return EMPTY_MAP;
     }
 
 }

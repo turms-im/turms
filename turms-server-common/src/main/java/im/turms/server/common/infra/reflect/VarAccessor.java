@@ -15,27 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.metrics;
-
-import im.turms.server.common.infra.reflect.VarAccessor;
-import im.turms.server.common.infra.reflect.VarAccessorFactory;
-import io.micrometer.core.instrument.Meter;
-import io.micrometer.core.instrument.Tag;
-import io.micrometer.core.instrument.Tags;
+package im.turms.server.common.infra.reflect;
 
 /**
  * @author James Chen
  */
-public final class MetricsUtil {
+public interface VarAccessor<T, V> {
 
-    private static final VarAccessor<Tags, Tag[]> GET_TAGS = VarAccessorFactory.get(Tags.class, "tags");
+    V get(T object);
 
-    private MetricsUtil() {
-    }
-
-    public static Tag[] getTags(Meter.Id id) {
-        Tags tags = (Tags) id.getTagsAsIterable();
-        return GET_TAGS.get(tags);
-    }
+    void set(T object, V value);
 
 }

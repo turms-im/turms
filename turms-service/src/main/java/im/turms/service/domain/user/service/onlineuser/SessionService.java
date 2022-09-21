@@ -210,15 +210,15 @@ public class SessionService {
                 .collect(CollectorUtil.toList(userCount))
                 .flatMap(statuses -> {
                     // Find which nodes the users are in
-                    List<UserSessionsInfo>[] offlineUserSessions = new List[]{null};
+                    List<UserSessionsInfo> offlineUserSessions = null;
                     Map<String, Set<Long>> nodeIdToUserIds = new HashMap<>(16);
                     for (UserSessionsStatus status : statuses) {
                         Map<DeviceType, String> deviceTypeToNodeId = status.deviceTypeToNodeId();
                         if (deviceTypeToNodeId.isEmpty()) {
-                            if (offlineUserSessions[0] == null) {
-                                offlineUserSessions[0] = new ArrayList<>(userCount);
+                            if (offlineUserSessions == null) {
+                                offlineUserSessions = new ArrayList<>(userCount);
                             }
-                            offlineUserSessions[0].add(new UserSessionsInfo(status.userId(), UserStatus.OFFLINE, null));
+                            offlineUserSessions.add(new UserSessionsInfo(status.userId(), UserStatus.OFFLINE, null));
                         } else {
                             for (String nodeId : deviceTypeToNodeId.values()) {
                                 nodeIdToUserIds.computeIfAbsent(nodeId, key -> CollectionUtil.newSetWithExpectedSize(userCount))
@@ -228,9 +228,9 @@ public class SessionService {
                     }
                     int nodeIdCount = nodeIdToUserIds.size();
                     if (nodeIdCount == 0) {
-                        return offlineUserSessions[0] == null
-                                ? PublisherPool.emptyCollection()
-                                : Mono.just(offlineUserSessions[0]);
+                        return offlineUserSessions == null
+                                ? PublisherPool.emptyList()
+                                : Mono.just(offlineUserSessions);
                     }
                     List<Mono<List<UserSessionsInfo>>> querySessionsRequests = new ArrayList<>(nodeIdCount);
                     // Send RPC to the nodes to query sessions
@@ -238,9 +238,10 @@ public class SessionService {
                         querySessionsRequests.add(rpcService
                                 .requestResponse(nodeIdAndUserIds.getKey(), new QueryUserSessionsRequest(nodeIdAndUserIds.getValue())));
                     }
+                    List<UserSessionsInfo> finalOfflineUserSessions = offlineUserSessions;
                     return Flux.merge(querySessionsRequests)
                             .collect(CollectorUtil.toList(nodeIdCount))
-                            .map(sessionsFromNodes -> mergeUserSessions(sessionsFromNodes, offlineUserSessions[0], userCount));
+                            .map(sessionsFromNodes -> mergeUserSessions(sessionsFromNodes, finalOfflineUserSessions, userCount));
                 });
     }
 

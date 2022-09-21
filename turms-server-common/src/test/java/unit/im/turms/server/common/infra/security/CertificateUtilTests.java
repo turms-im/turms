@@ -43,7 +43,6 @@ class CertificateUtilTests {
         String path = CertificateUtilTests.class.getClassLoader().getResource("ec-secp256k1.pem").getPath();
         ECPublicKey publicKey = CertificateUtil.getEcPublicKeyFromPem(new File(path));
         assertThat(publicKey).isNotNull();
-
     }
 
     @Test

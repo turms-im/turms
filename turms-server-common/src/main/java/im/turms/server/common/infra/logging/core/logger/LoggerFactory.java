@@ -50,7 +50,7 @@ public class LoggerFactory {
     private static TurmsTemplateLayout layout;
 
     @Getter
-    private static boolean initialized = false;
+    private static boolean initialized;
 
     private static final List<Appender> ALL_APPENDERS = new CopyOnWriteArrayList<>();
     private static final List<Appender> DEFAULT_APPENDERS = new ArrayList<>(2);

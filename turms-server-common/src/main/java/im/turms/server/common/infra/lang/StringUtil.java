@@ -345,6 +345,10 @@ public final class StringUtil {
         return string == null || string.isBlank();
     }
 
+    public static boolean isNotBlank(String string) {
+        return string != null && !string.isBlank();
+    }
+
     public static boolean isEmpty(String string) {
         return string == null || string.isEmpty();
     }

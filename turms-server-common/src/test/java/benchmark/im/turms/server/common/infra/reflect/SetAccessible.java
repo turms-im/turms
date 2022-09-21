@@ -19,8 +19,10 @@ package benchmark.im.turms.server.common.infra.reflect;
 
 import im.turms.server.common.infra.reflect.ReflectionUtil;
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
@@ -33,17 +35,19 @@ import java.util.concurrent.TimeUnit;
  * Reference:
  * JMH version: 1.35
  * VM version: JDK 17.0.4.1, OpenJDK 64-Bit Server VM, 17.0.4.1+1
- * Reflection.fieldSetAccessibleTrue  thrpt   10    19485.899 ±   651.753  ops/ms
- * Reflection.setAccessibleTrue       thrpt   10  1875686.987 ± 22904.328  ops/ms
+ * SetAccessible.field_setAccessible           avgt   10  50.175 ± 4.245  ns/op
+ * SetAccessible.reflectionUtil_setAccessible  avgt   10   0.518 ± 0.009  ns/op
  *
  * @author James Chen
  */
+
 @Fork(value = 2, jvmArgsAppend = "--add-opens=java.base/java.lang=ALL-UNNAMED")
-@Measurement(iterations = 5, time = 2)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
-@State(Scope.Benchmark)
 @Warmup(iterations = 5, time = 1)
-public class Reflection {
+@Measurement(iterations = 5, time = 2)
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
+@State(Scope.Benchmark)
+public class SetAccessible {
 
     private static final Field PRIVATE_FIELD;
 
@@ -56,12 +60,12 @@ public class Reflection {
     }
 
     @Benchmark
-    public void fieldSetAccessibleTrue() {
+    public void field_setAccessible() {
         PRIVATE_FIELD.setAccessible(true);
     }
 
     @Benchmark
-    public void setAccessibleTrue() {
+    public void reflectionUtil_setAccessible() {
         ReflectionUtil.setAccessible(PRIVATE_FIELD);
     }
 

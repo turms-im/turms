@@ -20,6 +20,7 @@ package im.turms.server.common.infra.security.jwt;
 import com.fasterxml.jackson.databind.ObjectReader;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.json.JsonCodecPool;
+import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.property.env.gateway.authentication.JwtAuthenticationVerificationProperties;
 import im.turms.server.common.infra.property.env.gateway.authentication.JwtKeyAlgorithmProperties;
@@ -127,12 +128,12 @@ public class JwtManager {
 
     private static <T extends PublicKey> T getPublicKey(String algorithm, JwtKeyAlgorithmProperties properties) {
         String pemFilePath = properties.getPemFilePath();
-        if (!StringUtil.isBlank(pemFilePath)) {
+        if (StringUtil.isNotBlank(pemFilePath)) {
             return (T) CertificateUtil.getPublicKeyFromPem(new File(pemFilePath), algorithm);
         }
         JwtP12KeyStoreProperties p12 = properties.getP12();
         String filePath = p12.getFilePath();
-        if (!StringUtil.isBlank(filePath)) {
+        if (StringUtil.isNotBlank(filePath)) {
             return (T) CertificateUtil.getPublicKeyFromP12(new File(filePath), p12.getPassword(), p12.getAlias());
         }
         return null;
@@ -143,7 +144,7 @@ public class JwtManager {
     }
 
     public Jwt decode(String jwt) {
-        List<String> parts = StringUtil.splitMultipleLatin1(jwt, (byte) '.');
+        List<String> parts = StringUtil.splitMultipleLatin1(jwt, AsciiCode.PERIOD);
         if (parts == null || parts.size() != 3) {
             throw new CorruptedJwtException("The JWT must have three parts");
         }
@@ -178,16 +179,16 @@ public class JwtManager {
         if (algorithm == null) {
             throw new UnsupportedOperationException("The " + algorithmName + " algorithm isn't supported");
         }
+        for (Predicate<JwtPayload> verification : verifications) {
+            if (!verification.test(payload)) {
+                throw new SignatureVerificationException();
+            }
+        }
         Jwt jwtEntity = new Jwt(header,
                 payload,
                 encodedHeaderBytes,
                 encodedPayloadBytes,
                 URL_DECODER.decode(StringUtil.getBytes(parts.get(2))));
-        for (Predicate<JwtPayload> verification : verifications) {
-            if (!verification.test(jwtEntity.payload())) {
-                throw new SignatureVerificationException();
-            }
-        }
         if (algorithm.verify(jwtEntity)) {
             return jwtEntity;
         }

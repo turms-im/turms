@@ -31,9 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getConstraints;
-import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getFields;
-import static im.turms.server.common.infra.property.TurmsPropertiesInspector.isNestedProperty;
+import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getFieldInfos;
 
 /**
  * @author James Chen
@@ -67,20 +65,20 @@ public class TurmsPropertiesValidator {
 
     @SneakyThrows
     private static void validateProperties(Object properties, List<String> errorMessages) {
-        List<Field> fields = getFields(properties.getClass());
-        for (Field field : fields) {
-            if (isNestedProperty(field)) {
-                Object nestedProperties = field.get(properties);
+        List<PropertyFieldInfo> propertyFieldInfos = getFieldInfos(properties.getClass());
+        for (PropertyFieldInfo propertyFieldInfo : propertyFieldInfos) {
+            if (propertyFieldInfo.isNestedProperty()) {
+                Object nestedProperties = propertyFieldInfo.get(properties);
                 validateProperties(nestedProperties, errorMessages);
             } else {
-                validateProperty(properties, field, errorMessages);
+                validateProperty(properties, propertyFieldInfo, errorMessages);
             }
         }
     }
 
     @SneakyThrows
-    private static void validateProperty(Object properties, Field field, List<String> errorMessages) {
-        PropertyConstraints constraints = getConstraints(field);
+    private static void validateProperty(Object properties, PropertyFieldInfo fieldInfo, List<String> errorMessages) {
+        PropertyConstraints constraints = fieldInfo.constraints();
         Min min = constraints.min();
         Max max = constraints.max();
         Size size = constraints.size();
@@ -88,7 +86,8 @@ public class TurmsPropertiesValidator {
         if (min == null && max == null && size == null && cron == null) {
             return;
         }
-        Object value = field.get(properties);
+        Object value = fieldInfo.get(properties);
+        Field field = fieldInfo.field();
         if (min != null || max != null) {
             validateMinMaxProperty(min, max, value, field, errorMessages);
         }

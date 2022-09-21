@@ -28,16 +28,6 @@ public class FastStringBuilder {
     private final List<Entry> cache = new LinkedList<>();
     private int length = 0;
 
-    public String buildLatin1() {
-        byte[] value = new byte[length];
-        int destPos = 0;
-        for (Entry entry : cache) {
-            System.arraycopy(entry.bytes, entry.from, value, destPos, entry.length);
-            destPos += entry.length;
-        }
-        return StringUtil.newLatin1String(value);
-    }
-
     public String build(byte coder, byte delimiter) {
         boolean isLatin1 = StringUtil.isLatin1(coder);
         int delimiterLength = isLatin1 ? 1 : 2;
@@ -57,6 +47,20 @@ public class FastStringBuilder {
             }
         }
         return StringUtil.newString(value, coder);
+    }
+
+    public byte[] buildAsBytes() {
+        byte[] value = new byte[length];
+        int destPos = 0;
+        for (Entry entry : cache) {
+            System.arraycopy(entry.bytes, entry.from, value, destPos, entry.length);
+            destPos += entry.length;
+        }
+        return value;
+    }
+
+    public String buildLatin1() {
+        return StringUtil.newLatin1String(buildAsBytes());
     }
 
     public void append(String str) {

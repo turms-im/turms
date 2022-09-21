@@ -17,10 +17,9 @@
 
 package im.turms.server.common.storage.mongo.entity;
 
+import im.turms.server.common.infra.reflect.VarAccessor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.lang.invoke.MethodHandle;
 
 /**
  * @author James Chen
@@ -50,22 +49,13 @@ public class EntityField<T> {
      */
     private final int ctorParamIndex;
 
-    private final MethodHandle getter;
-    private final MethodHandle setter;
+    private final VarAccessor varAccessor;
 
     public T get(Object entity) {
-        try {
-            return (T) getter.invoke(entity);
-        } catch (Throwable t) {
-            throw new IllegalStateException(t);
-        }
+        return (T) varAccessor.get(entity);
     }
 
     public void set(Object entity, T value) {
-        try {
-            setter.invoke(entity, value);
-        } catch (Throwable t) {
-            throw new IllegalStateException(t);
-        }
+        varAccessor.set(entity, value);
     }
 }

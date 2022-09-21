@@ -18,7 +18,6 @@
 package im.turms.server.common.infra.security;
 
 import im.turms.server.common.infra.lang.FastStringBuilder;
-import im.turms.server.common.infra.lang.StringUtil;
 import lombok.SneakyThrows;
 
 import javax.annotation.Nullable;
@@ -73,10 +72,10 @@ public final class CertificateUtil {
                 }
             }
         }
-        String publicKeyPem = builder.buildLatin1();
+        byte[] publicKeyPem = builder.buildAsBytes();
         if (isCertificate) {
             CertificateFactory fact = CertificateFactory.getInstance("X.509");
-            try (ByteArrayInputStream stream = new ByteArrayInputStream(StringUtil.getBytes(publicKeyPem))) {
+            try (ByteArrayInputStream stream = new ByteArrayInputStream(publicKeyPem)) {
                 X509Certificate cer = (X509Certificate) fact.generateCertificates(stream);
                 return cer.getPublicKey();
             }

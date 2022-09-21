@@ -15,27 +15,34 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.metrics;
+package im.turms.server.common.infra.reflect;
 
-import im.turms.server.common.infra.reflect.VarAccessor;
-import im.turms.server.common.infra.reflect.VarAccessorFactory;
-import io.micrometer.core.instrument.Meter;
-import io.micrometer.core.instrument.Tag;
-import io.micrometer.core.instrument.Tags;
+import lombok.SneakyThrows;
+
+import java.lang.invoke.MethodHandle;
 
 /**
  * @author James Chen
  */
-public final class MetricsUtil {
+public class MethodHandleBasedVarAccessor<T, V> implements VarAccessor<T, V> {
 
-    private static final VarAccessor<Tags, Tag[]> GET_TAGS = VarAccessorFactory.get(Tags.class, "tags");
+    private final MethodHandle getter;
+    private final MethodHandle setter;
 
-    private MetricsUtil() {
+    public MethodHandleBasedVarAccessor(MethodHandle getter, MethodHandle setter) {
+        this.getter = getter;
+        this.setter = setter;
     }
 
-    public static Tag[] getTags(Meter.Id id) {
-        Tags tags = (Tags) id.getTagsAsIterable();
-        return GET_TAGS.get(tags);
+    @SneakyThrows
+    @Override
+    public V get(T object) {
+        return (V) getter.invoke(object);
     }
 
+    @SneakyThrows
+    @Override
+    public void set(T object, V value) {
+        setter.invoke(object, value);
+    }
 }

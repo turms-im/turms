@@ -43,6 +43,7 @@ import im.turms.server.common.infra.property.env.gateway.authentication.JwtAlgor
 import im.turms.server.common.infra.property.env.gateway.authentication.JwtAuthenticationProperties;
 import im.turms.server.common.infra.security.jwt.Jwt;
 import im.turms.server.common.infra.security.jwt.JwtManager;
+import im.turms.server.common.infra.security.jwt.JwtPayload;
 import im.turms.server.common.infra.security.jwt.exception.CorruptedJwtException;
 import io.netty.handler.codec.http.HttpMethod;
 import reactor.core.publisher.Mono;
@@ -50,6 +51,7 @@ import reactor.netty.http.client.HttpClient;
 
 import javax.annotation.Nullable;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.Date;
@@ -84,9 +86,8 @@ public class SessionAuthenticationManager implements SessionAuthenticationSuppor
                                         UserService userService) {
         this.pluginManager = pluginManager;
         this.userService = userService;
-        TurmsProperties localProperties = propertiesManager.getLocalProperties();
         updateGlobalProperties(propertiesManager.getGlobalProperties());
-        AuthenticationProperties authenticationProperties = localProperties.getGateway().getSession().getAuthentication();
+        AuthenticationProperties authenticationProperties = propertiesManager.getLocalProperties().getGateway().getSession().getAuthentication();
         authenticationType = authenticationProperties.getType();
         JwtManager jwtManager = null;
         Map<String, String> expectedCustomPayloadClaims = null;
@@ -116,8 +117,8 @@ public class SessionAuthenticationManager implements SessionAuthenticationSuppor
             HttpAuthenticationResponseExpectationProperties responseExpectationProperties = httpProperties.getResponseExpectation();
             String url = requestProperties.getUrl();
             try {
-                new URL(url);
-            } catch (MalformedURLException e) {
+                new URL(url).toURI();
+            } catch (MalformedURLException | URISyntaxException e) {
                 throw new IllegalArgumentException("The HTTP URL for authentication is illegal", e);
             }
             httpAuthenticationClient = HttpClient.create()
@@ -238,15 +239,16 @@ public class SessionAuthenticationManager implements SessionAuthenticationSuppor
             return Mono.error(new IllegalArgumentException(e));
         }
         long now = System.currentTimeMillis();
-        Date expiresAt = jwt.payload().expiresAt();
+        JwtPayload payload = jwt.payload();
+        Date expiresAt = payload.expiresAt();
         if (expiresAt != null && expiresAt.getTime() <= now) {
             return Mono.just(ResponseStatusCode.LOGIN_AUTHENTICATION_FAILED);
         }
-        Date notBefore = jwt.payload().notBefore();
+        Date notBefore = payload.notBefore();
         if (notBefore != null && notBefore.getTime() > now) {
             return Mono.just(ResponseStatusCode.LOGIN_AUTHENTICATION_FAILED);
         }
-        return CollectionUtil.containsAllLooseComparison(jwt.payload().customClaims(), expectedCustomPayloadClaims)
+        return CollectionUtil.containsAllLooseComparison(payload.customClaims(), expectedCustomPayloadClaims)
                 ? Mono.just(ResponseStatusCode.OK)
                 : Mono.just(ResponseStatusCode.LOGIN_AUTHENTICATION_FAILED);
     }

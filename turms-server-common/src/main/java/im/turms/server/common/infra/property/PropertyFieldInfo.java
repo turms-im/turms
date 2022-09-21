@@ -15,27 +15,25 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.metrics;
+package im.turms.server.common.infra.property;
 
 import im.turms.server.common.infra.reflect.VarAccessor;
-import im.turms.server.common.infra.reflect.VarAccessorFactory;
-import io.micrometer.core.instrument.Meter;
-import io.micrometer.core.instrument.Tag;
-import io.micrometer.core.instrument.Tags;
+
+import java.lang.reflect.Field;
 
 /**
  * @author James Chen
  */
-public final class MetricsUtil {
+public record PropertyFieldInfo(
+        Field field,
+        VarAccessor varAccessor,
+        PropertyConstraints constraints,
+        boolean isMutableProperty,
+        boolean isNestedProperty
+) {
 
-    private static final VarAccessor<Tags, Tag[]> GET_TAGS = VarAccessorFactory.get(Tags.class, "tags");
-
-    private MetricsUtil() {
-    }
-
-    public static Tag[] getTags(Meter.Id id) {
-        Tags tags = (Tags) id.getTagsAsIterable();
-        return GET_TAGS.get(tags);
+    public <T> T get(Object obj) {
+        return (T) varAccessor.get(obj);
     }
 
 }
