@@ -15,15 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.security;
+package im.turms.server.common.infra.security.jwt;
 
 /**
  * @author James Chen
  */
-public interface PasswordEncoder {
-
-    byte[] encode(byte[] rawPassword);
-
-    boolean matches(byte[] rawPassword, byte[] encodedPassword);
-
+public record Jwt(
+        JwtHeader header,
+        JwtPayload payload,
+        byte[] encodedHeaderBytes,
+        byte[] encodedPayloadBytes,
+        byte[] decodedSignatureBytes
+) {
 }

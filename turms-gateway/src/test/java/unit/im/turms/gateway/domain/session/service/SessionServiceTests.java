@@ -39,6 +39,7 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
 import im.turms.server.common.infra.property.env.gateway.SessionProperties;
+import im.turms.server.common.infra.property.env.gateway.authentication.AuthenticationProperties;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
@@ -182,7 +183,9 @@ class SessionServiceTests {
                 .gateway(new GatewayProperties().toBuilder()
                         .session(new SessionProperties().toBuilder()
                                 .notifyClientsOfSessionInfoAfterConnected(true)
-                                .enableAuthentication(enableAuthentication)
+                                .authentication(new AuthenticationProperties().toBuilder()
+                                        .enabled(enableAuthentication)
+                                        .build())
                                 .build())
                         .build())
                 .build();

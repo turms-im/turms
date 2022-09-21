@@ -31,7 +31,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.net.InetAddressUtil;
 import im.turms.server.common.infra.property.env.service.env.FakeProperties;
-import im.turms.server.common.infra.security.PasswordManager;
+import im.turms.server.common.infra.security.password.PasswordManager;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.service.domain.conversation.po.GroupConversation;
 import im.turms.service.domain.conversation.po.PrivateConversation;

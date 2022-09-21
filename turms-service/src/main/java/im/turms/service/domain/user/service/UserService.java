@@ -33,7 +33,7 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.infra.property.env.service.business.user.UserProperties;
-import im.turms.server.common.infra.security.PasswordManager;
+import im.turms.server.common.infra.security.password.PasswordManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;

@@ -15,16 +15,20 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.plugin;
+package unit.im.turms.server.common.infra.security.password;
 
-import reactor.core.publisher.Mono;
+import im.turms.server.common.infra.security.password.SaltedSha256PasswordEncoder;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author James Chen
  */
-@FunctionalInterface
-public interface ExtensionPointInvoker<T extends ExtensionPoint> {
+class SaltedSha256PasswordEncoderTests extends BasePasswordEncoderTests {
 
-    Mono<Void> invoke(T extensionPoint);
+    @Test
+    void test() {
+        int sha256OutputLength = 32;
+        test(new SaltedSha256PasswordEncoder(), SaltedSha256PasswordEncoder.SALT_SIZE_BYTES + sha256OutputLength);
+    }
 
 }

@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.property.env.gateway;
 
+import im.turms.server.common.infra.property.env.gateway.authentication.AuthenticationProperties;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
@@ -24,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import javax.validation.constraints.Min;
 
@@ -73,11 +75,7 @@ public class SessionProperties {
     @MutableProperty
     private boolean notifyClientsOfSessionInfoAfterConnected = true;
 
-    @Description("Whether to authenticate users when logging in." +
-            "Note that user ID is always required even if enableAuthentication is false; " +
-            "If false, turms-gateway won't connect to the MongoDB server for user records")
-    @GlobalProperty
-    @MutableProperty
-    private boolean enableAuthentication;
+    @NestedConfigurationProperty
+    private AuthenticationProperties authentication = new AuthenticationProperties();
 
 }

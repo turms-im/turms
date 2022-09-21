@@ -29,7 +29,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.reactor.PublisherPool;
-import im.turms.server.common.infra.security.PasswordManager;
+import im.turms.server.common.infra.security.password.PasswordManager;
 import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
 import reactor.core.publisher.Mono;

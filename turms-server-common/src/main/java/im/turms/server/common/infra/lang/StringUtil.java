@@ -122,7 +122,9 @@ public final class StringUtil {
             return "";
         }
         if (itemCount == 1) {
-            return String.valueOf(items.iterator().next());
+            return String.valueOf(items instanceof List<?> list
+                    ? list.get(0)
+                    : items.iterator().next());
         }
         List<String> strings = new ArrayList<>(itemCount);
         int size = 0;
@@ -181,6 +183,15 @@ public final class StringUtil {
         return patternReaderIndex == patternLength;
     }
 
+    public static boolean match(String text, Collection<String> patterns) {
+        for (String pattern : patterns) {
+            if (!match(text, pattern)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static String padStartLatin1(String string, int minLength, byte padChar) {
         int length = string.length();
         if (length >= minLength) {
@@ -215,7 +226,11 @@ public final class StringUtil {
 
     @Nullable
     public static Pair<String, String> splitLatin1(String toSplit, byte delimiter) {
-        byte[] bytes = getBytes(toSplit);
+        return splitLatin1(getBytes(toSplit), delimiter);
+    }
+
+    @Nullable
+    public static Pair<String, String> splitLatin1(byte[] bytes, byte delimiter) {
         for (int i = 0; i < bytes.length; i++) {
             if (bytes[i] == delimiter) {
                 byte[] first = new byte[i];
@@ -226,6 +241,35 @@ public final class StringUtil {
             }
         }
         return null;
+    }
+
+    @Nullable
+    public static List<String> splitMultipleLatin1(String toSplit, byte delimiter) {
+        return splitMultipleLatin1(getBytes(toSplit), delimiter);
+    }
+
+    @Nullable
+    public static List<String> splitMultipleLatin1(byte[] bytes, byte delimiter) {
+        List<String> results = null;
+        int begin = 0;
+        byte[] stringBytes;
+        for (int i = 0; i < bytes.length; i++) {
+            if (bytes[i] == delimiter) {
+                stringBytes = new byte[i - begin];
+                System.arraycopy(bytes, begin, stringBytes, 0, stringBytes.length);
+                begin = i + 1;
+                if (results == null) {
+                    results = new ArrayList<>(8);
+                }
+                results.add(newLatin1String(stringBytes));
+            }
+        }
+        if (begin != 0) {
+            stringBytes = new byte[bytes.length - begin];
+            System.arraycopy(bytes, begin, stringBytes, 0, stringBytes.length);
+            results.add(newLatin1String(stringBytes));
+        }
+        return results;
     }
 
     /**

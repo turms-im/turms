@@ -17,29 +17,76 @@
 
 package im.turms.server.common.infra.json;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
 import im.turms.server.common.infra.time.DateUtil;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.PooledByteBufAllocator;
+import lombok.SneakyThrows;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author James Chen
  */
-public final class JsonSizeCalculator {
+public final class JsonUtil {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JsonSizeCalculator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);
+
+    private static final TypeReference<HashMap<String, Object>> TYPE_REF_STRING_OBJECT_MAP = new TypeReference<>() {
+    };
+    private static final TypeReference<HashMap<String, String>> TYPE_REF_STRING_STRING_MAP = new TypeReference<>() {
+    };
 
     private static final int ESTIMATED_JSON_FIELD_META_SIZE = 8;
 
-    private JsonSizeCalculator() {
+    private JsonUtil() {
+    }
+
+    @SneakyThrows
+    public static Map<String, Object> readStringObjectMapValue(byte[] src) {
+        return JsonCodecPool.MAPPER.readValue(src, TYPE_REF_STRING_OBJECT_MAP);
+    }
+
+    @SneakyThrows
+    public static Map<String, Object> readStringObjectMapValue(InputStream src) {
+        return JsonCodecPool.MAPPER.readValue(src, TYPE_REF_STRING_OBJECT_MAP);
+    }
+
+    @SneakyThrows
+    public static Map<String, String> readStringStringMapValue(byte[] src) {
+        return JsonCodecPool.MAPPER.readValue(src, TYPE_REF_STRING_STRING_MAP);
+    }
+
+    @SneakyThrows
+    public static Map<String, String> readStringStringMapValue(InputStream src) {
+        return JsonCodecPool.MAPPER.readValue(src, TYPE_REF_STRING_STRING_MAP);
+    }
+
+    public static ByteBuf write(Object body) {
+        int estimatedSize = estimateJson(body);
+        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(estimatedSize);
+        try (OutputStream bufferOutputStream = new ByteBufOutputStream(buffer)) {
+            JsonCodecPool.MAPPER.writeValue(bufferOutputStream, body);
+            return buffer;
+        } catch (IOException e) {
+            ReferenceCountUtil.ensureReleased(buffer);
+            throw new RuntimeException(e);
+        }
     }
 
     public static int estimateJson(@Nullable Object val) {

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.security;
+package im.turms.server.common.infra.security.password;
 
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.property.TurmsProperties;

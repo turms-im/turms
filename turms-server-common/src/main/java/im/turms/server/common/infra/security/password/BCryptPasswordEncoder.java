@@ -15,43 +15,41 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.security;
+package im.turms.server.common.infra.security.password;
 
 import im.turms.server.common.infra.collection.ArrayUtil;
+import io.netty.util.concurrent.FastThreadLocal;
+import org.bouncycastle.crypto.generators.BCrypt;
 
-import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author James Chen
  */
-public class SaltedSha256PasswordEncoder implements PasswordEncoder {
+public class BCryptPasswordEncoder implements PasswordEncoder {
 
-    public static final int SALT_SIZE_BYTES = 8;
+    public static final int SALT_SIZE_BYTES = 16;
+    private static final int COST = 10;
+
+    private static final FastThreadLocal<BCrypt> BCRYPT = new FastThreadLocal<>() {
+        @Override
+        protected BCrypt initialValue() {
+            return new BCrypt();
+        }
+    };
 
     @Override
     public byte[] encode(byte[] rawPassword) {
         byte[] salt = new byte[SALT_SIZE_BYTES];
         ThreadLocalRandom.current().nextBytes(salt);
-
-        byte[] rawPasswordWithSalt = ArrayUtil.concat(salt, rawPassword);
-        MessageDigest digest = MessageDigestPool.getSha256();
-        byte[] saltedPassword = digest.digest(rawPasswordWithSalt);
-
-        return ArrayUtil.concat(salt, saltedPassword);
+        byte[] password = BCRYPT.get().generate(rawPassword, salt, COST);
+        return ArrayUtil.concat(salt, password);
     }
 
     @Override
     public boolean matches(byte[] rawPassword, byte[] saltedPasswordWithSalt) {
-        if (saltedPasswordWithSalt.length < SALT_SIZE_BYTES) {
-            return false;
-        }
-        byte[] rawPasswordWithSalt = new byte[SALT_SIZE_BYTES + rawPassword.length];
-        System.arraycopy(saltedPasswordWithSalt, 0, rawPasswordWithSalt, 0, SALT_SIZE_BYTES);
-        System.arraycopy(rawPassword, 0, rawPasswordWithSalt, SALT_SIZE_BYTES, rawPassword.length);
-        MessageDigest digest = MessageDigestPool.getSha256();
-        byte[] saltedPassword = digest.digest(rawPasswordWithSalt);
+        byte[] saltedPassword = BCRYPT.get().generate(rawPassword, saltedPasswordWithSalt, COST);
         return Arrays.equals(saltedPassword, 0, saltedPassword.length,
                 saltedPasswordWithSalt, SALT_SIZE_BYTES, saltedPasswordWithSalt.length);
     }

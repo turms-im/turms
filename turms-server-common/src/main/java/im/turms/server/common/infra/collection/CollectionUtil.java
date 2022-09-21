@@ -17,18 +17,19 @@
 
 package im.turms.server.common.infra.collection;
 
+import im.turms.server.common.infra.lang.StringUtil;
 import org.eclipse.collections.api.collection.ImmutableCollection;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.RandomAccess;
 import java.util.Set;
 import java.util.function.Function;
@@ -133,12 +134,6 @@ public final class CollectionUtil {
         return UnifiedSet.newSet(values);
     }
 
-    public static <T> Set<T> newSet(T[] values) {
-        Set<T> set = UnifiedSet.newSet(values.length);
-        Collections.addAll(set, values);
-        return set;
-    }
-
     public static <T> Set<T> newSetWithExpectedSize(int expectedSize) {
         return UnifiedSet.newSet(expectedSize);
     }
@@ -170,12 +165,38 @@ public final class CollectionUtil {
         return collection == null || collection.isEmpty();
     }
 
+    public static <K, V> boolean isEmpty(@Nullable Map<K, V> map) {
+        return map == null || map.isEmpty();
+    }
+
     public static <T> boolean isNotEmpty(@Nullable Collection<T> collection) {
         return collection != null && !collection.isEmpty();
     }
 
+    public static <K, V> boolean isNotEmpty(@Nullable Map<K, V> map) {
+        return map != null && !map.isEmpty();
+    }
+
     public static boolean isImmutable(Iterable<?> iterable) {
         return IMMUTABLE_COLLECTION_CLASS.isInstance(iterable) || iterable instanceof ImmutableCollection;
+    }
+
+    public static boolean containsAll(Map<?, ?> map1, Map<?, ?> map2) {
+        for (Map.Entry<?, ?> entry : map2.entrySet()) {
+            if (!Objects.equals(entry.getValue(), map1.get(entry.getKey()))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean containsAllLooseComparison(Map<?, ?> map1, Map<?, String> map2) {
+        for (Map.Entry<?, ?> entry : map2.entrySet()) {
+            if (!StringUtil.toString(entry.getValue()).equals(StringUtil.toString(map1.get(entry.getKey())))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static <K, V> Map<V, Set<K>> reverseAsSetValues(Map<K, V> map, int expectedValuesPerKey) {

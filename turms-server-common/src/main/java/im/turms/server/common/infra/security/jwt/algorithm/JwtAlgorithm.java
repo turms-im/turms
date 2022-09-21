@@ -15,20 +15,20 @@
  * limitations under the License.
  */
 
-package unit.im.turms.server.common.infra.security;
+package im.turms.server.common.infra.security.jwt.algorithm;
 
-import im.turms.server.common.infra.security.BCryptPasswordEncoder;
-import org.junit.jupiter.api.Test;
+import im.turms.server.common.infra.security.jwt.Jwt;
+import lombok.Data;
 
 /**
  * @author James Chen
  */
-class BCryptPasswordEncoderTests extends BasePasswordEncoderTests {
+@Data
+public abstract class JwtAlgorithm {
 
-    @Test
-    void test() {
-        int bcryptOutputLength = 24;
-        test(new BCryptPasswordEncoder(), BCryptPasswordEncoder.SALT_SIZE_BYTES + bcryptOutputLength);
-    }
+    private final String id;
+    private final String algorithm;
+
+    public abstract boolean verify(Jwt jwt);
 
 }

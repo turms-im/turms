@@ -19,7 +19,7 @@ package im.turms.gateway.domain.admin.service;
 
 import im.turms.gateway.domain.admin.repository.AdminRepository;
 import im.turms.server.common.domain.admin.service.BaseAdminService;
-import im.turms.server.common.infra.security.PasswordManager;
+import im.turms.server.common.infra.security.password.PasswordManager;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;

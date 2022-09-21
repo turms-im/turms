@@ -19,7 +19,7 @@ package im.turms.gateway.domain.session.service;
 
 import im.turms.gateway.domain.session.repository.UserRepository;
 import im.turms.server.common.infra.exception.ResponseException;
-import im.turms.server.common.infra.security.PasswordManager;
+import im.turms.server.common.infra.security.password.PasswordManager;
 import im.turms.server.common.infra.validation.Validator;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;

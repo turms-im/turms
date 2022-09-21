@@ -19,15 +19,12 @@ package im.turms.gateway.domain.session.service;
 
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.observation.service.MetricsService;
-import im.turms.gateway.domain.session.bo.UserLoginInfo;
 import im.turms.gateway.domain.session.manager.HeartbeatManager;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
-import im.turms.gateway.infra.plugin.extension.UserAuthenticator;
 import im.turms.gateway.infra.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.domain.admin.constant.AdminConst;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.CloseReason;
@@ -50,7 +47,6 @@ import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.plugin.PluginManager;
-import im.turms.server.common.infra.plugin.SequentialExtensionPointInvoker;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.SessionProperties;
@@ -61,6 +57,7 @@ import im.turms.server.common.infra.validation.Validator;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
+import lombok.experimental.Delegate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -88,17 +85,18 @@ import static im.turms.gateway.infra.metrics.MetricNameConst.ONLINE_USERS_GAUGE;
  * @author James Chen
  */
 @Service
-public class SessionService implements ISessionService {
+public class SessionService implements ISessionService, SessionAuthenticationSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessionService.class);
 
     private final Node node;
-    private final TurmsPropertiesManager propertiesManager;
     private final HeartbeatManager heartbeatManager;
     private final PluginManager pluginManager;
 
+    @Delegate
+    private final SessionAuthenticationManager sessionAuthenticationManager;
+
     private final SessionLocationService sessionLocationService;
-    private final UserService userService;
     private final UserStatusService userStatusService;
     private final UserSimultaneousLoginService userSimultaneousLoginService;
 
@@ -115,7 +113,6 @@ public class SessionService implements ISessionService {
     private final Counter loggedInUsersCounter;
 
     private int closeIdleSessionAfterSeconds;
-    private boolean enableAuthentication;
     private boolean notifyClientsOfSessionInfoAfterConnected;
     private String serverId;
 
@@ -131,9 +128,8 @@ public class SessionService implements ISessionService {
             MetricsService metricsService) {
         this.node = node;
         this.sessionLocationService = sessionLocationService;
-        this.propertiesManager = propertiesManager;
         this.pluginManager = pluginManager;
-        this.userService = userService;
+        this.sessionAuthenticationManager = new SessionAuthenticationManager(propertiesManager, pluginManager, userService);
         this.userStatusService = userStatusService;
         this.userSimultaneousLoginService = userSimultaneousLoginService;
         userIdToSessionsManager = new ConcurrentHashMap<>(4096);
@@ -171,7 +167,6 @@ public class SessionService implements ISessionService {
     private void updateGlobalProperties(TurmsProperties properties) {
         SessionProperties sessionProperties = properties.getGateway().getSession();
         closeIdleSessionAfterSeconds = sessionProperties.getCloseIdleSessionAfterSeconds();
-        enableAuthentication = sessionProperties.isEnableAuthentication();
         notifyClientsOfSessionInfoAfterConnected = sessionProperties.isNotifyClientsOfSessionInfoAfterConnected();
     }
 
@@ -210,65 +205,6 @@ public class SessionService implements ISessionService {
                 .flatMap(statusCode -> statusCode == ResponseStatusCode.OK
                         ? tryRegisterOnlineUser(version, ip, userId, deviceType, deviceDetails, userStatus, location)
                         : Mono.error(ResponseException.get(statusCode)));
-    }
-
-    /**
-     * @return Possible codes:
-     * {@link ResponseStatusCode#OK},
-     * {@link ResponseStatusCode#LOGIN_AUTHENTICATION_FAILED},
-     * {@link ResponseStatusCode#LOGGING_IN_USER_NOT_ACTIVE}
-     */
-    private Mono<ResponseStatusCode> authenticate(
-            int version,
-            @NotNull Long userId,
-            @Nullable String password,
-            @NotNull DeviceType deviceType,
-            @Nullable Map<String, String> deviceDetails,
-            @Nullable UserStatus userStatus,
-            @Nullable Location location,
-            @Nullable String ip) {
-        if (userId.equals(AdminConst.ADMIN_REQUESTER_ID)) {
-            return Mono.just(ResponseStatusCode.LOGIN_AUTHENTICATION_FAILED);
-        }
-        if (!enableAuthentication) {
-            return Mono.just(ResponseStatusCode.OK);
-        }
-        if (pluginManager.hasRunningExtensions(UserAuthenticator.class)) {
-            UserLoginInfo userLoginInfo = new UserLoginInfo(
-                    version,
-                    userId,
-                    password,
-                    deviceType,
-                    deviceDetails,
-                    userStatus,
-                    location,
-                    ip);
-            Mono<ResponseStatusCode> authenticate = pluginManager.invokeExtensionPointsSequentially(
-                            UserAuthenticator.class,
-                            "authenticate",
-                            (SequentialExtensionPointInvoker<UserAuthenticator, Boolean>)
-                                    (authenticator, pre) -> pre.switchIfEmpty(Mono.defer(() -> authenticator.authenticate(userLoginInfo))))
-                    .map(authenticated -> authenticated ? ResponseStatusCode.OK : ResponseStatusCode.LOGIN_AUTHENTICATION_FAILED);
-            return authenticate
-                    .switchIfEmpty(authenticate0(userId, password));
-        }
-        return authenticate0(userId, password);
-    }
-
-    /**
-     * @return Possible codes:
-     * {@link ResponseStatusCode#OK},
-     * {@link ResponseStatusCode#LOGIN_AUTHENTICATION_FAILED},
-     * {@link ResponseStatusCode#LOGGING_IN_USER_NOT_ACTIVE}
-     */
-    private Mono<ResponseStatusCode> authenticate0(
-            @NotNull Long userId,
-            @Nullable String password) {
-        return userService.isActiveAndNotDeleted(userId)
-                .flatMap(isActiveAndNotDeleted -> isActiveAndNotDeleted
-                        ? userService.authenticate(userId, password)
-                        .map(authenticated -> authenticated ? ResponseStatusCode.OK : ResponseStatusCode.LOGIN_AUTHENTICATION_FAILED)
-                        : Mono.just(ResponseStatusCode.LOGGING_IN_USER_NOT_ACTIVE));
     }
 
     /**

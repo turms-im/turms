@@ -15,16 +15,25 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.plugin;
+package im.turms.server.common.infra.jackson;
 
-import reactor.core.publisher.Mono;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author James Chen
  */
-@FunctionalInterface
-public interface FirstExtensionPointInvoker<T extends ExtensionPoint, R> {
+public class UnixTimestampDeserializer extends JsonDeserializer<Date> {
 
-    Mono<R> invoke(T extensionPoint);
+    @Override
+    public Date deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+        String unixTimestamp = parser.getText();
+        return new Date(TimeUnit.SECONDS.toMillis(Long.parseLong(unixTimestamp)));
+    }
 
 }

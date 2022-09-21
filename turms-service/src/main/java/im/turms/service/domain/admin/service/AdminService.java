@@ -26,7 +26,7 @@ import im.turms.server.common.domain.admin.po.Admin;
 import im.turms.server.common.domain.admin.service.BaseAdminService;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import im.turms.server.common.infra.security.PasswordManager;
+import im.turms.server.common.infra.security.password.PasswordManager;
 import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;

@@ -18,7 +18,6 @@
 package im.turms.server.common.infra.property;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -28,6 +27,7 @@ import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.json.JsonUtil;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
@@ -92,8 +92,6 @@ public class TurmsPropertiesInspector {
      */
     public static final Map<String, Object> METADATA;
     public static final Map<String, Object> ONLY_MUTABLE_METADATA;
-    public static final TypeReference<HashMap<String, Object>> TYPE_REF_MAP = new TypeReference<>() {
-    };
 
     private static final Map<Class<?>, List<Field>> CLASS_TO_FIELDS;
     private static final Map<Class<?>, Map<String, Field>> CLASS_TO_NAME_TO_FIELD;
@@ -134,8 +132,8 @@ public class TurmsPropertiesInspector {
     public static Map<String, Object> getPropertyToValueMap(TurmsProperties turmsProperties,
                                                             boolean returnOnlyMutableProperties) {
         return returnOnlyMutableProperties
-                ? MAPPER.readValue(MUTABLE_PROPERTIES_WRITER.writeValueAsBytes(turmsProperties), TYPE_REF_MAP)
-                : MAPPER.readValue(MAPPER.writeValueAsBytes(turmsProperties), TYPE_REF_MAP);
+                ? JsonUtil.readStringObjectMapValue(MUTABLE_PROPERTIES_WRITER.writeValueAsBytes(turmsProperties))
+                : JsonUtil.readStringObjectMapValue(MAPPER.writeValueAsBytes(turmsProperties));
     }
 
     public static PropertyConstraints getConstraints(Field field) {

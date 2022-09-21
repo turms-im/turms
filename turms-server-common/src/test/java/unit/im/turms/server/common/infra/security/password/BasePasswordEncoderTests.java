@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package unit.im.turms.server.common.infra.security;
+package unit.im.turms.server.common.infra.security.password;
 
-import im.turms.server.common.infra.security.PasswordEncoder;
+import im.turms.server.common.infra.security.password.PasswordEncoder;
 
 import java.nio.charset.StandardCharsets;
 

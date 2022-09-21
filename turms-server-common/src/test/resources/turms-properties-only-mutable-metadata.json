@@ -196,6 +196,43 @@
       }
     },
     "session": {
+      "authentication": {
+        "enabled": {
+          "deprecated": false,
+          "desc": "Whether to authenticate users when logging in.Note that user ID is always required even if enabled is false; If false, turms-gateway won't connect to the MongoDB server for user records",
+          "global": true,
+          "mutable": true,
+          "type": "boolean"
+        },
+        "http": {
+          "request": {},
+          "responseExpectation": {}
+        },
+        "jwt": {
+          "algorithm": {
+            "ecdsa256": {
+              "p12": {}
+            },
+            "ecdsa384": {
+              "p12": {}
+            },
+            "ecdsa512": {
+              "p12": {}
+            },
+            "rsa256": {
+              "p12": {}
+            },
+            "rsa384": {
+              "p12": {}
+            },
+            "rsa512": {
+              "p12": {}
+            }
+          },
+          "expectation": {},
+          "verification": {}
+        }
+      },
       "clientHeartbeatIntervalSeconds": {
         "deprecated": false,
         "desc": "The client heartbeat interval. Note that the value will NOT change the actual heartbeat behavior of clients, and the value is only used to facilitate related operations of turms-gateway",
@@ -209,13 +246,6 @@
         "global": true,
         "mutable": true,
         "type": "int"
-      },
-      "enableAuthentication": {
-        "deprecated": false,
-        "desc": "Whether to authenticate users when logging in.Note that user ID is always required even if enableAuthentication is false; If false, turms-gateway won't connect to the MongoDB server for user records",
-        "global": true,
-        "mutable": true,
-        "type": "boolean"
       },
       "minHeartbeatIntervalSeconds": {
         "deprecated": false,

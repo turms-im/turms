@@ -33,8 +33,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.io.BaseFileResource;
 import im.turms.server.common.infra.io.ByteBufFileResource;
 import im.turms.server.common.infra.io.FileResource;
-import im.turms.server.common.infra.json.JsonCodecPool;
-import im.turms.server.common.infra.json.JsonSizeCalculator;
+import im.turms.server.common.infra.json.JsonUtil;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.AdminApiLogging;
@@ -52,7 +51,6 @@ import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaderValues;
@@ -71,8 +69,6 @@ import reactor.netty.http.server.HttpServerResponse;
 
 import javax.annotation.Nullable;
 import javax.validation.ConstraintViolationException;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Date;
@@ -305,7 +301,7 @@ public class HttpRequestDispatcher {
         Mono<?> publisher = returnValue instanceof Mono<?> mono
                 ? mono
                 : Mono.just(returnValue);
-        return publisher.map(value -> value instanceof HttpHandlerResult result
+        return publisher.map(value -> value instanceof HttpHandlerResult<?> result
                 ? result
                 : HttpHandlerResult.create(HttpResponseStatus.OK, value));
     }
@@ -366,19 +362,7 @@ public class HttpRequestDispatcher {
             return Pair.of(TEXT_PLAIN_UTF_8,
                     PooledByteBufAllocator.DEFAULT.buffer(bytes.length).writeBytes(bytes));
         }
-        int estimatedSize = JsonSizeCalculator.estimateJson(body);
-        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(estimatedSize);
-        OutputStream byteBuilder = new ByteBufOutputStream(buffer);
-        try {
-            JsonCodecPool.MAPPER.writeValue(byteBuilder, body);
-            return Pair.of(APPLICATION_JSON, buffer);
-        } catch (IOException e) {
-            try {
-                byteBuilder.close();
-            } catch (IOException ex) {
-            }
-            throw new RuntimeException(e);
-        }
+        return Pair.of(APPLICATION_JSON, JsonUtil.write(body));
     }
 
     private static HttpHandlerResult<ResponseDTO<?>> translateThrowable(Throwable throwable) {

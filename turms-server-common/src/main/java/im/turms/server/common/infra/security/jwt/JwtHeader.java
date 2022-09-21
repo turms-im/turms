@@ -15,16 +15,21 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.plugin;
+package im.turms.server.common.infra.security.jwt;
 
-import reactor.core.publisher.Mono;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author James Chen
  */
-@FunctionalInterface
-public interface SequentialExtensionPointInvoker<T extends ExtensionPoint, R> {
-
-    Mono<R> invoke(T currentExtensionPoint, Mono<R> previousReturnValue);
-
+public record JwtHeader(
+        @JsonProperty("alg")
+        String algorithm,
+        @JsonProperty("typ")
+        String type,
+        @JsonProperty("cty")
+        String contentType,
+        @JsonProperty("kid")
+        String keyId
+) {
 }

@@ -527,6 +527,352 @@
       }
     },
     "session": {
+      "authentication": {
+        "enabled": {
+          "deprecated": false,
+          "desc": "Whether to authenticate users when logging in.Note that user ID is always required even if enabled is false; If false, turms-gateway won't connect to the MongoDB server for user records",
+          "global": true,
+          "mutable": true,
+          "type": "boolean",
+          "value": false
+        },
+        "http": {
+          "request": {
+            "headers": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "java.util.Map",
+              "value": {}
+            },
+            "httpMethod": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "options": [
+                "POST",
+                "GET",
+                "PUT",
+                "PATCH",
+                "DELETE",
+                "HEAD"
+              ],
+              "type": "enum",
+              "value": "GET"
+            },
+            "timeoutMillis": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "int",
+              "value": 30000
+            },
+            "url": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "string",
+              "value": ""
+            }
+          },
+          "responseExpectation": {
+            "bodyFields": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "java.util.Map",
+              "value": {}
+            },
+            "headers": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "java.util.Map",
+              "value": {}
+            },
+            "statusCodes": {
+              "deprecated": false,
+              "elementType": "string",
+              "global": false,
+              "mutable": false,
+              "type": "java.util.Set",
+              "value": [
+                "2??"
+              ]
+            }
+          }
+        },
+        "jwt": {
+          "algorithm": {
+            "ecdsa256": {
+              "p12": {
+                "alias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                }
+              },
+              "pemFilePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string",
+                "value": ""
+              }
+            },
+            "ecdsa384": {
+              "p12": {
+                "alias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                }
+              },
+              "pemFilePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string",
+                "value": ""
+              }
+            },
+            "ecdsa512": {
+              "p12": {
+                "alias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                }
+              },
+              "pemFilePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string",
+                "value": ""
+              }
+            },
+            "hmac256SecretFilePath": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "string",
+              "value": ""
+            },
+            "hmac384SecretFilePath": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "string",
+              "value": ""
+            },
+            "hmac512SecretFilePath": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "string",
+              "value": ""
+            },
+            "rsa256": {
+              "p12": {
+                "alias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                }
+              },
+              "pemFilePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string",
+                "value": ""
+              }
+            },
+            "rsa384": {
+              "p12": {
+                "alias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                }
+              },
+              "pemFilePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string",
+                "value": ""
+              }
+            },
+            "rsa512": {
+              "p12": {
+                "alias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                }
+              },
+              "pemFilePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string",
+                "value": ""
+              }
+            }
+          },
+          "expectation": {
+            "customPayloadClaims": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "java.util.Map",
+              "value": {
+                "authenticated": "true"
+              }
+            }
+          },
+          "verification": {
+            "audience": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "string",
+              "value": ""
+            },
+            "customPayloadClaims": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "java.util.Map",
+              "value": {}
+            },
+            "issuer": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "string",
+              "value": ""
+            },
+            "subject": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "type": "string",
+              "value": ""
+            }
+          }
+        },
+        "type": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "options": [
+            "HTTP",
+            "JWT",
+            "PASSWORD"
+          ],
+          "type": "enum",
+          "value": "PASSWORD"
+        }
+      },
       "clientHeartbeatIntervalSeconds": {
         "deprecated": false,
         "desc": "The client heartbeat interval. Note that the value will NOT change the actual heartbeat behavior of clients, and the value is only used to facilitate related operations of turms-gateway",
@@ -542,14 +888,6 @@
         "mutable": true,
         "type": "int",
         "value": 180
-      },
-      "enableAuthentication": {
-        "deprecated": false,
-        "desc": "Whether to authenticate users when logging in.Note that user ID is always required even if enableAuthentication is false; If false, turms-gateway won't connect to the MongoDB server for user records",
-        "global": true,
-        "mutable": true,
-        "type": "boolean",
-        "value": false
       },
       "minHeartbeatIntervalSeconds": {
         "deprecated": false,

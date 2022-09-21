@@ -33,7 +33,7 @@ import im.turms.server.common.infra.property.env.service.env.database.MongoPrope
 import im.turms.server.common.infra.property.env.service.env.database.TieredStorageProperties;
 import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
-import im.turms.server.common.infra.security.PasswordManager;
+import im.turms.server.common.infra.security.password.PasswordManager;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.storage.mongo.BsonPool;
