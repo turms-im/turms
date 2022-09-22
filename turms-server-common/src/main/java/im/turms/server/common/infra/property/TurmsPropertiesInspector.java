@@ -44,7 +44,6 @@ import javax.validation.constraints.Size;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,20 +97,20 @@ public class TurmsPropertiesInspector {
 
     static {
         IdentityHashMap<Class<?>, List<PropertyFieldInfo>> classToFieldInfos = new IdentityHashMap<>(128);
-        collectFieldsInfo(TurmsProperties.class, classToFieldInfos);
+        collectFieldInfos(TurmsProperties.class, classToFieldInfos);
 
         CLASS_TO_FIELD_INFOS = classToFieldInfos;
         CLASS_TO_NAME_TO_FIELD_INFO = new IdentityHashMap<>(CLASS_TO_FIELD_INFOS.size());
-        for (Map.Entry<Class<?>, List<PropertyFieldInfo>> classAndFields : classToFieldInfos.entrySet()) {
-            List<PropertyFieldInfo> fieldInfos = classAndFields.getValue();
+        for (Map.Entry<Class<?>, List<PropertyFieldInfo>> classAndFieldInfos : classToFieldInfos.entrySet()) {
+            List<PropertyFieldInfo> fieldInfos = classAndFieldInfos.getValue();
             Map<String, PropertyFieldInfo> nameToFieldInfo = CollectionUtil.newMapWithExpectedSize(fieldInfos.size());
             for (PropertyFieldInfo fieldInfo : fieldInfos) {
                 nameToFieldInfo.put(fieldInfo.field().getName(), fieldInfo);
             }
-            CLASS_TO_NAME_TO_FIELD_INFO.put(classAndFields.getKey(), nameToFieldInfo);
+            CLASS_TO_NAME_TO_FIELD_INFO.put(classAndFieldInfos.getKey(), Map.copyOf(nameToFieldInfo));
         }
-        METADATA = getMetadata(new HashMap<>(32), TurmsProperties.class, false);
-        ONLY_MUTABLE_METADATA = getMetadata(new HashMap<>(32), TurmsProperties.class, true);
+        METADATA = getMetadata(TurmsProperties.class, false);
+        ONLY_MUTABLE_METADATA = getMetadata(TurmsProperties.class, true);
     }
 
     private TurmsPropertiesInspector() {
@@ -139,7 +138,7 @@ public class TurmsPropertiesInspector {
         return CLASS_TO_FIELD_INFOS.get(propertiesClass);
     }
 
-    private static void collectFieldsInfo(Class<?> propertiesClass,
+    private static void collectFieldInfos(Class<?> propertiesClass,
                                           Map<Class<?>, List<PropertyFieldInfo>> classToFieldInfosOutput) {
         List<Field> fields = ReflectionUtil.getNonStaticFields(propertiesClass);
         List<PropertyFieldInfo> propertyFieldInfos = new ArrayList<>(fields.size());
@@ -147,7 +146,7 @@ public class TurmsPropertiesInspector {
             ReflectionUtil.setAccessible(field);
             boolean isNestedProperty = field.isAnnotationPresent(NestedConfigurationProperty.class);
             if (isNestedProperty) {
-                collectFieldsInfo(field.getType(), classToFieldInfosOutput);
+                collectFieldInfos(field.getType(), classToFieldInfosOutput);
             }
             PropertyConstraints constraints = PropertyConstraints.of(
                     field.getDeclaredAnnotation(Min.class),
@@ -164,22 +163,21 @@ public class TurmsPropertiesInspector {
         classToFieldInfosOutput.put(propertiesClass, propertyFieldInfos);
     }
 
-    private static Map<String, Object> getMetadata(Map<String, Object> metadataOutput,
-                                                   Class<?> clazz,
-                                                   boolean onlyMutable) {
-        for (PropertyFieldInfo fieldInfo : CLASS_TO_FIELD_INFOS.get(clazz)) {
+    private static Map<String, Object> getMetadata(Class<?> clazz, boolean onlyMutable) {
+        List<PropertyFieldInfo> fieldInfos = CLASS_TO_FIELD_INFOS.get(clazz);
+        List<Map.Entry<String, Object>> entries = new ArrayList<>(fieldInfos.size());
+        for (PropertyFieldInfo fieldInfo : fieldInfos) {
             Field field = fieldInfo.field();
             if (Modifier.isTransient(field.getModifiers())
                     || (onlyMutable && (!fieldInfo.isMutableProperty() && !fieldInfo.isNestedProperty()))) {
                 continue;
             }
-            Class<?> type = field.getType();
             Object fieldMetadata = fieldInfo.isNestedProperty()
-                    ? getMetadata(new HashMap<>(), type, onlyMutable)
+                    ? getMetadata(field.getType(), onlyMutable)
                     : getFlatFieldMetadata(fieldInfo);
-            metadataOutput.put(field.getName(), fieldMetadata);
+            entries.add(Map.entry(field.getName(), fieldMetadata));
         }
-        return metadataOutput;
+        return Map.ofEntries(entries.toArray(new Map.Entry[0]));
     }
 
     private static Map<String, Object> getFlatFieldMetadata(PropertyFieldInfo fieldInfo) {

@@ -83,7 +83,7 @@ public class EntityCodec<T> extends MongoCodec<T> {
     public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         try {
-            for (EntityField<?> field : entity.fieldMap().values()) {
+            for (EntityField<?> field : entity.fields()) {
                 Object fieldValue = field.get(value);
                 if (fieldValue == null) {
                     continue;

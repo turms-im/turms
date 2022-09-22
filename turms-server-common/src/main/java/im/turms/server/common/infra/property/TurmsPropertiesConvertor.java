@@ -134,10 +134,10 @@ public class TurmsPropertiesConvertor {
                 Map<String, Object> newValueMetadata = CollectionUtil.newMapWithExpectedSize(originalValueMetadata.size() + 1);
                 newValueMetadata.putAll(originalValueMetadata);
                 newValueMetadata.put("value", value);
-                metadataWithValue.put(key, newValueMetadata);
+                metadataWithValue.put(key, Map.copyOf(newValueMetadata));
             }
         }
-        return metadataWithValue;
+        return Map.copyOf(metadataWithValue);
     }
 
     // Convert

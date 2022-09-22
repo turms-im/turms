@@ -165,7 +165,8 @@ public class JsPluginFactory {
             }
             extensionPointClasses.add(extensionPointClass);
         }
-        return new ExtensionClassInfo(extensionPointClasses, extensionPointToFunction);
+        return new ExtensionClassInfo(extensionPointClasses,
+                Map.copyOf(CollectionUtil.transformValues(extensionPointToFunction, Map::copyOf)));
     }
 
     private static Class<? extends ExtensionPoint> parseExtensionPointClass(Value classString) {

@@ -33,7 +33,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -79,6 +78,16 @@ public final class ReflectionUtil {
         }
     }
 
+    public static MethodHandle getGetter(Class<?> clazz, String fieldName) {
+        try {
+            Field field = clazz.getDeclaredField(fieldName);
+            setAccessible(field);
+            return LOOKUP.unreflectGetter(field);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     public static MethodHandle method2Handle(Method method) {
         try {
             setAccessible(method);
@@ -91,7 +100,7 @@ public final class ReflectionUtil {
     /**
      * 1. Ignore the access control of the module system
      * 2. Better performance than {@link AccessibleObject#setAccessible(boolean)}:
-     * {@link benchmark.im.turms.server.common.infra.reflect.Reflection}
+     * {@link benchmark.im.turms.server.common.infra.reflect.SetAccessible}
      */
     public static void setAccessible(AccessibleObject object) {
         UNSAFE.putBoolean(object, OVERRIDE_OFFSET, true);
@@ -104,24 +113,14 @@ public final class ReflectionUtil {
                 : null;
     }
 
-    @Nullable
     public static Class<?> getIterableElementClass(Field field) {
-        Class<?> fieldType = field.getType();
-        if (Iterable.class.isAssignableFrom(fieldType)) {
-            return getElementClass(field.getGenericType());
-        }
-        return null;
+        return getElementClass(field.getGenericType());
     }
 
-    @Nullable
     public static Pair<Class<?>, Class<?>> getMapKeyClassAndElementClass(Field field) {
-        Class<?> fieldType = field.getType();
-        if (Map.class.isAssignableFrom(fieldType)) {
-            ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
-            Type[] actualTypes = parameterizedType.getActualTypeArguments();
-            return Pair.of((Class<?>) actualTypes[0], (Class<?>) actualTypes[1]);
-        }
-        return null;
+        ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
+        Type[] actualTypes = parameterizedType.getActualTypeArguments();
+        return Pair.of((Class<?>) actualTypes[0], (Class<?>) actualTypes[1]);
     }
 
     public static boolean isListOf(Type type, Class<?> elementClass) {

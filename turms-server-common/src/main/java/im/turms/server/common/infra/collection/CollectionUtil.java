@@ -200,7 +200,7 @@ public final class CollectionUtil {
     }
 
     public static <K, V> Map<V, Set<K>> reverseAsSetValues(Map<K, V> map, int expectedValuesPerKey) {
-        Map<V, Set<K>> result = new HashMap<>(map.size());
+        Map<V, Set<K>> result = newMapWithExpectedSize(map.size());
         for (Map.Entry<K, V> keyAndValue : map.entrySet()) {
             result.computeIfAbsent(keyAndValue.getValue(),
                             key -> CollectionUtil.newSetWithExpectedSize(expectedValuesPerKey))

@@ -95,7 +95,7 @@ public class HttpEndpointCollector {
                 keyToEndpoint.put(key, endpoint);
             }
         }
-        return keyToEndpoint;
+        return Map.copyOf(keyToEndpoint);
     }
 
     private static String findMediaType(Method method) {

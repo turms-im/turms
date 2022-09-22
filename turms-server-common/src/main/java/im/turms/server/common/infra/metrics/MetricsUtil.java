@@ -17,25 +17,28 @@
 
 package im.turms.server.common.infra.metrics;
 
-import im.turms.server.common.infra.reflect.VarAccessor;
-import im.turms.server.common.infra.reflect.VarAccessorFactory;
+import im.turms.server.common.infra.reflect.ReflectionUtil;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Tags;
+import lombok.SneakyThrows;
+
+import java.lang.invoke.MethodHandle;
 
 /**
  * @author James Chen
  */
 public final class MetricsUtil {
 
-    private static final VarAccessor<Tags, Tag[]> GET_TAGS = VarAccessorFactory.get(Tags.class, "tags");
+    private static final MethodHandle GET_TAGS = ReflectionUtil.getGetter(Tags.class, "tags");
 
     private MetricsUtil() {
     }
 
+    @SneakyThrows
     public static Tag[] getTags(Meter.Id id) {
         Tags tags = (Tags) id.getTagsAsIterable();
-        return GET_TAGS.get(tags);
+        return (Tag[]) GET_TAGS.invokeExact(tags);
     }
 
 }

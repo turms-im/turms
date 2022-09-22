@@ -23,9 +23,9 @@ import org.graalvm.polyglot.Value;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -93,8 +93,11 @@ public class ValueDecoder {
             }
             return map;
         } else if (value.hasMembers()) {
-            Map<Object, Object> map = new HashMap<>();
-            value.getMemberKeys().forEach(action -> map.put(action, decode(value.getMember(action))));
+            Set<String> memberKeys = value.getMemberKeys();
+            Map<Object, Object> map = CollectionUtil.newMapWithExpectedSize(memberKeys.size());
+            for (String memberKey : memberKeys) {
+                map.put(memberKey, decode(value.getMember(memberKey)));
+            }
             return map;
         }
         throw new IllegalArgumentException("Unknown value: " + value);

@@ -19,6 +19,7 @@ package im.turms.server.common.storage.mongo.entity;
 
 import com.mongodb.client.model.IndexModel;
 import com.mongodb.client.model.IndexOptions;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
@@ -65,7 +66,7 @@ public final class MongoEntityFactory {
 
     public static <T> MongoEntity<T> parse(Class<T> clazz) {
         Constructor<T> constructor = findConstructor(clazz);
-        EntityFieldsInfo entityFieldsInfo = parseFields(clazz, constructor, clazz.getDeclaredMethods());
+        EntityFieldsInfo entityFieldsInfo = parseFields(clazz, constructor);
         ShardKey shardKey = parseShardKey(clazz);
         String collectionName = parseCollectionName(clazz);
         return new MongoEntity<>(
@@ -78,7 +79,8 @@ public final class MongoEntityFactory {
                 parseCompoundIndex(clazz),
                 entityFieldsInfo.indexes,
                 entityFieldsInfo.idFieldName,
-                entityFieldsInfo.fields
+                entityFieldsInfo.nameToField,
+                new ArrayList<>(entityFieldsInfo.nameToField.values())
         );
     }
 
@@ -102,6 +104,7 @@ public final class MongoEntityFactory {
         return constructor;
     }
 
+    @Nullable
     private static <T> Zone parseZone(Class<T> clazz, ShardKey shardKey) {
         TieredStorage storage = clazz.getAnnotation(TieredStorage.class);
         if (storage == null) {
@@ -109,12 +112,12 @@ public final class MongoEntityFactory {
         }
         String creationDateFieldName = storage.creationDateFieldName();
         if (!StringUtils.hasText(creationDateFieldName)) {
-            throw new IllegalStateException(
-                    "The creationDateFieldName of @TieredStorage must not be blank for the class " + clazz.getName());
+            throw new IllegalArgumentException(
+                    "The creationDateFieldName of @" + TieredStorage.class.getSimpleName() + " must not be blank for the class " + clazz.getName());
         }
         if (!shardKey.document().containsKey(creationDateFieldName)) {
-            throw new IllegalStateException(
-                    "The creationDateFieldName of @TieredStorage must be a part of the shard key of the class " + clazz.getName());
+            throw new IllegalArgumentException(
+                    "The creationDateFieldName of @" + TieredStorage.class.getSimpleName() + " must be a part of the shard key of the class " + clazz.getName());
         }
         return new Zone(creationDateFieldName);
     }
@@ -185,7 +188,7 @@ public final class MongoEntityFactory {
             if (keys.length > 1) {
                 throw new IllegalStateException("The hash sharding strategy can have only one shard key: " + clazz.getName());
             } else if (keys[0].equals(DomainFieldName.ID)) {
-                throw new IllegalStateException("Should not create an hashed index on the key. " +
+                throw new IllegalStateException("Should not create a hashed index on the key. " +
                         "If so, MongoDB will create a default range index on the key: " + clazz.getName());
             } else {
                 document = new BsonDocument(keys[0], BsonPool.BSON_STRING_HASHED);
@@ -209,12 +212,12 @@ public final class MongoEntityFactory {
         return new ShardKey(document, paths);
     }
 
-    private static <T> EntityFieldsInfo parseFields(Class<?> clazz, Constructor<T> constructor, Method[] allClassMethods) {
-        Field[] fields = clazz.getDeclaredFields();
+    private static <T> EntityFieldsInfo parseFields(Class<T> clazz, Constructor<T> constructor) {
         String idField = null;
         Map<String, EntityField<?>> entityFields = null;
         List<Index> entityIndexes = null;
-        Map<String, MethodHandle> setterMethods = parseSetterMethods(allClassMethods);
+        Map<String, MethodHandle> setterMethods = parseSetterMethods(clazz.getDeclaredMethods());
+        Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             int modifiers = field.getModifiers();
             if (Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers)) {
@@ -238,7 +241,7 @@ public final class MongoEntityFactory {
                 if (idField == null) {
                     idField = fieldName;
                 } else {
-                    throw new IllegalStateException("The class " + clazz.getName() + " should not have multiple fields marked with @Id");
+                    throw new IllegalStateException("The class " + clazz.getName() + " should not have multiple fields marked with @" + Id.class.getSimpleName());
                 }
             }
             // Indexes
@@ -251,7 +254,7 @@ public final class MongoEntityFactory {
             }
             // Getter and Setter
             MethodHandle setter = setterMethods.get(fieldName);
-            VarAccessor varAccessor = setter == null
+            VarAccessor<T, ?> varAccessor = setter == null
                     ? VarAccessorFactory.get(field)
                     : VarAccessorFactory.get(field, setter);
             // Constructor
@@ -259,14 +262,14 @@ public final class MongoEntityFactory {
                     ? EntityField.UNSET_CTOR_PARAM_INDEX
                     : parseCtorParamIndex(constructor, field);
             if (entityFields == null) {
-                entityFields = new HashMap<>(16);
+                entityFields = CollectionUtil.newMapWithExpectedSize(fields.length);
             }
             entityFields.put(fieldName,
-                    new EntityField(fieldClass, keyClass, elementClass, fieldName, isIdField, ctorParamIndex, varAccessor));
+                    new EntityField<>(fieldClass, keyClass, elementClass, fieldName, isIdField, ctorParamIndex, varAccessor));
         }
         return new EntityFieldsInfo(
                 idField,
-                entityFields == null ? Collections.emptyMap() : entityFields,
+                entityFields == null ? Collections.emptyMap() : Map.copyOf(entityFields),
                 entityIndexes == null ? Collections.emptyList() : entityIndexes);
     }
 
@@ -281,10 +284,9 @@ public final class MongoEntityFactory {
                 setterMethods.put(methodName, ReflectionUtil.method2Handle(method));
             }
         }
-        if (setterMethods == null) {
-            return Collections.emptyMap();
-        }
-        return setterMethods;
+        return setterMethods == null
+                ? Collections.emptyMap()
+                : setterMethods;
     }
 
     private static <T> int parseCtorParamIndex(Constructor<T> constructor, Field field) {
@@ -367,7 +369,7 @@ public final class MongoEntityFactory {
 
     private record EntityFieldsInfo(
             @Nullable String idFieldName,
-            Map<String, EntityField<?>> fields,
+            Map<String, EntityField<?>> nameToField,
             List<Index> indexes) {
     }
 

@@ -117,7 +117,7 @@ public class UserSimultaneousLoginService {
             }
             default -> throw new IllegalStateException("Unexpected value: " + strategy);
         }
-        return newDeviceTypeToExclusiveDeviceTypes;
+        return Map.copyOf(newDeviceTypeToExclusiveDeviceTypes);
     }
 
     private Set<DeviceType> newForbiddenDeviceTypesFromStrategy(SimultaneousLoginStrategy strategy) {

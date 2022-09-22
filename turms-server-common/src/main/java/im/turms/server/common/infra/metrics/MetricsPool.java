@@ -21,16 +21,17 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.reflect.VarAccessor;
-import im.turms.server.common.infra.reflect.VarAccessorFactory;
+import im.turms.server.common.infra.reflect.ReflectionUtil;
 import io.micrometer.core.instrument.Measurement;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
+import lombok.SneakyThrows;
 import org.eclipse.collections.impl.factory.Sets;
 
 import javax.annotation.Nullable;
+import java.lang.invoke.MethodHandle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,8 +49,7 @@ import java.util.TreeSet;
  */
 public class MetricsPool {
 
-    private static final VarAccessor<MeterRegistry, Map<Meter.Id, Meter>> METER_MAP = VarAccessorFactory
-            .get(MeterRegistry.class, "meterMap");
+    private static final MethodHandle METER_MAP = ReflectionUtil.getGetter(MeterRegistry.class, "meterMap");
     private final MeterRegistry registry;
 
     public MetricsPool(MeterRegistry registry) {
@@ -111,8 +111,9 @@ public class MetricsPool {
         return names;
     }
 
+    @SneakyThrows
     private Map<Meter.Id, Meter> getMeterMap() {
-        return METER_MAP.get(registry);
+        return (Map<Meter.Id, Meter>) METER_MAP.invokeExact(registry);
     }
 
     private List<Tag> parseTags(List<String> tags) {
@@ -137,7 +138,7 @@ public class MetricsPool {
         List<Meter> list = null;
         Map<Meter.Id, Meter> meterMap;
         try {
-            meterMap = (Map<Meter.Id, Meter>) METER_MAP.get(registry);
+            meterMap = (Map<Meter.Id, Meter>) METER_MAP.invokeExact(registry);
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }

@@ -41,10 +41,11 @@ public record MongoEntity<T>(
         List<Index> indexes,
         // Field
         String idFieldName,
-        Map<String, EntityField<?>> fieldMap
+        Map<String, EntityField<?>> nameToField,
+        List<EntityField<?>> fields
 ) {
     public <F> EntityField<F> getField(String fieldName) {
-        return (EntityField<F>) fieldMap.get(fieldName);
+        return (EntityField<F>) nameToField.get(fieldName);
     }
 
     @Nullable
