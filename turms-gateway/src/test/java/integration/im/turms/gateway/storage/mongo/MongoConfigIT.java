@@ -21,8 +21,11 @@ import im.turms.gateway.storage.mongo.MongoConfig;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.constant.AuthenticationType;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
 import im.turms.server.common.infra.property.env.gateway.MongoProperties;
+import im.turms.server.common.infra.property.env.gateway.SessionProperties;
+import im.turms.server.common.infra.property.env.gateway.authentication.AuthenticationProperties;
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.testing.BaseIntegrationTest;
@@ -44,6 +47,12 @@ class MongoConfigIT extends BaseIntegrationTest {
                 .gateway(new GatewayProperties().toBuilder()
                         .mongo(new MongoProperties().toBuilder()
                                 .user(new TurmsMongoProperties(getMongoUri()))
+                                .build())
+                        .session(new SessionProperties().toBuilder()
+                                .authentication(new AuthenticationProperties().toBuilder()
+                                        .enabled(true)
+                                        .type(AuthenticationType.PASSWORD)
+                                        .build())
                                 .build())
                         .build())
                 .build();
