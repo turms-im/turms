@@ -17,6 +17,7 @@
 
 package im.turms.server.common.access.admin.web;
 
+import com.fasterxml.jackson.databind.JavaType;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -65,7 +66,7 @@ public class HttpRequestParamParser {
     private HttpRequestParamParser() {
     }
 
-    public static Object parsePlainValue(Object value, Class<?> type) {
+    public static Object parsePlainValue(Object value, Class<?> type, JavaType typeForJackson) {
         if (type.isEnum()) {
             if (value instanceof String s) {
                 return Enum.valueOf((Class) type, s);
@@ -74,7 +75,7 @@ public class HttpRequestParamParser {
             }
         }
         try {
-            return JsonCodecPool.MAPPER.convertValue(value, type);
+            return JsonCodecPool.MAPPER.convertValue(value, typeForJackson);
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid value: " + value, e);
         }
@@ -109,7 +110,7 @@ public class HttpRequestParamParser {
         }
         if (requestBodyParam != null) {
             int finalBodyIndex = bodyIndex;
-            Mono<Object> parseBody = parseBody(request, requestBodyParam.type())
+            Mono<Object> parseBody = parseBody(request, requestBodyParam.typeForJackson())
                     .doOnNext(body -> args[finalBodyIndex] = body);
             if (requestBodyParam.isRequired()) {
                 parseBody = parseBody.switchIfEmpty(BODY_IS_REQUIRED);
@@ -180,13 +181,13 @@ public class HttpRequestParamParser {
         } else if (Set.class.isAssignableFrom(parameter.type())) {
             Set<Object> items = CollectionUtil.newSetWithExpectedSize(values.size());
             for (Object value : values) {
-                items.add(parsePlainValue(value, parameter.elementType()));
+                items.add(parsePlainValue(value, parameter.elementType(), parameter.elementTypeForJackson()));
             }
             return items;
         } else if (List.class.isAssignableFrom(parameter.type())) {
             List<Object> items = new ArrayList<>(values.size());
             for (Object value : values) {
-                items.add(parsePlainValue(value, parameter.elementType()));
+                items.add(parsePlainValue(value, parameter.elementType(), parameter.elementTypeForJackson()));
             }
             return items;
         } else {
@@ -196,27 +197,26 @@ public class HttpRequestParamParser {
 
     private static Object parseSingleValue(MethodParameterInfo parameter,
                                            @Nullable Object value) {
-        if (value == null) {
-            Object defaultValue = parameter.defaultValue();
-            if (defaultValue != null) {
-                return defaultValue;
-            }
-            if (parameter.isRequired()) {
-                throw new HttpResponseException(HttpHandlerResult
-                        .badRequest("Missing required "
-                                + (parameter.isHeader() ? "header" : "query")
-                                + " parameter: " + parameter.name()));
-            } else {
-                return null;
-            }
+        if (value != null) {
+            return parsePlainValue(value, parameter.type(), parameter.typeForJackson());
         }
-        return parsePlainValue(value, parameter.type());
+        Object defaultValue = parameter.defaultValue();
+        if (defaultValue != null) {
+            return defaultValue;
+        }
+        if (parameter.isRequired()) {
+            throw new HttpResponseException(HttpHandlerResult
+                    .badRequest("Missing required "
+                            + (parameter.isHeader() ? "header" : "query")
+                            + " parameter: " + parameter.name()));
+        }
+        return null;
     }
 
     /**
      * TODO: Support more charsets
      */
-    private static Mono<Object> parseBody(HttpServerRequest request, Class<?> parameterType) {
+    private static Mono<Object> parseBody(HttpServerRequest request, JavaType parameterType) {
         return Mono.defer(() -> {
             CompositeByteBuf body = Unpooled.compositeBuffer();
             return request.receive()

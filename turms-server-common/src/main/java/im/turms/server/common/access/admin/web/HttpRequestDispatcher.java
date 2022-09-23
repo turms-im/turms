@@ -263,7 +263,8 @@ public class HttpRequestDispatcher {
                             for (MultipartFile file : collection.tempFiles()) {
                                 try {
                                     file.release();
-                                } catch (Exception ignored) {
+                                } catch (Exception e) {
+                                    LOGGER.error("Caught an error while releasing the multipart file: " + file.name(), e);
                                 }
                             }
                         }));

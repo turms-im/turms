@@ -18,6 +18,8 @@
 package im.turms.server.common.infra.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -47,41 +49,50 @@ public final class JsonUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);
 
-    private static final TypeReference<HashMap<String, Object>> TYPE_REF_STRING_OBJECT_MAP = new TypeReference<>() {
-    };
-    private static final TypeReference<HashMap<String, String>> TYPE_REF_STRING_STRING_MAP = new TypeReference<>() {
-    };
-
     private static final int ESTIMATED_JSON_FIELD_META_SIZE = 8;
+    private static final ObjectMapper MAPPER = JsonCodecPool.MAPPER;
+
+    private static final JavaType JAVA_TYPE_STRING_OBJECT_MAP = constructJavaType(new TypeReference<HashMap<String, Object>>() {
+    });
+    private static final JavaType JAVA_TYPE_STRING_STRING_MAP = constructJavaType(new TypeReference<HashMap<String, String>>() {
+    });
 
     private JsonUtil() {
     }
 
+    public static JavaType constructJavaType(TypeReference<?> typeReference) {
+        return MAPPER.constructType(typeReference);
+    }
+
+    public static JavaType constructJavaType(Class<?> type) {
+        return MAPPER.constructType(type);
+    }
+
     @SneakyThrows
     public static Map<String, Object> readStringObjectMapValue(byte[] src) {
-        return JsonCodecPool.MAPPER.readValue(src, TYPE_REF_STRING_OBJECT_MAP);
+        return MAPPER.readValue(src, JAVA_TYPE_STRING_OBJECT_MAP);
     }
 
     @SneakyThrows
     public static Map<String, Object> readStringObjectMapValue(InputStream src) {
-        return JsonCodecPool.MAPPER.readValue(src, TYPE_REF_STRING_OBJECT_MAP);
+        return MAPPER.readValue(src, JAVA_TYPE_STRING_OBJECT_MAP);
     }
 
     @SneakyThrows
     public static Map<String, String> readStringStringMapValue(byte[] src) {
-        return JsonCodecPool.MAPPER.readValue(src, TYPE_REF_STRING_STRING_MAP);
+        return MAPPER.readValue(src, JAVA_TYPE_STRING_STRING_MAP);
     }
 
     @SneakyThrows
     public static Map<String, String> readStringStringMapValue(InputStream src) {
-        return JsonCodecPool.MAPPER.readValue(src, TYPE_REF_STRING_STRING_MAP);
+        return MAPPER.readValue(src, JAVA_TYPE_STRING_STRING_MAP);
     }
 
     public static ByteBuf write(Object body) {
         int estimatedSize = estimateJson(body);
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(estimatedSize);
         try (OutputStream bufferOutputStream = new ByteBufOutputStream(buffer)) {
-            JsonCodecPool.MAPPER.writeValue(bufferOutputStream, body);
+            MAPPER.writeValue(bufferOutputStream, body);
             return buffer;
         } catch (IOException e) {
             ReferenceCountUtil.ensureReleased(buffer);

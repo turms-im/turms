@@ -17,6 +17,7 @@
 
 package im.turms.server.common.access.admin.web;
 
+import com.fasterxml.jackson.databind.JavaType;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
 import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
 import im.turms.server.common.access.admin.web.annotation.FormData;
@@ -29,6 +30,7 @@ import im.turms.server.common.access.admin.web.annotation.RequestBody;
 import im.turms.server.common.access.admin.web.annotation.RequestHeader;
 import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.io.BaseFileResource;
+import im.turms.server.common.infra.json.JsonUtil;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.PrimitiveDefaultUtil;
 import im.turms.server.common.infra.openapi.OpenApiBuilder;
@@ -58,7 +60,7 @@ public class HttpEndpointCollector {
     }
 
     public static Map<ApiEndpointKey, ApiEndpoint> collectionEndpoints(ConfigurableApplicationContext context) {
-        Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint = new HashMap<>(256);
+        Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint = new HashMap<>(64);
         Map<String, Object> beans = context.getBeansWithAnnotation(RestController.class);
         for (Object controller : beans.values()) {
             Class<?> controllerClass = controller.getClass();
@@ -152,6 +154,8 @@ public class HttpEndpointCollector {
                 parameterInfos[i] = new MethodParameterInfo(parameter.getName(),
                         RequestContext.class,
                         null,
+                        null,
+                        null,
                         false,
                         false,
                         false,
@@ -170,11 +174,16 @@ public class HttpEndpointCollector {
     private static MethodParameterInfo parseAsRequestParam(Parameter parameter) {
         QueryParam queryParam = parameter.getDeclaredAnnotation(QueryParam.class);
         Class<?> type = parameter.getType();
+        JavaType typeForJackson = JsonUtil.constructJavaType(type);
+        Class<?> elementClass = ReflectionUtil.getElementClass(parameter.getParameterizedType());
+        JavaType elementClassForJackson = elementClass == null ? null : JsonUtil.constructJavaType(elementClass);
         if (queryParam == null) {
             Object defaultValue = PrimitiveDefaultUtil.getDefaultValue(type);
             return new MethodParameterInfo(parameter.getName(),
                     type,
-                    ReflectionUtil.getElementClass(parameter.getParameterizedType()),
+                    typeForJackson,
+                    elementClass,
+                    elementClassForJackson,
                     defaultValue == null,
                     false,
                     false,
@@ -186,10 +195,12 @@ public class HttpEndpointCollector {
         String name = queryParam.value().isBlank() ? parameter.getName() : queryParam.value();
         Object parsedDefaultValue = queryParam.defaultValue().isBlank()
                 ? PrimitiveDefaultUtil.getDefaultValue(type)
-                : HttpRequestParamParser.parsePlainValue(queryParam.defaultValue(), type);
+                : HttpRequestParamParser.parsePlainValue(queryParam.defaultValue(), type, typeForJackson);
         return new MethodParameterInfo(name,
                 type,
-                ReflectionUtil.getElementClass(parameter.getParameterizedType()),
+                typeForJackson,
+                elementClass,
+                elementClassForJackson,
                 queryParam.required(),
                 false,
                 false,
@@ -206,9 +217,12 @@ public class HttpEndpointCollector {
         }
         String name = requestHeader.value().isBlank() ? parameter.getName() : requestHeader.value();
         Class<?> type = parameter.getType();
+        Class<?> elementClass = ReflectionUtil.getElementClass(parameter.getParameterizedType());
         return new MethodParameterInfo(name,
                 type,
-                ReflectionUtil.getElementClass(parameter.getParameterizedType()),
+                JsonUtil.constructJavaType(type),
+                elementClass,
+                elementClass == null ? null : JsonUtil.constructJavaType(elementClass),
                 requestHeader.required(),
                 true,
                 false,
@@ -223,9 +237,13 @@ public class HttpEndpointCollector {
         if (requestBody == null) {
             return null;
         }
+        Class<?> elementClass = ReflectionUtil.getElementClass(parameter.getParameterizedType());
+        Class<?> type = parameter.getType();
         return new MethodParameterInfo(parameter.getName(),
-                parameter.getType(),
-                ReflectionUtil.getElementClass(parameter.getParameterizedType()),
+                type,
+                JsonUtil.constructJavaType(type),
+                elementClass,
+                elementClass == null ? null : JsonUtil.constructJavaType(elementClass),
                 requestBody.required(),
                 false,
                 true,
@@ -246,7 +264,9 @@ public class HttpEndpointCollector {
         String contentType = requestFormData.contentType();
         return new MethodParameterInfo(parameter.getName(),
                 List.class,
+                null,
                 MultipartFile.class,
+                null,
                 requestFormData.required(),
                 false,
                 false,

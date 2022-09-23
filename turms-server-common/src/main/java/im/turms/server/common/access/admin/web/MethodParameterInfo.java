@@ -17,6 +17,8 @@
 
 package im.turms.server.common.access.admin.web;
 
+import com.fasterxml.jackson.databind.JavaType;
+
 import javax.annotation.Nullable;
 
 /**
@@ -25,7 +27,9 @@ import javax.annotation.Nullable;
 public record MethodParameterInfo(
         String name,
         Class<?> type,
+        @Nullable JavaType typeForJackson,
         @Nullable Class<?> elementType,
+        @Nullable JavaType elementTypeForJackson,
         boolean isRequired,
         boolean isHeader,
         boolean isBody,
