@@ -22,12 +22,14 @@ import im.turms.server.common.domain.admin.po.Admin;
 import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.constant.AuthenticationType;
+import im.turms.server.common.infra.property.env.gateway.authentication.AuthenticationProperties;
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.storage.mongo.BaseMongoConfig;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -54,9 +56,13 @@ public class MongoConfig extends BaseMongoConfig {
     }
 
     @Bean
-    @ConditionalOnProperty("turms.gateway.session.enable-authentication")
     public TurmsMongoClient userMongoClient(TurmsPropertiesManager propertiesManager) {
-        TurmsMongoProperties properties = propertiesManager.getLocalProperties().getGateway().getMongo().getUser();
+        TurmsProperties localProperties = propertiesManager.getLocalProperties();
+        AuthenticationProperties authenticationProperties = localProperties.getGateway().getSession().getAuthentication();
+        if (!authenticationProperties.isEnabled() || authenticationProperties.getType() != AuthenticationType.PASSWORD) {
+            return null;
+        }
+        TurmsMongoProperties properties = localProperties.getGateway().getMongo().getUser();
         TurmsMongoClient mongoClient = getMongoClient(properties, "user", Set.of(ClusterType.SHARDED, ClusterType.LOAD_BALANCED));
         mongoClient.registerEntitiesByClasses(User.class);
         return mongoClient;
