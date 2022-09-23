@@ -118,7 +118,6 @@ public class TurmsPropertiesConvertor {
         Map<String, Object> metadataWithValue = CollectionUtil.newMapWithExpectedSize(metadata.size() + 1);
         for (Map.Entry<String, Object> entry : metadata.entrySet()) {
             String key = entry.getKey();
-            Map<String, Object> originalValueMetadata = (Map<String, Object>) entry.getValue();
             PropertyFieldInfo propertyFieldInfo = getFieldInfo(propertiesClass, key);
             Object value;
             if (propertyFieldInfo == null || (value = propertyFieldInfo.get(properties)) == null) {
@@ -127,14 +126,40 @@ public class TurmsPropertiesConvertor {
                 continue;
             }
             if (propertyFieldInfo.isNestedProperty()) {
+                Map<String, Object> originalValueMetadata = (Map<String, Object>) entry.getValue();
                 metadataWithValue.put(key, mergeMetadataWithPropertyValue0(originalValueMetadata, value));
             } else {
-                // Clone the metadata because we need to add "value" to it
-                // while we should not modify the original metadata
-                Map<String, Object> newValueMetadata = CollectionUtil.newMapWithExpectedSize(originalValueMetadata.size() + 1);
-                newValueMetadata.putAll(originalValueMetadata);
-                newValueMetadata.put("value", value);
-                metadataWithValue.put(key, Map.copyOf(newValueMetadata));
+                FieldMetadata fieldMetadata = (FieldMetadata) entry.getValue();
+                int entryCount = 5;
+                String elementType = fieldMetadata.elementType();
+                Object[] options = fieldMetadata.options();
+                String desc = fieldMetadata.desc();
+                if (elementType != null) {
+                    entryCount++;
+                }
+                if (options != null) {
+                    entryCount++;
+                }
+                if (desc != null) {
+                    entryCount++;
+                }
+                Map.Entry<String, Object>[] entries = new Map.Entry[entryCount];
+                int i = 0;
+                entries[i++] = Map.entry("value", value);
+                entries[i++] = Map.entry(FieldMetadata.Fields.deprecated, fieldMetadata.deprecated());
+                entries[i++] = Map.entry(FieldMetadata.Fields.global, fieldMetadata.global());
+                entries[i++] = Map.entry(FieldMetadata.Fields.mutable, fieldMetadata.mutable());
+                entries[i++] = Map.entry(FieldMetadata.Fields.type, fieldMetadata.type());
+                if (elementType != null) {
+                    entries[i++] = Map.entry(FieldMetadata.Fields.elementType, elementType);
+                }
+                if (options != null) {
+                    entries[i++] = Map.entry(FieldMetadata.Fields.options, options);
+                }
+                if (desc != null) {
+                    entries[i] = Map.entry(FieldMetadata.Fields.desc, desc);
+                }
+                metadataWithValue.put(key, Map.ofEntries(entries));
             }
         }
         return Map.copyOf(metadataWithValue);

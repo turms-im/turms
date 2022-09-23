@@ -55,14 +55,6 @@ import static im.turms.server.common.infra.json.JsonCodecPool.MAPPER;
  */
 public class TurmsPropertiesInspector {
 
-    private static final String FIELD_NAME_DEPRECATED = "deprecated";
-    private static final String FIELD_NAME_DESC = "desc";
-    private static final String FIELD_NAME_ELEMENT_TYPE = "elementType";
-    private static final String FIELD_NAME_GLOBAL = "global";
-    private static final String FIELD_NAME_MUTABLE = "mutable";
-    private static final String FIELD_NAME_OPTIONS = "options";
-    private static final String FIELD_NAME_TYPE = "type";
-
     public static final ObjectWriter MUTABLE_PROPERTIES_WRITER = JsonMapper.builder()
             .enable(MapperFeature.PROPAGATE_TRANSIENT_MARKER)
             // e.g. "SharedConfigProperties" is an empty bean
@@ -180,36 +172,30 @@ public class TurmsPropertiesInspector {
         return Map.ofEntries(entries.toArray(new Map.Entry[0]));
     }
 
-    private static Map<String, Object> getFlatFieldMetadata(PropertyFieldInfo fieldInfo) {
+    private static FieldMetadata getFlatFieldMetadata(PropertyFieldInfo fieldInfo) {
         Field field = fieldInfo.field();
         Class<?> type = field.getType();
         String elementType = null;
-        String typeName = getTypeName(type);
-        Object[] options = type.isEnum() ? type.getEnumConstants() : null;
+        Object[] options = null;
         if (Iterable.class.isAssignableFrom(type)) {
-            elementType = getTypeName(ReflectionUtil.getElementClass(field.getGenericType()));
-            if (type.isEnum()) {
-                options = type.getEnumConstants();
+            Class<?> elementClass = ReflectionUtil.getElementClass(field.getGenericType());
+            elementType = getTypeName(elementClass);
+            if (elementClass.isEnum()) {
+                options = elementClass.getEnumConstants();
             }
         } else if (type.isArray()) {
             elementType = getTypeName(type.getComponentType());
+        } else if (type.isEnum()) {
+            options = type.getEnumConstants();
         }
-        // Fill in
-        Map<String, Object> metadata = CollectionUtil.newMapWithExpectedSize(7);
-        if (field.isAnnotationPresent(Description.class)) {
-            metadata.put(FIELD_NAME_DESC, field.getDeclaredAnnotation(Description.class).value());
-        }
-        if (elementType != null) {
-            metadata.put(FIELD_NAME_ELEMENT_TYPE, elementType);
-        }
-        metadata.put(FIELD_NAME_TYPE, typeName);
-        metadata.put(FIELD_NAME_DEPRECATED, field.isAnnotationPresent(Deprecated.class));
-        metadata.put(FIELD_NAME_GLOBAL, field.isAnnotationPresent(GlobalProperty.class));
-        metadata.put(FIELD_NAME_MUTABLE, fieldInfo.isMutableProperty());
-        if (options != null) {
-            metadata.put(FIELD_NAME_OPTIONS, options);
-        }
-        return metadata;
+        Description descriptionAnnotation = field.getDeclaredAnnotation(Description.class);
+        return new FieldMetadata(field.isAnnotationPresent(Deprecated.class),
+                field.isAnnotationPresent(GlobalProperty.class),
+                fieldInfo.isMutableProperty(),
+                getTypeName(type),
+                elementType,
+                options,
+                descriptionAnnotation == null ? null : descriptionAnnotation.value());
     }
 
     private static String getTypeName(Class<?> type) {

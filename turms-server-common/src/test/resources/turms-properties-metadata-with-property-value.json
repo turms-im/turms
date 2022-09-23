@@ -300,6 +300,23 @@
           "elementType": "enum",
           "global": false,
           "mutable": false,
+          "options": [
+            "ALL",
+            "NONE",
+            "CREATE",
+            "DELETE",
+            "UPDATE",
+            "QUERY",
+            "STORAGE",
+            "CONVERSATION",
+            "MESSAGE",
+            "USER",
+            "USER_RELATIONSHIP",
+            "GROUP",
+            "GROUP_BLOCKLIST",
+            "GROUP_ENROLLMENT",
+            "GROUP_MEMBER"
+          ],
           "type": "java.util.Set",
           "value": []
         },
@@ -309,6 +326,63 @@
           "elementType": "enum",
           "global": false,
           "mutable": false,
+          "options": [
+            "CREATE_SESSION_REQUEST",
+            "DELETE_SESSION_REQUEST",
+            "QUERY_CONVERSATIONS_REQUEST",
+            "UPDATE_CONVERSATION_REQUEST",
+            "UPDATE_TYPING_STATUS_REQUEST",
+            "CREATE_MESSAGE_REQUEST",
+            "QUERY_MESSAGES_REQUEST",
+            "UPDATE_MESSAGE_REQUEST",
+            "CREATE_GROUP_MEMBER_REQUEST",
+            "DELETE_GROUP_MEMBER_REQUEST",
+            "QUERY_GROUP_MEMBERS_REQUEST",
+            "UPDATE_GROUP_MEMBER_REQUEST",
+            "QUERY_USER_PROFILE_REQUEST",
+            "QUERY_NEARBY_USERS_REQUEST",
+            "QUERY_USER_ONLINE_STATUSES_REQUEST",
+            "UPDATE_USER_LOCATION_REQUEST",
+            "UPDATE_USER_ONLINE_STATUS_REQUEST",
+            "UPDATE_USER_REQUEST",
+            "CREATE_FRIEND_REQUEST_REQUEST",
+            "CREATE_RELATIONSHIP_GROUP_REQUEST",
+            "CREATE_RELATIONSHIP_REQUEST",
+            "DELETE_RELATIONSHIP_GROUP_REQUEST",
+            "DELETE_RELATIONSHIP_REQUEST",
+            "QUERY_FRIEND_REQUESTS_REQUEST",
+            "QUERY_RELATED_USER_IDS_REQUEST",
+            "QUERY_RELATIONSHIP_GROUPS_REQUEST",
+            "QUERY_RELATIONSHIPS_REQUEST",
+            "UPDATE_FRIEND_REQUEST_REQUEST",
+            "UPDATE_RELATIONSHIP_GROUP_REQUEST",
+            "UPDATE_RELATIONSHIP_REQUEST",
+            "CREATE_GROUP_REQUEST",
+            "DELETE_GROUP_REQUEST",
+            "QUERY_GROUP_REQUEST",
+            "QUERY_JOINED_GROUP_IDS_REQUEST",
+            "QUERY_JOINED_GROUP_INFOS_REQUEST",
+            "UPDATE_GROUP_REQUEST",
+            "CREATE_GROUP_BLOCKED_USER_REQUEST",
+            "DELETE_GROUP_BLOCKED_USER_REQUEST",
+            "QUERY_GROUP_BLOCKED_USER_IDS_REQUEST",
+            "QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST",
+            "CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST",
+            "CREATE_GROUP_INVITATION_REQUEST",
+            "CREATE_GROUP_JOIN_REQUEST_REQUEST",
+            "CREATE_GROUP_JOIN_QUESTION_REQUEST",
+            "DELETE_GROUP_INVITATION_REQUEST",
+            "DELETE_GROUP_JOIN_REQUEST_REQUEST",
+            "DELETE_GROUP_JOIN_QUESTION_REQUEST",
+            "QUERY_GROUP_INVITATIONS_REQUEST",
+            "QUERY_GROUP_JOIN_REQUESTS_REQUEST",
+            "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
+            "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
+            "DELETE_RESOURCE_REQUEST",
+            "QUERY_SIGNED_GET_URL_REQUEST",
+            "QUERY_SIGNED_PUT_URL_REQUEST",
+            "KIND_NOT_SET"
+          ],
           "type": "java.util.Set",
           "value": []
         },
@@ -318,6 +392,23 @@
           "elementType": "enum",
           "global": false,
           "mutable": false,
+          "options": [
+            "ALL",
+            "NONE",
+            "CREATE",
+            "DELETE",
+            "UPDATE",
+            "QUERY",
+            "STORAGE",
+            "CONVERSATION",
+            "MESSAGE",
+            "USER",
+            "USER_RELATIONSHIP",
+            "GROUP",
+            "GROUP_BLOCKLIST",
+            "GROUP_ENROLLMENT",
+            "GROUP_MEMBER"
+          ],
           "type": "java.util.Set",
           "value": []
         },
@@ -327,6 +418,63 @@
           "elementType": "enum",
           "global": false,
           "mutable": false,
+          "options": [
+            "CREATE_SESSION_REQUEST",
+            "DELETE_SESSION_REQUEST",
+            "QUERY_CONVERSATIONS_REQUEST",
+            "UPDATE_CONVERSATION_REQUEST",
+            "UPDATE_TYPING_STATUS_REQUEST",
+            "CREATE_MESSAGE_REQUEST",
+            "QUERY_MESSAGES_REQUEST",
+            "UPDATE_MESSAGE_REQUEST",
+            "CREATE_GROUP_MEMBER_REQUEST",
+            "DELETE_GROUP_MEMBER_REQUEST",
+            "QUERY_GROUP_MEMBERS_REQUEST",
+            "UPDATE_GROUP_MEMBER_REQUEST",
+            "QUERY_USER_PROFILE_REQUEST",
+            "QUERY_NEARBY_USERS_REQUEST",
+            "QUERY_USER_ONLINE_STATUSES_REQUEST",
+            "UPDATE_USER_LOCATION_REQUEST",
+            "UPDATE_USER_ONLINE_STATUS_REQUEST",
+            "UPDATE_USER_REQUEST",
+            "CREATE_FRIEND_REQUEST_REQUEST",
+            "CREATE_RELATIONSHIP_GROUP_REQUEST",
+            "CREATE_RELATIONSHIP_REQUEST",
+            "DELETE_RELATIONSHIP_GROUP_REQUEST",
+            "DELETE_RELATIONSHIP_REQUEST",
+            "QUERY_FRIEND_REQUESTS_REQUEST",
+            "QUERY_RELATED_USER_IDS_REQUEST",
+            "QUERY_RELATIONSHIP_GROUPS_REQUEST",
+            "QUERY_RELATIONSHIPS_REQUEST",
+            "UPDATE_FRIEND_REQUEST_REQUEST",
+            "UPDATE_RELATIONSHIP_GROUP_REQUEST",
+            "UPDATE_RELATIONSHIP_REQUEST",
+            "CREATE_GROUP_REQUEST",
+            "DELETE_GROUP_REQUEST",
+            "QUERY_GROUP_REQUEST",
+            "QUERY_JOINED_GROUP_IDS_REQUEST",
+            "QUERY_JOINED_GROUP_INFOS_REQUEST",
+            "UPDATE_GROUP_REQUEST",
+            "CREATE_GROUP_BLOCKED_USER_REQUEST",
+            "DELETE_GROUP_BLOCKED_USER_REQUEST",
+            "QUERY_GROUP_BLOCKED_USER_IDS_REQUEST",
+            "QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST",
+            "CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST",
+            "CREATE_GROUP_INVITATION_REQUEST",
+            "CREATE_GROUP_JOIN_REQUEST_REQUEST",
+            "CREATE_GROUP_JOIN_QUESTION_REQUEST",
+            "DELETE_GROUP_INVITATION_REQUEST",
+            "DELETE_GROUP_JOIN_REQUEST_REQUEST",
+            "DELETE_GROUP_JOIN_QUESTION_REQUEST",
+            "QUERY_GROUP_INVITATIONS_REQUEST",
+            "QUERY_GROUP_JOIN_REQUESTS_REQUEST",
+            "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
+            "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
+            "DELETE_RESOURCE_REQUEST",
+            "QUERY_SIGNED_GET_URL_REQUEST",
+            "QUERY_SIGNED_PUT_URL_REQUEST",
+            "KIND_NOT_SET"
+          ],
           "type": "java.util.Set",
           "value": []
         },
@@ -1390,18 +1538,18 @@
               "value": [
                 {
                   "blockMinutes": 10,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 1
+                  "goNextLevelTriggerTimes": 1,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
                   "blockMinutes": 30,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 1
+                  "goNextLevelTriggerTimes": 1,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
                   "blockMinutes": 60,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 0
+                  "goNextLevelTriggerTimes": 0,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 }
               ]
             },
@@ -1431,18 +1579,18 @@
               "value": [
                 {
                   "blockMinutes": 10,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 1
+                  "goNextLevelTriggerTimes": 1,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
                   "blockMinutes": 30,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 1
+                  "goNextLevelTriggerTimes": 1,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
                   "blockMinutes": 60,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 0
+                  "goNextLevelTriggerTimes": 0,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 }
               ]
             },
@@ -1472,18 +1620,18 @@
               "value": [
                 {
                   "blockMinutes": 10,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 1
+                  "goNextLevelTriggerTimes": 1,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
                   "blockMinutes": 30,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 1
+                  "goNextLevelTriggerTimes": 1,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
                   "blockMinutes": 60,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 0
+                  "goNextLevelTriggerTimes": 0,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 }
               ]
             },
@@ -1531,18 +1679,18 @@
               "value": [
                 {
                   "blockMinutes": 10,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 1
+                  "goNextLevelTriggerTimes": 1,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
                   "blockMinutes": 30,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 1
+                  "goNextLevelTriggerTimes": 1,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
                   "blockMinutes": 60,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 0
+                  "goNextLevelTriggerTimes": 0,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 }
               ]
             },
@@ -1572,18 +1720,18 @@
               "value": [
                 {
                   "blockMinutes": 10,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 1
+                  "goNextLevelTriggerTimes": 1,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
                   "blockMinutes": 30,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 1
+                  "goNextLevelTriggerTimes": 1,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
                   "blockMinutes": 60,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 0
+                  "goNextLevelTriggerTimes": 0,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 }
               ]
             },
@@ -1613,18 +1761,18 @@
               "value": [
                 {
                   "blockMinutes": 10,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 1
+                  "goNextLevelTriggerTimes": 1,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
                   "blockMinutes": 30,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 1
+                  "goNextLevelTriggerTimes": 1,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
                   "blockMinutes": 60,
-                  "reduceOneTriggerTimeIntervalMillis": 60000,
-                  "goNextLevelTriggerTimes": 0
+                  "goNextLevelTriggerTimes": 0,
+                  "reduceOneTriggerTimeIntervalMillis": 60000
                 }
               ]
             },
@@ -1888,6 +2036,63 @@
         "elementType": "enum",
         "global": false,
         "mutable": false,
+        "options": [
+          "CREATE_SESSION_REQUEST",
+          "DELETE_SESSION_REQUEST",
+          "QUERY_CONVERSATIONS_REQUEST",
+          "UPDATE_CONVERSATION_REQUEST",
+          "UPDATE_TYPING_STATUS_REQUEST",
+          "CREATE_MESSAGE_REQUEST",
+          "QUERY_MESSAGES_REQUEST",
+          "UPDATE_MESSAGE_REQUEST",
+          "CREATE_GROUP_MEMBER_REQUEST",
+          "DELETE_GROUP_MEMBER_REQUEST",
+          "QUERY_GROUP_MEMBERS_REQUEST",
+          "UPDATE_GROUP_MEMBER_REQUEST",
+          "QUERY_USER_PROFILE_REQUEST",
+          "QUERY_NEARBY_USERS_REQUEST",
+          "QUERY_USER_ONLINE_STATUSES_REQUEST",
+          "UPDATE_USER_LOCATION_REQUEST",
+          "UPDATE_USER_ONLINE_STATUS_REQUEST",
+          "UPDATE_USER_REQUEST",
+          "CREATE_FRIEND_REQUEST_REQUEST",
+          "CREATE_RELATIONSHIP_GROUP_REQUEST",
+          "CREATE_RELATIONSHIP_REQUEST",
+          "DELETE_RELATIONSHIP_GROUP_REQUEST",
+          "DELETE_RELATIONSHIP_REQUEST",
+          "QUERY_FRIEND_REQUESTS_REQUEST",
+          "QUERY_RELATED_USER_IDS_REQUEST",
+          "QUERY_RELATIONSHIP_GROUPS_REQUEST",
+          "QUERY_RELATIONSHIPS_REQUEST",
+          "UPDATE_FRIEND_REQUEST_REQUEST",
+          "UPDATE_RELATIONSHIP_GROUP_REQUEST",
+          "UPDATE_RELATIONSHIP_REQUEST",
+          "CREATE_GROUP_REQUEST",
+          "DELETE_GROUP_REQUEST",
+          "QUERY_GROUP_REQUEST",
+          "QUERY_JOINED_GROUP_IDS_REQUEST",
+          "QUERY_JOINED_GROUP_INFOS_REQUEST",
+          "UPDATE_GROUP_REQUEST",
+          "CREATE_GROUP_BLOCKED_USER_REQUEST",
+          "DELETE_GROUP_BLOCKED_USER_REQUEST",
+          "QUERY_GROUP_BLOCKED_USER_IDS_REQUEST",
+          "QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST",
+          "CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST",
+          "CREATE_GROUP_INVITATION_REQUEST",
+          "CREATE_GROUP_JOIN_REQUEST_REQUEST",
+          "CREATE_GROUP_JOIN_QUESTION_REQUEST",
+          "DELETE_GROUP_INVITATION_REQUEST",
+          "DELETE_GROUP_JOIN_REQUEST_REQUEST",
+          "DELETE_GROUP_JOIN_QUESTION_REQUEST",
+          "QUERY_GROUP_INVITATIONS_REQUEST",
+          "QUERY_GROUP_JOIN_REQUESTS_REQUEST",
+          "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
+          "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
+          "DELETE_RESOURCE_REQUEST",
+          "QUERY_SIGNED_GET_URL_REQUEST",
+          "QUERY_SIGNED_PUT_URL_REQUEST",
+          "KIND_NOT_SET"
+        ],
         "type": "java.util.Set",
         "value": []
       },
@@ -1898,6 +2103,23 @@
           "elementType": "enum",
           "global": false,
           "mutable": false,
+          "options": [
+            "ALL",
+            "NONE",
+            "CREATE",
+            "DELETE",
+            "UPDATE",
+            "QUERY",
+            "STORAGE",
+            "CONVERSATION",
+            "MESSAGE",
+            "USER",
+            "USER_RELATIONSHIP",
+            "GROUP",
+            "GROUP_BLOCKLIST",
+            "GROUP_ENROLLMENT",
+            "GROUP_MEMBER"
+          ],
           "type": "java.util.Set",
           "value": []
         },
@@ -1907,6 +2129,63 @@
           "elementType": "enum",
           "global": false,
           "mutable": false,
+          "options": [
+            "CREATE_SESSION_REQUEST",
+            "DELETE_SESSION_REQUEST",
+            "QUERY_CONVERSATIONS_REQUEST",
+            "UPDATE_CONVERSATION_REQUEST",
+            "UPDATE_TYPING_STATUS_REQUEST",
+            "CREATE_MESSAGE_REQUEST",
+            "QUERY_MESSAGES_REQUEST",
+            "UPDATE_MESSAGE_REQUEST",
+            "CREATE_GROUP_MEMBER_REQUEST",
+            "DELETE_GROUP_MEMBER_REQUEST",
+            "QUERY_GROUP_MEMBERS_REQUEST",
+            "UPDATE_GROUP_MEMBER_REQUEST",
+            "QUERY_USER_PROFILE_REQUEST",
+            "QUERY_NEARBY_USERS_REQUEST",
+            "QUERY_USER_ONLINE_STATUSES_REQUEST",
+            "UPDATE_USER_LOCATION_REQUEST",
+            "UPDATE_USER_ONLINE_STATUS_REQUEST",
+            "UPDATE_USER_REQUEST",
+            "CREATE_FRIEND_REQUEST_REQUEST",
+            "CREATE_RELATIONSHIP_GROUP_REQUEST",
+            "CREATE_RELATIONSHIP_REQUEST",
+            "DELETE_RELATIONSHIP_GROUP_REQUEST",
+            "DELETE_RELATIONSHIP_REQUEST",
+            "QUERY_FRIEND_REQUESTS_REQUEST",
+            "QUERY_RELATED_USER_IDS_REQUEST",
+            "QUERY_RELATIONSHIP_GROUPS_REQUEST",
+            "QUERY_RELATIONSHIPS_REQUEST",
+            "UPDATE_FRIEND_REQUEST_REQUEST",
+            "UPDATE_RELATIONSHIP_GROUP_REQUEST",
+            "UPDATE_RELATIONSHIP_REQUEST",
+            "CREATE_GROUP_REQUEST",
+            "DELETE_GROUP_REQUEST",
+            "QUERY_GROUP_REQUEST",
+            "QUERY_JOINED_GROUP_IDS_REQUEST",
+            "QUERY_JOINED_GROUP_INFOS_REQUEST",
+            "UPDATE_GROUP_REQUEST",
+            "CREATE_GROUP_BLOCKED_USER_REQUEST",
+            "DELETE_GROUP_BLOCKED_USER_REQUEST",
+            "QUERY_GROUP_BLOCKED_USER_IDS_REQUEST",
+            "QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST",
+            "CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST",
+            "CREATE_GROUP_INVITATION_REQUEST",
+            "CREATE_GROUP_JOIN_REQUEST_REQUEST",
+            "CREATE_GROUP_JOIN_QUESTION_REQUEST",
+            "DELETE_GROUP_INVITATION_REQUEST",
+            "DELETE_GROUP_JOIN_REQUEST_REQUEST",
+            "DELETE_GROUP_JOIN_QUESTION_REQUEST",
+            "QUERY_GROUP_INVITATIONS_REQUEST",
+            "QUERY_GROUP_JOIN_REQUESTS_REQUEST",
+            "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
+            "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
+            "DELETE_RESOURCE_REQUEST",
+            "QUERY_SIGNED_GET_URL_REQUEST",
+            "QUERY_SIGNED_PUT_URL_REQUEST",
+            "KIND_NOT_SET"
+          ],
           "type": "java.util.Set",
           "value": []
         },
@@ -1916,6 +2195,23 @@
           "elementType": "enum",
           "global": false,
           "mutable": false,
+          "options": [
+            "ALL",
+            "NONE",
+            "CREATE",
+            "DELETE",
+            "UPDATE",
+            "QUERY",
+            "STORAGE",
+            "CONVERSATION",
+            "MESSAGE",
+            "USER",
+            "USER_RELATIONSHIP",
+            "GROUP",
+            "GROUP_BLOCKLIST",
+            "GROUP_ENROLLMENT",
+            "GROUP_MEMBER"
+          ],
           "type": "java.util.Set",
           "value": []
         },
@@ -1925,6 +2221,63 @@
           "elementType": "enum",
           "global": false,
           "mutable": false,
+          "options": [
+            "CREATE_SESSION_REQUEST",
+            "DELETE_SESSION_REQUEST",
+            "QUERY_CONVERSATIONS_REQUEST",
+            "UPDATE_CONVERSATION_REQUEST",
+            "UPDATE_TYPING_STATUS_REQUEST",
+            "CREATE_MESSAGE_REQUEST",
+            "QUERY_MESSAGES_REQUEST",
+            "UPDATE_MESSAGE_REQUEST",
+            "CREATE_GROUP_MEMBER_REQUEST",
+            "DELETE_GROUP_MEMBER_REQUEST",
+            "QUERY_GROUP_MEMBERS_REQUEST",
+            "UPDATE_GROUP_MEMBER_REQUEST",
+            "QUERY_USER_PROFILE_REQUEST",
+            "QUERY_NEARBY_USERS_REQUEST",
+            "QUERY_USER_ONLINE_STATUSES_REQUEST",
+            "UPDATE_USER_LOCATION_REQUEST",
+            "UPDATE_USER_ONLINE_STATUS_REQUEST",
+            "UPDATE_USER_REQUEST",
+            "CREATE_FRIEND_REQUEST_REQUEST",
+            "CREATE_RELATIONSHIP_GROUP_REQUEST",
+            "CREATE_RELATIONSHIP_REQUEST",
+            "DELETE_RELATIONSHIP_GROUP_REQUEST",
+            "DELETE_RELATIONSHIP_REQUEST",
+            "QUERY_FRIEND_REQUESTS_REQUEST",
+            "QUERY_RELATED_USER_IDS_REQUEST",
+            "QUERY_RELATIONSHIP_GROUPS_REQUEST",
+            "QUERY_RELATIONSHIPS_REQUEST",
+            "UPDATE_FRIEND_REQUEST_REQUEST",
+            "UPDATE_RELATIONSHIP_GROUP_REQUEST",
+            "UPDATE_RELATIONSHIP_REQUEST",
+            "CREATE_GROUP_REQUEST",
+            "DELETE_GROUP_REQUEST",
+            "QUERY_GROUP_REQUEST",
+            "QUERY_JOINED_GROUP_IDS_REQUEST",
+            "QUERY_JOINED_GROUP_INFOS_REQUEST",
+            "UPDATE_GROUP_REQUEST",
+            "CREATE_GROUP_BLOCKED_USER_REQUEST",
+            "DELETE_GROUP_BLOCKED_USER_REQUEST",
+            "QUERY_GROUP_BLOCKED_USER_IDS_REQUEST",
+            "QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST",
+            "CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST",
+            "CREATE_GROUP_INVITATION_REQUEST",
+            "CREATE_GROUP_JOIN_REQUEST_REQUEST",
+            "CREATE_GROUP_JOIN_QUESTION_REQUEST",
+            "DELETE_GROUP_INVITATION_REQUEST",
+            "DELETE_GROUP_JOIN_REQUEST_REQUEST",
+            "DELETE_GROUP_JOIN_QUESTION_REQUEST",
+            "QUERY_GROUP_INVITATIONS_REQUEST",
+            "QUERY_GROUP_JOIN_REQUESTS_REQUEST",
+            "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
+            "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
+            "DELETE_RESOURCE_REQUEST",
+            "QUERY_SIGNED_GET_URL_REQUEST",
+            "QUERY_SIGNED_PUT_URL_REQUEST",
+            "KIND_NOT_SET"
+          ],
           "type": "java.util.Set",
           "value": []
         },
@@ -2609,29 +2962,29 @@
             "type": "java.util.LinkedHashMap",
             "value": {
               "cold": {
-                "enabled": true,
                 "days": 270,
+                "enabled": true,
                 "shards": [
                   ""
                 ]
               },
               "frozen": {
-                "enabled": true,
                 "days": 0,
+                "enabled": true,
                 "shards": [
                   ""
                 ]
               },
               "hot": {
-                "enabled": true,
                 "days": 30,
+                "enabled": true,
                 "shards": [
                   ""
                 ]
               },
               "warm": {
-                "enabled": true,
                 "days": 60,
+                "enabled": true,
                 "shards": [
                   ""
                 ]
@@ -3046,32 +3399,14 @@
         "global": false,
         "mutable": false,
         "type": "java.time.Duration",
-        "value": {
-          "seconds": 300,
-          "nano": 0,
-          "negative": false,
-          "zero": false,
-          "units": [
-            "SECONDS",
-            "NANOS"
-          ]
-        }
+        "value": 300.000000000
       },
       "signatureDurationForPut": {
         "deprecated": false,
         "global": false,
         "mutable": false,
         "type": "java.time.Duration",
-        "value": {
-          "seconds": 300,
-          "nano": 0,
-          "negative": false,
-          "zero": false,
-          "units": [
-            "SECONDS",
-            "NANOS"
-          ]
-        }
+        "value": 300.000000000
       }
     },
     "user": {
