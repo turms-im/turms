@@ -1013,6 +1013,7 @@
           "global": false,
           "mutable": false,
           "options": [
+            "NOOP",
             "HTTP",
             "JWT",
             "PASSWORD"

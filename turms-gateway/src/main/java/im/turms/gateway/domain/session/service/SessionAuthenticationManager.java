@@ -190,6 +190,7 @@ public class SessionAuthenticationManager implements SessionAuthenticationSuppor
         Long userId = userLoginInfo.userId();
         String password = userLoginInfo.password();
         return switch (authenticationType) {
+            case NOOP -> Mono.just(ResponseStatusCode.OK);
             case HTTP -> authenticateUsingHttp(userLoginInfo);
             case JWT -> authenticateUsingJwt(password);
             case PASSWORD -> authenticateUsingPassword(userId, password);

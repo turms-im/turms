@@ -21,6 +21,7 @@ package im.turms.server.common.infra.property.constant;
  * @author James Chen
  */
 public enum AuthenticationType {
+    NOOP,
     HTTP,
     JWT,
     PASSWORD
