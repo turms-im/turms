@@ -163,7 +163,10 @@ public class SharedPropertyService implements ClusterService {
     private Mono<SharedClusterProperties> initializeSharedProperties() {
         LOGGER.info("Trying to get shared properties");
         TurmsProperties localProperties = propertiesManager.getLocalProperties();
-        SharedClusterProperties clusterProperties = new SharedClusterProperties(clusterId, localProperties, new Date());
+        SharedClusterProperties clusterProperties = new SharedClusterProperties(clusterId,
+                TurmsProperties.SCHEMA_VERSION,
+                localProperties,
+                new Date());
         if (nodeType == NodeType.GATEWAY) {
             clusterProperties.setServiceProperties(null);
         } else {

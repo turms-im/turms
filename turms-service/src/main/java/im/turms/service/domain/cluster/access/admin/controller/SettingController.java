@@ -27,6 +27,7 @@ import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesInspector;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.service.domain.cluster.access.admin.dto.response.SettingsDTO;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import io.swagger.v3.oas.annotations.media.Schema;
 import reactor.core.publisher.Mono;
@@ -50,9 +51,12 @@ public class SettingController extends BaseController {
 
     @GetMapping
     @RequiredPermission(CLUSTER_SETTING_QUERY)
-    public HttpHandlerResult<ResponseDTO<Map<String, Object>>> queryClusterSettings(
+    public HttpHandlerResult<ResponseDTO<SettingsDTO>> queryClusterSettings(
             boolean onlyMutable) {
-        return HttpHandlerResult.okIfTruthy(getPropertyToValueMap(propertiesManager.getGlobalProperties(), onlyMutable));
+        return HttpHandlerResult.okIfTruthy(new SettingsDTO(
+                TurmsProperties.SCHEMA_VERSION,
+                getPropertyToValueMap(propertiesManager.getGlobalProperties(), onlyMutable)
+        ));
     }
 
     /**
@@ -76,16 +80,16 @@ public class SettingController extends BaseController {
 
     @GetMapping("metadata")
     @RequiredPermission(CLUSTER_SETTING_QUERY)
-    public HttpHandlerResult<ResponseDTO<Map<String, Object>>> queryClusterConfigMetadata(
+    public HttpHandlerResult<ResponseDTO<SettingsDTO>> queryClusterConfigMetadata(
             boolean onlyMutable,
             boolean withValue) {
         Map<String, Object> metadata = onlyMutable
                 ? TurmsPropertiesInspector.ONLY_MUTABLE_METADATA
                 : TurmsPropertiesInspector.METADATA;
-        if (withValue) {
-            return HttpHandlerResult.okIfTruthy(mergeMetadataWithPropertyValue(metadata, propertiesManager.getGlobalProperties()));
-        }
-        return HttpHandlerResult.okIfTruthy(metadata);
+        Map<String, Object> settings = withValue
+                ? mergeMetadataWithPropertyValue(metadata, propertiesManager.getGlobalProperties())
+                : metadata;
+        return HttpHandlerResult.okIfTruthy(new SettingsDTO(TurmsProperties.SCHEMA_VERSION, settings));
     }
 
 }

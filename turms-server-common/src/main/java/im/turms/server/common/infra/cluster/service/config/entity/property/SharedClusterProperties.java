@@ -45,6 +45,8 @@ public class SharedClusterProperties {
     @Id
     private String clusterId;
 
+    private int schemaVersion;
+
     private CommonProperties commonProperties;
 
     private ServiceProperties serviceProperties;
@@ -55,8 +57,12 @@ public class SharedClusterProperties {
 
     private transient TurmsProperties turmsProperties;
 
-    public SharedClusterProperties(String clusterId, TurmsProperties localProperties, Date lastUpdatedTime) {
+    public SharedClusterProperties(String clusterId,
+                                   int schemaVersion,
+                                   TurmsProperties localProperties,
+                                   Date lastUpdatedTime) {
         this.clusterId = clusterId;
+        this.schemaVersion = schemaVersion;
         this.turmsProperties = localProperties;
         commonProperties = getCommonProperties(localProperties);
         serviceProperties = localProperties.getService();
@@ -79,21 +85,23 @@ public class SharedClusterProperties {
     }
 
     public void tryInitTurmsProperties() {
-        if (commonProperties != null) {
-            turmsProperties = new TurmsProperties(
-                    commonProperties.getCluster(),
-                    commonProperties.getFlightRecorder(),
-                    commonProperties.getHealthCheck(),
-                    commonProperties.getIp(),
-                    commonProperties.getLocation(),
-                    commonProperties.getLogging(),
-                    commonProperties.getPlugin(),
-                    commonProperties.getSecurity(),
-                    commonProperties.getShutdown(),
-                    commonProperties.getUserStatus(),
-                    gatewayProperties,
-                    serviceProperties);
+        CommonProperties localCommonProperties = commonProperties;
+        if (localCommonProperties == null) {
+            return;
         }
+        turmsProperties = new TurmsProperties(
+                localCommonProperties.getCluster(),
+                localCommonProperties.getFlightRecorder(),
+                localCommonProperties.getHealthCheck(),
+                localCommonProperties.getIp(),
+                localCommonProperties.getLocation(),
+                localCommonProperties.getLogging(),
+                localCommonProperties.getPlugin(),
+                localCommonProperties.getSecurity(),
+                localCommonProperties.getShutdown(),
+                localCommonProperties.getUserStatus(),
+                gatewayProperties,
+                serviceProperties);
     }
 
     @PropertySetter

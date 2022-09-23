@@ -52,6 +52,8 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class TurmsProperties {
 
+    public static final int SCHEMA_VERSION = 1;
+
     // Common
 
     @NestedConfigurationProperty

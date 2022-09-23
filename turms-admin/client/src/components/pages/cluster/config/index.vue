@@ -164,7 +164,7 @@ export default {
             this.loading = true;
             return this.fetchConfig()
                 .then(response => {
-                    this.defaultConfig = response.data.data;
+                    this.defaultConfig = response.data.data.settings;
                     this.currentConfig = this.$util.copy(this.defaultConfig);
                     if (this.initialized) {
                         this.$message.success(this.$t('refreshedDataSuccessfully'));
