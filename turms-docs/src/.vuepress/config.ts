@@ -1,32 +1,30 @@
 import { defineUserConfig } from 'vuepress';
-import type { DefaultThemeOptions } from 'vuepress';
-const { path } = require('@vuepress/utils');
+import { mdEnhancePlugin } from 'vuepress-plugin-md-enhance';
+import { searchPlugin } from '@vuepress/plugin-search';
+import { defaultTheme } from '@vuepress/theme-default';
 
-export default defineUserConfig<DefaultThemeOptions>({
+export default defineUserConfig({
     title: 'Turms Documentation',
     base: '/docs/',
     plugins: [
-        [
-            '@vuepress/plugin-search',
-            {
-                locales: {
-                    '/': {
-                        placeholder: '搜索',
-                    }
-                },
-                maxSuggestions: 10
-            }
-        ],
-        [
-            path.resolve(__dirname, '../plugins/mermaid'),
-        ]
+        searchPlugin({
+            locales: {
+                '/': {
+                    placeholder: '搜索',
+                }
+            },
+            maxSuggestions: 10
+        }),
+        mdEnhancePlugin({
+            codetabs: true,
+            mermaid: true
+        })
     ],
-    themeConfig: {
+    theme: defaultTheme({
         repo: 'https://github.com/turms-im/turms',
         contributors: false,
         lastUpdatedText: '上次更新',
         logo: 'https://raw.githubusercontent.com/turms-im/assets/master/logo/pegion.svg',
-        smoothScroll: false,
         sidebar: [
             {
                 text: '介绍',
@@ -102,5 +100,5 @@ export default defineUserConfig<DefaultThemeOptions>({
                 ]
             }
         ]
-    }
+    })
 });
