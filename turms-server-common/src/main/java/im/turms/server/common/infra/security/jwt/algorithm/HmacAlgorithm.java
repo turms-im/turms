@@ -22,17 +22,17 @@ import im.turms.server.common.infra.security.jwt.Jwt;
 /**
  * @author James Chen
  */
-public class HmacAlgorithm extends JwtAlgorithm {
+public class HmacAlgorithm extends SymmetricAlgorithm {
 
     private final byte[] secret;
 
-    public HmacAlgorithm(String id, String algorithm, byte[] secretBytes) {
-        super(id, algorithm);
-        int minLength = switch (id) {
-            case "HS256" -> 256 / 8;
-            case "HS384" -> 384 / 8;
-            case "HS512" -> 512 / 8;
-            default -> throw new IllegalArgumentException("Unknown HMAC algorithm ID: " + id);
+    public HmacAlgorithm(JwtAlgorithmDefinition definition, byte[] secretBytes) {
+        super(definition);
+        int minLength = switch (definition) {
+            case HS256 -> 256 / 8;
+            case HS384 -> 384 / 8;
+            case HS512 -> 512 / 8;
+            default -> throw new IllegalArgumentException("Unknown HMAC algorithm: " + definition.getJwtAlgorithmName());
         };
         if (secretBytes.length < minLength) {
             throw new IllegalArgumentException("The length of secret must be at least " + minLength + " bytes long");
@@ -42,7 +42,7 @@ public class HmacAlgorithm extends JwtAlgorithm {
 
     @Override
     public boolean verify(Jwt jwt) {
-        return JwtSignatureUtil.verifySignature(getAlgorithm(),
+        return verifySignature(getJavaAlgorithmName(),
                 secret,
                 jwt.encodedHeaderBytes(),
                 jwt.encodedPayloadBytes(),

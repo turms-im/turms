@@ -24,18 +24,18 @@ import java.security.interfaces.RSAPublicKey;
 /**
  * @author James Chen
  */
-public class RsaAlgorithm extends JwtAlgorithm {
+public class RsaAlgorithm extends AsymmetricAlgorithm {
 
     private final RSAPublicKey publicKey;
 
-    public RsaAlgorithm(String id, String algorithm, RSAPublicKey publicKey) {
-        super(id, algorithm);
+    public RsaAlgorithm(JwtAlgorithmDefinition definition, RSAPublicKey publicKey) {
+        super(definition);
         this.publicKey = publicKey;
     }
 
     @Override
     public boolean verify(Jwt jwt) {
-        return JwtSignatureUtil.verifySignature(getAlgorithm(),
+        return verifySignature(getJavaAlgorithmName(),
                 publicKey,
                 jwt.encodedHeaderBytes(),
                 jwt.encodedPayloadBytes(),

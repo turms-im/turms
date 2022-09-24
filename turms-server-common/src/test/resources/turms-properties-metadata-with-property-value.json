@@ -869,6 +869,102 @@
               "type": "string",
               "value": ""
             },
+            "ps256": {
+              "p12": {
+                "alias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                }
+              },
+              "pemFilePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string",
+                "value": ""
+              }
+            },
+            "ps384": {
+              "p12": {
+                "alias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                }
+              },
+              "pemFilePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string",
+                "value": ""
+              }
+            },
+            "ps512": {
+              "p12": {
+                "alias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string",
+                  "value": ""
+                }
+              },
+              "pemFilePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string",
+                "value": ""
+              }
+            },
             "rsa256": {
               "p12": {
                 "alias": {

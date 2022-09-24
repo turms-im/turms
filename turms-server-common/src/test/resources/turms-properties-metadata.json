@@ -781,6 +781,90 @@
               "mutable": false,
               "type": "string"
             },
+            "ps256": {
+              "p12": {
+                "alias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                },
+                "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                }
+              },
+              "pemFilePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string"
+              }
+            },
+            "ps384": {
+              "p12": {
+                "alias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                },
+                "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                }
+              },
+              "pemFilePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string"
+              }
+            },
+            "ps512": {
+              "p12": {
+                "alias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                },
+                "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                }
+              },
+              "pemFilePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string"
+              }
+            },
             "rsa256": {
               "p12": {
                 "alias": {

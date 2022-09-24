@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.security;
 
 import io.netty.util.concurrent.FastThreadLocal;
+import lombok.SneakyThrows;
 
 import javax.crypto.Mac;
 import java.util.Map;
@@ -56,6 +57,11 @@ public final class MacPool {
             "HmacSHA384", HMAC_SHA_384,
             "HmacSHA512", HMAC_SHA_512
     );
+
+    @SneakyThrows
+    public static void ensureExistence(String algorithm) {
+        Mac.getInstance(algorithm);
+    }
 
     public static Mac get(String algorithm) {
         FastThreadLocal<Mac> threadLocal = NAME_TO_ALGORITHM.get(algorithm);

@@ -29,7 +29,9 @@ import im.turms.server.common.infra.security.CertificateUtil;
 import im.turms.server.common.infra.security.jwt.algorithm.EcdsaAlgorithm;
 import im.turms.server.common.infra.security.jwt.algorithm.HmacAlgorithm;
 import im.turms.server.common.infra.security.jwt.algorithm.JwtAlgorithm;
+import im.turms.server.common.infra.security.jwt.algorithm.JwtAlgorithmDefinition;
 import im.turms.server.common.infra.security.jwt.algorithm.RsaAlgorithm;
+import im.turms.server.common.infra.security.jwt.algorithm.RsaPssAlgorithm;
 import im.turms.server.common.infra.security.jwt.exception.CorruptedJwtException;
 import im.turms.server.common.infra.security.jwt.exception.SignatureVerificationException;
 import lombok.SneakyThrows;
@@ -40,6 +42,8 @@ import java.nio.file.Path;
 import java.security.PublicKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.MGF1ParameterSpec;
+import java.security.spec.PSSParameterSpec;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -66,25 +70,28 @@ public class JwtManager {
 
     @SneakyThrows
     public JwtManager(JwtAuthenticationVerificationProperties verificationProperties,
-                      JwtKeyAlgorithmProperties ecdsa256,
-                      JwtKeyAlgorithmProperties ecdsa384,
-                      JwtKeyAlgorithmProperties ecdsa512,
                       JwtKeyAlgorithmProperties rsa256,
                       JwtKeyAlgorithmProperties rsa384,
                       JwtKeyAlgorithmProperties rsa512,
+                      JwtKeyAlgorithmProperties ps256,
+                      JwtKeyAlgorithmProperties ps384,
+                      JwtKeyAlgorithmProperties ps512,
+                      JwtKeyAlgorithmProperties ecdsa256,
+                      JwtKeyAlgorithmProperties ecdsa384,
+                      JwtKeyAlgorithmProperties ecdsa512,
                       String hmac256SecretFilePath,
                       String hmac384SecretFilePath,
                       String hmac512SecretFilePath) {
         String issuer = verificationProperties.getIssuer();
-        if (!StringUtil.isBlank(issuer)) {
+        if (StringUtil.isNotBlank(issuer)) {
             verifications.add(payload -> issuer.equals(payload.issuer()));
         }
         String subject = verificationProperties.getSubject();
-        if (!StringUtil.isBlank(subject)) {
+        if (StringUtil.isNotBlank(subject)) {
             verifications.add(payload -> subject.equals(payload.subject()));
         }
         String audience = verificationProperties.getAudience();
-        if (!StringUtil.isBlank(audience)) {
+        if (StringUtil.isNotBlank(audience)) {
             verifications.add(payload -> CollectionUtil.isNotEmpty(payload.audiences())
                     && payload.audiences().contains(audience));
         }
@@ -96,37 +103,97 @@ public class JwtManager {
 
         List<Map.Entry<String, JwtAlgorithm>> algorithms = new ArrayList<>(9);
         PublicKey publicKey;
-        if ((publicKey = getPublicKey(CertificateUtil.ALGORITHM_RSA, rsa256)) != null) {
-            algorithms.add(Map.entry("RS256", new RsaAlgorithm("RS256", "SHA256withRSA", (RSAPublicKey) publicKey)));
+        JwtAlgorithmDefinition definition;
+        if ((publicKey = getRsaPublicKey(rsa256)) != null) {
+            definition = JwtAlgorithmDefinition.RS256;
+            algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
+                    new RsaAlgorithm(definition, (RSAPublicKey) publicKey)));
         }
-        if ((publicKey = getPublicKey(CertificateUtil.ALGORITHM_RSA, rsa384)) != null) {
-            algorithms.add(Map.entry("RS384", new RsaAlgorithm("RS384", "SHA384withRSA", (RSAPublicKey) publicKey)));
+        if ((publicKey = getRsaPublicKey(rsa384)) != null) {
+            definition = JwtAlgorithmDefinition.RS384;
+            algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
+                    new RsaAlgorithm(definition, (RSAPublicKey) publicKey)));
         }
-        if ((publicKey = getPublicKey(CertificateUtil.ALGORITHM_RSA, rsa512)) != null) {
-            algorithms.add(Map.entry("RS512", new RsaAlgorithm("RS512", "SHA512withRSA", (RSAPublicKey) publicKey)));
+        if ((publicKey = getRsaPublicKey(rsa512)) != null) {
+            definition = JwtAlgorithmDefinition.RS512;
+            algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
+                    new RsaAlgorithm(definition, (RSAPublicKey) publicKey)));
         }
-        if ((publicKey = getPublicKey(CertificateUtil.ALGORITHM_EC, ecdsa256)) != null) {
-            algorithms.add(Map.entry("ES256", new EcdsaAlgorithm("ES256", "SHA256withECDSA", 32, (ECPublicKey) publicKey)));
+        if ((publicKey = getRsaPublicKey(ps256)) != null) {
+            definition = JwtAlgorithmDefinition.PS256;
+            algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
+                    new RsaPssAlgorithm(definition, (RSAPublicKey) publicKey,
+                            new PSSParameterSpec(
+                                    MGF1ParameterSpec.SHA256.getDigestAlgorithm(),
+                                    "MGF1",
+                                    MGF1ParameterSpec.SHA256,
+                                    32, 1
+                            ))));
         }
-        if ((publicKey = getPublicKey(CertificateUtil.ALGORITHM_EC, ecdsa384)) != null) {
-            algorithms.add(Map.entry("ES384", new EcdsaAlgorithm("ES384", "SHA384withECDSA", 48, (ECPublicKey) publicKey)));
+        if ((publicKey = getRsaPublicKey(ps384)) != null) {
+            definition = JwtAlgorithmDefinition.PS384;
+            algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
+                    new RsaPssAlgorithm(definition, (RSAPublicKey) publicKey,
+                            new PSSParameterSpec(
+                                    MGF1ParameterSpec.SHA384.getDigestAlgorithm(),
+                                    "MGF1",
+                                    MGF1ParameterSpec.SHA384,
+                                    48, 1
+                            ))));
         }
-        if ((publicKey = getPublicKey(CertificateUtil.ALGORITHM_EC, ecdsa512)) != null) {
-            algorithms.add(Map.entry("ES512", new EcdsaAlgorithm("ES512", "SHA512withECDSA", 66, (ECPublicKey) publicKey)));
+        if ((publicKey = getRsaPublicKey(ps512)) != null) {
+            definition = JwtAlgorithmDefinition.PS512;
+            algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
+                    new RsaPssAlgorithm(definition, (RSAPublicKey) publicKey,
+                            new PSSParameterSpec(
+                                    MGF1ParameterSpec.SHA512.getDigestAlgorithm(),
+                                    "MGF1",
+                                    MGF1ParameterSpec.SHA512,
+                                    64, 1
+                            ))));
         }
-        if (!StringUtil.isBlank(hmac256SecretFilePath)) {
-            algorithms.add(Map.entry("HS256", new HmacAlgorithm("HS256", "HmacSHA256", Files.readAllBytes(Path.of(hmac256SecretFilePath)))));
+        if ((publicKey = getEcPublicKey(ecdsa256)) != null) {
+            definition = JwtAlgorithmDefinition.ES256;
+            algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
+                    new EcdsaAlgorithm(definition, 32, (ECPublicKey) publicKey)));
         }
-        if (!StringUtil.isBlank(hmac384SecretFilePath)) {
-            algorithms.add(Map.entry("HS384", new HmacAlgorithm("HS384", "HmacSHA384", Files.readAllBytes(Path.of(hmac384SecretFilePath)))));
+        if ((publicKey = getEcPublicKey(ecdsa384)) != null) {
+            definition = JwtAlgorithmDefinition.ES384;
+            algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
+                    new EcdsaAlgorithm(definition, 48, (ECPublicKey) publicKey)));
         }
-        if (!StringUtil.isBlank(hmac512SecretFilePath)) {
-            algorithms.add(Map.entry("HS512", new HmacAlgorithm("HS512", "HmacSHA512", Files.readAllBytes(Path.of(hmac512SecretFilePath)))));
+        if ((publicKey = getEcPublicKey(ecdsa512)) != null) {
+            definition = JwtAlgorithmDefinition.ES512;
+            algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
+                    new EcdsaAlgorithm(definition, 66, (ECPublicKey) publicKey)));
+        }
+        if (StringUtil.isNotBlank(hmac256SecretFilePath)) {
+            definition = JwtAlgorithmDefinition.HS256;
+            algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
+                    new HmacAlgorithm(definition, Files.readAllBytes(Path.of(hmac256SecretFilePath)))));
+        }
+        if (StringUtil.isNotBlank(hmac384SecretFilePath)) {
+            definition = JwtAlgorithmDefinition.HS384;
+            algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
+                    new HmacAlgorithm(definition, Files.readAllBytes(Path.of(hmac384SecretFilePath)))));
+        }
+        if (StringUtil.isNotBlank(hmac512SecretFilePath)) {
+            definition = JwtAlgorithmDefinition.HS512;
+            algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
+                    new HmacAlgorithm(definition, Files.readAllBytes(Path.of(hmac512SecretFilePath)))));
         }
         nameToAlgorithm = Map.ofEntries(algorithms.toArray(new Map.Entry[0]));
     }
 
-    private static <T extends PublicKey> T getPublicKey(String algorithm, JwtKeyAlgorithmProperties properties) {
+    private RSAPublicKey getRsaPublicKey(JwtKeyAlgorithmProperties properties) {
+        return getPublicKey(CertificateUtil.ALGORITHM_RSA, properties);
+    }
+
+    private ECPublicKey getEcPublicKey(JwtKeyAlgorithmProperties properties) {
+        return getPublicKey(CertificateUtil.ALGORITHM_EC, properties);
+    }
+
+    private <T extends PublicKey> T getPublicKey(String algorithm, JwtKeyAlgorithmProperties properties) {
         String pemFilePath = properties.getPemFilePath();
         if (StringUtil.isNotBlank(pemFilePath)) {
             return (T) CertificateUtil.getPublicKeyFromPem(new File(pemFilePath), algorithm);

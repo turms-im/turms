@@ -17,26 +17,32 @@
 
 package im.turms.server.common.infra.security.jwt.algorithm;
 
-import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.security.jwt.Jwt;
-import lombok.Data;
+
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.AlgorithmParameterSpec;
 
 /**
  * @author James Chen
  */
-@Data
-public abstract sealed class JwtAlgorithm permits AsymmetricAlgorithm, SymmetricAlgorithm {
+public class RsaPssAlgorithm extends AsymmetricAlgorithm {
 
-    static final byte JWT_PART_SEPARATOR = AsciiCode.PERIOD;
+    private final RSAPublicKey publicKey;
+    private final AlgorithmParameterSpec parameterSpec;
 
-    private final String jwtAlgorithmName;
-    private final String javaAlgorithmName;
-
-    protected JwtAlgorithm(JwtAlgorithmDefinition definition) {
-        this.jwtAlgorithmName = definition.getJwtAlgorithmName();
-        this.javaAlgorithmName = definition.getJavaAlgorithmName();
+    public RsaPssAlgorithm(JwtAlgorithmDefinition definition, RSAPublicKey publicKey, AlgorithmParameterSpec parameterSpec) {
+        super(definition);
+        this.publicKey = publicKey;
+        this.parameterSpec = parameterSpec;
     }
 
-    public abstract boolean verify(Jwt jwt);
-
+    @Override
+    public boolean verify(Jwt jwt) {
+        return verifySignature(getJavaAlgorithmName(),
+                parameterSpec,
+                publicKey,
+                jwt.encodedHeaderBytes(),
+                jwt.encodedPayloadBytes(),
+                jwt.decodedSignatureBytes());
+    }
 }

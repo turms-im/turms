@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.security;
 
 import io.netty.util.concurrent.FastThreadLocal;
+import lombok.SneakyThrows;
 
 import java.security.Signature;
 import java.util.Map;
@@ -80,6 +81,11 @@ public final class SignaturePool {
             "SHA384withECDSA", SHA_384_WITH_ECDSA,
             "SHA512withECDSA", SHA_512_WITH_ECDSA
     );
+
+    @SneakyThrows
+    public static void ensureExistence(String algorithm) {
+        Signature.getInstance(algorithm);
+    }
 
     public static Signature get(String algorithm) {
         FastThreadLocal<Signature> threadLocal = NAME_TO_ALGORITHM.get(algorithm);

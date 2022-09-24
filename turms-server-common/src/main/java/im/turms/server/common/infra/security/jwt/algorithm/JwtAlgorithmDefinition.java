@@ -17,26 +17,33 @@
 
 package im.turms.server.common.infra.security.jwt.algorithm;
 
-import im.turms.server.common.infra.lang.AsciiCode;
-import im.turms.server.common.infra.security.jwt.Jwt;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * @author James Chen
  */
-@Data
-public abstract sealed class JwtAlgorithm permits AsymmetricAlgorithm, SymmetricAlgorithm {
+@Getter
+@AllArgsConstructor
+public enum JwtAlgorithmDefinition {
 
-    static final byte JWT_PART_SEPARATOR = AsciiCode.PERIOD;
+    RS256("RS256", "SHA256withRSA"),
+    RS384("RS384", "SHA384withRSA"),
+    RS512("RS512", "SHA512withRSA"),
+
+    PS256("PS256", "SHA256withRSAandMGF1"),
+    PS384("PS384", "SHA384withRSAandMGF1"),
+    PS512("PS512", "SHA512withRSAandMGF1"),
+
+    ES256("ES256", "SHA256withECDSA"),
+    ES384("ES384", "SHA384withECDSA"),
+    ES512("ES512", "SHA512withECDSA"),
+
+    HS256("HS256", "HmacSHA256"),
+    HS384("HS384", "HmacSHA384"),
+    HS512("HS512", "HmacSHA512");
 
     private final String jwtAlgorithmName;
     private final String javaAlgorithmName;
-
-    protected JwtAlgorithm(JwtAlgorithmDefinition definition) {
-        this.jwtAlgorithmName = definition.getJwtAlgorithmName();
-        this.javaAlgorithmName = definition.getJavaAlgorithmName();
-    }
-
-    public abstract boolean verify(Jwt jwt);
 
 }

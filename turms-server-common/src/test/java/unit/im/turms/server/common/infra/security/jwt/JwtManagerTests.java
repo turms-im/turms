@@ -47,12 +47,15 @@ class JwtManagerTests {
                 .pemFilePath(rsaPemFilePath)
                 .build();
         JwtManager jwtManager = new JwtManager(new JwtAuthenticationVerificationProperties(),
-                keyAuthenticationProperties,
-                keyAuthenticationProperties,
-                keyAuthenticationProperties,
                 rsaKeyAuthenticationProperties,
                 rsaKeyAuthenticationProperties,
                 rsaKeyAuthenticationProperties,
+                keyAuthenticationProperties,
+                keyAuthenticationProperties,
+                keyAuthenticationProperties,
+                keyAuthenticationProperties,
+                keyAuthenticationProperties,
+                keyAuthenticationProperties,
                 hmacSecretFilePath,
                 "",
                 "");

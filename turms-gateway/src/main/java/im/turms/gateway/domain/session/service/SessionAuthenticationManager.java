@@ -101,12 +101,15 @@ public class SessionAuthenticationManager implements SessionAuthenticationSuppor
             expectedCustomPayloadClaims = jwtProperties.getExpectation().getCustomPayloadClaims();
             JwtAlgorithmProperties jwtAlgorithmProperties = jwtProperties.getAlgorithm();
             jwtManager = new JwtManager(jwtProperties.getVerification(),
-                    jwtAlgorithmProperties.getEcdsa256(),
-                    jwtAlgorithmProperties.getEcdsa384(),
-                    jwtAlgorithmProperties.getEcdsa512(),
                     jwtAlgorithmProperties.getRsa256(),
                     jwtAlgorithmProperties.getRsa384(),
                     jwtAlgorithmProperties.getRsa512(),
+                    jwtAlgorithmProperties.getPs256(),
+                    jwtAlgorithmProperties.getPs384(),
+                    jwtAlgorithmProperties.getPs512(),
+                    jwtAlgorithmProperties.getEcdsa256(),
+                    jwtAlgorithmProperties.getEcdsa384(),
+                    jwtAlgorithmProperties.getEcdsa512(),
                     jwtAlgorithmProperties.getHmac256SecretFilePath(),
                     jwtAlgorithmProperties.getHmac384SecretFilePath(),
                     jwtAlgorithmProperties.getHmac512SecretFilePath());

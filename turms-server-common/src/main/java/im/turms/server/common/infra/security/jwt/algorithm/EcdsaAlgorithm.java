@@ -28,13 +28,13 @@ import java.security.interfaces.ECPublicKey;
 /**
  * @author James Chen
  */
-public class EcdsaAlgorithm extends JwtAlgorithm {
+public class EcdsaAlgorithm extends AsymmetricAlgorithm {
 
     private final int ecNumberSize;
     private final ECPublicKey publicKey;
 
-    public EcdsaAlgorithm(String id, String algorithm, int ecNumberSize, ECPublicKey publicKey) {
-        super(id, algorithm);
+    public EcdsaAlgorithm(JwtAlgorithmDefinition definition, int ecNumberSize, ECPublicKey publicKey) {
+        super(definition);
         this.ecNumberSize = ecNumberSize;
         this.publicKey = publicKey;
     }
@@ -44,7 +44,7 @@ public class EcdsaAlgorithm extends JwtAlgorithm {
     public boolean verify(Jwt jwt) {
         byte[] signatureBytes = jwt.decodedSignatureBytes();
         validateSignatureStructure(signatureBytes, publicKey);
-        return JwtSignatureUtil.verifySignature(getAlgorithm(),
+        return verifySignature(getJavaAlgorithmName(),
                 publicKey,
                 jwt.encodedHeaderBytes(),
                 jwt.encodedPayloadBytes(),

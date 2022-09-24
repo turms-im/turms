@@ -33,15 +33,6 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class JwtAlgorithmProperties {
 
     @NestedConfigurationProperty
-    private JwtKeyAlgorithmProperties ecdsa256 = new JwtKeyAlgorithmProperties();
-
-    @NestedConfigurationProperty
-    private JwtKeyAlgorithmProperties ecdsa384 = new JwtKeyAlgorithmProperties();
-
-    @NestedConfigurationProperty
-    private JwtKeyAlgorithmProperties ecdsa512 = new JwtKeyAlgorithmProperties();
-
-    @NestedConfigurationProperty
     private JwtKeyAlgorithmProperties rsa256 = new JwtKeyAlgorithmProperties();
 
     @NestedConfigurationProperty
@@ -49,6 +40,24 @@ public class JwtAlgorithmProperties {
 
     @NestedConfigurationProperty
     private JwtKeyAlgorithmProperties rsa512 = new JwtKeyAlgorithmProperties();
+
+    @NestedConfigurationProperty
+    private JwtKeyAlgorithmProperties ps256 = new JwtKeyAlgorithmProperties();
+
+    @NestedConfigurationProperty
+    private JwtKeyAlgorithmProperties ps384 = new JwtKeyAlgorithmProperties();
+
+    @NestedConfigurationProperty
+    private JwtKeyAlgorithmProperties ps512 = new JwtKeyAlgorithmProperties();
+
+    @NestedConfigurationProperty
+    private JwtKeyAlgorithmProperties ecdsa256 = new JwtKeyAlgorithmProperties();
+
+    @NestedConfigurationProperty
+    private JwtKeyAlgorithmProperties ecdsa384 = new JwtKeyAlgorithmProperties();
+
+    @NestedConfigurationProperty
+    private JwtKeyAlgorithmProperties ecdsa512 = new JwtKeyAlgorithmProperties();
 
     private String hmac256SecretFilePath = "";
 

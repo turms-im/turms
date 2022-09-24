@@ -17,40 +17,25 @@
 
 package im.turms.server.common.infra.security.jwt.algorithm;
 
-import im.turms.server.common.infra.lang.AsciiCode;
-import im.turms.server.common.infra.security.MacPool;
 import im.turms.server.common.infra.security.SignaturePool;
 import lombok.SneakyThrows;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.security.MessageDigest;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.security.spec.AlgorithmParameterSpec;
 
 /**
  * @author James Chen
  */
-public final class JwtSignatureUtil {
+public abstract non-sealed class AsymmetricAlgorithm extends JwtAlgorithm {
 
-    private static final byte JWT_PART_SEPARATOR = AsciiCode.PERIOD;
-
-    private JwtSignatureUtil() {
-    }
-
-    public static boolean verifySignature(
-            String algorithm,
-            byte[] secretBytes,
-            byte[] headerBytes,
-            byte[] payloadBytes,
-            byte[] signatureBytes
-    ) {
-        return MessageDigest.isEqual(signatureBytes,
-                createSignature(algorithm, secretBytes, headerBytes, payloadBytes));
+    protected AsymmetricAlgorithm(JwtAlgorithmDefinition definition) {
+        super(definition);
+        SignaturePool.ensureExistence(definition.getJavaAlgorithmName());
     }
 
     @SneakyThrows
-    public static boolean verifySignature(
+    public boolean verifySignature(
             String algorithm,
             PublicKey publicKey,
             byte[] headerBytes,
@@ -66,17 +51,21 @@ public final class JwtSignatureUtil {
     }
 
     @SneakyThrows
-    private static byte[] createSignature(
+    public boolean verifySignature(
             String algorithm,
-            byte[] secretBytes,
+            AlgorithmParameterSpec parameterSpec,
+            PublicKey publicKey,
             byte[] headerBytes,
-            byte[] payloadBytes
+            byte[] payloadBytes,
+            byte[] signatureBytes
     ) {
-        Mac mac = MacPool.get(algorithm);
-        mac.init(new SecretKeySpec(secretBytes, algorithm));
-        mac.update(headerBytes);
-        mac.update(JWT_PART_SEPARATOR);
-        return mac.doFinal(payloadBytes);
+        Signature signature = SignaturePool.get(algorithm);
+        signature.setParameter(parameterSpec);
+        signature.initVerify(publicKey);
+        signature.update(headerBytes);
+        signature.update(JWT_PART_SEPARATOR);
+        signature.update(payloadBytes);
+        return signature.verify(signatureBytes);
     }
 
 }
