@@ -17,10 +17,12 @@
 
 package im.turms.server.common.infra.lang;
 
+import java.util.Set;
+
 /**
  * @author James Chen
  */
-public class PrimitiveDefaultUtil {
+public class PrimitiveUtil {
 
     private static final Character CHAR_DEFAULT = '\0';
     private static final Byte BYTE_DEFAULT = 0;
@@ -30,7 +32,26 @@ public class PrimitiveDefaultUtil {
     private static final Float FLOAT_DEFAULT = 0F;
     private static final Double DOUBLE_DEFAULT = 0D;
 
-    private PrimitiveDefaultUtil() {
+    private static final Set<Object> WRAPPERS = Set.of(
+            Byte.class,
+            Short.class,
+            Integer.class,
+            Long.class,
+            Float.class,
+            Double.class,
+            Boolean.class,
+            Character.class
+    );
+
+    private PrimitiveUtil() {
+    }
+
+    public static boolean isPrimitiveOrWrapperClass(Class<?> type) {
+        return type.isPrimitive() || isWrapperClass(type);
+    }
+
+    public static boolean isWrapperClass(Class<?> type) {
+        return WRAPPERS.contains(type);
     }
 
     public static <T> T getDefaultValue(Class<T> type) {

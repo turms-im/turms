@@ -32,7 +32,7 @@ import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.io.BaseFileResource;
 import im.turms.server.common.infra.json.JsonUtil;
 import im.turms.server.common.infra.lang.Pair;
-import im.turms.server.common.infra.lang.PrimitiveDefaultUtil;
+import im.turms.server.common.infra.lang.PrimitiveUtil;
 import im.turms.server.common.infra.openapi.OpenApiBuilder;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
 import io.netty.buffer.ByteBuf;
@@ -176,14 +176,14 @@ public class HttpEndpointCollector {
         Class<?> type = parameter.getType();
         JavaType typeForJackson = JsonUtil.constructJavaType(type);
         Class<?> elementClass = ReflectionUtil.getElementClass(parameter.getParameterizedType());
-        JavaType elementClassForJackson = elementClass == null ? null : JsonUtil.constructJavaType(elementClass);
+        JavaType elementTypeForJackson = elementClass == null ? null : JsonUtil.constructJavaType(elementClass);
         if (queryParam == null) {
-            Object defaultValue = PrimitiveDefaultUtil.getDefaultValue(type);
+            Object defaultValue = PrimitiveUtil.getDefaultValue(type);
             return new MethodParameterInfo(parameter.getName(),
                     type,
                     typeForJackson,
                     elementClass,
-                    elementClassForJackson,
+                    elementTypeForJackson,
                     defaultValue == null,
                     false,
                     false,
@@ -194,13 +194,13 @@ public class HttpEndpointCollector {
         }
         String name = queryParam.value().isBlank() ? parameter.getName() : queryParam.value();
         Object parsedDefaultValue = queryParam.defaultValue().isBlank()
-                ? PrimitiveDefaultUtil.getDefaultValue(type)
+                ? PrimitiveUtil.getDefaultValue(type)
                 : HttpRequestParamParser.parsePlainValue(queryParam.defaultValue(), type, typeForJackson);
         return new MethodParameterInfo(name,
                 type,
                 typeForJackson,
                 elementClass,
-                elementClassForJackson,
+                elementTypeForJackson,
                 queryParam.required(),
                 false,
                 false,
@@ -227,7 +227,7 @@ public class HttpEndpointCollector {
                 true,
                 false,
                 false,
-                PrimitiveDefaultUtil.getDefaultValue(type),
+                PrimitiveUtil.getDefaultValue(type),
                 null,
                 true);
     }

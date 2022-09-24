@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.collection;
 
 import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.lang.PrimitiveUtil;
 import org.eclipse.collections.api.collection.ImmutableCollection;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
@@ -96,6 +97,8 @@ public final class CollectionUtil {
             return 0;
         } else if (iterable instanceof Collection<?> collection) {
             return collection.size();
+        } else if (iterable instanceof Map<?, ?> map) {
+            return map.size();
         } else {
             int size = 0;
             for (Object ignored : iterable) {
@@ -190,9 +193,90 @@ public final class CollectionUtil {
         return true;
     }
 
-    public static boolean containsAllLooseComparison(Map<?, ?> map1, Map<?, String> map2) {
+    public static boolean containsAllLooseComparison(Map<?, ?> map1, Map<?, ?> map2) {
         for (Map.Entry<?, ?> entry : map2.entrySet()) {
-            if (!StringUtil.toString(entry.getValue()).equals(StringUtil.toString(map1.get(entry.getKey())))) {
+            if (!areTwoObjectsLooselyEqual(map1.get(entry.getKey()), entry.getValue())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean areTwoObjectsLooselyEqual(@Nullable Object actualValue, @Nullable Object expectedValue) {
+        if (actualValue == null) {
+            return null == expectedValue;
+        } else if (expectedValue == null) {
+            return false;
+        }
+        if (expectedValue.equals(actualValue)) {
+            return true;
+        }
+        if (expectedValue instanceof String || PrimitiveUtil.isPrimitiveOrWrapperClass(expectedValue.getClass())) {
+            if (actualValue instanceof String || PrimitiveUtil.isPrimitiveOrWrapperClass(actualValue.getClass())) {
+                return expectedValue.toString().equals(actualValue.toString());
+            } else {
+                return false;
+            }
+        }
+        if (expectedValue.getClass().isArray()) {
+            return areCollectionsLooselyEqual(ArrayUtil.getArray(expectedValue), actualValue);
+        } else if (expectedValue instanceof Collection<?> expectedValueCollection) {
+            return areCollectionsLooselyEqual(expectedValueCollection, actualValue);
+        } else if (expectedValue instanceof Map<?, ?> expectedValueMap) {
+            return actualValue instanceof Map<?, ?> actualValueMap
+                    && containsAllLooseComparison(actualValueMap, expectedValueMap);
+        }
+        return false;
+    }
+
+    private static boolean areCollectionsLooselyEqual(Object[] array, Object value) {
+        if (value.getClass().isArray()) {
+            Object[] values = ArrayUtil.getArray(value);
+            return areArraysLooselyEqual(array, values);
+        } else if (value instanceof Collection<?> values) {
+            return areCollectionLooselyEqual(values, array);
+        }
+        return false;
+    }
+
+    private static boolean areCollectionsLooselyEqual(Collection<?> values1, Object values2) {
+        if (values2.getClass().isArray()) {
+            return areCollectionLooselyEqual(values1, (Object[]) values2);
+        } else if (values2 instanceof Collection<?> values) {
+            if (values1.size() != values.size()) {
+                return false;
+            }
+            Iterator<?> firstIterator = values1.iterator();
+            Iterator<?> secondIterator = values.iterator();
+            while (firstIterator.hasNext()) {
+                if (!areTwoObjectsLooselyEqual(firstIterator.next(), secondIterator.next())) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean areCollectionLooselyEqual(Collection<?> values1, Object[] values2) {
+        if (values1.size() != values2.length) {
+            return false;
+        }
+        int i = 0;
+        for (Object value : values1) {
+            if (!areTwoObjectsLooselyEqual(values2[i++], value)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean areArraysLooselyEqual(Object[] values1, Object[] values2) {
+        if (values1.length != values2.length) {
+            return false;
+        }
+        for (int i = 0; i < values1.length; i++) {
+            if (!areTwoObjectsLooselyEqual(values1[i], values2[i])) {
                 return false;
             }
         }
