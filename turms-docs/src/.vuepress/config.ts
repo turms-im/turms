@@ -89,7 +89,20 @@ export default defineUserConfig({
                     }
                 ]
             },
-            '/for-developers/client-api.md',
+            {
+                text: '客户端指南',
+                collapsible: true,
+                children: [
+                    '/for-developers/client-quick-start.md',
+                    '/for-developers/client-requirements.md',
+                    '/for-developers/client-api.md',
+                    '/for-developers/client-session.md',
+                    '/for-developers/client-metrics.md',
+                    '/for-developers/client-authentication.md',
+                    '/for-developers/client-server-protocol.md',
+                    '/for-developers/client-turms-client-js.md'
+                ]
+            },
             '/for-developers/turms-admin.md',
             {
                 text: '手册',
