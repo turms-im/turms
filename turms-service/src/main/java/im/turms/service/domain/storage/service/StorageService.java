@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Method;
 
 /**
  * @author James Chen
@@ -36,10 +37,27 @@ public class StorageService {
 
     private static final Mono STORAGE_NOT_IMPLEMENTED = Mono.error(ResponseException.get(ResponseStatusCode.STORAGE_NOT_IMPLEMENTED));
 
+    private static final Method QUERY_PRESIGNED_GET_URL_METHOD;
+    private static final Method QUERY_PRESIGNED_PUT_URL_METHOD;
+    private static final Method DELETE_RESOURCE_METHOD;
+
     private final PluginManager pluginManager;
 
     public StorageService(PluginManager pluginManager) {
         this.pluginManager = pluginManager;
+    }
+
+    static {
+        try {
+            QUERY_PRESIGNED_GET_URL_METHOD = StorageServiceProvider.class
+                    .getDeclaredMethod("queryPresignedGetUrl", Long.class, ContentType.class, String.class, Long.class);
+            QUERY_PRESIGNED_PUT_URL_METHOD = StorageServiceProvider.class
+                    .getDeclaredMethod("queryPresignedPutUrl", Long.class, ContentType.class, String.class, Long.class, long.class);
+            DELETE_RESOURCE_METHOD = StorageServiceProvider.class
+                    .getDeclaredMethod("deleteResource", Long.class, ContentType.class, String.class, Long.class);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Mono<String> queryPresignedGetUrl(Long requesterId,
@@ -53,7 +71,7 @@ public class StorageService {
             return Mono.error(e);
         }
         return pluginManager.invokeFirstExtensionPoint(StorageServiceProvider.class,
-                "queryPresignedGetUrl",
+                QUERY_PRESIGNED_GET_URL_METHOD,
                 STORAGE_NOT_IMPLEMENTED,
                 provider -> provider.queryPresignedGetUrl(requesterId, contentType, keyStr, keyNum));
     }
@@ -70,7 +88,7 @@ public class StorageService {
             return Mono.error(e);
         }
         return pluginManager.invokeFirstExtensionPoint(StorageServiceProvider.class,
-                "queryPresignedPutUrl",
+                QUERY_PRESIGNED_PUT_URL_METHOD,
                 STORAGE_NOT_IMPLEMENTED,
                 provider -> provider.queryPresignedPutUrl(requesterId, contentType, keyStr, keyNum, contentLength));
     }
@@ -86,7 +104,7 @@ public class StorageService {
             return Mono.error(e);
         }
         return pluginManager.invokeFirstExtensionPoint(StorageServiceProvider.class,
-                "deleteResource",
+                DELETE_RESOURCE_METHOD,
                 STORAGE_NOT_IMPLEMENTED,
                 provider -> provider.deleteResource(requesterId, contentType, keyStr, keyNum));
     }

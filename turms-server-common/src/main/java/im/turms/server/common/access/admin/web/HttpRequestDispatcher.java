@@ -70,6 +70,7 @@ import reactor.netty.http.server.HttpServerResponse;
 import javax.annotation.Nullable;
 import javax.validation.ConstraintViolationException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -91,6 +92,8 @@ public class HttpRequestDispatcher {
     private static final String X_REQUEST_ID = "X-Request-ID";
     private static final Mono<Credentials> CREDENTIALS_ROOT = Mono.just(Credentials.ROOT);
 
+    private static final Method HANDLE_ADMIN_ACTION_METHOD;
+
     private final Node node;
     private final PluginManager pluginManager;
     private final BaseAdminApiRateLimitingManager adminApiRateLimitingManager;
@@ -103,6 +106,15 @@ public class HttpRequestDispatcher {
     private final boolean useAuthentication;
     private boolean allowDeleteWithoutFilter;
     private boolean isLogEnabled;
+
+    static {
+        try {
+            HANDLE_ADMIN_ACTION_METHOD = AdminActionHandler.class
+                    .getDeclaredMethod("handleAdminAction", AdminAction.class);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public HttpRequestDispatcher(Node node,
                                  ApplicationContext context,
@@ -427,7 +439,7 @@ public class HttpRequestDispatcher {
                 params,
                 processingTime);
         pluginManager.invokeExtensionPoints(AdminActionHandler.class,
-                        "handleAdminAction",
+                        HANDLE_ADMIN_ACTION_METHOD,
                         handler -> handler.handleAdminAction(adminAction))
                 .subscribe(null, LOGGER::error);
         if (isLogEnabled) {

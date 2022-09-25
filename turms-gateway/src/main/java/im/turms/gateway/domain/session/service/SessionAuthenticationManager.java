@@ -50,6 +50,7 @@ import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -64,6 +65,17 @@ import java.util.Set;
 public class SessionAuthenticationManager implements SessionAuthenticationSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessionAuthenticationManager.class);
+
+    private static final Method AUTHENTICATE_METHOD;
+
+    static {
+        try {
+            AUTHENTICATE_METHOD = UserAuthenticator.class
+                    .getDeclaredMethod("authenticate", UserLoginInfo.class);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private final JwtManager jwtManager;
     private final PluginManager pluginManager;
@@ -179,7 +191,7 @@ public class SessionAuthenticationManager implements SessionAuthenticationSuppor
         if (pluginManager.hasRunningExtensions(UserAuthenticator.class)) {
             Mono<ResponseStatusCode> authenticate = pluginManager.invokeExtensionPointsSequentially(
                             UserAuthenticator.class,
-                            "authenticate",
+                            AUTHENTICATE_METHOD,
                             (SequentialExtensionPointInvoker<UserAuthenticator, Boolean>)
                                     (authenticator, pre) -> pre.switchIfEmpty(Mono.defer(() -> authenticator.authenticate(userLoginInfo))))
                     .map(authenticated -> authenticated ? ResponseStatusCode.OK : ResponseStatusCode.LOGIN_AUTHENTICATION_FAILED);

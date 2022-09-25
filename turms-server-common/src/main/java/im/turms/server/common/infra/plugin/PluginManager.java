@@ -45,6 +45,7 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -353,7 +354,7 @@ public class PluginManager {
     }
 
     public <T extends ExtensionPoint, R> Mono<R> invokeFirstExtensionPoint(Class<T> extensionPointClass,
-                                                                           String methodName,
+                                                                           Method method,
                                                                            @Nullable Mono<R> defaultValue,
                                                                            FirstExtensionPointInvoker<T, R> invoker) {
         List<T> extensionPoints = pluginRepository.getExtensionPoints(extensionPointClass);
@@ -368,20 +369,20 @@ public class PluginManager {
         }
         try {
             return invoker.invoke(extensionPoint)
-                    .onErrorMap(t -> translateException(t, methodName, extension));
+                    .onErrorMap(t -> translateException(t, method, extension));
         } catch (Exception e) {
-            return Mono.error(translateException(e, methodName, extension));
+            return Mono.error(translateException(e, method, extension));
         }
     }
 
     public <T extends ExtensionPoint, R> Mono<R> invokeExtensionPointsSequentially(Class<T> extensionPointClass,
-                                                                                   String methodName,
+                                                                                   Method method,
                                                                                    SequentialExtensionPointInvoker<T, R> invoker) {
-        return invokeExtensionPointsSequentially(extensionPointClass, methodName, null, invoker);
+        return invokeExtensionPointsSequentially(extensionPointClass, method, null, invoker);
     }
 
     public <T extends ExtensionPoint, R> Mono<R> invokeExtensionPointsSequentially(Class<T> extensionPointClass,
-                                                                                   String methodName,
+                                                                                   Method method,
                                                                                    @Nullable R initialValue,
                                                                                    SequentialExtensionPointInvoker<T, R> invoker) {
         List<T> extensionPoints = pluginRepository.getExtensionPoints(extensionPointClass);
@@ -397,9 +398,9 @@ public class PluginManager {
             }
             try {
                 result = invoker.invoke((T) extensionPoint, result)
-                        .onErrorMap(t -> translateException(t, methodName, extension));
+                        .onErrorMap(t -> translateException(t, method, extension));
             } catch (Exception e) {
-                Mono<R> error = Mono.error(translateException(e, methodName, extension));
+                Mono<R> error = Mono.error(translateException(e, method, extension));
                 return result.then(error);
             }
         }
@@ -407,7 +408,7 @@ public class PluginManager {
     }
 
     public <T extends ExtensionPoint> Mono<Void> invokeExtensionPoints(Class<T> extensionPointClass,
-                                                                       String methodName,
+                                                                       Method method,
                                                                        ExtensionPointInvoker<T> invoker) {
         List<T> extensionPoints = pluginRepository.getExtensionPoints(extensionPointClass);
         int size = extensionPoints.size();
@@ -422,9 +423,9 @@ public class PluginManager {
             }
             try {
                 list.add(invoker.invoke((T) extensionPoint)
-                        .onErrorMap(t -> translateException(t, methodName, extension)));
+                        .onErrorMap(t -> translateException(t, method, extension)));
             } catch (Exception e) {
-                list.add(Mono.error(translateException(e, methodName, extension)));
+                list.add(Mono.error(translateException(e, method, extension)));
             }
         }
         if (list.isEmpty()) {
@@ -433,10 +434,10 @@ public class PluginManager {
         return Mono.whenDelayError(list);
     }
 
-    private Exception translateException(Throwable t, String methodName, TurmsExtension extension) {
+    private Exception translateException(Throwable t, Method method, TurmsExtension extension) {
         // TODO: add plugin ID
         String message = "Failed to invoke the method \"%s\" in the extension %s"
-                .formatted(methodName, extension.getClass().getName());
+                .formatted(method.getName(), extension.getClass().getName());
         return new ExtensionPointExecutionException(message, t);
     }
 

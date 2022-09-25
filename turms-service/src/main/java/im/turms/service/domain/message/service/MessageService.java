@@ -79,6 +79,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -109,6 +110,7 @@ public class MessageService {
 
     private static final byte[] GROUP_CONVERSATION_SEQUENCE_ID_PREFIX = {'g', 'i'};
     private static final byte[] PRIVATE_CONVERSATION_SEQUENCE_ID_PREFIX = {'p', 'i'};
+    private static final Method GET_MESSAGES_TO_DELETE_METHOD;
 
     private final MessageRepository messageRepository;
     @Nullable
@@ -144,6 +146,15 @@ public class MessageService {
     private final Cache<Long, Message> sentMessageCache;
 
     private final Counter sentMessageCounter;
+
+    static {
+        try {
+            GET_MESSAGES_TO_DELETE_METHOD = ExpiredMessageDeletionNotifier.class
+                    .getDeclaredMethod("getMessagesToDelete", List.class);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Autowired
     public MessageService(
@@ -544,7 +555,7 @@ public class MessageService {
                                 .collect(CollectorUtil.toChunkedList())
                                 .flatMap(messages -> pluginManager.invokeExtensionPointsSequentially(
                                         ExpiredMessageDeletionNotifier.class,
-                                        "getMessagesToDelete",
+                                        GET_MESSAGES_TO_DELETE_METHOD,
                                         messages,
                                         (notifier, pre) -> pre.flatMap(notifier::getMessagesToDelete)))
                                 .map(messages -> {

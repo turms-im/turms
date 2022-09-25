@@ -43,6 +43,7 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -56,11 +57,22 @@ public class NotificationService implements INotificationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationService.class);
 
+    private static final Method HANDLE_METHOD;
+
     private final ApiLoggingContext apiLoggingContext;
     private final SessionService sessionService;
     private final PluginManager pluginManager;
 
     private final boolean isNotificationLoggingEnabled;
+
+    static {
+        try {
+            HANDLE_METHOD = NotificationHandler.class
+                    .getDeclaredMethod("handle", TurmsNotification.class, Set.class, Set.class);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public NotificationService(
             ApiLoggingContext apiLoggingContext,
@@ -171,7 +183,7 @@ public class NotificationService implements INotificationService {
             return;
         }
         pluginManager.invokeExtensionPoints(NotificationHandler.class,
-                        "handle",
+                        HANDLE_METHOD,
                         handler -> handler.handle(notification, recipientIds, offlineRecipientIds))
                 .subscribe(null, LOGGER::error);
     }

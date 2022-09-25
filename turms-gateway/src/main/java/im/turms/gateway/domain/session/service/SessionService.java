@@ -64,6 +64,7 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -88,6 +89,9 @@ import static im.turms.gateway.infra.metrics.MetricNameConst.ONLINE_USERS_GAUGE;
 public class SessionService implements ISessionService, SessionAuthenticationSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessionService.class);
+
+    private static final Method GO_OFFLINE_METHOD;
+    private static final Method GO_ONLINE_METHOD;
 
     private final Node node;
     private final HeartbeatManager heartbeatManager;
@@ -115,6 +119,17 @@ public class SessionService implements ISessionService, SessionAuthenticationSup
     private int closeIdleSessionAfterSeconds;
     private boolean notifyClientsOfSessionInfoAfterConnected;
     private String serverId;
+
+    static {
+        try {
+            GO_OFFLINE_METHOD = UserOnlineStatusChangeHandler.class
+                    .getDeclaredMethod("goOffline", UserSessionsManager.class, CloseReason.class);
+            GO_ONLINE_METHOD = UserOnlineStatusChangeHandler.class
+                    .getDeclaredMethod("goOnline", UserSessionsManager.class, UserSession.class);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public SessionService(
             Node node,
@@ -653,7 +668,8 @@ public class SessionService implements ISessionService, SessionAuthenticationSup
         if (manager.countSessions() == 0) {
             userIdToSessionsManager.remove(userId);
         }
-        pluginManager.invokeExtensionPoints(UserOnlineStatusChangeHandler.class, "goOffline",
+        pluginManager.invokeExtensionPoints(UserOnlineStatusChangeHandler.class,
+                        GO_OFFLINE_METHOD,
                         handler -> handler.goOffline(manager, closeReason))
                 .subscribe(null, LOGGER::error);
     }
@@ -694,7 +710,8 @@ public class SessionService implements ISessionService, SessionAuthenticationSup
 
     // Plugin
     public Mono<Void> triggerGoOnlinePlugins(@NotNull UserSessionsManager userSessionsManager, @NotNull UserSession userSession) {
-        return pluginManager.invokeExtensionPoints(UserOnlineStatusChangeHandler.class, "goOnline",
+        return pluginManager.invokeExtensionPoints(UserOnlineStatusChangeHandler.class,
+                GO_ONLINE_METHOD,
                 handler -> handler.goOnline(userSessionsManager, userSession));
     }
 

@@ -59,6 +59,7 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Set;
 
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
@@ -75,6 +76,9 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRequestDispatcher.class);
 
+    private static final Method TRANSFORM_METHOD;
+    private static final Method HANDLE_METHOD;
+
     private final ApiLoggingContext apiLoggingContext;
     private final BlocklistService blocklistService;
     private final ServerStatusManager serverStatusManager;
@@ -82,6 +86,17 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     private final PluginManager pluginManager;
 
     private final FastEnumMap<TurmsRequest.KindCase, ClientRequestHandler> requestTypeToHandler;
+
+    static {
+        try {
+            TRANSFORM_METHOD = ClientRequestTransformer.class
+                    .getDeclaredMethod("transform", ClientRequest.class);
+            HANDLE_METHOD = ClientRequestHandler.class
+                    .getDeclaredMethod("handle", ClientRequest.class);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public ServiceRequestDispatcher(ApiLoggingContext apiLoggingContext,
                                     ApplicationContext context,
@@ -119,10 +134,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             if (requestMapping == null) {
                 continue;
             }
-            Object beanInstance = beanFactory.getBean(beanName);
+            ClientRequestHandler beanInstance = (ClientRequestHandler) beanFactory.getBean(beanName);
             TurmsRequest.KindCase endpointType = requestMapping.value();
             if (!disabledEndpoints.contains(endpointType)) {
-                mappingMap.put(endpointType, (ClientRequestHandler) beanInstance);
+                mappingMap.put(endpointType, beanInstance);
             }
         }
         return mappingMap;
@@ -201,7 +216,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     null);
             clientRequestMono = pluginManager.invokeExtensionPointsSequentially(
                             ClientRequestTransformer.class,
-                            "transform",
+                            TRANSFORM_METHOD,
                             clientRequest,
                             (transformer, req) -> req.flatMap(transformer::transform))
                     .defaultIfEmpty(clientRequest);
@@ -232,7 +247,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             // 4. Pass the request to the controller and get a response
             Mono<RequestHandlerResult> result =
                     pluginManager.invokeExtensionPointsSequentially(im.turms.service.infra.plugin.extension.ClientRequestHandler.class,
-                            "handle",
+                            HANDLE_METHOD,
                             (requestHandler, pre) -> pre.switchIfEmpty(Mono.defer(() -> requestHandler.handle(lastClientRequest))));
             result = result.switchIfEmpty(Mono.defer(() -> handler.handle(lastClientRequest)));
             // 5. Metrics and transform to ServiceResponse
