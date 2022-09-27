@@ -50,14 +50,20 @@ t-->>c: OK if verified and authenticated
 * 客户端应用向您的服务端申请JWT令牌
 * 客户端应用拿到JWT令牌后，通过Turms客户端登陆接口`turmsClient.userService.login`中的`password`字段将JWT字符串发送给turms-gateway服务端
 * turms-gateway服务端拿到JWT令牌后，根据JWT令牌中指定的算法与开发者在turms-gateway服务端配置的公钥配置（非对称加密算法：RS256、RS384、RS512、PS256、PS384、PS512、ES256、ES384、ES512）或私钥配置（对称加密算法：HS256、HS384、HS512）对JWT令牌进行校验。
-* 如果开发者未在turms-gateway服务端配置JWT指定的算法密钥配置，则向客户端返回对应的错误信息
+* 如果开发者未在turms-gateway服务端配置JWT指定的算法密钥配置，则向客户端返回对应的错误信息，以告知客户端该算法不被支持
 * 如果JWT令牌校验通过，则根据JWT令牌的认证与授权信息对用户进行认证与授权
 * 如果JWT令牌校验失败，则向客户端返回对应的错误信息
 
-##### JWT格式
+##### JWT正文（Payload）格式
 
 ```json
 {
+    "iss": string, // issuer
+    "sub": string, // subject
+    "aud": array<string>, // audience
+    "exp": number, // expiration time
+    "nbf", number, // not before
+
     "authenticated": true,
     "statements": [{
         "effect": "ALLOW", // or "DENY"
@@ -69,9 +75,21 @@ t-->>c: OK if verified and authenticated
 
 其中：
 
-* `authenticated`字段表示用户是否通过认证，为`true`（注意：该`true`既可以是布尔值，也可以是字符串）时则表示通过认证，反之则没通过。
+* `iss`、`sub`、`aud`、`exp`与`nbf`这五个JWT公共声明可用于JWT校验，除`sub`声明必须存在外，其余四个声明均可以不存在，即不做声明相关的逻辑校验。
 
-* `statements`数组字段用于声明该用户拥有的权限，数组长度最大为100。
+  * `iss`（issuer）：JWT的签发者，如`www.my-server.com`。可配合配置项`turms.gateway.session.identity-access-management.jwt.verification.issuer`做校验。
+
+  * `sub`（subject）：JWT所签发给的用户，如`123456789`。该字段必须与用户的登陆用户ID相同。
+
+  * `aud`（audience）: JWT的接收方，如`www.my-turms.com`。可配合配置项`turms.gateway.session.identity-access-management.jwt.verification.audience`做校验。
+
+  * `exp`（expiration time）：JWT的过期时间，如`1600000000`。在该时间之后，该JWT是无效的。
+
+  * `nbf`（not before）：在该时间之前，该JWT是无效的，如`1600000000`。
+
+* `authenticated`：私有布尔声明，表示该用户是否通过认证，为`true`（注意：该`true`既可以是布尔值，也可以是字符串）时则表示通过认证，反之则没通过。
+
+* `statements`：私有数组声明，表示该用户拥有的权限，数组长度最大为100。
 
   * `effect`字段可以是`ALLOW`表示“允许的权限”，或`DENY`表示“禁止的权限”。被`DENY`禁止的权限生效优先级始终高于被`ALLOW`允许的权限，而不会受`statements`申明顺序的影响。
 
@@ -123,20 +141,24 @@ t-->>c: OK if verified and authenticated
 
 ##### 相关配置项
 
-| 配置名                                                       | 默认值   | 说明                                                         |
-| ------------------------------------------------------------ | -------- | ------------------------------------------------------------ |
-| turms.gateway.session.identity-access-management.type        | password | 设置为`jwt`以开启基于JWT的身份与访问管理机制                 |
-| turms.service.message.check-if-target-active-and-not-deleted | true     | 使用`JWT`机制时，需要将该配置项设置成`false`，否则因为Turms的数据库中并不存在该用户，因此用户将无法发送消息 |
-| turms.gateway.session.identity-access-management.jwt.algorithm.hmac256.file-path |          | 密钥文件路径。开发者只用配置该密钥或下文的P12中的一组        |
-| turms.gateway.session.identity-access-management.jwt.algorithm.hmac256.p12.file-path |          | PKCS#12文件路径                                              |
-| turms.gateway.session.identity-access-management.jwt.algorithm.hmac256.p12.password |          | PKCS#12密钥                                                  |
-| turms.gateway.session.identity-access-management.jwt.algorithm.hmac256.p12.key-alias |          | 密钥别名                                                     |
-| turms.gateway.session.identity-access-management.jwt.algorithm.hmac256.p12.key-password |          | 密钥密码。为空时，默认等同于PKCS#12密钥                      |
-| turms.gateway.session.identity-access-management.jwt.algorithm.rsa256.pem-file-path |          | PEM文件路径。开发者只用配置该PEM或下文的P12中的一组          |
-| turms.gateway.session.identity-access-management.jwt.algorithm.rsa256.p12.file-path |          | PKCS#12文件路径                                              |
-| turms.gateway.session.identity-access-management.jwt.algorithm.rsa256.p12.password |          | PKCS#12密钥                                                  |
-| turms.gateway.session.identity-access-management.jwt.algorithm.rsa256.p12.key-alias |          | 公钥别名                                                     |
-| rsa384/rsa512/ps256/ps384/ps512/ecdsa256/ecdsa384/ecdsa512的配置与上述的`rsa256`一样 |          |                                                              |
+| 配置名                                                       | 默认值                    | 说明                                                         |
+| ------------------------------------------------------------ | ------------------------- | ------------------------------------------------------------ |
+| turms.gateway.session.identity-access-management.type        | password                  | 设置为`jwt`以开启基于JWT的身份与访问管理机制                 |
+| turms.service.message.check-if-target-active-and-not-deleted | true                      | 使用`JWT`机制时，需要将该配置项设置成`false`，否则因为Turms的数据库中并不存在该用户，因此用户将无法发送消息 |
+| turms.gateway.session.identity-access-management.jwt.verification.issuer |                           | 该值不为空时，校验JWT的签发者是否等同于该值                  |
+| turms.gateway.session.identity-access-management.jwt.verification.audience |                           | 该值不为空时，校验JWT的接收方是否包含该值                    |
+| turms.gateway.session.identity-access-management.jwt.verification.custom-payload-claims |                           | 该值不为空时，校验JWT中的私有声明是否与该值匹配              |
+| turms.gateway.session.identity-access-management.jwt.authentication.expectation.custom-payload-claims | { "authenticated": true } | 在JWT的私有声明中匹配该值，如果匹配成功，则表明该用户已被认证 |
+| turms.gateway.session.identity-access-management.jwt.algorithm.hmac256.file-path |                           | 密钥文件路径。开发者只用配置该密钥或下文的P12中的一组        |
+| turms.gateway.session.identity-access-management.jwt.algorithm.hmac256.p12.file-path |                           | PKCS#12文件路径                                              |
+| turms.gateway.session.identity-access-management.jwt.algorithm.hmac256.p12.password |                           | PKCS#12密钥                                                  |
+| turms.gateway.session.identity-access-management.jwt.algorithm.hmac256.p12.key-alias |                           | 密钥别名                                                     |
+| turms.gateway.session.identity-access-management.jwt.algorithm.hmac256.p12.key-password |                           | 密钥密码。为空时，默认等同于PKCS#12密钥                      |
+| turms.gateway.session.identity-access-management.jwt.algorithm.rsa256.pem-file-path |                           | PEM文件路径。开发者只用配置该PEM或下文的P12中的一组          |
+| turms.gateway.session.identity-access-management.jwt.algorithm.rsa256.p12.file-path |                           | PKCS#12文件路径                                              |
+| turms.gateway.session.identity-access-management.jwt.algorithm.rsa256.p12.password |                           | PKCS#12密钥                                                  |
+| turms.gateway.session.identity-access-management.jwt.algorithm.rsa256.p12.key-alias |                           | 公钥别名                                                     |
+| rsa384/rsa512/ps256/ps384/ps512/ecdsa256/ecdsa384/ecdsa512的配置与上述的`rsa256`一样 |                           |                                                              |
 
 #### 4. 基于外部HTTP响应的身份与访问管理机制
 
@@ -178,7 +200,18 @@ t-->>c: OK if authenticated
 
 ##### HTTP响应格式
 
-同上文的JWT格式。
+```json
+{
+    "authenticated": true,
+    "statements": [{
+        "effect": "ALLOW", // or "DENY"
+        "actions": "*", // a string of ["*", "CREATE", "DELETE", "UPDATE", "QUERY"], or an array that contains these strings
+        "resources": "*" // a string of ["*", "USER", "GROUP_BLOCKED_USER", ...], or an array that contains these strings
+    }]
+}
+```
+
+`authenticated`与`statements`两个字段的含义与上文JWT正文中对应声明的含义相同，故不赘述。
 
 ##### 相关配置项
 
