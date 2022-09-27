@@ -89,10 +89,6 @@ public class JwtManager {
         if (StringUtil.isNotBlank(issuer)) {
             verifications.add(payload -> issuer.equals(payload.issuer()));
         }
-        String subject = verificationProperties.getSubject();
-        if (StringUtil.isNotBlank(subject)) {
-            verifications.add(payload -> subject.equals(payload.subject()));
-        }
         String audience = verificationProperties.getAudience();
         if (StringUtil.isNotBlank(audience)) {
             verifications.add(payload -> CollectionUtil.isNotEmpty(payload.audiences())

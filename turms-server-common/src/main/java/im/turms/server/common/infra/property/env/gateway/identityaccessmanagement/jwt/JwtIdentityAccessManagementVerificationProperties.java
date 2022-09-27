@@ -36,8 +36,6 @@ public class JwtIdentityAccessManagementVerificationProperties {
 
     private String issuer = "";
 
-    private String subject = "";
-
     private String audience = "";
 
     private Map<String, String> customPayloadClaims = Collections.emptyMap();

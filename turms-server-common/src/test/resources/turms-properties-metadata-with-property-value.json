@@ -1191,13 +1191,6 @@
               "mutable": false,
               "type": "string",
               "value": ""
-            },
-            "subject": {
-              "deprecated": false,
-              "global": false,
-              "mutable": false,
-              "type": "string",
-              "value": ""
             }
           }
         },

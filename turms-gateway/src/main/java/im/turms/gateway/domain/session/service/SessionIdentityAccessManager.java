@@ -225,7 +225,7 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
         return switch (identityAccessManagementType) {
             case NOOP -> GRANTED_WITH_ALL_PERMISSIONS_MONO;
             case HTTP -> verifyAndGrantUsingHttp(userLoginInfo);
-            case JWT -> verifyAndGrantUsingJwt(password);
+            case JWT -> verifyAndGrantUsingJwt(userId, password);
             case PASSWORD -> verifyAndGrantUsingPassword(userId, password);
         };
     }
@@ -260,9 +260,9 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
                 });
     }
 
-    private Mono<UserPermissionInfo> verifyAndGrantUsingJwt(String jwtToken) {
+    private Mono<UserPermissionInfo> verifyAndGrantUsingJwt(Long userId, String jwtToken) {
         if (StringUtil.isBlank(jwtToken)) {
-            return Mono.error(new IllegalArgumentException("The JWT token must not be blank"));
+            return Mono.error(new IllegalArgumentException("Corrupt JWT token: JWT must not be blank"));
         }
         Jwt jwt;
         try {
@@ -274,6 +274,13 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
         }
         long now = System.currentTimeMillis();
         JwtPayload payload = jwt.payload();
+        String subject = payload.subject();
+        if (subject == null) {
+            return Mono.error(new IllegalArgumentException("Corrupt JWT token: the sub claim in the payload must exist"));
+        }
+        if (!subject.equals(userId.toString())) {
+            return LOGIN_AUTHENTICATION_FAILED_MONO;
+        }
         Date expiresAt = payload.expiresAt();
         if (expiresAt != null && expiresAt.getTime() <= now) {
             return LOGIN_AUTHENTICATION_FAILED_MONO;

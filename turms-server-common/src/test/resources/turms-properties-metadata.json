@@ -1060,12 +1060,6 @@
               "global": false,
               "mutable": false,
               "type": "string"
-            },
-            "subject": {
-              "deprecated": false,
-              "global": false,
-              "mutable": false,
-              "type": "string"
             }
           }
         },
