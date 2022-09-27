@@ -17,6 +17,7 @@
 
 package im.turms.gateway.domain.session.service;
 
+import im.turms.gateway.domain.session.bo.UserPermissionInfo;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -30,7 +31,7 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-public interface SessionAuthenticationSupport {
+public interface SessionIdentityAccessManagementSupport {
 
     /**
      * @return Possible codes:
@@ -38,7 +39,7 @@ public interface SessionAuthenticationSupport {
      * {@link ResponseStatusCode#LOGIN_AUTHENTICATION_FAILED},
      * {@link ResponseStatusCode#LOGGING_IN_USER_NOT_ACTIVE}
      */
-    Mono<ResponseStatusCode> authenticate(
+    Mono<UserPermissionInfo> verifyAndGrant(
             int version,
             @NotNull Long userId,
             @Nullable String password,

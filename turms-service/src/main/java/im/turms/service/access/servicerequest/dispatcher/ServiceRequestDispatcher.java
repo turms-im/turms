@@ -23,6 +23,7 @@ import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.TurmsRequestOrBuilder;
+import im.turms.server.common.access.client.dto.request.TurmsRequestTypePool;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dispatcher.IServiceRequestDispatcher;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
@@ -113,8 +114,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         Set<TurmsRequest.KindCase> disabledEndpoints = propertiesManager.getLocalProperties()
                 .getService().getClientApi().getDisabledEndpoints();
         requestTypeToHandler = getMappings((ConfigurableApplicationContext) context, disabledEndpoints);
-        for (TurmsRequest.KindCase requestType : TurmsRequest.KindCase.values()) {
-            if (!requestTypeToHandler.containsKey(requestType) && requestType != KIND_NOT_SET && !isRequestForGateway(requestType)) {
+        for (TurmsRequest.KindCase requestType : TurmsRequestTypePool.ALL) {
+            if (!requestTypeToHandler.containsKey(requestType) && !isRequestForGateway(requestType)) {
                 throw new IllegalStateException("No client request handler for the request type: " + requestType.name());
             }
         }

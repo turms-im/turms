@@ -15,13 +15,9 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.gateway.authentication;
+package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt;
 
 
-import im.turms.server.common.infra.property.constant.AuthenticationType;
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,21 +31,15 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class AuthenticationProperties {
-
-    @Description("Whether to authenticate users when logging in." +
-            "Note that user ID is always required even if enabled is false; " +
-            "If false, turms-gateway won't connect to the MongoDB server for user records")
-    @GlobalProperty
-    @MutableProperty
-    private boolean enabled;
-
-    private AuthenticationType type = AuthenticationType.PASSWORD;
+public class JwtIdentityAccessManagementProperties {
 
     @NestedConfigurationProperty
-    private JwtAuthenticationProperties jwt = new JwtAuthenticationProperties();
+    private JwtAlgorithmProperties algorithm = new JwtAlgorithmProperties();
 
     @NestedConfigurationProperty
-    private HttpAuthenticationProperties http = new HttpAuthenticationProperties();
+    private JwtAuthenticationProperties authentication = new JwtAuthenticationProperties();
+
+    @NestedConfigurationProperty
+    private JwtIdentityAccessManagementVerificationProperties verification = new JwtIdentityAccessManagementVerificationProperties();
 
 }

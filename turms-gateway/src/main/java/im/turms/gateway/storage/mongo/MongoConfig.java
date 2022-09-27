@@ -24,8 +24,8 @@ import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import im.turms.server.common.infra.property.constant.AuthenticationType;
-import im.turms.server.common.infra.property.env.gateway.authentication.AuthenticationProperties;
+import im.turms.server.common.infra.property.constant.IdentityAccessManagementType;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.storage.mongo.BaseMongoConfig;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -58,8 +58,8 @@ public class MongoConfig extends BaseMongoConfig {
     @Bean
     public TurmsMongoClient userMongoClient(TurmsPropertiesManager propertiesManager) {
         TurmsProperties localProperties = propertiesManager.getLocalProperties();
-        AuthenticationProperties authenticationProperties = localProperties.getGateway().getSession().getAuthentication();
-        if (!authenticationProperties.isEnabled() || authenticationProperties.getType() != AuthenticationType.PASSWORD) {
+        IdentityAccessManagementProperties authenticationProperties = localProperties.getGateway().getSession().getIdentityAccessManagement();
+        if (!authenticationProperties.isEnabled() || authenticationProperties.getType() != IdentityAccessManagementType.PASSWORD) {
             return null;
         }
         TurmsMongoProperties properties = localProperties.getGateway().getMongo().getUser();

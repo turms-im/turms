@@ -29,6 +29,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -152,15 +154,15 @@ public final class StringUtil {
         return newLatin1String(newStringBytes);
     }
 
-    public static boolean match(String text, String pattern) {
+    public static boolean matchLatin1(String text, String pattern) {
         byte[] textBytes = getBytes(text);
         byte[] patternBytes = getBytes(pattern);
         int textReaderIndex = 0;
         int patternReaderIndex = 0;
         int textReaderIndexForMultipleToken = -1;
         int patternReaderIndexForMultipleToken = -1;
-        int textLength = text.length();
-        int patternLength = pattern.length();
+        int textLength = textBytes.length;
+        int patternLength = patternBytes.length;
 
         while (textReaderIndex < textLength) {
             if (patternReaderIndex < patternLength
@@ -183,13 +185,28 @@ public final class StringUtil {
         return patternReaderIndex == patternLength;
     }
 
-    public static boolean match(String text, Collection<String> patterns) {
+    public static boolean matchLatin1(String text, Collection<String> patterns) {
         for (String pattern : patterns) {
-            if (!match(text, pattern)) {
+            if (!matchLatin1(text, pattern)) {
                 return false;
             }
         }
         return true;
+    }
+
+    public static <T> List<T> findMatchesLatin1(T[] values, String pattern) {
+        List<T> newValues = null;
+        for (T value : values) {
+            if (matchLatin1(value.toString(), pattern)) {
+                if (newValues == null) {
+                    newValues = new LinkedList<>();
+                }
+                newValues.add(value);
+            }
+        }
+        return newValues == null
+                ? Collections.emptyList()
+                : newValues;
     }
 
     public static String padStartLatin1(String string, int minLength, byte padChar) {

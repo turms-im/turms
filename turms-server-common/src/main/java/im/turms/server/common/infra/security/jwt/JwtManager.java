@@ -22,9 +22,10 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.json.JsonCodecPool;
 import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.property.env.gateway.authentication.JwtAuthenticationVerificationProperties;
-import im.turms.server.common.infra.property.env.gateway.authentication.JwtKeyAlgorithmProperties;
-import im.turms.server.common.infra.property.env.gateway.authentication.JwtP12KeyStoreProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtIdentityAccessManagementVerificationProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtKeyAlgorithmProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtP12KeyStoreProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtSecretKeyAlgorithmProperties;
 import im.turms.server.common.infra.security.CertificateUtil;
 import im.turms.server.common.infra.security.jwt.algorithm.EcdsaAlgorithm;
 import im.turms.server.common.infra.security.jwt.algorithm.HmacAlgorithm;
@@ -36,7 +37,9 @@ import im.turms.server.common.infra.security.jwt.exception.CorruptedJwtException
 import im.turms.server.common.infra.security.jwt.exception.SignatureVerificationException;
 import lombok.SneakyThrows;
 
+import javax.annotation.Nullable;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.PublicKey;
@@ -69,7 +72,7 @@ public class JwtManager {
     }
 
     @SneakyThrows
-    public JwtManager(JwtAuthenticationVerificationProperties verificationProperties,
+    public JwtManager(JwtIdentityAccessManagementVerificationProperties verificationProperties,
                       JwtKeyAlgorithmProperties rsa256,
                       JwtKeyAlgorithmProperties rsa384,
                       JwtKeyAlgorithmProperties rsa512,
@@ -79,9 +82,9 @@ public class JwtManager {
                       JwtKeyAlgorithmProperties ecdsa256,
                       JwtKeyAlgorithmProperties ecdsa384,
                       JwtKeyAlgorithmProperties ecdsa512,
-                      String hmac256SecretFilePath,
-                      String hmac384SecretFilePath,
-                      String hmac512SecretFilePath) {
+                      JwtSecretKeyAlgorithmProperties hmac256,
+                      JwtSecretKeyAlgorithmProperties hmac384,
+                      JwtSecretKeyAlgorithmProperties hmac512) {
         String issuer = verificationProperties.getIssuer();
         if (StringUtil.isNotBlank(issuer)) {
             verifications.add(payload -> issuer.equals(payload.issuer()));
@@ -103,6 +106,7 @@ public class JwtManager {
 
         List<Map.Entry<String, JwtAlgorithm>> algorithms = new ArrayList<>(9);
         PublicKey publicKey;
+        byte[] secretKey;
         JwtAlgorithmDefinition definition;
         if ((publicKey = getRsaPublicKey(rsa256)) != null) {
             definition = JwtAlgorithmDefinition.RS256;
@@ -167,32 +171,53 @@ public class JwtManager {
             algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
                     new EcdsaAlgorithm(definition, 66, (ECPublicKey) publicKey)));
         }
-        if (StringUtil.isNotBlank(hmac256SecretFilePath)) {
-            definition = JwtAlgorithmDefinition.HS256;
+        definition = JwtAlgorithmDefinition.HS256;
+        if ((secretKey = getSecretKey(definition.getJwtAlgorithmName(), hmac256)) != null) {
             algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
-                    new HmacAlgorithm(definition, Files.readAllBytes(Path.of(hmac256SecretFilePath)))));
+                    new HmacAlgorithm(definition, secretKey)));
         }
-        if (StringUtil.isNotBlank(hmac384SecretFilePath)) {
-            definition = JwtAlgorithmDefinition.HS384;
+        definition = JwtAlgorithmDefinition.HS384;
+        if ((secretKey = getSecretKey(definition.getJwtAlgorithmName(), hmac384)) != null) {
             algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
-                    new HmacAlgorithm(definition, Files.readAllBytes(Path.of(hmac384SecretFilePath)))));
+                    new HmacAlgorithm(definition, secretKey)));
         }
-        if (StringUtil.isNotBlank(hmac512SecretFilePath)) {
-            definition = JwtAlgorithmDefinition.HS512;
+        definition = JwtAlgorithmDefinition.HS512;
+        if ((secretKey = getSecretKey(definition.getJwtAlgorithmName(), hmac512)) != null) {
             algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
-                    new HmacAlgorithm(definition, Files.readAllBytes(Path.of(hmac512SecretFilePath)))));
+                    new HmacAlgorithm(definition, secretKey)));
         }
         nameToAlgorithm = Map.ofEntries(algorithms.toArray(new Map.Entry[0]));
     }
 
+    @Nullable
     private RSAPublicKey getRsaPublicKey(JwtKeyAlgorithmProperties properties) {
         return getPublicKey(CertificateUtil.ALGORITHM_RSA, properties);
     }
 
+    @Nullable
     private ECPublicKey getEcPublicKey(JwtKeyAlgorithmProperties properties) {
         return getPublicKey(CertificateUtil.ALGORITHM_EC, properties);
     }
 
+    @Nullable
+    private byte[] getSecretKey(String name, JwtSecretKeyAlgorithmProperties properties) {
+        if (StringUtil.isNotBlank(properties.getFilePath())) {
+            try {
+                return Files.readAllBytes(Path.of(properties.getFilePath()));
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to read the secret key from the path \"%s\" for %s"
+                        .formatted(properties.getFilePath(), name), e);
+            }
+        }
+        JwtP12KeyStoreProperties p12 = properties.getP12();
+        String filePath = p12.getFilePath();
+        if (StringUtil.isNotBlank(filePath)) {
+            return CertificateUtil.getSecretKeyFromP12(new File(filePath), p12.getPassword(), p12.getKeyAlias());
+        }
+        return null;
+    }
+
+    @Nullable
     private <T extends PublicKey> T getPublicKey(String algorithm, JwtKeyAlgorithmProperties properties) {
         String pemFilePath = properties.getPemFilePath();
         if (StringUtil.isNotBlank(pemFilePath)) {
@@ -201,7 +226,7 @@ public class JwtManager {
         JwtP12KeyStoreProperties p12 = properties.getP12();
         String filePath = p12.getFilePath();
         if (StringUtil.isNotBlank(filePath)) {
-            return (T) CertificateUtil.getPublicKeyFromP12(new File(filePath), p12.getPassword(), p12.getAlias());
+            return (T) CertificateUtil.getPublicKeyFromP12(new File(filePath), p12.getPassword(), p12.getKeyAlias());
         }
         return null;
     }

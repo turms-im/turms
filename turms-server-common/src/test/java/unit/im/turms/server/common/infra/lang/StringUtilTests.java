@@ -56,39 +56,39 @@ class StringUtilTests {
     }
 
     @Test
-    void match() {
-        assertThat(StringUtil.match("", "")).isTrue();
-        assertThat(StringUtil.match("Foo", "Fo")).isFalse();
-        assertThat(StringUtil.match("Foo", "Foo")).isTrue();
-        assertThat(StringUtil.match("Foo", "Bar")).isFalse();
+    void matchLatin1() {
+        assertThat(StringUtil.matchLatin1("", "")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "Fo")).isFalse();
+        assertThat(StringUtil.matchLatin1("Foo", "Foo")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "Bar")).isFalse();
 
-        assertThat(StringUtil.match("Foo", "*")).isTrue();
-        assertThat(StringUtil.match("Foo", "Fo*")).isTrue();
-        assertThat(StringUtil.match("Foo", "Fo**")).isTrue();
-        assertThat(StringUtil.match("Foo Bar", "Fo*")).isTrue();
-        assertThat(StringUtil.match("Foo Bar Foo", "F*o Bar*")).isTrue();
-        assertThat(StringUtil.match("Foo Bar Foo", "F*b Bar*")).isFalse();
-        assertThat(StringUtil.match("Foo", "*Foo")).isTrue();
-        assertThat(StringUtil.match("Foo", "Foo*")).isTrue();
-        assertThat(StringUtil.match("Foo", "*Foo*")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "*")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "Fo*")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "Fo**")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo Bar", "Fo*")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo Bar Foo", "F*o Bar*")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo Bar Foo", "F*b Bar*")).isFalse();
+        assertThat(StringUtil.matchLatin1("Foo", "*Foo")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "Foo*")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "*Foo*")).isTrue();
 
-        assertThat(StringUtil.match("Foo", "???")).isTrue();
-        assertThat(StringUtil.match("Foo", "?")).isFalse();
-        assertThat(StringUtil.match("Foo", "?Foo")).isFalse();
-        assertThat(StringUtil.match("Foo", "Fo?")).isTrue();
-        assertThat(StringUtil.match("Foo", "Fo??")).isFalse();
-        assertThat(StringUtil.match("Foo Bar", "F?o B?r")).isTrue();
-        assertThat(StringUtil.match("Foo Bar", "F?o B??r")).isFalse();
+        assertThat(StringUtil.matchLatin1("Foo", "???")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "?")).isFalse();
+        assertThat(StringUtil.matchLatin1("Foo", "?Foo")).isFalse();
+        assertThat(StringUtil.matchLatin1("Foo", "Fo?")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "Fo??")).isFalse();
+        assertThat(StringUtil.matchLatin1("Foo Bar", "F?o B?r")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo Bar", "F?o B??r")).isFalse();
 
-        assertThat(StringUtil.match("Foo", "*?")).isTrue();
-        assertThat(StringUtil.match("Foo", "**?")).isTrue();
-        assertThat(StringUtil.match("Foo", "***?")).isTrue();
-        assertThat(StringUtil.match("Foo", "?*")).isTrue();
-        assertThat(StringUtil.match("Foo", "?**")).isTrue();
-        assertThat(StringUtil.match("Foo", "?***")).isTrue();
-        assertThat(StringUtil.match("Foo", "*o?")).isTrue();
-        assertThat(StringUtil.match("Foo", "*?o?")).isTrue();
-        assertThat(StringUtil.match("Foo", "*??o?")).isFalse();
+        assertThat(StringUtil.matchLatin1("Foo", "*?")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "**?")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "***?")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "?*")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "?**")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "?***")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "*o?")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "*?o?")).isTrue();
+        assertThat(StringUtil.matchLatin1("Foo", "*??o?")).isFalse();
     }
 
     @Test

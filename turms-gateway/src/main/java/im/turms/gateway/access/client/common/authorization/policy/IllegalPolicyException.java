@@ -15,14 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.constant;
+package im.turms.gateway.access.client.common.authorization.policy;
 
 /**
  * @author James Chen
  */
-public enum AuthenticationType {
-    NOOP,
-    HTTP,
-    JWT,
-    PASSWORD
+public class IllegalPolicyException extends RuntimeException {
+
+    public IllegalPolicyException(String message) {
+        super(message);
+    }
+
 }

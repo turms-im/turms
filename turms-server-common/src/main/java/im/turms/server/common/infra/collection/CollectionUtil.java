@@ -41,9 +41,14 @@ import java.util.function.Function;
 public final class CollectionUtil {
 
     private static final Class<?> IMMUTABLE_COLLECTION_CLASS;
+    private static final Class<?> IMMUTABLE_SET_CLASS;
 
     static {
-        IMMUTABLE_COLLECTION_CLASS = Set.of().getClass().getSuperclass().getSuperclass();
+        IMMUTABLE_SET_CLASS = Set.of().getClass().getSuperclass();
+        if (!IMMUTABLE_SET_CLASS.getName().equals("java.util.ImmutableCollections$AbstractImmutableSet")) {
+            throw new IllegalStateException("Cannot find the class AbstractImmutableSet");
+        }
+        IMMUTABLE_COLLECTION_CLASS = IMMUTABLE_SET_CLASS.getSuperclass();
         if (!IMMUTABLE_COLLECTION_CLASS.getName().equals("java.util.ImmutableCollections$AbstractImmutableCollection")) {
             throw new IllegalStateException("Cannot find the class AbstractImmutableCollection");
         }
@@ -184,6 +189,10 @@ public final class CollectionUtil {
         return IMMUTABLE_COLLECTION_CLASS.isInstance(iterable) || iterable instanceof ImmutableCollection;
     }
 
+    public static boolean isImmutableSet(Iterable<?> iterable) {
+        return IMMUTABLE_SET_CLASS.isInstance(iterable);
+    }
+
     public static boolean containsAll(Map<?, ?> map1, Map<?, ?> map2) {
         for (Map.Entry<?, ?> entry : map2.entrySet()) {
             if (!Objects.equals(entry.getValue(), map1.get(entry.getKey()))) {
@@ -212,11 +221,8 @@ public final class CollectionUtil {
             return true;
         }
         if (expectedValue instanceof String || PrimitiveUtil.isPrimitiveOrWrapperClass(expectedValue.getClass())) {
-            if (actualValue instanceof String || PrimitiveUtil.isPrimitiveOrWrapperClass(actualValue.getClass())) {
-                return expectedValue.toString().equals(actualValue.toString());
-            } else {
-                return false;
-            }
+            return actualValue instanceof String || PrimitiveUtil.isPrimitiveOrWrapperClass(actualValue.getClass()) &&
+                    expectedValue.toString().equals(actualValue.toString());
         }
         if (expectedValue.getClass().isArray()) {
             return areCollectionsLooselyEqual(ArrayUtil.getArray(expectedValue), actualValue);
@@ -226,15 +232,15 @@ public final class CollectionUtil {
             return actualValue instanceof Map<?, ?> actualValueMap
                     && containsAllLooseComparison(actualValueMap, expectedValueMap);
         }
-        return false;
+        throw new UnsupportedOperationException("The expected value is unsupported: " + expectedValue);
     }
 
-    private static boolean areCollectionsLooselyEqual(Object[] array, Object value) {
-        if (value.getClass().isArray()) {
-            Object[] values = ArrayUtil.getArray(value);
-            return areArraysLooselyEqual(array, values);
-        } else if (value instanceof Collection<?> values) {
-            return areCollectionLooselyEqual(values, array);
+    private static boolean areCollectionsLooselyEqual(Object[] value1, Object value2) {
+        if (value2.getClass().isArray()) {
+            Object[] values = ArrayUtil.getArray(value2);
+            return areArraysLooselyEqual(value1, values);
+        } else if (value2 instanceof Collection<?> values) {
+            return areCollectionLooselyEqual(values, value1);
         }
         return false;
     }
@@ -309,4 +315,35 @@ public final class CollectionUtil {
         return result;
     }
 
+    public static <T> Set<T> copyAsSet(Collection<? extends T> collection) {
+        if (isImmutableSet(collection)) {
+            return (Set<T>) collection;
+        } else {
+            return (Set<T>) Set.of(collection.toArray());
+        }
+    }
+
+    public static <T> Set<T> concatAsSet(Collection<T>... collections) {
+        int count = 0;
+        for (Collection<T> values : collections) {
+            count += values.size();
+        }
+        Set<T> set = newSetWithExpectedSize(count);
+        for (Collection<T> values : collections) {
+            set.addAll(values);
+        }
+        return set;
+    }
+
+    public static <T> Set<T> concatAsSet(List<Collection<T>> collections) {
+        int count = 0;
+        for (Collection<T> values : collections) {
+            count += values.size();
+        }
+        Set<T> set = newSetWithExpectedSize(count);
+        for (Collection<T> values : collections) {
+            set.addAll(values);
+        }
+        return set;
+    }
 }

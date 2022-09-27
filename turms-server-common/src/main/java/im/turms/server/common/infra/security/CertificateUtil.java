@@ -103,4 +103,22 @@ public final class CertificateUtil {
         return cer.getPublicKey();
     }
 
+    @SneakyThrows
+    public static byte[] getSecretKeyFromP12(File file,
+                                             String keyStorePassword,
+                                             @Nullable String keyAlias) {
+        KeyStore keystore = KeyStore.getInstance("PKCS12");
+        char[] password = keyStorePassword.toCharArray();
+        try (FileInputStream stream = new FileInputStream(file)) {
+            keystore.load(stream, password);
+        }
+        if (keyAlias == null) {
+            Enumeration<String> aliasEnum = keystore.aliases();
+            if (aliasEnum.hasMoreElements()) {
+                keyAlias = aliasEnum.nextElement();
+            }
+        }
+        return keystore.getKey(keyAlias, password).getEncoded();
+    }
+
 }

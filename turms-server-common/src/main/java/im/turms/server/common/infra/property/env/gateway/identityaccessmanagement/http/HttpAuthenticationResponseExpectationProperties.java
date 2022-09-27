@@ -15,17 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.gateway.authentication;
+package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.http;
 
-import im.turms.server.common.infra.property.constant.HttpAuthenticationHttpMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -34,15 +34,15 @@ import java.util.Map;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class HttpAuthenticationRequestProperties {
+public class HttpAuthenticationResponseExpectationProperties {
 
-    private String url = "";
+    @Size(min = 1)
+    private Set<String> statusCodes = Set.of("2??");
 
     private Map<String, String> headers = Collections.emptyMap();
 
-    private HttpAuthenticationHttpMethod httpMethod = HttpAuthenticationHttpMethod.GET;
-
-    @Min(1)
-    private int timeoutMillis = 30 * 1000;
+    private Map<String, Object> bodyFields = Map.of(
+            "authenticated", true
+    );
 
 }

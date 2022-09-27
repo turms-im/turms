@@ -19,7 +19,7 @@ package im.turms.gateway.domain.session.repository;
 
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.domain.user.po.User;
-import im.turms.server.common.infra.property.env.gateway.authentication.AuthenticationProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
@@ -36,7 +36,7 @@ import reactor.core.publisher.Mono;
 public class UserRepository extends BaseRepository<User, Long> {
 
     /**
-     * @param mongoClient can be null if {@link AuthenticationProperties#enabled} is false
+     * @param mongoClient can be null if {@link IdentityAccessManagementProperties#enabled} is false
      */
     public UserRepository(
             @Autowired(required = false) @Qualifier("userMongoClient") TurmsMongoClient mongoClient) {

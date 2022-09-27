@@ -71,6 +71,7 @@ object ResponseStatusCode {
     const val RECORD_CONTAINS_DUPLICATE_KEY = 1103
     const val REQUESTED_RECORDS_TOO_MANY = 1104
     const val SEND_REQUEST_FROM_NON_EXISTING_SESSION = 1105
+    const val UNAUTHORIZED_REQUEST = 1106
 
     // Server
     const val SERVER_INTERNAL_ERROR = 1200

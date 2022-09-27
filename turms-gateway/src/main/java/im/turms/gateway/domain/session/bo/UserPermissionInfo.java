@@ -15,27 +15,22 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.gateway.authentication;
+package im.turms.gateway.domain.session.bo;
 
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.common.ResponseStatusCode;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@Builder(toBuilder = true)
-@Data
-@NoArgsConstructor
-public class JwtP12KeyStoreProperties {
-
-    private String filePath = "";
-
-    private String password = "";
-
-    private String alias = "";
-
+public record UserPermissionInfo(
+        ResponseStatusCode authenticationCode,
+        Set<TurmsRequest.KindCase> permissions
+) {
+    public UserPermissionInfo(ResponseStatusCode authenticationCode) {
+        this(authenticationCode, Collections.emptySet());
+    }
 }

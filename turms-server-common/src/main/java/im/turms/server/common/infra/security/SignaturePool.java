@@ -83,7 +83,7 @@ public final class SignaturePool {
     );
 
     @SneakyThrows
-    public static void ensureExistence(String algorithm) {
+    public static void ensureAvailability(String algorithm) {
         Signature.getInstance(algorithm);
     }
 

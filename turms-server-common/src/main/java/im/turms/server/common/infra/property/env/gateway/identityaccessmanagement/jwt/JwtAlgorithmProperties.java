@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.gateway.authentication;
+package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,10 +59,13 @@ public class JwtAlgorithmProperties {
     @NestedConfigurationProperty
     private JwtKeyAlgorithmProperties ecdsa512 = new JwtKeyAlgorithmProperties();
 
-    private String hmac256SecretFilePath = "";
+    @NestedConfigurationProperty
+    private JwtSecretKeyAlgorithmProperties hmac256 = new JwtSecretKeyAlgorithmProperties();
 
-    private String hmac384SecretFilePath = "";
+    @NestedConfigurationProperty
+    private JwtSecretKeyAlgorithmProperties hmac384 = new JwtSecretKeyAlgorithmProperties();
 
-    private String hmac512SecretFilePath = "";
+    @NestedConfigurationProperty
+    private JwtSecretKeyAlgorithmProperties hmac512 = new JwtSecretKeyAlgorithmProperties();
 
 }

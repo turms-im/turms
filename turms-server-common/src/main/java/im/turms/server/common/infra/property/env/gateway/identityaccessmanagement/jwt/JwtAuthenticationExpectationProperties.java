@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.gateway.authentication;
+package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Collections;
+import javax.validation.constraints.Size;
 import java.util.Map;
 
 /**
@@ -32,14 +32,11 @@ import java.util.Map;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class JwtAuthenticationVerificationProperties {
+public class JwtAuthenticationExpectationProperties {
 
-    private String issuer = "";
-
-    private String subject = "";
-
-    private String audience = "";
-
-    private Map<String, String> customPayloadClaims = Collections.emptyMap();
+    @Size(min = 1)
+    private Map<String, Object> customPayloadClaims = Map.of(
+            "authenticated", true
+    );
 
 }

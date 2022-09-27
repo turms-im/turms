@@ -21,6 +21,7 @@ import im.turms.gateway.access.client.common.UserSession;
 import im.turms.server.common.access.client.dto.ClientMessageEncoder;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.collection.ConcurrentEnumMap;
@@ -61,12 +62,14 @@ public final class UserSessionsManager {
      */
     @Nullable
     public UserSession addSessionIfAbsent(int version,
+                                          Set<TurmsRequest.KindCase> permissions,
                                           DeviceType loggingInDeviceType,
                                           Map<String, String> deviceDetails,
                                           @Nullable Location location) {
         Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
         UserSession userSession = new UserSession(
                 version,
+                permissions,
                 userId,
                 loggingInDeviceType,
                 deviceDetails,

@@ -612,15 +612,52 @@
       }
     },
     "session": {
-      "authentication": {
+      "clientHeartbeatIntervalSeconds": {
+        "deprecated": false,
+        "desc": "The client heartbeat interval. Note that the value will NOT change the actual heartbeat behavior of clients, and the value is only used to facilitate related operations of turms-gateway",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "closeIdleSessionAfterSeconds": {
+        "deprecated": false,
+        "desc": "A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "identityAccessManagement": {
         "enabled": {
           "deprecated": false,
-          "desc": "Whether to authenticate users when logging in.Note that user ID is always required even if enabled is false; If false, turms-gateway won't connect to the MongoDB server for user records",
+          "desc": "Whether to authenticate and authorize users when logging in.Note that user ID is always required even if enabled is false; If false, turms-gateway won't connect to the MongoDB server for user records",
           "global": true,
           "mutable": true,
           "type": "boolean"
         },
         "http": {
+          "authentication": {
+            "responseExpectation": {
+              "bodyFields": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "java.util.Map"
+              },
+              "headers": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "java.util.Map"
+              },
+              "statusCodes": {
+                "deprecated": false,
+                "elementType": "string",
+                "global": false,
+                "mutable": false,
+                "type": "java.util.Set"
+              }
+            }
+          },
           "request": {
             "headers": {
               "deprecated": false,
@@ -654,40 +691,19 @@
               "mutable": false,
               "type": "string"
             }
-          },
-          "responseExpectation": {
-            "bodyFields": {
-              "deprecated": false,
-              "global": false,
-              "mutable": false,
-              "type": "java.util.Map"
-            },
-            "headers": {
-              "deprecated": false,
-              "global": false,
-              "mutable": false,
-              "type": "java.util.Map"
-            },
-            "statusCodes": {
-              "deprecated": false,
-              "elementType": "string",
-              "global": false,
-              "mutable": false,
-              "type": "java.util.Set"
-            }
           }
         },
         "jwt": {
           "algorithm": {
             "ecdsa256": {
               "p12": {
-                "alias": {
+                "filePath": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
                   "type": "string"
                 },
-                "filePath": {
+                "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
@@ -709,13 +725,13 @@
             },
             "ecdsa384": {
               "p12": {
-                "alias": {
+                "filePath": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
                   "type": "string"
                 },
-                "filePath": {
+                "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
@@ -737,13 +753,13 @@
             },
             "ecdsa512": {
               "p12": {
-                "alias": {
+                "filePath": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
                   "type": "string"
                 },
-                "filePath": {
+                "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
@@ -763,33 +779,99 @@
                 "type": "string"
               }
             },
-            "hmac256SecretFilePath": {
-              "deprecated": false,
-              "global": false,
-              "mutable": false,
-              "type": "string"
-            },
-            "hmac384SecretFilePath": {
-              "deprecated": false,
-              "global": false,
-              "mutable": false,
-              "type": "string"
-            },
-            "hmac512SecretFilePath": {
-              "deprecated": false,
-              "global": false,
-              "mutable": false,
-              "type": "string"
-            },
-            "ps256": {
+            "hmac256": {
+              "filePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string"
+              },
               "p12": {
-                "alias": {
+                "filePath": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
                   "type": "string"
                 },
+                "keyAlias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                }
+              }
+            },
+            "hmac384": {
+              "filePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string"
+              },
+              "p12": {
                 "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                },
+                "keyAlias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                }
+              }
+            },
+            "hmac512": {
+              "filePath": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "string"
+              },
+              "p12": {
+                "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                },
+                "keyAlias": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                },
+                "password": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                }
+              }
+            },
+            "ps256": {
+              "p12": {
+                "filePath": {
+                  "deprecated": false,
+                  "global": false,
+                  "mutable": false,
+                  "type": "string"
+                },
+                "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
@@ -811,13 +893,13 @@
             },
             "ps384": {
               "p12": {
-                "alias": {
+                "filePath": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
                   "type": "string"
                 },
-                "filePath": {
+                "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
@@ -839,13 +921,13 @@
             },
             "ps512": {
               "p12": {
-                "alias": {
+                "filePath": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
                   "type": "string"
                 },
-                "filePath": {
+                "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
@@ -867,13 +949,13 @@
             },
             "rsa256": {
               "p12": {
-                "alias": {
+                "filePath": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
                   "type": "string"
                 },
-                "filePath": {
+                "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
@@ -895,13 +977,13 @@
             },
             "rsa384": {
               "p12": {
-                "alias": {
+                "filePath": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
                   "type": "string"
                 },
-                "filePath": {
+                "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
@@ -923,13 +1005,13 @@
             },
             "rsa512": {
               "p12": {
-                "alias": {
+                "filePath": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
                   "type": "string"
                 },
-                "filePath": {
+                "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
@@ -950,12 +1032,14 @@
               }
             }
           },
-          "expectation": {
-            "customPayloadClaims": {
-              "deprecated": false,
-              "global": false,
-              "mutable": false,
-              "type": "java.util.Map"
+          "authentication": {
+            "expectation": {
+              "customPayloadClaims": {
+                "deprecated": false,
+                "global": false,
+                "mutable": false,
+                "type": "java.util.Map"
+              }
             }
           },
           "verification": {
@@ -997,20 +1081,6 @@
           ],
           "type": "enum"
         }
-      },
-      "clientHeartbeatIntervalSeconds": {
-        "deprecated": false,
-        "desc": "The client heartbeat interval. Note that the value will NOT change the actual heartbeat behavior of clients, and the value is only used to facilitate related operations of turms-gateway",
-        "global": true,
-        "mutable": true,
-        "type": "int"
-      },
-      "closeIdleSessionAfterSeconds": {
-        "deprecated": false,
-        "desc": "A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd",
-        "global": true,
-        "mutable": true,
-        "type": "int"
       },
       "minHeartbeatIntervalSeconds": {
         "deprecated": false,

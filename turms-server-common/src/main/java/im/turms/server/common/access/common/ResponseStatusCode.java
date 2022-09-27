@@ -42,6 +42,7 @@ public enum ResponseStatusCode {
     RECORD_CONTAINS_DUPLICATE_KEY(1103, "The record to add contains a duplicate key", 409),
     REQUESTED_RECORDS_TOO_MANY(1104, "Too many records are requested", 429),
     SEND_REQUEST_FROM_NON_EXISTING_SESSION(1105, "The session should be established before sending requests", 403),
+    UNAUTHORIZED_REQUEST(1106, "The request is unauthorized", 401),
 
     // Server
     SERVER_INTERNAL_ERROR(1200, "Internal server error", 500),

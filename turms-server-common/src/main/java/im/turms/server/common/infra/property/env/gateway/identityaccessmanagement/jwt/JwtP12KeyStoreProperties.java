@@ -15,14 +15,13 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.gateway.authentication;
+package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
@@ -31,14 +30,12 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class HttpAuthenticationProperties {
+public class JwtP12KeyStoreProperties {
 
-    @NestedConfigurationProperty
-    private HttpAuthenticationRequestProperties request =
-            new HttpAuthenticationRequestProperties();
+    private String filePath = "";
 
-    @NestedConfigurationProperty
-    private HttpAuthenticationResponseExpectationProperties responseExpectation =
-            new HttpAuthenticationResponseExpectationProperties();
+    private String password = "";
+
+    private String keyAlias = "";
 
 }

@@ -19,12 +19,14 @@ package im.turms.server.common.infra.security.jwt.algorithm;
 
 import im.turms.server.common.infra.security.jwt.Jwt;
 
+import javax.crypto.spec.SecretKeySpec;
+
 /**
  * @author James Chen
  */
 public class HmacAlgorithm extends SymmetricAlgorithm {
 
-    private final byte[] secret;
+    private final SecretKeySpec secretKeySpec;
 
     public HmacAlgorithm(JwtAlgorithmDefinition definition, byte[] secretBytes) {
         super(definition);
@@ -37,13 +39,13 @@ public class HmacAlgorithm extends SymmetricAlgorithm {
         if (secretBytes.length < minLength) {
             throw new IllegalArgumentException("The length of secret must be at least " + minLength + " bytes long");
         }
-        this.secret = secretBytes;
+        secretKeySpec = new SecretKeySpec(secretBytes, definition.getJavaAlgorithmName());
     }
 
     @Override
     public boolean verify(Jwt jwt) {
         return verifySignature(getJavaAlgorithmName(),
-                secret,
+                secretKeySpec,
                 jwt.encodedHeaderBytes(),
                 jwt.encodedPayloadBytes(),
                 jwt.decodedSignatureBytes());

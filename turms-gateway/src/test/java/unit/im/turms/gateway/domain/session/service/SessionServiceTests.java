@@ -25,6 +25,7 @@ import im.turms.gateway.domain.session.service.UserService;
 import im.turms.gateway.domain.session.service.UserSimultaneousLoginService;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.access.client.dto.request.TurmsRequestTypePool;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
@@ -39,7 +40,7 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
 import im.turms.server.common.infra.property.env.gateway.SessionProperties;
-import im.turms.server.common.infra.property.env.gateway.authentication.AuthenticationProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
@@ -154,7 +155,7 @@ class SessionServiceTests {
     void handleHeartbeatRequest_shouldSucceed() {
         SessionService service = newSessionService();
         assertThatNoException()
-                .isThrownBy(() -> service.handleHeartbeatUpdateRequest(new UserSession(version, userId, deviceType, null, null)));
+                .isThrownBy(() -> service.handleHeartbeatUpdateRequest(new UserSession(version, TurmsRequestTypePool.ALL, userId, deviceType, null, null)));
     }
 
     @Test
@@ -183,7 +184,7 @@ class SessionServiceTests {
                 .gateway(new GatewayProperties().toBuilder()
                         .session(new SessionProperties().toBuilder()
                                 .notifyClientsOfSessionInfoAfterConnected(true)
-                                .authentication(new AuthenticationProperties().toBuilder()
+                                .identityAccessManagement(new IdentityAccessManagementProperties().toBuilder()
                                         .enabled(enableAuthentication)
                                         .build())
                                 .build())

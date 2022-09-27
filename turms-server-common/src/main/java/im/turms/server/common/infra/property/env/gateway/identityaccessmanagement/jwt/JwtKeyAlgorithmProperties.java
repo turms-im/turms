@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.gateway.authentication;
+package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt;
 
 
 import lombok.AllArgsConstructor;

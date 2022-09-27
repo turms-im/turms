@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.gateway.authentication;
+package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.http;
 
 
 import lombok.AllArgsConstructor;
@@ -31,15 +31,12 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class JwtAuthenticationProperties {
+public class HttpIdentityAccessManagementProperties {
 
     @NestedConfigurationProperty
-    private JwtAlgorithmProperties algorithm = new JwtAlgorithmProperties();
+    private HttpIdentityAccessManagementRequestProperties request = new HttpIdentityAccessManagementRequestProperties();
 
     @NestedConfigurationProperty
-    private JwtAuthenticationExpectationProperties expectation = new JwtAuthenticationExpectationProperties();
-
-    @NestedConfigurationProperty
-    private JwtAuthenticationVerificationProperties verification = new JwtAuthenticationVerificationProperties();
+    private HttpAuthenticationProperties authentication = new HttpAuthenticationProperties();
 
 }

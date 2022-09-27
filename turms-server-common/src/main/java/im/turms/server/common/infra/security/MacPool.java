@@ -59,7 +59,7 @@ public final class MacPool {
     );
 
     @SneakyThrows
-    public static void ensureExistence(String algorithm) {
+    public static void ensureAvailability(String algorithm) {
         Mac.getInstance(algorithm);
     }
 

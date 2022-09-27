@@ -162,7 +162,7 @@ public enum AdminPermission {
     public static Set<AdminPermission> matchPermission(String pattern) {
         Set<AdminPermission> permissions = CollectionUtil.newSetWithExpectedSize(8);
         for (String name : NAMES) {
-            if (StringUtil.match(name, pattern)) {
+            if (StringUtil.matchLatin1(name, pattern)) {
                 permissions.add(AdminPermission.valueOf(name));
             }
         }
@@ -177,7 +177,7 @@ public enum AdminPermission {
         Set<AdminPermission> permissions = CollectionUtil.newSetWithExpectedSize(count * 8);
         for (String pattern : patterns) {
             for (String name : NAMES) {
-                if (StringUtil.match(name, pattern)) {
+                if (StringUtil.matchLatin1(name, pattern)) {
                     permissions.add(AdminPermission.valueOf(name));
                 }
             }

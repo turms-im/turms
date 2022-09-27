@@ -17,8 +17,10 @@
 
 package unit.im.turms.server.common.infra.security.jwt;
 
-import im.turms.server.common.infra.property.env.gateway.authentication.JwtAuthenticationVerificationProperties;
-import im.turms.server.common.infra.property.env.gateway.authentication.JwtKeyAlgorithmProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtIdentityAccessManagementVerificationProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtKeyAlgorithmProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtP12KeyStoreProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtSecretKeyAlgorithmProperties;
 import im.turms.server.common.infra.security.jwt.Jwt;
 import im.turms.server.common.infra.security.jwt.JwtManager;
 import org.junit.jupiter.api.Test;
@@ -30,6 +32,16 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * keytool -genseckey -keystore keystore.p12 -storetype pkcs12 -storepass 123456 -keyalg HMacSHA256 -keysize 2048 -alias HS256 -keypass 123456
+ * keytool -genseckey -keystore keystore.p12 -storetype pkcs12 -storepass 123456 -keyalg HMacSHA384 -keysize 2048 -alias HS384 -keypass 123456
+ * keytool -genseckey -keystore keystore.p12 -storetype pkcs12 -storepass 123456 -keyalg HMacSHA512 -keysize 2048 -alias HS512 -keypass 123456
+ * keytool -genkey -keystore keystore.p12 -storetype pkcs12 -storepass 123456 -keyalg RSA -keysize 2048 -alias RS256 -keypass 123456 -sigalg SHA256withRSA -dname "CN=,OU=,O=,L=,ST=,C=" -validity 3600
+ * keytool -genkey -keystore keystore.p12 -storetype pkcs12 -storepass 123456 -keyalg RSA -keysize 2048 -alias RS384 -keypass 123456 -sigalg SHA384withRSA -dname "CN=,OU=,O=,L=,ST=,C=" -validity 3600
+ * keytool -genkey -keystore keystore.p12 -storetype pkcs12 -storepass 123456 -keyalg RSA -keysize 2048 -alias RS512 -keypass 123456 -sigalg SHA512withRSA -dname "CN=,OU=,O=,L=,ST=,C=" -validity 3600
+ * keytool -genkeypair -keystore keystore.p12 -storetype pkcs12 -storepass 123456 -keyalg EC -keysize 256 -alias ES256 -keypass 123456 -sigalg SHA256withECDSA -dname "CN=,OU=,O=,L=,ST=,C=" -validity 3600
+ * keytool -genkeypair -keystore keystore.p12 -storetype pkcs12 -storepass 123456 -keyalg EC -keysize 384 -alias ES384 -keypass 123456 -sigalg SHA384withECDSA -dname "CN=,OU=,O=,L=,ST=,C=" -validity 3600
+ * keytool -genkeypair -keystore keystore.p12 -storetype pkcs12 -storepass 123456 -keyalg EC -keysize 521 -alias ES512 -keypass 123456 -sigalg SHA512withECDSA -dname "CN=,OU=,O=,L=,ST=,C=" -validity 3600
+ *
  * @author James Chen
  */
 class JwtManagerTests {
@@ -37,16 +49,13 @@ class JwtManagerTests {
     @Test
     void decode() {
         ClassLoader classLoader = JwtManagerTests.class.getClassLoader();
-        String rsaPemFilePath = new File(classLoader.getResource("rsa.pem").getPath())
-                .getAbsolutePath();
-        String hmacSecretFilePath = new File(classLoader.getResource("hmac256-secret.text").getPath())
-                .getAbsolutePath();
         JwtKeyAlgorithmProperties keyAuthenticationProperties = new JwtKeyAlgorithmProperties();
         JwtKeyAlgorithmProperties rsaKeyAuthenticationProperties = new JwtKeyAlgorithmProperties()
                 .toBuilder()
-                .pemFilePath(rsaPemFilePath)
+                .pemFilePath(new File(classLoader.getResource("rsa.pem").getPath())
+                        .getAbsolutePath())
                 .build();
-        JwtManager jwtManager = new JwtManager(new JwtAuthenticationVerificationProperties(),
+        JwtManager jwtManager = new JwtManager(new JwtIdentityAccessManagementVerificationProperties(),
                 rsaKeyAuthenticationProperties,
                 rsaKeyAuthenticationProperties,
                 rsaKeyAuthenticationProperties,
@@ -56,9 +65,19 @@ class JwtManagerTests {
                 keyAuthenticationProperties,
                 keyAuthenticationProperties,
                 keyAuthenticationProperties,
-                hmacSecretFilePath,
-                "",
-                "");
+                new JwtSecretKeyAlgorithmProperties().toBuilder()
+                        .filePath(new File(classLoader.getResource("hmac256-secret.text").getPath())
+                                .getAbsolutePath())
+                        .build(),
+                new JwtSecretKeyAlgorithmProperties().toBuilder()
+                        .p12(new JwtP12KeyStoreProperties().toBuilder()
+                                .filePath(new File(classLoader.getResource("hmac256-secret.p12").getPath())
+                                        .getAbsolutePath())
+                                .password("123456")
+                                .keyAlias("HS256")
+                                .build())
+                        .build(),
+                new JwtSecretKeyAlgorithmProperties());
         Jwt jwt = jwtManager.decode(
                 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJULVNxdWFyZSIsImlhdCI6MTY0MDk5ODg2MSwiZXhwIjoxNjcyNTM0ODYxLCJhdWQiOiJKYW1lcyBDaGVuIiwic3ViIjoi5YWs5ryUIiwic29uZ3MiOlsi5q6L54WnIiwiQ29sb3JzIE9mIFRoZSBTbWlsZSJdLCJsaWtlIjp0cnVlfQ.yLsCgYkTKtgzUqQfUJ_c2AVqIw3WYIPD2ExJsvWjDQA");
 

@@ -50,6 +50,7 @@ public enum ResponseStatusCode: Int {
     case recordContainsDuplicateKey
     case requestedRecordsTooMany
     case sendRequestFromNonExistingSession
+    case unauthorizedRequest
 
     // Server
     case serverInternalError = 1200

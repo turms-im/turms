@@ -15,14 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.gateway.authentication;
+package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.http;
 
+import im.turms.server.common.infra.property.constant.HttpAuthenticationHttpMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Min;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -32,11 +34,15 @@ import java.util.Map;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class JwtAuthenticationExpectationProperties {
+public class HttpIdentityAccessManagementRequestProperties {
 
-    @Size(min = 1)
-    private Map<String, String> customPayloadClaims = Map.of(
-            "authenticated", "true"
-    );
+    private String url = "";
+
+    private Map<String, String> headers = Collections.emptyMap();
+
+    private HttpAuthenticationHttpMethod httpMethod = HttpAuthenticationHttpMethod.GET;
+
+    @Min(1)
+    private int timeoutMillis = 30 * 1000;
 
 }

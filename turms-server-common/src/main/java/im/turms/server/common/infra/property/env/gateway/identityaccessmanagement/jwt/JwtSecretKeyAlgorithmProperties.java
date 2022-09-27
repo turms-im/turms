@@ -15,17 +15,14 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.gateway.authentication;
+package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.Size;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
@@ -34,13 +31,11 @@ import java.util.Set;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class HttpAuthenticationResponseExpectationProperties {
+public class JwtSecretKeyAlgorithmProperties {
 
-    @Size(min = 1)
-    private Set<String> statusCodes = Set.of("2??");
+    private String filePath = "";
 
-    private Map<String, String> headers = Collections.emptyMap();
-
-    private Map<String, String> bodyFields = Collections.emptyMap();
+    @NestedConfigurationProperty
+    private JwtP12KeyStoreProperties p12 = new JwtP12KeyStoreProperties();
 
 }

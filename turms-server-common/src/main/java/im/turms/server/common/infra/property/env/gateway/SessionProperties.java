@@ -17,7 +17,7 @@
 
 package im.turms.server.common.infra.property.env.gateway;
 
-import im.turms.server.common.infra.property.env.gateway.authentication.AuthenticationProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
@@ -76,6 +76,6 @@ public class SessionProperties {
     private boolean notifyClientsOfSessionInfoAfterConnected = true;
 
     @NestedConfigurationProperty
-    private AuthenticationProperties authentication = new AuthenticationProperties();
+    private IdentityAccessManagementProperties identityAccessManagement = new IdentityAccessManagementProperties();
 
 }

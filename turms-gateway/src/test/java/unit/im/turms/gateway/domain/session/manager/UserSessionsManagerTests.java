@@ -21,6 +21,7 @@ import im.turms.gateway.access.client.common.connection.NetConnection;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.access.client.dto.request.TurmsRequestTypePool;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
@@ -61,7 +62,7 @@ class UserSessionsManagerTests {
     @Test
     void setDeviceOffline_shouldSucceed() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(version, deviceType, null, null);
+        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, deviceType, null, null);
         NetConnection connection = mock(NetConnection.class);
         manager.getSession(deviceType).setConnection(connection, new ByteArrayWrapper(new byte[]{}));
 
@@ -73,7 +74,7 @@ class UserSessionsManagerTests {
     @Test
     void pushSessionNotification_shouldReturnTrue_ifSessionExists() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(version, deviceType, null, null)
+        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, deviceType, null, null)
                 .setNotificationConsumer((byteBuf, tracingContext) -> Mono.empty());
         assertThat(manager.pushSessionNotification(deviceType, serverId)).isTrue();
     }
@@ -81,32 +82,32 @@ class UserSessionsManagerTests {
     @Test
     void pushSessionNotification_shouldReturnFalse_ifSessionNotExists() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(version, DeviceType.ANDROID, null, null);
+        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, DeviceType.ANDROID, null, null);
         assertThat(manager.pushSessionNotification(DeviceType.IOS, serverId)).isFalse();
     }
 
     @Test
     void getSession_shouldReturnSession() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(version, deviceType, null, null);
+        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, deviceType, null, null);
         assertThat(manager.getSession(deviceType)).isNotNull();
     }
 
     @Test
     void getSessionsNumber_shouldBeThree_forThreeSessions() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(version, DeviceType.ANDROID, null, null);
-        manager.addSessionIfAbsent(version, DeviceType.IOS, null, null);
-        manager.addSessionIfAbsent(version, DeviceType.DESKTOP, null, null);
+        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, DeviceType.ANDROID, null, null);
+        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, DeviceType.IOS, null, null);
+        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, DeviceType.DESKTOP, null, null);
         assertThat(manager.countSessions()).isEqualTo(3);
     }
 
     @Test
     void getLoggedInDeviceTypes_shouldBeSame() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(version, DeviceType.ANDROID, null, null);
-        manager.addSessionIfAbsent(version, DeviceType.IOS, null, null);
-        manager.addSessionIfAbsent(version, DeviceType.DESKTOP, null, null);
+        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, DeviceType.ANDROID, null, null);
+        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, DeviceType.IOS, null, null);
+        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, DeviceType.DESKTOP, null, null);
 
         Set<DeviceType> loggedInDeviceTypes = manager.getLoggedInDeviceTypes();
 

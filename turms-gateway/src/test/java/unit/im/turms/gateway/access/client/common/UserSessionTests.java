@@ -19,6 +19,7 @@ package unit.im.turms.gateway.access.client.common;
 
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.request.TurmsRequestTypePool;
 import im.turms.server.common.domain.location.bo.Location;
 import org.junit.jupiter.api.Test;
 
@@ -42,6 +43,7 @@ class UserSessionTests {
     void constructor_shouldReturnInstance() {
         UserSession userSession = new UserSession(
                 version,
+                TurmsRequestTypePool.ALL,
                 userId,
                 deviceType,
                 deviceDetails,
@@ -53,6 +55,7 @@ class UserSessionTests {
     void getters_shouldGetValues() {
         UserSession userSession = new UserSession(
                 version,
+                TurmsRequestTypePool.ALL,
                 userId,
                 deviceType,
                 deviceDetails,

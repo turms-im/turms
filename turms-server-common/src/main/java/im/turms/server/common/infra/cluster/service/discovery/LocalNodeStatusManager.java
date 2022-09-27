@@ -133,7 +133,7 @@ public class LocalNodeStatusManager {
             Leader localLeader = new Leader(clusterId, localMember.getNodeId(), new Date(), 1);
             return sharedConfigService.insert(localLeader)
                     .then()
-                    .onErrorResume(DuplicateKeyException.class, t -> Mono.empty());
+                    .onErrorComplete(DuplicateKeyException.class);
         }
         return Mono.empty();
     }

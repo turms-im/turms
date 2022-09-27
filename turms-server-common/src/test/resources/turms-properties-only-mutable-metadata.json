@@ -196,17 +196,33 @@
       }
     },
     "session": {
-      "authentication": {
+      "clientHeartbeatIntervalSeconds": {
+        "deprecated": false,
+        "desc": "The client heartbeat interval. Note that the value will NOT change the actual heartbeat behavior of clients, and the value is only used to facilitate related operations of turms-gateway",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "closeIdleSessionAfterSeconds": {
+        "deprecated": false,
+        "desc": "A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd",
+        "global": true,
+        "mutable": true,
+        "type": "int"
+      },
+      "identityAccessManagement": {
         "enabled": {
           "deprecated": false,
-          "desc": "Whether to authenticate users when logging in.Note that user ID is always required even if enabled is false; If false, turms-gateway won't connect to the MongoDB server for user records",
+          "desc": "Whether to authenticate and authorize users when logging in.Note that user ID is always required even if enabled is false; If false, turms-gateway won't connect to the MongoDB server for user records",
           "global": true,
           "mutable": true,
           "type": "boolean"
         },
         "http": {
-          "request": {},
-          "responseExpectation": {}
+          "authentication": {
+            "responseExpectation": {}
+          },
+          "request": {}
         },
         "jwt": {
           "algorithm": {
@@ -217,6 +233,15 @@
               "p12": {}
             },
             "ecdsa512": {
+              "p12": {}
+            },
+            "hmac256": {
+              "p12": {}
+            },
+            "hmac384": {
+              "p12": {}
+            },
+            "hmac512": {
               "p12": {}
             },
             "ps256": {
@@ -238,23 +263,11 @@
               "p12": {}
             }
           },
-          "expectation": {},
+          "authentication": {
+            "expectation": {}
+          },
           "verification": {}
         }
-      },
-      "clientHeartbeatIntervalSeconds": {
-        "deprecated": false,
-        "desc": "The client heartbeat interval. Note that the value will NOT change the actual heartbeat behavior of clients, and the value is only used to facilitate related operations of turms-gateway",
-        "global": true,
-        "mutable": true,
-        "type": "int"
-      },
-      "closeIdleSessionAfterSeconds": {
-        "deprecated": false,
-        "desc": "A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd",
-        "global": true,
-        "mutable": true,
-        "type": "int"
       },
       "minHeartbeatIntervalSeconds": {
         "deprecated": false,

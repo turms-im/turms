@@ -54,6 +54,7 @@ class ResponseStatusCode {
   static const recordContainsDuplicateKey = 1103;
   static const requestedRecordsTooMany = 1104;
   static const sendRequestFromNonExistingSession = 1105;
+  static const unauthorizedRequest = 1106;
 
   // Server
   static const serverInternalError = 1200;

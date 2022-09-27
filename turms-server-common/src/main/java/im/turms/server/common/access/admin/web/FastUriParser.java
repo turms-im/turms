@@ -64,11 +64,10 @@ public class FastUriParser {
             switch (currentState) {
                 case PARSING_PATH -> {
                     if (b == '?') {
-                        if (i == srcBytesLength - 1) {
-                            return Pair.of(StringUtil.newLatin1String(srcBytes, 0, srcBytesLength - 1),
-                                    Collections.emptyMap());
-                        }
                         path = StringUtil.newLatin1String(srcBytes, 0, i);
+                        if (i == srcBytesLength - 1) {
+                            return Pair.of(path, Collections.emptyMap());
+                        }
                         itemBeginIndex = i + 1;
                         currentState = ParseState.PARSING_QUERY_PARAM_KEY;
                     }

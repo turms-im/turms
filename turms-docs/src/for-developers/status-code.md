@@ -39,6 +39,7 @@ ResponseStatusCode表明请求响应中的处理状态，类似HTTP的状态码�
 |                      | RECORD_CONTAINS_DUPLICATE_KEY                        | 1103   |      |
 |                      | REQUESTED_RECORDS_TOO_MANY                           | 1104   |      |
 |                      | SEND_REQUEST_FROM_NON_EXISTING_SESSION               | 1105   |      |
+|                      | UNAUTHORIZED_REQUEST                                 | 1106   |      |
 | 服务端错误           | SERVER_INTERNAL_ERROR                                | 1200   |      |
 |                      | SERVER_UNAVAILABLE                                   | 1201   |      |
 | 用户登录相关错误     | UNSUPPORTED_CLIENT_VERSION                           | 2000   |      |

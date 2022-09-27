@@ -69,6 +69,9 @@ public class ClientRequestDispatcher {
 
     private static final long HEARTBEAT_FAILURE_REQUEST_ID = -100;
 
+    private static final Mono<TurmsNotification> UNAUTHORIZED_REQUEST_ERROR_MONO =
+            Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED_REQUEST));
+
     static {
         HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT = Unpooled
                 .unreleasableBuffer(ClientMessageEncoder.encodeResponse(
@@ -147,9 +150,12 @@ public class ClientRequestDispatcher {
         TracingContext tracingContext = supportsTracing(requestType) ? new TracingContext() : TracingContext.NOOP;
         // Check if we can log to avoid logging DeleteSessionRequest twice
         boolean canLogRequest = true;
-        if (requestType == DELETE_SESSION_REQUEST) {
-            UserSession session = sessionWrapper.getUserSession();
-            if (session != null) {
+        UserSession session = sessionWrapper.getUserSession();
+        if (session != null) {
+            if (!session.hasPermission(requestType)) {
+                notificationMono = UNAUTHORIZED_REQUEST_ERROR_MONO;
+            }
+            if (requestType == DELETE_SESSION_REQUEST) {
                 canLogRequest = session.acquireDeleteSessionRequestLoggingLock();
             }
         }

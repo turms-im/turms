@@ -24,6 +24,7 @@ import im.turms.gateway.domain.session.manager.UserSessionsManager;
 import im.turms.gateway.infra.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.location.bo.Location;
@@ -86,7 +87,7 @@ import static im.turms.gateway.infra.metrics.MetricNameConst.ONLINE_USERS_GAUGE;
  * @author James Chen
  */
 @Service
-public class SessionService implements ISessionService, SessionAuthenticationSupport {
+public class SessionService implements ISessionService, SessionIdentityAccessManagementSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessionService.class);
 
@@ -98,7 +99,7 @@ public class SessionService implements ISessionService, SessionAuthenticationSup
     private final PluginManager pluginManager;
 
     @Delegate
-    private final SessionAuthenticationManager sessionAuthenticationManager;
+    private final SessionIdentityAccessManager sessionAuthenticationManager;
 
     private final SessionLocationService sessionLocationService;
     private final UserStatusService userStatusService;
@@ -144,7 +145,7 @@ public class SessionService implements ISessionService, SessionAuthenticationSup
         this.node = node;
         this.sessionLocationService = sessionLocationService;
         this.pluginManager = pluginManager;
-        this.sessionAuthenticationManager = new SessionAuthenticationManager(propertiesManager, pluginManager, userService);
+        this.sessionAuthenticationManager = new SessionIdentityAccessManager(propertiesManager, pluginManager, userService);
         this.userStatusService = userStatusService;
         this.userSimultaneousLoginService = userSimultaneousLoginService;
         userIdToSessionsManager = new ConcurrentHashMap<>(4096);
@@ -216,10 +217,13 @@ public class SessionService implements ISessionService, SessionAuthenticationSup
         if (userSimultaneousLoginService.isForbiddenDeviceType(deviceType)) {
             return Mono.error(ResponseException.get(ResponseStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE));
         }
-        return authenticate(version, userId, password, deviceType, deviceDetails, userStatus, location, ipStr)
-                .flatMap(statusCode -> statusCode == ResponseStatusCode.OK
-                        ? tryRegisterOnlineUser(version, ip, userId, deviceType, deviceDetails, userStatus, location)
-                        : Mono.error(ResponseException.get(statusCode)));
+        return this.verifyAndGrant(version, userId, password, deviceType, deviceDetails, userStatus, location, ipStr)
+                .flatMap(permissionInfo -> {
+                    ResponseStatusCode statusCode = permissionInfo.authenticationCode();
+                    return statusCode == ResponseStatusCode.OK
+                            ? tryRegisterOnlineUser(version, permissionInfo.permissions(), ip, userId, deviceType, deviceDetails, userStatus, location)
+                            : Mono.error(ResponseException.get(statusCode));
+                });
     }
 
     /**
@@ -458,6 +462,7 @@ public class SessionService implements ISessionService, SessionAuthenticationSup
      */
     public Mono<UserSession> tryRegisterOnlineUser(
             int version,
+            @NotNull Set<TurmsRequest.KindCase> permissions,
             @NotNull ByteArrayWrapper ip,
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
@@ -492,7 +497,7 @@ public class SessionService implements ISessionService, SessionAuthenticationSup
                     // Check the current sessions status
                     UserStatus existingUserStatus = sessionsStatus.userStatus();
                     if (existingUserStatus == UserStatus.OFFLINE) {
-                        return addOnlineDeviceIfAbsent(version, ip, userId, deviceType, deviceDetails, userStatus, location);
+                        return addOnlineDeviceIfAbsent(version, permissions, ip, userId, deviceType, deviceDetails, userStatus, location);
                     }
                     boolean conflicts = sessionsStatus.getLoggedInDeviceTypes().contains(deviceType);
                     if (conflicts) {
@@ -527,7 +532,7 @@ public class SessionService implements ISessionService, SessionAuthenticationSup
                     }
                     return disconnectConflictedDeviceTypes(userId, deviceType, sessionsStatus)
                             .flatMap(wasSuccessful -> wasSuccessful
-                                    ? addOnlineDeviceIfAbsent(version, ip, userId, deviceType, deviceDetails, userStatus, location)
+                                    ? addOnlineDeviceIfAbsent(version, permissions, ip, userId, deviceType, deviceDetails, userStatus, location)
                                     : Mono.error(ResponseException.get(ResponseStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
                 });
     }
@@ -615,6 +620,7 @@ public class SessionService implements ISessionService, SessionAuthenticationSup
 
     private Mono<UserSession> addOnlineDeviceIfAbsent(
             int version,
+            @NotNull Set<TurmsRequest.KindCase> permissions,
             @NotNull ByteArrayWrapper ip,
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
@@ -630,7 +636,7 @@ public class SessionService implements ISessionService, SessionAuthenticationSup
                     UserStatus finalUserStatus = null == userStatus ? UserStatus.AVAILABLE : userStatus;
                     UserSessionsManager manager = userIdToSessionsManager
                             .computeIfAbsent(userId, key -> new UserSessionsManager(key, finalUserStatus));
-                    UserSession session = manager.addSessionIfAbsent(version, deviceType, deviceDetails, location);
+                    UserSession session = manager.addSessionIfAbsent(version, permissions, deviceType, deviceDetails, location);
                     // This should never happen
                     if (null == session) {
                         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE));
@@ -642,7 +648,7 @@ public class SessionService implements ISessionService, SessionAuthenticationSup
                                     ? (sessions.isEmpty() ? null : sessions)
                                     : sessions;
                         });
-                        session = manager.addSessionIfAbsent(version, deviceType, deviceDetails, location);
+                        session = manager.addSessionIfAbsent(version, permissions, deviceType, deviceDetails, location);
                         if (null == session) {
                             return Mono.error(ResponseException.get(ResponseStatusCode.SERVER_INTERNAL_ERROR));
                         }

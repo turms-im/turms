@@ -20,6 +20,7 @@ package im.turms.gateway.access.client.common;
 import im.turms.gateway.access.client.common.connection.NetConnection;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
@@ -38,6 +39,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.function.BiFunction;
 
@@ -56,6 +58,7 @@ public final class UserSession {
     private final int id = RandomUtil.nextPositiveInt();
 
     private final int version;
+    private final Set<TurmsRequest.KindCase> permissions;
 
     private final Long userId;
     private final DeviceType deviceType;
@@ -109,12 +112,14 @@ public final class UserSession {
     private ByteArrayWrapper ip;
 
     public UserSession(int version,
+                       Set<TurmsRequest.KindCase> permissions,
                        Long userId,
                        DeviceType loggingInDeviceType,
                        @Nullable Map<String, String> deviceDetails,
                        @Nullable Location loginLocation) {
         Date now = new Date();
         this.version = version;
+        this.permissions = permissions;
         this.userId = userId;
         this.deviceType = loggingInDeviceType;
         this.deviceDetails = deviceDetails == null ? Collections.emptyMap() : deviceDetails;
@@ -169,6 +174,10 @@ public final class UserSession {
 
     public boolean acquireDeleteSessionRequestLoggingLock() {
         return IS_DELETE_SESSION_LOCK_ACQUIRED_UPDATER.compareAndSet(this, 0, 1);
+    }
+
+    public boolean hasPermission(TurmsRequest.KindCase requestType) {
+        return permissions.contains(requestType);
     }
 
     @Override

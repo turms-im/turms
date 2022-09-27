@@ -31,7 +31,7 @@ public abstract non-sealed class AsymmetricAlgorithm extends JwtAlgorithm {
 
     protected AsymmetricAlgorithm(JwtAlgorithmDefinition definition) {
         super(definition);
-        SignaturePool.ensureExistence(definition.getJavaAlgorithmName());
+        SignaturePool.ensureAvailability(definition.getJavaAlgorithmName());
     }
 
     @SneakyThrows

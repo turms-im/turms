@@ -21,11 +21,11 @@ import im.turms.gateway.storage.mongo.MongoConfig;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import im.turms.server.common.infra.property.constant.AuthenticationType;
+import im.turms.server.common.infra.property.constant.IdentityAccessManagementType;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
 import im.turms.server.common.infra.property.env.gateway.MongoProperties;
 import im.turms.server.common.infra.property.env.gateway.SessionProperties;
-import im.turms.server.common.infra.property.env.gateway.authentication.AuthenticationProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.testing.BaseIntegrationTest;
@@ -49,9 +49,9 @@ class MongoConfigIT extends BaseIntegrationTest {
                                 .user(new TurmsMongoProperties(getMongoUri()))
                                 .build())
                         .session(new SessionProperties().toBuilder()
-                                .authentication(new AuthenticationProperties().toBuilder()
+                                .identityAccessManagement(new IdentityAccessManagementProperties().toBuilder()
                                         .enabled(true)
-                                        .type(AuthenticationType.PASSWORD)
+                                        .type(IdentityAccessManagementType.PASSWORD)
                                         .build())
                                 .build())
                         .build())
