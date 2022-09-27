@@ -98,7 +98,7 @@ export default defineUserConfig({
                     '/for-developers/client-api.md',
                     '/for-developers/client-session.md',
                     '/for-developers/client-metrics.md',
-                    '/for-developers/client-authentication.md',
+                    '/for-developers/client-identity-access-management.md',
                     '/for-developers/client-server-protocol.md',
                     '/for-developers/client-turms-client-js.md'
                 ]
