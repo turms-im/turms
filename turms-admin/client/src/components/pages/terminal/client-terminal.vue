@@ -120,8 +120,8 @@ export default {
             }
             return false;
         },
-        onCursorChanged(x, y) {
-            this.$refs.autocomplete?.updatePosition(x + 4, y + 8);
+        onCursorChanged(x, y, rowHeight) {
+            this.$refs.autocomplete?.updatePosition(x, y, rowHeight);
         },
         onInputChanged(text) {
             // TODO: support param suggestion

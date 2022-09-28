@@ -193,7 +193,7 @@ export default class Terminal extends XTerm {
     _triggerOnCursorChangedListeners() {
         setTimeout(() => {
             const rect = this.textarea.getBoundingClientRect();
-            this.onCursorChanged?.(rect.right, rect.bottom);
+            this.onCursorChanged?.(rect.right, rect.bottom, rect.height);
         });
     }
 

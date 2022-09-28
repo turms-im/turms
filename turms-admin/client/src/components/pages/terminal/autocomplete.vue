@@ -54,8 +54,14 @@ export default {
         }
     },
     methods: {
-        updatePosition(x, y) {
-            this.$el.style.left = `${x}px`;
+        updatePosition(x, y, rowHeight) {
+            const rect = this.$el.getBoundingClientRect();
+            if (y + rect.height > (window.innerHeight - 12)) {
+                y -= rect.height + rowHeight + 8;
+            } else {
+                y += 8;
+            }
+            this.$el.style.left = `${x + 4}px`;
             this.$el.style.top = `${y}px`;
         },
         select() {
