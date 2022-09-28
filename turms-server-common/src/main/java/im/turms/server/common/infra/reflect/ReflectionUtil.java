@@ -47,10 +47,33 @@ public final class ReflectionUtil {
      * because Java hides {@link java.lang.reflect.AccessibleObject#override} in
      * https://bugs.openjdk.java.net/browse/JDK-8210522
      * https://github.com/openjdk/jdk/commit/9c70e26c146ae4c5a2e2311948efec9bf662bb8c
-     * So we get the offset via:
-     * "jdk.internal.misc.Unsafe#objectFieldOffset(AccessibleObject.class, "override")"
+     * Though we get the offset via:
+     * "jdk.internal.misc.Unsafe#objectFieldOffset(AccessibleObject.class, "override")",
+     * we don't want to "add-exports" everywhere, which causes a bad development experience
      */
-    private static final long OVERRIDE_OFFSET = 12;
+    private static final long OVERRIDE_OFFSET;
+
+    static {
+        Field field;
+        try {
+            class OverrideTest {
+                private boolean firstField;
+            }
+            field = OverrideTest.class.getDeclaredField("firstField");
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+        // "AccessibleObject#override" should be the first field,
+        // so their object offset should be the same
+        OVERRIDE_OFFSET = UNSAFE.objectFieldOffset(field);
+        if (field.isAccessible()) {
+            throw new IllegalStateException("The private field should be inaccessible");
+        }
+        setAccessible(field);
+        if (!field.isAccessible()) {
+            throw new IllegalStateException("The private field should be accessible after updating \"override\" to true");
+        }
+    }
 
     private ReflectionUtil() {
     }
