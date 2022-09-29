@@ -159,17 +159,17 @@ public enum PolicyStatementResource {
             Set.of(QUERY_JOINED_GROUP_IDS_REQUEST,
                     QUERY_JOINED_GROUP_INFOS_REQUEST)),
     //endregion
-    //region conversation
-    CONVERSATION(Collections.emptySet(),
-            Collections.emptySet(),
-            Set.of(UPDATE_CONVERSATION_REQUEST),
-            Set.of(QUERY_CONVERSATIONS_REQUEST)),
-    //endregion
     //region message
     MESSAGE(Set.of(CREATE_MESSAGE_REQUEST),
             Collections.emptySet(),
             Set.of(UPDATE_MESSAGE_REQUEST),
             Set.of(QUERY_MESSAGES_REQUEST)),
+    //endregion
+    //region conversation
+    CONVERSATION(Collections.emptySet(),
+            Collections.emptySet(),
+            Set.of(UPDATE_CONVERSATION_REQUEST),
+            Set.of(QUERY_CONVERSATIONS_REQUEST)),
     //endregion
     //region typing status
     TYPING_STATUS(Collections.emptySet(),

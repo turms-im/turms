@@ -17,6 +17,7 @@
 
 package im.turms.gateway.access.client.common.authorization.policy;
 
+import im.turms.server.common.infra.collection.CloseableCollection;
 import im.turms.server.common.infra.collection.CollectionPool;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.Pool;
@@ -66,6 +67,9 @@ public class PolicyDeserializer {
                 "], or an array that contains these strings";
     }
 
+    private PolicyDeserializer() {
+    }
+
     public static Policy parse(Map<String, Object> map) {
         Object statementsObj = map.get(Policy.Fields.statements);
         if (!(statementsObj instanceof List<?> statementObjs)) {
@@ -105,8 +109,8 @@ public class PolicyDeserializer {
         if (!(actionsObj instanceof List<?> actionObjs)) {
             throw new IllegalPolicyException(ILLEGAL_ACTIONS);
         }
-        Set<PolicyStatementAction> actions = CollectionPool.getSet();
-        try {
+        try (CloseableCollection<Set<PolicyStatementAction>> closeableCollection = CollectionPool.getSet()) {
+            Set<PolicyStatementAction> actions = closeableCollection.value();
             for (Object actionObj : actionObjs) {
                 if (!(actionObj instanceof String actionStr)) {
                     throw new IllegalPolicyException(ILLEGAL_ACTIONS);
@@ -114,8 +118,6 @@ public class PolicyDeserializer {
                 actions.add(parseAction(actionStr));
             }
             return ACTIONS_POOL.poolIfAbsent(actions, CollectionUtil::copyAsSet);
-        } finally {
-            actions.clear();
         }
     }
 
@@ -144,8 +146,8 @@ public class PolicyDeserializer {
         if (!(resourcesObj instanceof List<?> resourceObjs)) {
             throw new IllegalPolicyException(ILLEGAL_RESOURCES);
         }
-        Set<PolicyStatementResource> resources = CollectionPool.getSet();
-        try {
+        try (CloseableCollection<Set<PolicyStatementResource>> closeableCollection = CollectionPool.getSet()) {
+            Set<PolicyStatementResource> resources = closeableCollection.value();
             for (Object resourceObj : resourceObjs) {
                 if (!(resourceObj instanceof String resourcesStr)) {
                     throw new IllegalPolicyException(ILLEGAL_RESOURCES);
@@ -160,8 +162,6 @@ public class PolicyDeserializer {
                 }
             }
             return RESOURCES_POOL.poolIfAbsent(resources, CollectionUtil::copyAsSet);
-        } finally {
-            resources.clear();
         }
     }
 

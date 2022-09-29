@@ -17,28 +17,18 @@
 
 package im.turms.server.common.infra.collection;
 
-import io.netty.util.concurrent.FastThreadLocal;
-import org.eclipse.collections.impl.set.mutable.UnifiedSet;
-
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author James Chen
  */
-public final class CollectionPool {
+public record CloseableCollection<T extends Collection<?>>(
+        T value
+) implements AutoCloseable {
 
-    private CollectionPool() {
-    }
-
-    private static final FastThreadLocal<CloseableCollection<Set<?>>> SET = new FastThreadLocal<>() {
-        @Override
-        protected CloseableCollection<Set<?>> initialValue() {
-            return new CloseableCollection<>(UnifiedSet.newSet(64));
-        }
-    };
-
-    public static <T> CloseableCollection<Set<T>> getSet() {
-        return (CloseableCollection) SET.get();
+    @Override
+    public void close() {
+        value.clear();
     }
 
 }

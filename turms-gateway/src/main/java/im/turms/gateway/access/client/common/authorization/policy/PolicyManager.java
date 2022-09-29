@@ -21,6 +21,7 @@ import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.collection.CollectionPool;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.Pool;
+import im.turms.server.common.infra.collection.CloseableCollection;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -63,13 +64,10 @@ public class PolicyManager {
                     return findMatchedRequestTypes(actions.iterator().next(),
                             resources.iterator().next());
                 }
-                Set<TurmsRequest.KindCase> matchedRequestTypesBuilder = CollectionPool.getSet();
-                try {
-                    return pool(findMatchedRequestTypes(matchedRequestTypesBuilder,
+                try (CloseableCollection<Set<TurmsRequest.KindCase>> closeableCollection = CollectionPool.getSet()) {
+                    return pool(findMatchedRequestTypes(closeableCollection.value(),
                             actions,
                             resources.iterator().next()));
-                } finally {
-                    matchedRequestTypesBuilder.clear();
                 }
             }
             if (resourceCount == RESOURCE_COUNT) {
@@ -79,18 +77,16 @@ public class PolicyManager {
                     }
                 }
             }
-            Set<TurmsRequest.KindCase> matchedRequestTypesBuilder = CollectionPool.getSet();
-            try {
+            try (CloseableCollection<Set<TurmsRequest.KindCase>> closeableCollection = CollectionPool.getSet()) {
+                Set<TurmsRequest.KindCase> matchedRequestTypesBuilder = closeableCollection.value();
                 for (PolicyStatementResource resource : resources) {
                     findMatchedRequestTypes(matchedRequestTypesBuilder, actions, resource);
                 }
                 return pool(matchedRequestTypesBuilder);
-            } finally {
-                matchedRequestTypesBuilder.clear();
             }
         }
-        Set<TurmsRequest.KindCase> allowedRequestTypesBuilder = CollectionPool.getSet();
-        try {
+        try (CloseableCollection<Set<TurmsRequest.KindCase>> closeableCollection = CollectionPool.getSet()) {
+            Set<TurmsRequest.KindCase> allowedRequestTypesBuilder = closeableCollection.value();
             List<PolicyStatement> denyStatements = null;
             for (PolicyStatement statement : statements) {
                 if (statement.effect() == PolicyStatementEffect.DENY) {
@@ -121,8 +117,6 @@ public class PolicyManager {
                 return PolicyStatementResource.ALL_REQUEST_TYPES;
             }
             return pool(allowedRequestTypesBuilder);
-        } finally {
-            allowedRequestTypesBuilder.clear();
         }
     }
 
