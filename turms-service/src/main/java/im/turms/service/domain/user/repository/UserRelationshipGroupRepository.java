@@ -50,9 +50,8 @@ public class UserRelationshipGroupRepository extends BaseRepository<UserRelation
     public Mono<DeleteResult> deleteAllRelationshipGroups(
             Set<Long> ownerIds,
             @Nullable ClientSession session) {
-        Filter filter = Filter.newBuilder(2)
-                .in(UserRelationshipGroup.Fields.ID_OWNER_ID, ownerIds)
-                .ne(UserRelationshipGroup.Fields.ID_GROUP_INDEX, 0);
+        Filter filter = Filter.newBuilder(1)
+                .in(UserRelationshipGroup.Fields.ID_OWNER_ID, ownerIds);
         return mongoClient.deleteMany(session, entityClass, filter);
     }
 
