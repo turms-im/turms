@@ -104,20 +104,24 @@ public class PolicyDeserializer {
 
     private static Set<PolicyStatementAction> parseActions(Object actionsObj) {
         if (actionsObj instanceof String actionStr) {
-            return ACTIONS_POOL.poolIfAbsent(Set.of(parseAction(actionStr)));
+            PolicyStatementAction action = parseAction(actionStr);
+            return ACTIONS_POOL.poolIfAbsent(1L << action.ordinal(), Set.of(action));
         }
         if (!(actionsObj instanceof List<?> actionObjs)) {
             throw new IllegalPolicyException(ILLEGAL_ACTIONS);
         }
         try (CloseableCollection<Set<PolicyStatementAction>> closeableCollection = CollectionPool.getSet()) {
             Set<PolicyStatementAction> actions = closeableCollection.value();
+            long key = 0;
             for (Object actionObj : actionObjs) {
                 if (!(actionObj instanceof String actionStr)) {
                     throw new IllegalPolicyException(ILLEGAL_ACTIONS);
                 }
-                actions.add(parseAction(actionStr));
+                PolicyStatementAction action = parseAction(actionStr);
+                key |= 1L << action.ordinal();
+                actions.add(action);
             }
-            return ACTIONS_POOL.poolIfAbsent(actions, CollectionUtil::copyAsSet);
+            return ACTIONS_POOL.poolIfAbsent(key, actions, CollectionUtil::copyAsSet);
         }
     }
 
@@ -137,17 +141,20 @@ public class PolicyDeserializer {
             if (resourcesStr.equals("*")) {
                 return PolicyStatementResource.ALL;
             }
+            PolicyStatementResource resource;
             try {
-                return RESOURCES_POOL.poolIfAbsent(Set.of(PolicyStatementResource.valueOf(resourcesStr)));
+                resource = PolicyStatementResource.valueOf(resourcesStr);
             } catch (Exception e) {
                 throw new IllegalPolicyException(ILLEGAL_RESOURCES);
             }
+            return RESOURCES_POOL.poolIfAbsent(1L << resource.ordinal(), Set.of(resource));
         }
         if (!(resourcesObj instanceof List<?> resourceObjs)) {
             throw new IllegalPolicyException(ILLEGAL_RESOURCES);
         }
         try (CloseableCollection<Set<PolicyStatementResource>> closeableCollection = CollectionPool.getSet()) {
             Set<PolicyStatementResource> resources = closeableCollection.value();
+            long key = 0;
             for (Object resourceObj : resourceObjs) {
                 if (!(resourceObj instanceof String resourcesStr)) {
                     throw new IllegalPolicyException(ILLEGAL_RESOURCES);
@@ -156,12 +163,14 @@ public class PolicyDeserializer {
                     return PolicyStatementResource.ALL;
                 }
                 try {
-                    resources.add(PolicyStatementResource.valueOf(resourcesStr));
+                    PolicyStatementResource resource = PolicyStatementResource.valueOf(resourcesStr);
+                    key |= 1L << resource.ordinal();
+                    resources.add(resource);
                 } catch (Exception e) {
                     throw new IllegalPolicyException(ILLEGAL_RESOURCES);
                 }
             }
-            return RESOURCES_POOL.poolIfAbsent(resources, CollectionUtil::copyAsSet);
+            return RESOURCES_POOL.poolIfAbsent(key, resources, CollectionUtil::copyAsSet);
         }
     }
 

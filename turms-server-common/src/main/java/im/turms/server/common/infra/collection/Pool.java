@@ -17,10 +17,12 @@
 
 package im.turms.server.common.infra.collection;
 
+import org.jctools.maps.NonBlockingHashMapLong;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.UnaryOperator;
 
 /**
@@ -28,75 +30,189 @@ import java.util.function.UnaryOperator;
  */
 public class Pool<T> {
 
+    public static final long RESERVED_KEY = 0;
+    private static final long FALLBACK_KEY = Long.MIN_VALUE;
+
     private final int maxSize;
-    /**
-     * Don't use NonBlockingHashMapLong because it's inefficient for our cases
-     */
-    private final ConcurrentHashMap<Long, ConcurrentLinkedQueue<T>> idToObject;
+    private final NonBlockingHashMapLong<Object> idToObject;
 
     public Pool(int maxSize, int initialSize) {
         this.maxSize = maxSize;
-        idToObject = new ConcurrentHashMap<>(initialSize);
+        idToObject = new NonBlockingHashMapLong<>(initialSize);
     }
 
     public T poolIfAbsent(T value) {
-        long key = value.hashCode();
-        ConcurrentLinkedQueue<T> existingObjects = idToObject.get(key);
-        if (existingObjects == null) {
+        return poolIfAbsent(value.hashCode(), value);
+    }
+
+    public T poolIfAbsent(long key, T value) {
+        if (key == RESERVED_KEY) {
+            key = FALLBACK_KEY;
+        }
+        Object existingObject = idToObject.get(key);
+        if (existingObject == null) {
             // We don't use LRU just because we don't it currently
             if (idToObject.size() > maxSize) {
-                Iterator<Map.Entry<Long, ConcurrentLinkedQueue<T>>> iterator = idToObject.entrySet().iterator();
+                Iterator<Map.Entry<Long, Object>> iterator = idToObject.entrySet().iterator();
                 if (iterator.hasNext()) {
                     iterator.remove();
                 }
             }
-            ConcurrentLinkedQueue<T> newObjects = new ConcurrentLinkedQueue<>();
-            newObjects.add(value);
-            existingObjects = idToObject.putIfAbsent(key, newObjects);
-            if (existingObjects == null) {
+            existingObject = idToObject.putIfAbsent(key, value);
+            if (existingObject == null) {
                 return value;
             }
         }
-        for (T existingObject : existingObjects) {
+        if (existingObject instanceof InternalArrayList existingObjects) {
+            for (Object existingObj : existingObjects) {
+                if (existingObj.equals(value)) {
+                    return (T) existingObj;
+                }
+            }
+            while (true) {
+                InternalArrayList<T> newObjects = new InternalArrayList<>(existingObjects, value);
+                Object previousObjects = idToObject.putIfAbsent(key, newObjects);
+                if (previousObjects == existingObjects) {
+                    return value;
+                } else {
+                    existingObjects = (InternalArrayList<T>) previousObjects;
+                    for (Object existingObj : existingObjects) {
+                        if (existingObj.equals(value)) {
+                            return (T) existingObj;
+                        }
+                    }
+                }
+            }
+        } else {
             if (existingObject.equals(value)) {
-                return existingObject;
+                return (T) existingObject;
+            }
+            InternalArrayList<T> newObjects = new InternalArrayList<>((T) existingObject, value);
+            Object previousObjects = idToObject.putIfAbsent(key, newObjects);
+            if (previousObjects == existingObject) {
+                return value;
+            }
+            InternalArrayList<T> existingObjects = (InternalArrayList<T>) previousObjects;
+            while (true) {
+                newObjects = new InternalArrayList<>(existingObjects, value);
+                previousObjects = idToObject.putIfAbsent(key, newObjects);
+                if (previousObjects == existingObjects) {
+                    return value;
+                } else {
+                    existingObjects = (InternalArrayList<T>) previousObjects;
+                    for (Object existingObj : existingObjects) {
+                        if (existingObj.equals(value)) {
+                            return (T) existingObj;
+                        }
+                    }
+                }
             }
         }
-        existingObjects.add(value);
-        return value;
     }
 
     public T poolIfAbsent(T value, UnaryOperator<T> transformer) {
-        long key = value.hashCode();
-        ConcurrentLinkedQueue<T> existingObjects = idToObject.get(key);
-        if (existingObjects == null) {
+        return poolIfAbsent(value.hashCode(), value, transformer);
+    }
+
+    public T poolIfAbsent(long key, T value, UnaryOperator<T> transformer) {
+        if (key == RESERVED_KEY) {
+            key = FALLBACK_KEY;
+        }
+        Object existingObject = idToObject.get(key);
+        boolean transformed = false;
+        if (existingObject == null) {
             // We don't use LRU just because we don't it currently
             if (idToObject.size() > maxSize) {
-                Iterator<Map.Entry<Long, ConcurrentLinkedQueue<T>>> iterator = idToObject.entrySet().iterator();
+                Iterator<Map.Entry<Long, Object>> iterator = idToObject.entrySet().iterator();
                 if (iterator.hasNext()) {
                     iterator.remove();
                 }
             }
-            ConcurrentLinkedQueue<T> newObjects = new ConcurrentLinkedQueue<>();
-            T newValue = transformer.apply(value);
-            newObjects.add(newValue);
-            existingObjects = idToObject.putIfAbsent(key, newObjects);
-            if (existingObjects == null) {
-                return newValue;
+            value = transformer.apply(value);
+            existingObject = idToObject.putIfAbsent(key, value);
+            if (existingObject == null) {
+                return value;
             }
+            transformed = true;
         }
-        for (T existingObject : existingObjects) {
+        if (existingObject instanceof InternalArrayList existingObjects) {
+            for (Object existingObj : existingObjects) {
+                if (existingObj.equals(value)) {
+                    return (T) existingObj;
+                }
+            }
+            if (!transformed) {
+                value = transformer.apply(value);
+            }
+            while (true) {
+                InternalArrayList<T> newObjects = new InternalArrayList<>(existingObjects, value);
+                Object previousObjects = idToObject.putIfAbsent(key, newObjects);
+                if (previousObjects == existingObjects) {
+                    return value;
+                } else {
+                    existingObjects = (InternalArrayList<T>) previousObjects;
+                    for (Object existingObj : existingObjects) {
+                        if (existingObj.equals(value)) {
+                            return (T) existingObj;
+                        }
+                    }
+                }
+            }
+        } else {
+            if (!transformed) {
+                value = transformer.apply(value);
+            }
             if (existingObject.equals(value)) {
-                return existingObject;
+                return (T) existingObject;
+            }
+            InternalArrayList<T> newObjects = new InternalArrayList<>((T) existingObject, value);
+            Object previousObjects = idToObject.putIfAbsent(key, newObjects);
+            if (previousObjects == existingObject) {
+                return value;
+            }
+            InternalArrayList<T> existingObjects = (InternalArrayList<T>) previousObjects;
+            while (true) {
+                newObjects = new InternalArrayList<>(existingObjects, value);
+                previousObjects = idToObject.putIfAbsent(key, newObjects);
+                if (previousObjects == existingObjects) {
+                    return value;
+                } else {
+                    existingObjects = (InternalArrayList<T>) previousObjects;
+                    for (Object existingObj : existingObjects) {
+                        if (existingObj.equals(value)) {
+                            return (T) existingObj;
+                        }
+                    }
+                }
             }
         }
-        T newValue = transformer.apply(value);
-        existingObjects.add(newValue);
-        return newValue;
     }
 
     public int size() {
         return idToObject.size();
+    }
+
+    public Collection<T> values() {
+        return (Collection<T>) idToObject.values();
+    }
+
+    private static class InternalArrayList<T> extends ArrayList<T> {
+        InternalArrayList(int initialCapacity) {
+            super(initialCapacity);
+        }
+
+        InternalArrayList(T element1, T element2) {
+            super(2);
+            add(element1);
+            add(element2);
+        }
+
+        InternalArrayList(InternalArrayList<T> list, T element) {
+            super(list.size() + 1);
+            addAll(list);
+            add(element);
+        }
+
     }
 
 }
