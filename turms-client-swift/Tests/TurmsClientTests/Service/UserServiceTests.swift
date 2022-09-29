@@ -7,7 +7,7 @@ class UserServiceTests: XCTestCase {
 
     override func setUp() {
         continueAfterFailure = false
-        turmsClient = TurmsClient(Config.WS_URL)
+        turmsClient = TurmsClient(Config.HOST, Config.PORT)
     }
 
     override func tearDown() {

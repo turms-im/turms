@@ -1,12 +1,11 @@
 import Foundation
-import Starscream
 
 public class StateStore {
     // Connection
 
     // Note: Do NOT set the property weak because it only be referenced here
     // and it will be deinited unexpectedly if it's weak
-    var websocket: WebSocket?
+    var tcp: TcpClient?
     var isConnected: Bool = false
 
     // Session
@@ -18,7 +17,7 @@ public class StateStore {
     var lastRequestDate = Date(timeIntervalSince1970: 0)
 
     func reset() {
-        websocket = nil
+        tcp = nil
         isConnected = false
         isSessionOpen = false
         sessionId = nil

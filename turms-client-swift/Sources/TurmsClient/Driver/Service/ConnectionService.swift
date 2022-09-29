@@ -1,19 +1,89 @@
 import Foundation
 import PromiseKit
-import Starscream
+
+private class MessageDecoder {
+    private static let maxReadBufferCapacity = 8 * 1024 * 1024
+
+    private var readIndex = 0
+    private var tempPayloadLength = 0
+    private var payloadLength: Int?
+
+    private var readBuffer = Data()
+
+    func decodeMessages(_ data: Data) throws -> [Data] {
+        if (readBuffer.count + data.count) > MessageDecoder.maxReadBufferCapacity {
+            throw RuntimeError("The read buffer has exceeded the maximum size \(MessageDecoder.maxReadBufferCapacity)")
+        }
+        readBuffer.append(data)
+        var messages: [Data] = []
+        while true {
+            let message = try tryReadMessage()
+            guard let msg = message else {
+                break
+            }
+            messages.append(msg)
+        }
+        return messages
+    }
+
+    func clear() {
+        readIndex = 0
+        tempPayloadLength = 0
+        payloadLength = nil
+        readBuffer.removeAll()
+    }
+
+    private func tryReadMessage() throws -> Data? {
+        guard let length = try tryReadVarInt() else {
+            return nil
+        }
+        payloadLength = length
+        let end = readIndex + payloadLength!
+        if readBuffer.count < end {
+            return nil
+        }
+        let message = readBuffer.subdata(in: readIndex ..< end)
+        readBuffer.removeSubrange(0 ..< end)
+        readIndex = 0
+        payloadLength = nil
+        return message
+    }
+
+    private func tryReadVarInt() throws -> Int? {
+        let length = readBuffer.count
+        while readIndex < 5 {
+            if readIndex >= length {
+                return nil
+            }
+            let byte = readBuffer[readIndex]
+            tempPayloadLength |= (Int(byte) & 0x7F) << (7 * readIndex)
+            readIndex += 1
+            if byte & 0x80 == 0 {
+                let length = tempPayloadLength
+                tempPayloadLength = 0
+                return length
+            }
+        }
+        throw RuntimeError("VarInt input too big")
+    }
+}
 
 public class ConnectionService: BaseService {
-    private let initialWsUrl: String
+    private let initialHost: String
+    private let initialPort: UInt16
     private let initialConnectTimeout: TimeInterval
 
     private var disconnectPromises: [Resolver<Void>] = []
 
     private var onConnectedListeners: [() -> Void] = []
-    private var onDisconnectedListeners: [(ConnectionDisconnectInfo) -> Void] = []
+    private var onDisconnectedListeners: [(Error?) -> Void] = []
     private var messageListeners: [(Data) -> Void] = []
 
-    init(stateStore: StateStore, wsUrl: String? = nil, connectTimeout: TimeInterval? = nil) {
-        initialWsUrl = wsUrl ?? "ws://localhost:10510"
+    private let decoder = MessageDecoder()
+
+    init(stateStore: StateStore, host: String? = nil, port: UInt16? = nil, connectTimeout: TimeInterval? = nil) {
+        initialHost = host ?? "127.0.0.1"
+        initialPort = port ?? 11510
         initialConnectTimeout = connectTimeout ?? 30
         super.init(stateStore)
     }
@@ -28,7 +98,7 @@ public class ConnectionService: BaseService {
         onConnectedListeners.append(listener)
     }
 
-    func addOnDisconnectedListener(_ listener: @escaping (ConnectionDisconnectInfo) -> Void) {
+    func addOnDisconnectedListener(_ listener: @escaping (Error?) -> Void) {
         onDisconnectedListeners.append(listener)
     }
 
@@ -42,9 +112,9 @@ public class ConnectionService: BaseService {
         }
     }
 
-    private func notifyOnDisconnectedListeners(_ info: ConnectionDisconnectInfo) {
+    private func notifyOnDisconnectedListeners(_ error: Error?) {
         onDisconnectedListeners.forEach {
-            $0(info)
+            $0(error)
         }
     }
 
@@ -62,39 +132,30 @@ public class ConnectionService: BaseService {
 
     // Connection
 
-    public func connect(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil) -> Promise<Void> {
+    public func connect(host: String? = nil, port: UInt16? = nil, connectTimeout _: TimeInterval? = nil, useTls: Bool? = false, certificatePinning: CertificatePinning? = nil) -> Promise<Void> {
         return Promise { seal in
             if stateStore.isConnected {
                 seal.reject(ResponseError(.clientSessionAlreadyEstablished))
                 return
             }
             resetStates()
-            let request = URLRequest(
-                url: URL(string: wsUrl ?? initialWsUrl)!,
-                timeoutInterval: connectTimeout ?? initialConnectTimeout
-            )
-            let websocket = WebSocket(request: request)
-            websocket.onEvent = { [weak self] event in
-                switch event {
-                case let .binary(data):
-                    self?.notifyMessageListeners(data)
-                case .connected:
-                    self?.onWebSocketOpen()
-                    seal.fulfill(())
-                case let .disconnected(reason, websocketCode):
-                    self?.onWebsocketClose(statusCode: Int(websocketCode), reason: reason)
-                    seal.reject(NSError())
-                case .cancelled: // disconnect by client and won't trigger the "disconnected" event
-                    self?.onWebsocketClose()
-                    seal.reject(NSError())
-                case let .error(error):
-                    self?.onWebsocketClose(error: error)
-                    seal.reject(error ?? NSError())
-                default: break
+            let tcp = TcpClient(onClosed: { [weak self] error in
+                self?.onSocketClose(error)
+            }, onDataReceived: { [weak self] data in
+                guard let s = self else { return }
+                let messages = try s.decoder.decodeMessages(data)
+                messages.forEach { message in
+                    s.notifyMessageListeners(message)
                 }
-            }
-            websocket.connect()
-            stateStore.websocket = websocket
+            })
+            tcp.connect(host: host ?? initialHost, port: port ?? initialPort, useTls: useTls ?? false, certificatePinning: certificatePinning)
+                .done { [weak self] in
+                    self?.onSocketOpen()
+                    seal.fulfill_()
+                }.catch { error in
+                    seal.reject(error)
+                }
+            stateStore.tcp = tcp
         }
     }
 
@@ -105,24 +166,21 @@ public class ConnectionService: BaseService {
                 return
             }
             disconnectPromises.append(seal)
-            stateStore.websocket!.disconnect()
+            stateStore.tcp!.close()
         }
     }
 
     // Lifecycle hooks
 
-    private func onWebSocketOpen() {
+    private func onSocketOpen() {
         stateStore.isConnected = true
         notifyOnConnectedListeners()
     }
 
-    private func onWebsocketClose(statusCode: Int? = nil, reason: String? = nil, error: Error? = nil) -> ConnectionDisconnectInfo {
-        let wasConnected = stateStore.isConnected
-        let url = stateStore.websocket!.request.url
-        fulfillDisconnectPromises()
-        let disconnectInfo = ConnectionDisconnectInfo(wasConnected: wasConnected, wsUrl: url, websocketStatusCode: statusCode, websocketReason: reason, error: error)
-        notifyOnDisconnectedListeners(disconnectInfo)
-        return disconnectInfo
+    private func onSocketClose(_ error: Error?) {
+        decoder.clear()
+        stateStore.isConnected = false
+        notifyOnDisconnectedListeners(error)
     }
 
     // Base methods

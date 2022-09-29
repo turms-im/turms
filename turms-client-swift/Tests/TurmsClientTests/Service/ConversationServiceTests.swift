@@ -11,7 +11,7 @@ class ConversationServiceTests: XCTestCase {
     func test_e2e() {
         // Set up
         continueAfterFailure = false
-        turmsClient = TurmsClient(Config.WS_URL)
+        turmsClient = TurmsClient(Config.HOST, Config.PORT)
         wait(turmsClient.userService.login(userId: ConversationServiceTests.USER_ID, password: "123"))
 
         // Update

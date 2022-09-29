@@ -153,7 +153,7 @@ internal class GroupServiceET {
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
     fun updateGroupJoinQuestion_shouldSucceed() = runBlocking {
-        val result = client.groupService.updateGroupJoinQuestion(groupId, "new-question", listOf("answer"))
+        val result = client.groupService.updateGroupJoinQuestion(groupJoinQuestionId, "new-question", listOf("answer"))
             .data
         assertNotNull(result)
     }

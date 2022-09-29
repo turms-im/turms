@@ -17,9 +17,9 @@ class MessageServiceTests: XCTestCase {
 
         // Set up
         continueAfterFailure = false
-        senderClient = TurmsClient(Config.WS_URL)
-        recipientClient = TurmsClient(Config.WS_URL)
-        groupMemberClient = TurmsClient(Config.WS_URL)
+        senderClient = TurmsClient(Config.HOST, Config.PORT)
+        recipientClient = TurmsClient(Config.HOST, Config.PORT)
+        groupMemberClient = TurmsClient(Config.HOST, Config.PORT)
         wait(senderClient.userService.login(userId: MessageServiceTests.SENDER_ID, password: "123"))
         wait(recipientClient.userService.login(userId: MessageServiceTests.RECIPIENT_ID, password: "123"))
         wait(groupMemberClient.userService.login(userId: MessageServiceTests.GROUP_MEMBER_ID, password: "123"))

@@ -1,6 +1,5 @@
 import Foundation
 import PromiseKit
-import Starscream
 
 public class TurmsDriver {
     let stateStore: StateStore
@@ -9,10 +8,10 @@ public class TurmsDriver {
     private let heartbeatService: HeartbeatService
     private let messageService: DriverMessageService
 
-    public init(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil) {
+    public init(host: String? = nil, port: UInt16? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil) {
         stateStore = StateStore()
 
-        connectionService = ConnectionService(stateStore: stateStore, wsUrl: wsUrl, connectTimeout: connectTimeout)
+        connectionService = ConnectionService(stateStore: stateStore, host: host, port: port, connectTimeout: connectTimeout)
         heartbeatService = HeartbeatService(stateStore: stateStore, heartbeatInterval: heartbeatInterval)
         messageService = DriverMessageService(stateStore: stateStore, requestTimeout: requestTimeout, minRequestInterval: minRequestInterval)
 
@@ -55,8 +54,8 @@ public class TurmsDriver {
 
     // Connection Service
 
-    public func connect(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil) -> Promise<Void> {
-        return connectionService.connect(wsUrl: wsUrl, connectTimeout: connectTimeout)
+    public func connect(host: String? = nil, port: UInt16? = nil, connectTimeout: TimeInterval? = nil, certificatePinning: CertificatePinning? = nil) -> Promise<Void> {
+        return connectionService.connect(host: host, port: port, connectTimeout: connectTimeout, certificatePinning: certificatePinning)
     }
 
     public func disconnect() -> Promise<Void> {
@@ -73,7 +72,7 @@ public class TurmsDriver {
         connectionService.addOnConnectedListener(listener)
     }
 
-    public func addOnDisconnectedListener(listener: @escaping (ConnectionDisconnectInfo) -> Void) {
+    public func addOnDisconnectedListener(listener: @escaping (Error?) -> Void) {
         connectionService.addOnDisconnectedListener(listener)
     }
 

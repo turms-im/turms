@@ -48,7 +48,7 @@ class ConnectionService(
         if (connectTimeoutMillis == null || connectTimeoutMillis <= 0) 30 * 1000 else connectTimeoutMillis
     private val disconnectFutures = ConcurrentLinkedQueue<Continuation<Throwable?>>()
     private val onConnectedListeners: MutableList<() -> Unit> = LinkedList()
-    private val onDisconnectedListeners: MutableList<() -> Unit> = LinkedList()
+    private val onDisconnectedListeners: MutableList<(Throwable?) -> Unit> = LinkedList()
     private val messageListeners: MutableList<(ByteBuffer) -> Unit> = LinkedList()
 
     private fun resetStates() {
@@ -60,7 +60,7 @@ class ConnectionService(
         onConnectedListeners.add(listener)
     }
 
-    fun addOnDisconnectedListener(listener: () -> Unit) {
+    fun addOnDisconnectedListener(listener: (Throwable?) -> Unit) {
         onDisconnectedListeners.add(listener)
     }
 
@@ -72,7 +72,7 @@ class ConnectionService(
         onConnectedListeners.remove(listener)
     }
 
-    fun removeOnDisconnectedListener(listener: () -> Unit) {
+    fun removeOnDisconnectedListener(listener: (Throwable?) -> Unit) {
         onDisconnectedListeners.remove(listener)
     }
 
@@ -86,9 +86,9 @@ class ConnectionService(
         }
     }
 
-    private fun notifyOnDisconnectedListeners() {
+    private fun notifyOnDisconnectedListeners(t: Throwable?) {
         for (listener in onDisconnectedListeners) {
-            listener()
+            listener(t)
         }
     }
 
@@ -191,7 +191,7 @@ class ConnectionService(
     private fun onSocketClose(t: Throwable?) {
         stateStore.isConnected = false
         completeDisconnectFutures(t)
-        notifyOnDisconnectedListeners()
+        notifyOnDisconnectedListeners(t)
     }
 
     override suspend fun close() {

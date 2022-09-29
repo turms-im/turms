@@ -11,7 +11,7 @@ class StorageServiceTests: XCTestCase {
 
     override func setUp() {
         continueAfterFailure = false
-        turmsClient = TurmsClient(Config.WS_URL, storageServerUrl: Config.STORAGE_SERVER_URL)
+        turmsClient = TurmsClient(Config.HOST, Config.PORT, storageServerUrl: Config.STORAGE_SERVER_URL)
         wait(turmsClient.userService.login(userId: StorageServiceTests.USER_ID, password: "123"))
     }
 

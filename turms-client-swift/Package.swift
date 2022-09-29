@@ -16,24 +16,23 @@ let package = Package(
     ],
     dependencies: [
         // Don't use Combine because of "@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)"
-        .package(url: "https://github.com/mxcl/PromiseKit", from: "6.16.0"),
-        .package(url: "https://github.com/apple/swift-protobuf", from: "1.19.0"),
-        .package(url: "https://github.com/daltoniam/Starscream", .branch("master")),
+        .package(url: "https://github.com/mxcl/PromiseKit", from: "6.18.1"),
+        .package(url: "https://github.com/apple/swift-protobuf", from: "1.20.2"),
 
         // Dev deps
         .package(url: "https://github.com/shibapm/PackageConfig", from: "1.1.3"),
-        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.49.6"),
-        .package(url: "https://github.com/Realm/SwiftLint", from: "0.47.0"),
+        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.49.18"),
+        .package(url: "https://github.com/Realm/SwiftLint", from: "0.49.1"),
         .package(url: "https://github.com/orta/Komondor", from: "1.1.3"),
     ],
     targets: [
         .target(
             name: "TurmsClient",
-            dependencies: ["PromiseKit", "Starscream", "SwiftProtobuf"]
+            dependencies: ["PromiseKit", "SwiftProtobuf"]
         ),
         .testTarget(
             name: "TurmsClientTests",
-            dependencies: ["TurmsClient", "Starscream", "SwiftProtobuf"]
+            dependencies: ["TurmsClient", "SwiftProtobuf"]
         ),
     ],
     swiftLanguageVersions: [.v5]

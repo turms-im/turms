@@ -44,7 +44,8 @@ public class UserService {
         deviceDetails: [String: String]? = nil,
         onlineStatus: UserStatus? = nil,
         location: Location? = nil,
-        storePassword: Bool = false
+        storePassword: Bool = false,
+        certificatePinning: CertificatePinning? = nil
     ) -> Promise<Response<Void>> {
         var user = User(userId: userId)
         if storePassword {
@@ -55,7 +56,7 @@ public class UserService {
         user.location = location
         let connect: Promise<Void> = turmsClient.driver.isConnected
             ? Promise.value(())
-            : turmsClient.driver.connect()
+            : turmsClient.driver.connect(certificatePinning: certificatePinning)
         return connect.then {
             return self.turmsClient.driver.send {
                 $0.createSessionRequest = .with {

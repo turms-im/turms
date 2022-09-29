@@ -3,7 +3,7 @@ import PromiseKit
 
 class HeartbeatService: BaseService {
     private static let HEARTBEAT_FAILURE_REQUEST_ID: Int64 = -100
-    private static let HEARTBEAT_REQUEST = Data()
+    private static let HEARTBEAT_REQUEST = Data([0])
 
     private let createQueue = DispatchQueue(label: "im.turms.turmsclient.heartbeatservice.createqueue")
 
@@ -48,7 +48,11 @@ class HeartbeatService: BaseService {
                 seal.reject(ResponseError(.clientSessionHasBeenClosed))
                 return
             }
-            stateStore.websocket?.write(data: HeartbeatService.HEARTBEAT_REQUEST) {
+            stateStore.tcp!.write(HeartbeatService.HEARTBEAT_REQUEST) { error in
+                if let error = error {
+                    seal.reject(error)
+                    return
+                }
                 self.heartbeatPromises.append(seal)
             }
         }

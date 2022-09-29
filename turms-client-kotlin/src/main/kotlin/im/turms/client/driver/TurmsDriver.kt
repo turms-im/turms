@@ -110,13 +110,13 @@ class TurmsDriver(
     fun addOnConnectedListener(listener: () -> Unit) =
         connectionService.addOnConnectedListener(listener)
 
-    fun addOnDisconnectedListener(listener: () -> Unit) =
+    fun addOnDisconnectedListener(listener: (Throwable?) -> Unit) =
         connectionService.addOnDisconnectedListener(listener)
 
     fun removeOnConnectedListener(listener: () -> Unit) =
         connectionService.removeOnConnectedListener(listener)
 
-    fun removeOnDisconnectedListener(listener: () -> Unit) =
+    fun removeOnDisconnectedListener(listener: (Throwable?) -> Unit) =
         connectionService.removeOnDisconnectedListener(listener)
 
     // Message Service

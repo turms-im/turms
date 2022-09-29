@@ -11,5 +11,4 @@ Turms客户端对版本的最低要求，主要是根据：平台全球市场占
 
 补充
 
-* 为实现快速迭代，turms-client-swift仍暂时使用WebSocket协议，但未来替换为纯TCP协议实现。此变动不会影响上述的版本要求
 * turms-client-kotlin采用的是`Socket`，而非`SocketChannel`。其中最主要的原因是：Android SDK不对`SocketChannel`提供一套标准的TLS协议实现，需要自行实现。考虑到安卓系统的五花八门且系统功能本身就比较受限（尤其相比服务端实现），自行实现TLS协议极易导致各种意料之外的Bugs，故使用`Socket`以采用官方的TLS协议实现。

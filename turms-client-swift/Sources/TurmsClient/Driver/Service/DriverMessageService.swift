@@ -52,13 +52,19 @@ class DriverMessageService: BaseService {
             request.requestID = generateRandomId()
             if requestTimeout > 0 {
                 after(.seconds(Int(requestTimeout))).done {
-                    seal.reject(ResponseError(ResponseStatusCode.requestTimeout))
+                    seal.reject(ResponseError(.requestTimeout))
                 }
             }
-            let data = try request.serializedData()
+            let data: Data
+            do {
+                data = try request.serializedData()
+            } catch {
+                seal.reject(ResponseError(.invalidRequest, error.localizedDescription))
+                return
+            }
             requestMap.updateValue(seal, forKey: request.requestID)
             stateStore.lastRequestDate = now
-            stateStore.websocket!.write(data: data)
+            stateStore.tcp!.writeVarIntLengthAndBytes(data)
         }
     }
 

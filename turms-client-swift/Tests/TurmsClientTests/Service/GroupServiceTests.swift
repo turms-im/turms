@@ -7,7 +7,7 @@ class GroupServiceTests: XCTestCase {
 
     override func setUp() {
         continueAfterFailure = false
-        turmsClient = TurmsClient(Config.WS_URL)
+        turmsClient = TurmsClient(Config.HOST, Config.PORT)
         wait(turmsClient.userService.login(userId: 1, password: "123"))
     }
 
