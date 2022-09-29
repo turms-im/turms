@@ -78,7 +78,8 @@ public final class NotificationFactory {
 
     public static ByteBuf createBuffer(CloseReason closeReason) {
         ResponseStatusCode code = closeReason.businessStatusCode();
-        return ClientMessageEncoder.encodeCloseNotification(closeReason.closeStatus(),
+        return ClientMessageEncoder.encodeCloseNotification(System.currentTimeMillis(),
+                closeReason.closeStatus(),
                 code,
                 getReason(code, closeReason.reason()));
     }

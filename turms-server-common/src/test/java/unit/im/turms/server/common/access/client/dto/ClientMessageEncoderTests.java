@@ -35,12 +35,14 @@ class ClientMessageEncoderTests {
 
     @Test
     void encodeResponse() throws InvalidProtocolBufferException {
+        long timestamp = System.currentTimeMillis();
         int requestId = 123;
         int code = 987;
         String reason = "Hello World";
-        ByteBuf response = ClientMessageEncoder.encodeResponse(requestId, code, reason);
+        ByteBuf response = ClientMessageEncoder.encodeResponse(timestamp, requestId, code, reason);
         TurmsNotification actual = TurmsNotification.parseFrom(response.nioBuffer());
         assertThat(actual).isEqualTo(TurmsNotification.newBuilder()
+                .setTimestamp(timestamp)
                 .setRequestId(requestId)
                 .setCode(code)
                 .setReason(reason)
@@ -49,12 +51,14 @@ class ClientMessageEncoderTests {
 
     @Test
     void encodeCloseNotification() throws InvalidProtocolBufferException {
+        long timestamp = System.currentTimeMillis();
         SessionCloseStatus closeStatus = SessionCloseStatus.CONNECTION_CLOSED;
         ResponseStatusCode code = ResponseStatusCode.UPDATING_TYPING_STATUS_IS_DISABLED;
         String reason = "Hello World";
-        ByteBuf response = ClientMessageEncoder.encodeCloseNotification(closeStatus, code, reason);
+        ByteBuf response = ClientMessageEncoder.encodeCloseNotification(timestamp, closeStatus, code, reason);
         TurmsNotification actual = TurmsNotification.parseFrom(response.nioBuffer());
         assertThat(actual).isEqualTo(TurmsNotification.newBuilder()
+                .setTimestamp(timestamp)
                 .setCloseStatus(closeStatus.getCode())
                 .setCode(code.getBusinessCode())
                 .setReason(reason)
@@ -63,11 +67,13 @@ class ClientMessageEncoderTests {
 
     @Test
     void encodeUserSessionNotification() throws InvalidProtocolBufferException {
+        long timestamp = System.currentTimeMillis();
         String sessionId = "my session ID";
         String serverId = "my server ID";
-        ByteBuf response = ClientMessageEncoder.encodeUserSessionNotification(sessionId, serverId);
+        ByteBuf response = ClientMessageEncoder.encodeUserSessionNotification(timestamp, sessionId, serverId);
         TurmsNotification actual = TurmsNotification.parseFrom(response.nioBuffer());
         assertThat(actual).isEqualTo(TurmsNotification.newBuilder()
+                .setTimestamp(timestamp)
                 .setData(TurmsNotification.Data.newBuilder()
                         .setUserSession(UserSession.newBuilder()
                                 .setSessionId(sessionId)

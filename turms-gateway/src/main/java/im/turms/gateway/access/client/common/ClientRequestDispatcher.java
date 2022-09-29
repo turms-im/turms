@@ -62,8 +62,6 @@ public class ClientRequestDispatcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientRequestDispatcher.class);
 
     private static final ByteBuf HEARTBEAT_RESPONSE_SUCCESS = Unpooled.EMPTY_BUFFER;
-    private static final ByteBuf HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT;
-    private static final ByteBuf HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE;
 
     private static final SimpleTurmsRequest UNRECOGNIZED_REQUEST = new SimpleTurmsRequest(-1, KIND_NOT_SET, null);
 
@@ -71,17 +69,6 @@ public class ClientRequestDispatcher {
 
     private static final Mono<TurmsNotification> UNAUTHORIZED_REQUEST_ERROR_MONO =
             Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED_REQUEST));
-
-    static {
-        HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT = Unpooled
-                .unreleasableBuffer(ClientMessageEncoder.encodeResponse(
-                        HEARTBEAT_FAILURE_REQUEST_ID,
-                        ResponseStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT));
-        HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE = Unpooled
-                .unreleasableBuffer(ClientMessageEncoder.encodeResponse(
-                        HEARTBEAT_FAILURE_REQUEST_ID,
-                        ResponseStatusCode.SERVER_UNAVAILABLE));
-    }
 
     private final ApiLoggingContext apiLoggingContext;
 
@@ -123,7 +110,10 @@ public class ClientRequestDispatcher {
         if (!serviceRequestBuffer.isReadable()) {
             serviceRequestBuffer.release();
             if (!serverStatusManager.isActive()) {
-                return Mono.just(HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE);
+                return Mono.just(ClientMessageEncoder.encodeResponse(
+                        System.currentTimeMillis(),
+                        HEARTBEAT_FAILURE_REQUEST_ID,
+                        ResponseStatusCode.SERVER_UNAVAILABLE));
             }
             return handleHeartbeatRequest(sessionWrapper);
         }
@@ -277,7 +267,10 @@ public class ClientRequestDispatcher {
             sessionService.handleHeartbeatUpdateRequest(session);
             data = HEARTBEAT_RESPONSE_SUCCESS;
         } else {
-            data = HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT;
+            data = ClientMessageEncoder.encodeResponse(
+                    System.currentTimeMillis(),
+                    HEARTBEAT_FAILURE_REQUEST_ID,
+                    ResponseStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT);
         }
         if (apiLoggingContext.shouldLogHeartbeatRequest()) {
             UserSession userSession = sessionWrapper.getUserSession();

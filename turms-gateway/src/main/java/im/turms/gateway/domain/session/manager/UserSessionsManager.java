@@ -98,7 +98,7 @@ public final class UserSessionsManager {
         try {
             userSession
                     .sendNotification(ClientMessageEncoder
-                            .encodeUserSessionNotification(Integer.toString(userSession.getId()), serverId))
+                            .encodeUserSessionNotification(System.currentTimeMillis(), Integer.toString(userSession.getId()), serverId))
                     .subscribe(null, t -> LOGGER.error("Failed to send the session notification", t));
             return true;
         } catch (Exception e) {
