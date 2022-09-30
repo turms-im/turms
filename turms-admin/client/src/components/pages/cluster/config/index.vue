@@ -193,7 +193,7 @@ export default {
                 });
         },
         requestResetToDefault() {
-            return this.$http.put('/cluster/settings?reset=true&updateGlobalSettings=true')
+            return this.$http.put('/cluster/settings?reset=true')
                 .then(() => {
                     this.$message.success(this.$t('updatedSuccessfully'));
                     this.fetchData();

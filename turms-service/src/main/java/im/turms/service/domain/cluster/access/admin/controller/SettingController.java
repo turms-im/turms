@@ -41,6 +41,8 @@ import static im.turms.server.common.infra.property.TurmsPropertiesInspector.get
 
 /**
  * @author James Chen
+ * @implNote These APIs should be designed to work for the cluster settings
+ * instead of the local node settings by default consistently because it's "cluster/settings"
  */
 @RestController("cluster/settings")
 public class SettingController extends BaseController {
@@ -52,10 +54,11 @@ public class SettingController extends BaseController {
     @GetMapping
     @RequiredPermission(CLUSTER_SETTING_QUERY)
     public HttpHandlerResult<ResponseDTO<SettingsDTO>> queryClusterSettings(
+            boolean queryLocalSettings,
             boolean onlyMutable) {
         return HttpHandlerResult.okIfTruthy(new SettingsDTO(
                 TurmsProperties.SCHEMA_VERSION,
-                getPropertyToValueMap(propertiesManager.getGlobalProperties(), onlyMutable)
+                getPropertyToValueMap(queryLocalSettings ? propertiesManager.getLocalProperties() : propertiesManager.getGlobalProperties(), onlyMutable)
         ));
     }
 
@@ -67,27 +70,28 @@ public class SettingController extends BaseController {
     @Schema(implementation = TurmsProperties.class)
     public Mono<HttpHandlerResult<ResponseDTO<Void>>> updateClusterSettings(
             boolean reset,
-            boolean updateGlobalSettings,
+            boolean updateLocalSettings,
             @RequestBody(required = false) Map<String, Object> turmsProperties) {
-        if (updateGlobalSettings) {
-            Mono<Void> updatePropertiesMono = propertiesManager.updateGlobalProperties(reset, turmsProperties);
-            return updatePropertiesMono.thenReturn(HttpHandlerResult.RESPONSE_OK);
-        } else {
+        if (updateLocalSettings) {
             propertiesManager.updateLocalProperties(reset, turmsProperties);
             return Mono.just(HttpHandlerResult.RESPONSE_OK);
+        } else {
+            return propertiesManager.updateGlobalProperties(reset, turmsProperties)
+                    .thenReturn(HttpHandlerResult.RESPONSE_OK);
         }
     }
 
     @GetMapping("metadata")
     @RequiredPermission(CLUSTER_SETTING_QUERY)
     public HttpHandlerResult<ResponseDTO<SettingsDTO>> queryClusterConfigMetadata(
+            boolean queryLocalSettings,
             boolean onlyMutable,
             boolean withValue) {
         Map<String, Object> metadata = onlyMutable
                 ? TurmsPropertiesInspector.ONLY_MUTABLE_METADATA
                 : TurmsPropertiesInspector.METADATA;
         Map<String, Object> settings = withValue
-                ? mergeMetadataWithPropertyValue(metadata, propertiesManager.getGlobalProperties())
+                ? mergeMetadataWithPropertyValue(metadata, queryLocalSettings ? propertiesManager.getLocalProperties() : propertiesManager.getGlobalProperties())
                 : metadata;
         return HttpHandlerResult.okIfTruthy(new SettingsDTO(TurmsProperties.SCHEMA_VERSION, settings));
     }
