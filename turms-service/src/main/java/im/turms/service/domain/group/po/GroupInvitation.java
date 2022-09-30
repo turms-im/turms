@@ -21,6 +21,7 @@ import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
+import im.turms.server.common.storage.mongo.entity.annotation.EnumNumber;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
@@ -79,6 +80,7 @@ public class GroupInvitation extends BaseEntity implements Expirable {
      * 2. Not final so that we can change it without using a builder (bad performance)
      */
     @Field(Fields.STATUS)
+    @EnumNumber
     private RequestStatus status;
 
     @Field(Fields.CREATION_DATE)

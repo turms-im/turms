@@ -38,6 +38,12 @@ public class MongoCodecProvider implements CodecProvider {
         registerCodec(new DurationCodec());
     }
 
+    public static <T extends Enum> MongoCodec<T> getEnumCodec(boolean isEnumNumber, Class<T> clazz) {
+        return isEnumNumber
+                ? new EnumNumberCodec<>(clazz)
+                : new EnumStringCodec<>(clazz);
+    }
+
     @Override
     public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
         return getCodec(clazz);
@@ -57,7 +63,7 @@ public class MongoCodecProvider implements CodecProvider {
 
     private <T> MongoCodec<T> createCodec(Class<T> clazz) {
         if (clazz.isEnum()) {
-            return new EnumCodec(clazz);
+            return new EnumStringCodec(clazz);
         } else if (clazz.isArray()) {
             return new ArrayCodec(clazz);
         } else {

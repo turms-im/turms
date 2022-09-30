@@ -51,6 +51,8 @@ public class EntityField<T> {
 
     private final VarAccessor varAccessor;
 
+    private final boolean isEnumNumber;
+
     public T get(Object entity) {
         return (T) varAccessor.get(entity);
     }

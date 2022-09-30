@@ -38,18 +38,25 @@ public class TurmsMapCodec<K, V> extends MongoCodec<Map<K, V>> {
     private final Class<K> keyClass;
     private final Class<V> valueClass;
     private Codec<V> valueCodec;
+    private final boolean isEnumNumber;
 
-    public TurmsMapCodec(Class<? extends Map<?, ?>> ownerClass, Class<K> keyClass, Class<V> valueClass) {
+    public TurmsMapCodec(Class<? extends Map<?, ?>> ownerClass,
+                         Class<K> keyClass,
+                         Class<V> valueClass,
+                         boolean isEnumNumber) {
         super((Class) Map.class);
         this.isLinkedHashMap = LinkedHashMap.class.isAssignableFrom(ownerClass);
         this.keyClass = keyClass;
         this.valueClass = valueClass;
+        this.isEnumNumber = isEnumNumber;
     }
 
     @Override
     public void setRegistry(CodecRegistry registry) {
         super.setRegistry(registry);
-        valueCodec = registry.get(valueClass);
+        valueCodec = valueClass.isEnum()
+                ? MongoCodecProvider.getEnumCodec(isEnumNumber, (Class) valueClass)
+                : registry.get(valueClass);
     }
 
     @Override

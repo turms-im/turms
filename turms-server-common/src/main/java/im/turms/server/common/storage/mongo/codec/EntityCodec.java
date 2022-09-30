@@ -18,6 +18,8 @@
 package im.turms.server.common.storage.mongo.codec;
 
 import im.turms.server.common.infra.lang.Pair;
+import im.turms.server.common.infra.lang.PrimitiveUtil;
+import im.turms.server.common.infra.lang.Quadruple;
 import im.turms.server.common.infra.lang.Triple;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -25,7 +27,6 @@ import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.entity.EntityField;
 import im.turms.server.common.storage.mongo.entity.MongoEntity;
 import im.turms.server.common.storage.mongo.entity.MongoEntityFactory;
-import org.apache.commons.lang3.ClassUtils;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -46,9 +47,11 @@ public class EntityCodec<T> extends MongoCodec<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityCodec.class);
 
-    private static final Map<Pair<Class<?>, Class<?>>, TurmsIterableCodec> CLASS_TO_ITERABLE_CODEC
+    private static final Map<Triple<Class<?>, Class<?>, Boolean>, TurmsIterableCodec> CLASS_TO_ITERABLE_CODEC
             = new ConcurrentHashMap<>(32);
-    private static final Map<Triple<Class<?>, Class<?>, Class<?>>, TurmsMapCodec> CLASS_TO_MAP_CODEC
+    private static final Map<Quadruple<Class<?>, Class<?>, Class<?>, Boolean>, TurmsMapCodec> CLASS_TO_MAP_CODEC
+            = new ConcurrentHashMap<>(32);
+    private static final Map<Pair<Class<?>, Boolean>, MongoCodec<?>> CLASS_TO_ENUM_CODEC
             = new ConcurrentHashMap<>(32);
 
     private final CodecRegistry registry;
@@ -93,20 +96,8 @@ public class EntityCodec<T> extends MongoCodec<T> {
                 } else {
                     writer.writeName(field.getName());
                 }
-                Class<?> fieldValueClass = fieldValue.getClass();
-                if (Map.class.isAssignableFrom(fieldValueClass)) {
-                    Triple<Class<?>, Class<?>, Class<?>> key = Triple.of(fieldValueClass, field.getKeyClass(), field.getElementClass());
-                    TurmsMapCodec<?, ?> codec = CLASS_TO_MAP_CODEC.computeIfAbsent(key,
-                            triple -> {
-                                TurmsMapCodec<?, ?> mapCodec = new TurmsMapCodec(triple.first(), triple.second(), triple.third());
-                                mapCodec.setRegistry(registry);
-                                return mapCodec;
-                            });
-                    encoderContext.encodeWithChildContext(codec, writer, (Map) fieldValue);
-                } else {
-                    Codec codec = registry.get(fieldValueClass);
-                    encoderContext.encodeWithChildContext(codec, writer, fieldValue);
-                }
+                Codec codec = getCodec(field);
+                encoderContext.encodeWithChildContext(codec, writer, fieldValue);
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to encode " + entity.entityClass().getName(), e);
@@ -127,7 +118,7 @@ public class EntityCodec<T> extends MongoCodec<T> {
                     ? entity.getField(entity.idFieldName())
                     : entity.getField(fieldName);
             if (field == null) {
-                LOGGER.warn("Found properties {} not present in the entity {}", fieldName, entity.collectionName());
+                LOGGER.warn("Found a property {} not present in the entity {}", fieldName, entity.collectionName());
                 reader.skipValue();
             } else {
                 Object value = null;
@@ -185,34 +176,48 @@ public class EntityCodec<T> extends MongoCodec<T> {
         return values;
     }
 
-    private Object decode(EntityField<T> field, BsonReader reader, DecoderContext decoderContext) {
+    private <F> F decode(EntityField<F> field, BsonReader reader, DecoderContext decoderContext) {
+        Codec<F> codec = getCodec(field);
+        return decoderContext.decodeWithChildContext(codec, reader);
+    }
+
+    private <F> Codec<F> getCodec(EntityField<F> field) {
         Class<?> fieldClass = field.getFieldClass();
         if (Iterable.class.isAssignableFrom(fieldClass)) {
-            TurmsIterableCodec codec = CLASS_TO_ITERABLE_CODEC.computeIfAbsent(
-                    Pair.of(fieldClass, field.getElementClass()),
-                    fieldClassAndElementClass -> {
+            return CLASS_TO_ITERABLE_CODEC.computeIfAbsent(
+                    Triple.of(fieldClass, field.getElementClass(), field.isEnumNumber()),
+                    triple -> {
                         TurmsIterableCodec iterableCodec = new TurmsIterableCodec(
-                                fieldClassAndElementClass.first(),
-                                fieldClassAndElementClass.second());
+                                triple.first(),
+                                triple.second(),
+                                triple.third());
                         iterableCodec.setRegistry(registry);
                         return iterableCodec;
                     });
-            return decoderContext.decodeWithChildContext(codec, reader);
         } else if (Map.class.isAssignableFrom(fieldClass)) {
-            Triple<Class<?>, Class<?>, Class<?>> key = Triple.of(fieldClass, field.getKeyClass(), field.getElementClass());
-            TurmsMapCodec<?, ?> codec = CLASS_TO_MAP_CODEC.computeIfAbsent(key,
-                    triple -> {
-                        TurmsMapCodec<?, ?> mapCodec = new TurmsMapCodec(triple.first(), triple.second(), triple.third());
+            Quadruple<Class<?>, Class<?>, Class<?>, Boolean> key = Quadruple.of(fieldClass,
+                    field.getKeyClass(),
+                    field.getElementClass(),
+                    field.isEnumNumber());
+            return CLASS_TO_MAP_CODEC.computeIfAbsent(key,
+                    quadruple -> {
+                        TurmsMapCodec<?, ?> mapCodec = new TurmsMapCodec(quadruple.first(),
+                                quadruple.second(),
+                                quadruple.third(),
+                                quadruple.fourth());
                         mapCodec.setRegistry(registry);
                         return mapCodec;
                     });
-            return decoderContext.decodeWithChildContext(codec, reader);
+        } else if (fieldClass.isEnum()) {
+            Pair<Class<?>, Boolean> pair = Pair.of(fieldClass, field.isEnumNumber());
+            return (Codec<F>) CLASS_TO_ENUM_CODEC.computeIfAbsent(pair, key -> key.second()
+                    ? new EnumNumberCodec<>((Class) key.first())
+                    : new EnumStringCodec<>((Class) key.first()));
         } else {
             if (fieldClass.isPrimitive()) {
-                fieldClass = ClassUtils.primitiveToWrapper(fieldClass);
+                fieldClass = PrimitiveUtil.primitiveToWrapper(fieldClass);
             }
-            Codec<?> fieldCodec = registry.get(fieldClass);
-            return decoderContext.decodeWithChildContext(fieldCodec, reader);
+            return (Codec<F>) registry.get(fieldClass);
         }
     }
 }

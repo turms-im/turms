@@ -30,6 +30,7 @@ import im.turms.server.common.storage.mongo.BsonPool;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
+import im.turms.server.common.storage.mongo.entity.annotation.EnumNumber;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstructor;
@@ -265,7 +266,14 @@ public final class MongoEntityFactory {
                 entityFields = CollectionUtil.newMapWithExpectedSize(fields.length);
             }
             entityFields.put(fieldName,
-                    new EntityField<>(fieldClass, keyClass, elementClass, fieldName, isIdField, ctorParamIndex, varAccessor));
+                    new EntityField<>(fieldClass,
+                            keyClass,
+                            elementClass,
+                            fieldName,
+                            isIdField,
+                            ctorParamIndex,
+                            varAccessor,
+                            field.isAnnotationPresent(EnumNumber.class)));
         }
         return new EntityFieldsInfo(
                 idField,

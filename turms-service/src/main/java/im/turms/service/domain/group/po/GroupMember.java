@@ -22,6 +22,7 @@ import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.IndexType;
 import im.turms.server.common.storage.mongo.entity.ShardingStrategy;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
+import im.turms.server.common.storage.mongo.entity.annotation.EnumNumber;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
@@ -55,6 +56,7 @@ public final class GroupMember extends BaseEntity {
     private String name;
 
     @Field(Fields.ROLE)
+    @EnumNumber
     private GroupMemberRole role;
 
     @Field(Fields.JOIN_DATE)

@@ -56,7 +56,7 @@
         }
       },
       "nodeType": {
-        "bsonType": "int"
+        "bsonType": "string"
       },
       "priority": {
         "bsonType": "int"

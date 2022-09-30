@@ -39,17 +39,21 @@ public class TurmsIterableCodec<I, E> extends MongoCodec<Iterable<E>> {
     private final Class<I> iterableClass;
     private final Class<E> elementClass;
     private Codec<E> elementCodec;
+    private final boolean isEnumNumber;
 
-    public TurmsIterableCodec(Class<I> iterableClass, Class<E> elementClass) {
+    public TurmsIterableCodec(Class<I> iterableClass, Class<E> elementClass, boolean isEnumNumber) {
         super((Class<Iterable<E>>) iterableClass);
         this.iterableClass = iterableClass;
         this.elementClass = elementClass;
+        this.isEnumNumber = isEnumNumber;
     }
 
     @Override
     public void setRegistry(CodecRegistry registry) {
         super.setRegistry(registry);
-        elementCodec = registry.get(elementClass);
+        elementCodec = elementClass.isEnum()
+                ? MongoCodecProvider.getEnumCodec(isEnumNumber, (Class) elementClass)
+                : registry.get(elementClass);
     }
 
     @Override

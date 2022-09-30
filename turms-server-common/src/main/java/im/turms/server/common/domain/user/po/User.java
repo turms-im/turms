@@ -20,6 +20,7 @@ package im.turms.server.common.domain.user.po;
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
+import im.turms.server.common.storage.mongo.entity.annotation.EnumNumber;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
@@ -50,6 +51,7 @@ public final class User extends BaseEntity {
     private final String intro;
 
     @Field(Fields.PROFILE_ACCESS)
+    @EnumNumber
     private final ProfileAccessStrategy profileAccess;
 
     @Field(Fields.PERMISSION_GROUP_ID)

@@ -32,7 +32,7 @@ import java.lang.reflect.ParameterizedType;
  */
 public abstract class MongoCodec<T> implements Codec<T> {
 
-    private final Class<T> clazz;
+    final Class<T> clazz;
     @Setter
     protected CodecRegistry registry;
 

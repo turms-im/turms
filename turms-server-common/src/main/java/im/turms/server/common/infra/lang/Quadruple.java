@@ -15,32 +15,20 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.storage.mongo.codec;
-
-import org.bson.BsonReader;
-import org.bson.BsonWriter;
+package im.turms.server.common.infra.lang;
 
 /**
  * @author James Chen
- * @implNote encode as an integer rather than in string to reduce size and improve performance
  */
-public class EnumCodec<T extends Enum<T>> extends MongoCodec<T> {
+public record Quadruple<T1, T2, T3, T4>(
+        T1 first,
+        T2 second,
+        T3 third,
+        T4 fourth
+) {
 
-    private final T[] values;
-
-    public EnumCodec(Class<T> clazz) {
-        super(clazz);
-        values = clazz.getEnumConstants();
-    }
-
-    @Override
-    public void encode(BsonWriter writer, T value) {
-        writer.writeInt32(value.ordinal());
-    }
-
-    @Override
-    public T decode(BsonReader reader) {
-        return values[reader.readInt32()];
+    public static <T1, T2, T3, T4> Quadruple<T1, T2, T3, T4> of(T1 first, T2 second, T3 third, T4 fourth) {
+        return new Quadruple<>(first, second, third, fourth);
     }
 
 }

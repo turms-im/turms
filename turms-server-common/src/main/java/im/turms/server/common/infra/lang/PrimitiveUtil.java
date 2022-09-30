@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.lang;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -41,6 +42,16 @@ public class PrimitiveUtil {
             Double.class,
             Boolean.class,
             Character.class
+    );
+    private static final Map<Class<?>, Class<?>> primitiveToWrapper = Map.of(
+            boolean.class, Boolean.class,
+            byte.class, Byte.class,
+            char.class, Character.class,
+            short.class, Short.class,
+            int.class, Integer.class,
+            long.class, Long.class,
+            double.class, Double.class,
+            float.class, Float.class
     );
 
     private PrimitiveUtil() {
@@ -78,4 +89,7 @@ public class PrimitiveUtil {
         return null;
     }
 
+    public static Class<?> primitiveToWrapper(Class<?> clazz) {
+        return primitiveToWrapper.get(clazz);
+    }
 }

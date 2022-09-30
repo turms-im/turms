@@ -19,6 +19,7 @@ package im.turms.service.domain.group.po;
 
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
+import im.turms.server.common.storage.mongo.entity.annotation.EnumNumber;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.service.domain.group.bo.GroupInvitationStrategy;
@@ -52,15 +53,19 @@ public final class GroupType extends BaseEntity {
     private final Integer groupSizeLimit;
 
     @Field(Fields.INVITATION_STRATEGY)
+    @EnumNumber
     private final GroupInvitationStrategy invitationStrategy;
 
     @Field(Fields.JOIN_STRATEGY)
+    @EnumNumber
     private final GroupJoinStrategy joinStrategy;
 
     @Field(Fields.GROUP_INFO_UPDATE_STRATEGY)
+    @EnumNumber
     private final GroupUpdateStrategy groupInfoUpdateStrategy;
 
     @Field(Fields.MEMBER_INFO_UPDATE_STRATEGY)
+    @EnumNumber
     private final GroupUpdateStrategy memberInfoUpdateStrategy;
 
     @Field(Fields.GUEST_SPEAKABLE)

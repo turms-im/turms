@@ -14,7 +14,7 @@
       "perm": {
         "bsonType": "array",
         "items": {
-          "bsonType": "int"
+          "bsonType": "string"
         }
       },
       "rank": {
