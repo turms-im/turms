@@ -17,7 +17,6 @@
 
 package im.turms.server.common.infra.collection;
 
-import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.lang.PrimitiveUtil;
 import org.eclipse.collections.api.collection.ImmutableCollection;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
@@ -40,6 +39,7 @@ import java.util.function.Function;
  */
 public final class CollectionUtil {
 
+    private static final Map.Entry[] EMPTY_ENTRY_ARRAY = new Map.Entry[0];
     private static final Class<?> IMMUTABLE_COLLECTION_CLASS;
     private static final Class<?> IMMUTABLE_SET_CLASS;
 
@@ -57,44 +57,40 @@ public final class CollectionUtil {
     private CollectionUtil() {
     }
 
-    public static <T> List<T> add(List<T> list, List<T> values) {
-        if (isImmutable(list)) {
-            List<T> newList = new ArrayList<>(list.size() + values.size());
-            newList.addAll(list);
-            list = newList;
-        }
-        list.addAll(values);
-        return list;
+    //region new instance
+    public static int getMapCapability(int expectedSize) {
+        return (int) (expectedSize / 0.75F + 1.0F);
     }
 
-    public static <T> Set<T> add(Set<T> set, Set<T> values) {
-        if (isImmutable(set)) {
-            Set<T> newSet = UnifiedSet.newSet(set.size() + values.size());
-            newSet.addAll(set);
-            set = newSet;
+    public static <T> Set<T> newSet(Collection<T> values) {
+        if (values instanceof Set) {
+            return (Set<T>) values;
         }
-        set.addAll(values);
-        return set;
+        return UnifiedSet.newSet(values);
     }
 
-    public static <T> Set<T> add(Set<T> set, T value) {
-        if (isImmutable(set)) {
-            Set<T> newSet = newSetWithExpectedSize(set.size() + 1);
-            newSet.addAll(set);
-            set = newSet;
-        }
-        set.add(value);
-        return set;
+    public static <T> Set<T> newSetWithExpectedSize(int expectedSize) {
+        return UnifiedSet.newSet(expectedSize);
     }
 
-    public static <T> Set<T> remove(Set<T> set, T value) {
-        if (isImmutable(set)) {
-            Set<T> newSet = newSetWithExpectedSize(set.size());
-            newSet.addAll(set);
-            set = newSet;
+    public static <K, V> Map<K, V> newMapWithExpectedSize(int expectedSize) {
+        return new HashMap<>(getMapCapability(expectedSize));
+    }
+    //endregion
+
+    //region introspection
+    public static int getSize(@Nullable Collection<?> collection) {
+        if (collection == null) {
+            return 0;
         }
-        set.remove(value);
-        return set;
+        return collection.size();
+    }
+
+    public static int getSize(@Nullable Map<?, ?> map) {
+        if (map == null) {
+            return 0;
+        }
+        return map.size();
     }
 
     public static int getSize(@Nullable Iterable<?> iterable) {
@@ -111,62 +107,6 @@ public final class CollectionUtil {
             }
             return size;
         }
-    }
-
-    public static <T> List<T> concat(Iterator<T> iterator1, Iterator<T> iterator2) {
-        Iterator<T> iterator = new ConcatIterator<>(iterator1, iterator2);
-        return toList(iterator);
-    }
-
-    public static <T> Set<T> intersection(Set<T> c1, Collection<T> c2) {
-        Set<T> result = newSetWithExpectedSize(Math.min(c1.size(), c2.size()));
-        for (T value : c2) {
-            if (c1.contains(value)) {
-                result.add(value);
-            }
-        }
-        return result;
-    }
-
-    public static <T> List<T> union(List<? extends T> list1, List<? extends T> list2) {
-        ArrayList<T> result = new ArrayList<>(list1.size() + list2.size());
-        result.addAll(list1);
-        result.addAll(list2);
-        return result;
-    }
-
-    public static <T> Set<T> newSet(Collection<T> values) {
-        if (values instanceof Set) {
-            return (Set<T>) values;
-        }
-        return UnifiedSet.newSet(values);
-    }
-
-    public static <T> Set<T> newSetWithExpectedSize(int expectedSize) {
-        return UnifiedSet.newSet(expectedSize);
-    }
-
-    public static <K, V> Map<K, V> newMapWithExpectedSize(int expectedSize) {
-        return new HashMap<>(MapUtil.getCapability(expectedSize));
-    }
-
-    public static <T> List<T> toList(Iterable<T> iterable) {
-        return toList(iterable.iterator());
-    }
-
-    public static <T> List<T> toList(Iterator<T> iterator) {
-        List<T> list = new LinkedList<>();
-        while (iterator.hasNext()) {
-            list.add(iterator.next());
-        }
-        return list;
-    }
-
-    public static <T> List<T> toListSupportRandomAccess(Collection<T> collection) {
-        if (collection instanceof List<T> list && collection instanceof RandomAccess) {
-            return list;
-        }
-        return new ArrayList<>(collection);
     }
 
     public static <T> boolean isEmpty(@Nullable Collection<T> collection) {
@@ -192,7 +132,9 @@ public final class CollectionUtil {
     public static boolean isImmutableSet(Iterable<?> iterable) {
         return IMMUTABLE_SET_CLASS.isInstance(iterable);
     }
+    //endregion
 
+    //region contains
     public static boolean containsAll(Map<?, ?> map1, Map<?, ?> map2) {
         for (Map.Entry<?, ?> entry : map2.entrySet()) {
             if (!Objects.equals(entry.getValue(), map1.get(entry.getKey()))) {
@@ -288,7 +230,44 @@ public final class CollectionUtil {
         }
         return true;
     }
+    //endregion
 
+    //region copy
+    public static <K, V> Map<K, V> copyAsMap(Collection<Map.Entry<K, V>> entries) {
+        return Map.ofEntries(entries.toArray(EMPTY_ENTRY_ARRAY));
+    }
+
+    public static <T> Set<T> copyAsSet(Collection<? extends T> collection) {
+        if (isImmutableSet(collection)) {
+            return (Set<T>) collection;
+        } else {
+            return (Set<T>) Set.of(collection.toArray());
+        }
+    }
+    //endregion
+
+    //region conversion
+    public static <T> List<T> toList(Iterable<T> iterable) {
+        return toList(iterable.iterator());
+    }
+
+    public static <T> List<T> toList(Iterator<T> iterator) {
+        List<T> list = new LinkedList<>();
+        while (iterator.hasNext()) {
+            list.add(iterator.next());
+        }
+        return list;
+    }
+
+    public static <T> List<T> toListSupportRandomAccess(Collection<T> collection) {
+        if (collection instanceof List<T> list && collection instanceof RandomAccess) {
+            return list;
+        }
+        return new ArrayList<>(collection);
+    }
+    //endregion
+
+    //region transform
     public static <K, V> Map<V, Set<K>> reverseAsSetValues(Map<K, V> map, int expectedValuesPerKey) {
         Map<V, Set<K>> result = newMapWithExpectedSize(map.size());
         for (Map.Entry<K, V> keyAndValue : map.entrySet()) {
@@ -314,13 +293,64 @@ public final class CollectionUtil {
         }
         return result;
     }
+    //endregion
 
-    public static <T> Set<T> copyAsSet(Collection<? extends T> collection) {
-        if (isImmutableSet(collection)) {
-            return (Set<T>) collection;
-        } else {
-            return (Set<T>) Set.of(collection.toArray());
+    //region add/remove
+    public static <T> List<T> add(List<T> list, List<T> values) {
+        if (isImmutable(list)) {
+            List<T> newList = new ArrayList<>(list.size() + values.size());
+            newList.addAll(list);
+            list = newList;
         }
+        list.addAll(values);
+        return list;
+    }
+
+    public static <T> List<T> add(List<T> list, T value) {
+        if (isImmutable(list)) {
+            List<T> newList = new ArrayList<>(list.size() + 1);
+            newList.addAll(list);
+            list = newList;
+        }
+        list.add(value);
+        return list;
+    }
+
+    public static <T> Set<T> add(Set<T> set, Set<T> values) {
+        if (isImmutable(set)) {
+            Set<T> newSet = UnifiedSet.newSet(set.size() + values.size());
+            newSet.addAll(set);
+            set = newSet;
+        }
+        set.addAll(values);
+        return set;
+    }
+
+    public static <T> Set<T> add(Set<T> set, T value) {
+        if (isImmutable(set)) {
+            Set<T> newSet = newSetWithExpectedSize(set.size() + 1);
+            newSet.addAll(set);
+            set = newSet;
+        }
+        set.add(value);
+        return set;
+    }
+
+    public static <T> Set<T> remove(Set<T> set, T value) {
+        if (isImmutable(set)) {
+            Set<T> newSet = newSetWithExpectedSize(set.size());
+            newSet.addAll(set);
+            set = newSet;
+        }
+        set.remove(value);
+        return set;
+    }
+    //endregion
+
+    //region concat and merge
+    public static <T> List<T> concatAsList(Iterator<T> iterator1, Iterator<T> iterator2) {
+        Iterator<T> iterator = new ConcatIterator<>(iterator1, iterator2);
+        return toList(iterator);
     }
 
     public static <T> Set<T> concatAsSet(Collection<T>... collections) {
@@ -346,4 +376,56 @@ public final class CollectionUtil {
         }
         return set;
     }
+
+    public static <K, V> Map<K, V> merge(Map<K, V> map1, Map<K, V> map2) {
+        Map<K, V> result = newMapWithExpectedSize(map1.size() + map2.size());
+        result.putAll(map1);
+        result.putAll(map2);
+        return result;
+    }
+
+    public static <K, V> Map<K, V> deepMerge(Map<K, V> baseMap,
+                                             Map<? extends K, ? extends V> mapToMerge,
+                                             boolean appendCollectionElements) {
+        for (Map.Entry<? extends K, ? extends V> entry : mapToMerge.entrySet()) {
+            K key = entry.getKey();
+            V existingValue = baseMap.get(key);
+            V valueToMerge = entry.getValue();
+            // We don't need to handle the case of arrays
+            // just because we don't use arrays.
+            if (appendCollectionElements
+                    && existingValue instanceof Collection existingValues
+                    && valueToMerge instanceof Collection valuesToMerge) {
+                if (!existingValues.containsAll(valuesToMerge)) {
+                    existingValues.addAll(valuesToMerge);
+                }
+            } else if (existingValue instanceof Map && valueToMerge instanceof Map) {
+                deepMerge((Map) existingValue, (Map) valueToMerge, appendCollectionElements);
+            } else if (existingValue == null || !existingValue.equals(valueToMerge)) {
+                baseMap.put(key, valueToMerge);
+            }
+        }
+        return baseMap;
+    }
+    //endregion
+
+    //region intersection/union
+    public static <T> Set<T> intersection(Set<T> c1, Collection<T> c2) {
+        Set<T> result = newSetWithExpectedSize(Math.min(c1.size(), c2.size()));
+        for (T value : c2) {
+            if (c1.contains(value)) {
+                result.add(value);
+            }
+        }
+        return result;
+    }
+
+    public static <T> List<T> union(List<? extends T> list1, List<? extends T> list2) {
+        ArrayList<T> result = new ArrayList<>(list1.size() + list2.size());
+        result.addAll(list1);
+        result.addAll(list2);
+        return result;
+    }
+    //endregion
+
 }

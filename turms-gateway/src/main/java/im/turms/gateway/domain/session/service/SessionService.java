@@ -40,7 +40,6 @@ import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.rpc.exception.ConnectionNotFound;
 import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.ResponseException;
@@ -217,7 +216,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         if (userSimultaneousLoginService.isForbiddenDeviceType(deviceType)) {
             return Mono.error(ResponseException.get(ResponseStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE));
         }
-        return this.verifyAndGrant(version, userId, password, deviceType, deviceDetails, userStatus, location, ipStr)
+        return verifyAndGrant(version, userId, password, deviceType, deviceDetails, userStatus, location, ipStr)
                 .flatMap(permissionInfo -> {
                     ResponseStatusCode statusCode = permissionInfo.authenticationCode();
                     return statusCode == ResponseStatusCode.OK
@@ -331,7 +330,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
             return PublisherPool.FALSE;
         }
         UserSession session = manager.getSession(deviceType);
-        if (session.getId() == sessionId) {
+        if (session != null && session.getId() == sessionId) {
             return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, Collections.singleton(deviceType), closeReason, manager);
         }
         return PublisherPool.FALSE;
@@ -690,7 +689,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         for (DeviceType deviceType : manager.getDeviceTypeToSession().keySet()) {
             // Don't just merge two maps for convenience to avoiding creating a new map
             if (!sharedOnlineDeviceTypeToNodeId.containsKey(deviceType)) {
-                Map<DeviceType, String> onlineDeviceTypeToNodeId = MapUtil.merge(sharedOnlineDeviceTypeToNodeId,
+                Map<DeviceType, String> onlineDeviceTypeToNodeId = CollectionUtil.merge(sharedOnlineDeviceTypeToNodeId,
                         CollectionUtil.transformValues(manager.getDeviceTypeToSession(), Node.getNodeId()));
                 return new UserSessionsStatus(userId, manager.getUserStatus(), onlineDeviceTypeToNodeId);
             }

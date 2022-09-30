@@ -20,7 +20,6 @@ package im.turms.server.common.infra.collection;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -53,8 +52,8 @@ public final class CollectorUtil {
         return Collectors.toCollection(() -> UnifiedSet.newSet(expectedSize));
     }
 
-    public static <K, V> Supplier<Map<K, V>> toMap(int size) {
-        return () -> new HashMap<>(size);
+    public static <K, V> Supplier<Map<K, V>> toMap(int expectedSize) {
+        return () -> CollectionUtil.newMapWithExpectedSize(expectedSize);
     }
 
 }

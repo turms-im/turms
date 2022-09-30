@@ -117,7 +117,7 @@ public class UserSimultaneousLoginService {
             }
             default -> throw new IllegalStateException("Unexpected value: " + strategy);
         }
-        return Map.copyOf(newDeviceTypeToExclusiveDeviceTypes);
+        return Map.copyOf(CollectionUtil.transformValues(newDeviceTypeToExclusiveDeviceTypes, Set::copyOf));
     }
 
     private Set<DeviceType> newForbiddenDeviceTypesFromStrategy(SimultaneousLoginStrategy strategy) {

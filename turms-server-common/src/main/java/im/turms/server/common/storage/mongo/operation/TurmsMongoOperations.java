@@ -46,8 +46,8 @@ import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.internal.MongoCollectionUtil;
 import com.mongodb.reactivestreams.client.internal.MongoOperationPublisher;
 import com.mongodb.reactivestreams.client.internal.TurmsFindPublisherImpl;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
-import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.reactor.PublisherPool;
@@ -252,7 +252,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
      */
     private BsonDocument applyShardKey(ShardKey shardKey, BsonDocument document) {
         List<ShardKey.Path> paths = shardKey.paths();
-        BsonDocument filter = new BsonDocument(MapUtil.getCapability(paths.size()));
+        BsonDocument filter = new BsonDocument(CollectionUtil.getMapCapability(paths.size()));
         for (ShardKey.Path shardKeyPath : paths) {
             if (shardKeyPath.isIdField()) {
                 filter.append(DomainFieldName.ID, document.get(DomainFieldName.ID));

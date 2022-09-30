@@ -230,7 +230,6 @@ public class DiscoveryService implements ClusterService {
         } catch (Exception e) {
             throw new IllegalStateException("Caught an error while trying to become the first leader", e);
         }
-
         localNodeStatusManager.startHeartbeat();
     }
 

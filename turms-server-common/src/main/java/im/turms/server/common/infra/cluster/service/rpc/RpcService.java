@@ -35,7 +35,6 @@ import im.turms.server.common.infra.cluster.service.rpc.dto.RpcResponse;
 import im.turms.server.common.infra.cluster.service.rpc.exception.ConnectionNotFound;
 import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.infra.collection.CollectorUtil;
-import im.turms.server.common.infra.collection.MapUtil;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.lang.Null;
 import im.turms.server.common.infra.lang.Pair;
@@ -526,7 +525,7 @@ public class RpcService implements ClusterService {
             }
             return resultFlux
                     .timeout(timeout)
-                    .collectMap(Pair::first, Pair::second, CollectorUtil.toMap(MapUtil.getCapability(size)))
+                    .collectMap(Pair::first, Pair::second, CollectorUtil.toMap(size))
                     .onErrorMap(t -> mapThrowable(t, request))
                     .doFinally(signal -> requestBody.release());
         });
