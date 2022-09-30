@@ -19,7 +19,6 @@ package im.turms.server.common.storage.mongo;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.client.model.geojson.codecs.GeoJsonCodecProvider;
 import com.mongodb.connection.ServerDescription;
 import com.mongodb.connection.netty.NettyStreamFactoryFactory;
 import com.mongodb.event.ClusterDescriptionChangedEvent;
@@ -30,7 +29,6 @@ import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.thread.ThreadNameConst;
-import im.turms.server.common.storage.mongo.codec.MongoCodecProvider;
 import im.turms.server.common.storage.mongo.entity.MongoEntity;
 import im.turms.server.common.storage.mongo.entity.MongoEntityFactory;
 import im.turms.server.common.storage.mongo.operation.MongoCollectionOptions;
@@ -41,16 +39,8 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.netty.util.concurrent.Future;
 import lombok.Getter;
-import org.bson.codecs.BsonCodecProvider;
-import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.Codec;
-import org.bson.codecs.DocumentCodecProvider;
-import org.bson.codecs.IterableCodecProvider;
-import org.bson.codecs.MapCodecProvider;
-import org.bson.codecs.ValueCodecProvider;
-import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.jsr310.Jsr310CodecProvider;
 import org.jctools.maps.NonBlockingIdentityHashMap;
 import reactor.core.publisher.Mono;
 
@@ -66,24 +56,7 @@ import java.util.function.Consumer;
  */
 public class MongoContext {
 
-    private static final MongoCodecProvider MONGO_CODEC_PROVIDER = new MongoCodecProvider();
-    /**
-     * {@link MongoClientSettings#DEFAULT_CODEC_REGISTRY}
-     */
-    public static final CodecRegistry CODEC_REGISTRY = CodecRegistries.fromProviders(
-            new ValueCodecProvider(),
-            new BsonValueCodecProvider(),
-            new DocumentCodecProvider(),
-            new MapCodecProvider(),
-            new IterableCodecProvider(),
-            new GeoJsonCodecProvider(),
-            new Jsr310CodecProvider(),
-            new BsonCodecProvider(),
-            MONGO_CODEC_PROVIDER);
-
-    static {
-        MONGO_CODEC_PROVIDER.setRegistry(CODEC_REGISTRY);
-    }
+    private static final CodecRegistry CODEC_REGISTRY = CodecPool.CODEC_REGISTRY;
 
     @Getter
     private final MongoClient client;
@@ -97,7 +70,8 @@ public class MongoContext {
     private final Map<Class<?>, MongoCollection<?>> classToCollection = new NonBlockingIdentityHashMap<>(64);
     private final NioEventLoopGroup eventLoopGroup;
 
-    public MongoContext(String connectionString, Consumer<List<ServerDescription>> onServerDescriptionChange) {
+    public MongoContext(String connectionString,
+                        Consumer<List<ServerDescription>> onServerDescriptionChange) {
         if (connectionString == null) {
             throw new IllegalArgumentException("The connection string cannot not be null");
         }

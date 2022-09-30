@@ -18,7 +18,7 @@
 package im.turms.server.common.storage.mongo.operation.option;
 
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
-import im.turms.server.common.infra.collection.MapUtil;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.storage.mongo.codec.BsonValueEncoder;
 import org.bson.BsonArrayUtil;
@@ -26,9 +26,6 @@ import org.bson.BsonDateTime;
 import org.bson.BsonDocument;
 import org.bson.BsonNull;
 import org.bson.BsonValue;
-import org.bson.Document;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.conversions.Bson;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -41,26 +38,14 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-public class Filter implements Bson {
-
-    /**
-     * Use {@link BsonDocument} instead of {@link Document}
-     * because {@link Document} will be converted to {@link BsonDocument} by mongo-java-driver finally,
-     * which is a huge waste of system resources because both documents are heavy
-     */
-    private final BsonDocument document;
+public class Filter extends BaseBson {
 
     Filter(int expectedSize) {
-        document = new BsonDocument(MapUtil.getCapability(expectedSize));
+        super(new BsonDocument(CollectionUtil.getMapCapability(expectedSize)));
     }
 
     public static Filter newBuilder(int expectedSize) {
         return new Filter(expectedSize);
-    }
-
-    @Override
-    public <TDocument> BsonDocument toBsonDocument(Class<TDocument> tDocumentClass, CodecRegistry codecRegistry) {
-        return document;
     }
 
     /**

@@ -17,7 +17,7 @@
 
 package im.turms.server.common.storage.mongo.codec;
 
-import im.turms.server.common.storage.mongo.MongoContext;
+import im.turms.server.common.storage.mongo.CodecPool;
 import org.bson.BsonArrayUtil;
 import org.bson.BsonBinary;
 import org.bson.BsonBoolean;
@@ -116,7 +116,7 @@ public final class BsonValueEncoder {
         EncoderContext encoderContext = EncoderContext.builder().build();
         BsonDocument document = new BsonDocument();
         BsonWriter writer = new BsonDocumentWriter(document);
-        EntityCodec codec = (EntityCodec) MongoContext.CODEC_REGISTRY.get(clazz);
+        EntityCodec codec = (EntityCodec) CodecPool.CODEC_REGISTRY.get(clazz);
         codec.encode(writer, value, encoderContext);
         return document;
     }

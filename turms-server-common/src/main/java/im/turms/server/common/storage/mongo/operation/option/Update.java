@@ -17,13 +17,10 @@
 
 package im.turms.server.common.storage.mongo.operation.option;
 
-import im.turms.server.common.infra.collection.MapUtil;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.storage.mongo.BsonPool;
 import im.turms.server.common.storage.mongo.codec.BsonValueEncoder;
 import org.bson.BsonDocument;
-import org.bson.Document;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.conversions.Bson;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -33,19 +30,13 @@ import java.util.Date;
 /**
  * @author James Chen
  */
-public final class Update implements Bson {
+public final class Update extends BaseBson {
 
-    /**
-     * Use {@link BsonDocument} instead of {@link Document}
-     * because {@link Document} will be converted to {@link BsonDocument} by mongo-java-driver finally,
-     * which is a huge waste of system resources because both documents are heavy
-     */
-    private final BsonDocument document;
     private BsonDocument set;
     private BsonDocument unset;
 
     private Update(int expectedSize) {
-        document = new BsonDocument(MapUtil.getCapability(expectedSize));
+        super(new BsonDocument(CollectionUtil.getMapCapability(expectedSize)));
     }
 
     public static Update newBuilder() {
@@ -54,11 +45,6 @@ public final class Update implements Bson {
 
     public static Update newBuilder(int expectedSize) {
         return new Update(expectedSize);
-    }
-
-    @Override
-    public <TDocument> BsonDocument toBsonDocument(Class<TDocument> tDocumentClass, CodecRegistry codecRegistry) {
-        return document;
     }
 
     public Update set(String field, Object value) {

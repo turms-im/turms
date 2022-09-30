@@ -18,7 +18,7 @@
 package im.turms.server.common.storage.mongo.operation.option;
 
 import com.mongodb.internal.client.model.FindOptions;
-import im.turms.server.common.infra.collection.MapUtil;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.storage.mongo.BsonPool;
 import lombok.Getter;
 import org.bson.BsonBoolean;
@@ -33,14 +33,12 @@ import javax.annotation.Nullable;
  * @implNote We don't use {@link FindOptions} because it's really heavy
  */
 @Getter
-public final class QueryOptions {
+public final class QueryOptions extends BaseBson {
 
     private static final BsonString COLLECTION_NAME_PLACEHOLDER = new BsonString("PLACEHOLDER");
 
-    private final BsonDocument document;
-
     private QueryOptions(int expectedSize) {
-        document = new BsonDocument(MapUtil.getCapability(expectedSize));
+        super(new BsonDocument(CollectionUtil.getMapCapability(expectedSize)));
         // "find" must be the first entry, and it will be replaced with the collection name in
         // QueryOptions#asDocument
         document.put("find", COLLECTION_NAME_PLACEHOLDER);

@@ -53,6 +53,7 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.storage.mongo.BsonPool;
+import im.turms.server.common.storage.mongo.CodecPool;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.MongoContext;
 import im.turms.server.common.storage.mongo.MongoErrorCodes;
@@ -105,7 +106,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TurmsMongoOperations.class);
 
-    private static final EncoderContext DEFAULT_ENCODER_CONTEXT = EncoderContext.builder().build();
+    private static final EncoderContext DEFAULT_ENCODER_CONTEXT = CodecPool.DEFAULT_ENCODER_CONTEXT;
 
     private static final BsonDocument ID_ONLY = new BsonDocument(DomainFieldName.ID, BsonPool.BSON_INT32_1);
     private static final Filter FILTER_ALL = Filter.newBuilder(0);
