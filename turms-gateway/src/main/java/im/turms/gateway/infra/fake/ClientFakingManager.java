@@ -92,12 +92,12 @@ public class ClientFakingManager {
     private void init() {
         if (enabled) {
             prepareClients(fakeProperties.getFirstUserId(), fakeProperties.getUserCount())
-                    .doOnSuccess(clients -> startSendingRandomRequests(clients,
-                            fakeProperties.getFirstUserId(),
-                            fakeProperties.getUserCount(),
-                            fakeProperties.getRequestIntervalMillis(),
-                            fakeProperties.getRequestCountPerInterval()))
-                    .subscribe(null, t -> LOGGER.error("Failed to prepare clients", t));
+                    .subscribe(clients -> startSendingRandomRequests(clients,
+                                    fakeProperties.getFirstUserId(),
+                                    fakeProperties.getUserCount(),
+                                    fakeProperties.getRequestIntervalMillis(),
+                                    fakeProperties.getRequestCountPerInterval()),
+                            t -> LOGGER.error("Failed to prepare clients", t));
         }
     }
 
@@ -157,6 +157,10 @@ public class ClientFakingManager {
                                             int userCount,
                                             int requestIntervalMillis,
                                             int requestCountPerInterval) {
+        if (clients.isEmpty()) {
+            LOGGER.info("No available clients to send random requests");
+            return;
+        }
         LOGGER.info("Start sending random requests from clients");
         int jitter = userCount / 10;
         Range<Long> fakedNumberRange = Range.between(
