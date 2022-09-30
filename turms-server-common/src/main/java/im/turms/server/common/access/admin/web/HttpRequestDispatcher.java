@@ -335,12 +335,9 @@ public class HttpRequestDispatcher {
                     .header(HttpHeaderNames.CONTENT_DISPOSITION, "attachment; filename=" + resource.getFileName())
                     .header(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.APPLICATION_OCTET_STREAM)
                     .header(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(resource.getSize()));
-            NettyOutbound outbound;
-            if (body instanceof FileResource fileResource) {
-                outbound = preparedResponse.sendFile(fileResource.getFile());
-            } else {
-                outbound = preparedResponse.sendObject(((ByteBufFileResource) resource).getBuffer());
-            }
+            NettyOutbound outbound = body instanceof FileResource fileResource
+                    ? preparedResponse.sendFile(fileResource.getFile())
+                    : preparedResponse.sendObject(((ByteBufFileResource) resource).getBuffer());
             return outbound
                     .then()
                     .doOnEach(signal -> {

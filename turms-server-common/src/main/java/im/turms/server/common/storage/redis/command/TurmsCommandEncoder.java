@@ -94,14 +94,16 @@ public class TurmsCommandEncoder extends ChannelOutboundHandlerAdapter {
     }
 
     private int countArgs(RedisCommand<?, ?, ?> command) {
-        int count = 0;
         CommandArgs<?, ?> args = command.getArgs();
-        if (args != null) {
-            count += command.getType() == CommandType.EVAL || command.getType() == CommandType.EVALSHA
-                    // Add 2, one for script, another for the length of keys
-                    ? (int) CommandArgsUtil.getLongArgument(args, 1) + 2
-                    : args.count();
+        if (args == null) {
+            return 0;
         }
+        int count = 0;
+        ProtocolKeyword type = command.getType();
+        count += type == CommandType.EVAL || type == CommandType.EVALSHA
+                // Add 2, one for script, another for the length of keys
+                ? (int) CommandArgsUtil.getLongArgument(args, 1) + 2
+                : args.count();
         return count;
     }
 

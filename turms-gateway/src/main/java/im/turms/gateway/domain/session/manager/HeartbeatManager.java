@@ -175,23 +175,28 @@ public class HeartbeatManager {
                 return null;
             }
         }
+        // Limit the frequency of sending heartbeat requests to Redis
         long lastHeartbeatUpdateTimestamp = session.getLastHeartbeatUpdateTimestampMillis();
-        if (minHeartbeatIntervalMillis > 0
-                && now - lastHeartbeatUpdateTimestamp < minHeartbeatIntervalMillis) {
+        int localMinHeartbeatIntervalMillis = minHeartbeatIntervalMillis;
+        if (localMinHeartbeatIntervalMillis > 0
+                && now - lastHeartbeatUpdateTimestamp < localMinHeartbeatIntervalMillis) {
             return null;
         }
+        // Only sends heartbeat requests to Redis if the client has
+        // sent any request to the local node after the last heartbeat update request
         long lastHeartbeatRequestTimestamp = Math.max(session.getLastHeartbeatRequestTimestampMillis(), session.getLastRequestTimestampMillis());
         if (lastHeartbeatRequestTimestamp <= lastHeartbeatUpdateTimestamp) {
             return null;
         }
-        int heartbeatElapsedTime = (int) (now - lastHeartbeatRequestTimestamp);
-        if (closeIdleSessionAfterMillis > 0 && heartbeatElapsedTime > closeIdleSessionAfterMillis) {
+        int localCloseIdleSessionAfterMillis = closeIdleSessionAfterMillis;
+        if (localCloseIdleSessionAfterMillis > 0 && (int) (now - lastHeartbeatRequestTimestamp) > localCloseIdleSessionAfterMillis) {
             sessionService.setLocalSessionOffline(
                             session.getUserId(),
                             session.getDeviceType(),
                             HEARTBEAT_TIMEOUT)
                     .subscribe(null, t -> LOGGER.error("Caught an error while disconnecting the local session: {} with the close reason: {}",
                             session, HEARTBEAT_TIMEOUT));
+            return null;
         }
         session.setLastHeartbeatUpdateTimestampMillis(now);
         return session.getUserId();

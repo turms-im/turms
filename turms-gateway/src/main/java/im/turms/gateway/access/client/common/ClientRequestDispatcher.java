@@ -251,9 +251,7 @@ public class ClientRequestDispatcher {
                     yield handleServiceRequest(sessionWrapper, request, serviceRequestBuffer);
                 }
             };
-        } catch (Exception e) {
-            return Mono.just(NotificationFactory
-                    .create(ThrowableInfo.get(e), request.requestId()));
+            // Don't need to catch here to use the outer consistent catch
         } finally {
             serviceRequestBuffer.release();
             tracingContext.clearThreadContext();
@@ -316,7 +314,7 @@ public class ClientRequestDispatcher {
                 request.requestId(),
                 request.type(),
                 serviceRequestBuffer);
-        return serviceRequestService.handleServiceRequest(serviceRequest);
+        return serviceRequestService.handleServiceRequest(session, serviceRequest);
     }
 
     private TurmsNotification getNotificationFromHandlerResult(RequestHandlerResult result, long requestId) {

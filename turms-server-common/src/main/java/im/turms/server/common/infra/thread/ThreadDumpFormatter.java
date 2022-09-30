@@ -68,7 +68,7 @@ public class ThreadDumpFormatter {
     }
 
     public static ByteBuf format(ThreadInfo[] threads) {
-        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(4096);
+        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(threads.length * 512);
         buffer
                 .writeBytes(DateUtil.toBytes(System.currentTimeMillis()))
                 .writeByte('\n')

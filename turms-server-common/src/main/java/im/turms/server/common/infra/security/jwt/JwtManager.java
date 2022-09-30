@@ -64,7 +64,7 @@ public class JwtManager {
     private static final ObjectReader HEADER_READER;
 
     private final Map<String, JwtAlgorithm> nameToAlgorithm;
-    private final List<Predicate<JwtPayload>> verifications = new ArrayList<>(4);
+    private final List<Predicate<JwtPayload>> verifications = new ArrayList<>(3);
 
     static {
         PAYLOAD_READER = JsonCodecPool.MAPPER.readerFor(JwtPayload.class);
@@ -237,32 +237,10 @@ public class JwtManager {
             throw new CorruptedJwtException("The JWT must have three parts");
         }
         byte[] encodedHeaderBytes = StringUtil.getBytes(parts.get(0));
-        byte[] decodedHeaderBytes;
-        try {
-            decodedHeaderBytes = URL_DECODER.decode(encodedHeaderBytes);
-        } catch (Exception e) {
-            throw new CorruptedJwtException("The JWT header isn't a valid Base64-encoded string", e);
-        }
-        byte[] encodedPayloadBytes = StringUtil.getUTF8Bytes(parts.get(1));
-        byte[] decodedPayloadBytes;
-        try {
-            decodedPayloadBytes = URL_DECODER.decode(encodedPayloadBytes);
-        } catch (Exception e) {
-            throw new CorruptedJwtException("The JWT payload isn't a valid Base64-encoded string", e);
-        }
-        JwtHeader header;
-        try {
-            header = HEADER_READER.readValue(decodedHeaderBytes);
-        } catch (Exception e) {
-            throw new CorruptedJwtException("Illegal JWT header format", e);
-        }
-        JwtPayload payload;
-        try {
-            payload = PAYLOAD_READER.readValue(decodedPayloadBytes);
-        } catch (Exception e) {
-            throw new CorruptedJwtException("Illegal JWT payload format", e);
-        }
-        String algorithmName = header.algorithm().toUpperCase();
+        byte[] encodedPayloadBytes = StringUtil.getBytes(parts.get(1));
+        JwtHeader header = decodeHeader(encodedHeaderBytes);
+        JwtPayload payload = decodePayload(encodedPayloadBytes);
+        String algorithmName = header.algorithm();
         JwtAlgorithm algorithm = nameToAlgorithm.get(algorithmName);
         if (algorithm == null) {
             throw new UnsupportedOperationException("The " + algorithmName + " algorithm isn't supported");
@@ -281,6 +259,34 @@ public class JwtManager {
             return jwtEntity;
         }
         throw new SignatureVerificationException();
+    }
+
+    private JwtHeader decodeHeader(byte[] encodedHeaderBytes) {
+        byte[] decodedHeaderBytes;
+        try {
+            decodedHeaderBytes = URL_DECODER.decode(encodedHeaderBytes);
+        } catch (Exception e) {
+            throw new CorruptedJwtException("The JWT header isn't a valid Base64-encoded string", e);
+        }
+        try {
+            return HEADER_READER.readValue(decodedHeaderBytes);
+        } catch (Exception e) {
+            throw new CorruptedJwtException("Illegal JWT header format", e);
+        }
+    }
+
+    private JwtPayload decodePayload(byte[] encodedPayloadBytes) {
+        byte[] decodedPayloadBytes;
+        try {
+            decodedPayloadBytes = URL_DECODER.decode(encodedPayloadBytes);
+        } catch (Exception e) {
+            throw new CorruptedJwtException("The JWT payload isn't a valid Base64-encoded string", e);
+        }
+        try {
+            return PAYLOAD_READER.readValue(decodedPayloadBytes);
+        } catch (Exception e) {
+            throw new CorruptedJwtException("Illegal JWT payload format", e);
+        }
     }
 
 }

@@ -528,7 +528,7 @@
     "fake": {
       "enabled": {
         "deprecated": false,
-        "desc": "Whether to fake data. Note that faking only works in non-production environments",
+        "desc": "Whether to fake clients. Note that faking only works in non-production environments",
         "global": false,
         "mutable": false,
         "type": "boolean"

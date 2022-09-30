@@ -114,7 +114,7 @@ public final class CommandArgsUtil {
 
     public static void writeRawLongArg(ByteBuf out, long value) {
         out.writeByte(BULK_STRINGS_FLAG_BYTE)
-                .writeBytes(getArgLength(Long.BYTES).nioBuffer())
+                .writeBytes(getArgLength(Long.BYTES).duplicate())
                 .writeBytes(CRLF_BYTES)
                 .writeLong(value)
                 .writeBytes(CRLF_BYTES);
@@ -122,7 +122,7 @@ public final class CommandArgsUtil {
 
     public static void writeRawShortArg(ByteBuf out, short value) {
         out.writeByte(BULK_STRINGS_FLAG_BYTE)
-                .writeBytes(getArgLength(Short.BYTES).nioBuffer())
+                .writeBytes(getArgLength(Short.BYTES).duplicate())
                 .writeBytes(CRLF_BYTES)
                 .writeShort(value)
                 .writeBytes(CRLF_BYTES);

@@ -205,6 +205,12 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
                 userStatus,
                 location,
                 ip);
+        Mono<UserPermissionInfo> defaultVerifyAndGrantHandler = Mono.defer(() -> switch (identityAccessManagementType) {
+            case NOOP -> GRANTED_WITH_ALL_PERMISSIONS_MONO;
+            case HTTP -> verifyAndGrantUsingHttp(userLoginInfo);
+            case JWT -> verifyAndGrantUsingJwt(userLoginInfo.userId(), userLoginInfo.password());
+            case PASSWORD -> verifyAndGrantUsingPassword(userLoginInfo.userId(), userLoginInfo.password());
+        });
         // TODO: Support authorization for plugins
         if (pluginManager.hasRunningExtensions(UserAuthenticator.class)) {
             Mono<UserPermissionInfo> authenticate = pluginManager.invokeExtensionPointsSequentially(
@@ -214,20 +220,9 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
                                     (authenticator, pre) -> pre.switchIfEmpty(Mono.defer(() -> authenticator.authenticate(userLoginInfo))))
                     .map(authenticated -> authenticated ? GRANTED_WITH_ALL_PERMISSIONS : LOGIN_AUTHENTICATION_FAILED);
             return authenticate
-                    .switchIfEmpty(Mono.defer(() -> verifyAndGrant0(userLoginInfo)));
+                    .switchIfEmpty(defaultVerifyAndGrantHandler);
         }
-        return Mono.defer(() -> verifyAndGrant0(userLoginInfo));
-    }
-
-    private Mono<UserPermissionInfo> verifyAndGrant0(UserLoginInfo userLoginInfo) {
-        Long userId = userLoginInfo.userId();
-        String password = userLoginInfo.password();
-        return switch (identityAccessManagementType) {
-            case NOOP -> GRANTED_WITH_ALL_PERMISSIONS_MONO;
-            case HTTP -> verifyAndGrantUsingHttp(userLoginInfo);
-            case JWT -> verifyAndGrantUsingJwt(userId, password);
-            case PASSWORD -> verifyAndGrantUsingPassword(userId, password);
-        };
+        return defaultVerifyAndGrantHandler;
     }
 
     private Mono<UserPermissionInfo> verifyAndGrantUsingHttp(UserLoginInfo userLoginInfo) {

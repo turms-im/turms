@@ -23,13 +23,13 @@ import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.TurmsRequestTypePool;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequest;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
-import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.net.InetAddressUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
@@ -65,20 +65,9 @@ class ServiceRequestServiceTests {
     }
 
     @Test
-    void handleServiceRequest_shouldThrow_ifUserIsOffline() {
-        ServiceRequestService serviceRequestService = newInboundRequestService(false, true);
-        Mono<TurmsNotification> result = serviceRequestService.handleServiceRequest(newServiceRequest());
-
-        StepVerifier.create(result)
-                .expectErrorMatches(throwable -> throwable instanceof ResponseException e
-                        && e.getCode().equals(ResponseStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION))
-                .verify();
-    }
-
-    @Test
     void handleServiceRequest_shouldReturnError_ifFailedToHandleRequest() {
         ServiceRequestService serviceRequestService = newInboundRequestService(true, false);
-        Mono<TurmsNotification> result = serviceRequestService.handleServiceRequest(newServiceRequest());
+        Mono<TurmsNotification> result = serviceRequestService.handleServiceRequest(newUserSession(), newServiceRequest());
 
         StepVerifier.create(result)
                 .verifyErrorMatches(t -> t == HANDLE_REQUEST_FAILURE_EXCEPTION);
@@ -87,7 +76,7 @@ class ServiceRequestServiceTests {
     @Test
     void handleServiceRequest_shouldReturnOk_ifHandleRequestSuccessfully() {
         ServiceRequestService serviceRequestService = newInboundRequestService(true, true);
-        Mono<TurmsNotification> result = serviceRequestService.handleServiceRequest(newServiceRequest());
+        Mono<TurmsNotification> result = serviceRequestService.handleServiceRequest(newUserSession(), newServiceRequest());
 
         StepVerifier.create(result)
                 .expectNextMatches(notification -> notification.getCode() == responseForSuccess.code().getBusinessCode())
@@ -111,6 +100,10 @@ class ServiceRequestServiceTests {
                 .thenReturn(session);
 
         return new ServiceRequestService(node, sessionService);
+    }
+
+    private UserSession newUserSession() {
+        return new UserSession(1, TurmsRequestTypePool.ALL, 1L, DeviceType.ANDROID, null, null);
     }
 
     private ServiceRequest newServiceRequest() {

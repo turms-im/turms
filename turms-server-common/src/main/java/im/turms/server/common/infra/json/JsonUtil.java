@@ -137,16 +137,18 @@ public final class JsonUtil {
                         if (Modifier.isStatic(field.getModifiers())) {
                             continue;
                         }
+                        ReflectionUtil.setAccessible(field);
+                        Object o;
                         try {
-                            ReflectionUtil.setAccessible(field);
-                            Object o = field.get(val);
-                            valSize = estimateJson(o);
-                            if (valSize > 0) {
-                                size += valSize;
-                                size += field.getName().length();
-                                size += ESTIMATED_JSON_FIELD_META_SIZE;
-                            }
+                            o = field.get(val);
                         } catch (Exception e) {
+                            continue;
+                        }
+                        valSize = estimateJson(o);
+                        if (valSize > 0) {
+                            size += valSize;
+                            size += field.getName().length();
+                            size += ESTIMATED_JSON_FIELD_META_SIZE;
                         }
                     }
                 }

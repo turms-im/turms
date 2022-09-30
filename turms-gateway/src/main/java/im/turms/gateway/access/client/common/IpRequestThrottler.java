@@ -43,6 +43,8 @@ public class IpRequestThrottler {
     private static final long IDLE_ENTRY_TTL = 30 * 60 * 1000L;
     private static final long INTERVAL_TO_CHECK = 30 * 60 * 1000L;
     private static final int BATCH_SIZE = 10_000;
+    private static final long SLEEP_THRESHOLD_MILLIS = 1000;
+    private static final long SLEEP_MILLIS = 1000;
 
     /**
      * Share the context with all instances of token buckets
@@ -106,8 +108,8 @@ public class IpRequestThrottler {
             // and cause the server cannot serve for users
             if (processed >= BATCH_SIZE) {
                 processed = 0;
-                if (System.currentTimeMillis() - startTime > 1000) {
-                    Thread.sleep(1000);
+                if (System.currentTimeMillis() - startTime > SLEEP_THRESHOLD_MILLIS) {
+                    Thread.sleep(SLEEP_MILLIS);
                     startTime = System.currentTimeMillis();
                 }
             }

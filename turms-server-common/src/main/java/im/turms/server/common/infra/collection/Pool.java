@@ -19,6 +19,7 @@ package im.turms.server.common.infra.collection;
 
 import org.jctools.maps.NonBlockingHashMapLong;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -28,17 +29,18 @@ import java.util.function.UnaryOperator;
 /**
  * @author James Chen
  */
+@ThreadSafe
 public class Pool<T> {
 
     public static final long RESERVED_KEY = 0;
     private static final long FALLBACK_KEY = Long.MIN_VALUE;
 
     private final int maxSize;
-    private final NonBlockingHashMapLong<Object> idToObject;
+    private final NonBlockingHashMapLong<Object> keyToObject;
 
     public Pool(int maxSize, int initialSize) {
         this.maxSize = maxSize;
-        idToObject = new NonBlockingHashMapLong<>(initialSize);
+        keyToObject = new NonBlockingHashMapLong<>(initialSize);
     }
 
     public T poolIfAbsent(T value) {
@@ -49,16 +51,16 @@ public class Pool<T> {
         if (key == RESERVED_KEY) {
             key = FALLBACK_KEY;
         }
-        Object existingObject = idToObject.get(key);
+        Object existingObject = keyToObject.get(key);
         if (existingObject == null) {
             // We don't use LRU just because we don't it currently
-            if (idToObject.size() > maxSize) {
-                Iterator<Map.Entry<Long, Object>> iterator = idToObject.entrySet().iterator();
+            if (keyToObject.size() > maxSize) {
+                Iterator<Map.Entry<Long, Object>> iterator = keyToObject.entrySet().iterator();
                 if (iterator.hasNext()) {
                     iterator.remove();
                 }
             }
-            existingObject = idToObject.putIfAbsent(key, value);
+            existingObject = keyToObject.putIfAbsent(key, value);
             if (existingObject == null) {
                 return value;
             }
@@ -71,7 +73,7 @@ public class Pool<T> {
             }
             while (true) {
                 InternalArrayList<T> newObjects = new InternalArrayList<>(existingObjects, value);
-                Object previousObjects = idToObject.putIfAbsent(key, newObjects);
+                Object previousObjects = keyToObject.putIfAbsent(key, newObjects);
                 if (previousObjects == existingObjects) {
                     return value;
                 } else {
@@ -88,14 +90,14 @@ public class Pool<T> {
                 return (T) existingObject;
             }
             InternalArrayList<T> newObjects = new InternalArrayList<>((T) existingObject, value);
-            Object previousObjects = idToObject.putIfAbsent(key, newObjects);
+            Object previousObjects = keyToObject.putIfAbsent(key, newObjects);
             if (previousObjects == existingObject) {
                 return value;
             }
             InternalArrayList<T> existingObjects = (InternalArrayList<T>) previousObjects;
             while (true) {
                 newObjects = new InternalArrayList<>(existingObjects, value);
-                previousObjects = idToObject.putIfAbsent(key, newObjects);
+                previousObjects = keyToObject.putIfAbsent(key, newObjects);
                 if (previousObjects == existingObjects) {
                     return value;
                 } else {
@@ -118,18 +120,18 @@ public class Pool<T> {
         if (key == RESERVED_KEY) {
             key = FALLBACK_KEY;
         }
-        Object existingObject = idToObject.get(key);
+        Object existingObject = keyToObject.get(key);
         boolean transformed = false;
         if (existingObject == null) {
             // We don't use LRU just because we don't it currently
-            if (idToObject.size() > maxSize) {
-                Iterator<Map.Entry<Long, Object>> iterator = idToObject.entrySet().iterator();
+            if (keyToObject.size() > maxSize) {
+                Iterator<Map.Entry<Long, Object>> iterator = keyToObject.entrySet().iterator();
                 if (iterator.hasNext()) {
                     iterator.remove();
                 }
             }
             value = transformer.apply(value);
-            existingObject = idToObject.putIfAbsent(key, value);
+            existingObject = keyToObject.putIfAbsent(key, value);
             if (existingObject == null) {
                 return value;
             }
@@ -146,7 +148,7 @@ public class Pool<T> {
             }
             while (true) {
                 InternalArrayList<T> newObjects = new InternalArrayList<>(existingObjects, value);
-                Object previousObjects = idToObject.putIfAbsent(key, newObjects);
+                Object previousObjects = keyToObject.putIfAbsent(key, newObjects);
                 if (previousObjects == existingObjects) {
                     return value;
                 } else {
@@ -166,14 +168,14 @@ public class Pool<T> {
                 return (T) existingObject;
             }
             InternalArrayList<T> newObjects = new InternalArrayList<>((T) existingObject, value);
-            Object previousObjects = idToObject.putIfAbsent(key, newObjects);
+            Object previousObjects = keyToObject.putIfAbsent(key, newObjects);
             if (previousObjects == existingObject) {
                 return value;
             }
             InternalArrayList<T> existingObjects = (InternalArrayList<T>) previousObjects;
             while (true) {
                 newObjects = new InternalArrayList<>(existingObjects, value);
-                previousObjects = idToObject.putIfAbsent(key, newObjects);
+                previousObjects = keyToObject.putIfAbsent(key, newObjects);
                 if (previousObjects == existingObjects) {
                     return value;
                 } else {
@@ -189,18 +191,14 @@ public class Pool<T> {
     }
 
     public int size() {
-        return idToObject.size();
+        return keyToObject.size();
     }
 
     public Collection<T> values() {
-        return (Collection<T>) idToObject.values();
+        return (Collection<T>) keyToObject.values();
     }
 
     private static class InternalArrayList<T> extends ArrayList<T> {
-        InternalArrayList(int initialCapacity) {
-            super(initialCapacity);
-        }
-
         InternalArrayList(T element1, T element2) {
             super(2);
             add(element1);
@@ -212,7 +210,6 @@ public class Pool<T> {
             addAll(list);
             add(element);
         }
-
     }
 
 }

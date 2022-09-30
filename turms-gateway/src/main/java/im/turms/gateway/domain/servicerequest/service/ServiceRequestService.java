@@ -20,15 +20,12 @@ package im.turms.gateway.domain.servicerequest.service;
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
-import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequest;
 import im.turms.server.common.infra.cluster.node.Node;
-import im.turms.server.common.infra.exception.ResponseException;
-import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -55,20 +52,8 @@ public class ServiceRequestService {
      * @return a response to the request.
      * @implNote The method ensures turmsRequestBuffer in serviceRequest will be released by 1
      */
-    public Mono<TurmsNotification> handleServiceRequest(ServiceRequest serviceRequest) {
+    public Mono<TurmsNotification> handleServiceRequest(UserSession session, ServiceRequest serviceRequest) {
         try {
-            // Validate
-            Long userId = serviceRequest.getUserId();
-            DeviceType deviceType = serviceRequest.getDeviceType();
-            UserSession session;
-            try {
-                session = sessionService.getLocalUserSession(userId, deviceType);
-            } catch (Exception e) {
-                return Mono.error(ResponseException.get(ResponseStatusCode.INVALID_REQUEST, e.getMessage()));
-            }
-            if (session == null) {
-                return ResponseExceptionPublisherPool.sendRequestFromNonExistingSession();
-            }
             // Update request timestamp
             session.setLastRequestTimestampMillis(System.currentTimeMillis());
             // Forward request

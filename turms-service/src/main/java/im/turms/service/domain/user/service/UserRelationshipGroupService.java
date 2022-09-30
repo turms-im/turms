@@ -330,7 +330,7 @@ public class UserRelationshipGroupService {
                         newMembers.add(groupMember);
                     }
                     return userRelationshipGroupMemberRepository.insertAllOfSameType(newMembers)
-                            .onErrorResume(DuplicateKeyException.class, e -> Mono.empty());
+                            .onErrorComplete(DuplicateKeyException.class);
                 })
                 .then(userRelationshipGroupRepository.deleteById(new UserRelationshipGroup.Key(ownerId, deleteGroupIndex)))
                 .then(userVersionService.updateRelationshipGroupsVersion(ownerId)
@@ -463,7 +463,7 @@ public class UserRelationshipGroupService {
                 .Key(ownerId, targetGroupIndex, relatedUserId);
         Mono<Void> insert = userRelationshipGroupMemberRepository.insert(new UserRelationshipGroupMember(newKey, new Date()), session);
         if (suppressIfAlreadyExistsInTargetGroup) {
-            insert = insert.onErrorResume(DuplicateKeyException.class, t -> Mono.empty());
+            insert = insert.onErrorComplete(DuplicateKeyException.class);
         }
         return insert
                 .then(userRelationshipGroupMemberRepository.deleteById(key, session))

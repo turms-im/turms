@@ -107,6 +107,7 @@ public final class UserSessionsManager {
         }
     }
 
+    @Nullable
     public UserSession getSession(@NotNull DeviceType deviceType) {
         return deviceTypeToSession.get(deviceType);
     }

@@ -34,7 +34,7 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 public class FakeProperties {
 
-    @Description("Whether to fake data. Note that faking only works in non-production environments")
+    @Description("Whether to fake clients. Note that faking only works in non-production environments")
     private boolean enabled;
 
     @Min(0)

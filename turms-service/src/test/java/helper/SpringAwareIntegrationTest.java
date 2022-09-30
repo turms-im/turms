@@ -18,6 +18,7 @@
 package helper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.infra.cluster.node.Node;
@@ -50,8 +51,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public abstract class SpringAwareIntegrationTest extends BaseIntegrationTest {
 
     private static final String BASIC_AUTH = "Basic " + Base64Utils.encodeToString("turms:turms".getBytes());
-    private static final ObjectMapper MAPPER = new ObjectMapper()
-            .registerModule(new ParameterNamesModule());
+    private static final ObjectMapper MAPPER = JsonMapper.builder()
+            .addModule(new ParameterNamesModule())
+            .build();
 
     @Autowired
     @Getter
