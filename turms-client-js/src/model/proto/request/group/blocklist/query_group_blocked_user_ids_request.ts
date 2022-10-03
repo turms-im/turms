@@ -14,10 +14,7 @@ function createBaseQueryGroupBlockedUserIdsRequest(): QueryGroupBlockedUserIdsRe
 }
 
 export const QueryGroupBlockedUserIdsRequest = {
-  encode(
-    message: QueryGroupBlockedUserIdsRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: QueryGroupBlockedUserIdsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.groupId !== "0") {
       writer.uint32(8).int64(message.groupId);
     }
@@ -27,10 +24,7 @@ export const QueryGroupBlockedUserIdsRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryGroupBlockedUserIdsRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGroupBlockedUserIdsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseQueryGroupBlockedUserIdsRequest();

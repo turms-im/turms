@@ -34,6 +34,10 @@ public struct UserRelationshipGroup {
     public init() {}
 }
 
+#if swift(>=5.5) && canImport(_Concurrency)
+    extension UserRelationshipGroup: @unchecked Sendable {}
+#endif // swift(>=5.5) && canImport(_Concurrency)
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 private let _protobuf_package = "im.turms.proto"

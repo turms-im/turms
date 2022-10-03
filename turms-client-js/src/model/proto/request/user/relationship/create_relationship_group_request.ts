@@ -12,20 +12,14 @@ function createBaseCreateRelationshipGroupRequest(): CreateRelationshipGroupRequ
 }
 
 export const CreateRelationshipGroupRequest = {
-  encode(
-    message: CreateRelationshipGroupRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CreateRelationshipGroupRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): CreateRelationshipGroupRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateRelationshipGroupRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateRelationshipGroupRequest();

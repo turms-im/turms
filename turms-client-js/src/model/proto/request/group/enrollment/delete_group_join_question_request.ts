@@ -13,20 +13,14 @@ function createBaseDeleteGroupJoinQuestionRequest(): DeleteGroupJoinQuestionRequ
 }
 
 export const DeleteGroupJoinQuestionRequest = {
-  encode(
-    message: DeleteGroupJoinQuestionRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: DeleteGroupJoinQuestionRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.questionId !== "0") {
       writer.uint32(8).int64(message.questionId);
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): DeleteGroupJoinQuestionRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteGroupJoinQuestionRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteGroupJoinQuestionRequest();

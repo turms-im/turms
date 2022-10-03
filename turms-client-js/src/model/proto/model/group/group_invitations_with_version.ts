@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import { GroupInvitation } from "./group_invitation";
 import _m0 from "protobufjs/minimal";
+import { GroupInvitation } from "./group_invitation";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -15,10 +15,7 @@ function createBaseGroupInvitationsWithVersion(): GroupInvitationsWithVersion {
 }
 
 export const GroupInvitationsWithVersion = {
-  encode(
-    message: GroupInvitationsWithVersion,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: GroupInvitationsWithVersion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.groupInvitations) {
       GroupInvitation.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -28,10 +25,7 @@ export const GroupInvitationsWithVersion = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): GroupInvitationsWithVersion {
+  decode(input: _m0.Reader | Uint8Array, length?: number): GroupInvitationsWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupInvitationsWithVersion();
@@ -39,9 +33,7 @@ export const GroupInvitationsWithVersion = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.groupInvitations.push(
-            GroupInvitation.decode(reader, reader.uint32())
-          );
+          message.groupInvitations.push(GroupInvitation.decode(reader, reader.uint32()));
           break;
         case 2:
           message.lastUpdatedDate = longToString(reader.int64() as Long);

@@ -71,11 +71,15 @@ public struct GroupJoinQuestion {
 
     public init() {}
 
-    fileprivate var _id: Int64?
-    fileprivate var _groupID: Int64?
-    fileprivate var _question: String?
-    fileprivate var _score: Int32?
+    private var _id: Int64?
+    private var _groupID: Int64?
+    private var _question: String?
+    private var _score: Int32?
 }
+
+#if swift(>=5.5) && canImport(_Concurrency)
+    extension GroupJoinQuestion: @unchecked Sendable {}
+#endif // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
@@ -108,6 +112,10 @@ extension GroupJoinQuestion: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     }
 
     public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
         try { if let v = self._id {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
         } }()

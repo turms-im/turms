@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { ProfileAccessStrategy } from "../../constant/profile_access_strategy";
 import _m0 from "protobufjs/minimal";
+import { ProfileAccessStrategy } from "../../constant/profile_access_strategy";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -12,19 +12,11 @@ export interface UpdateUserRequest {
 }
 
 function createBaseUpdateUserRequest(): UpdateUserRequest {
-  return {
-    password: undefined,
-    name: undefined,
-    intro: undefined,
-    profileAccessStrategy: undefined,
-  };
+  return { password: undefined, name: undefined, intro: undefined, profileAccessStrategy: undefined };
 }
 
 export const UpdateUserRequest = {
-  encode(
-    message: UpdateUserRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdateUserRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.password !== undefined) {
       writer.uint32(10).string(message.password);
     }

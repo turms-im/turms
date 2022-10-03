@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { GroupMemberRole } from "../../../constant/group_member_role";
 import Long from "long";
 import _m0 from "protobufjs/minimal";
+import { GroupMemberRole } from "../../../constant/group_member_role";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -14,20 +14,11 @@ export interface CreateGroupMemberRequest {
 }
 
 function createBaseCreateGroupMemberRequest(): CreateGroupMemberRequest {
-  return {
-    groupId: "0",
-    userId: "0",
-    name: undefined,
-    role: 0,
-    muteEndDate: undefined,
-  };
+  return { groupId: "0", userId: "0", name: undefined, role: 0, muteEndDate: undefined };
 }
 
 export const CreateGroupMemberRequest = {
-  encode(
-    message: CreateGroupMemberRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CreateGroupMemberRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.groupId !== "0") {
       writer.uint32(8).int64(message.groupId);
     }
@@ -46,10 +37,7 @@ export const CreateGroupMemberRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): CreateGroupMemberRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateGroupMemberRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateGroupMemberRequest();

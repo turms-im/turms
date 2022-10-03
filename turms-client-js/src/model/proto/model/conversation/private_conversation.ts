@@ -15,10 +15,7 @@ function createBasePrivateConversation(): PrivateConversation {
 }
 
 export const PrivateConversation = {
-  encode(
-    message: PrivateConversation,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: PrivateConversation, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.ownerId !== "0") {
       writer.uint32(8).int64(message.ownerId);
     }

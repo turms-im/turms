@@ -18,23 +18,17 @@ function createBaseCheckGroupJoinQuestionsAnswersRequest(): CheckGroupJoinQuesti
 }
 
 export const CheckGroupJoinQuestionsAnswersRequest = {
-  encode(
-    message: CheckGroupJoinQuestionsAnswersRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CheckGroupJoinQuestionsAnswersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     Object.entries(message.questionIdToAnswer).forEach(([key, value]) => {
       CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry.encode(
         { key: key as any, value },
-        writer.uint32(10).fork()
+        writer.uint32(10).fork(),
       ).ldelim();
     });
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): CheckGroupJoinQuestionsAnswersRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CheckGroupJoinQuestionsAnswersRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCheckGroupJoinQuestionsAnswersRequest();
@@ -42,11 +36,7 @@ export const CheckGroupJoinQuestionsAnswersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          const entry1 =
-            CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry.decode(
-              reader,
-              reader.uint32()
-            );
+          const entry1 = CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.questionIdToAnswer[entry1.key] = entry1.value;
           }
@@ -67,7 +57,7 @@ function createBaseCheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry
 export const CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry = {
   encode(
     message: CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry,
-    writer: _m0.Writer = _m0.Writer.create()
+    writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
     if (message.key !== "0") {
       writer.uint32(8).int64(message.key);
@@ -80,12 +70,11 @@ export const CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry = {
 
   decode(
     input: _m0.Reader | Uint8Array,
-    length?: number
+    length?: number,
   ): CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message =
-      createBaseCheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry();
+    const message = createBaseCheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

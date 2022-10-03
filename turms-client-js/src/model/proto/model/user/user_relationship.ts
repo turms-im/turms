@@ -23,10 +23,7 @@ function createBaseUserRelationship(): UserRelationship {
 }
 
 export const UserRelationship = {
-  encode(
-    message: UserRelationship,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UserRelationship, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.ownerId !== undefined) {
       writer.uint32(8).int64(message.ownerId);
     }

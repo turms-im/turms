@@ -15,10 +15,7 @@ function createBaseGroupJoinQuestionsAnswerResult(): GroupJoinQuestionsAnswerRes
 }
 
 export const GroupJoinQuestionsAnswerResult = {
-  encode(
-    message: GroupJoinQuestionsAnswerResult,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: GroupJoinQuestionsAnswerResult, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.score !== 0) {
       writer.uint32(8).int32(message.score);
     }
@@ -33,10 +30,7 @@ export const GroupJoinQuestionsAnswerResult = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): GroupJoinQuestionsAnswerResult {
+  decode(input: _m0.Reader | Uint8Array, length?: number): GroupJoinQuestionsAnswerResult {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupJoinQuestionsAnswerResult();

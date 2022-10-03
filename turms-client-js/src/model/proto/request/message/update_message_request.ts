@@ -12,19 +12,11 @@ export interface UpdateMessageRequest {
 }
 
 function createBaseUpdateMessageRequest(): UpdateMessageRequest {
-  return {
-    messageId: "0",
-    text: undefined,
-    records: [],
-    recallDate: undefined,
-  };
+  return { messageId: "0", text: undefined, records: [], recallDate: undefined };
 }
 
 export const UpdateMessageRequest = {
-  encode(
-    message: UpdateMessageRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdateMessageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.messageId !== "0") {
       writer.uint32(8).int64(message.messageId);
     }
@@ -40,10 +32,7 @@ export const UpdateMessageRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UpdateMessageRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateMessageRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateMessageRequest();

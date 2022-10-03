@@ -14,10 +14,7 @@ function createBaseInt64ValuesWithVersion(): Int64ValuesWithVersion {
 }
 
 export const Int64ValuesWithVersion = {
-  encode(
-    message: Int64ValuesWithVersion,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: Int64ValuesWithVersion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.values) {
       writer.int64(v);
@@ -29,10 +26,7 @@ export const Int64ValuesWithVersion = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): Int64ValuesWithVersion {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Int64ValuesWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInt64ValuesWithVersion();

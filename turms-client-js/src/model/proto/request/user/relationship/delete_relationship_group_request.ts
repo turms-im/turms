@@ -13,10 +13,7 @@ function createBaseDeleteRelationshipGroupRequest(): DeleteRelationshipGroupRequ
 }
 
 export const DeleteRelationshipGroupRequest = {
-  encode(
-    message: DeleteRelationshipGroupRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: DeleteRelationshipGroupRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.groupIndex !== 0) {
       writer.uint32(8).int32(message.groupIndex);
     }
@@ -26,10 +23,7 @@ export const DeleteRelationshipGroupRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): DeleteRelationshipGroupRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteRelationshipGroupRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteRelationshipGroupRequest();

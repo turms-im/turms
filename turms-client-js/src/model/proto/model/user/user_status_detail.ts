@@ -1,8 +1,8 @@
 /* eslint-disable */
-import { UserStatus } from "../../constant/user_status";
 import Long from "long";
-import { DeviceType } from "../../constant/device_type";
 import _m0 from "protobufjs/minimal";
+import { DeviceType } from "../../constant/device_type";
+import { UserStatus } from "../../constant/user_status";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -17,10 +17,7 @@ function createBaseUserStatusDetail(): UserStatusDetail {
 }
 
 export const UserStatusDetail = {
-  encode(
-    message: UserStatusDetail,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UserStatusDetail, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.userId !== "0") {
       writer.uint32(8).int64(message.userId);
     }

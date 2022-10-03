@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { ContentType } from "../../constant/content_type";
 import Long from "long";
 import _m0 from "protobufjs/minimal";
+import { ContentType } from "../../constant/content_type";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -13,19 +13,11 @@ export interface QuerySignedPutUrlRequest {
 }
 
 function createBaseQuerySignedPutUrlRequest(): QuerySignedPutUrlRequest {
-  return {
-    contentType: 0,
-    keyStr: undefined,
-    keyNum: undefined,
-    contentLength: "0",
-  };
+  return { contentType: 0, keyStr: undefined, keyNum: undefined, contentLength: "0" };
 }
 
 export const QuerySignedPutUrlRequest = {
-  encode(
-    message: QuerySignedPutUrlRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: QuerySignedPutUrlRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.contentType !== 0) {
       writer.uint32(8).int32(message.contentType);
     }
@@ -41,10 +33,7 @@ export const QuerySignedPutUrlRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QuerySignedPutUrlRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QuerySignedPutUrlRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseQuerySignedPutUrlRequest();

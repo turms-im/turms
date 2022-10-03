@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import { ProfileAccessStrategy } from "../../constant/profile_access_strategy";
 import _m0 from "protobufjs/minimal";
+import { ProfileAccessStrategy } from "../../constant/profile_access_strategy";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -26,10 +26,7 @@ function createBaseUserInfo(): UserInfo {
 }
 
 export const UserInfo = {
-  encode(
-    message: UserInfo,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UserInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== undefined) {
       writer.uint32(8).int64(message.id);
     }

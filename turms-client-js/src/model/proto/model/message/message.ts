@@ -35,10 +35,7 @@ function createBaseMessage(): Message {
 }
 
 export const Message = {
-  encode(
-    message: Message,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: Message, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== undefined) {
       writer.uint32(8).int64(message.id);
     }

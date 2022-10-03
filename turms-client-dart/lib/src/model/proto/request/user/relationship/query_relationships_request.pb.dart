@@ -14,7 +14,7 @@ class QueryRelationshipsRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'QueryRelationshipsRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
     ..p<$fixnum.Int64>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userIds', $pb.PbFieldType.P6)
     ..aOB(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'blocked')
-    ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'groupIndex', $pb.PbFieldType.O3)
+    ..p<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'groupIndexes', $pb.PbFieldType.P3)
     ..aInt64(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdatedDate')
     ..hasRequiredFields = false
   ;
@@ -23,7 +23,7 @@ class QueryRelationshipsRequest extends $pb.GeneratedMessage {
   factory QueryRelationshipsRequest({
     $core.Iterable<$fixnum.Int64>? userIds,
     $core.bool? blocked,
-    $core.int? groupIndex,
+    $core.Iterable<$core.int>? groupIndexes,
     $fixnum.Int64? lastUpdatedDate,
   }) {
     final _result = create();
@@ -33,8 +33,8 @@ class QueryRelationshipsRequest extends $pb.GeneratedMessage {
     if (blocked != null) {
       _result.blocked = blocked;
     }
-    if (groupIndex != null) {
-      _result.groupIndex = groupIndex;
+    if (groupIndexes != null) {
+      _result.groupIndexes.addAll(groupIndexes);
     }
     if (lastUpdatedDate != null) {
       _result.lastUpdatedDate = lastUpdatedDate;
@@ -75,13 +75,7 @@ class QueryRelationshipsRequest extends $pb.GeneratedMessage {
   void clearBlocked() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.int get groupIndex => $_getIZ(2);
-  @$pb.TagNumber(3)
-  set groupIndex($core.int v) { $_setSignedInt32(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasGroupIndex() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearGroupIndex() => clearField(3);
+  $core.List<$core.int> get groupIndexes => $_getList(2);
 
   @$pb.TagNumber(4)
   $fixnum.Int64 get lastUpdatedDate => $_getI64(3);

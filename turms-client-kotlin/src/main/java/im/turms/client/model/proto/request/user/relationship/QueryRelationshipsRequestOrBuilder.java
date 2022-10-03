@@ -53,15 +53,21 @@ public interface QueryRelationshipsRequestOrBuilder extends
   boolean getBlocked();
 
   /**
-   * <code>optional int32 group_index = 3;</code>
-   * @return Whether the groupIndex field is set.
+   * <code>repeated int32 group_indexes = 3;</code>
+   * @return A list containing the groupIndexes.
    */
-  boolean hasGroupIndex();
+  java.util.List<java.lang.Integer> getGroupIndexesList();
   /**
-   * <code>optional int32 group_index = 3;</code>
-   * @return The groupIndex.
+   * <code>repeated int32 group_indexes = 3;</code>
+   * @return The count of groupIndexes.
    */
-  int getGroupIndex();
+  int getGroupIndexesCount();
+  /**
+   * <code>repeated int32 group_indexes = 3;</code>
+   * @param index The index of the element to return.
+   * @return The groupIndexes at the given index.
+   */
+  int getGroupIndexes(int index);
 
   /**
    * <code>optional int64 last_updated_date = 4;</code>

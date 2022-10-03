@@ -14,10 +14,7 @@ function createBaseQueryUserProfileRequest(): QueryUserProfileRequest {
 }
 
 export const QueryUserProfileRequest = {
-  encode(
-    message: QueryUserProfileRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: QueryUserProfileRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.userId !== "0") {
       writer.uint32(8).int64(message.userId);
     }
@@ -27,10 +24,7 @@ export const QueryUserProfileRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryUserProfileRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryUserProfileRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseQueryUserProfileRequest();

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import { UserRelationship } from "./user_relationship";
 import _m0 from "protobufjs/minimal";
+import { UserRelationship } from "./user_relationship";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -15,10 +15,7 @@ function createBaseUserRelationshipsWithVersion(): UserRelationshipsWithVersion 
 }
 
 export const UserRelationshipsWithVersion = {
-  encode(
-    message: UserRelationshipsWithVersion,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UserRelationshipsWithVersion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.userRelationships) {
       UserRelationship.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -28,10 +25,7 @@ export const UserRelationshipsWithVersion = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UserRelationshipsWithVersion {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserRelationshipsWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserRelationshipsWithVersion();
@@ -39,9 +33,7 @@ export const UserRelationshipsWithVersion = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.userRelationships.push(
-            UserRelationship.decode(reader, reader.uint32())
-          );
+          message.userRelationships.push(UserRelationship.decode(reader, reader.uint32()));
           break;
         case 2:
           message.lastUpdatedDate = longToString(reader.int64() as Long);

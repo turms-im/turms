@@ -12,19 +12,11 @@ export interface QueryGroupMembersRequest {
 }
 
 function createBaseQueryGroupMembersRequest(): QueryGroupMembersRequest {
-  return {
-    groupId: "0",
-    lastUpdatedDate: undefined,
-    memberIds: [],
-    withStatus: undefined,
-  };
+  return { groupId: "0", lastUpdatedDate: undefined, memberIds: [], withStatus: undefined };
 }
 
 export const QueryGroupMembersRequest = {
-  encode(
-    message: QueryGroupMembersRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: QueryGroupMembersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.groupId !== "0") {
       writer.uint32(8).int64(message.groupId);
     }
@@ -42,10 +34,7 @@ export const QueryGroupMembersRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryGroupMembersRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGroupMembersRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseQueryGroupMembersRequest();

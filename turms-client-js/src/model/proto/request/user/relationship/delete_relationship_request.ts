@@ -15,10 +15,7 @@ function createBaseDeleteRelationshipRequest(): DeleteRelationshipRequest {
 }
 
 export const DeleteRelationshipRequest = {
-  encode(
-    message: DeleteRelationshipRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: DeleteRelationshipRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.userId !== "0") {
       writer.uint32(8).int64(message.userId);
     }
@@ -31,10 +28,7 @@ export const DeleteRelationshipRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): DeleteRelationshipRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteRelationshipRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteRelationshipRequest();

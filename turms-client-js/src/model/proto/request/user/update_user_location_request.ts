@@ -19,10 +19,7 @@ function createBaseUpdateUserLocationRequest(): UpdateUserLocationRequest {
 }
 
 export const UpdateUserLocationRequest = {
-  encode(
-    message: UpdateUserLocationRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdateUserLocationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.latitude !== 0) {
       writer.uint32(13).float(message.latitude);
     }
@@ -30,18 +27,12 @@ export const UpdateUserLocationRequest = {
       writer.uint32(21).float(message.longitude);
     }
     Object.entries(message.details).forEach(([key, value]) => {
-      UpdateUserLocationRequest_DetailsEntry.encode(
-        { key: key as any, value },
-        writer.uint32(26).fork()
-      ).ldelim();
+      UpdateUserLocationRequest_DetailsEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
     });
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UpdateUserLocationRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateUserLocationRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateUserLocationRequest();
@@ -55,10 +46,7 @@ export const UpdateUserLocationRequest = {
           message.longitude = reader.float();
           break;
         case 3:
-          const entry3 = UpdateUserLocationRequest_DetailsEntry.decode(
-            reader,
-            reader.uint32()
-          );
+          const entry3 = UpdateUserLocationRequest_DetailsEntry.decode(reader, reader.uint32());
           if (entry3.value !== undefined) {
             message.details[entry3.key] = entry3.value;
           }
@@ -77,10 +65,7 @@ function createBaseUpdateUserLocationRequest_DetailsEntry(): UpdateUserLocationR
 }
 
 export const UpdateUserLocationRequest_DetailsEntry = {
-  encode(
-    message: UpdateUserLocationRequest_DetailsEntry,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdateUserLocationRequest_DetailsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -90,10 +75,7 @@ export const UpdateUserLocationRequest_DetailsEntry = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UpdateUserLocationRequest_DetailsEntry {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateUserLocationRequest_DetailsEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateUserLocationRequest_DetailsEntry();

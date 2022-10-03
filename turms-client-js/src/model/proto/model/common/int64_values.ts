@@ -13,10 +13,7 @@ function createBaseInt64Values(): Int64Values {
 }
 
 export const Int64Values = {
-  encode(
-    message: Int64Values,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: Int64Values, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.values) {
       writer.int64(v);

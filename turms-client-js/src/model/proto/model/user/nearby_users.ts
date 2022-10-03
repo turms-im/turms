@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { NearbyUser } from "./nearby_user";
 import _m0 from "protobufjs/minimal";
+import { NearbyUser } from "./nearby_user";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -13,10 +13,7 @@ function createBaseNearbyUsers(): NearbyUsers {
 }
 
 export const NearbyUsers = {
-  encode(
-    message: NearbyUsers,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: NearbyUsers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.nearbyUsers) {
       NearbyUser.encode(v!, writer.uint32(10).fork()).ldelim();
     }

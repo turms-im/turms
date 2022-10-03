@@ -12,19 +12,11 @@ export interface UpdateRelationshipRequest {
 }
 
 function createBaseUpdateRelationshipRequest(): UpdateRelationshipRequest {
-  return {
-    userId: "0",
-    blocked: undefined,
-    newGroupIndex: undefined,
-    deleteGroupIndex: undefined,
-  };
+  return { userId: "0", blocked: undefined, newGroupIndex: undefined, deleteGroupIndex: undefined };
 }
 
 export const UpdateRelationshipRequest = {
-  encode(
-    message: UpdateRelationshipRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdateRelationshipRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.userId !== "0") {
       writer.uint32(8).int64(message.userId);
     }
@@ -40,10 +32,7 @@ export const UpdateRelationshipRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UpdateRelationshipRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateRelationshipRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateRelationshipRequest();

@@ -29,10 +29,7 @@ function createBaseQueryMessagesRequest(): QueryMessagesRequest {
 }
 
 export const QueryMessagesRequest = {
-  encode(
-    message: QueryMessagesRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: QueryMessagesRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.ids) {
       writer.int64(v);
@@ -64,10 +61,7 @@ export const QueryMessagesRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryMessagesRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryMessagesRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseQueryMessagesRequest();

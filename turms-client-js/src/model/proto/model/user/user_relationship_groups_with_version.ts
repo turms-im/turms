@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import { UserRelationshipGroup } from "./user_relationship_group";
 import _m0 from "protobufjs/minimal";
+import { UserRelationshipGroup } from "./user_relationship_group";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -15,10 +15,7 @@ function createBaseUserRelationshipGroupsWithVersion(): UserRelationshipGroupsWi
 }
 
 export const UserRelationshipGroupsWithVersion = {
-  encode(
-    message: UserRelationshipGroupsWithVersion,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UserRelationshipGroupsWithVersion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.userRelationshipGroups) {
       UserRelationshipGroup.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -28,10 +25,7 @@ export const UserRelationshipGroupsWithVersion = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UserRelationshipGroupsWithVersion {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserRelationshipGroupsWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserRelationshipGroupsWithVersion();
@@ -39,9 +33,7 @@ export const UserRelationshipGroupsWithVersion = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.userRelationshipGroups.push(
-            UserRelationshipGroup.decode(reader, reader.uint32())
-          );
+          message.userRelationshipGroups.push(UserRelationshipGroup.decode(reader, reader.uint32()));
           break;
         case 2:
           message.lastUpdatedDate = longToString(reader.int64() as Long);

@@ -13,10 +13,7 @@ function createBaseUserRelationshipGroup(): UserRelationshipGroup {
 }
 
 export const UserRelationshipGroup = {
-  encode(
-    message: UserRelationshipGroup,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UserRelationshipGroup, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.index !== 0) {
       writer.uint32(8).int32(message.index);
     }
@@ -26,10 +23,7 @@ export const UserRelationshipGroup = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UserRelationshipGroup {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserRelationshipGroup {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserRelationshipGroup();

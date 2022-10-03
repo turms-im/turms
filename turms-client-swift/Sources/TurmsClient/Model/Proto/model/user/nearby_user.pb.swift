@@ -74,11 +74,15 @@ public struct NearbyUser {
 
     public init() {}
 
-    fileprivate var _deviceType: DeviceType?
-    fileprivate var _info: UserInfo?
-    fileprivate var _distance: Int32?
-    fileprivate var _location: UserLocation?
+    private var _deviceType: DeviceType?
+    private var _info: UserInfo?
+    private var _distance: Int32?
+    private var _location: UserLocation?
 }
+
+#if swift(>=5.5) && canImport(_Concurrency)
+    extension NearbyUser: @unchecked Sendable {}
+#endif // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
@@ -111,6 +115,10 @@ extension NearbyUser: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
     }
 
     public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
         if userID != 0 {
             try visitor.visitSingularInt64Field(value: userID, fieldNumber: 1)
         }

@@ -367,15 +367,15 @@ export default class UserService {
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => Response.fromNotification(n, data => {
-                const usersInfosWithVersion = data.usersInfosWithVersion;
-                const userInfo = NotificationUtil.transform(usersInfosWithVersion?.userInfos?.[0]);
-                if (userInfo) {
-                    return {
-                        userInfo,
-                        lastUpdatedDate: NotificationUtil.transformDate(usersInfosWithVersion.lastUpdatedDate)
-                    };
-                }
-            }));
+            const usersInfosWithVersion = data.usersInfosWithVersion;
+            const userInfo = NotificationUtil.transform(usersInfosWithVersion?.userInfos?.[0]);
+            if (userInfo) {
+                return {
+                    userInfo,
+                    lastUpdatedDate: NotificationUtil.transformDate(usersInfosWithVersion.lastUpdatedDate)
+                };
+            }
+        }));
     }
 
     queryNearbyUsers({
@@ -434,19 +434,19 @@ export default class UserService {
     queryRelationships({
         relatedUserIds,
         isBlocked,
-        groupIndex,
+        groupIndexes,
         lastUpdatedDate
     }: {
         relatedUserIds?: string[],
         isBlocked?: boolean,
-        groupIndex?: number,
+        groupIndexes?: number[],
         lastUpdatedDate?: Date
     }): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryRelationshipsRequest: {
                 userIds: relatedUserIds || [],
                 blocked: isBlocked,
-                groupIndex,
+                groupIndexes: groupIndexes || [],
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userRelationshipsWithVersion)));
@@ -454,46 +454,46 @@ export default class UserService {
 
     queryRelatedUserIds({
         isBlocked,
-        groupIndex,
+        groupIndexes,
         lastUpdatedDate
     }: {
         isBlocked?: boolean,
-        groupIndex?: number,
+        groupIndexes?: number[],
         lastUpdatedDate?: Date
     } = {}): Promise<Response<ParsedModel.IdsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryRelatedUserIdsRequest: {
                 blocked: isBlocked,
-                groupIndex,
+                groupIndexes: groupIndexes || [],
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getIdsWithVer(data)));
     }
 
     queryFriends({
-        groupIndex,
+        groupIndexes,
         lastUpdatedDate
     }: {
-        groupIndex?: number,
+        groupIndexes?: number[],
         lastUpdatedDate?: Date
     } = {}): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
         return this.queryRelationships({
             isBlocked: false,
-            groupIndex,
+            groupIndexes,
             lastUpdatedDate
         });
     }
 
     queryBlockedUsers({
-        groupIndex,
+        groupIndexes,
         lastUpdatedDate
     }: {
-        groupIndex?: number,
+        groupIndexes?: number[],
         lastUpdatedDate?: Date
     } = {}): Promise<Response<ParsedModel.UserRelationshipsWithVersion | undefined>> {
         return this.queryRelationships({
             isBlocked: true,
-            groupIndex,
+            groupIndexes,
             lastUpdatedDate
         });
     }

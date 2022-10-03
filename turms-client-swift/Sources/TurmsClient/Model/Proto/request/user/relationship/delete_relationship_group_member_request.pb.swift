@@ -43,8 +43,12 @@ public struct DeleteRelationshipGroupMemberRequest {
 
     public init() {}
 
-    fileprivate var _targetGroupIndex: Int32?
+    private var _targetGroupIndex: Int32?
 }
+
+#if swift(>=5.5) && canImport(_Concurrency)
+    extension DeleteRelationshipGroupMemberRequest: @unchecked Sendable {}
+#endif // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
@@ -73,6 +77,10 @@ extension DeleteRelationshipGroupMemberRequest: SwiftProtobuf.Message, SwiftProt
     }
 
     public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
         if userID != 0 {
             try visitor.visitSingularInt64Field(value: userID, fieldNumber: 1)
         }

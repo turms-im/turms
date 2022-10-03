@@ -1,9 +1,9 @@
 /* eslint-disable */
-import { DeviceType } from "../../constant/device_type";
 import Long from "long";
+import _m0 from "protobufjs/minimal";
+import { DeviceType } from "../../constant/device_type";
 import { UserStatus } from "../../constant/user_status";
 import { UserLocation } from "../../model/user/user_location";
-import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -35,10 +35,7 @@ function createBaseCreateSessionRequest(): CreateSessionRequest {
 }
 
 export const CreateSessionRequest = {
-  encode(
-    message: CreateSessionRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CreateSessionRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.version !== 0) {
       writer.uint32(8).int32(message.version);
     }
@@ -55,10 +52,7 @@ export const CreateSessionRequest = {
       writer.uint32(40).int32(message.deviceType);
     }
     Object.entries(message.deviceDetails).forEach(([key, value]) => {
-      CreateSessionRequest_DeviceDetailsEntry.encode(
-        { key: key as any, value },
-        writer.uint32(50).fork()
-      ).ldelim();
+      CreateSessionRequest_DeviceDetailsEntry.encode({ key: key as any, value }, writer.uint32(50).fork()).ldelim();
     });
     if (message.location !== undefined) {
       UserLocation.encode(message.location, writer.uint32(58).fork()).ldelim();
@@ -66,10 +60,7 @@ export const CreateSessionRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): CreateSessionRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateSessionRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateSessionRequest();
@@ -92,10 +83,7 @@ export const CreateSessionRequest = {
           message.deviceType = reader.int32() as any;
           break;
         case 6:
-          const entry6 = CreateSessionRequest_DeviceDetailsEntry.decode(
-            reader,
-            reader.uint32()
-          );
+          const entry6 = CreateSessionRequest_DeviceDetailsEntry.decode(reader, reader.uint32());
           if (entry6.value !== undefined) {
             message.deviceDetails[entry6.key] = entry6.value;
           }
@@ -117,10 +105,7 @@ function createBaseCreateSessionRequest_DeviceDetailsEntry(): CreateSessionReque
 }
 
 export const CreateSessionRequest_DeviceDetailsEntry = {
-  encode(
-    message: CreateSessionRequest_DeviceDetailsEntry,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CreateSessionRequest_DeviceDetailsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -130,10 +115,7 @@ export const CreateSessionRequest_DeviceDetailsEntry = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): CreateSessionRequest_DeviceDetailsEntry {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateSessionRequest_DeviceDetailsEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateSessionRequest_DeviceDetailsEntry();

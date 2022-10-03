@@ -7,24 +7,16 @@ export const protobufPackage = "im.turms.proto";
 export interface QueryRelationshipsRequest {
   userIds: string[];
   blocked?: boolean | undefined;
-  groupIndex?: number | undefined;
+  groupIndexes: number[];
   lastUpdatedDate?: string | undefined;
 }
 
 function createBaseQueryRelationshipsRequest(): QueryRelationshipsRequest {
-  return {
-    userIds: [],
-    blocked: undefined,
-    groupIndex: undefined,
-    lastUpdatedDate: undefined,
-  };
+  return { userIds: [], blocked: undefined, groupIndexes: [], lastUpdatedDate: undefined };
 }
 
 export const QueryRelationshipsRequest = {
-  encode(
-    message: QueryRelationshipsRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: QueryRelationshipsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.userIds) {
       writer.int64(v);
@@ -33,19 +25,18 @@ export const QueryRelationshipsRequest = {
     if (message.blocked !== undefined) {
       writer.uint32(16).bool(message.blocked);
     }
-    if (message.groupIndex !== undefined) {
-      writer.uint32(24).int32(message.groupIndex);
+    writer.uint32(26).fork();
+    for (const v of message.groupIndexes) {
+      writer.int32(v);
     }
+    writer.ldelim();
     if (message.lastUpdatedDate !== undefined) {
       writer.uint32(32).int64(message.lastUpdatedDate);
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryRelationshipsRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryRelationshipsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseQueryRelationshipsRequest();
@@ -66,7 +57,14 @@ export const QueryRelationshipsRequest = {
           message.blocked = reader.bool();
           break;
         case 3:
-          message.groupIndex = reader.int32();
+          if ((tag & 7) === 2) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.groupIndexes.push(reader.int32());
+            }
+          } else {
+            message.groupIndexes.push(reader.int32());
+          }
           break;
         case 4:
           message.lastUpdatedDate = longToString(reader.int64() as Long);

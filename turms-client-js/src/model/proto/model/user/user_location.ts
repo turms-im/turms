@@ -7,7 +7,9 @@ export const protobufPackage = "im.turms.proto";
 export interface UserLocation {
   latitude: number;
   longitude: number;
-  timestamp?: string | undefined;
+  timestamp?:
+    | string
+    | undefined;
   /** e.g. street address, city, state, country, etc. */
   details: { [key: string]: string };
 }
@@ -22,10 +24,7 @@ function createBaseUserLocation(): UserLocation {
 }
 
 export const UserLocation = {
-  encode(
-    message: UserLocation,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UserLocation, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.latitude !== 0) {
       writer.uint32(13).float(message.latitude);
     }
@@ -36,10 +35,7 @@ export const UserLocation = {
       writer.uint32(24).int64(message.timestamp);
     }
     Object.entries(message.details).forEach(([key, value]) => {
-      UserLocation_DetailsEntry.encode(
-        { key: key as any, value },
-        writer.uint32(34).fork()
-      ).ldelim();
+      UserLocation_DetailsEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).ldelim();
     });
     return writer;
   },
@@ -61,10 +57,7 @@ export const UserLocation = {
           message.timestamp = longToString(reader.int64() as Long);
           break;
         case 4:
-          const entry4 = UserLocation_DetailsEntry.decode(
-            reader,
-            reader.uint32()
-          );
+          const entry4 = UserLocation_DetailsEntry.decode(reader, reader.uint32());
           if (entry4.value !== undefined) {
             message.details[entry4.key] = entry4.value;
           }
@@ -83,10 +76,7 @@ function createBaseUserLocation_DetailsEntry(): UserLocation_DetailsEntry {
 }
 
 export const UserLocation_DetailsEntry = {
-  encode(
-    message: UserLocation_DetailsEntry,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UserLocation_DetailsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -96,10 +86,7 @@ export const UserLocation_DetailsEntry = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UserLocation_DetailsEntry {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserLocation_DetailsEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserLocation_DetailsEntry();

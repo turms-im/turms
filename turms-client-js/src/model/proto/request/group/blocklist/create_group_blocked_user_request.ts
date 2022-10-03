@@ -14,10 +14,7 @@ function createBaseCreateGroupBlockedUserRequest(): CreateGroupBlockedUserReques
 }
 
 export const CreateGroupBlockedUserRequest = {
-  encode(
-    message: CreateGroupBlockedUserRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CreateGroupBlockedUserRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.groupId !== "0") {
       writer.uint32(8).int64(message.groupId);
     }
@@ -27,10 +24,7 @@ export const CreateGroupBlockedUserRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): CreateGroupBlockedUserRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateGroupBlockedUserRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateGroupBlockedUserRequest();

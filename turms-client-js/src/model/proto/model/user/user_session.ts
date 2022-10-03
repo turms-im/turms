@@ -13,10 +13,7 @@ function createBaseUserSession(): UserSession {
 }
 
 export const UserSession = {
-  encode(
-    message: UserSession,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UserSession, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.sessionId !== "") {
       writer.uint32(10).string(message.sessionId);
     }

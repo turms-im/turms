@@ -20,15 +20,9 @@ function createBaseAudioFile(): AudioFile {
 }
 
 export const AudioFile = {
-  encode(
-    message: AudioFile,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: AudioFile, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.description !== undefined) {
-      AudioFile_Description.encode(
-        message.description,
-        writer.uint32(10).fork()
-      ).ldelim();
+      AudioFile_Description.encode(message.description, writer.uint32(10).fork()).ldelim();
     }
     if (message.data !== undefined) {
       writer.uint32(18).bytes(message.data);
@@ -44,10 +38,7 @@ export const AudioFile = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.description = AudioFile_Description.decode(
-            reader,
-            reader.uint32()
-          );
+          message.description = AudioFile_Description.decode(reader, reader.uint32());
           break;
         case 2:
           message.data = reader.bytes();
@@ -66,10 +57,7 @@ function createBaseAudioFile_Description(): AudioFile_Description {
 }
 
 export const AudioFile_Description = {
-  encode(
-    message: AudioFile_Description,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: AudioFile_Description, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.url !== "") {
       writer.uint32(10).string(message.url);
     }
@@ -85,10 +73,7 @@ export const AudioFile_Description = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): AudioFile_Description {
+  decode(input: _m0.Reader | Uint8Array, length?: number): AudioFile_Description {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAudioFile_Description();

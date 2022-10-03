@@ -69,11 +69,15 @@ public struct UpdateUserRequest {
 
     public init() {}
 
-    fileprivate var _password: String?
-    fileprivate var _name: String?
-    fileprivate var _intro: String?
-    fileprivate var _profileAccessStrategy: ProfileAccessStrategy?
+    private var _password: String?
+    private var _name: String?
+    private var _intro: String?
+    private var _profileAccessStrategy: ProfileAccessStrategy?
 }
+
+#if swift(>=5.5) && canImport(_Concurrency)
+    extension UpdateUserRequest: @unchecked Sendable {}
+#endif // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
@@ -104,6 +108,10 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     }
 
     public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
         try { if let v = self._password {
             try visitor.visitSingularStringField(value: v, fieldNumber: 1)
         } }()

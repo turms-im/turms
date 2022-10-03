@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import { Group } from "./group";
 import _m0 from "protobufjs/minimal";
+import { Group } from "./group";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -15,10 +15,7 @@ function createBaseGroupsWithVersion(): GroupsWithVersion {
 }
 
 export const GroupsWithVersion = {
-  encode(
-    message: GroupsWithVersion,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: GroupsWithVersion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.groups) {
       Group.encode(v!, writer.uint32(10).fork()).ldelim();
     }

@@ -15,10 +15,7 @@ function createBaseCreateGroupInvitationRequest(): CreateGroupInvitationRequest 
 }
 
 export const CreateGroupInvitationRequest = {
-  encode(
-    message: CreateGroupInvitationRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CreateGroupInvitationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.groupId !== "0") {
       writer.uint32(8).int64(message.groupId);
     }
@@ -31,10 +28,7 @@ export const CreateGroupInvitationRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): CreateGroupInvitationRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateGroupInvitationRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateGroupInvitationRequest();

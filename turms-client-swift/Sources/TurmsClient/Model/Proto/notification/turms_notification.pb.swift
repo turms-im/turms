@@ -385,8 +385,14 @@ public struct TurmsNotification {
 
     public init() {}
 
-    fileprivate var _storage = _StorageClass.defaultInstance
+    private var _storage = _StorageClass.defaultInstance
 }
+
+#if swift(>=5.5) && canImport(_Concurrency)
+    extension TurmsNotification: @unchecked Sendable {}
+    extension TurmsNotification.DataMessage: @unchecked Sendable {}
+    extension TurmsNotification.DataMessage.OneOf_Kind: @unchecked Sendable {}
+#endif // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
@@ -794,6 +800,10 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
     }
 
     public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
         switch kind {
         case .ids?: try {
                 guard case let .ids(v)? = self.kind else { preconditionFailure() }

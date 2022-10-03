@@ -1,38 +1,33 @@
 /* eslint-disable */
 import Long from "long";
+import _m0 from "protobufjs/minimal";
 import { DeviceType } from "../../constant/device_type";
 import { UserInfo } from "./user_info";
 import { UserLocation } from "./user_location";
-import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "im.turms.proto";
 
 export interface NearbyUser {
   /** session info */
   userId: string;
-  deviceType?: DeviceType | undefined;
+  deviceType?:
+    | DeviceType
+    | undefined;
   /** user info */
-  info?: UserInfo | undefined;
+  info?:
+    | UserInfo
+    | undefined;
   /** geo info */
   distance?: number | undefined;
   location?: UserLocation | undefined;
 }
 
 function createBaseNearbyUser(): NearbyUser {
-  return {
-    userId: "0",
-    deviceType: undefined,
-    info: undefined,
-    distance: undefined,
-    location: undefined,
-  };
+  return { userId: "0", deviceType: undefined, info: undefined, distance: undefined, location: undefined };
 }
 
 export const NearbyUser = {
-  encode(
-    message: NearbyUser,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: NearbyUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.userId !== "0") {
       writer.uint32(8).int64(message.userId);
     }

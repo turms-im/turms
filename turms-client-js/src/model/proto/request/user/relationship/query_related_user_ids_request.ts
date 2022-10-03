@@ -6,39 +6,31 @@ export const protobufPackage = "im.turms.proto";
 
 export interface QueryRelatedUserIdsRequest {
   blocked?: boolean | undefined;
-  groupIndex?: number | undefined;
+  groupIndexes: number[];
   lastUpdatedDate?: string | undefined;
 }
 
 function createBaseQueryRelatedUserIdsRequest(): QueryRelatedUserIdsRequest {
-  return {
-    blocked: undefined,
-    groupIndex: undefined,
-    lastUpdatedDate: undefined,
-  };
+  return { blocked: undefined, groupIndexes: [], lastUpdatedDate: undefined };
 }
 
 export const QueryRelatedUserIdsRequest = {
-  encode(
-    message: QueryRelatedUserIdsRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: QueryRelatedUserIdsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.blocked !== undefined) {
       writer.uint32(8).bool(message.blocked);
     }
-    if (message.groupIndex !== undefined) {
-      writer.uint32(16).int32(message.groupIndex);
+    writer.uint32(18).fork();
+    for (const v of message.groupIndexes) {
+      writer.int32(v);
     }
+    writer.ldelim();
     if (message.lastUpdatedDate !== undefined) {
       writer.uint32(24).int64(message.lastUpdatedDate);
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryRelatedUserIdsRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryRelatedUserIdsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseQueryRelatedUserIdsRequest();
@@ -49,7 +41,14 @@ export const QueryRelatedUserIdsRequest = {
           message.blocked = reader.bool();
           break;
         case 2:
-          message.groupIndex = reader.int32();
+          if ((tag & 7) === 2) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.groupIndexes.push(reader.int32());
+            }
+          } else {
+            message.groupIndexes.push(reader.int32());
+          }
           break;
         case 3:
           message.lastUpdatedDate = longToString(reader.int64() as Long);

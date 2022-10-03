@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import { GroupJoinRequest } from "./group_join_request";
 import _m0 from "protobufjs/minimal";
+import { GroupJoinRequest } from "./group_join_request";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -15,10 +15,7 @@ function createBaseGroupJoinRequestsWithVersion(): GroupJoinRequestsWithVersion 
 }
 
 export const GroupJoinRequestsWithVersion = {
-  encode(
-    message: GroupJoinRequestsWithVersion,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: GroupJoinRequestsWithVersion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.groupJoinRequests) {
       GroupJoinRequest.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -28,10 +25,7 @@ export const GroupJoinRequestsWithVersion = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): GroupJoinRequestsWithVersion {
+  decode(input: _m0.Reader | Uint8Array, length?: number): GroupJoinRequestsWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupJoinRequestsWithVersion();
@@ -39,9 +33,7 @@ export const GroupJoinRequestsWithVersion = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.groupJoinRequests.push(
-            GroupJoinRequest.decode(reader, reader.uint32())
-          );
+          message.groupJoinRequests.push(GroupJoinRequest.decode(reader, reader.uint32()));
           break;
         case 2:
           message.lastUpdatedDate = longToString(reader.int64() as Long);

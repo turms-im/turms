@@ -20,15 +20,9 @@ function createBaseImageFile(): ImageFile {
 }
 
 export const ImageFile = {
-  encode(
-    message: ImageFile,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: ImageFile, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.description !== undefined) {
-      ImageFile_Description.encode(
-        message.description,
-        writer.uint32(10).fork()
-      ).ldelim();
+      ImageFile_Description.encode(message.description, writer.uint32(10).fork()).ldelim();
     }
     if (message.data !== undefined) {
       writer.uint32(18).bytes(message.data);
@@ -44,10 +38,7 @@ export const ImageFile = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.description = ImageFile_Description.decode(
-            reader,
-            reader.uint32()
-          );
+          message.description = ImageFile_Description.decode(reader, reader.uint32());
           break;
         case 2:
           message.data = reader.bytes();
@@ -62,19 +53,11 @@ export const ImageFile = {
 };
 
 function createBaseImageFile_Description(): ImageFile_Description {
-  return {
-    url: "",
-    original: undefined,
-    imageSize: undefined,
-    fileSize: undefined,
-  };
+  return { url: "", original: undefined, imageSize: undefined, fileSize: undefined };
 }
 
 export const ImageFile_Description = {
-  encode(
-    message: ImageFile_Description,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: ImageFile_Description, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.url !== "") {
       writer.uint32(10).string(message.url);
     }
@@ -90,10 +73,7 @@ export const ImageFile_Description = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): ImageFile_Description {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ImageFile_Description {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImageFile_Description();

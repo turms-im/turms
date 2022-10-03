@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { UserStatusDetail } from "./user_status_detail";
 import _m0 from "protobufjs/minimal";
+import { UserStatusDetail } from "./user_status_detail";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -13,10 +13,7 @@ function createBaseUsersOnlineStatuses(): UsersOnlineStatuses {
 }
 
 export const UsersOnlineStatuses = {
-  encode(
-    message: UsersOnlineStatuses,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UsersOnlineStatuses, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.userStatuses) {
       UserStatusDetail.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -31,9 +28,7 @@ export const UsersOnlineStatuses = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.userStatuses.push(
-            UserStatusDetail.decode(reader, reader.uint32())
-          );
+          message.userStatuses.push(UserStatusDetail.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);

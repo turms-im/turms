@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import { UserFriendRequest } from "./user_friend_request";
 import _m0 from "protobufjs/minimal";
+import { UserFriendRequest } from "./user_friend_request";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -15,10 +15,7 @@ function createBaseUserFriendRequestsWithVersion(): UserFriendRequestsWithVersio
 }
 
 export const UserFriendRequestsWithVersion = {
-  encode(
-    message: UserFriendRequestsWithVersion,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UserFriendRequestsWithVersion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.userFriendRequests) {
       UserFriendRequest.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -28,10 +25,7 @@ export const UserFriendRequestsWithVersion = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UserFriendRequestsWithVersion {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserFriendRequestsWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserFriendRequestsWithVersion();
@@ -39,9 +33,7 @@ export const UserFriendRequestsWithVersion = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.userFriendRequests.push(
-            UserFriendRequest.decode(reader, reader.uint32())
-          );
+          message.userFriendRequests.push(UserFriendRequest.decode(reader, reader.uint32()));
           break;
         case 2:
           message.lastUpdatedDate = longToString(reader.int64() as Long);

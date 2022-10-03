@@ -193,12 +193,12 @@ class UserService {
   Future<Response<UserRelationshipsWithVersion?>> queryRelationships(
       {Set<Int64>? relatedUserIds,
       bool? isBlocked,
-      int? groupIndex,
+      Set<int>? groupIndexes,
       DateTime? lastUpdatedDate}) async {
     final n = await _turmsClient.driver.send(QueryRelationshipsRequest(
         userIds: relatedUserIds,
         blocked: isBlocked,
-        groupIndex: groupIndex,
+        groupIndexes: groupIndexes,
         lastUpdatedDate: lastUpdatedDate?.toInt64()));
     return n.toResponse((data) => data.hasUserRelationshipsWithVersion()
         ? data.userRelationshipsWithVersion
@@ -206,27 +206,27 @@ class UserService {
   }
 
   Future<Response<Int64ValuesWithVersion?>> queryRelatedUserIds(
-      {bool? isBlocked, int? groupIndex, DateTime? lastUpdatedDate}) async {
+      {bool? isBlocked, Set<int>? groupIndexes, DateTime? lastUpdatedDate}) async {
     final n = await _turmsClient.driver.send(QueryRelatedUserIdsRequest(
         blocked: isBlocked,
-        groupIndex: groupIndex,
+        groupIndexes: groupIndexes,
         lastUpdatedDate: lastUpdatedDate?.toInt64()));
     return n.toResponse(
         (data) => data.hasIdsWithVersion() ? data.idsWithVersion : null);
   }
 
   Future<Response<UserRelationshipsWithVersion?>> queryFriends(
-          {int? groupIndex, DateTime? lastUpdatedDate}) =>
+          {Set<int>? groupIndexes, DateTime? lastUpdatedDate}) =>
       queryRelationships(
           isBlocked: false,
-          groupIndex: groupIndex,
+          groupIndexes: groupIndexes,
           lastUpdatedDate: lastUpdatedDate);
 
   Future<Response<UserRelationshipsWithVersion?>> queryBlockedUsers(
-          {int? groupIndex, DateTime? lastUpdatedDate}) =>
+          {Set<int>? groupIndexes, DateTime? lastUpdatedDate}) =>
       queryRelationships(
           isBlocked: true,
-          groupIndex: groupIndex,
+          groupIndexes: groupIndexes,
           lastUpdatedDate: lastUpdatedDate);
 
   Future<Response<void>> createRelationship(Int64 userId, bool isBlocked,

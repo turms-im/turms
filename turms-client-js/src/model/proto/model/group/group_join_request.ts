@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import { RequestStatus } from "../../constant/request_status";
 import _m0 from "protobufjs/minimal";
+import { RequestStatus } from "../../constant/request_status";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -30,10 +30,7 @@ function createBaseGroupJoinRequest(): GroupJoinRequest {
 }
 
 export const GroupJoinRequest = {
-  encode(
-    message: GroupJoinRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: GroupJoinRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== undefined) {
       writer.uint32(8).int64(message.id);
     }

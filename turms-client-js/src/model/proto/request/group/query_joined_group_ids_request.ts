@@ -13,20 +13,14 @@ function createBaseQueryJoinedGroupIdsRequest(): QueryJoinedGroupIdsRequest {
 }
 
 export const QueryJoinedGroupIdsRequest = {
-  encode(
-    message: QueryJoinedGroupIdsRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: QueryJoinedGroupIdsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.lastUpdatedDate !== undefined) {
       writer.uint32(8).int64(message.lastUpdatedDate);
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryJoinedGroupIdsRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryJoinedGroupIdsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseQueryJoinedGroupIdsRequest();

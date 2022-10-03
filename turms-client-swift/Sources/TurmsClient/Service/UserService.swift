@@ -242,7 +242,7 @@ public class UserService {
     public func queryRelationships(
         relatedUserIds: [Int64]? = nil,
         isBlocked: Bool? = nil,
-        groupIndex: Int32? = nil,
+        groupIndexes: [Int32]? = nil,
         lastUpdatedDate: Date? = nil
     ) -> Promise<Response<UserRelationshipsWithVersion?>> {
         return turmsClient.driver
@@ -254,8 +254,8 @@ public class UserService {
                     if let v = isBlocked {
                         $0.blocked = v
                     }
-                    if let v = groupIndex {
-                        $0.groupIndex = v
+                    if let v = groupIndexes {
+                        $0.groupIndexes = v
                     }
                     if let v = lastUpdatedDate {
                         $0.lastUpdatedDate = v.toMillis()
@@ -269,15 +269,15 @@ public class UserService {
             }
     }
 
-    public func queryRelatedUserIds(isBlocked: Bool? = nil, groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<Response<Int64ValuesWithVersion?>> {
+    public func queryRelatedUserIds(isBlocked: Bool? = nil, groupIndexes: [Int32]? = nil, lastUpdatedDate: Date? = nil) -> Promise<Response<Int64ValuesWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryRelatedUserIdsRequest = .with {
                     if let v = isBlocked {
                         $0.blocked = v
                     }
-                    if let v = groupIndex {
-                        $0.groupIndex = v
+                    if let v = groupIndexes {
+                        $0.groupIndexes = v
                     }
                     if let v = lastUpdatedDate {
                         $0.lastUpdatedDate = v.toMillis()
@@ -291,18 +291,18 @@ public class UserService {
             }
     }
 
-    public func queryFriends(groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<Response<UserRelationshipsWithVersion?>> {
+    public func queryFriends(groupIndexes: [Int32]? = nil, lastUpdatedDate: Date? = nil) -> Promise<Response<UserRelationshipsWithVersion?>> {
         return queryRelationships(
             isBlocked: false,
-            groupIndex: groupIndex,
+            groupIndexes: groupIndexes,
             lastUpdatedDate: lastUpdatedDate
         )
     }
 
-    public func queryBlockedUsers(groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<Response<UserRelationshipsWithVersion?>> {
+    public func queryBlockedUsers(groupIndexes: [Int32]? = nil, lastUpdatedDate: Date? = nil) -> Promise<Response<UserRelationshipsWithVersion?>> {
         return queryRelationships(
             isBlocked: true,
-            groupIndex: groupIndex,
+            groupIndexes: groupIndexes,
             lastUpdatedDate: lastUpdatedDate
         )
     }

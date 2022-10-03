@@ -264,14 +264,14 @@ class UserService(private val turmsClient: TurmsClient) {
     suspend fun queryRelationships(
         relatedUserIds: Set<Long>? = null,
         isBlocked: Boolean? = null,
-        groupIndex: Int? = null,
+        groupIndexes: Set<Int>? = null,
         lastUpdatedDate: Date? = null
     ): Response<UserRelationshipsWithVersion?> = turmsClient.driver
         .send(
             QueryRelationshipsRequest.newBuilder().apply {
                 relatedUserIds?.let { addAllUserIds(it) }
                 isBlocked?.let { this.blocked = it }
-                groupIndex?.let { this.groupIndex = it }
+                groupIndexes?.let { this.addAllGroupIndexes(it) }
                 lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
             }
         ).toResponse {
@@ -280,13 +280,13 @@ class UserService(private val turmsClient: TurmsClient) {
 
     suspend fun queryRelatedUserIds(
         isBlocked: Boolean? = null,
-        groupIndex: Int? = null,
+        groupIndexes: Set<Int>? = null,
         lastUpdatedDate: Date? = null
     ): Response<Int64ValuesWithVersion?> = turmsClient.driver
         .send(
             QueryRelatedUserIdsRequest.newBuilder().apply {
                 isBlocked?.let { this.blocked = it }
-                groupIndex?.let { this.groupIndex = it }
+                groupIndexes?.let { this.addAllGroupIndexes(it) }
                 lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
             }
         ).toResponse {
@@ -294,16 +294,16 @@ class UserService(private val turmsClient: TurmsClient) {
         }
 
     suspend fun queryFriends(
-        groupIndex: Int? = null,
+        groupIndexes: Set<Int>? = null,
         lastUpdatedDate: Date? = null
     ): Response<UserRelationshipsWithVersion?> =
-        queryRelationships(isBlocked = false, groupIndex = groupIndex, lastUpdatedDate = lastUpdatedDate)
+        queryRelationships(isBlocked = false, groupIndexes = groupIndexes, lastUpdatedDate = lastUpdatedDate)
 
     suspend fun queryBlockedUsers(
-        groupIndex: Int? = null,
+        groupIndexes: Set<Int>? = null,
         lastUpdatedDate: Date? = null
     ): Response<UserRelationshipsWithVersion?> =
-        queryRelationships(isBlocked = true, groupIndex = groupIndex, lastUpdatedDate = lastUpdatedDate)
+        queryRelationships(isBlocked = true, groupIndexes = groupIndexes, lastUpdatedDate = lastUpdatedDate)
 
     suspend fun createRelationship(
         userId: Long,

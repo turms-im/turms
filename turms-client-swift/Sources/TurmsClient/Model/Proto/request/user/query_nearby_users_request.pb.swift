@@ -83,12 +83,16 @@ public struct QueryNearbyUsersRequest {
 
     public init() {}
 
-    fileprivate var _distance: Int32?
-    fileprivate var _maxNumber: Int32?
-    fileprivate var _withCoordinates: Bool?
-    fileprivate var _withDistance: Bool?
-    fileprivate var _withInfo: Bool?
+    private var _distance: Int32?
+    private var _maxNumber: Int32?
+    private var _withCoordinates: Bool?
+    private var _withDistance: Bool?
+    private var _withInfo: Bool?
 }
+
+#if swift(>=5.5) && canImport(_Concurrency)
+    extension QueryNearbyUsersRequest: @unchecked Sendable {}
+#endif // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
@@ -125,6 +129,10 @@ extension QueryNearbyUsersRequest: SwiftProtobuf.Message, SwiftProtobuf._Message
     }
 
     public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
         if latitude != 0 {
             try visitor.visitSingularFloatField(value: latitude, fieldNumber: 1)
         }

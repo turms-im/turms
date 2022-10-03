@@ -16,10 +16,7 @@ function createBaseQueryConversationsRequest(): QueryConversationsRequest {
 }
 
 export const QueryConversationsRequest = {
-  encode(
-    message: QueryConversationsRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: QueryConversationsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.targetIds) {
       writer.int64(v);
@@ -33,10 +30,7 @@ export const QueryConversationsRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryConversationsRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryConversationsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseQueryConversationsRequest();

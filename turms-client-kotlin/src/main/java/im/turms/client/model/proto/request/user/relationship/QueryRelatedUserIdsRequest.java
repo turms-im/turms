@@ -29,6 +29,7 @@ public  final class QueryRelatedUserIdsRequest extends
     // @@protoc_insertion_point(message_implements:im.turms.proto.QueryRelatedUserIdsRequest)
     QueryRelatedUserIdsRequestOrBuilder {
   private QueryRelatedUserIdsRequest() {
+    groupIndexes_ = emptyIntList();
   }
   private int bitField0_;
   public static final int BLOCKED_FIELD_NUMBER = 1;
@@ -65,38 +66,75 @@ public  final class QueryRelatedUserIdsRequest extends
     blocked_ = false;
   }
 
-  public static final int GROUP_INDEX_FIELD_NUMBER = 2;
-  private int groupIndex_;
+  public static final int GROUP_INDEXES_FIELD_NUMBER = 2;
+  private com.google.protobuf.Internal.IntList groupIndexes_;
   /**
-   * <code>optional int32 group_index = 2;</code>
-   * @return Whether the groupIndex field is set.
+   * <code>repeated int32 group_indexes = 2;</code>
+   * @return A list containing the groupIndexes.
    */
   @java.lang.Override
-  public boolean hasGroupIndex() {
-    return ((bitField0_ & 0x00000002) != 0);
+  public java.util.List<java.lang.Integer>
+      getGroupIndexesList() {
+    return groupIndexes_;
   }
   /**
-   * <code>optional int32 group_index = 2;</code>
-   * @return The groupIndex.
+   * <code>repeated int32 group_indexes = 2;</code>
+   * @return The count of groupIndexes.
    */
   @java.lang.Override
-  public int getGroupIndex() {
-    return groupIndex_;
+  public int getGroupIndexesCount() {
+    return groupIndexes_.size();
   }
   /**
-   * <code>optional int32 group_index = 2;</code>
-   * @param value The groupIndex to set.
+   * <code>repeated int32 group_indexes = 2;</code>
+   * @param index The index of the element to return.
+   * @return The groupIndexes at the given index.
    */
-  private void setGroupIndex(int value) {
-    bitField0_ |= 0x00000002;
-    groupIndex_ = value;
+  @java.lang.Override
+  public int getGroupIndexes(int index) {
+    return groupIndexes_.getInt(index);
+  }
+  private int groupIndexesMemoizedSerializedSize = -1;
+  private void ensureGroupIndexesIsMutable() {
+    com.google.protobuf.Internal.IntList tmp = groupIndexes_;
+    if (!tmp.isModifiable()) {
+      groupIndexes_ =
+          com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+     }
   }
   /**
-   * <code>optional int32 group_index = 2;</code>
+   * <code>repeated int32 group_indexes = 2;</code>
+   * @param index The index to set the value at.
+   * @param value The groupIndexes to set.
    */
-  private void clearGroupIndex() {
-    bitField0_ = (bitField0_ & ~0x00000002);
-    groupIndex_ = 0;
+  private void setGroupIndexes(
+      int index, int value) {
+    ensureGroupIndexesIsMutable();
+    groupIndexes_.setInt(index, value);
+  }
+  /**
+   * <code>repeated int32 group_indexes = 2;</code>
+   * @param value The groupIndexes to add.
+   */
+  private void addGroupIndexes(int value) {
+    ensureGroupIndexesIsMutable();
+    groupIndexes_.addInt(value);
+  }
+  /**
+   * <code>repeated int32 group_indexes = 2;</code>
+   * @param values The groupIndexes to add.
+   */
+  private void addAllGroupIndexes(
+      java.lang.Iterable<? extends java.lang.Integer> values) {
+    ensureGroupIndexesIsMutable();
+    com.google.protobuf.AbstractMessageLite.addAll(
+        values, groupIndexes_);
+  }
+  /**
+   * <code>repeated int32 group_indexes = 2;</code>
+   */
+  private void clearGroupIndexes() {
+    groupIndexes_ = emptyIntList();
   }
 
   public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 3;
@@ -107,7 +145,7 @@ public  final class QueryRelatedUserIdsRequest extends
    */
   @java.lang.Override
   public boolean hasLastUpdatedDate() {
-    return ((bitField0_ & 0x00000004) != 0);
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
    * <code>optional int64 last_updated_date = 3;</code>
@@ -122,14 +160,14 @@ public  final class QueryRelatedUserIdsRequest extends
    * @param value The lastUpdatedDate to set.
    */
   private void setLastUpdatedDate(long value) {
-    bitField0_ |= 0x00000004;
+    bitField0_ |= 0x00000002;
     lastUpdatedDate_ = value;
   }
   /**
    * <code>optional int64 last_updated_date = 3;</code>
    */
   private void clearLastUpdatedDate() {
-    bitField0_ = (bitField0_ & ~0x00000004);
+    bitField0_ = (bitField0_ & ~0x00000002);
     lastUpdatedDate_ = 0L;
   }
 
@@ -265,38 +303,71 @@ public  final class QueryRelatedUserIdsRequest extends
     }
 
     /**
-     * <code>optional int32 group_index = 2;</code>
-     * @return Whether the groupIndex field is set.
+     * <code>repeated int32 group_indexes = 2;</code>
+     * @return A list containing the groupIndexes.
      */
     @java.lang.Override
-    public boolean hasGroupIndex() {
-      return instance.hasGroupIndex();
+    public java.util.List<java.lang.Integer>
+        getGroupIndexesList() {
+      return java.util.Collections.unmodifiableList(
+          instance.getGroupIndexesList());
     }
     /**
-     * <code>optional int32 group_index = 2;</code>
-     * @return The groupIndex.
+     * <code>repeated int32 group_indexes = 2;</code>
+     * @return The count of groupIndexes.
      */
     @java.lang.Override
-    public int getGroupIndex() {
-      return instance.getGroupIndex();
+    public int getGroupIndexesCount() {
+      return instance.getGroupIndexesCount();
     }
     /**
-     * <code>optional int32 group_index = 2;</code>
-     * @param value The groupIndex to set.
+     * <code>repeated int32 group_indexes = 2;</code>
+     * @param index The index of the element to return.
+     * @return The groupIndexes at the given index.
+     */
+    @java.lang.Override
+    public int getGroupIndexes(int index) {
+      return instance.getGroupIndexes(index);
+    }
+    /**
+     * <code>repeated int32 group_indexes = 2;</code>
+     * @param value The groupIndexes to set.
      * @return This builder for chaining.
      */
-    public Builder setGroupIndex(int value) {
+    public Builder setGroupIndexes(
+        int index, int value) {
       copyOnWrite();
-      instance.setGroupIndex(value);
+      instance.setGroupIndexes(index, value);
       return this;
     }
     /**
-     * <code>optional int32 group_index = 2;</code>
+     * <code>repeated int32 group_indexes = 2;</code>
+     * @param value The groupIndexes to add.
      * @return This builder for chaining.
      */
-    public Builder clearGroupIndex() {
+    public Builder addGroupIndexes(int value) {
       copyOnWrite();
-      instance.clearGroupIndex();
+      instance.addGroupIndexes(value);
+      return this;
+    }
+    /**
+     * <code>repeated int32 group_indexes = 2;</code>
+     * @param values The groupIndexes to add.
+     * @return This builder for chaining.
+     */
+    public Builder addAllGroupIndexes(
+        java.lang.Iterable<? extends java.lang.Integer> values) {
+      copyOnWrite();
+      instance.addAllGroupIndexes(values);
+      return this;
+    }
+    /**
+     * <code>repeated int32 group_indexes = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearGroupIndexes() {
+      copyOnWrite();
+      instance.clearGroupIndexes();
       return this;
     }
 
@@ -354,12 +425,12 @@ public  final class QueryRelatedUserIdsRequest extends
           java.lang.Object[] objects = new java.lang.Object[] {
             "bitField0_",
             "blocked_",
-            "groupIndex_",
+            "groupIndexes_",
             "lastUpdatedDate_",
           };
           java.lang.String info =
-              "\u0000\u0003\u0000\u0001\u0001\u0003\u0003\u0000\u0000\u0000\u0001\u1007\u0000\u0002" +
-              "\u1004\u0001\u0003\u1002\u0002";
+              "\u0000\u0003\u0000\u0001\u0001\u0003\u0003\u0000\u0001\u0000\u0001\u1007\u0000\u0002" +
+              "\'\u0003\u1002\u0001";
           return newMessageInfo(DEFAULT_INSTANCE, info, objects);
       }
       // fall through

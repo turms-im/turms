@@ -189,20 +189,15 @@ public class UserRelationshipService {
 
     public Mono<Int64ValuesWithVersion> queryRelatedUserIdsWithVersion(
             @NotNull Long ownerId,
-            @NotNull Integer groupIndex,
+            @Nullable Set<Integer> groupIndexes,
             @Nullable Boolean isBlocked,
             @Nullable Date lastUpdatedDate) {
-        try {
-            Validator.notNull(groupIndex, "groupIndex");
-        } catch (ResponseException e) {
-            return Mono.error(e);
-        }
         return userVersionService.queryRelationshipsLastUpdatedDate(ownerId)
                 .flatMap(date -> {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, date)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
-                    return queryRelatedUserIds(Set.of(ownerId), Set.of(groupIndex), isBlocked)
+                    return queryRelatedUserIds(Set.of(ownerId), groupIndexes, isBlocked)
                             .collect(Collectors.toSet())
                             .map(ids -> {
                                 if (ids.isEmpty()) {
@@ -221,7 +216,7 @@ public class UserRelationshipService {
     public Mono<UserRelationshipsWithVersion> queryRelationshipsWithVersion(
             @NotNull Long ownerId,
             @Nullable Set<Long> relatedUserIds,
-            @Nullable Integer groupIndex,
+            @Nullable Set<Integer> groupIndexes,
             @Nullable Boolean isBlocked,
             @Nullable Date lastUpdatedDate) {
         return userVersionService.queryRelationshipsLastUpdatedDate(ownerId)
@@ -232,7 +227,7 @@ public class UserRelationshipService {
                     return queryRelationships(
                             Set.of(ownerId),
                             relatedUserIds,
-                            groupIndex == null ? null : Set.of(groupIndex),
+                            groupIndexes,
                             isBlocked,
                             null,
                             null,

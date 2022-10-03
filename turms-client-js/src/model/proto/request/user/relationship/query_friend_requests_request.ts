@@ -14,10 +14,7 @@ function createBaseQueryFriendRequestsRequest(): QueryFriendRequestsRequest {
 }
 
 export const QueryFriendRequestsRequest = {
-  encode(
-    message: QueryFriendRequestsRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: QueryFriendRequestsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.areSentByMe === true) {
       writer.uint32(8).bool(message.areSentByMe);
     }
@@ -27,10 +24,7 @@ export const QueryFriendRequestsRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryFriendRequestsRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryFriendRequestsRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseQueryFriendRequestsRequest();

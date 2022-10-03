@@ -101,14 +101,18 @@ public struct GroupMember {
 
     public init() {}
 
-    fileprivate var _groupID: Int64?
-    fileprivate var _userID: Int64?
-    fileprivate var _name: String?
-    fileprivate var _role: GroupMemberRole?
-    fileprivate var _joinDate: Int64?
-    fileprivate var _muteEndDate: Int64?
-    fileprivate var _userStatus: UserStatus?
+    private var _groupID: Int64?
+    private var _userID: Int64?
+    private var _name: String?
+    private var _role: GroupMemberRole?
+    private var _joinDate: Int64?
+    private var _muteEndDate: Int64?
+    private var _userStatus: UserStatus?
 }
+
+#if swift(>=5.5) && canImport(_Concurrency)
+    extension GroupMember: @unchecked Sendable {}
+#endif // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
@@ -147,6 +151,10 @@ extension GroupMember: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
     }
 
     public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
         try { if let v = self._groupID {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
         } }()

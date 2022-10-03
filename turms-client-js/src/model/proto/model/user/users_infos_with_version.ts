@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import { UserInfo } from "./user_info";
 import _m0 from "protobufjs/minimal";
+import { UserInfo } from "./user_info";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -15,10 +15,7 @@ function createBaseUsersInfosWithVersion(): UsersInfosWithVersion {
 }
 
 export const UsersInfosWithVersion = {
-  encode(
-    message: UsersInfosWithVersion,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UsersInfosWithVersion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.userInfos) {
       UserInfo.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -28,10 +25,7 @@ export const UsersInfosWithVersion = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UsersInfosWithVersion {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UsersInfosWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUsersInfosWithVersion();

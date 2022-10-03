@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { PrivateConversation } from "./private_conversation";
-import { GroupConversation } from "./group_conversation";
 import _m0 from "protobufjs/minimal";
+import { GroupConversation } from "./group_conversation";
+import { PrivateConversation } from "./private_conversation";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -15,10 +15,7 @@ function createBaseConversations(): Conversations {
 }
 
 export const Conversations = {
-  encode(
-    message: Conversations,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: Conversations, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.privateConversations) {
       PrivateConversation.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -36,14 +33,10 @@ export const Conversations = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.privateConversations.push(
-            PrivateConversation.decode(reader, reader.uint32())
-          );
+          message.privateConversations.push(PrivateConversation.decode(reader, reader.uint32()));
           break;
         case 2:
-          message.groupConversations.push(
-            GroupConversation.decode(reader, reader.uint32())
-          );
+          message.groupConversations.push(GroupConversation.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);

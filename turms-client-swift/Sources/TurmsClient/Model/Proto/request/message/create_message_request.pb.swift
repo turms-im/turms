@@ -113,15 +113,19 @@ public struct CreateMessageRequest {
 
     public init() {}
 
-    fileprivate var _messageID: Int64?
-    fileprivate var _isSystemMessage: Bool?
-    fileprivate var _groupID: Int64?
-    fileprivate var _recipientID: Int64?
-    fileprivate var _deliveryDate: Int64?
-    fileprivate var _text: String?
-    fileprivate var _burnAfter: Int32?
-    fileprivate var _preMessageID: Int64?
+    private var _messageID: Int64?
+    private var _isSystemMessage: Bool?
+    private var _groupID: Int64?
+    private var _recipientID: Int64?
+    private var _deliveryDate: Int64?
+    private var _text: String?
+    private var _burnAfter: Int32?
+    private var _preMessageID: Int64?
 }
+
+#if swift(>=5.5) && canImport(_Concurrency)
+    extension CreateMessageRequest: @unchecked Sendable {}
+#endif // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
@@ -162,6 +166,10 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     }
 
     public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
         try { if let v = self._messageID {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
         } }()

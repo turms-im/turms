@@ -13,20 +13,11 @@ export interface GroupJoinQuestion {
 }
 
 function createBaseGroupJoinQuestion(): GroupJoinQuestion {
-  return {
-    id: undefined,
-    groupId: undefined,
-    question: undefined,
-    answers: [],
-    score: undefined,
-  };
+  return { id: undefined, groupId: undefined, question: undefined, answers: [], score: undefined };
 }
 
 export const GroupJoinQuestion = {
-  encode(
-    message: GroupJoinQuestion,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: GroupJoinQuestion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== undefined) {
       writer.uint32(8).int64(message.id);
     }

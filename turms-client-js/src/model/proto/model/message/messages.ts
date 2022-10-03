@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { Message } from "./message";
 import _m0 from "protobufjs/minimal";
+import { Message } from "./message";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -13,10 +13,7 @@ function createBaseMessages(): Messages {
 }
 
 export const Messages = {
-  encode(
-    message: Messages,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: Messages, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.messages) {
       Message.encode(v!, writer.uint32(10).fork()).ldelim();
     }

@@ -13,10 +13,7 @@ function createBaseQueryUserOnlineStatusesRequest(): QueryUserOnlineStatusesRequ
 }
 
 export const QueryUserOnlineStatusesRequest = {
-  encode(
-    message: QueryUserOnlineStatusesRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: QueryUserOnlineStatusesRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.userIds) {
       writer.int64(v);
@@ -25,10 +22,7 @@ export const QueryUserOnlineStatusesRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): QueryUserOnlineStatusesRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryUserOnlineStatusesRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseQueryUserOnlineStatusesRequest();

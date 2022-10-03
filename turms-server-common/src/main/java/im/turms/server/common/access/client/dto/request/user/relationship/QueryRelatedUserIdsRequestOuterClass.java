@@ -47,13 +47,12 @@ public final class QueryRelatedUserIdsRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n>request/user/relationship/query_relate" +
       "d_user_ids_request.proto\022\016im.turms.proto" +
-      "\"\236\001\n\032QueryRelatedUserIdsRequest\022\024\n\007block" +
-      "ed\030\001 \001(\010H\000\210\001\001\022\030\n\013group_index\030\002 \001(\005H\001\210\001\001\022" +
-      "\036\n\021last_updated_date\030\003 \001(\003H\002\210\001\001B\n\n\010_bloc" +
-      "kedB\016\n\014_group_indexB\024\n\022_last_updated_dat" +
-      "eBI\nBim.turms.server.common.access.clien" +
-      "t.dto.request.user.relationshipP\001\272\002\000b\006pr" +
-      "oto3"
+      "\"\213\001\n\032QueryRelatedUserIdsRequest\022\024\n\007block" +
+      "ed\030\001 \001(\010H\000\210\001\001\022\025\n\rgroup_indexes\030\002 \003(\005\022\036\n\021" +
+      "last_updated_date\030\003 \001(\003H\001\210\001\001B\n\n\010_blocked" +
+      "B\024\n\022_last_updated_dateBI\nBim.turms.serve" +
+      "r.common.access.client.dto.request.user." +
+      "relationshipP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -64,7 +63,7 @@ public final class QueryRelatedUserIdsRequestOuterClass {
     internal_static_im_turms_proto_QueryRelatedUserIdsRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryRelatedUserIdsRequest_descriptor,
-        new java.lang.String[] { "Blocked", "GroupIndex", "LastUpdatedDate", "Blocked", "GroupIndex", "LastUpdatedDate", });
+        new java.lang.String[] { "Blocked", "GroupIndexes", "LastUpdatedDate", "Blocked", "LastUpdatedDate", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

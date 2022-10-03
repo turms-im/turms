@@ -19,18 +19,12 @@ function createBaseGroupConversation(): GroupConversation {
 }
 
 export const GroupConversation = {
-  encode(
-    message: GroupConversation,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: GroupConversation, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.groupId !== "0") {
       writer.uint32(8).int64(message.groupId);
     }
     Object.entries(message.memberIdToReadDate).forEach(([key, value]) => {
-      GroupConversation_MemberIdToReadDateEntry.encode(
-        { key: key as any, value },
-        writer.uint32(18).fork()
-      ).ldelim();
+      GroupConversation_MemberIdToReadDateEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
     });
     return writer;
   },
@@ -46,10 +40,7 @@ export const GroupConversation = {
           message.groupId = longToString(reader.int64() as Long);
           break;
         case 2:
-          const entry2 = GroupConversation_MemberIdToReadDateEntry.decode(
-            reader,
-            reader.uint32()
-          );
+          const entry2 = GroupConversation_MemberIdToReadDateEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.memberIdToReadDate[entry2.key] = entry2.value;
           }
@@ -68,10 +59,7 @@ function createBaseGroupConversation_MemberIdToReadDateEntry(): GroupConversatio
 }
 
 export const GroupConversation_MemberIdToReadDateEntry = {
-  encode(
-    message: GroupConversation_MemberIdToReadDateEntry,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: GroupConversation_MemberIdToReadDateEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== "0") {
       writer.uint32(8).int64(message.key);
     }
@@ -81,10 +69,7 @@ export const GroupConversation_MemberIdToReadDateEntry = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): GroupConversation_MemberIdToReadDateEntry {
+  decode(input: _m0.Reader | Uint8Array, length?: number): GroupConversation_MemberIdToReadDateEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupConversation_MemberIdToReadDateEntry();

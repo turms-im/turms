@@ -89,13 +89,17 @@ public struct UserInfo {
 
     public init() {}
 
-    fileprivate var _id: Int64?
-    fileprivate var _name: String?
-    fileprivate var _intro: String?
-    fileprivate var _registrationDate: Int64?
-    fileprivate var _active: Bool?
-    fileprivate var _profileAccessStrategy: ProfileAccessStrategy?
+    private var _id: Int64?
+    private var _name: String?
+    private var _intro: String?
+    private var _registrationDate: Int64?
+    private var _active: Bool?
+    private var _profileAccessStrategy: ProfileAccessStrategy?
 }
+
+#if swift(>=5.5) && canImport(_Concurrency)
+    extension UserInfo: @unchecked Sendable {}
+#endif // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
@@ -130,6 +134,10 @@ extension UserInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     }
 
     public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every if/case branch local when no optimizations
+        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+        // https://github.com/apple/swift-protobuf/issues/1182
         try { if let v = self._id {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
         } }()

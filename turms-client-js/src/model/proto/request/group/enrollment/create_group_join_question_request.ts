@@ -16,10 +16,7 @@ function createBaseCreateGroupJoinQuestionRequest(): CreateGroupJoinQuestionRequ
 }
 
 export const CreateGroupJoinQuestionRequest = {
-  encode(
-    message: CreateGroupJoinQuestionRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CreateGroupJoinQuestionRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.groupId !== "0") {
       writer.uint32(8).int64(message.groupId);
     }
@@ -35,10 +32,7 @@ export const CreateGroupJoinQuestionRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): CreateGroupJoinQuestionRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateGroupJoinQuestionRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateGroupJoinQuestionRequest();

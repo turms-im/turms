@@ -45,6 +45,7 @@ import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -235,12 +236,13 @@ public class UserRelationshipServiceController {
     public ClientRequestHandler handleQueryRelatedUserIdsRequest() {
         return clientRequest -> {
             QueryRelatedUserIdsRequest request = clientRequest.turmsRequest().getQueryRelatedUserIdsRequest();
-            int groupIndex = request.hasGroupIndex() ? request.getGroupIndex() : DEFAULT_RELATIONSHIP_GROUP_INDEX;
+            List<Integer> groupIndexesList = request.getGroupIndexesList();
+            Set<Integer> groupIndexes = groupIndexesList.isEmpty() ? null : CollectionUtil.newSet(groupIndexesList);
             Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate()) : null;
             Boolean isBlocked = request.hasBlocked() ? request.getBlocked() : null;
             return userRelationshipService.queryRelatedUserIdsWithVersion(
                             clientRequest.userId(),
-                            groupIndex,
+                            groupIndexes,
                             isBlocked,
                             lastUpdatedDate)
                     .map(idsWithVersion -> RequestHandlerResultFactory
@@ -274,15 +276,17 @@ public class UserRelationshipServiceController {
         return clientRequest -> {
             QueryRelationshipsRequest request = clientRequest.turmsRequest()
                     .getQueryRelationshipsRequest();
-            Set<Long> ids = request.getUserIdsCount() == 0 ? null : CollectionUtil.newSet(request.getUserIdsList());
-            int groupIndex = request.hasGroupIndex() ? request.getGroupIndex() : DEFAULT_RELATIONSHIP_GROUP_INDEX;
+            List<Long> userIdsList = request.getUserIdsList();
+            List<Integer> groupIndexesList = request.getGroupIndexesList();
+            Set<Long> relatedUserIds = userIdsList.isEmpty() ? null : CollectionUtil.newSet(userIdsList);
+            Set<Integer> groupIndexes = groupIndexesList.isEmpty() ? null : CollectionUtil.newSet(groupIndexesList);
             Boolean isBlocked = request.hasBlocked() ? request.getBlocked() : null;
             Date lastUpdatedDate = request.hasLastUpdatedDate() ?
                     new Date(request.getLastUpdatedDate()) : null;
             return userRelationshipService.queryRelationshipsWithVersion(
                             clientRequest.userId(),
-                            ids,
-                            groupIndex,
+                            relatedUserIds,
+                            groupIndexes,
                             isBlocked,
                             lastUpdatedDate)
                     .map(relationshipsWithVersion -> RequestHandlerResultFactory

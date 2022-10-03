@@ -12,19 +12,11 @@ export interface UpdateGroupJoinQuestionRequest {
 }
 
 function createBaseUpdateGroupJoinQuestionRequest(): UpdateGroupJoinQuestionRequest {
-  return {
-    questionId: "0",
-    question: undefined,
-    answers: [],
-    score: undefined,
-  };
+  return { questionId: "0", question: undefined, answers: [], score: undefined };
 }
 
 export const UpdateGroupJoinQuestionRequest = {
-  encode(
-    message: UpdateGroupJoinQuestionRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdateGroupJoinQuestionRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.questionId !== "0") {
       writer.uint32(8).int64(message.questionId);
     }
@@ -40,10 +32,7 @@ export const UpdateGroupJoinQuestionRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UpdateGroupJoinQuestionRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateGroupJoinQuestionRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateGroupJoinQuestionRequest();

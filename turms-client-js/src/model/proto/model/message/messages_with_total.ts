@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import { Message } from "./message";
 import _m0 from "protobufjs/minimal";
+import { Message } from "./message";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -17,10 +17,7 @@ function createBaseMessagesWithTotal(): MessagesWithTotal {
 }
 
 export const MessagesWithTotal = {
-  encode(
-    message: MessagesWithTotal,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: MessagesWithTotal, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.total !== 0) {
       writer.uint32(8).int32(message.total);
     }

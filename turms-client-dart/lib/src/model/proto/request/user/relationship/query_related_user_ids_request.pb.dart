@@ -13,7 +13,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 class QueryRelatedUserIdsRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'QueryRelatedUserIdsRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
     ..aOB(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'blocked')
-    ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'groupIndex', $pb.PbFieldType.O3)
+    ..p<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'groupIndexes', $pb.PbFieldType.P3)
     ..aInt64(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdatedDate')
     ..hasRequiredFields = false
   ;
@@ -21,15 +21,15 @@ class QueryRelatedUserIdsRequest extends $pb.GeneratedMessage {
   QueryRelatedUserIdsRequest._() : super();
   factory QueryRelatedUserIdsRequest({
     $core.bool? blocked,
-    $core.int? groupIndex,
+    $core.Iterable<$core.int>? groupIndexes,
     $fixnum.Int64? lastUpdatedDate,
   }) {
     final _result = create();
     if (blocked != null) {
       _result.blocked = blocked;
     }
-    if (groupIndex != null) {
-      _result.groupIndex = groupIndex;
+    if (groupIndexes != null) {
+      _result.groupIndexes.addAll(groupIndexes);
     }
     if (lastUpdatedDate != null) {
       _result.lastUpdatedDate = lastUpdatedDate;
@@ -67,13 +67,7 @@ class QueryRelatedUserIdsRequest extends $pb.GeneratedMessage {
   void clearBlocked() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.int get groupIndex => $_getIZ(1);
-  @$pb.TagNumber(2)
-  set groupIndex($core.int v) { $_setSignedInt32(1, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasGroupIndex() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearGroupIndex() => clearField(2);
+  $core.List<$core.int> get groupIndexes => $_getList(1);
 
   @$pb.TagNumber(3)
   $fixnum.Int64 get lastUpdatedDate => $_getI64(2);

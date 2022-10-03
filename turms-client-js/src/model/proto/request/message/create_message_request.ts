@@ -5,7 +5,9 @@ import _m0 from "protobufjs/minimal";
 export const protobufPackage = "im.turms.proto";
 
 export interface CreateMessageRequest {
-  messageId?: string | undefined;
+  messageId?:
+    | string
+    | undefined;
   /**
    * is_system_message can only be true if the user is an administrator,
    * or turms server will return an error
@@ -35,10 +37,7 @@ function createBaseCreateMessageRequest(): CreateMessageRequest {
 }
 
 export const CreateMessageRequest = {
-  encode(
-    message: CreateMessageRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CreateMessageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.messageId !== undefined) {
       writer.uint32(8).int64(message.messageId);
     }
@@ -69,10 +68,7 @@ export const CreateMessageRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): CreateMessageRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateMessageRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateMessageRequest();

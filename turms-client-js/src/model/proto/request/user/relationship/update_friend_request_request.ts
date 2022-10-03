@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { ResponseAction } from "../../../constant/response_action";
 import Long from "long";
 import _m0 from "protobufjs/minimal";
+import { ResponseAction } from "../../../constant/response_action";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -16,10 +16,7 @@ function createBaseUpdateFriendRequestRequest(): UpdateFriendRequestRequest {
 }
 
 export const UpdateFriendRequestRequest = {
-  encode(
-    message: UpdateFriendRequestRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdateFriendRequestRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.requestId !== "0") {
       writer.uint32(8).int64(message.requestId);
     }
@@ -32,10 +29,7 @@ export const UpdateFriendRequestRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): UpdateFriendRequestRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateFriendRequestRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateFriendRequestRequest();

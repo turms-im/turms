@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
-import { GroupMember } from "./group_member";
 import _m0 from "protobufjs/minimal";
+import { GroupMember } from "./group_member";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -15,10 +15,7 @@ function createBaseGroupMembersWithVersion(): GroupMembersWithVersion {
 }
 
 export const GroupMembersWithVersion = {
-  encode(
-    message: GroupMembersWithVersion,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: GroupMembersWithVersion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.groupMembers) {
       GroupMember.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -28,10 +25,7 @@ export const GroupMembersWithVersion = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): GroupMembersWithVersion {
+  decode(input: _m0.Reader | Uint8Array, length?: number): GroupMembersWithVersion {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupMembersWithVersion();
@@ -39,9 +33,7 @@ export const GroupMembersWithVersion = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.groupMembers.push(
-            GroupMember.decode(reader, reader.uint32())
-          );
+          message.groupMembers.push(GroupMember.decode(reader, reader.uint32()));
           break;
         case 2:
           message.lastUpdatedDate = longToString(reader.int64() as Long);

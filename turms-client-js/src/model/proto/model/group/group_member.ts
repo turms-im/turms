@@ -1,9 +1,9 @@
 /* eslint-disable */
 import Long from "long";
+import _m0 from "protobufjs/minimal";
+import { DeviceType } from "../../constant/device_type";
 import { GroupMemberRole } from "../../constant/group_member_role";
 import { UserStatus } from "../../constant/user_status";
-import { DeviceType } from "../../constant/device_type";
-import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "im.turms.proto";
 
@@ -32,10 +32,7 @@ function createBaseGroupMember(): GroupMember {
 }
 
 export const GroupMember = {
-  encode(
-    message: GroupMember,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: GroupMember, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.groupId !== undefined) {
       writer.uint32(8).int64(message.groupId);
     }

@@ -14,10 +14,7 @@ function createBaseQueryGroupRequest(): QueryGroupRequest {
 }
 
 export const QueryGroupRequest = {
-  encode(
-    message: QueryGroupRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: QueryGroupRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.groupId !== "0") {
       writer.uint32(8).int64(message.groupId);
     }
