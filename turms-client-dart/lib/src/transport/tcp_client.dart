@@ -65,7 +65,7 @@ class TcpClient {
       } catch (e) {
         close(e);
       }
-    }, onDone: () => tryCallOnClose(null), onError: tryCallOnClose);
+    }, onDone: () => onClose(null), onError: onClose);
   }
 
   void write(List<int> bytes) {
@@ -91,13 +91,21 @@ class TcpClient {
   }
 
   Future<void> close(dynamic error) async {
-    await _socket.close();
-    tryCallOnClose(error);
+    try {
+      await _socket.flush();
+      await _socket.close();
+    } finally {
+      onClose(error);
+    }
   }
 
-  void tryCallOnClose(dynamic error) {
+  void onClose(dynamic error) {
     if (isOpen) {
-      _onClose.call(error);
+      try {
+        _onClose.call(error);
+      } catch (e) {
+        // TODO: log
+      }
     }
     metrics = TcpMetrics();
     isOpen = false;

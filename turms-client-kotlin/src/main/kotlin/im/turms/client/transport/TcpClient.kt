@@ -175,20 +175,22 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
             withContext(coroutineContext) {
                 socket.close()
             }
-        } catch (e: Exception) {
-            tryCallOnClose(t)
         } finally {
-            tryCallOnClose(t)
+            onClose(t)
         }
     }
 
-    private fun tryCallOnClose(t: Throwable? = null) {
+    private fun onClose(t: Throwable? = null) {
         if (isOpen) {
-            onClose?.invoke(t)
+            try {
+                onClose?.invoke(t)
+            } catch (e: Exception) {
+                // TODO: log
+            }
         }
         readBuffer.clear()
-        isOpen = false
         metrics = TcpMetrics()
+        isOpen = false
     }
 
     // Read and Write
@@ -212,7 +214,7 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
             repeat(exact) {
                 val data = input.read()
                 if (data == -1) {
-                    tryCallOnClose()
+                    onClose()
                     return
                 }
                 metrics.dataReceived++
@@ -239,7 +241,7 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
             consumer(readBuffer)
             readBuffer.clear()
         } catch (e: Exception) {
-            tryCallOnClose(e)
+            onClose(e)
         }
     }
 
@@ -260,7 +262,7 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
             }
             throw IllegalStateException("VarInt input too big")
         } catch (e: Exception) {
-            tryCallOnClose(e)
+            onClose(e)
             throw e
         }
     }
@@ -272,7 +274,7 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
                 metrics.dataSent += src.size
             }
         } catch (e: Exception) {
-            tryCallOnClose(e)
+            onClose(e)
         }
     }
 

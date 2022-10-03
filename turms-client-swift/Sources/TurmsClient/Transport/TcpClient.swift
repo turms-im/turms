@@ -81,10 +81,10 @@ public class TcpClient {
                     }
                 case .cancelled:
                     seal.reject(RuntimeError("\(newState)"))
-                    s.tryCallOnClose()
+                    s.onClose()
                 case let .failed(error):
                     seal.reject(RuntimeError("\(newState)"))
-                    s.tryCallOnClose(error)
+                    s.onClose(error)
                 case .waiting, .setup, .preparing:
                     break
                 @unknown default:
@@ -159,13 +159,17 @@ public class TcpClient {
     }
 
     public func close(_: Error? = nil) {
-        isOpen = false
         connection?.cancel()
+        onClose()
     }
 
-    private func tryCallOnClose(_ error: Error? = nil) {
+    private func onClose(_ error: Error? = nil) {
         if isOpen {
-            onClosed(error)
+            do {
+                onClosed(error)
+            } catch {
+                // TODO: log
+            }
         }
         metrics = TcpMetrics()
         isOpen = false
