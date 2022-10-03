@@ -19,16 +19,19 @@ package im.turms.server.common.infra.fake;
 
 import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.ByteString;
+import com.google.protobuf.ByteStringUtil;
 import com.google.protobuf.Message;
 import im.turms.server.common.infra.lang.Range;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.jctools.maps.NonBlockingHashMapLong;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static com.google.protobuf.Descriptors.Descriptor;
 import static com.google.protobuf.Descriptors.EnumDescriptor;
 import static com.google.protobuf.Descriptors.EnumValueDescriptor;
 import static com.google.protobuf.Descriptors.FieldDescriptor;
@@ -36,6 +39,7 @@ import static com.google.protobuf.Descriptors.FieldDescriptor;
 /**
  * @author James Chen
  */
+@ThreadSafe
 public class RandomProtobufGenerator<T extends AbstractMessage> {
 
     private static final int MAX_LIST_LENGTH = 10;
@@ -43,10 +47,13 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
 
     private final Random random;
     private final Message instance;
+    private final List<FieldDescriptor> fieldDescriptors;
+    private NonBlockingHashMapLong<RandomProtobufGenerator<?>> fieldMessageGenerators;
 
     public RandomProtobufGenerator(Random random, Message instance) {
         this.random = random;
         this.instance = instance;
+        fieldDescriptors = instance.getDescriptorForType().getFields();
     }
 
     public T generate() {
@@ -64,34 +71,45 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
 
     public T generate(GeneratorOptions options) {
         Message.Builder builder = instance.newBuilderForType();
-        Descriptor descriptor = instance.getDescriptorForType();
-        for (FieldDescriptor field : descriptor.getFields()) {
-            if (field.isOptional() && random.nextFloat() > options.possibilityToFillOptionalFields) {
+        for (FieldDescriptor field : fieldDescriptors) {
+            float possibility = options.possibilityToFillOptionalFields;
+            if (field.isOptional() && possibility < 1 && random.nextFloat() > possibility) {
                 continue;
             }
-            Object value = getRandomValue(field, options);
+            Object value = getRandomValue(builder, field, options);
             try {
                 builder.setField(field, value);
             } catch (Exception e) {
-                throw new RuntimeException("Failed to set the value %s to the field %s".formatted(value.toString(), field.getFullName()));
+                throw new RuntimeException("Failed to set the field " +
+                        field.getFullName() +
+                        " to the value " +
+                        value);
             }
         }
         return (T) builder.build();
     }
 
-    private Object getRandomValue(FieldDescriptor field, GeneratorOptions options) {
+    private Object getRandomValue(Message.Builder builder,
+                                  FieldDescriptor field,
+                                  GeneratorOptions options) {
         if (field.isRepeated()) {
+            float possibility = options.possibilityToHaveNotEmptyRepeatedFields;
+            if (possibility < 1 && random.nextFloat() > possibility) {
+                return Collections.emptyList();
+            }
             int length = random.nextInt(MAX_LIST_LENGTH);
             List<Object> values = new ArrayList<>(length);
             for (int i = 0; i < length; i++) {
-                values.add(getRandomSingleValue(field, options));
+                values.add(getRandomSingleValue(builder, field, options));
             }
             return values;
         }
-        return getRandomSingleValue(field, options);
+        return getRandomSingleValue(builder, field, options);
     }
 
-    private Object getRandomSingleValue(FieldDescriptor field, GeneratorOptions options) {
+    private Object getRandomSingleValue(Message.Builder builder,
+                                        FieldDescriptor field,
+                                        GeneratorOptions options) {
         Range<Long> numberRange = options.numberRange;
         return switch (field.getJavaType()) {
             case BOOLEAN -> random.nextBoolean();
@@ -101,15 +119,17 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
             case FLOAT -> random.nextFloat();
             case INT -> getRandomNumberFromRange(numberRange).intValue();
             case LONG -> getRandomNumberFromRange(numberRange);
-            case MESSAGE -> getRandomMessage(field, options);
+            case MESSAGE -> getRandomMessage(builder, field, options);
             case STRING -> RandomStringUtils.randomAlphabetic(8, 64);
+            default -> new IllegalArgumentException("Failed to generate random single value for the unknown type: " + field.getJavaType());
         };
     }
 
     private ByteString getRandomByteString() {
-        byte[] bytes = new byte[32];
+        int length = random.nextInt(32 + 1);
+        byte[] bytes = new byte[length];
         random.nextBytes(bytes);
-        return ByteString.copyFrom(bytes);
+        return ByteStringUtil.wrap(bytes);
     }
 
     private EnumValueDescriptor getRandomEnum(EnumDescriptor enumDesc) {
@@ -117,9 +137,20 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
         return values.get(random.nextInt(values.size()));
     }
 
-    private AbstractMessage getRandomMessage(FieldDescriptor field, GeneratorOptions options) {
-        Message.Builder fieldBuilder = instance.toBuilder().newBuilderForField(field);
-        return new RandomProtobufGenerator<>(random, fieldBuilder.getDefaultInstanceForType()).generate(options);
+    private AbstractMessage getRandomMessage(Message.Builder builder,
+                                             FieldDescriptor field,
+                                             GeneratorOptions options) {
+        if (fieldMessageGenerators == null) {
+            synchronized (this) {
+                if (fieldMessageGenerators == null) {
+                    fieldMessageGenerators = new NonBlockingHashMapLong<>(8);
+                }
+            }
+        }
+        return fieldMessageGenerators.computeIfAbsent((long) field.getIndex(), index -> {
+            Message.Builder fieldBuilder = builder.newBuilderForField(field);
+            return new RandomProtobufGenerator<>(random, fieldBuilder.getDefaultInstanceForType());
+        }).generate(options);
     }
 
     private Long getRandomNumberFromRange(Range<Long> numberRange) {

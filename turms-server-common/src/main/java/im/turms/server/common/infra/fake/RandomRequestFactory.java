@@ -20,7 +20,9 @@ package im.turms.server.common.infra.fake;
 import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.Message;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.random.RandomUtil;
 
@@ -35,8 +37,10 @@ import static com.google.protobuf.Descriptors.OneofDescriptor;
  */
 public final class RandomRequestFactory {
 
-    public static final String CREATE_SESSION_REQUEST_FILED_NAME = "create_session_request";
-    public static final String DELETE_SESSION_REQUEST_FILED_NAME = "delete_session_request";
+    public static final String CREATE_SESSION_REQUEST_FILED_NAME = TurmsRequest.getDescriptor()
+            .findFieldByNumber(TurmsRequest.CREATE_SESSION_REQUEST_FIELD_NUMBER).getName();
+    public static final String DELETE_SESSION_REQUEST_FILED_NAME = TurmsRequest.getDescriptor()
+            .findFieldByNumber(TurmsRequest.DELETE_SESSION_REQUEST_FIELD_NUMBER).getName();
 
     private static final Random RANDOM = new Random();
     private static final String REQUEST_TYPE_FILED_NAME = "kind";
@@ -65,13 +69,21 @@ public final class RandomRequestFactory {
     private RandomRequestFactory() {
     }
 
-    public static TurmsRequest.Builder create(Set<String> excludedRequestNames,
-                                              RandomProtobufGenerator.GeneratorOptions options) {
+    public static TurmsRequest create(Set<String> excludedRequestNames,
+                                      RandomProtobufGenerator.GeneratorOptions options) {
         Pair<FieldDescriptor, RandomProtobufGenerator<AbstractMessage>> entry = pickRandomRequestGenerator(excludedRequestNames);
-        return ClientMessagePool
+        TurmsRequest.Builder builder = ClientMessagePool
                 .getTurmsRequestBuilder()
                 .setRequestId(RandomUtil.nextPositiveLong())
                 .setField(entry.first(), entry.second().generate(options));
+        if (builder.hasUpdateUserOnlineStatusRequest()) {
+            UpdateUserOnlineStatusRequest updateStatusRequest = builder.getUpdateUserOnlineStatusRequest();
+            if (updateStatusRequest.getUserStatus() == UserStatus.OFFLINE) {
+                builder.setUpdateUserOnlineStatusRequest(updateStatusRequest.toBuilder()
+                        .setUserStatus(UserStatus.INVISIBLE));
+            }
+        }
+        return builder.build();
     }
 
     private static Pair<FieldDescriptor, RandomProtobufGenerator<AbstractMessage>> pickRandomRequestGenerator(

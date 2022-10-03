@@ -20,17 +20,15 @@ package im.turms.gateway.infra.fake;
 import im.turms.gateway.access.client.tcp.TcpUserSessionAssembler;
 import im.turms.gateway.infra.thread.ThreadNameConst;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
-import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.client.TurmsClient;
 import im.turms.server.common.infra.collection.CyclicIterator;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.ThrowableUtil;
-import im.turms.server.common.infra.fake.RandomProtobufGenerator;
+import im.turms.server.common.infra.fake.RandomProtobufGenerator.GeneratorOptions;
 import im.turms.server.common.infra.fake.RandomRequestFactory;
 import im.turms.server.common.infra.lang.Range;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -167,6 +165,7 @@ public class ClientFakingManager {
                 Math.max(0, firstUserId - jitter),
                 firstUserId + userCount + jitter
         );
+        GeneratorOptions generatorOptions = new GeneratorOptions(0.8F, 0.8F, fakedNumberRange);
         thread = NamedThreadFactory.newThread(ThreadNameConst.FAKE_CLIENT_MANAGER, true, () -> {
             CyclicIterator<TurmsClient> clientIterator = new CyclicIterator<>(clients);
             Set<String> excludedRequestNames = Set.of(RandomRequestFactory.CREATE_SESSION_REQUEST_FILED_NAME,
@@ -181,7 +180,7 @@ public class ClientFakingManager {
                             removeCurrentClient(clientIterator, client);
                             continue;
                         }
-                        TurmsRequest.Builder request = generateRandomRequest(excludedRequestNames, fakedNumberRange);
+                        TurmsRequest request = RandomRequestFactory.create(excludedRequestNames, generatorOptions);
                         client.sendRequest(request)
                                 .subscribe(null, t -> {
                                     LOGGER.error("Caught an internal error while sending request: {}",
@@ -209,20 +208,6 @@ public class ClientFakingManager {
             LOGGER.warn("All fake clients has been closed");
         });
         thread.start();
-    }
-
-    private TurmsRequest.Builder generateRandomRequest(Set<String> excludedRequestNames, Range<Long> fakedNumberRange) {
-        RandomProtobufGenerator.GeneratorOptions options = new RandomProtobufGenerator
-                .GeneratorOptions(1, 1, fakedNumberRange);
-        TurmsRequest.Builder builder = RandomRequestFactory.create(excludedRequestNames, options);
-        if (builder.hasUpdateUserOnlineStatusRequest()) {
-            UpdateUserOnlineStatusRequest updateStatusRequest = builder.getUpdateUserOnlineStatusRequest();
-            if (updateStatusRequest.getUserStatus() == UserStatus.OFFLINE) {
-                builder.setUpdateUserOnlineStatusRequest(updateStatusRequest.toBuilder()
-                        .setUserStatus(UserStatus.INVISIBLE));
-            }
-        }
-        return builder;
     }
 
     private void removeCurrentClient(Iterator<TurmsClient> clients, TurmsClient client) {

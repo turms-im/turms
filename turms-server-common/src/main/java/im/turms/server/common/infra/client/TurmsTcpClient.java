@@ -123,16 +123,21 @@ public class TurmsTcpClient extends TurmsClient {
 
     @Override
     public Mono<TurmsNotification> sendRequest(TurmsRequest.Builder requestBuilder) {
+        if (!requestBuilder.hasRequestId()) {
+            requestBuilder.setRequestId(RandomUtil.nextPositiveLong());
+        }
+        TurmsRequest request = requestBuilder.build();
+        return sendRequest(request);
+    }
+
+    @Override
+    public Mono<TurmsNotification> sendRequest(TurmsRequest request) {
         if (connection == null) {
             return Mono.error(new IllegalStateException("Connection is null"));
         }
         if (connection.isDisposed()) {
             return Mono.error(new IllegalStateException("Connection is closed"));
         }
-        if (!requestBuilder.hasRequestId()) {
-            requestBuilder.setRequestId(RandomUtil.nextPositiveLong());
-        }
-        TurmsRequest request = requestBuilder.build();
         return connection
                 .sendObject(request)
                 .then()
