@@ -27,7 +27,7 @@ public interface GroupJoinQuestionsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
    */
-  java.util.List<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion> 
+  java.util.List<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion>
       getGroupJoinQuestionsList();
   /**
    * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
@@ -40,7 +40,7 @@ public interface GroupJoinQuestionsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
    */
-  java.util.List<? extends im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder> 
+  java.util.List<? extends im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder>
       getGroupJoinQuestionsOrBuilderList();
   /**
    * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>

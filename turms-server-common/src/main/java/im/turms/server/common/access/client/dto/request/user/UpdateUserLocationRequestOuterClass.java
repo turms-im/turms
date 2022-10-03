@@ -33,12 +33,12 @@ public final class UpdateUserLocationRequestOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_UpdateUserLocationRequest_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_UpdateUserLocationRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_UpdateUserLocationRequest_DetailsEntry_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_UpdateUserLocationRequest_DetailsEntry_fieldAccessorTable;
 

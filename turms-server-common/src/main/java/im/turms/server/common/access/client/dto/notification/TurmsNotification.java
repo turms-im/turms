@@ -48,102 +48,6 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private TurmsNotification(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    int mutable_bitField0_ = 0;
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 8: {
-            timestamp_ = input.readInt64();
-            break;
-          }
-          case 32: {
-            bitField0_ |= 0x00000001;
-            requestId_ = input.readInt64();
-            break;
-          }
-          case 40: {
-            bitField0_ |= 0x00000002;
-            code_ = input.readInt32();
-            break;
-          }
-          case 50: {
-            java.lang.String s = input.readStringRequireUtf8();
-            bitField0_ |= 0x00000004;
-            reason_ = s;
-            break;
-          }
-          case 58: {
-            im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder subBuilder = null;
-            if (data_ != null) {
-              subBuilder = data_.toBuilder();
-            }
-            data_ = input.readMessage(im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(data_);
-              data_ = subBuilder.buildPartial();
-            }
-
-            break;
-          }
-          case 80: {
-            bitField0_ |= 0x00000008;
-            requesterId_ = input.readInt64();
-            break;
-          }
-          case 88: {
-            bitField0_ |= 0x00000010;
-            closeStatus_ = input.readInt32();
-            break;
-          }
-          case 98: {
-            im.turms.server.common.access.client.dto.request.TurmsRequest.Builder subBuilder = null;
-            if (relayedRequest_ != null) {
-              subBuilder = relayedRequest_.toBuilder();
-            }
-            relayedRequest_ = input.readMessage(im.turms.server.common.access.client.dto.request.TurmsRequest.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(relayedRequest_);
-              relayedRequest_ = subBuilder.buildPartial();
-            }
-
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
     return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_descriptor;
@@ -477,303 +381,6 @@ private static final long serialVersionUID = 0L;
     getUnknownFields() {
       return this.unknownFields;
     }
-    private Data(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              im.turms.server.common.access.client.dto.model.common.Int64Values.Builder subBuilder = null;
-              if (kindCase_ == 1) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.common.Int64Values) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.common.Int64Values.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.common.Int64Values) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 1;
-              break;
-            }
-            case 18: {
-              im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion.Builder subBuilder = null;
-              if (kindCase_ == 2) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 2;
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-              kindCase_ = 3;
-              kind_ = s;
-              break;
-            }
-            case 34: {
-              im.turms.server.common.access.client.dto.model.conversation.Conversations.Builder subBuilder = null;
-              if (kindCase_ == 4) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.conversation.Conversations) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.conversation.Conversations.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.conversation.Conversations) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 4;
-              break;
-            }
-            case 42: {
-              im.turms.server.common.access.client.dto.model.message.Messages.Builder subBuilder = null;
-              if (kindCase_ == 5) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.message.Messages) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.message.Messages.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.message.Messages) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 5;
-              break;
-            }
-            case 50: {
-              im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.Builder subBuilder = null;
-              if (kindCase_ == 6) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 6;
-              break;
-            }
-            case 58: {
-              im.turms.server.common.access.client.dto.model.user.UserSession.Builder subBuilder = null;
-              if (kindCase_ == 7) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.user.UserSession) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.user.UserSession.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.user.UserSession) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 7;
-              break;
-            }
-            case 66: {
-              im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion.Builder subBuilder = null;
-              if (kindCase_ == 8) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 8;
-              break;
-            }
-            case 74: {
-              im.turms.server.common.access.client.dto.model.user.UsersOnlineStatuses.Builder subBuilder = null;
-              if (kindCase_ == 9) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.user.UsersOnlineStatuses) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.user.UsersOnlineStatuses.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.user.UsersOnlineStatuses) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 9;
-              break;
-            }
-            case 82: {
-              im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion.Builder subBuilder = null;
-              if (kindCase_ == 10) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 10;
-              break;
-            }
-            case 90: {
-              im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.Builder subBuilder = null;
-              if (kindCase_ == 11) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 11;
-              break;
-            }
-            case 98: {
-              im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion.Builder subBuilder = null;
-              if (kindCase_ == 12) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 12;
-              break;
-            }
-            case 106: {
-              im.turms.server.common.access.client.dto.model.user.NearbyUsers.Builder subBuilder = null;
-              if (kindCase_ == 13) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.user.NearbyUsers) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.user.NearbyUsers.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.user.NearbyUsers) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 13;
-              break;
-            }
-            case 114: {
-              im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.Builder subBuilder = null;
-              if (kindCase_ == 14) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 14;
-              break;
-            }
-            case 122: {
-              im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult.Builder subBuilder = null;
-              if (kindCase_ == 15) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 15;
-              break;
-            }
-            case 130: {
-              im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion.Builder subBuilder = null;
-              if (kindCase_ == 16) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 16;
-              break;
-            }
-            case 138: {
-              im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion.Builder subBuilder = null;
-              if (kindCase_ == 17) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 17;
-              break;
-            }
-            case 146: {
-              im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion.Builder subBuilder = null;
-              if (kindCase_ == 18) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 18;
-              break;
-            }
-            case 154: {
-              im.turms.server.common.access.client.dto.model.group.GroupsWithVersion.Builder subBuilder = null;
-              if (kindCase_ == 19) {
-                subBuilder = ((im.turms.server.common.access.client.dto.model.group.GroupsWithVersion) kind_).toBuilder();
-              }
-              kind_ =
-                  input.readMessage(im.turms.server.common.access.client.dto.model.group.GroupsWithVersion.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.server.common.access.client.dto.model.group.GroupsWithVersion) kind_);
-                kind_ = subBuilder.buildPartial();
-              }
-              kindCase_ = 19;
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_Data_descriptor;
@@ -944,7 +551,7 @@ private static final long serialVersionUID = 0L;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (kindCase_ == 3) {
@@ -964,7 +571,7 @@ private static final long serialVersionUID = 0L;
         ref = kind_;
       }
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         if (kindCase_ == 3) {
@@ -1486,64 +1093,28 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (kindCase_ == 1) {
-        output.writeMessage(1, (im.turms.server.common.access.client.dto.model.common.Int64Values) kind_);
+      switch (kindCase_) {
+        case 1 -> output.writeMessage(1, (im.turms.server.common.access.client.dto.model.common.Int64Values) kind_);
+        case 2 -> output.writeMessage(2, (im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion) kind_);
+        case 3 -> com.google.protobuf.GeneratedMessageV3.writeString(output, 3, kind_);
+        case 4 -> output.writeMessage(4, (im.turms.server.common.access.client.dto.model.conversation.Conversations) kind_);
+        case 5 -> output.writeMessage(5, (im.turms.server.common.access.client.dto.model.message.Messages) kind_);
+        case 6 -> output.writeMessage(6, (im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList) kind_);
+        case 7 -> output.writeMessage(7, (im.turms.server.common.access.client.dto.model.user.UserSession) kind_);
+        case 8 -> output.writeMessage(8, (im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion) kind_);
+        case 9 -> output.writeMessage(9, (im.turms.server.common.access.client.dto.model.user.UsersOnlineStatuses) kind_);
+        case 10 -> output.writeMessage(10, (im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion) kind_);
+        case 11 -> output.writeMessage(11, (im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion) kind_);
+        case 12 -> output.writeMessage(12, (im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion) kind_);
+        case 13 -> output.writeMessage(13, (im.turms.server.common.access.client.dto.model.user.NearbyUsers) kind_);
+        case 14 -> output.writeMessage(14, (im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) kind_);
+        case 15 -> output.writeMessage(15, (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult) kind_);
+        case 16 -> output.writeMessage(16, (im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion) kind_);
+        case 17 -> output.writeMessage(17, (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion) kind_);
+        case 18 -> output.writeMessage(18, (im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion) kind_);
+        case 19 -> output.writeMessage(19, (im.turms.server.common.access.client.dto.model.group.GroupsWithVersion) kind_);
       }
-      if (kindCase_ == 2) {
-        output.writeMessage(2, (im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion) kind_);
-      }
-      if (kindCase_ == 3) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, kind_);
-      }
-      if (kindCase_ == 4) {
-        output.writeMessage(4, (im.turms.server.common.access.client.dto.model.conversation.Conversations) kind_);
-      }
-      if (kindCase_ == 5) {
-        output.writeMessage(5, (im.turms.server.common.access.client.dto.model.message.Messages) kind_);
-      }
-      if (kindCase_ == 6) {
-        output.writeMessage(6, (im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList) kind_);
-      }
-      if (kindCase_ == 7) {
-        output.writeMessage(7, (im.turms.server.common.access.client.dto.model.user.UserSession) kind_);
-      }
-      if (kindCase_ == 8) {
-        output.writeMessage(8, (im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion) kind_);
-      }
-      if (kindCase_ == 9) {
-        output.writeMessage(9, (im.turms.server.common.access.client.dto.model.user.UsersOnlineStatuses) kind_);
-      }
-      if (kindCase_ == 10) {
-        output.writeMessage(10, (im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion) kind_);
-      }
-      if (kindCase_ == 11) {
-        output.writeMessage(11, (im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion) kind_);
-      }
-      if (kindCase_ == 12) {
-        output.writeMessage(12, (im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion) kind_);
-      }
-      if (kindCase_ == 13) {
-        output.writeMessage(13, (im.turms.server.common.access.client.dto.model.user.NearbyUsers) kind_);
-      }
-      if (kindCase_ == 14) {
-        output.writeMessage(14, (im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) kind_);
-      }
-      if (kindCase_ == 15) {
-        output.writeMessage(15, (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult) kind_);
-      }
-      if (kindCase_ == 16) {
-        output.writeMessage(16, (im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion) kind_);
-      }
-      if (kindCase_ == 17) {
-        output.writeMessage(17, (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion) kind_);
-      }
-      if (kindCase_ == 18) {
-        output.writeMessage(18, (im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion) kind_);
-      }
-      if (kindCase_ == 19) {
-        output.writeMessage(19, (im.turms.server.common.access.client.dto.model.group.GroupsWithVersion) kind_);
-      }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -1552,82 +1123,46 @@ private static final long serialVersionUID = 0L;
       if (size != -1) return size;
 
       size = 0;
-      if (kindCase_ == 1) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, (im.turms.server.common.access.client.dto.model.common.Int64Values) kind_);
+      switch (kindCase_) {
+        case 1 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(1, (im.turms.server.common.access.client.dto.model.common.Int64Values) kind_);
+        case 2 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(2, (im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion) kind_);
+        case 3 -> size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, kind_);
+        case 4 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(4, (im.turms.server.common.access.client.dto.model.conversation.Conversations) kind_);
+        case 5 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(5, (im.turms.server.common.access.client.dto.model.message.Messages) kind_);
+        case 6 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(6, (im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList) kind_);
+        case 7 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(7, (im.turms.server.common.access.client.dto.model.user.UserSession) kind_);
+        case 8 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(8, (im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion) kind_);
+        case 9 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(9, (im.turms.server.common.access.client.dto.model.user.UsersOnlineStatuses) kind_);
+        case 10 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(10, (im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion) kind_);
+        case 11 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(11, (im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion) kind_);
+        case 12 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(12, (im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion) kind_);
+        case 13 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(13, (im.turms.server.common.access.client.dto.model.user.NearbyUsers) kind_);
+        case 14 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(14, (im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) kind_);
+        case 15 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(15, (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult) kind_);
+        case 16 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(16, (im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion) kind_);
+        case 17 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(17, (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion) kind_);
+        case 18 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(18, (im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion) kind_);
+        case 19 -> size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(19, (im.turms.server.common.access.client.dto.model.group.GroupsWithVersion) kind_);
       }
-      if (kindCase_ == 2) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, (im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion) kind_);
-      }
-      if (kindCase_ == 3) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, kind_);
-      }
-      if (kindCase_ == 4) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, (im.turms.server.common.access.client.dto.model.conversation.Conversations) kind_);
-      }
-      if (kindCase_ == 5) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, (im.turms.server.common.access.client.dto.model.message.Messages) kind_);
-      }
-      if (kindCase_ == 6) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(6, (im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList) kind_);
-      }
-      if (kindCase_ == 7) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(7, (im.turms.server.common.access.client.dto.model.user.UserSession) kind_);
-      }
-      if (kindCase_ == 8) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(8, (im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion) kind_);
-      }
-      if (kindCase_ == 9) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(9, (im.turms.server.common.access.client.dto.model.user.UsersOnlineStatuses) kind_);
-      }
-      if (kindCase_ == 10) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(10, (im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion) kind_);
-      }
-      if (kindCase_ == 11) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(11, (im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion) kind_);
-      }
-      if (kindCase_ == 12) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(12, (im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion) kind_);
-      }
-      if (kindCase_ == 13) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(13, (im.turms.server.common.access.client.dto.model.user.NearbyUsers) kind_);
-      }
-      if (kindCase_ == 14) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(14, (im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) kind_);
-      }
-      if (kindCase_ == 15) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(15, (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult) kind_);
-      }
-      if (kindCase_ == 16) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(16, (im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion) kind_);
-      }
-      if (kindCase_ == 17) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(17, (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion) kind_);
-      }
-      if (kindCase_ == 18) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(18, (im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion) kind_);
-      }
-      if (kindCase_ == 19) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(19, (im.turms.server.common.access.client.dto.model.group.GroupsWithVersion) kind_);
-      }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -1723,7 +1258,7 @@ private static final long serialVersionUID = 0L;
         case 0:
         default:
       }
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -1814,7 +1349,7 @@ private static final long serialVersionUID = 0L;
         case 0:
         default:
       }
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -1931,22 +1466,71 @@ private static final long serialVersionUID = 0L;
 
       // Construct using im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        if (idsBuilder_ != null) {
+          idsBuilder_.clear();
+        }
+        if (idsWithVersionBuilder_ != null) {
+          idsWithVersionBuilder_.clear();
+        }
+        if (conversationsBuilder_ != null) {
+          conversationsBuilder_.clear();
+        }
+        if (messagesBuilder_ != null) {
+          messagesBuilder_.clear();
+        }
+        if (messagesWithTotalListBuilder_ != null) {
+          messagesWithTotalListBuilder_.clear();
+        }
+        if (userSessionBuilder_ != null) {
+          userSessionBuilder_.clear();
+        }
+        if (usersInfosWithVersionBuilder_ != null) {
+          usersInfosWithVersionBuilder_.clear();
+        }
+        if (usersOnlineStatusesBuilder_ != null) {
+          usersOnlineStatusesBuilder_.clear();
+        }
+        if (userFriendRequestsWithVersionBuilder_ != null) {
+          userFriendRequestsWithVersionBuilder_.clear();
+        }
+        if (userRelationshipGroupsWithVersionBuilder_ != null) {
+          userRelationshipGroupsWithVersionBuilder_.clear();
+        }
+        if (userRelationshipsWithVersionBuilder_ != null) {
+          userRelationshipsWithVersionBuilder_.clear();
+        }
+        if (nearbyUsersBuilder_ != null) {
+          nearbyUsersBuilder_.clear();
+        }
+        if (groupInvitationsWithVersionBuilder_ != null) {
+          groupInvitationsWithVersionBuilder_.clear();
+        }
+        if (groupJoinQuestionAnswerResultBuilder_ != null) {
+          groupJoinQuestionAnswerResultBuilder_.clear();
+        }
+        if (groupJoinRequestsWithVersionBuilder_ != null) {
+          groupJoinRequestsWithVersionBuilder_.clear();
+        }
+        if (groupJoinQuestionsWithVersionBuilder_ != null) {
+          groupJoinQuestionsWithVersionBuilder_.clear();
+        }
+        if (groupMembersWithVersionBuilder_ != null) {
+          groupMembersWithVersionBuilder_.clear();
+        }
+        if (groupsWithVersionBuilder_ != null) {
+          groupsWithVersionBuilder_.clear();
+        }
         kindCase_ = 0;
         kind_ = null;
         return this;
@@ -2238,7 +1822,7 @@ private static final long serialVersionUID = 0L;
             break;
           }
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -2253,17 +1837,162 @@ private static final long serialVersionUID = 0L;
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        im.turms.server.common.access.client.dto.notification.TurmsNotification.Data parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                input.readMessage(
+                    getIdsFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 1;
+                break;
+              } // case 10
+              case 18: {
+                input.readMessage(
+                    getIdsWithVersionFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 2;
+                break;
+              } // case 18
+              case 26: {
+                java.lang.String s = input.readStringRequireUtf8();
+                kindCase_ = 3;
+                kind_ = s;
+                break;
+              } // case 26
+              case 34: {
+                input.readMessage(
+                    getConversationsFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 4;
+                break;
+              } // case 34
+              case 42: {
+                input.readMessage(
+                    getMessagesFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 5;
+                break;
+              } // case 42
+              case 50: {
+                input.readMessage(
+                    getMessagesWithTotalListFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 6;
+                break;
+              } // case 50
+              case 58: {
+                input.readMessage(
+                    getUserSessionFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 7;
+                break;
+              } // case 58
+              case 66: {
+                input.readMessage(
+                    getUsersInfosWithVersionFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 8;
+                break;
+              } // case 66
+              case 74: {
+                input.readMessage(
+                    getUsersOnlineStatusesFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 9;
+                break;
+              } // case 74
+              case 82: {
+                input.readMessage(
+                    getUserFriendRequestsWithVersionFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 10;
+                break;
+              } // case 82
+              case 90: {
+                input.readMessage(
+                    getUserRelationshipGroupsWithVersionFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 11;
+                break;
+              } // case 90
+              case 98: {
+                input.readMessage(
+                    getUserRelationshipsWithVersionFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 12;
+                break;
+              } // case 98
+              case 106: {
+                input.readMessage(
+                    getNearbyUsersFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 13;
+                break;
+              } // case 106
+              case 114: {
+                input.readMessage(
+                    getGroupInvitationsWithVersionFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 14;
+                break;
+              } // case 114
+              case 122: {
+                input.readMessage(
+                    getGroupJoinQuestionAnswerResultFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 15;
+                break;
+              } // case 122
+              case 130: {
+                input.readMessage(
+                    getGroupJoinRequestsWithVersionFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 16;
+                break;
+              } // case 130
+              case 138: {
+                input.readMessage(
+                    getGroupJoinQuestionsWithVersionFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 17;
+                break;
+              } // case 138
+              case 146: {
+                input.readMessage(
+                    getGroupMembersWithVersionFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 18;
+                break;
+              } // case 146
+              case 154: {
+                input.readMessage(
+                    getGroupsWithVersionFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                kindCase_ = 19;
+                break;
+              } // case 154
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (im.turms.server.common.access.client.dto.notification.TurmsNotification.Data) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
       private int kindCase_ = 0;
@@ -4967,7 +4696,18 @@ private static final long serialVersionUID = 0L;
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Data(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -5241,7 +4981,7 @@ private static final long serialVersionUID = 0L;
     if (relayedRequest_ != null) {
       output.writeMessage(12, getRelayedRequest());
     }
-    unknownFields.writeTo(output);
+    getUnknownFields().writeTo(output);
   }
 
   @java.lang.Override
@@ -5281,7 +5021,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(12, getRelayedRequest());
     }
-    size += unknownFields.getSerializedSize();
+    size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -5333,7 +5073,7 @@ private static final long serialVersionUID = 0L;
       if (!getRelayedRequest()
           .equals(other.getRelayedRequest())) return false;
     }
-    if (!unknownFields.equals(other.unknownFields)) return false;
+    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
 
@@ -5377,7 +5117,7 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + RELAYED_REQUEST_FIELD_NUMBER;
       hash = (53 * hash) + getRelayedRequest().hashCode();
     }
-    hash = (29 * hash) + unknownFields.hashCode();
+    hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
@@ -5494,18 +5234,13 @@ private static final long serialVersionUID = 0L;
 
     // Construct using im.turms.server.common.access.client.dto.notification.TurmsNotification.newBuilder()
     private Builder() {
-      maybeForceBuilderInitialization();
+
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
+
     }
     @java.lang.Override
     public Builder clear() {
@@ -5668,7 +5403,7 @@ private static final long serialVersionUID = 0L;
       if (other.hasRelayedRequest()) {
         mergeRelayedRequest(other.getRelayedRequest());
       }
-      this.mergeUnknownFields(other.unknownFields);
+      this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
     }
@@ -5683,17 +5418,74 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      im.turms.server.common.access.client.dto.notification.TurmsNotification parsedMessage = null;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              timestamp_ = input.readInt64();
+
+              break;
+            } // case 8
+            case 32: {
+              requestId_ = input.readInt64();
+              bitField0_ |= 0x00000001;
+              break;
+            } // case 32
+            case 40: {
+              code_ = input.readInt32();
+              bitField0_ |= 0x00000002;
+              break;
+            } // case 40
+            case 50: {
+              reason_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000004;
+              break;
+            } // case 50
+            case 58: {
+              input.readMessage(
+                  getDataFieldBuilder().getBuilder(),
+                  extensionRegistry);
+
+              break;
+            } // case 58
+            case 80: {
+              requesterId_ = input.readInt64();
+              bitField0_ |= 0x00000008;
+              break;
+            } // case 80
+            case 88: {
+              closeStatus_ = input.readInt32();
+              bitField0_ |= 0x00000010;
+              break;
+            } // case 88
+            case 98: {
+              input.readMessage(
+                  getRelayedRequestFieldBuilder().getBuilder(),
+                  extensionRegistry);
+
+              break;
+            } // case 98
+            default: {
+              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                done = true; // was an endgroup tag
+              }
+              break;
+            } // default:
+          } // switch (tag)
+        } // while (!done)
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (im.turms.server.common.access.client.dto.notification.TurmsNotification) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
+        onChanged();
+      } // finally
       return this;
     }
     private int bitField0_;
@@ -6302,7 +6094,18 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new TurmsNotification(input, extensionRegistry);
+      Builder builder = newBuilder();
+      try {
+        builder.mergeFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(builder.buildPartial());
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(e)
+            .setUnfinishedMessage(builder.buildPartial());
+      }
+      return builder.buildPartial();
     }
   };
 

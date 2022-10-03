@@ -50,100 +50,6 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private CreateSessionRequest(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    int mutable_bitField0_ = 0;
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 8: {
-
-            version_ = input.readInt32();
-            break;
-          }
-          case 16: {
-
-            userId_ = input.readInt64();
-            break;
-          }
-          case 26: {
-            java.lang.String s = input.readStringRequireUtf8();
-            bitField0_ |= 0x00000001;
-            password_ = s;
-            break;
-          }
-          case 32: {
-            int rawValue = input.readEnum();
-            bitField0_ |= 0x00000002;
-            userStatus_ = rawValue;
-            break;
-          }
-          case 40: {
-            int rawValue = input.readEnum();
-
-            deviceType_ = rawValue;
-            break;
-          }
-          case 50: {
-            if (!((mutable_bitField0_ & 0x00000004) != 0)) {
-              deviceDetails_ = com.google.protobuf.MapField.newMapField(
-                  DeviceDetailsDefaultEntryHolder.defaultEntry);
-              mutable_bitField0_ |= 0x00000004;
-            }
-            com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-            deviceDetails__ = input.readMessage(
-                DeviceDetailsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-            deviceDetails_.getMutableMap().put(
-                deviceDetails__.getKey(), deviceDetails__.getValue());
-            break;
-          }
-          case 58: {
-            im.turms.server.common.access.client.dto.model.user.UserLocation.Builder subBuilder = null;
-            if (((bitField0_ & 0x00000004) != 0)) {
-              subBuilder = location_.toBuilder();
-            }
-            location_ = input.readMessage(im.turms.server.common.access.client.dto.model.user.UserLocation.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(location_);
-              location_ = subBuilder.buildPartial();
-            }
-            bitField0_ |= 0x00000004;
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
     return im.turms.server.common.access.client.dto.request.user.CreateSessionRequestOuterClass.internal_static_im_turms_proto_CreateSessionRequest_descriptor;
@@ -212,7 +118,7 @@ private static final long serialVersionUID = 0L;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
-      com.google.protobuf.ByteString bs = 
+      com.google.protobuf.ByteString bs =
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
       password_ = s;
@@ -228,7 +134,7 @@ private static final long serialVersionUID = 0L;
       getPasswordBytes() {
     java.lang.Object ref = password_;
     if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
+      com.google.protobuf.ByteString b =
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
       password_ = b;
@@ -289,7 +195,7 @@ private static final long serialVersionUID = 0L;
         java.lang.String, java.lang.String> defaultEntry =
             com.google.protobuf.MapEntry
             .<java.lang.String, java.lang.String>newDefaultInstance(
-                im.turms.server.common.access.client.dto.request.user.CreateSessionRequestOuterClass.internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_descriptor, 
+                im.turms.server.common.access.client.dto.request.user.CreateSessionRequestOuterClass.internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_descriptor,
                 com.google.protobuf.WireFormat.FieldType.STRING,
                 "",
                 com.google.protobuf.WireFormat.FieldType.STRING,
@@ -428,7 +334,7 @@ private static final long serialVersionUID = 0L;
     if (((bitField0_ & 0x00000004) != 0)) {
       output.writeMessage(7, getLocation());
     }
-    unknownFields.writeTo(output);
+    getUnknownFields().writeTo(output);
   }
 
   @java.lang.Override
@@ -470,7 +376,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(7, getLocation());
     }
-    size += unknownFields.getSerializedSize();
+    size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -506,7 +412,7 @@ private static final long serialVersionUID = 0L;
       if (!getLocation()
           .equals(other.getLocation())) return false;
     }
-    if (!unknownFields.equals(other.unknownFields)) return false;
+    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
 
@@ -540,7 +446,7 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + LOCATION_FIELD_NUMBER;
       hash = (53 * hash) + getLocation().hashCode();
     }
-    hash = (29 * hash) + unknownFields.hashCode();
+    hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
@@ -833,7 +739,7 @@ private static final long serialVersionUID = 0L;
       if (other.hasLocation()) {
         mergeLocation(other.getLocation());
       }
-      this.mergeUnknownFields(other.unknownFields);
+      this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
     }
@@ -848,17 +754,70 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      im.turms.server.common.access.client.dto.request.user.CreateSessionRequest parsedMessage = null;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              version_ = input.readInt32();
+
+              break;
+            } // case 8
+            case 16: {
+              userId_ = input.readInt64();
+
+              break;
+            } // case 16
+            case 26: {
+              password_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000001;
+              break;
+            } // case 26
+            case 32: {
+              userStatus_ = input.readEnum();
+              bitField0_ |= 0x00000002;
+              break;
+            } // case 32
+            case 40: {
+              deviceType_ = input.readEnum();
+
+              break;
+            } // case 40
+            case 50: {
+              com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+              deviceDetails__ = input.readMessage(
+                  DeviceDetailsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              internalGetMutableDeviceDetails().getMutableMap().put(
+                  deviceDetails__.getKey(), deviceDetails__.getValue());
+              break;
+            } // case 50
+            case 58: {
+              input.readMessage(
+                  getLocationFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              bitField0_ |= 0x00000008;
+              break;
+            } // case 58
+            default: {
+              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                done = true; // was an endgroup tag
+              }
+              break;
+            } // default:
+          } // switch (tag)
+        } // while (!done)
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (im.turms.server.common.access.client.dto.request.user.CreateSessionRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
+        onChanged();
+      } // finally
       return this;
     }
     private int bitField0_;
@@ -878,7 +837,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setVersion(int value) {
-      
+
       version_ = value;
       onChanged();
       return this;
@@ -888,7 +847,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearVersion() {
-      
+
       version_ = 0;
       onChanged();
       return this;
@@ -909,7 +868,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setUserId(long value) {
-      
+
       userId_ = value;
       onChanged();
       return this;
@@ -919,7 +878,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearUserId() {
-      
+
       userId_ = 0L;
       onChanged();
       return this;
@@ -957,7 +916,7 @@ private static final long serialVersionUID = 0L;
         getPasswordBytes() {
       java.lang.Object ref = password_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         password_ = b;
@@ -1083,7 +1042,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setDeviceTypeValue(int value) {
-      
+
       deviceType_ = value;
       onChanged();
       return this;
@@ -1107,7 +1066,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
         throw new NullPointerException();
       }
-      
+
       deviceType_ = value.getNumber();
       onChanged();
       return this;
@@ -1117,7 +1076,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearDeviceType() {
-      
+
       deviceType_ = 0;
       onChanged();
       return this;
@@ -1361,7 +1320,7 @@ private static final long serialVersionUID = 0L;
      * <code>optional .im.turms.proto.UserLocation location = 7;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.server.common.access.client.dto.model.user.UserLocation, im.turms.server.common.access.client.dto.model.user.UserLocation.Builder, im.turms.server.common.access.client.dto.model.user.UserLocationOrBuilder> 
+        im.turms.server.common.access.client.dto.model.user.UserLocation, im.turms.server.common.access.client.dto.model.user.UserLocation.Builder, im.turms.server.common.access.client.dto.model.user.UserLocationOrBuilder>
         getLocationFieldBuilder() {
       if (locationBuilder_ == null) {
         locationBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1406,7 +1365,18 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new CreateSessionRequest(input, extensionRegistry);
+      Builder builder = newBuilder();
+      try {
+        builder.mergeFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(builder.buildPartial());
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(e)
+            .setUnfinishedMessage(builder.buildPartial());
+      }
+      return builder.buildPartial();
     }
   };
 

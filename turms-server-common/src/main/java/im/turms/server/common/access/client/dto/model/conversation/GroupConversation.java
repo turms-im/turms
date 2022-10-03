@@ -47,64 +47,6 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private GroupConversation(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    int mutable_bitField0_ = 0;
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 8: {
-
-            groupId_ = input.readInt64();
-            break;
-          }
-          case 18: {
-            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              memberIdToReadDate_ = com.google.protobuf.MapField.newMapField(
-                  MemberIdToReadDateDefaultEntryHolder.defaultEntry);
-              mutable_bitField0_ |= 0x00000001;
-            }
-            com.google.protobuf.MapEntry<java.lang.Long, java.lang.Long>
-            memberIdToReadDate__ = input.readMessage(
-                MemberIdToReadDateDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-            memberIdToReadDate_.getMutableMap().put(
-                memberIdToReadDate__.getKey(), memberIdToReadDate__.getValue());
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
     return im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_descriptor;
@@ -147,7 +89,7 @@ private static final long serialVersionUID = 0L;
         java.lang.Long, java.lang.Long> defaultEntry =
             com.google.protobuf.MapEntry
             .<java.lang.Long, java.lang.Long>newDefaultInstance(
-                im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_MemberIdToReadDateEntry_descriptor, 
+                im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_MemberIdToReadDateEntry_descriptor,
                 com.google.protobuf.WireFormat.FieldType.INT64,
                 0L,
                 com.google.protobuf.WireFormat.FieldType.INT64,
@@ -174,7 +116,7 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean containsMemberIdToReadDate(
       long key) {
-    
+
     return internalGetMemberIdToReadDate().getMap().containsKey(key);
   }
   /**
@@ -201,7 +143,7 @@ private static final long serialVersionUID = 0L;
   public long getMemberIdToReadDateOrDefault(
       long key,
       long defaultValue) {
-    
+
     java.util.Map<java.lang.Long, java.lang.Long> map =
         internalGetMemberIdToReadDate().getMap();
     return map.containsKey(key) ? map.get(key) : defaultValue;
@@ -213,7 +155,7 @@ private static final long serialVersionUID = 0L;
 
   public long getMemberIdToReadDateOrThrow(
       long key) {
-    
+
     java.util.Map<java.lang.Long, java.lang.Long> map =
         internalGetMemberIdToReadDate().getMap();
     if (!map.containsKey(key)) {
@@ -245,7 +187,7 @@ private static final long serialVersionUID = 0L;
         internalGetMemberIdToReadDate(),
         MemberIdToReadDateDefaultEntryHolder.defaultEntry,
         2);
-    unknownFields.writeTo(output);
+    getUnknownFields().writeTo(output);
   }
 
   @java.lang.Override
@@ -268,7 +210,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, memberIdToReadDate__);
     }
-    size += unknownFields.getSerializedSize();
+    size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -287,7 +229,7 @@ private static final long serialVersionUID = 0L;
         != other.getGroupId()) return false;
     if (!internalGetMemberIdToReadDate().equals(
         other.internalGetMemberIdToReadDate())) return false;
-    if (!unknownFields.equals(other.unknownFields)) return false;
+    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
 
@@ -305,7 +247,7 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + MEMBER_ID_TO_READ_DATE_FIELD_NUMBER;
       hash = (53 * hash) + internalGetMemberIdToReadDate().hashCode();
     }
-    hash = (29 * hash) + unknownFields.hashCode();
+    hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
@@ -444,18 +386,13 @@ private static final long serialVersionUID = 0L;
 
     // Construct using im.turms.server.common.access.client.dto.model.conversation.GroupConversation.newBuilder()
     private Builder() {
-      maybeForceBuilderInitialization();
+
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
+
     }
     @java.lang.Override
     public Builder clear() {
@@ -546,7 +483,7 @@ private static final long serialVersionUID = 0L;
       }
       internalGetMutableMemberIdToReadDate().mergeFrom(
           other.internalGetMemberIdToReadDate());
-      this.mergeUnknownFields(other.unknownFields);
+      this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
     }
@@ -561,17 +498,43 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      im.turms.server.common.access.client.dto.model.conversation.GroupConversation parsedMessage = null;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              groupId_ = input.readInt64();
+
+              break;
+            } // case 8
+            case 18: {
+              com.google.protobuf.MapEntry<java.lang.Long, java.lang.Long>
+              memberIdToReadDate__ = input.readMessage(
+                  MemberIdToReadDateDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              internalGetMutableMemberIdToReadDate().getMutableMap().put(
+                  memberIdToReadDate__.getKey(), memberIdToReadDate__.getValue());
+              break;
+            } // case 18
+            default: {
+              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                done = true; // was an endgroup tag
+              }
+              break;
+            } // default:
+          } // switch (tag)
+        } // while (!done)
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (im.turms.server.common.access.client.dto.model.conversation.GroupConversation) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
+        onChanged();
+      } // finally
       return this;
     }
     private int bitField0_;
@@ -591,7 +554,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setGroupId(long value) {
-      
+
       groupId_ = value;
       onChanged();
       return this;
@@ -601,7 +564,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearGroupId() {
-      
+
       groupId_ = 0L;
       onChanged();
       return this;
@@ -640,7 +603,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public boolean containsMemberIdToReadDate(
         long key) {
-      
+
       return internalGetMemberIdToReadDate().getMap().containsKey(key);
     }
     /**
@@ -667,7 +630,7 @@ private static final long serialVersionUID = 0L;
     public long getMemberIdToReadDateOrDefault(
         long key,
         long defaultValue) {
-      
+
       java.util.Map<java.lang.Long, java.lang.Long> map =
           internalGetMemberIdToReadDate().getMap();
       return map.containsKey(key) ? map.get(key) : defaultValue;
@@ -679,7 +642,7 @@ private static final long serialVersionUID = 0L;
 
     public long getMemberIdToReadDateOrThrow(
         long key) {
-      
+
       java.util.Map<java.lang.Long, java.lang.Long> map =
           internalGetMemberIdToReadDate().getMap();
       if (!map.containsKey(key)) {
@@ -699,7 +662,7 @@ private static final long serialVersionUID = 0L;
 
     public Builder removeMemberIdToReadDate(
         long key) {
-      
+
       internalGetMutableMemberIdToReadDate().getMutableMap()
           .remove(key);
       return this;
@@ -718,8 +681,8 @@ private static final long serialVersionUID = 0L;
     public Builder putMemberIdToReadDate(
         long key,
         long value) {
-      
-      
+
+
       internalGetMutableMemberIdToReadDate().getMutableMap()
           .put(key, value);
       return this;
@@ -767,7 +730,18 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new GroupConversation(input, extensionRegistry);
+      Builder builder = newBuilder();
+      try {
+        builder.mergeFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(builder.buildPartial());
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(e)
+            .setUnfinishedMessage(builder.buildPartial());
+      }
+      return builder.buildPartial();
     }
   };
 

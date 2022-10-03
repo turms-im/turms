@@ -33,7 +33,7 @@ public final class UpdateTypingStatusRequestOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_UpdateTypingStatusRequest_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_UpdateTypingStatusRequest_fieldAccessorTable;
 

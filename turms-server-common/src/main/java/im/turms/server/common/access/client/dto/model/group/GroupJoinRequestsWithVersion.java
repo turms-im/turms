@@ -48,63 +48,6 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private GroupJoinRequestsWithVersion(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    int mutable_bitField0_ = 0;
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 10: {
-            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              groupJoinRequests_ = new java.util.ArrayList<im.turms.server.common.access.client.dto.model.group.GroupJoinRequest>();
-              mutable_bitField0_ |= 0x00000001;
-            }
-            groupJoinRequests_.add(
-                input.readMessage(im.turms.server.common.access.client.dto.model.group.GroupJoinRequest.parser(), extensionRegistry));
-            break;
-          }
-          case 16: {
-            bitField0_ |= 0x00000001;
-            lastUpdatedDate_ = input.readInt64();
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      if (((mutable_bitField0_ & 0x00000001) != 0)) {
-        groupJoinRequests_ = java.util.Collections.unmodifiableList(groupJoinRequests_);
-      }
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
     return im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersionOuterClass.internal_static_im_turms_proto_GroupJoinRequestsWithVersion_descriptor;
@@ -132,7 +75,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.server.common.access.client.dto.model.group.GroupJoinRequestOrBuilder> 
+  public java.util.List<? extends im.turms.server.common.access.client.dto.model.group.GroupJoinRequestOrBuilder>
       getGroupJoinRequestsOrBuilderList() {
     return groupJoinRequests_;
   }
@@ -198,7 +141,7 @@ private static final long serialVersionUID = 0L;
     if (((bitField0_ & 0x00000001) != 0)) {
       output.writeInt64(2, lastUpdatedDate_);
     }
-    unknownFields.writeTo(output);
+    getUnknownFields().writeTo(output);
   }
 
   @java.lang.Override
@@ -215,7 +158,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(2, lastUpdatedDate_);
     }
-    size += unknownFields.getSerializedSize();
+    size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -237,7 +180,7 @@ private static final long serialVersionUID = 0L;
       if (getLastUpdatedDate()
           != other.getLastUpdatedDate()) return false;
     }
-    if (!unknownFields.equals(other.unknownFields)) return false;
+    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
 
@@ -257,7 +200,7 @@ private static final long serialVersionUID = 0L;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getLastUpdatedDate());
     }
-    hash = (29 * hash) + unknownFields.hashCode();
+    hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
@@ -374,29 +317,24 @@ private static final long serialVersionUID = 0L;
 
     // Construct using im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion.newBuilder()
     private Builder() {
-      maybeForceBuilderInitialization();
+
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-        getGroupJoinRequestsFieldBuilder();
-      }
+
     }
     @java.lang.Override
     public Builder clear() {
       super.clear();
       if (groupJoinRequestsBuilder_ == null) {
         groupJoinRequests_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000001);
       } else {
+        groupJoinRequests_ = null;
         groupJoinRequestsBuilder_.clear();
       }
+      bitField0_ = (bitField0_ & ~0x00000001);
       lastUpdatedDate_ = 0L;
       bitField0_ = (bitField0_ & ~0x00000002);
       return this;
@@ -507,7 +445,7 @@ private static final long serialVersionUID = 0L;
             groupJoinRequestsBuilder_ = null;
             groupJoinRequests_ = other.groupJoinRequests_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            groupJoinRequestsBuilder_ = 
+            groupJoinRequestsBuilder_ =
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getGroupJoinRequestsFieldBuilder() : null;
           } else {
@@ -518,7 +456,7 @@ private static final long serialVersionUID = 0L;
       if (other.hasLastUpdatedDate()) {
         setLastUpdatedDate(other.getLastUpdatedDate());
       }
-      this.mergeUnknownFields(other.unknownFields);
+      this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
     }
@@ -533,17 +471,48 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion parsedMessage = null;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              im.turms.server.common.access.client.dto.model.group.GroupJoinRequest m =
+                  input.readMessage(
+                      im.turms.server.common.access.client.dto.model.group.GroupJoinRequest.parser(),
+                      extensionRegistry);
+              if (groupJoinRequestsBuilder_ == null) {
+                ensureGroupJoinRequestsIsMutable();
+                groupJoinRequests_.add(m);
+              } else {
+                groupJoinRequestsBuilder_.addMessage(m);
+              }
+              break;
+            } // case 10
+            case 16: {
+              lastUpdatedDate_ = input.readInt64();
+              bitField0_ |= 0x00000002;
+              break;
+            } // case 16
+            default: {
+              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                done = true; // was an endgroup tag
+              }
+              break;
+            } // default:
+          } // switch (tag)
+        } // while (!done)
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
+        onChanged();
+      } // finally
       return this;
     }
     private int bitField0_;
@@ -743,7 +712,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
      */
-    public java.util.List<? extends im.turms.server.common.access.client.dto.model.group.GroupJoinRequestOrBuilder> 
+    public java.util.List<? extends im.turms.server.common.access.client.dto.model.group.GroupJoinRequestOrBuilder>
          getGroupJoinRequestsOrBuilderList() {
       if (groupJoinRequestsBuilder_ != null) {
         return groupJoinRequestsBuilder_.getMessageOrBuilderList();
@@ -769,12 +738,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
      */
-    public java.util.List<im.turms.server.common.access.client.dto.model.group.GroupJoinRequest.Builder> 
+    public java.util.List<im.turms.server.common.access.client.dto.model.group.GroupJoinRequest.Builder>
          getGroupJoinRequestsBuilderList() {
       return getGroupJoinRequestsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.server.common.access.client.dto.model.group.GroupJoinRequest, im.turms.server.common.access.client.dto.model.group.GroupJoinRequest.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestOrBuilder> 
+        im.turms.server.common.access.client.dto.model.group.GroupJoinRequest, im.turms.server.common.access.client.dto.model.group.GroupJoinRequest.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestOrBuilder>
         getGroupJoinRequestsFieldBuilder() {
       if (groupJoinRequestsBuilder_ == null) {
         groupJoinRequestsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
@@ -859,7 +828,18 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new GroupJoinRequestsWithVersion(input, extensionRegistry);
+      Builder builder = newBuilder();
+      try {
+        builder.mergeFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(builder.buildPartial());
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(e)
+            .setUnfinishedMessage(builder.buildPartial());
+      }
+      return builder.buildPartial();
     }
   };
 

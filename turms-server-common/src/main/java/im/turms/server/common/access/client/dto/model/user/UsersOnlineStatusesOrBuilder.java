@@ -27,7 +27,7 @@ public interface UsersOnlineStatusesOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
    */
-  java.util.List<im.turms.server.common.access.client.dto.model.user.UserStatusDetail> 
+  java.util.List<im.turms.server.common.access.client.dto.model.user.UserStatusDetail>
       getUserStatusesList();
   /**
    * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
@@ -40,7 +40,7 @@ public interface UsersOnlineStatusesOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
    */
-  java.util.List<? extends im.turms.server.common.access.client.dto.model.user.UserStatusDetailOrBuilder> 
+  java.util.List<? extends im.turms.server.common.access.client.dto.model.user.UserStatusDetailOrBuilder>
       getUserStatusesOrBuilderList();
   /**
    * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>

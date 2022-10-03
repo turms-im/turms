@@ -27,7 +27,7 @@ public interface UsersInfosWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
    */
-  java.util.List<im.turms.server.common.access.client.dto.model.user.UserInfo> 
+  java.util.List<im.turms.server.common.access.client.dto.model.user.UserInfo>
       getUserInfosList();
   /**
    * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
@@ -40,7 +40,7 @@ public interface UsersInfosWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
    */
-  java.util.List<? extends im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder> 
+  java.util.List<? extends im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder>
       getUserInfosOrBuilderList();
   /**
    * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>

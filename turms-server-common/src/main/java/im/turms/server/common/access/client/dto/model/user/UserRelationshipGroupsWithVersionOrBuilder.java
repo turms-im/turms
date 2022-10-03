@@ -27,7 +27,7 @@ public interface UserRelationshipGroupsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.UserRelationshipGroup user_relationship_groups = 1;</code>
    */
-  java.util.List<im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup> 
+  java.util.List<im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup>
       getUserRelationshipGroupsList();
   /**
    * <code>repeated .im.turms.proto.UserRelationshipGroup user_relationship_groups = 1;</code>
@@ -40,7 +40,7 @@ public interface UserRelationshipGroupsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.UserRelationshipGroup user_relationship_groups = 1;</code>
    */
-  java.util.List<? extends im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupOrBuilder> 
+  java.util.List<? extends im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupOrBuilder>
       getUserRelationshipGroupsOrBuilderList();
   /**
    * <code>repeated .im.turms.proto.UserRelationshipGroup user_relationship_groups = 1;</code>

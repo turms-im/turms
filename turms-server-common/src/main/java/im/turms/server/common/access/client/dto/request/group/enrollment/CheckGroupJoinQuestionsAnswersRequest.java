@@ -47,59 +47,6 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private CheckGroupJoinQuestionsAnswersRequest(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    int mutable_bitField0_ = 0;
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 10: {
-            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              questionIdToAnswer_ = com.google.protobuf.MapField.newMapField(
-                  QuestionIdToAnswerDefaultEntryHolder.defaultEntry);
-              mutable_bitField0_ |= 0x00000001;
-            }
-            com.google.protobuf.MapEntry<java.lang.Long, java.lang.String>
-            questionIdToAnswer__ = input.readMessage(
-                QuestionIdToAnswerDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-            questionIdToAnswer_.getMutableMap().put(
-                questionIdToAnswer__.getKey(), questionIdToAnswer__.getValue());
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
     return im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOuterClass.internal_static_im_turms_proto_CheckGroupJoinQuestionsAnswersRequest_descriptor;
@@ -131,7 +78,7 @@ private static final long serialVersionUID = 0L;
         java.lang.Long, java.lang.String> defaultEntry =
             com.google.protobuf.MapEntry
             .<java.lang.Long, java.lang.String>newDefaultInstance(
-                im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOuterClass.internal_static_im_turms_proto_CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry_descriptor, 
+                im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOuterClass.internal_static_im_turms_proto_CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry_descriptor,
                 com.google.protobuf.WireFormat.FieldType.INT64,
                 0L,
                 com.google.protobuf.WireFormat.FieldType.STRING,
@@ -158,7 +105,7 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean containsQuestionIdToAnswer(
       long key) {
-    
+
     return internalGetQuestionIdToAnswer().getMap().containsKey(key);
   }
   /**
@@ -185,7 +132,7 @@ private static final long serialVersionUID = 0L;
   public java.lang.String getQuestionIdToAnswerOrDefault(
       long key,
       java.lang.String defaultValue) {
-    
+
     java.util.Map<java.lang.Long, java.lang.String> map =
         internalGetQuestionIdToAnswer().getMap();
     return map.containsKey(key) ? map.get(key) : defaultValue;
@@ -197,7 +144,7 @@ private static final long serialVersionUID = 0L;
 
   public java.lang.String getQuestionIdToAnswerOrThrow(
       long key) {
-    
+
     java.util.Map<java.lang.Long, java.lang.String> map =
         internalGetQuestionIdToAnswer().getMap();
     if (!map.containsKey(key)) {
@@ -226,7 +173,7 @@ private static final long serialVersionUID = 0L;
         internalGetQuestionIdToAnswer(),
         QuestionIdToAnswerDefaultEntryHolder.defaultEntry,
         1);
-    unknownFields.writeTo(output);
+    getUnknownFields().writeTo(output);
   }
 
   @java.lang.Override
@@ -245,7 +192,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, questionIdToAnswer__);
     }
-    size += unknownFields.getSerializedSize();
+    size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -262,7 +209,7 @@ private static final long serialVersionUID = 0L;
 
     if (!internalGetQuestionIdToAnswer().equals(
         other.internalGetQuestionIdToAnswer())) return false;
-    if (!unknownFields.equals(other.unknownFields)) return false;
+    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
 
@@ -277,7 +224,7 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + QUESTION_ID_TO_ANSWER_FIELD_NUMBER;
       hash = (53 * hash) + internalGetQuestionIdToAnswer().hashCode();
     }
-    hash = (29 * hash) + unknownFields.hashCode();
+    hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
@@ -416,18 +363,13 @@ private static final long serialVersionUID = 0L;
 
     // Construct using im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.newBuilder()
     private Builder() {
-      maybeForceBuilderInitialization();
+
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
+
     }
     @java.lang.Override
     public Builder clear() {
@@ -512,7 +454,7 @@ private static final long serialVersionUID = 0L;
       if (other == im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.getDefaultInstance()) return this;
       internalGetMutableQuestionIdToAnswer().mergeFrom(
           other.internalGetQuestionIdToAnswer());
-      this.mergeUnknownFields(other.unknownFields);
+      this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
     }
@@ -527,17 +469,38 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest parsedMessage = null;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              com.google.protobuf.MapEntry<java.lang.Long, java.lang.String>
+              questionIdToAnswer__ = input.readMessage(
+                  QuestionIdToAnswerDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              internalGetMutableQuestionIdToAnswer().getMutableMap().put(
+                  questionIdToAnswer__.getKey(), questionIdToAnswer__.getValue());
+              break;
+            } // case 10
+            default: {
+              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                done = true; // was an endgroup tag
+              }
+              break;
+            } // default:
+          } // switch (tag)
+        } // while (!done)
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
+        onChanged();
+      } // finally
       return this;
     }
     private int bitField0_;
@@ -575,7 +538,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public boolean containsQuestionIdToAnswer(
         long key) {
-      
+
       return internalGetQuestionIdToAnswer().getMap().containsKey(key);
     }
     /**
@@ -602,7 +565,7 @@ private static final long serialVersionUID = 0L;
     public java.lang.String getQuestionIdToAnswerOrDefault(
         long key,
         java.lang.String defaultValue) {
-      
+
       java.util.Map<java.lang.Long, java.lang.String> map =
           internalGetQuestionIdToAnswer().getMap();
       return map.containsKey(key) ? map.get(key) : defaultValue;
@@ -614,7 +577,7 @@ private static final long serialVersionUID = 0L;
 
     public java.lang.String getQuestionIdToAnswerOrThrow(
         long key) {
-      
+
       java.util.Map<java.lang.Long, java.lang.String> map =
           internalGetQuestionIdToAnswer().getMap();
       if (!map.containsKey(key)) {
@@ -634,7 +597,7 @@ private static final long serialVersionUID = 0L;
 
     public Builder removeQuestionIdToAnswer(
         long key) {
-      
+
       internalGetMutableQuestionIdToAnswer().getMutableMap()
           .remove(key);
       return this;
@@ -653,7 +616,7 @@ private static final long serialVersionUID = 0L;
     public Builder putQuestionIdToAnswer(
         long key,
         java.lang.String value) {
-      
+
       if (value == null) {
   throw new NullPointerException("map value");
 }
@@ -705,7 +668,18 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new CheckGroupJoinQuestionsAnswersRequest(input, extensionRegistry);
+      Builder builder = newBuilder();
+      try {
+        builder.mergeFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(builder.buildPartial());
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(e)
+            .setUnfinishedMessage(builder.buildPartial());
+      }
+      return builder.buildPartial();
     }
   };
 

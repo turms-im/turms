@@ -49,83 +49,6 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private UserStatusDetail(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    int mutable_bitField0_ = 0;
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 8: {
-
-            userId_ = input.readInt64();
-            break;
-          }
-          case 16: {
-            int rawValue = input.readEnum();
-
-            userStatus_ = rawValue;
-            break;
-          }
-          case 24: {
-            int rawValue = input.readEnum();
-            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              usingDeviceTypes_ = new java.util.ArrayList<java.lang.Integer>();
-              mutable_bitField0_ |= 0x00000001;
-            }
-            usingDeviceTypes_.add(rawValue);
-            break;
-          }
-          case 26: {
-            int length = input.readRawVarint32();
-            int oldLimit = input.pushLimit(length);
-            while(input.getBytesUntilLimit() > 0) {
-              int rawValue = input.readEnum();
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                usingDeviceTypes_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              usingDeviceTypes_.add(rawValue);
-            }
-            input.popLimit(oldLimit);
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      if (((mutable_bitField0_ & 0x00000001) != 0)) {
-        usingDeviceTypes_ = java.util.Collections.unmodifiableList(usingDeviceTypes_);
-      }
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
     return im.turms.server.common.access.client.dto.model.user.UserStatusDetailOuterClass.internal_static_im_turms_proto_UserStatusDetail_descriptor;
@@ -255,7 +178,7 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < usingDeviceTypes_.size(); i++) {
       output.writeEnumNoTag(usingDeviceTypes_.get(i));
     }
-    unknownFields.writeTo(output);
+    getUnknownFields().writeTo(output);
   }
 
   @java.lang.Override
@@ -284,7 +207,7 @@ private static final long serialVersionUID = 0L;
           .computeUInt32SizeNoTag(dataSize);
       }usingDeviceTypesMemoizedSerializedSize = dataSize;
     }
-    size += unknownFields.getSerializedSize();
+    size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -303,7 +226,7 @@ private static final long serialVersionUID = 0L;
         != other.getUserId()) return false;
     if (userStatus_ != other.userStatus_) return false;
     if (!usingDeviceTypes_.equals(other.usingDeviceTypes_)) return false;
-    if (!unknownFields.equals(other.unknownFields)) return false;
+    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
 
@@ -323,7 +246,7 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + USING_DEVICE_TYPES_FIELD_NUMBER;
       hash = (53 * hash) + usingDeviceTypes_.hashCode();
     }
-    hash = (29 * hash) + unknownFields.hashCode();
+    hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
@@ -440,18 +363,13 @@ private static final long serialVersionUID = 0L;
 
     // Construct using im.turms.server.common.access.client.dto.model.user.UserStatusDetail.newBuilder()
     private Builder() {
-      maybeForceBuilderInitialization();
+
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
+
     }
     @java.lang.Override
     public Builder clear() {
@@ -560,7 +478,7 @@ private static final long serialVersionUID = 0L;
         }
         onChanged();
       }
-      this.mergeUnknownFields(other.unknownFields);
+      this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
     }
@@ -575,17 +493,57 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      im.turms.server.common.access.client.dto.model.user.UserStatusDetail parsedMessage = null;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              userId_ = input.readInt64();
+
+              break;
+            } // case 8
+            case 16: {
+              userStatus_ = input.readEnum();
+
+              break;
+            } // case 16
+            case 24: {
+              int tmpRaw = input.readEnum();
+              ensureUsingDeviceTypesIsMutable();
+              usingDeviceTypes_.add(tmpRaw);
+              break;
+            } // case 24
+            case 26: {
+              int length = input.readRawVarint32();
+              int oldLimit = input.pushLimit(length);
+              while(input.getBytesUntilLimit() > 0) {
+                int tmpRaw = input.readEnum();
+                ensureUsingDeviceTypesIsMutable();
+                usingDeviceTypes_.add(tmpRaw);
+              }
+              input.popLimit(oldLimit);
+              break;
+            } // case 26
+            default: {
+              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                done = true; // was an endgroup tag
+              }
+              break;
+            } // default:
+          } // switch (tag)
+        } // while (!done)
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (im.turms.server.common.access.client.dto.model.user.UserStatusDetail) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
+        onChanged();
+      } // finally
       return this;
     }
     private int bitField0_;
@@ -605,7 +563,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setUserId(long value) {
-      
+
       userId_ = value;
       onChanged();
       return this;
@@ -615,7 +573,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearUserId() {
-      
+
       userId_ = 0L;
       onChanged();
       return this;
@@ -635,7 +593,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setUserStatusValue(int value) {
-      
+
       userStatus_ = value;
       onChanged();
       return this;
@@ -659,7 +617,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
         throw new NullPointerException();
       }
-      
+
       userStatus_ = value.getNumber();
       onChanged();
       return this;
@@ -669,7 +627,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearUserStatus() {
-      
+
       userStatus_ = 0;
       onChanged();
       return this;
@@ -778,8 +736,8 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
-     * @param index The index of the value to return.
-     * @return The enum numeric value on the wire of usingDeviceTypes at the given index.
+     * @param index The index to set the value at.
+     * @param value The enum numeric value on the wire for usingDeviceTypes to set.
      * @return This builder for chaining.
      */
     public Builder setUsingDeviceTypesValue(
@@ -847,7 +805,18 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new UserStatusDetail(input, extensionRegistry);
+      Builder builder = newBuilder();
+      try {
+        builder.mergeFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(builder.buildPartial());
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(e)
+            .setUnfinishedMessage(builder.buildPartial());
+      }
+      return builder.buildPartial();
     }
   };
 

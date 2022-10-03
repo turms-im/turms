@@ -45,7 +45,7 @@ public interface MessagesWithTotalOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.Message messages = 4;</code>
    */
-  java.util.List<im.turms.server.common.access.client.dto.model.message.Message> 
+  java.util.List<im.turms.server.common.access.client.dto.model.message.Message>
       getMessagesList();
   /**
    * <code>repeated .im.turms.proto.Message messages = 4;</code>
@@ -58,7 +58,7 @@ public interface MessagesWithTotalOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.Message messages = 4;</code>
    */
-  java.util.List<? extends im.turms.server.common.access.client.dto.model.message.MessageOrBuilder> 
+  java.util.List<? extends im.turms.server.common.access.client.dto.model.message.MessageOrBuilder>
       getMessagesOrBuilderList();
   /**
    * <code>repeated .im.turms.proto.Message messages = 4;</code>

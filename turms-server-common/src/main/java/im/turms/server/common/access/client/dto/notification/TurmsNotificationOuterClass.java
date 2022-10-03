@@ -33,12 +33,12 @@ public final class TurmsNotificationOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_TurmsNotification_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_TurmsNotification_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_TurmsNotification_Data_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_TurmsNotification_Data_fieldAccessorTable;
 

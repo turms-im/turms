@@ -33,7 +33,7 @@ public final class NearbyUserOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_NearbyUser_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_NearbyUser_fieldAccessorTable;
 

@@ -49,70 +49,6 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private Conversations(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    int mutable_bitField0_ = 0;
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 10: {
-            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              privateConversations_ = new java.util.ArrayList<im.turms.server.common.access.client.dto.model.conversation.PrivateConversation>();
-              mutable_bitField0_ |= 0x00000001;
-            }
-            privateConversations_.add(
-                input.readMessage(im.turms.server.common.access.client.dto.model.conversation.PrivateConversation.parser(), extensionRegistry));
-            break;
-          }
-          case 18: {
-            if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-              groupConversations_ = new java.util.ArrayList<im.turms.server.common.access.client.dto.model.conversation.GroupConversation>();
-              mutable_bitField0_ |= 0x00000002;
-            }
-            groupConversations_.add(
-                input.readMessage(im.turms.server.common.access.client.dto.model.conversation.GroupConversation.parser(), extensionRegistry));
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      if (((mutable_bitField0_ & 0x00000001) != 0)) {
-        privateConversations_ = java.util.Collections.unmodifiableList(privateConversations_);
-      }
-      if (((mutable_bitField0_ & 0x00000002) != 0)) {
-        groupConversations_ = java.util.Collections.unmodifiableList(groupConversations_);
-      }
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
     return im.turms.server.common.access.client.dto.model.conversation.ConversationsOuterClass.internal_static_im_turms_proto_Conversations_descriptor;
@@ -139,7 +75,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.PrivateConversation private_conversations = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOrBuilder> 
+  public java.util.List<? extends im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOrBuilder>
       getPrivateConversationsOrBuilderList() {
     return privateConversations_;
   }
@@ -179,7 +115,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.GroupConversation group_conversations = 2;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.server.common.access.client.dto.model.conversation.GroupConversationOrBuilder> 
+  public java.util.List<? extends im.turms.server.common.access.client.dto.model.conversation.GroupConversationOrBuilder>
       getGroupConversationsOrBuilderList() {
     return groupConversations_;
   }
@@ -226,7 +162,7 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < groupConversations_.size(); i++) {
       output.writeMessage(2, groupConversations_.get(i));
     }
-    unknownFields.writeTo(output);
+    getUnknownFields().writeTo(output);
   }
 
   @java.lang.Override
@@ -243,7 +179,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, groupConversations_.get(i));
     }
-    size += unknownFields.getSerializedSize();
+    size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -262,7 +198,7 @@ private static final long serialVersionUID = 0L;
         .equals(other.getPrivateConversationsList())) return false;
     if (!getGroupConversationsList()
         .equals(other.getGroupConversationsList())) return false;
-    if (!unknownFields.equals(other.unknownFields)) return false;
+    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
 
@@ -281,7 +217,7 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + GROUP_CONVERSATIONS_FIELD_NUMBER;
       hash = (53 * hash) + getGroupConversationsList().hashCode();
     }
-    hash = (29 * hash) + unknownFields.hashCode();
+    hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
@@ -398,36 +334,31 @@ private static final long serialVersionUID = 0L;
 
     // Construct using im.turms.server.common.access.client.dto.model.conversation.Conversations.newBuilder()
     private Builder() {
-      maybeForceBuilderInitialization();
+
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-        getPrivateConversationsFieldBuilder();
-        getGroupConversationsFieldBuilder();
-      }
+
     }
     @java.lang.Override
     public Builder clear() {
       super.clear();
       if (privateConversationsBuilder_ == null) {
         privateConversations_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000001);
       } else {
+        privateConversations_ = null;
         privateConversationsBuilder_.clear();
       }
+      bitField0_ = (bitField0_ & ~0x00000001);
       if (groupConversationsBuilder_ == null) {
         groupConversations_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000002);
       } else {
+        groupConversations_ = null;
         groupConversationsBuilder_.clear();
       }
+      bitField0_ = (bitField0_ & ~0x00000002);
       return this;
     }
 
@@ -539,7 +470,7 @@ private static final long serialVersionUID = 0L;
             privateConversationsBuilder_ = null;
             privateConversations_ = other.privateConversations_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            privateConversationsBuilder_ = 
+            privateConversationsBuilder_ =
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getPrivateConversationsFieldBuilder() : null;
           } else {
@@ -565,7 +496,7 @@ private static final long serialVersionUID = 0L;
             groupConversationsBuilder_ = null;
             groupConversations_ = other.groupConversations_;
             bitField0_ = (bitField0_ & ~0x00000002);
-            groupConversationsBuilder_ = 
+            groupConversationsBuilder_ =
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getGroupConversationsFieldBuilder() : null;
           } else {
@@ -573,7 +504,7 @@ private static final long serialVersionUID = 0L;
           }
         }
       }
-      this.mergeUnknownFields(other.unknownFields);
+      this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
     }
@@ -588,17 +519,56 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      im.turms.server.common.access.client.dto.model.conversation.Conversations parsedMessage = null;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              im.turms.server.common.access.client.dto.model.conversation.PrivateConversation m =
+                  input.readMessage(
+                      im.turms.server.common.access.client.dto.model.conversation.PrivateConversation.parser(),
+                      extensionRegistry);
+              if (privateConversationsBuilder_ == null) {
+                ensurePrivateConversationsIsMutable();
+                privateConversations_.add(m);
+              } else {
+                privateConversationsBuilder_.addMessage(m);
+              }
+              break;
+            } // case 10
+            case 18: {
+              im.turms.server.common.access.client.dto.model.conversation.GroupConversation m =
+                  input.readMessage(
+                      im.turms.server.common.access.client.dto.model.conversation.GroupConversation.parser(),
+                      extensionRegistry);
+              if (groupConversationsBuilder_ == null) {
+                ensureGroupConversationsIsMutable();
+                groupConversations_.add(m);
+              } else {
+                groupConversationsBuilder_.addMessage(m);
+              }
+              break;
+            } // case 18
+            default: {
+              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                done = true; // was an endgroup tag
+              }
+              break;
+            } // default:
+          } // switch (tag)
+        } // while (!done)
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (im.turms.server.common.access.client.dto.model.conversation.Conversations) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
+        onChanged();
+      } // finally
       return this;
     }
     private int bitField0_;
@@ -798,7 +768,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.PrivateConversation private_conversations = 1;</code>
      */
-    public java.util.List<? extends im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOrBuilder> 
+    public java.util.List<? extends im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOrBuilder>
          getPrivateConversationsOrBuilderList() {
       if (privateConversationsBuilder_ != null) {
         return privateConversationsBuilder_.getMessageOrBuilderList();
@@ -824,12 +794,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.PrivateConversation private_conversations = 1;</code>
      */
-    public java.util.List<im.turms.server.common.access.client.dto.model.conversation.PrivateConversation.Builder> 
+    public java.util.List<im.turms.server.common.access.client.dto.model.conversation.PrivateConversation.Builder>
          getPrivateConversationsBuilderList() {
       return getPrivateConversationsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.server.common.access.client.dto.model.conversation.PrivateConversation, im.turms.server.common.access.client.dto.model.conversation.PrivateConversation.Builder, im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOrBuilder> 
+        im.turms.server.common.access.client.dto.model.conversation.PrivateConversation, im.turms.server.common.access.client.dto.model.conversation.PrivateConversation.Builder, im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOrBuilder>
         getPrivateConversationsFieldBuilder() {
       if (privateConversationsBuilder_ == null) {
         privateConversationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
@@ -1038,7 +1008,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupConversation group_conversations = 2;</code>
      */
-    public java.util.List<? extends im.turms.server.common.access.client.dto.model.conversation.GroupConversationOrBuilder> 
+    public java.util.List<? extends im.turms.server.common.access.client.dto.model.conversation.GroupConversationOrBuilder>
          getGroupConversationsOrBuilderList() {
       if (groupConversationsBuilder_ != null) {
         return groupConversationsBuilder_.getMessageOrBuilderList();
@@ -1064,12 +1034,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupConversation group_conversations = 2;</code>
      */
-    public java.util.List<im.turms.server.common.access.client.dto.model.conversation.GroupConversation.Builder> 
+    public java.util.List<im.turms.server.common.access.client.dto.model.conversation.GroupConversation.Builder>
          getGroupConversationsBuilderList() {
       return getGroupConversationsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.server.common.access.client.dto.model.conversation.GroupConversation, im.turms.server.common.access.client.dto.model.conversation.GroupConversation.Builder, im.turms.server.common.access.client.dto.model.conversation.GroupConversationOrBuilder> 
+        im.turms.server.common.access.client.dto.model.conversation.GroupConversation, im.turms.server.common.access.client.dto.model.conversation.GroupConversation.Builder, im.turms.server.common.access.client.dto.model.conversation.GroupConversationOrBuilder>
         getGroupConversationsFieldBuilder() {
       if (groupConversationsBuilder_ == null) {
         groupConversationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
@@ -1115,7 +1085,18 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new Conversations(input, extensionRegistry);
+      Builder builder = newBuilder();
+      try {
+        builder.mergeFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(builder.buildPartial());
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(e)
+            .setUnfinishedMessage(builder.buildPartial());
+      }
+      return builder.buildPartial();
     }
   };
 
