@@ -117,8 +117,8 @@ export default {
                 .then(() => {
                     this.$message.success(this.$t('exportSuccessfully'));
                 })
-                .catch(() => {
-                    this.$message.error(this.$t('failedToExport'));
+                .catch(error => {
+                    this.$error(this.$t('failedToExport'), error);
                 })
                 .finally(() => {
                     setTimeout(hide);
@@ -143,7 +143,9 @@ export default {
                             UPDATE_METRICS_INTERVAL);
                     }
                 })
-                .catch(error => this.$error(this.$t('failedToRefreshData'), error))
+                .catch(error => {
+                    this.$error(this.$t('failedToRefreshData'), error);
+                })
                 .finally(() => this.updating = false);
         },
         updateMetrics() {

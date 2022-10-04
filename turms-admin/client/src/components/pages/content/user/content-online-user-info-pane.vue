@@ -242,7 +242,9 @@ export default {
                     }
                     this.records = sessions;
                 })
-                .catch(error => this.$error(this.$t('updateFailed'), error))
+                .catch(error => {
+                    this.$error(this.$t('updateFailed'), error);
+                })
                 .finally(() => this.loading = false);
         },
         setSelectedDevicesOffline() {

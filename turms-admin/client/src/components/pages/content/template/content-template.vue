@@ -358,7 +358,9 @@ export default {
                     }
                     this.$emit('onRecordsDeleted', recordKeys);
                 })
-                .catch(error => this.$error(this.$t('deleteFailed'), error))
+                .catch(error => {
+                    this.$error(this.$t('deleteFailed'), error);
+                })
                 .finally(() => this.loading = false);
         },
         requestInitialData() {

@@ -45,6 +45,7 @@ function loadAntd(app) {
             content: `${msg}: ${desc}`,
             duration: 6
         });
+        console.error(msg, error);
     };
     app.config.globalProperties.$loading = function ({promise, loading, success, error, successCb, finallyCb}) {
         if (!promise) {

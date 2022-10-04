@@ -46,8 +46,8 @@ export default {
                 .then(() => {
                     this.$message.success(this.$t('exportSuccessfully'));
                 })
-                .catch(() => {
-                    this.$message.error(this.$t('failedToExport'));
+                .catch(error => {
+                    this.$error(this.$t('failedToExport'), error);
                 })
                 .finally(() => {
                     setTimeout(hide);
