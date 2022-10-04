@@ -39,6 +39,12 @@ public class UnsafeAndMethodHandledBasedVarAccessor<T, V> implements VarAccessor
 
     public UnsafeAndMethodHandledBasedVarAccessor(Field field, MethodHandle setter) {
         declaringClass = field.getDeclaringClass();
+        if (field.getType().isPrimitive()) {
+            throw new IllegalArgumentException("The field type cannot be primitive");
+        }
+        if (declaringClass.isRecord()) {
+            throw new IllegalArgumentException("The declaring class cannot be record");
+        }
         fieldOffset = UNSAFE.objectFieldOffset(field);
         this.setter = setter;
     }

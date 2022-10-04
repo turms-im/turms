@@ -43,6 +43,9 @@ public class UnsafeBasedVarAccessor<T, V> implements VarAccessor<T, V> {
         if (fieldClass.isPrimitive()) {
             throw new IllegalArgumentException("The field type cannot be primitive");
         }
+        if (declaringClass.isRecord()) {
+            throw new IllegalArgumentException("The declaring class cannot be record");
+        }
         fieldOffset = UNSAFE.objectFieldOffset(field);
     }
 

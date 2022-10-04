@@ -81,14 +81,14 @@ public final class ReflectionUtil {
     public static List<Field> getNonStaticFields(Class<?> clazz) {
         List<Field> fields = new LinkedList<>();
         Class<?> currentClass = clazz;
-        while (currentClass != null) {
+        do {
             for (Field field : currentClass.getDeclaredFields()) {
                 if (!Modifier.isStatic(field.getModifiers())) {
                     fields.add(field);
                 }
             }
             currentClass = currentClass.getSuperclass();
-        }
+        } while (currentClass != null);
         return fields;
     }
 
