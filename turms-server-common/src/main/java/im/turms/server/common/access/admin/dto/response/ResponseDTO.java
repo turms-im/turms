@@ -18,10 +18,7 @@
 package im.turms.server.common.access.admin.dto.response;
 
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import im.turms.server.common.access.common.ResponseStatusCode;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 import javax.annotation.Nullable;
 import java.util.Date;
@@ -29,48 +26,44 @@ import java.util.Date;
 /**
  * @author James Chen
  */
-@AllArgsConstructor(onConstructor = @__(@JsonCreator))
-@Data
-public class ResponseDTO<T> {
-
-    private final Integer code;
-    @Nullable
-    private final String reason;
-    private final String exception;
-    private final Date timestamp;
-    @Nullable
-    private final T data;
+public record ResponseDTO<T>(
+        Integer code,
+        @Nullable String reason,
+        String exception,
+        Date timestamp,
+        @Nullable T data
+) {
 
     public ResponseDTO(ResponseStatusCode responseStatusCode) {
-        this.code = responseStatusCode.getBusinessCode();
-        this.reason = responseStatusCode.getReason();
-        this.exception = null;
-        this.timestamp = new Date();
-        data = null;
+        this(responseStatusCode.getBusinessCode(),
+                responseStatusCode.getReason(),
+                null,
+                new Date(),
+                null);
     }
 
     public ResponseDTO(ResponseStatusCode responseStatusCode, @Nullable String reason) {
-        this.code = responseStatusCode.getBusinessCode();
-        this.reason = reason == null ? responseStatusCode.getReason() : reason;
-        this.exception = null;
-        this.timestamp = new Date();
-        data = null;
+        this(responseStatusCode.getBusinessCode(),
+                reason == null ? responseStatusCode.getReason() : reason,
+                null,
+                new Date(),
+                null);
     }
 
     public ResponseDTO(ResponseStatusCode responseStatusCode, @Nullable String reason, @Nullable Throwable throwable) {
-        this.code = responseStatusCode.getBusinessCode();
-        this.reason = reason == null ? responseStatusCode.getReason() : reason;
-        this.exception = throwable == null ? null : throwable.toString();
-        this.timestamp = new Date();
-        data = null;
+        this(responseStatusCode.getBusinessCode(),
+                reason == null ? responseStatusCode.getReason() : reason,
+                throwable == null ? null : throwable.toString(),
+                new Date(),
+                null);
     }
 
     public ResponseDTO(ResponseStatusCode responseStatusCode, @Nullable T data) {
-        this.code = responseStatusCode.getBusinessCode();
-        this.reason = responseStatusCode.getReason();
-        this.exception = null;
-        this.timestamp = new Date();
-        this.data = data;
+        this(responseStatusCode.getBusinessCode(),
+                responseStatusCode.getReason(),
+                null,
+                new Date(),
+                data);
     }
 
 }

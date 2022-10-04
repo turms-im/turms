@@ -24,20 +24,18 @@ import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.netty.ReferenceCountUtil;
-import im.turms.server.common.infra.reflect.ReflectionUtil;
 import im.turms.server.common.infra.time.DateUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.PooledByteBufAllocator;
 import lombok.SneakyThrows;
+import org.jctools.maps.NonBlockingIdentityHashMap;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Collection;
+import java.lang.reflect.Method;
+import java.lang.reflect.RecordComponent;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,13 +47,16 @@ public final class JsonUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);
 
-    private static final int ESTIMATED_JSON_FIELD_META_SIZE = 8;
     private static final ObjectMapper MAPPER = JsonCodecPool.MAPPER;
-
     private static final JavaType JAVA_TYPE_STRING_OBJECT_MAP = constructJavaType(new TypeReference<HashMap<String, Object>>() {
     });
     private static final JavaType JAVA_TYPE_STRING_STRING_MAP = constructJavaType(new TypeReference<HashMap<String, String>>() {
     });
+
+    private static final int ESTIMATED_JSON_FIELD_METADATA_SIZE = 8;
+
+    private static final NonBlockingIdentityHashMap<Class<?>, RecordMetadata> CLASS_TO_METADATA =
+            new NonBlockingIdentityHashMap<>(256);
 
     private JsonUtil() {
     }
@@ -88,90 +89,103 @@ public final class JsonUtil {
         return MAPPER.readValue(src, JAVA_TYPE_STRING_STRING_MAP);
     }
 
-    public static ByteBuf write(Object body) {
-        int estimatedSize = estimateJson(body);
+    public static ByteBuf write(Object value) {
+        int estimatedSize = estimateSize(value);
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(estimatedSize);
         try (OutputStream bufferOutputStream = new ByteBufOutputStream(buffer)) {
-            MAPPER.writeValue(bufferOutputStream, body);
+            MAPPER.writeValue(bufferOutputStream, value);
             return buffer;
-        } catch (IOException e) {
+        } catch (Exception e) {
             ReferenceCountUtil.ensureReleased(buffer);
             throw new RuntimeException(e);
         }
     }
 
-    public static int estimateJson(@Nullable Object val) {
-        if (val == null) {
+    public static int estimateSize(@Nullable Object value) {
+        if (value == null) {
             return 0;
         }
+        return value.getClass().isRecord()
+                ? estimateRecordSize(value)
+                : estimateNonRecordSize(value);
+    }
+
+    private static int estimateRecordSize(Object value) {
+        RecordMetadata metadata = getRecordMetadata(value);
         int size = 0;
-        if (val instanceof Collection<?> collection) {
-            for (Object o : collection) {
-                size += estimateJson(o);
+        for (Component component : metadata.components) {
+            Object componentValue;
+            try {
+                componentValue = component.accessor.invoke(value);
+            } catch (Exception e) {
+                continue;
             }
-        } else if (val.getClass().isArray()) {
-            if (val instanceof byte[] array) {
-                size += array.length;
-            } else if (val instanceof Object[] array) {
-                for (Object element : array) {
-                    size += estimateJson(element);
-                }
-            } else {
-                // We don't support other array types now because we don't use them
-                LOGGER.warn("Unknown array type: " + val.getClass());
-            }
-        } else if (val instanceof Map<?, ?> map) {
-            for (Map.Entry<?, ?> entry : map.entrySet()) {
-                Object key = entry.getKey();
-                size += key instanceof String str ? StringUtil.getLength(str) : 16;
-                size += estimateJson(entry.getValue());
-            }
-        } else {
-            int valSize = estimatePlainObject(val);
-            if (valSize >= 0) {
-                size += valSize;
-            } else {
-                Class<?> valClass = val.getClass();
-                if (valClass.getPackageName().startsWith("im.turms")) {
-                    for (Field field : valClass.getDeclaredFields()) {
-                        if (Modifier.isStatic(field.getModifiers())) {
-                            continue;
-                        }
-                        ReflectionUtil.setAccessible(field);
-                        Object o;
-                        try {
-                            o = field.get(val);
-                        } catch (Exception e) {
-                            continue;
-                        }
-                        valSize = estimateJson(o);
-                        if (valSize > 0) {
-                            size += valSize;
-                            size += field.getName().length();
-                            size += ESTIMATED_JSON_FIELD_META_SIZE;
-                        }
-                    }
-                }
-            }
+            size += estimateSize(componentValue);
+            size += component.nameLength;
+            size += ESTIMATED_JSON_FIELD_METADATA_SIZE;
         }
         return size;
     }
 
-    public static int estimatePlainObject(@Nullable Object val) {
-        if (val == null) {
-            return 0;
-        }
-        if (val instanceof Date) {
-            return DateUtil.DATE_TIME_LENGTH;
-        }
-        if (val instanceof String str) {
-            return StringUtil.getLength(str);
-        }
-        if (val.getClass().getPackageName().startsWith("java.lang")) {
+    private static int estimateNonRecordSize(Object value) {
+        int size = 0;
+        if (value instanceof Iterable<?> iterable) {
+            for (Object element : iterable) {
+                size += estimateSize(element);
+            }
+        } else if (value.getClass().isArray()) {
+            if (value instanceof byte[] array) {
+                size += array.length;
+            } else if (value instanceof Object[] array) {
+                for (Object element : array) {
+                    size += estimateSize(element);
+                }
+            } else {
+                // We don't support other array types now because we don't use them
+                LOGGER.warn("Unknown array type: " + value.getClass());
+            }
+        } else if (value instanceof Map<?, ?> map) {
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                size += entry.getKey() instanceof String str ? StringUtil.getLength(str) : 16;
+                Object entryValue = entry.getValue();
+                size += estimateSize(entryValue);
+                size += ESTIMATED_JSON_FIELD_METADATA_SIZE;
+            }
+        } else if (value instanceof Date) {
+            size += DateUtil.DATE_TIME_LENGTH;
+        } else if (value instanceof String str) {
+            size += StringUtil.getLength(str);
+        } else {
             // We don't use "String.valueOf(val).length()" for better performance
-            return 16;
+            size += 16;
         }
-        return -1;
+        return size;
+    }
+
+    private static RecordMetadata getRecordMetadata(Object value) {
+        return CLASS_TO_METADATA.computeIfAbsent(value.getClass(), clazz -> {
+            RecordComponent[] recordComponents = clazz.getRecordComponents();
+            if (recordComponents.length == 0) {
+                return RecordMetadata.EMPTY;
+            }
+            Component[] components = new Component[recordComponents.length];
+            for (int i = 0, length = recordComponents.length; i < length; i++) {
+                RecordComponent component = recordComponents[i];
+                components[i] = new Component(component.getName().length(),
+                        component.getAccessor());
+            }
+            return new RecordMetadata(components);
+        });
+    }
+
+    private static record RecordMetadata(Component[] components) {
+        static final RecordMetadata EMPTY = new RecordMetadata(new Component[0]);
+    }
+
+    private static record Component(
+            int nameLength,
+            Method accessor
+    ) {
     }
 
 }
