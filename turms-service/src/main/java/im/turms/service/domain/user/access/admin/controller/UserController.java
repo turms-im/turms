@@ -145,24 +145,24 @@ public class UserController extends BaseController {
             @QueryParam(required = false) Date sentMessageEndDate,
             @QueryParam(defaultValue = "NOOP") DivideBy divideBy) {
         List<Mono<?>> counts = new LinkedList<>();
-        UserStatisticsDTO statistics = new UserStatisticsDTO();
+        UserStatisticsDTO.UserStatisticsDTOBuilder builder = UserStatisticsDTO.builder();
         if (divideBy == null || divideBy == DivideBy.NOOP) {
             if (deletedStartDate != null || deletedEndDate != null) {
                 counts.add(userService.countDeletedUsers(
                                 DateRange.of(deletedStartDate, deletedEndDate))
-                        .doOnNext(statistics::setDeletedUsers));
+                        .doOnNext(builder::deletedUsers));
             }
             if (sentMessageStartDate != null || sentMessageEndDate != null) {
                 counts.add(messageService.countUsersWhoSentMessage(
                                 DateRange.of(sentMessageStartDate, sentMessageEndDate),
                                 null,
                                 false)
-                        .doOnNext(statistics::setUsersWhoSentMessages));
+                        .doOnNext(builder::usersWhoSentMessages));
             }
             if (counts.isEmpty() || registeredStartDate != null || registeredEndDate != null) {
                 counts.add(userService.countRegisteredUsers(
                                 DateRange.of(registeredStartDate, registeredEndDate), true)
-                        .doOnNext(statistics::setRegisteredUsers));
+                        .doOnNext(builder::registeredUsers));
             }
         } else {
             if (deletedStartDate != null && deletedEndDate != null) {
@@ -170,7 +170,7 @@ public class UserController extends BaseController {
                         DateRange.of(deletedStartDate, deletedEndDate),
                         divideBy,
                         userService::countDeletedUsers)
-                        .doOnNext(statistics::setDeletedUsersRecords));
+                        .doOnNext(builder::deletedUsersRecords));
             }
             if (sentMessageStartDate != null && sentMessageEndDate != null) {
                 counts.add(checkAndQueryBetweenDate(
@@ -179,20 +179,21 @@ public class UserController extends BaseController {
                         messageService::countUsersWhoSentMessage,
                         null,
                         false)
-                        .doOnNext(statistics::setUsersWhoSentMessagesRecords));
+                        .doOnNext(builder::usersWhoSentMessagesRecords));
             }
             if (registeredStartDate != null && registeredEndDate != null) {
                 counts.add(checkAndQueryBetweenDate(
                         DateRange.of(registeredStartDate, registeredEndDate),
                         divideBy,
                         dateRange -> userService.countRegisteredUsers(dateRange, true))
-                        .doOnNext(statistics::setRegisteredUsersRecords));
+                        .doOnNext(builder::registeredUsersRecords));
             }
             if (counts.isEmpty()) {
                 return Mono.empty();
             }
         }
-        return HttpHandlerResult.okIfTruthy(Mono.when(counts).thenReturn(statistics));
+        return HttpHandlerResult.okIfTruthy(Mono.when(counts)
+                .then(Mono.fromCallable(builder::build)));
     }
 
     @PutMapping

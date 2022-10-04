@@ -18,30 +18,24 @@
 package im.turms.service.domain.user.access.admin.dto.response;
 
 import im.turms.service.domain.common.access.admin.dto.response.StatisticsRecordDTO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldNameConstants;
+import lombok.Builder;
 
 import java.util.List;
 
 /**
  * @author James Chen
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@FieldNameConstants
-public final class UserStatisticsDTO {
-    private Long deletedUsers;
-    private Long usersWhoSentMessages;
-    private Long loggedInUsers;
-    private Long maxOnlineUsers;
-    private Long registeredUsers;
-
-    private List<StatisticsRecordDTO> deletedUsersRecords;
-    private List<StatisticsRecordDTO> usersWhoSentMessagesRecords;
-    private List<StatisticsRecordDTO> loggedInUsersRecords;
-    private List<StatisticsRecordDTO> maxOnlineUsersRecords;
-    private List<StatisticsRecordDTO> registeredUsersRecords;
+@Builder
+public record UserStatisticsDTO(
+        Long deletedUsers,
+        Long usersWhoSentMessages,
+        Long loggedInUsers,
+        Long maxOnlineUsers,
+        Long registeredUsers,
+        List<StatisticsRecordDTO> deletedUsersRecords,
+        List<StatisticsRecordDTO> usersWhoSentMessagesRecords,
+        List<StatisticsRecordDTO> loggedInUsersRecords,
+        List<StatisticsRecordDTO> maxOnlineUsersRecords,
+        List<StatisticsRecordDTO> registeredUsersRecords
+) {
 }

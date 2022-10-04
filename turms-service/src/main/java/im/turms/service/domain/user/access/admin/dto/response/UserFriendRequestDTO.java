@@ -17,33 +17,36 @@
 
 package im.turms.service.domain.user.access.admin.dto.response;
 
+import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.service.domain.user.po.UserFriendRequest;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 
 import java.util.Date;
 
 /**
  * @author James Chen
  */
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class UserFriendRequestDTO extends UserFriendRequest {
-
-    @Getter
-    private final Date expirationDate;
+public record UserFriendRequestDTO(
+        Long id,
+        String content,
+        RequestStatus status,
+        String reason,
+        Date creationDate,
+        Date responseDate,
+        Long requesterId,
+        Long recipientId,
+        Date expirationDate
+) {
 
     public UserFriendRequestDTO(UserFriendRequest request, Date expirationDate) {
-        super(request.getId(),
+        this(request.getId(),
                 request.getContent(),
                 request.getStatus(),
                 request.getReason(),
                 request.getCreationDate(),
                 request.getResponseDate(),
                 request.getRequesterId(),
-                request.getRecipientId());
-        this.expirationDate = expirationDate;
+                request.getRecipientId(),
+                expirationDate);
     }
 
 }

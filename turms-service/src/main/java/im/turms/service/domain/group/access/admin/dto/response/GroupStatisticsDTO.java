@@ -18,26 +18,20 @@
 package im.turms.service.domain.group.access.admin.dto.response;
 
 import im.turms.service.domain.common.access.admin.dto.response.StatisticsRecordDTO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldNameConstants;
+import lombok.Builder;
 
 import java.util.List;
 
 /**
  * @author James Chen
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@FieldNameConstants
-public final class GroupStatisticsDTO {
-    private Long deletedGroups;
-    private Long groupsThatSentMessages;
-    private Long createdGroups;
-
-    private List<StatisticsRecordDTO> deletedGroupsRecords;
-    private List<StatisticsRecordDTO> groupsThatSentMessagesRecords;
-    private List<StatisticsRecordDTO> createdGroupsRecords;
+@Builder
+public record GroupStatisticsDTO(
+        Long deletedGroups,
+        Long groupsThatSentMessages,
+        Long createdGroups,
+        List<StatisticsRecordDTO> deletedGroupsRecords,
+        List<StatisticsRecordDTO> groupsThatSentMessagesRecords,
+        List<StatisticsRecordDTO> createdGroupsRecords
+) {
 }

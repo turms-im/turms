@@ -170,35 +170,35 @@ public class MessageController extends BaseController {
             @QueryParam(required = false) Date acknowledgedOnAverageEndDate,
             @QueryParam(defaultValue = "NOOP") DivideBy divideBy) {
         List<Mono<?>> counts = new LinkedList<>();
-        MessageStatisticsDTO statistics = new MessageStatisticsDTO();
+        MessageStatisticsDTO.MessageStatisticsDTOBuilder builder = MessageStatisticsDTO.builder();
         if (divideBy == null || divideBy == DivideBy.NOOP) {
             if (sentOnAverageStartDate != null || sentOnAverageEndDate != null) {
                 counts.add(messageService.countSentMessagesOnAverage(
                                 DateRange.of(sentOnAverageStartDate, sentOnAverageEndDate),
                                 areGroupMessages,
                                 areSystemMessages)
-                        .doOnNext(statistics::setSentMessagesOnAverage));
+                        .doOnNext(builder::sentMessagesOnAverage));
             }
 //            if (acknowledgedStartDate != null || acknowledgedEndDate != null) {
 //                counts.add(messageService.countAcknowledgedMessages(
 //                        DateRange.of(acknowledgedStartDate, acknowledgedEndDate),
 //                        areGroupMessages,
 //                        areSystemMessages)
-//                        .doOnNext(statistics::setAcknowledgedMessages));
+//                        .doOnNext(builder::acknowledgedMessages));
 //            }
 //            if (acknowledgedOnAverageStartDate != null || acknowledgedOnAverageEndDate != null) {
 //                counts.add(messageService.countAcknowledgedMessagesOnAverage(
 //                        DateRange.of(acknowledgedOnAverageStartDate, acknowledgedOnAverageEndDate),
 //                        areGroupMessages,
 //                        areSystemMessages)
-//                        .doOnNext(statistics::setAcknowledgedMessagesOnAverage));
+//                        .doOnNext(builder::acknowledgedMessagesOnAverage));
 //            }
             if (counts.isEmpty() || sentStartDate != null || sentEndDate != null) {
                 counts.add(messageService.countSentMessages(
                                 DateRange.of(sentStartDate, sentEndDate),
                                 areGroupMessages,
                                 areSystemMessages)
-                        .doOnNext(statistics::setSentMessages));
+                        .doOnNext(builder::sentMessages));
             }
         } else {
             if (sentOnAverageStartDate != null && sentOnAverageEndDate != null) {
@@ -208,7 +208,7 @@ public class MessageController extends BaseController {
                         messageService::countSentMessagesOnAverage,
                         areGroupMessages,
                         areSystemMessages)
-                        .doOnNext(statistics::setSentMessagesOnAverageRecords));
+                        .doOnNext(builder::sentMessagesOnAverageRecords));
             }
 //            if (acknowledgedStartDate != null && acknowledgedEndDate != null) {
 //                counts.add(checkAndQueryBetweenDate(
@@ -217,7 +217,7 @@ public class MessageController extends BaseController {
 //                        messageService::countAcknowledgedMessages,
 //                        areGroupMessages,
 //                        areSystemMessages)
-//                        .doOnNext(statistics::setAcknowledgedMessagesRecords));
+//                        .doOnNext(builder::acknowledgedMessagesRecords));
 //            }
 //            if (acknowledgedOnAverageStartDate != null && acknowledgedOnAverageEndDate != null) {
 //                counts.add(checkAndQueryBetweenDate(
@@ -226,7 +226,7 @@ public class MessageController extends BaseController {
 //                        messageService::countAcknowledgedMessagesOnAverage,
 //                        areGroupMessages,
 //                        areSystemMessages)
-//                        .doOnNext(statistics::setAcknowledgedMessagesOnAverageRecords));
+//                        .doOnNext(builder::acknowledgedMessagesOnAverageRecords));
 //            }
             if (sentStartDate != null && sentEndDate != null) {
                 counts.add(checkAndQueryBetweenDate(
@@ -235,13 +235,14 @@ public class MessageController extends BaseController {
                         messageService::countSentMessages,
                         areGroupMessages,
                         areSystemMessages)
-                        .doOnNext(statistics::setSentMessagesRecords));
+                        .doOnNext(builder::sentMessagesRecords));
             }
             if (counts.isEmpty()) {
                 return Mono.empty();
             }
         }
-        return HttpHandlerResult.okIfTruthy(Mono.when(counts).thenReturn(statistics));
+        return HttpHandlerResult.okIfTruthy(Mono.when(counts)
+                .then(Mono.fromCallable(builder::build)));
     }
 
     @PutMapping

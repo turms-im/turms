@@ -18,28 +18,22 @@
 package im.turms.service.domain.message.access.admin.dto.response;
 
 import im.turms.service.domain.common.access.admin.dto.response.StatisticsRecordDTO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldNameConstants;
+import lombok.Builder;
 
 import java.util.List;
 
 /**
  * @author James Chen
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@FieldNameConstants
-public final class MessageStatisticsDTO {
-    private Long sentMessagesOnAverage;
-    private Long acknowledgedMessages;
-    private Long acknowledgedMessagesOnAverage;
-    private Long sentMessages;
-
-    private List<StatisticsRecordDTO> sentMessagesOnAverageRecords;
-    private List<StatisticsRecordDTO> acknowledgedMessagesRecords;
-    private List<StatisticsRecordDTO> acknowledgedMessagesOnAverageRecords;
-    private List<StatisticsRecordDTO> sentMessagesRecords;
+@Builder
+public record MessageStatisticsDTO(
+        Long sentMessagesOnAverage,
+        Long acknowledgedMessages,
+        Long acknowledgedMessagesOnAverage,
+        Long sentMessages,
+        List<StatisticsRecordDTO> sentMessagesOnAverageRecords,
+        List<StatisticsRecordDTO> acknowledgedMessagesRecords,
+        List<StatisticsRecordDTO> acknowledgedMessagesOnAverageRecords,
+        List<StatisticsRecordDTO> sentMessagesRecords
+) {
 }

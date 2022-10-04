@@ -174,22 +174,22 @@ public class GroupController extends BaseController {
             @QueryParam(required = false) Date sentMessageEndDate,
             @QueryParam(defaultValue = "NOOP") DivideBy divideBy) {
         List<Mono<?>> counts = new LinkedList<>();
-        GroupStatisticsDTO statistics = new GroupStatisticsDTO();
+        GroupStatisticsDTO.GroupStatisticsDTOBuilder builder = GroupStatisticsDTO.builder();
         if (divideBy == null || divideBy == DivideBy.NOOP) {
             if (deletedStartDate != null || deletedEndDate != null) {
                 counts.add(groupService.countDeletedGroups(
                                 DateRange.of(deletedStartDate, deletedEndDate))
-                        .doOnNext(statistics::setDeletedGroups));
+                        .doOnNext(builder::deletedGroups));
             }
             if (sentMessageStartDate != null || sentMessageEndDate != null) {
                 counts.add(messageService.countGroupsThatSentMessages(
                                 DateRange.of(sentMessageStartDate, sentMessageEndDate))
-                        .doOnNext(statistics::setGroupsThatSentMessages));
+                        .doOnNext(builder::groupsThatSentMessages));
             }
             if (counts.isEmpty() || createdStartDate != null || createdEndDate != null) {
                 counts.add(groupService.countCreatedGroups(
                                 DateRange.of(createdStartDate, createdEndDate))
-                        .doOnNext(statistics::setCreatedGroups));
+                        .doOnNext(builder::createdGroups));
             }
         } else {
             if (deletedStartDate != null && deletedEndDate != null) {
@@ -197,27 +197,28 @@ public class GroupController extends BaseController {
                         DateRange.of(deletedStartDate, deletedEndDate),
                         divideBy,
                         groupService::countDeletedGroups)
-                        .doOnNext(statistics::setDeletedGroupsRecords));
+                        .doOnNext(builder::deletedGroupsRecords));
             }
             if (sentMessageStartDate != null && sentMessageEndDate != null) {
                 counts.add(checkAndQueryBetweenDate(
                         DateRange.of(sentMessageStartDate, sentMessageEndDate),
                         divideBy,
                         messageService::countGroupsThatSentMessages)
-                        .doOnNext(statistics::setGroupsThatSentMessagesRecords));
+                        .doOnNext(builder::groupsThatSentMessagesRecords));
             }
             if (createdStartDate != null && createdEndDate != null) {
                 counts.add(checkAndQueryBetweenDate(
                         DateRange.of(createdStartDate, createdEndDate),
                         divideBy,
                         groupService::countCreatedGroups)
-                        .doOnNext(statistics::setCreatedGroupsRecords));
+                        .doOnNext(builder::createdGroupsRecords));
             }
             if (counts.isEmpty()) {
                 return Mono.empty();
             }
         }
-        return HttpHandlerResult.okIfTruthy(Mono.when(counts).thenReturn(statistics));
+        return HttpHandlerResult.okIfTruthy(Mono.when(counts)
+                .then(Mono.fromCallable(builder::build)));
     }
 
     @PutMapping
