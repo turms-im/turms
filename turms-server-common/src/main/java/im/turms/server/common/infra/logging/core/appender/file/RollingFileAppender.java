@@ -18,12 +18,15 @@
 package im.turms.server.common.infra.logging.core.appender.file;
 
 import im.turms.server.common.infra.logging.core.appender.Appender;
+import im.turms.server.common.infra.logging.core.logger.InternalLogger;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
 import im.turms.server.common.infra.logging.core.model.LogRecord;
 import im.turms.server.common.infra.time.TimeZoneConst;
 import lombok.SneakyThrows;
 
+import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,6 +35,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Deque;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -41,6 +45,9 @@ public class RollingFileAppender extends Appender {
 
     public static final char FIELD_DELIMITER = '_';
     private static final String FILE_MIDDLE = "yyyyMMdd";
+
+    private static final Set<StandardOpenOption> APPEND_OPTIONS = Set
+            .of(StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
 
     private final String filePrefix;
     private final String fileSuffix;
@@ -76,32 +83,27 @@ public class RollingFileAppender extends Appender {
         this.fileDirectory = filePath.getParent();
 
         this.maxFiles = Math.max(maxFiles, 0);
-        this.maxFileSize = (maxFileMb > 0) ? maxFileMb * 1024 * 1024 : Long.MAX_VALUE;
+        this.maxFileSize = maxFileMb > 0
+                ? maxFileMb * 1024 * 1024
+                : Long.MAX_VALUE;
 
         Files.createDirectories(fileDirectory);
         files = LogDirectoryVisitor.visit(fileDirectory, filePrefix, fileSuffix, FILE_MIDDLE, fileDateTimeFormatter, maxFiles);
 
         LogFile logFile = files.peekLast();
-
         if (logFile == null) {
-            openNewFile();
+            openNewFile(false);
         } else {
             openExistingFile(logFile);
         }
     }
 
-    @SneakyThrows
-    private FileChannel openChannel(Path file) {
+    private FileChannel openFileChannel(Path file) throws IOException {
         Path directory = file.getParent();
         if (directory != null) {
             Files.createDirectories(directory);
         }
-        return FileChannel.open(
-                file,
-                StandardOpenOption.CREATE,
-                StandardOpenOption.WRITE,
-                StandardOpenOption.APPEND
-        );
+        return FileChannel.open(file, APPEND_OPTIONS);
     }
 
     private boolean needRoll(LogRecord record) {
@@ -122,26 +124,85 @@ public class RollingFileAppender extends Appender {
      * Note that it's fine to close file channel and open a new one not atomically
      * because there is always only one thread will call roll() and append()
      */
-    @SneakyThrows
     private void roll() {
         closeFile();
-        openNewFile();
-        clean();
+        openNewFile(true);
+        cleanExceededFiles();
     }
 
-    @SneakyThrows
-    private void openNewFile() {
+    private void openNewFile(boolean recoverFromError) {
         ZonedDateTime now = ZonedDateTime.now(TimeZoneConst.ZONE_ID);
         ZonedDateTime next = now.plus(1, ChronoUnit.DAYS)
                 .truncatedTo(ChronoUnit.DAYS);
-
-        Path filePath = getFilePath(now);
-
-        channel = openChannel(filePath);
+        Path dir = fileDirectory;
+        if (recoverFromError) {
+            try {
+                Files.createDirectories(dir);
+            } catch (FileAlreadyExistsException e) {
+                InternalLogger.INSTANCE.error("The directory \"" + dir + "\" is a file instead of a directory. " +
+                        "This may happen if the directory has been replaced with a file unexpectedly by users. Removing...");
+                try {
+                    Files.deleteIfExists(dir);
+                } catch (Exception ignored) {
+                }
+                try {
+                    Files.createDirectories(dir);
+                } catch (IOException exception) {
+                    throw new IllegalStateException(exception);
+                }
+            } catch (Exception e) {
+                InternalLogger.INSTANCE.error("Caught an error while creating the directory: " + dir, e);
+            }
+        } else {
+            try {
+                Files.createDirectories(dir);
+            } catch (Exception e) {
+                throw new IllegalStateException("Caught an error while creating the directory: " + dir, e);
+            }
+        }
+        String fileName;
+        Path filePath;
+        while (true) {
+            fileName = filePrefix
+                    + FIELD_DELIMITER
+                    + fileDateTimeFormatter.format(now)
+                    + FIELD_DELIMITER
+                    + nextIndex
+                    + fileSuffix;
+            filePath = fileDirectory.resolve(fileName);
+            try {
+                channel = FileChannel.open(filePath, APPEND_OPTIONS);
+                break;
+            } catch (IOException e) {
+                String message = "Failed to open a file channel for the file: " + filePath;
+                if (recoverFromError) {
+                    InternalLogger.INSTANCE.error(message, e);
+                    nextIndex++;
+                    try {
+                        Thread.sleep(1000L);
+                    } catch (InterruptedException exc) {
+                        throw new IllegalStateException(message, e);
+                    }
+                } else {
+                    throw new IllegalStateException(message, e);
+                }
+            }
+        }
         currentFile = new LogFile(filePath, now, nextIndex);
         files.add(currentFile);
 
-        nextFileSize = channel.size();
+        try {
+            nextFileSize = channel.size();
+        } catch (IOException e) {
+            String message = "Failed to read the file channel size: " + filePath;
+            if (recoverFromError) {
+                message += ". Fallback to 0";
+                InternalLogger.INSTANCE.error(message, e);
+                nextFileSize = 0;
+            } else {
+                throw new IllegalStateException(message, e);
+            }
+        }
         nextDay = TimeUnit.SECONDS.toNanos(next.toEpochSecond());
         nextIndex++;
     }
@@ -154,7 +215,7 @@ public class RollingFileAppender extends Appender {
 
         Path filePath = existingFile.path();
 
-        channel = openChannel(filePath);
+        channel = openFileChannel(filePath);
         currentFile = existingFile;
 
         nextFileSize = channel.size();
@@ -162,32 +223,38 @@ public class RollingFileAppender extends Appender {
         nextIndex = existingFile.index() + 1;
     }
 
-    @SneakyThrows
     private void closeFile() {
-        channel.force(true);
-        channel.close();
+        try {
+            channel.force(true);
+        } catch (IOException e) {
+            InternalLogger.INSTANCE
+                    .error("Caught an error while forcing updates to be written: " + currentFile.path(),
+                            e);
+        }
+        try {
+            channel.close();
+        } catch (Exception e) {
+            InternalLogger.INSTANCE.error("Caught an error while closing the file channel: " + currentFile.path(),
+                    e);
+        }
     }
 
-    private void clean() {
+    private void cleanExceededFiles() {
         while (files.size() > maxFiles) {
             LogFile file = files.remove();
             if (maxFiles > 0) {
-                try {
-                    Files.deleteIfExists(file.path());
-                } catch (Exception ignored) {
-                }
+                deleteLogFile(file);
             }
         }
     }
 
-    private Path getFilePath(ZonedDateTime currentDay) {
-        String name = filePrefix
-                + FIELD_DELIMITER
-                + fileDateTimeFormatter.format(currentDay)
-                + FIELD_DELIMITER
-                + nextIndex
-                + fileSuffix;
-        return fileDirectory.resolve(name);
+    private void deleteLogFile(LogFile file) {
+        Path path = file.path();
+        try {
+            Files.deleteIfExists(path);
+        } catch (Exception e) {
+            InternalLogger.INSTANCE.error("Caught an error while delete the log file: " + path);
+        }
     }
 
 }
