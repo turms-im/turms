@@ -17,20 +17,18 @@
 
 package im.turms.server.common.infra.cluster.node;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Getter
 public enum NodeType {
-    GATEWAY("Turms Gateway"),
-    SERVICE("Turms Service");
+    GATEWAY("turms-gateway", "Turms Gateway"),
+    SERVICE("turms-service", "Turms Service");
 
-    @Getter
+    private final String id;
     private final String displayName;
-
-    NodeType(String displayName) {
-        this.displayName = displayName;
-    }
-
 }

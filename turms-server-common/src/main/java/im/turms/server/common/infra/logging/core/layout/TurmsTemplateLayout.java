@@ -55,6 +55,10 @@ public class TurmsTemplateLayout extends TemplateLayout {
     private static final int TRACE_ID_LENGTH = 19;
     private static final int CLASS_NAME_LENGTH = 40;
 
+    private static final int NODE_TYPE_GATEWAY = 'G';
+    private static final int NODE_TYPE_SERVICE = 'S';
+    private static final int NODE_TYPE_UNKNOWN = 'U';
+
     static {
         LogLevel[] levels = LogLevel.values();
         LEVELS = new byte[levels.length][];
@@ -72,8 +76,18 @@ public class TurmsTemplateLayout extends TemplateLayout {
     private final int nodeType;
     private final byte[] nodeId;
 
-    public TurmsTemplateLayout(NodeType nodeType, String nodeId) {
-        this.nodeType = nodeType == NodeType.GATEWAY ? 'G' : 'S';
+    public TurmsTemplateLayout(@Nullable NodeType nodeType, String nodeId) {
+        int type;
+        if (nodeType == null) {
+            type = NODE_TYPE_UNKNOWN;
+        } else {
+            type = switch (nodeType) {
+                case GATEWAY -> NODE_TYPE_GATEWAY;
+                case SERVICE -> NODE_TYPE_SERVICE;
+                default -> throw new IllegalArgumentException("Unknown node type: " + nodeType);
+            };
+        }
+        this.nodeType = type;
         this.nodeId = StringUtil.getUTF8Bytes(nodeId);
     }
 

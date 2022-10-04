@@ -20,6 +20,7 @@ package im.turms.server.common.infra.logging.core.logger;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.logging.core.appender.Appender;
 import im.turms.server.common.infra.logging.core.appender.ConsoleAppender;
@@ -36,6 +37,7 @@ import lombok.SneakyThrows;
 import org.jctools.queues.MpscUnboundedArrayQueue;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +48,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author James Chen
  */
 public class LoggerFactory {
+
+    private static final String PROPERTY_NAME_TURMS_GATEWAY_HOME = "TURMS_GATEWAY_HOME";
+    private static final String PROPERTY_NAME_TURMS_SERVICE_HOME = "TURMS_SERVICE_HOME";
+    private static final String SERVER_TYPE_UNKNOWN = "unknown";
 
     private static TurmsTemplateLayout layout;
 
@@ -68,19 +74,25 @@ public class LoggerFactory {
     }
 
     @SneakyThrows
-    public static synchronized void init(NodeType nodeType, String nodeId, LoggingProperties properties) {
+    public static synchronized void init(@Nullable NodeType nodeType,
+                                         String nodeId,
+                                         LoggingProperties properties) {
         if (initialized) {
             return;
         }
-        homeDir = nodeType == NodeType.SERVICE
-                ? System.getenv("TURMS_SERVICE_HOME")
-                : System.getenv("TURMS_GATEWAY_HOME");
+        if (nodeType != null) {
+            homeDir = switch (nodeType) {
+                case GATEWAY -> System.getenv(PROPERTY_NAME_TURMS_GATEWAY_HOME);
+                case SERVICE -> System.getenv(PROPERTY_NAME_TURMS_SERVICE_HOME);
+                default -> throw new IllegalArgumentException("Unknown node type: " + nodeType);
+            };
+        }
         if (homeDir == null) {
             homeDir = ".";
         }
-        serverTypeName = nodeType == NodeType.SERVICE
-                ? "turms-service"
-                : "turms-gateway";
+        serverTypeName = nodeType == null
+                ? SERVER_TYPE_UNKNOWN
+                : nodeType.getId();
         ConsoleLoggingProperties consoleLoggingProperties = properties.getConsole();
         FileLoggingProperties fileLoggingProperties = properties.getFile();
         if (consoleLoggingProperties.isEnabled()) {
@@ -118,19 +130,18 @@ public class LoggerFactory {
     }
 
     private static synchronized void initForTest() {
-        NodeType nodeType = NodeType.GATEWAY;
-        try {
-            Class.forName("im.turms.service.TurmsServiceApplication");
+        NodeType nodeType = null;
+        if (ClassUtil.exists("im.turms.service.TurmsServiceApplication")) {
             nodeType = NodeType.SERVICE;
-        } catch (ClassNotFoundException ignored) {
+        } else if (ClassUtil.exists("im.turms.gateway.TurmsGatewayApplication")) {
+            nodeType = NodeType.GATEWAY;
         }
-
         // We use "INFO" level for tests because:
         // 1. If "DEBUG", in fact we never view these logs because they are too many to view.
         // 2. In some tests, Netty will try to init its internal logger and log DEBUG messages when Netty initializing
         // while our logger will require Netty to init so that we can log, so there is a circular dependency.
         // Use "INFO" can just avoid Netty trying to log when initializing
-        init(nodeType, "node-id-test", LoggingProperties.builder()
+        init(nodeType, "test", LoggingProperties.builder()
                 .console(new ConsoleLoggingProperties().toBuilder().level(LogLevel.INFO).enabled(true).build())
                 .file(new FileLoggingProperties().toBuilder().level(LogLevel.INFO).enabled(true).build())
                 .build());
