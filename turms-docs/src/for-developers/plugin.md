@@ -15,16 +15,16 @@
 
 ## 插件实现
 
-Turms服务端支持基于Java或JavaScript语言的插件实现。
+Turms服务端支持基于JVM或JavaScript语言的插件实现。
 
-|          | Java插件                                                     | JavaScript插件                                               |
+|          | JVM语言插件                                                  | JavaScript插件                                               |
 | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 语言版本 | Java 17                                                      | ECMAScript 2022                                              |
+| 语言版本 | Java 17 （Bytecode 61.0）                                    | ECMAScript 2022                                              |
 | 优点     | 适合实现逻辑复杂的功能。<br />比如Turms项目的官方插件`turms-plugin-antispam`敏感词过滤插件 | 只需新建一个JavaScript文件，就可以直接编写自定义逻辑，无需编译，无需打包；<br />方便支持热更新 |
 | 缺点     | 如果只是实现一点自定义逻辑，依旧需要先搭个插件项目，然后基于构建工具将代码打包成Jar包，流程繁琐 | 如果需要实现复杂的逻辑，则不如基于Java插件实现；<br />内存开销比Java插件大；<br />解释执行，运行效率低 |
 | 总评     | 更适合做实现复杂、偏重且实现相对固定的插件。<br />该类插件更像是一个“工程” | 更适合小巧轻量、需要支持热更新的插件。<br />该类插件更像是一个“小补丁” |
 
-### Java版本
+### JVM语言版本（以Java为例）
 
 #### 实现步骤
 
@@ -62,7 +62,7 @@ Turms服务端支持基于Java或JavaScript语言的插件实现。
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
-            <version>3.2.4</version>
+            <version>3.4.0</version>
             <executions>
                 <execution>
                     <phase>package</phase>
@@ -183,16 +183,6 @@ Turms服务端中的插件实现相对灵活，既允许插件使用独立类环
 以实现`StorageServiceProvider`插件为例：
 
 ```javascript
-function getPluginDescriptor() {
-    return {
-        id: 'com.mydomain.myplugin',
-        version: '0.0.1',
-        provider: 'com.mydomain',
-        license: 'MIT',
-        description: ''
-    };
-}
-
 class MyTurmsExtension extends TurmsExtension {
     getExtensionPoints() {
         return ['im.turms.plugin.MyExtensionPoint'];
@@ -211,17 +201,40 @@ class MyTurmsExtension extends TurmsExtension {
         return await List.of(notification);
     }
 }
+
+class MyTurmsPlugin extends TurmsPlugin {
+    getDescriptor() {
+    	return {
+        	id: 'com.mydomain.myplugin',
+	        version: '0.0.1',
+    	    provider: 'com.mydomain',
+        	license: 'MIT',
+	        description: ''
+    	};
+	}
+
+    getExtensions() {
+        return [MyTurmsExtension];
+    }
+}
+
+export default MyTurmsPlugin;
 ```
 
 其中：
 
-* `getPluginDescriptor`函数必须存在，且是固定的函数名，它返回的对象是插件的描述信息：
-* `id`字段用于区分插件。无格式要求，但是必须不为空。
-  
-* 其他字段起描述作用，暂无实际作用，均可为空。
+* `MyTurmsExtension`类是开发者自定义的`TurmsExtension`拓展，开发者可以自定义类名。其中：
+  * `getExtensionPoints`函数必须存在，用于返回该拓展类实现了的插件拓展点名称。如果开发者指定了拓展点，但没有实现拓展点的接口函数，则Turms服务端在执行插件回调函数时，会跳过该插件，并不会报错。
 
+* `MyTurmsPlugin`类是开发者自定义的`TurmsPlugin`插件，开发者可以自定义类名。其中：
+  * `getDescriptor`函数必须存在，它返回的对象是插件的描述信息：
+    * `id`字段用于区分插件。无格式要求，但是必须不为空。
 
-* `MyTurmsExtension`类是开发者自定义的`TurmsExtension`拓展，其中`getExtensionPoints`函数必须存在，用于返回该拓展实现了的插件拓展点名称。如果开发者指定了拓展点，但并没有提供对应的实现函数，则Turms服务端在执行插件回调函数时，会跳过该插件，并不会报错。
+    * 其他字段起描述作用，暂无实际作用，均可为空。
+
+  * `getExtensions`函数必须存在，它返回的对象是拓展类数组，如上文的`MyTurmsExtension`。
+
+* `export default`用于导出开发者自定的插件，如上文的`MyTurmsPlugin`。
 
 注意事项：
 

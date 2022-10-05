@@ -29,7 +29,6 @@ import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.nio.file.Path;
@@ -37,7 +36,6 @@ import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -47,19 +45,13 @@ import java.util.UUID;
 public class JsPluginFactory {
 
     private static final String JS_LANGUAGE_TYPE = "js";
-    private static final String GET_PLUGIN_DESCRIPTOR = "getPluginDescriptor";
+    private static final String GET_DESCRIPTOR = "getDescriptor";
+    private static final String GET_EXTENSIONS = "getExtensions";
     private static final String GET_EXTENSION_POINTS = "getExtensionPoints";
+    private static final String IS_TURMS_PLUGIN = "isTurmsPlugin";
     private static final String IS_TURMS_EXTENSION = "isTurmsExtension";
-    private static final Set<String> BUILTIN_ROOT_MEMBER_KEYS = Set.of(
-            "TurmsExtension",
-            GET_PLUGIN_DESCRIPTOR
-    );
-    //language=JS
-    private static final Source PLUGIN_CONTEXT = parseScript("""
-            class TurmsExtension {
-                static isTurmsExtension = true;
-            }
-            """);
+    private static final String TURMS_PLUGIN = "TurmsPlugin";
+    private static final String TURMS_EXTENSION = "TurmsExtension";
 
     private JsPluginFactory() {
     }
@@ -67,9 +59,10 @@ public class JsPluginFactory {
     public static Source parseScript(String script) {
         try {
             return Source.newBuilder("js", script, "script")
-                    .cached(true)
+                    .mimeType("application/javascript+module")
+                    .cached(false)
                     .build();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new CorruptedScriptException("Failed to parse script", e);
         }
     }
@@ -82,8 +75,12 @@ public class JsPluginFactory {
                                   int inspectPort) {
         Source source = parseScript(script);
         Context.Builder builder = Context.newBuilder(JS_LANGUAGE_TYPE)
+                // TODO: remove once "js.esm-eval-returns-exports" isn't experimental
+                .allowExperimentalOptions(true)
                 .allowHostAccess(HostAccess.ALL)
-                .allowHostClassLookup(className -> true);
+                .allowHostClassLookup(className -> true)
+                .option("js.ecmascript-version", "2022")
+                .option("js.esm-eval-returns-exports", "true");
         if (isDebugEnabled) {
             builder.option("inspect", inspectHost + ":" + inspectPort)
                     .option("inspect.Path", UUID.randomUUID().toString());
@@ -91,34 +88,75 @@ public class JsPluginFactory {
             builder.engine(engine);
         }
         Context context = builder.build();
-        context.eval(PLUGIN_CONTEXT);
+        JsContext.bindBeforeInitialization(context);
+        Value exports;
         try {
-            context.eval(source);
+            exports = context.eval(source);
         } catch (Exception e) {
             try {
                 context.close(true);
             } catch (Exception ignored) {
             }
-            throw new CorruptedScriptException("Failed to create a JavaScript plugin since the script is corrupted", e);
+            throw new CorruptedScriptException("Failed to eval the script", e);
+        }
+        Value pluginClass = exports.getMember("default");
+        if (pluginClass == null
+                || !pluginClass.canInstantiate()
+                || !ValueInspector.getBool(pluginClass.getMember(IS_TURMS_PLUGIN))) {
+            throw new CorruptedScriptException("The script should define a default export to export a subclass of " + TURMS_PLUGIN);
+        }
+        Value plugin;
+        try {
+            plugin = pluginClass.newInstance();
+        } catch (Exception e) {
+            throw new CorruptedScriptException("Failed to initialize the plugin: " + pluginClass.getMetaQualifiedName(), e);
         }
         Value bindings = context.getBindings(JS_LANGUAGE_TYPE);
-        JsPluginDescriptor descriptor = JsPluginDescriptorFactory.parsePluginDescriptor(bindings, script, path);
-        List<TurmsExtension> extensions = createExtensions(context, bindings, bindings.getMemberKeys());
-        new JsContext(descriptor.getId()).bind(context, bindings);
+        JsPluginDescriptor descriptor = JsPluginDescriptorFactory.parsePluginDescriptor(plugin, path);
+        List<TurmsExtension> extensions = createExtensions(context, plugin);
+        JsContext.bindAfterInitialization(context, bindings, descriptor.getId());
         return new JsPlugin(context, descriptor, extensions);
     }
 
-    private static List<TurmsExtension> createExtensions(Context context, Value bindings, Set<String> memberKeys) {
-        List<TurmsExtension> extensions = new ArrayList<>(memberKeys.size() - BUILTIN_ROOT_MEMBER_KEYS.size());
-        for (String memberKey : memberKeys) {
-            if (BUILTIN_ROOT_MEMBER_KEYS.contains(memberKey)) {
-                continue;
+    private static List<TurmsExtension> createExtensions(Context context, Value plugin) {
+        Value getExtensions = plugin.getMember(GET_EXTENSIONS);
+        if (getExtensions == null) {
+            String message = "The plugin should have a function called \"" + GET_EXTENSIONS + "\"";
+            throw new CorruptedScriptException(message);
+        }
+        if (!getExtensions.canExecute()) {
+            String message = "\"" + GET_EXTENSIONS + "\" should be a function. Actual: " + getExtensions;
+            throw new CorruptedScriptException(message);
+        }
+        Value extensionClasses;
+        try {
+            extensionClasses = getExtensions.execute();
+        } catch (Exception e) {
+            String message = "Failed to execute the function \"" + GET_EXTENSIONS + "\"";
+            throw new CorruptedScriptException(message, e);
+        }
+        if (!extensionClasses.hasArrayElements()) {
+            String message = "The function \"" +
+                    GET_EXTENSIONS +
+                    "\" should return the subclasses of " + TURMS_EXTENSION +
+                    ". Actual: "
+                    + extensionClasses;
+            throw new CorruptedScriptException(message);
+        }
+        Value iterator = extensionClasses.getIterator();
+        List<TurmsExtension> extensions = new ArrayList<>((int) extensionClasses.getArraySize());
+        while (iterator.hasIteratorNextElement()) {
+            Value extensionClass = iterator.getIteratorNextElement();
+            if (!extensionClass.canInstantiate()
+                    || !ValueInspector.getBool(extensionClass.getMember(IS_TURMS_EXTENSION))) {
+                String message = "The function \"" +
+                        GET_EXTENSIONS +
+                        "\" should return the subclasses of " + TURMS_EXTENSION +
+                        ". Actual: "
+                        + extensionClasses;
+                throw new CorruptedScriptException(message);
             }
-            Value extensionClass = bindings.getMember(memberKey);
-            Value isTurmsExtension = extensionClass.getMember(IS_TURMS_EXTENSION);
-            if (extensionClass.canInstantiate() && ValueInspector.getBool(isTurmsExtension)) {
-                extensions.add(createExtension(context, extensionClass));
-            }
+            extensions.add(createExtension(context, extensionClass));
         }
         return extensions;
     }
@@ -127,8 +165,7 @@ public class JsPluginFactory {
         Value extension = extensionClass.newInstance();
         Value getExtensionPoints = extension.getMember(GET_EXTENSION_POINTS);
         if (getExtensionPoints == null || !getExtensionPoints.canExecute()) {
-            String message = "The method \"%s\" should return the name of extension points"
-                    .formatted(GET_EXTENSION_POINTS);
+            String message = "The method \"" + GET_EXTENSION_POINTS + "\" should return the name of extension points";
             throw new CorruptedScriptException(message);
         }
         Value extensionPointStrings = getExtensionPoints.execute();
@@ -153,10 +190,13 @@ public class JsPluginFactory {
         List<Class<? extends ExtensionPoint>> extensionPointClasses = new ArrayList<>(size);
         while (iterator.hasIteratorNextElement()) {
             Class<? extends ExtensionPoint> extensionPointClass = parseExtensionPointClass(iterator.getIteratorNextElement());
+            if (extensionPointToFunction.containsKey(extensionPointClass)) {
+                continue;
+            }
             Method[] methods = extensionPointClass.getMethods();
+            Map<String, Value> nameToFunction = CollectionUtil.newMapWithExpectedSize(methods.length);
+            extensionPointToFunction.put(extensionPointClass, nameToFunction);
             for (Method method : methods) {
-                Map<String, Value> nameToFunction = extensionPointToFunction
-                        .computeIfAbsent(extensionPointClass, clazz -> CollectionUtil.newMapWithExpectedSize(methods.length));
                 String methodName = method.getName();
                 Value function = extension.getMember(methodName);
                 if (function != null && function.canExecute()) {

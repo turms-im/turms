@@ -1,14 +1,9 @@
-function getPluginDescriptor() {
-    return {
-        id: 'com.mydomain.myplugin',
-        version: '0.0.1',
-        provider: 'com.mydomain',
-        license: 'MIT',
-        description: ''
-    };
+class MyBaseExtension extends TurmsExtension {
+    testBaseMethod() {
+    }
 }
 
-class MyPlugin extends TurmsExtension {
+class MyExtension extends MyBaseExtension {
     getExtensionPoints() {
         return ['unit.im.turms.server.common.infra.plugin.MyExtensionPointForJs'];
     }
@@ -41,3 +36,20 @@ class MyPlugin extends TurmsExtension {
 
     // testNotImplemented()
 }
+
+class MyPlugin extends TurmsPlugin {
+    getDescriptor() {
+        return {
+            id: 'com.mydomain.myplugin',
+            version: '0.0.1',
+            provider: 'com.mydomain',
+            license: 'MIT',
+            description: ''
+        };
+    }
+
+    getExtensions() {
+        return [MyExtension];
+    }
+}
+export default MyPlugin;

@@ -29,43 +29,54 @@ import java.util.Map;
  */
 public class JsPluginDescriptorFactory extends PluginDescriptorFactory {
 
-    private static final String GET_PLUGIN_DESCRIPTOR = "getPluginDescriptor";
+    private static final String GET_DESCRIPTOR = "getDescriptor";
 
     private JsPluginDescriptorFactory() {
     }
 
-    public static JsPluginDescriptor parsePluginDescriptor(Value bindings, String script, @Nullable Path path) {
-        Map<String, String> properties = executeGetPluginDescriptor(bindings, script);
+    public static JsPluginDescriptor parsePluginDescriptor(Value plugin, @Nullable Path path) {
+        Map<String, String> properties = executeGetPluginDescriptor(plugin);
         return createJsPluginDescriptor(properties, path);
     }
 
-    public static Map<String, String> executeGetPluginDescriptor(Value bindings, String script) {
-        if (!bindings.hasMember(GET_PLUGIN_DESCRIPTOR)) {
-            String message = "The script should have a function called \"%s\". Actual: %n%s"
-                    .formatted(GET_PLUGIN_DESCRIPTOR, script);
+    public static Map<String, String> executeGetPluginDescriptor(Value plugin) {
+        Value getDescriptor = plugin.getMember(GET_DESCRIPTOR);
+        if (getDescriptor == null) {
+            String message = "The plugin should have a function called \"" + GET_DESCRIPTOR + "\"";
             throw new CorruptedScriptException(message);
         }
-        Value getPluginDescriptor = bindings.getMember(GET_PLUGIN_DESCRIPTOR);
-        if (!getPluginDescriptor.canExecute()) {
-            String message = "The method \"%s\" should be a function. Actual: %n%s"
-                    .formatted(GET_PLUGIN_DESCRIPTOR, script);
+        if (!getDescriptor.canExecute()) {
+            String message = "\"" +
+                    GET_DESCRIPTOR +
+                    "\" should be a function. Actual: " +
+                    getDescriptor;
             throw new CorruptedScriptException(message);
         }
         Value descriptor;
         try {
-            descriptor = getPluginDescriptor.execute();
+            descriptor = getDescriptor.execute();
         } catch (Exception e) {
-            String message = "Failed to run the function \"%s\""
-                    .formatted(GET_PLUGIN_DESCRIPTOR);
+            String message = "Failed to run the function \"" + GET_DESCRIPTOR + "\"";
             throw new CorruptedScriptException(message, e);
         }
+        Map<String, String> map;
         try {
-            return descriptor.as(Map.class);
+            map = descriptor.as(Map.class);
         } catch (Exception e) {
-            String message = "The method \"%s\" should return a plugin descriptor object. Actual: %n%s"
-                    .formatted(GET_PLUGIN_DESCRIPTOR, descriptor.toString());
+            String message = "The function \"" +
+                    GET_DESCRIPTOR +
+                    "\" should return a plugin descriptor object. Actual: " +
+                    descriptor;
             throw new CorruptedScriptException(message, e);
         }
+        if (map == null) {
+            String message = "The function \"" +
+                    GET_DESCRIPTOR +
+                    "\" should return a plugin descriptor object. Actual: " +
+                    descriptor;
+            throw new CorruptedScriptException(message);
+        }
+        return map;
     }
 
     private static JsPluginDescriptor createJsPluginDescriptor(Map<String, String> properties, @Nullable Path path) {

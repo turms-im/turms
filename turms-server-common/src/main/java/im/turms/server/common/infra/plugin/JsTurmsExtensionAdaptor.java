@@ -36,6 +36,8 @@ public class JsTurmsExtensionAdaptor extends TurmsExtension {
     private final List<Class<? extends ExtensionPoint>> extensionPointClasses;
     private final Value onStarted;
     private final Value onStopped;
+    private final Value onResumed;
+    private final Value onPaused;
 
     public JsTurmsExtensionAdaptor(Context jsContext,
                                    ExtensionPoint proxy,
@@ -46,6 +48,8 @@ public class JsTurmsExtensionAdaptor extends TurmsExtension {
         this.extensionPointClasses = extensionPointClasses;
         onStarted = ValueInspector.returnIfFunction(extension.getMember("onStarted"));
         onStopped = ValueInspector.returnIfFunction(extension.getMember("onStopped"));
+        onResumed = ValueInspector.returnIfFunction(extension.getMember("onResumed"));
+        onPaused = ValueInspector.returnIfFunction(extension.getMember("onPaused"));
     }
 
     @Override
@@ -63,6 +67,20 @@ public class JsTurmsExtensionAdaptor extends TurmsExtension {
             }
         } finally {
             jsContext.close(true);
+        }
+    }
+
+    @Override
+    protected void onResumed() {
+        if (onResumed != null) {
+            onResumed.execute();
+        }
+    }
+
+    @Override
+    protected void onPaused() {
+        if (onPaused != null) {
+            onPaused.execute();
         }
     }
 
