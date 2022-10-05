@@ -153,12 +153,12 @@ public final class TurmsRequestTypePool {
 
     static {
         TurmsRequest.KindCase[] values = TurmsRequest.KindCase.values();
-        CREATE = CollectionUtil.copyAsSet(StringUtil.findMatchesLatin1(values, "CREATE_*"));
-        DELETE = CollectionUtil.copyAsSet(StringUtil.findMatchesLatin1(values, "DELETE_*"));
-        UPDATE = CollectionUtil.copyAsSet(StringUtil.findMatchesLatin1(values, "UPDATE_*"));
-        QUERY = CollectionUtil.copyAsSet(CollectionUtil.concatAsSet(StringUtil.findMatchesLatin1(values, "QUERY_*"),
+        CREATE = CollectionUtil.toImmutableSet(StringUtil.findMatchesLatin1(values, "CREATE_*"));
+        DELETE = CollectionUtil.toImmutableSet(StringUtil.findMatchesLatin1(values, "DELETE_*"));
+        UPDATE = CollectionUtil.toImmutableSet(StringUtil.findMatchesLatin1(values, "UPDATE_*"));
+        QUERY = CollectionUtil.toImmutableSet(CollectionUtil.newSet(StringUtil.findMatchesLatin1(values, "QUERY_*"),
                 StringUtil.findMatchesLatin1(values, "CHECK_*")));
-        ALL = CollectionUtil.concatAsSet(CREATE, DELETE, UPDATE, QUERY);
+        ALL = CollectionUtil.newSet(CREATE, DELETE, UPDATE, QUERY);
     }
 
 }

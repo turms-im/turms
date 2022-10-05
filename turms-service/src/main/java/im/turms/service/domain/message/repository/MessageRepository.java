@@ -172,8 +172,8 @@ public class MessageRepository extends BaseRepository<Message, Long> {
             @Nullable Integer size) {
         boolean enableConversationId = useConversationId
                 && areGroupMessages != null
-                && !CollectionUtil.isEmpty(senderIds)
-                && !CollectionUtil.isEmpty(targetIds);
+                && CollectionUtil.isNotEmpty(senderIds)
+                && CollectionUtil.isNotEmpty(targetIds);
         Filter filter = Filter.newBuilder(enableConversationId ? 9 : 8)
                 .eqIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
                 .eqIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)

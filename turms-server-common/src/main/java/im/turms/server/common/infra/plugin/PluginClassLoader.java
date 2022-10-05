@@ -72,7 +72,7 @@ public class PluginClassLoader extends URLClassLoader {
 
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
-        return Collections.enumeration(CollectionUtil.concatAsList(
+        return Collections.enumeration(CollectionUtil.newList(
                 findResources(name).asIterator(),
                 getParent().getResources(name).asIterator()
         ));

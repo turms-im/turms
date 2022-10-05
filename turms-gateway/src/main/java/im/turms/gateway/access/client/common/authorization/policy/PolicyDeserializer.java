@@ -121,7 +121,7 @@ public class PolicyDeserializer {
                 key |= 1L << action.ordinal();
                 actions.add(action);
             }
-            return ACTIONS_POOL.poolIfAbsent(key, actions, CollectionUtil::copyAsSet);
+            return ACTIONS_POOL.poolIfAbsent(key, actions, CollectionUtil::toImmutableSet);
         }
     }
 
@@ -170,7 +170,7 @@ public class PolicyDeserializer {
                     throw new IllegalPolicyException(ILLEGAL_RESOURCES);
                 }
             }
-            return RESOURCES_POOL.poolIfAbsent(key, resources, CollectionUtil::copyAsSet);
+            return RESOURCES_POOL.poolIfAbsent(key, resources, CollectionUtil::toImmutableSet);
         }
     }
 

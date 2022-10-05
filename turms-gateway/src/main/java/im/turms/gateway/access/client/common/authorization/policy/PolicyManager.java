@@ -121,7 +121,7 @@ public class PolicyManager {
     }
 
     private Set<TurmsRequest.KindCase> pool(Set<TurmsRequest.KindCase> requestTypesBuilder) {
-        return requestTypesPool.poolIfAbsent(requestTypesBuilder, CollectionUtil::copyAsSet);
+        return requestTypesPool.poolIfAbsent(requestTypesBuilder, CollectionUtil::toImmutableSet);
     }
 
     private Set<TurmsRequest.KindCase> findMatchedRequestTypes(Set<TurmsRequest.KindCase> matchedRequestTypesBuilder,

@@ -182,7 +182,7 @@ public class JwtManager {
             algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
                     new HmacAlgorithm(definition, secretKey)));
         }
-        nameToAlgorithm = CollectionUtil.copyAsMap(algorithms);
+        nameToAlgorithm = CollectionUtil.newImmutableMap(algorithms);
     }
 
     @Nullable

@@ -200,7 +200,7 @@ public enum PolicyStatementResource {
         for (PolicyStatementResource resource : resources) {
             requestTypes.add(resource.allRequestTypes);
         }
-        ALL_REQUEST_TYPES = CollectionUtil.concatAsSet(requestTypes);
+        ALL_REQUEST_TYPES = CollectionUtil.newSet(requestTypes);
     }
 
     PolicyStatementResource(Set<KindCase> requestTypesForCreating,
@@ -211,7 +211,7 @@ public enum PolicyStatementResource {
         this.requestTypesForDeleting = requestTypesForDeleting;
         this.requestTypesForUpdating = requestTypesForUpdating;
         this.requestTypesForQuerying = requestTypesForQuerying;
-        allRequestTypes = CollectionUtil.concatAsSet(requestTypesForCreating,
+        allRequestTypes = CollectionUtil.newSet(requestTypesForCreating,
                 requestTypesForDeleting,
                 requestTypesForUpdating,
                 requestTypesForQuerying);

@@ -62,11 +62,53 @@ public final class CollectionUtil {
         return (int) (expectedSize / 0.75F + 1.0F);
     }
 
-    public static <T> Set<T> newSet(Collection<T> values) {
-        if (values instanceof Set) {
-            return (Set<T>) values;
+    public static <T> List<T> newList(Iterator<T> iterator) {
+        List<T> list = new LinkedList<>();
+        while (iterator.hasNext()) {
+            list.add(iterator.next());
         }
-        return UnifiedSet.newSet(values);
+        return list;
+    }
+
+    public static <T> List<T> newList(Iterator<T> iterator1, Iterator<T> iterator2) {
+        Iterator<T> iterator = new ConcatIterator<>(iterator1, iterator2);
+        return newList(iterator);
+    }
+
+    public static <T> Set<T> newSet(Collection<T> values) {
+        return new UnifiedSet<>(values);
+    }
+
+    public static <T> Set<T> newSet(Collection<T> collection1, Collection<T> collection2) {
+        int count = collection1.size() + collection2.size();
+        Set<T> set = newSetWithExpectedSize(count);
+        set.addAll(collection1);
+        set.addAll(collection2);
+        return set;
+    }
+
+    public static <T> Set<T> newSet(Collection<T>... collections) {
+        int count = 0;
+        for (Collection<T> values : collections) {
+            count += values.size();
+        }
+        Set<T> set = newSetWithExpectedSize(count);
+        for (Collection<T> values : collections) {
+            set.addAll(values);
+        }
+        return set;
+    }
+
+    public static <T> Set<T> newSet(List<Collection<T>> collections) {
+        int count = 0;
+        for (Collection<T> values : collections) {
+            count += values.size();
+        }
+        Set<T> set = newSetWithExpectedSize(count);
+        for (Collection<T> values : collections) {
+            set.addAll(values);
+        }
+        return set;
     }
 
     public static <T> Set<T> newSetWithExpectedSize(int expectedSize) {
@@ -76,6 +118,11 @@ public final class CollectionUtil {
     public static <K, V> Map<K, V> newMapWithExpectedSize(int expectedSize) {
         return new HashMap<>(getMapCapability(expectedSize));
     }
+
+    public static <K, V> Map<K, V> newImmutableMap(Collection<Map.Entry<K, V>> entries) {
+        return Map.ofEntries(entries.toArray(EMPTY_ENTRY_ARRAY));
+    }
+
     //endregion
 
     //region introspection
@@ -232,31 +279,13 @@ public final class CollectionUtil {
     }
     //endregion
 
-    //region copy
-    public static <K, V> Map<K, V> copyAsMap(Collection<Map.Entry<K, V>> entries) {
-        return Map.ofEntries(entries.toArray(EMPTY_ENTRY_ARRAY));
-    }
-
-    public static <T> Set<T> copyAsSet(Collection<? extends T> collection) {
-        if (isImmutableSet(collection)) {
-            return (Set<T>) collection;
-        } else {
-            return (Set<T>) Set.of(collection.toArray());
-        }
-    }
-    //endregion
-
     //region conversion
-    public static <T> List<T> toList(Iterable<T> iterable) {
-        return toList(iterable.iterator());
-    }
 
-    public static <T> List<T> toList(Iterator<T> iterator) {
-        List<T> list = new LinkedList<>();
-        while (iterator.hasNext()) {
-            list.add(iterator.next());
+    public static <T> List<T> toList(Collection<T> collection) {
+        if (collection instanceof List<T> list) {
+            return list;
         }
-        return list;
+        return new ArrayList<>(collection);
     }
 
     public static <T> List<T> toListSupportRandomAccess(Collection<T> collection) {
@@ -264,6 +293,21 @@ public final class CollectionUtil {
             return list;
         }
         return new ArrayList<>(collection);
+    }
+
+    public static <T> Set<T> toSet(Collection<T> values) {
+        if (values instanceof Set<T> set) {
+            return set;
+        }
+        return new UnifiedSet<>(values);
+    }
+
+    public static <T> Set<T> toImmutableSet(Collection<? extends T> collection) {
+        if (isImmutableSet(collection)) {
+            return (Set<T>) collection;
+        } else {
+            return (Set<T>) Set.of(collection.toArray());
+        }
     }
     //endregion
 
@@ -296,7 +340,7 @@ public final class CollectionUtil {
     //endregion
 
     //region add/remove
-    public static <T> List<T> add(List<T> list, List<T> values) {
+    public static <T> List<T> add(List<T> list, Collection<T> values) {
         if (isImmutable(list)) {
             List<T> newList = new ArrayList<>(list.size() + values.size());
             newList.addAll(list);
@@ -316,7 +360,7 @@ public final class CollectionUtil {
         return list;
     }
 
-    public static <T> Set<T> add(Set<T> set, Set<T> values) {
+    public static <T> Set<T> add(Set<T> set, Collection<T> values) {
         if (isImmutable(set)) {
             Set<T> newSet = UnifiedSet.newSet(set.size() + values.size());
             newSet.addAll(set);
@@ -347,35 +391,7 @@ public final class CollectionUtil {
     }
     //endregion
 
-    //region concat and merge
-    public static <T> List<T> concatAsList(Iterator<T> iterator1, Iterator<T> iterator2) {
-        Iterator<T> iterator = new ConcatIterator<>(iterator1, iterator2);
-        return toList(iterator);
-    }
-
-    public static <T> Set<T> concatAsSet(Collection<T>... collections) {
-        int count = 0;
-        for (Collection<T> values : collections) {
-            count += values.size();
-        }
-        Set<T> set = newSetWithExpectedSize(count);
-        for (Collection<T> values : collections) {
-            set.addAll(values);
-        }
-        return set;
-    }
-
-    public static <T> Set<T> concatAsSet(List<Collection<T>> collections) {
-        int count = 0;
-        for (Collection<T> values : collections) {
-            count += values.size();
-        }
-        Set<T> set = newSetWithExpectedSize(count);
-        for (Collection<T> values : collections) {
-            set.addAll(values);
-        }
-        return set;
-    }
+    //region merge
 
     public static <K, V> Map<K, V> merge(Map<K, V> map1, Map<K, V> map2) {
         Map<K, V> result = newMapWithExpectedSize(map1.size() + map2.size());

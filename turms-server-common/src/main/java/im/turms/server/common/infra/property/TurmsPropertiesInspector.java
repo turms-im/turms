@@ -169,7 +169,7 @@ public class TurmsPropertiesInspector {
                     : getFlatFieldMetadata(fieldInfo);
             entries.add(Map.entry(field.getName(), fieldMetadata));
         }
-        return CollectionUtil.copyAsMap(entries);
+        return CollectionUtil.newImmutableMap(entries);
     }
 
     private static FieldMetadata getFlatFieldMetadata(PropertyFieldInfo fieldInfo) {
