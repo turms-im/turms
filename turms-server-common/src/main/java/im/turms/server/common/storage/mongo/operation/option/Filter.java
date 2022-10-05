@@ -151,6 +151,17 @@ public class Filter extends BaseBson {
         return this;
     }
 
+    public Filter neNullIfTrueOrEqNullIfFalse(String key, @Nullable Boolean value) {
+        if (value != null) {
+            if (value) {
+                ne(key, BsonNull.VALUE);
+            } else {
+                eq(key, BsonNull.VALUE);
+            }
+        }
+        return this;
+    }
+
     public Filter or(Filter... filters) {
         List<BsonValue> values = new ArrayList<>(filters.length);
         for (Filter filter : filters) {

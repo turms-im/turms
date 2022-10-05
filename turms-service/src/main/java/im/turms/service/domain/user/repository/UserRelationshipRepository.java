@@ -73,14 +73,14 @@ public class UserRelationshipRepository extends BaseRepository<UserRelationship,
         Filter filter = Filter.newBuilder(3)
                 .inIfNotNull(UserRelationship.Fields.ID_OWNER_ID, ownerIds)
                 .inIfNotNull(UserRelationship.Fields.ID_RELATED_USER_ID, relatedUserIds)
-                .neNullIfNotNull(UserRelationship.Fields.BLOCK_DATE, isBlocked);
+                .neNullIfTrueOrEqNullIfFalse(UserRelationship.Fields.BLOCK_DATE, isBlocked);
         return mongoClient.count(entityClass, filter);
     }
 
     public Flux<Long> findRelatedUserIds(@Nullable Set<Long> ownerIds, @Nullable Boolean isBlocked) {
         Filter filter = Filter.newBuilder(2)
                 .inIfNotNull(UserRelationship.Fields.ID_OWNER_ID, ownerIds)
-                .neNullIfNotNull(UserRelationship.Fields.BLOCK_DATE, isBlocked);
+                .neNullIfTrueOrEqNullIfFalse(UserRelationship.Fields.BLOCK_DATE, isBlocked);
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(UserRelationship.Fields.ID_RELATED_USER_ID);
         return mongoClient.findMany(entityClass, filter, options)
@@ -98,7 +98,7 @@ public class UserRelationshipRepository extends BaseRepository<UserRelationship,
                 .inIfNotNull(UserRelationship.Fields.ID_OWNER_ID, ownerIds)
                 .inIfNotNull(UserRelationship.Fields.ID_RELATED_USER_ID, relatedUserIds)
                 .addBetweenIfNotNull(UserRelationship.Fields.ESTABLISHMENT_DATE, establishmentDateRange)
-                .neNullIfNotNull(UserRelationship.Fields.BLOCK_DATE, isBlocked);
+                .neNullIfTrueOrEqNullIfFalse(UserRelationship.Fields.BLOCK_DATE, isBlocked);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);
         return mongoClient.findMany(entityClass, filter, options);
