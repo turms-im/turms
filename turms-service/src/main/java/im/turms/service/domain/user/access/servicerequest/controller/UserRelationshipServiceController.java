@@ -35,6 +35,8 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.business.NotificationProperties;
+import im.turms.server.common.infra.recycler.ListRecycler;
+import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
@@ -174,17 +176,19 @@ public class UserRelationshipServiceController {
             int targetGroupIndex = request.hasTargetGroupIndex() ?
                     request.getTargetGroupIndex() : DEFAULT_RELATIONSHIP_GROUP_INDEX;
             if (notifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers) {
+                Recyclable<List<Long>> recyclableList = ListRecycler.obtain();
                 return userRelationshipGroupService.queryRelationshipGroupMemberIds(
                                 clientRequest.userId(),
                                 groupIndex)
-                        .collect(Collectors.toSet())
-                        .flatMap(ids -> userRelationshipGroupService.deleteRelationshipGroupAndMoveMembers(
+                        .collect(Collectors.toCollection(recyclableList::getValue))
+                        .flatMap(memberIds -> userRelationshipGroupService.deleteRelationshipGroupAndMoveMembers(
                                         clientRequest.userId(),
                                         groupIndex,
                                         targetGroupIndex)
-                                .then(Mono.fromCallable(() -> ids.isEmpty()
+                                .then(Mono.fromCallable(() -> memberIds.isEmpty()
                                         ? RequestHandlerResultFactory.OK
-                                        : RequestHandlerResultFactory.get(ids, clientRequest.turmsRequest()))));
+                                        : RequestHandlerResultFactory.get(CollectionUtil.newSet(memberIds), clientRequest.turmsRequest()))))
+                        .doFinally(signalType -> recyclableList.recycle());
             }
             return userRelationshipGroupService.deleteRelationshipGroupAndMoveMembers(
                             clientRequest.userId(),

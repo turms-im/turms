@@ -41,6 +41,9 @@ import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.reactor.PublisherPool;
+import im.turms.server.common.infra.recycler.ListRecycler;
+import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
@@ -55,7 +58,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -246,17 +248,29 @@ public class UserServiceController {
             }
             Mono<Set<Long>> queryMemberIds = notifyMembers
                     ? groupMemberService.queryMemberIdsInUsersJoinedGroups(Set.of(clientRequest.userId()))
-                    : Mono.just(Collections.emptySet());
-            Mono<Set<Long>> queryRelatedUserIds = notifyRelatedUser
-                    ? userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.userId()), false)
-                    .collect(Collectors.toSet())
-                    : Mono.just(Collections.emptySet());
+                    : PublisherPool.emptySet();
+            Mono<List<Long>> queryRelatedUserIds;
+
+            Recyclable<List<Long>> recyclableList;
+            if (notifyRelatedUser) {
+                recyclableList = ListRecycler.obtain();
+                queryRelatedUserIds = userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.userId()), false)
+                        .collect(Collectors.toCollection(recyclableList::getValue));
+            } else {
+                recyclableList = null;
+                queryRelatedUserIds = PublisherPool.emptyList();
+            }
             return queryMemberIds.zipWith(queryRelatedUserIds)
                     .map(results -> {
                         Set<Long> recipients = CollectionUtil.add(results.getT1(), results.getT2());
                         return recipients.isEmpty()
                                 ? RequestHandlerResultFactory.OK
                                 : RequestHandlerResultFactory.get(recipients, clientRequest.turmsRequest());
+                    })
+                    .doFinally(signalType -> {
+                        if (recyclableList != null) {
+                            recyclableList.recycle();
+                        }
                     });
         };
     }
@@ -280,11 +294,13 @@ public class UserServiceController {
                             null)
                     .then(Mono.defer(() -> {
                         if (notifyRelatedUsersAfterOtherRelatedUserInfoUpdated) {
+                            Recyclable<List<Long>> recyclableList = ListRecycler.obtain();
                             return userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.userId()), false)
-                                    .collect(Collectors.toSet())
+                                    .collect(Collectors.toCollection(recyclableList::getValue))
                                     .map(relatedUserIds -> relatedUserIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
-                                            : RequestHandlerResultFactory.get(relatedUserIds, clientRequest.turmsRequest()));
+                                            : RequestHandlerResultFactory.get(CollectionUtil.newSet(relatedUserIds), clientRequest.turmsRequest()))
+                                    .doFinally(signalType -> recyclableList.recycle());
                         }
                         return Mono.just(RequestHandlerResultFactory.OK);
                     }));

@@ -49,6 +49,8 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.business.NotificationProperties;
+import im.turms.server.common.infra.recycler.Recyclable;
+import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
@@ -401,12 +403,14 @@ public class GroupServiceController {
                             request.getContent())
                     .flatMap(joinRequest -> {
                         if (notifyOwnerAndManagersAfterReceivingJoinRequest) {
+                            Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
                             return groupMemberService.queryGroupManagersAndOwnerId(request.getGroupId())
-                                    .collect(Collectors.toSet())
+                                    .collect(Collectors.toCollection(recyclableSet::getValue))
                                     .map(recipientIds -> recipientIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
                                             : RequestHandlerResultFactory
-                                            .get(joinRequest.getId(), recipientIds, false, clientRequest.turmsRequest()));
+                                            .get(joinRequest.getId(), CollectionUtil.newSet(recipientIds), false, clientRequest.turmsRequest()))
+                                    .doFinally(signalType -> recyclableSet.recycle());
                         }
                         return Mono.just(RequestHandlerResultFactory.OK);
                     });
@@ -458,11 +462,16 @@ public class GroupServiceController {
                     .then(Mono.defer(() -> {
                         if (notifyOwnerAndManagersAfterGroupJoinRequestRecalled) {
                             return groupJoinRequestService.queryGroupId(request.getRequestId())
-                                    .flatMap(groupId -> groupMemberService.queryGroupManagersAndOwnerId(groupId)
-                                            .collect(Collectors.toSet())
-                                            .map(ids -> ids.isEmpty()
-                                                    ? RequestHandlerResultFactory.OK
-                                                    : RequestHandlerResultFactory.get(ids, clientRequest.turmsRequest())));
+                                    .flatMap(groupId -> {
+                                        Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
+                                        return groupMemberService.queryGroupManagersAndOwnerId(groupId)
+                                                .collect(Collectors.toCollection(recyclableSet::getValue))
+                                                .map(ids -> ids.isEmpty()
+                                                        ? RequestHandlerResultFactory.OK
+                                                        : RequestHandlerResultFactory
+                                                        .get(CollectionUtil.newSet(ids), clientRequest.turmsRequest()))
+                                                .doFinally(signalType -> recyclableSet.recycle());
+                                    });
                         }
                         return Mono.just(RequestHandlerResultFactory.OK);
                     }));

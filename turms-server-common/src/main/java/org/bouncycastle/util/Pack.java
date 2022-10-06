@@ -34,18 +34,4 @@ public abstract class Pack {
         }
     }
 
-    /**
-     * @param value The number
-     * @param bs    The target.
-     * @param off   Position in target to start.
-     * @param bytes number of bytes to write.
-     * @deprecated Will be removed
-     */
-    public static void longToBigEndian(long value, byte[] bs, int off, int bytes) {
-        for (int i = bytes - 1; i >= 0; i--) {
-            bs[i + off] = (byte) (value & 0xff);
-            value >>>= 8;
-        }
-    }
-
 }

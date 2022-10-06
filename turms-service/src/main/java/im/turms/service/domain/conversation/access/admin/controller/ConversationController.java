@@ -32,6 +32,7 @@ import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.storage.mongo.operation.OperationResultConvertor;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.conversation.access.admin.dto.request.UpdateConversationDTO;
@@ -44,7 +45,6 @@ import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -84,7 +84,7 @@ public class ConversationController extends BaseController {
         Mono<List<PrivateConversation>> privateConversations =
                 privateConversationsFlux.collect(CollectorUtil.toList(privateConversationsSize));
         Mono<List<GroupConversation>> groupConversations = groupIds == null || groupIds.isEmpty()
-                ? Mono.just(Collections.emptyList())
+                ? PublisherPool.emptyList()
                 : conversationService.queryGroupConversations(groupIds)
                 .collect(CollectorUtil.toList(groupIds.size()));
         Mono<ConversationsDTO> conversationsMono = privateConversations.zipWith(groupConversations)

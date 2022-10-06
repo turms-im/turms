@@ -43,6 +43,9 @@ import im.turms.server.common.infra.property.constant.TimeType;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.infra.property.env.service.business.message.SequenceIdProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
+import im.turms.server.common.infra.recycler.ListRecycler;
+import im.turms.server.common.infra.recycler.Recyclable;
+import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
@@ -87,6 +90,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static im.turms.server.common.access.common.ResponseStatusCode.ILLEGAL_ARGUMENT;
 import static im.turms.server.common.access.common.ResponseStatusCode.MESSAGE_RECALL_TIMEOUT;
@@ -326,9 +330,10 @@ public class MessageService {
         }
         if (areGroupMessages) {
             Integer finalSize = size;
+            Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
             if (CollectionUtil.isEmpty(fromIds)) {
                 return groupMemberService.queryUserJoinedGroupIds(requesterId)
-                        .collect(CollectorUtil.toSet(50))
+                        .collect(Collectors.toCollection(recyclableSet::getValue))
                         .flatMapMany(groupIds -> queryMessages(closeToDate,
                                 messageIds,
                                 true,
@@ -338,10 +343,11 @@ public class MessageService {
                                 deliveryDateRange,
                                 DateRange.NULL,
                                 page,
-                                finalSize));
+                                finalSize))
+                        .doFinally(signalType -> recyclableSet.recycle());
             }
             return groupMemberService.findExistentMemberGroupIds(fromIds, requesterId)
-                    .collect(CollectorUtil.toList(fromIds.size()))
+                    .collect(Collectors.toCollection(recyclableSet::getValue))
                     .flatMapMany(existentMemberGroupIds -> {
                         int diff = fromIds.size() - existentMemberGroupIds.size();
                         if (diff != 0) {
@@ -365,7 +371,8 @@ public class MessageService {
                                 DateRange.NULL,
                                 page,
                                 finalSize);
-                    });
+                    })
+                    .doFinally(signalType -> recyclableSet.recycle());
         }
         return queryMessages(
                 closeToDate,

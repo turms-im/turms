@@ -24,13 +24,13 @@ import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.task.TaskManager;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.math.MathFlux;
 
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -73,7 +73,7 @@ public class StatisticsService {
         CountOnlineUsersRequest request = new CountOnlineUsersRequest();
         return node.getRpcService().requestResponsesAsMapFromOtherMembers(request, false)
                 .onErrorResume(throwable -> RpcException.isErrorCode(throwable, RpcErrorCode.MEMBER_NOT_FOUND),
-                        throwable -> Mono.just(Collections.emptyMap()));
+                        throwable -> PublisherPool.emptyMap());
     }
 
     public Mono<Integer> countOnlineUsers() {

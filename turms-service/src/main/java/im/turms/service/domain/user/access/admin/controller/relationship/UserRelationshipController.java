@@ -32,6 +32,8 @@ import im.turms.server.common.access.admin.web.annotation.RequestBody;
 import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.recycler.ListRecycler;
+import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.user.access.admin.dto.request.AddRelationshipDTO;
@@ -151,12 +153,17 @@ public class UserRelationshipController extends BaseController {
 
     private Flux<UserRelationshipDTO> relationship2dto(Boolean withGroupIndexes, Flux<UserRelationship> relationshipsFlux) {
         return relationshipsFlux
-                .flatMap(relationship -> withGroupIndexes
-                        ? userRelationshipGroupService
-                        .queryGroupIndexes(relationship.getKey().getOwnerId(), relationship.getKey().getRelatedUserId())
-                        .collect(Collectors.toSet())
-                        .map(indexes -> UserRelationshipDTO.fromDomain(relationship, indexes))
-                        : Mono.just(UserRelationshipDTO.fromDomain(relationship)));
+                .flatMap(relationship -> {
+                    if (withGroupIndexes) {
+                        Recyclable<List<Integer>> recyclableList = ListRecycler.obtain();
+                        return userRelationshipGroupService
+                                .queryGroupIndexes(relationship.getKey().getOwnerId(), relationship.getKey().getRelatedUserId())
+                                .collect(Collectors.toCollection(recyclableList::getValue))
+                                .map(indexes -> UserRelationshipDTO.fromDomain(relationship, CollectionUtil.newSet(indexes)))
+                                .doFinally(signalType -> recyclableList.recycle());
+                    }
+                    return Mono.just(UserRelationshipDTO.fromDomain(relationship));
+                });
     }
 
 }

@@ -30,6 +30,9 @@ import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.reactor.PublisherPool;
+import im.turms.server.common.infra.recycler.ListRecycler;
+import im.turms.server.common.infra.recycler.Recyclable;
+import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
@@ -197,8 +200,9 @@ public class UserRelationshipService {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, date)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
+                    Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
                     return queryRelatedUserIds(Set.of(ownerId), groupIndexes, isBlocked)
-                            .collect(Collectors.toSet())
+                            .collect(Collectors.toCollection(recyclableSet::getValue))
                             .map(ids -> {
                                 if (ids.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
@@ -208,7 +212,8 @@ public class UserRelationshipService {
                                         .setLastUpdatedDate(date.getTime())
                                         .addAllValues(ids)
                                         .build();
-                            });
+                            })
+                            .doFinally(signalType -> recyclableSet.recycle());
                 })
                 .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
     }
@@ -224,6 +229,7 @@ public class UserRelationshipService {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, date)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
+                    Recyclable<Set<UserRelationship>> recyclableSet = SetRecycler.obtain();
                     return queryRelationships(
                             Set.of(ownerId),
                             relatedUserIds,
@@ -232,7 +238,7 @@ public class UserRelationshipService {
                             null,
                             null,
                             null)
-                            .collect(Collectors.toSet())
+                            .collect(Collectors.toCollection(recyclableSet::getValue))
                             .map(relationships -> {
                                 if (relationships.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
@@ -244,7 +250,8 @@ public class UserRelationshipService {
                                     builder.addUserRelationships(ProtoModelConvertor.relationship2proto(relationship));
                                 }
                                 return builder.build();
-                            });
+                            })
+                            .doFinally(signalType -> recyclableSet.recycle());
                 })
                 .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
     }
@@ -260,16 +267,19 @@ public class UserRelationshipService {
             @Nullable Set<Integer> groupIndexes,
             @Nullable Boolean isBlocked) {
         if (groupIndexes != null && isBlocked != null) {
-            Mono<Set<Long>> queryRelationshipGroupMemberIds = userRelationshipGroupService
+            Recyclable<List<Long>> recyclableList1 = ListRecycler.obtain();
+            Recyclable<List<Long>> recyclableList2 = ListRecycler.obtain();
+            Mono<List<Long>> queryRelationshipGroupMemberIds = userRelationshipGroupService
                     .queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null)
-                    .collect(Collectors.toSet());
-            Mono<Set<Long>> queryRelatedUserIds = queryRelatedUserIds(ownerIds, isBlocked)
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toCollection(recyclableList1::getValue));
+            Mono<List<Long>> queryRelatedUserIds = queryRelatedUserIds(ownerIds, isBlocked)
+                    .collect(Collectors.toCollection(recyclableList2::getValue));
             return Mono
                     .zip(queryRelationshipGroupMemberIds, queryRelatedUserIds)
-                    .flatMapIterable(tuple -> {
-                        tuple.getT1().retainAll(tuple.getT2());
-                        return tuple.getT1();
+                    .flatMapMany(tuple -> Flux.fromIterable(CollectionUtil.newSet(tuple.getT1(), tuple.getT2())))
+                    .doFinally(signalType -> {
+                        recyclableList1.recycle();
+                        recyclableList2.recycle();
                     });
         }
         if (groupIndexes == null) {
@@ -307,14 +317,16 @@ public class UserRelationshipService {
             if (relatedUserIds != null && relatedUserIds.isEmpty()) {
                 return Flux.empty();
             }
+            Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
             return userRelationshipGroupService.queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null)
-                    .collect(Collectors.toSet())
+                    .collect(Collectors.toCollection(recyclableSet::getValue))
                     .flatMapMany(userIds -> {
                         if (relatedUserIds != null) {
                             userIds.retainAll(relatedUserIds);
                         }
                         return queryRelationships(ownerIds, userIds, isBlocked, establishmentDateRange, page, size);
-                    });
+                    })
+                    .doFinally(signalType -> recyclableSet.recycle());
         } else if (queryByGroupIndexes) {
             return queryMembersRelationships(ownerIds, groupIndexes, page, size);
         }
@@ -326,14 +338,16 @@ public class UserRelationshipService {
             @Nullable Set<Integer> groupIndexes,
             @Nullable Integer page,
             @Nullable Integer size) {
+        Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
         return queryRelatedUserIds(ownerIds, groupIndexes, null)
-                .collect(Collectors.toSet())
+                .collect(Collectors.toCollection(recyclableSet::getValue))
                 .flatMapMany(relatedUserIds -> {
                     if (relatedUserIds.isEmpty()) {
                         return Flux.empty();
                     }
                     return userRelationshipRepository.findRelationships(ownerIds, relatedUserIds, page, size);
-                });
+                })
+                .doFinally(signalType -> recyclableSet.recycle());
     }
 
     public Mono<Long> countRelationships(
@@ -347,14 +361,16 @@ public class UserRelationshipService {
             if (relatedUserIds != null && relatedUserIds.isEmpty()) {
                 return Mono.just(0L);
             }
+            Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
             return userRelationshipGroupService.queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null)
-                    .collect(Collectors.toSet())
+                    .collect(Collectors.toCollection(recyclableSet::getValue))
                     .flatMap(userIds -> {
                         if (relatedUserIds != null) {
                             userIds.retainAll(relatedUserIds);
                         }
                         return countRelationships(ownerIds, userIds, isBlocked);
-                    });
+                    })
+                    .doFinally(signalType -> recyclableSet.recycle());
         } else if (queryByGroupIndexes) {
             return userRelationshipGroupService.countRelationshipGroupMembers(ownerIds, groupIndexes);
         }

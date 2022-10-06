@@ -637,7 +637,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         return collectionExists(clazz)
                 .flatMap(exists -> {
                     if (exists) {
-                        return Mono.just(true);
+                        return PublisherPool.TRUE;
                     }
                     CreateCollectionOptions options = new CreateCollectionOptions()
                             .validationOptions(new ValidationOptions()

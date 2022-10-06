@@ -29,6 +29,9 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.recycler.ListRecycler;
+import im.turms.server.common.infra.recycler.Recyclable;
+import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
@@ -50,6 +53,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -226,8 +230,9 @@ public class GroupBlocklistService {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
+                    Recyclable<List<Long>> recyclableList = ListRecycler.obtain();
                     return queryGroupBlockedUserIds(groupId)
-                            .collect(Collectors.toSet())
+                            .collect(Collectors.toCollection(recyclableList::getValue))
                             .map(ids -> {
                                 if (ids.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
@@ -237,7 +242,8 @@ public class GroupBlocklistService {
                                         .setLastUpdatedDate(version.getTime())
                                         .addAllValues(ids)
                                         .build();
-                            });
+                            })
+                            .doFinally(signalType -> recyclableList.recycle());
 
                 })
                 .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
@@ -257,15 +263,17 @@ public class GroupBlocklistService {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
+                    Recyclable<List<Long>> recyclableList = ListRecycler.obtain();
+                    Recyclable<Set<User>> recyclableSet = SetRecycler.obtain();
                     return queryGroupBlockedUserIds(groupId)
-                            .collect(Collectors.toSet())
+                            .collect(Collectors.toCollection(recyclableList::getValue))
                             .flatMapMany(ids -> {
                                 if (ids.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
                                 return userService.queryUsersProfile(ids, false);
                             })
-                            .collect(Collectors.toSet())
+                            .collect(Collectors.toCollection(recyclableSet::getValue))
                             .map(users -> {
                                 if (users.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
@@ -277,6 +285,10 @@ public class GroupBlocklistService {
                                     builder.addUserInfos(ProtoModelConvertor.userProfile2proto(user));
                                 }
                                 return builder.build();
+                            })
+                            .doFinally(signalType -> {
+                                recyclableList.recycle();
+                                recyclableSet.recycle();
                             });
 
                 })

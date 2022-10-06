@@ -35,6 +35,8 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.business.group.GroupQuestionProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
+import im.turms.server.common.infra.recycler.ListRecycler;
+import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -325,8 +327,9 @@ public class GroupQuestionService {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
+                    Recyclable<List<GroupJoinQuestion>> recyclableList = ListRecycler.obtain();
                     return queryGroupJoinQuestions(null, Set.of(groupId), null, null, false)
-                            .collect(Collectors.toSet())
+                            .collect(Collectors.toCollection(recyclableList::getValue))
                             .map(groupJoinQuestions -> {
                                 if (groupJoinQuestions.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
@@ -338,7 +341,8 @@ public class GroupQuestionService {
                                     builder.addGroupJoinQuestions(ProtoModelConvertor.groupJoinQuestion2proto(question));
                                 }
                                 return builder.build();
-                            });
+                            })
+                            .doFinally(signalType -> recyclableList.recycle());
                 })
                 .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
     }

@@ -37,6 +37,9 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.business.group.GroupProperties;
+import im.turms.server.common.infra.reactor.PublisherPool;
+import im.turms.server.common.infra.recycler.ListRecycler;
+import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
@@ -314,7 +317,7 @@ public class GroupService {
             @Nullable Set<Long> memberIds,
             @Nullable Integer page,
             @Nullable Integer size) {
-        return getGroupIdsFromGroupIdsAndMemberIds(ids, memberIds)
+        return queryGroupIdsFromGroupIdsAndMemberIds(ids, memberIds)
                 .defaultIfEmpty(Collections.emptySet())
                 .flatMapMany(groupIds -> groupRepository.findGroups(groupIds, typeIds, creatorIds, ownerIds,
                         isActive, creationDateRange, deletionDateRange, muteEndDateRange,
@@ -830,7 +833,7 @@ public class GroupService {
             @Nullable DateRange deletionDateRange,
             @Nullable DateRange muteEndDateRange,
             @Nullable Set<Long> memberIds) {
-        return getGroupIdsFromGroupIdsAndMemberIds(ids, memberIds)
+        return queryGroupIdsFromGroupIdsAndMemberIds(ids, memberIds)
                 .defaultIfEmpty(Collections.emptySet())
                 .flatMap(groupIds -> groupRepository.countGroups(groupIds, typeIds, creatorIds,
                         ownerIds, isActive, creationDateRange, deletionDateRange,
@@ -863,17 +866,21 @@ public class GroupService {
         return groupRepository.isGroupActiveAndNotDeleted(groupId);
     }
 
-    private Mono<Set<Long>> getGroupIdsFromGroupIdsAndMemberIds(@Nullable Set<Long> groupIds, @Nullable Set<Long> memberIds) {
-        if (memberIds == null) {
-            return groupIds == null ? Mono.just(Collections.emptySet()) : Mono.just(groupIds);
+    private Mono<Set<Long>> queryGroupIdsFromGroupIdsAndMemberIds(@Nullable Set<Long> groupIds,
+                                                                  @Nullable Set<Long> memberIds) {
+        if (CollectionUtil.isEmpty(memberIds)) {
+            return CollectionUtil.isEmpty(groupIds)
+                    ? PublisherPool.emptySet()
+                    : Mono.just(groupIds);
         }
-        Mono<Set<Long>> joinedGroupIdsMono = groupMemberService
+        Recyclable<List<Long>> recyclableList = ListRecycler.obtain();
+        Mono<List<Long>> joinedGroupIdListMono = groupMemberService
                 .queryUsersJoinedGroupIds(memberIds, null, null)
-                .collect(Collectors.toSet());
-        return groupIds == null
-                ? joinedGroupIdsMono
-                : joinedGroupIdsMono
-                .map(ids -> CollectionUtil.add(ids, groupIds));
+                .collect(Collectors.toCollection(recyclableList::getValue));
+        return (groupIds == null
+                ? joinedGroupIdListMono.map(CollectionUtil::newSet)
+                : joinedGroupIdListMono.map(groupIdList -> CollectionUtil.newSet(groupIdList, groupIds)))
+                .doFinally(signalType -> recyclableList.recycle());
     }
 
 }

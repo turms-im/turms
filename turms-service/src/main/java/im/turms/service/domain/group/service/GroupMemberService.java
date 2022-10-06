@@ -39,6 +39,8 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.business.group.GroupProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
+import im.turms.server.common.infra.recycler.Recyclable;
+import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
@@ -66,7 +68,6 @@ import javax.validation.constraints.PastOrPresent;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -522,7 +523,9 @@ public class GroupMemberService {
             Map<GroupMember.Key, GroupMember> keyToMember = groupIdToMembersCache.getIfPresent(groupId);
             if (keyToMember != null) {
                 GroupMember member = keyToMember.get(new GroupMember.Key(groupId, userId));
-                return Mono.just(member != null && member.getMuteEndDate() != null);
+                return member != null && member.getMuteEndDate() != null
+                        ? PublisherPool.TRUE
+                        : PublisherPool.FALSE;
             }
         }
         return groupMemberRepository.isMemberMuted(groupId, userId);
@@ -595,11 +598,13 @@ public class GroupMemberService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
+        Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
         return queryUsersJoinedGroupIds(userIds, null, null)
-                .collect(CollectorUtil.toSet(50))
+                .collect(Collectors.toCollection(recyclableSet::getValue))
                 .flatMap(groupIds -> groupIds.isEmpty()
-                        ? Mono.just(Collections.emptySet())
-                        : queryGroupMemberIds(groupIds));
+                        ? PublisherPool.<Long>emptySet()
+                        : queryGroupMemberIds(groupIds))
+                .doFinally(signalType -> recyclableSet.recycle());
     }
 
     public Mono<Set<Long>> queryGroupMemberIds(@NotNull Long groupId) {
@@ -619,8 +624,11 @@ public class GroupMemberService {
                 return Mono.just(memberIds);
             }
         }
+        Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
         return groupMemberRepository.findMemberIdsByGroupId(groupId)
-                .collect(CollectorUtil.toSet(50));
+                .collect(Collectors.toCollection(recyclableSet::getValue))
+                .map(CollectionUtil::newSet)
+                .doFinally(signalType -> recyclableSet.recycle());
     }
 
     public Mono<Set<Long>> queryGroupMemberIds(@NotEmpty Set<Long> groupIds) {
@@ -659,8 +667,11 @@ public class GroupMemberService {
                         .collect(Collectors.toCollection(() -> memberIds));
             }
         }
+        Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
         return groupMemberRepository.findGroupMemberIds(groupIds)
-                .collect(CollectorUtil.toSet(groupIds.size() * 50));
+                .collect(Collectors.toCollection(recyclableSet::getValue))
+                .map(CollectionUtil::newSet)
+                .doFinally(signalType -> recyclableSet.recycle());
     }
 
     public Mono<List<GroupMember>> queryGroupMembers(

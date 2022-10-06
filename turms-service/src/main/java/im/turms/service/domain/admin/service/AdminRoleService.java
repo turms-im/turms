@@ -25,6 +25,8 @@ import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.admin.service.BaseAdminRoleService;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.reactor.PublisherPool;
+import im.turms.server.common.infra.recycler.Recyclable;
+import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -250,9 +252,11 @@ public class AdminRoleService extends BaseAdminRoleService {
         } catch (ResponseException e) {
             return Flux.error(e);
         }
+        Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
         return adminService.queryRoleIds(accounts)
-                .collect(Collectors.toSet())
-                .flatMapMany(this::queryRanksByRoles);
+                .collect(Collectors.toCollection(recyclableSet::getValue))
+                .flatMapMany(this::queryRanksByRoles)
+                .doFinally(signalType -> recyclableSet.recycle());
     }
 
     public Mono<Integer> queryRankByAccount(@NotNull String account) {
@@ -342,16 +346,20 @@ public class AdminRoleService extends BaseAdminRoleService {
             return Mono.error(e);
         }
         return queryRankByAccount(account)
-                .flatMap(rank -> queryRanksByAccounts(accounts)
-                        .collect(Collectors.toSet())
-                        .map(ranks -> {
-                            for (int targetRank : ranks) {
-                                if (targetRank >= rank) {
-                                    return Triple.of(false, rank, ranks);
+                .flatMap(rank -> {
+                    Recyclable<Set<Integer>> recyclableSet = SetRecycler.obtain();
+                    return queryRanksByAccounts(accounts)
+                            .collect(Collectors.toCollection(recyclableSet::getValue))
+                            .map(ranks -> {
+                                for (int targetRank : ranks) {
+                                    if (targetRank >= rank) {
+                                        return Triple.of(false, rank, ranks);
+                                    }
                                 }
-                            }
-                            return Triple.of(true, rank, ranks);
-                        }));
+                                return Triple.of(true, rank, ranks);
+                            })
+                            .doFinally(signalType -> recyclableSet.recycle());
+                });
     }
 
     public Mono<AdminRole> queryAndCacheRole(@NotNull Long roleId) {

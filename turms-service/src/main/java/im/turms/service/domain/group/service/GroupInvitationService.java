@@ -33,6 +33,8 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.business.group.GroupInvitationProperties;
+import im.turms.server.common.infra.recycler.ListRecycler;
+import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
@@ -59,6 +61,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -361,8 +364,9 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                                 if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
                                     return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                                 }
+                                Recyclable<List<GroupInvitation>> recyclableList = ListRecycler.obtain();
                                 return queryGroupInvitationsByGroupId(groupId)
-                                        .collect(Collectors.toSet())
+                                        .collect(Collectors.toCollection(recyclableList::getValue))
                                         .map(groupInvitations -> {
                                             if (groupInvitations.isEmpty()) {
                                                 throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
@@ -376,7 +380,8 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                                                         ProtoModelConvertor.groupInvitation2proto(invitation, expireAfterSeconds).build());
                                             }
                                             return builder.build();
-                                        });
+                                        })
+                                        .doFinally(signalType -> recyclableList.recycle());
                             })
                             .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
                 });
