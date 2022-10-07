@@ -109,6 +109,7 @@ public class TcpClient {
                     try s.onDataReceived(data)
                 } catch {
                     s.close(error)
+                    return
                 }
             }
             if let context = context, context.isFinal, isComplete {
