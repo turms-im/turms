@@ -29,11 +29,16 @@ import java.util.Set;
 public class SetRecycler<T> extends Recycler<Recyclable<Set<T>>> {
 
     private static final SetRecycler<?> INSTANCE = new SetRecycler<>();
-    private static final int MAX_SIZE = 1024 * 10;
+    private static final int INITIAL_SIZE = 256;
+    /**
+     * Use a small max size so that smaller collection can clear/recycle quickly,
+     * while larger collection don't need to grow too frequently.
+     */
+    private static final int MAX_SIZE = 256;
 
     @Override
     Recyclable<Set<T>> newInstance() {
-        return new Recyclable<>(this, UnifiedSet.newSet(512));
+        return new Recyclable<>(this, UnifiedSet.newSet(INITIAL_SIZE));
     }
 
     public static <T> Recyclable<Set<T>> obtain() {

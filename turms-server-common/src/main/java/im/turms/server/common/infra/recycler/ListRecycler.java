@@ -28,11 +28,16 @@ import java.util.List;
 public class ListRecycler<T> extends Recycler<Recyclable<List<T>>> {
 
     private static final ListRecycler<?> INSTANCE = new ListRecycler<>();
-    private static final int MAX_SIZE = 1024 * 10;
+    private static final int INITIAL_SIZE = 256;
+    /**
+     * Use a small max size so that smaller collection can clear/recycle quickly,
+     * while larger collection don't need to grow too frequently.
+     */
+    private static final int MAX_SIZE = 256;
 
     @Override
     Recyclable<List<T>> newInstance() {
-        return new Recyclable<>(this, new ArrayList<>(512));
+        return new Recyclable<>(this, new ArrayList<>(INITIAL_SIZE));
     }
 
     public static <T> Recyclable<List<T>> obtain() {
