@@ -25,9 +25,11 @@ import java.io.Writer;
 public class StringBuilderWriter extends Writer {
 
     private final StringBuilder builder;
+    private final int maxLength;
 
-    public StringBuilderWriter(int capacity) {
+    public StringBuilderWriter(int capacity, int maxLength) {
         this.builder = new StringBuilder(capacity);
+        this.maxLength = maxLength;
     }
 
     @Override
@@ -50,6 +52,10 @@ public class StringBuilderWriter extends Writer {
 
     @Override
     public void close() {
+        if (builder.length() > maxLength) {
+            builder.setLength(maxLength);
+            builder.trimToSize();
+        }
         builder.setLength(0);
     }
 

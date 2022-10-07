@@ -27,7 +27,7 @@ public final class StringBuilderPool {
     private static final FastThreadLocal<StringBuilderWriter> WRITER = new FastThreadLocal<>() {
         @Override
         protected StringBuilderWriter initialValue() {
-            return new StringBuilderWriter(512);
+            return new StringBuilderWriter(512, 10 * 1024);
         }
     };
 
