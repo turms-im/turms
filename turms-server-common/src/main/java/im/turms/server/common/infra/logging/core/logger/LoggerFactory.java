@@ -105,7 +105,8 @@ public class LoggerFactory {
             RollingFileAppender fileAppender = new RollingFileAppender(fileLoggingProperties.getLevel(),
                     getFilePath(fileLoggingProperties.getFilePath()),
                     fileLoggingProperties.getMaxFiles(),
-                    fileLoggingProperties.getMaxFileSizeMb());
+                    fileLoggingProperties.getMaxFileSizeMb(),
+                    fileLoggingProperties.getCompression().isEnabled());
             DEFAULT_APPENDERS.add(fileAppender);
         }
         layout = new TurmsTemplateLayout(nodeType, nodeId);
@@ -179,7 +180,8 @@ public class LoggerFactory {
                 RollingFileAppender appender = new RollingFileAppender(level,
                         filePath,
                         fileLoggingProperties.getMaxFiles(),
-                        fileLoggingProperties.getMaxFileSizeMb());
+                        fileLoggingProperties.getMaxFileSizeMb(),
+                        fileLoggingProperties.getCompression().isEnabled());
                 appenders.add(appender);
                 ALL_APPENDERS.add(appender);
                 if (defaultConsoleAppender != null) {

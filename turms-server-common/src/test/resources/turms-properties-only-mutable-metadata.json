@@ -213,7 +213,7 @@
       "identityAccessManagement": {
         "enabled": {
           "deprecated": false,
-          "desc": "Whether to authenticate and authorize users when logging in.Note that user ID is always required even if enabled is false; If false, turms-gateway won't connect to the MongoDB server for user records",
+          "desc": "Whether to authenticate and authorize users when logging in. Note that user ID is always required even if enabled is false. If false at startup, turms-gateway won't connect to the MongoDB server for user records",
           "global": true,
           "mutable": true,
           "type": "boolean"
@@ -386,7 +386,9 @@
   },
   "logging": {
     "console": {},
-    "file": {}
+    "file": {
+      "compression": {}
+    }
   },
   "plugin": {
     "java": {},

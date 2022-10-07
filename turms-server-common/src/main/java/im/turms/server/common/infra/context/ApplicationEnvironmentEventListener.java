@@ -21,6 +21,7 @@ import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
+import im.turms.server.common.infra.property.env.common.logging.FileLoggingCompressionProperties;
 import im.turms.server.common.infra.property.env.common.logging.ConsoleLoggingProperties;
 import im.turms.server.common.infra.property.env.common.logging.FileLoggingProperties;
 import im.turms.server.common.infra.property.env.common.logging.LoggingProperties;
@@ -79,6 +80,9 @@ public class ApplicationEnvironmentEventListener implements ApplicationListener<
                 .maxFileSizeMb(env.getProperty("turms.logging.file.maxFileSizeMb",
                         Integer.class,
                         FileLoggingProperties.DEFAULT_VALUE_FILE_SIZE_MB))
+                .compression(new FileLoggingCompressionProperties(env.getProperty("turms.logging.file.compression.enabled",
+                        Boolean.class,
+                        FileLoggingCompressionProperties.DEFAULT_VALUE_ENABLED)))
                 .build();
         LoggingProperties loggingProperties = new LoggingProperties().toBuilder()
                 .console(consoleLoggingProperties)

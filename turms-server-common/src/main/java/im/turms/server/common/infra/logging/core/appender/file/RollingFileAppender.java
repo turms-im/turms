@@ -18,13 +18,17 @@
 package im.turms.server.common.infra.logging.core.appender.file;
 
 import im.turms.server.common.infra.logging.core.appender.Appender;
+import im.turms.server.common.infra.logging.core.compression.FastGzipOutputStream;
 import im.turms.server.common.infra.logging.core.logger.InternalLogger;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
 import im.turms.server.common.infra.logging.core.model.LogRecord;
+import im.turms.server.common.infra.memory.ByteBufferUtil;
 import im.turms.server.common.infra.time.TimeZoneConst;
 import lombok.SneakyThrows;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -46,6 +50,17 @@ public class RollingFileAppender extends Appender {
     public static final char FIELD_DELIMITER = '_';
     private static final String FILE_MIDDLE = "yyyyMMdd";
 
+    public static final String ARCHIVE_FILE_SUFFIX = ".gz";
+    // 3 is a good trade-off between speed and compression ratio
+    private static final int COMPRESSION_LEVEL = 3;
+
+    private static final Set<StandardOpenOption> READ_OPTIONS = Set
+            .of(StandardOpenOption.READ);
+    private static final Set<StandardOpenOption> CREATE_NEW_OPTIONS = Set
+            .of(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+    /**
+     * Don't add {@link StandardOpenOption#READ} because READ + APPEND isn't allowed
+     */
     private static final Set<StandardOpenOption> APPEND_OPTIONS = Set
             .of(StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
 
@@ -68,11 +83,15 @@ public class RollingFileAppender extends Appender {
     private long nextIndex;
     private long nextDay = Long.MIN_VALUE;
 
+    private final boolean enableCompression;
+    private final FastGzipOutputStream gzipOutputStream;
+
     @SneakyThrows
     public RollingFileAppender(LogLevel level,
                                String file,
                                int maxFiles,
-                               long maxFileMb) {
+                               long maxFileMb,
+                               boolean enableCompression) {
         super(level);
         Path filePath = Paths.get(file).toAbsolutePath();
         String fileName = filePath.getFileName().toString();
@@ -86,6 +105,12 @@ public class RollingFileAppender extends Appender {
         this.maxFileSize = maxFileMb > 0
                 ? maxFileMb * 1024 * 1024
                 : Long.MAX_VALUE;
+
+        this.enableCompression = enableCompression;
+        gzipOutputStream = enableCompression
+                // Use large buffer to reduce the number of JNI calls
+                ? new FastGzipOutputStream(COMPRESSION_LEVEL, (int) Math.min(1024L * 1024, maxFileSize / 10))
+                : null;
 
         Files.createDirectories(fileDirectory);
         files = LogDirectoryVisitor.visit(fileDirectory, filePrefix, fileSuffix, FILE_MIDDLE, fileDateTimeFormatter, maxFiles);
@@ -125,7 +150,21 @@ public class RollingFileAppender extends Appender {
      * because there is always only one thread will call roll() and append()
      */
     private void roll() {
-        closeFile();
+        closeCurrentFileChannel();
+        if (enableCompression) {
+            try {
+                compress();
+                try {
+                    Files.deleteIfExists(currentFile.path());
+                } catch (Exception e) {
+                    InternalLogger.INSTANCE.error("Caught an error while deleting the log file: " + currentFile.path(),
+                            e);
+                }
+            } catch (Exception e) {
+                InternalLogger.INSTANCE.error("Caught an error while compressing the log file: " + currentFile.path(),
+                        e);
+            }
+        }
         openNewFile(true);
         cleanExceededFiles();
     }
@@ -188,7 +227,10 @@ public class RollingFileAppender extends Appender {
                 }
             }
         }
-        currentFile = new LogFile(filePath, now, nextIndex);
+        Path archivePath = enableCompression
+                ? filePath.resolveSibling(fileName + ARCHIVE_FILE_SUFFIX)
+                : null;
+        currentFile = new LogFile(filePath, archivePath, now, nextIndex);
         files.add(currentFile);
 
         try {
@@ -223,7 +265,7 @@ public class RollingFileAppender extends Appender {
         nextIndex = existingFile.index() + 1;
     }
 
-    private void closeFile() {
+    private void closeCurrentFileChannel() {
         try {
             channel.force(true);
         } catch (IOException e) {
@@ -239,6 +281,40 @@ public class RollingFileAppender extends Appender {
         }
     }
 
+    private void compress() {
+        MappedByteBuffer logFileBuffer;
+        try (FileChannel fileChannel = FileChannel.open(currentFile.path(), READ_OPTIONS)) {
+            logFileBuffer = fileChannel
+                    .map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to read the log file: " + currentFile.path(), e);
+        }
+        try {
+            FileChannel outputFileChannel;
+            try {
+                outputFileChannel = FileChannel.open(currentFile.archivePath(), CREATE_NEW_OPTIONS);
+            } catch (FileAlreadyExistsException ignored) {
+                return;
+            } catch (Exception e) {
+                throw new IllegalStateException("Failed to open the archive path: " + currentFile.archivePath(), e);
+            }
+            try {
+                gzipOutputStream.init(outputFileChannel);
+            } catch (Exception e) {
+                throw new IllegalStateException("Failed to initialize the GZIP output stream", e);
+            }
+            try (gzipOutputStream) {
+                try {
+                    gzipOutputStream.write(logFileBuffer);
+                } catch (Exception e) {
+                    throw new IllegalStateException("Failed to write the log file to the GZIP output stream", e);
+                }
+            }
+        } finally {
+            ByteBufferUtil.freeDirectBuffer(logFileBuffer);
+        }
+    }
+
     private void cleanExceededFiles() {
         while (files.size() > maxFiles) {
             LogFile file = files.remove();
@@ -250,10 +326,18 @@ public class RollingFileAppender extends Appender {
 
     private void deleteLogFile(LogFile file) {
         Path path = file.path();
+        Path archivePath = file.archivePath();
         try {
             Files.deleteIfExists(path);
         } catch (Exception e) {
             InternalLogger.INSTANCE.error("Caught an error while delete the log file: " + path);
+        }
+        if (archivePath != null) {
+            try {
+                Files.deleteIfExists(archivePath);
+            } catch (Exception e) {
+                InternalLogger.INSTANCE.error("Caught an error while delete the log file: " + archivePath);
+            }
         }
     }
 

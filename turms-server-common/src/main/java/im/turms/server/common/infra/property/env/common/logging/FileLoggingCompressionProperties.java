@@ -15,20 +15,24 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.logging.core.appender.file;
+package im.turms.server.common.infra.property.env.common.logging;
 
-import javax.annotation.Nullable;
-import java.nio.file.Path;
-import java.time.ZonedDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
-public record LogFile(
-        Path path,
-        @Nullable
-        Path archivePath,
-        ZonedDateTime dateTime,
-        long index
-) {
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@Data
+@NoArgsConstructor
+public class FileLoggingCompressionProperties {
+
+    public static final boolean DEFAULT_VALUE_ENABLED = true;
+
+    private boolean enabled = DEFAULT_VALUE_ENABLED;
+
 }

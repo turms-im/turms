@@ -80,7 +80,7 @@ public class LogDirectoryVisitor extends SimpleFileVisitor<Path> {
                         .parse(name.substring(filePrefix.length() + 1, indexStart));
                 ZonedDateTime timestamp = LocalDate.from(time)
                         .atStartOfDay(TimeZoneConst.ZONE_ID);
-                handleLogFile(path, timestamp, index);
+                handleNewLogFile(path, timestamp, index);
             }
         } catch (Exception e) {
             InternalLogger.INSTANCE.warn("Cannot figure out if a file matches the template: " + path, e);
@@ -94,8 +94,20 @@ public class LogDirectoryVisitor extends SimpleFileVisitor<Path> {
                 && name.endsWith(fileSuffix);
     }
 
-    private void handleLogFile(Path path, ZonedDateTime timestamp, long index) {
-        LogFile file = new LogFile(path, timestamp, index);
+    private void handleNewLogFile(Path path, ZonedDateTime timestamp, long index) {
+        String fileName = path.getFileName().toString();
+        boolean isArchive = fileName.endsWith(RollingFileAppender.ARCHIVE_FILE_SUFFIX);
+        Path filePath;
+        Path archivePath;
+        if (isArchive) {
+            filePath = path.resolveSibling(fileName
+                    .substring(0, fileName.length() - RollingFileAppender.ARCHIVE_FILE_SUFFIX.length()));
+            archivePath = path;
+        } else {
+            filePath = path;
+            archivePath = path.resolveSibling(fileName + RollingFileAppender.ARCHIVE_FILE_SUFFIX);
+        }
+        LogFile file = new LogFile(filePath, archivePath, timestamp, index);
         files.add(file);
         if (files.size() > maxFilesToKeep) {
             LogFile firstLogFile = files.first();
@@ -103,6 +115,13 @@ public class LogDirectoryVisitor extends SimpleFileVisitor<Path> {
             if (deleteExceedFiles) {
                 try {
                     Files.deleteIfExists(firstLogFile.path());
+                } catch (Exception ignored) {
+                }
+                try {
+                    Path firstArchivePath = firstLogFile.archivePath();
+                    if (firstArchivePath != null) {
+                        Files.deleteIfExists(firstArchivePath);
+                    }
                 } catch (Exception ignored) {
                 }
             }
