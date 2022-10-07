@@ -18,7 +18,6 @@
 package im.turms.server.common.infra.logging.core.compression;
 
 import im.turms.server.common.infra.memory.ByteBufferUtil;
-import lombok.SneakyThrows;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import java.io.IOException;
@@ -30,7 +29,7 @@ import java.util.zip.Deflater;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * This class have a better performance than {@link GZIPOutputStream} because the class:
+ * This class has a better performance than {@link GZIPOutputStream} because the class:
  * 1. uses (direct) ByteBuffer instead of byte[]
  * 2. caches and reuse data
  * 3. no synchronized on our own methods
@@ -80,9 +79,8 @@ public class FastGzipOutputStream implements AutoCloseable {
         open = true;
     }
 
-    @SneakyThrows
     @Override
-    public void close() {
+    public void close() throws IOException {
         if (!open) {
             return;
         }
@@ -116,7 +114,7 @@ public class FastGzipOutputStream implements AutoCloseable {
         }
     }
 
-    public void destroy() {
+    public void destroy() throws IOException {
         close();
         ByteBufferUtil.freeDirectBuffer(tempOut);
         ByteBufferUtil.freeDirectBuffer(trailer);

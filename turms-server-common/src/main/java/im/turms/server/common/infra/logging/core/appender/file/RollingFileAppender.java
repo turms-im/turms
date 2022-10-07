@@ -281,37 +281,62 @@ public class RollingFileAppender extends Appender {
         }
     }
 
-    private void compress() {
+    private void compress() throws IOException {
         MappedByteBuffer logFileBuffer;
         try (FileChannel fileChannel = FileChannel.open(currentFile.path(), READ_OPTIONS)) {
             logFileBuffer = fileChannel
                     .map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size());
         } catch (Exception e) {
-            throw new RuntimeException("Failed to read the log file: " + currentFile.path(), e);
+            throw new IOException("Failed to read the log file: " + currentFile.path(), e);
         }
+        FileChannel archiveFileChannel = null;
+        Exception exceptionFromCatch = null;
         try {
-            FileChannel outputFileChannel;
             try {
-                outputFileChannel = FileChannel.open(currentFile.archivePath(), CREATE_NEW_OPTIONS);
+                archiveFileChannel = FileChannel.open(currentFile.archivePath(), CREATE_NEW_OPTIONS);
             } catch (FileAlreadyExistsException ignored) {
                 return;
             } catch (Exception e) {
-                throw new IllegalStateException("Failed to open the archive path: " + currentFile.archivePath(), e);
+                throw new IOException("Failed to open the archive path: " + currentFile.archivePath(), e);
             }
             try {
-                gzipOutputStream.init(outputFileChannel);
+                gzipOutputStream.init(archiveFileChannel);
             } catch (Exception e) {
-                throw new IllegalStateException("Failed to initialize the GZIP output stream", e);
+                throw new IOException("Failed to initialize the GZIP output stream", e);
             }
-            try (gzipOutputStream) {
+            IOException writeException = null;
+            try {
+                gzipOutputStream.write(logFileBuffer);
+            } catch (Exception e) {
+                writeException = new IOException("Failed to write the log file to the GZIP output stream", e);
+                throw writeException;
+            } finally {
                 try {
-                    gzipOutputStream.write(logFileBuffer);
-                } catch (Exception e) {
-                    throw new IllegalStateException("Failed to write the log file to the GZIP output stream", e);
+                    gzipOutputStream.close();
+                } catch (IOException exception) {
+                    IOException closeException = new IOException("Failed to close the GZIP output stream", exception);
+                    if (writeException != null) {
+                        closeException.addSuppressed(writeException);
+                    }
+                    throw closeException;
                 }
             }
+        } catch (Exception e) {
+            exceptionFromCatch = e;
+            throw e;
         } finally {
             ByteBufferUtil.freeDirectBuffer(logFileBuffer);
+            if (archiveFileChannel != null) {
+                try {
+                    archiveFileChannel.close();
+                } catch (IOException e) {
+                    IOException closeException = new IOException("Failed to close the archive file channel", e);
+                    if (exceptionFromCatch != null) {
+                        closeException.addSuppressed(exceptionFromCatch);
+                    }
+                    throw closeException;
+                }
+            }
         }
     }
 
