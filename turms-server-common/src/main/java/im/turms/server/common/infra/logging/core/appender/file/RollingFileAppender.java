@@ -68,18 +68,20 @@ public class RollingFileAppender extends Appender {
     private final String fileSuffix;
 
     private final Path fileDirectory;
+    private final File fileDirectoryFile;
 
     private final DateTimeFormatter fileDateTimeFormatter = DateTimeFormatter
             .ofPattern(FILE_MIDDLE)
             .withZone(TimeZoneConst.ZONE_ID);
 
     private final int maxFiles;
-    private final long maxFileSize;
+    private final long maxFileBytes;
+    private final long minUsableSpaceBytes;
 
     private final Deque<LogFile> files;
     private LogFile currentFile;
 
-    private long nextFileSize;
+    private long nextFileBytes;
     private long nextIndex;
     private long nextDay = Long.MIN_VALUE;
 
@@ -100,16 +102,18 @@ public class RollingFileAppender extends Appender {
         this.filePrefix = index == -1 ? fileName : fileName.substring(0, index);
         this.fileSuffix = index == -1 ? "" : fileName.substring(index);
         this.fileDirectory = filePath.getParent();
+        fileDirectoryFile = fileDirectory.toFile();
 
         this.maxFiles = Math.max(maxFiles, 0);
-        this.maxFileSize = maxFileMb > 0
+        this.maxFileBytes = maxFileMb > 0
                 ? maxFileMb * 1024 * 1024
-                : Long.MAX_VALUE;
+                : 1024 * 1024 * 1024;
+        minUsableSpaceBytes = (long) (maxFileBytes * 2.5);
 
         this.enableCompression = enableCompression;
         gzipOutputStream = enableCompression
                 // Use large buffer to reduce the number of JNI calls
-                ? new FastGzipOutputStream(COMPRESSION_LEVEL, (int) Math.min(1024L * 1024, maxFileSize / 10))
+                ? new FastGzipOutputStream(COMPRESSION_LEVEL, (int) Math.min(1024L * 1024, maxFileBytes / 10))
                 : null;
 
         Files.createDirectories(fileDirectory);
@@ -132,7 +136,7 @@ public class RollingFileAppender extends Appender {
     }
 
     private boolean needRoll(LogRecord record) {
-        return record.timestamp() >= nextDay || nextFileSize >= maxFileSize;
+        return record.timestamp() >= nextDay || nextFileBytes >= maxFileBytes;
     }
 
     @Override
@@ -141,7 +145,7 @@ public class RollingFileAppender extends Appender {
             roll();
         }
         int bytes = super.append(record);
-        nextFileSize += bytes;
+        nextFileBytes += bytes;
         return bytes;
     }
 
@@ -150,6 +154,7 @@ public class RollingFileAppender extends Appender {
      * because there is always only one thread will call roll() and append()
      */
     private void roll() {
+        cleanFilesUntilSpaceEnough();
         closeCurrentFileChannel();
         if (enableCompression) {
             try {
@@ -234,13 +239,13 @@ public class RollingFileAppender extends Appender {
         files.add(currentFile);
 
         try {
-            nextFileSize = channel.size();
+            nextFileBytes = channel.size();
         } catch (IOException e) {
             String message = "Failed to read the file channel size: " + filePath;
             if (recoverFromError) {
                 message += ". Fallback to 0";
                 InternalLogger.INSTANCE.error(message, e);
-                nextFileSize = 0;
+                nextFileBytes = 0;
             } else {
                 throw new IllegalStateException(message, e);
             }
@@ -260,7 +265,7 @@ public class RollingFileAppender extends Appender {
         channel = openFileChannel(filePath);
         currentFile = existingFile;
 
-        nextFileSize = channel.size();
+        nextFileBytes = channel.size();
         nextDay = TimeUnit.SECONDS.toNanos(next.toEpochSecond());
         nextIndex = existingFile.index() + 1;
     }
@@ -347,6 +352,38 @@ public class RollingFileAppender extends Appender {
                 deleteLogFile(file);
             }
         }
+    }
+
+    private void cleanFilesUntilSpaceEnough() {
+        File file = fileDirectoryFile;
+        if (file.getUsableSpace() > minUsableSpaceBytes) {
+            return;
+        }
+        int lastElementIndex = files.size() - 1;
+        int i = 0;
+        for (LogFile logFile : files) {
+            if (i == lastElementIndex) {
+                break;
+            }
+            deleteLogFile(logFile);
+            if (file.getUsableSpace() > minUsableSpaceBytes) {
+                return;
+            }
+            i++;
+        }
+        InternalLogger.INSTANCE.fatal("Freeze to wait for the space to be available");
+        while (true) {
+            try {
+                // TODO: don't freeze other appenders
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (file.getUsableSpace() > minUsableSpaceBytes) {
+                break;
+            }
+        }
+        InternalLogger.INSTANCE.info("The space has become available");
     }
 
     private void deleteLogFile(LogFile file) {
