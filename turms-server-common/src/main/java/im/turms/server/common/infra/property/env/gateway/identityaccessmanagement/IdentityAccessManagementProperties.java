@@ -39,12 +39,12 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @NoArgsConstructor
 public class IdentityAccessManagementProperties {
 
-    @Description("Whether to authenticate and authorize users when logging in." +
-            "Note that user ID is always required even if enabled is false; " +
-            "If false, turms-gateway won't connect to the MongoDB server for user records")
+    @Description("Whether to authenticate and authorize users when logging in. " +
+            "Note that user ID is always required even if enabled is false. " +
+            "If false at startup, turms-gateway won't connect to the MongoDB server for user records")
     @GlobalProperty
     @MutableProperty
-    private boolean enabled;
+    private boolean enabled = true;
 
     private IdentityAccessManagementType type = IdentityAccessManagementType.PASSWORD;
 
