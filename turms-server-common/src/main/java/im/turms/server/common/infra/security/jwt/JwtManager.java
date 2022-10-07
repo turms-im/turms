@@ -33,7 +33,7 @@ import im.turms.server.common.infra.security.jwt.algorithm.JwtAlgorithm;
 import im.turms.server.common.infra.security.jwt.algorithm.JwtAlgorithmDefinition;
 import im.turms.server.common.infra.security.jwt.algorithm.RsaAlgorithm;
 import im.turms.server.common.infra.security.jwt.algorithm.RsaPssAlgorithm;
-import im.turms.server.common.infra.security.jwt.exception.CorruptedJwtException;
+import im.turms.server.common.infra.security.jwt.exception.InvalidJwtException;
 import im.turms.server.common.infra.security.jwt.exception.SignatureVerificationException;
 import lombok.SneakyThrows;
 
@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPublicKey;
@@ -100,7 +101,7 @@ public class JwtManager {
                     .containsAllLooseComparison(payload.customClaims(), customPayloadClaims));
         }
 
-        List<Map.Entry<String, JwtAlgorithm>> algorithms = new ArrayList<>(9);
+        List<Map.Entry<String, JwtAlgorithm>> algorithms = new ArrayList<>(12);
         PublicKey publicKey;
         byte[] secretKey;
         JwtAlgorithmDefinition definition;
@@ -231,10 +232,10 @@ public class JwtManager {
         return nameToAlgorithm.keySet();
     }
 
-    public Jwt decode(String jwt) {
+    public Jwt decode(String jwt) throws InvalidJwtException, NoSuchAlgorithmException, SignatureVerificationException {
         List<String> parts = StringUtil.splitMultipleLatin1(jwt, AsciiCode.PERIOD);
         if (parts == null || parts.size() != 3) {
-            throw new CorruptedJwtException("The JWT must have three parts");
+            throw new InvalidJwtException("The JWT must have three parts");
         }
         byte[] encodedHeaderBytes = StringUtil.getBytes(parts.get(0));
         byte[] encodedPayloadBytes = StringUtil.getBytes(parts.get(1));
@@ -243,11 +244,11 @@ public class JwtManager {
         String algorithmName = header.algorithm();
         JwtAlgorithm algorithm = nameToAlgorithm.get(algorithmName);
         if (algorithm == null) {
-            throw new UnsupportedOperationException("The " + algorithmName + " algorithm isn't supported");
+            throw new NoSuchAlgorithmException("The " + algorithmName + " algorithm isn't supported");
         }
         for (Predicate<JwtPayload> verification : verifications) {
             if (!verification.test(payload)) {
-                throw new SignatureVerificationException();
+                throw new SignatureVerificationException("The JWT signature is invalid");
             }
         }
         Jwt jwtEntity = new Jwt(header,
@@ -258,7 +259,7 @@ public class JwtManager {
         if (algorithm.verify(jwtEntity)) {
             return jwtEntity;
         }
-        throw new SignatureVerificationException();
+        throw new SignatureVerificationException("The JWT signature is invalid");
     }
 
     private JwtHeader decodeHeader(byte[] encodedHeaderBytes) {
@@ -266,12 +267,12 @@ public class JwtManager {
         try {
             decodedHeaderBytes = URL_DECODER.decode(encodedHeaderBytes);
         } catch (Exception e) {
-            throw new CorruptedJwtException("The JWT header isn't a valid Base64-encoded string", e);
+            throw new InvalidJwtException("The JWT header isn't a valid Base64-encoded string", e);
         }
         try {
             return HEADER_READER.readValue(decodedHeaderBytes);
         } catch (Exception e) {
-            throw new CorruptedJwtException("Illegal JWT header format", e);
+            throw new InvalidJwtException("Illegal JWT header format", e);
         }
     }
 
@@ -280,12 +281,12 @@ public class JwtManager {
         try {
             decodedPayloadBytes = URL_DECODER.decode(encodedPayloadBytes);
         } catch (Exception e) {
-            throw new CorruptedJwtException("The JWT payload isn't a valid Base64-encoded string", e);
+            throw new InvalidJwtException("The JWT payload isn't a valid Base64-encoded string", e);
         }
         try {
             return PAYLOAD_READER.readValue(decodedPayloadBytes);
         } catch (Exception e) {
-            throw new CorruptedJwtException("Illegal JWT payload format", e);
+            throw new InvalidJwtException("Illegal JWT payload format", e);
         }
     }
 

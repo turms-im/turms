@@ -50,7 +50,6 @@ import im.turms.server.common.infra.property.env.gateway.identityaccessmanagemen
 import im.turms.server.common.infra.security.jwt.Jwt;
 import im.turms.server.common.infra.security.jwt.JwtManager;
 import im.turms.server.common.infra.security.jwt.JwtPayload;
-import im.turms.server.common.infra.security.jwt.exception.CorruptedJwtException;
 import io.netty.handler.codec.http.HttpMethod;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
@@ -257,32 +256,32 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
 
     private Mono<UserPermissionInfo> verifyAndGrantUsingJwt(Long userId, String jwtToken) {
         if (StringUtil.isBlank(jwtToken)) {
-            return Mono.error(new IllegalArgumentException("Corrupt JWT token: JWT must not be blank"));
+            return Mono.error(new IllegalArgumentException("Invalid JWT token: JWT must not be blank"));
         }
         Jwt jwt;
         try {
             jwt = jwtManager.decode(jwtToken);
-        } catch (CorruptedJwtException e) {
-            return Mono.error(new IllegalArgumentException("Corrupt JWT token", e));
-        } catch (UnsupportedOperationException e) {
-            return Mono.error(new IllegalArgumentException(e));
+        } catch (Exception e) {
+            return Mono.error(new IllegalArgumentException("Invalid JWT token", e));
         }
-        long now = System.currentTimeMillis();
         JwtPayload payload = jwt.payload();
         String subject = payload.subject();
         if (subject == null) {
-            return Mono.error(new IllegalArgumentException("Corrupt JWT token: the sub claim in the payload must exist"));
+            return Mono.error(new IllegalArgumentException("Invalid JWT token: the sub claim in the payload must exist"));
         }
         if (!subject.equals(userId.toString())) {
             return LOGIN_AUTHENTICATION_FAILED_MONO;
         }
         Date expiresAt = payload.expiresAt();
-        if (expiresAt != null && expiresAt.getTime() <= now) {
-            return LOGIN_AUTHENTICATION_FAILED_MONO;
-        }
         Date notBefore = payload.notBefore();
-        if (notBefore != null && notBefore.getTime() > now) {
-            return LOGIN_AUTHENTICATION_FAILED_MONO;
+        boolean hasExpiresAt = expiresAt != null;
+        boolean hasNotBefore = notBefore != null;
+        if (hasExpiresAt || hasNotBefore) {
+            long now = System.currentTimeMillis();
+            if ((hasExpiresAt && expiresAt.getTime() <= now)
+                    || (hasNotBefore && notBefore.getTime() > now)) {
+                return LOGIN_AUTHENTICATION_FAILED_MONO;
+            }
         }
         Map<String, Object> customClaims = payload.customClaims();
         if (!CollectionUtil.containsAllLooseComparison(customClaims, jwtAuthenticationExpectedCustomPayloadClaims)) {
@@ -292,7 +291,7 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
         try {
             policy = PolicyDeserializer.parse(customClaims);
         } catch (IllegalPolicyException e) {
-            return Mono.error(new IllegalArgumentException("Corrupt JWT token", e));
+            return Mono.error(new IllegalArgumentException("Invalid JWT token", e));
         }
         return Mono.just(new UserPermissionInfo(ResponseStatusCode.OK,
                 policyManager.findAllowedRequestTypes(policy)));

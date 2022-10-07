@@ -33,8 +33,8 @@ public abstract sealed class JwtAlgorithm permits AsymmetricAlgorithm, Symmetric
     private final String javaAlgorithmName;
 
     protected JwtAlgorithm(JwtAlgorithmDefinition definition) {
-        this.jwtAlgorithmName = definition.getJwtAlgorithmName();
-        this.javaAlgorithmName = definition.getJavaAlgorithmName();
+        jwtAlgorithmName = definition.getJwtAlgorithmName();
+        javaAlgorithmName = definition.getJavaAlgorithmName();
     }
 
     public abstract boolean verify(Jwt jwt);

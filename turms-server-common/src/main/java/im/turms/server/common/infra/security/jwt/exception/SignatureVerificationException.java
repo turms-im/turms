@@ -21,4 +21,7 @@ package im.turms.server.common.infra.security.jwt.exception;
  * @author James Chen
  */
 public class SignatureVerificationException extends RuntimeException {
+    public SignatureVerificationException(String message) {
+        super(message);
+    }
 }

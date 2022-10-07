@@ -20,12 +20,12 @@ package im.turms.server.common.infra.security.jwt.exception;
 /**
  * @author James Chen
  */
-public class CorruptedJwtException extends RuntimeException {
-    public CorruptedJwtException(String message) {
+public class InvalidJwtException extends RuntimeException {
+    public InvalidJwtException(String message) {
         this(message, null);
     }
 
-    public CorruptedJwtException(String message, Throwable cause) {
+    public InvalidJwtException(String message, Throwable cause) {
         super(message, cause);
     }
 }

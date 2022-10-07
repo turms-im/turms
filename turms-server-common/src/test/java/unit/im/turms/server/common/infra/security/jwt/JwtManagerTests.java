@@ -23,6 +23,7 @@ import im.turms.server.common.infra.property.env.gateway.identityaccessmanagemen
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtSecretKeyAlgorithmProperties;
 import im.turms.server.common.infra.security.jwt.Jwt;
 import im.turms.server.common.infra.security.jwt.JwtManager;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -46,6 +47,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class JwtManagerTests {
 
+    @SneakyThrows
     @Test
     void decode() {
         ClassLoader classLoader = JwtManagerTests.class.getClassLoader();
