@@ -28,11 +28,13 @@ public final class RandomUtil {
     }
 
     public static int nextPositiveInt() {
-        return ThreadLocalRandom.current().nextInt() >>> 1;
+        int i = ThreadLocalRandom.current().nextInt() >>> 1;
+        return i == 0 ? 1 : i;
     }
 
     public static long nextPositiveLong() {
-        return ThreadLocalRandom.current().nextLong() >>> 1;
+        long l = ThreadLocalRandom.current().nextLong() >>> 1;
+        return l == 0L ? 1L : l;
     }
 
 }
