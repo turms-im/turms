@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.group.access.admin.dto.request;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 import java.util.Set;
 
 /**
@@ -27,5 +29,5 @@ public record UpdateGroupJoinQuestionDTO(
         String question,
         Set<String> answers,
         Integer score
-) {
+) implements ControllerDTO {
 }

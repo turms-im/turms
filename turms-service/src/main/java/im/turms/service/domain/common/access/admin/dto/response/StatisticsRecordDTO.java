@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.common.access.admin.dto.response;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 import java.util.Date;
 
 /**
@@ -25,5 +27,5 @@ import java.util.Date;
 public record StatisticsRecordDTO(
         Date date,
         Long total
-) {
+) implements ControllerDTO {
 }

@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.user.access.admin.dto.request;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 import java.util.Date;
 
 /**
@@ -27,5 +29,5 @@ public record AddRelationshipGroupDTO(
         Integer index,
         String name,
         Date creationDate
-) {
+) implements ControllerDTO {
 }

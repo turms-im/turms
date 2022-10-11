@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.group.access.admin.dto.response;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 import im.turms.service.domain.common.access.admin.dto.response.StatisticsRecordDTO;
 import lombok.Builder;
 
@@ -33,5 +34,5 @@ public record GroupStatisticsDTO(
         List<StatisticsRecordDTO> deletedGroupsRecords,
         List<StatisticsRecordDTO> groupsThatSentMessagesRecords,
         List<StatisticsRecordDTO> createdGroupsRecords
-) {
+) implements ControllerDTO {
 }

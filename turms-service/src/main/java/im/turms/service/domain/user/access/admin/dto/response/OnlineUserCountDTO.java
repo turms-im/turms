@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.user.access.admin.dto.response;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 import java.util.Map;
 
 /**
@@ -25,5 +27,5 @@ import java.util.Map;
 public record OnlineUserCountDTO(
         Integer total,
         Map<String, Integer> nodeIdToUserCount
-) {
+) implements ControllerDTO {
 }

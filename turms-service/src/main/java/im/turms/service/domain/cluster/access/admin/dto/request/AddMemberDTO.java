@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.cluster.access.admin.dto.request;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 import im.turms.server.common.infra.cluster.node.NodeType;
 
 import java.util.Date;
@@ -41,5 +42,5 @@ public record AddMemberDTO(
         String udpAddress,
         boolean isActive,
         boolean isHealthy
-) {
+) implements ControllerDTO {
 }

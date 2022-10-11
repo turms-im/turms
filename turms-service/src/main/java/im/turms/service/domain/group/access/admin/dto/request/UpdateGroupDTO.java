@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.group.access.admin.dto.request;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 import java.util.Date;
 
 /**
@@ -36,5 +38,5 @@ public record UpdateGroupDTO(
         Date muteEndDate,
         Long successorId,
         Boolean quitAfterTransfer
-) {
+) implements ControllerDTO {
 }

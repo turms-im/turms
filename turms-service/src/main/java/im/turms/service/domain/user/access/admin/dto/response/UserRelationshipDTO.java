@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.user.access.admin.dto.response;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 import im.turms.service.domain.user.po.UserRelationship;
 
 import javax.annotation.Nullable;
@@ -32,7 +33,7 @@ public record UserRelationshipDTO(
         Date blockDate,
         Date establishmentDate,
         Set<Integer> groupIndexes
-) {
+) implements ControllerDTO {
 
     public UserRelationshipDTO(Long ownerId, Long relatedUserId, Date blockDate, Date establishmentDate, Set<Integer> groupIndexes) {
         this(new Key(ownerId, relatedUserId), blockDate, establishmentDate, groupIndexes);

@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.cluster.access.admin.dto.request;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 /**
  * @author James Chen
  */
@@ -26,5 +28,5 @@ public record UpdateMemberDTO(
         Boolean isLeaderEligible,
         Boolean isActive,
         Integer priority
-) {
+) implements ControllerDTO {
 }

@@ -18,6 +18,7 @@
 package im.turms.service.domain.user.access.admin.dto.request;
 
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 import im.turms.server.common.infra.security.SecurityValueConst;
 
 import java.util.Date;
@@ -34,7 +35,7 @@ public record AddUserDTO(
         Long permissionGroupId,
         Date registrationDate,
         Boolean isActive
-) {
+) implements ControllerDTO {
     @Override
     public String toString() {
         return "AddUserDTO[" +

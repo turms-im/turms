@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.group.access.admin.dto.request;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 import java.util.Date;
 
 /**
@@ -25,5 +27,5 @@ import java.util.Date;
 public record UpdateGroupBlockedUserDTO(
         Date blockDate,
         Long requesterId
-) {
+) implements ControllerDTO {
 }

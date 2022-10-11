@@ -18,6 +18,7 @@
 package im.turms.server.common.access.admin.dto.response;
 
 import com.mongodb.client.result.UpdateResult;
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 
 /**
  * @author James Chen
@@ -28,11 +29,14 @@ import com.mongodb.client.result.UpdateResult;
 public record UpdateResultDTO(
         Long matchedCount,
         Long modifiedCount
-) {
+) implements ControllerDTO {
 
     public static final UpdateResultDTO NONE = new UpdateResultDTO(0L, 0L);
 
     public static UpdateResultDTO get(UpdateResult result) {
+        if (result.getMatchedCount() == 0L && result.getModifiedCount() == 0L) {
+            return NONE;
+        }
         return new UpdateResultDTO(result.getMatchedCount(), result.getModifiedCount());
     }
 

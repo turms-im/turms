@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.admin.access.admin.dto.request;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 import java.util.Set;
 
 /**
@@ -27,5 +29,5 @@ public record AddAdminRoleDTO(
         String name,
         Set<String> permissions,
         Integer rank
-) {
+) implements ControllerDTO {
 }

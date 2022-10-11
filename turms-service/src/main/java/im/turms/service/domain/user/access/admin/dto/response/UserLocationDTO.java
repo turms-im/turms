@@ -18,6 +18,7 @@
 package im.turms.service.domain.user.access.admin.dto.response;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 
 /**
  * @author James Chen
@@ -27,5 +28,5 @@ public record UserLocationDTO(
         DeviceType deviceType,
         Double longitude,
         Double latitude
-) {
+) implements ControllerDTO {
 }

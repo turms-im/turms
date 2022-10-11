@@ -17,6 +17,8 @@
 
 package im.turms.server.common.domain.observation.access.admin.dto.request;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 import java.util.Map;
 
 /**
@@ -29,5 +31,5 @@ public record CreateRecordingDTO(
         Integer delaySeconds,
         Map<String, String> customSettings,
         String description
-) {
+) implements ControllerDTO {
 }

@@ -17,6 +17,8 @@
 
 package im.turms.server.common.domain.plugin.access.admin.dto.response;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 import java.util.List;
 
 /**
@@ -29,5 +31,5 @@ public record PluginDTO(
         String license,
         String description,
         List<ExtensionDTO> extensions
-) {
+) implements ControllerDTO {
 }

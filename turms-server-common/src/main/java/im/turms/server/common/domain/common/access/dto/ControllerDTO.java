@@ -15,18 +15,10 @@
  * limitations under the License.
  */
 
-package im.turms.service.domain.admin.access.admin.dto.request;
-
-import im.turms.server.common.domain.common.access.dto.ControllerDTO;
-
-import java.util.Set;
+package im.turms.server.common.domain.common.access.dto;
 
 /**
  * @author James Chen
  */
-public record UpdateAdminRoleDTO(
-        String name,
-        Set<String> permissions,
-        Integer rank
-) implements ControllerDTO {
+public interface ControllerDTO {
 }

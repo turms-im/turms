@@ -17,6 +17,8 @@
 
 package im.turms.server.common.domain.plugin.access.admin.dto.response;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 import java.util.List;
 
 /**
@@ -27,5 +29,5 @@ public record ExtensionDTO(
         boolean started,
         boolean running,
         List<String> extensionPointClasses
-) {
+) implements ControllerDTO {
 }

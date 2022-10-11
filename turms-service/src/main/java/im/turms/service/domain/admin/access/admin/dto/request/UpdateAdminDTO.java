@@ -18,6 +18,7 @@
 package im.turms.service.domain.admin.access.admin.dto.request;
 
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 import im.turms.server.common.infra.security.SecurityValueConst;
 
 /**
@@ -27,7 +28,7 @@ public record UpdateAdminDTO(
         String password,
         String name,
         Long roleId
-) {
+) implements ControllerDTO {
     @Override
     public String toString() {
         return "UpdateAdminDTO[" +

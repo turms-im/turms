@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.blocklist.access.admin.dto.response;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 import java.util.Date;
 
 /**
@@ -24,5 +26,6 @@ import java.util.Date;
  */
 public record BlockedIpDTO(
         String id,
-        Date blockEndTime) {
+        Date blockEndTime
+) implements ControllerDTO {
 }

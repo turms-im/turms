@@ -18,6 +18,7 @@
 package im.turms.service.domain.user.access.admin.dto.request;
 
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 
 import java.util.Date;
 
@@ -33,5 +34,5 @@ public record AddFriendRequestDTO(
         String reason,
         Date creationDate,
         Date responseDate
-) {
+) implements ControllerDTO {
 }

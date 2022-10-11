@@ -17,12 +17,14 @@
 
 package im.turms.server.common.domain.observation.access.admin.dto.response;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 /**
  * @author James Chen
  */
 public record HealthDTO(
         Status status
-) {
+) implements ControllerDTO {
 
     public enum Status {
         UP

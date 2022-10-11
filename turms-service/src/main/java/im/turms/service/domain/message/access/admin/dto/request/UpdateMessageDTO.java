@@ -18,6 +18,7 @@
 package im.turms.service.domain.message.access.admin.dto.request;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 
 import java.util.Date;
 import java.util.List;
@@ -34,5 +35,5 @@ public record UpdateMessageDTO(
         List<byte[]> records,
         Integer burnAfter,
         Date recallDate
-) {
+) implements ControllerDTO {
 }

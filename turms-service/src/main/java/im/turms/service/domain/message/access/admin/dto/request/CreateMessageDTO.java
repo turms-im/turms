@@ -18,6 +18,7 @@
 package im.turms.service.domain.message.access.admin.dto.request;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 
 import java.util.List;
 
@@ -37,5 +38,5 @@ public record CreateMessageDTO(
         Integer burnAfter,
         Long referenceId,
         Long preMessageId
-) {
+) implements ControllerDTO {
 }

@@ -18,11 +18,14 @@
 package im.turms.server.common.access.admin.dto.response;
 
 import com.mongodb.client.result.DeleteResult;
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 
 /**
  * @author James Chen
  */
-public record DeleteResultDTO(Long deletedCount) {
+public record DeleteResultDTO(
+        Long deletedCount
+) implements ControllerDTO {
 
     public static DeleteResultDTO get(DeleteResult result) {
         return new DeleteResultDTO(result.getDeletedCount());

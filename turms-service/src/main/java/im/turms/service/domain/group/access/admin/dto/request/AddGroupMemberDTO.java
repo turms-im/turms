@@ -18,6 +18,7 @@
 package im.turms.service.domain.group.access.admin.dto.request;
 
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 
 import java.util.Date;
 
@@ -31,5 +32,5 @@ public record AddGroupMemberDTO(
         GroupMemberRole role,
         Date joinDate,
         Date muteEndDate
-) {
+) implements ControllerDTO {
 }

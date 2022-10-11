@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.group.access.admin.dto.request;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 import im.turms.service.domain.group.bo.GroupInvitationStrategy;
 import im.turms.service.domain.group.bo.GroupJoinStrategy;
 import im.turms.service.domain.group.bo.GroupUpdateStrategy;
@@ -35,5 +36,5 @@ public record UpdateGroupTypeDTO(
         Boolean selfInfoUpdatable,
         Boolean enableReadReceipt,
         Boolean messageEditable
-) {
+) implements ControllerDTO {
 }

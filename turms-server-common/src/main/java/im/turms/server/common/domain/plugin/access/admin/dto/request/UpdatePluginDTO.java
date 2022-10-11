@@ -17,12 +17,14 @@
 
 package im.turms.server.common.domain.plugin.access.admin.dto.request;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 /**
  * @author James Chen
  */
 public record UpdatePluginDTO(
         PluginStatus status
-) {
+) implements ControllerDTO {
 
     public enum PluginStatus {
         STARTED,

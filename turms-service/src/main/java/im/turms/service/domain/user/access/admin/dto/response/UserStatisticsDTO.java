@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.user.access.admin.dto.response;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 import im.turms.service.domain.common.access.admin.dto.response.StatisticsRecordDTO;
 import lombok.Builder;
 
@@ -37,5 +38,5 @@ public record UserStatisticsDTO(
         List<StatisticsRecordDTO> loggedInUsersRecords,
         List<StatisticsRecordDTO> maxOnlineUsersRecords,
         List<StatisticsRecordDTO> registeredUsersRecords
-) {
+) implements ControllerDTO {
 }

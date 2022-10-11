@@ -17,6 +17,8 @@
 
 package im.turms.server.common.domain.observation.access.admin.dto.response;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,9 +32,12 @@ public record MetricDTO(
         String baseUnit,
         List<MeasurementDTO> measurements,
         Map<String, Set<String>> availableTags
-) {
+) implements ControllerDTO {
 
-    public record MeasurementDTO(List<String> tags, Map<String, Double> measurements) {
+    public record MeasurementDTO(
+            List<String> tags,
+            Map<String, Double> measurements
+    ) {
     }
 
 }

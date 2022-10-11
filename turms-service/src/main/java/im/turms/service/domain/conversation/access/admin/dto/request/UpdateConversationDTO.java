@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.conversation.access.admin.dto.request;
 
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+
 import java.util.Date;
 
 /**
@@ -24,5 +26,5 @@ import java.util.Date;
  */
 public record UpdateConversationDTO(
         Date readDate
-) {
+) implements ControllerDTO {
 }
