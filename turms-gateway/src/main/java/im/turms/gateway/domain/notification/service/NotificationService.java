@@ -182,7 +182,7 @@ public class NotificationService implements INotificationService {
             LOGGER.error("Failed to parse TurmsNotification", e);
             return;
         }
-        pluginManager.invokeExtensionPoints(NotificationHandler.class,
+        pluginManager.invokeExtensionPointsSimultaneously(NotificationHandler.class,
                         HANDLE_METHOD,
                         handler -> handler.handle(notification, recipientIds, offlineRecipientIds))
                 .subscribe(null, LOGGER::error);

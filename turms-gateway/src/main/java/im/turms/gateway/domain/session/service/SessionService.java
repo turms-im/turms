@@ -673,7 +673,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         if (manager.countSessions() == 0) {
             userIdToSessionsManager.remove(userId);
         }
-        pluginManager.invokeExtensionPoints(UserOnlineStatusChangeHandler.class,
+        pluginManager.invokeExtensionPointsSimultaneously(UserOnlineStatusChangeHandler.class,
                         GO_OFFLINE_METHOD,
                         handler -> handler.goOffline(manager, closeReason))
                 .subscribe(null, LOGGER::error);
@@ -715,7 +715,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
 
     // Plugin
     public Mono<Void> triggerGoOnlinePlugins(@NotNull UserSessionsManager userSessionsManager, @NotNull UserSession userSession) {
-        return pluginManager.invokeExtensionPoints(UserOnlineStatusChangeHandler.class,
+        return pluginManager.invokeExtensionPointsSimultaneously(UserOnlineStatusChangeHandler.class,
                 GO_ONLINE_METHOD,
                 handler -> handler.goOnline(userSessionsManager, userSession));
     }

@@ -197,7 +197,7 @@ class SessionServiceTests {
                 .thenReturn(properties);
 
         PluginManager pluginManager = mock(PluginManager.class);
-        when(pluginManager.invokeExtensionPoints(any(), any(), any()))
+        when(pluginManager.invokeExtensionPointsSimultaneously(any(), any(), any()))
                 .thenReturn(Mono.empty());
 
         SessionLocationService locationService = mock(SessionLocationService.class);

@@ -24,7 +24,7 @@ import reactor.core.publisher.Mono;
  * @author James Chen
  */
 @FunctionalInterface
-public interface ExtensionPointInvoker<T extends ExtensionPoint> {
+public interface SimultaneousExtensionPointInvoker<T extends ExtensionPoint> {
 
     Mono<Void> invoke(T extensionPoint);
 

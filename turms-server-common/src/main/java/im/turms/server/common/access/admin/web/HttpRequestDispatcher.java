@@ -435,7 +435,7 @@ public class HttpRequestDispatcher {
                 action,
                 params,
                 processingTime);
-        pluginManager.invokeExtensionPoints(AdminActionHandler.class,
+        pluginManager.invokeExtensionPointsSimultaneously(AdminActionHandler.class,
                         HANDLE_ADMIN_ACTION_METHOD,
                         handler -> handler.handleAdminAction(adminAction))
                 .subscribe(null, LOGGER::error);

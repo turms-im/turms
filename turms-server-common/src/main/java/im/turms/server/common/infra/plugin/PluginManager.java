@@ -26,9 +26,9 @@ import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import im.turms.server.common.infra.plugin.invoker.ExtensionPointInvoker;
 import im.turms.server.common.infra.plugin.invoker.FirstExtensionPointInvoker;
 import im.turms.server.common.infra.plugin.invoker.SequentialExtensionPointInvoker;
+import im.turms.server.common.infra.plugin.invoker.SimultaneousExtensionPointInvoker;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.plugin.JsPluginDebugProperties;
 import im.turms.server.common.infra.property.env.common.plugin.JsPluginProperties;
@@ -407,9 +407,9 @@ public class PluginManager {
         return result;
     }
 
-    public <T extends ExtensionPoint> Mono<Void> invokeExtensionPoints(Class<T> extensionPointClass,
-                                                                       Method method,
-                                                                       ExtensionPointInvoker<T> invoker) {
+    public <T extends ExtensionPoint> Mono<Void> invokeExtensionPointsSimultaneously(Class<T> extensionPointClass,
+                                                                                     Method method,
+                                                                                     SimultaneousExtensionPointInvoker<T> invoker) {
         List<T> extensionPoints = pluginRepository.getExtensionPoints(extensionPointClass);
         int size = extensionPoints.size();
         if (size == 0) {
