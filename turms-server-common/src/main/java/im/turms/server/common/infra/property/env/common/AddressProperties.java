@@ -37,7 +37,7 @@ public class AddressProperties {
 
     @MutableProperty
     @Description("The advertise strategy is used to decide which type of address should be used" +
-            " so that admins can access admin APIs (only provided by turms) and metrics APIs (provided by turms and turms-gateway)")
+            " so that admins can access admin APIs and metrics APIs")
     private AdvertiseStrategy advertiseStrategy = AdvertiseStrategy.LOCAL_ADDRESS;
 
     @MutableProperty

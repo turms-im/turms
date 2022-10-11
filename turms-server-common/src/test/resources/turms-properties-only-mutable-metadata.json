@@ -15,7 +15,7 @@
         },
         "advertiseStrategy": {
           "deprecated": false,
-          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs (only provided by turms) and metrics APIs (provided by turms and turms-gateway)",
+          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs",
           "global": false,
           "mutable": true,
           "options": [
@@ -52,7 +52,7 @@
         },
         "advertiseStrategy": {
           "deprecated": false,
-          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs (only provided by turms) and metrics APIs (provided by turms and turms-gateway)",
+          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs",
           "global": false,
           "mutable": true,
           "options": [
@@ -427,7 +427,7 @@
         },
         "advertiseStrategy": {
           "deprecated": false,
-          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs (only provided by turms) and metrics APIs (provided by turms and turms-gateway)",
+          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs",
           "global": false,
           "mutable": true,
           "options": [

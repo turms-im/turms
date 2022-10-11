@@ -247,14 +247,11 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
             clientToEntities.putAll(client, client.getRegisteredEntities());
         }
         BiPredicate<Class<?>, CompoundIndex> customCompoundIndexFilter = (entityClass, index) -> {
-            if (entityClass == Message.class) {
-                if (index.ifExist().length > 0 && index.ifExist()[0].equals(Message.Fields.CONVERSATION_ID)) {
-                    return useConversationId;
-                } else {
-                    return !useConversationId;
-                }
+            if (entityClass != Message.class) {
+                return true;
             }
-            return true;
+            boolean requiresConversationId = index.ifExist().length > 0 && index.ifExist()[0].equals(Message.Fields.CONVERSATION_ID);
+            return requiresConversationId == useConversationId;
         };
         BiPredicate<String, Object> isCustomIndexEnabled = (fieldName, optionalIndex) -> {
             try {
@@ -331,12 +328,9 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 }
                 ensureZones = ensureZones
                         .then(client.findTags(entity.collectionName()))
-                        .flatMap(tags -> {
-                            if (needRotateTieredStorageZones(entity, tags, tiers)) {
-                                return client.isBalancerRunning();
-                            }
-                            return Mono.empty();
-                        })
+                        .flatMap(tags -> needRotateTieredStorageZones(entity, tags, tiers)
+                                ? client.isBalancerRunning()
+                                : Mono.empty())
                         .flatMap(isBalancerRunning -> {
                             if (isBalancerRunning) {
                                 return Mono.error(new IllegalStateException("Failed to ensure zones because the balancer is running"));

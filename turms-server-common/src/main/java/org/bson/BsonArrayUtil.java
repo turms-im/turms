@@ -19,6 +19,9 @@ package org.bson;
 
 import java.util.List;
 
+/**
+ * @author James Chen
+ */
 public final class BsonArrayUtil {
 
     private BsonArrayUtil() {

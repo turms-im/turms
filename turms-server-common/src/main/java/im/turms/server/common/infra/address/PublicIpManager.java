@@ -44,13 +44,13 @@ public class PublicIpManager {
     public Mono<String> getPublicIp() {
         List<String> ipDetectorAddresses = propertiesManager.getLocalProperties().getIp().getPublicIpDetectorAddresses();
         if (ipDetectorAddresses.isEmpty()) {
-            throw new IllegalStateException("Failed to detect the public IP because cannot find an IP detector address");
+            return Mono.error(new IllegalStateException("Failed to detect the public IP because cannot find an IP detector address"));
         }
         List<Mono<String>> monos = new ArrayList<>(ipDetectorAddresses.size());
         HttpClient httpClient = getClient();
-        for (String checkerAddress : ipDetectorAddresses) {
+        for (String ipDetectorAddress : ipDetectorAddresses) {
             Mono<String> ipMono = httpClient.get()
-                    .uri(checkerAddress)
+                    .uri(ipDetectorAddress)
                     .responseSingle((response, body) -> response.status().codeClass().equals(HttpStatusClass.SUCCESS)
                             ? body.asString()
                             .flatMap(ip -> {

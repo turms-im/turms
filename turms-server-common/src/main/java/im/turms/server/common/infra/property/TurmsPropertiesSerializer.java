@@ -39,7 +39,7 @@ public class TurmsPropertiesSerializer {
             Files.createDirectories(dir);
         }
         JsonNode node = JsonNodeFactory.instance.objectNode()
-                .set("turms", properties);
+                .set(TurmsProperties.PROPERTIES_PREFIX, properties);
         YamlUtil.writeValue(filePath.toFile(), node);
     }
 

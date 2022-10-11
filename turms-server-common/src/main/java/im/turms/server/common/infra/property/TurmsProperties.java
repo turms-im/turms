@@ -47,10 +47,12 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Component
-@ConfigurationProperties(prefix = "turms", ignoreUnknownFields = false)
+@ConfigurationProperties(prefix = TurmsProperties.PROPERTIES_PREFIX, ignoreUnknownFields = false)
 @Data
 @NoArgsConstructor
 public class TurmsProperties {
+
+    public static final String PROPERTIES_PREFIX = "turms";
 
     public static final int SCHEMA_VERSION = 1;
 

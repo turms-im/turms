@@ -318,8 +318,8 @@ public class RollingFileAppender extends Appender {
             } finally {
                 try {
                     gzipOutputStream.close();
-                } catch (IOException exception) {
-                    IOException closeException = new IOException("Failed to close the GZIP output stream", exception);
+                } catch (IOException e) {
+                    IOException closeException = new IOException("Failed to close the GZIP output stream", e);
                     if (writeException != null) {
                         closeException.addSuppressed(writeException);
                     }

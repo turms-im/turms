@@ -59,12 +59,11 @@ public class TurmsPropertiesInspector {
             .enable(MapperFeature.PROPAGATE_TRANSIENT_MARKER)
             // e.g. "SharedConfigProperties" is an empty bean
             .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-            .build()
-            .registerModule(new JavaTimeModule())
+            .addModule(new JavaTimeModule())
             // Use "NON_NULL" instead of "NON_EMPTY"
             // because we allow admins to apply the properties with empty collection
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-            .setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
+            .serializationInclusion(JsonInclude.Include.NON_NULL)
+            .annotationIntrospector(new JacksonAnnotationIntrospector() {
                 @Override
                 public boolean hasIgnoreMarker(AnnotatedMember m) {
                     if (super.hasIgnoreMarker(m)) {
@@ -76,6 +75,7 @@ public class TurmsPropertiesInspector {
                     return false;
                 }
             })
+            .build()
             .writer();
 
     /**

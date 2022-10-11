@@ -27,8 +27,12 @@ public class ValueInspector {
     private ValueInspector() {
     }
 
-    public static boolean getBool(Value bool) {
+    public static boolean isTrue(Value bool) {
         return bool != null && bool.isBoolean() && bool.asBoolean();
+    }
+
+    public static boolean isFalse(Value bool) {
+        return !isTrue(bool);
     }
 
     public static Value returnIfFunction(Value value) {

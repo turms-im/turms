@@ -253,7 +253,7 @@ public final class Validator {
         }
     }
 
-    public static void state(boolean expression, String message) {
+    public static void shouldTrue(boolean expression, String message) {
         if (!expression) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, message);
         }

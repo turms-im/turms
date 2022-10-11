@@ -102,7 +102,7 @@ public class JsPluginFactory {
         Value pluginClass = exports.getMember("default");
         if (pluginClass == null
                 || !pluginClass.canInstantiate()
-                || !ValueInspector.getBool(pluginClass.getMember(IS_TURMS_PLUGIN))) {
+                || ValueInspector.isFalse(pluginClass.getMember(IS_TURMS_PLUGIN))) {
             throw new CorruptedScriptException("The script should define a default export to export a subclass of " + TURMS_PLUGIN);
         }
         Value plugin;
@@ -148,7 +148,7 @@ public class JsPluginFactory {
         while (iterator.hasIteratorNextElement()) {
             Value extensionClass = iterator.getIteratorNextElement();
             if (!extensionClass.canInstantiate()
-                    || !ValueInspector.getBool(extensionClass.getMember(IS_TURMS_EXTENSION))) {
+                    || ValueInspector.isFalse(extensionClass.getMember(IS_TURMS_EXTENSION))) {
                 String message = "The function \"" +
                         GET_EXTENSIONS +
                         "\" should return the subclasses of " + TURMS_EXTENSION +

@@ -30,7 +30,6 @@ import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.ZoneOffset;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -60,7 +59,7 @@ public class DictionaryParser {
 
     @SneakyThrows
     private List<Word> parseSimpleWords(BufferedReader reader, boolean skipInvalidCharacter) {
-        List<Word> words = new LinkedList<>();
+        List<Word> words = new ChunkedArrayList<>();
         // use CharArrayBuffer to collect each line because
         // it's far faster and more efficient than "reader.readLine()"
         CharArrayBuffer buffer = new CharArrayBuffer(64);

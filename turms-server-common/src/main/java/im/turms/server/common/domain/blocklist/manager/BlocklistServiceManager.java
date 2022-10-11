@@ -94,7 +94,8 @@ public class BlocklistServiceManager<T> {
     private static final ByteBufAllocator BUFFER_ALLOCATOR = PooledByteBufAllocator.DEFAULT;
     private static final ByteBuf BLOCKLIST_KEY_FOR_IP = ByteBufUtil.getUnreleasableDirectBuffer((byte) 'i');
     private static final ByteBuf BLOCKLIST_KEY_FOR_USER_ID = ByteBufUtil.getUnreleasableDirectBuffer((byte) 'u');
-    private static final int UNINITIALIZED_ID = -1;
+    private static final int UNINITIALIZED_TIMESTAMP = -1;
+    private static final int UNINITIALIZED_LOG_ID = -1;
 
     private final RedisScript blockClientsScript;
     private final RedisScript unblockClientsScript;
@@ -125,8 +126,8 @@ public class BlocklistServiceManager<T> {
      */
     private final ConcurrentSkipListSet<BlockedClient> blockedClientSkipList;
 
-    private volatile int localTimestamp = UNINITIALIZED_ID;
-    private volatile int localLogId = UNINITIALIZED_ID;
+    private volatile int localTimestamp = UNINITIALIZED_TIMESTAMP;
+    private volatile int localLogId = UNINITIALIZED_LOG_ID;
 
     private final AtomicBoolean isSyncing = new AtomicBoolean();
 
@@ -189,15 +190,12 @@ public class BlocklistServiceManager<T> {
     // Block and Unblock
 
     public Mono<Void> blockClients(Set<T> targetIds, int blockMinutes) {
-        if (CollectionUtils.isEmpty(targetIds)) {
+        if (CollectionUtils.isEmpty(targetIds) || blockMinutes <= 0) {
             return Mono.empty();
         }
         if (blockMinutes > MAX_BLOCK_TIME_MINUTES) {
             return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                     "The blockMinutes cannot be larger than " + MAX_BLOCK_TIME_MINUTES));
-        }
-        if (blockMinutes <= 0) {
-            return Mono.empty();
         }
         long now = System.currentTimeMillis();
         long blockEndTimeMillis = now + blockMinutes * 60L * 1000L;
@@ -211,8 +209,7 @@ public class BlocklistServiceManager<T> {
             blockedClientIdToBlockEndTime.put(targetId, blockEndTimeMillis);
             blockedClientSkipList.add(blockedClient);
             triggerOnTargetBlocked(targetId);
-            args[i] = encodeId(targetId);
-            i++;
+            args[i++] = encodeId(targetId);
         }
         Mono<List<Object>> blockUsers = redisClient.eval(blockClientsScript, args);
         return blockUsers.flatMap(elements -> {
@@ -273,13 +270,12 @@ public class BlocklistServiceManager<T> {
         long now = System.currentTimeMillis();
         while (iterator.hasNext()) {
             BlockedClient blockedClient = iterator.next();
-            if (blockedClient.blockEndTime() < now) {
-                iterator.remove();
-                T id = (T) blockedClient.id();
-                blockedClientIdToBlockEndTime.remove(id, blockedClient.blockEndTime());
-            } else {
+            if (blockedClient.blockEndTime() >= now) {
                 break;
             }
+            iterator.remove();
+            T id = (T) blockedClient.id();
+            blockedClientIdToBlockEndTime.remove(id, blockedClient.blockEndTime());
         }
     }
 
@@ -388,8 +384,8 @@ public class BlocklistServiceManager<T> {
         LOGGER.info("Starting resetting and synchronizing blocked clients");
         blockedClientIdToBlockEndTime.clear();
         blockedClientSkipList.clear();
-        localTimestamp = UNINITIALIZED_ID;
-        localLogId = UNINITIALIZED_ID;
+        localTimestamp = UNINITIALIZED_TIMESTAMP;
+        localLogId = UNINITIALIZED_LOG_ID;
         Mono<List<Object>> result = redisClient.eval(getBlockedClientsScript, getBlocklistKey());
         return result
                 .doOnNext(elements -> {
@@ -425,7 +421,7 @@ public class BlocklistServiceManager<T> {
                     if (timestamp < 0) {
                         return Mono.empty();
                     }
-                    if (timestamp != localTimestamp && localTimestamp != UNINITIALIZED_ID) {
+                    if (timestamp != localTimestamp && localTimestamp != UNINITIALIZED_TIMESTAMP) {
                         return resetAndSyncAllBlockedClients(checkSyncStatus);
                     }
                     int logId = (int) (long) elements.get(1);

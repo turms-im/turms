@@ -284,7 +284,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             DataValidator.validRequestStatus(status);
             Validator.pastOrPresent(creationDate, "creationDate");
             Validator.pastOrPresent(responseDate, "responseDate");
-            Validator.state(requesterId == null || !requesterId.equals(recipientId), "The requester ID must not equal the recipient ID");
+            Validator.shouldTrue(requesterId == null || !requesterId.equals(recipientId), "The requester ID must not equal the recipient ID");
         } catch (ResponseException e) {
             return Mono.error(e);
         }

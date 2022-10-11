@@ -236,13 +236,15 @@ public class UserRelationshipGroupService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (newGroupIndex != null && deleteGroupIndex != null) {
-            if (!newGroupIndex.equals(deleteGroupIndex)) {
-                return moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, newGroupIndex, false, session);
+        if (newGroupIndex != null) {
+            if (deleteGroupIndex != null) {
+                if (!newGroupIndex.equals(deleteGroupIndex)) {
+                    return moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, newGroupIndex, false, session);
+                }
+            } else {
+                return addRelatedUserToRelationshipGroups(ownerId, newGroupIndex, relatedUserId, session)
+                        .then();
             }
-        } else if (newGroupIndex != null) {
-            return addRelatedUserToRelationshipGroups(ownerId, newGroupIndex, relatedUserId, session)
-                    .then();
         } else if (deleteGroupIndex != null) {
             return moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, DEFAULT_RELATIONSHIP_GROUP_INDEX, true, session);
         }

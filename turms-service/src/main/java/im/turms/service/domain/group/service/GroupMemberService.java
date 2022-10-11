@@ -188,8 +188,13 @@ public class GroupMemberService {
             @Nullable ClientSession session) {
         try {
             Validator.notNull(userId, "userId");
+            DataValidator.validGroupMemberRole(groupMemberRole);
         } catch (ResponseException e) {
             return Mono.error(e);
+        }
+        if (groupMemberRole == GroupMemberRole.OWNER) {
+            return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "The role of the new member must not be OWNER"));
         }
         return isAllowedToInviteOrAdd(groupId, requesterId, groupMemberRole)
                 .flatMap(pair -> {

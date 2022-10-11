@@ -580,18 +580,11 @@ public class GroupServiceController {
             CreateGroupMemberRequest request = clientRequest.turmsRequest().getCreateGroupMemberRequest();
             String name = request.hasName() ? request.getName() : null;
             Date muteEndDate = request.hasMuteEndDate() ? new Date(request.getMuteEndDate()) : null;
-            GroupMemberRole role = request.getRole();
-            if (role == GroupMemberRole.UNRECOGNIZED) {
-                role = GroupMemberRole.MEMBER;
-            } else if (role == GroupMemberRole.OWNER) {
-                return Mono.just(RequestHandlerResultFactory
-                        .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The role of the new member must not be OWNER"));
-            }
             return groupMemberService.authAndAddGroupMember(
                             clientRequest.userId(),
                             request.getGroupId(),
                             request.getUserId(),
-                            role,
+                            request.getRole(),
                             name,
                             muteEndDate,
                             null)
