@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.proto;
 
+import com.google.protobuf.CodedInputStreamUtil;
 import com.google.protobuf.CodedInputStream;
 import io.netty.buffer.ByteBuf;
 
@@ -40,9 +41,9 @@ public final class ProtoDecoder {
     public static CodedInputStream newInputStream(ByteBuf byteBuf) {
         int count = byteBuf.nioBufferCount();
         if (count == 1) {
-            return CodedInputStream.newInstance(byteBuf.nioBuffer());
+            return CodedInputStreamUtil.newInstance(byteBuf.nioBuffer());
         } else if (count > 1) {
-            return CodedInputStream.newInstance(Arrays.asList(byteBuf.nioBuffers()));
+            return CodedInputStreamUtil.newInstance(Arrays.asList(byteBuf.nioBuffers()));
         }
         throw new IllegalArgumentException("byteBuf must have at least one nioBuffer");
     }
