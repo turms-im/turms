@@ -62,7 +62,7 @@ public class UserRepository extends BaseRepository<User, Long> {
                 .setIfNotNull(User.Fields.PASSWORD, password)
                 .setIfNotNull(User.Fields.NAME, name)
                 .setIfNotNull(User.Fields.INTRO, intro)
-                .setIfNotNull(User.Fields.PROFILE_ACCESS, profileAccessStrategy)
+                .setIfNotNull(User.Fields.PROFILE_ACCESS_STRATEGY, profileAccessStrategy)
                 .setIfNotNull(User.Fields.PERMISSION_GROUP_ID, permissionGroupId)
                 .setIfNotNull(User.Fields.REGISTRATION_DATE, registrationDate)
                 .setIfNotNull(User.Fields.IS_ACTIVE, isActive)
@@ -124,9 +124,9 @@ public class UserRepository extends BaseRepository<User, Long> {
                 .eq(DomainFieldName.ID, userId)
                 .eq(User.Fields.DELETION_DATE, null);
         QueryOptions options = QueryOptions.newBuilder(1)
-                .include(User.Fields.PROFILE_ACCESS);
+                .include(User.Fields.PROFILE_ACCESS_STRATEGY);
         return mongoClient.findOne(entityClass, filter, options)
-                .map(User::getProfileAccess);
+                .map(User::getProfileAccessStrategy);
     }
 
     public Flux<User> findUsers(
@@ -157,7 +157,7 @@ public class UserRepository extends BaseRepository<User, Long> {
                         User.Fields.NAME,
                         User.Fields.INTRO,
                         User.Fields.REGISTRATION_DATE,
-                        User.Fields.PROFILE_ACCESS,
+                        User.Fields.PROFILE_ACCESS_STRATEGY,
                         User.Fields.PERMISSION_GROUP_ID,
                         User.Fields.IS_ACTIVE);
         return mongoClient.findOne(entityClass, filter, options);
@@ -172,7 +172,7 @@ public class UserRepository extends BaseRepository<User, Long> {
                         User.Fields.NAME,
                         User.Fields.INTRO,
                         User.Fields.REGISTRATION_DATE,
-                        User.Fields.PROFILE_ACCESS,
+                        User.Fields.PROFILE_ACCESS_STRATEGY,
                         User.Fields.PERMISSION_GROUP_ID,
                         User.Fields.IS_ACTIVE);
         return mongoClient.findMany(entityClass, filter, options);

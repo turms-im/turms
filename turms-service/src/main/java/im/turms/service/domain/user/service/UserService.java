@@ -194,12 +194,12 @@ public class UserService {
             @Nullable String rawPassword,
             @Nullable String name,
             @Nullable String intro,
-            @Nullable @ValidProfileAccess ProfileAccessStrategy profileAccess,
+            @Nullable @ValidProfileAccess ProfileAccessStrategy profileAccessStrategy,
             @Nullable Long permissionGroupId,
             @Nullable @PastOrPresent Date registrationDate,
             @Nullable Boolean isActive) {
         try {
-            DataValidator.validProfileAccess(profileAccess);
+            DataValidator.validProfileAccess(profileAccessStrategy);
             Validator.pastOrPresent(registrationDate, "registrationDate");
         } catch (ResponseException e) {
             return Mono.error(e);
@@ -209,7 +209,7 @@ public class UserService {
         byte[] password = StringUtil.isEmpty(rawPassword) ? null : passwordManager.encodeUserPassword(rawPassword);
         name = name == null ? "" : name;
         intro = intro == null ? "" : intro;
-        profileAccess = profileAccess == null ? ProfileAccessStrategy.ALL : profileAccess;
+        profileAccessStrategy = profileAccessStrategy == null ? ProfileAccessStrategy.ALL : profileAccessStrategy;
         permissionGroupId = permissionGroupId == null ? DEFAULT_USER_PERMISSION_GROUP_ID : permissionGroupId;
         isActive = isActive == null ? activateUserWhenAdded : isActive;
         Date date = registrationDate == null ? now : registrationDate;
@@ -218,7 +218,7 @@ public class UserService {
                 password,
                 name,
                 intro,
-                profileAccess,
+                profileAccessStrategy,
                 permissionGroupId,
                 date,
                 null,

@@ -77,7 +77,7 @@ public class UserController extends BaseController {
                 addUserDTO.password(),
                 addUserDTO.name(),
                 addUserDTO.intro(),
-                addUserDTO.profileAccess(),
+                addUserDTO.profileAccessStrategy(),
                 addUserDTO.permissionGroupId(),
                 addUserDTO.registrationDate(),
                 addUserDTO.isActive());
@@ -206,7 +206,7 @@ public class UserController extends BaseController {
                         updateUserDTO.password(),
                         updateUserDTO.name(),
                         updateUserDTO.intro(),
-                        updateUserDTO.profileAccess(),
+                        updateUserDTO.profileAccessStrategy(),
                         updateUserDTO.permissionGroupId(),
                         updateUserDTO.registrationDate(),
                         updateUserDTO.isActive())

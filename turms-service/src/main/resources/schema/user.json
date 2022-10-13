@@ -2,7 +2,7 @@
   "$jsonSchema": {
     "bsonType": "object",
     "required": [
-      "pa",
+      "pas",
       "rd",
       "act",
       "pgid",
@@ -13,7 +13,7 @@
       "_id": {
         "bsonType": "long"
       },
-      "pa": {
+      "pas": {
         "bsonType": "int"
       },
       "rd": {

@@ -91,7 +91,7 @@ export default {
                             rules: this.$validator.create({onlyNumber: true})
                         },
                         {
-                            id: 'profileAccess',
+                            id: 'profileAccessStrategy',
                             type: 'SELECT',
                             options: {
                                 values: [
@@ -163,7 +163,7 @@ export default {
                             rules: this.$validator.create({onlyNumber: true})
                         },
                         {
-                            id: 'profileAccess',
+                            id: 'profileAccessStrategy',
                             type: 'SELECT',
                             options: {
                                 values: [
@@ -226,7 +226,7 @@ export default {
                         width: '10%'
                     },
                     {
-                        key: 'profileAccess',
+                        key: 'profileAccessStrategy',
                         width: '10%'
                     },
                     {

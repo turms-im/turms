@@ -117,7 +117,7 @@ public final class ProtoModelConvertor {
         String intro = user.getIntro();
         Date registrationDate = user.getRegistrationDate();
         Boolean active = user.getIsActive();
-        ProfileAccessStrategy profileAccess = user.getProfileAccess();
+        ProfileAccessStrategy profileAccessStrategy = user.getProfileAccessStrategy();
         if (userId != null) {
             builder.setId(userId);
         }
@@ -133,8 +133,8 @@ public final class ProtoModelConvertor {
         if (active != null) {
             builder.setActive(active);
         }
-        if (profileAccess != null) {
-            builder.setProfileAccessStrategy(profileAccess);
+        if (profileAccessStrategy != null) {
+            builder.setProfileAccessStrategy(profileAccessStrategy);
         }
         return builder;
     }

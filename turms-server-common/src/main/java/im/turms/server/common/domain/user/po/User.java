@@ -50,9 +50,9 @@ public final class User extends BaseEntity {
     @Field(Fields.INTRO)
     private final String intro;
 
-    @Field(Fields.PROFILE_ACCESS)
+    @Field(Fields.PROFILE_ACCESS_STRATEGY)
     @EnumNumber
-    private final ProfileAccessStrategy profileAccess;
+    private final ProfileAccessStrategy profileAccessStrategy;
 
     @Field(Fields.PERMISSION_GROUP_ID)
     private final Long permissionGroupId;
@@ -74,7 +74,7 @@ public final class User extends BaseEntity {
         public static final String PASSWORD = "pw";
         public static final String NAME = "n";
         public static final String INTRO = "intro";
-        public static final String PROFILE_ACCESS = "pa";
+        public static final String PROFILE_ACCESS_STRATEGY = "pas";
         public static final String PERMISSION_GROUP_ID = "pgid";
         public static final String REGISTRATION_DATE = "rd";
         public static final String DELETION_DATE = "dd";
