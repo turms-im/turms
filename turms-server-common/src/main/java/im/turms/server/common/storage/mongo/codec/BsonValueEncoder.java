@@ -108,6 +108,9 @@ public final class BsonValueEncoder {
         if (value instanceof Character val) {
             return new BsonString(val.toString());
         }
+        if (value instanceof byte[] val) {
+            return new BsonBinary(val);
+        }
         Class<?> clazz = value.getClass();
         if (clazz.isEnum()) {
             Enum<?> element = (Enum<?>) value;
