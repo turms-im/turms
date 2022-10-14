@@ -70,40 +70,68 @@ public interface UserInfoOrBuilder extends
       getIntroBytes();
 
   /**
-   * <code>optional int64 registration_date = 4;</code>
+   * <code>optional string profile_picture = 4;</code>
+   * @return Whether the profilePicture field is set.
+   */
+  boolean hasProfilePicture();
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   * @return The profilePicture.
+   */
+  java.lang.String getProfilePicture();
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   * @return The bytes for profilePicture.
+   */
+  com.google.protobuf.ByteString
+      getProfilePictureBytes();
+
+  /**
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+   * @return Whether the profileAccessStrategy field is set.
+   */
+  boolean hasProfileAccessStrategy();
+  /**
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+   * @return The enum numeric value on the wire for profileAccessStrategy.
+   */
+  int getProfileAccessStrategyValue();
+  /**
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+   * @return The profileAccessStrategy.
+   */
+  im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy getProfileAccessStrategy();
+
+  /**
+   * <code>optional int64 registration_date = 6;</code>
    * @return Whether the registrationDate field is set.
    */
   boolean hasRegistrationDate();
   /**
-   * <code>optional int64 registration_date = 4;</code>
+   * <code>optional int64 registration_date = 6;</code>
    * @return The registrationDate.
    */
   long getRegistrationDate();
 
   /**
-   * <code>optional bool active = 5;</code>
+   * <code>optional int64 last_updated_date = 7;</code>
+   * @return Whether the lastUpdatedDate field is set.
+   */
+  boolean hasLastUpdatedDate();
+  /**
+   * <code>optional int64 last_updated_date = 7;</code>
+   * @return The lastUpdatedDate.
+   */
+  long getLastUpdatedDate();
+
+  /**
+   * <code>optional bool active = 8;</code>
    * @return Whether the active field is set.
    */
   boolean hasActive();
   /**
-   * <code>optional bool active = 5;</code>
+   * <code>optional bool active = 8;</code>
    * @return The active.
    */
   boolean getActive();
-
-  /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
-   * @return Whether the profileAccessStrategy field is set.
-   */
-  boolean hasProfileAccessStrategy();
-  /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
-   * @return The enum numeric value on the wire for profileAccessStrategy.
-   */
-  int getProfileAccessStrategyValue();
-  /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
-   * @return The profileAccessStrategy.
-   */
-  im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy getProfileAccessStrategy();
 }

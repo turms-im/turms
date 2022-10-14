@@ -2,7 +2,7 @@ import StateStore from '../state-store';
 import BaseService from './base-service';
 import SharedContextWorker from './shared-context-worker';
 
-// Use 'string' values because it's useful for debugging
+// Use string values because it's clear to distinguish when debugging
 export const enum RequestType {
     REGISTER = 'register',
     UNREGISTER = 'unregister',

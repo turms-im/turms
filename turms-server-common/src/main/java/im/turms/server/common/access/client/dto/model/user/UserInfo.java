@@ -35,6 +35,7 @@ private static final long serialVersionUID = 0L;
   private UserInfo() {
     name_ = "";
     intro_ = "";
+    profilePicture_ = "";
     profileAccessStrategy_ = 0;
   }
 
@@ -175,18 +176,90 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int REGISTRATION_DATE_FIELD_NUMBER = 4;
+  public static final int PROFILE_PICTURE_FIELD_NUMBER = 4;
+  private volatile java.lang.Object profilePicture_;
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   * @return Whether the profilePicture field is set.
+   */
+  @java.lang.Override
+  public boolean hasProfilePicture() {
+    return ((bitField0_ & 0x00000008) != 0);
+  }
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   * @return The profilePicture.
+   */
+  @java.lang.Override
+  public java.lang.String getProfilePicture() {
+    java.lang.Object ref = profilePicture_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs =
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      profilePicture_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   * @return The bytes for profilePicture.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getProfilePictureBytes() {
+    java.lang.Object ref = profilePicture_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      profilePicture_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 5;
+  private int profileAccessStrategy_;
+  /**
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+   * @return Whether the profileAccessStrategy field is set.
+   */
+  @java.lang.Override public boolean hasProfileAccessStrategy() {
+    return ((bitField0_ & 0x00000010) != 0);
+  }
+  /**
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+   * @return The enum numeric value on the wire for profileAccessStrategy.
+   */
+  @java.lang.Override public int getProfileAccessStrategyValue() {
+    return profileAccessStrategy_;
+  }
+  /**
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+   * @return The profileAccessStrategy.
+   */
+  @java.lang.Override public im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy getProfileAccessStrategy() {
+    @SuppressWarnings("deprecation")
+    im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy result = im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy.valueOf(profileAccessStrategy_);
+    return result == null ? im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy.UNRECOGNIZED : result;
+  }
+
+  public static final int REGISTRATION_DATE_FIELD_NUMBER = 6;
   private long registrationDate_;
   /**
-   * <code>optional int64 registration_date = 4;</code>
+   * <code>optional int64 registration_date = 6;</code>
    * @return Whether the registrationDate field is set.
    */
   @java.lang.Override
   public boolean hasRegistrationDate() {
-    return ((bitField0_ & 0x00000008) != 0);
+    return ((bitField0_ & 0x00000020) != 0);
   }
   /**
-   * <code>optional int64 registration_date = 4;</code>
+   * <code>optional int64 registration_date = 6;</code>
    * @return The registrationDate.
    */
   @java.lang.Override
@@ -194,49 +267,42 @@ private static final long serialVersionUID = 0L;
     return registrationDate_;
   }
 
-  public static final int ACTIVE_FIELD_NUMBER = 5;
+  public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 7;
+  private long lastUpdatedDate_;
+  /**
+   * <code>optional int64 last_updated_date = 7;</code>
+   * @return Whether the lastUpdatedDate field is set.
+   */
+  @java.lang.Override
+  public boolean hasLastUpdatedDate() {
+    return ((bitField0_ & 0x00000040) != 0);
+  }
+  /**
+   * <code>optional int64 last_updated_date = 7;</code>
+   * @return The lastUpdatedDate.
+   */
+  @java.lang.Override
+  public long getLastUpdatedDate() {
+    return lastUpdatedDate_;
+  }
+
+  public static final int ACTIVE_FIELD_NUMBER = 8;
   private boolean active_;
   /**
-   * <code>optional bool active = 5;</code>
+   * <code>optional bool active = 8;</code>
    * @return Whether the active field is set.
    */
   @java.lang.Override
   public boolean hasActive() {
-    return ((bitField0_ & 0x00000010) != 0);
+    return ((bitField0_ & 0x00000080) != 0);
   }
   /**
-   * <code>optional bool active = 5;</code>
+   * <code>optional bool active = 8;</code>
    * @return The active.
    */
   @java.lang.Override
   public boolean getActive() {
     return active_;
-  }
-
-  public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 6;
-  private int profileAccessStrategy_;
-  /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
-   * @return Whether the profileAccessStrategy field is set.
-   */
-  @java.lang.Override public boolean hasProfileAccessStrategy() {
-    return ((bitField0_ & 0x00000020) != 0);
-  }
-  /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
-   * @return The enum numeric value on the wire for profileAccessStrategy.
-   */
-  @java.lang.Override public int getProfileAccessStrategyValue() {
-    return profileAccessStrategy_;
-  }
-  /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
-   * @return The profileAccessStrategy.
-   */
-  @java.lang.Override public im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy getProfileAccessStrategy() {
-    @SuppressWarnings("deprecation")
-    im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy result = im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy.valueOf(profileAccessStrategy_);
-    return result == null ? im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy.UNRECOGNIZED : result;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -263,13 +329,19 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, intro_);
     }
     if (((bitField0_ & 0x00000008) != 0)) {
-      output.writeInt64(4, registrationDate_);
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, profilePicture_);
     }
     if (((bitField0_ & 0x00000010) != 0)) {
-      output.writeBool(5, active_);
+      output.writeEnum(5, profileAccessStrategy_);
     }
     if (((bitField0_ & 0x00000020) != 0)) {
-      output.writeEnum(6, profileAccessStrategy_);
+      output.writeInt64(6, registrationDate_);
+    }
+    if (((bitField0_ & 0x00000040) != 0)) {
+      output.writeInt64(7, lastUpdatedDate_);
+    }
+    if (((bitField0_ & 0x00000080) != 0)) {
+      output.writeBool(8, active_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -291,16 +363,23 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, intro_);
     }
     if (((bitField0_ & 0x00000008) != 0)) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(4, registrationDate_);
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, profilePicture_);
     }
     if (((bitField0_ & 0x00000010) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(5, active_);
+        .computeEnumSize(5, profileAccessStrategy_);
     }
     if (((bitField0_ & 0x00000020) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(6, profileAccessStrategy_);
+        .computeInt64Size(6, registrationDate_);
+    }
+    if (((bitField0_ & 0x00000040) != 0)) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(7, lastUpdatedDate_);
+    }
+    if (((bitField0_ & 0x00000080) != 0)) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(8, active_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -332,19 +411,29 @@ private static final long serialVersionUID = 0L;
       if (!getIntro()
           .equals(other.getIntro())) return false;
     }
+    if (hasProfilePicture() != other.hasProfilePicture()) return false;
+    if (hasProfilePicture()) {
+      if (!getProfilePicture()
+          .equals(other.getProfilePicture())) return false;
+    }
+    if (hasProfileAccessStrategy() != other.hasProfileAccessStrategy()) return false;
+    if (hasProfileAccessStrategy()) {
+      if (profileAccessStrategy_ != other.profileAccessStrategy_) return false;
+    }
     if (hasRegistrationDate() != other.hasRegistrationDate()) return false;
     if (hasRegistrationDate()) {
       if (getRegistrationDate()
           != other.getRegistrationDate()) return false;
     }
+    if (hasLastUpdatedDate() != other.hasLastUpdatedDate()) return false;
+    if (hasLastUpdatedDate()) {
+      if (getLastUpdatedDate()
+          != other.getLastUpdatedDate()) return false;
+    }
     if (hasActive() != other.hasActive()) return false;
     if (hasActive()) {
       if (getActive()
           != other.getActive()) return false;
-    }
-    if (hasProfileAccessStrategy() != other.hasProfileAccessStrategy()) return false;
-    if (hasProfileAccessStrategy()) {
-      if (profileAccessStrategy_ != other.profileAccessStrategy_) return false;
     }
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
@@ -370,19 +459,28 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + INTRO_FIELD_NUMBER;
       hash = (53 * hash) + getIntro().hashCode();
     }
+    if (hasProfilePicture()) {
+      hash = (37 * hash) + PROFILE_PICTURE_FIELD_NUMBER;
+      hash = (53 * hash) + getProfilePicture().hashCode();
+    }
+    if (hasProfileAccessStrategy()) {
+      hash = (37 * hash) + PROFILE_ACCESS_STRATEGY_FIELD_NUMBER;
+      hash = (53 * hash) + profileAccessStrategy_;
+    }
     if (hasRegistrationDate()) {
       hash = (37 * hash) + REGISTRATION_DATE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getRegistrationDate());
     }
+    if (hasLastUpdatedDate()) {
+      hash = (37 * hash) + LAST_UPDATED_DATE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getLastUpdatedDate());
+    }
     if (hasActive()) {
       hash = (37 * hash) + ACTIVE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getActive());
-    }
-    if (hasProfileAccessStrategy()) {
-      hash = (37 * hash) + PROFILE_ACCESS_STRATEGY_FIELD_NUMBER;
-      hash = (53 * hash) + profileAccessStrategy_;
     }
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
@@ -518,12 +616,16 @@ private static final long serialVersionUID = 0L;
       bitField0_ = (bitField0_ & ~0x00000002);
       intro_ = "";
       bitField0_ = (bitField0_ & ~0x00000004);
-      registrationDate_ = 0L;
+      profilePicture_ = "";
       bitField0_ = (bitField0_ & ~0x00000008);
-      active_ = false;
-      bitField0_ = (bitField0_ & ~0x00000010);
       profileAccessStrategy_ = 0;
+      bitField0_ = (bitField0_ & ~0x00000010);
+      registrationDate_ = 0L;
       bitField0_ = (bitField0_ & ~0x00000020);
+      lastUpdatedDate_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000040);
+      active_ = false;
+      bitField0_ = (bitField0_ & ~0x00000080);
       return this;
     }
 
@@ -565,17 +667,25 @@ private static final long serialVersionUID = 0L;
       }
       result.intro_ = intro_;
       if (((from_bitField0_ & 0x00000008) != 0)) {
-        result.registrationDate_ = registrationDate_;
         to_bitField0_ |= 0x00000008;
       }
+      result.profilePicture_ = profilePicture_;
       if (((from_bitField0_ & 0x00000010) != 0)) {
-        result.active_ = active_;
         to_bitField0_ |= 0x00000010;
       }
+      result.profileAccessStrategy_ = profileAccessStrategy_;
       if (((from_bitField0_ & 0x00000020) != 0)) {
+        result.registrationDate_ = registrationDate_;
         to_bitField0_ |= 0x00000020;
       }
-      result.profileAccessStrategy_ = profileAccessStrategy_;
+      if (((from_bitField0_ & 0x00000040) != 0)) {
+        result.lastUpdatedDate_ = lastUpdatedDate_;
+        to_bitField0_ |= 0x00000040;
+      }
+      if (((from_bitField0_ & 0x00000080) != 0)) {
+        result.active_ = active_;
+        to_bitField0_ |= 0x00000080;
+      }
       result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
@@ -638,14 +748,22 @@ private static final long serialVersionUID = 0L;
         intro_ = other.intro_;
         onChanged();
       }
-      if (other.hasRegistrationDate()) {
-        setRegistrationDate(other.getRegistrationDate());
-      }
-      if (other.hasActive()) {
-        setActive(other.getActive());
+      if (other.hasProfilePicture()) {
+        bitField0_ |= 0x00000008;
+        profilePicture_ = other.profilePicture_;
+        onChanged();
       }
       if (other.hasProfileAccessStrategy()) {
         setProfileAccessStrategy(other.getProfileAccessStrategy());
+      }
+      if (other.hasRegistrationDate()) {
+        setRegistrationDate(other.getRegistrationDate());
+      }
+      if (other.hasLastUpdatedDate()) {
+        setLastUpdatedDate(other.getLastUpdatedDate());
+      }
+      if (other.hasActive()) {
+        setActive(other.getActive());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -688,21 +806,31 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000004;
               break;
             } // case 26
-            case 32: {
-              registrationDate_ = input.readInt64();
+            case 34: {
+              profilePicture_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000008;
               break;
-            } // case 32
+            } // case 34
             case 40: {
-              active_ = input.readBool();
+              profileAccessStrategy_ = input.readEnum();
               bitField0_ |= 0x00000010;
               break;
             } // case 40
             case 48: {
-              profileAccessStrategy_ = input.readEnum();
+              registrationDate_ = input.readInt64();
               bitField0_ |= 0x00000020;
               break;
             } // case 48
+            case 56: {
+              lastUpdatedDate_ = input.readInt64();
+              bitField0_ |= 0x00000040;
+              break;
+            } // case 56
+            case 64: {
+              active_ = input.readBool();
+              bitField0_ |= 0x00000080;
+              break;
+            } // case 64
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -925,112 +1053,117 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private long registrationDate_ ;
+    private java.lang.Object profilePicture_ = "";
     /**
-     * <code>optional int64 registration_date = 4;</code>
-     * @return Whether the registrationDate field is set.
+     * <code>optional string profile_picture = 4;</code>
+     * @return Whether the profilePicture field is set.
      */
-    @java.lang.Override
-    public boolean hasRegistrationDate() {
+    public boolean hasProfilePicture() {
       return ((bitField0_ & 0x00000008) != 0);
     }
     /**
-     * <code>optional int64 registration_date = 4;</code>
-     * @return The registrationDate.
+     * <code>optional string profile_picture = 4;</code>
+     * @return The profilePicture.
      */
-    @java.lang.Override
-    public long getRegistrationDate() {
-      return registrationDate_;
+    public java.lang.String getProfilePicture() {
+      java.lang.Object ref = profilePicture_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        profilePicture_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
     /**
-     * <code>optional int64 registration_date = 4;</code>
-     * @param value The registrationDate to set.
+     * <code>optional string profile_picture = 4;</code>
+     * @return The bytes for profilePicture.
+     */
+    public com.google.protobuf.ByteString
+        getProfilePictureBytes() {
+      java.lang.Object ref = profilePicture_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        profilePicture_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>optional string profile_picture = 4;</code>
+     * @param value The profilePicture to set.
      * @return This builder for chaining.
      */
-    public Builder setRegistrationDate(long value) {
-      bitField0_ |= 0x00000008;
-      registrationDate_ = value;
+    public Builder setProfilePicture(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+      profilePicture_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional int64 registration_date = 4;</code>
+     * <code>optional string profile_picture = 4;</code>
      * @return This builder for chaining.
      */
-    public Builder clearRegistrationDate() {
+    public Builder clearProfilePicture() {
       bitField0_ = (bitField0_ & ~0x00000008);
-      registrationDate_ = 0L;
-      onChanged();
-      return this;
-    }
-
-    private boolean active_ ;
-    /**
-     * <code>optional bool active = 5;</code>
-     * @return Whether the active field is set.
-     */
-    @java.lang.Override
-    public boolean hasActive() {
-      return ((bitField0_ & 0x00000010) != 0);
-    }
-    /**
-     * <code>optional bool active = 5;</code>
-     * @return The active.
-     */
-    @java.lang.Override
-    public boolean getActive() {
-      return active_;
-    }
-    /**
-     * <code>optional bool active = 5;</code>
-     * @param value The active to set.
-     * @return This builder for chaining.
-     */
-    public Builder setActive(boolean value) {
-      bitField0_ |= 0x00000010;
-      active_ = value;
+      profilePicture_ = getDefaultInstance().getProfilePicture();
       onChanged();
       return this;
     }
     /**
-     * <code>optional bool active = 5;</code>
+     * <code>optional string profile_picture = 4;</code>
+     * @param value The bytes for profilePicture to set.
      * @return This builder for chaining.
      */
-    public Builder clearActive() {
-      bitField0_ = (bitField0_ & ~0x00000010);
-      active_ = false;
+    public Builder setProfilePictureBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      bitField0_ |= 0x00000008;
+      profilePicture_ = value;
       onChanged();
       return this;
     }
 
     private int profileAccessStrategy_ = 0;
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return Whether the profileAccessStrategy field is set.
      */
     @java.lang.Override public boolean hasProfileAccessStrategy() {
-      return ((bitField0_ & 0x00000020) != 0);
+      return ((bitField0_ & 0x00000010) != 0);
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return The enum numeric value on the wire for profileAccessStrategy.
      */
     @java.lang.Override public int getProfileAccessStrategyValue() {
       return profileAccessStrategy_;
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @param value The enum numeric value on the wire for profileAccessStrategy to set.
      * @return This builder for chaining.
      */
     public Builder setProfileAccessStrategyValue(int value) {
-      bitField0_ |= 0x00000020;
+      bitField0_ |= 0x00000010;
       profileAccessStrategy_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return The profileAccessStrategy.
      */
     @java.lang.Override
@@ -1040,7 +1173,7 @@ private static final long serialVersionUID = 0L;
       return result == null ? im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy.UNRECOGNIZED : result;
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @param value The profileAccessStrategy to set.
      * @return This builder for chaining.
      */
@@ -1048,18 +1181,135 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
         throw new NullPointerException();
       }
-      bitField0_ |= 0x00000020;
+      bitField0_ |= 0x00000010;
       profileAccessStrategy_ = value.getNumber();
       onChanged();
       return this;
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearProfileAccessStrategy() {
-      bitField0_ = (bitField0_ & ~0x00000020);
+      bitField0_ = (bitField0_ & ~0x00000010);
       profileAccessStrategy_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private long registrationDate_ ;
+    /**
+     * <code>optional int64 registration_date = 6;</code>
+     * @return Whether the registrationDate field is set.
+     */
+    @java.lang.Override
+    public boolean hasRegistrationDate() {
+      return ((bitField0_ & 0x00000020) != 0);
+    }
+    /**
+     * <code>optional int64 registration_date = 6;</code>
+     * @return The registrationDate.
+     */
+    @java.lang.Override
+    public long getRegistrationDate() {
+      return registrationDate_;
+    }
+    /**
+     * <code>optional int64 registration_date = 6;</code>
+     * @param value The registrationDate to set.
+     * @return This builder for chaining.
+     */
+    public Builder setRegistrationDate(long value) {
+      bitField0_ |= 0x00000020;
+      registrationDate_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional int64 registration_date = 6;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearRegistrationDate() {
+      bitField0_ = (bitField0_ & ~0x00000020);
+      registrationDate_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private long lastUpdatedDate_ ;
+    /**
+     * <code>optional int64 last_updated_date = 7;</code>
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    @java.lang.Override
+    public boolean hasLastUpdatedDate() {
+      return ((bitField0_ & 0x00000040) != 0);
+    }
+    /**
+     * <code>optional int64 last_updated_date = 7;</code>
+     * @return The lastUpdatedDate.
+     */
+    @java.lang.Override
+    public long getLastUpdatedDate() {
+      return lastUpdatedDate_;
+    }
+    /**
+     * <code>optional int64 last_updated_date = 7;</code>
+     * @param value The lastUpdatedDate to set.
+     * @return This builder for chaining.
+     */
+    public Builder setLastUpdatedDate(long value) {
+      bitField0_ |= 0x00000040;
+      lastUpdatedDate_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional int64 last_updated_date = 7;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearLastUpdatedDate() {
+      bitField0_ = (bitField0_ & ~0x00000040);
+      lastUpdatedDate_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private boolean active_ ;
+    /**
+     * <code>optional bool active = 8;</code>
+     * @return Whether the active field is set.
+     */
+    @java.lang.Override
+    public boolean hasActive() {
+      return ((bitField0_ & 0x00000080) != 0);
+    }
+    /**
+     * <code>optional bool active = 8;</code>
+     * @return The active.
+     */
+    @java.lang.Override
+    public boolean getActive() {
+      return active_;
+    }
+    /**
+     * <code>optional bool active = 8;</code>
+     * @param value The active to set.
+     * @return This builder for chaining.
+     */
+    public Builder setActive(boolean value) {
+      bitField0_ |= 0x00000080;
+      active_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional bool active = 8;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearActive() {
+      bitField0_ = (bitField0_ & ~0x00000080);
+      active_ = false;
       onChanged();
       return this;
     }

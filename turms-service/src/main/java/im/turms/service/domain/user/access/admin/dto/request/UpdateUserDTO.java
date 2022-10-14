@@ -30,6 +30,7 @@ public record UpdateUserDTO(
         String password,
         String name,
         String intro,
+        String profilePicture,
         ProfileAccessStrategy profileAccessStrategy,
         Long permissionGroupId,
         Date registrationDate,
@@ -41,6 +42,7 @@ public record UpdateUserDTO(
                 "password=" + SecurityValueConst.SENSITIVE_VALUE +
                 ", name=" + name +
                 ", intro=" + intro +
+                ", profilePicture=" + profilePicture +
                 ", profileAccessStrategy=" + profileAccessStrategy +
                 ", permissionGroupId=" + permissionGroupId +
                 ", registrationDate=" + registrationDate +

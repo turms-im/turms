@@ -136,6 +136,7 @@ class UserService {
   Future<Response<void>> updateProfile(
       {String? name,
       String? intro,
+      String? profilePicture,
       ProfileAccessStrategy? profileAccessStrategy}) async {
     if ([name, intro, profileAccessStrategy].areAllNull) {
       return Response.nullValue();
@@ -143,6 +144,7 @@ class UserService {
     final n = await _turmsClient.driver.send(UpdateUserRequest(
         name: name,
         intro: intro,
+        profilePicture: profilePicture,
         profileAccessStrategy: profileAccessStrategy));
     return n.toNullResponse();
   }

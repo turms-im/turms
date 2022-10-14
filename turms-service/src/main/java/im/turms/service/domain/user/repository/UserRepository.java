@@ -52,16 +52,18 @@ public class UserRepository extends BaseRepository<User, Long> {
             @Nullable byte[] password,
             @Nullable String name,
             @Nullable String intro,
+            @Nullable String profilePicture,
             @Nullable ProfileAccessStrategy profileAccessStrategy,
             @Nullable Long permissionGroupId,
             @Nullable Date registrationDate,
             @Nullable Boolean isActive) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, userIds);
-        Update update = Update.newBuilder(8)
+        Update update = Update.newBuilder(9)
                 .setIfNotNull(User.Fields.PASSWORD, password)
                 .setIfNotNull(User.Fields.NAME, name)
                 .setIfNotNull(User.Fields.INTRO, intro)
+                .setIfNotNull(User.Fields.PROFILE_PICTURE, profilePicture)
                 .setIfNotNull(User.Fields.PROFILE_ACCESS_STRATEGY, profileAccessStrategy)
                 .setIfNotNull(User.Fields.PERMISSION_GROUP_ID, permissionGroupId)
                 .setIfNotNull(User.Fields.REGISTRATION_DATE, registrationDate)
@@ -156,6 +158,7 @@ public class UserRepository extends BaseRepository<User, Long> {
                 .include(DomainFieldName.ID,
                         User.Fields.NAME,
                         User.Fields.INTRO,
+                        User.Fields.PROFILE_PICTURE,
                         User.Fields.REGISTRATION_DATE,
                         User.Fields.PROFILE_ACCESS_STRATEGY,
                         User.Fields.PERMISSION_GROUP_ID,
@@ -171,6 +174,7 @@ public class UserRepository extends BaseRepository<User, Long> {
                 .include(DomainFieldName.ID,
                         User.Fields.NAME,
                         User.Fields.INTRO,
+                        User.Fields.PROFILE_PICTURE,
                         User.Fields.REGISTRATION_DATE,
                         User.Fields.PROFILE_ACCESS_STRATEGY,
                         User.Fields.PERMISSION_GROUP_ID,

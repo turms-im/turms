@@ -108,9 +108,10 @@ export declare namespace ParsedModel {
         id?: string;
         name?: string;
         intro?: string;
+        profilePicture?: string;
+        profileAccessStrategy?: ProfileAccessStrategy;
         registrationDate?: Date;
         active?: boolean;
-        profileAccessStrategy?: ProfileAccessStrategy;
     }
 
     interface UserStatusDetail {

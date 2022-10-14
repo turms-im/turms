@@ -52,7 +52,8 @@ export default class Response<T> {
                 `Failed to transform notification data: ${notification.data}. Error: ${e?.message}`);
         }
         return new Response(new Date(parseInt(notification.timestamp)),
-            notification.requestId == null ? null : notification.requestId,
-            notification.code, responseData);
+            notification.requestId,
+            notification.code,
+            responseData);
     }
 }

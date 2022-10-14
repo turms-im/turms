@@ -14,14 +14,14 @@ export default class WorkerWebSocketClient extends WebSocketClient {
         super(url, listener);
         let connectStart;
         sharedContextService.addNotificationListener(NotificationType.WEBSOCKET_CONNECTING, () => {
-            connectStart = new Date().getTime();
+            connectStart = Date.now();
             this._isConnecting = true;
             this._isConnected = false;
         });
         sharedContextService.addNotificationListener(NotificationType.WEBSOCKET_CONNECTED, () => {
             this._isConnecting = false;
             this._isConnected = true;
-            this._metrics.connectTime = new Date().getTime() - connectStart;
+            this._metrics.connectTime = Date.now() - connectStart;
             this.notifyOnOpen();
         });
         sharedContextService.addNotificationListener(NotificationType.WEBSOCKET_CLOSED, notification => {

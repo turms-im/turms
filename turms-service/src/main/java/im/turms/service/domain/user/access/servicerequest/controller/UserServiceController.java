@@ -282,12 +282,14 @@ public class UserServiceController {
             String password = request.hasPassword() ? request.getPassword() : null;
             String name = request.hasName() ? request.getName() : null;
             String intro = request.hasIntro() ? request.getIntro() : null;
+            String profilePicture = request.hasProfilePicture() ? request.getProfilePicture() : null;
             ProfileAccessStrategy profileAccessStrategy = request.getProfileAccessStrategy();
             return userService.updateUser(
                             clientRequest.userId(),
                             password,
                             name,
                             intro,
+                            profilePicture,
                             profileAccessStrategy,
                             null,
                             null,

@@ -9,9 +9,11 @@ export interface UserInfo {
   id?: string | undefined;
   name?: string | undefined;
   intro?: string | undefined;
-  registrationDate?: string | undefined;
-  active?: boolean | undefined;
+  profilePicture?: string | undefined;
   profileAccessStrategy?: ProfileAccessStrategy | undefined;
+  registrationDate?: string | undefined;
+  lastUpdatedDate?: string | undefined;
+  active?: boolean | undefined;
 }
 
 function createBaseUserInfo(): UserInfo {
@@ -19,9 +21,11 @@ function createBaseUserInfo(): UserInfo {
     id: undefined,
     name: undefined,
     intro: undefined,
-    registrationDate: undefined,
-    active: undefined,
+    profilePicture: undefined,
     profileAccessStrategy: undefined,
+    registrationDate: undefined,
+    lastUpdatedDate: undefined,
+    active: undefined,
   };
 }
 
@@ -36,14 +40,20 @@ export const UserInfo = {
     if (message.intro !== undefined) {
       writer.uint32(26).string(message.intro);
     }
-    if (message.registrationDate !== undefined) {
-      writer.uint32(32).int64(message.registrationDate);
-    }
-    if (message.active !== undefined) {
-      writer.uint32(40).bool(message.active);
+    if (message.profilePicture !== undefined) {
+      writer.uint32(34).string(message.profilePicture);
     }
     if (message.profileAccessStrategy !== undefined) {
-      writer.uint32(48).int32(message.profileAccessStrategy);
+      writer.uint32(40).int32(message.profileAccessStrategy);
+    }
+    if (message.registrationDate !== undefined) {
+      writer.uint32(48).int64(message.registrationDate);
+    }
+    if (message.lastUpdatedDate !== undefined) {
+      writer.uint32(56).int64(message.lastUpdatedDate);
+    }
+    if (message.active !== undefined) {
+      writer.uint32(64).bool(message.active);
     }
     return writer;
   },
@@ -65,13 +75,19 @@ export const UserInfo = {
           message.intro = reader.string();
           break;
         case 4:
-          message.registrationDate = longToString(reader.int64() as Long);
+          message.profilePicture = reader.string();
           break;
         case 5:
-          message.active = reader.bool();
+          message.profileAccessStrategy = reader.int32() as any;
           break;
         case 6:
-          message.profileAccessStrategy = reader.int32() as any;
+          message.registrationDate = longToString(reader.int64() as Long);
+          break;
+        case 7:
+          message.lastUpdatedDate = longToString(reader.int64() as Long);
+          break;
+        case 8:
+          message.active = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);

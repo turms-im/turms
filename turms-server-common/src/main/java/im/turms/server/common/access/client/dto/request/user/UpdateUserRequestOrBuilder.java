@@ -76,17 +76,34 @@ public interface UpdateUserRequestOrBuilder extends
       getIntroBytes();
 
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional string profile_picture = 4;</code>
+   * @return Whether the profilePicture field is set.
+   */
+  boolean hasProfilePicture();
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   * @return The profilePicture.
+   */
+  java.lang.String getProfilePicture();
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   * @return The bytes for profilePicture.
+   */
+  com.google.protobuf.ByteString
+      getProfilePictureBytes();
+
+  /**
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @return Whether the profileAccessStrategy field is set.
    */
   boolean hasProfileAccessStrategy();
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.
    */
   int getProfileAccessStrategyValue();
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @return The profileAccessStrategy.
    */
   im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy getProfileAccessStrategy();

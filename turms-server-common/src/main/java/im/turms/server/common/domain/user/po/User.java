@@ -50,6 +50,9 @@ public final class User extends BaseEntity {
     @Field(Fields.INTRO)
     private final String intro;
 
+    @Field(Fields.PROFILE_PICTURE)
+    private final String profilePicture;
+
     @Field(Fields.PROFILE_ACCESS_STRATEGY)
     @EnumNumber
     private final ProfileAccessStrategy profileAccessStrategy;

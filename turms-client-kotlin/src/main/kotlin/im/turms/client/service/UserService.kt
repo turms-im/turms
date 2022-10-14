@@ -197,6 +197,7 @@ class UserService(private val turmsClient: TurmsClient) {
     suspend fun updateProfile(
         name: String? = null,
         intro: String? = null,
+        profilePicture: String? = null,
         profileAccessStrategy: ProfileAccessStrategy? = null
     ): Response<Unit> = if (Validator.areAllNull(name, intro, profileAccessStrategy)) {
         Response.unitValue()
@@ -206,6 +207,7 @@ class UserService(private val turmsClient: TurmsClient) {
                 UpdateUserRequest.newBuilder().apply {
                     name?.let { this.name = it }
                     intro?.let { this.intro = it }
+                    profilePicture?.let { this.profilePicture = it }
                     profileAccessStrategy?.let { this.profileAccessStrategy = it }
                 }
             )

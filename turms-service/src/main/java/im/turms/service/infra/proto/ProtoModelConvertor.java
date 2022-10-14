@@ -115,6 +115,7 @@ public final class ProtoModelConvertor {
         Long userId = user.getId();
         String name = user.getName();
         String intro = user.getIntro();
+        String profilePicture = user.getProfilePicture();
         Date registrationDate = user.getRegistrationDate();
         Boolean active = user.getIsActive();
         ProfileAccessStrategy profileAccessStrategy = user.getProfileAccessStrategy();
@@ -126,6 +127,9 @@ public final class ProtoModelConvertor {
         }
         if (intro != null) {
             builder.setIntro(intro);
+        }
+        if (profilePicture != null) {
+            builder.setProfilePicture(profilePicture);
         }
         if (registrationDate != null) {
             builder.setRegistrationDate(registrationDate.getTime());

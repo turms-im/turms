@@ -31,6 +31,7 @@ public  final class UserInfo extends
   private UserInfo() {
     name_ = "";
     intro_ = "";
+    profilePicture_ = "";
   }
   private int bitField0_;
   public static final int ID_FIELD_NUMBER = 1;
@@ -177,86 +178,73 @@ public  final class UserInfo extends
     bitField0_ |= 0x00000004;
   }
 
-  public static final int REGISTRATION_DATE_FIELD_NUMBER = 4;
-  private long registrationDate_;
+  public static final int PROFILE_PICTURE_FIELD_NUMBER = 4;
+  private java.lang.String profilePicture_;
   /**
-   * <code>optional int64 registration_date = 4;</code>
-   * @return Whether the registrationDate field is set.
+   * <code>optional string profile_picture = 4;</code>
+   * @return Whether the profilePicture field is set.
    */
   @java.lang.Override
-  public boolean hasRegistrationDate() {
+  public boolean hasProfilePicture() {
     return ((bitField0_ & 0x00000008) != 0);
   }
   /**
-   * <code>optional int64 registration_date = 4;</code>
-   * @return The registrationDate.
+   * <code>optional string profile_picture = 4;</code>
+   * @return The profilePicture.
    */
   @java.lang.Override
-  public long getRegistrationDate() {
-    return registrationDate_;
+  public java.lang.String getProfilePicture() {
+    return profilePicture_;
   }
   /**
-   * <code>optional int64 registration_date = 4;</code>
-   * @param value The registrationDate to set.
+   * <code>optional string profile_picture = 4;</code>
+   * @return The bytes for profilePicture.
    */
-  private void setRegistrationDate(long value) {
-    bitField0_ |= 0x00000008;
-    registrationDate_ = value;
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getProfilePictureBytes() {
+    return com.google.protobuf.ByteString.copyFromUtf8(profilePicture_);
   }
   /**
-   * <code>optional int64 registration_date = 4;</code>
+   * <code>optional string profile_picture = 4;</code>
+   * @param value The profilePicture to set.
    */
-  private void clearRegistrationDate() {
+  private void setProfilePicture(
+      java.lang.String value) {
+    java.lang.Class<?> valueClass = value.getClass();
+  bitField0_ |= 0x00000008;
+    profilePicture_ = value;
+  }
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   */
+  private void clearProfilePicture() {
     bitField0_ = (bitField0_ & ~0x00000008);
-    registrationDate_ = 0L;
+    profilePicture_ = getDefaultInstance().getProfilePicture();
+  }
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   * @param value The bytes for profilePicture to set.
+   */
+  private void setProfilePictureBytes(
+      com.google.protobuf.ByteString value) {
+    checkByteStringIsUtf8(value);
+    profilePicture_ = value.toStringUtf8();
+    bitField0_ |= 0x00000008;
   }
 
-  public static final int ACTIVE_FIELD_NUMBER = 5;
-  private boolean active_;
-  /**
-   * <code>optional bool active = 5;</code>
-   * @return Whether the active field is set.
-   */
-  @java.lang.Override
-  public boolean hasActive() {
-    return ((bitField0_ & 0x00000010) != 0);
-  }
-  /**
-   * <code>optional bool active = 5;</code>
-   * @return The active.
-   */
-  @java.lang.Override
-  public boolean getActive() {
-    return active_;
-  }
-  /**
-   * <code>optional bool active = 5;</code>
-   * @param value The active to set.
-   */
-  private void setActive(boolean value) {
-    bitField0_ |= 0x00000010;
-    active_ = value;
-  }
-  /**
-   * <code>optional bool active = 5;</code>
-   */
-  private void clearActive() {
-    bitField0_ = (bitField0_ & ~0x00000010);
-    active_ = false;
-  }
-
-  public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 6;
+  public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 5;
   private int profileAccessStrategy_;
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @return Whether the profileAccessStrategy field is set.
    */
   @java.lang.Override
   public boolean hasProfileAccessStrategy() {
-    return ((bitField0_ & 0x00000020) != 0);
+    return ((bitField0_ & 0x00000010) != 0);
   }
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.
    */
   @java.lang.Override
@@ -264,7 +252,7 @@ public  final class UserInfo extends
     return profileAccessStrategy_;
   }
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @return The profileAccessStrategy.
    */
   @java.lang.Override
@@ -273,26 +261,128 @@ public  final class UserInfo extends
     return result == null ? im.turms.client.model.proto.constant.ProfileAccessStrategy.UNRECOGNIZED : result;
   }
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @param value The enum numeric value on the wire for profileAccessStrategy to set.
    */
   private void setProfileAccessStrategyValue(int value) {
-    bitField0_ |= 0x00000020;  profileAccessStrategy_ = value;
+    bitField0_ |= 0x00000010;  profileAccessStrategy_ = value;
   }
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @param value The profileAccessStrategy to set.
    */
   private void setProfileAccessStrategy(im.turms.client.model.proto.constant.ProfileAccessStrategy value) {
     profileAccessStrategy_ = value.getNumber();
-    bitField0_ |= 0x00000020;
+    bitField0_ |= 0x00000010;
   }
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    */
   private void clearProfileAccessStrategy() {
-    bitField0_ = (bitField0_ & ~0x00000020);
+    bitField0_ = (bitField0_ & ~0x00000010);
     profileAccessStrategy_ = 0;
+  }
+
+  public static final int REGISTRATION_DATE_FIELD_NUMBER = 6;
+  private long registrationDate_;
+  /**
+   * <code>optional int64 registration_date = 6;</code>
+   * @return Whether the registrationDate field is set.
+   */
+  @java.lang.Override
+  public boolean hasRegistrationDate() {
+    return ((bitField0_ & 0x00000020) != 0);
+  }
+  /**
+   * <code>optional int64 registration_date = 6;</code>
+   * @return The registrationDate.
+   */
+  @java.lang.Override
+  public long getRegistrationDate() {
+    return registrationDate_;
+  }
+  /**
+   * <code>optional int64 registration_date = 6;</code>
+   * @param value The registrationDate to set.
+   */
+  private void setRegistrationDate(long value) {
+    bitField0_ |= 0x00000020;
+    registrationDate_ = value;
+  }
+  /**
+   * <code>optional int64 registration_date = 6;</code>
+   */
+  private void clearRegistrationDate() {
+    bitField0_ = (bitField0_ & ~0x00000020);
+    registrationDate_ = 0L;
+  }
+
+  public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 7;
+  private long lastUpdatedDate_;
+  /**
+   * <code>optional int64 last_updated_date = 7;</code>
+   * @return Whether the lastUpdatedDate field is set.
+   */
+  @java.lang.Override
+  public boolean hasLastUpdatedDate() {
+    return ((bitField0_ & 0x00000040) != 0);
+  }
+  /**
+   * <code>optional int64 last_updated_date = 7;</code>
+   * @return The lastUpdatedDate.
+   */
+  @java.lang.Override
+  public long getLastUpdatedDate() {
+    return lastUpdatedDate_;
+  }
+  /**
+   * <code>optional int64 last_updated_date = 7;</code>
+   * @param value The lastUpdatedDate to set.
+   */
+  private void setLastUpdatedDate(long value) {
+    bitField0_ |= 0x00000040;
+    lastUpdatedDate_ = value;
+  }
+  /**
+   * <code>optional int64 last_updated_date = 7;</code>
+   */
+  private void clearLastUpdatedDate() {
+    bitField0_ = (bitField0_ & ~0x00000040);
+    lastUpdatedDate_ = 0L;
+  }
+
+  public static final int ACTIVE_FIELD_NUMBER = 8;
+  private boolean active_;
+  /**
+   * <code>optional bool active = 8;</code>
+   * @return Whether the active field is set.
+   */
+  @java.lang.Override
+  public boolean hasActive() {
+    return ((bitField0_ & 0x00000080) != 0);
+  }
+  /**
+   * <code>optional bool active = 8;</code>
+   * @return The active.
+   */
+  @java.lang.Override
+  public boolean getActive() {
+    return active_;
+  }
+  /**
+   * <code>optional bool active = 8;</code>
+   * @param value The active to set.
+   */
+  private void setActive(boolean value) {
+    bitField0_ |= 0x00000080;
+    active_ = value;
+  }
+  /**
+   * <code>optional bool active = 8;</code>
+   */
+  private void clearActive() {
+    bitField0_ = (bitField0_ & ~0x00000080);
+    active_ = false;
   }
 
   public static im.turms.client.model.proto.model.user.UserInfo parseFrom(
@@ -541,79 +631,64 @@ public  final class UserInfo extends
     }
 
     /**
-     * <code>optional int64 registration_date = 4;</code>
-     * @return Whether the registrationDate field is set.
+     * <code>optional string profile_picture = 4;</code>
+     * @return Whether the profilePicture field is set.
      */
     @java.lang.Override
-    public boolean hasRegistrationDate() {
-      return instance.hasRegistrationDate();
+    public boolean hasProfilePicture() {
+      return instance.hasProfilePicture();
     }
     /**
-     * <code>optional int64 registration_date = 4;</code>
-     * @return The registrationDate.
+     * <code>optional string profile_picture = 4;</code>
+     * @return The profilePicture.
      */
     @java.lang.Override
-    public long getRegistrationDate() {
-      return instance.getRegistrationDate();
+    public java.lang.String getProfilePicture() {
+      return instance.getProfilePicture();
     }
     /**
-     * <code>optional int64 registration_date = 4;</code>
-     * @param value The registrationDate to set.
+     * <code>optional string profile_picture = 4;</code>
+     * @return The bytes for profilePicture.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getProfilePictureBytes() {
+      return instance.getProfilePictureBytes();
+    }
+    /**
+     * <code>optional string profile_picture = 4;</code>
+     * @param value The profilePicture to set.
      * @return This builder for chaining.
      */
-    public Builder setRegistrationDate(long value) {
+    public Builder setProfilePicture(
+        java.lang.String value) {
       copyOnWrite();
-      instance.setRegistrationDate(value);
+      instance.setProfilePicture(value);
       return this;
     }
     /**
-     * <code>optional int64 registration_date = 4;</code>
+     * <code>optional string profile_picture = 4;</code>
      * @return This builder for chaining.
      */
-    public Builder clearRegistrationDate() {
+    public Builder clearProfilePicture() {
       copyOnWrite();
-      instance.clearRegistrationDate();
-      return this;
-    }
-
-    /**
-     * <code>optional bool active = 5;</code>
-     * @return Whether the active field is set.
-     */
-    @java.lang.Override
-    public boolean hasActive() {
-      return instance.hasActive();
-    }
-    /**
-     * <code>optional bool active = 5;</code>
-     * @return The active.
-     */
-    @java.lang.Override
-    public boolean getActive() {
-      return instance.getActive();
-    }
-    /**
-     * <code>optional bool active = 5;</code>
-     * @param value The active to set.
-     * @return This builder for chaining.
-     */
-    public Builder setActive(boolean value) {
-      copyOnWrite();
-      instance.setActive(value);
+      instance.clearProfilePicture();
       return this;
     }
     /**
-     * <code>optional bool active = 5;</code>
+     * <code>optional string profile_picture = 4;</code>
+     * @param value The bytes for profilePicture to set.
      * @return This builder for chaining.
      */
-    public Builder clearActive() {
+    public Builder setProfilePictureBytes(
+        com.google.protobuf.ByteString value) {
       copyOnWrite();
-      instance.clearActive();
+      instance.setProfilePictureBytes(value);
       return this;
     }
 
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return Whether the profileAccessStrategy field is set.
      */
     @java.lang.Override
@@ -621,7 +696,7 @@ public  final class UserInfo extends
       return instance.hasProfileAccessStrategy();
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return The enum numeric value on the wire for profileAccessStrategy.
      */
     @java.lang.Override
@@ -629,7 +704,7 @@ public  final class UserInfo extends
       return instance.getProfileAccessStrategyValue();
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @param value The profileAccessStrategy to set.
      * @return This builder for chaining.
      */
@@ -639,7 +714,7 @@ public  final class UserInfo extends
       return this;
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return The profileAccessStrategy.
      */
     @java.lang.Override
@@ -647,7 +722,7 @@ public  final class UserInfo extends
       return instance.getProfileAccessStrategy();
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @param value The enum numeric value on the wire for profileAccessStrategy to set.
      * @return This builder for chaining.
      */
@@ -657,12 +732,120 @@ public  final class UserInfo extends
       return this;
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearProfileAccessStrategy() {
       copyOnWrite();
       instance.clearProfileAccessStrategy();
+      return this;
+    }
+
+    /**
+     * <code>optional int64 registration_date = 6;</code>
+     * @return Whether the registrationDate field is set.
+     */
+    @java.lang.Override
+    public boolean hasRegistrationDate() {
+      return instance.hasRegistrationDate();
+    }
+    /**
+     * <code>optional int64 registration_date = 6;</code>
+     * @return The registrationDate.
+     */
+    @java.lang.Override
+    public long getRegistrationDate() {
+      return instance.getRegistrationDate();
+    }
+    /**
+     * <code>optional int64 registration_date = 6;</code>
+     * @param value The registrationDate to set.
+     * @return This builder for chaining.
+     */
+    public Builder setRegistrationDate(long value) {
+      copyOnWrite();
+      instance.setRegistrationDate(value);
+      return this;
+    }
+    /**
+     * <code>optional int64 registration_date = 6;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearRegistrationDate() {
+      copyOnWrite();
+      instance.clearRegistrationDate();
+      return this;
+    }
+
+    /**
+     * <code>optional int64 last_updated_date = 7;</code>
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    @java.lang.Override
+    public boolean hasLastUpdatedDate() {
+      return instance.hasLastUpdatedDate();
+    }
+    /**
+     * <code>optional int64 last_updated_date = 7;</code>
+     * @return The lastUpdatedDate.
+     */
+    @java.lang.Override
+    public long getLastUpdatedDate() {
+      return instance.getLastUpdatedDate();
+    }
+    /**
+     * <code>optional int64 last_updated_date = 7;</code>
+     * @param value The lastUpdatedDate to set.
+     * @return This builder for chaining.
+     */
+    public Builder setLastUpdatedDate(long value) {
+      copyOnWrite();
+      instance.setLastUpdatedDate(value);
+      return this;
+    }
+    /**
+     * <code>optional int64 last_updated_date = 7;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearLastUpdatedDate() {
+      copyOnWrite();
+      instance.clearLastUpdatedDate();
+      return this;
+    }
+
+    /**
+     * <code>optional bool active = 8;</code>
+     * @return Whether the active field is set.
+     */
+    @java.lang.Override
+    public boolean hasActive() {
+      return instance.hasActive();
+    }
+    /**
+     * <code>optional bool active = 8;</code>
+     * @return The active.
+     */
+    @java.lang.Override
+    public boolean getActive() {
+      return instance.getActive();
+    }
+    /**
+     * <code>optional bool active = 8;</code>
+     * @param value The active to set.
+     * @return This builder for chaining.
+     */
+    public Builder setActive(boolean value) {
+      copyOnWrite();
+      instance.setActive(value);
+      return this;
+    }
+    /**
+     * <code>optional bool active = 8;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearActive() {
+      copyOnWrite();
+      instance.clearActive();
       return this;
     }
 
@@ -686,14 +869,16 @@ public  final class UserInfo extends
             "id_",
             "name_",
             "intro_",
-            "registrationDate_",
-            "active_",
+            "profilePicture_",
             "profileAccessStrategy_",
+            "registrationDate_",
+            "lastUpdatedDate_",
+            "active_",
           };
           java.lang.String info =
-              "\u0000\u0006\u0000\u0001\u0001\u0006\u0006\u0000\u0000\u0000\u0001\u1002\u0000\u0002" +
-              "\u1208\u0001\u0003\u1208\u0002\u0004\u1002\u0003\u0005\u1007\u0004\u0006\u100c\u0005" +
-              "";
+              "\u0000\b\u0000\u0001\u0001\b\b\u0000\u0000\u0000\u0001\u1002\u0000\u0002\u1208\u0001" +
+              "\u0003\u1208\u0002\u0004\u1208\u0003\u0005\u100c\u0004\u0006\u1002\u0005\u0007\u1002" +
+              "\u0006\b\u1007\u0007";
           return newMessageInfo(DEFAULT_INSTANCE, info, objects);
       }
       // fall through

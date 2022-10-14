@@ -32,6 +32,7 @@ public  final class UpdateUserRequest extends
     password_ = "";
     name_ = "";
     intro_ = "";
+    profilePicture_ = "";
   }
   private int bitField0_;
   public static final int PASSWORD_FIELD_NUMBER = 1;
@@ -199,18 +200,73 @@ public  final class UpdateUserRequest extends
     bitField0_ |= 0x00000004;
   }
 
-  public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 4;
+  public static final int PROFILE_PICTURE_FIELD_NUMBER = 4;
+  private java.lang.String profilePicture_;
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   * @return Whether the profilePicture field is set.
+   */
+  @java.lang.Override
+  public boolean hasProfilePicture() {
+    return ((bitField0_ & 0x00000008) != 0);
+  }
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   * @return The profilePicture.
+   */
+  @java.lang.Override
+  public java.lang.String getProfilePicture() {
+    return profilePicture_;
+  }
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   * @return The bytes for profilePicture.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getProfilePictureBytes() {
+    return com.google.protobuf.ByteString.copyFromUtf8(profilePicture_);
+  }
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   * @param value The profilePicture to set.
+   */
+  private void setProfilePicture(
+      java.lang.String value) {
+    java.lang.Class<?> valueClass = value.getClass();
+  bitField0_ |= 0x00000008;
+    profilePicture_ = value;
+  }
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   */
+  private void clearProfilePicture() {
+    bitField0_ = (bitField0_ & ~0x00000008);
+    profilePicture_ = getDefaultInstance().getProfilePicture();
+  }
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   * @param value The bytes for profilePicture to set.
+   */
+  private void setProfilePictureBytes(
+      com.google.protobuf.ByteString value) {
+    checkByteStringIsUtf8(value);
+    profilePicture_ = value.toStringUtf8();
+    bitField0_ |= 0x00000008;
+  }
+
+  public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 5;
   private int profileAccessStrategy_;
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @return Whether the profileAccessStrategy field is set.
    */
   @java.lang.Override
   public boolean hasProfileAccessStrategy() {
-    return ((bitField0_ & 0x00000008) != 0);
+    return ((bitField0_ & 0x00000010) != 0);
   }
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.
    */
   @java.lang.Override
@@ -218,7 +274,7 @@ public  final class UpdateUserRequest extends
     return profileAccessStrategy_;
   }
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @return The profileAccessStrategy.
    */
   @java.lang.Override
@@ -227,25 +283,25 @@ public  final class UpdateUserRequest extends
     return result == null ? im.turms.client.model.proto.constant.ProfileAccessStrategy.UNRECOGNIZED : result;
   }
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @param value The enum numeric value on the wire for profileAccessStrategy to set.
    */
   private void setProfileAccessStrategyValue(int value) {
-    bitField0_ |= 0x00000008;  profileAccessStrategy_ = value;
+    bitField0_ |= 0x00000010;  profileAccessStrategy_ = value;
   }
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @param value The profileAccessStrategy to set.
    */
   private void setProfileAccessStrategy(im.turms.client.model.proto.constant.ProfileAccessStrategy value) {
     profileAccessStrategy_ = value.getNumber();
-    bitField0_ |= 0x00000008;
+    bitField0_ |= 0x00000010;
   }
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    */
   private void clearProfileAccessStrategy() {
-    bitField0_ = (bitField0_ & ~0x00000008);
+    bitField0_ = (bitField0_ & ~0x00000010);
     profileAccessStrategy_ = 0;
   }
 
@@ -516,7 +572,64 @@ public  final class UpdateUserRequest extends
     }
 
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional string profile_picture = 4;</code>
+     * @return Whether the profilePicture field is set.
+     */
+    @java.lang.Override
+    public boolean hasProfilePicture() {
+      return instance.hasProfilePicture();
+    }
+    /**
+     * <code>optional string profile_picture = 4;</code>
+     * @return The profilePicture.
+     */
+    @java.lang.Override
+    public java.lang.String getProfilePicture() {
+      return instance.getProfilePicture();
+    }
+    /**
+     * <code>optional string profile_picture = 4;</code>
+     * @return The bytes for profilePicture.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getProfilePictureBytes() {
+      return instance.getProfilePictureBytes();
+    }
+    /**
+     * <code>optional string profile_picture = 4;</code>
+     * @param value The profilePicture to set.
+     * @return This builder for chaining.
+     */
+    public Builder setProfilePicture(
+        java.lang.String value) {
+      copyOnWrite();
+      instance.setProfilePicture(value);
+      return this;
+    }
+    /**
+     * <code>optional string profile_picture = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearProfilePicture() {
+      copyOnWrite();
+      instance.clearProfilePicture();
+      return this;
+    }
+    /**
+     * <code>optional string profile_picture = 4;</code>
+     * @param value The bytes for profilePicture to set.
+     * @return This builder for chaining.
+     */
+    public Builder setProfilePictureBytes(
+        com.google.protobuf.ByteString value) {
+      copyOnWrite();
+      instance.setProfilePictureBytes(value);
+      return this;
+    }
+
+    /**
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return Whether the profileAccessStrategy field is set.
      */
     @java.lang.Override
@@ -524,7 +637,7 @@ public  final class UpdateUserRequest extends
       return instance.hasProfileAccessStrategy();
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return The enum numeric value on the wire for profileAccessStrategy.
      */
     @java.lang.Override
@@ -532,7 +645,7 @@ public  final class UpdateUserRequest extends
       return instance.getProfileAccessStrategyValue();
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @param value The profileAccessStrategy to set.
      * @return This builder for chaining.
      */
@@ -542,7 +655,7 @@ public  final class UpdateUserRequest extends
       return this;
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return The profileAccessStrategy.
      */
     @java.lang.Override
@@ -550,7 +663,7 @@ public  final class UpdateUserRequest extends
       return instance.getProfileAccessStrategy();
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @param value The enum numeric value on the wire for profileAccessStrategy to set.
      * @return This builder for chaining.
      */
@@ -560,7 +673,7 @@ public  final class UpdateUserRequest extends
       return this;
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearProfileAccessStrategy() {
@@ -589,11 +702,12 @@ public  final class UpdateUserRequest extends
             "password_",
             "name_",
             "intro_",
+            "profilePicture_",
             "profileAccessStrategy_",
           };
           java.lang.String info =
-              "\u0000\u0004\u0000\u0001\u0001\u0004\u0004\u0000\u0000\u0000\u0001\u1208\u0000\u0002" +
-              "\u1208\u0001\u0003\u1208\u0002\u0004\u100c\u0003";
+              "\u0000\u0005\u0000\u0001\u0001\u0005\u0005\u0000\u0000\u0000\u0001\u1208\u0000\u0002" +
+              "\u1208\u0001\u0003\u1208\u0002\u0004\u1208\u0003\u0005\u100c\u0004";
           return newMessageInfo(DEFAULT_INSTANCE, info, objects);
       }
       // fall through

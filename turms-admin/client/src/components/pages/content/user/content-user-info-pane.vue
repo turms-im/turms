@@ -86,6 +86,10 @@ export default {
                             rows: 4
                         },
                         {
+                            id: 'profilePicture',
+                            type: 'INPUT'
+                        },
+                        {
                             id: 'permissionGroupId',
                             type: 'INPUT',
                             rules: this.$validator.create({onlyNumber: true})
@@ -158,6 +162,10 @@ export default {
                             rows: 4
                         },
                         {
+                            id: 'profilePicture',
+                            type: 'INPUT'
+                        },
+                        {
                             id: 'permissionGroupId',
                             type: 'INPUT',
                             rules: this.$validator.create({onlyNumber: true})
@@ -210,7 +218,7 @@ export default {
                     {
                         title: 'userId',
                         key: 'id',
-                        width: '12.5%'
+                        width: '10%'
                     },
                     {
                         key: 'password',
@@ -219,11 +227,15 @@ export default {
                     {
                         title: 'username',
                         key: 'name',
-                        width: '10%'
+                        width: '7.5%'
                     },
                     {
                         key: 'intro',
                         width: '10%'
+                    },
+                    {
+                        id: 'profilePicture',
+                        width: '7.5%'
                     },
                     {
                         key: 'profileAccessStrategy',
@@ -231,7 +243,7 @@ export default {
                     },
                     {
                         key: 'permissionGroupId',
-                        width: '10%'
+                        width: '7.5%'
                     },
                     {
                         key: 'registrationDate',

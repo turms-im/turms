@@ -36,6 +36,7 @@ private static final long serialVersionUID = 0L;
     password_ = "";
     name_ = "";
     intro_ = "";
+    profilePicture_ = "";
     profileAccessStrategy_ = 0;
   }
 
@@ -203,24 +204,70 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 4;
-  private int profileAccessStrategy_;
+  public static final int PROFILE_PICTURE_FIELD_NUMBER = 4;
+  private volatile java.lang.Object profilePicture_;
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
-   * @return Whether the profileAccessStrategy field is set.
+   * <code>optional string profile_picture = 4;</code>
+   * @return Whether the profilePicture field is set.
    */
-  @java.lang.Override public boolean hasProfileAccessStrategy() {
+  @java.lang.Override
+  public boolean hasProfilePicture() {
     return ((bitField0_ & 0x00000008) != 0);
   }
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional string profile_picture = 4;</code>
+   * @return The profilePicture.
+   */
+  @java.lang.Override
+  public java.lang.String getProfilePicture() {
+    java.lang.Object ref = profilePicture_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs =
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      profilePicture_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>optional string profile_picture = 4;</code>
+   * @return The bytes for profilePicture.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getProfilePictureBytes() {
+    java.lang.Object ref = profilePicture_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      profilePicture_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 5;
+  private int profileAccessStrategy_;
+  /**
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+   * @return Whether the profileAccessStrategy field is set.
+   */
+  @java.lang.Override public boolean hasProfileAccessStrategy() {
+    return ((bitField0_ & 0x00000010) != 0);
+  }
+  /**
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.
    */
   @java.lang.Override public int getProfileAccessStrategyValue() {
     return profileAccessStrategy_;
   }
   /**
-   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
    * @return The profileAccessStrategy.
    */
   @java.lang.Override public im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy getProfileAccessStrategy() {
@@ -253,7 +300,10 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, intro_);
     }
     if (((bitField0_ & 0x00000008) != 0)) {
-      output.writeEnum(4, profileAccessStrategy_);
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, profilePicture_);
+    }
+    if (((bitField0_ & 0x00000010) != 0)) {
+      output.writeEnum(5, profileAccessStrategy_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -274,8 +324,11 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, intro_);
     }
     if (((bitField0_ & 0x00000008) != 0)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, profilePicture_);
+    }
+    if (((bitField0_ & 0x00000010) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(4, profileAccessStrategy_);
+        .computeEnumSize(5, profileAccessStrategy_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -307,6 +360,11 @@ private static final long serialVersionUID = 0L;
       if (!getIntro()
           .equals(other.getIntro())) return false;
     }
+    if (hasProfilePicture() != other.hasProfilePicture()) return false;
+    if (hasProfilePicture()) {
+      if (!getProfilePicture()
+          .equals(other.getProfilePicture())) return false;
+    }
     if (hasProfileAccessStrategy() != other.hasProfileAccessStrategy()) return false;
     if (hasProfileAccessStrategy()) {
       if (profileAccessStrategy_ != other.profileAccessStrategy_) return false;
@@ -333,6 +391,10 @@ private static final long serialVersionUID = 0L;
     if (hasIntro()) {
       hash = (37 * hash) + INTRO_FIELD_NUMBER;
       hash = (53 * hash) + getIntro().hashCode();
+    }
+    if (hasProfilePicture()) {
+      hash = (37 * hash) + PROFILE_PICTURE_FIELD_NUMBER;
+      hash = (53 * hash) + getProfilePicture().hashCode();
     }
     if (hasProfileAccessStrategy()) {
       hash = (37 * hash) + PROFILE_ACCESS_STRATEGY_FIELD_NUMBER;
@@ -472,8 +534,10 @@ private static final long serialVersionUID = 0L;
       bitField0_ = (bitField0_ & ~0x00000002);
       intro_ = "";
       bitField0_ = (bitField0_ & ~0x00000004);
-      profileAccessStrategy_ = 0;
+      profilePicture_ = "";
       bitField0_ = (bitField0_ & ~0x00000008);
+      profileAccessStrategy_ = 0;
+      bitField0_ = (bitField0_ & ~0x00000010);
       return this;
     }
 
@@ -516,6 +580,10 @@ private static final long serialVersionUID = 0L;
       result.intro_ = intro_;
       if (((from_bitField0_ & 0x00000008) != 0)) {
         to_bitField0_ |= 0x00000008;
+      }
+      result.profilePicture_ = profilePicture_;
+      if (((from_bitField0_ & 0x00000010) != 0)) {
+        to_bitField0_ |= 0x00000010;
       }
       result.profileAccessStrategy_ = profileAccessStrategy_;
       result.bitField0_ = to_bitField0_;
@@ -582,6 +650,11 @@ private static final long serialVersionUID = 0L;
         intro_ = other.intro_;
         onChanged();
       }
+      if (other.hasProfilePicture()) {
+        bitField0_ |= 0x00000008;
+        profilePicture_ = other.profilePicture_;
+        onChanged();
+      }
       if (other.hasProfileAccessStrategy()) {
         setProfileAccessStrategy(other.getProfileAccessStrategy());
       }
@@ -626,11 +699,16 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000004;
               break;
             } // case 26
-            case 32: {
-              profileAccessStrategy_ = input.readEnum();
+            case 34: {
+              profilePicture_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000008;
               break;
-            } // case 32
+            } // case 34
+            case 40: {
+              profileAccessStrategy_ = input.readEnum();
+              bitField0_ |= 0x00000010;
+              break;
+            } // case 40
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -897,34 +975,117 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int profileAccessStrategy_ = 0;
+    private java.lang.Object profilePicture_ = "";
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
-     * @return Whether the profileAccessStrategy field is set.
+     * <code>optional string profile_picture = 4;</code>
+     * @return Whether the profilePicture field is set.
      */
-    @java.lang.Override public boolean hasProfileAccessStrategy() {
+    public boolean hasProfilePicture() {
       return ((bitField0_ & 0x00000008) != 0);
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional string profile_picture = 4;</code>
+     * @return The profilePicture.
+     */
+    public java.lang.String getProfilePicture() {
+      java.lang.Object ref = profilePicture_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        profilePicture_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>optional string profile_picture = 4;</code>
+     * @return The bytes for profilePicture.
+     */
+    public com.google.protobuf.ByteString
+        getProfilePictureBytes() {
+      java.lang.Object ref = profilePicture_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        profilePicture_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>optional string profile_picture = 4;</code>
+     * @param value The profilePicture to set.
+     * @return This builder for chaining.
+     */
+    public Builder setProfilePicture(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+      profilePicture_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional string profile_picture = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearProfilePicture() {
+      bitField0_ = (bitField0_ & ~0x00000008);
+      profilePicture_ = getDefaultInstance().getProfilePicture();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional string profile_picture = 4;</code>
+     * @param value The bytes for profilePicture to set.
+     * @return This builder for chaining.
+     */
+    public Builder setProfilePictureBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      bitField0_ |= 0x00000008;
+      profilePicture_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int profileAccessStrategy_ = 0;
+    /**
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+     * @return Whether the profileAccessStrategy field is set.
+     */
+    @java.lang.Override public boolean hasProfileAccessStrategy() {
+      return ((bitField0_ & 0x00000010) != 0);
+    }
+    /**
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return The enum numeric value on the wire for profileAccessStrategy.
      */
     @java.lang.Override public int getProfileAccessStrategyValue() {
       return profileAccessStrategy_;
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @param value The enum numeric value on the wire for profileAccessStrategy to set.
      * @return This builder for chaining.
      */
     public Builder setProfileAccessStrategyValue(int value) {
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000010;
       profileAccessStrategy_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return The profileAccessStrategy.
      */
     @java.lang.Override
@@ -934,7 +1095,7 @@ private static final long serialVersionUID = 0L;
       return result == null ? im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy.UNRECOGNIZED : result;
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @param value The profileAccessStrategy to set.
      * @return This builder for chaining.
      */
@@ -942,17 +1103,17 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
         throw new NullPointerException();
       }
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000010;
       profileAccessStrategy_ = value.getNumber();
       onChanged();
       return this;
     }
     /**
-     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearProfileAccessStrategy() {
-      bitField0_ = (bitField0_ & ~0x00000008);
+      bitField0_ = (bitField0_ & ~0x00000010);
       profileAccessStrategy_ = 0;
       onChanged();
       return this;

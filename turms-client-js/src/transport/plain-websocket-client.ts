@@ -8,11 +8,11 @@ export default class PlainWebSocketClient extends WebSocketClient {
 
     constructor(url: string, listener: EventListener) {
         super(url, listener);
-        const connectStart = new Date().getTime();
+        const connectStart = Date.now();
         const ws = new WebSocket(url);
         ws.binaryType = 'arraybuffer';
         ws.onopen = (): void => {
-            this._metrics.connectTime = new Date().getTime() - connectStart;
+            this._metrics.connectTime = Date.now() - connectStart;
             this.notifyOnOpen();
         };
         // onClose will always be triggered with a CloseEvent instance when

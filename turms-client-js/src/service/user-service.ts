@@ -327,10 +327,12 @@ export default class UserService {
     updateProfile({
         name,
         intro,
+        profilePicture,
         profileAccessStrategy
     }: {
         name?: string,
         intro?: string,
+        profilePicture?: string,
         profileAccessStrategy?: string | ProfileAccessStrategy
     }): Promise<Response<void>> {
         if (Validator.areAllFalsy(name, intro, profileAccessStrategy)) {
@@ -346,6 +348,7 @@ export default class UserService {
             updateUserRequest: {
                 name,
                 intro,
+                profilePicture,
                 profileAccessStrategy
             }
         }).then(n => Response.fromNotification(n));

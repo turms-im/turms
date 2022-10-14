@@ -16,7 +16,8 @@ class UpdateUserRequest extends $pb.GeneratedMessage {
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'password')
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
     ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'intro')
-    ..e<$0.ProfileAccessStrategy>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'profileAccessStrategy', $pb.PbFieldType.OE, defaultOrMaker: $0.ProfileAccessStrategy.ALL, valueOf: $0.ProfileAccessStrategy.valueOf, enumValues: $0.ProfileAccessStrategy.values)
+    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'profilePicture')
+    ..e<$0.ProfileAccessStrategy>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'profileAccessStrategy', $pb.PbFieldType.OE, defaultOrMaker: $0.ProfileAccessStrategy.ALL, valueOf: $0.ProfileAccessStrategy.valueOf, enumValues: $0.ProfileAccessStrategy.values)
     ..hasRequiredFields = false
   ;
 
@@ -25,6 +26,7 @@ class UpdateUserRequest extends $pb.GeneratedMessage {
     $core.String? password,
     $core.String? name,
     $core.String? intro,
+    $core.String? profilePicture,
     $0.ProfileAccessStrategy? profileAccessStrategy,
   }) {
     final _result = create();
@@ -36,6 +38,9 @@ class UpdateUserRequest extends $pb.GeneratedMessage {
     }
     if (intro != null) {
       _result.intro = intro;
+    }
+    if (profilePicture != null) {
+      _result.profilePicture = profilePicture;
     }
     if (profileAccessStrategy != null) {
       _result.profileAccessStrategy = profileAccessStrategy;
@@ -91,12 +96,21 @@ class UpdateUserRequest extends $pb.GeneratedMessage {
   void clearIntro() => clearField(3);
 
   @$pb.TagNumber(4)
-  $0.ProfileAccessStrategy get profileAccessStrategy => $_getN(3);
+  $core.String get profilePicture => $_getSZ(3);
   @$pb.TagNumber(4)
-  set profileAccessStrategy($0.ProfileAccessStrategy v) { setField(4, v); }
+  set profilePicture($core.String v) { $_setString(3, v); }
   @$pb.TagNumber(4)
-  $core.bool hasProfileAccessStrategy() => $_has(3);
+  $core.bool hasProfilePicture() => $_has(3);
   @$pb.TagNumber(4)
-  void clearProfileAccessStrategy() => clearField(4);
+  void clearProfilePicture() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $0.ProfileAccessStrategy get profileAccessStrategy => $_getN(4);
+  @$pb.TagNumber(5)
+  set profileAccessStrategy($0.ProfileAccessStrategy v) { setField(5, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasProfileAccessStrategy() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearProfileAccessStrategy() => clearField(5);
 }
 

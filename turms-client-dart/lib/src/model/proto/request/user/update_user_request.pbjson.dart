@@ -15,15 +15,17 @@ const UpdateUserRequest$json = const {
     const {'1': 'password', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'password', '17': true},
     const {'1': 'name', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'name', '17': true},
     const {'1': 'intro', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'intro', '17': true},
-    const {'1': 'profile_access_strategy', '3': 4, '4': 1, '5': 14, '6': '.im.turms.proto.ProfileAccessStrategy', '9': 3, '10': 'profileAccessStrategy', '17': true},
+    const {'1': 'profile_picture', '3': 4, '4': 1, '5': 9, '9': 3, '10': 'profilePicture', '17': true},
+    const {'1': 'profile_access_strategy', '3': 5, '4': 1, '5': 14, '6': '.im.turms.proto.ProfileAccessStrategy', '9': 4, '10': 'profileAccessStrategy', '17': true},
   ],
   '8': const [
     const {'1': '_password'},
     const {'1': '_name'},
     const {'1': '_intro'},
+    const {'1': '_profile_picture'},
     const {'1': '_profile_access_strategy'},
   ],
 };
 
 /// Descriptor for `UpdateUserRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updateUserRequestDescriptor = $convert.base64Decode('ChFVcGRhdGVVc2VyUmVxdWVzdBIfCghwYXNzd29yZBgBIAEoCUgAUghwYXNzd29yZIgBARIXCgRuYW1lGAIgASgJSAFSBG5hbWWIAQESGQoFaW50cm8YAyABKAlIAlIFaW50cm+IAQESYgoXcHJvZmlsZV9hY2Nlc3Nfc3RyYXRlZ3kYBCABKA4yJS5pbS50dXJtcy5wcm90by5Qcm9maWxlQWNjZXNzU3RyYXRlZ3lIA1IVcHJvZmlsZUFjY2Vzc1N0cmF0ZWd5iAEBQgsKCV9wYXNzd29yZEIHCgVfbmFtZUIICgZfaW50cm9CGgoYX3Byb2ZpbGVfYWNjZXNzX3N0cmF0ZWd5');
+final $typed_data.Uint8List updateUserRequestDescriptor = $convert.base64Decode('ChFVcGRhdGVVc2VyUmVxdWVzdBIfCghwYXNzd29yZBgBIAEoCUgAUghwYXNzd29yZIgBARIXCgRuYW1lGAIgASgJSAFSBG5hbWWIAQESGQoFaW50cm8YAyABKAlIAlIFaW50cm+IAQESLAoPcHJvZmlsZV9waWN0dXJlGAQgASgJSANSDnByb2ZpbGVQaWN0dXJliAEBEmIKF3Byb2ZpbGVfYWNjZXNzX3N0cmF0ZWd5GAUgASgOMiUuaW0udHVybXMucHJvdG8uUHJvZmlsZUFjY2Vzc1N0cmF0ZWd5SARSFXByb2ZpbGVBY2Nlc3NTdHJhdGVneYgBAUILCglfcGFzc3dvcmRCBwoFX25hbWVCCAoGX2ludHJvQhIKEF9wcm9maWxlX3BpY3R1cmVCGgoYX3Byb2ZpbGVfYWNjZXNzX3N0cmF0ZWd5');

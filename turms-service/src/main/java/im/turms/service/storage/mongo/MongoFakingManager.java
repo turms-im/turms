@@ -338,8 +338,9 @@ public final class MongoFakingManager {
             User user = new User(
                     (long) i,
                     passwordManager.encodeUserPassword("123"),
-                    "user-name",
-                    "user-intro",
+                    "my-name",
+                    "my-intro",
+                    "my-avatar-id",
                     ProfileAccessStrategy.ALL,
                     DEFAULT_USER_PERMISSION_GROUP_ID,
                     userDate,

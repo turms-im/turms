@@ -47,14 +47,15 @@ public final class UpdateUserRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n&request/user/update_user_request.proto" +
       "\022\016im.turms.proto\032&constant/profile_acces" +
-      "s_strategy.proto\"\332\001\n\021UpdateUserRequest\022\025" +
+      "s_strategy.proto\"\214\002\n\021UpdateUserRequest\022\025" +
       "\n\010password\030\001 \001(\tH\000\210\001\001\022\021\n\004name\030\002 \001(\tH\001\210\001\001" +
-      "\022\022\n\005intro\030\003 \001(\tH\002\210\001\001\022K\n\027profile_access_s" +
-      "trategy\030\004 \001(\0162%.im.turms.proto.ProfileAc" +
-      "cessStrategyH\003\210\001\001B\013\n\t_passwordB\007\n\005_nameB" +
-      "\010\n\006_introB\032\n\030_profile_access_strategyB<\n" +
-      "5im.turms.server.common.access.client.dt" +
-      "o.request.userP\001\272\002\000b\006proto3"
+      "\022\022\n\005intro\030\003 \001(\tH\002\210\001\001\022\034\n\017profile_picture\030" +
+      "\004 \001(\tH\003\210\001\001\022K\n\027profile_access_strategy\030\005 " +
+      "\001(\0162%.im.turms.proto.ProfileAccessStrate" +
+      "gyH\004\210\001\001B\013\n\t_passwordB\007\n\005_nameB\010\n\006_introB" +
+      "\022\n\020_profile_pictureB\032\n\030_profile_access_s" +
+      "trategyB<\n5im.turms.server.common.access" +
+      ".client.dto.request.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -66,7 +67,7 @@ public final class UpdateUserRequestOuterClass {
     internal_static_im_turms_proto_UpdateUserRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateUserRequest_descriptor,
-        new java.lang.String[] { "Password", "Name", "Intro", "ProfileAccessStrategy", "Password", "Name", "Intro", "ProfileAccessStrategy", });
+        new java.lang.String[] { "Password", "Name", "Intro", "ProfilePicture", "ProfileAccessStrategy", "Password", "Name", "Intro", "ProfilePicture", "ProfileAccessStrategy", });
     im.turms.server.common.access.client.dto.constant.ProfileAccessStrategyOuterClass.getDescriptor();
   }
 

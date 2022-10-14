@@ -17,9 +17,11 @@ class UserInfo extends $pb.GeneratedMessage {
     ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
     ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'intro')
-    ..aInt64(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'registrationDate')
-    ..aOB(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'active')
-    ..e<$0.ProfileAccessStrategy>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'profileAccessStrategy', $pb.PbFieldType.OE, defaultOrMaker: $0.ProfileAccessStrategy.ALL, valueOf: $0.ProfileAccessStrategy.valueOf, enumValues: $0.ProfileAccessStrategy.values)
+    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'profilePicture')
+    ..e<$0.ProfileAccessStrategy>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'profileAccessStrategy', $pb.PbFieldType.OE, defaultOrMaker: $0.ProfileAccessStrategy.ALL, valueOf: $0.ProfileAccessStrategy.valueOf, enumValues: $0.ProfileAccessStrategy.values)
+    ..aInt64(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'registrationDate')
+    ..aInt64(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdatedDate')
+    ..aOB(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'active')
     ..hasRequiredFields = false
   ;
 
@@ -28,9 +30,11 @@ class UserInfo extends $pb.GeneratedMessage {
     $fixnum.Int64? id,
     $core.String? name,
     $core.String? intro,
-    $fixnum.Int64? registrationDate,
-    $core.bool? active,
+    $core.String? profilePicture,
     $0.ProfileAccessStrategy? profileAccessStrategy,
+    $fixnum.Int64? registrationDate,
+    $fixnum.Int64? lastUpdatedDate,
+    $core.bool? active,
   }) {
     final _result = create();
     if (id != null) {
@@ -42,14 +46,20 @@ class UserInfo extends $pb.GeneratedMessage {
     if (intro != null) {
       _result.intro = intro;
     }
-    if (registrationDate != null) {
-      _result.registrationDate = registrationDate;
-    }
-    if (active != null) {
-      _result.active = active;
+    if (profilePicture != null) {
+      _result.profilePicture = profilePicture;
     }
     if (profileAccessStrategy != null) {
       _result.profileAccessStrategy = profileAccessStrategy;
+    }
+    if (registrationDate != null) {
+      _result.registrationDate = registrationDate;
+    }
+    if (lastUpdatedDate != null) {
+      _result.lastUpdatedDate = lastUpdatedDate;
+    }
+    if (active != null) {
+      _result.active = active;
     }
     return _result;
   }
@@ -102,30 +112,48 @@ class UserInfo extends $pb.GeneratedMessage {
   void clearIntro() => clearField(3);
 
   @$pb.TagNumber(4)
-  $fixnum.Int64 get registrationDate => $_getI64(3);
+  $core.String get profilePicture => $_getSZ(3);
   @$pb.TagNumber(4)
-  set registrationDate($fixnum.Int64 v) { $_setInt64(3, v); }
+  set profilePicture($core.String v) { $_setString(3, v); }
   @$pb.TagNumber(4)
-  $core.bool hasRegistrationDate() => $_has(3);
+  $core.bool hasProfilePicture() => $_has(3);
   @$pb.TagNumber(4)
-  void clearRegistrationDate() => clearField(4);
+  void clearProfilePicture() => clearField(4);
 
   @$pb.TagNumber(5)
-  $core.bool get active => $_getBF(4);
+  $0.ProfileAccessStrategy get profileAccessStrategy => $_getN(4);
   @$pb.TagNumber(5)
-  set active($core.bool v) { $_setBool(4, v); }
+  set profileAccessStrategy($0.ProfileAccessStrategy v) { setField(5, v); }
   @$pb.TagNumber(5)
-  $core.bool hasActive() => $_has(4);
+  $core.bool hasProfileAccessStrategy() => $_has(4);
   @$pb.TagNumber(5)
-  void clearActive() => clearField(5);
+  void clearProfileAccessStrategy() => clearField(5);
 
   @$pb.TagNumber(6)
-  $0.ProfileAccessStrategy get profileAccessStrategy => $_getN(5);
+  $fixnum.Int64 get registrationDate => $_getI64(5);
   @$pb.TagNumber(6)
-  set profileAccessStrategy($0.ProfileAccessStrategy v) { setField(6, v); }
+  set registrationDate($fixnum.Int64 v) { $_setInt64(5, v); }
   @$pb.TagNumber(6)
-  $core.bool hasProfileAccessStrategy() => $_has(5);
+  $core.bool hasRegistrationDate() => $_has(5);
   @$pb.TagNumber(6)
-  void clearProfileAccessStrategy() => clearField(6);
+  void clearRegistrationDate() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $fixnum.Int64 get lastUpdatedDate => $_getI64(6);
+  @$pb.TagNumber(7)
+  set lastUpdatedDate($fixnum.Int64 v) { $_setInt64(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasLastUpdatedDate() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearLastUpdatedDate() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.bool get active => $_getBF(7);
+  @$pb.TagNumber(8)
+  set active($core.bool v) { $_setBool(7, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasActive() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearActive() => clearField(8);
 }
 

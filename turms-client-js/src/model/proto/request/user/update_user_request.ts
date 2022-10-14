@@ -8,11 +8,18 @@ export interface UpdateUserRequest {
   password?: string | undefined;
   name?: string | undefined;
   intro?: string | undefined;
+  profilePicture?: string | undefined;
   profileAccessStrategy?: ProfileAccessStrategy | undefined;
 }
 
 function createBaseUpdateUserRequest(): UpdateUserRequest {
-  return { password: undefined, name: undefined, intro: undefined, profileAccessStrategy: undefined };
+  return {
+    password: undefined,
+    name: undefined,
+    intro: undefined,
+    profilePicture: undefined,
+    profileAccessStrategy: undefined,
+  };
 }
 
 export const UpdateUserRequest = {
@@ -26,8 +33,11 @@ export const UpdateUserRequest = {
     if (message.intro !== undefined) {
       writer.uint32(26).string(message.intro);
     }
+    if (message.profilePicture !== undefined) {
+      writer.uint32(34).string(message.profilePicture);
+    }
     if (message.profileAccessStrategy !== undefined) {
-      writer.uint32(32).int32(message.profileAccessStrategy);
+      writer.uint32(40).int32(message.profileAccessStrategy);
     }
     return writer;
   },
@@ -49,6 +59,9 @@ export const UpdateUserRequest = {
           message.intro = reader.string();
           break;
         case 4:
+          message.profilePicture = reader.string();
+          break;
+        case 5:
           message.profileAccessStrategy = reader.int32() as any;
           break;
         default:

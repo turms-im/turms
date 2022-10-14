@@ -101,7 +101,7 @@ class TurmsDriver {
     final fieldInfo = request.info_.byName[fieldName];
     if (fieldInfo == null) {
       throw ArgumentError(
-          'Cannot find the request type: ${message.info_.messageName}');
+          'Cannot find the request type: $name');
     }
     request.setField(fieldInfo.tagNumber, message);
     final notification = await _messageService.sendRequest(request);
