@@ -42,6 +42,7 @@ import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.service.domain.common.validation.DataValidator;
 import im.turms.service.domain.group.bo.GroupQuestionIdAndAnswer;
+import im.turms.service.domain.group.bo.NewGroupQuestion;
 import im.turms.service.domain.group.po.GroupJoinQuestion;
 import im.turms.service.domain.group.repository.GroupQuestionRepository;
 import im.turms.service.infra.proto.ProtoModelConvertor;
@@ -174,7 +175,7 @@ public class GroupQuestionService {
                 .flatMap(groupId -> groupBlocklistService.isBlocked(groupId, requesterId)
                         .flatMap(isBlocked -> isBlocked
                                 ? Mono.error(ResponseException.get(ResponseStatusCode.GROUP_QUESTION_ANSWERER_HAS_BEEN_BLOCKED))
-                                : groupMemberService.isGroupMember(groupId, requesterId))
+                                : groupMemberService.isGroupMember(groupId, requesterId, false))
                         .flatMap(isGroupMember -> isGroupMember
                                 ? Mono.error(ResponseException.get(ResponseStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION))
                                 : groupService.isGroupActiveAndNotDeleted(groupId))
@@ -201,57 +202,66 @@ public class GroupQuestionService {
                                         .build())));
     }
 
-    public Mono<GroupJoinQuestion> authAndCreateGroupJoinQuestion(
+    public Mono<List<GroupJoinQuestion>> authAndCreateGroupJoinQuestions(
             @NotNull Long requesterId,
             @NotNull Long groupId,
-            @NotNull String question,
-            @NotEmpty Set<String> answers,
-            @NotNull @Min(0) Integer score) {
+            @NotNull List<NewGroupQuestion> questions) {
         try {
-            Validator.notNull(question, "question");
-            Validator.notEmpty(answers, "answers");
-            Validator.notNull(score, "score");
-            Validator.min(score, "score", 0);
+            Validator.notNull(questions, "questions");
+            for (NewGroupQuestion question : questions) {
+                DataValidator.validNewGroupQuestion(question);
+            }
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return groupMemberService.isOwnerOrManager(requesterId, groupId)
+        if (questions.isEmpty()) {
+            return PublisherPool.emptyList();
+        }
+        return groupMemberService.isOwnerOrManager(requesterId, groupId, false)
                 .flatMap(authenticated -> authenticated
-                        ? createGroupJoinQuestion(groupId, question, answers, score)
+                        ? createGroupJoinQuestions(groupId, questions)
                         : Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_CREATE_GROUP_QUESTION)));
     }
 
-    public Mono<GroupJoinQuestion> createGroupJoinQuestion(
+    public Mono<List<GroupJoinQuestion>> createGroupJoinQuestions(
             @NotNull Long groupId,
-            @NotNull String question,
-            @NotEmpty Set<String> answers,
-            @NotNull @Min(0) Integer score) {
+            @NotNull List<NewGroupQuestion> questions) {
         try {
             Validator.notNull(groupId, "groupId");
-            Validator.notNull(question, "question");
-            Validator.maxLength(question, "question", questionContentLimit);
-            Validator.notNull(answers, "answers");
-            Validator.inSizeRange(answers, "answers", 1, maxAnswerCount);
-            Validator.maxLength(answers, "answers", answerContentLimit);
-            Validator.notNull(score, "score");
-            Validator.min(score, "score", 0);
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        GroupJoinQuestion groupJoinQuestion = new GroupJoinQuestion(
-                node.nextLargeGapId(ServiceType.GROUP_JOIN_QUESTION),
-                groupId,
-                question,
-                answers,
-                score);
-        return groupQuestionRepository.insert(groupJoinQuestion)
+        List<GroupJoinQuestion> newQuestions = new ArrayList<>(questions.size());
+        for (NewGroupQuestion q : questions) {
+            String question = q.question();
+            Set<String> answers = q.answers();
+            Integer score = q.score();
+            try {
+                Validator.notNull(question, "question");
+                Validator.maxLength(question, "question", questionContentLimit);
+                Validator.notNull(answers, "answers");
+                Validator.inSizeRange(answers, "answers", 1, maxAnswerCount);
+                Validator.maxLength(answers, "answers", answerContentLimit);
+                Validator.notNull(score, "score");
+                Validator.min(score, "score", 0);
+            } catch (ResponseException e) {
+                return Mono.error(e);
+            }
+            newQuestions.add(new GroupJoinQuestion(
+                    node.nextLargeGapId(ServiceType.GROUP_JOIN_QUESTION),
+                    groupId,
+                    question,
+                    answers,
+                    score));
+        }
+        return groupQuestionRepository.insertAllOfSameType(newQuestions)
                 .then(groupVersionService.updateJoinQuestionsVersion(groupId)
                         .onErrorResume(t -> {
                             LOGGER.error("Caught an error while updating the join questions version of the group {} after creating a join question",
                                     groupId, t);
                             return Mono.empty();
                         }))
-                .thenReturn(groupJoinQuestion);
+                .thenReturn(newQuestions);
     }
 
     public Mono<Long> queryGroupId(@NotNull Long questionId) {
@@ -263,30 +273,40 @@ public class GroupQuestionService {
         return groupQuestionRepository.findGroupId(questionId);
     }
 
-    public Mono<Void> authAndDeleteGroupJoinQuestion(
+    public Mono<Void> authAndDeleteGroupJoinQuestions(
             @NotNull Long requesterId,
-            @NotNull Long questionId) {
+            @NotNull Long groupId,
+            @NotNull Set<Long> questionIds) {
         try {
             Validator.notNull(requesterId, "requesterId");
+            Validator.notNull(groupId, "groupId");
+            Validator.notNull(questionIds, "questionIds");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return queryGroupId(questionId)
-                .flatMap(groupId -> groupMemberService.isOwnerOrManager(requesterId, groupId)
-                        .flatMap(authenticated -> {
-                            if (!authenticated) {
-                                return Mono
-                                        .error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_DELETE_GROUP_QUESTION));
-                            }
-                            return groupQuestionRepository.deleteById(questionId)
-                                    .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
-                                            .onErrorResume(t -> {
-                                                LOGGER.error("Caught an error while updating the join questions version of the group {} after deleting a join question",
-                                                        groupId, t);
-                                                return Mono.empty();
-                                            })
-                                            .then());
-                        }));
+        if (questionIds.isEmpty()) {
+            return Mono.empty();
+        }
+        return groupMemberService.isOwnerOrManager(requesterId, groupId, false)
+                .flatMap(authenticated -> {
+                    if (!authenticated) {
+                        return Mono
+                                .error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_DELETE_GROUP_QUESTION));
+                    }
+                    return groupQuestionRepository.deleteByIds(questionIds);
+                })
+                .flatMap(result -> {
+                    if (result.getDeletedCount() == 0) {
+                        return Mono.empty();
+                    }
+                    return groupVersionService.updateJoinQuestionsVersion(groupId)
+                            .onErrorResume(t -> {
+                                LOGGER.error("Caught an error while updating the join questions version of the group {} after deleting a join question",
+                                        groupId, t);
+                                return Mono.empty();
+                            })
+                            .then();
+                });
     }
 
     public Flux<GroupJoinQuestion> queryGroupJoinQuestions(
@@ -306,7 +326,7 @@ public class GroupQuestionService {
         return groupQuestionRepository.deleteByIds(ids);
     }
 
-    public Mono<GroupJoinQuestionsWithVersion> queryGroupJoinQuestionsWithVersion(
+    public Mono<GroupJoinQuestionsWithVersion> authAndQueryGroupJoinQuestionsWithVersion(
             @NotNull Long requesterId,
             @NotNull Long groupId,
             boolean withAnswers,
@@ -317,7 +337,7 @@ public class GroupQuestionService {
             return Mono.error(e);
         }
         Mono<Boolean> authenticated = withAnswers
-                ? groupMemberService.isOwnerOrManager(requesterId, groupId)
+                ? groupMemberService.isOwnerOrManager(requesterId, groupId, false)
                 : PublisherPool.TRUE;
         return authenticated
                 .flatMap(isAuthenticated -> isAuthenticated != null && isAuthenticated
@@ -364,7 +384,7 @@ public class GroupQuestionService {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return queryGroupId(questionId)
-                .flatMap(groupId -> groupMemberService.isOwnerOrManager(requesterId, groupId)
+                .flatMap(groupId -> groupMemberService.isOwnerOrManager(requesterId, groupId, false)
                         .flatMap(authenticated -> {
                             if (authenticated == null || !authenticated) {
                                 return Mono

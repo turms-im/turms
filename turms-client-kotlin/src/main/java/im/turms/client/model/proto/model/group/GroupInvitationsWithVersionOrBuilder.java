@@ -27,7 +27,7 @@ public interface GroupInvitationsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
    */
-  java.util.List<im.turms.client.model.proto.model.group.GroupInvitation> 
+  java.util.List<im.turms.client.model.proto.model.group.GroupInvitation>
       getGroupInvitationsList();
   /**
    * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>

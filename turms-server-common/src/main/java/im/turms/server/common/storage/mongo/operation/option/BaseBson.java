@@ -53,4 +53,8 @@ public abstract class BaseBson implements Bson {
     public <T> BsonDocument toBsonDocument(Class<T> documentClass, CodecRegistry codecRegistry) {
         return document;
     }
+
+    public int size() {
+        return document.size();
+    }
 }

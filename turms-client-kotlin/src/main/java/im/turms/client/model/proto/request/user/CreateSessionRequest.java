@@ -47,14 +47,14 @@ public  final class CreateSessionRequest extends
    * @param value The version to set.
    */
   private void setVersion(int value) {
-    
+
     version_ = value;
   }
   /**
    * <code>int32 version = 1;</code>
    */
   private void clearVersion() {
-    
+
     version_ = 0;
   }
 
@@ -73,14 +73,14 @@ public  final class CreateSessionRequest extends
    * @param value The userId to set.
    */
   private void setUserId(long value) {
-    
+
     userId_ = value;
   }
   /**
    * <code>int64 user_id = 2;</code>
    */
   private void clearUserId() {
-    
+
     userId_ = 0L;
   }
 
@@ -221,13 +221,13 @@ public  final class CreateSessionRequest extends
    */
   private void setDeviceType(im.turms.client.model.proto.constant.DeviceType value) {
     deviceType_ = value.getNumber();
-    
+
   }
   /**
    * <code>.im.turms.proto.DeviceType device_type = 5;</code>
    */
   private void clearDeviceType() {
-    
+
     deviceType_ = 0;
   }
 

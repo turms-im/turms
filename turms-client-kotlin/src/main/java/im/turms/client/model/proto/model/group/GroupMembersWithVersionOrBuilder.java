@@ -27,7 +27,7 @@ public interface GroupMembersWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
    */
-  java.util.List<im.turms.client.model.proto.model.group.GroupMember> 
+  java.util.List<im.turms.client.model.proto.model.group.GroupMember>
       getGroupMembersList();
   /**
    * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>

@@ -297,18 +297,37 @@ private static final long serialVersionUID = 0L;
     return creationDate_;
   }
 
-  public static final int MUTE_END_DATE_FIELD_NUMBER = 9;
+  public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 9;
+  private long lastUpdatedDate_;
+  /**
+   * <code>optional int64 last_updated_date = 9;</code>
+   * @return Whether the lastUpdatedDate field is set.
+   */
+  @java.lang.Override
+  public boolean hasLastUpdatedDate() {
+    return ((bitField0_ & 0x00000100) != 0);
+  }
+  /**
+   * <code>optional int64 last_updated_date = 9;</code>
+   * @return The lastUpdatedDate.
+   */
+  @java.lang.Override
+  public long getLastUpdatedDate() {
+    return lastUpdatedDate_;
+  }
+
+  public static final int MUTE_END_DATE_FIELD_NUMBER = 10;
   private long muteEndDate_;
   /**
-   * <code>optional int64 mute_end_date = 9;</code>
+   * <code>optional int64 mute_end_date = 10;</code>
    * @return Whether the muteEndDate field is set.
    */
   @java.lang.Override
   public boolean hasMuteEndDate() {
-    return ((bitField0_ & 0x00000100) != 0);
+    return ((bitField0_ & 0x00000200) != 0);
   }
   /**
-   * <code>optional int64 mute_end_date = 9;</code>
+   * <code>optional int64 mute_end_date = 10;</code>
    * @return The muteEndDate.
    */
   @java.lang.Override
@@ -316,18 +335,18 @@ private static final long serialVersionUID = 0L;
     return muteEndDate_;
   }
 
-  public static final int ACTIVE_FIELD_NUMBER = 10;
+  public static final int ACTIVE_FIELD_NUMBER = 11;
   private boolean active_;
   /**
-   * <code>optional bool active = 10;</code>
+   * <code>optional bool active = 11;</code>
    * @return Whether the active field is set.
    */
   @java.lang.Override
   public boolean hasActive() {
-    return ((bitField0_ & 0x00000200) != 0);
+    return ((bitField0_ & 0x00000400) != 0);
   }
   /**
-   * <code>optional bool active = 10;</code>
+   * <code>optional bool active = 11;</code>
    * @return The active.
    */
   @java.lang.Override
@@ -374,10 +393,13 @@ private static final long serialVersionUID = 0L;
       output.writeInt64(8, creationDate_);
     }
     if (((bitField0_ & 0x00000100) != 0)) {
-      output.writeInt64(9, muteEndDate_);
+      output.writeInt64(9, lastUpdatedDate_);
     }
     if (((bitField0_ & 0x00000200) != 0)) {
-      output.writeBool(10, active_);
+      output.writeInt64(10, muteEndDate_);
+    }
+    if (((bitField0_ & 0x00000400) != 0)) {
+      output.writeBool(11, active_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -419,11 +441,15 @@ private static final long serialVersionUID = 0L;
     }
     if (((bitField0_ & 0x00000100) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(9, muteEndDate_);
+        .computeInt64Size(9, lastUpdatedDate_);
     }
     if (((bitField0_ & 0x00000200) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(10, active_);
+        .computeInt64Size(10, muteEndDate_);
+    }
+    if (((bitField0_ & 0x00000400) != 0)) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(11, active_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -479,6 +505,11 @@ private static final long serialVersionUID = 0L;
     if (hasCreationDate()) {
       if (getCreationDate()
           != other.getCreationDate()) return false;
+    }
+    if (hasLastUpdatedDate() != other.hasLastUpdatedDate()) return false;
+    if (hasLastUpdatedDate()) {
+      if (getLastUpdatedDate()
+          != other.getLastUpdatedDate()) return false;
     }
     if (hasMuteEndDate() != other.hasMuteEndDate()) return false;
     if (hasMuteEndDate()) {
@@ -537,6 +568,11 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + CREATION_DATE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getCreationDate());
+    }
+    if (hasLastUpdatedDate()) {
+      hash = (37 * hash) + LAST_UPDATED_DATE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getLastUpdatedDate());
     }
     if (hasMuteEndDate()) {
       hash = (37 * hash) + MUTE_END_DATE_FIELD_NUMBER;
@@ -692,10 +728,12 @@ private static final long serialVersionUID = 0L;
       bitField0_ = (bitField0_ & ~0x00000040);
       creationDate_ = 0L;
       bitField0_ = (bitField0_ & ~0x00000080);
-      muteEndDate_ = 0L;
+      lastUpdatedDate_ = 0L;
       bitField0_ = (bitField0_ & ~0x00000100);
-      active_ = false;
+      muteEndDate_ = 0L;
       bitField0_ = (bitField0_ & ~0x00000200);
+      active_ = false;
+      bitField0_ = (bitField0_ & ~0x00000400);
       return this;
     }
 
@@ -757,12 +795,16 @@ private static final long serialVersionUID = 0L;
         to_bitField0_ |= 0x00000080;
       }
       if (((from_bitField0_ & 0x00000100) != 0)) {
-        result.muteEndDate_ = muteEndDate_;
+        result.lastUpdatedDate_ = lastUpdatedDate_;
         to_bitField0_ |= 0x00000100;
       }
       if (((from_bitField0_ & 0x00000200) != 0)) {
-        result.active_ = active_;
+        result.muteEndDate_ = muteEndDate_;
         to_bitField0_ |= 0x00000200;
+      }
+      if (((from_bitField0_ & 0x00000400) != 0)) {
+        result.active_ = active_;
+        to_bitField0_ |= 0x00000400;
       }
       result.bitField0_ = to_bitField0_;
       onBuilt();
@@ -843,6 +885,9 @@ private static final long serialVersionUID = 0L;
       if (other.hasCreationDate()) {
         setCreationDate(other.getCreationDate());
       }
+      if (other.hasLastUpdatedDate()) {
+        setLastUpdatedDate(other.getLastUpdatedDate());
+      }
       if (other.hasMuteEndDate()) {
         setMuteEndDate(other.getMuteEndDate());
       }
@@ -916,15 +961,20 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 64
             case 72: {
-              muteEndDate_ = input.readInt64();
+              lastUpdatedDate_ = input.readInt64();
               bitField0_ |= 0x00000100;
               break;
             } // case 72
             case 80: {
-              active_ = input.readBool();
+              muteEndDate_ = input.readInt64();
               bitField0_ |= 0x00000200;
               break;
             } // case 80
+            case 88: {
+              active_ = input.readBool();
+              bitField0_ |= 0x00000400;
+              break;
+            } // case 88
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -1386,17 +1436,56 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
+    private long lastUpdatedDate_ ;
+    /**
+     * <code>optional int64 last_updated_date = 9;</code>
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    @java.lang.Override
+    public boolean hasLastUpdatedDate() {
+      return ((bitField0_ & 0x00000100) != 0);
+    }
+    /**
+     * <code>optional int64 last_updated_date = 9;</code>
+     * @return The lastUpdatedDate.
+     */
+    @java.lang.Override
+    public long getLastUpdatedDate() {
+      return lastUpdatedDate_;
+    }
+    /**
+     * <code>optional int64 last_updated_date = 9;</code>
+     * @param value The lastUpdatedDate to set.
+     * @return This builder for chaining.
+     */
+    public Builder setLastUpdatedDate(long value) {
+      bitField0_ |= 0x00000100;
+      lastUpdatedDate_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional int64 last_updated_date = 9;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearLastUpdatedDate() {
+      bitField0_ = (bitField0_ & ~0x00000100);
+      lastUpdatedDate_ = 0L;
+      onChanged();
+      return this;
+    }
+
     private long muteEndDate_ ;
     /**
-     * <code>optional int64 mute_end_date = 9;</code>
+     * <code>optional int64 mute_end_date = 10;</code>
      * @return Whether the muteEndDate field is set.
      */
     @java.lang.Override
     public boolean hasMuteEndDate() {
-      return ((bitField0_ & 0x00000100) != 0);
+      return ((bitField0_ & 0x00000200) != 0);
     }
     /**
-     * <code>optional int64 mute_end_date = 9;</code>
+     * <code>optional int64 mute_end_date = 10;</code>
      * @return The muteEndDate.
      */
     @java.lang.Override
@@ -1404,22 +1493,22 @@ private static final long serialVersionUID = 0L;
       return muteEndDate_;
     }
     /**
-     * <code>optional int64 mute_end_date = 9;</code>
+     * <code>optional int64 mute_end_date = 10;</code>
      * @param value The muteEndDate to set.
      * @return This builder for chaining.
      */
     public Builder setMuteEndDate(long value) {
-      bitField0_ |= 0x00000100;
+      bitField0_ |= 0x00000200;
       muteEndDate_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional int64 mute_end_date = 9;</code>
+     * <code>optional int64 mute_end_date = 10;</code>
      * @return This builder for chaining.
      */
     public Builder clearMuteEndDate() {
-      bitField0_ = (bitField0_ & ~0x00000100);
+      bitField0_ = (bitField0_ & ~0x00000200);
       muteEndDate_ = 0L;
       onChanged();
       return this;
@@ -1427,15 +1516,15 @@ private static final long serialVersionUID = 0L;
 
     private boolean active_ ;
     /**
-     * <code>optional bool active = 10;</code>
+     * <code>optional bool active = 11;</code>
      * @return Whether the active field is set.
      */
     @java.lang.Override
     public boolean hasActive() {
-      return ((bitField0_ & 0x00000200) != 0);
+      return ((bitField0_ & 0x00000400) != 0);
     }
     /**
-     * <code>optional bool active = 10;</code>
+     * <code>optional bool active = 11;</code>
      * @return The active.
      */
     @java.lang.Override
@@ -1443,22 +1532,22 @@ private static final long serialVersionUID = 0L;
       return active_;
     }
     /**
-     * <code>optional bool active = 10;</code>
+     * <code>optional bool active = 11;</code>
      * @param value The active to set.
      * @return This builder for chaining.
      */
     public Builder setActive(boolean value) {
-      bitField0_ |= 0x00000200;
+      bitField0_ |= 0x00000400;
       active_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional bool active = 10;</code>
+     * <code>optional bool active = 11;</code>
      * @return This builder for chaining.
      */
     public Builder clearActive() {
-      bitField0_ = (bitField0_ & ~0x00000200);
+      bitField0_ = (bitField0_ & ~0x00000400);
       active_ = false;
       onChanged();
       return this;

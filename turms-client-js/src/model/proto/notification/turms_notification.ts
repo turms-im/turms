@@ -14,11 +14,11 @@ import { Messages } from "../model/message/messages";
 import { MessagesWithTotalList } from "../model/message/messages_with_total_list";
 import { NearbyUsers } from "../model/user/nearby_users";
 import { UserFriendRequestsWithVersion } from "../model/user/user_friend_requests_with_version";
+import { UserInfosWithVersion } from "../model/user/user_infos_with_version";
+import { UserOnlineStatuses } from "../model/user/user_online_statuses";
 import { UserRelationshipGroupsWithVersion } from "../model/user/user_relationship_groups_with_version";
 import { UserRelationshipsWithVersion } from "../model/user/user_relationships_with_version";
 import { UserSession } from "../model/user/user_session";
-import { UsersInfosWithVersion } from "../model/user/users_infos_with_version";
-import { UsersOnlineStatuses } from "../model/user/users_online_statuses";
 import { TurmsRequest } from "../request/turms_request";
 
 export const protobufPackage = "im.turms.proto";
@@ -54,8 +54,8 @@ export interface TurmsNotification_Data {
   messages?: Messages | undefined;
   messagesWithTotalList?: MessagesWithTotalList | undefined;
   userSession?: UserSession | undefined;
-  usersInfosWithVersion?: UsersInfosWithVersion | undefined;
-  usersOnlineStatuses?: UsersOnlineStatuses | undefined;
+  userInfosWithVersion?: UserInfosWithVersion | undefined;
+  userOnlineStatuses?: UserOnlineStatuses | undefined;
   userFriendRequestsWithVersion?: UserFriendRequestsWithVersion | undefined;
   userRelationshipGroupsWithVersion?: UserRelationshipGroupsWithVersion | undefined;
   userRelationshipsWithVersion?: UserRelationshipsWithVersion | undefined;
@@ -159,8 +159,8 @@ function createBaseTurmsNotification_Data(): TurmsNotification_Data {
     messages: undefined,
     messagesWithTotalList: undefined,
     userSession: undefined,
-    usersInfosWithVersion: undefined,
-    usersOnlineStatuses: undefined,
+    userInfosWithVersion: undefined,
+    userOnlineStatuses: undefined,
     userFriendRequestsWithVersion: undefined,
     userRelationshipGroupsWithVersion: undefined,
     userRelationshipsWithVersion: undefined,
@@ -197,11 +197,11 @@ export const TurmsNotification_Data = {
     if (message.userSession !== undefined) {
       UserSession.encode(message.userSession, writer.uint32(58).fork()).ldelim();
     }
-    if (message.usersInfosWithVersion !== undefined) {
-      UsersInfosWithVersion.encode(message.usersInfosWithVersion, writer.uint32(66).fork()).ldelim();
+    if (message.userInfosWithVersion !== undefined) {
+      UserInfosWithVersion.encode(message.userInfosWithVersion, writer.uint32(66).fork()).ldelim();
     }
-    if (message.usersOnlineStatuses !== undefined) {
-      UsersOnlineStatuses.encode(message.usersOnlineStatuses, writer.uint32(74).fork()).ldelim();
+    if (message.userOnlineStatuses !== undefined) {
+      UserOnlineStatuses.encode(message.userOnlineStatuses, writer.uint32(74).fork()).ldelim();
     }
     if (message.userFriendRequestsWithVersion !== undefined) {
       UserFriendRequestsWithVersion.encode(message.userFriendRequestsWithVersion, writer.uint32(82).fork()).ldelim();
@@ -266,10 +266,10 @@ export const TurmsNotification_Data = {
           message.userSession = UserSession.decode(reader, reader.uint32());
           break;
         case 8:
-          message.usersInfosWithVersion = UsersInfosWithVersion.decode(reader, reader.uint32());
+          message.userInfosWithVersion = UserInfosWithVersion.decode(reader, reader.uint32());
           break;
         case 9:
-          message.usersOnlineStatuses = UsersOnlineStatuses.decode(reader, reader.uint32());
+          message.userOnlineStatuses = UserOnlineStatuses.decode(reader, reader.uint32());
           break;
         case 10:
           message.userFriendRequestsWithVersion = UserFriendRequestsWithVersion.decode(reader, reader.uint32());

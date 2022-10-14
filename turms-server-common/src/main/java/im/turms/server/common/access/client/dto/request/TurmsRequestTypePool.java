@@ -26,31 +26,31 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_FRIEND_REQUEST_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_BLOCKED_USER_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_INVITATION_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_JOIN_QUESTION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_JOIN_QUESTIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_JOIN_REQUEST_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_MEMBER_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_MEMBERS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_BLOCKED_USER_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_INVITATION_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_JOIN_QUESTION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_JOIN_QUESTIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_JOIN_REQUEST_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_MEMBER_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_MEMBERS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RESOURCE_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_CONVERSATIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_FRIEND_REQUESTS_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUPS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_BLOCKED_USER_IDS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_INVITATIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_JOIN_QUESTIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_JOIN_REQUESTS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_MEMBERS_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_JOINED_GROUP_IDS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_JOINED_GROUP_INFOS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_MESSAGES_REQUEST;
@@ -61,7 +61,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_GET_URL_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_PUT_URL_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_ONLINE_STATUSES_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_PROFILE_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_PROFILES_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_CONVERSATION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_FRIEND_REQUEST_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_JOIN_QUESTION_REQUEST;
@@ -102,7 +102,7 @@ public final class TurmsRequestTypePool {
             QUERY_MESSAGES_REQUEST,
             UPDATE_MESSAGE_REQUEST);
 
-    public static final Set<TurmsRequest.KindCase> USER = Set.of(QUERY_USER_PROFILE_REQUEST,
+    public static final Set<TurmsRequest.KindCase> USER = Set.of(QUERY_USER_PROFILES_REQUEST,
             QUERY_NEARBY_USERS_REQUEST,
             QUERY_USER_ONLINE_STATUSES_REQUEST,
             UPDATE_USER_LOCATION_REQUEST,
@@ -124,7 +124,7 @@ public final class TurmsRequestTypePool {
 
     public static final Set<TurmsRequest.KindCase> GROUP = Set.of(CREATE_GROUP_REQUEST,
             DELETE_GROUP_REQUEST,
-            QUERY_GROUP_REQUEST,
+            QUERY_GROUPS_REQUEST,
             QUERY_JOINED_GROUP_IDS_REQUEST,
             QUERY_JOINED_GROUP_INFOS_REQUEST,
             UPDATE_GROUP_REQUEST);
@@ -137,17 +137,17 @@ public final class TurmsRequestTypePool {
     public static final Set<TurmsRequest.KindCase> GROUP_ENROLLMENT = Set.of(CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST,
             CREATE_GROUP_INVITATION_REQUEST,
             CREATE_GROUP_JOIN_REQUEST_REQUEST,
-            CREATE_GROUP_JOIN_QUESTION_REQUEST,
+            CREATE_GROUP_JOIN_QUESTIONS_REQUEST,
             DELETE_GROUP_INVITATION_REQUEST,
             DELETE_GROUP_JOIN_REQUEST_REQUEST,
-            DELETE_GROUP_JOIN_QUESTION_REQUEST,
+            DELETE_GROUP_JOIN_QUESTIONS_REQUEST,
             QUERY_GROUP_INVITATIONS_REQUEST,
             QUERY_GROUP_JOIN_REQUESTS_REQUEST,
             QUERY_GROUP_JOIN_QUESTIONS_REQUEST,
             UPDATE_GROUP_JOIN_QUESTION_REQUEST);
 
-    public static final Set<TurmsRequest.KindCase> GROUP_MEMBER = Set.of(CREATE_GROUP_MEMBER_REQUEST,
-            DELETE_GROUP_MEMBER_REQUEST,
+    public static final Set<TurmsRequest.KindCase> GROUP_MEMBER = Set.of(CREATE_GROUP_MEMBERS_REQUEST,
+            DELETE_GROUP_MEMBERS_REQUEST,
             QUERY_GROUP_MEMBERS_REQUEST,
             UPDATE_GROUP_MEMBER_REQUEST);
 

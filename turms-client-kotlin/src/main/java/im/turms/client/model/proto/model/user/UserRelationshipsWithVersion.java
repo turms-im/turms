@@ -44,7 +44,7 @@ public  final class UserRelationshipsWithVersion extends
   /**
    * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
    */
-  public java.util.List<? extends im.turms.client.model.proto.model.user.UserRelationshipOrBuilder> 
+  public java.util.List<? extends im.turms.client.model.proto.model.user.UserRelationshipOrBuilder>
       getUserRelationshipsOrBuilderList() {
     return userRelationships_;
   }

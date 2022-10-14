@@ -44,7 +44,7 @@ public  final class GroupsWithVersion extends
   /**
    * <code>repeated .im.turms.proto.Group groups = 1;</code>
    */
-  public java.util.List<? extends im.turms.client.model.proto.model.group.GroupOrBuilder> 
+  public java.util.List<? extends im.turms.client.model.proto.model.group.GroupOrBuilder>
       getGroupsOrBuilderList() {
     return groups_;
   }

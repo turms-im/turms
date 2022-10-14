@@ -708,7 +708,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
             try {
                 onSessionClosedListener.accept(session);
             } catch (Exception e) {
-                LOGGER.error("Caught an error while triggering a onSessionClosed listener", e);
+                LOGGER.error("Caught an error while triggering an onSessionClosed listener", e);
             }
         }
     }

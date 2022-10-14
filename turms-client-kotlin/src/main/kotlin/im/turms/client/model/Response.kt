@@ -29,6 +29,11 @@ data class Response<T>(
     val code: Int,
     val data: T
 ) {
+
+    fun <T> withData(data: T): Response<T> {
+        return Response(timestamp, requestId, code, data)
+    }
+
     companion object {
 
         @JvmStatic

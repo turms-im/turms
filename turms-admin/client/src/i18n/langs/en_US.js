@@ -270,6 +270,7 @@ const en_US = {
     'lastRequestDate': 'Last Request Date',
     'lastSixMonths': 'Six months before today - Today',
     'lastThreeMonths': 'Three months before today - Today (default)',
+    'lastUpdatedDate': 'Last Updated Date',
     'lastUpdatedTime': 'Last Sync',
     'leaderEligible': 'Leader Eligible',
     'license': 'License',

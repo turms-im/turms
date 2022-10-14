@@ -24,6 +24,7 @@ import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -285,6 +286,9 @@ public final class CollectionUtil {
         if (collection instanceof List<T> list) {
             return list;
         }
+        if (collection.isEmpty()) {
+            return Collections.emptyList();
+        }
         return new ArrayList<>(collection);
     }
 
@@ -299,15 +303,20 @@ public final class CollectionUtil {
         if (values instanceof Set<T> set) {
             return set;
         }
+        if (values.isEmpty()) {
+            return Collections.emptySet();
+        }
         return new UnifiedSet<>(values);
     }
 
     public static <T> Set<T> toImmutableSet(Collection<? extends T> collection) {
         if (isImmutableSet(collection)) {
             return (Set<T>) collection;
-        } else {
-            return (Set<T>) Set.of(collection.toArray());
         }
+        if (collection.isEmpty()) {
+            return Collections.emptySet();
+        }
+        return (Set<T>) Set.of(collection.toArray());
     }
     //endregion
 

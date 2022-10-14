@@ -151,15 +151,16 @@ public enum ResponseStatusCode {
     ANSWER_QUESTION_OF_INACTIVE_GROUP(3306, "Cannot answer the questions of an inactive group", 403),
 
     // Group - Member
-    NOT_OWNER_OR_MANAGER_TO_REMOVE_GROUP_MEMBER(3400, "Only the owner and managers of the group can remove the group member", 403),
-    NOT_OWNER_TO_UPDATE_GROUP_MEMBER_INFO(3401, "Only the group owner can update the group member's information", 403),
-    NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_MEMBER_INFO(3402,
+    ADD_USER_TO_INACTIVE_GROUP(3400, "Cannot add a user to the inactive group", 403),
+    ADD_NEW_MEMBER_WITH_ROLE_HIGHER_THAN_REQUESTER(3401, "Cannot add a user with the role higher than the requester's", 403),
+    ADD_BLOCKED_USER_TO_GROUP(3402, "Cannot add a blocked user to the group", 403),
+    ADD_BLOCKED_USER_TO_INACTIVE_GROUP(3403, "Cannot add a blocked user to the inactive group", 403),
+    NOT_OWNER_OR_MANAGER_TO_REMOVE_GROUP_MEMBER(3404, "Only the owner and managers of the group can remove the group member", 403),
+    NOT_OWNER_TO_REMOVE_GROUP_OWNER_OR_MANAGER(3405, "Only the owner of the group can remove the owner or managers", 403),
+    NOT_OWNER_TO_UPDATE_GROUP_MEMBER_INFO(3406, "Only the group owner can update the group member's information", 403),
+    NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_MEMBER_INFO(3407,
             "Only the owner and managers of the group can update the group member's information", 403),
-    NOT_MEMBER_TO_QUERY_MEMBER_INFO(3403, "Only the group members can query its group members' information", 403),
-    ADD_BLOCKED_USER_TO_GROUP(3404, "Cannot add a blocked user to the group", 403),
-    ADD_BLOCKED_USER_TO_INACTIVE_GROUP(3405, "Cannot add a blocked user to the inactive group", 403),
-    ADD_USER_TO_INACTIVE_GROUP(3406, "Cannot add a user to the inactive group", 403),
-    ADD_NEW_MEMBER_WITH_ROLE_HIGHER_THAN_REQUESTER(3407, "Cannot add a user with the role higher than the requester's", 403),
+    NOT_MEMBER_TO_QUERY_MEMBER_INFO(3408, "Only the group members can query its group members' information", 403),
 
     // Group - Blocklist
     NOT_OWNER_OR_MANAGER_TO_ADD_BLOCKED_USER(3500, "Only the owner and managers of the group can add blocked users", 403),

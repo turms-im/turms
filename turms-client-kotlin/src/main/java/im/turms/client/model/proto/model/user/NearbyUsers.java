@@ -43,7 +43,7 @@ public  final class NearbyUsers extends
   /**
    * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
    */
-  public java.util.List<? extends im.turms.client.model.proto.model.user.NearbyUserOrBuilder> 
+  public java.util.List<? extends im.turms.client.model.proto.model.user.NearbyUserOrBuilder>
       getNearbyUsersOrBuilderList() {
     return nearbyUsers_;
   }

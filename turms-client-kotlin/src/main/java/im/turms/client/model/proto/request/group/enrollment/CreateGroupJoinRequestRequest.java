@@ -46,14 +46,14 @@ public  final class CreateGroupJoinRequestRequest extends
    * @param value The groupId to set.
    */
   private void setGroupId(long value) {
-    
+
     groupId_ = value;
   }
   /**
    * <code>int64 group_id = 1;</code>
    */
   private void clearGroupId() {
-    
+
     groupId_ = 0L;
   }
 
@@ -83,14 +83,14 @@ public  final class CreateGroupJoinRequestRequest extends
   private void setContent(
       java.lang.String value) {
     java.lang.Class<?> valueClass = value.getClass();
-  
+
     content_ = value;
   }
   /**
    * <code>string content = 2;</code>
    */
   private void clearContent() {
-    
+
     content_ = getDefaultInstance().getContent();
   }
   /**
@@ -101,7 +101,7 @@ public  final class CreateGroupJoinRequestRequest extends
       com.google.protobuf.ByteString value) {
     checkByteStringIsUtf8(value);
     content_ = value.toStringUtf8();
-    
+
   }
 
   public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinRequestRequest parseFrom(

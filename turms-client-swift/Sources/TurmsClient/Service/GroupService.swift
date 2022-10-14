@@ -144,11 +144,14 @@ public class GroupService {
         return muteGroup(groupId: groupId, muteEndDate: Date(timeIntervalSince1970: 0))
     }
 
-    public func queryGroup(groupId: Int64, lastUpdatedDate: Date? = nil) -> Promise<Response<GroupWithVersion?>> {
+    public func queryGroups(groupIds: Set<Int64>, lastUpdatedDate: Date? = nil) -> Promise<Response<[Group]>> {
+        if groupIds.isEmpty {
+            return Promise.value(Response.emptyArray())
+        }
         return turmsClient.driver
             .send {
-                $0.queryGroupRequest = .with {
-                    $0.groupID = groupId
+                $0.queryGroupsRequest = .with {
+                    $0.groupIds = Array(groupIds)
                     if let v = lastUpdatedDate {
                         $0.lastUpdatedDate = v.toMillis()
                     }
@@ -156,7 +159,7 @@ public class GroupService {
             }
             .map {
                 try $0.toResponse {
-                    try GroupWithVersion.from($0)
+                    $0.groupsWithVersion.groups
                 }
             }
     }
@@ -193,28 +196,43 @@ public class GroupService {
             }
     }
 
-    public func addGroupJoinQuestion(groupId: Int64, question: String, answers: [String], score: Int32) -> Promise<Response<Int64>> {
+    public func addGroupJoinQuestions(groupId: Int64, questions: [NewGroupJoinQuestion]) -> Promise<Response<[Int64]>> {
+        if questions.isEmpty {
+            return Promise.value(Response.emptyArray())
+        }
         return turmsClient.driver
             .send {
-                $0.createGroupJoinQuestionRequest = .with {
+                $0.createGroupJoinQuestionsRequest = try .with {
                     $0.groupID = groupId
-                    $0.question = question
-                    $0.answers = answers
-                    $0.score = score
+                    $0.questions = try questions.map { question in
+                        try .with { builder in
+                            let answers = question.answers
+                            if answers.isEmpty {
+                                throw ResponseError(.illegalArgument, "The answers of group must not be empty")
+                            }
+                            builder.question = question.question
+                            builder.answers = Array(answers)
+                            builder.score = question.score
+                        }
+                    }
                 }
             }
             .map {
                 try $0.toResponse {
-                    try $0.getFirstId()
+                    $0.ids.values
                 }
             }
     }
 
-    public func deleteGroupJoinQuestion(_ questionId: Int64) -> Promise<Response<Void>> {
+    public func deleteGroupJoinQuestions(groupId: Int64, questionIds: [Int64]) -> Promise<Response<Void>> {
+        if questionIds.isEmpty {
+            return Promise.value(Response.empty())
+        }
         return turmsClient.driver
             .send {
-                $0.deleteGroupJoinQuestionRequest = .with {
-                    $0.questionID = questionId
+                $0.deleteGroupJoinQuestionsRequest = .with {
+                    $0.groupID = groupId
+                    $0.questionIds = questionIds
                 }
             }
             .map {
@@ -296,7 +314,7 @@ public class GroupService {
     public func queryBlockedUserInfos(
         groupId: Int64,
         lastUpdatedDate: Date? = nil
-    ) -> Promise<Response<UsersInfosWithVersion?>> {
+    ) -> Promise<Response<UserInfosWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryGroupBlockedUserInfosRequest = .with {
@@ -308,7 +326,7 @@ public class GroupService {
             }
             .map {
                 try $0.toResponse {
-                    try $0.kind?.getKindData(UsersInfosWithVersion.self)
+                    try $0.kind?.getKindData(UserInfosWithVersion.self)
                 }
             }
     }
@@ -484,18 +502,21 @@ public class GroupService {
     }
 
     // Group Member
-    public func addGroupMember(
+    public func addGroupMembers(
         groupId: Int64,
-        userId: Int64,
+        userIds: [Int64],
         name: String? = nil,
         role: GroupMemberRole? = nil,
         muteEndDate: Date? = nil
     ) -> Promise<Response<Void>> {
+        if userIds.isEmpty {
+            return Promise.value(Response.empty())
+        }
         return turmsClient.driver
             .send {
-                $0.createGroupMemberRequest = .with {
+                $0.createGroupMembersRequest = .with {
                     $0.groupID = groupId
-                    $0.userID = userId
+                    $0.userIds = userIds
                     if let v = name {
                         $0.name = v
                     }
@@ -515,9 +536,9 @@ public class GroupService {
     public func quitGroup(groupId: Int64, successorId: Int64? = nil, quitAfterTransfer: Bool? = nil) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
-                $0.deleteGroupMemberRequest = .with {
+                $0.deleteGroupMembersRequest = .with {
                     $0.groupID = groupId
-                    $0.memberID = turmsClient.userService.userInfo!.userId
+                    $0.memberIds = [turmsClient.userService.userInfo!.userId]
                     if let v = successorId {
                         $0.successorID = v
                     }
@@ -531,17 +552,24 @@ public class GroupService {
             }
     }
 
-    public func removeGroupMember(groupId: Int64, memberId: Int64) -> Promise<Response<Void>> {
+    public func removeGroupMembers(groupId: Int64, memberIds: [Int64]) -> Promise<Response<Void>> {
+        if memberIds.isEmpty {
+            return Promise.value(Response.empty())
+        }
         return turmsClient.driver
             .send {
-                $0.deleteGroupMemberRequest = .with {
+                $0.deleteGroupMembersRequest = .with {
                     $0.groupID = groupId
-                    $0.memberID = memberId
+                    $0.memberIds = memberIds
                 }
             }
             .map {
                 try $0.toResponse()
             }
+    }
+
+    public func removeGroupMember(groupId: Int64, memberId: Int64) -> Promise<Response<Void>> {
+        return removeGroupMembers(groupId: groupId, memberIds: [memberId])
     }
 
     public func updateGroupMemberInfo(

@@ -9,8 +9,8 @@ class TurmsDriverTests: XCTestCase {
         assertCompleted("login_shouldSucceed", client.userService.login(userId: 1, password: "123"))
         assertCompleted("sendHeartbeat_shouldSucceed", driver.sendHeartbeat())
         assertCompleted("sendTurmsRequest_shouldSucceed", driver.send {
-            $0.queryUserProfileRequest = QueryUserProfileRequest.with {
-                $0.userID = 1
+            $0.queryUserProfilesRequest = .with {
+                $0.userIds = [1]
             }
         })
         assertCompleted("disconnect_shouldSucceed", driver.disconnect())

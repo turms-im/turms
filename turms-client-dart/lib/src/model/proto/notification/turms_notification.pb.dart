@@ -17,8 +17,8 @@ import '../model/conversation/conversations.pb.dart' as $3;
 import '../model/message/messages.pb.dart' as $4;
 import '../model/message/messages_with_total_list.pb.dart' as $5;
 import '../model/user/user_session.pb.dart' as $6;
-import '../model/user/users_infos_with_version.pb.dart' as $7;
-import '../model/user/users_online_statuses.pb.dart' as $8;
+import '../model/user/user_infos_with_version.pb.dart' as $7;
+import '../model/user/user_online_statuses.pb.dart' as $8;
 import '../model/user/user_friend_requests_with_version.pb.dart' as $9;
 import '../model/user/user_relationship_groups_with_version.pb.dart' as $10;
 import '../model/user/user_relationships_with_version.pb.dart' as $11;
@@ -38,8 +38,8 @@ enum TurmsNotification_Data_Kind {
   messages, 
   messagesWithTotalList, 
   userSession, 
-  usersInfosWithVersion, 
-  usersOnlineStatuses, 
+  userInfosWithVersion, 
+  userOnlineStatuses, 
   userFriendRequestsWithVersion, 
   userRelationshipGroupsWithVersion, 
   userRelationshipsWithVersion, 
@@ -62,8 +62,8 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
     5 : TurmsNotification_Data_Kind.messages,
     6 : TurmsNotification_Data_Kind.messagesWithTotalList,
     7 : TurmsNotification_Data_Kind.userSession,
-    8 : TurmsNotification_Data_Kind.usersInfosWithVersion,
-    9 : TurmsNotification_Data_Kind.usersOnlineStatuses,
+    8 : TurmsNotification_Data_Kind.userInfosWithVersion,
+    9 : TurmsNotification_Data_Kind.userOnlineStatuses,
     10 : TurmsNotification_Data_Kind.userFriendRequestsWithVersion,
     11 : TurmsNotification_Data_Kind.userRelationshipGroupsWithVersion,
     12 : TurmsNotification_Data_Kind.userRelationshipsWithVersion,
@@ -85,8 +85,8 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
     ..aOM<$4.Messages>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'messages', subBuilder: $4.Messages.create)
     ..aOM<$5.MessagesWithTotalList>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'messagesWithTotalList', subBuilder: $5.MessagesWithTotalList.create)
     ..aOM<$6.UserSession>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userSession', subBuilder: $6.UserSession.create)
-    ..aOM<$7.UsersInfosWithVersion>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'usersInfosWithVersion', subBuilder: $7.UsersInfosWithVersion.create)
-    ..aOM<$8.UsersOnlineStatuses>(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'usersOnlineStatuses', subBuilder: $8.UsersOnlineStatuses.create)
+    ..aOM<$7.UserInfosWithVersion>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userInfosWithVersion', subBuilder: $7.UserInfosWithVersion.create)
+    ..aOM<$8.UserOnlineStatuses>(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userOnlineStatuses', subBuilder: $8.UserOnlineStatuses.create)
     ..aOM<$9.UserFriendRequestsWithVersion>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userFriendRequestsWithVersion', subBuilder: $9.UserFriendRequestsWithVersion.create)
     ..aOM<$10.UserRelationshipGroupsWithVersion>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userRelationshipGroupsWithVersion', subBuilder: $10.UserRelationshipGroupsWithVersion.create)
     ..aOM<$11.UserRelationshipsWithVersion>(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userRelationshipsWithVersion', subBuilder: $11.UserRelationshipsWithVersion.create)
@@ -109,8 +109,8 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
     $4.Messages? messages,
     $5.MessagesWithTotalList? messagesWithTotalList,
     $6.UserSession? userSession,
-    $7.UsersInfosWithVersion? usersInfosWithVersion,
-    $8.UsersOnlineStatuses? usersOnlineStatuses,
+    $7.UserInfosWithVersion? userInfosWithVersion,
+    $8.UserOnlineStatuses? userOnlineStatuses,
     $9.UserFriendRequestsWithVersion? userFriendRequestsWithVersion,
     $10.UserRelationshipGroupsWithVersion? userRelationshipGroupsWithVersion,
     $11.UserRelationshipsWithVersion? userRelationshipsWithVersion,
@@ -144,11 +144,11 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
     if (userSession != null) {
       _result.userSession = userSession;
     }
-    if (usersInfosWithVersion != null) {
-      _result.usersInfosWithVersion = usersInfosWithVersion;
+    if (userInfosWithVersion != null) {
+      _result.userInfosWithVersion = userInfosWithVersion;
     }
-    if (usersOnlineStatuses != null) {
-      _result.usersOnlineStatuses = usersOnlineStatuses;
+    if (userOnlineStatuses != null) {
+      _result.userOnlineStatuses = userOnlineStatuses;
     }
     if (userFriendRequestsWithVersion != null) {
       _result.userFriendRequestsWithVersion = userFriendRequestsWithVersion;
@@ -282,26 +282,26 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
   $6.UserSession ensureUserSession() => $_ensure(6);
 
   @$pb.TagNumber(8)
-  $7.UsersInfosWithVersion get usersInfosWithVersion => $_getN(7);
+  $7.UserInfosWithVersion get userInfosWithVersion => $_getN(7);
   @$pb.TagNumber(8)
-  set usersInfosWithVersion($7.UsersInfosWithVersion v) { setField(8, v); }
+  set userInfosWithVersion($7.UserInfosWithVersion v) { setField(8, v); }
   @$pb.TagNumber(8)
-  $core.bool hasUsersInfosWithVersion() => $_has(7);
+  $core.bool hasUserInfosWithVersion() => $_has(7);
   @$pb.TagNumber(8)
-  void clearUsersInfosWithVersion() => clearField(8);
+  void clearUserInfosWithVersion() => clearField(8);
   @$pb.TagNumber(8)
-  $7.UsersInfosWithVersion ensureUsersInfosWithVersion() => $_ensure(7);
+  $7.UserInfosWithVersion ensureUserInfosWithVersion() => $_ensure(7);
 
   @$pb.TagNumber(9)
-  $8.UsersOnlineStatuses get usersOnlineStatuses => $_getN(8);
+  $8.UserOnlineStatuses get userOnlineStatuses => $_getN(8);
   @$pb.TagNumber(9)
-  set usersOnlineStatuses($8.UsersOnlineStatuses v) { setField(9, v); }
+  set userOnlineStatuses($8.UserOnlineStatuses v) { setField(9, v); }
   @$pb.TagNumber(9)
-  $core.bool hasUsersOnlineStatuses() => $_has(8);
+  $core.bool hasUserOnlineStatuses() => $_has(8);
   @$pb.TagNumber(9)
-  void clearUsersOnlineStatuses() => clearField(9);
+  void clearUserOnlineStatuses() => clearField(9);
   @$pb.TagNumber(9)
-  $8.UsersOnlineStatuses ensureUsersOnlineStatuses() => $_ensure(8);
+  $8.UserOnlineStatuses ensureUserOnlineStatuses() => $_ensure(8);
 
   @$pb.TagNumber(10)
   $9.UserFriendRequestsWithVersion get userFriendRequestsWithVersion => $_getN(9);

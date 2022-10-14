@@ -3,6 +3,7 @@
     "bsonType": "object",
     "required": [
       "cd",
+      "lud",
       "ac",
       "ms",
       "oid",
@@ -14,6 +15,9 @@
         "bsonType": "long"
       },
       "cd": {
+        "bsonType": "date"
+      },
+      "lud": {
         "bsonType": "date"
       },
       "ac": {

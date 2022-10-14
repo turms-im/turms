@@ -35,12 +35,14 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.group.access.admin.dto.request.AddGroupJoinQuestionDTO;
 import im.turms.service.domain.group.access.admin.dto.request.UpdateGroupJoinQuestionDTO;
+import im.turms.service.domain.group.bo.NewGroupQuestion;
 import im.turms.service.domain.group.po.GroupJoinQuestion;
 import im.turms.service.domain.group.service.GroupQuestionService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -86,11 +88,12 @@ public class GroupQuestionController extends BaseController {
     @RequiredPermission(AdminPermission.GROUP_QUESTION_CREATE)
     public Mono<HttpHandlerResult<ResponseDTO<GroupJoinQuestion>>> addGroupJoinQuestion(
             @RequestBody AddGroupJoinQuestionDTO addGroupJoinQuestionDTO) {
-        Mono<GroupJoinQuestion> createMono = groupQuestionService.createGroupJoinQuestion(
-                addGroupJoinQuestionDTO.groupId(),
-                addGroupJoinQuestionDTO.question(),
-                addGroupJoinQuestionDTO.answers(),
-                addGroupJoinQuestionDTO.score());
+        Mono<GroupJoinQuestion> createMono = groupQuestionService.createGroupJoinQuestions(
+                        addGroupJoinQuestionDTO.groupId(),
+                        List.of(new NewGroupQuestion(addGroupJoinQuestionDTO.question(),
+                                addGroupJoinQuestionDTO.answers(),
+                                addGroupJoinQuestionDTO.score())))
+                .map(questions -> questions.get(0));
         return HttpHandlerResult.okIfTruthy(createMono);
     }
 

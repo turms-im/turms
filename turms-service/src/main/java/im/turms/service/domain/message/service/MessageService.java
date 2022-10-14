@@ -43,7 +43,6 @@ import im.turms.server.common.infra.property.constant.TimeType;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.infra.property.env.service.business.message.SequenceIdProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
-import im.turms.server.common.infra.recycler.ListRecycler;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.task.TaskManager;
@@ -820,7 +819,7 @@ public class MessageService {
         }
         return messageRepository.findMessageGroupId(messageId)
                 .flatMap(message -> message.getIsGroupMessage()
-                        ? groupMemberService.queryGroupMemberIds(message.groupId())
+                        ? groupMemberService.queryGroupMemberIds(message.groupId(), true)
                         : Mono.just(Set.of(message.getTargetId())));
     }
 
@@ -851,7 +850,7 @@ public class MessageService {
                         return Mono.error(ResponseException.get(code, permission.reason()));
                     }
                     Mono<Set<Long>> recipientIdsMono = isGroupMessage
-                            ? groupMemberService.queryGroupMemberIds(targetId)
+                            ? groupMemberService.queryGroupMemberIds(targetId, true)
                             .map(memberIds -> CollectionUtil.remove(memberIds, senderId))
                             : Mono.just(Set.of(targetId));
                     return recipientIdsMono.flatMap(recipientIds -> {

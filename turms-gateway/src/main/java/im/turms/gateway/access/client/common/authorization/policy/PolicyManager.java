@@ -18,10 +18,10 @@
 package im.turms.gateway.access.client.common.authorization.policy;
 
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.infra.collection.CloseableCollection;
 import im.turms.server.common.infra.collection.CollectionPool;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.Pool;
-import im.turms.server.common.infra.collection.CloseableCollection;
 
 import java.util.Collections;
 import java.util.LinkedList;

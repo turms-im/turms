@@ -26,9 +26,9 @@ import helper.Constants.ORDER_LOW_PRIORITY
 import helper.Constants.ORDER_MIDDLE_PRIORITY
 import helper.ExceptionUtil
 import im.turms.client.TurmsClient
+import im.turms.client.model.NewGroupJoinQuestion
 import im.turms.client.model.ResponseStatusCode
 import im.turms.client.model.proto.constant.GroupMemberRole
-import im.turms.client.model.proto.model.group.Group
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -69,10 +69,10 @@ internal class GroupServiceET {
     @Test
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
-    fun addGroupJoinQuestion_shouldReturnQuestionId() = runBlocking {
-        groupJoinQuestionId =
-            client.groupService.addGroupJoinQuestion(groupId, "question", listOf("answer1", "answer2"), 10)
-                .data
+    fun addGroupJoinQuestions_shouldReturnQuestionIds() = runBlocking {
+        val questions = listOf(NewGroupJoinQuestion("question", setOf("answer1", "answer2"), 10))
+        groupJoinQuestionId = client.groupService.addGroupJoinQuestions(groupId, questions)
+            .data[0]
         assertNotNull(groupJoinQuestionId)
     }
 
@@ -88,8 +88,8 @@ internal class GroupServiceET {
     @Test
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
-    fun addGroupMember_shouldSucceed() = runBlocking {
-        val result = client.groupService.addGroupMember(groupId, GROUP_MEMBER_ID, "name", GroupMemberRole.MEMBER)
+    fun addGroupMembers_shouldSucceed() = runBlocking {
+        val result = client.groupService.addGroupMembers(groupId, setOf(GROUP_MEMBER_ID), "name", GroupMemberRole.MEMBER)
             .data
         assertNotNull(result)
     }
@@ -193,10 +193,10 @@ internal class GroupServiceET {
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun queryGroup_shouldReturnGroupWithVersion() = runBlocking {
-        val groupWithVersion = client.groupService.queryGroup(groupId)
+    fun queryGroups_shouldReturnGroups() = runBlocking {
+        val groups = client.groupService.queryGroups(setOf(groupId))
             .data
-        assertEquals(groupId, groupWithVersion!!.group!!.id)
+        assertEquals(groupId, groups[0].id)
     }
 
     @Test
@@ -214,11 +214,7 @@ internal class GroupServiceET {
     fun queryJoinedGroupInfos_shouldEqualNewGroupId() = runBlocking {
         val groupWithVersion = client.groupService.queryJoinedGroupInfos()
             .data
-        val groups: List<Group> = groupWithVersion!!.groupsList
-        val groupIds: MutableSet<Long?> = HashSet(groups.size)
-        for (group in groups) {
-            groupIds.add(group.id)
-        }
+        val groupIds = groupWithVersion!!.groupsList.map { it.id }.toSet()
         assertTrue(groupIds.contains(groupId))
     }
 
@@ -320,8 +316,8 @@ internal class GroupServiceET {
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun removeGroupMember_shouldSucceed() = runBlocking {
-        val result = client.groupService.removeGroupMember(groupId, GROUP_MEMBER_ID)
+    fun removeGroupMembers_shouldSucceed() = runBlocking {
+        val result = client.groupService.removeGroupMembers(groupId, setOf(GROUP_MEMBER_ID))
             .data
         assertNotNull(result)
     }
@@ -329,8 +325,8 @@ internal class GroupServiceET {
     @Test
     @Order(ORDER_LOWEST_PRIORITY)
     @Timeout(5)
-    fun deleteGroupJoinQuestion_shouldSucceed() = runBlocking {
-        val result = client.groupService.deleteGroupJoinQuestion(groupJoinQuestionId)
+    fun deleteGroupJoinQuestions_shouldSucceed() = runBlocking {
+        val result = client.groupService.deleteGroupJoinQuestions(setOf(groupJoinQuestionId))
             .data
         assertNotNull(result)
     }

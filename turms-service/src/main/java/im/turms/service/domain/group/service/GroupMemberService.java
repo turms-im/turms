@@ -33,6 +33,7 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsProperties;
@@ -178,16 +179,63 @@ public class GroupMemberService {
                 }));
     }
 
-    public Mono<GroupMember> authAndAddGroupMember(
+    public Mono<List<GroupMember>> addGroupMembers(
+            @NotNull Long groupId,
+            @NotNull Set<Long> userIds,
+            @NotNull @ValidGroupMemberRole GroupMemberRole groupMemberRole,
+            @Nullable String name,
+            @Nullable @PastOrPresent Date joinDate,
+            @Nullable Date muteEndDate,
+            @Nullable ClientSession session) {
+        try {
+            Validator.notNull(groupId, "groupId");
+            Validator.notNull(userIds, "userIds");
+            // TODO: configurable
+            Validator.maxSize(userIds, "userIds", 100);
+            Validator.notNull(groupMemberRole, "groupMemberRole");
+            DataValidator.validGroupMemberRole(groupMemberRole);
+            Validator.pastOrPresent(joinDate, "joinDate");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        if (userIds.isEmpty()) {
+            return PublisherPool.emptyList();
+        }
+        if (joinDate == null) {
+            joinDate = new Date();
+        }
+        List<GroupMember> groupMembers = new ArrayList<>(userIds.size());
+        for (Long userId : userIds) {
+            groupMembers.add(new GroupMember(
+                    groupId,
+                    userId,
+                    name,
+                    groupMemberRole,
+                    joinDate,
+                    muteEndDate));
+        }
+        return groupMemberRepository.insertAllOfSameType(groupMembers, session)
+                .then(groupVersionService.updateMembersVersion(groupId)
+                        .onErrorResume(t -> {
+                            LOGGER.error("Caught an error while updating the members version of the group {} after adding a group member",
+                                    groupId, t);
+                            return Mono.empty();
+                        }))
+                .thenReturn(groupMembers);
+    }
+
+    public Mono<List<GroupMember>> authAndAddGroupMembers(
             @NotNull Long requesterId,
             @NotNull Long groupId,
-            @NotNull Long userId,
+            @NotNull Set<Long> userIds,
             @NotNull @ValidGroupMemberRole GroupMemberRole groupMemberRole,
             @Nullable String name,
             @Nullable Date muteEndDate,
             @Nullable ClientSession session) {
         try {
-            Validator.notNull(userId, "userId");
+            Validator.notNull(userIds, "userIds");
+            // TODO: configurable
+            Validator.maxSize(userIds, "userIds", 100);
             DataValidator.validGroupMemberRole(groupMemberRole);
         } catch (ResponseException e) {
             return Mono.error(e);
@@ -197,71 +245,129 @@ public class GroupMemberService {
                     "The role of the new member must not be OWNER"));
         }
         return isAllowedToInviteOrAdd(groupId, requesterId, groupMemberRole)
-                .flatMap(pair -> {
-                    ServicePermission permission = pair.getLeft();
+                .flatMap(permissionAndCode -> {
+                    ServicePermission permission = permissionAndCode.getLeft();
                     ResponseStatusCode code = permission.code();
                     if (code != ResponseStatusCode.OK) {
                         return Mono.error(ResponseException.get(code, permission.reason()));
                     }
-                    Mono<Boolean> isBlockedMono = groupBlocklistService.isBlocked(groupId, userId);
-                    Mono<Boolean> isGroupActiveMono = groupService.isGroupActiveAndNotDeleted(groupId);
-                    return Mono.zip(isBlockedMono, isGroupActiveMono)
-                            .flatMap(results -> {
-                                boolean isUserBlocked = results.getT1();
-                                boolean isGroupActive = results.getT2();
-                                if (isUserBlocked) {
-                                    return isGroupActive
-                                            ? ResponseExceptionPublisherPool.addBlockedUserToGroup()
-                                            : ResponseExceptionPublisherPool.addBlockedUserToInactiveGroup();
-                                } else if (isGroupActive) {
-                                    return addGroupMember(groupId, userId, groupMemberRole, name, new Date(), muteEndDate, session);
-                                }
-                                return Mono.error(ResponseException.get(ResponseStatusCode.ADD_USER_TO_INACTIVE_GROUP));
-                            });
+                    return groupService.isGroupActiveAndNotDeleted(groupId);
+                })
+                .flatMap(isGroupActive -> {
+                    if (!isGroupActive) {
+                        return ResponseExceptionPublisherPool.addBlockedUserToInactiveGroup();
+                    }
+                    return groupBlocklistService.findBlockedUserIds(groupId, userIds)
+                            .collect(CollectorUtil.toList(userIds.size()));
+                })
+                .flatMap(blockedUserIds -> {
+                    if (blockedUserIds.isEmpty()) {
+                        return addGroupMembers(groupId, userIds, groupMemberRole, name, new Date(), muteEndDate, session);
+                    }
+                    String ids = StringUtil.joinLatin1(", ", blockedUserIds);
+                    return Mono.error(ResponseException.get(ResponseStatusCode.ADD_BLOCKED_USER_TO_GROUP, "The blocked user IDs: " + ids));
                 });
     }
 
-    public Mono<Void> authAndDeleteGroupMember(
+    /**
+     * @return the deleted member IDs
+     */
+    public Mono<Set<Long>> authAndDeleteGroupMembers(
             @NotNull Long requesterId,
             @NotNull Long groupId,
-            @NotNull Long deleteMemberId,
+            @NotNull Set<Long> memberIdsToDelete,
             @Nullable Long successorId,
             @Nullable Boolean quitAfterTransfer) {
         try {
             Validator.notNull(requesterId, "requesterId");
             Validator.notNull(groupId, "groupId");
-            Validator.notNull(deleteMemberId, "deleteMemberId");
+            Validator.notNull(memberIdsToDelete, "memberIdsToDelete");
+            // TODO: configurable
+            Validator.maxSize(memberIdsToDelete, "memberIdsToDelete", 100);
         } catch (ResponseException e) {
             return Mono.error(e);
         }
         if (successorId != null) {
-            quitAfterTransfer = quitAfterTransfer != null && quitAfterTransfer;
+            if (!memberIdsToDelete.isEmpty()) {
+                return Mono.error(ResponseException
+                        .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "Cannot transfer the group ownership while removing other members"));
+            }
             return groupService.authAndTransferGroupOwnership(
-                    requesterId, groupId, successorId, quitAfterTransfer, null);
+                            requesterId,
+                            groupId,
+                            successorId,
+                            quitAfterTransfer != null && quitAfterTransfer,
+                            null)
+                    .thenReturn(Set.of(requesterId));
         }
-        boolean quitGroup = requesterId.equals(deleteMemberId);
+        if (memberIdsToDelete.isEmpty()) {
+            return PublisherPool.emptySet();
+        }
+        boolean quitGroup = memberIdsToDelete.contains(requesterId);
         if (quitGroup) {
-            return isOwner(deleteMemberId, groupId)
+            if (memberIdsToDelete.size() > 1) {
+                return Mono.error(ResponseException
+                        .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "Cannot quit a group while removing other members"));
+            }
+            return isOwner(requesterId, groupId, false)
                     .flatMap(isOwner -> isOwner
                             ? Mono.error(ResponseException.get(ResponseStatusCode.OWNER_QUITS_WITHOUT_SPECIFYING_SUCCESSOR))
-                            : deleteGroupMembers(groupId, deleteMemberId, null, true).then());
+                            : deleteGroupMember(groupId, requesterId, null, true)
+                            .thenReturn(Set.of(requesterId)));
         }
-        return isOwnerOrManager(requesterId, groupId)
-                .flatMap(isOwnerOrManager -> isOwnerOrManager
-                        ? deleteGroupMembers(Set.of(new GroupMember.Key(groupId, deleteMemberId)), null, true).then()
-                        : Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_REMOVE_GROUP_MEMBER)));
+        return queryGroupMemberRole(requesterId, groupId, false)
+                .flatMap(requesterRole -> {
+                    int requesterRoleNumber = requesterRole.getNumber();
+                    if (requesterRoleNumber > GroupMemberRole.MANAGER_VALUE) {
+                        return Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_REMOVE_GROUP_MEMBER));
+                    }
+                    return queryGroupMemberKeyAndRolePairs(memberIdsToDelete, groupId)
+                            .flatMap(keyAndRolePairs -> {
+                                if (keyAndRolePairs.isEmpty()) {
+                                    return PublisherPool.emptySet();
+                                }
+                                int pairCount = keyAndRolePairs.size();
+                                Set<Long> finalMemberIdsToDelete;
+                                boolean needComputeMemberId;
+                                if (pairCount == memberIdsToDelete.size()) {
+                                    finalMemberIdsToDelete = memberIdsToDelete;
+                                    needComputeMemberId = false;
+                                } else {
+                                    finalMemberIdsToDelete = CollectionUtil.newSetWithExpectedSize(pairCount);
+                                    needComputeMemberId = true;
+                                }
+                                List<GroupMember.Key> keys = new ArrayList<>(pairCount);
+                                for (GroupMember keyAndRole : keyAndRolePairs) {
+                                    Long userId = keyAndRole.getKey().getUserId();
+                                    if (keyAndRole.getRole().getNumber() <= requesterRoleNumber) {
+                                        return Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_TO_REMOVE_GROUP_OWNER_OR_MANAGER,
+                                                ResponseStatusCode.NOT_OWNER_TO_REMOVE_GROUP_OWNER_OR_MANAGER.getReason() +
+                                                        ". No permission to remove the member: "
+                                                        + userId));
+                                    }
+                                    keys.add(new GroupMember.Key(groupId, userId));
+                                    if (needComputeMemberId) {
+                                        finalMemberIdsToDelete.add(userId);
+                                    }
+                                }
+                                return deleteGroupMembers(keys, null, true)
+                                        .thenReturn(finalMemberIdsToDelete);
+                            });
+                });
     }
 
-    public Mono<DeleteResult> deleteGroupMembers(
+    public Mono<DeleteResult> deleteGroupMember(
             @NotNull Long groupId,
             @NotNull Long memberId,
             @Nullable ClientSession session,
             boolean updateGroupMembersVersion) {
-        return deleteGroupMembers(Set.of(new GroupMember.Key(groupId, memberId)), session, updateGroupMembersVersion);
+        return deleteGroupMembers(Set.of(new GroupMember.Key(groupId, memberId)),
+                session,
+                updateGroupMembersVersion);
     }
 
     public Mono<DeleteResult> deleteGroupMembers(
-            @NotEmpty Set<GroupMember.Key> keys,
+            @NotEmpty Collection<GroupMember.Key> keys,
             @Nullable ClientSession session,
             boolean updateGroupMembersVersion) {
         Set<Long> groupIds;
@@ -378,7 +484,7 @@ public class GroupMemberService {
         return updateGroupMembers(keys, name, role, joinDate, muteEndDate, session, updateGroupMembersVersion);
     }
 
-    public Mono<Boolean> isGroupMember(@NotNull Long groupId, @NotNull Long userId) {
+    public Mono<Boolean> isGroupMember(@NotNull Long groupId, @NotNull Long userId, boolean preferCache) {
         try {
             Validator.notNull(groupId, "groupId");
             Validator.notNull(userId, "userId");
@@ -386,7 +492,7 @@ public class GroupMemberService {
             return Mono.error(e);
         }
         GroupMember.Key key = new GroupMember.Key(groupId, userId);
-        if (isMemberCacheEnabled) {
+        if (preferCache && isMemberCacheEnabled) {
             Map<GroupMember.Key, GroupMember> keyToMember = groupIdToMembersCache.getIfPresent(groupId);
             if (keyToMember != null) {
                 GroupMember member = keyToMember.get(key);
@@ -421,7 +527,7 @@ public class GroupMemberService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return queryGroupMemberRole(inviterId, groupId)
+        return queryGroupMemberRole(inviterId, groupId, false)
                 .flatMap(inviterRole -> groupService.queryGroupType(groupId)
                         .flatMap(groupType -> {
                             GroupInvitationStrategy strategy = groupType.getInvitationStrategy();
@@ -444,7 +550,7 @@ public class GroupMemberService {
      * {@link ResponseStatusCode#INVITEE_HAS_BEEN_BLOCKED}
      */
     public Mono<ResponseStatusCode> isAllowedToBeInvited(@NotNull Long groupId, @NotNull Long inviteeId) {
-        return isGroupMember(groupId, inviteeId)
+        return isGroupMember(groupId, inviteeId, false)
                 .flatMap(isGroupMember -> {
                     if (isGroupMember) {
                         return Mono.just(ResponseStatusCode.GROUP_INVITEE_ALREADY_GROUP_MEMBER);
@@ -460,7 +566,7 @@ public class GroupMemberService {
      * Note that a blocked user is never a group member
      */
     public Mono<ResponseStatusCode> isAllowedToSendMessage(@NotNull Long groupId, @NotNull Long senderId) {
-        return isGroupMember(groupId, senderId)
+        return isGroupMember(groupId, senderId, true)
                 .flatMap(isGroupMember -> isGroupMember != null && isGroupMember
                         ? isGroupMemberAllowedToSendMessage(groupId, senderId)
                         : isGuestAllowedToSendMessage(groupId, senderId));
@@ -484,7 +590,7 @@ public class GroupMemberService {
                     }
                     return groupService.isGroupActiveAndNotDeleted(groupId)
                             .flatMap(isActive -> isActive
-                                    ? isMemberMuted(groupId, senderId)
+                                    ? isMemberMuted(groupId, senderId, true)
                                     .map(muted -> muted ? ResponseStatusCode.MUTED_MEMBER_SEND_MESSAGE : ResponseStatusCode.OK)
                                     : Mono.just(ResponseStatusCode.SEND_MESSAGE_TO_INACTIVE_GROUP));
                 });
@@ -517,14 +623,14 @@ public class GroupMemberService {
                 .defaultIfEmpty(ResponseStatusCode.SEND_MESSAGE_TO_INACTIVE_GROUP);
     }
 
-    public Mono<Boolean> isMemberMuted(@NotNull Long groupId, @NotNull Long userId) {
+    public Mono<Boolean> isMemberMuted(@NotNull Long groupId, @NotNull Long userId, boolean preferCache) {
         try {
             Validator.notNull(groupId, "groupId");
             Validator.notNull(userId, "userId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (isMemberCacheEnabled) {
+        if (preferCache && isMemberCacheEnabled) {
             Map<GroupMember.Key, GroupMember> keyToMember = groupIdToMembersCache.getIfPresent(groupId);
             if (keyToMember != null) {
                 GroupMember member = keyToMember.get(new GroupMember.Key(groupId, userId));
@@ -536,14 +642,27 @@ public class GroupMemberService {
         return groupMemberRepository.isMemberMuted(groupId, userId);
     }
 
-    public Mono<GroupMemberRole> queryGroupMemberRole(@NotNull Long userId, @NotNull Long groupId) {
+    public Mono<List<GroupMember>> queryGroupMemberKeyAndRolePairs(@NotNull Set<Long> userIds, @NotNull Long groupId) {
         try {
+            Validator.notNull(userIds, "userIds");
             Validator.notNull(groupId, "groupId");
-            Validator.notNull(userId, "userId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (isMemberCacheEnabled) {
+        return groupMemberRepository.findGroupMemberKeyAndRoleParis(userIds, groupId)
+                .collect(CollectorUtil.toList(userIds.size()));
+    }
+
+    public Mono<GroupMemberRole> queryGroupMemberRole(@NotNull Long userId,
+                                                      @NotNull Long groupId,
+                                                      boolean preferCache) {
+        try {
+            Validator.notNull(userId, "userId");
+            Validator.notNull(groupId, "groupId");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        if (preferCache && isMemberCacheEnabled) {
             Map<GroupMember.Key, GroupMember> keyToMember = groupIdToMembersCache.getIfPresent(groupId);
             if (keyToMember != null) {
                 GroupMember member = keyToMember.get(new GroupMember.Key(groupId, userId));
@@ -555,21 +674,27 @@ public class GroupMemberService {
         return groupMemberRepository.findGroupMemberRole(userId, groupId);
     }
 
-    public Mono<Boolean> isOwner(@NotNull Long userId, @NotNull Long groupId) {
-        return queryGroupMemberRole(userId, groupId)
+    public Mono<Boolean> isOwner(@NotNull Long userId,
+                                 @NotNull Long groupId,
+                                 boolean preferCache) {
+        return queryGroupMemberRole(userId, groupId, preferCache)
                 .map(memberRole -> memberRole == GroupMemberRole.OWNER)
                 .switchIfEmpty(PublisherPool.FALSE);
     }
 
-    public Mono<Boolean> isOwnerOrManager(@NotNull Long userId, @NotNull Long groupId) {
-        return queryGroupMemberRole(userId, groupId)
+    public Mono<Boolean> isOwnerOrManager(@NotNull Long userId,
+                                          @NotNull Long groupId,
+                                          boolean preferCache) {
+        return queryGroupMemberRole(userId, groupId, preferCache)
                 .map(memberRole -> memberRole == GroupMemberRole.OWNER
                         || memberRole == GroupMemberRole.MANAGER)
                 .defaultIfEmpty(false);
     }
 
-    public Mono<Boolean> isOwnerOrManagerOrMember(@NotNull Long userId, @NotNull Long groupId) {
-        return queryGroupMemberRole(userId, groupId)
+    public Mono<Boolean> isOwnerOrManagerOrMember(@NotNull Long userId,
+                                                  @NotNull Long groupId,
+                                                  boolean preferCache) {
+        return queryGroupMemberRole(userId, groupId, preferCache)
                 .map(memberRole -> memberRole == GroupMemberRole.OWNER
                         || memberRole == GroupMemberRole.MANAGER
                         || memberRole == GroupMemberRole.MEMBER)
@@ -597,7 +722,7 @@ public class GroupMemberService {
         return groupMemberRepository.findUsersJoinedGroupIds(userIds, page, size);
     }
 
-    public Mono<Set<Long>> queryMemberIdsInUsersJoinedGroups(@NotEmpty Set<Long> userIds) {
+    public Mono<Set<Long>> queryMemberIdsInUsersJoinedGroups(@NotEmpty Set<Long> userIds, boolean preferCache) {
         try {
             Validator.notEmpty(userIds, "userIds");
         } catch (ResponseException e) {
@@ -608,17 +733,17 @@ public class GroupMemberService {
                 .collect(Collectors.toCollection(recyclableSet::getValue))
                 .flatMap(groupIds -> groupIds.isEmpty()
                         ? PublisherPool.<Long>emptySet()
-                        : queryGroupMemberIds(groupIds))
+                        : queryGroupMemberIds(groupIds, preferCache))
                 .doFinally(signalType -> recyclableSet.recycle());
     }
 
-    public Mono<Set<Long>> queryGroupMemberIds(@NotNull Long groupId) {
+    public Mono<Set<Long>> queryGroupMemberIds(@NotNull Long groupId, boolean preferCache) {
         try {
             Validator.notNull(groupId, "groupId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (isMemberCacheEnabled) {
+        if (preferCache && isMemberCacheEnabled) {
             Map<GroupMember.Key, GroupMember> keyToMember = groupIdToMembersCache.getIfPresent(groupId);
             if (keyToMember != null) {
                 Collection<GroupMember> members = keyToMember.values();
@@ -636,13 +761,13 @@ public class GroupMemberService {
                 .doFinally(signalType -> recyclableSet.recycle());
     }
 
-    public Mono<Set<Long>> queryGroupMemberIds(@NotEmpty Set<Long> groupIds) {
+    public Mono<Set<Long>> queryGroupMemberIds(@NotEmpty Set<Long> groupIds, boolean preferCache) {
         try {
             Validator.notEmpty(groupIds, "groupIds");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (isMemberCacheEnabled) {
+        if (preferCache && isMemberCacheEnabled) {
             Map<Long, Map<GroupMember.Key, GroupMember>> cachedGroupIdToMembers =
                     groupIdToMembersCache.getAllPresent(groupIds);
             int cachedGroupCount = cachedGroupIdToMembers.size();
@@ -768,14 +893,16 @@ public class GroupMemberService {
                         : OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT);
     }
 
-    public Mono<List<GroupMember>> queryGroupMembers(@NotNull Long groupId, @NotEmpty Set<Long> memberIds) {
+    public Mono<List<GroupMember>> queryGroupMembers(@NotNull Long groupId,
+                                                     @NotEmpty Set<Long> memberIds,
+                                                     boolean preferCache) {
         try {
             Validator.notNull(groupId, "groupId");
             Validator.notEmpty(memberIds, "memberIds");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (isMemberCacheEnabled) {
+        if (preferCache && isMemberCacheEnabled) {
             Map<GroupMember.Key, GroupMember> keyToMember = groupIdToMembersCache.getIfPresent(groupId);
             if (keyToMember != null) {
                 List<GroupMember> members = new ArrayList<>(memberIds.size());
@@ -802,10 +929,10 @@ public class GroupMemberService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return isGroupMember(groupId, requesterId)
+        return isGroupMember(groupId, requesterId, false)
                 .flatMap(isGroupMember -> isGroupMember == null || !isGroupMember
                         ? Mono.error(ResponseException.get(ResponseStatusCode.NOT_MEMBER_TO_QUERY_MEMBER_INFO))
-                        : queryGroupMembers(groupId, memberIds))
+                        : queryGroupMembers(groupId, memberIds, false))
                 .flatMap(members -> {
                     if (members.isEmpty()) {
                         return ResponseExceptionPublisherPool.noContent();
@@ -826,7 +953,7 @@ public class GroupMemberService {
             @NotNull Long groupId,
             @Nullable Date lastUpdatedDate,
             boolean withStatus) {
-        return isGroupMember(groupId, requesterId)
+        return isGroupMember(groupId, requesterId, false)
                 .flatMap(isGroupMember -> isGroupMember != null && isGroupMember
                         ? groupVersionService.queryMembersVersion(groupId)
                         : Mono.error(ResponseException.get(ResponseStatusCode.NOT_MEMBER_TO_QUERY_MEMBER_INFO)))
@@ -869,10 +996,10 @@ public class GroupMemberService {
         }
         Mono<ResponseStatusCode> isAuthorizedMono;
         if (role != null) {
-            isAuthorizedMono = isOwner(requesterId, groupId)
+            isAuthorizedMono = isOwner(requesterId, groupId, false)
                     .map(isOwner -> isOwner ? ResponseStatusCode.OK : ResponseStatusCode.NOT_OWNER_TO_UPDATE_GROUP_MEMBER_INFO);
         } else if (muteEndDate != null || (name != null && !requesterId.equals(memberId))) {
-            isAuthorizedMono = isOwnerOrManager(requesterId, groupId)
+            isAuthorizedMono = isOwnerOrManager(requesterId, groupId, false)
                     .map(isOwnerOrManager -> isOwnerOrManager ? ResponseStatusCode.OK :
                             ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_MEMBER_INFO);
         } else {
@@ -1013,27 +1140,29 @@ public class GroupMemberService {
         }
         for (GroupMember.Key key : keys) {
             Map<GroupMember.Key, GroupMember> keyAndMember = groupIdToMembersCache.getIfPresent(key.getGroupId());
-            if (keyAndMember != null) {
-                GroupMember member = keyAndMember.get(key);
-                if (member != null) {
-                    if (name != null) {
-                        member.setName(name);
-                    }
-                    if (role != null) {
-                        member.setRole(role);
-                    }
-                    if (joinDate != null) {
-                        member.setJoinDate(joinDate);
-                    }
-                    if (muteEndDate != null) {
-                        member.setMuteEndDate(muteEndDate);
-                    }
-                }
+            if (keyAndMember == null) {
+                continue;
+            }
+            GroupMember member = keyAndMember.get(key);
+            if (member == null) {
+                continue;
+            }
+            if (name != null) {
+                member.setName(name);
+            }
+            if (role != null) {
+                member.setRole(role);
+            }
+            if (joinDate != null) {
+                member.setJoinDate(joinDate);
+            }
+            if (muteEndDate != null) {
+                member.setMuteEndDate(muteEndDate);
             }
         }
     }
 
-    private void invalidMemberCache(Set<GroupMember.Key> keys) {
+    private void invalidMemberCache(Collection<GroupMember.Key> keys) {
         if (!isMemberCacheEnabled) {
             return;
         }

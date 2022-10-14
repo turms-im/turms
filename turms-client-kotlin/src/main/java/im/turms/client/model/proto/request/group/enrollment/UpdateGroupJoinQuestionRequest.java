@@ -48,14 +48,14 @@ public  final class UpdateGroupJoinQuestionRequest extends
    * @param value The questionId to set.
    */
   private void setQuestionId(long value) {
-    
+
     questionId_ = value;
   }
   /**
    * <code>int64 question_id = 1;</code>
    */
   private void clearQuestionId() {
-    
+
     questionId_ = 0L;
   }
 

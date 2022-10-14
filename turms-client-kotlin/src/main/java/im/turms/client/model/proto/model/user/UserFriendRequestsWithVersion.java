@@ -44,7 +44,7 @@ public  final class UserFriendRequestsWithVersion extends
   /**
    * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
    */
-  public java.util.List<? extends im.turms.client.model.proto.model.user.UserFriendRequestOrBuilder> 
+  public java.util.List<? extends im.turms.client.model.proto.model.user.UserFriendRequestOrBuilder>
       getUserFriendRequestsOrBuilderList() {
     return userFriendRequests_;
   }

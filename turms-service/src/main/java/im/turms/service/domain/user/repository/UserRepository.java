@@ -72,7 +72,7 @@ public class UserRepository extends BaseRepository<User, Long> {
         return mongoClient.updateMany(entityClass, filter, update);
     }
 
-    public Mono<UpdateResult> updateUsersDeleted(Set<Long> userIds) {
+    public Mono<UpdateResult> updateUsersDeletionDate(Set<Long> userIds) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, userIds);
         Date now = new Date();
@@ -150,10 +150,11 @@ public class UserRepository extends BaseRepository<User, Long> {
         return mongoClient.findMany(entityClass, filter, options);
     }
 
-    public Mono<User> findNotDeletedUserProfile(Long userId) {
-        Filter filter = Filter.newBuilder(2)
-                .eq(DomainFieldName.ID, userId)
-                .eq(User.Fields.DELETION_DATE, null);
+    public Flux<User> findNotDeletedUserProfiles(Collection<Long> userIds, @Nullable Date lastUpdatedDate) {
+        Filter filter = Filter.newBuilder(3)
+                .in(DomainFieldName.ID, userIds)
+                .eq(User.Fields.DELETION_DATE, null)
+                .gtIfNotNull(User.Fields.LAST_UPDATED_DATE, lastUpdatedDate);
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(DomainFieldName.ID,
                         User.Fields.NAME,
@@ -163,7 +164,7 @@ public class UserRepository extends BaseRepository<User, Long> {
                         User.Fields.PROFILE_ACCESS_STRATEGY,
                         User.Fields.PERMISSION_GROUP_ID,
                         User.Fields.IS_ACTIVE);
-        return mongoClient.findOne(entityClass, filter, options);
+        return mongoClient.findMany(entityClass, filter, options);
     }
 
     public Flux<User> findUsersProfile(Collection<Long> userIds, boolean queryDeletedRecords) {

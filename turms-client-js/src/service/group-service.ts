@@ -8,6 +8,9 @@ import ResponseError from '../error/response-error';
 import ResponseStatusCode from '../model/response-status-code';
 import TurmsClient from '../turms-client';
 import Validator from '../util/validator';
+import CollectionUtil from '../util/collection-util';
+import NewGroupJoinQuestion from '../model/new-group-join-question';
+import { GroupJoinQuestion } from '../model/proto/model/group/group_join_question';
 
 export default class GroupService {
     private _turmsClient: TurmsClient;
@@ -156,31 +159,23 @@ export default class GroupService {
         });
     }
 
-    queryGroup({
-        groupId,
+    queryGroups({
+        groupIds,
         lastUpdatedDate
     }: {
-        groupId: string,
+        groupIds: string[],
         lastUpdatedDate?: Date
-    }): Promise<Response<ParsedModel.GroupWithVersion | undefined>> {
-        if (Validator.isFalsy(groupId)) {
-            return ResponseError.notFalsyPromise('groupId');
+    }): Promise<Response<ParsedModel.Group[]>> {
+        if (Validator.isFalsy(groupIds)) {
+            return Promise.resolve(Response.emptyList());
         }
         return this._turmsClient.driver.send({
-            queryGroupRequest: {
-                groupId,
+            queryGroupsRequest: {
+                groupIds: CollectionUtil.uniqueArray(groupIds),
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => Response.fromNotification(n, (data) => {
-            const groupsWithVersion = data.groupsWithVersion;
-            const group = NotificationUtil.transform(groupsWithVersion?.groups?.[0]);
-            if (group) {
-                return {
-                    group,
-                    lastUpdatedDate: NotificationUtil.transformDate(groupsWithVersion.lastUpdatedDate)
-                };
-            }
-        }));
+        }).then(n => Response.fromNotification(n, (data) =>
+            NotificationUtil.transform(data.groupsWithVersion?.groups)));
     }
 
     queryJoinedGroupIds({
@@ -207,50 +202,65 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupsWithVersion)));
     }
 
-    addGroupJoinQuestion({
+    addGroupJoinQuestions({
         groupId,
-        question,
-        answers,
-        score
+        questions
     }: {
         groupId: string,
-        question: string,
-        answers: string[],
-        score: number
-    }): Promise<Response<string>> {
+        questions: NewGroupJoinQuestion[]
+    }): Promise<Response<string[]>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (Validator.isFalsy(question)) {
-            return ResponseError.notFalsyPromise('question');
+        if (Validator.isFalsy(questions)) {
+            return Promise.resolve(Response.emptyList());
         }
-        if (Validator.isFalsy(answers)) {
-            return ResponseError.notFalsyPromise('answers', true);
-        }
-        if (Validator.isFalsy(score)) {
-            return ResponseError.notFalsyPromise('score');
+        let newQuestions;
+        try {
+            newQuestions = questions.map(q => {
+                const question = q.question;
+                const answers = q.answers;
+                const score = q.score;
+                if (Validator.isFalsy(question)) {
+                    ResponseError.notFalsy('question');
+                }
+                if (Validator.isFalsy(answers)) {
+                    ResponseError.notFalsy('answers', true);
+                }
+                if (Validator.isFalsy(score)) {
+                    ResponseError.notFalsy('score');
+                }
+                return {
+                    question,
+                    answers,
+                    score
+                };
+            });
+        } catch (e) {
+            return Promise.reject(e);
         }
         return this._turmsClient.driver.send({
-            createGroupJoinQuestionRequest: {
+            createGroupJoinQuestionsRequest: {
                 groupId,
-                question,
-                answers: answers || [],
-                score
+                questions: newQuestions
             }
-        }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
+        }).then(n => Response.fromNotification(n, data => data.ids?.values || []));
     }
 
-    deleteGroupJoinQuestion({
-        questionId
+    deleteGroupJoinQuestions({
+        groupId,
+        questionIds
     }: {
-        questionId: string
+        groupId: string,
+        questionIds: string[]
     }): Promise<Response<void>> {
-        if (Validator.isFalsy(questionId)) {
-            return ResponseError.notFalsyPromise('questionId');
+        if (Validator.isFalsy(questionIds)) {
+            return Promise.resolve(Response.nullValue());
         }
         return this._turmsClient.driver.send({
-            deleteGroupJoinQuestionRequest: {
-                questionId
+            deleteGroupJoinQuestionsRequest: {
+                groupId,
+                questionIds
             }
         }).then(n => Response.fromNotification(n));
     }
@@ -349,7 +359,7 @@ export default class GroupService {
     }: {
         groupId: string,
         lastUpdatedDate?: Date
-    }): Promise<Response<ParsedModel.UsersInfosWithVersion | undefined>> {
+    }): Promise<Response<ParsedModel.UserInfosWithVersion | undefined>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -358,7 +368,7 @@ export default class GroupService {
                 groupId,
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.usersInfosWithVersion)));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userInfosWithVersion)));
     }
 
     // Group Enrollment
@@ -553,15 +563,15 @@ export default class GroupService {
     }
 
     // Group Member
-    addGroupMember({
+    addGroupMembers({
         groupId,
-        userId,
+        userIds,
         name,
         role,
         muteEndDate
     }: {
         groupId: string,
-        userId: string,
+        userIds: string[],
         name?: string,
         role?: string | GroupMemberRole,
         muteEndDate?: Date
@@ -569,19 +579,19 @@ export default class GroupService {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (Validator.isFalsy(userId)) {
-            return ResponseError.notFalsyPromise('userId');
-        }
         if (typeof role === 'string') {
             role = GroupMemberRole[role] as GroupMemberRole;
             if (Validator.isFalsy(role)) {
                 return ResponseError.notFalsyPromise('role');
             }
         }
+        if (Validator.isFalsy(userIds)) {
+            return Promise.resolve(Response.nullValue());
+        }
         return this._turmsClient.driver.send({
-            createGroupMemberRequest: {
+            createGroupMembersRequest: {
                 groupId,
-                userId,
+                userIds,
                 name,
                 role,
                 muteEndDate: DataParser.getDateTimeStr(muteEndDate)
@@ -602,32 +612,32 @@ export default class GroupService {
             return ResponseError.notFalsyPromise('groupId');
         }
         return this._turmsClient.driver.send({
-            deleteGroupMemberRequest: {
+            deleteGroupMembersRequest: {
                 groupId,
-                memberId: this._turmsClient.userService.userInfo.userId,
+                memberIds: [this._turmsClient.userService.userInfo.userId],
                 successorId,
                 quitAfterTransfer
             }
         }).then(n => Response.fromNotification(n));
     }
 
-    removeGroupMember({
+    removeGroupMembers({
         groupId,
-        memberId
+        memberIds
     }: {
         groupId: string,
-        memberId: string
+        memberIds: string[]
     }): Promise<Response<void>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (Validator.isFalsy(memberId)) {
-            return ResponseError.notFalsyPromise('memberId');
+        if (Validator.isFalsy(memberIds)) {
+            return Promise.resolve(Response.nullValue());
         }
         return this._turmsClient.driver.send({
-            deleteGroupMemberRequest: {
+            deleteGroupMembersRequest: {
                 groupId,
-                memberId
+                memberIds
             }
         }).then(n => Response.fromNotification(n));
     }

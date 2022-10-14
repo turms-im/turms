@@ -101,6 +101,8 @@ public class GroupController extends BaseController {
             @QueryParam(required = false) Date creationDateEnd,
             @QueryParam(required = false) Date deletionDateStart,
             @QueryParam(required = false) Date deletionDateEnd,
+            @QueryParam(required = false) Date lastUpdatedDateStart,
+            @QueryParam(required = false) Date lastUpdatedDateEnd,
             @QueryParam(required = false) Date muteEndDateStart,
             @QueryParam(required = false) Date muteEndDateEnd,
             @QueryParam(required = false) Set<Long> memberIds,
@@ -114,6 +116,7 @@ public class GroupController extends BaseController {
                 isActive,
                 DateRange.of(creationDateStart, creationDateEnd),
                 DateRange.of(deletionDateStart, deletionDateEnd),
+                DateRange.of(lastUpdatedDateStart, lastUpdatedDateEnd),
                 DateRange.of(muteEndDateStart, muteEndDateEnd),
                 memberIds,
                 0,
@@ -133,21 +136,28 @@ public class GroupController extends BaseController {
             @QueryParam(required = false) Date creationDateEnd,
             @QueryParam(required = false) Date deletionDateStart,
             @QueryParam(required = false) Date deletionDateEnd,
+            @QueryParam(required = false) Date lastUpdatedDateStart,
+            @QueryParam(required = false) Date lastUpdatedDateEnd,
             @QueryParam(required = false) Date muteEndDateStart,
             @QueryParam(required = false) Date muteEndDateEnd,
             @QueryParam(required = false) Set<Long> memberIds,
             int page,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
+        DateRange creationDateRange = DateRange.of(creationDateStart, creationDateEnd);
+        DateRange deletionDateRange = DateRange.of(deletionDateStart, deletionDateEnd);
+        DateRange lastUpdatedDateRange = DateRange.of(lastUpdatedDateStart, lastUpdatedDateEnd);
+        DateRange muteEndDateRange = DateRange.of(muteEndDateStart, muteEndDateEnd);
         Mono<Long> count = groupService.countGroups(
                 ids,
                 typeIds,
                 creatorIds,
                 ownerIds,
                 isActive,
-                DateRange.of(creationDateStart, creationDateEnd),
-                DateRange.of(deletionDateStart, deletionDateEnd),
-                DateRange.of(muteEndDateStart, muteEndDateEnd),
+                creationDateRange,
+                deletionDateRange,
+                lastUpdatedDateRange,
+                muteEndDateRange,
                 memberIds);
         Flux<Group> groupsFlux = groupService.queryGroups(
                 ids,
@@ -155,9 +165,10 @@ public class GroupController extends BaseController {
                 creatorIds,
                 ownerIds,
                 isActive,
-                DateRange.of(creationDateStart, creationDateEnd),
-                DateRange.of(deletionDateStart, deletionDateEnd),
-                DateRange.of(muteEndDateStart, muteEndDateEnd),
+                creationDateRange,
+                deletionDateRange,
+                lastUpdatedDateRange,
+                muteEndDateRange,
                 memberIds,
                 page,
                 size);

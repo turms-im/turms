@@ -44,7 +44,7 @@ public  final class Conversations extends
   /**
    * <code>repeated .im.turms.proto.PrivateConversation private_conversations = 1;</code>
    */
-  public java.util.List<? extends im.turms.client.model.proto.model.conversation.PrivateConversationOrBuilder> 
+  public java.util.List<? extends im.turms.client.model.proto.model.conversation.PrivateConversationOrBuilder>
       getPrivateConversationsOrBuilderList() {
     return privateConversations_;
   }
@@ -138,7 +138,7 @@ public  final class Conversations extends
   /**
    * <code>repeated .im.turms.proto.GroupConversation group_conversations = 2;</code>
    */
-  public java.util.List<? extends im.turms.client.model.proto.model.conversation.GroupConversationOrBuilder> 
+  public java.util.List<? extends im.turms.client.model.proto.model.conversation.GroupConversationOrBuilder>
       getGroupConversationsOrBuilderList() {
     return groupConversations_;
   }

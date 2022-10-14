@@ -253,7 +253,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                         String reason = "The invitation is under the status " + requestStatus;
                         return Mono.error(ResponseException.get(ResponseStatusCode.RECALL_NOT_PENDING_GROUP_INVITATION, reason));
                     }
-                    return groupMemberService.isOwnerOrManager(requesterId, invitation.getGroupId())
+                    return groupMemberService.isOwnerOrManager(requesterId, invitation.getGroupId(), false)
                             .flatMap(authenticated -> {
                                 if (!authenticated) {
                                     return Mono
@@ -344,7 +344,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                 .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
     }
 
-    public Mono<GroupInvitationsWithVersion> queryGroupInvitationsWithVersion(
+    public Mono<GroupInvitationsWithVersion> authAndQueryGroupInvitationsWithVersion(
             @NotNull Long userId,
             @NotNull Long groupId,
             @Nullable Date lastUpdatedDate) {
@@ -354,7 +354,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return groupMemberService.isOwnerOrManager(userId, groupId)
+        return groupMemberService.isOwnerOrManager(userId, groupId, false)
                 .flatMap(authenticated -> {
                     if (!authenticated) {
                         return Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_ACCESS_INVITATION));

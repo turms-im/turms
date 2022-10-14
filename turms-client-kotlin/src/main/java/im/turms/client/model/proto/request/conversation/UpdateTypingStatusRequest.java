@@ -45,14 +45,14 @@ public  final class UpdateTypingStatusRequest extends
    * @param value The isGroupMessage to set.
    */
   private void setIsGroupMessage(boolean value) {
-    
+
     isGroupMessage_ = value;
   }
   /**
    * <code>bool is_group_message = 1;</code>
    */
   private void clearIsGroupMessage() {
-    
+
     isGroupMessage_ = false;
   }
 
@@ -71,14 +71,14 @@ public  final class UpdateTypingStatusRequest extends
    * @param value The toId to set.
    */
   private void setToId(long value) {
-    
+
     toId_ = value;
   }
   /**
    * <code>int64 to_id = 2;</code>
    */
   private void clearToId() {
-    
+
     toId_ = 0L;
   }
 

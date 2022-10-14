@@ -46,14 +46,14 @@ public  final class MessagesWithTotal extends
    * @param value The total to set.
    */
   private void setTotal(int value) {
-    
+
     total_ = value;
   }
   /**
    * <code>int32 total = 1;</code>
    */
   private void clearTotal() {
-    
+
     total_ = 0;
   }
 
@@ -72,14 +72,14 @@ public  final class MessagesWithTotal extends
    * @param value The isGroupMessage to set.
    */
   private void setIsGroupMessage(boolean value) {
-    
+
     isGroupMessage_ = value;
   }
   /**
    * <code>bool is_group_message = 2;</code>
    */
   private void clearIsGroupMessage() {
-    
+
     isGroupMessage_ = false;
   }
 
@@ -98,14 +98,14 @@ public  final class MessagesWithTotal extends
    * @param value The fromId to set.
    */
   private void setFromId(long value) {
-    
+
     fromId_ = value;
   }
   /**
    * <code>int64 from_id = 3;</code>
    */
   private void clearFromId() {
-    
+
     fromId_ = 0L;
   }
 
@@ -121,7 +121,7 @@ public  final class MessagesWithTotal extends
   /**
    * <code>repeated .im.turms.proto.Message messages = 4;</code>
    */
-  public java.util.List<? extends im.turms.client.model.proto.model.message.MessageOrBuilder> 
+  public java.util.List<? extends im.turms.client.model.proto.model.message.MessageOrBuilder>
       getMessagesOrBuilderList() {
     return messages_;
   }

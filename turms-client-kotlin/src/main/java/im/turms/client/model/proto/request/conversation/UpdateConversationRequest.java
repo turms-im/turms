@@ -114,14 +114,14 @@ public  final class UpdateConversationRequest extends
    * @param value The readDate to set.
    */
   private void setReadDate(long value) {
-    
+
     readDate_ = value;
   }
   /**
    * <code>int64 read_date = 3;</code>
    */
   private void clearReadDate() {
-    
+
     readDate_ = 0L;
   }
 

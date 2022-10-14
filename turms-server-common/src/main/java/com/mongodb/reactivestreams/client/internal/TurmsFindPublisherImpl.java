@@ -213,25 +213,26 @@ public class TurmsFindPublisherImpl<T> extends BatchCursorPublisher<T> implement
 
     @Override
     AsyncExplainableReadOperation<AsyncBatchCursor<T>> asAsyncReadOperation(final int initialBatchSize) {
-        queryOptions.batchSize(initialBatchSize);
-        return getFindOperation();
+        return getFindOperation(QueryOptions
+                .newBuilder(queryOptions.size() + 1)
+                .batchSize(initialBatchSize));
     }
 
     @Override
     AsyncReadOperation<AsyncBatchCursor<T>> asAsyncFirstReadOperation() {
-        queryOptions
+        return getFindOperation(QueryOptions
+                .newBuilder(queryOptions.size() + 2)
                 .limit(1)
-                .singleBatch();
-        return getFindOperation();
+                .singleBatch());
     }
 
-    private TurmsFindOperation<T> getFindOperation() {
+    private TurmsFindOperation<T> getFindOperation(QueryOptions options) {
         MongoNamespace namespace = getNamespace();
         CodecRegistry codecRegistry = getCodecRegistry();
         Class<T> documentClass = getDocumentClass();
         Codec<T> codec = codecRegistry.get(documentClass);
         BsonDocument filterDoc = filter.toBsonDocument(documentClass, codecRegistry);
-        BsonDocument command = queryOptions.asDocument(namespace.getCollectionName(), filterDoc);
+        BsonDocument command = options.asDocument(namespace.getCollectionName(), filterDoc);
         return new TurmsFindOperation<>(namespace, codec, command)
                 .retryReads(getRetryReads());
     }

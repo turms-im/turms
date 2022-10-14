@@ -27,7 +27,7 @@ public interface NearbyUsersOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
    */
-  java.util.List<im.turms.client.model.proto.model.user.NearbyUser> 
+  java.util.List<im.turms.client.model.proto.model.user.NearbyUser>
       getNearbyUsersList();
   /**
    * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>

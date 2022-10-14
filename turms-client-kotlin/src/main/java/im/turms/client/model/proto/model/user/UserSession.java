@@ -58,14 +58,14 @@ public  final class UserSession extends
   private void setSessionId(
       java.lang.String value) {
     java.lang.Class<?> valueClass = value.getClass();
-  
+
     sessionId_ = value;
   }
   /**
    * <code>string session_id = 1;</code>
    */
   private void clearSessionId() {
-    
+
     sessionId_ = getDefaultInstance().getSessionId();
   }
   /**
@@ -76,7 +76,7 @@ public  final class UserSession extends
       com.google.protobuf.ByteString value) {
     checkByteStringIsUtf8(value);
     sessionId_ = value.toStringUtf8();
-    
+
   }
 
   public static final int SERVER_ID_FIELD_NUMBER = 2;
@@ -105,14 +105,14 @@ public  final class UserSession extends
   private void setServerId(
       java.lang.String value) {
     java.lang.Class<?> valueClass = value.getClass();
-  
+
     serverId_ = value;
   }
   /**
    * <code>string server_id = 2;</code>
    */
   private void clearServerId() {
-    
+
     serverId_ = getDefaultInstance().getServerId();
   }
   /**
@@ -123,7 +123,7 @@ public  final class UserSession extends
       com.google.protobuf.ByteString value) {
     checkByteStringIsUtf8(value);
     serverId_ = value.toStringUtf8();
-    
+
   }
 
   public static im.turms.client.model.proto.model.user.UserSession parseFrom(

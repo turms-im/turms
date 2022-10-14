@@ -123,8 +123,8 @@ public class UserRelationshipServiceController {
                             new Date())
                     .map(friendRequest -> notifyRecipientWhenReceivingFriendRequest
                             ? RequestHandlerResultFactory
-                            .get(friendRequest.getId(), request.getRecipientId(), clientRequest.turmsRequest())
-                            : RequestHandlerResultFactory.get(friendRequest.getId()));
+                            .getByDataId(friendRequest.getId(), request.getRecipientId(), clientRequest.turmsRequest())
+                            : RequestHandlerResultFactory.getByDataId(friendRequest.getId()));
         };
     }
 
@@ -138,7 +138,7 @@ public class UserRelationshipServiceController {
                             request.getName(),
                             new Date(),
                             null)
-                    .map(group -> RequestHandlerResultFactory.get(group.getKey().getGroupIndex().longValue()));
+                    .map(group -> RequestHandlerResultFactory.getByDataId(group.getKey().getGroupIndex().longValue()));
         };
     }
 

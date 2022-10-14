@@ -42,14 +42,14 @@ import im.turms.server.common.access.client.dto.model.user.NearbyUsers;
 import im.turms.server.common.access.client.dto.model.user.UserFriendRequest;
 import im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion;
 import im.turms.server.common.access.client.dto.model.user.UserInfo;
+import im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion;
 import im.turms.server.common.access.client.dto.model.user.UserLocation;
+import im.turms.server.common.access.client.dto.model.user.UserOnlineStatus;
+import im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses;
 import im.turms.server.common.access.client.dto.model.user.UserRelationship;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion;
-import im.turms.server.common.access.client.dto.model.user.UserStatusDetail;
-import im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion;
-import im.turms.server.common.access.client.dto.model.user.UsersOnlineStatuses;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
@@ -279,10 +279,31 @@ public class ClientMessagePool {
         }
     };
 
+    private static final FastThreadLocal<UserInfosWithVersion.Builder> USER_INFOS_WITH_VERSION = new FastThreadLocal<>() {
+        @Override
+        protected UserInfosWithVersion.Builder initialValue() {
+            return UserInfosWithVersion.newBuilder();
+        }
+    };
+
     private static final FastThreadLocal<UserLocation.Builder> USER_LOCATION = new FastThreadLocal<>() {
         @Override
         protected UserLocation.Builder initialValue() {
             return UserLocation.newBuilder();
+        }
+    };
+
+    private static final FastThreadLocal<UserOnlineStatus.Builder> USER_ONLINE_STATUS = new FastThreadLocal<>() {
+        @Override
+        protected UserOnlineStatus.Builder initialValue() {
+            return UserOnlineStatus.newBuilder();
+        }
+    };
+
+    private static final FastThreadLocal<UserOnlineStatuses.Builder> USERS_ONLINE_STATUSES = new FastThreadLocal<>() {
+        @Override
+        protected UserOnlineStatuses.Builder initialValue() {
+            return UserOnlineStatuses.newBuilder();
         }
     };
 
@@ -311,27 +332,6 @@ public class ClientMessagePool {
         @Override
         protected UserRelationshipsWithVersion.Builder initialValue() {
             return UserRelationshipsWithVersion.newBuilder();
-        }
-    };
-
-    private static final FastThreadLocal<UserStatusDetail.Builder> USER_STATUS_DETAIL = new FastThreadLocal<>() {
-        @Override
-        protected UserStatusDetail.Builder initialValue() {
-            return UserStatusDetail.newBuilder();
-        }
-    };
-
-    private static final FastThreadLocal<UsersInfosWithVersion.Builder> USERS_INFOS_WITH_VERSION = new FastThreadLocal<>() {
-        @Override
-        protected UsersInfosWithVersion.Builder initialValue() {
-            return UsersInfosWithVersion.newBuilder();
-        }
-    };
-
-    private static final FastThreadLocal<UsersOnlineStatuses.Builder> USERS_ONLINE_STATUSES = new FastThreadLocal<>() {
-        @Override
-        protected UsersOnlineStatuses.Builder initialValue() {
-            return UsersOnlineStatuses.newBuilder();
         }
     };
 
@@ -455,8 +455,20 @@ public class ClientMessagePool {
         return USER_INFO.get().clear();
     }
 
+    public static UserInfosWithVersion.Builder getUserInfosWithVersionBuilder() {
+        return USER_INFOS_WITH_VERSION.get().clear();
+    }
+
     public static UserLocation.Builder getUserLocationBuilder() {
         return USER_LOCATION.get().clear();
+    }
+
+    public static UserOnlineStatus.Builder getUserOnlineStatusBuilder() {
+        return USER_ONLINE_STATUS.get().clear();
+    }
+
+    public static UserOnlineStatuses.Builder getUsersOnlineStatusesBuilder() {
+        return USERS_ONLINE_STATUSES.get().clear();
     }
 
     public static UserRelationship.Builder getUserRelationshipBuilder() {
@@ -473,18 +485,6 @@ public class ClientMessagePool {
 
     public static UserRelationshipsWithVersion.Builder getUserRelationshipsWithVersionBuilder() {
         return USER_RELATIONSHIPS_WITH_VERSION.get().clear();
-    }
-
-    public static UserStatusDetail.Builder getUserStatusDetailBuilder() {
-        return USER_STATUS_DETAIL.get().clear();
-    }
-
-    public static UsersInfosWithVersion.Builder getUsersInfosWithVersionBuilder() {
-        return USERS_INFOS_WITH_VERSION.get().clear();
-    }
-
-    public static UsersOnlineStatuses.Builder getUsersOnlineStatusesBuilder() {
-        return USERS_ONLINE_STATUSES.get().clear();
     }
 
 }

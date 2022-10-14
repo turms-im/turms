@@ -21,9 +21,9 @@ public extension TurmsNotification.DataMessage.OneOf_Kind {
 
         case let .userSession(v):
             message = v
-        case let .usersInfosWithVersion(v):
+        case let .userInfosWithVersion(v):
             message = v
-        case let .usersOnlineStatuses(v):
+        case let .userOnlineStatuses(v):
             message = v
         case let .userFriendRequestsWithVersion(v):
             message = v

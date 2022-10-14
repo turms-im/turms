@@ -27,7 +27,7 @@ public interface MessagesOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.Message messages = 1;</code>
    */
-  java.util.List<im.turms.client.model.proto.model.message.Message> 
+  java.util.List<im.turms.client.model.proto.model.message.Message>
       getMessagesList();
   /**
    * <code>repeated .im.turms.proto.Message messages = 1;</code>

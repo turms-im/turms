@@ -134,14 +134,15 @@ class ResponseStatusCode {
   static const answerQuestionOfInactiveGroup = 3306;
 
   // Group - Member
-  static const notOwnerOrManagerToRemoveGroupMember = 3400;
-  static const notOwnerToUpdateGroupMemberInfo = 3401;
-  static const notOwnerOrManagerToUpdateGroupMemberInfo = 3402;
-  static const notMemberToQueryMemberInfo = 3403;
-  static const addBlockedUserToGroup = 3404;
-  static const addBlockedUserToInactiveGroup = 3405;
-  static const addUserToInactiveGroup = 3406;
-  static const addNewMemberWithRoleHigherThanRequester = 3407;
+  static const addUserToInactiveGroup = 3400;
+  static const addNewMemberWithRoleHigherThanRequester = 3401;
+  static const addBlockedUserToGroup = 3402;
+  static const addBlockedUserToInactiveGroup = 3403;
+  static const notOwnerOrManagerToRemoveGroupMember = 3404;
+  static const notOwnerToRemoveGroupOwnerOrManager = 3405;
+  static const notOwnerToUpdateGroupMemberInfo = 3406;
+  static const notOwnerOrManagerToUpdateGroupMemberInfo = 3407;
+  static const notMemberToQueryMemberInfo = 3408;
 
   // Group - Blocklist
   static const notOwnerOrManagerToAddBlockedUser = 3500;

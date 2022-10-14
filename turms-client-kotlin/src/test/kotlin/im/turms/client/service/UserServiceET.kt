@@ -221,8 +221,8 @@ internal class UserServiceET {
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryUserProfile_shouldReturnUserInfoWithVersion() = runBlocking {
-        val result = turmsClient.userService.queryUserProfile(1)
+    fun queryUserProfiles_shouldReturnUserInfos() = runBlocking {
+        val result = turmsClient.userService.queryUserProfiles(setOf(1))
             .data
         assertNotNull(result)
     }
@@ -239,7 +239,7 @@ internal class UserServiceET {
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryUserOnlineStatusesRequest_shouldUsersOnlineStatus() = runBlocking {
+    fun queryUserOnlineStatusesRequest_shouldUsersOnlineStatuses() = runBlocking {
         val set = setOf(1L)
         val result = turmsClient.userService.queryOnlineStatusesRequest(set)
             .data

@@ -55,6 +55,16 @@ public struct UpdateUserRequest {
     /// Clears the value of `intro`. Subsequent reads from it will return its default value.
     public mutating func clearIntro() { _intro = nil }
 
+    public var profilePicture: String {
+        get { return _profilePicture ?? String() }
+        set { _profilePicture = newValue }
+    }
+
+    /// Returns true if `profilePicture` has been explicitly set.
+    public var hasProfilePicture: Bool { return _profilePicture != nil }
+    /// Clears the value of `profilePicture`. Subsequent reads from it will return its default value.
+    public mutating func clearProfilePicture() { _profilePicture = nil }
+
     public var profileAccessStrategy: ProfileAccessStrategy {
         get { return _profileAccessStrategy ?? .all }
         set { _profileAccessStrategy = newValue }
@@ -72,6 +82,7 @@ public struct UpdateUserRequest {
     private var _password: String?
     private var _name: String?
     private var _intro: String?
+    private var _profilePicture: String?
     private var _profileAccessStrategy: ProfileAccessStrategy?
 }
 
@@ -89,7 +100,8 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         1: .same(proto: "password"),
         2: .same(proto: "name"),
         3: .same(proto: "intro"),
-        4: .standard(proto: "profile_access_strategy"),
+        4: .standard(proto: "profile_picture"),
+        5: .standard(proto: "profile_access_strategy"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -101,7 +113,8 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
             case 1: try try decoder.decodeSingularStringField(value: &_password)
             case 2: try try decoder.decodeSingularStringField(value: &_name)
             case 3: try try decoder.decodeSingularStringField(value: &_intro)
-            case 4: try try decoder.decodeSingularEnumField(value: &_profileAccessStrategy)
+            case 4: try try decoder.decodeSingularStringField(value: &_profilePicture)
+            case 5: try try decoder.decodeSingularEnumField(value: &_profileAccessStrategy)
             default: break
             }
         }
@@ -121,8 +134,11 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         try { if let v = self._intro {
             try visitor.visitSingularStringField(value: v, fieldNumber: 3)
         } }()
+        try { if let v = self._profilePicture {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 4)
+        } }()
         try { if let v = self._profileAccessStrategy {
-            try visitor.visitSingularEnumField(value: v, fieldNumber: 4)
+            try visitor.visitSingularEnumField(value: v, fieldNumber: 5)
         } }()
         try unknownFields.traverse(visitor: &visitor)
     }
@@ -131,6 +147,7 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         if lhs._password != rhs._password { return false }
         if lhs._name != rhs._name { return false }
         if lhs._intro != rhs._intro { return false }
+        if lhs._profilePicture != rhs._profilePicture { return false }
         if lhs._profileAccessStrategy != rhs._profileAccessStrategy { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true

@@ -67,7 +67,6 @@ public class GroupVersionRepository extends BaseRepository<GroupVersion, Long> {
 
     public Mono<UpdateResult> updateVersion(
             Long groupId,
-            boolean updateInfo,
             boolean updateMembers,
             boolean updateBlocklist,
             boolean joinRequests,
@@ -75,8 +74,7 @@ public class GroupVersionRepository extends BaseRepository<GroupVersion, Long> {
         Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, groupId);
         Date now = new Date();
-        Update update = Update.newBuilder(5)
-                .setIfTrue(GroupVersion.Fields.INFO, now, updateInfo)
+        Update update = Update.newBuilder(4)
                 .setIfTrue(GroupVersion.Fields.MEMBERS, now, updateMembers)
                 .setIfTrue(GroupVersion.Fields.BLOCKLIST, now, updateBlocklist)
                 .setIfTrue(GroupVersion.Fields.JOIN_REQUESTS, now, joinRequests)
@@ -91,15 +89,6 @@ public class GroupVersionRepository extends BaseRepository<GroupVersion, Long> {
                 .include(GroupVersion.Fields.BLOCKLIST);
         return mongoClient.findOne(entityClass, filter, options)
                 .map(GroupVersion::getBlocklist);
-    }
-
-    public Mono<Date> findInfo(Long groupId) {
-        Filter filter = Filter.newBuilder(1)
-                .eq(DomainFieldName.ID, groupId);
-        QueryOptions options = QueryOptions.newBuilder(1)
-                .include(GroupVersion.Fields.INFO);
-        return mongoClient.findOne(entityClass, filter, options)
-                .map(GroupVersion::getInfo);
     }
 
     public Mono<Date> findInvitations(Long groupId) {

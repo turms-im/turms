@@ -68,9 +68,9 @@ class UserServiceTests: XCTestCase {
 
         // Query
 
-        assertCompleted("queryUserProfile_shouldReturnUserInfoWithVersion", service.queryUserProfile(userId: 1))
+        assertCompleted("queryUserProfiles_shouldReturnUserInfos", service.queryUserProfiles(userIds: [1]))
         assertCompleted("queryNearbyUsers_shouldReturnNearbyUsers", service.queryNearbyUsers(latitude: 1, longitude: 1))
-        assertCompleted("queryUserOnlineStatusesRequest_shouldUsersOnlineStatus", service.queryUserOnlineStatusesRequest([1]).done {
+        assertCompleted("queryUserOnlineStatusesRequest_shouldUserOnlineStatuses", service.queryUserOnlineStatusesRequest([1]).done {
             XCTAssertEqual($0.data[0].userStatus, userStatus)
         })
         assertCompleted("queryRelationships_shouldReturnUserRelationshipsWithVersion", service.queryRelationships(relatedUserIds: [2]))

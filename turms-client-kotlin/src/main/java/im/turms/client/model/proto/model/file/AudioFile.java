@@ -125,14 +125,14 @@ public  final class AudioFile extends
     private void setUrl(
         java.lang.String value) {
       java.lang.Class<?> valueClass = value.getClass();
-  
+
       url_ = value;
     }
     /**
      * <code>string url = 1;</code>
      */
     private void clearUrl() {
-      
+
       url_ = getDefaultInstance().getUrl();
     }
     /**
@@ -143,7 +143,7 @@ public  final class AudioFile extends
         com.google.protobuf.ByteString value) {
       checkByteStringIsUtf8(value);
       url_ = value.toStringUtf8();
-      
+
     }
 
     public static final int DURATION_FIELD_NUMBER = 2;

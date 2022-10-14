@@ -47,14 +47,14 @@ public  final class UpdateFriendRequestRequest extends
    * @param value The requestId to set.
    */
   private void setRequestId(long value) {
-    
+
     requestId_ = value;
   }
   /**
    * <code>int64 request_id = 1;</code>
    */
   private void clearRequestId() {
-    
+
     requestId_ = 0L;
   }
 
@@ -90,13 +90,13 @@ public  final class UpdateFriendRequestRequest extends
    */
   private void setResponseAction(im.turms.client.model.proto.constant.ResponseAction value) {
     responseAction_ = value.getNumber();
-    
+
   }
   /**
    * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
    */
   private void clearResponseAction() {
-    
+
     responseAction_ = 0;
   }
 

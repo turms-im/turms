@@ -22,7 +22,7 @@ import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion;
-import im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion;
+import im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.exception.ResponseException;
@@ -52,6 +52,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -100,9 +101,9 @@ public class GroupBlocklistService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return groupMemberService.isOwnerOrManager(requesterId, groupId)
+        return groupMemberService.isOwnerOrManager(requesterId, groupId, false)
                 .flatMap(authenticated -> authenticated
-                        ? groupMemberService.isGroupMember(groupId, userIdToBlock)
+                        ? groupMemberService.isGroupMember(groupId, userIdToBlock, false)
                         : Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_ADD_BLOCKED_USER)))
                 .flatMap(isGroupMember -> {
                     GroupBlockedUser blockedUser = new GroupBlockedUser(
@@ -110,7 +111,6 @@ public class GroupBlocklistService {
                     if (isGroupMember) {
                         Mono<Void> updateVersion = groupVersionService.updateVersion(
                                         groupId,
-                                        false,
                                         true,
                                         true,
                                         false,
@@ -124,12 +124,12 @@ public class GroupBlocklistService {
                         if (session == null) {
                             return groupBlocklistRepository
                                     .inTransaction(newSession ->
-                                            groupMemberService.deleteGroupMembers(groupId, userIdToBlock, newSession, false)
+                                            groupMemberService.deleteGroupMember(groupId, userIdToBlock, newSession, false)
                                                     .then(groupBlocklistRepository.insert(blockedUser, newSession))
                                                     .then(updateVersion)
                                                     .retryWhen(TRANSACTION_RETRY));
                         }
-                        return groupMemberService.deleteGroupMembers(groupId, userIdToBlock, session, false)
+                        return groupMemberService.deleteGroupMember(groupId, userIdToBlock, session, false)
                                 .then(groupBlocklistRepository.insert(blockedUser, session))
                                 .then(updateVersion);
                     }
@@ -158,7 +158,7 @@ public class GroupBlocklistService {
             return Mono.error(e);
         }
         return groupMemberService
-                .isOwnerOrManager(requesterId, groupId)
+                .isOwnerOrManager(requesterId, groupId, false)
                 .flatMap(authenticated -> {
                     if (!authenticated) {
                         return Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_REMOVE_BLOCKED_USER));
@@ -176,6 +176,21 @@ public class GroupBlocklistService {
                     }
                     return removeMono.then();
                 });
+    }
+
+    public Flux<Long> findBlockedUserIds(@NotNull Long groupId, @NotNull Set<Long> userIds) {
+        try {
+            Validator.notNull(groupId, "groupId");
+            Validator.notNull(userIds, "userIds");
+        } catch (ResponseException e) {
+            return Flux.error(e);
+        }
+        List<GroupBlockedUser.Key> keys = new ArrayList<>(userIds.size());
+        for (Long userId : userIds) {
+            keys.add(new GroupBlockedUser.Key(groupId, userId));
+        }
+        return groupBlocklistRepository.findIdsByIds(keys)
+                .map(user -> user.getKey().getUserId());
     }
 
     public Mono<Boolean> isBlocked(@NotNull Long groupId, @NotNull Long userId) {
@@ -249,7 +264,7 @@ public class GroupBlocklistService {
                 .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
     }
 
-    public Mono<UsersInfosWithVersion> queryGroupBlockedUserInfosWithVersion(
+    public Mono<UserInfosWithVersion> queryGroupBlockedUserInfosWithVersion(
             @NotNull Long groupId,
             @Nullable Date lastUpdatedDate) {
         try {
@@ -278,8 +293,8 @@ public class GroupBlocklistService {
                                 if (users.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                UsersInfosWithVersion.Builder builder = ClientMessagePool
-                                        .getUsersInfosWithVersionBuilder()
+                                UserInfosWithVersion.Builder builder = ClientMessagePool
+                                        .getUserInfosWithVersionBuilder()
                                         .setLastUpdatedDate(version.getTime());
                                 for (User user : users) {
                                     builder.addUserInfos(ProtoModelConvertor.userProfile2proto(user));

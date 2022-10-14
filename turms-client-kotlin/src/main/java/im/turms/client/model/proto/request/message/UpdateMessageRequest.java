@@ -48,14 +48,14 @@ public  final class UpdateMessageRequest extends
    * @param value The messageId to set.
    */
   private void setMessageId(long value) {
-    
+
     messageId_ = value;
   }
   /**
    * <code>int64 message_id = 1;</code>
    */
   private void clearMessageId() {
-    
+
     messageId_ = 0L;
   }
 

@@ -46,11 +46,11 @@ public  final class TurmsRequest extends
     CREATE_MESSAGE_REQUEST(8),
     QUERY_MESSAGES_REQUEST(9),
     UPDATE_MESSAGE_REQUEST(10),
-    CREATE_GROUP_MEMBER_REQUEST(11),
-    DELETE_GROUP_MEMBER_REQUEST(12),
+    CREATE_GROUP_MEMBERS_REQUEST(11),
+    DELETE_GROUP_MEMBERS_REQUEST(12),
     QUERY_GROUP_MEMBERS_REQUEST(13),
     UPDATE_GROUP_MEMBER_REQUEST(14),
-    QUERY_USER_PROFILE_REQUEST(100),
+    QUERY_USER_PROFILES_REQUEST(100),
     QUERY_NEARBY_USERS_REQUEST(101),
     QUERY_USER_ONLINE_STATUSES_REQUEST(102),
     UPDATE_USER_LOCATION_REQUEST(103),
@@ -70,7 +70,7 @@ public  final class TurmsRequest extends
     UPDATE_RELATIONSHIP_REQUEST(211),
     CREATE_GROUP_REQUEST(300),
     DELETE_GROUP_REQUEST(301),
-    QUERY_GROUP_REQUEST(302),
+    QUERY_GROUPS_REQUEST(302),
     QUERY_JOINED_GROUP_IDS_REQUEST(303),
     QUERY_JOINED_GROUP_INFOS_REQUEST(304),
     UPDATE_GROUP_REQUEST(305),
@@ -81,10 +81,10 @@ public  final class TurmsRequest extends
     CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST(500),
     CREATE_GROUP_INVITATION_REQUEST(501),
     CREATE_GROUP_JOIN_REQUEST_REQUEST(502),
-    CREATE_GROUP_JOIN_QUESTION_REQUEST(503),
+    CREATE_GROUP_JOIN_QUESTIONS_REQUEST(503),
     DELETE_GROUP_INVITATION_REQUEST(504),
     DELETE_GROUP_JOIN_REQUEST_REQUEST(505),
-    DELETE_GROUP_JOIN_QUESTION_REQUEST(506),
+    DELETE_GROUP_JOIN_QUESTIONS_REQUEST(506),
     QUERY_GROUP_INVITATIONS_REQUEST(507),
     QUERY_GROUP_JOIN_REQUESTS_REQUEST(508),
     QUERY_GROUP_JOIN_QUESTIONS_REQUEST(509),
@@ -115,11 +115,11 @@ public  final class TurmsRequest extends
         case 8: return CREATE_MESSAGE_REQUEST;
         case 9: return QUERY_MESSAGES_REQUEST;
         case 10: return UPDATE_MESSAGE_REQUEST;
-        case 11: return CREATE_GROUP_MEMBER_REQUEST;
-        case 12: return DELETE_GROUP_MEMBER_REQUEST;
+        case 11: return CREATE_GROUP_MEMBERS_REQUEST;
+        case 12: return DELETE_GROUP_MEMBERS_REQUEST;
         case 13: return QUERY_GROUP_MEMBERS_REQUEST;
         case 14: return UPDATE_GROUP_MEMBER_REQUEST;
-        case 100: return QUERY_USER_PROFILE_REQUEST;
+        case 100: return QUERY_USER_PROFILES_REQUEST;
         case 101: return QUERY_NEARBY_USERS_REQUEST;
         case 102: return QUERY_USER_ONLINE_STATUSES_REQUEST;
         case 103: return UPDATE_USER_LOCATION_REQUEST;
@@ -139,7 +139,7 @@ public  final class TurmsRequest extends
         case 211: return UPDATE_RELATIONSHIP_REQUEST;
         case 300: return CREATE_GROUP_REQUEST;
         case 301: return DELETE_GROUP_REQUEST;
-        case 302: return QUERY_GROUP_REQUEST;
+        case 302: return QUERY_GROUPS_REQUEST;
         case 303: return QUERY_JOINED_GROUP_IDS_REQUEST;
         case 304: return QUERY_JOINED_GROUP_INFOS_REQUEST;
         case 305: return UPDATE_GROUP_REQUEST;
@@ -150,10 +150,10 @@ public  final class TurmsRequest extends
         case 500: return CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST;
         case 501: return CREATE_GROUP_INVITATION_REQUEST;
         case 502: return CREATE_GROUP_JOIN_REQUEST_REQUEST;
-        case 503: return CREATE_GROUP_JOIN_QUESTION_REQUEST;
+        case 503: return CREATE_GROUP_JOIN_QUESTIONS_REQUEST;
         case 504: return DELETE_GROUP_INVITATION_REQUEST;
         case 505: return DELETE_GROUP_JOIN_REQUEST_REQUEST;
-        case 506: return DELETE_GROUP_JOIN_QUESTION_REQUEST;
+        case 506: return DELETE_GROUP_JOIN_QUESTIONS_REQUEST;
         case 507: return QUERY_GROUP_INVITATIONS_REQUEST;
         case 508: return QUERY_GROUP_JOIN_REQUESTS_REQUEST;
         case 509: return QUERY_GROUP_JOIN_QUESTIONS_REQUEST;
@@ -186,7 +186,7 @@ public  final class TurmsRequest extends
   private long requestId_;
   /**
    * <pre>
-   * Note: request_id is allowed to be duplicate because
+   * Note: "request_id" is allowed to be duplicate because
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
@@ -199,7 +199,7 @@ public  final class TurmsRequest extends
   }
   /**
    * <pre>
-   * Note: request_id is allowed to be duplicate because
+   * Note: "request_id" is allowed to be duplicate because
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
@@ -212,7 +212,7 @@ public  final class TurmsRequest extends
   }
   /**
    * <pre>
-   * Note: request_id is allowed to be duplicate because
+   * Note: "request_id" is allowed to be duplicate because
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
@@ -225,7 +225,7 @@ public  final class TurmsRequest extends
   }
   /**
    * <pre>
-   * Note: request_id is allowed to be duplicate because
+   * Note: "request_id" is allowed to be duplicate because
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
@@ -696,16 +696,16 @@ public  final class TurmsRequest extends
     }
   }
 
-  public static final int CREATE_GROUP_MEMBER_REQUEST_FIELD_NUMBER = 11;
+  public static final int CREATE_GROUP_MEMBERS_REQUEST_FIELD_NUMBER = 11;
   /**
    * <pre>
    * Group Member
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+   * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
    */
   @java.lang.Override
-  public boolean hasCreateGroupMemberRequest() {
+  public boolean hasCreateGroupMembersRequest() {
     return kindCase_ == 11;
   }
   /**
@@ -713,23 +713,23 @@ public  final class TurmsRequest extends
    * Group Member
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+   * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
    */
   @java.lang.Override
-  public im.turms.client.model.proto.request.group.member.CreateGroupMemberRequest getCreateGroupMemberRequest() {
+  public im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest getCreateGroupMembersRequest() {
     if (kindCase_ == 11) {
-       return (im.turms.client.model.proto.request.group.member.CreateGroupMemberRequest) kind_;
+       return (im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest) kind_;
     }
-    return im.turms.client.model.proto.request.group.member.CreateGroupMemberRequest.getDefaultInstance();
+    return im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest.getDefaultInstance();
   }
   /**
    * <pre>
    * Group Member
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+   * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
    */
-  private void setCreateGroupMemberRequest(im.turms.client.model.proto.request.group.member.CreateGroupMemberRequest value) {
+  private void setCreateGroupMembersRequest(im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest value) {
     value.getClass();
   kind_ = value;
     kindCase_ = 11;
@@ -739,13 +739,13 @@ public  final class TurmsRequest extends
    * Group Member
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+   * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
    */
-  private void mergeCreateGroupMemberRequest(im.turms.client.model.proto.request.group.member.CreateGroupMemberRequest value) {
+  private void mergeCreateGroupMembersRequest(im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest value) {
     value.getClass();
   if (kindCase_ == 11 &&
-        kind_ != im.turms.client.model.proto.request.group.member.CreateGroupMemberRequest.getDefaultInstance()) {
-      kind_ = im.turms.client.model.proto.request.group.member.CreateGroupMemberRequest.newBuilder((im.turms.client.model.proto.request.group.member.CreateGroupMemberRequest) kind_)
+        kind_ != im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest.getDefaultInstance()) {
+      kind_ = im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest.newBuilder((im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest) kind_)
           .mergeFrom(value).buildPartial();
     } else {
       kind_ = value;
@@ -757,49 +757,49 @@ public  final class TurmsRequest extends
    * Group Member
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+   * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
    */
-  private void clearCreateGroupMemberRequest() {
+  private void clearCreateGroupMembersRequest() {
     if (kindCase_ == 11) {
       kindCase_ = 0;
       kind_ = null;
     }
   }
 
-  public static final int DELETE_GROUP_MEMBER_REQUEST_FIELD_NUMBER = 12;
+  public static final int DELETE_GROUP_MEMBERS_REQUEST_FIELD_NUMBER = 12;
   /**
-   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+   * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
    */
   @java.lang.Override
-  public boolean hasDeleteGroupMemberRequest() {
+  public boolean hasDeleteGroupMembersRequest() {
     return kindCase_ == 12;
   }
   /**
-   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+   * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
    */
   @java.lang.Override
-  public im.turms.client.model.proto.request.group.member.DeleteGroupMemberRequest getDeleteGroupMemberRequest() {
+  public im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest getDeleteGroupMembersRequest() {
     if (kindCase_ == 12) {
-       return (im.turms.client.model.proto.request.group.member.DeleteGroupMemberRequest) kind_;
+       return (im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest) kind_;
     }
-    return im.turms.client.model.proto.request.group.member.DeleteGroupMemberRequest.getDefaultInstance();
+    return im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+   * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
    */
-  private void setDeleteGroupMemberRequest(im.turms.client.model.proto.request.group.member.DeleteGroupMemberRequest value) {
+  private void setDeleteGroupMembersRequest(im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest value) {
     value.getClass();
   kind_ = value;
     kindCase_ = 12;
   }
   /**
-   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+   * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
    */
-  private void mergeDeleteGroupMemberRequest(im.turms.client.model.proto.request.group.member.DeleteGroupMemberRequest value) {
+  private void mergeDeleteGroupMembersRequest(im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest value) {
     value.getClass();
   if (kindCase_ == 12 &&
-        kind_ != im.turms.client.model.proto.request.group.member.DeleteGroupMemberRequest.getDefaultInstance()) {
-      kind_ = im.turms.client.model.proto.request.group.member.DeleteGroupMemberRequest.newBuilder((im.turms.client.model.proto.request.group.member.DeleteGroupMemberRequest) kind_)
+        kind_ != im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest.getDefaultInstance()) {
+      kind_ = im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest.newBuilder((im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest) kind_)
           .mergeFrom(value).buildPartial();
     } else {
       kind_ = value;
@@ -807,9 +807,9 @@ public  final class TurmsRequest extends
     kindCase_ = 12;
   }
   /**
-   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+   * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
    */
-  private void clearDeleteGroupMemberRequest() {
+  private void clearDeleteGroupMembersRequest() {
     if (kindCase_ == 12) {
       kindCase_ = 0;
       kind_ = null;
@@ -916,16 +916,16 @@ public  final class TurmsRequest extends
     }
   }
 
-  public static final int QUERY_USER_PROFILE_REQUEST_FIELD_NUMBER = 100;
+  public static final int QUERY_USER_PROFILES_REQUEST_FIELD_NUMBER = 100;
   /**
    * <pre>
    * User
    * </pre>
    *
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+   * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
    */
   @java.lang.Override
-  public boolean hasQueryUserProfileRequest() {
+  public boolean hasQueryUserProfilesRequest() {
     return kindCase_ == 100;
   }
   /**
@@ -933,23 +933,23 @@ public  final class TurmsRequest extends
    * User
    * </pre>
    *
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+   * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
    */
   @java.lang.Override
-  public im.turms.client.model.proto.request.user.QueryUserProfileRequest getQueryUserProfileRequest() {
+  public im.turms.client.model.proto.request.user.QueryUserProfilesRequest getQueryUserProfilesRequest() {
     if (kindCase_ == 100) {
-       return (im.turms.client.model.proto.request.user.QueryUserProfileRequest) kind_;
+       return (im.turms.client.model.proto.request.user.QueryUserProfilesRequest) kind_;
     }
-    return im.turms.client.model.proto.request.user.QueryUserProfileRequest.getDefaultInstance();
+    return im.turms.client.model.proto.request.user.QueryUserProfilesRequest.getDefaultInstance();
   }
   /**
    * <pre>
    * User
    * </pre>
    *
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+   * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
    */
-  private void setQueryUserProfileRequest(im.turms.client.model.proto.request.user.QueryUserProfileRequest value) {
+  private void setQueryUserProfilesRequest(im.turms.client.model.proto.request.user.QueryUserProfilesRequest value) {
     value.getClass();
   kind_ = value;
     kindCase_ = 100;
@@ -959,13 +959,13 @@ public  final class TurmsRequest extends
    * User
    * </pre>
    *
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+   * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
    */
-  private void mergeQueryUserProfileRequest(im.turms.client.model.proto.request.user.QueryUserProfileRequest value) {
+  private void mergeQueryUserProfilesRequest(im.turms.client.model.proto.request.user.QueryUserProfilesRequest value) {
     value.getClass();
   if (kindCase_ == 100 &&
-        kind_ != im.turms.client.model.proto.request.user.QueryUserProfileRequest.getDefaultInstance()) {
-      kind_ = im.turms.client.model.proto.request.user.QueryUserProfileRequest.newBuilder((im.turms.client.model.proto.request.user.QueryUserProfileRequest) kind_)
+        kind_ != im.turms.client.model.proto.request.user.QueryUserProfilesRequest.getDefaultInstance()) {
+      kind_ = im.turms.client.model.proto.request.user.QueryUserProfilesRequest.newBuilder((im.turms.client.model.proto.request.user.QueryUserProfilesRequest) kind_)
           .mergeFrom(value).buildPartial();
     } else {
       kind_ = value;
@@ -977,9 +977,9 @@ public  final class TurmsRequest extends
    * User
    * </pre>
    *
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+   * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
    */
-  private void clearQueryUserProfileRequest() {
+  private void clearQueryUserProfilesRequest() {
     if (kindCase_ == 100) {
       kindCase_ = 0;
       kind_ = null;
@@ -1976,40 +1976,40 @@ public  final class TurmsRequest extends
     }
   }
 
-  public static final int QUERY_GROUP_REQUEST_FIELD_NUMBER = 302;
+  public static final int QUERY_GROUPS_REQUEST_FIELD_NUMBER = 302;
   /**
-   * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+   * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
    */
   @java.lang.Override
-  public boolean hasQueryGroupRequest() {
+  public boolean hasQueryGroupsRequest() {
     return kindCase_ == 302;
   }
   /**
-   * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+   * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
    */
   @java.lang.Override
-  public im.turms.client.model.proto.request.group.QueryGroupRequest getQueryGroupRequest() {
+  public im.turms.client.model.proto.request.group.QueryGroupsRequest getQueryGroupsRequest() {
     if (kindCase_ == 302) {
-       return (im.turms.client.model.proto.request.group.QueryGroupRequest) kind_;
+       return (im.turms.client.model.proto.request.group.QueryGroupsRequest) kind_;
     }
-    return im.turms.client.model.proto.request.group.QueryGroupRequest.getDefaultInstance();
+    return im.turms.client.model.proto.request.group.QueryGroupsRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+   * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
    */
-  private void setQueryGroupRequest(im.turms.client.model.proto.request.group.QueryGroupRequest value) {
+  private void setQueryGroupsRequest(im.turms.client.model.proto.request.group.QueryGroupsRequest value) {
     value.getClass();
   kind_ = value;
     kindCase_ = 302;
   }
   /**
-   * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+   * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
    */
-  private void mergeQueryGroupRequest(im.turms.client.model.proto.request.group.QueryGroupRequest value) {
+  private void mergeQueryGroupsRequest(im.turms.client.model.proto.request.group.QueryGroupsRequest value) {
     value.getClass();
   if (kindCase_ == 302 &&
-        kind_ != im.turms.client.model.proto.request.group.QueryGroupRequest.getDefaultInstance()) {
-      kind_ = im.turms.client.model.proto.request.group.QueryGroupRequest.newBuilder((im.turms.client.model.proto.request.group.QueryGroupRequest) kind_)
+        kind_ != im.turms.client.model.proto.request.group.QueryGroupsRequest.getDefaultInstance()) {
+      kind_ = im.turms.client.model.proto.request.group.QueryGroupsRequest.newBuilder((im.turms.client.model.proto.request.group.QueryGroupsRequest) kind_)
           .mergeFrom(value).buildPartial();
     } else {
       kind_ = value;
@@ -2017,9 +2017,9 @@ public  final class TurmsRequest extends
     kindCase_ = 302;
   }
   /**
-   * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+   * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
    */
-  private void clearQueryGroupRequest() {
+  private void clearQueryGroupsRequest() {
     if (kindCase_ == 302) {
       kindCase_ = 0;
       kind_ = null;
@@ -2566,40 +2566,40 @@ public  final class TurmsRequest extends
     }
   }
 
-  public static final int CREATE_GROUP_JOIN_QUESTION_REQUEST_FIELD_NUMBER = 503;
+  public static final int CREATE_GROUP_JOIN_QUESTIONS_REQUEST_FIELD_NUMBER = 503;
   /**
-   * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+   * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
    */
   @java.lang.Override
-  public boolean hasCreateGroupJoinQuestionRequest() {
+  public boolean hasCreateGroupJoinQuestionsRequest() {
     return kindCase_ == 503;
   }
   /**
-   * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+   * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
    */
   @java.lang.Override
-  public im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionRequest getCreateGroupJoinQuestionRequest() {
+  public im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest getCreateGroupJoinQuestionsRequest() {
     if (kindCase_ == 503) {
-       return (im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionRequest) kind_;
+       return (im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest) kind_;
     }
-    return im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionRequest.getDefaultInstance();
+    return im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+   * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
    */
-  private void setCreateGroupJoinQuestionRequest(im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionRequest value) {
+  private void setCreateGroupJoinQuestionsRequest(im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest value) {
     value.getClass();
   kind_ = value;
     kindCase_ = 503;
   }
   /**
-   * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+   * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
    */
-  private void mergeCreateGroupJoinQuestionRequest(im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionRequest value) {
+  private void mergeCreateGroupJoinQuestionsRequest(im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest value) {
     value.getClass();
   if (kindCase_ == 503 &&
-        kind_ != im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionRequest.getDefaultInstance()) {
-      kind_ = im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionRequest) kind_)
+        kind_ != im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest.getDefaultInstance()) {
+      kind_ = im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest) kind_)
           .mergeFrom(value).buildPartial();
     } else {
       kind_ = value;
@@ -2607,9 +2607,9 @@ public  final class TurmsRequest extends
     kindCase_ = 503;
   }
   /**
-   * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+   * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
    */
-  private void clearCreateGroupJoinQuestionRequest() {
+  private void clearCreateGroupJoinQuestionsRequest() {
     if (kindCase_ == 503) {
       kindCase_ = 0;
       kind_ = null;
@@ -2716,40 +2716,40 @@ public  final class TurmsRequest extends
     }
   }
 
-  public static final int DELETE_GROUP_JOIN_QUESTION_REQUEST_FIELD_NUMBER = 506;
+  public static final int DELETE_GROUP_JOIN_QUESTIONS_REQUEST_FIELD_NUMBER = 506;
   /**
-   * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+   * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
    */
   @java.lang.Override
-  public boolean hasDeleteGroupJoinQuestionRequest() {
+  public boolean hasDeleteGroupJoinQuestionsRequest() {
     return kindCase_ == 506;
   }
   /**
-   * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+   * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
    */
   @java.lang.Override
-  public im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionRequest getDeleteGroupJoinQuestionRequest() {
+  public im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest getDeleteGroupJoinQuestionsRequest() {
     if (kindCase_ == 506) {
-       return (im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionRequest) kind_;
+       return (im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest) kind_;
     }
-    return im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionRequest.getDefaultInstance();
+    return im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+   * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
    */
-  private void setDeleteGroupJoinQuestionRequest(im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionRequest value) {
+  private void setDeleteGroupJoinQuestionsRequest(im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest value) {
     value.getClass();
   kind_ = value;
     kindCase_ = 506;
   }
   /**
-   * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+   * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
    */
-  private void mergeDeleteGroupJoinQuestionRequest(im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionRequest value) {
+  private void mergeDeleteGroupJoinQuestionsRequest(im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest value) {
     value.getClass();
   if (kindCase_ == 506 &&
-        kind_ != im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionRequest.getDefaultInstance()) {
-      kind_ = im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionRequest) kind_)
+        kind_ != im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.getDefaultInstance()) {
+      kind_ = im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest) kind_)
           .mergeFrom(value).buildPartial();
     } else {
       kind_ = value;
@@ -2757,9 +2757,9 @@ public  final class TurmsRequest extends
     kindCase_ = 506;
   }
   /**
-   * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+   * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
    */
-  private void clearDeleteGroupJoinQuestionRequest() {
+  private void clearDeleteGroupJoinQuestionsRequest() {
     if (kindCase_ == 506) {
       kindCase_ = 0;
       kind_ = null;
@@ -3249,7 +3249,7 @@ public  final class TurmsRequest extends
 
     /**
      * <pre>
-     * Note: request_id is allowed to be duplicate because
+     * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
@@ -3262,7 +3262,7 @@ public  final class TurmsRequest extends
     }
     /**
      * <pre>
-     * Note: request_id is allowed to be duplicate because
+     * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
@@ -3275,7 +3275,7 @@ public  final class TurmsRequest extends
     }
     /**
      * <pre>
-     * Note: request_id is allowed to be duplicate because
+     * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
@@ -3290,7 +3290,7 @@ public  final class TurmsRequest extends
     }
     /**
      * <pre>
-     * Note: request_id is allowed to be duplicate because
+     * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
@@ -3764,33 +3764,33 @@ public  final class TurmsRequest extends
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
     @java.lang.Override
-    public boolean hasCreateGroupMemberRequest() {
-      return instance.hasCreateGroupMemberRequest();
+    public boolean hasCreateGroupMembersRequest() {
+      return instance.hasCreateGroupMembersRequest();
     }
     /**
      * <pre>
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
     @java.lang.Override
-    public im.turms.client.model.proto.request.group.member.CreateGroupMemberRequest getCreateGroupMemberRequest() {
-      return instance.getCreateGroupMemberRequest();
+    public im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest getCreateGroupMembersRequest() {
+      return instance.getCreateGroupMembersRequest();
     }
     /**
      * <pre>
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
-    public Builder setCreateGroupMemberRequest(im.turms.client.model.proto.request.group.member.CreateGroupMemberRequest value) {
+    public Builder setCreateGroupMembersRequest(im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest value) {
       copyOnWrite();
-      instance.setCreateGroupMemberRequest(value);
+      instance.setCreateGroupMembersRequest(value);
       return this;
     }
     /**
@@ -3798,12 +3798,12 @@ public  final class TurmsRequest extends
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
-    public Builder setCreateGroupMemberRequest(
-        im.turms.client.model.proto.request.group.member.CreateGroupMemberRequest.Builder builderForValue) {
+    public Builder setCreateGroupMembersRequest(
+        im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest.Builder builderForValue) {
       copyOnWrite();
-      instance.setCreateGroupMemberRequest(builderForValue.build());
+      instance.setCreateGroupMembersRequest(builderForValue.build());
       return this;
     }
     /**
@@ -3811,11 +3811,11 @@ public  final class TurmsRequest extends
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
-    public Builder mergeCreateGroupMemberRequest(im.turms.client.model.proto.request.group.member.CreateGroupMemberRequest value) {
+    public Builder mergeCreateGroupMembersRequest(im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest value) {
       copyOnWrite();
-      instance.mergeCreateGroupMemberRequest(value);
+      instance.mergeCreateGroupMembersRequest(value);
       return this;
     }
     /**
@@ -3823,59 +3823,59 @@ public  final class TurmsRequest extends
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
-    public Builder clearCreateGroupMemberRequest() {
+    public Builder clearCreateGroupMembersRequest() {
       copyOnWrite();
-      instance.clearCreateGroupMemberRequest();
+      instance.clearCreateGroupMembersRequest();
       return this;
     }
 
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
      */
     @java.lang.Override
-    public boolean hasDeleteGroupMemberRequest() {
-      return instance.hasDeleteGroupMemberRequest();
+    public boolean hasDeleteGroupMembersRequest() {
+      return instance.hasDeleteGroupMembersRequest();
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
      */
     @java.lang.Override
-    public im.turms.client.model.proto.request.group.member.DeleteGroupMemberRequest getDeleteGroupMemberRequest() {
-      return instance.getDeleteGroupMemberRequest();
+    public im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest getDeleteGroupMembersRequest() {
+      return instance.getDeleteGroupMembersRequest();
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
      */
-    public Builder setDeleteGroupMemberRequest(im.turms.client.model.proto.request.group.member.DeleteGroupMemberRequest value) {
+    public Builder setDeleteGroupMembersRequest(im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest value) {
       copyOnWrite();
-      instance.setDeleteGroupMemberRequest(value);
+      instance.setDeleteGroupMembersRequest(value);
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
      */
-    public Builder setDeleteGroupMemberRequest(
-        im.turms.client.model.proto.request.group.member.DeleteGroupMemberRequest.Builder builderForValue) {
+    public Builder setDeleteGroupMembersRequest(
+        im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest.Builder builderForValue) {
       copyOnWrite();
-      instance.setDeleteGroupMemberRequest(builderForValue.build());
+      instance.setDeleteGroupMembersRequest(builderForValue.build());
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
      */
-    public Builder mergeDeleteGroupMemberRequest(im.turms.client.model.proto.request.group.member.DeleteGroupMemberRequest value) {
+    public Builder mergeDeleteGroupMembersRequest(im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest value) {
       copyOnWrite();
-      instance.mergeDeleteGroupMemberRequest(value);
+      instance.mergeDeleteGroupMembersRequest(value);
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
      */
-    public Builder clearDeleteGroupMemberRequest() {
+    public Builder clearDeleteGroupMembersRequest() {
       copyOnWrite();
-      instance.clearDeleteGroupMemberRequest();
+      instance.clearDeleteGroupMembersRequest();
       return this;
     }
 
@@ -3980,33 +3980,33 @@ public  final class TurmsRequest extends
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
     @java.lang.Override
-    public boolean hasQueryUserProfileRequest() {
-      return instance.hasQueryUserProfileRequest();
+    public boolean hasQueryUserProfilesRequest() {
+      return instance.hasQueryUserProfilesRequest();
     }
     /**
      * <pre>
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
     @java.lang.Override
-    public im.turms.client.model.proto.request.user.QueryUserProfileRequest getQueryUserProfileRequest() {
-      return instance.getQueryUserProfileRequest();
+    public im.turms.client.model.proto.request.user.QueryUserProfilesRequest getQueryUserProfilesRequest() {
+      return instance.getQueryUserProfilesRequest();
     }
     /**
      * <pre>
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
-    public Builder setQueryUserProfileRequest(im.turms.client.model.proto.request.user.QueryUserProfileRequest value) {
+    public Builder setQueryUserProfilesRequest(im.turms.client.model.proto.request.user.QueryUserProfilesRequest value) {
       copyOnWrite();
-      instance.setQueryUserProfileRequest(value);
+      instance.setQueryUserProfilesRequest(value);
       return this;
     }
     /**
@@ -4014,12 +4014,12 @@ public  final class TurmsRequest extends
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
-    public Builder setQueryUserProfileRequest(
-        im.turms.client.model.proto.request.user.QueryUserProfileRequest.Builder builderForValue) {
+    public Builder setQueryUserProfilesRequest(
+        im.turms.client.model.proto.request.user.QueryUserProfilesRequest.Builder builderForValue) {
       copyOnWrite();
-      instance.setQueryUserProfileRequest(builderForValue.build());
+      instance.setQueryUserProfilesRequest(builderForValue.build());
       return this;
     }
     /**
@@ -4027,11 +4027,11 @@ public  final class TurmsRequest extends
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
-    public Builder mergeQueryUserProfileRequest(im.turms.client.model.proto.request.user.QueryUserProfileRequest value) {
+    public Builder mergeQueryUserProfilesRequest(im.turms.client.model.proto.request.user.QueryUserProfilesRequest value) {
       copyOnWrite();
-      instance.mergeQueryUserProfileRequest(value);
+      instance.mergeQueryUserProfilesRequest(value);
       return this;
     }
     /**
@@ -4039,11 +4039,11 @@ public  final class TurmsRequest extends
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
-    public Builder clearQueryUserProfileRequest() {
+    public Builder clearQueryUserProfilesRequest() {
       copyOnWrite();
-      instance.clearQueryUserProfileRequest();
+      instance.clearQueryUserProfilesRequest();
       return this;
     }
 
@@ -5008,50 +5008,50 @@ public  final class TurmsRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
      */
     @java.lang.Override
-    public boolean hasQueryGroupRequest() {
-      return instance.hasQueryGroupRequest();
+    public boolean hasQueryGroupsRequest() {
+      return instance.hasQueryGroupsRequest();
     }
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
      */
     @java.lang.Override
-    public im.turms.client.model.proto.request.group.QueryGroupRequest getQueryGroupRequest() {
-      return instance.getQueryGroupRequest();
+    public im.turms.client.model.proto.request.group.QueryGroupsRequest getQueryGroupsRequest() {
+      return instance.getQueryGroupsRequest();
     }
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
      */
-    public Builder setQueryGroupRequest(im.turms.client.model.proto.request.group.QueryGroupRequest value) {
+    public Builder setQueryGroupsRequest(im.turms.client.model.proto.request.group.QueryGroupsRequest value) {
       copyOnWrite();
-      instance.setQueryGroupRequest(value);
+      instance.setQueryGroupsRequest(value);
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
      */
-    public Builder setQueryGroupRequest(
-        im.turms.client.model.proto.request.group.QueryGroupRequest.Builder builderForValue) {
+    public Builder setQueryGroupsRequest(
+        im.turms.client.model.proto.request.group.QueryGroupsRequest.Builder builderForValue) {
       copyOnWrite();
-      instance.setQueryGroupRequest(builderForValue.build());
+      instance.setQueryGroupsRequest(builderForValue.build());
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
      */
-    public Builder mergeQueryGroupRequest(im.turms.client.model.proto.request.group.QueryGroupRequest value) {
+    public Builder mergeQueryGroupsRequest(im.turms.client.model.proto.request.group.QueryGroupsRequest value) {
       copyOnWrite();
-      instance.mergeQueryGroupRequest(value);
+      instance.mergeQueryGroupsRequest(value);
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
      */
-    public Builder clearQueryGroupRequest() {
+    public Builder clearQueryGroupsRequest() {
       copyOnWrite();
-      instance.clearQueryGroupRequest();
+      instance.clearQueryGroupsRequest();
       return this;
     }
 
@@ -5584,50 +5584,50 @@ public  final class TurmsRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
      */
     @java.lang.Override
-    public boolean hasCreateGroupJoinQuestionRequest() {
-      return instance.hasCreateGroupJoinQuestionRequest();
+    public boolean hasCreateGroupJoinQuestionsRequest() {
+      return instance.hasCreateGroupJoinQuestionsRequest();
     }
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
      */
     @java.lang.Override
-    public im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionRequest getCreateGroupJoinQuestionRequest() {
-      return instance.getCreateGroupJoinQuestionRequest();
+    public im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest getCreateGroupJoinQuestionsRequest() {
+      return instance.getCreateGroupJoinQuestionsRequest();
     }
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
      */
-    public Builder setCreateGroupJoinQuestionRequest(im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionRequest value) {
+    public Builder setCreateGroupJoinQuestionsRequest(im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest value) {
       copyOnWrite();
-      instance.setCreateGroupJoinQuestionRequest(value);
+      instance.setCreateGroupJoinQuestionsRequest(value);
       return this;
     }
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
      */
-    public Builder setCreateGroupJoinQuestionRequest(
-        im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionRequest.Builder builderForValue) {
+    public Builder setCreateGroupJoinQuestionsRequest(
+        im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest.Builder builderForValue) {
       copyOnWrite();
-      instance.setCreateGroupJoinQuestionRequest(builderForValue.build());
+      instance.setCreateGroupJoinQuestionsRequest(builderForValue.build());
       return this;
     }
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
      */
-    public Builder mergeCreateGroupJoinQuestionRequest(im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionRequest value) {
+    public Builder mergeCreateGroupJoinQuestionsRequest(im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest value) {
       copyOnWrite();
-      instance.mergeCreateGroupJoinQuestionRequest(value);
+      instance.mergeCreateGroupJoinQuestionsRequest(value);
       return this;
     }
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
      */
-    public Builder clearCreateGroupJoinQuestionRequest() {
+    public Builder clearCreateGroupJoinQuestionsRequest() {
       copyOnWrite();
-      instance.clearCreateGroupJoinQuestionRequest();
+      instance.clearCreateGroupJoinQuestionsRequest();
       return this;
     }
 
@@ -5728,50 +5728,50 @@ public  final class TurmsRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
      */
     @java.lang.Override
-    public boolean hasDeleteGroupJoinQuestionRequest() {
-      return instance.hasDeleteGroupJoinQuestionRequest();
+    public boolean hasDeleteGroupJoinQuestionsRequest() {
+      return instance.hasDeleteGroupJoinQuestionsRequest();
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
      */
     @java.lang.Override
-    public im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionRequest getDeleteGroupJoinQuestionRequest() {
-      return instance.getDeleteGroupJoinQuestionRequest();
+    public im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest getDeleteGroupJoinQuestionsRequest() {
+      return instance.getDeleteGroupJoinQuestionsRequest();
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
      */
-    public Builder setDeleteGroupJoinQuestionRequest(im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionRequest value) {
+    public Builder setDeleteGroupJoinQuestionsRequest(im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest value) {
       copyOnWrite();
-      instance.setDeleteGroupJoinQuestionRequest(value);
+      instance.setDeleteGroupJoinQuestionsRequest(value);
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
      */
-    public Builder setDeleteGroupJoinQuestionRequest(
-        im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionRequest.Builder builderForValue) {
+    public Builder setDeleteGroupJoinQuestionsRequest(
+        im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.Builder builderForValue) {
       copyOnWrite();
-      instance.setDeleteGroupJoinQuestionRequest(builderForValue.build());
+      instance.setDeleteGroupJoinQuestionsRequest(builderForValue.build());
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
      */
-    public Builder mergeDeleteGroupJoinQuestionRequest(im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionRequest value) {
+    public Builder mergeDeleteGroupJoinQuestionsRequest(im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest value) {
       copyOnWrite();
-      instance.mergeDeleteGroupJoinQuestionRequest(value);
+      instance.mergeDeleteGroupJoinQuestionsRequest(value);
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
      */
-    public Builder clearDeleteGroupJoinQuestionRequest() {
+    public Builder clearDeleteGroupJoinQuestionsRequest() {
       copyOnWrite();
-      instance.clearDeleteGroupJoinQuestionRequest();
+      instance.clearDeleteGroupJoinQuestionsRequest();
       return this;
     }
 
@@ -6163,11 +6163,11 @@ public  final class TurmsRequest extends
             im.turms.client.model.proto.request.message.CreateMessageRequest.class,
             im.turms.client.model.proto.request.message.QueryMessagesRequest.class,
             im.turms.client.model.proto.request.message.UpdateMessageRequest.class,
-            im.turms.client.model.proto.request.group.member.CreateGroupMemberRequest.class,
-            im.turms.client.model.proto.request.group.member.DeleteGroupMemberRequest.class,
+            im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest.class,
+            im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest.class,
             im.turms.client.model.proto.request.group.member.QueryGroupMembersRequest.class,
             im.turms.client.model.proto.request.group.member.UpdateGroupMemberRequest.class,
-            im.turms.client.model.proto.request.user.QueryUserProfileRequest.class,
+            im.turms.client.model.proto.request.user.QueryUserProfilesRequest.class,
             im.turms.client.model.proto.request.user.QueryNearbyUsersRequest.class,
             im.turms.client.model.proto.request.user.QueryUserOnlineStatusesRequest.class,
             im.turms.client.model.proto.request.user.UpdateUserLocationRequest.class,
@@ -6187,7 +6187,7 @@ public  final class TurmsRequest extends
             im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest.class,
             im.turms.client.model.proto.request.group.CreateGroupRequest.class,
             im.turms.client.model.proto.request.group.DeleteGroupRequest.class,
-            im.turms.client.model.proto.request.group.QueryGroupRequest.class,
+            im.turms.client.model.proto.request.group.QueryGroupsRequest.class,
             im.turms.client.model.proto.request.group.QueryJoinedGroupIdsRequest.class,
             im.turms.client.model.proto.request.group.QueryJoinedGroupInfosRequest.class,
             im.turms.client.model.proto.request.group.UpdateGroupRequest.class,
@@ -6198,10 +6198,10 @@ public  final class TurmsRequest extends
             im.turms.client.model.proto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.class,
             im.turms.client.model.proto.request.group.enrollment.CreateGroupInvitationRequest.class,
             im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinRequestRequest.class,
-            im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionRequest.class,
+            im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest.class,
             im.turms.client.model.proto.request.group.enrollment.DeleteGroupInvitationRequest.class,
             im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinRequestRequest.class,
-            im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionRequest.class,
+            im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.class,
             im.turms.client.model.proto.request.group.enrollment.QueryGroupInvitationsRequest.class,
             im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinRequestsRequest.class,
             im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinQuestionsRequest.class,

@@ -1,7 +1,6 @@
 import 'package:fixnum/fixnum.dart';
 
 import '../../turms_client.dart';
-import '../extension/int_extensions.dart';
 import '../extension/notification_extensions.dart';
 import '../util/system.dart';
 
@@ -12,7 +11,7 @@ class Location {
   Location(this.longitude, this.latitude);
 }
 
-class UserInfo {
+class User {
   Int64 userId;
   String? password;
   DeviceType? deviceType;
@@ -20,7 +19,7 @@ class UserInfo {
   UserStatus? onlineStatus;
   Location? location;
 
-  UserInfo(this.userId, this.password, this.deviceType, this.deviceDetails,
+  User(this.userId, this.password, this.deviceType, this.deviceDetails,
       this.onlineStatus, this.location);
 }
 
@@ -29,7 +28,7 @@ typedef OnOfflineListener = void Function(SessionCloseInfo info);
 
 class UserService {
   final TurmsClient _turmsClient;
-  UserInfo? _userInfo;
+  User? _userInfo;
   bool _storePassword = false;
 
   final List<OnOnlineListener> _onOnlineListeners = [];
@@ -48,7 +47,7 @@ class UserService {
       });
   }
 
-  UserInfo? get userInfo => _userInfo;
+  User? get userInfo => _userInfo;
 
   bool get isLoggedIn =>
       _userInfo != null && _userInfo?.onlineStatus != UserStatus.OFFLINE;
@@ -72,7 +71,7 @@ class UserService {
       UserStatus? onlineStatus,
       Location? location,
       bool storePassword = false}) async {
-    final user = UserInfo(userId, storePassword ? password : null,
+    final user = User(userId, storePassword ? password : null,
         deviceType ?? currentDeviceType, deviceDetails, onlineStatus, location);
     if (!_turmsClient.driver.isConnected) {
       await _turmsClient.driver.connect();
@@ -149,20 +148,14 @@ class UserService {
     return n.toNullResponse();
   }
 
-  Future<Response<UserInfoWithVersion?>> queryUserProfile(Int64 userId,
+  Future<Response<List<UserInfo>>> queryUserProfiles(Set<Int64> userIds,
       {DateTime? lastUpdatedDate}) async {
-    final n = await _turmsClient.driver.send(QueryUserProfileRequest(
-        userId: userId, lastUpdatedDate: lastUpdatedDate?.toInt64()));
-    if (!n.data.hasUsersInfosWithVersion()) {
-      return Response.nullValue();
+    if (userIds.isEmpty) {
+      return Future.value(Response.emptyList());
     }
-    return n.toResponse((data) {
-      final usersInfosWithVersion = data.usersInfosWithVersion;
-      final date = usersInfosWithVersion.hasLastUpdatedDate()
-          ? usersInfosWithVersion.lastUpdatedDate.toDateTime()
-          : null;
-      return UserInfoWithVersion(usersInfosWithVersion.userInfos[0], date);
-    });
+    final n = await _turmsClient.driver.send(QueryUserProfilesRequest(
+        userIds: userIds, lastUpdatedDate: lastUpdatedDate?.toInt64()));
+    return n.toResponse((data) => data.userInfosWithVersion.userInfos);
   }
 
   Future<Response<List<NearbyUser>>> queryNearbyUsers(
@@ -183,11 +176,11 @@ class UserService {
     return n.toResponse((data) => data.nearbyUsers.nearbyUsers);
   }
 
-  Future<Response<List<UserStatusDetail>>> queryOnlineStatusesRequest(
+  Future<Response<List<UserOnlineStatus>>> queryOnlineStatusesRequest(
       Set<Int64> userIds) async {
     final n = await _turmsClient.driver
         .send(QueryUserOnlineStatusesRequest(userIds: userIds));
-    return n.toResponse((data) => data.usersOnlineStatuses.userStatuses);
+    return n.toResponse((data) => data.userOnlineStatuses.statuses);
   }
 
   // Relationship
@@ -208,7 +201,9 @@ class UserService {
   }
 
   Future<Response<Int64ValuesWithVersion?>> queryRelatedUserIds(
-      {bool? isBlocked, Set<int>? groupIndexes, DateTime? lastUpdatedDate}) async {
+      {bool? isBlocked,
+      Set<int>? groupIndexes,
+      DateTime? lastUpdatedDate}) async {
     final n = await _turmsClient.driver.send(QueryRelatedUserIdsRequest(
         blocked: isBlocked,
         groupIndexes: groupIndexes,

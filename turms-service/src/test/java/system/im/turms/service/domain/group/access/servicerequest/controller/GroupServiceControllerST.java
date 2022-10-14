@@ -18,11 +18,12 @@ package system.im.turms.service.domain.group.access.servicerequest.controller;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
+import im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.group.CreateGroupRequest;
 import im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest;
-import im.turms.server.common.access.client.dto.request.group.QueryGroupRequest;
+import im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest;
 import im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequest;
 import im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequest;
 import im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest;
@@ -32,17 +33,17 @@ import im.turms.server.common.access.client.dto.request.group.blocklist.QueryGro
 import im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest;
 import im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest;
 import im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest;
-import im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest;
+import im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest;
 import im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequest;
 import im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest;
-import im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest;
+import im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest;
 import im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest;
 import im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequest;
 import im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest;
 import im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequest;
 import im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest;
-import im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest;
-import im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest;
+import im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest;
+import im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest;
 import im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequest;
 import im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -107,20 +108,22 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
-    void handleCreateGroupQuestionRequest_addGroupJoinQuestion_shouldReturnQuestionId() {
+    void handleCreateGroupQuestionsRequest_addGroupJoinQuestions_shouldReturnQuestionIds() {
         TurmsRequest request = TurmsRequest.newBuilder()
-                .setCreateGroupJoinQuestionRequest(CreateGroupJoinQuestionRequest.newBuilder()
+                .setCreateGroupJoinQuestionsRequest(CreateGroupJoinQuestionsRequest.newBuilder()
                         .setGroupId(groupId)
-                        .setQuestion("question")
-                        .addAllAnswers(List.of("answer1", "answer2"))
-                        .setScore(10))
+                        .addQuestions(GroupJoinQuestion.newBuilder()
+                                .setQuestion("question")
+                                .addAllAnswers(List.of("answer1", "answer2"))
+                                .setScore(10)
+                                .build()))
                 .build();
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
-        Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupQuestionRequest()
+        Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupQuestionsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
             TurmsNotification.Data data = result.dataForRequester();
-            assertThat(data.hasIds()).isTrue();
+            assertThat(data.getIds().getValuesCount()).isEqualTo(1);
             groupJoinQuestionId = data.getIds().getValues(0);
         });
     }
@@ -145,16 +148,16 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
-    void handleCreateGroupMemberRequest_addGroupMember_shouldSucceed() {
+    void handleCreateGroupMembersRequest_addGroupMembers_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
-                .setCreateGroupMemberRequest(CreateGroupMemberRequest.newBuilder()
+                .setCreateGroupMembersRequest(CreateGroupMembersRequest.newBuilder()
                         .setGroupId(groupId)
-                        .setUserId(GROUP_MEMBER_ID)
+                        .addUserIds(GROUP_MEMBER_ID)
                         .setName("name")
                         .setRole(GroupMemberRole.MEMBER))
                 .build();
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
-        Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupMemberRequest()
+        Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupMembersRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
     }
@@ -316,13 +319,13 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
-    void handleQueryGroupRequest_queryGroup_shouldReturnGroupWithVersion() {
+    void handleQueryGroupsRequest_queryGroups_shouldReturnGroups() {
         TurmsRequest request = TurmsRequest.newBuilder()
-                .setQueryGroupRequest(QueryGroupRequest.newBuilder()
-                        .setGroupId(groupId))
+                .setQueryGroupsRequest(QueryGroupsRequest.newBuilder()
+                        .addGroupIds(groupId))
                 .build();
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
-        Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupRequest()
+        Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getGroupsWithVersion().getGroups(0).getId())
                 .isEqualTo(groupId));
@@ -379,7 +382,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupBlockedUsersInfosRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getUsersInfosWithVersion().getUserInfos(0).getId())
+        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getUserInfosWithVersion().getUserInfos(0).getId())
                 .isEqualTo(GROUP_BLOCKED_USER_ID));
     }
 
@@ -482,27 +485,28 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
 
     @Test
     @Order(ORDER_LOW_PRIORITY)
-    void handleDeleteGroupMemberRequest_removeGroupMember_shouldSucceed() {
+    void handleDeleteGroupMembersRequest_removeGroupMembers_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
-                .setDeleteGroupMemberRequest(DeleteGroupMemberRequest.newBuilder()
+                .setDeleteGroupMembersRequest(DeleteGroupMembersRequest.newBuilder()
                         .setGroupId(groupId)
-                        .setMemberId(GROUP_MEMBER_ID))
+                        .addMemberIds(GROUP_MEMBER_ID))
                 .build();
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
-        Mono<RequestHandlerResult> resultMono = getController().handleDeleteGroupMemberRequest()
+        Mono<RequestHandlerResult> resultMono = getController().handleDeleteGroupMembersRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
     }
 
     @Test
     @Order(ORDER_LOWEST_PRIORITY)
-    void handleDeleteGroupJoinQuestionRequest_deleteGroupJoinQuestion_shouldSucceed() {
+    void handleDeleteGroupJoinQuestionsRequest_deleteGroupJoinQuestions_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
-                .setDeleteGroupJoinQuestionRequest(DeleteGroupJoinQuestionRequest.newBuilder()
-                        .setQuestionId(groupJoinQuestionId))
+                .setDeleteGroupJoinQuestionsRequest(DeleteGroupJoinQuestionsRequest.newBuilder()
+                        .setGroupId(groupId)
+                        .addQuestionIds(groupJoinQuestionId))
                 .build();
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
-        Mono<RequestHandlerResult> resultMono = getController().handleDeleteGroupJoinQuestionRequest()
+        Mono<RequestHandlerResult> resultMono = getController().handleDeleteGroupJoinQuestionsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
     }

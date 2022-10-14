@@ -369,18 +369,52 @@ public  final class Group extends
     creationDate_ = 0L;
   }
 
-  public static final int MUTE_END_DATE_FIELD_NUMBER = 9;
+  public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 9;
+  private long lastUpdatedDate_;
+  /**
+   * <code>optional int64 last_updated_date = 9;</code>
+   * @return Whether the lastUpdatedDate field is set.
+   */
+  @java.lang.Override
+  public boolean hasLastUpdatedDate() {
+    return ((bitField0_ & 0x00000100) != 0);
+  }
+  /**
+   * <code>optional int64 last_updated_date = 9;</code>
+   * @return The lastUpdatedDate.
+   */
+  @java.lang.Override
+  public long getLastUpdatedDate() {
+    return lastUpdatedDate_;
+  }
+  /**
+   * <code>optional int64 last_updated_date = 9;</code>
+   * @param value The lastUpdatedDate to set.
+   */
+  private void setLastUpdatedDate(long value) {
+    bitField0_ |= 0x00000100;
+    lastUpdatedDate_ = value;
+  }
+  /**
+   * <code>optional int64 last_updated_date = 9;</code>
+   */
+  private void clearLastUpdatedDate() {
+    bitField0_ = (bitField0_ & ~0x00000100);
+    lastUpdatedDate_ = 0L;
+  }
+
+  public static final int MUTE_END_DATE_FIELD_NUMBER = 10;
   private long muteEndDate_;
   /**
-   * <code>optional int64 mute_end_date = 9;</code>
+   * <code>optional int64 mute_end_date = 10;</code>
    * @return Whether the muteEndDate field is set.
    */
   @java.lang.Override
   public boolean hasMuteEndDate() {
-    return ((bitField0_ & 0x00000100) != 0);
+    return ((bitField0_ & 0x00000200) != 0);
   }
   /**
-   * <code>optional int64 mute_end_date = 9;</code>
+   * <code>optional int64 mute_end_date = 10;</code>
    * @return The muteEndDate.
    */
   @java.lang.Override
@@ -388,33 +422,33 @@ public  final class Group extends
     return muteEndDate_;
   }
   /**
-   * <code>optional int64 mute_end_date = 9;</code>
+   * <code>optional int64 mute_end_date = 10;</code>
    * @param value The muteEndDate to set.
    */
   private void setMuteEndDate(long value) {
-    bitField0_ |= 0x00000100;
+    bitField0_ |= 0x00000200;
     muteEndDate_ = value;
   }
   /**
-   * <code>optional int64 mute_end_date = 9;</code>
+   * <code>optional int64 mute_end_date = 10;</code>
    */
   private void clearMuteEndDate() {
-    bitField0_ = (bitField0_ & ~0x00000100);
+    bitField0_ = (bitField0_ & ~0x00000200);
     muteEndDate_ = 0L;
   }
 
-  public static final int ACTIVE_FIELD_NUMBER = 10;
+  public static final int ACTIVE_FIELD_NUMBER = 11;
   private boolean active_;
   /**
-   * <code>optional bool active = 10;</code>
+   * <code>optional bool active = 11;</code>
    * @return Whether the active field is set.
    */
   @java.lang.Override
   public boolean hasActive() {
-    return ((bitField0_ & 0x00000200) != 0);
+    return ((bitField0_ & 0x00000400) != 0);
   }
   /**
-   * <code>optional bool active = 10;</code>
+   * <code>optional bool active = 11;</code>
    * @return The active.
    */
   @java.lang.Override
@@ -422,18 +456,18 @@ public  final class Group extends
     return active_;
   }
   /**
-   * <code>optional bool active = 10;</code>
+   * <code>optional bool active = 11;</code>
    * @param value The active to set.
    */
   private void setActive(boolean value) {
-    bitField0_ |= 0x00000200;
+    bitField0_ |= 0x00000400;
     active_ = value;
   }
   /**
-   * <code>optional bool active = 10;</code>
+   * <code>optional bool active = 11;</code>
    */
   private void clearActive() {
-    bitField0_ = (bitField0_ & ~0x00000200);
+    bitField0_ = (bitField0_ & ~0x00000400);
     active_ = false;
   }
 
@@ -884,7 +918,43 @@ public  final class Group extends
     }
 
     /**
-     * <code>optional int64 mute_end_date = 9;</code>
+     * <code>optional int64 last_updated_date = 9;</code>
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    @java.lang.Override
+    public boolean hasLastUpdatedDate() {
+      return instance.hasLastUpdatedDate();
+    }
+    /**
+     * <code>optional int64 last_updated_date = 9;</code>
+     * @return The lastUpdatedDate.
+     */
+    @java.lang.Override
+    public long getLastUpdatedDate() {
+      return instance.getLastUpdatedDate();
+    }
+    /**
+     * <code>optional int64 last_updated_date = 9;</code>
+     * @param value The lastUpdatedDate to set.
+     * @return This builder for chaining.
+     */
+    public Builder setLastUpdatedDate(long value) {
+      copyOnWrite();
+      instance.setLastUpdatedDate(value);
+      return this;
+    }
+    /**
+     * <code>optional int64 last_updated_date = 9;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearLastUpdatedDate() {
+      copyOnWrite();
+      instance.clearLastUpdatedDate();
+      return this;
+    }
+
+    /**
+     * <code>optional int64 mute_end_date = 10;</code>
      * @return Whether the muteEndDate field is set.
      */
     @java.lang.Override
@@ -892,7 +962,7 @@ public  final class Group extends
       return instance.hasMuteEndDate();
     }
     /**
-     * <code>optional int64 mute_end_date = 9;</code>
+     * <code>optional int64 mute_end_date = 10;</code>
      * @return The muteEndDate.
      */
     @java.lang.Override
@@ -900,7 +970,7 @@ public  final class Group extends
       return instance.getMuteEndDate();
     }
     /**
-     * <code>optional int64 mute_end_date = 9;</code>
+     * <code>optional int64 mute_end_date = 10;</code>
      * @param value The muteEndDate to set.
      * @return This builder for chaining.
      */
@@ -910,7 +980,7 @@ public  final class Group extends
       return this;
     }
     /**
-     * <code>optional int64 mute_end_date = 9;</code>
+     * <code>optional int64 mute_end_date = 10;</code>
      * @return This builder for chaining.
      */
     public Builder clearMuteEndDate() {
@@ -920,7 +990,7 @@ public  final class Group extends
     }
 
     /**
-     * <code>optional bool active = 10;</code>
+     * <code>optional bool active = 11;</code>
      * @return Whether the active field is set.
      */
     @java.lang.Override
@@ -928,7 +998,7 @@ public  final class Group extends
       return instance.hasActive();
     }
     /**
-     * <code>optional bool active = 10;</code>
+     * <code>optional bool active = 11;</code>
      * @return The active.
      */
     @java.lang.Override
@@ -936,7 +1006,7 @@ public  final class Group extends
       return instance.getActive();
     }
     /**
-     * <code>optional bool active = 10;</code>
+     * <code>optional bool active = 11;</code>
      * @param value The active to set.
      * @return This builder for chaining.
      */
@@ -946,7 +1016,7 @@ public  final class Group extends
       return this;
     }
     /**
-     * <code>optional bool active = 10;</code>
+     * <code>optional bool active = 11;</code>
      * @return This builder for chaining.
      */
     public Builder clearActive() {
@@ -980,13 +1050,14 @@ public  final class Group extends
             "intro_",
             "announcement_",
             "creationDate_",
+            "lastUpdatedDate_",
             "muteEndDate_",
             "active_",
           };
           java.lang.String info =
-              "\u0000\n\u0000\u0001\u0001\n\n\u0000\u0000\u0000\u0001\u1002\u0000\u0002\u1002\u0001" +
-              "\u0003\u1002\u0002\u0004\u1002\u0003\u0005\u1208\u0004\u0006\u1208\u0005\u0007\u1208" +
-              "\u0006\b\u1002\u0007\t\u1002\b\n\u1007\t";
+              "\u0000\u000b\u0000\u0001\u0001\u000b\u000b\u0000\u0000\u0000\u0001\u1002\u0000\u0002" +
+              "\u1002\u0001\u0003\u1002\u0002\u0004\u1002\u0003\u0005\u1208\u0004\u0006\u1208\u0005" +
+              "\u0007\u1208\u0006\b\u1002\u0007\t\u1002\b\n\u1002\t\u000b\u1007\n";
           return newMessageInfo(DEFAULT_INSTANCE, info, objects);
       }
       // fall through

@@ -43,14 +43,16 @@ describe('Create', () => {
         groupId = response.data;
         expect(groupId).toBeTruthy();
     });
-    it('addGroupJoinQuestion_shouldReturnQuestionId', async () => {
-        const response = await turmsClient.groupService.addGroupJoinQuestion({
+    it('addGroupJoinQuestions_shouldReturnQuestionIds', async () => {
+        const response = await turmsClient.groupService.addGroupJoinQuestions({
             groupId,
-            question: 'question',
-            answers: ['answer1', 'answer2'],
-            score: 10
+            questions: [{
+                question: 'question',
+                answers: ['answer1', 'answer2'],
+                score: 10
+            }]
         });
-        groupJoinQuestionId = response.data;
+        groupJoinQuestionId = response.data[0];
         expect(groupJoinQuestionId).toBeTruthy();
     });
     it('createJoinRequest_shouldReturnJoinRequestId', async () => {
@@ -61,10 +63,10 @@ describe('Create', () => {
         groupJoinRequestId = response.data;
         expect(groupJoinRequestId).toBeTruthy();
     });
-    it('addGroupMember_shouldSucceed', async () => {
-        const response = await turmsClient.groupService.addGroupMember({
+    it('addGroupMembers_shouldSucceed', async () => {
+        const response = await turmsClient.groupService.addGroupMembers({
             groupId,
-            userId: GROUP_MEMBER_ID,
+            userIds: [GROUP_MEMBER_ID],
             name: 'name',
             role: GroupMemberRole.MEMBER
         });
@@ -146,12 +148,12 @@ describe('Update', () => {
 });
 
 describe('Query', () => {
-    it('queryGroup_shouldReturnGroupWithVersion', async () => {
-        const response = await turmsClient.groupService.queryGroup({
-            groupId
+    it('queryGroups_shouldReturnGroups', async () => {
+        const response = await turmsClient.groupService.queryGroups({
+            groupIds: [groupId]
         });
-        const groupWithVersion = response.data;
-        expect(groupWithVersion.group.id).toEqual(groupId);
+        const groups = response.data;
+        expect(groups[0].id).toEqual(groupId);
     });
     it('queryJoinedGroupIds_shouldEqualNewGroupId', async () => {
         const response = await turmsClient.groupService.queryJoinedGroupIds();
@@ -234,10 +236,10 @@ describe('Query', () => {
 });
 
 describe('Delete', () => {
-    it('removeGroupMember_shouldSucceed', async () => {
-        const response = await turmsClient.groupService.removeGroupMember({
+    it('removeGroupMembers_shouldSucceed', async () => {
+        const response = await turmsClient.groupService.removeGroupMembers({
             groupId,
-            memberId: GROUP_MEMBER_ID
+            memberIds: [GROUP_MEMBER_ID]
         });
         expect(response.data).toBeFalsy();
     });

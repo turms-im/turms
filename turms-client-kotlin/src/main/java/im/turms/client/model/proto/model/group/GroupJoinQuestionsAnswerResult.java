@@ -46,14 +46,14 @@ public  final class GroupJoinQuestionsAnswerResult extends
    * @param value The score to set.
    */
   private void setScore(int value) {
-    
+
     score_ = value;
   }
   /**
    * <code>int32 score = 1;</code>
    */
   private void clearScore() {
-    
+
     score_ = 0;
   }
 
@@ -143,14 +143,14 @@ public  final class GroupJoinQuestionsAnswerResult extends
    * @param value The joined to set.
    */
   private void setJoined(boolean value) {
-    
+
     joined_ = value;
   }
   /**
    * <code>bool joined = 3;</code>
    */
   private void clearJoined() {
-    
+
     joined_ = false;
   }
 

@@ -273,6 +273,7 @@ const ja_JP = {
     'lastRequestDate': '最終リクエストタイムスタンプ',
     'lastSixMonths': '今日から6ヶ月前～今日',
     'lastThreeMonths': '本日から3ヶ月前～本日(デフォルト)',
+    'lastUpdatedDate': '最終更新タイムスタンプ',
     'lastUpdatedTime': '最終更新タイムスタンプ',
     'leaderEligible': 'リーダー適格',
     'license': 'ライセンス',

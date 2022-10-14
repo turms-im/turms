@@ -67,7 +67,7 @@ public  final class CheckGroupJoinQuestionsAnswersRequest extends
 
   public boolean containsQuestionIdToAnswer(
       long key) {
-    
+
     return internalGetQuestionIdToAnswer().containsKey(key);
   }
   /**
@@ -95,7 +95,7 @@ public  final class CheckGroupJoinQuestionsAnswersRequest extends
   public java.lang.String getQuestionIdToAnswerOrDefault(
       long key,
       java.lang.String defaultValue) {
-    
+
     java.util.Map<java.lang.Long, java.lang.String> map =
         internalGetQuestionIdToAnswer();
     return map.containsKey(key) ? map.get(key) : defaultValue;
@@ -107,7 +107,7 @@ public  final class CheckGroupJoinQuestionsAnswersRequest extends
 
   public java.lang.String getQuestionIdToAnswerOrThrow(
       long key) {
-    
+
     java.util.Map<java.lang.Long, java.lang.String> map =
         internalGetQuestionIdToAnswer();
     if (!map.containsKey(key)) {
@@ -230,7 +230,7 @@ public  final class CheckGroupJoinQuestionsAnswersRequest extends
 
     public boolean containsQuestionIdToAnswer(
         long key) {
-      
+
       return instance.getQuestionIdToAnswerMap().containsKey(key);
     }
 
@@ -245,7 +245,7 @@ public  final class CheckGroupJoinQuestionsAnswersRequest extends
 
     public Builder removeQuestionIdToAnswer(
         long key) {
-      
+
       copyOnWrite();
       instance.getMutableQuestionIdToAnswerMap().remove(key);
       return this;
@@ -274,7 +274,7 @@ public  final class CheckGroupJoinQuestionsAnswersRequest extends
     public java.lang.String getQuestionIdToAnswerOrDefault(
         long key,
         java.lang.String defaultValue) {
-      
+
       java.util.Map<java.lang.Long, java.lang.String> map =
           instance.getQuestionIdToAnswerMap();
       return map.containsKey(key) ? map.get(key) : defaultValue;
@@ -286,7 +286,7 @@ public  final class CheckGroupJoinQuestionsAnswersRequest extends
 
     public java.lang.String getQuestionIdToAnswerOrThrow(
         long key) {
-      
+
       java.util.Map<java.lang.Long, java.lang.String> map =
           instance.getQuestionIdToAnswerMap();
       if (!map.containsKey(key)) {
@@ -300,7 +300,7 @@ public  final class CheckGroupJoinQuestionsAnswersRequest extends
     public Builder putQuestionIdToAnswer(
         long key,
         java.lang.String value) {
-      
+
       java.lang.Class<?> valueClass = value.getClass();
       copyOnWrite();
       instance.getMutableQuestionIdToAnswerMap().put(key, value);

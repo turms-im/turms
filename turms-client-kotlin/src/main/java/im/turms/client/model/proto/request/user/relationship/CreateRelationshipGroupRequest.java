@@ -57,14 +57,14 @@ public  final class CreateRelationshipGroupRequest extends
   private void setName(
       java.lang.String value) {
     java.lang.Class<?> valueClass = value.getClass();
-  
+
     name_ = value;
   }
   /**
    * <code>string name = 1;</code>
    */
   private void clearName() {
-    
+
     name_ = getDefaultInstance().getName();
   }
   /**
@@ -75,7 +75,7 @@ public  final class CreateRelationshipGroupRequest extends
       com.google.protobuf.ByteString value) {
     checkByteStringIsUtf8(value);
     name_ = value.toStringUtf8();
-    
+
   }
 
   public static im.turms.client.model.proto.request.user.relationship.CreateRelationshipGroupRequest parseFrom(

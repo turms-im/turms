@@ -46,14 +46,14 @@ public  final class CreateRelationshipRequest extends
    * @param value The userId to set.
    */
   private void setUserId(long value) {
-    
+
     userId_ = value;
   }
   /**
    * <code>int64 user_id = 1;</code>
    */
   private void clearUserId() {
-    
+
     userId_ = 0L;
   }
 
@@ -72,14 +72,14 @@ public  final class CreateRelationshipRequest extends
    * @param value The blocked to set.
    */
   private void setBlocked(boolean value) {
-    
+
     blocked_ = value;
   }
   /**
    * <code>bool blocked = 2;</code>
    */
   private void clearBlocked() {
-    
+
     blocked_ = false;
   }
 

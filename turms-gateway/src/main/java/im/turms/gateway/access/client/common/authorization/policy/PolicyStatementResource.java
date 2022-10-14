@@ -32,31 +32,31 @@ import java.util.Set;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_BLOCKED_USER_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_INVITATION_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_JOIN_QUESTION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_JOIN_QUESTIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_JOIN_REQUEST_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_MEMBER_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_MEMBERS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_BLOCKED_USER_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_INVITATION_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_JOIN_QUESTION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_JOIN_QUESTIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_JOIN_REQUEST_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_MEMBER_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_MEMBERS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RESOURCE_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_CONVERSATIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_FRIEND_REQUESTS_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUPS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_BLOCKED_USER_IDS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_INVITATIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_JOIN_QUESTIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_JOIN_REQUESTS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_MEMBERS_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_JOINED_GROUP_IDS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_JOINED_GROUP_INFOS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_MESSAGES_REQUEST;
@@ -67,7 +67,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_GET_URL_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_PUT_URL_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_ONLINE_STATUSES_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_PROFILE_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_PROFILES_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_CONVERSATION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_FRIEND_REQUEST_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_JOIN_QUESTION_REQUEST;
@@ -102,7 +102,7 @@ public enum PolicyStatementResource {
     USER_PROFILE(Collections.emptySet(),
             Collections.emptySet(),
             Collections.emptySet(),
-            Set.of(QUERY_USER_PROFILE_REQUEST)),
+            Set.of(QUERY_USER_PROFILES_REQUEST)),
     NEARBY_USER(Collections.emptySet(),
             Collections.emptySet(),
             Collections.emptySet(),
@@ -127,7 +127,7 @@ public enum PolicyStatementResource {
     GROUP(Set.of(CREATE_GROUP_REQUEST),
             Set.of(DELETE_GROUP_REQUEST),
             Set.of(UPDATE_GROUP_REQUEST),
-            Set.of(QUERY_GROUP_REQUEST)),
+            Set.of(QUERY_GROUPS_REQUEST)),
     GROUP_BLOCKED_USER(Set.of(CREATE_GROUP_BLOCKED_USER_REQUEST),
             Set.of(DELETE_GROUP_BLOCKED_USER_REQUEST),
             Collections.emptySet(),
@@ -137,8 +137,8 @@ public enum PolicyStatementResource {
             Set.of(DELETE_GROUP_INVITATION_REQUEST),
             Collections.emptySet(),
             Set.of(QUERY_GROUP_INVITATIONS_REQUEST)),
-    GROUP_JOIN_QUESTION(Set.of(CREATE_GROUP_JOIN_QUESTION_REQUEST),
-            Set.of(DELETE_GROUP_JOIN_QUESTION_REQUEST),
+    GROUP_JOIN_QUESTION(Set.of(CREATE_GROUP_JOIN_QUESTIONS_REQUEST),
+            Set.of(DELETE_GROUP_JOIN_QUESTIONS_REQUEST),
             Set.of(UPDATE_GROUP_JOIN_QUESTION_REQUEST),
             Set.of(QUERY_GROUP_JOIN_QUESTIONS_REQUEST)),
     GROUP_JOIN_QUESTION_ANSWER(Collections.emptySet(),
@@ -149,8 +149,8 @@ public enum PolicyStatementResource {
             Set.of(DELETE_GROUP_JOIN_REQUEST_REQUEST),
             Collections.emptySet(),
             Set.of(QUERY_GROUP_JOIN_REQUESTS_REQUEST)),
-    GROUP_MEMBER(Set.of(CREATE_GROUP_MEMBER_REQUEST),
-            Set.of(DELETE_GROUP_MEMBER_REQUEST),
+    GROUP_MEMBER(Set.of(CREATE_GROUP_MEMBERS_REQUEST),
+            Set.of(DELETE_GROUP_MEMBERS_REQUEST),
             Set.of(UPDATE_GROUP_MEMBER_REQUEST),
             Set.of(QUERY_GROUP_MEMBERS_REQUEST)),
     JOINED_GROUP(Collections.emptySet(),

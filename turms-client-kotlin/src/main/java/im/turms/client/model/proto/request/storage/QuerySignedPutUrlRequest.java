@@ -64,13 +64,13 @@ public  final class QuerySignedPutUrlRequest extends
    */
   private void setContentType(im.turms.client.model.proto.constant.ContentType value) {
     contentType_ = value.getNumber();
-    
+
   }
   /**
    * <code>.im.turms.proto.ContentType content_type = 1;</code>
    */
   private void clearContentType() {
-    
+
     contentType_ = 0;
   }
 
@@ -178,14 +178,14 @@ public  final class QuerySignedPutUrlRequest extends
    * @param value The contentLength to set.
    */
   private void setContentLength(long value) {
-    
+
     contentLength_ = value;
   }
   /**
    * <code>int64 content_length = 4;</code>
    */
   private void clearContentLength() {
-    
+
     contentLength_ = 0L;
   }
 

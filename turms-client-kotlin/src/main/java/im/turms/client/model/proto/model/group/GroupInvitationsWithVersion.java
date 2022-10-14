@@ -44,7 +44,7 @@ public  final class GroupInvitationsWithVersion extends
   /**
    * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
    */
-  public java.util.List<? extends im.turms.client.model.proto.model.group.GroupInvitationOrBuilder> 
+  public java.util.List<? extends im.turms.client.model.proto.model.group.GroupInvitationOrBuilder>
       getGroupInvitationsOrBuilderList() {
     return groupInvitations_;
   }

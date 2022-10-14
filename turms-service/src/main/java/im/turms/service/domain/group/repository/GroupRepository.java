@@ -47,7 +47,8 @@ public class GroupRepository extends BaseRepository<Group, Long> {
         super(mongoClient, Group.class);
     }
 
-    public Mono<UpdateResult> updateGroups(@Nullable Collection<Long> groupIds, @Nullable ClientSession session) {
+    public Mono<UpdateResult> updateGroupsDeletionDate(@Nullable Collection<Long> groupIds,
+                                                       @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(1)
                 .inIfNotNull(DomainFieldName.ID, groupIds);
         Update update = Update.newBuilder(1)
@@ -68,10 +69,11 @@ public class GroupRepository extends BaseRepository<Group, Long> {
             @Nullable Date creationDate,
             @Nullable Date deletionDate,
             @Nullable Date muteEndDate,
+            @Nullable Date lastUpdatedDate,
             @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, groupIds);
-        Update update = Update.newBuilder(11)
+        Update update = Update.newBuilder(12)
                 .setIfNotNull(Group.Fields.TYPE_ID, typeId)
                 .setIfNotNull(Group.Fields.CREATOR_ID, creatorId)
                 .setIfNotNull(Group.Fields.OWNER_ID, ownerId)
@@ -82,6 +84,7 @@ public class GroupRepository extends BaseRepository<Group, Long> {
                 .setIfNotNull(Group.Fields.IS_ACTIVE, isActive)
                 .setIfNotNull(Group.Fields.CREATION_DATE, creationDate)
                 .setIfNotNull(Group.Fields.DELETION_DATE, deletionDate)
+                .setIfNotNull(Group.Fields.LAST_UPDATED_DATE, lastUpdatedDate)
                 .setIfNotNull(Group.Fields.MUTE_END_DATE, muteEndDate);
         return mongoClient.updateMany(session, entityClass, filter, update);
     }
@@ -107,8 +110,9 @@ public class GroupRepository extends BaseRepository<Group, Long> {
             @Nullable Boolean isActive,
             @Nullable DateRange creationDateRange,
             @Nullable DateRange deletionDateRange,
+            @Nullable DateRange lastUpdatedDateRange,
             @Nullable DateRange muteEndDateRange) {
-        Filter filter = Filter.newBuilder(11)
+        Filter filter = Filter.newBuilder(13)
                 .inIfNotNull(DomainFieldName.ID, ids)
                 .inIfNotNull(Group.Fields.TYPE_ID, typeIds)
                 .inIfNotNull(Group.Fields.CREATOR_ID, creatorIds)
@@ -116,6 +120,7 @@ public class GroupRepository extends BaseRepository<Group, Long> {
                 .eqIfNotNull(Group.Fields.IS_ACTIVE, isActive)
                 .addBetweenIfNotNull(Group.Fields.CREATION_DATE, creationDateRange)
                 .addBetweenIfNotNull(Group.Fields.DELETION_DATE, deletionDateRange)
+                .addBetweenIfNotNull(Group.Fields.LAST_UPDATED_DATE, lastUpdatedDateRange)
                 .addBetweenIfNotNull(Group.Fields.MUTE_END_DATE, muteEndDateRange);
         return mongoClient.count(entityClass, filter);
     }
@@ -141,10 +146,11 @@ public class GroupRepository extends BaseRepository<Group, Long> {
             @Nullable Boolean isActive,
             @Nullable DateRange creationDateRange,
             @Nullable DateRange deletionDateRange,
+            @Nullable DateRange lastUpdatedDateRange,
             @Nullable DateRange muteEndDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Filter filter = Filter.newBuilder(11)
+        Filter filter = Filter.newBuilder(13)
                 .inIfNotNull(DomainFieldName.ID, ids)
                 .inIfNotNull(Group.Fields.TYPE_ID, typeIds)
                 .inIfNotNull(Group.Fields.CREATOR_ID, creatorIds)
@@ -152,10 +158,21 @@ public class GroupRepository extends BaseRepository<Group, Long> {
                 .eqIfNotNull(Group.Fields.IS_ACTIVE, isActive)
                 .addBetweenIfNotNull(Group.Fields.CREATION_DATE, creationDateRange)
                 .addBetweenIfNotNull(Group.Fields.DELETION_DATE, deletionDateRange)
+                .addBetweenIfNotNull(Group.Fields.LAST_UPDATED_DATE, lastUpdatedDateRange)
                 .addBetweenIfNotNull(Group.Fields.MUTE_END_DATE, muteEndDateRange);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);
         return mongoClient.findMany(entityClass, filter, options);
+    }
+
+    public Flux<Group> findNotDeletedGroups(
+            @Nullable Set<Long> ids,
+            @Nullable Date lastUpdatedDate) {
+        Filter filter = Filter.newBuilder(3)
+                .in(DomainFieldName.ID, ids)
+                .eq(Group.Fields.DELETION_DATE, null)
+                .gtIfNotNull(Group.Fields.LAST_UPDATED_DATE, lastUpdatedDate);
+        return mongoClient.findMany(entityClass, filter);
     }
 
     public Mono<Long> findGroupTypeId(Long groupId) {

@@ -27,7 +27,7 @@ public interface GroupJoinQuestionsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
    */
-  java.util.List<im.turms.client.model.proto.model.group.GroupJoinQuestion> 
+  java.util.List<im.turms.client.model.proto.model.group.GroupJoinQuestion>
       getGroupJoinQuestionsList();
   /**
    * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>

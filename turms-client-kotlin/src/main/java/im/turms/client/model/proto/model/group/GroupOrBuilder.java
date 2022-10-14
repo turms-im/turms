@@ -131,23 +131,34 @@ public interface GroupOrBuilder extends
   long getCreationDate();
 
   /**
-   * <code>optional int64 mute_end_date = 9;</code>
+   * <code>optional int64 last_updated_date = 9;</code>
+   * @return Whether the lastUpdatedDate field is set.
+   */
+  boolean hasLastUpdatedDate();
+  /**
+   * <code>optional int64 last_updated_date = 9;</code>
+   * @return The lastUpdatedDate.
+   */
+  long getLastUpdatedDate();
+
+  /**
+   * <code>optional int64 mute_end_date = 10;</code>
    * @return Whether the muteEndDate field is set.
    */
   boolean hasMuteEndDate();
   /**
-   * <code>optional int64 mute_end_date = 9;</code>
+   * <code>optional int64 mute_end_date = 10;</code>
    * @return The muteEndDate.
    */
   long getMuteEndDate();
 
   /**
-   * <code>optional bool active = 10;</code>
+   * <code>optional bool active = 11;</code>
    * @return Whether the active field is set.
    */
   boolean hasActive();
   /**
-   * <code>optional bool active = 10;</code>
+   * <code>optional bool active = 11;</code>
    * @return The active.
    */
   boolean getActive();

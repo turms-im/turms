@@ -234,7 +234,7 @@ export default {
                         width: '10%'
                     },
                     {
-                        id: 'profilePicture',
+                        key: 'profilePicture',
                         width: '7.5%'
                     },
                     {

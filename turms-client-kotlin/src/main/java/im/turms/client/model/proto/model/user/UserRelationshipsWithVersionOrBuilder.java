@@ -27,7 +27,7 @@ public interface UserRelationshipsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
    */
-  java.util.List<im.turms.client.model.proto.model.user.UserRelationship> 
+  java.util.List<im.turms.client.model.proto.model.user.UserRelationship>
       getUserRelationshipsList();
   /**
    * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>

@@ -172,7 +172,7 @@ public class MessageServiceController {
                             dataForRecipients);
                 } else {
                     if (!hasDataForRecipients) {
-                        return RequestHandlerResultFactory.get(messageId);
+                        return RequestHandlerResultFactory.getByDataId(messageId);
                     }
                     TurmsRequest dataForRecipients;
                     if (request.hasMessageId()) {
@@ -195,7 +195,7 @@ public class MessageServiceController {
                                 .setCreateMessageRequest(requestBuilder)
                                 .build();
                     }
-                    return RequestHandlerResultFactory.get(
+                    return RequestHandlerResultFactory.getByDataId(
                             messageId,
                             recipientIds,
                             sendMessageToOtherSenderOnlineDevices,

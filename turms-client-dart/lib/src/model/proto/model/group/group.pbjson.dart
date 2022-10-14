@@ -20,8 +20,9 @@ const Group$json = const {
     const {'1': 'intro', '3': 6, '4': 1, '5': 9, '9': 5, '10': 'intro', '17': true},
     const {'1': 'announcement', '3': 7, '4': 1, '5': 9, '9': 6, '10': 'announcement', '17': true},
     const {'1': 'creation_date', '3': 8, '4': 1, '5': 3, '9': 7, '10': 'creationDate', '17': true},
-    const {'1': 'mute_end_date', '3': 9, '4': 1, '5': 3, '9': 8, '10': 'muteEndDate', '17': true},
-    const {'1': 'active', '3': 10, '4': 1, '5': 8, '9': 9, '10': 'active', '17': true},
+    const {'1': 'last_updated_date', '3': 9, '4': 1, '5': 3, '9': 8, '10': 'lastUpdatedDate', '17': true},
+    const {'1': 'mute_end_date', '3': 10, '4': 1, '5': 3, '9': 9, '10': 'muteEndDate', '17': true},
+    const {'1': 'active', '3': 11, '4': 1, '5': 8, '9': 10, '10': 'active', '17': true},
   ],
   '8': const [
     const {'1': '_id'},
@@ -32,10 +33,11 @@ const Group$json = const {
     const {'1': '_intro'},
     const {'1': '_announcement'},
     const {'1': '_creation_date'},
+    const {'1': '_last_updated_date'},
     const {'1': '_mute_end_date'},
     const {'1': '_active'},
   ],
 };
 
 /// Descriptor for `Group`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List groupDescriptor = $convert.base64Decode('CgVHcm91cBITCgJpZBgBIAEoA0gAUgJpZIgBARIcCgd0eXBlX2lkGAIgASgDSAFSBnR5cGVJZIgBARIiCgpjcmVhdG9yX2lkGAMgASgDSAJSCWNyZWF0b3JJZIgBARIeCghvd25lcl9pZBgEIAEoA0gDUgdvd25lcklkiAEBEhcKBG5hbWUYBSABKAlIBFIEbmFtZYgBARIZCgVpbnRybxgGIAEoCUgFUgVpbnRyb4gBARInCgxhbm5vdW5jZW1lbnQYByABKAlIBlIMYW5ub3VuY2VtZW50iAEBEigKDWNyZWF0aW9uX2RhdGUYCCABKANIB1IMY3JlYXRpb25EYXRliAEBEicKDW11dGVfZW5kX2RhdGUYCSABKANICFILbXV0ZUVuZERhdGWIAQESGwoGYWN0aXZlGAogASgISAlSBmFjdGl2ZYgBAUIFCgNfaWRCCgoIX3R5cGVfaWRCDQoLX2NyZWF0b3JfaWRCCwoJX293bmVyX2lkQgcKBV9uYW1lQggKBl9pbnRyb0IPCg1fYW5ub3VuY2VtZW50QhAKDl9jcmVhdGlvbl9kYXRlQhAKDl9tdXRlX2VuZF9kYXRlQgkKB19hY3RpdmU=');
+final $typed_data.Uint8List groupDescriptor = $convert.base64Decode('CgVHcm91cBITCgJpZBgBIAEoA0gAUgJpZIgBARIcCgd0eXBlX2lkGAIgASgDSAFSBnR5cGVJZIgBARIiCgpjcmVhdG9yX2lkGAMgASgDSAJSCWNyZWF0b3JJZIgBARIeCghvd25lcl9pZBgEIAEoA0gDUgdvd25lcklkiAEBEhcKBG5hbWUYBSABKAlIBFIEbmFtZYgBARIZCgVpbnRybxgGIAEoCUgFUgVpbnRyb4gBARInCgxhbm5vdW5jZW1lbnQYByABKAlIBlIMYW5ub3VuY2VtZW50iAEBEigKDWNyZWF0aW9uX2RhdGUYCCABKANIB1IMY3JlYXRpb25EYXRliAEBEi8KEWxhc3RfdXBkYXRlZF9kYXRlGAkgASgDSAhSD2xhc3RVcGRhdGVkRGF0ZYgBARInCg1tdXRlX2VuZF9kYXRlGAogASgDSAlSC211dGVFbmREYXRliAEBEhsKBmFjdGl2ZRgLIAEoCEgKUgZhY3RpdmWIAQFCBQoDX2lkQgoKCF90eXBlX2lkQg0KC19jcmVhdG9yX2lkQgsKCV9vd25lcl9pZEIHCgVfbmFtZUIICgZfaW50cm9CDwoNX2Fubm91bmNlbWVudEIQCg5fY3JlYXRpb25fZGF0ZUIUChJfbGFzdF91cGRhdGVkX2RhdGVCEAoOX211dGVfZW5kX2RhdGVCCQoHX2FjdGl2ZQ==');

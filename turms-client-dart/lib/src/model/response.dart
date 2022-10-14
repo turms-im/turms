@@ -28,6 +28,8 @@ class Response<T> {
   String toString() =>
       'Response{timestamp: $timestamp, requestId: $requestId, code: $code, data: $data}';
 
+  Response<T> withData<T>(T data) => Response(timestamp, requestId, code, data);
+
   static Response<T> value<T>(T data) =>
       Response(DateTime.now(), null, ResponseStatusCode.ok, data);
 

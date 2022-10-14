@@ -27,7 +27,7 @@ public interface GroupsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.Group groups = 1;</code>
    */
-  java.util.List<im.turms.client.model.proto.model.group.Group> 
+  java.util.List<im.turms.client.model.proto.model.group.Group>
       getGroupsList();
   /**
    * <code>repeated .im.turms.proto.Group groups = 1;</code>

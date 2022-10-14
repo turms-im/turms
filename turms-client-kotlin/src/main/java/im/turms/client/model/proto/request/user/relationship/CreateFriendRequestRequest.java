@@ -46,14 +46,14 @@ public  final class CreateFriendRequestRequest extends
    * @param value The recipientId to set.
    */
   private void setRecipientId(long value) {
-    
+
     recipientId_ = value;
   }
   /**
    * <code>int64 recipient_id = 1;</code>
    */
   private void clearRecipientId() {
-    
+
     recipientId_ = 0L;
   }
 
@@ -83,14 +83,14 @@ public  final class CreateFriendRequestRequest extends
   private void setContent(
       java.lang.String value) {
     java.lang.Class<?> valueClass = value.getClass();
-  
+
     content_ = value;
   }
   /**
    * <code>string content = 2;</code>
    */
   private void clearContent() {
-    
+
     content_ = getDefaultInstance().getContent();
   }
   /**
@@ -101,7 +101,7 @@ public  final class CreateFriendRequestRequest extends
       com.google.protobuf.ByteString value) {
     checkByteStringIsUtf8(value);
     content_ = value.toStringUtf8();
-    
+
   }
 
   public static im.turms.client.model.proto.request.user.relationship.CreateFriendRequestRequest parseFrom(

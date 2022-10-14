@@ -147,6 +147,15 @@ public class GroupMemberRepository extends BaseRepository<GroupMember, GroupMemb
                 .map(member -> member.getKey().getUserId());
     }
 
+    public Flux<GroupMember> findGroupMemberKeyAndRoleParis(Set<Long> userIds, Long groupId) {
+        Filter filter = Filter.newBuilder(2)
+                .in(GroupMember.Fields.ID_USER_ID, userIds)
+                .eq(GroupMember.Fields.ID_GROUP_ID, groupId);
+        QueryOptions options = QueryOptions.newBuilder(1)
+                .include(GroupMember.Fields.ROLE);
+        return mongoClient.findMany(entityClass, filter, options);
+    }
+
     public Mono<GroupMemberRole> findGroupMemberRole(Long userId, Long groupId) {
         Filter filter = Filter.newBuilder(2)
                 .eq(GroupMember.Fields.ID_USER_ID, userId)

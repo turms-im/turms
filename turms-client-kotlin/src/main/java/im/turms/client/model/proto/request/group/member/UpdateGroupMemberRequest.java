@@ -47,14 +47,14 @@ public  final class UpdateGroupMemberRequest extends
    * @param value The groupId to set.
    */
   private void setGroupId(long value) {
-    
+
     groupId_ = value;
   }
   /**
    * <code>int64 group_id = 1;</code>
    */
   private void clearGroupId() {
-    
+
     groupId_ = 0L;
   }
 
@@ -73,14 +73,14 @@ public  final class UpdateGroupMemberRequest extends
    * @param value The memberId to set.
    */
   private void setMemberId(long value) {
-    
+
     memberId_ = value;
   }
   /**
    * <code>int64 member_id = 2;</code>
    */
   private void clearMemberId() {
-    
+
     memberId_ = 0L;
   }
 

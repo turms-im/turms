@@ -27,7 +27,7 @@ public interface UserFriendRequestsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
    */
-  java.util.List<im.turms.client.model.proto.model.user.UserFriendRequest> 
+  java.util.List<im.turms.client.model.proto.model.user.UserFriendRequest>
       getUserFriendRequestsList();
   /**
    * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>

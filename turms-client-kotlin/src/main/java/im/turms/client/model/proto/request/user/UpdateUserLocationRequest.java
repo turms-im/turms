@@ -45,14 +45,14 @@ public  final class UpdateUserLocationRequest extends
    * @param value The latitude to set.
    */
   private void setLatitude(float value) {
-    
+
     latitude_ = value;
   }
   /**
    * <code>float latitude = 1;</code>
    */
   private void clearLatitude() {
-    
+
     latitude_ = 0F;
   }
 
@@ -71,14 +71,14 @@ public  final class UpdateUserLocationRequest extends
    * @param value The longitude to set.
    */
   private void setLongitude(float value) {
-    
+
     longitude_ = value;
   }
   /**
    * <code>float longitude = 2;</code>
    */
   private void clearLongitude() {
-    
+
     longitude_ = 0F;
   }
 

@@ -83,6 +83,8 @@ public interface MongoOperationsSupport {
 
     <T> Mono<Void> insertAllOfSameType(List<T> values);
 
+    <T> Mono<Void> insertAllOfSameType(@Nullable ClientSession session, List<T> values);
+
     <T> Mono<UpdateResult> updateOne(Class<T> clazz, Filter filter, Update update);
 
     <T> Mono<UpdateResult> updateOne(@Nullable ClientSession session, Class<T> clazz, Filter filter, Update update);

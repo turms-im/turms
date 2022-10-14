@@ -55,25 +55,15 @@ public struct UserInfo {
     /// Clears the value of `intro`. Subsequent reads from it will return its default value.
     public mutating func clearIntro() { _intro = nil }
 
-    public var registrationDate: Int64 {
-        get { return _registrationDate ?? 0 }
-        set { _registrationDate = newValue }
+    public var profilePicture: String {
+        get { return _profilePicture ?? String() }
+        set { _profilePicture = newValue }
     }
 
-    /// Returns true if `registrationDate` has been explicitly set.
-    public var hasRegistrationDate: Bool { return _registrationDate != nil }
-    /// Clears the value of `registrationDate`. Subsequent reads from it will return its default value.
-    public mutating func clearRegistrationDate() { _registrationDate = nil }
-
-    public var active: Bool {
-        get { return _active ?? false }
-        set { _active = newValue }
-    }
-
-    /// Returns true if `active` has been explicitly set.
-    public var hasActive: Bool { return _active != nil }
-    /// Clears the value of `active`. Subsequent reads from it will return its default value.
-    public mutating func clearActive() { _active = nil }
+    /// Returns true if `profilePicture` has been explicitly set.
+    public var hasProfilePicture: Bool { return _profilePicture != nil }
+    /// Clears the value of `profilePicture`. Subsequent reads from it will return its default value.
+    public mutating func clearProfilePicture() { _profilePicture = nil }
 
     public var profileAccessStrategy: ProfileAccessStrategy {
         get { return _profileAccessStrategy ?? .all }
@@ -85,6 +75,36 @@ public struct UserInfo {
     /// Clears the value of `profileAccessStrategy`. Subsequent reads from it will return its default value.
     public mutating func clearProfileAccessStrategy() { _profileAccessStrategy = nil }
 
+    public var registrationDate: Int64 {
+        get { return _registrationDate ?? 0 }
+        set { _registrationDate = newValue }
+    }
+
+    /// Returns true if `registrationDate` has been explicitly set.
+    public var hasRegistrationDate: Bool { return _registrationDate != nil }
+    /// Clears the value of `registrationDate`. Subsequent reads from it will return its default value.
+    public mutating func clearRegistrationDate() { _registrationDate = nil }
+
+    public var lastUpdatedDate: Int64 {
+        get { return _lastUpdatedDate ?? 0 }
+        set { _lastUpdatedDate = newValue }
+    }
+
+    /// Returns true if `lastUpdatedDate` has been explicitly set.
+    public var hasLastUpdatedDate: Bool { return _lastUpdatedDate != nil }
+    /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
+    public mutating func clearLastUpdatedDate() { _lastUpdatedDate = nil }
+
+    public var active: Bool {
+        get { return _active ?? false }
+        set { _active = newValue }
+    }
+
+    /// Returns true if `active` has been explicitly set.
+    public var hasActive: Bool { return _active != nil }
+    /// Clears the value of `active`. Subsequent reads from it will return its default value.
+    public mutating func clearActive() { _active = nil }
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -92,9 +112,11 @@ public struct UserInfo {
     private var _id: Int64?
     private var _name: String?
     private var _intro: String?
-    private var _registrationDate: Int64?
-    private var _active: Bool?
+    private var _profilePicture: String?
     private var _profileAccessStrategy: ProfileAccessStrategy?
+    private var _registrationDate: Int64?
+    private var _lastUpdatedDate: Int64?
+    private var _active: Bool?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -111,9 +133,11 @@ extension UserInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         1: .same(proto: "id"),
         2: .same(proto: "name"),
         3: .same(proto: "intro"),
-        4: .standard(proto: "registration_date"),
-        5: .same(proto: "active"),
-        6: .standard(proto: "profile_access_strategy"),
+        4: .standard(proto: "profile_picture"),
+        5: .standard(proto: "profile_access_strategy"),
+        6: .standard(proto: "registration_date"),
+        7: .standard(proto: "last_updated_date"),
+        8: .same(proto: "active"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -125,9 +149,11 @@ extension UserInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
             case 1: try try decoder.decodeSingularInt64Field(value: &_id)
             case 2: try try decoder.decodeSingularStringField(value: &_name)
             case 3: try try decoder.decodeSingularStringField(value: &_intro)
-            case 4: try try decoder.decodeSingularInt64Field(value: &_registrationDate)
-            case 5: try try decoder.decodeSingularBoolField(value: &_active)
-            case 6: try try decoder.decodeSingularEnumField(value: &_profileAccessStrategy)
+            case 4: try try decoder.decodeSingularStringField(value: &_profilePicture)
+            case 5: try try decoder.decodeSingularEnumField(value: &_profileAccessStrategy)
+            case 6: try try decoder.decodeSingularInt64Field(value: &_registrationDate)
+            case 7: try try decoder.decodeSingularInt64Field(value: &_lastUpdatedDate)
+            case 8: try try decoder.decodeSingularBoolField(value: &_active)
             default: break
             }
         }
@@ -147,14 +173,20 @@ extension UserInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         try { if let v = self._intro {
             try visitor.visitSingularStringField(value: v, fieldNumber: 3)
         } }()
-        try { if let v = self._registrationDate {
-            try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
-        } }()
-        try { if let v = self._active {
-            try visitor.visitSingularBoolField(value: v, fieldNumber: 5)
+        try { if let v = self._profilePicture {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 4)
         } }()
         try { if let v = self._profileAccessStrategy {
-            try visitor.visitSingularEnumField(value: v, fieldNumber: 6)
+            try visitor.visitSingularEnumField(value: v, fieldNumber: 5)
+        } }()
+        try { if let v = self._registrationDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
+        } }()
+        try { if let v = self._lastUpdatedDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 7)
+        } }()
+        try { if let v = self._active {
+            try visitor.visitSingularBoolField(value: v, fieldNumber: 8)
         } }()
         try unknownFields.traverse(visitor: &visitor)
     }
@@ -163,9 +195,11 @@ extension UserInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if lhs._id != rhs._id { return false }
         if lhs._name != rhs._name { return false }
         if lhs._intro != rhs._intro { return false }
-        if lhs._registrationDate != rhs._registrationDate { return false }
-        if lhs._active != rhs._active { return false }
+        if lhs._profilePicture != rhs._profilePicture { return false }
         if lhs._profileAccessStrategy != rhs._profileAccessStrategy { return false }
+        if lhs._registrationDate != rhs._registrationDate { return false }
+        if lhs._lastUpdatedDate != rhs._lastUpdatedDate { return false }
+        if lhs._active != rhs._active { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

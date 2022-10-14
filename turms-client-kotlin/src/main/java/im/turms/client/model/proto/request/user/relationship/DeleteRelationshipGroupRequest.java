@@ -46,14 +46,14 @@ public  final class DeleteRelationshipGroupRequest extends
    * @param value The groupIndex to set.
    */
   private void setGroupIndex(int value) {
-    
+
     groupIndex_ = value;
   }
   /**
    * <code>int32 group_index = 1;</code>
    */
   private void clearGroupIndex() {
-    
+
     groupIndex_ = 0;
   }
 

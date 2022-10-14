@@ -35,9 +35,9 @@ import im.turms.server.common.access.client.dto.model.group.GroupMember;
 import im.turms.server.common.access.client.dto.model.user.NearbyUser;
 import im.turms.server.common.access.client.dto.model.user.UserFriendRequest;
 import im.turms.server.common.access.client.dto.model.user.UserInfo;
+import im.turms.server.common.access.client.dto.model.user.UserOnlineStatus;
 import im.turms.server.common.access.client.dto.model.user.UserRelationship;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup;
-import im.turms.server.common.access.client.dto.model.user.UserStatusDetail;
 import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.user.po.User;
@@ -119,6 +119,7 @@ public final class ProtoModelConvertor {
         Date registrationDate = user.getRegistrationDate();
         Boolean active = user.getIsActive();
         ProfileAccessStrategy profileAccessStrategy = user.getProfileAccessStrategy();
+        Date lastUpdatedDate = user.getLastUpdatedDate();
         if (userId != null) {
             builder.setId(userId);
         }
@@ -140,15 +141,18 @@ public final class ProtoModelConvertor {
         if (profileAccessStrategy != null) {
             builder.setProfileAccessStrategy(profileAccessStrategy);
         }
+        if (lastUpdatedDate != null) {
+            builder.setLastUpdatedDate(lastUpdatedDate.getTime());
+        }
         return builder;
     }
 
-    public static UserStatusDetail.Builder userOnlineInfo2userStatus(
+    public static UserOnlineStatus.Builder userSessionsStatus2proto(
             @NotNull Long userId,
             @Nullable UserSessionsStatus userSessionsStatus,
             boolean convertInvisibleToOffline) {
-        UserStatusDetail.Builder builder = ClientMessagePool
-                .getUserStatusDetailBuilder()
+        UserOnlineStatus.Builder builder = ClientMessagePool
+                .getUserOnlineStatusBuilder()
                 .setUserId(userId);
         if (userSessionsStatus == null) {
             builder.setUserStatus(UserStatus.OFFLINE);
@@ -295,6 +299,7 @@ public final class ProtoModelConvertor {
         String intro = group.getIntro();
         String announcement = group.getAnnouncement();
         Date creationDate = group.getCreationDate();
+        Date lastUpdatedDate = group.getLastUpdatedDate();
         Date muteEndDate = group.getMuteEndDate();
         Boolean active = group.getIsActive();
         if (groupId != null) {
@@ -320,6 +325,9 @@ public final class ProtoModelConvertor {
         }
         if (creationDate != null) {
             builder.setCreationDate(creationDate.getTime());
+        }
+        if (lastUpdatedDate != null) {
+            builder.setLastUpdatedDate(lastUpdatedDate.getTime());
         }
         if (muteEndDate != null) {
             builder.setMuteEndDate(muteEndDate.getTime());

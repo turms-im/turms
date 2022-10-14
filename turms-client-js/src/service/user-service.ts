@@ -16,6 +16,7 @@ import TurmsClient from '../turms-client';
 import UserLocation from '../model/user-location';
 import { UserStatus } from '../model/proto/constant/user_status';
 import Validator from '../util/validator';
+import CollectionUtil from '../util/collection-util';
 
 export interface UserInfo {
     userId?: string;
@@ -354,31 +355,23 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
-    queryUserProfile({
-        userId,
+    queryUserProfiles({
+        userIds,
         lastUpdatedDate
     }: {
-        userId: string,
+        userIds: string[],
         lastUpdatedDate?: Date
-    }): Promise<Response<ParsedModel.UserInfoWithVersion | undefined>> {
-        if (Validator.isFalsy(userId)) {
-            return ResponseError.notFalsyPromise('userId');
+    }): Promise<Response<ParsedModel.UserInfo[]>> {
+        if (!userIds?.length) {
+            return Promise.resolve(Response.emptyList());
         }
         return this._turmsClient.driver.send({
-            queryUserProfileRequest: {
-                userId: userId,
+            queryUserProfilesRequest: {
+                userIds: CollectionUtil.uniqueArray(userIds),
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => Response.fromNotification(n, data => {
-            const usersInfosWithVersion = data.usersInfosWithVersion;
-            const userInfo = NotificationUtil.transform(usersInfosWithVersion?.userInfos?.[0]);
-            if (userInfo) {
-                return {
-                    userInfo,
-                    lastUpdatedDate: NotificationUtil.transformDate(usersInfosWithVersion.lastUpdatedDate)
-                };
-            }
-        }));
+        }).then(n => Response.fromNotification(n, data =>
+            NotificationUtil.transformOrEmpty(data.userInfosWithVersion?.userInfos)));
     }
 
     queryNearbyUsers({
@@ -421,15 +414,16 @@ export default class UserService {
         userIds
     }: {
         userIds: string[]
-    }): Promise<Response<ParsedModel.UserStatusDetail[]>> {
+    }): Promise<Response<ParsedModel.UserOnlineStatus[]>> {
         if (Validator.isFalsy(userIds)) {
-            return ResponseError.notFalsyPromise('userIds', true);
+            return Promise.resolve(Response.emptyList());
         }
         return this._turmsClient.driver.send({
             queryUserOnlineStatusesRequest: {
                 userIds
             }
-        }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.usersOnlineStatuses?.userStatuses)));
+        }).then(n => Response.fromNotification(n, data =>
+            NotificationUtil.transformOrEmpty(data.userOnlineStatuses?.statuses)));
     }
 
     // Relationship

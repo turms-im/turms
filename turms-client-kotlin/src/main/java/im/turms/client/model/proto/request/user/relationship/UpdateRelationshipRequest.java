@@ -46,14 +46,14 @@ public  final class UpdateRelationshipRequest extends
    * @param value The userId to set.
    */
   private void setUserId(long value) {
-    
+
     userId_ = value;
   }
   /**
    * <code>int64 user_id = 1;</code>
    */
   private void clearUserId() {
-    
+
     userId_ = 0L;
   }
 

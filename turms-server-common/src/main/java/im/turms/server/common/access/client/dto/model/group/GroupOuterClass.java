@@ -46,17 +46,19 @@ public final class GroupOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\027model/group/group.proto\022\016im.turms.prot" +
-      "o\"\357\002\n\005Group\022\017\n\002id\030\001 \001(\003H\000\210\001\001\022\024\n\007type_id\030" +
+      "o\"\245\003\n\005Group\022\017\n\002id\030\001 \001(\003H\000\210\001\001\022\024\n\007type_id\030" +
       "\002 \001(\003H\001\210\001\001\022\027\n\ncreator_id\030\003 \001(\003H\002\210\001\001\022\025\n\010o" +
       "wner_id\030\004 \001(\003H\003\210\001\001\022\021\n\004name\030\005 \001(\tH\004\210\001\001\022\022\n" +
       "\005intro\030\006 \001(\tH\005\210\001\001\022\031\n\014announcement\030\007 \001(\tH" +
-      "\006\210\001\001\022\032\n\rcreation_date\030\010 \001(\003H\007\210\001\001\022\032\n\rmute" +
-      "_end_date\030\t \001(\003H\010\210\001\001\022\023\n\006active\030\n \001(\010H\t\210\001" +
-      "\001B\005\n\003_idB\n\n\010_type_idB\r\n\013_creator_idB\013\n\t_" +
-      "owner_idB\007\n\005_nameB\010\n\006_introB\017\n\r_announce" +
-      "mentB\020\n\016_creation_dateB\020\n\016_mute_end_date" +
-      "B\t\n\007_activeB;\n4im.turms.server.common.ac" +
-      "cess.client.dto.model.groupP\001\272\002\000b\006proto3"
+      "\006\210\001\001\022\032\n\rcreation_date\030\010 \001(\003H\007\210\001\001\022\036\n\021last" +
+      "_updated_date\030\t \001(\003H\010\210\001\001\022\032\n\rmute_end_dat" +
+      "e\030\n \001(\003H\t\210\001\001\022\023\n\006active\030\013 \001(\010H\n\210\001\001B\005\n\003_id" +
+      "B\n\n\010_type_idB\r\n\013_creator_idB\013\n\t_owner_id" +
+      "B\007\n\005_nameB\010\n\006_introB\017\n\r_announcementB\020\n\016" +
+      "_creation_dateB\024\n\022_last_updated_dateB\020\n\016" +
+      "_mute_end_dateB\t\n\007_activeB;\n4im.turms.se" +
+      "rver.common.access.client.dto.model.grou" +
+      "pP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -67,7 +69,7 @@ public final class GroupOuterClass {
     internal_static_im_turms_proto_Group_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_Group_descriptor,
-        new java.lang.String[] { "Id", "TypeId", "CreatorId", "OwnerId", "Name", "Intro", "Announcement", "CreationDate", "MuteEndDate", "Active", "Id", "TypeId", "CreatorId", "OwnerId", "Name", "Intro", "Announcement", "CreationDate", "MuteEndDate", "Active", });
+        new java.lang.String[] { "Id", "TypeId", "CreatorId", "OwnerId", "Name", "Intro", "Announcement", "CreationDate", "LastUpdatedDate", "MuteEndDate", "Active", "Id", "TypeId", "CreatorId", "OwnerId", "Name", "Intro", "Announcement", "CreationDate", "LastUpdatedDate", "MuteEndDate", "Active", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

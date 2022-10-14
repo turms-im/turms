@@ -75,22 +75,29 @@ public class Filter extends BaseBson {
         return this;
     }
 
-    public Filter eqIfFalse(@NotNull String key, @Nullable Object obj, boolean condition) {
+    public Filter eqIfFalse(@NotNull String key, @Nullable Object value, boolean condition) {
         if (!condition) {
-            document.append(key, new BsonDocument("$eq", BsonValueEncoder.encodeSingleValue(obj)));
+            document.append(key, new BsonDocument("$eq", BsonValueEncoder.encodeSingleValue(value)));
         }
         return this;
     }
 
-    public Filter eqIfNotNull(@NotNull String key, @Nullable Object obj) {
-        if (obj != null) {
-            document.append(key, new BsonDocument("$eq", BsonValueEncoder.encodeSingleValue(obj)));
+    public Filter eqIfNotNull(@NotNull String key, @Nullable Object value) {
+        if (value != null) {
+            document.append(key, new BsonDocument("$eq", BsonValueEncoder.encodeSingleValue(value)));
         }
         return this;
     }
 
     public Filter gt(String key, Object value) {
         document.append(key, new BsonDocument("$gt", BsonValueEncoder.encodeSingleValue(value)));
+        return this;
+    }
+
+    public Filter gtIfNotNull(String key, @Nullable Object value) {
+        if (value != null) {
+            document.append(key, new BsonDocument("$gt", BsonValueEncoder.encodeSingleValue(value)));
+        }
         return this;
     }
 
@@ -144,8 +151,8 @@ public class Filter extends BaseBson {
         return this;
     }
 
-    public Filter neNullIfNotNull(@NotNull String key, @Nullable Object obj) {
-        if (obj != null) {
+    public Filter neNullIfNotNull(@NotNull String key, @Nullable Object value) {
+        if (value != null) {
             document.append(key, new BsonDocument("$ne", BsonNull.VALUE));
         }
         return this;

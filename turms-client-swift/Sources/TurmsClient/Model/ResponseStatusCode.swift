@@ -130,14 +130,15 @@ public enum ResponseStatusCode: Int {
     case answerQuestionOfInactiveGroup
 
     // Group - Member
-    case notOwnerOrManagerToRemoveGroupMember = 3400
+    case addUserToInactiveGroup = 3400
+    case addNewMemberWithRoleHigherThanRequester
+    case addBlockedUserToGroup
+    case addBlockedUserToInactiveGroup
+    case notOwnerOrManagerToRemoveGroupMember
+    case notOwnerToRemoveGroupOwnerOrManager
     case notOwnerToUpdateGroupMemberInfo
     case notOwnerOrManagerToUpdateGroupMemberInfo
     case notMemberToQueryMemberInfo
-    case addBlockedUserToGroup
-    case addBlockedUserToInactiveGroup
-    case addUserToInactiveGroup
-    case addNewMemberWithRoleHigherThanRequester
 
     // Group - Blocklist
     case notOwnerOrManagerToAddBlockedUser = 3500

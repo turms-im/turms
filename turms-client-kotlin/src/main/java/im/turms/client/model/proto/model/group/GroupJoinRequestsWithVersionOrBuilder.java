@@ -27,7 +27,7 @@ public interface GroupJoinRequestsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
    */
-  java.util.List<im.turms.client.model.proto.model.group.GroupJoinRequest> 
+  java.util.List<im.turms.client.model.proto.model.group.GroupJoinRequest>
       getGroupJoinRequestsList();
   /**
    * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>

@@ -44,7 +44,7 @@ public  final class GroupJoinRequestsWithVersion extends
   /**
    * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
    */
-  public java.util.List<? extends im.turms.client.model.proto.model.group.GroupJoinRequestOrBuilder> 
+  public java.util.List<? extends im.turms.client.model.proto.model.group.GroupJoinRequestOrBuilder>
       getGroupJoinRequestsOrBuilderList() {
     return groupJoinRequests_;
   }

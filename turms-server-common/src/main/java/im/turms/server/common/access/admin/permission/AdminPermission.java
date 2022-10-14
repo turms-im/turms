@@ -29,15 +29,12 @@ import java.util.Set;
  * @author James Chen
  */
 public enum AdminPermission {
-    STATISTICS_USER_QUERY,
-    STATISTICS_GROUP_QUERY,
-    STATISTICS_MESSAGE_QUERY,
-
     FLIGHT_RECORDING_CREATE,
     FLIGHT_RECORDING_DELETE,
     FLIGHT_RECORDING_UPDATE,
     FLIGHT_RECORDING_QUERY,
 
+    //region business
     USER_CREATE,
     USER_DELETE,
     USER_UPDATE,
@@ -109,7 +106,15 @@ public enum AdminPermission {
     MESSAGE_DELETE,
     MESSAGE_UPDATE,
     MESSAGE_QUERY,
+    //endregion
 
+    //region business - statistics
+    STATISTICS_USER_QUERY,
+    STATISTICS_GROUP_QUERY,
+    STATISTICS_MESSAGE_QUERY,
+    //endregion
+
+    //region admin
     ADMIN_CREATE,
     ADMIN_DELETE,
     ADMIN_UPDATE,
@@ -119,11 +124,19 @@ public enum AdminPermission {
     ADMIN_ROLE_DELETE,
     ADMIN_ROLE_UPDATE,
     ADMIN_ROLE_QUERY,
+    //endregion
 
+    //region client - blocklist
     CLIENT_BLOCKLIST_CREATE,
     CLIENT_BLOCKLIST_DELETE,
     CLIENT_BLOCKLIST_QUERY,
+    //endregion
 
+    //region client - request
+    CLIENT_REQUEST_CREATE,
+    //endregion
+
+    //region cluster
     CLUSTER_MEMBER_CREATE,
     CLUSTER_MEMBER_DELETE,
     CLUSTER_MEMBER_UPDATE,
@@ -134,13 +147,18 @@ public enum AdminPermission {
 
     CLUSTER_SETTING_UPDATE,
     CLUSTER_SETTING_QUERY,
+    //endregion
 
+    //region node - plugin
     PLUGIN_CREATE,
     PLUGIN_DELETE,
     PLUGIN_UPDATE,
     PLUGIN_QUERY,
+    //endregion
 
+    //region node - others
     SHUTDOWN;
+    //endregion
 
     public static final String SUFFIX_CREATE = "_CREATE";
     public static final String SUFFIX_DELETE = "_DELETE";

@@ -42,7 +42,7 @@ export declare namespace ParsedModel {
         recipientId?: string;
     }
 
-    interface UsersInfosWithVersion {
+    interface UserInfosWithVersion {
         userInfos?: UserInfo[];
         lastUpdatedDate?: Date;
     }
@@ -99,11 +99,6 @@ export declare namespace ParsedModel {
         lastUpdatedDate?: Date;
     }
 
-    interface UserInfoWithVersion {
-        userInfo?: UserInfo;
-        lastUpdatedDate?: Date;
-    }
-
     interface UserInfo {
         id?: string;
         name?: string;
@@ -111,10 +106,11 @@ export declare namespace ParsedModel {
         profilePicture?: string;
         profileAccessStrategy?: ProfileAccessStrategy;
         registrationDate?: Date;
+        lastUpdatedDate?: string;
         active?: boolean;
     }
 
-    interface UserStatusDetail {
+    interface UserOnlineStatus {
         userId?: string;
         userStatus?: UserStatus;
         usingDeviceTypes?: DeviceType[];
@@ -181,11 +177,6 @@ export declare namespace ParsedModel {
         lastUpdatedDate?: Date;
     }
 
-    interface GroupWithVersion {
-        lastUpdatedDate?: Date;
-        group?: Group;
-    }
-
     interface GroupsWithVersion {
         lastUpdatedDate?: Date;
         groups?: Group[];
@@ -200,6 +191,7 @@ export declare namespace ParsedModel {
         intro?: string;
         announcement?: string;
         creationDate?: Date;
+        lastUpdatedDate?: Date;
         muteEndDate?: Date;
         active?: boolean;
     }

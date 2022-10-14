@@ -31,13 +31,13 @@ class GroupServiceTests: XCTestCase {
         assertCompleted("createGroup_shouldReturnGroupId", service.createGroup(name: "name", intro: "intro", announcement: "announcement", minimumScore: 10).done {
             groupId = $0.data
         })
-        assertCompleted("addGroupJoinQuestion_shouldReturnQuestionId", service.addGroupJoinQuestion(groupId: groupId!, question: "question", answers: ["answer1", "answer2"], score: 10).done {
-            groupQuestionId = $0.data
+        assertCompleted("addGroupJoinQuestions_shouldReturnQuestionIds", service.addGroupJoinQuestions(groupId: groupId!, questions: [NewGroupJoinQuestion(question: "question", answers: ["answer1", "answer2"], score: 10)]).done {
+            groupQuestionId = $0.data[0]
         })
         assertCompleted("createJoinRequest_shouldReturnJoinRequestId", service.createJoinRequest(groupId: groupId!, content: "content").done {
             groupJoinRequestId = $0.data
         })
-        assertCompleted("addGroupMember_shouldSucceed", service.addGroupMember(groupId: groupId!, userId: groupMemberId, name: "name", role: .member))
+        assertCompleted("addGroupMembers_shouldSucceed", service.addGroupMembers(groupId: groupId!, userIds: [groupMemberId], name: "name", role: .member))
         assertCompleted("blockUser_shouldSucceed", service.blockUser(groupId: groupId!, userId: groupBlockedUserId))
         assertCompleted("createInvitation_shouldReturnInvitationId", service.createInvitation(groupId: groupId!, inviteeId: groupInvitationInviteeId, content: "content").done {
             groupInvitationId = $0.data
@@ -53,8 +53,8 @@ class GroupServiceTests: XCTestCase {
         assertCompleted("unmuteGroupMember_shouldSucceed", service.unmuteGroupMember(groupId: groupId!, memberId: groupMemberId))
 
         // Query
-        assertCompleted("queryGroup_shouldReturnGroupWithVersion", service.queryGroup(groupId: groupId!).done {
-            XCTAssertEqual(groupId!, $0.data!.group.id)
+        assertCompleted("queryGroups_shouldReturnGroups", service.queryGroups(groupIds: [groupId!]).done {
+            XCTAssertEqual(groupId!, $0.data[0].id)
         })
         assertCompleted("queryJoinedGroupIds_shouldEqualNewGroupId", service.queryJoinedGroupIds().done {
             XCTAssert($0.data!.values.contains(groupId!))
@@ -97,7 +97,7 @@ class GroupServiceTests: XCTestCase {
         // Delete
 
         assertCompleted("removeGroupMember_shouldSucceed", service.removeGroupMember(groupId: groupId!, memberId: groupMemberId))
-        assertCompleted("deleteGroupJoinQuestion_shouldSucceed", service.deleteGroupJoinQuestion(groupQuestionId!))
+        assertCompleted("deleteGroupJoinQuestions_shouldSucceed", service.deleteGroupJoinQuestions(groupId: groupId!, questionIds: [groupQuestionId!]))
         assertCompleted("unblockUser_shouldSucceed", service.unblockUser(groupId: groupId!, userId: groupBlockedUserId))
         assertCompleted("deleteInvitation_shouldSucceedOrThrowDisabledFunction", service.deleteInvitation(groupInvitationId!).recover { error -> Promise<Response<Void>> in
             if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.recallingGroupInvitationIsDisabled.rawValue {

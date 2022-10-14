@@ -26,6 +26,7 @@ import im.turms.server.common.infra.collection.FastEnumMap;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
@@ -67,7 +68,62 @@ public final class RequestHandlerResultFactory {
         return new RequestHandlerResult(null, false, Collections.emptySet(), null, code, reason);
     }
 
-    public static RequestHandlerResult get(@NotNull Long id) {
+    public static RequestHandlerResult get(@NotNull TurmsNotification.Data dataForRequester) {
+        return new RequestHandlerResult(dataForRequester,
+                false,
+                Collections.emptySet(),
+                null,
+                ResponseStatusCode.OK,
+                null);
+    }
+
+    public static RequestHandlerResult get(
+            @NotNull Long recipientId,
+            @NotNull TurmsRequest dataForRecipient) {
+        return new RequestHandlerResult(null,
+                false,
+                Collections.singleton(recipientId),
+                dataForRecipient,
+                ResponseStatusCode.OK,
+                null);
+    }
+
+    public static RequestHandlerResult get(
+            @NotEmpty Set<Long> recipientIds,
+            @NotNull TurmsRequest dataForRecipient) {
+        return new RequestHandlerResult(null,
+                false,
+                recipientIds,
+                dataForRecipient,
+                ResponseStatusCode.OK,
+                null);
+    }
+
+    public static RequestHandlerResult get(
+            @NotEmpty Set<Long> recipientIds,
+            @NotNull TurmsRequest dataForRecipient,
+            boolean forwardDataForRecipientsToOtherSenderOnlineDevices) {
+        return new RequestHandlerResult(null,
+                forwardDataForRecipientsToOtherSenderOnlineDevices,
+                recipientIds,
+                dataForRecipient,
+                ResponseStatusCode.OK,
+                null);
+    }
+
+    public static RequestHandlerResult get(
+            @NotNull Long recipientId,
+            @NotNull TurmsRequest dataForRecipient,
+            @NotNull ResponseStatusCode code) {
+        return new RequestHandlerResult(null,
+                false,
+                Collections.singleton(recipientId),
+                dataForRecipient,
+                code,
+                null);
+    }
+
+    public static RequestHandlerResult getByDataId(@NotNull Long id) {
         TurmsNotification.Data data = ClientMessagePool
                 .getTurmsNotificationDataBuilder()
                 .setIds(ClientMessagePool.getInt64ValuesBuilder().addValues(id))
@@ -81,7 +137,7 @@ public final class RequestHandlerResultFactory {
                 null);
     }
 
-    public static RequestHandlerResult get(
+    public static RequestHandlerResult getByDataId(
             @NotNull Long id,
             @NotNull Long recipientId,
             @NotNull TurmsRequest dataForRecipient) {
@@ -92,7 +148,7 @@ public final class RequestHandlerResultFactory {
         return new RequestHandlerResult(data, false, Collections.singleton(recipientId), dataForRecipient, ResponseStatusCode.OK, null);
     }
 
-    public static RequestHandlerResult get(
+    public static RequestHandlerResult getByDataId(
             @NotNull Long id,
             @NotEmpty Set<Long> recipients,
             boolean forwardDataForRecipientsToOtherSenderOnlineDevices,
@@ -110,34 +166,18 @@ public final class RequestHandlerResultFactory {
                 null);
     }
 
-    public static RequestHandlerResult get(@NotNull TurmsNotification.Data dataForRequester) {
-        return new RequestHandlerResult(dataForRequester, false, Collections.emptySet(), null, ResponseStatusCode.OK, null);
-    }
-
-    public static RequestHandlerResult get(
-            @NotNull Long recipientId,
-            @NotNull TurmsRequest dataForRecipient) {
-        return new RequestHandlerResult(null, false, Collections.singleton(recipientId), dataForRecipient, ResponseStatusCode.OK, null);
-    }
-
-    public static RequestHandlerResult get(
-            @NotEmpty Set<Long> recipientIds,
-            @NotNull TurmsRequest dataForRecipient) {
-        return new RequestHandlerResult(null, false, recipientIds, dataForRecipient, ResponseStatusCode.OK, null);
-    }
-
-    public static RequestHandlerResult get(
-            @NotEmpty Set<Long> recipientIds,
-            @NotNull TurmsRequest dataForRecipient,
-            boolean forwardDataForRecipientsToOtherSenderOnlineDevices) {
-        return new RequestHandlerResult(null, forwardDataForRecipientsToOtherSenderOnlineDevices, recipientIds, dataForRecipient, ResponseStatusCode.OK, null);
-    }
-
-    public static RequestHandlerResult get(
-            @NotNull Long recipientId,
-            @NotNull TurmsRequest dataForRecipient,
-            @NotNull ResponseStatusCode code) {
-        return new RequestHandlerResult(null, false, Collections.singleton(recipientId), dataForRecipient, code, null);
+    public static RequestHandlerResult getByDataIds(@NotNull Collection<Long> ids) {
+        TurmsNotification.Data data = ClientMessagePool
+                .getTurmsNotificationDataBuilder()
+                .setIds(ClientMessagePool.getInt64ValuesBuilder().addAllValues(ids))
+                .build();
+        return new RequestHandlerResult(
+                data,
+                false,
+                Collections.emptySet(),
+                null,
+                ResponseStatusCode.OK,
+                null);
     }
 
 }

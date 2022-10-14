@@ -53,6 +53,10 @@ public final class User extends BaseEntity {
     @Field(Fields.PROFILE_PICTURE)
     private final String profilePicture;
 
+    /**
+     * The field is reserved for future use because
+     * there is no field needing user access control currently
+     */
     @Field(Fields.PROFILE_ACCESS_STRATEGY)
     @EnumNumber
     private final ProfileAccessStrategy profileAccessStrategy;
@@ -66,23 +70,24 @@ public final class User extends BaseEntity {
     @Field(Fields.DELETION_DATE)
     private final Date deletionDate;
 
-    @Field(Fields.IS_ACTIVE)
-    private final Boolean isActive;
-
     @Field(Fields.LAST_UPDATED_DATE)
     private final Date lastUpdatedDate;
+
+    @Field(Fields.IS_ACTIVE)
+    private final Boolean isActive;
 
     public static final class Fields {
 
         public static final String PASSWORD = "pw";
         public static final String NAME = "n";
         public static final String INTRO = "intro";
+        public static final String PROFILE_PICTURE = "pp";
         public static final String PROFILE_ACCESS_STRATEGY = "pas";
         public static final String PERMISSION_GROUP_ID = "pgid";
         public static final String REGISTRATION_DATE = "rd";
         public static final String DELETION_DATE = "dd";
-        public static final String IS_ACTIVE = "act";
         public static final String LAST_UPDATED_DATE = "lud";
+        public static final String IS_ACTIVE = "act";
 
         private Fields() {
         }

@@ -39,9 +39,6 @@ public final class GroupVersion extends BaseEntity {
     @Id
     private final Long groupId;
 
-    @Field(Fields.INFO)
-    private final Date info;
-
     @Field(Fields.MEMBERS)
     private final Date members;
 
@@ -58,7 +55,6 @@ public final class GroupVersion extends BaseEntity {
     private final Date invitations;
 
     public static final class Fields {
-        public static final String INFO = "inf";
         public static final String MEMBERS = "mbr";
         public static final String BLOCKLIST = "bl";
         public static final String JOIN_REQUESTS = "jr";

@@ -46,14 +46,14 @@ public  final class QueryGroupJoinQuestionsRequest extends
    * @param value The groupId to set.
    */
   private void setGroupId(long value) {
-    
+
     groupId_ = value;
   }
   /**
    * <code>int64 group_id = 1;</code>
    */
   private void clearGroupId() {
-    
+
     groupId_ = 0L;
   }
 
@@ -72,14 +72,14 @@ public  final class QueryGroupJoinQuestionsRequest extends
    * @param value The withAnswers to set.
    */
   private void setWithAnswers(boolean value) {
-    
+
     withAnswers_ = value;
   }
   /**
    * <code>bool with_answers = 2;</code>
    */
   private void clearWithAnswers() {
-    
+
     withAnswers_ = false;
   }
 

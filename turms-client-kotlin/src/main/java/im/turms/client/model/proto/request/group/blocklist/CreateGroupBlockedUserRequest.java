@@ -45,14 +45,14 @@ public  final class CreateGroupBlockedUserRequest extends
    * @param value The groupId to set.
    */
   private void setGroupId(long value) {
-    
+
     groupId_ = value;
   }
   /**
    * <code>int64 group_id = 1;</code>
    */
   private void clearGroupId() {
-    
+
     groupId_ = 0L;
   }
 
@@ -71,14 +71,14 @@ public  final class CreateGroupBlockedUserRequest extends
    * @param value The userId to set.
    */
   private void setUserId(long value) {
-    
+
     userId_ = value;
   }
   /**
    * <code>int64 user_id = 2;</code>
    */
   private void clearUserId() {
-    
+
     userId_ = 0L;
   }
 

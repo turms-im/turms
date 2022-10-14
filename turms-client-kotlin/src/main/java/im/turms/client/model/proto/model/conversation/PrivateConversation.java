@@ -45,14 +45,14 @@ public  final class PrivateConversation extends
    * @param value The ownerId to set.
    */
   private void setOwnerId(long value) {
-    
+
     ownerId_ = value;
   }
   /**
    * <code>int64 owner_id = 1;</code>
    */
   private void clearOwnerId() {
-    
+
     ownerId_ = 0L;
   }
 
@@ -71,14 +71,14 @@ public  final class PrivateConversation extends
    * @param value The targetId to set.
    */
   private void setTargetId(long value) {
-    
+
     targetId_ = value;
   }
   /**
    * <code>int64 target_id = 2;</code>
    */
   private void clearTargetId() {
-    
+
     targetId_ = 0L;
   }
 
@@ -97,14 +97,14 @@ public  final class PrivateConversation extends
    * @param value The readDate to set.
    */
   private void setReadDate(long value) {
-    
+
     readDate_ = value;
   }
   /**
    * <code>int64 read_date = 3;</code>
    */
   private void clearReadDate() {
-    
+
     readDate_ = 0L;
   }
 

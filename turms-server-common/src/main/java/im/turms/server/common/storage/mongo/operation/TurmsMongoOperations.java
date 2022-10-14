@@ -353,6 +353,20 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 .then();
     }
 
+    @Override
+    public <T> Mono<Void> insertAllOfSameType(@Nullable ClientSession session, List<T> values) {
+        if (values.isEmpty()) {
+            return Mono.empty();
+        }
+        MongoCollection collection = context.getCollection(values.get(0).getClass());
+        Publisher<InsertManyResult> source = session == null
+                ? collection.insertMany(values, DEFAULT_INSERT_MANY_OPTIONS)
+                : collection.insertMany(session, values, DEFAULT_INSERT_MANY_OPTIONS);
+        return Mono.from(source)
+                .onErrorMap(MongoExceptionUtil::translate)
+                .then();
+    }
+
     // Update
 
     @Override

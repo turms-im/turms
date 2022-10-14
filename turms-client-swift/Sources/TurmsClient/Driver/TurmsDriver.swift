@@ -78,9 +78,13 @@ public class TurmsDriver {
 
     // Message Service
 
-    public func send(_ populator: (inout TurmsRequest) -> Void) -> Promise<TurmsNotification> {
+    public func send(_ populator: (inout TurmsRequest) throws -> Void) -> Promise<TurmsNotification> {
         var request = TurmsRequest()
-        populator(&request)
+        do {
+            try populator(&request)
+        } catch {
+            return Promise(error: error)
+        }
         let notification = messageService.sendRequest(&request)
         if case .createSessionRequest = request.kind {
             notification.done { _ in

@@ -23,11 +23,11 @@ import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.client.dto.model.user.NearbyUsers;
-import im.turms.server.common.access.client.dto.model.user.UsersInfosWithVersion;
-import im.turms.server.common.access.client.dto.model.user.UsersOnlineStatuses;
+import im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion;
+import im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses;
 import im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest;
 import im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest;
-import im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest;
+import im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest;
 import im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest;
 import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.server.common.access.client.dto.request.user.UpdateUserRequest;
@@ -36,6 +36,7 @@ import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;
+import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.lang.Pair;
@@ -65,7 +66,7 @@ import java.util.stream.Collectors;
 
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_NEARBY_USERS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_ONLINE_STATUSES_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_PROFILE_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_PROFILES_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_USER_LOCATION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_USER_ONLINE_STATUS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_USER_REQUEST;
@@ -119,20 +120,24 @@ public class UserServiceController {
         respondOfflineIfInvisible = properties.getService().getUser().isRespondOfflineIfInvisible();
     }
 
-    @ServiceRequestMapping(QUERY_USER_PROFILE_REQUEST)
-    public ClientRequestHandler handleQueryUserProfileRequest() {
+    @ServiceRequestMapping(QUERY_USER_PROFILES_REQUEST)
+    public ClientRequestHandler handleQueryUserProfilesRequest() {
         return clientRequest -> {
-            QueryUserProfileRequest request = clientRequest.turmsRequest().getQueryUserProfileRequest();
-            return userService.authAndQueryUserProfile(
+            QueryUserProfilesRequest request = clientRequest.turmsRequest().getQueryUserProfilesRequest();
+            return userService.authAndQueryUsersProfile(
                             clientRequest.userId(),
-                            request.getUserId())
-                    .map(user -> {
-                        UsersInfosWithVersion.Builder userBuilder = ClientMessagePool
-                                .getUsersInfosWithVersionBuilder()
-                                .addUserInfos(ProtoModelConvertor.userProfile2proto(user).build());
+                            CollectionUtil.toSet(request.getUserIdsList()),
+                            request.hasLastUpdatedDate()
+                                    ? new Date(request.getLastUpdatedDate())
+                                    : null)
+                    .map(users -> {
+                        UserInfosWithVersion.Builder userInfosWithVersionBuilder = ClientMessagePool.getUserInfosWithVersionBuilder();
+                        for (User user : users) {
+                            userInfosWithVersionBuilder.addUserInfos(ProtoModelConvertor.userProfile2proto(user).build());
+                        }
                         return RequestHandlerResultFactory.get(ClientMessagePool
                                 .getTurmsNotificationDataBuilder()
-                                .setUsersInfosWithVersion(userBuilder)
+                                .setUserInfosWithVersion(userInfosWithVersionBuilder.build())
                                 .build());
                     });
         };
@@ -171,7 +176,7 @@ public class UserServiceController {
     }
 
     @ServiceRequestMapping(QUERY_USER_ONLINE_STATUSES_REQUEST)
-    public ClientRequestHandler handleQueryUsersOnlineStatusRequest() {
+    public ClientRequestHandler handleQueryUserOnlineStatusesRequest() {
         return clientRequest -> {
             QueryUserOnlineStatusesRequest request = clientRequest.turmsRequest().getQueryUserOnlineStatusesRequest();
             if (request.getUserIdsCount() == 0) {
@@ -188,17 +193,17 @@ public class UserServiceController {
             return Flux.merge(monos)
                     .collect(CollectorUtil.toList(size))
                     .map(userIdAndSessionsStatusList -> {
-                        UsersOnlineStatuses.Builder statusesBuilder = ClientMessagePool.getUsersOnlineStatusesBuilder();
+                        UserOnlineStatuses.Builder statusesBuilder = ClientMessagePool.getUsersOnlineStatusesBuilder();
                         for (Pair<Long, UserSessionsStatus> userIdAndSessionsStatus : userIdAndSessionsStatusList) {
-                            statusesBuilder.addUserStatuses(ProtoModelConvertor
-                                    .userOnlineInfo2userStatus(
+                            statusesBuilder.addStatuses(ProtoModelConvertor
+                                    .userSessionsStatus2proto(
                                             userIdAndSessionsStatus.first(),
                                             userIdAndSessionsStatus.second(),
                                             respondOfflineIfInvisible));
                         }
                         return RequestHandlerResultFactory.get(ClientMessagePool
                                 .getTurmsNotificationDataBuilder()
-                                .setUsersOnlineStatuses(statusesBuilder)
+                                .setUserOnlineStatuses(statusesBuilder)
                                 .build());
                     });
         };
@@ -247,7 +252,7 @@ public class UserServiceController {
                 return updateMono.thenReturn(RequestHandlerResultFactory.OK);
             }
             Mono<Set<Long>> queryMemberIds = notifyMembers
-                    ? groupMemberService.queryMemberIdsInUsersJoinedGroups(Set.of(clientRequest.userId()))
+                    ? groupMemberService.queryMemberIdsInUsersJoinedGroups(Set.of(clientRequest.userId()), true)
                     : PublisherPool.emptySet();
             Mono<List<Long>> queryRelatedUserIds;
 

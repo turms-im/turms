@@ -44,7 +44,7 @@ public  final class GroupJoinQuestionsWithVersion extends
   /**
    * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
    */
-  public java.util.List<? extends im.turms.client.model.proto.model.group.GroupJoinQuestionOrBuilder> 
+  public java.util.List<? extends im.turms.client.model.proto.model.group.GroupJoinQuestionOrBuilder>
       getGroupJoinQuestionsOrBuilderList() {
     return groupJoinQuestions_;
   }

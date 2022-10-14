@@ -78,11 +78,11 @@ private static final long serialVersionUID = 0L;
     CREATE_MESSAGE_REQUEST(8),
     QUERY_MESSAGES_REQUEST(9),
     UPDATE_MESSAGE_REQUEST(10),
-    CREATE_GROUP_MEMBER_REQUEST(11),
-    DELETE_GROUP_MEMBER_REQUEST(12),
+    CREATE_GROUP_MEMBERS_REQUEST(11),
+    DELETE_GROUP_MEMBERS_REQUEST(12),
     QUERY_GROUP_MEMBERS_REQUEST(13),
     UPDATE_GROUP_MEMBER_REQUEST(14),
-    QUERY_USER_PROFILE_REQUEST(100),
+    QUERY_USER_PROFILES_REQUEST(100),
     QUERY_NEARBY_USERS_REQUEST(101),
     QUERY_USER_ONLINE_STATUSES_REQUEST(102),
     UPDATE_USER_LOCATION_REQUEST(103),
@@ -102,7 +102,7 @@ private static final long serialVersionUID = 0L;
     UPDATE_RELATIONSHIP_REQUEST(211),
     CREATE_GROUP_REQUEST(300),
     DELETE_GROUP_REQUEST(301),
-    QUERY_GROUP_REQUEST(302),
+    QUERY_GROUPS_REQUEST(302),
     QUERY_JOINED_GROUP_IDS_REQUEST(303),
     QUERY_JOINED_GROUP_INFOS_REQUEST(304),
     UPDATE_GROUP_REQUEST(305),
@@ -113,10 +113,10 @@ private static final long serialVersionUID = 0L;
     CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST(500),
     CREATE_GROUP_INVITATION_REQUEST(501),
     CREATE_GROUP_JOIN_REQUEST_REQUEST(502),
-    CREATE_GROUP_JOIN_QUESTION_REQUEST(503),
+    CREATE_GROUP_JOIN_QUESTIONS_REQUEST(503),
     DELETE_GROUP_INVITATION_REQUEST(504),
     DELETE_GROUP_JOIN_REQUEST_REQUEST(505),
-    DELETE_GROUP_JOIN_QUESTION_REQUEST(506),
+    DELETE_GROUP_JOIN_QUESTIONS_REQUEST(506),
     QUERY_GROUP_INVITATIONS_REQUEST(507),
     QUERY_GROUP_JOIN_REQUESTS_REQUEST(508),
     QUERY_GROUP_JOIN_QUESTIONS_REQUEST(509),
@@ -149,11 +149,11 @@ private static final long serialVersionUID = 0L;
         case 8: return CREATE_MESSAGE_REQUEST;
         case 9: return QUERY_MESSAGES_REQUEST;
         case 10: return UPDATE_MESSAGE_REQUEST;
-        case 11: return CREATE_GROUP_MEMBER_REQUEST;
-        case 12: return DELETE_GROUP_MEMBER_REQUEST;
+        case 11: return CREATE_GROUP_MEMBERS_REQUEST;
+        case 12: return DELETE_GROUP_MEMBERS_REQUEST;
         case 13: return QUERY_GROUP_MEMBERS_REQUEST;
         case 14: return UPDATE_GROUP_MEMBER_REQUEST;
-        case 100: return QUERY_USER_PROFILE_REQUEST;
+        case 100: return QUERY_USER_PROFILES_REQUEST;
         case 101: return QUERY_NEARBY_USERS_REQUEST;
         case 102: return QUERY_USER_ONLINE_STATUSES_REQUEST;
         case 103: return UPDATE_USER_LOCATION_REQUEST;
@@ -173,7 +173,7 @@ private static final long serialVersionUID = 0L;
         case 211: return UPDATE_RELATIONSHIP_REQUEST;
         case 300: return CREATE_GROUP_REQUEST;
         case 301: return DELETE_GROUP_REQUEST;
-        case 302: return QUERY_GROUP_REQUEST;
+        case 302: return QUERY_GROUPS_REQUEST;
         case 303: return QUERY_JOINED_GROUP_IDS_REQUEST;
         case 304: return QUERY_JOINED_GROUP_INFOS_REQUEST;
         case 305: return UPDATE_GROUP_REQUEST;
@@ -184,10 +184,10 @@ private static final long serialVersionUID = 0L;
         case 500: return CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST;
         case 501: return CREATE_GROUP_INVITATION_REQUEST;
         case 502: return CREATE_GROUP_JOIN_REQUEST_REQUEST;
-        case 503: return CREATE_GROUP_JOIN_QUESTION_REQUEST;
+        case 503: return CREATE_GROUP_JOIN_QUESTIONS_REQUEST;
         case 504: return DELETE_GROUP_INVITATION_REQUEST;
         case 505: return DELETE_GROUP_JOIN_REQUEST_REQUEST;
-        case 506: return DELETE_GROUP_JOIN_QUESTION_REQUEST;
+        case 506: return DELETE_GROUP_JOIN_QUESTIONS_REQUEST;
         case 507: return QUERY_GROUP_INVITATIONS_REQUEST;
         case 508: return QUERY_GROUP_JOIN_REQUESTS_REQUEST;
         case 509: return QUERY_GROUP_JOIN_QUESTIONS_REQUEST;
@@ -214,7 +214,7 @@ private static final long serialVersionUID = 0L;
   private long requestId_;
   /**
    * <pre>
-   * Note: request_id is allowed to be duplicate because
+   * Note: "request_id" is allowed to be duplicate because
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
@@ -227,7 +227,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * Note: request_id is allowed to be duplicate because
+   * Note: "request_id" is allowed to be duplicate because
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
@@ -523,17 +523,17 @@ private static final long serialVersionUID = 0L;
     return im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest.getDefaultInstance();
   }
 
-  public static final int CREATE_GROUP_MEMBER_REQUEST_FIELD_NUMBER = 11;
+  public static final int CREATE_GROUP_MEMBERS_REQUEST_FIELD_NUMBER = 11;
   /**
    * <pre>
    * Group Member
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
-   * @return Whether the createGroupMemberRequest field is set.
+   * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
+   * @return Whether the createGroupMembersRequest field is set.
    */
   @java.lang.Override
-  public boolean hasCreateGroupMemberRequest() {
+  public boolean hasCreateGroupMembersRequest() {
     return kindCase_ == 11;
   }
   /**
@@ -541,60 +541,60 @@ private static final long serialVersionUID = 0L;
    * Group Member
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
-   * @return The createGroupMemberRequest.
+   * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
+   * @return The createGroupMembersRequest.
    */
   @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest getCreateGroupMemberRequest() {
+  public im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest getCreateGroupMembersRequest() {
     if (kindCase_ == 11) {
-       return (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest) kind_;
+       return (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest) kind_;
     }
-    return im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest.getDefaultInstance();
+    return im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.getDefaultInstance();
   }
   /**
    * <pre>
    * Group Member
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+   * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
    */
   @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequestOrBuilder getCreateGroupMemberRequestOrBuilder() {
+  public im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOrBuilder getCreateGroupMembersRequestOrBuilder() {
     if (kindCase_ == 11) {
-       return (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest) kind_;
+       return (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest) kind_;
     }
-    return im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest.getDefaultInstance();
+    return im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.getDefaultInstance();
   }
 
-  public static final int DELETE_GROUP_MEMBER_REQUEST_FIELD_NUMBER = 12;
+  public static final int DELETE_GROUP_MEMBERS_REQUEST_FIELD_NUMBER = 12;
   /**
-   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
-   * @return Whether the deleteGroupMemberRequest field is set.
+   * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
+   * @return Whether the deleteGroupMembersRequest field is set.
    */
   @java.lang.Override
-  public boolean hasDeleteGroupMemberRequest() {
+  public boolean hasDeleteGroupMembersRequest() {
     return kindCase_ == 12;
   }
   /**
-   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
-   * @return The deleteGroupMemberRequest.
+   * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
+   * @return The deleteGroupMembersRequest.
    */
   @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest getDeleteGroupMemberRequest() {
+  public im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest getDeleteGroupMembersRequest() {
     if (kindCase_ == 12) {
-       return (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest) kind_;
+       return (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest) kind_;
     }
-    return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest.getDefaultInstance();
+    return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+   * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
    */
   @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequestOrBuilder getDeleteGroupMemberRequestOrBuilder() {
+  public im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOrBuilder getDeleteGroupMembersRequestOrBuilder() {
     if (kindCase_ == 12) {
-       return (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest) kind_;
+       return (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest) kind_;
     }
-    return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest.getDefaultInstance();
+    return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.getDefaultInstance();
   }
 
   public static final int QUERY_GROUP_MEMBERS_REQUEST_FIELD_NUMBER = 13;
@@ -659,17 +659,17 @@ private static final long serialVersionUID = 0L;
     return im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest.getDefaultInstance();
   }
 
-  public static final int QUERY_USER_PROFILE_REQUEST_FIELD_NUMBER = 100;
+  public static final int QUERY_USER_PROFILES_REQUEST_FIELD_NUMBER = 100;
   /**
    * <pre>
    * User
    * </pre>
    *
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
-   * @return Whether the queryUserProfileRequest field is set.
+   * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
+   * @return Whether the queryUserProfilesRequest field is set.
    */
   @java.lang.Override
-  public boolean hasQueryUserProfileRequest() {
+  public boolean hasQueryUserProfilesRequest() {
     return kindCase_ == 100;
   }
   /**
@@ -677,29 +677,29 @@ private static final long serialVersionUID = 0L;
    * User
    * </pre>
    *
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
-   * @return The queryUserProfileRequest.
+   * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
+   * @return The queryUserProfilesRequest.
    */
   @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest getQueryUserProfileRequest() {
+  public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest getQueryUserProfilesRequest() {
     if (kindCase_ == 100) {
-       return (im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest) kind_;
+       return (im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) kind_;
     }
-    return im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest.getDefaultInstance();
+    return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.getDefaultInstance();
   }
   /**
    * <pre>
    * User
    * </pre>
    *
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+   * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
    */
   @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequestOrBuilder getQueryUserProfileRequestOrBuilder() {
+  public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOrBuilder getQueryUserProfilesRequestOrBuilder() {
     if (kindCase_ == 100) {
-       return (im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest) kind_;
+       return (im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) kind_;
     }
-    return im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest.getDefaultInstance();
+    return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.getDefaultInstance();
   }
 
   public static final int QUERY_NEARBY_USERS_REQUEST_FIELD_NUMBER = 101;
@@ -1315,35 +1315,35 @@ private static final long serialVersionUID = 0L;
     return im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest.getDefaultInstance();
   }
 
-  public static final int QUERY_GROUP_REQUEST_FIELD_NUMBER = 302;
+  public static final int QUERY_GROUPS_REQUEST_FIELD_NUMBER = 302;
   /**
-   * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
-   * @return Whether the queryGroupRequest field is set.
+   * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
+   * @return Whether the queryGroupsRequest field is set.
    */
   @java.lang.Override
-  public boolean hasQueryGroupRequest() {
+  public boolean hasQueryGroupsRequest() {
     return kindCase_ == 302;
   }
   /**
-   * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
-   * @return The queryGroupRequest.
+   * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
+   * @return The queryGroupsRequest.
    */
   @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.group.QueryGroupRequest getQueryGroupRequest() {
+  public im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest getQueryGroupsRequest() {
     if (kindCase_ == 302) {
-       return (im.turms.server.common.access.client.dto.request.group.QueryGroupRequest) kind_;
+       return (im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest) kind_;
     }
-    return im.turms.server.common.access.client.dto.request.group.QueryGroupRequest.getDefaultInstance();
+    return im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+   * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
    */
   @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.group.QueryGroupRequestOrBuilder getQueryGroupRequestOrBuilder() {
+  public im.turms.server.common.access.client.dto.request.group.QueryGroupsRequestOrBuilder getQueryGroupsRequestOrBuilder() {
     if (kindCase_ == 302) {
-       return (im.turms.server.common.access.client.dto.request.group.QueryGroupRequest) kind_;
+       return (im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest) kind_;
     }
-    return im.turms.server.common.access.client.dto.request.group.QueryGroupRequest.getDefaultInstance();
+    return im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.getDefaultInstance();
   }
 
   public static final int QUERY_JOINED_GROUP_IDS_REQUEST_FIELD_NUMBER = 303;
@@ -1680,35 +1680,35 @@ private static final long serialVersionUID = 0L;
     return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequest.getDefaultInstance();
   }
 
-  public static final int CREATE_GROUP_JOIN_QUESTION_REQUEST_FIELD_NUMBER = 503;
+  public static final int CREATE_GROUP_JOIN_QUESTIONS_REQUEST_FIELD_NUMBER = 503;
   /**
-   * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
-   * @return Whether the createGroupJoinQuestionRequest field is set.
+   * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
+   * @return Whether the createGroupJoinQuestionsRequest field is set.
    */
   @java.lang.Override
-  public boolean hasCreateGroupJoinQuestionRequest() {
+  public boolean hasCreateGroupJoinQuestionsRequest() {
     return kindCase_ == 503;
   }
   /**
-   * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
-   * @return The createGroupJoinQuestionRequest.
+   * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
+   * @return The createGroupJoinQuestionsRequest.
    */
   @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest getCreateGroupJoinQuestionRequest() {
+  public im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest getCreateGroupJoinQuestionsRequest() {
     if (kindCase_ == 503) {
-       return (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest) kind_;
+       return (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest) kind_;
     }
-    return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.getDefaultInstance();
+    return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+   * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
    */
   @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequestOrBuilder getCreateGroupJoinQuestionRequestOrBuilder() {
+  public im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequestOrBuilder getCreateGroupJoinQuestionsRequestOrBuilder() {
     if (kindCase_ == 503) {
-       return (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest) kind_;
+       return (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest) kind_;
     }
-    return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.getDefaultInstance();
+    return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.getDefaultInstance();
   }
 
   public static final int DELETE_GROUP_INVITATION_REQUEST_FIELD_NUMBER = 504;
@@ -1773,35 +1773,35 @@ private static final long serialVersionUID = 0L;
     return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.getDefaultInstance();
   }
 
-  public static final int DELETE_GROUP_JOIN_QUESTION_REQUEST_FIELD_NUMBER = 506;
+  public static final int DELETE_GROUP_JOIN_QUESTIONS_REQUEST_FIELD_NUMBER = 506;
   /**
-   * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
-   * @return Whether the deleteGroupJoinQuestionRequest field is set.
+   * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
+   * @return Whether the deleteGroupJoinQuestionsRequest field is set.
    */
   @java.lang.Override
-  public boolean hasDeleteGroupJoinQuestionRequest() {
+  public boolean hasDeleteGroupJoinQuestionsRequest() {
     return kindCase_ == 506;
   }
   /**
-   * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
-   * @return The deleteGroupJoinQuestionRequest.
+   * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
+   * @return The deleteGroupJoinQuestionsRequest.
    */
   @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest getDeleteGroupJoinQuestionRequest() {
+  public im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest getDeleteGroupJoinQuestionsRequest() {
     if (kindCase_ == 506) {
-       return (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest) kind_;
+       return (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest) kind_;
     }
-    return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.getDefaultInstance();
+    return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+   * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
    */
   @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequestOrBuilder getDeleteGroupJoinQuestionRequestOrBuilder() {
+  public im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequestOrBuilder getDeleteGroupJoinQuestionsRequestOrBuilder() {
     if (kindCase_ == 506) {
-       return (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest) kind_;
+       return (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest) kind_;
     }
-    return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.getDefaultInstance();
+    return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.getDefaultInstance();
   }
 
   public static final int QUERY_GROUP_INVITATIONS_REQUEST_FIELD_NUMBER = 507;
@@ -2059,11 +2059,11 @@ private static final long serialVersionUID = 0L;
       case 8 -> output.writeMessage(8, (im.turms.server.common.access.client.dto.request.message.CreateMessageRequest) kind_);
       case 9 -> output.writeMessage(9, (im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest) kind_);
       case 10 -> output.writeMessage(10, (im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest) kind_);
-      case 11 -> output.writeMessage(11, (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest) kind_);
-      case 12 -> output.writeMessage(12, (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest) kind_);
+      case 11 -> output.writeMessage(11, (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest) kind_);
+      case 12 -> output.writeMessage(12, (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest) kind_);
       case 13 -> output.writeMessage(13, (im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequest) kind_);
       case 14 -> output.writeMessage(14, (im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest) kind_);
-      case 100 -> output.writeMessage(100, (im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest) kind_);
+      case 100 -> output.writeMessage(100, (im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) kind_);
       case 101 -> output.writeMessage(101, (im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest) kind_);
       case 102 -> output.writeMessage(102, (im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest) kind_);
       case 103 -> output.writeMessage(103, (im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest) kind_);
@@ -2083,7 +2083,7 @@ private static final long serialVersionUID = 0L;
       case 211 -> output.writeMessage(211, (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest) kind_);
       case 300 -> output.writeMessage(300, (im.turms.server.common.access.client.dto.request.group.CreateGroupRequest) kind_);
       case 301 -> output.writeMessage(301, (im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest) kind_);
-      case 302 -> output.writeMessage(302, (im.turms.server.common.access.client.dto.request.group.QueryGroupRequest) kind_);
+      case 302 -> output.writeMessage(302, (im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest) kind_);
       case 303 -> output.writeMessage(303, (im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequest) kind_);
       case 304 -> output.writeMessage(304, (im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequest) kind_);
       case 305 -> output.writeMessage(305, (im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest) kind_);
@@ -2094,10 +2094,10 @@ private static final long serialVersionUID = 0L;
       case 500 -> output.writeMessage(500, (im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest) kind_);
       case 501 -> output.writeMessage(501, (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest) kind_);
       case 502 -> output.writeMessage(502, (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequest) kind_);
-      case 503 -> output.writeMessage(503, (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest) kind_);
+      case 503 -> output.writeMessage(503, (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest) kind_);
       case 504 -> output.writeMessage(504, (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest) kind_);
       case 505 -> output.writeMessage(505, (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest) kind_);
-      case 506 -> output.writeMessage(506, (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest) kind_);
+      case 506 -> output.writeMessage(506, (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest) kind_);
       case 507 -> output.writeMessage(507, (im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequest) kind_);
       case 508 -> output.writeMessage(508, (im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequest) kind_);
       case 509 -> output.writeMessage(509, (im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest) kind_);
@@ -2137,15 +2137,15 @@ private static final long serialVersionUID = 0L;
       case 10 -> size += com.google.protobuf.CodedOutputStream
               .computeMessageSize(10, (im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest) kind_);
       case 11 -> size += com.google.protobuf.CodedOutputStream
-              .computeMessageSize(11, (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest) kind_);
+              .computeMessageSize(11, (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest) kind_);
       case 12 -> size += com.google.protobuf.CodedOutputStream
-              .computeMessageSize(12, (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest) kind_);
+              .computeMessageSize(12, (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest) kind_);
       case 13 -> size += com.google.protobuf.CodedOutputStream
               .computeMessageSize(13, (im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequest) kind_);
       case 14 -> size += com.google.protobuf.CodedOutputStream
               .computeMessageSize(14, (im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest) kind_);
       case 100 -> size += com.google.protobuf.CodedOutputStream
-              .computeMessageSize(100, (im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest) kind_);
+              .computeMessageSize(100, (im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) kind_);
       case 101 -> size += com.google.protobuf.CodedOutputStream
               .computeMessageSize(101, (im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest) kind_);
       case 102 -> size += com.google.protobuf.CodedOutputStream
@@ -2185,7 +2185,7 @@ private static final long serialVersionUID = 0L;
       case 301 -> size += com.google.protobuf.CodedOutputStream
               .computeMessageSize(301, (im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest) kind_);
       case 302 -> size += com.google.protobuf.CodedOutputStream
-              .computeMessageSize(302, (im.turms.server.common.access.client.dto.request.group.QueryGroupRequest) kind_);
+              .computeMessageSize(302, (im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest) kind_);
       case 303 -> size += com.google.protobuf.CodedOutputStream
               .computeMessageSize(303, (im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequest) kind_);
       case 304 -> size += com.google.protobuf.CodedOutputStream
@@ -2207,13 +2207,13 @@ private static final long serialVersionUID = 0L;
       case 502 -> size += com.google.protobuf.CodedOutputStream
               .computeMessageSize(502, (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequest) kind_);
       case 503 -> size += com.google.protobuf.CodedOutputStream
-              .computeMessageSize(503, (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest) kind_);
+              .computeMessageSize(503, (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest) kind_);
       case 504 -> size += com.google.protobuf.CodedOutputStream
               .computeMessageSize(504, (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest) kind_);
       case 505 -> size += com.google.protobuf.CodedOutputStream
               .computeMessageSize(505, (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest) kind_);
       case 506 -> size += com.google.protobuf.CodedOutputStream
-              .computeMessageSize(506, (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest) kind_);
+              .computeMessageSize(506, (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest) kind_);
       case 507 -> size += com.google.protobuf.CodedOutputStream
               .computeMessageSize(507, (im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequest) kind_);
       case 508 -> size += com.google.protobuf.CodedOutputStream
@@ -2284,12 +2284,12 @@ private static final long serialVersionUID = 0L;
             .equals(other.getUpdateMessageRequest())) return false;
         break;
       case 11:
-        if (!getCreateGroupMemberRequest()
-            .equals(other.getCreateGroupMemberRequest())) return false;
+        if (!getCreateGroupMembersRequest()
+            .equals(other.getCreateGroupMembersRequest())) return false;
         break;
       case 12:
-        if (!getDeleteGroupMemberRequest()
-            .equals(other.getDeleteGroupMemberRequest())) return false;
+        if (!getDeleteGroupMembersRequest()
+            .equals(other.getDeleteGroupMembersRequest())) return false;
         break;
       case 13:
         if (!getQueryGroupMembersRequest()
@@ -2300,8 +2300,8 @@ private static final long serialVersionUID = 0L;
             .equals(other.getUpdateGroupMemberRequest())) return false;
         break;
       case 100:
-        if (!getQueryUserProfileRequest()
-            .equals(other.getQueryUserProfileRequest())) return false;
+        if (!getQueryUserProfilesRequest()
+            .equals(other.getQueryUserProfilesRequest())) return false;
         break;
       case 101:
         if (!getQueryNearbyUsersRequest()
@@ -2380,8 +2380,8 @@ private static final long serialVersionUID = 0L;
             .equals(other.getDeleteGroupRequest())) return false;
         break;
       case 302:
-        if (!getQueryGroupRequest()
-            .equals(other.getQueryGroupRequest())) return false;
+        if (!getQueryGroupsRequest()
+            .equals(other.getQueryGroupsRequest())) return false;
         break;
       case 303:
         if (!getQueryJoinedGroupIdsRequest()
@@ -2424,8 +2424,8 @@ private static final long serialVersionUID = 0L;
             .equals(other.getCreateGroupJoinRequestRequest())) return false;
         break;
       case 503:
-        if (!getCreateGroupJoinQuestionRequest()
-            .equals(other.getCreateGroupJoinQuestionRequest())) return false;
+        if (!getCreateGroupJoinQuestionsRequest()
+            .equals(other.getCreateGroupJoinQuestionsRequest())) return false;
         break;
       case 504:
         if (!getDeleteGroupInvitationRequest()
@@ -2436,8 +2436,8 @@ private static final long serialVersionUID = 0L;
             .equals(other.getDeleteGroupJoinRequestRequest())) return false;
         break;
       case 506:
-        if (!getDeleteGroupJoinQuestionRequest()
-            .equals(other.getDeleteGroupJoinQuestionRequest())) return false;
+        if (!getDeleteGroupJoinQuestionsRequest()
+            .equals(other.getDeleteGroupJoinQuestionsRequest())) return false;
         break;
       case 507:
         if (!getQueryGroupInvitationsRequest()
@@ -2520,12 +2520,12 @@ private static final long serialVersionUID = 0L;
         hash = (53 * hash) + getUpdateMessageRequest().hashCode();
         break;
       case 11:
-        hash = (37 * hash) + CREATE_GROUP_MEMBER_REQUEST_FIELD_NUMBER;
-        hash = (53 * hash) + getCreateGroupMemberRequest().hashCode();
+        hash = (37 * hash) + CREATE_GROUP_MEMBERS_REQUEST_FIELD_NUMBER;
+        hash = (53 * hash) + getCreateGroupMembersRequest().hashCode();
         break;
       case 12:
-        hash = (37 * hash) + DELETE_GROUP_MEMBER_REQUEST_FIELD_NUMBER;
-        hash = (53 * hash) + getDeleteGroupMemberRequest().hashCode();
+        hash = (37 * hash) + DELETE_GROUP_MEMBERS_REQUEST_FIELD_NUMBER;
+        hash = (53 * hash) + getDeleteGroupMembersRequest().hashCode();
         break;
       case 13:
         hash = (37 * hash) + QUERY_GROUP_MEMBERS_REQUEST_FIELD_NUMBER;
@@ -2536,8 +2536,8 @@ private static final long serialVersionUID = 0L;
         hash = (53 * hash) + getUpdateGroupMemberRequest().hashCode();
         break;
       case 100:
-        hash = (37 * hash) + QUERY_USER_PROFILE_REQUEST_FIELD_NUMBER;
-        hash = (53 * hash) + getQueryUserProfileRequest().hashCode();
+        hash = (37 * hash) + QUERY_USER_PROFILES_REQUEST_FIELD_NUMBER;
+        hash = (53 * hash) + getQueryUserProfilesRequest().hashCode();
         break;
       case 101:
         hash = (37 * hash) + QUERY_NEARBY_USERS_REQUEST_FIELD_NUMBER;
@@ -2616,8 +2616,8 @@ private static final long serialVersionUID = 0L;
         hash = (53 * hash) + getDeleteGroupRequest().hashCode();
         break;
       case 302:
-        hash = (37 * hash) + QUERY_GROUP_REQUEST_FIELD_NUMBER;
-        hash = (53 * hash) + getQueryGroupRequest().hashCode();
+        hash = (37 * hash) + QUERY_GROUPS_REQUEST_FIELD_NUMBER;
+        hash = (53 * hash) + getQueryGroupsRequest().hashCode();
         break;
       case 303:
         hash = (37 * hash) + QUERY_JOINED_GROUP_IDS_REQUEST_FIELD_NUMBER;
@@ -2660,8 +2660,8 @@ private static final long serialVersionUID = 0L;
         hash = (53 * hash) + getCreateGroupJoinRequestRequest().hashCode();
         break;
       case 503:
-        hash = (37 * hash) + CREATE_GROUP_JOIN_QUESTION_REQUEST_FIELD_NUMBER;
-        hash = (53 * hash) + getCreateGroupJoinQuestionRequest().hashCode();
+        hash = (37 * hash) + CREATE_GROUP_JOIN_QUESTIONS_REQUEST_FIELD_NUMBER;
+        hash = (53 * hash) + getCreateGroupJoinQuestionsRequest().hashCode();
         break;
       case 504:
         hash = (37 * hash) + DELETE_GROUP_INVITATION_REQUEST_FIELD_NUMBER;
@@ -2672,8 +2672,8 @@ private static final long serialVersionUID = 0L;
         hash = (53 * hash) + getDeleteGroupJoinRequestRequest().hashCode();
         break;
       case 506:
-        hash = (37 * hash) + DELETE_GROUP_JOIN_QUESTION_REQUEST_FIELD_NUMBER;
-        hash = (53 * hash) + getDeleteGroupJoinQuestionRequest().hashCode();
+        hash = (37 * hash) + DELETE_GROUP_JOIN_QUESTIONS_REQUEST_FIELD_NUMBER;
+        hash = (53 * hash) + getDeleteGroupJoinQuestionsRequest().hashCode();
         break;
       case 507:
         hash = (37 * hash) + QUERY_GROUP_INVITATIONS_REQUEST_FIELD_NUMBER;
@@ -2864,11 +2864,11 @@ private static final long serialVersionUID = 0L;
       if (updateMessageRequestBuilder_ != null) {
         updateMessageRequestBuilder_.clear();
       }
-      if (createGroupMemberRequestBuilder_ != null) {
-        createGroupMemberRequestBuilder_.clear();
+      if (createGroupMembersRequestBuilder_ != null) {
+        createGroupMembersRequestBuilder_.clear();
       }
-      if (deleteGroupMemberRequestBuilder_ != null) {
-        deleteGroupMemberRequestBuilder_.clear();
+      if (deleteGroupMembersRequestBuilder_ != null) {
+        deleteGroupMembersRequestBuilder_.clear();
       }
       if (queryGroupMembersRequestBuilder_ != null) {
         queryGroupMembersRequestBuilder_.clear();
@@ -2876,8 +2876,8 @@ private static final long serialVersionUID = 0L;
       if (updateGroupMemberRequestBuilder_ != null) {
         updateGroupMemberRequestBuilder_.clear();
       }
-      if (queryUserProfileRequestBuilder_ != null) {
-        queryUserProfileRequestBuilder_.clear();
+      if (queryUserProfilesRequestBuilder_ != null) {
+        queryUserProfilesRequestBuilder_.clear();
       }
       if (queryNearbyUsersRequestBuilder_ != null) {
         queryNearbyUsersRequestBuilder_.clear();
@@ -2936,8 +2936,8 @@ private static final long serialVersionUID = 0L;
       if (deleteGroupRequestBuilder_ != null) {
         deleteGroupRequestBuilder_.clear();
       }
-      if (queryGroupRequestBuilder_ != null) {
-        queryGroupRequestBuilder_.clear();
+      if (queryGroupsRequestBuilder_ != null) {
+        queryGroupsRequestBuilder_.clear();
       }
       if (queryJoinedGroupIdsRequestBuilder_ != null) {
         queryJoinedGroupIdsRequestBuilder_.clear();
@@ -2969,8 +2969,8 @@ private static final long serialVersionUID = 0L;
       if (createGroupJoinRequestRequestBuilder_ != null) {
         createGroupJoinRequestRequestBuilder_.clear();
       }
-      if (createGroupJoinQuestionRequestBuilder_ != null) {
-        createGroupJoinQuestionRequestBuilder_.clear();
+      if (createGroupJoinQuestionsRequestBuilder_ != null) {
+        createGroupJoinQuestionsRequestBuilder_.clear();
       }
       if (deleteGroupInvitationRequestBuilder_ != null) {
         deleteGroupInvitationRequestBuilder_.clear();
@@ -2978,8 +2978,8 @@ private static final long serialVersionUID = 0L;
       if (deleteGroupJoinRequestRequestBuilder_ != null) {
         deleteGroupJoinRequestRequestBuilder_.clear();
       }
-      if (deleteGroupJoinQuestionRequestBuilder_ != null) {
-        deleteGroupJoinQuestionRequestBuilder_.clear();
+      if (deleteGroupJoinQuestionsRequestBuilder_ != null) {
+        deleteGroupJoinQuestionsRequestBuilder_.clear();
       }
       if (queryGroupInvitationsRequestBuilder_ != null) {
         queryGroupInvitationsRequestBuilder_.clear();
@@ -3094,17 +3094,17 @@ private static final long serialVersionUID = 0L;
           }
           break;
         case 11:
-          if (createGroupMemberRequestBuilder_ == null) {
+          if (createGroupMembersRequestBuilder_ == null) {
             result.kind_ = kind_;
           } else {
-            result.kind_ = createGroupMemberRequestBuilder_.build();
+            result.kind_ = createGroupMembersRequestBuilder_.build();
           }
           break;
         case 12:
-          if (deleteGroupMemberRequestBuilder_ == null) {
+          if (deleteGroupMembersRequestBuilder_ == null) {
             result.kind_ = kind_;
           } else {
-            result.kind_ = deleteGroupMemberRequestBuilder_.build();
+            result.kind_ = deleteGroupMembersRequestBuilder_.build();
           }
           break;
         case 13:
@@ -3122,10 +3122,10 @@ private static final long serialVersionUID = 0L;
           }
           break;
         case 100:
-          if (queryUserProfileRequestBuilder_ == null) {
+          if (queryUserProfilesRequestBuilder_ == null) {
             result.kind_ = kind_;
           } else {
-            result.kind_ = queryUserProfileRequestBuilder_.build();
+            result.kind_ = queryUserProfilesRequestBuilder_.build();
           }
           break;
         case 101:
@@ -3262,10 +3262,10 @@ private static final long serialVersionUID = 0L;
           }
           break;
         case 302:
-          if (queryGroupRequestBuilder_ == null) {
+          if (queryGroupsRequestBuilder_ == null) {
             result.kind_ = kind_;
           } else {
-            result.kind_ = queryGroupRequestBuilder_.build();
+            result.kind_ = queryGroupsRequestBuilder_.build();
           }
           break;
         case 303:
@@ -3339,10 +3339,10 @@ private static final long serialVersionUID = 0L;
           }
           break;
         case 503:
-          if (createGroupJoinQuestionRequestBuilder_ == null) {
+          if (createGroupJoinQuestionsRequestBuilder_ == null) {
             result.kind_ = kind_;
           } else {
-            result.kind_ = createGroupJoinQuestionRequestBuilder_.build();
+            result.kind_ = createGroupJoinQuestionsRequestBuilder_.build();
           }
           break;
         case 504:
@@ -3360,10 +3360,10 @@ private static final long serialVersionUID = 0L;
           }
           break;
         case 506:
-          if (deleteGroupJoinQuestionRequestBuilder_ == null) {
+          if (deleteGroupJoinQuestionsRequestBuilder_ == null) {
             result.kind_ = kind_;
           } else {
-            result.kind_ = deleteGroupJoinQuestionRequestBuilder_.build();
+            result.kind_ = deleteGroupJoinQuestionsRequestBuilder_.build();
           }
           break;
         case 507:
@@ -3502,12 +3502,12 @@ private static final long serialVersionUID = 0L;
           mergeUpdateMessageRequest(other.getUpdateMessageRequest());
           break;
         }
-        case CREATE_GROUP_MEMBER_REQUEST: {
-          mergeCreateGroupMemberRequest(other.getCreateGroupMemberRequest());
+        case CREATE_GROUP_MEMBERS_REQUEST: {
+          mergeCreateGroupMembersRequest(other.getCreateGroupMembersRequest());
           break;
         }
-        case DELETE_GROUP_MEMBER_REQUEST: {
-          mergeDeleteGroupMemberRequest(other.getDeleteGroupMemberRequest());
+        case DELETE_GROUP_MEMBERS_REQUEST: {
+          mergeDeleteGroupMembersRequest(other.getDeleteGroupMembersRequest());
           break;
         }
         case QUERY_GROUP_MEMBERS_REQUEST: {
@@ -3518,8 +3518,8 @@ private static final long serialVersionUID = 0L;
           mergeUpdateGroupMemberRequest(other.getUpdateGroupMemberRequest());
           break;
         }
-        case QUERY_USER_PROFILE_REQUEST: {
-          mergeQueryUserProfileRequest(other.getQueryUserProfileRequest());
+        case QUERY_USER_PROFILES_REQUEST: {
+          mergeQueryUserProfilesRequest(other.getQueryUserProfilesRequest());
           break;
         }
         case QUERY_NEARBY_USERS_REQUEST: {
@@ -3598,8 +3598,8 @@ private static final long serialVersionUID = 0L;
           mergeDeleteGroupRequest(other.getDeleteGroupRequest());
           break;
         }
-        case QUERY_GROUP_REQUEST: {
-          mergeQueryGroupRequest(other.getQueryGroupRequest());
+        case QUERY_GROUPS_REQUEST: {
+          mergeQueryGroupsRequest(other.getQueryGroupsRequest());
           break;
         }
         case QUERY_JOINED_GROUP_IDS_REQUEST: {
@@ -3642,8 +3642,8 @@ private static final long serialVersionUID = 0L;
           mergeCreateGroupJoinRequestRequest(other.getCreateGroupJoinRequestRequest());
           break;
         }
-        case CREATE_GROUP_JOIN_QUESTION_REQUEST: {
-          mergeCreateGroupJoinQuestionRequest(other.getCreateGroupJoinQuestionRequest());
+        case CREATE_GROUP_JOIN_QUESTIONS_REQUEST: {
+          mergeCreateGroupJoinQuestionsRequest(other.getCreateGroupJoinQuestionsRequest());
           break;
         }
         case DELETE_GROUP_INVITATION_REQUEST: {
@@ -3654,8 +3654,8 @@ private static final long serialVersionUID = 0L;
           mergeDeleteGroupJoinRequestRequest(other.getDeleteGroupJoinRequestRequest());
           break;
         }
-        case DELETE_GROUP_JOIN_QUESTION_REQUEST: {
-          mergeDeleteGroupJoinQuestionRequest(other.getDeleteGroupJoinQuestionRequest());
+        case DELETE_GROUP_JOIN_QUESTIONS_REQUEST: {
+          mergeDeleteGroupJoinQuestionsRequest(other.getDeleteGroupJoinQuestionsRequest());
           break;
         }
         case QUERY_GROUP_INVITATIONS_REQUEST: {
@@ -3779,14 +3779,14 @@ private static final long serialVersionUID = 0L;
             } // case 82
             case 90: {
               input.readMessage(
-                  getCreateGroupMemberRequestFieldBuilder().getBuilder(),
+                  getCreateGroupMembersRequestFieldBuilder().getBuilder(),
                   extensionRegistry);
               kindCase_ = 11;
               break;
             } // case 90
             case 98: {
               input.readMessage(
-                  getDeleteGroupMemberRequestFieldBuilder().getBuilder(),
+                  getDeleteGroupMembersRequestFieldBuilder().getBuilder(),
                   extensionRegistry);
               kindCase_ = 12;
               break;
@@ -3807,7 +3807,7 @@ private static final long serialVersionUID = 0L;
             } // case 114
             case 802: {
               input.readMessage(
-                  getQueryUserProfileRequestFieldBuilder().getBuilder(),
+                  getQueryUserProfilesRequestFieldBuilder().getBuilder(),
                   extensionRegistry);
               kindCase_ = 100;
               break;
@@ -3947,7 +3947,7 @@ private static final long serialVersionUID = 0L;
             } // case 2410
             case 2418: {
               input.readMessage(
-                  getQueryGroupRequestFieldBuilder().getBuilder(),
+                  getQueryGroupsRequestFieldBuilder().getBuilder(),
                   extensionRegistry);
               kindCase_ = 302;
               break;
@@ -4024,7 +4024,7 @@ private static final long serialVersionUID = 0L;
             } // case 4018
             case 4026: {
               input.readMessage(
-                  getCreateGroupJoinQuestionRequestFieldBuilder().getBuilder(),
+                  getCreateGroupJoinQuestionsRequestFieldBuilder().getBuilder(),
                   extensionRegistry);
               kindCase_ = 503;
               break;
@@ -4045,7 +4045,7 @@ private static final long serialVersionUID = 0L;
             } // case 4042
             case 4050: {
               input.readMessage(
-                  getDeleteGroupJoinQuestionRequestFieldBuilder().getBuilder(),
+                  getDeleteGroupJoinQuestionsRequestFieldBuilder().getBuilder(),
                   extensionRegistry);
               kindCase_ = 506;
               break;
@@ -4134,7 +4134,7 @@ private static final long serialVersionUID = 0L;
     private long requestId_ ;
     /**
      * <pre>
-     * Note: request_id is allowed to be duplicate because
+     * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
@@ -4147,7 +4147,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Note: request_id is allowed to be duplicate because
+     * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
@@ -4160,7 +4160,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Note: request_id is allowed to be duplicate because
+     * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
@@ -4176,7 +4176,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Note: request_id is allowed to be duplicate because
+     * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
@@ -5435,17 +5435,17 @@ private static final long serialVersionUID = 0L;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequestOrBuilder> createGroupMemberRequestBuilder_;
+        im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOrBuilder> createGroupMembersRequestBuilder_;
     /**
      * <pre>
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
-     * @return Whether the createGroupMemberRequest field is set.
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
+     * @return Whether the createGroupMembersRequest field is set.
      */
     @java.lang.Override
-    public boolean hasCreateGroupMemberRequest() {
+    public boolean hasCreateGroupMembersRequest() {
       return kindCase_ == 11;
     }
     /**
@@ -5453,21 +5453,21 @@ private static final long serialVersionUID = 0L;
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
-     * @return The createGroupMemberRequest.
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
+     * @return The createGroupMembersRequest.
      */
     @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest getCreateGroupMemberRequest() {
-      if (createGroupMemberRequestBuilder_ == null) {
+    public im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest getCreateGroupMembersRequest() {
+      if (createGroupMembersRequestBuilder_ == null) {
         if (kindCase_ == 11) {
-          return (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest) kind_;
+          return (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest) kind_;
         }
-        return im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.getDefaultInstance();
       } else {
         if (kindCase_ == 11) {
-          return createGroupMemberRequestBuilder_.getMessage();
+          return createGroupMembersRequestBuilder_.getMessage();
         }
-        return im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.getDefaultInstance();
       }
     }
     /**
@@ -5475,17 +5475,17 @@ private static final long serialVersionUID = 0L;
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
-    public Builder setCreateGroupMemberRequest(im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest value) {
-      if (createGroupMemberRequestBuilder_ == null) {
+    public Builder setCreateGroupMembersRequest(im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest value) {
+      if (createGroupMembersRequestBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
         kind_ = value;
         onChanged();
       } else {
-        createGroupMemberRequestBuilder_.setMessage(value);
+        createGroupMembersRequestBuilder_.setMessage(value);
       }
       kindCase_ = 11;
       return this;
@@ -5495,15 +5495,15 @@ private static final long serialVersionUID = 0L;
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
-    public Builder setCreateGroupMemberRequest(
-        im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest.Builder builderForValue) {
-      if (createGroupMemberRequestBuilder_ == null) {
+    public Builder setCreateGroupMembersRequest(
+        im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.Builder builderForValue) {
+      if (createGroupMembersRequestBuilder_ == null) {
         kind_ = builderForValue.build();
         onChanged();
       } else {
-        createGroupMemberRequestBuilder_.setMessage(builderForValue.build());
+        createGroupMembersRequestBuilder_.setMessage(builderForValue.build());
       }
       kindCase_ = 11;
       return this;
@@ -5513,13 +5513,13 @@ private static final long serialVersionUID = 0L;
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
-    public Builder mergeCreateGroupMemberRequest(im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest value) {
-      if (createGroupMemberRequestBuilder_ == null) {
+    public Builder mergeCreateGroupMembersRequest(im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest value) {
+      if (createGroupMembersRequestBuilder_ == null) {
         if (kindCase_ == 11 &&
-            kind_ != im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest.getDefaultInstance()) {
-          kind_ = im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest.newBuilder((im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest) kind_)
+            kind_ != im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.getDefaultInstance()) {
+          kind_ = im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.newBuilder((im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest) kind_)
               .mergeFrom(value).buildPartial();
         } else {
           kind_ = value;
@@ -5527,9 +5527,9 @@ private static final long serialVersionUID = 0L;
         onChanged();
       } else {
         if (kindCase_ == 11) {
-          createGroupMemberRequestBuilder_.mergeFrom(value);
+          createGroupMembersRequestBuilder_.mergeFrom(value);
         } else {
-          createGroupMemberRequestBuilder_.setMessage(value);
+          createGroupMembersRequestBuilder_.setMessage(value);
         }
       }
       kindCase_ = 11;
@@ -5540,10 +5540,10 @@ private static final long serialVersionUID = 0L;
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
-    public Builder clearCreateGroupMemberRequest() {
-      if (createGroupMemberRequestBuilder_ == null) {
+    public Builder clearCreateGroupMembersRequest() {
+      if (createGroupMembersRequestBuilder_ == null) {
         if (kindCase_ == 11) {
           kindCase_ = 0;
           kind_ = null;
@@ -5554,7 +5554,7 @@ private static final long serialVersionUID = 0L;
           kindCase_ = 0;
           kind_ = null;
         }
-        createGroupMemberRequestBuilder_.clear();
+        createGroupMembersRequestBuilder_.clear();
       }
       return this;
     }
@@ -5563,27 +5563,27 @@ private static final long serialVersionUID = 0L;
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
-    public im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest.Builder getCreateGroupMemberRequestBuilder() {
-      return getCreateGroupMemberRequestFieldBuilder().getBuilder();
+    public im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.Builder getCreateGroupMembersRequestBuilder() {
+      return getCreateGroupMembersRequestFieldBuilder().getBuilder();
     }
     /**
      * <pre>
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
     @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequestOrBuilder getCreateGroupMemberRequestOrBuilder() {
-      if ((kindCase_ == 11) && (createGroupMemberRequestBuilder_ != null)) {
-        return createGroupMemberRequestBuilder_.getMessageOrBuilder();
+    public im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOrBuilder getCreateGroupMembersRequestOrBuilder() {
+      if ((kindCase_ == 11) && (createGroupMembersRequestBuilder_ != null)) {
+        return createGroupMembersRequestBuilder_.getMessageOrBuilder();
       } else {
         if (kindCase_ == 11) {
-          return (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest) kind_;
+          return (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest) kind_;
         }
-        return im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.getDefaultInstance();
       }
     }
     /**
@@ -5591,93 +5591,93 @@ private static final long serialVersionUID = 0L;
      * Group Member
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+     * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequestOrBuilder>
-        getCreateGroupMemberRequestFieldBuilder() {
-      if (createGroupMemberRequestBuilder_ == null) {
+        im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOrBuilder>
+        getCreateGroupMembersRequestFieldBuilder() {
+      if (createGroupMembersRequestBuilder_ == null) {
         if (!(kindCase_ == 11)) {
-          kind_ = im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest.getDefaultInstance();
+          kind_ = im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.getDefaultInstance();
         }
-        createGroupMemberRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequestOrBuilder>(
-                (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMemberRequest) kind_,
+        createGroupMembersRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOrBuilder>(
+                (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest) kind_,
                 getParentForChildren(),
                 isClean());
         kind_ = null;
       }
       kindCase_ = 11;
       onChanged();;
-      return createGroupMemberRequestBuilder_;
+      return createGroupMembersRequestBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequestOrBuilder> deleteGroupMemberRequestBuilder_;
+        im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOrBuilder> deleteGroupMembersRequestBuilder_;
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
-     * @return Whether the deleteGroupMemberRequest field is set.
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
+     * @return Whether the deleteGroupMembersRequest field is set.
      */
     @java.lang.Override
-    public boolean hasDeleteGroupMemberRequest() {
+    public boolean hasDeleteGroupMembersRequest() {
       return kindCase_ == 12;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
-     * @return The deleteGroupMemberRequest.
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
+     * @return The deleteGroupMembersRequest.
      */
     @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest getDeleteGroupMemberRequest() {
-      if (deleteGroupMemberRequestBuilder_ == null) {
+    public im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest getDeleteGroupMembersRequest() {
+      if (deleteGroupMembersRequestBuilder_ == null) {
         if (kindCase_ == 12) {
-          return (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest) kind_;
+          return (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest) kind_;
         }
-        return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.getDefaultInstance();
       } else {
         if (kindCase_ == 12) {
-          return deleteGroupMemberRequestBuilder_.getMessage();
+          return deleteGroupMembersRequestBuilder_.getMessage();
         }
-        return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
      */
-    public Builder setDeleteGroupMemberRequest(im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest value) {
-      if (deleteGroupMemberRequestBuilder_ == null) {
+    public Builder setDeleteGroupMembersRequest(im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest value) {
+      if (deleteGroupMembersRequestBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
         kind_ = value;
         onChanged();
       } else {
-        deleteGroupMemberRequestBuilder_.setMessage(value);
+        deleteGroupMembersRequestBuilder_.setMessage(value);
       }
       kindCase_ = 12;
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
      */
-    public Builder setDeleteGroupMemberRequest(
-        im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest.Builder builderForValue) {
-      if (deleteGroupMemberRequestBuilder_ == null) {
+    public Builder setDeleteGroupMembersRequest(
+        im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.Builder builderForValue) {
+      if (deleteGroupMembersRequestBuilder_ == null) {
         kind_ = builderForValue.build();
         onChanged();
       } else {
-        deleteGroupMemberRequestBuilder_.setMessage(builderForValue.build());
+        deleteGroupMembersRequestBuilder_.setMessage(builderForValue.build());
       }
       kindCase_ = 12;
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
      */
-    public Builder mergeDeleteGroupMemberRequest(im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest value) {
-      if (deleteGroupMemberRequestBuilder_ == null) {
+    public Builder mergeDeleteGroupMembersRequest(im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest value) {
+      if (deleteGroupMembersRequestBuilder_ == null) {
         if (kindCase_ == 12 &&
-            kind_ != im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest.getDefaultInstance()) {
-          kind_ = im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest.newBuilder((im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest) kind_)
+            kind_ != im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.getDefaultInstance()) {
+          kind_ = im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.newBuilder((im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest) kind_)
               .mergeFrom(value).buildPartial();
         } else {
           kind_ = value;
@@ -5685,19 +5685,19 @@ private static final long serialVersionUID = 0L;
         onChanged();
       } else {
         if (kindCase_ == 12) {
-          deleteGroupMemberRequestBuilder_.mergeFrom(value);
+          deleteGroupMembersRequestBuilder_.mergeFrom(value);
         } else {
-          deleteGroupMemberRequestBuilder_.setMessage(value);
+          deleteGroupMembersRequestBuilder_.setMessage(value);
         }
       }
       kindCase_ = 12;
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
      */
-    public Builder clearDeleteGroupMemberRequest() {
-      if (deleteGroupMemberRequestBuilder_ == null) {
+    public Builder clearDeleteGroupMembersRequest() {
+      if (deleteGroupMembersRequestBuilder_ == null) {
         if (kindCase_ == 12) {
           kindCase_ = 0;
           kind_ = null;
@@ -5708,50 +5708,50 @@ private static final long serialVersionUID = 0L;
           kindCase_ = 0;
           kind_ = null;
         }
-        deleteGroupMemberRequestBuilder_.clear();
+        deleteGroupMembersRequestBuilder_.clear();
       }
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
      */
-    public im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest.Builder getDeleteGroupMemberRequestBuilder() {
-      return getDeleteGroupMemberRequestFieldBuilder().getBuilder();
+    public im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.Builder getDeleteGroupMembersRequestBuilder() {
+      return getDeleteGroupMembersRequestFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
      */
     @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequestOrBuilder getDeleteGroupMemberRequestOrBuilder() {
-      if ((kindCase_ == 12) && (deleteGroupMemberRequestBuilder_ != null)) {
-        return deleteGroupMemberRequestBuilder_.getMessageOrBuilder();
+    public im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOrBuilder getDeleteGroupMembersRequestOrBuilder() {
+      if ((kindCase_ == 12) && (deleteGroupMembersRequestBuilder_ != null)) {
+        return deleteGroupMembersRequestBuilder_.getMessageOrBuilder();
       } else {
         if (kindCase_ == 12) {
-          return (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest) kind_;
+          return (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest) kind_;
         }
-        return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+     * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequestOrBuilder>
-        getDeleteGroupMemberRequestFieldBuilder() {
-      if (deleteGroupMemberRequestBuilder_ == null) {
+        im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOrBuilder>
+        getDeleteGroupMembersRequestFieldBuilder() {
+      if (deleteGroupMembersRequestBuilder_ == null) {
         if (!(kindCase_ == 12)) {
-          kind_ = im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest.getDefaultInstance();
+          kind_ = im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.getDefaultInstance();
         }
-        deleteGroupMemberRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequestOrBuilder>(
-                (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMemberRequest) kind_,
+        deleteGroupMembersRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOrBuilder>(
+                (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest) kind_,
                 getParentForChildren(),
                 isClean());
         kind_ = null;
       }
       kindCase_ = 12;
       onChanged();;
-      return deleteGroupMemberRequestBuilder_;
+      return deleteGroupMembersRequestBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
@@ -6039,17 +6039,17 @@ private static final long serialVersionUID = 0L;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest, im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequestOrBuilder> queryUserProfileRequestBuilder_;
+        im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOrBuilder> queryUserProfilesRequestBuilder_;
     /**
      * <pre>
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
-     * @return Whether the queryUserProfileRequest field is set.
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
+     * @return Whether the queryUserProfilesRequest field is set.
      */
     @java.lang.Override
-    public boolean hasQueryUserProfileRequest() {
+    public boolean hasQueryUserProfilesRequest() {
       return kindCase_ == 100;
     }
     /**
@@ -6057,21 +6057,21 @@ private static final long serialVersionUID = 0L;
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
-     * @return The queryUserProfileRequest.
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
+     * @return The queryUserProfilesRequest.
      */
     @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest getQueryUserProfileRequest() {
-      if (queryUserProfileRequestBuilder_ == null) {
+    public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest getQueryUserProfilesRequest() {
+      if (queryUserProfilesRequestBuilder_ == null) {
         if (kindCase_ == 100) {
-          return (im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest) kind_;
+          return (im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) kind_;
         }
-        return im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.getDefaultInstance();
       } else {
         if (kindCase_ == 100) {
-          return queryUserProfileRequestBuilder_.getMessage();
+          return queryUserProfilesRequestBuilder_.getMessage();
         }
-        return im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.getDefaultInstance();
       }
     }
     /**
@@ -6079,17 +6079,17 @@ private static final long serialVersionUID = 0L;
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
-    public Builder setQueryUserProfileRequest(im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest value) {
-      if (queryUserProfileRequestBuilder_ == null) {
+    public Builder setQueryUserProfilesRequest(im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest value) {
+      if (queryUserProfilesRequestBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
         kind_ = value;
         onChanged();
       } else {
-        queryUserProfileRequestBuilder_.setMessage(value);
+        queryUserProfilesRequestBuilder_.setMessage(value);
       }
       kindCase_ = 100;
       return this;
@@ -6099,15 +6099,15 @@ private static final long serialVersionUID = 0L;
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
-    public Builder setQueryUserProfileRequest(
-        im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest.Builder builderForValue) {
-      if (queryUserProfileRequestBuilder_ == null) {
+    public Builder setQueryUserProfilesRequest(
+        im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder builderForValue) {
+      if (queryUserProfilesRequestBuilder_ == null) {
         kind_ = builderForValue.build();
         onChanged();
       } else {
-        queryUserProfileRequestBuilder_.setMessage(builderForValue.build());
+        queryUserProfilesRequestBuilder_.setMessage(builderForValue.build());
       }
       kindCase_ = 100;
       return this;
@@ -6117,13 +6117,13 @@ private static final long serialVersionUID = 0L;
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
-    public Builder mergeQueryUserProfileRequest(im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest value) {
-      if (queryUserProfileRequestBuilder_ == null) {
+    public Builder mergeQueryUserProfilesRequest(im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest value) {
+      if (queryUserProfilesRequestBuilder_ == null) {
         if (kindCase_ == 100 &&
-            kind_ != im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest.getDefaultInstance()) {
-          kind_ = im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest.newBuilder((im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest) kind_)
+            kind_ != im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.getDefaultInstance()) {
+          kind_ = im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.newBuilder((im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) kind_)
               .mergeFrom(value).buildPartial();
         } else {
           kind_ = value;
@@ -6131,9 +6131,9 @@ private static final long serialVersionUID = 0L;
         onChanged();
       } else {
         if (kindCase_ == 100) {
-          queryUserProfileRequestBuilder_.mergeFrom(value);
+          queryUserProfilesRequestBuilder_.mergeFrom(value);
         } else {
-          queryUserProfileRequestBuilder_.setMessage(value);
+          queryUserProfilesRequestBuilder_.setMessage(value);
         }
       }
       kindCase_ = 100;
@@ -6144,10 +6144,10 @@ private static final long serialVersionUID = 0L;
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
-    public Builder clearQueryUserProfileRequest() {
-      if (queryUserProfileRequestBuilder_ == null) {
+    public Builder clearQueryUserProfilesRequest() {
+      if (queryUserProfilesRequestBuilder_ == null) {
         if (kindCase_ == 100) {
           kindCase_ = 0;
           kind_ = null;
@@ -6158,7 +6158,7 @@ private static final long serialVersionUID = 0L;
           kindCase_ = 0;
           kind_ = null;
         }
-        queryUserProfileRequestBuilder_.clear();
+        queryUserProfilesRequestBuilder_.clear();
       }
       return this;
     }
@@ -6167,27 +6167,27 @@ private static final long serialVersionUID = 0L;
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
-    public im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest.Builder getQueryUserProfileRequestBuilder() {
-      return getQueryUserProfileRequestFieldBuilder().getBuilder();
+    public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder getQueryUserProfilesRequestBuilder() {
+      return getQueryUserProfilesRequestFieldBuilder().getBuilder();
     }
     /**
      * <pre>
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
     @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequestOrBuilder getQueryUserProfileRequestOrBuilder() {
-      if ((kindCase_ == 100) && (queryUserProfileRequestBuilder_ != null)) {
-        return queryUserProfileRequestBuilder_.getMessageOrBuilder();
+    public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOrBuilder getQueryUserProfilesRequestOrBuilder() {
+      if ((kindCase_ == 100) && (queryUserProfilesRequestBuilder_ != null)) {
+        return queryUserProfilesRequestBuilder_.getMessageOrBuilder();
       } else {
         if (kindCase_ == 100) {
-          return (im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest) kind_;
+          return (im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) kind_;
         }
-        return im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.getDefaultInstance();
       }
     }
     /**
@@ -6195,25 +6195,25 @@ private static final long serialVersionUID = 0L;
      * User
      * </pre>
      *
-     * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
+     * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest, im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequestOrBuilder>
-        getQueryUserProfileRequestFieldBuilder() {
-      if (queryUserProfileRequestBuilder_ == null) {
+        im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOrBuilder>
+        getQueryUserProfilesRequestFieldBuilder() {
+      if (queryUserProfilesRequestBuilder_ == null) {
         if (!(kindCase_ == 100)) {
-          kind_ = im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest.getDefaultInstance();
+          kind_ = im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.getDefaultInstance();
         }
-        queryUserProfileRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest, im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequestOrBuilder>(
-                (im.turms.server.common.access.client.dto.request.user.QueryUserProfileRequest) kind_,
+        queryUserProfilesRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOrBuilder>(
+                (im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) kind_,
                 getParentForChildren(),
                 isClean());
         kind_ = null;
       }
       kindCase_ = 100;
       onChanged();;
-      return queryUserProfileRequestBuilder_;
+      return queryUserProfilesRequestBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
@@ -8987,71 +8987,71 @@ private static final long serialVersionUID = 0L;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.server.common.access.client.dto.request.group.QueryGroupRequest, im.turms.server.common.access.client.dto.request.group.QueryGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryGroupRequestOrBuilder> queryGroupRequestBuilder_;
+        im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest, im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryGroupsRequestOrBuilder> queryGroupsRequestBuilder_;
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
-     * @return Whether the queryGroupRequest field is set.
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
+     * @return Whether the queryGroupsRequest field is set.
      */
     @java.lang.Override
-    public boolean hasQueryGroupRequest() {
+    public boolean hasQueryGroupsRequest() {
       return kindCase_ == 302;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
-     * @return The queryGroupRequest.
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
+     * @return The queryGroupsRequest.
      */
     @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.group.QueryGroupRequest getQueryGroupRequest() {
-      if (queryGroupRequestBuilder_ == null) {
+    public im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest getQueryGroupsRequest() {
+      if (queryGroupsRequestBuilder_ == null) {
         if (kindCase_ == 302) {
-          return (im.turms.server.common.access.client.dto.request.group.QueryGroupRequest) kind_;
+          return (im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest) kind_;
         }
-        return im.turms.server.common.access.client.dto.request.group.QueryGroupRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.getDefaultInstance();
       } else {
         if (kindCase_ == 302) {
-          return queryGroupRequestBuilder_.getMessage();
+          return queryGroupsRequestBuilder_.getMessage();
         }
-        return im.turms.server.common.access.client.dto.request.group.QueryGroupRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
      */
-    public Builder setQueryGroupRequest(im.turms.server.common.access.client.dto.request.group.QueryGroupRequest value) {
-      if (queryGroupRequestBuilder_ == null) {
+    public Builder setQueryGroupsRequest(im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest value) {
+      if (queryGroupsRequestBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
         kind_ = value;
         onChanged();
       } else {
-        queryGroupRequestBuilder_.setMessage(value);
+        queryGroupsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 302;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
      */
-    public Builder setQueryGroupRequest(
-        im.turms.server.common.access.client.dto.request.group.QueryGroupRequest.Builder builderForValue) {
-      if (queryGroupRequestBuilder_ == null) {
+    public Builder setQueryGroupsRequest(
+        im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.Builder builderForValue) {
+      if (queryGroupsRequestBuilder_ == null) {
         kind_ = builderForValue.build();
         onChanged();
       } else {
-        queryGroupRequestBuilder_.setMessage(builderForValue.build());
+        queryGroupsRequestBuilder_.setMessage(builderForValue.build());
       }
       kindCase_ = 302;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
      */
-    public Builder mergeQueryGroupRequest(im.turms.server.common.access.client.dto.request.group.QueryGroupRequest value) {
-      if (queryGroupRequestBuilder_ == null) {
+    public Builder mergeQueryGroupsRequest(im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest value) {
+      if (queryGroupsRequestBuilder_ == null) {
         if (kindCase_ == 302 &&
-            kind_ != im.turms.server.common.access.client.dto.request.group.QueryGroupRequest.getDefaultInstance()) {
-          kind_ = im.turms.server.common.access.client.dto.request.group.QueryGroupRequest.newBuilder((im.turms.server.common.access.client.dto.request.group.QueryGroupRequest) kind_)
+            kind_ != im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.getDefaultInstance()) {
+          kind_ = im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.newBuilder((im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest) kind_)
               .mergeFrom(value).buildPartial();
         } else {
           kind_ = value;
@@ -9059,19 +9059,19 @@ private static final long serialVersionUID = 0L;
         onChanged();
       } else {
         if (kindCase_ == 302) {
-          queryGroupRequestBuilder_.mergeFrom(value);
+          queryGroupsRequestBuilder_.mergeFrom(value);
         } else {
-          queryGroupRequestBuilder_.setMessage(value);
+          queryGroupsRequestBuilder_.setMessage(value);
         }
       }
       kindCase_ = 302;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
      */
-    public Builder clearQueryGroupRequest() {
-      if (queryGroupRequestBuilder_ == null) {
+    public Builder clearQueryGroupsRequest() {
+      if (queryGroupsRequestBuilder_ == null) {
         if (kindCase_ == 302) {
           kindCase_ = 0;
           kind_ = null;
@@ -9082,50 +9082,50 @@ private static final long serialVersionUID = 0L;
           kindCase_ = 0;
           kind_ = null;
         }
-        queryGroupRequestBuilder_.clear();
+        queryGroupsRequestBuilder_.clear();
       }
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
      */
-    public im.turms.server.common.access.client.dto.request.group.QueryGroupRequest.Builder getQueryGroupRequestBuilder() {
-      return getQueryGroupRequestFieldBuilder().getBuilder();
+    public im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.Builder getQueryGroupsRequestBuilder() {
+      return getQueryGroupsRequestFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
      */
     @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.group.QueryGroupRequestOrBuilder getQueryGroupRequestOrBuilder() {
-      if ((kindCase_ == 302) && (queryGroupRequestBuilder_ != null)) {
-        return queryGroupRequestBuilder_.getMessageOrBuilder();
+    public im.turms.server.common.access.client.dto.request.group.QueryGroupsRequestOrBuilder getQueryGroupsRequestOrBuilder() {
+      if ((kindCase_ == 302) && (queryGroupsRequestBuilder_ != null)) {
+        return queryGroupsRequestBuilder_.getMessageOrBuilder();
       } else {
         if (kindCase_ == 302) {
-          return (im.turms.server.common.access.client.dto.request.group.QueryGroupRequest) kind_;
+          return (im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest) kind_;
         }
-        return im.turms.server.common.access.client.dto.request.group.QueryGroupRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
+     * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.server.common.access.client.dto.request.group.QueryGroupRequest, im.turms.server.common.access.client.dto.request.group.QueryGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryGroupRequestOrBuilder>
-        getQueryGroupRequestFieldBuilder() {
-      if (queryGroupRequestBuilder_ == null) {
+        im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest, im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryGroupsRequestOrBuilder>
+        getQueryGroupsRequestFieldBuilder() {
+      if (queryGroupsRequestBuilder_ == null) {
         if (!(kindCase_ == 302)) {
-          kind_ = im.turms.server.common.access.client.dto.request.group.QueryGroupRequest.getDefaultInstance();
+          kind_ = im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.getDefaultInstance();
         }
-        queryGroupRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            im.turms.server.common.access.client.dto.request.group.QueryGroupRequest, im.turms.server.common.access.client.dto.request.group.QueryGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryGroupRequestOrBuilder>(
-                (im.turms.server.common.access.client.dto.request.group.QueryGroupRequest) kind_,
+        queryGroupsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest, im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryGroupsRequestOrBuilder>(
+                (im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest) kind_,
                 getParentForChildren(),
                 isClean());
         kind_ = null;
       }
       kindCase_ = 302;
       onChanged();;
-      return queryGroupRequestBuilder_;
+      return queryGroupsRequestBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
@@ -10621,71 +10621,71 @@ private static final long serialVersionUID = 0L;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequestOrBuilder> createGroupJoinQuestionRequestBuilder_;
+        im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequestOrBuilder> createGroupJoinQuestionsRequestBuilder_;
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
-     * @return Whether the createGroupJoinQuestionRequest field is set.
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
+     * @return Whether the createGroupJoinQuestionsRequest field is set.
      */
     @java.lang.Override
-    public boolean hasCreateGroupJoinQuestionRequest() {
+    public boolean hasCreateGroupJoinQuestionsRequest() {
       return kindCase_ == 503;
     }
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
-     * @return The createGroupJoinQuestionRequest.
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
+     * @return The createGroupJoinQuestionsRequest.
      */
     @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest getCreateGroupJoinQuestionRequest() {
-      if (createGroupJoinQuestionRequestBuilder_ == null) {
+    public im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest getCreateGroupJoinQuestionsRequest() {
+      if (createGroupJoinQuestionsRequestBuilder_ == null) {
         if (kindCase_ == 503) {
-          return (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest) kind_;
+          return (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest) kind_;
         }
-        return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.getDefaultInstance();
       } else {
         if (kindCase_ == 503) {
-          return createGroupJoinQuestionRequestBuilder_.getMessage();
+          return createGroupJoinQuestionsRequestBuilder_.getMessage();
         }
-        return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
      */
-    public Builder setCreateGroupJoinQuestionRequest(im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest value) {
-      if (createGroupJoinQuestionRequestBuilder_ == null) {
+    public Builder setCreateGroupJoinQuestionsRequest(im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest value) {
+      if (createGroupJoinQuestionsRequestBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
         kind_ = value;
         onChanged();
       } else {
-        createGroupJoinQuestionRequestBuilder_.setMessage(value);
+        createGroupJoinQuestionsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 503;
       return this;
     }
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
      */
-    public Builder setCreateGroupJoinQuestionRequest(
-        im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.Builder builderForValue) {
-      if (createGroupJoinQuestionRequestBuilder_ == null) {
+    public Builder setCreateGroupJoinQuestionsRequest(
+        im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.Builder builderForValue) {
+      if (createGroupJoinQuestionsRequestBuilder_ == null) {
         kind_ = builderForValue.build();
         onChanged();
       } else {
-        createGroupJoinQuestionRequestBuilder_.setMessage(builderForValue.build());
+        createGroupJoinQuestionsRequestBuilder_.setMessage(builderForValue.build());
       }
       kindCase_ = 503;
       return this;
     }
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
      */
-    public Builder mergeCreateGroupJoinQuestionRequest(im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest value) {
-      if (createGroupJoinQuestionRequestBuilder_ == null) {
+    public Builder mergeCreateGroupJoinQuestionsRequest(im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest value) {
+      if (createGroupJoinQuestionsRequestBuilder_ == null) {
         if (kindCase_ == 503 &&
-            kind_ != im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.getDefaultInstance()) {
-          kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.newBuilder((im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest) kind_)
+            kind_ != im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.getDefaultInstance()) {
+          kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.newBuilder((im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest) kind_)
               .mergeFrom(value).buildPartial();
         } else {
           kind_ = value;
@@ -10693,19 +10693,19 @@ private static final long serialVersionUID = 0L;
         onChanged();
       } else {
         if (kindCase_ == 503) {
-          createGroupJoinQuestionRequestBuilder_.mergeFrom(value);
+          createGroupJoinQuestionsRequestBuilder_.mergeFrom(value);
         } else {
-          createGroupJoinQuestionRequestBuilder_.setMessage(value);
+          createGroupJoinQuestionsRequestBuilder_.setMessage(value);
         }
       }
       kindCase_ = 503;
       return this;
     }
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
      */
-    public Builder clearCreateGroupJoinQuestionRequest() {
-      if (createGroupJoinQuestionRequestBuilder_ == null) {
+    public Builder clearCreateGroupJoinQuestionsRequest() {
+      if (createGroupJoinQuestionsRequestBuilder_ == null) {
         if (kindCase_ == 503) {
           kindCase_ = 0;
           kind_ = null;
@@ -10716,50 +10716,50 @@ private static final long serialVersionUID = 0L;
           kindCase_ = 0;
           kind_ = null;
         }
-        createGroupJoinQuestionRequestBuilder_.clear();
+        createGroupJoinQuestionsRequestBuilder_.clear();
       }
       return this;
     }
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
      */
-    public im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.Builder getCreateGroupJoinQuestionRequestBuilder() {
-      return getCreateGroupJoinQuestionRequestFieldBuilder().getBuilder();
+    public im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.Builder getCreateGroupJoinQuestionsRequestBuilder() {
+      return getCreateGroupJoinQuestionsRequestFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
      */
     @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequestOrBuilder getCreateGroupJoinQuestionRequestOrBuilder() {
-      if ((kindCase_ == 503) && (createGroupJoinQuestionRequestBuilder_ != null)) {
-        return createGroupJoinQuestionRequestBuilder_.getMessageOrBuilder();
+    public im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequestOrBuilder getCreateGroupJoinQuestionsRequestOrBuilder() {
+      if ((kindCase_ == 503) && (createGroupJoinQuestionsRequestBuilder_ != null)) {
+        return createGroupJoinQuestionsRequestBuilder_.getMessageOrBuilder();
       } else {
         if (kindCase_ == 503) {
-          return (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest) kind_;
+          return (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest) kind_;
         }
-        return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
+     * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequestOrBuilder>
-        getCreateGroupJoinQuestionRequestFieldBuilder() {
-      if (createGroupJoinQuestionRequestBuilder_ == null) {
+        im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequestOrBuilder>
+        getCreateGroupJoinQuestionsRequestFieldBuilder() {
+      if (createGroupJoinQuestionsRequestBuilder_ == null) {
         if (!(kindCase_ == 503)) {
-          kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.getDefaultInstance();
+          kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.getDefaultInstance();
         }
-        createGroupJoinQuestionRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequestOrBuilder>(
-                (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionRequest) kind_,
+        createGroupJoinQuestionsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequestOrBuilder>(
+                (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest) kind_,
                 getParentForChildren(),
                 isClean());
         kind_ = null;
       }
       kindCase_ = 503;
       onChanged();;
-      return createGroupJoinQuestionRequestBuilder_;
+      return createGroupJoinQuestionsRequestBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
@@ -11047,71 +11047,71 @@ private static final long serialVersionUID = 0L;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequestOrBuilder> deleteGroupJoinQuestionRequestBuilder_;
+        im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequestOrBuilder> deleteGroupJoinQuestionsRequestBuilder_;
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
-     * @return Whether the deleteGroupJoinQuestionRequest field is set.
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
+     * @return Whether the deleteGroupJoinQuestionsRequest field is set.
      */
     @java.lang.Override
-    public boolean hasDeleteGroupJoinQuestionRequest() {
+    public boolean hasDeleteGroupJoinQuestionsRequest() {
       return kindCase_ == 506;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
-     * @return The deleteGroupJoinQuestionRequest.
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
+     * @return The deleteGroupJoinQuestionsRequest.
      */
     @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest getDeleteGroupJoinQuestionRequest() {
-      if (deleteGroupJoinQuestionRequestBuilder_ == null) {
+    public im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest getDeleteGroupJoinQuestionsRequest() {
+      if (deleteGroupJoinQuestionsRequestBuilder_ == null) {
         if (kindCase_ == 506) {
-          return (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest) kind_;
+          return (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest) kind_;
         }
-        return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.getDefaultInstance();
       } else {
         if (kindCase_ == 506) {
-          return deleteGroupJoinQuestionRequestBuilder_.getMessage();
+          return deleteGroupJoinQuestionsRequestBuilder_.getMessage();
         }
-        return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
      */
-    public Builder setDeleteGroupJoinQuestionRequest(im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest value) {
-      if (deleteGroupJoinQuestionRequestBuilder_ == null) {
+    public Builder setDeleteGroupJoinQuestionsRequest(im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest value) {
+      if (deleteGroupJoinQuestionsRequestBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
         kind_ = value;
         onChanged();
       } else {
-        deleteGroupJoinQuestionRequestBuilder_.setMessage(value);
+        deleteGroupJoinQuestionsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 506;
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
      */
-    public Builder setDeleteGroupJoinQuestionRequest(
-        im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.Builder builderForValue) {
-      if (deleteGroupJoinQuestionRequestBuilder_ == null) {
+    public Builder setDeleteGroupJoinQuestionsRequest(
+        im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.Builder builderForValue) {
+      if (deleteGroupJoinQuestionsRequestBuilder_ == null) {
         kind_ = builderForValue.build();
         onChanged();
       } else {
-        deleteGroupJoinQuestionRequestBuilder_.setMessage(builderForValue.build());
+        deleteGroupJoinQuestionsRequestBuilder_.setMessage(builderForValue.build());
       }
       kindCase_ = 506;
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
      */
-    public Builder mergeDeleteGroupJoinQuestionRequest(im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest value) {
-      if (deleteGroupJoinQuestionRequestBuilder_ == null) {
+    public Builder mergeDeleteGroupJoinQuestionsRequest(im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest value) {
+      if (deleteGroupJoinQuestionsRequestBuilder_ == null) {
         if (kindCase_ == 506 &&
-            kind_ != im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.getDefaultInstance()) {
-          kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.newBuilder((im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest) kind_)
+            kind_ != im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.getDefaultInstance()) {
+          kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.newBuilder((im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest) kind_)
               .mergeFrom(value).buildPartial();
         } else {
           kind_ = value;
@@ -11119,19 +11119,19 @@ private static final long serialVersionUID = 0L;
         onChanged();
       } else {
         if (kindCase_ == 506) {
-          deleteGroupJoinQuestionRequestBuilder_.mergeFrom(value);
+          deleteGroupJoinQuestionsRequestBuilder_.mergeFrom(value);
         } else {
-          deleteGroupJoinQuestionRequestBuilder_.setMessage(value);
+          deleteGroupJoinQuestionsRequestBuilder_.setMessage(value);
         }
       }
       kindCase_ = 506;
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
      */
-    public Builder clearDeleteGroupJoinQuestionRequest() {
-      if (deleteGroupJoinQuestionRequestBuilder_ == null) {
+    public Builder clearDeleteGroupJoinQuestionsRequest() {
+      if (deleteGroupJoinQuestionsRequestBuilder_ == null) {
         if (kindCase_ == 506) {
           kindCase_ = 0;
           kind_ = null;
@@ -11142,50 +11142,50 @@ private static final long serialVersionUID = 0L;
           kindCase_ = 0;
           kind_ = null;
         }
-        deleteGroupJoinQuestionRequestBuilder_.clear();
+        deleteGroupJoinQuestionsRequestBuilder_.clear();
       }
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
      */
-    public im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.Builder getDeleteGroupJoinQuestionRequestBuilder() {
-      return getDeleteGroupJoinQuestionRequestFieldBuilder().getBuilder();
+    public im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.Builder getDeleteGroupJoinQuestionsRequestBuilder() {
+      return getDeleteGroupJoinQuestionsRequestFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
      */
     @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequestOrBuilder getDeleteGroupJoinQuestionRequestOrBuilder() {
-      if ((kindCase_ == 506) && (deleteGroupJoinQuestionRequestBuilder_ != null)) {
-        return deleteGroupJoinQuestionRequestBuilder_.getMessageOrBuilder();
+    public im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequestOrBuilder getDeleteGroupJoinQuestionsRequestOrBuilder() {
+      if ((kindCase_ == 506) && (deleteGroupJoinQuestionsRequestBuilder_ != null)) {
+        return deleteGroupJoinQuestionsRequestBuilder_.getMessageOrBuilder();
       } else {
         if (kindCase_ == 506) {
-          return (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest) kind_;
+          return (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest) kind_;
         }
-        return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.getDefaultInstance();
+        return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
+     * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequestOrBuilder>
-        getDeleteGroupJoinQuestionRequestFieldBuilder() {
-      if (deleteGroupJoinQuestionRequestBuilder_ == null) {
+        im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequestOrBuilder>
+        getDeleteGroupJoinQuestionsRequestFieldBuilder() {
+      if (deleteGroupJoinQuestionsRequestBuilder_ == null) {
         if (!(kindCase_ == 506)) {
-          kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.getDefaultInstance();
+          kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.getDefaultInstance();
         }
-        deleteGroupJoinQuestionRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequestOrBuilder>(
-                (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest) kind_,
+        deleteGroupJoinQuestionsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequestOrBuilder>(
+                (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest) kind_,
                 getParentForChildren(),
                 isClean());
         kind_ = null;
       }
       kindCase_ = 506;
       onChanged();;
-      return deleteGroupJoinQuestionRequestBuilder_;
+      return deleteGroupJoinQuestionsRequestBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<

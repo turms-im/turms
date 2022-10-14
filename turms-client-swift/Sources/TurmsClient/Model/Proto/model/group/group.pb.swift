@@ -105,6 +105,16 @@ public struct Group {
     /// Clears the value of `creationDate`. Subsequent reads from it will return its default value.
     public mutating func clearCreationDate() { _creationDate = nil }
 
+    public var lastUpdatedDate: Int64 {
+        get { return _lastUpdatedDate ?? 0 }
+        set { _lastUpdatedDate = newValue }
+    }
+
+    /// Returns true if `lastUpdatedDate` has been explicitly set.
+    public var hasLastUpdatedDate: Bool { return _lastUpdatedDate != nil }
+    /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
+    public mutating func clearLastUpdatedDate() { _lastUpdatedDate = nil }
+
     public var muteEndDate: Int64 {
         get { return _muteEndDate ?? 0 }
         set { _muteEndDate = newValue }
@@ -137,6 +147,7 @@ public struct Group {
     private var _intro: String?
     private var _announcement: String?
     private var _creationDate: Int64?
+    private var _lastUpdatedDate: Int64?
     private var _muteEndDate: Int64?
     private var _active: Bool?
 }
@@ -160,8 +171,9 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
         6: .same(proto: "intro"),
         7: .same(proto: "announcement"),
         8: .standard(proto: "creation_date"),
-        9: .standard(proto: "mute_end_date"),
-        10: .same(proto: "active"),
+        9: .standard(proto: "last_updated_date"),
+        10: .standard(proto: "mute_end_date"),
+        11: .same(proto: "active"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -178,8 +190,9 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
             case 6: try try decoder.decodeSingularStringField(value: &_intro)
             case 7: try try decoder.decodeSingularStringField(value: &_announcement)
             case 8: try try decoder.decodeSingularInt64Field(value: &_creationDate)
-            case 9: try try decoder.decodeSingularInt64Field(value: &_muteEndDate)
-            case 10: try try decoder.decodeSingularBoolField(value: &_active)
+            case 9: try try decoder.decodeSingularInt64Field(value: &_lastUpdatedDate)
+            case 10: try try decoder.decodeSingularInt64Field(value: &_muteEndDate)
+            case 11: try try decoder.decodeSingularBoolField(value: &_active)
             default: break
             }
         }
@@ -214,11 +227,14 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
         try { if let v = self._creationDate {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 8)
         } }()
-        try { if let v = self._muteEndDate {
+        try { if let v = self._lastUpdatedDate {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 9)
         } }()
+        try { if let v = self._muteEndDate {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 10)
+        } }()
         try { if let v = self._active {
-            try visitor.visitSingularBoolField(value: v, fieldNumber: 10)
+            try visitor.visitSingularBoolField(value: v, fieldNumber: 11)
         } }()
         try unknownFields.traverse(visitor: &visitor)
     }
@@ -232,6 +248,7 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
         if lhs._intro != rhs._intro { return false }
         if lhs._announcement != rhs._announcement { return false }
         if lhs._creationDate != rhs._creationDate { return false }
+        if lhs._lastUpdatedDate != rhs._lastUpdatedDate { return false }
         if lhs._muteEndDate != rhs._muteEndDate { return false }
         if lhs._active != rhs._active { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }

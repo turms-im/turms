@@ -12,20 +12,20 @@ import { CreateGroupRequest } from "./group/create_group_request";
 import { DeleteGroupRequest } from "./group/delete_group_request";
 import { CheckGroupJoinQuestionsAnswersRequest } from "./group/enrollment/check_group_join_questions_answers_request";
 import { CreateGroupInvitationRequest } from "./group/enrollment/create_group_invitation_request";
-import { CreateGroupJoinQuestionRequest } from "./group/enrollment/create_group_join_question_request";
+import { CreateGroupJoinQuestionsRequest } from "./group/enrollment/create_group_join_questions_request";
 import { CreateGroupJoinRequestRequest } from "./group/enrollment/create_group_join_request_request";
 import { DeleteGroupInvitationRequest } from "./group/enrollment/delete_group_invitation_request";
-import { DeleteGroupJoinQuestionRequest } from "./group/enrollment/delete_group_join_question_request";
+import { DeleteGroupJoinQuestionsRequest } from "./group/enrollment/delete_group_join_questions_request";
 import { DeleteGroupJoinRequestRequest } from "./group/enrollment/delete_group_join_request_request";
 import { QueryGroupInvitationsRequest } from "./group/enrollment/query_group_invitations_request";
 import { QueryGroupJoinQuestionsRequest } from "./group/enrollment/query_group_join_questions_request";
 import { QueryGroupJoinRequestsRequest } from "./group/enrollment/query_group_join_requests_request";
 import { UpdateGroupJoinQuestionRequest } from "./group/enrollment/update_group_join_question_request";
-import { CreateGroupMemberRequest } from "./group/member/create_group_member_request";
-import { DeleteGroupMemberRequest } from "./group/member/delete_group_member_request";
+import { CreateGroupMembersRequest } from "./group/member/create_group_members_request";
+import { DeleteGroupMembersRequest } from "./group/member/delete_group_members_request";
 import { QueryGroupMembersRequest } from "./group/member/query_group_members_request";
 import { UpdateGroupMemberRequest } from "./group/member/update_group_member_request";
-import { QueryGroupRequest } from "./group/query_group_request";
+import { QueryGroupsRequest } from "./group/query_groups_request";
 import { QueryJoinedGroupIdsRequest } from "./group/query_joined_group_ids_request";
 import { QueryJoinedGroupInfosRequest } from "./group/query_joined_group_infos_request";
 import { UpdateGroupRequest } from "./group/update_group_request";
@@ -39,7 +39,7 @@ import { CreateSessionRequest } from "./user/create_session_request";
 import { DeleteSessionRequest } from "./user/delete_session_request";
 import { QueryNearbyUsersRequest } from "./user/query_nearby_users_request";
 import { QueryUserOnlineStatusesRequest } from "./user/query_user_online_statuses_request";
-import { QueryUserProfileRequest } from "./user/query_user_profile_request";
+import { QueryUserProfilesRequest } from "./user/query_user_profiles_request";
 import { CreateFriendRequestRequest } from "./user/relationship/create_friend_request_request";
 import { CreateRelationshipGroupRequest } from "./user/relationship/create_relationship_group_request";
 import { CreateRelationshipRequest } from "./user/relationship/create_relationship_request";
@@ -61,7 +61,7 @@ export const protobufPackage = "im.turms.proto";
 /** Client -> Server -> Client */
 export interface TurmsRequest {
   /**
-   * Note: request_id is allowed to be duplicate because
+   * Note: "request_id" is allowed to be duplicate because
    * it is used for clients to identify the response of the same request id in a session
    */
   requestId?:
@@ -85,14 +85,14 @@ export interface TurmsRequest {
     | UpdateMessageRequest
     | undefined;
   /** Group Member */
-  createGroupMemberRequest?: CreateGroupMemberRequest | undefined;
-  deleteGroupMemberRequest?: DeleteGroupMemberRequest | undefined;
+  createGroupMembersRequest?: CreateGroupMembersRequest | undefined;
+  deleteGroupMembersRequest?: DeleteGroupMembersRequest | undefined;
   queryGroupMembersRequest?: QueryGroupMembersRequest | undefined;
   updateGroupMemberRequest?:
     | UpdateGroupMemberRequest
     | undefined;
   /** User */
-  queryUserProfileRequest?: QueryUserProfileRequest | undefined;
+  queryUserProfilesRequest?: QueryUserProfilesRequest | undefined;
   queryNearbyUsersRequest?: QueryNearbyUsersRequest | undefined;
   queryUserOnlineStatusesRequest?: QueryUserOnlineStatusesRequest | undefined;
   updateUserLocationRequest?: UpdateUserLocationRequest | undefined;
@@ -118,7 +118,7 @@ export interface TurmsRequest {
   /** Group */
   createGroupRequest?: CreateGroupRequest | undefined;
   deleteGroupRequest?: DeleteGroupRequest | undefined;
-  queryGroupRequest?: QueryGroupRequest | undefined;
+  queryGroupsRequest?: QueryGroupsRequest | undefined;
   queryJoinedGroupIdsRequest?: QueryJoinedGroupIdsRequest | undefined;
   queryJoinedGroupInfosRequest?: QueryJoinedGroupInfosRequest | undefined;
   updateGroupRequest?:
@@ -135,10 +135,10 @@ export interface TurmsRequest {
   checkGroupJoinQuestionsAnswersRequest?: CheckGroupJoinQuestionsAnswersRequest | undefined;
   createGroupInvitationRequest?: CreateGroupInvitationRequest | undefined;
   createGroupJoinRequestRequest?: CreateGroupJoinRequestRequest | undefined;
-  createGroupJoinQuestionRequest?: CreateGroupJoinQuestionRequest | undefined;
+  createGroupJoinQuestionsRequest?: CreateGroupJoinQuestionsRequest | undefined;
   deleteGroupInvitationRequest?: DeleteGroupInvitationRequest | undefined;
   deleteGroupJoinRequestRequest?: DeleteGroupJoinRequestRequest | undefined;
-  deleteGroupJoinQuestionRequest?: DeleteGroupJoinQuestionRequest | undefined;
+  deleteGroupJoinQuestionsRequest?: DeleteGroupJoinQuestionsRequest | undefined;
   queryGroupInvitationsRequest?: QueryGroupInvitationsRequest | undefined;
   queryGroupJoinRequestsRequest?: QueryGroupJoinRequestsRequest | undefined;
   queryGroupJoinQuestionsRequest?: QueryGroupJoinQuestionsRequest | undefined;
@@ -162,11 +162,11 @@ function createBaseTurmsRequest(): TurmsRequest {
     createMessageRequest: undefined,
     queryMessagesRequest: undefined,
     updateMessageRequest: undefined,
-    createGroupMemberRequest: undefined,
-    deleteGroupMemberRequest: undefined,
+    createGroupMembersRequest: undefined,
+    deleteGroupMembersRequest: undefined,
     queryGroupMembersRequest: undefined,
     updateGroupMemberRequest: undefined,
-    queryUserProfileRequest: undefined,
+    queryUserProfilesRequest: undefined,
     queryNearbyUsersRequest: undefined,
     queryUserOnlineStatusesRequest: undefined,
     updateUserLocationRequest: undefined,
@@ -186,7 +186,7 @@ function createBaseTurmsRequest(): TurmsRequest {
     updateRelationshipRequest: undefined,
     createGroupRequest: undefined,
     deleteGroupRequest: undefined,
-    queryGroupRequest: undefined,
+    queryGroupsRequest: undefined,
     queryJoinedGroupIdsRequest: undefined,
     queryJoinedGroupInfosRequest: undefined,
     updateGroupRequest: undefined,
@@ -197,10 +197,10 @@ function createBaseTurmsRequest(): TurmsRequest {
     checkGroupJoinQuestionsAnswersRequest: undefined,
     createGroupInvitationRequest: undefined,
     createGroupJoinRequestRequest: undefined,
-    createGroupJoinQuestionRequest: undefined,
+    createGroupJoinQuestionsRequest: undefined,
     deleteGroupInvitationRequest: undefined,
     deleteGroupJoinRequestRequest: undefined,
-    deleteGroupJoinQuestionRequest: undefined,
+    deleteGroupJoinQuestionsRequest: undefined,
     queryGroupInvitationsRequest: undefined,
     queryGroupJoinRequestsRequest: undefined,
     queryGroupJoinQuestionsRequest: undefined,
@@ -240,11 +240,11 @@ export const TurmsRequest = {
     if (message.updateMessageRequest !== undefined) {
       UpdateMessageRequest.encode(message.updateMessageRequest, writer.uint32(82).fork()).ldelim();
     }
-    if (message.createGroupMemberRequest !== undefined) {
-      CreateGroupMemberRequest.encode(message.createGroupMemberRequest, writer.uint32(90).fork()).ldelim();
+    if (message.createGroupMembersRequest !== undefined) {
+      CreateGroupMembersRequest.encode(message.createGroupMembersRequest, writer.uint32(90).fork()).ldelim();
     }
-    if (message.deleteGroupMemberRequest !== undefined) {
-      DeleteGroupMemberRequest.encode(message.deleteGroupMemberRequest, writer.uint32(98).fork()).ldelim();
+    if (message.deleteGroupMembersRequest !== undefined) {
+      DeleteGroupMembersRequest.encode(message.deleteGroupMembersRequest, writer.uint32(98).fork()).ldelim();
     }
     if (message.queryGroupMembersRequest !== undefined) {
       QueryGroupMembersRequest.encode(message.queryGroupMembersRequest, writer.uint32(106).fork()).ldelim();
@@ -252,8 +252,8 @@ export const TurmsRequest = {
     if (message.updateGroupMemberRequest !== undefined) {
       UpdateGroupMemberRequest.encode(message.updateGroupMemberRequest, writer.uint32(114).fork()).ldelim();
     }
-    if (message.queryUserProfileRequest !== undefined) {
-      QueryUserProfileRequest.encode(message.queryUserProfileRequest, writer.uint32(802).fork()).ldelim();
+    if (message.queryUserProfilesRequest !== undefined) {
+      QueryUserProfilesRequest.encode(message.queryUserProfilesRequest, writer.uint32(802).fork()).ldelim();
     }
     if (message.queryNearbyUsersRequest !== undefined) {
       QueryNearbyUsersRequest.encode(message.queryNearbyUsersRequest, writer.uint32(810).fork()).ldelim();
@@ -316,8 +316,8 @@ export const TurmsRequest = {
     if (message.deleteGroupRequest !== undefined) {
       DeleteGroupRequest.encode(message.deleteGroupRequest, writer.uint32(2410).fork()).ldelim();
     }
-    if (message.queryGroupRequest !== undefined) {
-      QueryGroupRequest.encode(message.queryGroupRequest, writer.uint32(2418).fork()).ldelim();
+    if (message.queryGroupsRequest !== undefined) {
+      QueryGroupsRequest.encode(message.queryGroupsRequest, writer.uint32(2418).fork()).ldelim();
     }
     if (message.queryJoinedGroupIdsRequest !== undefined) {
       QueryJoinedGroupIdsRequest.encode(message.queryJoinedGroupIdsRequest, writer.uint32(2426).fork()).ldelim();
@@ -354,8 +354,8 @@ export const TurmsRequest = {
     if (message.createGroupJoinRequestRequest !== undefined) {
       CreateGroupJoinRequestRequest.encode(message.createGroupJoinRequestRequest, writer.uint32(4018).fork()).ldelim();
     }
-    if (message.createGroupJoinQuestionRequest !== undefined) {
-      CreateGroupJoinQuestionRequest.encode(message.createGroupJoinQuestionRequest, writer.uint32(4026).fork())
+    if (message.createGroupJoinQuestionsRequest !== undefined) {
+      CreateGroupJoinQuestionsRequest.encode(message.createGroupJoinQuestionsRequest, writer.uint32(4026).fork())
         .ldelim();
     }
     if (message.deleteGroupInvitationRequest !== undefined) {
@@ -364,8 +364,8 @@ export const TurmsRequest = {
     if (message.deleteGroupJoinRequestRequest !== undefined) {
       DeleteGroupJoinRequestRequest.encode(message.deleteGroupJoinRequestRequest, writer.uint32(4042).fork()).ldelim();
     }
-    if (message.deleteGroupJoinQuestionRequest !== undefined) {
-      DeleteGroupJoinQuestionRequest.encode(message.deleteGroupJoinQuestionRequest, writer.uint32(4050).fork())
+    if (message.deleteGroupJoinQuestionsRequest !== undefined) {
+      DeleteGroupJoinQuestionsRequest.encode(message.deleteGroupJoinQuestionsRequest, writer.uint32(4050).fork())
         .ldelim();
     }
     if (message.queryGroupInvitationsRequest !== undefined) {
@@ -429,10 +429,10 @@ export const TurmsRequest = {
           message.updateMessageRequest = UpdateMessageRequest.decode(reader, reader.uint32());
           break;
         case 11:
-          message.createGroupMemberRequest = CreateGroupMemberRequest.decode(reader, reader.uint32());
+          message.createGroupMembersRequest = CreateGroupMembersRequest.decode(reader, reader.uint32());
           break;
         case 12:
-          message.deleteGroupMemberRequest = DeleteGroupMemberRequest.decode(reader, reader.uint32());
+          message.deleteGroupMembersRequest = DeleteGroupMembersRequest.decode(reader, reader.uint32());
           break;
         case 13:
           message.queryGroupMembersRequest = QueryGroupMembersRequest.decode(reader, reader.uint32());
@@ -441,7 +441,7 @@ export const TurmsRequest = {
           message.updateGroupMemberRequest = UpdateGroupMemberRequest.decode(reader, reader.uint32());
           break;
         case 100:
-          message.queryUserProfileRequest = QueryUserProfileRequest.decode(reader, reader.uint32());
+          message.queryUserProfilesRequest = QueryUserProfilesRequest.decode(reader, reader.uint32());
           break;
         case 101:
           message.queryNearbyUsersRequest = QueryNearbyUsersRequest.decode(reader, reader.uint32());
@@ -501,7 +501,7 @@ export const TurmsRequest = {
           message.deleteGroupRequest = DeleteGroupRequest.decode(reader, reader.uint32());
           break;
         case 302:
-          message.queryGroupRequest = QueryGroupRequest.decode(reader, reader.uint32());
+          message.queryGroupsRequest = QueryGroupsRequest.decode(reader, reader.uint32());
           break;
         case 303:
           message.queryJoinedGroupIdsRequest = QueryJoinedGroupIdsRequest.decode(reader, reader.uint32());
@@ -537,7 +537,7 @@ export const TurmsRequest = {
           message.createGroupJoinRequestRequest = CreateGroupJoinRequestRequest.decode(reader, reader.uint32());
           break;
         case 503:
-          message.createGroupJoinQuestionRequest = CreateGroupJoinQuestionRequest.decode(reader, reader.uint32());
+          message.createGroupJoinQuestionsRequest = CreateGroupJoinQuestionsRequest.decode(reader, reader.uint32());
           break;
         case 504:
           message.deleteGroupInvitationRequest = DeleteGroupInvitationRequest.decode(reader, reader.uint32());
@@ -546,7 +546,7 @@ export const TurmsRequest = {
           message.deleteGroupJoinRequestRequest = DeleteGroupJoinRequestRequest.decode(reader, reader.uint32());
           break;
         case 506:
-          message.deleteGroupJoinQuestionRequest = DeleteGroupJoinQuestionRequest.decode(reader, reader.uint32());
+          message.deleteGroupJoinQuestionsRequest = DeleteGroupJoinQuestionsRequest.decode(reader, reader.uint32());
           break;
         case 507:
           message.queryGroupInvitationsRequest = QueryGroupInvitationsRequest.decode(reader, reader.uint32());

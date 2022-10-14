@@ -74,6 +74,10 @@ export default {
                 },
                 {
                     type: 'DATE-RANGE',
+                    name: 'lastUpdatedDate'
+                },
+                {
+                    type: 'DATE-RANGE',
                     name: 'muteEndDate'
                 }
             ],
@@ -124,6 +128,10 @@ export default {
                         },
                         {
                             id: 'deletionDate',
+                            type: 'DATE'
+                        },
+                        {
+                            id: 'lastUpdatedDate',
                             type: 'DATE'
                         },
                         {
@@ -196,6 +204,10 @@ export default {
                             type: 'DATE'
                         },
                         {
+                            id: 'lastUpdatedDate',
+                            type: 'DATE'
+                        },
+                        {
                             id: 'muteEndDate',
                             type: 'DATE'
                         },
@@ -259,6 +271,10 @@ export default {
                     },
                     {
                         key: 'deletionDate',
+                        width: '7.5%'
+                    },
+                    {
+                        key: 'lastUpdatedDate',
                         width: '7.5%'
                     },
                     {

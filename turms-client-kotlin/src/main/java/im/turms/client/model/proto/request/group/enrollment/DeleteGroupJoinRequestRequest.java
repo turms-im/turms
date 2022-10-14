@@ -45,14 +45,14 @@ public  final class DeleteGroupJoinRequestRequest extends
    * @param value The requestId to set.
    */
   private void setRequestId(long value) {
-    
+
     requestId_ = value;
   }
   /**
    * <code>int64 request_id = 1;</code>
    */
   private void clearRequestId() {
-    
+
     requestId_ = 0L;
   }
 

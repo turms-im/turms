@@ -46,14 +46,14 @@ public  final class UpdateRelationshipGroupRequest extends
    * @param value The groupIndex to set.
    */
   private void setGroupIndex(int value) {
-    
+
     groupIndex_ = value;
   }
   /**
    * <code>int32 group_index = 1;</code>
    */
   private void clearGroupIndex() {
-    
+
     groupIndex_ = 0;
   }
 
@@ -83,14 +83,14 @@ public  final class UpdateRelationshipGroupRequest extends
   private void setNewName(
       java.lang.String value) {
     java.lang.Class<?> valueClass = value.getClass();
-  
+
     newName_ = value;
   }
   /**
    * <code>string new_name = 2;</code>
    */
   private void clearNewName() {
-    
+
     newName_ = getDefaultInstance().getNewName();
   }
   /**
@@ -101,7 +101,7 @@ public  final class UpdateRelationshipGroupRequest extends
       com.google.protobuf.ByteString value) {
     checkByteStringIsUtf8(value);
     newName_ = value.toStringUtf8();
-    
+
   }
 
   public static im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest parseFrom(

@@ -66,6 +66,10 @@ public abstract class BaseRepository<T, K> {
         return mongoClient.insertAllOfSameType(docs);
     }
 
+    public Mono<Void> insertAllOfSameType(List<T> docs, @Nullable ClientSession session) {
+        return mongoClient.insertAllOfSameType(session, docs);
+    }
+
     public Mono<DeleteResult> deleteAll() {
         return mongoClient.deleteAll(entityClass);
     }

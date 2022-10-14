@@ -64,13 +64,13 @@ public  final class QuerySignedGetUrlRequest extends
    */
   private void setContentType(im.turms.client.model.proto.constant.ContentType value) {
     contentType_ = value.getNumber();
-    
+
   }
   /**
    * <code>.im.turms.proto.ContentType content_type = 1;</code>
    */
   private void clearContentType() {
-    
+
     contentType_ = 0;
   }
 

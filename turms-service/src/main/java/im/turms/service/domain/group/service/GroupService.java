@@ -32,6 +32,7 @@ import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.exception.ThrowableUtil;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsProperties;
@@ -59,7 +60,6 @@ import im.turms.service.domain.user.service.UserVersionService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import io.micrometer.core.instrument.Counter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -171,6 +171,7 @@ public class GroupService {
                 ? activateGroupWhenCreated
                 : isActive;
         Long groupId = node.nextLargeGapId(ServiceType.GROUP);
+        Date now = new Date();
         Group group = new Group(groupId,
                 groupTypeId,
                 creatorId,
@@ -179,45 +180,43 @@ public class GroupService {
                 intro,
                 announcement,
                 minimumScore == null ? 0 : minimumScore,
-                creationDate == null ? new Date() : creationDate,
+                creationDate == null ? now : creationDate,
                 deletionDate,
+                now,
                 muteEndDate,
                 isActive);
         return groupRepository
-                .inTransaction(session -> {
-                    Date now = new Date();
-                    return groupRepository.insert(group, session)
-                            .then(groupMemberService.addGroupMember(
-                                    group.getId(),
-                                    creatorId,
-                                    GroupMemberRole.OWNER,
-                                    null,
-                                    now,
-                                    null,
-                                    session))
-                            .then(Mono.defer(() -> {
-                                createdGroupsCounter.increment();
-                                return groupVersionService.upsert(groupId, now)
-                                        .onErrorResume(t -> {
-                                            LOGGER.error("Caught an error while upserting a version for the group {} after creating the group",
-                                                    groupId, t);
-                                            return Mono.empty();
-                                        });
-                            }))
-                            .thenReturn(group);
-                })
+                .inTransaction(session -> groupRepository.insert(group, session)
+                        .then(groupMemberService.addGroupMember(
+                                group.getId(),
+                                creatorId,
+                                GroupMemberRole.OWNER,
+                                null,
+                                now,
+                                null,
+                                session))
+                        .then(Mono.defer(() -> {
+                            createdGroupsCounter.increment();
+                            return groupVersionService.upsert(groupId, now)
+                                    .onErrorResume(t -> {
+                                        LOGGER.error("Caught an error while upserting a version for the group {} after creating the group",
+                                                groupId, t);
+                                        return Mono.empty();
+                                    });
+                        }))
+                        .thenReturn(group))
                 .retryWhen(TRANSACTION_RETRY);
     }
 
     public Mono<Void> authAndDeleteGroup(@NotNull Long requesterId, @NotNull Long groupId) {
         return groupMemberService
-                .isOwner(requesterId, groupId)
+                .isOwner(requesterId, groupId, false)
                 .flatMap(authenticated -> {
                     if (!authenticated) {
                         return Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_TO_DELETE_GROUP));
                     }
                     if (notifyMembersAfterGroupDeleted) {
-                        return groupMemberService.queryGroupMemberIds(groupId)
+                        return groupMemberService.queryGroupMemberIds(groupId, false)
                                 .flatMap(memberIds -> deleteGroupsAndGroupMembers(Set.of(groupId), null))
                                 .then();
                     }
@@ -283,7 +282,7 @@ public class GroupService {
         return groupRepository
                 .inTransaction(session -> {
                     Mono<DeleteResult> updateOrDeleteMono = finalShouldDeleteLogically
-                            ? groupRepository.updateGroups(groupIds, session)
+                            ? groupRepository.updateGroupsDeletionDate(groupIds, session)
                             .map(OperationResultConvertor::update2delete)
                             : groupRepository.deleteByIds(groupIds, session);
                     return updateOrDeleteMono.flatMap(result -> {
@@ -313,6 +312,7 @@ public class GroupService {
             @Nullable Boolean isActive,
             @Nullable DateRange creationDateRange,
             @Nullable DateRange deletionDateRange,
+            @Nullable DateRange lastUpdatedDateRange,
             @Nullable DateRange muteEndDateRange,
             @Nullable Set<Long> memberIds,
             @Nullable Integer page,
@@ -320,7 +320,7 @@ public class GroupService {
         return queryGroupIdsFromGroupIdsAndMemberIds(ids, memberIds)
                 .defaultIfEmpty(Collections.emptySet())
                 .flatMapMany(groupIds -> groupRepository.findGroups(groupIds, typeIds, creatorIds, ownerIds,
-                        isActive, creationDateRange, deletionDateRange, muteEndDateRange,
+                        isActive, creationDateRange, deletionDateRange, lastUpdatedDateRange, muteEndDateRange,
                         page, size));
     }
 
@@ -354,7 +354,7 @@ public class GroupService {
             return Mono.error(e);
         }
         return groupMemberService
-                .isOwner(requesterId, groupId)
+                .isOwner(requesterId, groupId, false)
                 .flatMap(isOwner -> isOwner
                         ? checkAndTransferGroupOwnership(requesterId, groupId, successorId, quitAfterTransfer, session)
                         : Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_TO_TRANSFER_GROUP)));
@@ -428,7 +428,7 @@ public class GroupService {
         return queryOwnerIdMono
                 .switchIfEmpty(ResponseExceptionPublisherPool.transferNonExistingGroup())
                 .flatMap(ownerId -> groupMemberService
-                        .isGroupMember(groupId, successorId)
+                        .isGroupMember(groupId, successorId, false)
                         .flatMap(isGroupMember -> !isGroupMember
                                 ? Mono.error(ResponseException.get(ResponseStatusCode.SUCCESSOR_NOT_GROUP_MEMBER))
                                 : queryGroupTypeId(groupId))
@@ -440,7 +440,7 @@ public class GroupService {
                                                 return Mono.error(ResponseException.get(code, result.reason()));
                                             }
                                             if (quitAfterTransfer) {
-                                                return groupMemberService.deleteGroupMembers(groupId, ownerId, session, false);
+                                                return groupMemberService.deleteGroupMember(groupId, ownerId, session, false);
                                             }
                                             return groupMemberService.updateGroupMember(
                                                     groupId,
@@ -537,30 +537,19 @@ public class GroupService {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return groupRepository.updateGroups(groupIds,
-                        typeId,
-                        creatorId,
-                        ownerId,
-                        name,
-                        intro,
-                        announcement,
-                        minimumScore,
-                        isActive,
-                        creationDate,
-                        deletionDate,
-                        muteEndDate,
-                        session)
-                .flatMap(result -> {
-                    int size = groupIds.size();
-                    if (size == 1) {
-                        return groupVersionService.updateInformation(groupIds.iterator().next()).thenReturn(result);
-                    }
-                    List<Mono<Boolean>> monos = new ArrayList<>(size);
-                    for (Long groupId : groupIds) {
-                        Mono<Boolean> mono = groupVersionService.updateInformation(groupId);
-                        monos.add(mono);
-                    }
-                    return Mono.whenDelayError(monos).thenReturn(result);
-                });
+                typeId,
+                creatorId,
+                ownerId,
+                name,
+                intro,
+                announcement,
+                minimumScore,
+                isActive,
+                creationDate,
+                deletionDate,
+                muteEndDate,
+                new Date(),
+                session);
     }
 
     public Mono<Void> authAndUpdateGroupInformation(
@@ -595,13 +584,13 @@ public class GroupService {
                 .flatMap(groupType -> {
                     GroupUpdateStrategy groupUpdateStrategy = groupType.getGroupInfoUpdateStrategy();
                     return switch (groupUpdateStrategy) {
-                        case OWNER -> groupMemberService.isOwner(requesterId, groupId)
+                        case OWNER -> groupMemberService.isOwner(requesterId, groupId, false)
                                 .map(isOwner -> isOwner ? ResponseStatusCode.OK : ResponseStatusCode.NOT_OWNER_TO_UPDATE_GROUP_INFO);
-                        case OWNER_MANAGER -> groupMemberService.isOwnerOrManager(requesterId, groupId)
+                        case OWNER_MANAGER -> groupMemberService.isOwnerOrManager(requesterId, groupId, false)
                                 .map(isOwnerOrManager -> isOwnerOrManager
                                         ? ResponseStatusCode.OK
                                         : ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_INFO);
-                        case OWNER_MANAGER_MEMBER -> groupMemberService.isOwnerOrManagerOrMember(requesterId, groupId)
+                        case OWNER_MANAGER_MEMBER -> groupMemberService.isOwnerOrManagerOrMember(requesterId, groupId, false)
                                 .map(isMember -> isMember ? ResponseStatusCode.OK : ResponseStatusCode.NOT_MEMBER_TO_UPDATE_GROUP_INFO);
                         case ALL -> Mono.just(ResponseStatusCode.OK);
                         default -> Mono.error(new IllegalStateException("Unexpected value: " + groupUpdateStrategy));
@@ -613,24 +602,19 @@ public class GroupService {
                         : Mono.error(ResponseException.get(code)));
     }
 
-    public Mono<GroupsWithVersion> authAndQueryGroupWithVersion(
-            @NotNull Long groupId,
+    public Mono<List<Group>> authAndQueryGroups(
+            @NotNull Set<Long> groupIds,
             @Nullable Date lastUpdatedDate) {
-        return groupVersionService.queryInfoVersion(groupId)
-                .flatMap(version -> DateUtil.isAfterOrSame(lastUpdatedDate, version)
-                        ? ResponseExceptionPublisherPool.alreadyUpToUpdate()
-                        : groupRepository.findById(groupId)
-                        .flatMap(group -> {
-                            if (group.getDeletionDate() == null) {
-                                return Mono.just(ClientMessagePool
-                                        .getGroupsWithVersionBuilder()
-                                        .addGroups(ProtoModelConvertor.group2proto(group))
-                                        .setLastUpdatedDate(version.getTime())
-                                        .build());
-                            }
-                            return ResponseExceptionPublisherPool.alreadyUpToUpdate();
-                        }))
-                .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
+        try {
+            Validator.notNull(groupIds, "groupIds");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        if (groupIds.isEmpty()) {
+            return PublisherPool.emptyList();
+        }
+        return groupRepository.findNotDeletedGroups(groupIds, lastUpdatedDate)
+                .collect(CollectorUtil.toList(groupIds.size()));
     }
 
     private Flux<Group> queryGroups(@NotEmpty List<Long> groupIds) {
@@ -777,8 +761,8 @@ public class GroupService {
                     return groupMono.flatMap(userPermissionGroup -> {
                         Set<Long> creatableGroupTypeIds = userPermissionGroup.getCreatableGroupTypeIds();
                         if (!creatableGroupTypeIds.contains(groupTypeId)) {
-                            String ids = StringUtils.join(creatableGroupTypeIds, ", ");
-                            String reason = "The requester is only allowed to create groups with the types " + ids;
+                            String ids = StringUtil.joinLatin1(", ", creatableGroupTypeIds);
+                            String reason = "The requester is only allowed to create groups with the types: " + ids;
                             return Mono.just(ServicePermission.get(ResponseStatusCode.NO_PERMISSION_TO_CREATE_GROUP_WITH_GROUP_TYPE, reason));
                         }
                         Map<Long, Integer> groupTypeIdToLimit = userPermissionGroup.getGroupTypeIdToLimit();
@@ -831,12 +815,13 @@ public class GroupService {
             @Nullable Boolean isActive,
             @Nullable DateRange creationDateRange,
             @Nullable DateRange deletionDateRange,
+            @Nullable DateRange lastUpdatedDateRange,
             @Nullable DateRange muteEndDateRange,
             @Nullable Set<Long> memberIds) {
         return queryGroupIdsFromGroupIdsAndMemberIds(ids, memberIds)
                 .defaultIfEmpty(Collections.emptySet())
                 .flatMap(groupIds -> groupRepository.countGroups(groupIds, typeIds, creatorIds,
-                        ownerIds, isActive, creationDateRange, deletionDateRange,
+                        ownerIds, isActive, creationDateRange, deletionDateRange, lastUpdatedDateRange,
                         muteEndDateRange));
     }
 

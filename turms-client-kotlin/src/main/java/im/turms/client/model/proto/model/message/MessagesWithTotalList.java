@@ -43,7 +43,7 @@ public  final class MessagesWithTotalList extends
   /**
    * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
    */
-  public java.util.List<? extends im.turms.client.model.proto.model.message.MessagesWithTotalOrBuilder> 
+  public java.util.List<? extends im.turms.client.model.proto.model.message.MessagesWithTotalOrBuilder>
       getMessagesWithTotalListOrBuilderList() {
     return messagesWithTotalList_;
   }

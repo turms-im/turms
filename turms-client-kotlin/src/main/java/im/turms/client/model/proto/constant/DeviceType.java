@@ -122,13 +122,13 @@ public enum DeviceType
           }
         };
 
-  public static com.google.protobuf.Internal.EnumVerifier 
+  public static com.google.protobuf.Internal.EnumVerifier
       internalGetVerifier() {
     return DeviceTypeVerifier.INSTANCE;
   }
 
-  private static final class DeviceTypeVerifier implements 
-       com.google.protobuf.Internal.EnumVerifier { 
+  private static final class DeviceTypeVerifier implements
+       com.google.protobuf.Internal.EnumVerifier {
           static final com.google.protobuf.Internal.EnumVerifier           INSTANCE = new DeviceTypeVerifier();
           @java.lang.Override
           public boolean isInRange(int number) {

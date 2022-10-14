@@ -1,8 +1,9 @@
 import 'package:fixnum/fixnum.dart' show Int64;
 
 import '../../turms_client.dart';
-import '../extension/int_extensions.dart';
 import '../extension/notification_extensions.dart';
+import '../model/new_group_join_question.dart';
+import '../model/proto/model/user/user_infos_with_version.pb.dart';
 
 class GroupService {
   final TurmsClient _turmsClient;
@@ -75,20 +76,14 @@ class GroupService {
   Future<Response<void>> unmuteGroup(Int64 groupId) =>
       muteGroup(groupId, DateTime(0));
 
-  Future<Response<GroupWithVersion?>> queryGroup(Int64 groupId,
+  Future<Response<List<Group>>> queryGroups(Set<Int64> groupIds,
       {DateTime? lastUpdatedDate}) async {
-    final n = await _turmsClient.driver.send(QueryGroupRequest(
-        groupId: groupId, lastUpdatedDate: lastUpdatedDate?.toInt64()));
-    return n.toResponse((data) {
-      final groupsWithVersion = data.groupsWithVersion;
-      if (groupsWithVersion.groups.isEmpty) {
-        return null;
-      }
-      final date = groupsWithVersion.hasLastUpdatedDate()
-          ? groupsWithVersion.lastUpdatedDate.toDateTime()
-          : null;
-      return GroupWithVersion(groupsWithVersion.groups[0], date);
-    });
+    if (groupIds.isEmpty) {
+      return Future.value(Response.emptyList());
+    }
+    final n = await _turmsClient.driver.send(QueryGroupsRequest(
+        groupIds: groupIds, lastUpdatedDate: lastUpdatedDate?.toInt64()));
+    return n.toResponse((data) => data.groupsWithVersion.groups);
   }
 
   Future<Response<Int64ValuesWithVersion?>> queryJoinedGroupIds(
@@ -109,20 +104,31 @@ class GroupService {
         (data) => data.hasGroupsWithVersion() ? data.groupsWithVersion : null);
   }
 
-  Future<Response<Int64>> addGroupJoinQuestion(
-      Int64 groupId, String question, Set<String> answers, int score) async {
-    if (answers.isEmpty) {
-      throw ResponseException.fromCodeAndReason(
-          ResponseStatusCode.illegalArgument, '"answers" must not be empty');
+  Future<Response<List<Int64>>> addGroupJoinQuestions(
+      Int64 groupId, List<NewGroupJoinQuestion> questions) async {
+    if (questions.isEmpty) {
+      return Future.value(Response.emptyList());
     }
-    final n = await _turmsClient.driver.send(CreateGroupJoinQuestionRequest(
-        groupId: groupId, question: question, answers: answers, score: score));
-    return n.toResponse((data) => data.getFirstIdOrThrow());
+    final newQuestions = questions.map((question) {
+      if (question.answers.isEmpty) {
+        throw ResponseException.fromCodeAndReason(
+            ResponseStatusCode.illegalArgument,
+            'The answers of group must not be empty');
+      }
+      return GroupJoinQuestion(
+          question: question.question,
+          answers: question.answers,
+          score: question.score);
+    });
+    final n = await _turmsClient.driver.send(CreateGroupJoinQuestionsRequest(
+        groupId: groupId, questions: newQuestions));
+    return n.toResponse((data) => data.ids.values);
   }
 
-  Future<Response<void>> deleteGroupJoinQuestion(Int64 questionId) async {
-    final n = await _turmsClient.driver
-        .send(DeleteGroupJoinQuestionRequest(questionId: questionId));
+  Future<Response<void>> deleteGroupJoinQuestions(
+      Int64 groupId, Set<Int64> questionIds) async {
+    final n = await _turmsClient.driver.send(DeleteGroupJoinQuestionsRequest(
+        groupId: groupId, questionIds: questionIds));
     return n.toNullResponse();
   }
 
@@ -160,12 +166,12 @@ class GroupService {
         (data) => data.hasIdsWithVersion() ? data.idsWithVersion : null);
   }
 
-  Future<Response<UsersInfosWithVersion?>> queryBlockedUserInfos(Int64 groupId,
+  Future<Response<UserInfosWithVersion?>> queryBlockedUserInfos(Int64 groupId,
       {DateTime? lastUpdatedDate}) async {
     final n = await _turmsClient.driver.send(QueryGroupBlockedUserInfosRequest(
         groupId: groupId, lastUpdatedDate: lastUpdatedDate?.toInt64()));
     return n.toResponse((data) =>
-        data.hasUsersInfosWithVersion() ? data.usersInfosWithVersion : null);
+        data.hasUserInfosWithVersion() ? data.userInfosWithVersion : null);
   }
 
   // Group Enrollment
@@ -267,11 +273,14 @@ class GroupService {
 
   // Group Member
 
-  Future<Response<void>> addGroupMember(Int64 groupId, Int64 userId,
+  Future<Response<void>> addGroupMembers(Int64 groupId, Set<Int64> userIds,
       {String? name, GroupMemberRole? role, DateTime? muteEndDate}) async {
-    final n = await _turmsClient.driver.send(CreateGroupMemberRequest(
+    if (userIds.isEmpty) {
+      return Future.value(Response.nullValue());
+    }
+    final n = await _turmsClient.driver.send(CreateGroupMembersRequest(
         groupId: groupId,
-        userId: userId,
+        userIds: userIds,
         name: name,
         role: role,
         muteEndDate: muteEndDate?.toInt64()));
@@ -280,18 +289,21 @@ class GroupService {
 
   Future<Response<void>> quitGroup(Int64 groupId,
       {Int64? successorId, bool? quitAfterTransfer}) async {
-    final n = await _turmsClient.driver.send(DeleteGroupMemberRequest(
+    final n = await _turmsClient.driver.send(DeleteGroupMembersRequest(
         groupId: groupId,
-        memberId: _turmsClient.userService.userInfo?.userId,
+        memberIds: [_turmsClient.userService.userInfo!.userId],
         successorId: successorId,
         quitAfterTransfer: quitAfterTransfer));
     return n.toNullResponse();
   }
 
-  Future<Response<void>> removeGroupMember(
-      Int64 groupId, Int64 memberId) async {
-    final n = await _turmsClient.driver
-        .send(DeleteGroupMemberRequest(groupId: groupId, memberId: memberId));
+  Future<Response<void>> removeGroupMembers(
+      Int64 groupId, Set<Int64> memberIds) async {
+    if (memberIds.isEmpty) {
+      return Future.value(Response.nullValue());
+    }
+    final n = await _turmsClient.driver.send(
+        DeleteGroupMembersRequest(groupId: groupId, memberIds: memberIds));
     return n.toNullResponse();
   }
 

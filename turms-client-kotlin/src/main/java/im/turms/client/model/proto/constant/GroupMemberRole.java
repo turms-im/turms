@@ -113,13 +113,13 @@ public enum GroupMemberRole
           }
         };
 
-  public static com.google.protobuf.Internal.EnumVerifier 
+  public static com.google.protobuf.Internal.EnumVerifier
       internalGetVerifier() {
     return GroupMemberRoleVerifier.INSTANCE;
   }
 
-  private static final class GroupMemberRoleVerifier implements 
-       com.google.protobuf.Internal.EnumVerifier { 
+  private static final class GroupMemberRoleVerifier implements
+       com.google.protobuf.Internal.EnumVerifier {
           static final com.google.protobuf.Internal.EnumVerifier           INSTANCE = new GroupMemberRoleVerifier();
           @java.lang.Override
           public boolean isInRange(int number) {

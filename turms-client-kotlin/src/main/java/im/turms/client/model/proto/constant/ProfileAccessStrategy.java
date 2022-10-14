@@ -95,13 +95,13 @@ public enum ProfileAccessStrategy
           }
         };
 
-  public static com.google.protobuf.Internal.EnumVerifier 
+  public static com.google.protobuf.Internal.EnumVerifier
       internalGetVerifier() {
     return ProfileAccessStrategyVerifier.INSTANCE;
   }
 
-  private static final class ProfileAccessStrategyVerifier implements 
-       com.google.protobuf.Internal.EnumVerifier { 
+  private static final class ProfileAccessStrategyVerifier implements
+       com.google.protobuf.Internal.EnumVerifier {
           static final com.google.protobuf.Internal.EnumVerifier           INSTANCE = new ProfileAccessStrategyVerifier();
           @java.lang.Override
           public boolean isInRange(int number) {

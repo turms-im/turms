@@ -444,13 +444,11 @@ public class UserRelationshipService {
             establishmentDate = new Date();
         }
         UserRelationship userRelationship = new UserRelationship(ownerId, relatedUserId, blockDate, establishmentDate);
-        if (upsert) {
-            return userRelationshipRepository.upsert(userRelationship, session);
-        } else {
-            return userRelationshipRepository.insert(userRelationship, session)
-                    .onErrorMap(DuplicateKeyException.class,
-                            e -> ResponseException.get(ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP));
-        }
+        return upsert
+                ? userRelationshipRepository.upsert(userRelationship, session)
+                : userRelationshipRepository.insert(userRelationship, session)
+                .onErrorMap(DuplicateKeyException.class,
+                        e -> ResponseException.get(ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP));
     }
 
     public Mono<Boolean> isBlocked(@NotNull Long ownerId, @NotNull Long relatedUserId) {

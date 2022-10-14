@@ -131,13 +131,13 @@ public enum RequestStatus
           }
         };
 
-  public static com.google.protobuf.Internal.EnumVerifier 
+  public static com.google.protobuf.Internal.EnumVerifier
       internalGetVerifier() {
     return RequestStatusVerifier.INSTANCE;
   }
 
-  private static final class RequestStatusVerifier implements 
-       com.google.protobuf.Internal.EnumVerifier { 
+  private static final class RequestStatusVerifier implements
+       com.google.protobuf.Internal.EnumVerifier {
           static final com.google.protobuf.Internal.EnumVerifier           INSTANCE = new RequestStatusVerifier();
           @java.lang.Override
           public boolean isInRange(int number) {

@@ -45,14 +45,14 @@ public  final class DeleteGroupInvitationRequest extends
    * @param value The invitationId to set.
    */
   private void setInvitationId(long value) {
-    
+
     invitationId_ = value;
   }
   /**
    * <code>int64 invitation_id = 1;</code>
    */
   private void clearInvitationId() {
-    
+
     invitationId_ = 0L;
   }
 

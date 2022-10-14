@@ -13,6 +13,10 @@ public struct Response<T> {
         self.data = data
     }
 
+    func withData<T>(_ data: T) -> Response<T> {
+        return Response<T>(timestamp: timestamp, requestId: requestId, code: code, data: data)
+    }
+
     static func value(_ data: T) -> Response<T> {
         return Response(timestamp: Date(), code: ResponseStatusCode.ok.rawValue, data: data)
     }

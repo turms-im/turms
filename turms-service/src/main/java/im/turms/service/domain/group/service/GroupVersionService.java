@@ -47,15 +47,6 @@ public class GroupVersionService {
         this.groupVersionRepository = groupVersionRepository;
     }
 
-    public Mono<Date> queryInfoVersion(@NotNull Long groupId) {
-        try {
-            Validator.notNull(groupId, "groupId");
-        } catch (ResponseException e) {
-            return Mono.error(e);
-        }
-        return groupVersionRepository.findInfo(groupId);
-    }
-
     public Mono<Date> queryMembersVersion(@NotNull Long groupId) {
         try {
             Validator.notNull(groupId, "groupId");
@@ -103,7 +94,6 @@ public class GroupVersionService {
 
     public Mono<Boolean> updateVersion(
             @NotNull Long groupId,
-            boolean updateInfo,
             boolean updateMembers,
             boolean updateBlocklist,
             boolean joinRequests,
@@ -113,12 +103,8 @@ public class GroupVersionService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return groupVersionRepository.updateVersion(groupId, updateInfo, updateMembers, updateBlocklist, joinRequests, joinQuestions)
+        return groupVersionRepository.updateVersion(groupId, updateMembers, updateBlocklist, joinRequests, joinQuestions)
                 .map(result -> result.getModifiedCount() > 0);
-    }
-
-    public Mono<Boolean> updateInformation(@NotNull Long groupId) {
-        return updateSpecificVersion(groupId, GroupVersion.Fields.INFO);
     }
 
     public Mono<Boolean> updateMembersVersion(@NotNull Long groupId) {
@@ -185,7 +171,7 @@ public class GroupVersionService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        GroupVersion version = new GroupVersion(groupId, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp);
+        GroupVersion version = new GroupVersion(groupId, timestamp, timestamp, timestamp, timestamp, timestamp);
         return groupVersionRepository.insert(version)
                 .thenReturn(version);
     }

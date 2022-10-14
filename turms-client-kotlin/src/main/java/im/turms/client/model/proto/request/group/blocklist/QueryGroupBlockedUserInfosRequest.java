@@ -46,14 +46,14 @@ public  final class QueryGroupBlockedUserInfosRequest extends
    * @param value The groupId to set.
    */
   private void setGroupId(long value) {
-    
+
     groupId_ = value;
   }
   /**
    * <code>int64 group_id = 1;</code>
    */
   private void clearGroupId() {
-    
+
     groupId_ = 0L;
   }
 

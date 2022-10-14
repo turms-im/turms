@@ -182,6 +182,17 @@ public final class Validator {
         }
     }
 
+    public static void maxSize(@Nullable Collection<?> items, String name, int max) {
+        if (items == null) {
+            return;
+        }
+        int size = items.size();
+        if (size > max) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    ("The size of \"" + name + "\" must be less than or equal to " + max).intern());
+        }
+    }
+
     public static void inRange(float num, String name, double min, double max) {
         if (num > max || num < min) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,

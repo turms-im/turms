@@ -176,11 +176,14 @@ public class UserService {
             }
     }
 
-    public func queryUserProfile(userId: Int64, lastUpdatedDate: Date? = nil) -> Promise<Response<UserInfoWithVersion?>> {
+    public func queryUserProfiles(userIds: [Int64], lastUpdatedDate: Date? = nil) -> Promise<Response<[UserInfo]>> {
+        if userIds.isEmpty {
+            return Promise.value(Response.emptyArray())
+        }
         return turmsClient.driver
             .send {
-                $0.queryUserProfileRequest = .with {
-                    $0.userID = userId
+                $0.queryUserProfilesRequest = .with {
+                    $0.userIds = userIds
                     if let v = lastUpdatedDate {
                         $0.lastUpdatedDate = v.toMillis()
                     }
@@ -188,7 +191,7 @@ public class UserService {
             }
             .map {
                 try $0.toResponse {
-                    try UserInfoWithVersion.from($0)
+                    $0.userInfosWithVersion.userInfos
                 }
             }
     }
@@ -223,7 +226,7 @@ public class UserService {
             }
     }
 
-    public func queryUserOnlineStatusesRequest(_ userIds: [Int64]) -> Promise<Response<[UserStatusDetail]>> {
+    public func queryUserOnlineStatusesRequest(_ userIds: [Int64]) -> Promise<Response<[UserOnlineStatus]>> {
         return turmsClient.driver
             .send {
                 $0.queryUserOnlineStatusesRequest = .with {
@@ -232,7 +235,7 @@ public class UserService {
             }
             .map {
                 try $0.toResponse {
-                    $0.usersOnlineStatuses.userStatuses
+                    $0.userOnlineStatuses.statuses
                 }
             }
     }

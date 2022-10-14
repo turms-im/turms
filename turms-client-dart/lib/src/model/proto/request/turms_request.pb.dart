@@ -18,11 +18,11 @@ import 'conversation/update_typing_status_request.pb.dart' as $4;
 import 'message/create_message_request.pb.dart' as $5;
 import 'message/query_messages_request.pb.dart' as $6;
 import 'message/update_message_request.pb.dart' as $7;
-import 'group/member/create_group_member_request.pb.dart' as $8;
-import 'group/member/delete_group_member_request.pb.dart' as $9;
+import 'group/member/create_group_members_request.pb.dart' as $8;
+import 'group/member/delete_group_members_request.pb.dart' as $9;
 import 'group/member/query_group_members_request.pb.dart' as $10;
 import 'group/member/update_group_member_request.pb.dart' as $11;
-import 'user/query_user_profile_request.pb.dart' as $12;
+import 'user/query_user_profiles_request.pb.dart' as $12;
 import 'user/query_nearby_users_request.pb.dart' as $13;
 import 'user/query_user_online_statuses_request.pb.dart' as $14;
 import 'user/update_user_location_request.pb.dart' as $15;
@@ -42,7 +42,7 @@ import 'user/relationship/update_relationship_group_request.pb.dart' as $28;
 import 'user/relationship/update_relationship_request.pb.dart' as $29;
 import 'group/create_group_request.pb.dart' as $30;
 import 'group/delete_group_request.pb.dart' as $31;
-import 'group/query_group_request.pb.dart' as $32;
+import 'group/query_groups_request.pb.dart' as $32;
 import 'group/query_joined_group_ids_request.pb.dart' as $33;
 import 'group/query_joined_group_infos_request.pb.dart' as $34;
 import 'group/update_group_request.pb.dart' as $35;
@@ -53,10 +53,10 @@ import 'group/blocklist/query_group_blocked_user_infos_request.pb.dart' as $39;
 import 'group/enrollment/check_group_join_questions_answers_request.pb.dart' as $40;
 import 'group/enrollment/create_group_invitation_request.pb.dart' as $41;
 import 'group/enrollment/create_group_join_request_request.pb.dart' as $42;
-import 'group/enrollment/create_group_join_question_request.pb.dart' as $43;
+import 'group/enrollment/create_group_join_questions_request.pb.dart' as $43;
 import 'group/enrollment/delete_group_invitation_request.pb.dart' as $44;
 import 'group/enrollment/delete_group_join_request_request.pb.dart' as $45;
-import 'group/enrollment/delete_group_join_question_request.pb.dart' as $46;
+import 'group/enrollment/delete_group_join_questions_request.pb.dart' as $46;
 import 'group/enrollment/query_group_invitations_request.pb.dart' as $47;
 import 'group/enrollment/query_group_join_requests_request.pb.dart' as $48;
 import 'group/enrollment/query_group_join_questions_request.pb.dart' as $49;
@@ -74,11 +74,11 @@ enum TurmsRequest_Kind {
   createMessageRequest, 
   queryMessagesRequest, 
   updateMessageRequest, 
-  createGroupMemberRequest, 
-  deleteGroupMemberRequest, 
+  createGroupMembersRequest, 
+  deleteGroupMembersRequest, 
   queryGroupMembersRequest, 
   updateGroupMemberRequest, 
-  queryUserProfileRequest, 
+  queryUserProfilesRequest, 
   queryNearbyUsersRequest, 
   queryUserOnlineStatusesRequest, 
   updateUserLocationRequest, 
@@ -98,7 +98,7 @@ enum TurmsRequest_Kind {
   updateRelationshipRequest, 
   createGroupRequest, 
   deleteGroupRequest, 
-  queryGroupRequest, 
+  queryGroupsRequest, 
   queryJoinedGroupIdsRequest, 
   queryJoinedGroupInfosRequest, 
   updateGroupRequest, 
@@ -109,10 +109,10 @@ enum TurmsRequest_Kind {
   checkGroupJoinQuestionsAnswersRequest, 
   createGroupInvitationRequest, 
   createGroupJoinRequestRequest, 
-  createGroupJoinQuestionRequest, 
+  createGroupJoinQuestionsRequest, 
   deleteGroupInvitationRequest, 
   deleteGroupJoinRequestRequest, 
-  deleteGroupJoinQuestionRequest, 
+  deleteGroupJoinQuestionsRequest, 
   queryGroupInvitationsRequest, 
   queryGroupJoinRequestsRequest, 
   queryGroupJoinQuestionsRequest, 
@@ -133,11 +133,11 @@ class TurmsRequest extends $pb.GeneratedMessage {
     8 : TurmsRequest_Kind.createMessageRequest,
     9 : TurmsRequest_Kind.queryMessagesRequest,
     10 : TurmsRequest_Kind.updateMessageRequest,
-    11 : TurmsRequest_Kind.createGroupMemberRequest,
-    12 : TurmsRequest_Kind.deleteGroupMemberRequest,
+    11 : TurmsRequest_Kind.createGroupMembersRequest,
+    12 : TurmsRequest_Kind.deleteGroupMembersRequest,
     13 : TurmsRequest_Kind.queryGroupMembersRequest,
     14 : TurmsRequest_Kind.updateGroupMemberRequest,
-    100 : TurmsRequest_Kind.queryUserProfileRequest,
+    100 : TurmsRequest_Kind.queryUserProfilesRequest,
     101 : TurmsRequest_Kind.queryNearbyUsersRequest,
     102 : TurmsRequest_Kind.queryUserOnlineStatusesRequest,
     103 : TurmsRequest_Kind.updateUserLocationRequest,
@@ -157,7 +157,7 @@ class TurmsRequest extends $pb.GeneratedMessage {
     211 : TurmsRequest_Kind.updateRelationshipRequest,
     300 : TurmsRequest_Kind.createGroupRequest,
     301 : TurmsRequest_Kind.deleteGroupRequest,
-    302 : TurmsRequest_Kind.queryGroupRequest,
+    302 : TurmsRequest_Kind.queryGroupsRequest,
     303 : TurmsRequest_Kind.queryJoinedGroupIdsRequest,
     304 : TurmsRequest_Kind.queryJoinedGroupInfosRequest,
     305 : TurmsRequest_Kind.updateGroupRequest,
@@ -168,10 +168,10 @@ class TurmsRequest extends $pb.GeneratedMessage {
     500 : TurmsRequest_Kind.checkGroupJoinQuestionsAnswersRequest,
     501 : TurmsRequest_Kind.createGroupInvitationRequest,
     502 : TurmsRequest_Kind.createGroupJoinRequestRequest,
-    503 : TurmsRequest_Kind.createGroupJoinQuestionRequest,
+    503 : TurmsRequest_Kind.createGroupJoinQuestionsRequest,
     504 : TurmsRequest_Kind.deleteGroupInvitationRequest,
     505 : TurmsRequest_Kind.deleteGroupJoinRequestRequest,
-    506 : TurmsRequest_Kind.deleteGroupJoinQuestionRequest,
+    506 : TurmsRequest_Kind.deleteGroupJoinQuestionsRequest,
     507 : TurmsRequest_Kind.queryGroupInvitationsRequest,
     508 : TurmsRequest_Kind.queryGroupJoinRequestsRequest,
     509 : TurmsRequest_Kind.queryGroupJoinQuestionsRequest,
@@ -192,11 +192,11 @@ class TurmsRequest extends $pb.GeneratedMessage {
     ..aOM<$5.CreateMessageRequest>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'createMessageRequest', subBuilder: $5.CreateMessageRequest.create)
     ..aOM<$6.QueryMessagesRequest>(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryMessagesRequest', subBuilder: $6.QueryMessagesRequest.create)
     ..aOM<$7.UpdateMessageRequest>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'updateMessageRequest', subBuilder: $7.UpdateMessageRequest.create)
-    ..aOM<$8.CreateGroupMemberRequest>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'createGroupMemberRequest', subBuilder: $8.CreateGroupMemberRequest.create)
-    ..aOM<$9.DeleteGroupMemberRequest>(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deleteGroupMemberRequest', subBuilder: $9.DeleteGroupMemberRequest.create)
+    ..aOM<$8.CreateGroupMembersRequest>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'createGroupMembersRequest', subBuilder: $8.CreateGroupMembersRequest.create)
+    ..aOM<$9.DeleteGroupMembersRequest>(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deleteGroupMembersRequest', subBuilder: $9.DeleteGroupMembersRequest.create)
     ..aOM<$10.QueryGroupMembersRequest>(13, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryGroupMembersRequest', subBuilder: $10.QueryGroupMembersRequest.create)
     ..aOM<$11.UpdateGroupMemberRequest>(14, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'updateGroupMemberRequest', subBuilder: $11.UpdateGroupMemberRequest.create)
-    ..aOM<$12.QueryUserProfileRequest>(100, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryUserProfileRequest', subBuilder: $12.QueryUserProfileRequest.create)
+    ..aOM<$12.QueryUserProfilesRequest>(100, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryUserProfilesRequest', subBuilder: $12.QueryUserProfilesRequest.create)
     ..aOM<$13.QueryNearbyUsersRequest>(101, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryNearbyUsersRequest', subBuilder: $13.QueryNearbyUsersRequest.create)
     ..aOM<$14.QueryUserOnlineStatusesRequest>(102, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryUserOnlineStatusesRequest', subBuilder: $14.QueryUserOnlineStatusesRequest.create)
     ..aOM<$15.UpdateUserLocationRequest>(103, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'updateUserLocationRequest', subBuilder: $15.UpdateUserLocationRequest.create)
@@ -216,7 +216,7 @@ class TurmsRequest extends $pb.GeneratedMessage {
     ..aOM<$29.UpdateRelationshipRequest>(211, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'updateRelationshipRequest', subBuilder: $29.UpdateRelationshipRequest.create)
     ..aOM<$30.CreateGroupRequest>(300, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'createGroupRequest', subBuilder: $30.CreateGroupRequest.create)
     ..aOM<$31.DeleteGroupRequest>(301, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deleteGroupRequest', subBuilder: $31.DeleteGroupRequest.create)
-    ..aOM<$32.QueryGroupRequest>(302, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryGroupRequest', subBuilder: $32.QueryGroupRequest.create)
+    ..aOM<$32.QueryGroupsRequest>(302, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryGroupsRequest', subBuilder: $32.QueryGroupsRequest.create)
     ..aOM<$33.QueryJoinedGroupIdsRequest>(303, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryJoinedGroupIdsRequest', subBuilder: $33.QueryJoinedGroupIdsRequest.create)
     ..aOM<$34.QueryJoinedGroupInfosRequest>(304, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryJoinedGroupInfosRequest', subBuilder: $34.QueryJoinedGroupInfosRequest.create)
     ..aOM<$35.UpdateGroupRequest>(305, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'updateGroupRequest', subBuilder: $35.UpdateGroupRequest.create)
@@ -227,10 +227,10 @@ class TurmsRequest extends $pb.GeneratedMessage {
     ..aOM<$40.CheckGroupJoinQuestionsAnswersRequest>(500, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'checkGroupJoinQuestionsAnswersRequest', subBuilder: $40.CheckGroupJoinQuestionsAnswersRequest.create)
     ..aOM<$41.CreateGroupInvitationRequest>(501, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'createGroupInvitationRequest', subBuilder: $41.CreateGroupInvitationRequest.create)
     ..aOM<$42.CreateGroupJoinRequestRequest>(502, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'createGroupJoinRequestRequest', subBuilder: $42.CreateGroupJoinRequestRequest.create)
-    ..aOM<$43.CreateGroupJoinQuestionRequest>(503, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'createGroupJoinQuestionRequest', subBuilder: $43.CreateGroupJoinQuestionRequest.create)
+    ..aOM<$43.CreateGroupJoinQuestionsRequest>(503, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'createGroupJoinQuestionsRequest', subBuilder: $43.CreateGroupJoinQuestionsRequest.create)
     ..aOM<$44.DeleteGroupInvitationRequest>(504, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deleteGroupInvitationRequest', subBuilder: $44.DeleteGroupInvitationRequest.create)
     ..aOM<$45.DeleteGroupJoinRequestRequest>(505, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deleteGroupJoinRequestRequest', subBuilder: $45.DeleteGroupJoinRequestRequest.create)
-    ..aOM<$46.DeleteGroupJoinQuestionRequest>(506, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deleteGroupJoinQuestionRequest', subBuilder: $46.DeleteGroupJoinQuestionRequest.create)
+    ..aOM<$46.DeleteGroupJoinQuestionsRequest>(506, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deleteGroupJoinQuestionsRequest', subBuilder: $46.DeleteGroupJoinQuestionsRequest.create)
     ..aOM<$47.QueryGroupInvitationsRequest>(507, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryGroupInvitationsRequest', subBuilder: $47.QueryGroupInvitationsRequest.create)
     ..aOM<$48.QueryGroupJoinRequestsRequest>(508, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryGroupJoinRequestsRequest', subBuilder: $48.QueryGroupJoinRequestsRequest.create)
     ..aOM<$49.QueryGroupJoinQuestionsRequest>(509, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryGroupJoinQuestionsRequest', subBuilder: $49.QueryGroupJoinQuestionsRequest.create)
@@ -252,11 +252,11 @@ class TurmsRequest extends $pb.GeneratedMessage {
     $5.CreateMessageRequest? createMessageRequest,
     $6.QueryMessagesRequest? queryMessagesRequest,
     $7.UpdateMessageRequest? updateMessageRequest,
-    $8.CreateGroupMemberRequest? createGroupMemberRequest,
-    $9.DeleteGroupMemberRequest? deleteGroupMemberRequest,
+    $8.CreateGroupMembersRequest? createGroupMembersRequest,
+    $9.DeleteGroupMembersRequest? deleteGroupMembersRequest,
     $10.QueryGroupMembersRequest? queryGroupMembersRequest,
     $11.UpdateGroupMemberRequest? updateGroupMemberRequest,
-    $12.QueryUserProfileRequest? queryUserProfileRequest,
+    $12.QueryUserProfilesRequest? queryUserProfilesRequest,
     $13.QueryNearbyUsersRequest? queryNearbyUsersRequest,
     $14.QueryUserOnlineStatusesRequest? queryUserOnlineStatusesRequest,
     $15.UpdateUserLocationRequest? updateUserLocationRequest,
@@ -276,7 +276,7 @@ class TurmsRequest extends $pb.GeneratedMessage {
     $29.UpdateRelationshipRequest? updateRelationshipRequest,
     $30.CreateGroupRequest? createGroupRequest,
     $31.DeleteGroupRequest? deleteGroupRequest,
-    $32.QueryGroupRequest? queryGroupRequest,
+    $32.QueryGroupsRequest? queryGroupsRequest,
     $33.QueryJoinedGroupIdsRequest? queryJoinedGroupIdsRequest,
     $34.QueryJoinedGroupInfosRequest? queryJoinedGroupInfosRequest,
     $35.UpdateGroupRequest? updateGroupRequest,
@@ -287,10 +287,10 @@ class TurmsRequest extends $pb.GeneratedMessage {
     $40.CheckGroupJoinQuestionsAnswersRequest? checkGroupJoinQuestionsAnswersRequest,
     $41.CreateGroupInvitationRequest? createGroupInvitationRequest,
     $42.CreateGroupJoinRequestRequest? createGroupJoinRequestRequest,
-    $43.CreateGroupJoinQuestionRequest? createGroupJoinQuestionRequest,
+    $43.CreateGroupJoinQuestionsRequest? createGroupJoinQuestionsRequest,
     $44.DeleteGroupInvitationRequest? deleteGroupInvitationRequest,
     $45.DeleteGroupJoinRequestRequest? deleteGroupJoinRequestRequest,
-    $46.DeleteGroupJoinQuestionRequest? deleteGroupJoinQuestionRequest,
+    $46.DeleteGroupJoinQuestionsRequest? deleteGroupJoinQuestionsRequest,
     $47.QueryGroupInvitationsRequest? queryGroupInvitationsRequest,
     $48.QueryGroupJoinRequestsRequest? queryGroupJoinRequestsRequest,
     $49.QueryGroupJoinQuestionsRequest? queryGroupJoinQuestionsRequest,
@@ -327,11 +327,11 @@ class TurmsRequest extends $pb.GeneratedMessage {
     if (updateMessageRequest != null) {
       _result.updateMessageRequest = updateMessageRequest;
     }
-    if (createGroupMemberRequest != null) {
-      _result.createGroupMemberRequest = createGroupMemberRequest;
+    if (createGroupMembersRequest != null) {
+      _result.createGroupMembersRequest = createGroupMembersRequest;
     }
-    if (deleteGroupMemberRequest != null) {
-      _result.deleteGroupMemberRequest = deleteGroupMemberRequest;
+    if (deleteGroupMembersRequest != null) {
+      _result.deleteGroupMembersRequest = deleteGroupMembersRequest;
     }
     if (queryGroupMembersRequest != null) {
       _result.queryGroupMembersRequest = queryGroupMembersRequest;
@@ -339,8 +339,8 @@ class TurmsRequest extends $pb.GeneratedMessage {
     if (updateGroupMemberRequest != null) {
       _result.updateGroupMemberRequest = updateGroupMemberRequest;
     }
-    if (queryUserProfileRequest != null) {
-      _result.queryUserProfileRequest = queryUserProfileRequest;
+    if (queryUserProfilesRequest != null) {
+      _result.queryUserProfilesRequest = queryUserProfilesRequest;
     }
     if (queryNearbyUsersRequest != null) {
       _result.queryNearbyUsersRequest = queryNearbyUsersRequest;
@@ -399,8 +399,8 @@ class TurmsRequest extends $pb.GeneratedMessage {
     if (deleteGroupRequest != null) {
       _result.deleteGroupRequest = deleteGroupRequest;
     }
-    if (queryGroupRequest != null) {
-      _result.queryGroupRequest = queryGroupRequest;
+    if (queryGroupsRequest != null) {
+      _result.queryGroupsRequest = queryGroupsRequest;
     }
     if (queryJoinedGroupIdsRequest != null) {
       _result.queryJoinedGroupIdsRequest = queryJoinedGroupIdsRequest;
@@ -432,8 +432,8 @@ class TurmsRequest extends $pb.GeneratedMessage {
     if (createGroupJoinRequestRequest != null) {
       _result.createGroupJoinRequestRequest = createGroupJoinRequestRequest;
     }
-    if (createGroupJoinQuestionRequest != null) {
-      _result.createGroupJoinQuestionRequest = createGroupJoinQuestionRequest;
+    if (createGroupJoinQuestionsRequest != null) {
+      _result.createGroupJoinQuestionsRequest = createGroupJoinQuestionsRequest;
     }
     if (deleteGroupInvitationRequest != null) {
       _result.deleteGroupInvitationRequest = deleteGroupInvitationRequest;
@@ -441,8 +441,8 @@ class TurmsRequest extends $pb.GeneratedMessage {
     if (deleteGroupJoinRequestRequest != null) {
       _result.deleteGroupJoinRequestRequest = deleteGroupJoinRequestRequest;
     }
-    if (deleteGroupJoinQuestionRequest != null) {
-      _result.deleteGroupJoinQuestionRequest = deleteGroupJoinQuestionRequest;
+    if (deleteGroupJoinQuestionsRequest != null) {
+      _result.deleteGroupJoinQuestionsRequest = deleteGroupJoinQuestionsRequest;
     }
     if (queryGroupInvitationsRequest != null) {
       _result.queryGroupInvitationsRequest = queryGroupInvitationsRequest;
@@ -589,26 +589,26 @@ class TurmsRequest extends $pb.GeneratedMessage {
   $7.UpdateMessageRequest ensureUpdateMessageRequest() => $_ensure(8);
 
   @$pb.TagNumber(11)
-  $8.CreateGroupMemberRequest get createGroupMemberRequest => $_getN(9);
+  $8.CreateGroupMembersRequest get createGroupMembersRequest => $_getN(9);
   @$pb.TagNumber(11)
-  set createGroupMemberRequest($8.CreateGroupMemberRequest v) { setField(11, v); }
+  set createGroupMembersRequest($8.CreateGroupMembersRequest v) { setField(11, v); }
   @$pb.TagNumber(11)
-  $core.bool hasCreateGroupMemberRequest() => $_has(9);
+  $core.bool hasCreateGroupMembersRequest() => $_has(9);
   @$pb.TagNumber(11)
-  void clearCreateGroupMemberRequest() => clearField(11);
+  void clearCreateGroupMembersRequest() => clearField(11);
   @$pb.TagNumber(11)
-  $8.CreateGroupMemberRequest ensureCreateGroupMemberRequest() => $_ensure(9);
+  $8.CreateGroupMembersRequest ensureCreateGroupMembersRequest() => $_ensure(9);
 
   @$pb.TagNumber(12)
-  $9.DeleteGroupMemberRequest get deleteGroupMemberRequest => $_getN(10);
+  $9.DeleteGroupMembersRequest get deleteGroupMembersRequest => $_getN(10);
   @$pb.TagNumber(12)
-  set deleteGroupMemberRequest($9.DeleteGroupMemberRequest v) { setField(12, v); }
+  set deleteGroupMembersRequest($9.DeleteGroupMembersRequest v) { setField(12, v); }
   @$pb.TagNumber(12)
-  $core.bool hasDeleteGroupMemberRequest() => $_has(10);
+  $core.bool hasDeleteGroupMembersRequest() => $_has(10);
   @$pb.TagNumber(12)
-  void clearDeleteGroupMemberRequest() => clearField(12);
+  void clearDeleteGroupMembersRequest() => clearField(12);
   @$pb.TagNumber(12)
-  $9.DeleteGroupMemberRequest ensureDeleteGroupMemberRequest() => $_ensure(10);
+  $9.DeleteGroupMembersRequest ensureDeleteGroupMembersRequest() => $_ensure(10);
 
   @$pb.TagNumber(13)
   $10.QueryGroupMembersRequest get queryGroupMembersRequest => $_getN(11);
@@ -633,15 +633,15 @@ class TurmsRequest extends $pb.GeneratedMessage {
   $11.UpdateGroupMemberRequest ensureUpdateGroupMemberRequest() => $_ensure(12);
 
   @$pb.TagNumber(100)
-  $12.QueryUserProfileRequest get queryUserProfileRequest => $_getN(13);
+  $12.QueryUserProfilesRequest get queryUserProfilesRequest => $_getN(13);
   @$pb.TagNumber(100)
-  set queryUserProfileRequest($12.QueryUserProfileRequest v) { setField(100, v); }
+  set queryUserProfilesRequest($12.QueryUserProfilesRequest v) { setField(100, v); }
   @$pb.TagNumber(100)
-  $core.bool hasQueryUserProfileRequest() => $_has(13);
+  $core.bool hasQueryUserProfilesRequest() => $_has(13);
   @$pb.TagNumber(100)
-  void clearQueryUserProfileRequest() => clearField(100);
+  void clearQueryUserProfilesRequest() => clearField(100);
   @$pb.TagNumber(100)
-  $12.QueryUserProfileRequest ensureQueryUserProfileRequest() => $_ensure(13);
+  $12.QueryUserProfilesRequest ensureQueryUserProfilesRequest() => $_ensure(13);
 
   @$pb.TagNumber(101)
   $13.QueryNearbyUsersRequest get queryNearbyUsersRequest => $_getN(14);
@@ -853,15 +853,15 @@ class TurmsRequest extends $pb.GeneratedMessage {
   $31.DeleteGroupRequest ensureDeleteGroupRequest() => $_ensure(32);
 
   @$pb.TagNumber(302)
-  $32.QueryGroupRequest get queryGroupRequest => $_getN(33);
+  $32.QueryGroupsRequest get queryGroupsRequest => $_getN(33);
   @$pb.TagNumber(302)
-  set queryGroupRequest($32.QueryGroupRequest v) { setField(302, v); }
+  set queryGroupsRequest($32.QueryGroupsRequest v) { setField(302, v); }
   @$pb.TagNumber(302)
-  $core.bool hasQueryGroupRequest() => $_has(33);
+  $core.bool hasQueryGroupsRequest() => $_has(33);
   @$pb.TagNumber(302)
-  void clearQueryGroupRequest() => clearField(302);
+  void clearQueryGroupsRequest() => clearField(302);
   @$pb.TagNumber(302)
-  $32.QueryGroupRequest ensureQueryGroupRequest() => $_ensure(33);
+  $32.QueryGroupsRequest ensureQueryGroupsRequest() => $_ensure(33);
 
   @$pb.TagNumber(303)
   $33.QueryJoinedGroupIdsRequest get queryJoinedGroupIdsRequest => $_getN(34);
@@ -974,15 +974,15 @@ class TurmsRequest extends $pb.GeneratedMessage {
   $42.CreateGroupJoinRequestRequest ensureCreateGroupJoinRequestRequest() => $_ensure(43);
 
   @$pb.TagNumber(503)
-  $43.CreateGroupJoinQuestionRequest get createGroupJoinQuestionRequest => $_getN(44);
+  $43.CreateGroupJoinQuestionsRequest get createGroupJoinQuestionsRequest => $_getN(44);
   @$pb.TagNumber(503)
-  set createGroupJoinQuestionRequest($43.CreateGroupJoinQuestionRequest v) { setField(503, v); }
+  set createGroupJoinQuestionsRequest($43.CreateGroupJoinQuestionsRequest v) { setField(503, v); }
   @$pb.TagNumber(503)
-  $core.bool hasCreateGroupJoinQuestionRequest() => $_has(44);
+  $core.bool hasCreateGroupJoinQuestionsRequest() => $_has(44);
   @$pb.TagNumber(503)
-  void clearCreateGroupJoinQuestionRequest() => clearField(503);
+  void clearCreateGroupJoinQuestionsRequest() => clearField(503);
   @$pb.TagNumber(503)
-  $43.CreateGroupJoinQuestionRequest ensureCreateGroupJoinQuestionRequest() => $_ensure(44);
+  $43.CreateGroupJoinQuestionsRequest ensureCreateGroupJoinQuestionsRequest() => $_ensure(44);
 
   @$pb.TagNumber(504)
   $44.DeleteGroupInvitationRequest get deleteGroupInvitationRequest => $_getN(45);
@@ -1007,15 +1007,15 @@ class TurmsRequest extends $pb.GeneratedMessage {
   $45.DeleteGroupJoinRequestRequest ensureDeleteGroupJoinRequestRequest() => $_ensure(46);
 
   @$pb.TagNumber(506)
-  $46.DeleteGroupJoinQuestionRequest get deleteGroupJoinQuestionRequest => $_getN(47);
+  $46.DeleteGroupJoinQuestionsRequest get deleteGroupJoinQuestionsRequest => $_getN(47);
   @$pb.TagNumber(506)
-  set deleteGroupJoinQuestionRequest($46.DeleteGroupJoinQuestionRequest v) { setField(506, v); }
+  set deleteGroupJoinQuestionsRequest($46.DeleteGroupJoinQuestionsRequest v) { setField(506, v); }
   @$pb.TagNumber(506)
-  $core.bool hasDeleteGroupJoinQuestionRequest() => $_has(47);
+  $core.bool hasDeleteGroupJoinQuestionsRequest() => $_has(47);
   @$pb.TagNumber(506)
-  void clearDeleteGroupJoinQuestionRequest() => clearField(506);
+  void clearDeleteGroupJoinQuestionsRequest() => clearField(506);
   @$pb.TagNumber(506)
-  $46.DeleteGroupJoinQuestionRequest ensureDeleteGroupJoinQuestionRequest() => $_ensure(47);
+  $46.DeleteGroupJoinQuestionsRequest ensureDeleteGroupJoinQuestionsRequest() => $_ensure(47);
 
   @$pb.TagNumber(507)
   $47.QueryGroupInvitationsRequest get queryGroupInvitationsRequest => $_getN(48);

@@ -25,7 +25,6 @@ import im.turms.client.model.ResponseStatusCode
 import im.turms.client.model.SessionCloseInfo
 import im.turms.client.model.SessionCloseStatus
 import im.turms.client.model.User
-import im.turms.client.model.UserInfoWithVersion
 import im.turms.client.model.UserLocation
 import im.turms.client.model.proto.constant.DeviceType
 import im.turms.client.model.proto.constant.ProfileAccessStrategy
@@ -34,14 +33,15 @@ import im.turms.client.model.proto.constant.UserStatus
 import im.turms.client.model.proto.model.common.Int64ValuesWithVersion
 import im.turms.client.model.proto.model.user.NearbyUser
 import im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion
+import im.turms.client.model.proto.model.user.UserInfo
+import im.turms.client.model.proto.model.user.UserOnlineStatus
 import im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion
 import im.turms.client.model.proto.model.user.UserRelationshipsWithVersion
-import im.turms.client.model.proto.model.user.UserStatusDetail
 import im.turms.client.model.proto.request.user.CreateSessionRequest
 import im.turms.client.model.proto.request.user.DeleteSessionRequest
 import im.turms.client.model.proto.request.user.QueryNearbyUsersRequest
 import im.turms.client.model.proto.request.user.QueryUserOnlineStatusesRequest
-import im.turms.client.model.proto.request.user.QueryUserProfileRequest
+import im.turms.client.model.proto.request.user.QueryUserProfilesRequest
 import im.turms.client.model.proto.request.user.UpdateUserLocationRequest
 import im.turms.client.model.proto.request.user.UpdateUserOnlineStatusRequest
 import im.turms.client.model.proto.request.user.UpdateUserRequest
@@ -214,18 +214,22 @@ class UserService(private val turmsClient: TurmsClient) {
             .toResponse()
     }
 
-    suspend fun queryUserProfile(
-        userId: Long,
+    suspend fun queryUserProfiles(
+        userIds: Set<Long>,
         lastUpdatedDate: Date? = null
-    ): Response<UserInfoWithVersion?> = turmsClient.driver
-        .send(
-            QueryUserProfileRequest.newBuilder().apply {
-                this.userId = userId
-                lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
+    ): Response<List<UserInfo>> = if (userIds.isEmpty()) {
+        Response.emptyList()
+    } else {
+        turmsClient.driver
+            .send(
+                QueryUserProfilesRequest.newBuilder().apply {
+                    addAllUserIds(userIds)
+                    lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
+                }
+            ).toResponse {
+                it.userInfosWithVersion.userInfosList
             }
-        ).toResponse {
-            UserInfoWithVersion.from(it)
-        }
+    }
 
     suspend fun queryNearbyUsers(
         latitude: Float,
@@ -250,17 +254,19 @@ class UserService(private val turmsClient: TurmsClient) {
             it.nearbyUsers.nearbyUsersList
         }
 
-    suspend fun queryOnlineStatusesRequest(@NotEmpty userIds: Set<Long>): Response<List<UserStatusDetail>> =
+    suspend fun queryOnlineStatusesRequest(@NotEmpty userIds: Set<Long>): Response<List<UserOnlineStatus>> =
         if (userIds.isEmpty()) {
-            throw ResponseException.from(ResponseStatusCode.ILLEGAL_ARGUMENT, "\"userIds\" must not be null or empty")
-        } else turmsClient.driver
-            .send(
-                QueryUserOnlineStatusesRequest.newBuilder().apply {
-                    addAllUserIds(userIds)
+            Response.emptyList()
+        } else {
+            turmsClient.driver
+                .send(
+                    QueryUserOnlineStatusesRequest.newBuilder().apply {
+                        addAllUserIds(userIds)
+                    }
+                ).toResponse {
+                    it.userOnlineStatuses.statusesList
                 }
-            ).toResponse {
-                it.usersOnlineStatuses.userStatusesList
-            }
+        }
 
     // Relationship
     suspend fun queryRelationships(

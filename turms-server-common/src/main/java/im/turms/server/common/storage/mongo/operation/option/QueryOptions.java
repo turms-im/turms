@@ -38,7 +38,8 @@ public final class QueryOptions extends BaseBson {
     private static final BsonString COLLECTION_NAME_PLACEHOLDER = new BsonString("PLACEHOLDER");
 
     private QueryOptions(int expectedSize) {
-        super(new BsonDocument(CollectionUtil.getMapCapability(expectedSize)));
+        // add 2. 1 for "find", another for "filter"
+        super(new BsonDocument(CollectionUtil.getMapCapability(expectedSize + 2)));
         // "find" must be the first entry, and it will be replaced with the collection name in
         // QueryOptions#asDocument
         document.put("find", COLLECTION_NAME_PLACEHOLDER);

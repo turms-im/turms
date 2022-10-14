@@ -46,14 +46,14 @@ public  final class DeleteRelationshipGroupMemberRequest extends
    * @param value The userId to set.
    */
   private void setUserId(long value) {
-    
+
     userId_ = value;
   }
   /**
    * <code>int64 user_id = 1;</code>
    */
   private void clearUserId() {
-    
+
     userId_ = 0L;
   }
 
@@ -72,14 +72,14 @@ public  final class DeleteRelationshipGroupMemberRequest extends
    * @param value The groupIndex to set.
    */
   private void setGroupIndex(int value) {
-    
+
     groupIndex_ = value;
   }
   /**
    * <code>int32 group_index = 2;</code>
    */
   private void clearGroupIndex() {
-    
+
     groupIndex_ = 0;
   }
 

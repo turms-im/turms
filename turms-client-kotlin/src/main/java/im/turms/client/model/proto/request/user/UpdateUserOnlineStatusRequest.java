@@ -63,13 +63,13 @@ public  final class UpdateUserOnlineStatusRequest extends
    */
   private void setUserStatus(im.turms.client.model.proto.constant.UserStatus value) {
     userStatus_ = value.getNumber();
-    
+
   }
   /**
    * <code>.im.turms.proto.UserStatus user_status = 1;</code>
    */
   private void clearUserStatus() {
-    
+
     userStatus_ = 0;
   }
 

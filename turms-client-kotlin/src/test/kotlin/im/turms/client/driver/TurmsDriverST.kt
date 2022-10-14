@@ -25,7 +25,7 @@ import helper.Constants.ORDER_MIDDLE_PRIORITY
 import im.turms.client.TurmsClient
 import im.turms.client.extension.isSuccess
 import im.turms.client.model.proto.request.TurmsRequest
-import im.turms.client.model.proto.request.user.QueryUserProfileRequest
+import im.turms.client.model.proto.request.user.QueryUserProfilesRequest
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -75,11 +75,11 @@ internal class TurmsDriverST {
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
     fun sendTurmsRequest_shouldSucceed() = runBlocking {
-        val profileRequest = QueryUserProfileRequest.newBuilder()
-            .setUserId(1)
+        val profileRequest = QueryUserProfilesRequest.newBuilder()
+            .addUserIds(1)
             .build()
         val builder = TurmsRequest.newBuilder()
-            .setQueryUserProfileRequest(profileRequest)
+            .setQueryUserProfilesRequest(profileRequest)
         val result = driver.send(builder)
         assertTrue(result.isSuccess)
     }

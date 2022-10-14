@@ -439,7 +439,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 if (keyNum == null) {
                     throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null");
                 }
-                yield groupMemberService.isOwnerOrManager(requesterId, keyNum);
+                yield groupMemberService.isOwnerOrManager(requesterId, keyNum, false);
             }
             case ATTACHMENT -> {
                 if (keyNum == null) {
@@ -458,7 +458,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 if (keyNum == null) {
                     throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null");
                 }
-                yield groupMemberService.isOwnerOrManager(requesterId, keyNum);
+                yield groupMemberService.isOwnerOrManager(requesterId, keyNum, false);
             }
             case ATTACHMENT -> PublisherPool.FALSE;
             default -> throw new IllegalStateException("Unexpected value: " + contentType);

@@ -143,8 +143,7 @@ public class ConversationServiceController {
                         .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The targetId and groupId must not all null"));
             }
             Long requesterId = clientRequest.userId();
-            long readDateValue = request.getReadDate();
-            Date readDate = new Date(readDateValue);
+            Date readDate = new Date(request.getReadDate());
             boolean isUpdatePrivateConversationRequest = request.hasTargetId();
             long targetId;
             Mono<Void> mono;
@@ -164,7 +163,7 @@ public class ConversationServiceController {
                                 ResponseStatusCode.OK));
                     }
                 } else if (notifyGroupConversationParticipantsAfterReadDateUpdated) {
-                    return groupMemberService.queryGroupMemberIds(targetId)
+                    return groupMemberService.queryGroupMemberIds(targetId, true)
                             .map(memberIds -> RequestHandlerResultFactory.get(
                                     memberIds,
                                     clientRequest.turmsRequest()));

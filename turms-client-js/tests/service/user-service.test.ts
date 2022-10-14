@@ -154,9 +154,9 @@ describe('Update', () => {
 });
 
 describe('Query', () => {
-    it('queryUserProfile_shouldReturnUserInfoWithVersion', async () => {
-        const response = await turmsClient.userService.queryUserProfile({
-            userId: '1'
+    it('queryUserProfiles_shouldReturnUserInfos', async () => {
+        const response = await turmsClient.userService.queryUserProfiles({
+            userIds: ['1']
         });
         const userInfos = response.data;
         expect(userInfos).toBeTruthy();

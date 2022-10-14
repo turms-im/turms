@@ -103,13 +103,13 @@ public enum ContentType
           }
         };
 
-  public static com.google.protobuf.Internal.EnumVerifier 
+  public static com.google.protobuf.Internal.EnumVerifier
       internalGetVerifier() {
     return ContentTypeVerifier.INSTANCE;
   }
 
-  private static final class ContentTypeVerifier implements 
-       com.google.protobuf.Internal.EnumVerifier { 
+  private static final class ContentTypeVerifier implements
+       com.google.protobuf.Internal.EnumVerifier {
           static final com.google.protobuf.Internal.EnumVerifier           INSTANCE = new ContentTypeVerifier();
           @java.lang.Override
           public boolean isInRange(int number) {

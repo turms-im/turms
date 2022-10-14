@@ -84,14 +84,15 @@ ResponseStatusCode表明请求响应中的处理状态，类似HTTP的状态码�
 |                      | GROUP_QUESTION_ANSWERER_HAS_BEEN_BLOCKED             | 3304   |      |
 |                      | MEMBER_CANNOT_ANSWER_GROUP_QUESTION                  | 3305   |      |
 |                      | ANSWER_QUESTION_OF_INACTIVE_GROUP                    | 3306   |      |
-| 群组成员相关错误     | NOT_OWNER_OR_MANAGER_TO_REMOVE_GROUP_MEMBER          | 3400   |      |
-|                      | NOT_OWNER_TO_UPDATE_GROUP_MEMBER_INFO                | 3401   |      |
-|                      | NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_MEMBER_INFO     | 3402   |      |
-|                      | NOT_MEMBER_TO_QUERY_MEMBER_INFO                      | 3403   |      |
-|                      | ADD_BLOCKED_USER_TO_GROUP                            | 3404   |      |
-|                      | ADD_BLOCKED_USER_TO_INACTIVE_GROUP                   | 3405   |      |
-|                      | ADD_USER_TO_INACTIVE_GROUP                           | 3406   |      |
-|                      | ADD_NEW_MEMBER_WITH_ROLE_HIGHER_THAN_REQUESTER       | 3407   |      |
+| 群组成员相关错误     | ADD_USER_TO_INACTIVE_GROUP                           | 3400   |      |
+|                      | ADD_NEW_MEMBER_WITH_ROLE_HIGHER_THAN_REQUESTER       | 3401   |      |
+|                      | ADD_BLOCKED_USER_TO_GROUP                            | 3402   |      |
+|                      | ADD_BLOCKED_USER_TO_INACTIVE_GROUP                   | 3403   |      |
+|                      | NOT_OWNER_OR_MANAGER_TO_REMOVE_GROUP_MEMBER          | 3404   |      |
+|                      | NOT_OWNER_TO_REMOVE_GROUP_OWNER_OR_MANAGER           | 3405   |      |
+|                      | NOT_OWNER_TO_UPDATE_GROUP_MEMBER_INFO                | 3406   |      |
+|                      | NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_MEMBER_INFO     | 3407   |      |
+|                      | NOT_MEMBER_TO_QUERY_MEMBER_INFO                      | 3408   |      |
 | 群组黑名单相关错误   | NOT_OWNER_OR_MANAGER_TO_ADD_BLOCKED_USER             | 3500   |      |
 |                      | NOT_OWNER_OR_MANAGER_TO_REMOVE_BLOCKED_USER          | 3501   |      |
 | 群组入群请求相关错误 | GROUP_JOIN_REQUEST_SENDER_HAS_BEEN_BLOCKED           | 3600   |      |

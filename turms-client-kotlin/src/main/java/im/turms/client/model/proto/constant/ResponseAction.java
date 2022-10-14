@@ -95,13 +95,13 @@ public enum ResponseAction
           }
         };
 
-  public static com.google.protobuf.Internal.EnumVerifier 
+  public static com.google.protobuf.Internal.EnumVerifier
       internalGetVerifier() {
     return ResponseActionVerifier.INSTANCE;
   }
 
-  private static final class ResponseActionVerifier implements 
-       com.google.protobuf.Internal.EnumVerifier { 
+  private static final class ResponseActionVerifier implements
+       com.google.protobuf.Internal.EnumVerifier {
           static final com.google.protobuf.Internal.EnumVerifier           INSTANCE = new ResponseActionVerifier();
           @java.lang.Override
           public boolean isInRange(int number) {

@@ -13,6 +13,7 @@ export interface Group {
   intro?: string | undefined;
   announcement?: string | undefined;
   creationDate?: string | undefined;
+  lastUpdatedDate?: string | undefined;
   muteEndDate?: string | undefined;
   active?: boolean | undefined;
 }
@@ -27,6 +28,7 @@ function createBaseGroup(): Group {
     intro: undefined,
     announcement: undefined,
     creationDate: undefined,
+    lastUpdatedDate: undefined,
     muteEndDate: undefined,
     active: undefined,
   };
@@ -58,11 +60,14 @@ export const Group = {
     if (message.creationDate !== undefined) {
       writer.uint32(64).int64(message.creationDate);
     }
+    if (message.lastUpdatedDate !== undefined) {
+      writer.uint32(72).int64(message.lastUpdatedDate);
+    }
     if (message.muteEndDate !== undefined) {
-      writer.uint32(72).int64(message.muteEndDate);
+      writer.uint32(80).int64(message.muteEndDate);
     }
     if (message.active !== undefined) {
-      writer.uint32(80).bool(message.active);
+      writer.uint32(88).bool(message.active);
     }
     return writer;
   },
@@ -99,9 +104,12 @@ export const Group = {
           message.creationDate = longToString(reader.int64() as Long);
           break;
         case 9:
-          message.muteEndDate = longToString(reader.int64() as Long);
+          message.lastUpdatedDate = longToString(reader.int64() as Long);
           break;
         case 10:
+          message.muteEndDate = longToString(reader.int64() as Long);
+          break;
+        case 11:
           message.active = reader.bool();
           break;
         default:

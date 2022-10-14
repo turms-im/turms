@@ -80,6 +80,9 @@ public final class Group extends BaseEntity {
     @Indexed(optional = true, reason = EXPIRABLE)
     private final Date deletionDate;
 
+    @Field(Fields.LAST_UPDATED_DATE)
+    private final Date lastUpdatedDate;
+
     @Field(Fields.MUTE_END_DATE)
     @Indexed(optional = true, reason = EXTENDED_FEATURE)
     private final Date muteEndDate;
@@ -97,6 +100,7 @@ public final class Group extends BaseEntity {
         public static final String MINIMUM_SCORE = "ms";
         public static final String CREATION_DATE = "cd";
         public static final String DELETION_DATE = "dd";
+        public static final String LAST_UPDATED_DATE = "lud";
         public static final String MUTE_END_DATE = "med";
         public static final String IS_ACTIVE = "ac";
 

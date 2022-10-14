@@ -270,6 +270,7 @@ const zh_CN = {
     'lastRequestDate': '上次请求时间',
     'lastSixMonths': '今日起前六个月',
     'lastThreeMonths': '今日起前三个月(默认)',
+    'lastUpdatedDate': '上次更新时间',
     'lastUpdatedTime': '上次更新时间',
     'leaderEligible': '有选举资格',
     'license': '许可证',

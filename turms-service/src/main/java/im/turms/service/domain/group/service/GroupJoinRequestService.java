@@ -227,7 +227,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                 });
     }
 
-    public Mono<GroupJoinRequestsWithVersion> queryGroupJoinRequestsWithVersion(
+    public Mono<GroupJoinRequestsWithVersion> authAndQueryGroupJoinRequestsWithVersion(
             @NotNull Long requesterId,
             @Nullable Long groupId,
             @Nullable Date lastUpdatedDate) {
@@ -238,7 +238,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         }
         boolean searchRequestsByGroupId = groupId != null;
         Mono<Date> versionMono = searchRequestsByGroupId ?
-                groupMemberService.isOwnerOrManager(requesterId, groupId)
+                groupMemberService.isOwnerOrManager(requesterId, groupId, false)
                         .flatMap(authenticated -> {
                             if (!authenticated) {
                                 return Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_REQUEST));

@@ -43,7 +43,7 @@ public  final class Messages extends
   /**
    * <code>repeated .im.turms.proto.Message messages = 1;</code>
    */
-  public java.util.List<? extends im.turms.client.model.proto.model.message.MessageOrBuilder> 
+  public java.util.List<? extends im.turms.client.model.proto.model.message.MessageOrBuilder>
       getMessagesOrBuilderList() {
     return messages_;
   }

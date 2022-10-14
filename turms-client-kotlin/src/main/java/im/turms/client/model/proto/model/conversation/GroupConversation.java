@@ -45,14 +45,14 @@ public  final class GroupConversation extends
    * @param value The groupId to set.
    */
   private void setGroupId(long value) {
-    
+
     groupId_ = value;
   }
   /**
    * <code>int64 group_id = 1;</code>
    */
   private void clearGroupId() {
-    
+
     groupId_ = 0L;
   }
 
@@ -93,7 +93,7 @@ public  final class GroupConversation extends
 
   public boolean containsMemberIdToReadDate(
       long key) {
-    
+
     return internalGetMemberIdToReadDate().containsKey(key);
   }
   /**
@@ -121,7 +121,7 @@ public  final class GroupConversation extends
   public long getMemberIdToReadDateOrDefault(
       long key,
       long defaultValue) {
-    
+
     java.util.Map<java.lang.Long, java.lang.Long> map =
         internalGetMemberIdToReadDate();
     return map.containsKey(key) ? map.get(key) : defaultValue;
@@ -133,7 +133,7 @@ public  final class GroupConversation extends
 
   public long getMemberIdToReadDateOrThrow(
       long key) {
-    
+
     java.util.Map<java.lang.Long, java.lang.Long> map =
         internalGetMemberIdToReadDate();
     if (!map.containsKey(key)) {
@@ -284,7 +284,7 @@ public  final class GroupConversation extends
 
     public boolean containsMemberIdToReadDate(
         long key) {
-      
+
       return instance.getMemberIdToReadDateMap().containsKey(key);
     }
 
@@ -299,7 +299,7 @@ public  final class GroupConversation extends
 
     public Builder removeMemberIdToReadDate(
         long key) {
-      
+
       copyOnWrite();
       instance.getMutableMemberIdToReadDateMap().remove(key);
       return this;
@@ -328,7 +328,7 @@ public  final class GroupConversation extends
     public long getMemberIdToReadDateOrDefault(
         long key,
         long defaultValue) {
-      
+
       java.util.Map<java.lang.Long, java.lang.Long> map =
           instance.getMemberIdToReadDateMap();
       return map.containsKey(key) ? map.get(key) : defaultValue;
@@ -340,7 +340,7 @@ public  final class GroupConversation extends
 
     public long getMemberIdToReadDateOrThrow(
         long key) {
-      
+
       java.util.Map<java.lang.Long, java.lang.Long> map =
           instance.getMemberIdToReadDateMap();
       if (!map.containsKey(key)) {
@@ -354,8 +354,8 @@ public  final class GroupConversation extends
     public Builder putMemberIdToReadDate(
         long key,
         long value) {
-      
-      
+
+
       copyOnWrite();
       instance.getMutableMemberIdToReadDateMap().put(key, value);
       return this;

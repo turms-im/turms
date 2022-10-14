@@ -46,14 +46,14 @@ public  final class QueryFriendRequestsRequest extends
    * @param value The areSentByMe to set.
    */
   private void setAreSentByMe(boolean value) {
-    
+
     areSentByMe_ = value;
   }
   /**
    * <code>bool are_sent_by_me = 1;</code>
    */
   private void clearAreSentByMe() {
-    
+
     areSentByMe_ = false;
   }
 

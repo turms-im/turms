@@ -26,7 +26,7 @@ public interface TurmsRequestOrBuilder extends
 
   /**
    * <pre>
-   * Note: request_id is allowed to be duplicate because
+   * Note: "request_id" is allowed to be duplicate because
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
@@ -36,7 +36,7 @@ public interface TurmsRequestOrBuilder extends
   boolean hasRequestId();
   /**
    * <pre>
-   * Note: request_id is allowed to be duplicate because
+   * Note: "request_id" is allowed to be duplicate because
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
@@ -162,30 +162,30 @@ public interface TurmsRequestOrBuilder extends
    * Group Member
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
-   * @return Whether the createGroupMemberRequest field is set.
+   * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
+   * @return Whether the createGroupMembersRequest field is set.
    */
-  boolean hasCreateGroupMemberRequest();
+  boolean hasCreateGroupMembersRequest();
   /**
    * <pre>
    * Group Member
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
-   * @return The createGroupMemberRequest.
+   * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
+   * @return The createGroupMembersRequest.
    */
-  im.turms.client.model.proto.request.group.member.CreateGroupMemberRequest getCreateGroupMemberRequest();
+  im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest getCreateGroupMembersRequest();
 
   /**
-   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
-   * @return Whether the deleteGroupMemberRequest field is set.
+   * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
+   * @return Whether the deleteGroupMembersRequest field is set.
    */
-  boolean hasDeleteGroupMemberRequest();
+  boolean hasDeleteGroupMembersRequest();
   /**
-   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
-   * @return The deleteGroupMemberRequest.
+   * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
+   * @return The deleteGroupMembersRequest.
    */
-  im.turms.client.model.proto.request.group.member.DeleteGroupMemberRequest getDeleteGroupMemberRequest();
+  im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest getDeleteGroupMembersRequest();
 
   /**
    * <code>.im.turms.proto.QueryGroupMembersRequest query_group_members_request = 13;</code>
@@ -214,19 +214,19 @@ public interface TurmsRequestOrBuilder extends
    * User
    * </pre>
    *
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
-   * @return Whether the queryUserProfileRequest field is set.
+   * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
+   * @return Whether the queryUserProfilesRequest field is set.
    */
-  boolean hasQueryUserProfileRequest();
+  boolean hasQueryUserProfilesRequest();
   /**
    * <pre>
    * User
    * </pre>
    *
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
-   * @return The queryUserProfileRequest.
+   * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
+   * @return The queryUserProfilesRequest.
    */
-  im.turms.client.model.proto.request.user.QueryUserProfileRequest getQueryUserProfileRequest();
+  im.turms.client.model.proto.request.user.QueryUserProfilesRequest getQueryUserProfilesRequest();
 
   /**
    * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
@@ -454,15 +454,15 @@ public interface TurmsRequestOrBuilder extends
   im.turms.client.model.proto.request.group.DeleteGroupRequest getDeleteGroupRequest();
 
   /**
-   * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
-   * @return Whether the queryGroupRequest field is set.
+   * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
+   * @return Whether the queryGroupsRequest field is set.
    */
-  boolean hasQueryGroupRequest();
+  boolean hasQueryGroupsRequest();
   /**
-   * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
-   * @return The queryGroupRequest.
+   * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
+   * @return The queryGroupsRequest.
    */
-  im.turms.client.model.proto.request.group.QueryGroupRequest getQueryGroupRequest();
+  im.turms.client.model.proto.request.group.QueryGroupsRequest getQueryGroupsRequest();
 
   /**
    * <code>.im.turms.proto.QueryJoinedGroupIdsRequest query_joined_group_ids_request = 303;</code>
@@ -591,15 +591,15 @@ public interface TurmsRequestOrBuilder extends
   im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinRequestRequest getCreateGroupJoinRequestRequest();
 
   /**
-   * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
-   * @return Whether the createGroupJoinQuestionRequest field is set.
+   * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
+   * @return Whether the createGroupJoinQuestionsRequest field is set.
    */
-  boolean hasCreateGroupJoinQuestionRequest();
+  boolean hasCreateGroupJoinQuestionsRequest();
   /**
-   * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
-   * @return The createGroupJoinQuestionRequest.
+   * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
+   * @return The createGroupJoinQuestionsRequest.
    */
-  im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionRequest getCreateGroupJoinQuestionRequest();
+  im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest getCreateGroupJoinQuestionsRequest();
 
   /**
    * <code>.im.turms.proto.DeleteGroupInvitationRequest delete_group_invitation_request = 504;</code>
@@ -624,15 +624,15 @@ public interface TurmsRequestOrBuilder extends
   im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinRequestRequest getDeleteGroupJoinRequestRequest();
 
   /**
-   * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
-   * @return Whether the deleteGroupJoinQuestionRequest field is set.
+   * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
+   * @return Whether the deleteGroupJoinQuestionsRequest field is set.
    */
-  boolean hasDeleteGroupJoinQuestionRequest();
+  boolean hasDeleteGroupJoinQuestionsRequest();
   /**
-   * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
-   * @return The deleteGroupJoinQuestionRequest.
+   * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
+   * @return The deleteGroupJoinQuestionsRequest.
    */
-  im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionRequest getDeleteGroupJoinQuestionRequest();
+  im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest getDeleteGroupJoinQuestionsRequest();
 
   /**
    * <code>.im.turms.proto.QueryGroupInvitationsRequest query_group_invitations_request = 507;</code>

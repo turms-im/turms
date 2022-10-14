@@ -203,10 +203,11 @@ public final class MongoFakingManager {
                 0,
                 now,
                 null,
+                now,
                 null,
                 true);
         groupRelatedObjs.add(group);
-        GroupVersion groupVersion = new GroupVersion(1L, now, now, now, now, now, now);
+        GroupVersion groupVersion = new GroupVersion(1L, now, now, now, now, now);
         groupRelatedObjs.add(groupVersion);
         for (int i = targetUserToBlockInGroupStart; i <= targetUserToBlockInGroupEnd; i++) {
             GroupBlockedUser groupBlockedUser = new GroupBlockedUser(
@@ -345,8 +346,8 @@ public final class MongoFakingManager {
                     DEFAULT_USER_PERMISSION_GROUP_ID,
                     userDate,
                     null,
-                    true,
-                    userDate);
+                    userDate,
+                    true);
             UserVersion userVersion = new UserVersion(
                     (long) i, userDate, userDate, userDate, userDate,
                     userDate, userDate, userDate, userDate, userDate);

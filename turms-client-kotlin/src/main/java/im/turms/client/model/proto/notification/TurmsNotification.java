@@ -119,26 +119,26 @@ public  final class TurmsNotification extends
     im.turms.client.model.proto.model.user.UserSession getUserSession();
 
     /**
-     * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 8;</code>
-     * @return Whether the usersInfosWithVersion field is set.
+     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+     * @return Whether the userInfosWithVersion field is set.
      */
-    boolean hasUsersInfosWithVersion();
+    boolean hasUserInfosWithVersion();
     /**
-     * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 8;</code>
-     * @return The usersInfosWithVersion.
+     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+     * @return The userInfosWithVersion.
      */
-    im.turms.client.model.proto.model.user.UsersInfosWithVersion getUsersInfosWithVersion();
+    im.turms.client.model.proto.model.user.UserInfosWithVersion getUserInfosWithVersion();
 
     /**
-     * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 9;</code>
-     * @return Whether the usersOnlineStatuses field is set.
+     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+     * @return Whether the userOnlineStatuses field is set.
      */
-    boolean hasUsersOnlineStatuses();
+    boolean hasUserOnlineStatuses();
     /**
-     * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 9;</code>
-     * @return The usersOnlineStatuses.
+     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+     * @return The userOnlineStatuses.
      */
-    im.turms.client.model.proto.model.user.UsersOnlineStatuses getUsersOnlineStatuses();
+    im.turms.client.model.proto.model.user.UserOnlineStatuses getUserOnlineStatuses();
 
     /**
      * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
@@ -272,8 +272,8 @@ public  final class TurmsNotification extends
       MESSAGES(5),
       MESSAGES_WITH_TOTAL_LIST(6),
       USER_SESSION(7),
-      USERS_INFOS_WITH_VERSION(8),
-      USERS_ONLINE_STATUSES(9),
+      USER_INFOS_WITH_VERSION(8),
+      USER_ONLINE_STATUSES(9),
       USER_FRIEND_REQUESTS_WITH_VERSION(10),
       USER_RELATIONSHIP_GROUPS_WITH_VERSION(11),
       USER_RELATIONSHIPS_WITH_VERSION(12),
@@ -306,8 +306,8 @@ public  final class TurmsNotification extends
           case 5: return MESSAGES;
           case 6: return MESSAGES_WITH_TOTAL_LIST;
           case 7: return USER_SESSION;
-          case 8: return USERS_INFOS_WITH_VERSION;
-          case 9: return USERS_ONLINE_STATUSES;
+          case 8: return USER_INFOS_WITH_VERSION;
+          case 9: return USER_ONLINE_STATUSES;
           case 10: return USER_FRIEND_REQUESTS_WITH_VERSION;
           case 11: return USER_RELATIONSHIP_GROUPS_WITH_VERSION;
           case 12: return USER_RELATIONSHIPS_WITH_VERSION;
@@ -703,40 +703,40 @@ public  final class TurmsNotification extends
       }
     }
 
-    public static final int USERS_INFOS_WITH_VERSION_FIELD_NUMBER = 8;
+    public static final int USER_INFOS_WITH_VERSION_FIELD_NUMBER = 8;
     /**
-     * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 8;</code>
+     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
      */
     @java.lang.Override
-    public boolean hasUsersInfosWithVersion() {
+    public boolean hasUserInfosWithVersion() {
       return kindCase_ == 8;
     }
     /**
-     * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 8;</code>
+     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
      */
     @java.lang.Override
-    public im.turms.client.model.proto.model.user.UsersInfosWithVersion getUsersInfosWithVersion() {
+    public im.turms.client.model.proto.model.user.UserInfosWithVersion getUserInfosWithVersion() {
       if (kindCase_ == 8) {
-         return (im.turms.client.model.proto.model.user.UsersInfosWithVersion) kind_;
+         return (im.turms.client.model.proto.model.user.UserInfosWithVersion) kind_;
       }
-      return im.turms.client.model.proto.model.user.UsersInfosWithVersion.getDefaultInstance();
+      return im.turms.client.model.proto.model.user.UserInfosWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 8;</code>
+     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
      */
-    private void setUsersInfosWithVersion(im.turms.client.model.proto.model.user.UsersInfosWithVersion value) {
+    private void setUserInfosWithVersion(im.turms.client.model.proto.model.user.UserInfosWithVersion value) {
       value.getClass();
   kind_ = value;
       kindCase_ = 8;
     }
     /**
-     * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 8;</code>
+     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
      */
-    private void mergeUsersInfosWithVersion(im.turms.client.model.proto.model.user.UsersInfosWithVersion value) {
+    private void mergeUserInfosWithVersion(im.turms.client.model.proto.model.user.UserInfosWithVersion value) {
       value.getClass();
   if (kindCase_ == 8 &&
-          kind_ != im.turms.client.model.proto.model.user.UsersInfosWithVersion.getDefaultInstance()) {
-        kind_ = im.turms.client.model.proto.model.user.UsersInfosWithVersion.newBuilder((im.turms.client.model.proto.model.user.UsersInfosWithVersion) kind_)
+          kind_ != im.turms.client.model.proto.model.user.UserInfosWithVersion.getDefaultInstance()) {
+        kind_ = im.turms.client.model.proto.model.user.UserInfosWithVersion.newBuilder((im.turms.client.model.proto.model.user.UserInfosWithVersion) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
@@ -744,49 +744,49 @@ public  final class TurmsNotification extends
       kindCase_ = 8;
     }
     /**
-     * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 8;</code>
+     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
      */
-    private void clearUsersInfosWithVersion() {
+    private void clearUserInfosWithVersion() {
       if (kindCase_ == 8) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int USERS_ONLINE_STATUSES_FIELD_NUMBER = 9;
+    public static final int USER_ONLINE_STATUSES_FIELD_NUMBER = 9;
     /**
-     * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 9;</code>
+     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
      */
     @java.lang.Override
-    public boolean hasUsersOnlineStatuses() {
+    public boolean hasUserOnlineStatuses() {
       return kindCase_ == 9;
     }
     /**
-     * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 9;</code>
+     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
      */
     @java.lang.Override
-    public im.turms.client.model.proto.model.user.UsersOnlineStatuses getUsersOnlineStatuses() {
+    public im.turms.client.model.proto.model.user.UserOnlineStatuses getUserOnlineStatuses() {
       if (kindCase_ == 9) {
-         return (im.turms.client.model.proto.model.user.UsersOnlineStatuses) kind_;
+         return (im.turms.client.model.proto.model.user.UserOnlineStatuses) kind_;
       }
-      return im.turms.client.model.proto.model.user.UsersOnlineStatuses.getDefaultInstance();
+      return im.turms.client.model.proto.model.user.UserOnlineStatuses.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 9;</code>
+     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
      */
-    private void setUsersOnlineStatuses(im.turms.client.model.proto.model.user.UsersOnlineStatuses value) {
+    private void setUserOnlineStatuses(im.turms.client.model.proto.model.user.UserOnlineStatuses value) {
       value.getClass();
   kind_ = value;
       kindCase_ = 9;
     }
     /**
-     * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 9;</code>
+     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
      */
-    private void mergeUsersOnlineStatuses(im.turms.client.model.proto.model.user.UsersOnlineStatuses value) {
+    private void mergeUserOnlineStatuses(im.turms.client.model.proto.model.user.UserOnlineStatuses value) {
       value.getClass();
   if (kindCase_ == 9 &&
-          kind_ != im.turms.client.model.proto.model.user.UsersOnlineStatuses.getDefaultInstance()) {
-        kind_ = im.turms.client.model.proto.model.user.UsersOnlineStatuses.newBuilder((im.turms.client.model.proto.model.user.UsersOnlineStatuses) kind_)
+          kind_ != im.turms.client.model.proto.model.user.UserOnlineStatuses.getDefaultInstance()) {
+        kind_ = im.turms.client.model.proto.model.user.UserOnlineStatuses.newBuilder((im.turms.client.model.proto.model.user.UserOnlineStatuses) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
@@ -794,9 +794,9 @@ public  final class TurmsNotification extends
       kindCase_ = 9;
     }
     /**
-     * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 9;</code>
+     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
      */
-    private void clearUsersOnlineStatuses() {
+    private void clearUserOnlineStatuses() {
       if (kindCase_ == 9) {
         kindCase_ = 0;
         kind_ = null;
@@ -1756,98 +1756,98 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 8;</code>
+       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
        */
       @java.lang.Override
-      public boolean hasUsersInfosWithVersion() {
-        return instance.hasUsersInfosWithVersion();
+      public boolean hasUserInfosWithVersion() {
+        return instance.hasUserInfosWithVersion();
       }
       /**
-       * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 8;</code>
+       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
        */
       @java.lang.Override
-      public im.turms.client.model.proto.model.user.UsersInfosWithVersion getUsersInfosWithVersion() {
-        return instance.getUsersInfosWithVersion();
+      public im.turms.client.model.proto.model.user.UserInfosWithVersion getUserInfosWithVersion() {
+        return instance.getUserInfosWithVersion();
       }
       /**
-       * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 8;</code>
+       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
        */
-      public Builder setUsersInfosWithVersion(im.turms.client.model.proto.model.user.UsersInfosWithVersion value) {
+      public Builder setUserInfosWithVersion(im.turms.client.model.proto.model.user.UserInfosWithVersion value) {
         copyOnWrite();
-        instance.setUsersInfosWithVersion(value);
+        instance.setUserInfosWithVersion(value);
         return this;
       }
       /**
-       * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 8;</code>
+       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
        */
-      public Builder setUsersInfosWithVersion(
-          im.turms.client.model.proto.model.user.UsersInfosWithVersion.Builder builderForValue) {
+      public Builder setUserInfosWithVersion(
+          im.turms.client.model.proto.model.user.UserInfosWithVersion.Builder builderForValue) {
         copyOnWrite();
-        instance.setUsersInfosWithVersion(builderForValue.build());
+        instance.setUserInfosWithVersion(builderForValue.build());
         return this;
       }
       /**
-       * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 8;</code>
+       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
        */
-      public Builder mergeUsersInfosWithVersion(im.turms.client.model.proto.model.user.UsersInfosWithVersion value) {
+      public Builder mergeUserInfosWithVersion(im.turms.client.model.proto.model.user.UserInfosWithVersion value) {
         copyOnWrite();
-        instance.mergeUsersInfosWithVersion(value);
+        instance.mergeUserInfosWithVersion(value);
         return this;
       }
       /**
-       * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 8;</code>
+       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
        */
-      public Builder clearUsersInfosWithVersion() {
+      public Builder clearUserInfosWithVersion() {
         copyOnWrite();
-        instance.clearUsersInfosWithVersion();
+        instance.clearUserInfosWithVersion();
         return this;
       }
 
       /**
-       * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 9;</code>
+       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
        */
       @java.lang.Override
-      public boolean hasUsersOnlineStatuses() {
-        return instance.hasUsersOnlineStatuses();
+      public boolean hasUserOnlineStatuses() {
+        return instance.hasUserOnlineStatuses();
       }
       /**
-       * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 9;</code>
+       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
        */
       @java.lang.Override
-      public im.turms.client.model.proto.model.user.UsersOnlineStatuses getUsersOnlineStatuses() {
-        return instance.getUsersOnlineStatuses();
+      public im.turms.client.model.proto.model.user.UserOnlineStatuses getUserOnlineStatuses() {
+        return instance.getUserOnlineStatuses();
       }
       /**
-       * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 9;</code>
+       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
        */
-      public Builder setUsersOnlineStatuses(im.turms.client.model.proto.model.user.UsersOnlineStatuses value) {
+      public Builder setUserOnlineStatuses(im.turms.client.model.proto.model.user.UserOnlineStatuses value) {
         copyOnWrite();
-        instance.setUsersOnlineStatuses(value);
+        instance.setUserOnlineStatuses(value);
         return this;
       }
       /**
-       * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 9;</code>
+       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
        */
-      public Builder setUsersOnlineStatuses(
-          im.turms.client.model.proto.model.user.UsersOnlineStatuses.Builder builderForValue) {
+      public Builder setUserOnlineStatuses(
+          im.turms.client.model.proto.model.user.UserOnlineStatuses.Builder builderForValue) {
         copyOnWrite();
-        instance.setUsersOnlineStatuses(builderForValue.build());
+        instance.setUserOnlineStatuses(builderForValue.build());
         return this;
       }
       /**
-       * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 9;</code>
+       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
        */
-      public Builder mergeUsersOnlineStatuses(im.turms.client.model.proto.model.user.UsersOnlineStatuses value) {
+      public Builder mergeUserOnlineStatuses(im.turms.client.model.proto.model.user.UserOnlineStatuses value) {
         copyOnWrite();
-        instance.mergeUsersOnlineStatuses(value);
+        instance.mergeUserOnlineStatuses(value);
         return this;
       }
       /**
-       * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 9;</code>
+       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
        */
-      public Builder clearUsersOnlineStatuses() {
+      public Builder clearUserOnlineStatuses() {
         copyOnWrite();
-        instance.clearUsersOnlineStatuses();
+        instance.clearUserOnlineStatuses();
         return this;
       }
 
@@ -2355,8 +2355,8 @@ public  final class TurmsNotification extends
               im.turms.client.model.proto.model.message.Messages.class,
               im.turms.client.model.proto.model.message.MessagesWithTotalList.class,
               im.turms.client.model.proto.model.user.UserSession.class,
-              im.turms.client.model.proto.model.user.UsersInfosWithVersion.class,
-              im.turms.client.model.proto.model.user.UsersOnlineStatuses.class,
+              im.turms.client.model.proto.model.user.UserInfosWithVersion.class,
+              im.turms.client.model.proto.model.user.UserOnlineStatuses.class,
               im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion.class,
               im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion.class,
               im.turms.client.model.proto.model.user.UserRelationshipsWithVersion.class,

@@ -20,8 +20,9 @@ class Group extends $pb.GeneratedMessage {
     ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'intro')
     ..aOS(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'announcement')
     ..aInt64(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'creationDate')
-    ..aInt64(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'muteEndDate')
-    ..aOB(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'active')
+    ..aInt64(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdatedDate')
+    ..aInt64(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'muteEndDate')
+    ..aOB(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'active')
     ..hasRequiredFields = false
   ;
 
@@ -35,6 +36,7 @@ class Group extends $pb.GeneratedMessage {
     $core.String? intro,
     $core.String? announcement,
     $fixnum.Int64? creationDate,
+    $fixnum.Int64? lastUpdatedDate,
     $fixnum.Int64? muteEndDate,
     $core.bool? active,
   }) {
@@ -62,6 +64,9 @@ class Group extends $pb.GeneratedMessage {
     }
     if (creationDate != null) {
       _result.creationDate = creationDate;
+    }
+    if (lastUpdatedDate != null) {
+      _result.lastUpdatedDate = lastUpdatedDate;
     }
     if (muteEndDate != null) {
       _result.muteEndDate = muteEndDate;
@@ -165,21 +170,30 @@ class Group extends $pb.GeneratedMessage {
   void clearCreationDate() => clearField(8);
 
   @$pb.TagNumber(9)
-  $fixnum.Int64 get muteEndDate => $_getI64(8);
+  $fixnum.Int64 get lastUpdatedDate => $_getI64(8);
   @$pb.TagNumber(9)
-  set muteEndDate($fixnum.Int64 v) { $_setInt64(8, v); }
+  set lastUpdatedDate($fixnum.Int64 v) { $_setInt64(8, v); }
   @$pb.TagNumber(9)
-  $core.bool hasMuteEndDate() => $_has(8);
+  $core.bool hasLastUpdatedDate() => $_has(8);
   @$pb.TagNumber(9)
-  void clearMuteEndDate() => clearField(9);
+  void clearLastUpdatedDate() => clearField(9);
 
   @$pb.TagNumber(10)
-  $core.bool get active => $_getBF(9);
+  $fixnum.Int64 get muteEndDate => $_getI64(9);
   @$pb.TagNumber(10)
-  set active($core.bool v) { $_setBool(9, v); }
+  set muteEndDate($fixnum.Int64 v) { $_setInt64(9, v); }
   @$pb.TagNumber(10)
-  $core.bool hasActive() => $_has(9);
+  $core.bool hasMuteEndDate() => $_has(9);
   @$pb.TagNumber(10)
-  void clearActive() => clearField(10);
+  void clearMuteEndDate() => clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.bool get active => $_getBF(10);
+  @$pb.TagNumber(11)
+  set active($core.bool v) { $_setBool(10, v); }
+  @$pb.TagNumber(11)
+  $core.bool hasActive() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearActive() => clearField(11);
 }
 

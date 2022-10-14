@@ -46,14 +46,14 @@ public  final class UserRelationshipGroup extends
    * @param value The index to set.
    */
   private void setIndex(int value) {
-    
+
     index_ = value;
   }
   /**
    * <code>int32 index = 1;</code>
    */
   private void clearIndex() {
-    
+
     index_ = 0;
   }
 
@@ -83,14 +83,14 @@ public  final class UserRelationshipGroup extends
   private void setName(
       java.lang.String value) {
     java.lang.Class<?> valueClass = value.getClass();
-  
+
     name_ = value;
   }
   /**
    * <code>string name = 2;</code>
    */
   private void clearName() {
-    
+
     name_ = getDefaultInstance().getName();
   }
   /**
@@ -101,7 +101,7 @@ public  final class UserRelationshipGroup extends
       com.google.protobuf.ByteString value) {
     checkByteStringIsUtf8(value);
     name_ = value.toStringUtf8();
-    
+
   }
 
   public static im.turms.client.model.proto.model.user.UserRelationshipGroup parseFrom(

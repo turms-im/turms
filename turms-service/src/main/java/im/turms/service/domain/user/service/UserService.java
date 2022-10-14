@@ -25,6 +25,7 @@ import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
+import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -33,6 +34,7 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.infra.property.env.service.business.user.UserProperties;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.security.password.PasswordManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.validation.Validator;
@@ -63,6 +65,7 @@ import javax.validation.constraints.PastOrPresent;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_USER_PERMISSION_GROUP_ID;
@@ -224,8 +227,8 @@ public class UserService {
                 permissionGroupId,
                 date,
                 null,
-                isActive,
-                now);
+                now,
+                isActive);
         Long finalId = id;
         return userRepository.inTransaction(session -> userRepository.insert(user, session)
                         .then(userRelationshipGroupService.createRelationshipGroup(finalId, 0, "", now, session))
@@ -240,6 +243,14 @@ public class UserService {
                 .doOnSuccess(ignored -> registeredUsersCounter.increment());
     }
 
+    /**
+     * @return Possible codes:
+     * {@link ResponseStatusCode#OK}
+     * {@link ResponseStatusCode#PROFILE_REQUESTER_NOT_IN_CONTACTS_OR_BLOCKED}
+     * {@link ResponseStatusCode#PROFILE_REQUESTER_HAS_BEEN_BLOCKED}
+     * {@link ResponseStatusCode#SERVER_INTERNAL_ERROR}
+     * {@link ResponseStatusCode#USER_PROFILE_NOT_FOUND}
+     */
     public Mono<ServicePermission> isAllowToQueryUserProfile(
             @NotNull Long requesterId,
             @NotNull Long targetUserId) {
@@ -266,23 +277,23 @@ public class UserService {
                 .defaultIfEmpty(ServicePermission.get(ResponseStatusCode.USER_PROFILE_NOT_FOUND));
     }
 
-    public Mono<User> authAndQueryUserProfile(
+    public Mono<List<User>> authAndQueryUsersProfile(
             @NotNull Long requesterId,
-            @NotNull Long userId) {
+            @NotNull Set<Long> userIds,
+            @Nullable Date lastUpdatedDate) {
         try {
             Validator.notNull(requesterId, "requesterId");
-            Validator.notNull(userId, "userId");
+            Validator.notNull(userIds, "userIds");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return isAllowToQueryUserProfile(requesterId, userId)
-                .flatMap(permission -> {
-                    ResponseStatusCode code = permission.code();
-                    if (code != ResponseStatusCode.OK) {
-                        return Mono.error(ResponseException.get(code, permission.reason()));
-                    }
-                    return userRepository.findNotDeletedUserProfile(userId);
-                });
+        if (userIds.isEmpty()) {
+            return PublisherPool.emptyList();
+        }
+        // we don't need to call "isAllowToQueryUserProfile" to check the permissions
+        // because we only provide basic user info that don't need access control currently.
+        return userRepository.findNotDeletedUserProfiles(userIds, lastUpdatedDate)
+                .collect(CollectorUtil.toList(userIds.size()));
     }
 
     public Flux<User> queryUsersProfile(@NotEmpty Collection<Long> userIds, boolean queryDeletedRecords) {
@@ -316,7 +327,7 @@ public class UserService {
             deleteLogically = deleteUserLogically;
         }
         if (deleteLogically) {
-            deleteOrUpdateMono = userRepository.updateUsersDeleted(userIds)
+            deleteOrUpdateMono = userRepository.updateUsersDeletionDate(userIds)
                     .map(OperationResultConvertor::update2delete);
         } else {
             deleteOrUpdateMono = userRepository

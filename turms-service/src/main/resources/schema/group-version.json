@@ -2,7 +2,6 @@
   "$jsonSchema": {
     "bsonType": "object",
     "required": [
-      "inf",
       "invt",
       "jq",
       "jr",
@@ -12,9 +11,6 @@
     "properties": {
       "_id": {
         "bsonType": "long"
-      },
-      "inf": {
-        "bsonType": "date"
       },
       "invt": {
         "bsonType": "date"
