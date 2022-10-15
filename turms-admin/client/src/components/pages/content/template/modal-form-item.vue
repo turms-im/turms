@@ -91,7 +91,7 @@
                 <icon type="inbox" />
             </p>
             <p class="ant-upload-text">
-                Click or drag file to this area to upload
+                {{ $t('uploadAreaPrompt') }}
             </p>
         </a-upload-dragger>
     </a-form-item>

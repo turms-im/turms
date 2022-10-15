@@ -451,6 +451,7 @@ const zh_CN = {
     'updateSelectedUserRelationships': '更新选中用户关系',
     'updateSelectedUsers': '更新选中用户',
     'updatedSuccessfully': '更新成功',
+    'uploadAreaPrompt': '选择文件或将其拖动到此处',
     'user': '用户',
     'userBlocklist': '用户黑名单',
     'userClass': '用户类',

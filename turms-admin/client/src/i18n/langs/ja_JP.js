@@ -454,6 +454,7 @@ const ja_JP = {
     'updateSelectedUserRelationships': '選択されたリレーションシップを更新',
     'updateSelectedUsers': '選択されたユーザーを更新',
     'updatedSuccessfully': '更新成功',
+    'uploadAreaPrompt': 'クリックしてファイルを選択またはここにドラッグ',
     'user': 'ユーザー',
     'userBlocklist': 'ユーザブロックリスト',
     'userClass': 'ユーザー',

@@ -451,6 +451,7 @@ const en_US = {
     'updateSelectedUserRelationships': 'Update Selected Relationships',
     'updateSelectedUsers': 'Update Selected Users',
     'updatedSuccessfully': 'Updated',
+    'uploadAreaPrompt': 'Choose a file or drag it here',
     'user': 'User',
     'userBlocklist': 'User Blocklist',
     'userClass': 'User',
