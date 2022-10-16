@@ -77,7 +77,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     private static final long REQUEST_ID = 1;
     private static final long GROUP_MEMBER_ID = 3;
     private static final long GROUP_INVITATION_INVITEE = 4;
-    private static final long GROUP_SUCCESSOR = 1;
+    private static final long GROUP_SUCCESSOR = GROUP_MEMBER_ID;
     private static final long GROUP_BLOCKED_USER_ID = 5;
 
     private static Long groupId;
@@ -219,10 +219,21 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .setUpdateGroupRequest(UpdateGroupRequest.newBuilder()
                         .setGroupId(groupId)
                         .setSuccessorId(GROUP_SUCCESSOR)
-                        .setQuitAfterTransfer(true))
+                        .setQuitAfterTransfer(false))
                 .build();
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateGroupRequest()
+                .handle(clientRequest);
+        assertResultIsOk(resultMono);
+
+        request = TurmsRequest.newBuilder()
+                .setUpdateGroupRequest(UpdateGroupRequest.newBuilder()
+                        .setGroupId(groupId)
+                        .setSuccessorId(USER_ID)
+                        .setQuitAfterTransfer(false))
+                .build();
+        clientRequest = new ClientRequest(GROUP_SUCCESSOR, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        resultMono = getController().handleUpdateGroupRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
     }

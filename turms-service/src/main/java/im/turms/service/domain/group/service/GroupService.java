@@ -353,6 +353,9 @@ public class GroupService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
+        if (successorId.equals(requesterId)) {
+            return Mono.empty();
+        }
         return groupMemberService
                 .isOwner(requesterId, groupId, false)
                 .flatMap(isOwner -> isOwner
@@ -422,46 +425,56 @@ public class GroupService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Mono<Long> queryOwnerIdMono = auxiliaryCurrentOwnerId == null
-                ? queryGroupOwnerId(groupId)
-                : Mono.just(auxiliaryCurrentOwnerId);
+        Mono<Long> queryOwnerIdMono;
+        if (auxiliaryCurrentOwnerId == null) {
+            queryOwnerIdMono = queryGroupOwnerId(groupId);
+        } else {
+            if (successorId.equals(auxiliaryCurrentOwnerId)) {
+                return Mono.empty();
+            }
+            queryOwnerIdMono = Mono.just(auxiliaryCurrentOwnerId);
+        }
         return queryOwnerIdMono
                 .switchIfEmpty(ResponseExceptionPublisherPool.transferNonExistingGroup())
-                .flatMap(ownerId -> groupMemberService
-                        .isGroupMember(groupId, successorId, false)
-                        .flatMap(isGroupMember -> !isGroupMember
-                                ? Mono.error(ResponseException.get(ResponseStatusCode.SUCCESSOR_NOT_GROUP_MEMBER))
-                                : queryGroupTypeId(groupId))
-                        .flatMap(groupTypeId ->
-                                isAllowedToCreateGroupAndHaveGroupType(successorId, groupTypeId)
-                                        .flatMap(result -> {
-                                            ResponseStatusCode code = result.code();
-                                            if (code != ResponseStatusCode.OK) {
-                                                return Mono.error(ResponseException.get(code, result.reason()));
-                                            }
-                                            if (quitAfterTransfer) {
-                                                return groupMemberService.deleteGroupMember(groupId, ownerId, session, false);
-                                            }
-                                            return groupMemberService.updateGroupMember(
-                                                    groupId,
-                                                    ownerId,
-                                                    null,
-                                                    GroupMemberRole.MEMBER,
-                                                    null,
-                                                    null,
-                                                    session,
-                                                    false);
-                                        })
-                                        .then(groupMemberService.updateGroupMember(
+                .flatMap(ownerId -> {
+                    if (successorId.equals(ownerId)) {
+                        return Mono.empty();
+                    }
+                    return groupMemberService
+                            .isGroupMember(groupId, successorId, false)
+                            .flatMap(isGroupMember -> isGroupMember
+                                    ? queryGroupTypeId(groupId)
+                                    : Mono.error(ResponseException.get(ResponseStatusCode.SUCCESSOR_NOT_GROUP_MEMBER)))
+                            .flatMap(groupTypeId -> isAllowedToCreateGroupAndHaveGroupType(successorId, groupTypeId)
+                                    .flatMap(result -> {
+                                        ResponseStatusCode code = result.code();
+                                        if (code != ResponseStatusCode.OK) {
+                                            return Mono.error(ResponseException.get(code, result.reason()));
+                                        }
+                                        if (quitAfterTransfer) {
+                                            return groupMemberService.deleteGroupMember(groupId, ownerId, session, false);
+                                        }
+                                        return groupMemberService.updateGroupMember(
                                                 groupId,
-                                                successorId,
+                                                ownerId,
                                                 null,
-                                                GroupMemberRole.OWNER,
+                                                GroupMemberRole.MEMBER,
                                                 null,
                                                 null,
                                                 session,
-                                                true))
-                                        .then()));
+                                                false);
+                                    })
+                                    .then(groupMemberService.updateGroupMember(
+                                            groupId,
+                                            successorId,
+                                            null,
+                                            GroupMemberRole.OWNER,
+                                            null,
+                                            null,
+                                            session,
+                                            true))
+                                    .then());
+                });
     }
 
     public Mono<GroupType> queryGroupType(@NotNull Long groupId) {
