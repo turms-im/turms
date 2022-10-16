@@ -687,7 +687,7 @@ public class GroupServiceController extends BaseServiceController {
         return clientRequest -> {
             UpdateGroupMemberRequest request = clientRequest.turmsRequest().getUpdateGroupMemberRequest();
             String name = request.hasName() ? request.getName() : null;
-            GroupMemberRole role = request.getRole() == GroupMemberRole.UNRECOGNIZED ? null : request.getRole();
+            GroupMemberRole role = request.hasRole() ? request.getRole() : null;
             Date muteEndDate = request.hasMuteEndDate() ? new Date(request.getMuteEndDate()) : null;
             return groupMemberService.authAndUpdateGroupMember(
                             clientRequest.userId(),

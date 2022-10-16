@@ -994,6 +994,10 @@ public class GroupMemberService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
+        if (role == GroupMemberRole.OWNER) {
+            return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "Cannot update a group member's role to OWNER"));
+        }
         Mono<ResponseStatusCode> isAuthorizedMono;
         if (role != null) {
             isAuthorizedMono = isOwner(requesterId, groupId, false)
