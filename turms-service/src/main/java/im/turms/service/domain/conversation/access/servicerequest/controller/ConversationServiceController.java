@@ -29,6 +29,7 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
+import im.turms.service.domain.common.access.servicerequest.controller.BaseServiceController;
 import im.turms.service.domain.conversation.service.ConversationService;
 import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
@@ -46,7 +47,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
  * @author James Chen
  */
 @Controller
-public class ConversationServiceController {
+public class ConversationServiceController extends BaseServiceController {
 
     private final ConversationService conversationService;
     private final GroupMemberService groupMemberService;

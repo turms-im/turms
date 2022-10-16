@@ -48,6 +48,7 @@ import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
+import im.turms.service.domain.common.access.servicerequest.controller.BaseServiceController;
 import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.domain.user.service.UserRelationshipService;
 import im.turms.service.domain.user.service.UserService;
@@ -75,7 +76,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
  * @author James Chen
  */
 @Controller
-public class UserServiceController {
+public class UserServiceController extends BaseServiceController {
 
     private final UserService userService;
     private final UserRelationshipService userRelationshipService;

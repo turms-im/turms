@@ -40,6 +40,7 @@ import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
+import im.turms.service.domain.common.access.servicerequest.controller.BaseServiceController;
 import im.turms.service.domain.conversation.service.ConversationService;
 import im.turms.service.domain.message.bo.MessageAndRecipientIds;
 import im.turms.service.domain.message.po.Message;
@@ -64,7 +65,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
  * @author James Chen
  */
 @Controller
-public class MessageServiceController {
+public class MessageServiceController extends BaseServiceController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageServiceController.class);
 

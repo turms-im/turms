@@ -54,6 +54,7 @@ import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
+import im.turms.service.domain.common.access.servicerequest.controller.BaseServiceController;
 import im.turms.service.domain.group.bo.GroupQuestionIdAndAnswer;
 import im.turms.service.domain.group.bo.NewGroupQuestion;
 import im.turms.service.domain.group.po.Group;
@@ -105,7 +106,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
  * @author James Chen
  */
 @Controller
-public class GroupServiceController {
+public class GroupServiceController extends BaseServiceController {
 
     private final GroupService groupService;
     private final GroupBlocklistService groupBlocklistService;

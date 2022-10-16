@@ -27,6 +27,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
+import im.turms.service.domain.common.access.servicerequest.controller.BaseServiceController;
 import im.turms.service.domain.storage.service.StorageService;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
@@ -39,7 +40,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
  * @author James Chen
  */
 @Controller
-public class StorageServiceController {
+public class StorageServiceController extends BaseServiceController {
 
     private final StorageService storageService;
 
