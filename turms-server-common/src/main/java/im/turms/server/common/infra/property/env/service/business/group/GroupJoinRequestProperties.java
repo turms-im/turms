@@ -42,7 +42,7 @@ public class GroupJoinRequestProperties {
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int contentLimit = 200;
+    private int maxContentLength = 200;
 
     @Description("A group join request will become expired after the specified time has elapsed")
     @GlobalProperty

@@ -86,7 +86,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
     private final UserVersionService userVersionService;
 
     private boolean allowRecallPendingInvitationByOwnerAndManager;
-    private int contentLimit;
+    private int maxContentLength;
     private boolean deleteExpiredInvitationsWhenCronTriggered;
 
     public GroupInvitationService(
@@ -122,8 +122,8 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
     private void updateProperties(TurmsProperties properties) {
         GroupInvitationProperties invitationProperties = properties.getService().getGroup().getInvitation();
         allowRecallPendingInvitationByOwnerAndManager = invitationProperties.isAllowRecallPendingInvitationByOwnerAndManager();
-        int localContentLimit = invitationProperties.getContentLimit();
-        contentLimit = localContentLimit > 0 ? localContentLimit : Integer.MAX_VALUE;
+        int localMaxContentLength = invitationProperties.getMaxContentLength();
+        maxContentLength = localMaxContentLength > 0 ? localMaxContentLength : Integer.MAX_VALUE;
         deleteExpiredInvitationsWhenCronTriggered = invitationProperties.isDeleteExpiredInvitationsWhenCronTriggered();
     }
 
@@ -136,7 +136,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
             Validator.notNull(groupId, "groupId");
             Validator.notNull(inviterId, "inviterId");
             Validator.notNull(inviteeId, "inviteeId");
-            validInvitationContentLength(content);
+            Validator.maxLength(content, "content", maxContentLength);
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -179,7 +179,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
             Validator.notNull(groupId, "groupId");
             Validator.notNull(inviterId, "inviterId");
             Validator.notNull(inviteeId, "inviteeId");
-            validInvitationContentLength(content);
+            Validator.maxLength(content, "content", maxContentLength);
             DataValidator.validRequestStatus(status);
             Validator.pastOrPresent(creationDate, "creationDate");
             Validator.pastOrPresent(responseDate, "responseDate");
@@ -446,7 +446,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
             @Nullable @PastOrPresent Date responseDate) {
         try {
             Validator.notEmpty(invitationIds, "invitationIds");
-            validInvitationContentLength(content);
+            Validator.maxLength(content, "content", maxContentLength);
             DataValidator.validRequestStatus(status);
             Validator.pastOrPresent(creationDate, "creationDate");
             Validator.pastOrPresent(responseDate, "responseDate");
@@ -457,14 +457,6 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return groupInvitationRepository.updateInvitations(invitationIds, inviterId, inviteeId, content, status, creationDate, responseDate);
-    }
-
-    // Validation
-
-    private void validInvitationContentLength(@Nullable String content) {
-        if (content != null) {
-            Validator.max(content.length(), "content", contentLimit);
-        }
     }
 
 }
