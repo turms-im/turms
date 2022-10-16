@@ -406,10 +406,79 @@ public class MessageService {
             @Nullable DateRange deletionDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
+        int targetIdCount = CollectionUtil.getSize(targetIds);
+        boolean enableConversationId = useConversationId && targetIdCount > 0;
+        List<byte[]> conversationIds = null;
+        if (enableConversationId) {
+            if (areGroupMessages == null) {
+                int senderIdCount = CollectionUtil.getSize(senderIds);
+                conversationIds = new ArrayList<>(targetIdCount + targetIdCount * senderIdCount);
+                boolean hasSenderIds = senderIdCount > 0;
+                for (long targetId : targetIds) {
+                    conversationIds.add(MessageRepository.getGroupConversationId(targetId));
+                    if (hasSenderIds) {
+                        for (long senderId : senderIds) {
+                            conversationIds.add(MessageRepository.getPrivateConversationId(senderId, targetId));
+                        }
+                    }
+                }
+                if (hasSenderIds) {
+                    // Reset "senderIds" and "targetIds" because they have been
+                    // converted to private conversation IDs so the senderIds/targetIds criteria is unnecessary.
+                    // Note that we change the semantic from
+                    // "querying messages sent by the sender IDs, and sent to the target IDs"
+                    // to "querying messages sent by the sender IDs, and sent to the target IDs +
+                    // messages sent by the target IDs, and sent to the sender IDs"
+                    senderIds = null;
+                    targetIds = null;
+                } else {
+                    // Reset "targetIds" because they have been converted to
+                    // group conversation IDs so the targetIds criteria is duplicate and unnecessary.
+                    targetIds = null;
+                }
+            } else if (areGroupMessages) {
+                if (targetIdCount == 1) {
+                    conversationIds = List.of(MessageRepository.getGroupConversationId(targetIds.iterator().next()));
+                } else {
+                    conversationIds = new ArrayList<>(targetIdCount);
+                    for (long targetId : targetIds) {
+                        conversationIds.add(MessageRepository.getGroupConversationId(targetId));
+                    }
+                }
+                // Reset "targetIds" because they have been converted to
+                // group conversation IDs so the targetIds criteria is duplicate and unnecessary.
+                targetIds = null;
+            } else {
+                int senderIdCount = CollectionUtil.getSize(senderIds);
+                if (senderIdCount > 0) {
+                    if (targetIdCount == 1 && senderIdCount == 1) {
+                        conversationIds = List.of(MessageRepository
+                                .getPrivateConversationId(senderIds.iterator().next(), targetIds.iterator().next()));
+                    } else {
+                        conversationIds = new ArrayList<>(senderIdCount * targetIdCount);
+                        for (long senderId : senderIds) {
+                            for (long targetId : targetIds) {
+                                conversationIds.add(MessageRepository.getPrivateConversationId(senderId, targetId));
+                            }
+                        }
+                    }
+                }
+                // Reset "senderIds" and "targetIds" because they have been
+                // converted to private conversation IDs so the senderIds/targetIds criteria is unnecessary.
+                // Note that we change the semantic from
+                // "querying messages sent by the sender IDs, and sent to the target IDs"
+                // to "querying messages sent by the sender IDs, and sent to the target IDs +
+                // messages sent by the target IDs, and sent to the sender IDs"
+                if (conversationIds != null) {
+                    senderIds = null;
+                    targetIds = null;
+                }
+            }
+        }
         return messageRepository.findMessages(
-                useConversationId,
                 closeToDate,
                 messageIds,
+                conversationIds,
                 areGroupMessages,
                 areSystemMessages,
                 senderIds,
@@ -463,15 +532,23 @@ public class MessageService {
         if (!persistSenderIp) {
             senderIp = null;
         }
+        byte[] conversationId;
         Mono<Long> sequenceId = null;
         if (isGroupMessage) {
+            conversationId = useConversationId
+                    ? MessageRepository.getGroupConversationId(targetId)
+                    : null;
             if (useSequenceIdForGroupConversation) {
                 sequenceId = fetchSequenceId(true, targetId);
             }
-        } else if (useSequenceIdForPrivateConversation) {
-            sequenceId = fetchSequenceId(false, targetId);
+        } else {
+            conversationId = useConversationId
+                    ? MessageRepository.getPrivateConversationId(senderId, targetId)
+                    : null;
+            if (useSequenceIdForPrivateConversation) {
+                sequenceId = fetchSequenceId(false, targetId);
+            }
         }
-        byte[] conversationId = messageRepository.getConversationId(senderId, targetId, isGroupMessage);
         Mono<Message> saveMessage;
         if (sequenceId == null) {
             Message message = new Message(

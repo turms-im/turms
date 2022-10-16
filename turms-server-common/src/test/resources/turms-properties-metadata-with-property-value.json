@@ -2916,7 +2916,7 @@
       "useConversationId": {
         "deprecated": false,
         "desc": "Whether to use conversation ID so that a user can query the messages sent by themselves in a conversation quickly",
-        "global": false,
+        "global": true,
         "mutable": false,
         "type": "boolean",
         "value": false

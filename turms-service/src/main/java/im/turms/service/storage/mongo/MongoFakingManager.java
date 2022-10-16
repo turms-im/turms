@@ -284,7 +284,7 @@ public final class MongoFakingManager {
             targetIds.add(targetId);
             Message privateMessage = new Message(
                     id,
-                    MessageRepository.getConversationId(senderId, targetId, false),
+                    MessageRepository.getPrivateConversationId(senderId, targetId),
                     false,
                     false,
                     DateUtils.addHours(now, -i),
@@ -301,9 +301,10 @@ public final class MongoFakingManager {
                     null,
                     null);
             id = nextId();
+            long groupId = 1L;
             Message groupMessage = new Message(
                     id,
-                    MessageRepository.getConversationId(senderId, targetId, false),
+                    MessageRepository.getGroupConversationId(groupId),
                     true,
                     false,
                     now,
@@ -313,7 +314,7 @@ public final class MongoFakingManager {
                     "group-message-text" + RandomStringUtils.randomAlphanumeric(16),
                     1L,
                     InetAddressUtil.ipBytesToInt(senderIp),
-                    1L,
+                    groupId,
                     null,
                     30,
                     null,

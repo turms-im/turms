@@ -17,9 +17,6 @@
 
 package im.turms.service.domain.message.access.servicerequest.controller;
 
-import com.google.common.collect.Collections2;
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.Multimap;
 import com.google.protobuf.ByteString;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.model.message.MessagesWithTotal;
@@ -45,7 +42,6 @@ import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
 import im.turms.service.domain.conversation.service.ConversationService;
 import im.turms.service.domain.message.bo.MessageAndRecipientIds;
-import im.turms.service.domain.message.bo.MessageFromKey;
 import im.turms.service.domain.message.po.Message;
 import im.turms.service.domain.message.service.MessageService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
@@ -54,8 +50,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -238,18 +234,22 @@ public class MessageServiceController {
                         }
                         Mono<TurmsNotification.Data> dataMono;
                         if (withTotal) {
-                            Multimap<MessageFromKey, Message> conversationWithMessagesMap = LinkedListMultimap.create();
+                            int fromIdCount = CollectionUtil.getSize(fromIds);
+                            Map<MessageFromKey, List<Message>> keyToMessages = CollectionUtil.newMapWithExpectedSize(fromIdCount > 0
+                                    ? messages.size() / fromIdCount
+                                    : messages.size());
                             for (Message message : messages) {
                                 Long targetId = message.getIsGroupMessage()
                                         ? message.getTargetId()
                                         : message.getSenderId();
                                 MessageFromKey senderKey = new MessageFromKey(message.getIsGroupMessage(), targetId);
-                                conversationWithMessagesMap.put(senderKey, message);
+                                keyToMessages.computeIfAbsent(senderKey, messageFromKey -> new LinkedList<>())
+                                        .add(message);
                             }
-                            Map<MessageFromKey, Collection<Message>> map = conversationWithMessagesMap.asMap();
-                            List<Mono<MessagesWithTotal>> messagesWithTotalMonos = new ArrayList<>(map.keySet().size());
+                            Set<Map.Entry<MessageFromKey, List<Message>>> entries = keyToMessages.entrySet();
+                            List<Mono<MessagesWithTotal>> messagesWithTotalMonos = new ArrayList<>(entries.size());
                             boolean isGroupMessage;
-                            for (Map.Entry<MessageFromKey, Collection<Message>> entry : map.entrySet()) {
+                            for (Map.Entry<MessageFromKey, List<Message>> entry : entries) {
                                 MessageFromKey senderKey = entry.getKey();
                                 isGroupMessage = senderKey.isGroupMessage();
                                 Mono<MessagesWithTotal> messagesWithTotalMono = messageService.countMessages(
@@ -265,7 +265,7 @@ public class MessageServiceController {
                                                 .setTotal(total.intValue())
                                                 .setIsGroupMessage(senderKey.isGroupMessage())
                                                 .setFromId(senderKey.fromId())
-                                                .addAllMessages(Collections2.transform(entry.getValue(),
+                                                .addAllMessages(CollectionUtil.transformAsList(entry.getValue(),
                                                         m -> ProtoModelConvertor.message2proto(m).build()))
                                                 .build());
                                 messagesWithTotalMonos.add(messagesWithTotalMono);
@@ -283,7 +283,8 @@ public class MessageServiceController {
                                     .getTurmsNotificationDataBuilder()
                                     .setMessages(ClientMessagePool
                                             .getMessagesBuilder()
-                                            .addAllMessages(Collections2.transform(messages, m -> ProtoModelConvertor.message2proto(m).build())))
+                                            .addAllMessages(CollectionUtil.transformAsList(messages,
+                                                    m -> ProtoModelConvertor.message2proto(m).build())))
                                     .build();
                             dataMono = Mono.just(data);
                         }
@@ -340,4 +341,12 @@ public class MessageServiceController {
         };
     }
 
+    /**
+     * @param fromId group id or sender id
+     */
+    private static record MessageFromKey(
+            boolean isGroupMessage,
+            long fromId
+    ) {
+    }
 }

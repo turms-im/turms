@@ -42,6 +42,7 @@ public class MessageProperties {
 
     @Description("Whether to use conversation ID so that " +
             "a user can query the messages sent by themselves in a conversation quickly")
+    @GlobalProperty
     private boolean useConversationId;
 
     @NestedConfigurationProperty

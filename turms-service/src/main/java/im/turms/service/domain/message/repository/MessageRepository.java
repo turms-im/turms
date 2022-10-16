@@ -20,8 +20,7 @@ package im.turms.service.domain.message.repository;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.domain.common.repository.BaseRepository;
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.lang.BitUtil;
+import im.turms.server.common.infra.lang.LongUtil;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
@@ -35,7 +34,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -159,9 +157,9 @@ public class MessageRepository extends BaseRepository<Message, Long> {
     }
 
     public Flux<Message> findMessages(
-            boolean useConversationId,
             boolean closeToDate,
             @Nullable Collection<Long> messageIds,
+            @Nullable Collection<byte[]> conversationIds,
             @Nullable Boolean areGroupMessages,
             @Nullable Boolean areSystemMessages,
             @Nullable Set<Long> senderIds,
@@ -170,37 +168,17 @@ public class MessageRepository extends BaseRepository<Message, Long> {
             @Nullable DateRange deletionDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
-        boolean enableConversationId = useConversationId
-                && areGroupMessages != null
-                && CollectionUtil.isNotEmpty(senderIds)
-                && CollectionUtil.isNotEmpty(targetIds);
-        Filter filter = Filter.newBuilder(enableConversationId ? 9 : 8)
+        Filter filter = Filter.newBuilder(7)
+                .inIfNotNull(Message.Fields.CONVERSATION_ID, conversationIds)
                 .eqIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
                 .eqIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)
+                .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, deliveryDateRange)
                 .inIfNotNull(Message.Fields.SENDER_ID, senderIds)
-                .inIfNotNull(Message.Fields.TARGET_ID, targetIds)
-                .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, deliveryDateRange);
+                .inIfNotNull(Message.Fields.TARGET_ID, targetIds);
         if (deletionDateRange == DateRange.NULL) {
             filter.eq(Message.Fields.DELETION_DATE, null);
         } else {
             filter.addBetweenIfNotNull(Message.Fields.DELETION_DATE, deletionDateRange);
-        }
-        if (enableConversationId) {
-            int conversationIdSize = CollectionUtil.getSize(senderIds) * CollectionUtil.getSize(targetIds);
-            // fast path
-            if (conversationIdSize == 1) {
-                filter.eq(Message.Fields.CONVERSATION_ID,
-                        getConversationId(senderIds.iterator().next(), targetIds.iterator().next(), areGroupMessages));
-            } else if (conversationIdSize > 0) {
-                // slow path
-                List<byte[]> conversationIds = new ArrayList<>(conversationIdSize);
-                for (long senderId : senderIds) {
-                    for (long targetId : targetIds) {
-                        conversationIds.add(getConversationId(senderId, targetId, areGroupMessages));
-                    }
-                }
-                filter.in(Message.Fields.CONVERSATION_ID, conversationIds);
-            }
         }
         QueryOptions options = QueryOptions.newBuilder(closeToDate ? 3 : 2)
                 .paginateIfNotNull(page, size);
@@ -227,38 +205,35 @@ public class MessageRepository extends BaseRepository<Message, Long> {
         return mongoClient.exists(entityClass, filter);
     }
 
-    public static byte[] getConversationId(long id1, long id2, boolean isGroupMessage) {
-        return id1 < id2
-                ? toConversationId(id1, id2, isGroupMessage)
-                : toConversationId(id2, id1, isGroupMessage);
+    public static byte[] getGroupConversationId(long groupId) {
+        return LongUtil.toBytes(groupId);
     }
 
-    public static byte[] toConversationId(long id1, long id2, boolean isGroupMessage) {
-        // ID is always positive, meaning that the most significant bit of ID is always 0,
-        // so we can use the bit to distinguish group messages and private messages
-        // in 16 bytes without adding a new byte to avoid the collision of conversation ID
-        byte b = (byte) (id2 >> 56);
-        if (isGroupMessage) {
-            b = BitUtil.setBit(b, 7);
-        }
-        return new byte[]{
-                (byte) (id1 >> 56),
-                (byte) (id1 >> 48),
-                (byte) (id1 >> 40),
-                (byte) (id1 >> 32),
-                (byte) (id1 >> 24),
-                (byte) (id1 >> 16),
-                (byte) (id1 >> 8),
-                (byte) id1,
+    public static byte[] getPrivateConversationId(long id1, long id2) {
+        return id1 < id2
+                ? toPrivateConversationId(id1, id2)
+                : toPrivateConversationId(id2, id1);
+    }
 
-                b,
-                (byte) (id2 >> 48),
-                (byte) (id2 >> 40),
-                (byte) (id2 >> 32),
-                (byte) (id2 >> 24),
-                (byte) (id2 >> 16),
-                (byte) (id2 >> 8),
-                (byte) id2
+    private static byte[] toPrivateConversationId(long lowerId, long higherId) {
+        return new byte[]{
+                (byte) (lowerId >> 56),
+                (byte) (lowerId >> 48),
+                (byte) (lowerId >> 40),
+                (byte) (lowerId >> 32),
+                (byte) (lowerId >> 24),
+                (byte) (lowerId >> 16),
+                (byte) (lowerId >> 8),
+                (byte) lowerId,
+
+                (byte) (higherId >> 56),
+                (byte) (higherId >> 48),
+                (byte) (higherId >> 40),
+                (byte) (higherId >> 32),
+                (byte) (higherId >> 24),
+                (byte) (higherId >> 16),
+                (byte) (higherId >> 8),
+                (byte) higherId
         };
     }
 }

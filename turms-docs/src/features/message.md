@@ -24,6 +24,12 @@
 | @某人                                          | 用于特别提醒某用户。如果Turms客户端检测到已接收的消息中被@的用户为当前登陆中的用户，Turms客户端则会触发@回调函数。开发者可自行实现后续相关业务逻辑。常用于给被@的用户提醒通知。<br />群内 @ 消息与普通消息没有本质区别，仅是在被 @ 的人在收到消息时，需要做特殊处理（触发回调函数） |                                                              |
 | 正在输入                                       | ✍当通信中的一方正在键入文本时，告知收信人（一名或多名用户），该用户正在输入消息<br />（✍原因：Turms无法得知您的用户是否正在键入文本） | turms.service.conversation.typing-status.enabled             |
 
+### 查询会话消息时的注意事项
+
+默认配置下，Turms不支持“在私聊会话中，消息发送者能够查询他自己发送的消息”（具体原因：[消息索引设计](https://turms-im.github.io/docs/for-developers/schema.html#%E7%B4%A2%E5%BC%95)。注意：在群聊会话中，消息发送者始终能够查询他自己发送的消息），开发者可以通过在turms-service服务端的配置文件中配置`turms.service.message.use-conversation-id=true`来启用`会话ID`。
+
+之后`turmsClient.messageService.queryMessages({areGroupMessages: false, fromIds: [10,11,12]})`的语义会由原来的“查询私聊会话中，由用户ID为11、12与13的用户发给当前用户的消息”变为“查询私聊会话中，由用户ID为11、12与13的用户发给当前用户的消息，与当前用户发送给用户ID为11、12与13的用户的消息”。
+
 ## 业务消息类型
 
 从开发者角度看，Turms客户端在发送消息时内部有且仅使用一种数据模型，即`CreateMessageRequest`。由于它带有string与List<byte[]>类型的字段，因此您实际上能在发送消息时传递任何形式的数据。只是Turms为方便开发者快速实现各种业务消息类型，Turms客户端对常见消息类型做了划分，以方便开发者快速上手。

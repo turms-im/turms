@@ -331,6 +331,14 @@ public final class CollectionUtil {
         return result;
     }
 
+    public static <T, R> List<R> transformAsList(Collection<T> values, Function<T, R> mapper) {
+        List<R> list = new ArrayList<>(values.size());
+        for (T value : values) {
+            list.add(mapper.apply(value));
+        }
+        return list;
+    }
+
     public static <K, V, R> Map<K, R> transformValues(Map<K, V> map, Function<V, R> supplier) {
         Map<K, R> result = newMapWithExpectedSize(map.size());
         for (Map.Entry<K, V> entry : map.entrySet()) {

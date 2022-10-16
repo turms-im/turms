@@ -37,10 +37,12 @@ import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReas
 
 /**
  * @author James Chen
- * @implNote The shard key is DELIVERY_DATE instead of TARGET_ID.
- * Being sharded by TARGET_ID, most CRUD operations are efficient for small scale applications,
+ * @implNote The shard key is {@link Fields#DELIVERY_DATE} instead of
+ * {@link Fields#TARGET_ID} or {@link Fields#CONVERSATION_ID}.
+ * Being sharded by {@link Fields#TARGET_ID} or {@link Fields#CONVERSATION_ID},
+ * most CRUD operations are efficient for small scale applications,
  * but Turms is designed for medium and large scale applications,
- * so we use DELIVERY_DATE as the shard key to support tiered storage.
+ * so we use {@link Fields#DELIVERY_DATE} as the shard key to support tiered storage.
  */
 @Data
 @Document(Message.COLLECTION_NAME)
@@ -63,6 +65,23 @@ public final class Message extends BaseEntity {
     @Id
     private final Long id;
 
+    /**
+     * For private conversations, the ID (16 bytes) consisting of the sender ID and the target ID
+     * is used to query messages in a conversation quickly so that a user can query the messages sent by
+     * themselves instead of only the messages sent by the sender quickly (using index).
+     * <p>
+     * For group conversations, the ID (8 bytes) is just the target/group ID.
+     * Because private conversation IDs need to work with the compound index of
+     * {@link Fields#DELIVERY_DATE} and {@link Fields#CONVERSATION_ID},
+     * group conversations also need the conversation ID to work with the compound index.
+     * Though we can add another compound index {@link Fields#DELIVERY_DATE} and {@link Fields#TARGET_ID},
+     * the index is useless for private conversations.
+     * <p>
+     * And we don't use two independent collections for private messages and group messages,
+     * because we have many CRUD operations that need to work with private and group messages
+     * at the same time, and if they are in a collection, we can just use and send one command to MongoDB
+     * instead of two commands.
+     */
     @Field(Fields.CONVERSATION_ID)
     private final byte[] conversationId;
 

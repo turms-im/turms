@@ -53,7 +53,7 @@ public class Pool<T> {
         }
         Object existingObject = keyToObject.get(key);
         if (existingObject == null) {
-            // We don't use LRU just because we don't it currently
+            // We don't use LRU just because we don't need it currently
             if (keyToObject.size() > maxSize) {
                 Iterator<Map.Entry<Long, Object>> iterator = keyToObject.entrySet().iterator();
                 if (iterator.hasNext()) {
@@ -123,7 +123,7 @@ public class Pool<T> {
         Object existingObject = keyToObject.get(key);
         boolean transformed = false;
         if (existingObject == null) {
-            // We don't use LRU just because we don't it currently
+            // We don't use LRU just because we don't need it currently
             if (keyToObject.size() > maxSize) {
                 Iterator<Map.Entry<Long, Object>> iterator = keyToObject.entrySet().iterator();
                 if (iterator.hasNext()) {

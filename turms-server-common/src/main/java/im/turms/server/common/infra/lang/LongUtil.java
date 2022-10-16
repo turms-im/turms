@@ -15,14 +15,27 @@
  * limitations under the License.
  */
 
-package im.turms.service.domain.message.bo;
+package im.turms.server.common.infra.lang;
 
 /**
- * @param fromId group id or sender id
  * @author James Chen
  */
-public record MessageFromKey(
-        boolean isGroupMessage,
-        long fromId
-) {
+public class LongUtil {
+
+    private LongUtil() {
+    }
+
+    public static byte[] toBytes(long v) {
+        return new byte[]{
+                (byte) v,
+                (byte) (v >>> 8),
+                (byte) (v >>> 16),
+                (byte) (v >>> 24),
+                (byte) (v >>> 32),
+                (byte) (v >>> 40),
+                (byte) (v >>> 48),
+                (byte) (v >>> 56)
+        };
+    }
+
 }
