@@ -224,7 +224,7 @@ public class UserRelationshipGroupService {
                         .thenReturn(result));
     }
 
-    public Mono<Void> updateRelationshipGroup(
+    public Mono<Void> upsertRelationshipGroupMember(
             @NotNull Long ownerId,
             @NotNull Long relatedUserId,
             @Nullable Integer newGroupIndex,

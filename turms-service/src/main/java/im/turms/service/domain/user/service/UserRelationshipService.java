@@ -427,10 +427,12 @@ public class UserRelationshipService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return Mono.whenDelayError(List.of(
-                upsertOneSidedRelationship(ownerId, relatedUserId, blockDate, establishmentDate, upsert, session),
-                userRelationshipGroupService.updateRelationshipGroup(ownerId, relatedUserId, newGroupIndex, deleteGroupIndex, session)
-        ));
+        // Notes:
+        // 1. It is unnecessary to check whether the requester is in the blocklist of the related user
+        // because only a one-sided relationship will be created here
+        // 2. Upsert relationship first to ensure that the relationship exists before "upsertRelationshipGroupMember"
+        return upsertOneSidedRelationship(ownerId, relatedUserId, blockDate, establishmentDate, upsert, session)
+                .then(userRelationshipGroupService.upsertRelationshipGroupMember(ownerId, relatedUserId, newGroupIndex, deleteGroupIndex, session));
     }
 
     private Mono<Void> upsertOneSidedRelationship(

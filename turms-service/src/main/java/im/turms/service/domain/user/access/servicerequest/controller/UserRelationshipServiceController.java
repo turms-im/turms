@@ -147,8 +147,6 @@ public class UserRelationshipServiceController extends BaseServiceController {
     public ClientRequestHandler handleCreateRelationshipRequest() {
         return clientRequest -> {
             CreateRelationshipRequest request = clientRequest.turmsRequest().getCreateRelationshipRequest();
-            // It is unnecessary to check whether requester is in the blocklist of the target user
-            // because only a one-sided relationship will be created here
             int groupIndex = request.hasGroupIndex() ?
                     request.getGroupIndex() : DEFAULT_RELATIONSHIP_GROUP_INDEX;
             Date blockDate = request.getBlocked() ? new Date() : null;
