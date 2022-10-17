@@ -17,8 +17,6 @@
 
 package im.turms.service.storage.mongo;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
@@ -184,7 +182,7 @@ public final class MongoFakingManager {
         AdminRole guestRole = new AdminRole(
                 guestRoleId,
                 "GUEST",
-                Sets.union(AdminPermission.matchPermission("*" + AdminPermission.SUFFIX_QUERY),
+                CollectionUtil.newSet(AdminPermission.matchPermission("*" + AdminPermission.SUFFIX_QUERY),
                         AdminPermission.matchPermission("*" + AdminPermission.SUFFIX_CREATE)),
                 0,
                 now);
@@ -331,7 +329,8 @@ public final class MongoFakingManager {
                     now);
             conversationRelatedObjs.add(privateConversation);
         }
-        GroupConversation groupConversation = new GroupConversation(1L, Maps.asMap(groupMemberIds, id -> now));
+        GroupConversation groupConversation = new GroupConversation(1L,
+                CollectionUtil.newMap(groupMemberIds, id -> now));
         conversationRelatedObjs.add(groupConversation);
 
         // User

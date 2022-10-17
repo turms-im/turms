@@ -17,8 +17,6 @@
 
 package im.turms.service.domain.message.service;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.domain.notification.rpc.SendNotificationRequest;
@@ -195,11 +193,12 @@ public class OutboundMessageService {
                     }
                     int expectedMembersCount = Math.min(gatewayMemberCount, recipientIdCount);
                     int expectedRecipientCountPerMember = Math.max(1, recipientIdCount / expectedMembersCount);
-                    SetMultimap<String, Long> nodeIdToUserIds =
-                            HashMultimap.create(expectedMembersCount, expectedRecipientCountPerMember);
+                    Map<String, Set<Long>> nodeIdToUserIds = CollectionUtil.newMapWithExpectedSize(expectedMembersCount);
                     for (RecipientAndNodeIds pair : pairs) {
                         for (String nodeId : pair.nodeIds) {
-                            nodeIdToUserIds.put(nodeId, pair.recipientId);
+                            nodeIdToUserIds.computeIfAbsent(nodeId, key ->
+                                            CollectionUtil.newSetWithExpectedSize(expectedRecipientCountPerMember))
+                                    .add(pair.recipientId);
                         }
                     }
                     return forwardClientMessageToNodes(messageData, nodeIdToUserIds, excludedUserSessionIds);
@@ -232,7 +231,7 @@ public class OutboundMessageService {
     // Network transmission methods
 
     private Mono<Boolean> forwardClientMessageToNodes(ByteBuf messageData,
-                                                      SetMultimap<String, Long> nodeIdToRecipientIds,
+                                                      Map<String, Set<Long>> nodeIdToRecipientIds,
                                                       Set<UserSessionId> excludedUserSessionIds) {
         Set<String> nodeIds = nodeIdToRecipientIds.keySet();
         int size = nodeIds.size();

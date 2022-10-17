@@ -17,7 +17,6 @@
 
 package im.turms.service.domain.user.access.servicerequest.controller;
 
-import com.google.common.collect.Sets;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
@@ -238,7 +237,9 @@ public class UserServiceController extends BaseServiceController {
                 return Mono.just(RequestHandlerResultFactory
                         .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The user status must not be UNRECOGNIZED"));
             }
-            Set<DeviceType> deviceTypes = request.getDeviceTypesCount() > 0 ? Sets.newHashSet(request.getDeviceTypesList()) : null;
+            Set<DeviceType> deviceTypes = request.getDeviceTypesCount() > 0
+                    ? CollectionUtil.newSet(request.getDeviceTypesList())
+                    : null;
             Mono<Boolean> updateMono;
             if (userStatus == UserStatus.OFFLINE) {
                 updateMono = deviceTypes == null

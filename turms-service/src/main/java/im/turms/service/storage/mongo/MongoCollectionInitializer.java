@@ -17,12 +17,11 @@
 
 package im.turms.service.storage.mongo;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import im.turms.server.common.domain.admin.po.Admin;
 import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -77,6 +76,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -242,9 +242,11 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     }
 
     private Mono<Void> ensureIndexesAndShard() {
-        Multimap<TurmsMongoClient, MongoEntity<?>> clientToEntities = HashMultimap.create(clients.size(), 8);
+        Map<TurmsMongoClient, List<MongoEntity<?>>> clientToEntities = CollectionUtil
+                .newMapWithExpectedSize(clients.size());
         for (TurmsMongoClient client : clients) {
-            clientToEntities.putAll(client, client.getRegisteredEntities());
+            clientToEntities.computeIfAbsent(client, key -> new LinkedList<>())
+                    .addAll(client.getRegisteredEntities());
         }
         BiPredicate<Class<?>, CompoundIndex> customCompoundIndexFilter = (entityClass, index) -> {
             if (entityClass != Message.class) {
@@ -293,7 +295,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 throw new IllegalStateException(message);
             }
         };
-        return Mono.whenDelayError(clientToEntities.asMap().entrySet().stream()
+        return Mono.whenDelayError(clientToEntities.entrySet().stream()
                 .map(entry -> entry.getKey().ensureIndexesAndShard(entry.getValue().stream()
                                 .map(MongoEntity::entityClass)
                                 .collect(Collectors.toList()),
@@ -396,9 +398,9 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                                             minimum,
                                             maximum)
                                     .onErrorMap(t -> new IllegalStateException("Failed to update the zone %s with the key ranges: %s -->> %s".formatted(
-                                                    zoneName,
-                                                    minimum.toJson(),
-                                                    maximum.toJson()),
+                                            zoneName,
+                                            minimum.toJson(),
+                                            maximum.toJson()),
                                             t))
                                     .doOnSuccess(unused -> LOGGER.info("Updated the zone {} with the key ranges: {} -->> {}",
                                             zoneName,

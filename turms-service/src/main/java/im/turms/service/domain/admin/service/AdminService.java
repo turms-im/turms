@@ -17,13 +17,13 @@
 
 package im.turms.service.domain.admin.service;
 
-import com.google.common.collect.Sets;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.admin.bo.AdminInfo;
 import im.turms.server.common.domain.admin.po.Admin;
 import im.turms.server.common.domain.admin.service.BaseAdminService;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.security.password.PasswordManager;
@@ -92,7 +92,7 @@ public class AdminService extends BaseAdminService {
         } catch (ResponseException e) {
             return Flux.error(e);
         }
-        Set<Long> roleIds = Sets.newHashSetWithExpectedSize(accounts.size());
+        Set<Long> roleIds = CollectionUtil.newSetWithExpectedSize(accounts.size());
         for (String account : accounts) {
             AdminInfo adminInfo = accountToAdmin.get(account);
             if (adminInfo != null) {

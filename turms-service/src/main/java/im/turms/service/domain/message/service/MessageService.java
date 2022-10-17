@@ -19,7 +19,6 @@ package im.turms.service.domain.message.service;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.google.common.primitives.Longs;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
@@ -33,6 +32,7 @@ import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.lang.LongUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.net.InetAddressUtil;
@@ -703,7 +703,7 @@ public class MessageService {
         return messageRepository.findByIds(messageIds)
                 .map(message -> {
                     byte[] messageType = {BuiltinSystemMessageType.RECALL_MESSAGE};
-                    byte[] messageId = Longs.toByteArray(message.getId());
+                    byte[] messageId = LongUtil.toBytes(message.getId());
                     return authAndSaveAndSendMessage(true,
                             senderId,
                             senderDeviceType,

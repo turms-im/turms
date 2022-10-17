@@ -116,6 +116,14 @@ public final class CollectionUtil {
         return UnifiedSet.newSet(expectedSize);
     }
 
+    public static <K, V> Map<K, V> newMap(Collection<K> keys, Function<K, V> valueMapper) {
+        Map<K, V> map = newMapWithExpectedSize(keys.size());
+        for (K key : keys) {
+            map.put(key, valueMapper.apply(key));
+        }
+        return map;
+    }
+
     public static <K, V> Map<K, V> newMapWithExpectedSize(int expectedSize) {
         return new HashMap<>(getMapCapability(expectedSize));
     }

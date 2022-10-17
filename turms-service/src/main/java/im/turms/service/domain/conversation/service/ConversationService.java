@@ -17,8 +17,6 @@
 
 package im.turms.service.domain.conversation.service;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -144,15 +142,17 @@ public class ConversationService {
         if (readDate == null) {
             readDate = new Date();
         }
-        Multimap<Long, Long> groupIdToMemberIds = ArrayListMultimap.create(1, keys.size());
+        Map<Long, List<Long>> groupIdToMemberIds = CollectionUtil.newMapWithExpectedSize(1);
+        int keyCount = keys.size();
         for (GroupConversation.GroupConversionMemberKey key : keys) {
-            groupIdToMemberIds.put(key.getGroupId(), key.getMemberId());
+            groupIdToMemberIds.computeIfAbsent(key.getGroupId(), k -> new ArrayList<>(keyCount))
+                    .add(key.getMemberId());
         }
-        Set<Map.Entry<Long, Collection<Long>>> entries = groupIdToMemberIds.asMap().entrySet();
+        Set<Map.Entry<Long, List<Long>>> entries = groupIdToMemberIds.entrySet();
         List<Mono<Void>> upsertMonos = new ArrayList<>(entries.size());
-        for (Map.Entry<Long, Collection<Long>> entry : entries) {
+        for (Map.Entry<Long, List<Long>> entry : entries) {
             Long groupId = entry.getKey();
-            Collection<Long> memberIds = entry.getValue();
+            List<Long> memberIds = entry.getValue();
             upsertMonos.add(groupConversationRepository.upsert(groupId, memberIds, readDate));
         }
         return Mono.whenDelayError(upsertMonos);

@@ -17,7 +17,6 @@
 
 package im.turms.service.infra.proto;
 
-import com.google.common.collect.Maps;
 import com.google.protobuf.ByteStringUtil;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
@@ -41,6 +40,7 @@ import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup
 import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.user.po.User;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.service.domain.message.po.Message;
 
 import javax.annotation.Nullable;
@@ -499,7 +499,7 @@ public final class ProtoModelConvertor {
         }
         Map<Long, Date> memberIdToReadDate = groupConversation.getMemberIdToReadDate();
         if (memberIdToReadDate != null) {
-            Map<Long, Long> map = Maps.transformValues(memberIdToReadDate, Date::getTime);
+            Map<Long, Long> map = CollectionUtil.transformValues(memberIdToReadDate, Date::getTime);
             builder.putAllMemberIdToReadDate(map);
         }
         return builder;
