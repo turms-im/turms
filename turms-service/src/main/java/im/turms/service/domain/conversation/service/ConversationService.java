@@ -34,6 +34,7 @@ import im.turms.service.domain.conversation.po.PrivateConversation;
 import im.turms.service.domain.conversation.repository.GroupConversationRepository;
 import im.turms.service.domain.conversation.repository.PrivateConversationRepository;
 import im.turms.service.domain.group.service.GroupMemberService;
+import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -182,6 +183,9 @@ public class ConversationService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
+        if (keys.isEmpty()) {
+            return Mono.empty();
+        }
         Date finalReadDate = readDate == null ? new Date() : readDate;
         return privateConversationRepository.upsert(keys, finalReadDate, allowMoveReadDateForward)
                 .onErrorResume(DuplicateKeyException.class,
@@ -216,20 +220,20 @@ public class ConversationService {
     }
 
     public Flux<PrivateConversation> queryPrivateConversations(
-            @NotNull Long ownerId,
-            @NotNull Collection<Long> targetIds) {
+            @NotNull Collection<Long> ownerIds,
+            @NotNull Long targetId) {
         try {
-            Validator.notNull(ownerId, "ownerId");
-            Validator.notNull(targetIds, "targetIds");
+            Validator.notNull(ownerIds, "ownerIds");
+            Validator.notNull(targetId, "targetId");
         } catch (ResponseException e) {
             return Flux.error(e);
         }
-        int size = targetIds.size();
+        int size = ownerIds.size();
         if (size == 0) {
             return Flux.empty();
         }
         Set<PrivateConversation.Key> keys = CollectionUtil.newSetWithExpectedSize(size);
-        for (Long targetId : targetIds) {
+        for (Long ownerId : ownerIds) {
             keys.add(new PrivateConversation.Key(ownerId, targetId));
         }
         return queryPrivateConversations(keys);
@@ -241,6 +245,9 @@ public class ConversationService {
         } catch (ResponseException e) {
             return Flux.error(e);
         }
+        if (keys.isEmpty()) {
+            return Flux.empty();
+        }
         return privateConversationRepository.findByIds(keys);
     }
 
@@ -249,6 +256,9 @@ public class ConversationService {
             Validator.notNull(keys, "keys");
         } catch (ResponseException e) {
             return Mono.error(e);
+        }
+        if (keys.isEmpty()) {
+            return OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT;
         }
         return privateConversationRepository.deleteByIds(keys);
     }
@@ -259,6 +269,9 @@ public class ConversationService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
+        if (userIds.isEmpty()) {
+            return OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT;
+        }
         return privateConversationRepository.deleteConversationsByOwnerIds(userIds, session);
     }
 
@@ -267,6 +280,9 @@ public class ConversationService {
             Validator.notNull(groupIds, "groupIds");
         } catch (ResponseException e) {
             return Mono.error(e);
+        }
+        if (groupIds.isEmpty()) {
+            return OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT;
         }
         return groupConversationRepository.deleteByIds(groupIds, session);
     }

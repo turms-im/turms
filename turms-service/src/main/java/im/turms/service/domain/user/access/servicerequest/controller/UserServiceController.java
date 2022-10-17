@@ -147,7 +147,7 @@ public class UserServiceController extends BaseServiceController {
     public ClientRequestHandler handleQueryNearbyUsersRequest() {
         return clientRequest -> {
             QueryNearbyUsersRequest request = clientRequest.turmsRequest().getQueryNearbyUsersRequest();
-            Integer distance = request.hasDistance() ? (int) request.getDistance() : null;
+            Integer distance = request.hasDistance() ? request.getDistance() : null;
             Short maxNumber = request.hasMaxNumber() ? (short) request.getMaxNumber() : null;
             return usersNearbyService.queryNearbyUsers(
                             clientRequest.userId(),

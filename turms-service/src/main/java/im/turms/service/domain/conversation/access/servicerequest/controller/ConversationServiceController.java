@@ -96,7 +96,7 @@ public class ConversationServiceController extends BaseServiceController {
                                         .addAllGroupConversations(conversations))
                                 .build());
             } else {
-                dataFlux = conversationService.queryPrivateConversations(clientRequest.userId(), targetIds)
+                dataFlux = conversationService.queryPrivateConversations(targetIds, clientRequest.userId())
                         .map(conversation -> ProtoModelConvertor.privateConversation2proto(conversation).build())
                         .collect(CollectorUtil.toList(targetIds.size()))
                         .map(conversations -> ClientMessagePool

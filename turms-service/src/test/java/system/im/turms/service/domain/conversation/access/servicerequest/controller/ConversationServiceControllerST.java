@@ -115,7 +115,18 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryConversationsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().hasConversations()).isTrue());
+        assertResultIsOk(resultMono, result ->
+                assertThat(result.dataForRequester().getConversations().getPrivateConversationsCount()).isZero());
+
+        request = TurmsRequest.newBuilder()
+                .setQueryConversationsRequest(QueryConversationsRequest.newBuilder()
+                        .addTargetIds(USER_ID))
+                .build();
+        clientRequest = new ClientRequest(RELATED_USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        resultMono = getController().handleQueryConversationsRequest()
+                .handle(clientRequest);
+        assertResultIsOk(resultMono, result ->
+                assertThat(result.dataForRequester().getConversations().getPrivateConversationsCount()).isPositive());
     }
 
     @Test
@@ -128,7 +139,8 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryConversationsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().hasConversations()).isTrue());
+        assertResultIsOk(resultMono, result ->
+                assertThat(result.dataForRequester().getConversations().getGroupConversationsCount()).isPositive());
     }
 
 }
