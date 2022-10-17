@@ -213,15 +213,13 @@ public class TurmsFindPublisherImpl<T> extends BatchCursorPublisher<T> implement
 
     @Override
     AsyncExplainableReadOperation<AsyncBatchCursor<T>> asAsyncReadOperation(final int initialBatchSize) {
-        return getFindOperation(QueryOptions
-                .newBuilder(queryOptions.size() + 1)
+        return getFindOperation(queryOptions
                 .batchSize(initialBatchSize));
     }
 
     @Override
     AsyncReadOperation<AsyncBatchCursor<T>> asAsyncFirstReadOperation() {
-        return getFindOperation(QueryOptions
-                .newBuilder(queryOptions.size() + 2)
+        return getFindOperation(queryOptions
                 .limit(1)
                 .singleBatch());
     }
