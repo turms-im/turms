@@ -81,7 +81,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
     private final UserVersionService userVersionService;
 
     private boolean allowRecallJoinRequestSentByOneself;
-    private int contentLimit;
+    private int maxContentLength;
     private boolean deleteExpiredJoinRequestsWhenCronTriggered;
 
     public GroupJoinRequestService(
@@ -122,8 +122,8 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
     private void updateProperties(TurmsProperties properties) {
         GroupJoinRequestProperties joinRequestProperties = properties.getService().getGroup().getJoinRequest();
         allowRecallJoinRequestSentByOneself = joinRequestProperties.isAllowRecallJoinRequestSentByOneself();
-        int localContentLimit = joinRequestProperties.getContentLimit();
-        contentLimit = localContentLimit > 0 ? localContentLimit : Integer.MAX_VALUE;
+        int localMaxContentLength = joinRequestProperties.getMaxContentLength();
+        maxContentLength = localMaxContentLength > 0 ? localMaxContentLength : Integer.MAX_VALUE;
         deleteExpiredJoinRequestsWhenCronTriggered = joinRequestProperties.isDeleteExpiredJoinRequestsWhenCronTriggered();
     }
 
@@ -134,7 +134,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         try {
             Validator.notNull(requesterId, "requesterId");
             Validator.notNull(groupId, "groupId");
-            validJoinRequestContentLength(content);
+            Validator.maxLength(content, "content", maxContentLength);
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -358,7 +358,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
             @Nullable @PastOrPresent Date responseDate) {
         try {
             Validator.notEmpty(requestIds, "requestIds");
-            validJoinRequestContentLength(content);
+            Validator.maxLength(content, "content", maxContentLength);
             DataValidator.validRequestStatus(status);
             Validator.pastOrPresent(creationDate, "creationDate");
             Validator.pastOrPresent(responseDate, "responseDate");
@@ -390,7 +390,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
             Validator.notNull(groupId, "groupId");
             Validator.notNull(requesterId, "requesterId");
             Validator.notNull(responderId, "responderId");
-            validJoinRequestContentLength(content);
+            Validator.maxLength(content, "content", maxContentLength);
             DataValidator.validRequestStatus(status);
             Validator.pastOrPresent(creationDate, "creationDate");
             Validator.pastOrPresent(responseDate, "responseDate");
@@ -427,14 +427,6 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                                 })
                 ))
                 .thenReturn(groupJoinRequest);
-    }
-
-    // Validation
-
-    private void validJoinRequestContentLength(@Nullable String content) {
-        if (content != null) {
-            Validator.max(content.length(), "content", contentLimit);
-        }
     }
 
 }

@@ -98,6 +98,11 @@ public class UserService {
     private boolean activateUserWhenAdded;
     private boolean deleteUserLogically;
 
+    private int maxPasswordLength;
+    private int maxNameLength;
+    private int maxIntroLength;
+    private int maxProfilePictureLength;
+
     private boolean allowSendMessagesToOneself;
     private boolean allowSendMessagesToStranger;
     private boolean checkIfTargetActiveAndNotDeleted;
@@ -137,6 +142,15 @@ public class UserService {
         UserProperties userProperties = properties.getService().getUser();
         activateUserWhenAdded = userProperties.isActivateUserWhenAdded();
         deleteUserLogically = userProperties.isDeleteUserLogically();
+
+        int localMaxPasswordLength = userProperties.getMaxPasswordLength();
+        int localMaxIntroLength = userProperties.getMaxIntroLength();
+        int localMaxNameLength = userProperties.getMaxNameLength();
+        int localMaxProfilePictureLength = userProperties.getMaxProfilePictureLength();
+        maxPasswordLength = localMaxPasswordLength > 0 ? localMaxPasswordLength : Integer.MAX_VALUE;
+        maxIntroLength = localMaxIntroLength > 0 ? localMaxIntroLength : Integer.MAX_VALUE;
+        maxNameLength = localMaxNameLength > 0 ? localMaxNameLength : Integer.MAX_VALUE;
+        maxProfilePictureLength = localMaxProfilePictureLength > 0 ? localMaxProfilePictureLength : Integer.MAX_VALUE;
 
         MessageProperties messageProperties = properties.getService().getMessage();
         allowSendMessagesToOneself = messageProperties.isAllowSendMessagesToOneself();
@@ -203,6 +217,10 @@ public class UserService {
             @Nullable @PastOrPresent Date registrationDate,
             @Nullable Boolean isActive) {
         try {
+            Validator.maxLength(rawPassword, "rawPassword", maxPasswordLength);
+            Validator.maxLength(name, "name", maxNameLength);
+            Validator.maxLength(intro, "intro", maxIntroLength);
+            Validator.maxLength(profilePicture, "profilePicture", maxProfilePictureLength);
             DataValidator.validProfileAccess(profileAccessStrategy);
             Validator.pastOrPresent(registrationDate, "registrationDate");
         } catch (ResponseException e) {
@@ -444,6 +462,10 @@ public class UserService {
             @Nullable Boolean isActive) {
         try {
             Validator.notEmpty(userIds, "userIds");
+            Validator.maxLength(rawPassword, "rawPassword", maxPasswordLength);
+            Validator.maxLength(name, "name", maxNameLength);
+            Validator.maxLength(intro, "intro", maxIntroLength);
+            Validator.maxLength(profilePicture, "profilePicture", maxProfilePictureLength);
             DataValidator.validProfileAccess(profileAccessStrategy);
             Validator.pastOrPresent(registrationDate, "registrationDate");
         } catch (ResponseException e) {

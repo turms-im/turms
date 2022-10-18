@@ -42,7 +42,7 @@ public class GroupInvitationProperties {
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int contentLimit = 200;
+    private int maxContentLength = 200;
 
     @Description("A group invitation will become expired after the specified time has passed")
     @GlobalProperty

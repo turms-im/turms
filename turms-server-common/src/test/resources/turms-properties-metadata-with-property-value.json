@@ -2618,14 +2618,6 @@
           "type": "boolean",
           "value": false
         },
-        "contentLimit": {
-          "deprecated": false,
-          "desc": "The maximum allowed length for the text of a group invitation",
-          "global": true,
-          "mutable": true,
-          "type": "int",
-          "value": 200
-        },
         "deleteExpiredInvitationsWhenCronTriggered": {
           "deprecated": false,
           "desc": "Whether to delete expired group invitations when the cron expression is triggered",
@@ -2649,6 +2641,14 @@
           "mutable": false,
           "type": "string",
           "value": "0 15 2 * * *"
+        },
+        "maxContentLength": {
+          "deprecated": false,
+          "desc": "The maximum allowed length for the text of a group invitation",
+          "global": true,
+          "mutable": true,
+          "type": "int",
+          "value": 200
         }
       },
       "joinRequest": {
@@ -2659,14 +2659,6 @@
           "mutable": true,
           "type": "boolean",
           "value": false
-        },
-        "contentLimit": {
-          "deprecated": false,
-          "desc": "The maximum allowed length for the text of a group join request",
-          "global": true,
-          "mutable": true,
-          "type": "int",
-          "value": 200
         },
         "deleteExpiredJoinRequestsWhenCronTriggered": {
           "deprecated": false,
@@ -2691,6 +2683,14 @@
           "mutable": false,
           "type": "string",
           "value": "0 30 2 * * *"
+        },
+        "maxContentLength": {
+          "deprecated": false,
+          "desc": "The maximum allowed length for the text of a group join request",
+          "global": true,
+          "mutable": true,
+          "type": "int",
+          "value": 200
         }
       },
       "memberCacheExpireAfterSeconds": {
@@ -3623,14 +3623,6 @@
           "type": "boolean",
           "value": false
         },
-        "contentLimit": {
-          "deprecated": false,
-          "desc": "The maximum allowed length for the text of a friend request",
-          "global": true,
-          "mutable": true,
-          "type": "int",
-          "value": 200
-        },
         "deleteExpiredRequestsWhenCronTriggered": {
           "deprecated": false,
           "desc": "Whether to delete expired when the cron expression is triggered",
@@ -3654,7 +3646,47 @@
           "mutable": true,
           "type": "int",
           "value": 2592000
+        },
+        "maxContentLength": {
+          "deprecated": false,
+          "desc": "The maximum allowed length for the text of a friend request",
+          "global": true,
+          "mutable": true,
+          "type": "int",
+          "value": 200
         }
+      },
+      "maxIntroLength": {
+        "deprecated": false,
+        "desc": "The maximum allowed length for a user's intro",
+        "global": true,
+        "mutable": true,
+        "type": "int",
+        "value": 100
+      },
+      "maxNameLength": {
+        "deprecated": false,
+        "desc": "The maximum allowed length for a user's name",
+        "global": true,
+        "mutable": true,
+        "type": "int",
+        "value": 20
+      },
+      "maxPasswordLength": {
+        "deprecated": false,
+        "desc": "The maximum allowed length for a user's password",
+        "global": true,
+        "mutable": true,
+        "type": "int",
+        "value": 16
+      },
+      "maxProfilePictureLength": {
+        "deprecated": false,
+        "desc": "The maximum allowed length for a user's profile picture",
+        "global": true,
+        "mutable": true,
+        "type": "int",
+        "value": 100
       },
       "respondOfflineIfInvisible": {
         "deprecated": false,

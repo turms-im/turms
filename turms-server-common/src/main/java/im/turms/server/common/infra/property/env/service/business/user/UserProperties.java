@@ -26,6 +26,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import javax.validation.constraints.Min;
+
 /**
  * @author James Chen
  */
@@ -57,5 +59,29 @@ public class UserProperties {
     @GlobalProperty
     @MutableProperty
     private boolean activateUserWhenAdded = true;
+
+    @Description("The maximum allowed length for a user's password")
+    @GlobalProperty
+    @MutableProperty
+    @Min(0)
+    private int maxPasswordLength = 16;
+
+    @Description("The maximum allowed length for a user's name")
+    @GlobalProperty
+    @MutableProperty
+    @Min(0)
+    private int maxNameLength = 20;
+
+    @Description("The maximum allowed length for a user's intro")
+    @GlobalProperty
+    @MutableProperty
+    @Min(0)
+    private int maxIntroLength = 100;
+
+    @Description("The maximum allowed length for a user's profile picture")
+    @GlobalProperty
+    @MutableProperty
+    @Min(0)
+    private int maxProfilePictureLength = 100;
 
 }

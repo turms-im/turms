@@ -82,7 +82,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
     private final UserRelationshipService userRelationshipService;
 
     private boolean allowSendRequestAfterDeclinedOrIgnoredOrExpired;
-    private int contentLimit;
+    private int maxContentLength;
     private boolean deleteExpiredRequestsWhenCronTriggered;
 
     public UserFriendRequestService(
@@ -117,8 +117,8 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
     private void updateProperties(TurmsProperties properties) {
         allowSendRequestAfterDeclinedOrIgnoredOrExpired = properties.getService().getUser().getFriendRequest()
                 .isAllowSendRequestAfterDeclinedOrIgnoredOrExpired();
-        int localContentLimit = properties.getService().getUser().getFriendRequest().getContentLimit();
-        contentLimit = localContentLimit > 0 ? localContentLimit : contentLimit;
+        int localMaxContentLength = properties.getService().getUser().getFriendRequest().getMaxContentLength();
+        maxContentLength = localMaxContentLength > 0 ? localMaxContentLength : Integer.MAX_VALUE;
         deleteExpiredRequestsWhenCronTriggered = properties.getService().getUser().getFriendRequest()
                 .isDeleteExpiredRequestsWhenCronTriggered();
     }
@@ -166,7 +166,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             Validator.notNull(requesterId, "requesterId");
             Validator.notNull(recipientId, "recipientId");
             Validator.notNull(content, "content");
-            validFriendRequestContentLength(content);
+            Validator.maxLength(content, "content", maxContentLength);
             DataValidator.validRequestStatus(status);
             Validator.pastOrPresent(creationDate, "creationDate");
             Validator.pastOrPresent(responseDate, "responseDate");
@@ -213,7 +213,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
         try {
             Validator.notNull(requesterId, "requesterId");
             Validator.notNull(recipientId, "recipientId");
-            validFriendRequestContentLength(content);
+            Validator.maxLength(content, "content", maxContentLength);
             Validator.notNull(creationDate, "creationDate");
             Validator.pastOrPresent(creationDate, "creationDate");
             Validator.notEquals(requesterId, recipientId, "The requester ID must not equal to the recipient ID");
@@ -280,7 +280,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             @Nullable @PastOrPresent Date responseDate) {
         try {
             Validator.notEmpty(requestIds, "requestIds");
-            validFriendRequestContentLength(content);
+            Validator.maxLength(content, "content", maxContentLength);
             DataValidator.validRequestStatus(status);
             Validator.pastOrPresent(creationDate, "creationDate");
             Validator.pastOrPresent(responseDate, "responseDate");
@@ -444,14 +444,6 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
                 creationDateRange,
                 responseDateRange,
                 expirationDateRange);
-    }
-
-    // Validation
-
-    private void validFriendRequestContentLength(@Nullable String content) {
-        if (content != null) {
-            Validator.max(content.length(), "content", contentLimit);
-        }
     }
 
 }
