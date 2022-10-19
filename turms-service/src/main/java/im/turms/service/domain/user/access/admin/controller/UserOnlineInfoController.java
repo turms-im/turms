@@ -42,8 +42,8 @@ import im.turms.service.domain.user.access.admin.dto.request.UpdateOnlineStatusD
 import im.turms.service.domain.user.access.admin.dto.response.OnlineUserCountDTO;
 import im.turms.service.domain.user.access.admin.dto.response.UserLocationDTO;
 import im.turms.service.domain.user.service.UserService;
+import im.turms.service.domain.user.service.onlineuser.NearbyUserService;
 import im.turms.service.domain.user.service.onlineuser.SessionService;
-import im.turms.service.domain.user.service.onlineuser.UsersNearbyService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -62,7 +62,7 @@ public class UserOnlineInfoController extends BaseController {
     private final StatisticsService statisticsService;
     private final SessionLocationService sessionLocationService;
     private final UserStatusService userStatusService;
-    private final UsersNearbyService usersNearbyService;
+    private final NearbyUserService nearbyUserService;
     private final SessionService sessionService;
 
     public UserOnlineInfoController(
@@ -71,14 +71,14 @@ public class UserOnlineInfoController extends BaseController {
             StatisticsService statisticsService,
             SessionLocationService sessionLocationService,
             UserStatusService userStatusService,
-            UsersNearbyService usersNearbyService,
+            NearbyUserService nearbyUserService,
             SessionService sessionService) {
         super(propertiesManager);
         this.userService = userService;
         this.statisticsService = statisticsService;
         this.sessionLocationService = sessionLocationService;
         this.userStatusService = userStatusService;
-        this.usersNearbyService = usersNearbyService;
+        this.nearbyUserService = nearbyUserService;
         this.sessionService = sessionService;
     }
 
@@ -164,7 +164,7 @@ public class UserOnlineInfoController extends BaseController {
             boolean withCoordinates,
             boolean withDistance,
             boolean withUserInfo) {
-        Mono<List<NearbyUser>> usersNearby = usersNearbyService
+        Mono<List<NearbyUser>> nearbyUsers = nearbyUserService
                 .queryNearbyUsers(userId,
                         deviceType,
                         null,
@@ -174,7 +174,7 @@ public class UserOnlineInfoController extends BaseController {
                         withCoordinates,
                         withDistance,
                         withUserInfo);
-        return HttpHandlerResult.okIfTruthy(usersNearby);
+        return HttpHandlerResult.okIfTruthy(nearbyUsers);
     }
 
     @GetMapping("locations")

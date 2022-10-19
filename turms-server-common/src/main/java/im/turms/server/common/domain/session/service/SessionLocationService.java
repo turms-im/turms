@@ -27,7 +27,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.location.LocationProperties;
-import im.turms.server.common.infra.property.env.common.location.UsersNearbyRequestProperties;
+import im.turms.server.common.infra.property.env.common.location.NearbyUserRequestProperties;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.redis.RedisEntryId;
@@ -56,9 +56,9 @@ public class SessionLocationService {
     private final boolean locationEnabled;
     @Getter
     private final boolean treatUserIdAndDeviceTypeAsUniqueUser;
-    private short defaultMaxAvailableNearbyUsersNumber;
+    private short defaultMaxNearbyUserCount;
     private int defaultMaxDistanceMeters;
-    private int maxAvailableUsersNearbyNumberLimitPerQuery;
+    private int maxNearbyUserCount;
     private int maxDistanceMeters;
 
     public SessionLocationService(
@@ -73,11 +73,23 @@ public class SessionLocationService {
     }
 
     private void updateProperties(TurmsProperties properties) {
-        UsersNearbyRequestProperties requestProperties = properties.getLocation().getUsersNearbyRequest();
-        defaultMaxAvailableNearbyUsersNumber = requestProperties.getDefaultMaxAvailableNearbyUsersNumber();
-        defaultMaxDistanceMeters = requestProperties.getDefaultMaxDistanceMeters();
-        maxAvailableUsersNearbyNumberLimitPerQuery = requestProperties.getMaxAvailableUsersNearbyNumberLimit();
-        maxDistanceMeters = requestProperties.getMaxDistanceMeters();
+        NearbyUserRequestProperties requestProperties = properties.getLocation().getNearbyUserRequest();
+        short localDefaultMaxNearbyUserCount = requestProperties.getDefaultMaxNearbyUserCount();
+        int localDefaultMaxDistanceMeters = requestProperties.getDefaultMaxDistanceMeters();
+        short localMaxNearbyUserCount = requestProperties.getMaxNearbyUserCount();
+        int localMaxDistanceMeters = requestProperties.getMaxDistanceMeters();
+        defaultMaxNearbyUserCount = localDefaultMaxNearbyUserCount > 0
+                ? localDefaultMaxNearbyUserCount
+                : Short.MAX_VALUE;
+        defaultMaxDistanceMeters = localDefaultMaxDistanceMeters > 0
+                ? localDefaultMaxDistanceMeters
+                : Integer.MAX_VALUE;
+        maxNearbyUserCount = localMaxNearbyUserCount > 0
+                ? localMaxNearbyUserCount
+                : Integer.MAX_VALUE;
+        maxDistanceMeters = localMaxDistanceMeters > 0
+                ? localMaxDistanceMeters
+                : Integer.MAX_VALUE;
     }
 
     /**
@@ -94,7 +106,7 @@ public class SessionLocationService {
             DeviceTypeUtil.validDeviceType(deviceType);
             Validator.notNull(timestamp, "timestamp");
             Validator.inRange(longitude, "longitude", Location.LONGITUDE_MIN, Location.LONGITUDE_MAX);
-            Validator.inRange(longitude, "latitude", Location.LATITUDE_MIN, Location.LATITUDE_MAX);
+            Validator.inRange(latitude, "latitude", Location.LATITUDE_MIN, Location.LATITUDE_MAX);
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -139,6 +151,8 @@ public class SessionLocationService {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(deviceType, "deviceType");
+            Validator.inRange(maxCount, "maxCount", 1, maxNearbyUserCount);
+            Validator.inRange(maxDistance, "maxDistance", 1, maxDistanceMeters);
             DeviceTypeUtil.validDeviceType(deviceType);
         } catch (ResponseException e) {
             return Flux.error(e);
@@ -146,21 +160,11 @@ public class SessionLocationService {
         if (!locationEnabled) {
             return Flux.error(ResponseException.get(ResponseStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
-        if (maxNumber == null) {
-            maxNumber = defaultMaxAvailableNearbyUsersNumber;
-        }
-        int maxAvailableUsersNearbyNumberLimit = maxAvailableUsersNearbyNumberLimitPerQuery;
-        if (maxNumber > maxAvailableUsersNearbyNumberLimit) {
-            String reason = "The maximum available users nearby number is " + maxAvailableUsersNearbyNumberLimit;
-            return Flux.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, reason));
+        if (maxCount == null) {
+            maxCount = (short) Math.min(defaultMaxNearbyUserCount, maxNearbyUserCount);
         }
         if (maxDistance == null) {
-            maxDistance = defaultMaxDistanceMeters;
-        }
-        int localMaxDistanceMeters = maxDistanceMeters;
-        if (maxDistance > localMaxDistanceMeters) {
-            String reason = "The maximum allowed distance in meters is " + localMaxDistanceMeters;
-            return Flux.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, reason));
+            maxDistance = Math.min(defaultMaxDistanceMeters, maxDistanceMeters);
         }
         Object currentUserSessionId = treatUserIdAndDeviceTypeAsUniqueUser
                 ? new UserSessionId(userId, deviceType)

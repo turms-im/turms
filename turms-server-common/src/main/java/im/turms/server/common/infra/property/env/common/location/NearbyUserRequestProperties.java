@@ -35,27 +35,27 @@ import javax.validation.constraints.Min;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class UsersNearbyRequestProperties {
+public class NearbyUserRequestProperties {
 
-    @Description("The default maximum available number of nearby users")
+    @Description("The default maximum allowed number of nearby users")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private short defaultMaxAvailableNearbyUsersNumber = 20;
+    private short defaultMaxNearbyUserCount = 20;
 
-    @Description("The maximum allowed available number of users nearby records")
+    @Description("The maximum allowed number of nearby users")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private short maxAvailableUsersNearbyNumberLimit = 100;
+    private short maxNearbyUserCount = 100;
 
-    @Description("The default maximum distance limit in meters")
+    @Description("The default maximum allowed distance in meters")
     @GlobalProperty
     @MutableProperty
     @Min(0)
     private int defaultMaxDistanceMeters = 10_000;
 
-    @Description("The maximum distance limit in meters")
+    @Description("The maximum allowed distance in meters")
     @GlobalProperty
     @MutableProperty
     @Min(0)

@@ -42,6 +42,6 @@ public class LocationProperties {
     private boolean treatUserIdAndDeviceTypeAsUniqueUser;
 
     @NestedConfigurationProperty
-    private UsersNearbyRequestProperties usersNearbyRequest = new UsersNearbyRequestProperties();
+    private NearbyUserRequestProperties nearbyUserRequest = new NearbyUserRequestProperties();
 
 }

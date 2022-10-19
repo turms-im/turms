@@ -25,6 +25,7 @@ import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.service.domain.user.service.UserService;
 import io.lettuce.core.GeoCoordinates;
@@ -43,12 +44,12 @@ import java.util.List;
  * @author James Chen
  */
 @Service
-public class UsersNearbyService {
+public class NearbyUserService {
 
     private final UserService userService;
     private final SessionLocationService sessionLocationService;
 
-    public UsersNearbyService(
+    public NearbyUserService(
             UserService userService,
             SessionLocationService sessionLocationService) {
         this.sessionLocationService = sessionLocationService;
@@ -60,12 +61,12 @@ public class UsersNearbyService {
             @NotNull DeviceType deviceType,
             @Nullable Float longitude,
             @Nullable Float latitude,
-            @Nullable Short maxNumber,
+            @Nullable Short maxCount,
             @Nullable Integer maxDistance,
             boolean withCoordinates,
             boolean withDistance,
             boolean withUserInfo) {
-        if (!Validator.areAllNullOrNotNull(longitude, latitude)) {
+        if (!Validator.areBothNullOrNotNull(longitude, latitude)) {
             return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                     "longitude and latitude must be both null or both not null"));
         }
@@ -80,7 +81,7 @@ public class UsersNearbyService {
         Flux<GeoWithin<Object>> nearbyUserFlux = sessionLocationService.queryNearbyUsers(
                 userId,
                 deviceType,
-                maxNumber,
+                maxCount,
                 maxDistance,
                 withCoordinates,
                 withDistance);
@@ -95,10 +96,10 @@ public class UsersNearbyService {
                     }, geo -> geo)
                     .flatMap(userIdToGeo -> {
                         if (userIdToGeo.isEmpty()) {
-                            return Mono.empty();
+                            return PublisherPool.emptyList();
                         }
                         return userService.queryUsersProfile(userIdToGeo.keySet(), false)
-                                .collect(CollectorUtil.toChunkedList())
+                                .collect(CollectorUtil.toList(userIdToGeo.size()))
                                 .map(users -> {
                                     List<NearbyUser> nearbyUsers = new ArrayList<>(users.size());
                                     for (User user : users) {
@@ -123,21 +124,30 @@ public class UsersNearbyService {
         Object id = geo.getMember();
         GeoCoordinates coordinates = geo.getCoordinates();
         Double distance = geo.getDistance();
+        Long userId;
+        DeviceType deviceType;
+        Float longitude;
+        Float latitude;
         if (id instanceof UserSessionId sessionId) {
-            return new NearbyUser(sessionId.userId(),
-                    sessionId.deviceType(),
-                    coordinates == null ? null : coordinates.getX().floatValue(),
-                    coordinates == null ? null : coordinates.getY().floatValue(),
-                    distance == null ? null : distance.intValue(),
-                    user);
+            userId = sessionId.userId();
+            deviceType = sessionId.deviceType();
         } else {
-            return new NearbyUser((Long) id,
-                    null,
-                    coordinates == null ? null : coordinates.getX().floatValue(),
-                    coordinates == null ? null : coordinates.getY().floatValue(),
-                    distance == null ? null : distance.intValue(),
-                    user);
+            userId = (Long) id;
+            deviceType = null;
         }
+        if (coordinates == null) {
+            longitude = null;
+            latitude = null;
+        } else {
+            longitude = coordinates.getX().floatValue();
+            latitude = coordinates.getY().floatValue();
+        }
+        return new NearbyUser(userId,
+                deviceType,
+                longitude,
+                latitude,
+                distance == null ? null : distance.intValue(),
+                user);
     }
 
 }

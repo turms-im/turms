@@ -1345,42 +1345,42 @@
       "mutable": false,
       "type": "boolean"
     },
-    "treatUserIdAndDeviceTypeAsUniqueUser": {
-      "deprecated": false,
-      "desc": "Whether to treat the pair of user ID and device type as a unique user when querying users nearby. If false, only the user ID is used to identify a unique user",
-      "global": false,
-      "mutable": false,
-      "type": "boolean"
-    },
-    "usersNearbyRequest": {
-      "defaultMaxAvailableNearbyUsersNumber": {
-        "deprecated": false,
-        "desc": "The default maximum available number of nearby users",
-        "global": true,
-        "mutable": true,
-        "type": "short"
-      },
+    "nearbyUserRequest": {
       "defaultMaxDistanceMeters": {
         "deprecated": false,
-        "desc": "The default maximum distance limit in meters",
+        "desc": "The default maximum allowed distance in meters",
         "global": true,
         "mutable": true,
         "type": "int"
       },
-      "maxAvailableUsersNearbyNumberLimit": {
+      "defaultMaxNearbyUserCount": {
         "deprecated": false,
-        "desc": "The maximum allowed available number of users nearby records",
+        "desc": "The default maximum allowed number of nearby users",
         "global": true,
         "mutable": true,
         "type": "short"
       },
       "maxDistanceMeters": {
         "deprecated": false,
-        "desc": "The maximum distance limit in meters",
+        "desc": "The maximum allowed distance in meters",
         "global": true,
         "mutable": true,
         "type": "int"
+      },
+      "maxNearbyUserCount": {
+        "deprecated": false,
+        "desc": "The maximum allowed number of nearby users",
+        "global": true,
+        "mutable": true,
+        "type": "short"
       }
+    },
+    "treatUserIdAndDeviceTypeAsUniqueUser": {
+      "deprecated": false,
+      "desc": "Whether to treat the pair of user ID and device type as a unique user when querying users nearby. If false, only the user ID is used to identify a unique user",
+      "global": false,
+      "mutable": false,
+      "type": "boolean"
     }
   },
   "logging": {

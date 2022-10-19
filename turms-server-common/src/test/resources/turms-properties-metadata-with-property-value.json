@@ -1517,6 +1517,40 @@
       "type": "boolean",
       "value": true
     },
+    "nearbyUserRequest": {
+      "defaultMaxDistanceMeters": {
+        "deprecated": false,
+        "desc": "The default maximum allowed distance in meters",
+        "global": true,
+        "mutable": true,
+        "type": "int",
+        "value": 10000
+      },
+      "defaultMaxNearbyUserCount": {
+        "deprecated": false,
+        "desc": "The default maximum allowed number of nearby users",
+        "global": true,
+        "mutable": true,
+        "type": "short",
+        "value": 20
+      },
+      "maxDistanceMeters": {
+        "deprecated": false,
+        "desc": "The maximum allowed distance in meters",
+        "global": true,
+        "mutable": true,
+        "type": "int",
+        "value": 10000
+      },
+      "maxNearbyUserCount": {
+        "deprecated": false,
+        "desc": "The maximum allowed number of nearby users",
+        "global": true,
+        "mutable": true,
+        "type": "short",
+        "value": 100
+      }
+    },
     "treatUserIdAndDeviceTypeAsUniqueUser": {
       "deprecated": false,
       "desc": "Whether to treat the pair of user ID and device type as a unique user when querying users nearby. If false, only the user ID is used to identify a unique user",
@@ -1524,40 +1558,6 @@
       "mutable": false,
       "type": "boolean",
       "value": false
-    },
-    "usersNearbyRequest": {
-      "defaultMaxAvailableNearbyUsersNumber": {
-        "deprecated": false,
-        "desc": "The default maximum available number of nearby users",
-        "global": true,
-        "mutable": true,
-        "type": "short",
-        "value": 20
-      },
-      "defaultMaxDistanceMeters": {
-        "deprecated": false,
-        "desc": "The default maximum distance limit in meters",
-        "global": true,
-        "mutable": true,
-        "type": "int",
-        "value": 10000
-      },
-      "maxAvailableUsersNearbyNumberLimit": {
-        "deprecated": false,
-        "desc": "The maximum allowed available number of users nearby records",
-        "global": true,
-        "mutable": true,
-        "type": "short",
-        "value": 100
-      },
-      "maxDistanceMeters": {
-        "deprecated": false,
-        "desc": "The maximum distance limit in meters",
-        "global": true,
-        "mutable": true,
-        "type": "int",
-        "value": 10000
-      }
     }
   },
   "logging": {

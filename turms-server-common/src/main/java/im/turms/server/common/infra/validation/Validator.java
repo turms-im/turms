@@ -81,16 +81,8 @@ public final class Validator {
         return true;
     }
 
-    public static boolean areAllNullOrNotNull(Object... array) {
-        if (array == null) {
-            return true;
-        }
-        for (int i = 1; i < array.length; i++) {
-            if (array[0] != array[i]) {
-                return false;
-            }
-        }
-        return true;
+    public static boolean areBothNullOrNotNull(@Nullable Object value1, @Nullable Object value2) {
+        return (value1 == null) == (value2 == null);
     }
 
     public static void notContains(@Nullable Collection<?> collection, Object value, String message) {
@@ -166,6 +158,20 @@ public final class Validator {
 
     public static void inRange(double num, String name, double min, double max) {
         if (num > max || num < min) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    ("\"" + name + "\" must be less than or equal to " + max + ", and greater than or equal to " + min).intern());
+        }
+    }
+
+    public static void inRange(@Nullable Short num, String name, int min, int max) {
+        if (num != null && (num > max || num < min)) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    ("\"" + name + "\" must be less than or equal to " + max + ", and greater than or equal to " + min).intern());
+        }
+    }
+
+    public static void inRange(@Nullable Integer num, String name, int min, int max) {
+        if (num != null && (num > max || num < min)) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                     ("\"" + name + "\" must be less than or equal to " + max + ", and greater than or equal to " + min).intern());
         }

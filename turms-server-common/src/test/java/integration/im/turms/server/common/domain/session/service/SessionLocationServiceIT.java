@@ -25,7 +25,7 @@ import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.location.LocationProperties;
-import im.turms.server.common.infra.property.env.common.location.UsersNearbyRequestProperties;
+import im.turms.server.common.infra.property.env.common.location.NearbyUserRequestProperties;
 import im.turms.server.common.storage.redis.RedisProperties;
 import im.turms.server.common.storage.redis.TurmsRedisClientManager;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContextPool;
@@ -91,7 +91,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
             Consumer<TurmsProperties> listener = invocation.getArgument(0);
             listener.accept(new TurmsProperties().toBuilder()
                     .location(new LocationProperties().toBuilder()
-                            .usersNearbyRequest(new UsersNearbyRequestProperties()
+                            .nearbyUserRequest(new NearbyUserRequestProperties()
                                     .toBuilder()
                                     .maxDistanceMeters(Integer.MAX_VALUE)
                                     .build())

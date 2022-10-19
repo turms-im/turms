@@ -31,6 +31,7 @@ import im.turms.server.common.access.client.dto.request.user.UpdateUserLocationR
 import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.server.common.access.client.dto.request.user.UpdateUserRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.location.bo.NearbyUser;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
@@ -51,8 +52,8 @@ import im.turms.service.domain.common.access.servicerequest.controller.BaseServi
 import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.domain.user.service.UserRelationshipService;
 import im.turms.service.domain.user.service.UserService;
+import im.turms.service.domain.user.service.onlineuser.NearbyUserService;
 import im.turms.service.domain.user.service.onlineuser.SessionService;
-import im.turms.service.domain.user.service.onlineuser.UsersNearbyService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;
@@ -81,7 +82,7 @@ public class UserServiceController extends BaseServiceController {
     private final UserRelationshipService userRelationshipService;
     private final UserStatusService userStatusService;
     private final SessionLocationService sessionLocationService;
-    private final UsersNearbyService usersNearbyService;
+    private final NearbyUserService nearbyUserService;
     private final SessionService sessionService;
     private final GroupMemberService groupMemberService;
 
@@ -94,14 +95,14 @@ public class UserServiceController extends BaseServiceController {
             TurmsPropertiesManager propertiesManager,
             UserService userService,
             SessionLocationService sessionLocationService,
-            UsersNearbyService usersNearbyService,
+            NearbyUserService nearbyUserService,
             GroupMemberService groupMemberService,
             UserRelationshipService userRelationshipService,
             UserStatusService userStatusService,
             SessionService sessionService) {
         this.userService = userService;
         this.sessionLocationService = sessionLocationService;
-        this.usersNearbyService = usersNearbyService;
+        this.nearbyUserService = nearbyUserService;
         this.groupMemberService = groupMemberService;
         this.userRelationshipService = userRelationshipService;
         this.userStatusService = userStatusService;
@@ -149,7 +150,7 @@ public class UserServiceController extends BaseServiceController {
             QueryNearbyUsersRequest request = clientRequest.turmsRequest().getQueryNearbyUsersRequest();
             Short maxCount = request.hasMaxCount() ? (short) request.getMaxCount() : null;
             Integer maxDistance = request.hasMaxDistance() ? request.getMaxDistance() : null;
-            return usersNearbyService.queryNearbyUsers(
+            return nearbyUserService.queryNearbyUsers(
                             clientRequest.userId(),
                             clientRequest.deviceType(),
                             request.getLongitude(),
@@ -164,7 +165,7 @@ public class UserServiceController extends BaseServiceController {
                             return RequestHandlerResultFactory.NO_CONTENT;
                         }
                         NearbyUsers.Builder builder = ClientMessagePool.getNearbyUsersBuilder();
-                        for (var nearbyUser : nearbyUsers) {
+                        for (NearbyUser nearbyUser : nearbyUsers) {
                             builder.addNearbyUsers(ProtoModelConvertor.nearbyUser2proto(nearbyUser));
                         }
                         return RequestHandlerResultFactory.get(ClientMessagePool
