@@ -83,72 +83,72 @@ public  final class QueryNearbyUsersRequest extends
     longitude_ = 0F;
   }
 
-  public static final int DISTANCE_FIELD_NUMBER = 3;
-  private int distance_;
+  public static final int MAX_COUNT_FIELD_NUMBER = 3;
+  private int maxCount_;
   /**
-   * <code>optional int32 distance = 3;</code>
-   * @return Whether the distance field is set.
+   * <code>optional int32 max_count = 3;</code>
+   * @return Whether the maxCount field is set.
    */
   @java.lang.Override
-  public boolean hasDistance() {
+  public boolean hasMaxCount() {
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>optional int32 distance = 3;</code>
-   * @return The distance.
+   * <code>optional int32 max_count = 3;</code>
+   * @return The maxCount.
    */
   @java.lang.Override
-  public int getDistance() {
-    return distance_;
+  public int getMaxCount() {
+    return maxCount_;
   }
   /**
-   * <code>optional int32 distance = 3;</code>
-   * @param value The distance to set.
+   * <code>optional int32 max_count = 3;</code>
+   * @param value The maxCount to set.
    */
-  private void setDistance(int value) {
+  private void setMaxCount(int value) {
     bitField0_ |= 0x00000001;
-    distance_ = value;
+    maxCount_ = value;
   }
   /**
-   * <code>optional int32 distance = 3;</code>
+   * <code>optional int32 max_count = 3;</code>
    */
-  private void clearDistance() {
+  private void clearMaxCount() {
     bitField0_ = (bitField0_ & ~0x00000001);
-    distance_ = 0;
+    maxCount_ = 0;
   }
 
-  public static final int MAX_NUMBER_FIELD_NUMBER = 4;
-  private int maxNumber_;
+  public static final int MAX_DISTANCE_FIELD_NUMBER = 4;
+  private int maxDistance_;
   /**
-   * <code>optional int32 max_number = 4;</code>
-   * @return Whether the maxNumber field is set.
+   * <code>optional int32 max_distance = 4;</code>
+   * @return Whether the maxDistance field is set.
    */
   @java.lang.Override
-  public boolean hasMaxNumber() {
+  public boolean hasMaxDistance() {
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>optional int32 max_number = 4;</code>
-   * @return The maxNumber.
+   * <code>optional int32 max_distance = 4;</code>
+   * @return The maxDistance.
    */
   @java.lang.Override
-  public int getMaxNumber() {
-    return maxNumber_;
+  public int getMaxDistance() {
+    return maxDistance_;
   }
   /**
-   * <code>optional int32 max_number = 4;</code>
-   * @param value The maxNumber to set.
+   * <code>optional int32 max_distance = 4;</code>
+   * @param value The maxDistance to set.
    */
-  private void setMaxNumber(int value) {
+  private void setMaxDistance(int value) {
     bitField0_ |= 0x00000002;
-    maxNumber_ = value;
+    maxDistance_ = value;
   }
   /**
-   * <code>optional int32 max_number = 4;</code>
+   * <code>optional int32 max_distance = 4;</code>
    */
-  private void clearMaxNumber() {
+  private void clearMaxDistance() {
     bitField0_ = (bitField0_ & ~0x00000002);
-    maxNumber_ = 0;
+    maxDistance_ = 0;
   }
 
   public static final int WITH_COORDINATES_FIELD_NUMBER = 5;
@@ -219,38 +219,38 @@ public  final class QueryNearbyUsersRequest extends
     withDistance_ = false;
   }
 
-  public static final int WITH_INFO_FIELD_NUMBER = 7;
-  private boolean withInfo_;
+  public static final int WITH_USER_INFO_FIELD_NUMBER = 7;
+  private boolean withUserInfo_;
   /**
-   * <code>optional bool with_info = 7;</code>
-   * @return Whether the withInfo field is set.
+   * <code>optional bool with_user_info = 7;</code>
+   * @return Whether the withUserInfo field is set.
    */
   @java.lang.Override
-  public boolean hasWithInfo() {
+  public boolean hasWithUserInfo() {
     return ((bitField0_ & 0x00000010) != 0);
   }
   /**
-   * <code>optional bool with_info = 7;</code>
-   * @return The withInfo.
+   * <code>optional bool with_user_info = 7;</code>
+   * @return The withUserInfo.
    */
   @java.lang.Override
-  public boolean getWithInfo() {
-    return withInfo_;
+  public boolean getWithUserInfo() {
+    return withUserInfo_;
   }
   /**
-   * <code>optional bool with_info = 7;</code>
-   * @param value The withInfo to set.
+   * <code>optional bool with_user_info = 7;</code>
+   * @param value The withUserInfo to set.
    */
-  private void setWithInfo(boolean value) {
+  private void setWithUserInfo(boolean value) {
     bitField0_ |= 0x00000010;
-    withInfo_ = value;
+    withUserInfo_ = value;
   }
   /**
-   * <code>optional bool with_info = 7;</code>
+   * <code>optional bool with_user_info = 7;</code>
    */
-  private void clearWithInfo() {
+  private void clearWithUserInfo() {
     bitField0_ = (bitField0_ & ~0x00000010);
-    withInfo_ = false;
+    withUserInfo_ = false;
   }
 
   public static im.turms.client.model.proto.request.user.QueryNearbyUsersRequest parseFrom(
@@ -405,74 +405,74 @@ public  final class QueryNearbyUsersRequest extends
     }
 
     /**
-     * <code>optional int32 distance = 3;</code>
-     * @return Whether the distance field is set.
+     * <code>optional int32 max_count = 3;</code>
+     * @return Whether the maxCount field is set.
      */
     @java.lang.Override
-    public boolean hasDistance() {
-      return instance.hasDistance();
+    public boolean hasMaxCount() {
+      return instance.hasMaxCount();
     }
     /**
-     * <code>optional int32 distance = 3;</code>
-     * @return The distance.
+     * <code>optional int32 max_count = 3;</code>
+     * @return The maxCount.
      */
     @java.lang.Override
-    public int getDistance() {
-      return instance.getDistance();
+    public int getMaxCount() {
+      return instance.getMaxCount();
     }
     /**
-     * <code>optional int32 distance = 3;</code>
-     * @param value The distance to set.
+     * <code>optional int32 max_count = 3;</code>
+     * @param value The maxCount to set.
      * @return This builder for chaining.
      */
-    public Builder setDistance(int value) {
+    public Builder setMaxCount(int value) {
       copyOnWrite();
-      instance.setDistance(value);
+      instance.setMaxCount(value);
       return this;
     }
     /**
-     * <code>optional int32 distance = 3;</code>
+     * <code>optional int32 max_count = 3;</code>
      * @return This builder for chaining.
      */
-    public Builder clearDistance() {
+    public Builder clearMaxCount() {
       copyOnWrite();
-      instance.clearDistance();
+      instance.clearMaxCount();
       return this;
     }
 
     /**
-     * <code>optional int32 max_number = 4;</code>
-     * @return Whether the maxNumber field is set.
+     * <code>optional int32 max_distance = 4;</code>
+     * @return Whether the maxDistance field is set.
      */
     @java.lang.Override
-    public boolean hasMaxNumber() {
-      return instance.hasMaxNumber();
+    public boolean hasMaxDistance() {
+      return instance.hasMaxDistance();
     }
     /**
-     * <code>optional int32 max_number = 4;</code>
-     * @return The maxNumber.
+     * <code>optional int32 max_distance = 4;</code>
+     * @return The maxDistance.
      */
     @java.lang.Override
-    public int getMaxNumber() {
-      return instance.getMaxNumber();
+    public int getMaxDistance() {
+      return instance.getMaxDistance();
     }
     /**
-     * <code>optional int32 max_number = 4;</code>
-     * @param value The maxNumber to set.
+     * <code>optional int32 max_distance = 4;</code>
+     * @param value The maxDistance to set.
      * @return This builder for chaining.
      */
-    public Builder setMaxNumber(int value) {
+    public Builder setMaxDistance(int value) {
       copyOnWrite();
-      instance.setMaxNumber(value);
+      instance.setMaxDistance(value);
       return this;
     }
     /**
-     * <code>optional int32 max_number = 4;</code>
+     * <code>optional int32 max_distance = 4;</code>
      * @return This builder for chaining.
      */
-    public Builder clearMaxNumber() {
+    public Builder clearMaxDistance() {
       copyOnWrite();
-      instance.clearMaxNumber();
+      instance.clearMaxDistance();
       return this;
     }
 
@@ -549,38 +549,38 @@ public  final class QueryNearbyUsersRequest extends
     }
 
     /**
-     * <code>optional bool with_info = 7;</code>
-     * @return Whether the withInfo field is set.
+     * <code>optional bool with_user_info = 7;</code>
+     * @return Whether the withUserInfo field is set.
      */
     @java.lang.Override
-    public boolean hasWithInfo() {
-      return instance.hasWithInfo();
+    public boolean hasWithUserInfo() {
+      return instance.hasWithUserInfo();
     }
     /**
-     * <code>optional bool with_info = 7;</code>
-     * @return The withInfo.
+     * <code>optional bool with_user_info = 7;</code>
+     * @return The withUserInfo.
      */
     @java.lang.Override
-    public boolean getWithInfo() {
-      return instance.getWithInfo();
+    public boolean getWithUserInfo() {
+      return instance.getWithUserInfo();
     }
     /**
-     * <code>optional bool with_info = 7;</code>
-     * @param value The withInfo to set.
+     * <code>optional bool with_user_info = 7;</code>
+     * @param value The withUserInfo to set.
      * @return This builder for chaining.
      */
-    public Builder setWithInfo(boolean value) {
+    public Builder setWithUserInfo(boolean value) {
       copyOnWrite();
-      instance.setWithInfo(value);
+      instance.setWithUserInfo(value);
       return this;
     }
     /**
-     * <code>optional bool with_info = 7;</code>
+     * <code>optional bool with_user_info = 7;</code>
      * @return This builder for chaining.
      */
-    public Builder clearWithInfo() {
+    public Builder clearWithUserInfo() {
       copyOnWrite();
-      instance.clearWithInfo();
+      instance.clearWithUserInfo();
       return this;
     }
 
@@ -603,11 +603,11 @@ public  final class QueryNearbyUsersRequest extends
             "bitField0_",
             "latitude_",
             "longitude_",
-            "distance_",
-            "maxNumber_",
+            "maxCount_",
+            "maxDistance_",
             "withCoordinates_",
             "withDistance_",
-            "withInfo_",
+            "withUserInfo_",
           };
           java.lang.String info =
               "\u0000\u0007\u0000\u0001\u0001\u0007\u0007\u0000\u0000\u0000\u0001\u0001\u0002\u0001" +

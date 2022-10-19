@@ -234,21 +234,21 @@ class UserService(private val turmsClient: TurmsClient) {
     suspend fun queryNearbyUsers(
         latitude: Float,
         longitude: Float,
-        distance: Int? = null,
-        maxNumber: Int? = null,
+        maxCount: Int? = null,
+        maxDistance: Int? = null,
         withCoordinates: Boolean? = null,
         withDistance: Boolean? = null,
-        withInfo: Boolean? = null,
+        withUserInfo: Boolean? = null,
     ): Response<List<NearbyUser>> = turmsClient.driver
         .send(
             QueryNearbyUsersRequest.newBuilder().apply {
                 this.latitude = latitude
                 this.longitude = longitude
-                distance?.let { this.distance = it }
-                maxNumber?.let { this.maxNumber = it }
+                maxCount?.let { this.maxCount = it }
+                maxDistance?.let { this.maxDistance = it }
                 withCoordinates?.let { this.withCoordinates = it }
                 withDistance?.let { this.withDistance = it }
-                withInfo?.let { this.withInfo = it }
+                withUserInfo?.let { this.withUserInfo = it }
             }
         ).toResponse {
             it.nearbyUsers.nearbyUsersList

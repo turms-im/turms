@@ -159,7 +159,7 @@ public class UserOnlineInfoController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<List<NearbyUser>>>> queryUsersNearby(
             Long userId,
             @QueryParam(required = false) DeviceType deviceType,
-            @QueryParam(required = false) Short maxNumber,
+            @QueryParam(required = false) Short maxCount,
             @QueryParam(required = false) Integer maxDistance,
             boolean withCoordinates,
             boolean withDistance,
@@ -169,7 +169,7 @@ public class UserOnlineInfoController extends BaseController {
                         deviceType,
                         null,
                         null,
-                        maxNumber,
+                        maxCount,
                         maxDistance,
                         withCoordinates,
                         withDistance,

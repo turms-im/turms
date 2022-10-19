@@ -151,7 +151,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
                 .setQueryMessagesRequest(QueryMessagesRequest.newBuilder()
                         .setAreGroupMessages(false)
                         .addFromIds(SENDER_ID)
-                        .setSize(10))
+                        .setMaxCount(10))
                 .build();
         ClientRequest clientRequest = new ClientRequest(RECIPIENT_ID, SENDER_DEVICE_TYPE, SENDER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryMessagesRequest()
@@ -165,7 +165,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryMessagesRequest(QueryMessagesRequest.newBuilder()
                         .setAreGroupMessages(true)
-                        .setSize(1)
+                        .setMaxCount(1)
                         .setWithTotal(true))
                 .build();
         ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, SENDER_IP, REQUEST_ID, request);

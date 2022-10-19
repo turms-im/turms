@@ -83,42 +83,42 @@ private static final long serialVersionUID = 0L;
     return longitude_;
   }
 
-  public static final int DISTANCE_FIELD_NUMBER = 3;
-  private int distance_;
+  public static final int MAX_COUNT_FIELD_NUMBER = 3;
+  private int maxCount_;
   /**
-   * <code>optional int32 distance = 3;</code>
-   * @return Whether the distance field is set.
+   * <code>optional int32 max_count = 3;</code>
+   * @return Whether the maxCount field is set.
    */
   @java.lang.Override
-  public boolean hasDistance() {
+  public boolean hasMaxCount() {
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>optional int32 distance = 3;</code>
-   * @return The distance.
+   * <code>optional int32 max_count = 3;</code>
+   * @return The maxCount.
    */
   @java.lang.Override
-  public int getDistance() {
-    return distance_;
+  public int getMaxCount() {
+    return maxCount_;
   }
 
-  public static final int MAX_NUMBER_FIELD_NUMBER = 4;
-  private int maxNumber_;
+  public static final int MAX_DISTANCE_FIELD_NUMBER = 4;
+  private int maxDistance_;
   /**
-   * <code>optional int32 max_number = 4;</code>
-   * @return Whether the maxNumber field is set.
+   * <code>optional int32 max_distance = 4;</code>
+   * @return Whether the maxDistance field is set.
    */
   @java.lang.Override
-  public boolean hasMaxNumber() {
+  public boolean hasMaxDistance() {
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>optional int32 max_number = 4;</code>
-   * @return The maxNumber.
+   * <code>optional int32 max_distance = 4;</code>
+   * @return The maxDistance.
    */
   @java.lang.Override
-  public int getMaxNumber() {
-    return maxNumber_;
+  public int getMaxDistance() {
+    return maxDistance_;
   }
 
   public static final int WITH_COORDINATES_FIELD_NUMBER = 5;
@@ -159,23 +159,23 @@ private static final long serialVersionUID = 0L;
     return withDistance_;
   }
 
-  public static final int WITH_INFO_FIELD_NUMBER = 7;
-  private boolean withInfo_;
+  public static final int WITH_USER_INFO_FIELD_NUMBER = 7;
+  private boolean withUserInfo_;
   /**
-   * <code>optional bool with_info = 7;</code>
-   * @return Whether the withInfo field is set.
+   * <code>optional bool with_user_info = 7;</code>
+   * @return Whether the withUserInfo field is set.
    */
   @java.lang.Override
-  public boolean hasWithInfo() {
+  public boolean hasWithUserInfo() {
     return ((bitField0_ & 0x00000010) != 0);
   }
   /**
-   * <code>optional bool with_info = 7;</code>
-   * @return The withInfo.
+   * <code>optional bool with_user_info = 7;</code>
+   * @return The withUserInfo.
    */
   @java.lang.Override
-  public boolean getWithInfo() {
-    return withInfo_;
+  public boolean getWithUserInfo() {
+    return withUserInfo_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -199,10 +199,10 @@ private static final long serialVersionUID = 0L;
       output.writeFloat(2, longitude_);
     }
     if (((bitField0_ & 0x00000001) != 0)) {
-      output.writeInt32(3, distance_);
+      output.writeInt32(3, maxCount_);
     }
     if (((bitField0_ & 0x00000002) != 0)) {
-      output.writeInt32(4, maxNumber_);
+      output.writeInt32(4, maxDistance_);
     }
     if (((bitField0_ & 0x00000004) != 0)) {
       output.writeBool(5, withCoordinates_);
@@ -211,7 +211,7 @@ private static final long serialVersionUID = 0L;
       output.writeBool(6, withDistance_);
     }
     if (((bitField0_ & 0x00000010) != 0)) {
-      output.writeBool(7, withInfo_);
+      output.writeBool(7, withUserInfo_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -232,11 +232,11 @@ private static final long serialVersionUID = 0L;
     }
     if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(3, distance_);
+        .computeInt32Size(3, maxCount_);
     }
     if (((bitField0_ & 0x00000002) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(4, maxNumber_);
+        .computeInt32Size(4, maxDistance_);
     }
     if (((bitField0_ & 0x00000004) != 0)) {
       size += com.google.protobuf.CodedOutputStream
@@ -248,7 +248,7 @@ private static final long serialVersionUID = 0L;
     }
     if (((bitField0_ & 0x00000010) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(7, withInfo_);
+        .computeBoolSize(7, withUserInfo_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -271,15 +271,15 @@ private static final long serialVersionUID = 0L;
     if (java.lang.Float.floatToIntBits(getLongitude())
         != java.lang.Float.floatToIntBits(
             other.getLongitude())) return false;
-    if (hasDistance() != other.hasDistance()) return false;
-    if (hasDistance()) {
-      if (getDistance()
-          != other.getDistance()) return false;
+    if (hasMaxCount() != other.hasMaxCount()) return false;
+    if (hasMaxCount()) {
+      if (getMaxCount()
+          != other.getMaxCount()) return false;
     }
-    if (hasMaxNumber() != other.hasMaxNumber()) return false;
-    if (hasMaxNumber()) {
-      if (getMaxNumber()
-          != other.getMaxNumber()) return false;
+    if (hasMaxDistance() != other.hasMaxDistance()) return false;
+    if (hasMaxDistance()) {
+      if (getMaxDistance()
+          != other.getMaxDistance()) return false;
     }
     if (hasWithCoordinates() != other.hasWithCoordinates()) return false;
     if (hasWithCoordinates()) {
@@ -291,10 +291,10 @@ private static final long serialVersionUID = 0L;
       if (getWithDistance()
           != other.getWithDistance()) return false;
     }
-    if (hasWithInfo() != other.hasWithInfo()) return false;
-    if (hasWithInfo()) {
-      if (getWithInfo()
-          != other.getWithInfo()) return false;
+    if (hasWithUserInfo() != other.hasWithUserInfo()) return false;
+    if (hasWithUserInfo()) {
+      if (getWithUserInfo()
+          != other.getWithUserInfo()) return false;
     }
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
@@ -313,13 +313,13 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + LONGITUDE_FIELD_NUMBER;
     hash = (53 * hash) + java.lang.Float.floatToIntBits(
         getLongitude());
-    if (hasDistance()) {
-      hash = (37 * hash) + DISTANCE_FIELD_NUMBER;
-      hash = (53 * hash) + getDistance();
+    if (hasMaxCount()) {
+      hash = (37 * hash) + MAX_COUNT_FIELD_NUMBER;
+      hash = (53 * hash) + getMaxCount();
     }
-    if (hasMaxNumber()) {
-      hash = (37 * hash) + MAX_NUMBER_FIELD_NUMBER;
-      hash = (53 * hash) + getMaxNumber();
+    if (hasMaxDistance()) {
+      hash = (37 * hash) + MAX_DISTANCE_FIELD_NUMBER;
+      hash = (53 * hash) + getMaxDistance();
     }
     if (hasWithCoordinates()) {
       hash = (37 * hash) + WITH_COORDINATES_FIELD_NUMBER;
@@ -331,10 +331,10 @@ private static final long serialVersionUID = 0L;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getWithDistance());
     }
-    if (hasWithInfo()) {
-      hash = (37 * hash) + WITH_INFO_FIELD_NUMBER;
+    if (hasWithUserInfo()) {
+      hash = (37 * hash) + WITH_USER_INFO_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-          getWithInfo());
+          getWithUserInfo());
     }
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
@@ -468,15 +468,15 @@ private static final long serialVersionUID = 0L;
 
       longitude_ = 0F;
 
-      distance_ = 0;
+      maxCount_ = 0;
       bitField0_ = (bitField0_ & ~0x00000001);
-      maxNumber_ = 0;
+      maxDistance_ = 0;
       bitField0_ = (bitField0_ & ~0x00000002);
       withCoordinates_ = false;
       bitField0_ = (bitField0_ & ~0x00000004);
       withDistance_ = false;
       bitField0_ = (bitField0_ & ~0x00000008);
-      withInfo_ = false;
+      withUserInfo_ = false;
       bitField0_ = (bitField0_ & ~0x00000010);
       return this;
     }
@@ -509,11 +509,11 @@ private static final long serialVersionUID = 0L;
       result.latitude_ = latitude_;
       result.longitude_ = longitude_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
-        result.distance_ = distance_;
+        result.maxCount_ = maxCount_;
         to_bitField0_ |= 0x00000001;
       }
       if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.maxNumber_ = maxNumber_;
+        result.maxDistance_ = maxDistance_;
         to_bitField0_ |= 0x00000002;
       }
       if (((from_bitField0_ & 0x00000004) != 0)) {
@@ -525,7 +525,7 @@ private static final long serialVersionUID = 0L;
         to_bitField0_ |= 0x00000008;
       }
       if (((from_bitField0_ & 0x00000010) != 0)) {
-        result.withInfo_ = withInfo_;
+        result.withUserInfo_ = withUserInfo_;
         to_bitField0_ |= 0x00000010;
       }
       result.bitField0_ = to_bitField0_;
@@ -583,11 +583,11 @@ private static final long serialVersionUID = 0L;
       if (other.getLongitude() != 0F) {
         setLongitude(other.getLongitude());
       }
-      if (other.hasDistance()) {
-        setDistance(other.getDistance());
+      if (other.hasMaxCount()) {
+        setMaxCount(other.getMaxCount());
       }
-      if (other.hasMaxNumber()) {
-        setMaxNumber(other.getMaxNumber());
+      if (other.hasMaxDistance()) {
+        setMaxDistance(other.getMaxDistance());
       }
       if (other.hasWithCoordinates()) {
         setWithCoordinates(other.getWithCoordinates());
@@ -595,8 +595,8 @@ private static final long serialVersionUID = 0L;
       if (other.hasWithDistance()) {
         setWithDistance(other.getWithDistance());
       }
-      if (other.hasWithInfo()) {
-        setWithInfo(other.getWithInfo());
+      if (other.hasWithUserInfo()) {
+        setWithUserInfo(other.getWithUserInfo());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -635,12 +635,12 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 21
             case 24: {
-              distance_ = input.readInt32();
+              maxCount_ = input.readInt32();
               bitField0_ |= 0x00000001;
               break;
             } // case 24
             case 32: {
-              maxNumber_ = input.readInt32();
+              maxDistance_ = input.readInt32();
               bitField0_ |= 0x00000002;
               break;
             } // case 32
@@ -655,7 +655,7 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 48
             case 56: {
-              withInfo_ = input.readBool();
+              withUserInfo_ = input.readBool();
               bitField0_ |= 0x00000010;
               break;
             } // case 56
@@ -738,80 +738,80 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int distance_ ;
+    private int maxCount_ ;
     /**
-     * <code>optional int32 distance = 3;</code>
-     * @return Whether the distance field is set.
+     * <code>optional int32 max_count = 3;</code>
+     * @return Whether the maxCount field is set.
      */
     @java.lang.Override
-    public boolean hasDistance() {
+    public boolean hasMaxCount() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>optional int32 distance = 3;</code>
-     * @return The distance.
+     * <code>optional int32 max_count = 3;</code>
+     * @return The maxCount.
      */
     @java.lang.Override
-    public int getDistance() {
-      return distance_;
+    public int getMaxCount() {
+      return maxCount_;
     }
     /**
-     * <code>optional int32 distance = 3;</code>
-     * @param value The distance to set.
+     * <code>optional int32 max_count = 3;</code>
+     * @param value The maxCount to set.
      * @return This builder for chaining.
      */
-    public Builder setDistance(int value) {
+    public Builder setMaxCount(int value) {
       bitField0_ |= 0x00000001;
-      distance_ = value;
+      maxCount_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional int32 distance = 3;</code>
+     * <code>optional int32 max_count = 3;</code>
      * @return This builder for chaining.
      */
-    public Builder clearDistance() {
+    public Builder clearMaxCount() {
       bitField0_ = (bitField0_ & ~0x00000001);
-      distance_ = 0;
+      maxCount_ = 0;
       onChanged();
       return this;
     }
 
-    private int maxNumber_ ;
+    private int maxDistance_ ;
     /**
-     * <code>optional int32 max_number = 4;</code>
-     * @return Whether the maxNumber field is set.
+     * <code>optional int32 max_distance = 4;</code>
+     * @return Whether the maxDistance field is set.
      */
     @java.lang.Override
-    public boolean hasMaxNumber() {
+    public boolean hasMaxDistance() {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>optional int32 max_number = 4;</code>
-     * @return The maxNumber.
+     * <code>optional int32 max_distance = 4;</code>
+     * @return The maxDistance.
      */
     @java.lang.Override
-    public int getMaxNumber() {
-      return maxNumber_;
+    public int getMaxDistance() {
+      return maxDistance_;
     }
     /**
-     * <code>optional int32 max_number = 4;</code>
-     * @param value The maxNumber to set.
+     * <code>optional int32 max_distance = 4;</code>
+     * @param value The maxDistance to set.
      * @return This builder for chaining.
      */
-    public Builder setMaxNumber(int value) {
+    public Builder setMaxDistance(int value) {
       bitField0_ |= 0x00000002;
-      maxNumber_ = value;
+      maxDistance_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional int32 max_number = 4;</code>
+     * <code>optional int32 max_distance = 4;</code>
      * @return This builder for chaining.
      */
-    public Builder clearMaxNumber() {
+    public Builder clearMaxDistance() {
       bitField0_ = (bitField0_ & ~0x00000002);
-      maxNumber_ = 0;
+      maxDistance_ = 0;
       onChanged();
       return this;
     }
@@ -894,41 +894,41 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private boolean withInfo_ ;
+    private boolean withUserInfo_ ;
     /**
-     * <code>optional bool with_info = 7;</code>
-     * @return Whether the withInfo field is set.
+     * <code>optional bool with_user_info = 7;</code>
+     * @return Whether the withUserInfo field is set.
      */
     @java.lang.Override
-    public boolean hasWithInfo() {
+    public boolean hasWithUserInfo() {
       return ((bitField0_ & 0x00000010) != 0);
     }
     /**
-     * <code>optional bool with_info = 7;</code>
-     * @return The withInfo.
+     * <code>optional bool with_user_info = 7;</code>
+     * @return The withUserInfo.
      */
     @java.lang.Override
-    public boolean getWithInfo() {
-      return withInfo_;
+    public boolean getWithUserInfo() {
+      return withUserInfo_;
     }
     /**
-     * <code>optional bool with_info = 7;</code>
-     * @param value The withInfo to set.
+     * <code>optional bool with_user_info = 7;</code>
+     * @param value The withUserInfo to set.
      * @return This builder for chaining.
      */
-    public Builder setWithInfo(boolean value) {
+    public Builder setWithUserInfo(boolean value) {
       bitField0_ |= 0x00000010;
-      withInfo_ = value;
+      withUserInfo_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional bool with_info = 7;</code>
+     * <code>optional bool with_user_info = 7;</code>
      * @return This builder for chaining.
      */
-    public Builder clearWithInfo() {
+    public Builder clearWithUserInfo() {
       bitField0_ = (bitField0_ & ~0x00000010);
-      withInfo_ = false;
+      withUserInfo_ = false;
       onChanged();
       return this;
     }

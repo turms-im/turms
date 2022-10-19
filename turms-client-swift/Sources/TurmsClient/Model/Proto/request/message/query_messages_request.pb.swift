@@ -27,16 +27,6 @@ public struct QueryMessagesRequest {
 
     public var ids: [Int64] = []
 
-    public var size: Int32 {
-        get { return _size ?? 0 }
-        set { _size = newValue }
-    }
-
-    /// Returns true if `size` has been explicitly set.
-    public var hasSize: Bool { return _size != nil }
-    /// Clears the value of `size`. Subsequent reads from it will return its default value.
-    public mutating func clearSize() { _size = nil }
-
     public var areGroupMessages: Bool {
         get { return _areGroupMessages ?? false }
         set { _areGroupMessages = newValue }
@@ -79,17 +69,27 @@ public struct QueryMessagesRequest {
     /// Clears the value of `deliveryDateBefore`. Subsequent reads from it will return its default value.
     public mutating func clearDeliveryDateBefore() { _deliveryDateBefore = nil }
 
+    public var maxCount: Int32 {
+        get { return _maxCount ?? 0 }
+        set { _maxCount = newValue }
+    }
+
+    /// Returns true if `maxCount` has been explicitly set.
+    public var hasMaxCount: Bool { return _maxCount != nil }
+    /// Clears the value of `maxCount`. Subsequent reads from it will return its default value.
+    public mutating func clearMaxCount() { _maxCount = nil }
+
     public var withTotal: Bool = false
 
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
 
-    private var _size: Int32?
     private var _areGroupMessages: Bool?
     private var _areSystemMessages: Bool?
     private var _deliveryDateAfter: Int64?
     private var _deliveryDateBefore: Int64?
+    private var _maxCount: Int32?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -104,12 +104,12 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     public static let protoMessageName: String = _protobuf_package + ".QueryMessagesRequest"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .same(proto: "ids"),
-        2: .same(proto: "size"),
-        3: .standard(proto: "are_group_messages"),
-        4: .standard(proto: "are_system_messages"),
-        5: .standard(proto: "from_ids"),
-        6: .standard(proto: "delivery_date_after"),
-        7: .standard(proto: "delivery_date_before"),
+        2: .standard(proto: "are_group_messages"),
+        3: .standard(proto: "are_system_messages"),
+        4: .standard(proto: "from_ids"),
+        5: .standard(proto: "delivery_date_after"),
+        6: .standard(proto: "delivery_date_before"),
+        7: .standard(proto: "max_count"),
         8: .standard(proto: "with_total"),
     ]
 
@@ -120,12 +120,12 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
             case 1: try try decoder.decodeRepeatedInt64Field(value: &ids)
-            case 2: try try decoder.decodeSingularInt32Field(value: &_size)
-            case 3: try try decoder.decodeSingularBoolField(value: &_areGroupMessages)
-            case 4: try try decoder.decodeSingularBoolField(value: &_areSystemMessages)
-            case 5: try try decoder.decodeRepeatedInt64Field(value: &fromIds)
-            case 6: try try decoder.decodeSingularInt64Field(value: &_deliveryDateAfter)
-            case 7: try try decoder.decodeSingularInt64Field(value: &_deliveryDateBefore)
+            case 2: try try decoder.decodeSingularBoolField(value: &_areGroupMessages)
+            case 3: try try decoder.decodeSingularBoolField(value: &_areSystemMessages)
+            case 4: try try decoder.decodeRepeatedInt64Field(value: &fromIds)
+            case 5: try try decoder.decodeSingularInt64Field(value: &_deliveryDateAfter)
+            case 6: try try decoder.decodeSingularInt64Field(value: &_deliveryDateBefore)
+            case 7: try try decoder.decodeSingularInt32Field(value: &_maxCount)
             case 8: try try decoder.decodeSingularBoolField(value: &withTotal)
             default: break
             }
@@ -140,23 +140,23 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         if !ids.isEmpty {
             try visitor.visitPackedInt64Field(value: ids, fieldNumber: 1)
         }
-        try { if let v = self._size {
-            try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
-        } }()
         try { if let v = self._areGroupMessages {
-            try visitor.visitSingularBoolField(value: v, fieldNumber: 3)
+            try visitor.visitSingularBoolField(value: v, fieldNumber: 2)
         } }()
         try { if let v = self._areSystemMessages {
-            try visitor.visitSingularBoolField(value: v, fieldNumber: 4)
+            try visitor.visitSingularBoolField(value: v, fieldNumber: 3)
         } }()
         if !fromIds.isEmpty {
-            try visitor.visitPackedInt64Field(value: fromIds, fieldNumber: 5)
+            try visitor.visitPackedInt64Field(value: fromIds, fieldNumber: 4)
         }
         try { if let v = self._deliveryDateAfter {
-            try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
         } }()
         try { if let v = self._deliveryDateBefore {
-            try visitor.visitSingularInt64Field(value: v, fieldNumber: 7)
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
+        } }()
+        try { if let v = self._maxCount {
+            try visitor.visitSingularInt32Field(value: v, fieldNumber: 7)
         } }()
         if withTotal != false {
             try visitor.visitSingularBoolField(value: withTotal, fieldNumber: 8)
@@ -166,12 +166,12 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
 
     public static func == (lhs: QueryMessagesRequest, rhs: QueryMessagesRequest) -> Bool {
         if lhs.ids != rhs.ids { return false }
-        if lhs._size != rhs._size { return false }
         if lhs._areGroupMessages != rhs._areGroupMessages { return false }
         if lhs._areSystemMessages != rhs._areSystemMessages { return false }
         if lhs.fromIds != rhs.fromIds { return false }
         if lhs._deliveryDateAfter != rhs._deliveryDateAfter { return false }
         if lhs._deliveryDateBefore != rhs._deliveryDateBefore { return false }
+        if lhs._maxCount != rhs._maxCount { return false }
         if lhs.withTotal != rhs.withTotal { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true

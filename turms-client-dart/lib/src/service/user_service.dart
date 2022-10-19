@@ -160,19 +160,19 @@ class UserService {
 
   Future<Response<List<NearbyUser>>> queryNearbyUsers(
       double latitude, double longitude,
-      {int? distance,
-      int? maxNumber,
+      {int? maxCount,
+      int? maxDistance,
       bool? withCoordinates,
       bool? withDistance,
-      bool? withInfo}) async {
+      bool? withUserInfo}) async {
     final n = await _turmsClient.driver.send(QueryNearbyUsersRequest(
         latitude: latitude,
         longitude: longitude,
-        distance: distance,
-        maxNumber: maxNumber,
+        maxCount: maxCount,
+        maxDistance: maxDistance,
         withCoordinates: withCoordinates,
         withDistance: withDistance,
-        withInfo: withInfo));
+        withUserInfo: withUserInfo));
     return n.toResponse((data) => data.nearbyUsers.nearbyUsers);
   }
 

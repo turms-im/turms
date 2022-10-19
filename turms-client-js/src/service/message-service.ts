@@ -152,7 +152,7 @@ export default class MessageService {
         fromIds,
         deliveryDateAfter,
         deliveryDateBefore,
-        size = 50
+        maxCount = 50
     }: {
         ids?: string[],
         areGroupMessages?: boolean,
@@ -160,7 +160,7 @@ export default class MessageService {
         fromIds?: string[],
         deliveryDateAfter?: Date,
         deliveryDateBefore?: Date,
-        size?: number
+        maxCount?: number
     }): Promise<Response<ParsedModel.Message[]>> {
         return this._turmsClient.driver.send({
             queryMessagesRequest: {
@@ -170,7 +170,7 @@ export default class MessageService {
                 fromIds: fromIds || [],
                 deliveryDateAfter: DataParser.getDateTimeStr(deliveryDateAfter),
                 deliveryDateBefore: DataParser.getDateTimeStr(deliveryDateBefore),
-                size,
+                maxCount,
                 withTotal: false
             }
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.messages?.messages)));
@@ -183,7 +183,7 @@ export default class MessageService {
         fromIds,
         deliveryDateAfter,
         deliveryDateBefore,
-        size = 1
+        maxCount = 1
     }: {
         ids?: string[],
         areGroupMessages?: boolean,
@@ -191,7 +191,7 @@ export default class MessageService {
         fromIds?: string[],
         deliveryDateAfter?: Date,
         deliveryDateBefore?: Date,
-        size?: number
+        maxCount?: number
     }): Promise<Response<ParsedModel.MessagesWithTotal[]>> {
         return this._turmsClient.driver.send({
             queryMessagesRequest: {
@@ -201,7 +201,7 @@ export default class MessageService {
                 fromIds: fromIds || [],
                 deliveryDateAfter: DataParser.getDateTimeStr(deliveryDateAfter),
                 deliveryDateBefore: DataParser.getDateTimeStr(deliveryDateBefore),
-                size,
+                maxCount,
                 withTotal: true
             }
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.messagesWithTotalList?.messagesWithTotalList)));

@@ -101,7 +101,7 @@ class DriverMessageService {
       Set<Int64>? fromIds,
       DateTime? deliveryDateAfter,
       DateTime? deliveryDateBefore,
-      int size = 50}) async {
+      int maxCount = 50}) async {
     final n = await _turmsClient.driver.send(QueryMessagesRequest(
         ids: ids,
         areGroupMessages: areGroupMessages,
@@ -109,7 +109,7 @@ class DriverMessageService {
         fromIds: fromIds,
         deliveryDateAfter: deliveryDateAfter?.toInt64(),
         deliveryDateBefore: deliveryDateBefore?.toInt64(),
-        size: size,
+        maxCount: maxCount,
         withTotal: false));
     return n.toResponse((data) => data.messages.messages);
   }
@@ -121,7 +121,7 @@ class DriverMessageService {
       Set<Int64>? fromIds,
       DateTime? deliveryDateAfter,
       DateTime? deliveryDateBefore,
-      int size = 1}) async {
+      int maxCount = 1}) async {
     final n = await _turmsClient.driver.send(QueryMessagesRequest(
         ids: ids,
         areGroupMessages: areGroupMessages,
@@ -129,7 +129,7 @@ class DriverMessageService {
         fromIds: fromIds,
         deliveryDateAfter: deliveryDateAfter?.toInt64(),
         deliveryDateBefore: deliveryDateBefore?.toInt64(),
-        size: size,
+        maxCount: maxCount,
         withTotal: true));
     return n
         .toResponse((data) => data.messagesWithTotalList.messagesWithTotalList);

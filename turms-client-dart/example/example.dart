@@ -21,7 +21,7 @@ Future<void> main() async {
 
   final users = (await client.userService.queryNearbyUsers(
           35.792657, 139.667651,
-          distance: 100, maxNumber: 10))
+          maxCount: 10, maxDistance: 100))
       .data;
   print('nearby users: $users');
 

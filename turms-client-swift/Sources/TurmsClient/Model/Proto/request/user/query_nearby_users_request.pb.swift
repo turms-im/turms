@@ -29,25 +29,25 @@ public struct QueryNearbyUsersRequest {
 
     public var longitude: Float = 0
 
-    public var distance: Int32 {
-        get { return _distance ?? 0 }
-        set { _distance = newValue }
+    public var maxCount: Int32 {
+        get { return _maxCount ?? 0 }
+        set { _maxCount = newValue }
     }
 
-    /// Returns true if `distance` has been explicitly set.
-    public var hasDistance: Bool { return _distance != nil }
-    /// Clears the value of `distance`. Subsequent reads from it will return its default value.
-    public mutating func clearDistance() { _distance = nil }
+    /// Returns true if `maxCount` has been explicitly set.
+    public var hasMaxCount: Bool { return _maxCount != nil }
+    /// Clears the value of `maxCount`. Subsequent reads from it will return its default value.
+    public mutating func clearMaxCount() { _maxCount = nil }
 
-    public var maxNumber: Int32 {
-        get { return _maxNumber ?? 0 }
-        set { _maxNumber = newValue }
+    public var maxDistance: Int32 {
+        get { return _maxDistance ?? 0 }
+        set { _maxDistance = newValue }
     }
 
-    /// Returns true if `maxNumber` has been explicitly set.
-    public var hasMaxNumber: Bool { return _maxNumber != nil }
-    /// Clears the value of `maxNumber`. Subsequent reads from it will return its default value.
-    public mutating func clearMaxNumber() { _maxNumber = nil }
+    /// Returns true if `maxDistance` has been explicitly set.
+    public var hasMaxDistance: Bool { return _maxDistance != nil }
+    /// Clears the value of `maxDistance`. Subsequent reads from it will return its default value.
+    public mutating func clearMaxDistance() { _maxDistance = nil }
 
     public var withCoordinates: Bool {
         get { return _withCoordinates ?? false }
@@ -69,25 +69,25 @@ public struct QueryNearbyUsersRequest {
     /// Clears the value of `withDistance`. Subsequent reads from it will return its default value.
     public mutating func clearWithDistance() { _withDistance = nil }
 
-    public var withInfo: Bool {
-        get { return _withInfo ?? false }
-        set { _withInfo = newValue }
+    public var withUserInfo: Bool {
+        get { return _withUserInfo ?? false }
+        set { _withUserInfo = newValue }
     }
 
-    /// Returns true if `withInfo` has been explicitly set.
-    public var hasWithInfo: Bool { return _withInfo != nil }
-    /// Clears the value of `withInfo`. Subsequent reads from it will return its default value.
-    public mutating func clearWithInfo() { _withInfo = nil }
+    /// Returns true if `withUserInfo` has been explicitly set.
+    public var hasWithUserInfo: Bool { return _withUserInfo != nil }
+    /// Clears the value of `withUserInfo`. Subsequent reads from it will return its default value.
+    public mutating func clearWithUserInfo() { _withUserInfo = nil }
 
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
 
-    private var _distance: Int32?
-    private var _maxNumber: Int32?
+    private var _maxCount: Int32?
+    private var _maxDistance: Int32?
     private var _withCoordinates: Bool?
     private var _withDistance: Bool?
-    private var _withInfo: Bool?
+    private var _withUserInfo: Bool?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -103,11 +103,11 @@ extension QueryNearbyUsersRequest: SwiftProtobuf.Message, SwiftProtobuf._Message
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .same(proto: "latitude"),
         2: .same(proto: "longitude"),
-        3: .same(proto: "distance"),
-        4: .standard(proto: "max_number"),
+        3: .standard(proto: "max_count"),
+        4: .standard(proto: "max_distance"),
         5: .standard(proto: "with_coordinates"),
         6: .standard(proto: "with_distance"),
-        7: .standard(proto: "with_info"),
+        7: .standard(proto: "with_user_info"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -118,11 +118,11 @@ extension QueryNearbyUsersRequest: SwiftProtobuf.Message, SwiftProtobuf._Message
             switch fieldNumber {
             case 1: try try decoder.decodeSingularFloatField(value: &latitude)
             case 2: try try decoder.decodeSingularFloatField(value: &longitude)
-            case 3: try try decoder.decodeSingularInt32Field(value: &_distance)
-            case 4: try try decoder.decodeSingularInt32Field(value: &_maxNumber)
+            case 3: try try decoder.decodeSingularInt32Field(value: &_maxCount)
+            case 4: try try decoder.decodeSingularInt32Field(value: &_maxDistance)
             case 5: try try decoder.decodeSingularBoolField(value: &_withCoordinates)
             case 6: try try decoder.decodeSingularBoolField(value: &_withDistance)
-            case 7: try try decoder.decodeSingularBoolField(value: &_withInfo)
+            case 7: try try decoder.decodeSingularBoolField(value: &_withUserInfo)
             default: break
             }
         }
@@ -139,10 +139,10 @@ extension QueryNearbyUsersRequest: SwiftProtobuf.Message, SwiftProtobuf._Message
         if longitude != 0 {
             try visitor.visitSingularFloatField(value: longitude, fieldNumber: 2)
         }
-        try { if let v = self._distance {
+        try { if let v = self._maxCount {
             try visitor.visitSingularInt32Field(value: v, fieldNumber: 3)
         } }()
-        try { if let v = self._maxNumber {
+        try { if let v = self._maxDistance {
             try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
         } }()
         try { if let v = self._withCoordinates {
@@ -151,7 +151,7 @@ extension QueryNearbyUsersRequest: SwiftProtobuf.Message, SwiftProtobuf._Message
         try { if let v = self._withDistance {
             try visitor.visitSingularBoolField(value: v, fieldNumber: 6)
         } }()
-        try { if let v = self._withInfo {
+        try { if let v = self._withUserInfo {
             try visitor.visitSingularBoolField(value: v, fieldNumber: 7)
         } }()
         try unknownFields.traverse(visitor: &visitor)
@@ -160,11 +160,11 @@ extension QueryNearbyUsersRequest: SwiftProtobuf.Message, SwiftProtobuf._Message
     public static func == (lhs: QueryNearbyUsersRequest, rhs: QueryNearbyUsersRequest) -> Bool {
         if lhs.latitude != rhs.latitude { return false }
         if lhs.longitude != rhs.longitude { return false }
-        if lhs._distance != rhs._distance { return false }
-        if lhs._maxNumber != rhs._maxNumber { return false }
+        if lhs._maxCount != rhs._maxCount { return false }
+        if lhs._maxDistance != rhs._maxDistance { return false }
         if lhs._withCoordinates != rhs._withCoordinates { return false }
         if lhs._withDistance != rhs._withDistance { return false }
-        if lhs._withInfo != rhs._withInfo { return false }
+        if lhs._withUserInfo != rhs._withUserInfo { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

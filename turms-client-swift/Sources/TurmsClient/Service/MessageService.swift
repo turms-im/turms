@@ -139,7 +139,7 @@ public class MessageService {
         fromIds: [Int64]? = nil,
         deliveryDateAfter: Date? = nil,
         deliveryDateBefore: Date? = nil,
-        size: Int32 = 50
+        maxCount: Int32 = 50
     ) -> Promise<Response<[Message]>> {
         return turmsClient.driver
             .send {
@@ -162,7 +162,7 @@ public class MessageService {
                     if let v = deliveryDateBefore {
                         $0.deliveryDateBefore = v.toMillis()
                     }
-                    $0.size = size
+                    $0.maxCount = maxCount
                     $0.withTotal = false
                 }
             }
@@ -180,7 +180,7 @@ public class MessageService {
         fromIds: [Int64]? = nil,
         deliveryDateAfter: Date? = nil,
         deliveryDateBefore: Date? = nil,
-        size: Int32 = 1
+        maxCount: Int32 = 1
     ) -> Promise<Response<[MessagesWithTotal]>> {
         return turmsClient.driver
             .send {
@@ -203,7 +203,7 @@ public class MessageService {
                     if let v = deliveryDateBefore {
                         $0.deliveryDateBefore = v.toMillis()
                     }
-                    $0.size = size
+                    $0.maxCount = maxCount
                     $0.withTotal = true
                 }
             }

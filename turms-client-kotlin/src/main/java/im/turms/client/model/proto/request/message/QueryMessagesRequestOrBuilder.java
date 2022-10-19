@@ -42,76 +42,76 @@ public interface QueryMessagesRequestOrBuilder extends
   long getIds(int index);
 
   /**
-   * <code>optional int32 size = 2;</code>
-   * @return Whether the size field is set.
-   */
-  boolean hasSize();
-  /**
-   * <code>optional int32 size = 2;</code>
-   * @return The size.
-   */
-  int getSize();
-
-  /**
-   * <code>optional bool are_group_messages = 3;</code>
+   * <code>optional bool are_group_messages = 2;</code>
    * @return Whether the areGroupMessages field is set.
    */
   boolean hasAreGroupMessages();
   /**
-   * <code>optional bool are_group_messages = 3;</code>
+   * <code>optional bool are_group_messages = 2;</code>
    * @return The areGroupMessages.
    */
   boolean getAreGroupMessages();
 
   /**
-   * <code>optional bool are_system_messages = 4;</code>
+   * <code>optional bool are_system_messages = 3;</code>
    * @return Whether the areSystemMessages field is set.
    */
   boolean hasAreSystemMessages();
   /**
-   * <code>optional bool are_system_messages = 4;</code>
+   * <code>optional bool are_system_messages = 3;</code>
    * @return The areSystemMessages.
    */
   boolean getAreSystemMessages();
 
   /**
-   * <code>repeated int64 from_ids = 5;</code>
+   * <code>repeated int64 from_ids = 4;</code>
    * @return A list containing the fromIds.
    */
   java.util.List<java.lang.Long> getFromIdsList();
   /**
-   * <code>repeated int64 from_ids = 5;</code>
+   * <code>repeated int64 from_ids = 4;</code>
    * @return The count of fromIds.
    */
   int getFromIdsCount();
   /**
-   * <code>repeated int64 from_ids = 5;</code>
+   * <code>repeated int64 from_ids = 4;</code>
    * @param index The index of the element to return.
    * @return The fromIds at the given index.
    */
   long getFromIds(int index);
 
   /**
-   * <code>optional int64 delivery_date_after = 6;</code>
+   * <code>optional int64 delivery_date_after = 5;</code>
    * @return Whether the deliveryDateAfter field is set.
    */
   boolean hasDeliveryDateAfter();
   /**
-   * <code>optional int64 delivery_date_after = 6;</code>
+   * <code>optional int64 delivery_date_after = 5;</code>
    * @return The deliveryDateAfter.
    */
   long getDeliveryDateAfter();
 
   /**
-   * <code>optional int64 delivery_date_before = 7;</code>
+   * <code>optional int64 delivery_date_before = 6;</code>
    * @return Whether the deliveryDateBefore field is set.
    */
   boolean hasDeliveryDateBefore();
   /**
-   * <code>optional int64 delivery_date_before = 7;</code>
+   * <code>optional int64 delivery_date_before = 6;</code>
    * @return The deliveryDateBefore.
    */
   long getDeliveryDateBefore();
+
+  /**
+   * <code>optional int32 max_count = 7;</code>
+   * @return Whether the maxCount field is set.
+   */
+  boolean hasMaxCount();
+  /**
+   * <code>optional int32 max_count = 7;</code>
+   * @return The maxCount.
+   */
+  int getMaxCount();
 
   /**
    * <code>bool with_total = 8;</code>

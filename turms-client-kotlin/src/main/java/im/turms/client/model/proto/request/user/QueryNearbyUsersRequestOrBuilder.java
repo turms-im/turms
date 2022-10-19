@@ -37,26 +37,26 @@ public interface QueryNearbyUsersRequestOrBuilder extends
   float getLongitude();
 
   /**
-   * <code>optional int32 distance = 3;</code>
-   * @return Whether the distance field is set.
+   * <code>optional int32 max_count = 3;</code>
+   * @return Whether the maxCount field is set.
    */
-  boolean hasDistance();
+  boolean hasMaxCount();
   /**
-   * <code>optional int32 distance = 3;</code>
-   * @return The distance.
+   * <code>optional int32 max_count = 3;</code>
+   * @return The maxCount.
    */
-  int getDistance();
+  int getMaxCount();
 
   /**
-   * <code>optional int32 max_number = 4;</code>
-   * @return Whether the maxNumber field is set.
+   * <code>optional int32 max_distance = 4;</code>
+   * @return Whether the maxDistance field is set.
    */
-  boolean hasMaxNumber();
+  boolean hasMaxDistance();
   /**
-   * <code>optional int32 max_number = 4;</code>
-   * @return The maxNumber.
+   * <code>optional int32 max_distance = 4;</code>
+   * @return The maxDistance.
    */
-  int getMaxNumber();
+  int getMaxDistance();
 
   /**
    * <code>optional bool with_coordinates = 5;</code>
@@ -81,13 +81,13 @@ public interface QueryNearbyUsersRequestOrBuilder extends
   boolean getWithDistance();
 
   /**
-   * <code>optional bool with_info = 7;</code>
-   * @return Whether the withInfo field is set.
+   * <code>optional bool with_user_info = 7;</code>
+   * @return Whether the withUserInfo field is set.
    */
-  boolean hasWithInfo();
+  boolean hasWithUserInfo();
   /**
-   * <code>optional bool with_info = 7;</code>
-   * @return The withInfo.
+   * <code>optional bool with_user_info = 7;</code>
+   * @return The withUserInfo.
    */
-  boolean getWithInfo();
+  boolean getWithUserInfo();
 }

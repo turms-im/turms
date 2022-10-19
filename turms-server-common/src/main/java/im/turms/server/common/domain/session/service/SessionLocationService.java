@@ -132,7 +132,7 @@ public class SessionLocationService {
     public Flux<GeoWithin<Object>> queryNearbyUsers(
             @NotNull Long userId,
             @NotNull @ValidDeviceType DeviceType deviceType,
-            @Nullable Short maxNumber,
+            @Nullable Short maxCount,
             @Nullable Integer maxDistance,
             boolean withCoordinates,
             boolean withDistance) {
@@ -165,7 +165,7 @@ public class SessionLocationService {
         Object currentUserSessionId = treatUserIdAndDeviceTypeAsUniqueUser
                 ? new UserSessionId(userId, deviceType)
                 : userId;
-        GeoArgs geoArgs = GeoArgs.Builder.count(maxNumber);
+        GeoArgs geoArgs = new GeoArgs().withCount(maxCount);
         if (withCoordinates) {
             geoArgs.withCoordinates();
         }

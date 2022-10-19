@@ -13,11 +13,11 @@ class QueryNearbyUsersRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'QueryNearbyUsersRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
     ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'latitude', $pb.PbFieldType.OF)
     ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'longitude', $pb.PbFieldType.OF)
-    ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'distance', $pb.PbFieldType.O3)
-    ..a<$core.int>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'maxNumber', $pb.PbFieldType.O3)
+    ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'maxCount', $pb.PbFieldType.O3)
+    ..a<$core.int>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'maxDistance', $pb.PbFieldType.O3)
     ..aOB(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'withCoordinates')
     ..aOB(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'withDistance')
-    ..aOB(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'withInfo')
+    ..aOB(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'withUserInfo')
     ..hasRequiredFields = false
   ;
 
@@ -25,11 +25,11 @@ class QueryNearbyUsersRequest extends $pb.GeneratedMessage {
   factory QueryNearbyUsersRequest({
     $core.double? latitude,
     $core.double? longitude,
-    $core.int? distance,
-    $core.int? maxNumber,
+    $core.int? maxCount,
+    $core.int? maxDistance,
     $core.bool? withCoordinates,
     $core.bool? withDistance,
-    $core.bool? withInfo,
+    $core.bool? withUserInfo,
   }) {
     final _result = create();
     if (latitude != null) {
@@ -38,11 +38,11 @@ class QueryNearbyUsersRequest extends $pb.GeneratedMessage {
     if (longitude != null) {
       _result.longitude = longitude;
     }
-    if (distance != null) {
-      _result.distance = distance;
+    if (maxCount != null) {
+      _result.maxCount = maxCount;
     }
-    if (maxNumber != null) {
-      _result.maxNumber = maxNumber;
+    if (maxDistance != null) {
+      _result.maxDistance = maxDistance;
     }
     if (withCoordinates != null) {
       _result.withCoordinates = withCoordinates;
@@ -50,8 +50,8 @@ class QueryNearbyUsersRequest extends $pb.GeneratedMessage {
     if (withDistance != null) {
       _result.withDistance = withDistance;
     }
-    if (withInfo != null) {
-      _result.withInfo = withInfo;
+    if (withUserInfo != null) {
+      _result.withUserInfo = withUserInfo;
     }
     return _result;
   }
@@ -95,22 +95,22 @@ class QueryNearbyUsersRequest extends $pb.GeneratedMessage {
   void clearLongitude() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.int get distance => $_getIZ(2);
+  $core.int get maxCount => $_getIZ(2);
   @$pb.TagNumber(3)
-  set distance($core.int v) { $_setSignedInt32(2, v); }
+  set maxCount($core.int v) { $_setSignedInt32(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasDistance() => $_has(2);
+  $core.bool hasMaxCount() => $_has(2);
   @$pb.TagNumber(3)
-  void clearDistance() => clearField(3);
+  void clearMaxCount() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.int get maxNumber => $_getIZ(3);
+  $core.int get maxDistance => $_getIZ(3);
   @$pb.TagNumber(4)
-  set maxNumber($core.int v) { $_setSignedInt32(3, v); }
+  set maxDistance($core.int v) { $_setSignedInt32(3, v); }
   @$pb.TagNumber(4)
-  $core.bool hasMaxNumber() => $_has(3);
+  $core.bool hasMaxDistance() => $_has(3);
   @$pb.TagNumber(4)
-  void clearMaxNumber() => clearField(4);
+  void clearMaxDistance() => clearField(4);
 
   @$pb.TagNumber(5)
   $core.bool get withCoordinates => $_getBF(4);
@@ -131,12 +131,12 @@ class QueryNearbyUsersRequest extends $pb.GeneratedMessage {
   void clearWithDistance() => clearField(6);
 
   @$pb.TagNumber(7)
-  $core.bool get withInfo => $_getBF(6);
+  $core.bool get withUserInfo => $_getBF(6);
   @$pb.TagNumber(7)
-  set withInfo($core.bool v) { $_setBool(6, v); }
+  set withUserInfo($core.bool v) { $_setBool(6, v); }
   @$pb.TagNumber(7)
-  $core.bool hasWithInfo() => $_has(6);
+  $core.bool hasWithUserInfo() => $_has(6);
   @$pb.TagNumber(7)
-  void clearWithInfo() => clearField(7);
+  void clearWithUserInfo() => clearField(7);
 }
 

@@ -91,37 +91,18 @@ private static final long serialVersionUID = 0L;
   }
   private int idsMemoizedSerializedSize = -1;
 
-  public static final int SIZE_FIELD_NUMBER = 2;
-  private int size_;
-  /**
-   * <code>optional int32 size = 2;</code>
-   * @return Whether the size field is set.
-   */
-  @java.lang.Override
-  public boolean hasSize() {
-    return ((bitField0_ & 0x00000001) != 0);
-  }
-  /**
-   * <code>optional int32 size = 2;</code>
-   * @return The size.
-   */
-  @java.lang.Override
-  public int getSize() {
-    return size_;
-  }
-
-  public static final int ARE_GROUP_MESSAGES_FIELD_NUMBER = 3;
+  public static final int ARE_GROUP_MESSAGES_FIELD_NUMBER = 2;
   private boolean areGroupMessages_;
   /**
-   * <code>optional bool are_group_messages = 3;</code>
+   * <code>optional bool are_group_messages = 2;</code>
    * @return Whether the areGroupMessages field is set.
    */
   @java.lang.Override
   public boolean hasAreGroupMessages() {
-    return ((bitField0_ & 0x00000002) != 0);
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>optional bool are_group_messages = 3;</code>
+   * <code>optional bool are_group_messages = 2;</code>
    * @return The areGroupMessages.
    */
   @java.lang.Override
@@ -129,18 +110,18 @@ private static final long serialVersionUID = 0L;
     return areGroupMessages_;
   }
 
-  public static final int ARE_SYSTEM_MESSAGES_FIELD_NUMBER = 4;
+  public static final int ARE_SYSTEM_MESSAGES_FIELD_NUMBER = 3;
   private boolean areSystemMessages_;
   /**
-   * <code>optional bool are_system_messages = 4;</code>
+   * <code>optional bool are_system_messages = 3;</code>
    * @return Whether the areSystemMessages field is set.
    */
   @java.lang.Override
   public boolean hasAreSystemMessages() {
-    return ((bitField0_ & 0x00000004) != 0);
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>optional bool are_system_messages = 4;</code>
+   * <code>optional bool are_system_messages = 3;</code>
    * @return The areSystemMessages.
    */
   @java.lang.Override
@@ -148,10 +129,10 @@ private static final long serialVersionUID = 0L;
     return areSystemMessages_;
   }
 
-  public static final int FROM_IDS_FIELD_NUMBER = 5;
+  public static final int FROM_IDS_FIELD_NUMBER = 4;
   private com.google.protobuf.Internal.LongList fromIds_;
   /**
-   * <code>repeated int64 from_ids = 5;</code>
+   * <code>repeated int64 from_ids = 4;</code>
    * @return A list containing the fromIds.
    */
   @java.lang.Override
@@ -160,14 +141,14 @@ private static final long serialVersionUID = 0L;
     return fromIds_;
   }
   /**
-   * <code>repeated int64 from_ids = 5;</code>
+   * <code>repeated int64 from_ids = 4;</code>
    * @return The count of fromIds.
    */
   public int getFromIdsCount() {
     return fromIds_.size();
   }
   /**
-   * <code>repeated int64 from_ids = 5;</code>
+   * <code>repeated int64 from_ids = 4;</code>
    * @param index The index of the element to return.
    * @return The fromIds at the given index.
    */
@@ -176,18 +157,18 @@ private static final long serialVersionUID = 0L;
   }
   private int fromIdsMemoizedSerializedSize = -1;
 
-  public static final int DELIVERY_DATE_AFTER_FIELD_NUMBER = 6;
+  public static final int DELIVERY_DATE_AFTER_FIELD_NUMBER = 5;
   private long deliveryDateAfter_;
   /**
-   * <code>optional int64 delivery_date_after = 6;</code>
+   * <code>optional int64 delivery_date_after = 5;</code>
    * @return Whether the deliveryDateAfter field is set.
    */
   @java.lang.Override
   public boolean hasDeliveryDateAfter() {
-    return ((bitField0_ & 0x00000008) != 0);
+    return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>optional int64 delivery_date_after = 6;</code>
+   * <code>optional int64 delivery_date_after = 5;</code>
    * @return The deliveryDateAfter.
    */
   @java.lang.Override
@@ -195,23 +176,42 @@ private static final long serialVersionUID = 0L;
     return deliveryDateAfter_;
   }
 
-  public static final int DELIVERY_DATE_BEFORE_FIELD_NUMBER = 7;
+  public static final int DELIVERY_DATE_BEFORE_FIELD_NUMBER = 6;
   private long deliveryDateBefore_;
   /**
-   * <code>optional int64 delivery_date_before = 7;</code>
+   * <code>optional int64 delivery_date_before = 6;</code>
    * @return Whether the deliveryDateBefore field is set.
    */
   @java.lang.Override
   public boolean hasDeliveryDateBefore() {
-    return ((bitField0_ & 0x00000010) != 0);
+    return ((bitField0_ & 0x00000008) != 0);
   }
   /**
-   * <code>optional int64 delivery_date_before = 7;</code>
+   * <code>optional int64 delivery_date_before = 6;</code>
    * @return The deliveryDateBefore.
    */
   @java.lang.Override
   public long getDeliveryDateBefore() {
     return deliveryDateBefore_;
+  }
+
+  public static final int MAX_COUNT_FIELD_NUMBER = 7;
+  private int maxCount_;
+  /**
+   * <code>optional int32 max_count = 7;</code>
+   * @return Whether the maxCount field is set.
+   */
+  @java.lang.Override
+  public boolean hasMaxCount() {
+    return ((bitField0_ & 0x00000010) != 0);
+  }
+  /**
+   * <code>optional int32 max_count = 7;</code>
+   * @return The maxCount.
+   */
+  @java.lang.Override
+  public int getMaxCount() {
+    return maxCount_;
   }
 
   public static final int WITH_TOTAL_FIELD_NUMBER = 8;
@@ -248,26 +248,26 @@ private static final long serialVersionUID = 0L;
       output.writeInt64NoTag(ids_.getLong(i));
     }
     if (((bitField0_ & 0x00000001) != 0)) {
-      output.writeInt32(2, size_);
+      output.writeBool(2, areGroupMessages_);
     }
     if (((bitField0_ & 0x00000002) != 0)) {
-      output.writeBool(3, areGroupMessages_);
-    }
-    if (((bitField0_ & 0x00000004) != 0)) {
-      output.writeBool(4, areSystemMessages_);
+      output.writeBool(3, areSystemMessages_);
     }
     if (getFromIdsList().size() > 0) {
-      output.writeUInt32NoTag(42);
+      output.writeUInt32NoTag(34);
       output.writeUInt32NoTag(fromIdsMemoizedSerializedSize);
     }
     for (int i = 0; i < fromIds_.size(); i++) {
       output.writeInt64NoTag(fromIds_.getLong(i));
     }
+    if (((bitField0_ & 0x00000004) != 0)) {
+      output.writeInt64(5, deliveryDateAfter_);
+    }
     if (((bitField0_ & 0x00000008) != 0)) {
-      output.writeInt64(6, deliveryDateAfter_);
+      output.writeInt64(6, deliveryDateBefore_);
     }
     if (((bitField0_ & 0x00000010) != 0)) {
-      output.writeInt64(7, deliveryDateBefore_);
+      output.writeInt32(7, maxCount_);
     }
     if (withTotal_ != false) {
       output.writeBool(8, withTotal_);
@@ -297,15 +297,11 @@ private static final long serialVersionUID = 0L;
     }
     if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(2, size_);
+        .computeBoolSize(2, areGroupMessages_);
     }
     if (((bitField0_ & 0x00000002) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(3, areGroupMessages_);
-    }
-    if (((bitField0_ & 0x00000004) != 0)) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(4, areSystemMessages_);
+        .computeBoolSize(3, areSystemMessages_);
     }
     {
       int dataSize = 0;
@@ -321,13 +317,17 @@ private static final long serialVersionUID = 0L;
       }
       fromIdsMemoizedSerializedSize = dataSize;
     }
+    if (((bitField0_ & 0x00000004) != 0)) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(5, deliveryDateAfter_);
+    }
     if (((bitField0_ & 0x00000008) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(6, deliveryDateAfter_);
+        .computeInt64Size(6, deliveryDateBefore_);
     }
     if (((bitField0_ & 0x00000010) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(7, deliveryDateBefore_);
+        .computeInt32Size(7, maxCount_);
     }
     if (withTotal_ != false) {
       size += com.google.protobuf.CodedOutputStream
@@ -350,11 +350,6 @@ private static final long serialVersionUID = 0L;
 
     if (!getIdsList()
         .equals(other.getIdsList())) return false;
-    if (hasSize() != other.hasSize()) return false;
-    if (hasSize()) {
-      if (getSize()
-          != other.getSize()) return false;
-    }
     if (hasAreGroupMessages() != other.hasAreGroupMessages()) return false;
     if (hasAreGroupMessages()) {
       if (getAreGroupMessages()
@@ -377,6 +372,11 @@ private static final long serialVersionUID = 0L;
       if (getDeliveryDateBefore()
           != other.getDeliveryDateBefore()) return false;
     }
+    if (hasMaxCount() != other.hasMaxCount()) return false;
+    if (hasMaxCount()) {
+      if (getMaxCount()
+          != other.getMaxCount()) return false;
+    }
     if (getWithTotal()
         != other.getWithTotal()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
@@ -393,10 +393,6 @@ private static final long serialVersionUID = 0L;
     if (getIdsCount() > 0) {
       hash = (37 * hash) + IDS_FIELD_NUMBER;
       hash = (53 * hash) + getIdsList().hashCode();
-    }
-    if (hasSize()) {
-      hash = (37 * hash) + SIZE_FIELD_NUMBER;
-      hash = (53 * hash) + getSize();
     }
     if (hasAreGroupMessages()) {
       hash = (37 * hash) + ARE_GROUP_MESSAGES_FIELD_NUMBER;
@@ -421,6 +417,10 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + DELIVERY_DATE_BEFORE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getDeliveryDateBefore());
+    }
+    if (hasMaxCount()) {
+      hash = (37 * hash) + MAX_COUNT_FIELD_NUMBER;
+      hash = (53 * hash) + getMaxCount();
     }
     hash = (37 * hash) + WITH_TOTAL_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
@@ -555,17 +555,17 @@ private static final long serialVersionUID = 0L;
       super.clear();
       ids_ = emptyLongList();
       bitField0_ = (bitField0_ & ~0x00000001);
-      size_ = 0;
-      bitField0_ = (bitField0_ & ~0x00000002);
       areGroupMessages_ = false;
-      bitField0_ = (bitField0_ & ~0x00000004);
+      bitField0_ = (bitField0_ & ~0x00000002);
       areSystemMessages_ = false;
-      bitField0_ = (bitField0_ & ~0x00000008);
+      bitField0_ = (bitField0_ & ~0x00000004);
       fromIds_ = emptyLongList();
-      bitField0_ = (bitField0_ & ~0x00000010);
+      bitField0_ = (bitField0_ & ~0x00000008);
       deliveryDateAfter_ = 0L;
-      bitField0_ = (bitField0_ & ~0x00000020);
+      bitField0_ = (bitField0_ & ~0x00000010);
       deliveryDateBefore_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000020);
+      maxCount_ = 0;
       bitField0_ = (bitField0_ & ~0x00000040);
       withTotal_ = false;
 
@@ -603,28 +603,28 @@ private static final long serialVersionUID = 0L;
       }
       result.ids_ = ids_;
       if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.size_ = size_;
+        result.areGroupMessages_ = areGroupMessages_;
         to_bitField0_ |= 0x00000001;
       }
       if (((from_bitField0_ & 0x00000004) != 0)) {
-        result.areGroupMessages_ = areGroupMessages_;
+        result.areSystemMessages_ = areSystemMessages_;
         to_bitField0_ |= 0x00000002;
       }
-      if (((from_bitField0_ & 0x00000008) != 0)) {
-        result.areSystemMessages_ = areSystemMessages_;
-        to_bitField0_ |= 0x00000004;
-      }
-      if (((bitField0_ & 0x00000010) != 0)) {
+      if (((bitField0_ & 0x00000008) != 0)) {
         fromIds_.makeImmutable();
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000008);
       }
       result.fromIds_ = fromIds_;
-      if (((from_bitField0_ & 0x00000020) != 0)) {
+      if (((from_bitField0_ & 0x00000010) != 0)) {
         result.deliveryDateAfter_ = deliveryDateAfter_;
+        to_bitField0_ |= 0x00000004;
+      }
+      if (((from_bitField0_ & 0x00000020) != 0)) {
+        result.deliveryDateBefore_ = deliveryDateBefore_;
         to_bitField0_ |= 0x00000008;
       }
       if (((from_bitField0_ & 0x00000040) != 0)) {
-        result.deliveryDateBefore_ = deliveryDateBefore_;
+        result.maxCount_ = maxCount_;
         to_bitField0_ |= 0x00000010;
       }
       result.withTotal_ = withTotal_;
@@ -687,9 +687,6 @@ private static final long serialVersionUID = 0L;
         }
         onChanged();
       }
-      if (other.hasSize()) {
-        setSize(other.getSize());
-      }
       if (other.hasAreGroupMessages()) {
         setAreGroupMessages(other.getAreGroupMessages());
       }
@@ -699,7 +696,7 @@ private static final long serialVersionUID = 0L;
       if (!other.fromIds_.isEmpty()) {
         if (fromIds_.isEmpty()) {
           fromIds_ = other.fromIds_;
-          bitField0_ = (bitField0_ & ~0x00000010);
+          bitField0_ = (bitField0_ & ~0x00000008);
         } else {
           ensureFromIdsIsMutable();
           fromIds_.addAll(other.fromIds_);
@@ -711,6 +708,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.hasDeliveryDateBefore()) {
         setDeliveryDateBefore(other.getDeliveryDateBefore());
+      }
+      if (other.hasMaxCount()) {
+        setMaxCount(other.getMaxCount());
       }
       if (other.getWithTotal() != false) {
         setWithTotal(other.getWithTotal());
@@ -758,27 +758,22 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 10
             case 16: {
-              size_ = input.readInt32();
+              areGroupMessages_ = input.readBool();
               bitField0_ |= 0x00000002;
               break;
             } // case 16
             case 24: {
-              areGroupMessages_ = input.readBool();
+              areSystemMessages_ = input.readBool();
               bitField0_ |= 0x00000004;
               break;
             } // case 24
             case 32: {
-              areSystemMessages_ = input.readBool();
-              bitField0_ |= 0x00000008;
-              break;
-            } // case 32
-            case 40: {
               long v = input.readInt64();
               ensureFromIdsIsMutable();
               fromIds_.addLong(v);
               break;
-            } // case 40
-            case 42: {
+            } // case 32
+            case 34: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               ensureFromIdsIsMutable();
@@ -787,14 +782,19 @@ private static final long serialVersionUID = 0L;
               }
               input.popLimit(limit);
               break;
-            } // case 42
-            case 48: {
+            } // case 34
+            case 40: {
               deliveryDateAfter_ = input.readInt64();
+              bitField0_ |= 0x00000010;
+              break;
+            } // case 40
+            case 48: {
+              deliveryDateBefore_ = input.readInt64();
               bitField0_ |= 0x00000020;
               break;
             } // case 48
             case 56: {
-              deliveryDateBefore_ = input.readInt64();
+              maxCount_ = input.readInt32();
               bitField0_ |= 0x00000040;
               break;
             } // case 56
@@ -899,56 +899,17 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int size_ ;
-    /**
-     * <code>optional int32 size = 2;</code>
-     * @return Whether the size field is set.
-     */
-    @java.lang.Override
-    public boolean hasSize() {
-      return ((bitField0_ & 0x00000002) != 0);
-    }
-    /**
-     * <code>optional int32 size = 2;</code>
-     * @return The size.
-     */
-    @java.lang.Override
-    public int getSize() {
-      return size_;
-    }
-    /**
-     * <code>optional int32 size = 2;</code>
-     * @param value The size to set.
-     * @return This builder for chaining.
-     */
-    public Builder setSize(int value) {
-      bitField0_ |= 0x00000002;
-      size_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>optional int32 size = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearSize() {
-      bitField0_ = (bitField0_ & ~0x00000002);
-      size_ = 0;
-      onChanged();
-      return this;
-    }
-
     private boolean areGroupMessages_ ;
     /**
-     * <code>optional bool are_group_messages = 3;</code>
+     * <code>optional bool are_group_messages = 2;</code>
      * @return Whether the areGroupMessages field is set.
      */
     @java.lang.Override
     public boolean hasAreGroupMessages() {
-      return ((bitField0_ & 0x00000004) != 0);
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>optional bool are_group_messages = 3;</code>
+     * <code>optional bool are_group_messages = 2;</code>
      * @return The areGroupMessages.
      */
     @java.lang.Override
@@ -956,22 +917,22 @@ private static final long serialVersionUID = 0L;
       return areGroupMessages_;
     }
     /**
-     * <code>optional bool are_group_messages = 3;</code>
+     * <code>optional bool are_group_messages = 2;</code>
      * @param value The areGroupMessages to set.
      * @return This builder for chaining.
      */
     public Builder setAreGroupMessages(boolean value) {
-      bitField0_ |= 0x00000004;
+      bitField0_ |= 0x00000002;
       areGroupMessages_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional bool are_group_messages = 3;</code>
+     * <code>optional bool are_group_messages = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearAreGroupMessages() {
-      bitField0_ = (bitField0_ & ~0x00000004);
+      bitField0_ = (bitField0_ & ~0x00000002);
       areGroupMessages_ = false;
       onChanged();
       return this;
@@ -979,15 +940,15 @@ private static final long serialVersionUID = 0L;
 
     private boolean areSystemMessages_ ;
     /**
-     * <code>optional bool are_system_messages = 4;</code>
+     * <code>optional bool are_system_messages = 3;</code>
      * @return Whether the areSystemMessages field is set.
      */
     @java.lang.Override
     public boolean hasAreSystemMessages() {
-      return ((bitField0_ & 0x00000008) != 0);
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>optional bool are_system_messages = 4;</code>
+     * <code>optional bool are_system_messages = 3;</code>
      * @return The areSystemMessages.
      */
     @java.lang.Override
@@ -995,22 +956,22 @@ private static final long serialVersionUID = 0L;
       return areSystemMessages_;
     }
     /**
-     * <code>optional bool are_system_messages = 4;</code>
+     * <code>optional bool are_system_messages = 3;</code>
      * @param value The areSystemMessages to set.
      * @return This builder for chaining.
      */
     public Builder setAreSystemMessages(boolean value) {
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000004;
       areSystemMessages_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional bool are_system_messages = 4;</code>
+     * <code>optional bool are_system_messages = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearAreSystemMessages() {
-      bitField0_ = (bitField0_ & ~0x00000008);
+      bitField0_ = (bitField0_ & ~0x00000004);
       areSystemMessages_ = false;
       onChanged();
       return this;
@@ -1018,29 +979,29 @@ private static final long serialVersionUID = 0L;
 
     private com.google.protobuf.Internal.LongList fromIds_ = emptyLongList();
     private void ensureFromIdsIsMutable() {
-      if (!((bitField0_ & 0x00000010) != 0)) {
+      if (!((bitField0_ & 0x00000008) != 0)) {
         fromIds_ = mutableCopy(fromIds_);
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000008;
        }
     }
     /**
-     * <code>repeated int64 from_ids = 5;</code>
+     * <code>repeated int64 from_ids = 4;</code>
      * @return A list containing the fromIds.
      */
     public java.util.List<java.lang.Long>
         getFromIdsList() {
-      return ((bitField0_ & 0x00000010) != 0) ?
+      return ((bitField0_ & 0x00000008) != 0) ?
                java.util.Collections.unmodifiableList(fromIds_) : fromIds_;
     }
     /**
-     * <code>repeated int64 from_ids = 5;</code>
+     * <code>repeated int64 from_ids = 4;</code>
      * @return The count of fromIds.
      */
     public int getFromIdsCount() {
       return fromIds_.size();
     }
     /**
-     * <code>repeated int64 from_ids = 5;</code>
+     * <code>repeated int64 from_ids = 4;</code>
      * @param index The index of the element to return.
      * @return The fromIds at the given index.
      */
@@ -1048,7 +1009,7 @@ private static final long serialVersionUID = 0L;
       return fromIds_.getLong(index);
     }
     /**
-     * <code>repeated int64 from_ids = 5;</code>
+     * <code>repeated int64 from_ids = 4;</code>
      * @param index The index to set the value at.
      * @param value The fromIds to set.
      * @return This builder for chaining.
@@ -1061,7 +1022,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated int64 from_ids = 5;</code>
+     * <code>repeated int64 from_ids = 4;</code>
      * @param value The fromIds to add.
      * @return This builder for chaining.
      */
@@ -1072,7 +1033,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated int64 from_ids = 5;</code>
+     * <code>repeated int64 from_ids = 4;</code>
      * @param values The fromIds to add.
      * @return This builder for chaining.
      */
@@ -1085,27 +1046,27 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated int64 from_ids = 5;</code>
+     * <code>repeated int64 from_ids = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearFromIds() {
       fromIds_ = emptyLongList();
-      bitField0_ = (bitField0_ & ~0x00000010);
+      bitField0_ = (bitField0_ & ~0x00000008);
       onChanged();
       return this;
     }
 
     private long deliveryDateAfter_ ;
     /**
-     * <code>optional int64 delivery_date_after = 6;</code>
+     * <code>optional int64 delivery_date_after = 5;</code>
      * @return Whether the deliveryDateAfter field is set.
      */
     @java.lang.Override
     public boolean hasDeliveryDateAfter() {
-      return ((bitField0_ & 0x00000020) != 0);
+      return ((bitField0_ & 0x00000010) != 0);
     }
     /**
-     * <code>optional int64 delivery_date_after = 6;</code>
+     * <code>optional int64 delivery_date_after = 5;</code>
      * @return The deliveryDateAfter.
      */
     @java.lang.Override
@@ -1113,22 +1074,22 @@ private static final long serialVersionUID = 0L;
       return deliveryDateAfter_;
     }
     /**
-     * <code>optional int64 delivery_date_after = 6;</code>
+     * <code>optional int64 delivery_date_after = 5;</code>
      * @param value The deliveryDateAfter to set.
      * @return This builder for chaining.
      */
     public Builder setDeliveryDateAfter(long value) {
-      bitField0_ |= 0x00000020;
+      bitField0_ |= 0x00000010;
       deliveryDateAfter_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional int64 delivery_date_after = 6;</code>
+     * <code>optional int64 delivery_date_after = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearDeliveryDateAfter() {
-      bitField0_ = (bitField0_ & ~0x00000020);
+      bitField0_ = (bitField0_ & ~0x00000010);
       deliveryDateAfter_ = 0L;
       onChanged();
       return this;
@@ -1136,15 +1097,15 @@ private static final long serialVersionUID = 0L;
 
     private long deliveryDateBefore_ ;
     /**
-     * <code>optional int64 delivery_date_before = 7;</code>
+     * <code>optional int64 delivery_date_before = 6;</code>
      * @return Whether the deliveryDateBefore field is set.
      */
     @java.lang.Override
     public boolean hasDeliveryDateBefore() {
-      return ((bitField0_ & 0x00000040) != 0);
+      return ((bitField0_ & 0x00000020) != 0);
     }
     /**
-     * <code>optional int64 delivery_date_before = 7;</code>
+     * <code>optional int64 delivery_date_before = 6;</code>
      * @return The deliveryDateBefore.
      */
     @java.lang.Override
@@ -1152,23 +1113,62 @@ private static final long serialVersionUID = 0L;
       return deliveryDateBefore_;
     }
     /**
-     * <code>optional int64 delivery_date_before = 7;</code>
+     * <code>optional int64 delivery_date_before = 6;</code>
      * @param value The deliveryDateBefore to set.
      * @return This builder for chaining.
      */
     public Builder setDeliveryDateBefore(long value) {
-      bitField0_ |= 0x00000040;
+      bitField0_ |= 0x00000020;
       deliveryDateBefore_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional int64 delivery_date_before = 7;</code>
+     * <code>optional int64 delivery_date_before = 6;</code>
      * @return This builder for chaining.
      */
     public Builder clearDeliveryDateBefore() {
-      bitField0_ = (bitField0_ & ~0x00000040);
+      bitField0_ = (bitField0_ & ~0x00000020);
       deliveryDateBefore_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private int maxCount_ ;
+    /**
+     * <code>optional int32 max_count = 7;</code>
+     * @return Whether the maxCount field is set.
+     */
+    @java.lang.Override
+    public boolean hasMaxCount() {
+      return ((bitField0_ & 0x00000040) != 0);
+    }
+    /**
+     * <code>optional int32 max_count = 7;</code>
+     * @return The maxCount.
+     */
+    @java.lang.Override
+    public int getMaxCount() {
+      return maxCount_;
+    }
+    /**
+     * <code>optional int32 max_count = 7;</code>
+     * @param value The maxCount to set.
+     * @return This builder for chaining.
+     */
+    public Builder setMaxCount(int value) {
+      bitField0_ |= 0x00000040;
+      maxCount_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional int32 max_count = 7;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearMaxCount() {
+      bitField0_ = (bitField0_ & ~0x00000040);
+      maxCount_ = 0;
       onChanged();
       return this;
     }

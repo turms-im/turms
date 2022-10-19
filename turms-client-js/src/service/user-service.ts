@@ -377,19 +377,19 @@ export default class UserService {
     queryNearbyUsers({
         latitude,
         longitude,
-        distance,
-        maxNumber,
+        maxCount,
+        maxDistance,
         withCoordinates,
         withDistance,
-        withInfo
+        withUserInfo
     }: {
         latitude: number,
         longitude: number,
-        distance?: number,
-        maxNumber?: number,
+        maxCount?: number,
+        maxDistance?: number,
         withCoordinates?: boolean,
         withDistance?: boolean,
-        withInfo?: boolean
+        withUserInfo?: boolean
     }): Promise<Response<ParsedModel.NearbyUser[]>> {
         if (Validator.isFalsy(latitude)) {
             return ResponseError.notFalsyPromise('latitude');
@@ -401,11 +401,11 @@ export default class UserService {
             queryNearbyUsersRequest: {
                 latitude,
                 longitude,
-                distance,
-                maxNumber,
+                maxCount,
+                maxDistance,
                 withCoordinates,
                 withDistance,
-                withInfo
+                withUserInfo
             }
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.nearbyUsers?.nearbyUsers)));
     }

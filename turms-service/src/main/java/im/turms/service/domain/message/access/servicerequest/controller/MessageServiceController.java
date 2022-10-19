@@ -213,8 +213,8 @@ public class MessageServiceController extends BaseServiceController {
             Date deliveryDateAfter = request.hasDeliveryDateAfter() ? new Date(request.getDeliveryDateAfter()) : null;
             Date deliveryDateBefore = request.hasDeliveryDateBefore() && deliveryDateAfter == null ?
                     new Date(request.getDeliveryDateBefore()) : null;
+            Integer size = request.hasMaxCount() ? request.getMaxCount() : null;
             boolean withTotal = request.getWithTotal();
-            Integer size = request.hasSize() ? request.getSize() : null;
             Long userId = clientRequest.userId();
             DateRange dateRange = DateRange.of(deliveryDateAfter, deliveryDateBefore);
             return messageService.authAndQueryCompleteMessages(

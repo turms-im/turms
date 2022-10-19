@@ -106,7 +106,7 @@ describe('Query', () => {
         const response = await recipientClient.messageService.queryMessages({
             areGroupMessages: false,
             fromIds: [SENDER_ID],
-            size: 10
+            maxCount: 10
         });
         const messages = response.data;
         expect(messages.length).toBeGreaterThan(0);
@@ -115,7 +115,7 @@ describe('Query', () => {
         const response = await recipientClient.messageService.queryMessages({
             areGroupMessages: false,
             fromIds: [SENDER_ID],
-            size: 1
+            maxCount: 1
         });
         const messagesWithTotals = response.data;
         expect(messagesWithTotals.length).toBeGreaterThan(0);

@@ -13,12 +13,12 @@ import 'package:protobuf/protobuf.dart' as $pb;
 class QueryMessagesRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'QueryMessagesRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
     ..p<$fixnum.Int64>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ids', $pb.PbFieldType.P6)
-    ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'size', $pb.PbFieldType.O3)
-    ..aOB(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'areGroupMessages')
-    ..aOB(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'areSystemMessages')
-    ..p<$fixnum.Int64>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fromIds', $pb.PbFieldType.P6)
-    ..aInt64(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deliveryDateAfter')
-    ..aInt64(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deliveryDateBefore')
+    ..aOB(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'areGroupMessages')
+    ..aOB(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'areSystemMessages')
+    ..p<$fixnum.Int64>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fromIds', $pb.PbFieldType.P6)
+    ..aInt64(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deliveryDateAfter')
+    ..aInt64(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deliveryDateBefore')
+    ..a<$core.int>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'maxCount', $pb.PbFieldType.O3)
     ..aOB(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'withTotal')
     ..hasRequiredFields = false
   ;
@@ -26,20 +26,17 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
   QueryMessagesRequest._() : super();
   factory QueryMessagesRequest({
     $core.Iterable<$fixnum.Int64>? ids,
-    $core.int? size,
     $core.bool? areGroupMessages,
     $core.bool? areSystemMessages,
     $core.Iterable<$fixnum.Int64>? fromIds,
     $fixnum.Int64? deliveryDateAfter,
     $fixnum.Int64? deliveryDateBefore,
+    $core.int? maxCount,
     $core.bool? withTotal,
   }) {
     final _result = create();
     if (ids != null) {
       _result.ids.addAll(ids);
-    }
-    if (size != null) {
-      _result.size = size;
     }
     if (areGroupMessages != null) {
       _result.areGroupMessages = areGroupMessages;
@@ -55,6 +52,9 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
     }
     if (deliveryDateBefore != null) {
       _result.deliveryDateBefore = deliveryDateBefore;
+    }
+    if (maxCount != null) {
+      _result.maxCount = maxCount;
     }
     if (withTotal != null) {
       _result.withTotal = withTotal;
@@ -86,52 +86,52 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
   $core.List<$fixnum.Int64> get ids => $_getList(0);
 
   @$pb.TagNumber(2)
-  $core.int get size => $_getIZ(1);
+  $core.bool get areGroupMessages => $_getBF(1);
   @$pb.TagNumber(2)
-  set size($core.int v) { $_setSignedInt32(1, v); }
+  set areGroupMessages($core.bool v) { $_setBool(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasSize() => $_has(1);
+  $core.bool hasAreGroupMessages() => $_has(1);
   @$pb.TagNumber(2)
-  void clearSize() => clearField(2);
+  void clearAreGroupMessages() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.bool get areGroupMessages => $_getBF(2);
+  $core.bool get areSystemMessages => $_getBF(2);
   @$pb.TagNumber(3)
-  set areGroupMessages($core.bool v) { $_setBool(2, v); }
+  set areSystemMessages($core.bool v) { $_setBool(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasAreGroupMessages() => $_has(2);
+  $core.bool hasAreSystemMessages() => $_has(2);
   @$pb.TagNumber(3)
-  void clearAreGroupMessages() => clearField(3);
+  void clearAreSystemMessages() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.bool get areSystemMessages => $_getBF(3);
-  @$pb.TagNumber(4)
-  set areSystemMessages($core.bool v) { $_setBool(3, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasAreSystemMessages() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearAreSystemMessages() => clearField(4);
+  $core.List<$fixnum.Int64> get fromIds => $_getList(3);
 
   @$pb.TagNumber(5)
-  $core.List<$fixnum.Int64> get fromIds => $_getList(4);
+  $fixnum.Int64 get deliveryDateAfter => $_getI64(4);
+  @$pb.TagNumber(5)
+  set deliveryDateAfter($fixnum.Int64 v) { $_setInt64(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasDeliveryDateAfter() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearDeliveryDateAfter() => clearField(5);
 
   @$pb.TagNumber(6)
-  $fixnum.Int64 get deliveryDateAfter => $_getI64(5);
+  $fixnum.Int64 get deliveryDateBefore => $_getI64(5);
   @$pb.TagNumber(6)
-  set deliveryDateAfter($fixnum.Int64 v) { $_setInt64(5, v); }
+  set deliveryDateBefore($fixnum.Int64 v) { $_setInt64(5, v); }
   @$pb.TagNumber(6)
-  $core.bool hasDeliveryDateAfter() => $_has(5);
+  $core.bool hasDeliveryDateBefore() => $_has(5);
   @$pb.TagNumber(6)
-  void clearDeliveryDateAfter() => clearField(6);
+  void clearDeliveryDateBefore() => clearField(6);
 
   @$pb.TagNumber(7)
-  $fixnum.Int64 get deliveryDateBefore => $_getI64(6);
+  $core.int get maxCount => $_getIZ(6);
   @$pb.TagNumber(7)
-  set deliveryDateBefore($fixnum.Int64 v) { $_setInt64(6, v); }
+  set maxCount($core.int v) { $_setSignedInt32(6, v); }
   @$pb.TagNumber(7)
-  $core.bool hasDeliveryDateBefore() => $_has(6);
+  $core.bool hasMaxCount() => $_has(6);
   @$pb.TagNumber(7)
-  void clearDeliveryDateBefore() => clearField(7);
+  void clearMaxCount() => clearField(7);
 
   @$pb.TagNumber(8)
   $core.bool get withTotal => $_getBF(7);

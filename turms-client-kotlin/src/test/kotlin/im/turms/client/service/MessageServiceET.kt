@@ -123,7 +123,7 @@ internal class MessageServiceET {
     @Timeout(5)
     fun queryMessages_shouldReturnNotEmptyMessages() = runBlocking {
         val messages =
-            recipientClient.messageService.queryMessages(areGroupMessages = false, fromIds = setOf(SENDER_ID), size = 10)
+            recipientClient.messageService.queryMessages(areGroupMessages = false, fromIds = setOf(SENDER_ID), maxCount = 10)
                 .data
         assertTrue(messages.isNotEmpty())
     }
@@ -132,7 +132,7 @@ internal class MessageServiceET {
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
     fun queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal() = runBlocking {
-        val messagesWithTotals = senderClient.messageService.queryMessagesWithTotal(size = 1)
+        val messagesWithTotals = senderClient.messageService.queryMessagesWithTotal(maxCount = 1)
             .data
         assertTrue(messagesWithTotals.isNotEmpty())
     }

@@ -196,17 +196,17 @@ public class UserService {
             }
     }
 
-    public func queryNearbyUsers(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil, withCoordinates: Bool? = nil, withDistance: Bool? = nil, withInfo: Bool? = nil) -> Promise<Response<[NearbyUser]>> {
+    public func queryNearbyUsers(latitude: Float, longitude: Float, maxCount: Int32? = nil, maxDistance: Int32? = nil, withCoordinates: Bool? = nil, withDistance: Bool? = nil, withUserInfo: Bool? = nil) -> Promise<Response<[NearbyUser]>> {
         return turmsClient.driver
             .send {
                 $0.queryNearbyUsersRequest = .with {
                     $0.latitude = latitude
                     $0.longitude = longitude
-                    if let v = distance {
-                        $0.distance = v
+                    if let v = maxCount {
+                        $0.maxCount = v
                     }
-                    if let v = maxNumber {
-                        $0.maxNumber = v
+                    if let v = maxDistance {
+                        $0.maxDistance = v
                     }
                     if let v = withCoordinates {
                         $0.withCoordinates = v
@@ -214,8 +214,8 @@ public class UserService {
                     if let v = withDistance {
                         $0.withDistance = v
                     }
-                    if let v = withInfo {
-                        $0.withInfo = v
+                    if let v = withUserInfo {
+                        $0.withUserInfo = v
                     }
                 }
             }

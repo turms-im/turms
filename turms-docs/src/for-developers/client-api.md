@@ -125,8 +125,8 @@ client.userService.login({
         client.userService.queryNearbyUsers({
             latitude: 139.667651,
             longitude: 35.792657,
-            distance: 100,
-            maxNumber: 10
+            maxCount: 10,
+            maxDistance: 1000
         })
             .then(response => {
                 console.log(`nearby users: ${JSON.stringify(response.data)}`);
@@ -181,8 +181,8 @@ client.userService.login(1, "123")
 val users = client.userService.queryNearbyUsers(
     35.792657f,
     139.667651f,
-    100,
-    10
+    10,
+    1000
 ).data
 println("nearby users: [${users.joinToString(", ")}]")
 
@@ -208,7 +208,7 @@ println("group $groupId has been created")
 
 ```swift
 // Initialize client
-let client = TurmsClient() // TurmsClient("ws://any-turms-gateway-server.com")
+let client = TurmsClient() // TurmsClient("127.0.0.1", 11510)
 
 // Listen to the offline event
 client.userService.addOfflineListener { (info: SessionCloseInfo) -> () in
@@ -230,8 +230,8 @@ client.userService.login(userId: 1, password: "123")
         client.userService.queryNearbyUsers(
                 latitude: 35.792657,
                 longitude: 139.667651,
-                distance: 100,
-                maxNumber: 10)
+                maxCount: 10,
+                maxDistance: 1000)
             .done {
                 print("nearby users: \($0.data)")
             }
@@ -261,7 +261,7 @@ client.userService.login(userId: 1, password: "123")
 
 ```dart
 // Initialize client
-final client = TurmsClient();
+final client = TurmsClient(); // TurmsClient(host: '127.0.0.1', port: 11510)
 
 // Listen to the offline event
 client.userService.addOnOfflineListener((info) => 
@@ -279,7 +279,7 @@ await client.userService.login(Int64(1), password: '123');
 
 final users = (await client.userService.queryNearbyUsers(
         35.792657, 139.667651,
-        distance: 100, maxNumber: 10))
+        maxCount: 10, maxDistance: 1000))
     .data;
 print('nearby users: $users');
 

@@ -104,52 +104,18 @@ public  final class QueryMessagesRequest extends
     ids_ = emptyLongList();
   }
 
-  public static final int SIZE_FIELD_NUMBER = 2;
-  private int size_;
-  /**
-   * <code>optional int32 size = 2;</code>
-   * @return Whether the size field is set.
-   */
-  @java.lang.Override
-  public boolean hasSize() {
-    return ((bitField0_ & 0x00000001) != 0);
-  }
-  /**
-   * <code>optional int32 size = 2;</code>
-   * @return The size.
-   */
-  @java.lang.Override
-  public int getSize() {
-    return size_;
-  }
-  /**
-   * <code>optional int32 size = 2;</code>
-   * @param value The size to set.
-   */
-  private void setSize(int value) {
-    bitField0_ |= 0x00000001;
-    size_ = value;
-  }
-  /**
-   * <code>optional int32 size = 2;</code>
-   */
-  private void clearSize() {
-    bitField0_ = (bitField0_ & ~0x00000001);
-    size_ = 0;
-  }
-
-  public static final int ARE_GROUP_MESSAGES_FIELD_NUMBER = 3;
+  public static final int ARE_GROUP_MESSAGES_FIELD_NUMBER = 2;
   private boolean areGroupMessages_;
   /**
-   * <code>optional bool are_group_messages = 3;</code>
+   * <code>optional bool are_group_messages = 2;</code>
    * @return Whether the areGroupMessages field is set.
    */
   @java.lang.Override
   public boolean hasAreGroupMessages() {
-    return ((bitField0_ & 0x00000002) != 0);
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>optional bool are_group_messages = 3;</code>
+   * <code>optional bool are_group_messages = 2;</code>
    * @return The areGroupMessages.
    */
   @java.lang.Override
@@ -157,33 +123,33 @@ public  final class QueryMessagesRequest extends
     return areGroupMessages_;
   }
   /**
-   * <code>optional bool are_group_messages = 3;</code>
+   * <code>optional bool are_group_messages = 2;</code>
    * @param value The areGroupMessages to set.
    */
   private void setAreGroupMessages(boolean value) {
-    bitField0_ |= 0x00000002;
+    bitField0_ |= 0x00000001;
     areGroupMessages_ = value;
   }
   /**
-   * <code>optional bool are_group_messages = 3;</code>
+   * <code>optional bool are_group_messages = 2;</code>
    */
   private void clearAreGroupMessages() {
-    bitField0_ = (bitField0_ & ~0x00000002);
+    bitField0_ = (bitField0_ & ~0x00000001);
     areGroupMessages_ = false;
   }
 
-  public static final int ARE_SYSTEM_MESSAGES_FIELD_NUMBER = 4;
+  public static final int ARE_SYSTEM_MESSAGES_FIELD_NUMBER = 3;
   private boolean areSystemMessages_;
   /**
-   * <code>optional bool are_system_messages = 4;</code>
+   * <code>optional bool are_system_messages = 3;</code>
    * @return Whether the areSystemMessages field is set.
    */
   @java.lang.Override
   public boolean hasAreSystemMessages() {
-    return ((bitField0_ & 0x00000004) != 0);
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>optional bool are_system_messages = 4;</code>
+   * <code>optional bool are_system_messages = 3;</code>
    * @return The areSystemMessages.
    */
   @java.lang.Override
@@ -191,25 +157,25 @@ public  final class QueryMessagesRequest extends
     return areSystemMessages_;
   }
   /**
-   * <code>optional bool are_system_messages = 4;</code>
+   * <code>optional bool are_system_messages = 3;</code>
    * @param value The areSystemMessages to set.
    */
   private void setAreSystemMessages(boolean value) {
-    bitField0_ |= 0x00000004;
+    bitField0_ |= 0x00000002;
     areSystemMessages_ = value;
   }
   /**
-   * <code>optional bool are_system_messages = 4;</code>
+   * <code>optional bool are_system_messages = 3;</code>
    */
   private void clearAreSystemMessages() {
-    bitField0_ = (bitField0_ & ~0x00000004);
+    bitField0_ = (bitField0_ & ~0x00000002);
     areSystemMessages_ = false;
   }
 
-  public static final int FROM_IDS_FIELD_NUMBER = 5;
+  public static final int FROM_IDS_FIELD_NUMBER = 4;
   private com.google.protobuf.Internal.LongList fromIds_;
   /**
-   * <code>repeated int64 from_ids = 5;</code>
+   * <code>repeated int64 from_ids = 4;</code>
    * @return A list containing the fromIds.
    */
   @java.lang.Override
@@ -218,7 +184,7 @@ public  final class QueryMessagesRequest extends
     return fromIds_;
   }
   /**
-   * <code>repeated int64 from_ids = 5;</code>
+   * <code>repeated int64 from_ids = 4;</code>
    * @return The count of fromIds.
    */
   @java.lang.Override
@@ -226,7 +192,7 @@ public  final class QueryMessagesRequest extends
     return fromIds_.size();
   }
   /**
-   * <code>repeated int64 from_ids = 5;</code>
+   * <code>repeated int64 from_ids = 4;</code>
    * @param index The index of the element to return.
    * @return The fromIds at the given index.
    */
@@ -243,7 +209,7 @@ public  final class QueryMessagesRequest extends
      }
   }
   /**
-   * <code>repeated int64 from_ids = 5;</code>
+   * <code>repeated int64 from_ids = 4;</code>
    * @param index The index to set the value at.
    * @param value The fromIds to set.
    */
@@ -253,7 +219,7 @@ public  final class QueryMessagesRequest extends
     fromIds_.setLong(index, value);
   }
   /**
-   * <code>repeated int64 from_ids = 5;</code>
+   * <code>repeated int64 from_ids = 4;</code>
    * @param value The fromIds to add.
    */
   private void addFromIds(long value) {
@@ -261,7 +227,7 @@ public  final class QueryMessagesRequest extends
     fromIds_.addLong(value);
   }
   /**
-   * <code>repeated int64 from_ids = 5;</code>
+   * <code>repeated int64 from_ids = 4;</code>
    * @param values The fromIds to add.
    */
   private void addAllFromIds(
@@ -271,24 +237,24 @@ public  final class QueryMessagesRequest extends
         values, fromIds_);
   }
   /**
-   * <code>repeated int64 from_ids = 5;</code>
+   * <code>repeated int64 from_ids = 4;</code>
    */
   private void clearFromIds() {
     fromIds_ = emptyLongList();
   }
 
-  public static final int DELIVERY_DATE_AFTER_FIELD_NUMBER = 6;
+  public static final int DELIVERY_DATE_AFTER_FIELD_NUMBER = 5;
   private long deliveryDateAfter_;
   /**
-   * <code>optional int64 delivery_date_after = 6;</code>
+   * <code>optional int64 delivery_date_after = 5;</code>
    * @return Whether the deliveryDateAfter field is set.
    */
   @java.lang.Override
   public boolean hasDeliveryDateAfter() {
-    return ((bitField0_ & 0x00000008) != 0);
+    return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>optional int64 delivery_date_after = 6;</code>
+   * <code>optional int64 delivery_date_after = 5;</code>
    * @return The deliveryDateAfter.
    */
   @java.lang.Override
@@ -296,33 +262,33 @@ public  final class QueryMessagesRequest extends
     return deliveryDateAfter_;
   }
   /**
-   * <code>optional int64 delivery_date_after = 6;</code>
+   * <code>optional int64 delivery_date_after = 5;</code>
    * @param value The deliveryDateAfter to set.
    */
   private void setDeliveryDateAfter(long value) {
-    bitField0_ |= 0x00000008;
+    bitField0_ |= 0x00000004;
     deliveryDateAfter_ = value;
   }
   /**
-   * <code>optional int64 delivery_date_after = 6;</code>
+   * <code>optional int64 delivery_date_after = 5;</code>
    */
   private void clearDeliveryDateAfter() {
-    bitField0_ = (bitField0_ & ~0x00000008);
+    bitField0_ = (bitField0_ & ~0x00000004);
     deliveryDateAfter_ = 0L;
   }
 
-  public static final int DELIVERY_DATE_BEFORE_FIELD_NUMBER = 7;
+  public static final int DELIVERY_DATE_BEFORE_FIELD_NUMBER = 6;
   private long deliveryDateBefore_;
   /**
-   * <code>optional int64 delivery_date_before = 7;</code>
+   * <code>optional int64 delivery_date_before = 6;</code>
    * @return Whether the deliveryDateBefore field is set.
    */
   @java.lang.Override
   public boolean hasDeliveryDateBefore() {
-    return ((bitField0_ & 0x00000010) != 0);
+    return ((bitField0_ & 0x00000008) != 0);
   }
   /**
-   * <code>optional int64 delivery_date_before = 7;</code>
+   * <code>optional int64 delivery_date_before = 6;</code>
    * @return The deliveryDateBefore.
    */
   @java.lang.Override
@@ -330,19 +296,53 @@ public  final class QueryMessagesRequest extends
     return deliveryDateBefore_;
   }
   /**
-   * <code>optional int64 delivery_date_before = 7;</code>
+   * <code>optional int64 delivery_date_before = 6;</code>
    * @param value The deliveryDateBefore to set.
    */
   private void setDeliveryDateBefore(long value) {
-    bitField0_ |= 0x00000010;
+    bitField0_ |= 0x00000008;
     deliveryDateBefore_ = value;
   }
   /**
-   * <code>optional int64 delivery_date_before = 7;</code>
+   * <code>optional int64 delivery_date_before = 6;</code>
    */
   private void clearDeliveryDateBefore() {
-    bitField0_ = (bitField0_ & ~0x00000010);
+    bitField0_ = (bitField0_ & ~0x00000008);
     deliveryDateBefore_ = 0L;
+  }
+
+  public static final int MAX_COUNT_FIELD_NUMBER = 7;
+  private int maxCount_;
+  /**
+   * <code>optional int32 max_count = 7;</code>
+   * @return Whether the maxCount field is set.
+   */
+  @java.lang.Override
+  public boolean hasMaxCount() {
+    return ((bitField0_ & 0x00000010) != 0);
+  }
+  /**
+   * <code>optional int32 max_count = 7;</code>
+   * @return The maxCount.
+   */
+  @java.lang.Override
+  public int getMaxCount() {
+    return maxCount_;
+  }
+  /**
+   * <code>optional int32 max_count = 7;</code>
+   * @param value The maxCount to set.
+   */
+  private void setMaxCount(int value) {
+    bitField0_ |= 0x00000010;
+    maxCount_ = value;
+  }
+  /**
+   * <code>optional int32 max_count = 7;</code>
+   */
+  private void clearMaxCount() {
+    bitField0_ = (bitField0_ & ~0x00000010);
+    maxCount_ = 0;
   }
 
   public static final int WITH_TOTAL_FIELD_NUMBER = 8;
@@ -536,43 +536,7 @@ public  final class QueryMessagesRequest extends
     }
 
     /**
-     * <code>optional int32 size = 2;</code>
-     * @return Whether the size field is set.
-     */
-    @java.lang.Override
-    public boolean hasSize() {
-      return instance.hasSize();
-    }
-    /**
-     * <code>optional int32 size = 2;</code>
-     * @return The size.
-     */
-    @java.lang.Override
-    public int getSize() {
-      return instance.getSize();
-    }
-    /**
-     * <code>optional int32 size = 2;</code>
-     * @param value The size to set.
-     * @return This builder for chaining.
-     */
-    public Builder setSize(int value) {
-      copyOnWrite();
-      instance.setSize(value);
-      return this;
-    }
-    /**
-     * <code>optional int32 size = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearSize() {
-      copyOnWrite();
-      instance.clearSize();
-      return this;
-    }
-
-    /**
-     * <code>optional bool are_group_messages = 3;</code>
+     * <code>optional bool are_group_messages = 2;</code>
      * @return Whether the areGroupMessages field is set.
      */
     @java.lang.Override
@@ -580,7 +544,7 @@ public  final class QueryMessagesRequest extends
       return instance.hasAreGroupMessages();
     }
     /**
-     * <code>optional bool are_group_messages = 3;</code>
+     * <code>optional bool are_group_messages = 2;</code>
      * @return The areGroupMessages.
      */
     @java.lang.Override
@@ -588,7 +552,7 @@ public  final class QueryMessagesRequest extends
       return instance.getAreGroupMessages();
     }
     /**
-     * <code>optional bool are_group_messages = 3;</code>
+     * <code>optional bool are_group_messages = 2;</code>
      * @param value The areGroupMessages to set.
      * @return This builder for chaining.
      */
@@ -598,7 +562,7 @@ public  final class QueryMessagesRequest extends
       return this;
     }
     /**
-     * <code>optional bool are_group_messages = 3;</code>
+     * <code>optional bool are_group_messages = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearAreGroupMessages() {
@@ -608,7 +572,7 @@ public  final class QueryMessagesRequest extends
     }
 
     /**
-     * <code>optional bool are_system_messages = 4;</code>
+     * <code>optional bool are_system_messages = 3;</code>
      * @return Whether the areSystemMessages field is set.
      */
     @java.lang.Override
@@ -616,7 +580,7 @@ public  final class QueryMessagesRequest extends
       return instance.hasAreSystemMessages();
     }
     /**
-     * <code>optional bool are_system_messages = 4;</code>
+     * <code>optional bool are_system_messages = 3;</code>
      * @return The areSystemMessages.
      */
     @java.lang.Override
@@ -624,7 +588,7 @@ public  final class QueryMessagesRequest extends
       return instance.getAreSystemMessages();
     }
     /**
-     * <code>optional bool are_system_messages = 4;</code>
+     * <code>optional bool are_system_messages = 3;</code>
      * @param value The areSystemMessages to set.
      * @return This builder for chaining.
      */
@@ -634,7 +598,7 @@ public  final class QueryMessagesRequest extends
       return this;
     }
     /**
-     * <code>optional bool are_system_messages = 4;</code>
+     * <code>optional bool are_system_messages = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearAreSystemMessages() {
@@ -644,7 +608,7 @@ public  final class QueryMessagesRequest extends
     }
 
     /**
-     * <code>repeated int64 from_ids = 5;</code>
+     * <code>repeated int64 from_ids = 4;</code>
      * @return A list containing the fromIds.
      */
     @java.lang.Override
@@ -654,7 +618,7 @@ public  final class QueryMessagesRequest extends
           instance.getFromIdsList());
     }
     /**
-     * <code>repeated int64 from_ids = 5;</code>
+     * <code>repeated int64 from_ids = 4;</code>
      * @return The count of fromIds.
      */
     @java.lang.Override
@@ -662,7 +626,7 @@ public  final class QueryMessagesRequest extends
       return instance.getFromIdsCount();
     }
     /**
-     * <code>repeated int64 from_ids = 5;</code>
+     * <code>repeated int64 from_ids = 4;</code>
      * @param index The index of the element to return.
      * @return The fromIds at the given index.
      */
@@ -671,7 +635,7 @@ public  final class QueryMessagesRequest extends
       return instance.getFromIds(index);
     }
     /**
-     * <code>repeated int64 from_ids = 5;</code>
+     * <code>repeated int64 from_ids = 4;</code>
      * @param value The fromIds to set.
      * @return This builder for chaining.
      */
@@ -682,7 +646,7 @@ public  final class QueryMessagesRequest extends
       return this;
     }
     /**
-     * <code>repeated int64 from_ids = 5;</code>
+     * <code>repeated int64 from_ids = 4;</code>
      * @param value The fromIds to add.
      * @return This builder for chaining.
      */
@@ -692,7 +656,7 @@ public  final class QueryMessagesRequest extends
       return this;
     }
     /**
-     * <code>repeated int64 from_ids = 5;</code>
+     * <code>repeated int64 from_ids = 4;</code>
      * @param values The fromIds to add.
      * @return This builder for chaining.
      */
@@ -703,7 +667,7 @@ public  final class QueryMessagesRequest extends
       return this;
     }
     /**
-     * <code>repeated int64 from_ids = 5;</code>
+     * <code>repeated int64 from_ids = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearFromIds() {
@@ -713,7 +677,7 @@ public  final class QueryMessagesRequest extends
     }
 
     /**
-     * <code>optional int64 delivery_date_after = 6;</code>
+     * <code>optional int64 delivery_date_after = 5;</code>
      * @return Whether the deliveryDateAfter field is set.
      */
     @java.lang.Override
@@ -721,7 +685,7 @@ public  final class QueryMessagesRequest extends
       return instance.hasDeliveryDateAfter();
     }
     /**
-     * <code>optional int64 delivery_date_after = 6;</code>
+     * <code>optional int64 delivery_date_after = 5;</code>
      * @return The deliveryDateAfter.
      */
     @java.lang.Override
@@ -729,7 +693,7 @@ public  final class QueryMessagesRequest extends
       return instance.getDeliveryDateAfter();
     }
     /**
-     * <code>optional int64 delivery_date_after = 6;</code>
+     * <code>optional int64 delivery_date_after = 5;</code>
      * @param value The deliveryDateAfter to set.
      * @return This builder for chaining.
      */
@@ -739,7 +703,7 @@ public  final class QueryMessagesRequest extends
       return this;
     }
     /**
-     * <code>optional int64 delivery_date_after = 6;</code>
+     * <code>optional int64 delivery_date_after = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearDeliveryDateAfter() {
@@ -749,7 +713,7 @@ public  final class QueryMessagesRequest extends
     }
 
     /**
-     * <code>optional int64 delivery_date_before = 7;</code>
+     * <code>optional int64 delivery_date_before = 6;</code>
      * @return Whether the deliveryDateBefore field is set.
      */
     @java.lang.Override
@@ -757,7 +721,7 @@ public  final class QueryMessagesRequest extends
       return instance.hasDeliveryDateBefore();
     }
     /**
-     * <code>optional int64 delivery_date_before = 7;</code>
+     * <code>optional int64 delivery_date_before = 6;</code>
      * @return The deliveryDateBefore.
      */
     @java.lang.Override
@@ -765,7 +729,7 @@ public  final class QueryMessagesRequest extends
       return instance.getDeliveryDateBefore();
     }
     /**
-     * <code>optional int64 delivery_date_before = 7;</code>
+     * <code>optional int64 delivery_date_before = 6;</code>
      * @param value The deliveryDateBefore to set.
      * @return This builder for chaining.
      */
@@ -775,12 +739,48 @@ public  final class QueryMessagesRequest extends
       return this;
     }
     /**
-     * <code>optional int64 delivery_date_before = 7;</code>
+     * <code>optional int64 delivery_date_before = 6;</code>
      * @return This builder for chaining.
      */
     public Builder clearDeliveryDateBefore() {
       copyOnWrite();
       instance.clearDeliveryDateBefore();
+      return this;
+    }
+
+    /**
+     * <code>optional int32 max_count = 7;</code>
+     * @return Whether the maxCount field is set.
+     */
+    @java.lang.Override
+    public boolean hasMaxCount() {
+      return instance.hasMaxCount();
+    }
+    /**
+     * <code>optional int32 max_count = 7;</code>
+     * @return The maxCount.
+     */
+    @java.lang.Override
+    public int getMaxCount() {
+      return instance.getMaxCount();
+    }
+    /**
+     * <code>optional int32 max_count = 7;</code>
+     * @param value The maxCount to set.
+     * @return This builder for chaining.
+     */
+    public Builder setMaxCount(int value) {
+      copyOnWrite();
+      instance.setMaxCount(value);
+      return this;
+    }
+    /**
+     * <code>optional int32 max_count = 7;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearMaxCount() {
+      copyOnWrite();
+      instance.clearMaxCount();
       return this;
     }
 
@@ -830,17 +830,17 @@ public  final class QueryMessagesRequest extends
           java.lang.Object[] objects = new java.lang.Object[] {
             "bitField0_",
             "ids_",
-            "size_",
             "areGroupMessages_",
             "areSystemMessages_",
             "fromIds_",
             "deliveryDateAfter_",
             "deliveryDateBefore_",
+            "maxCount_",
             "withTotal_",
           };
           java.lang.String info =
-              "\u0000\b\u0000\u0001\u0001\b\b\u0000\u0002\u0000\u0001%\u0002\u1004\u0000\u0003\u1007" +
-              "\u0001\u0004\u1007\u0002\u0005%\u0006\u1002\u0003\u0007\u1002\u0004\b\u0007";
+              "\u0000\b\u0000\u0001\u0001\b\b\u0000\u0002\u0000\u0001%\u0002\u1007\u0000\u0003\u1007" +
+              "\u0001\u0004%\u0005\u1002\u0002\u0006\u1002\u0003\u0007\u1004\u0004\b\u0007";
           return newMessageInfo(DEFAULT_INSTANCE, info, objects);
       }
       // fall through

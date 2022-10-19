@@ -10,7 +10,6 @@ import TurmsClient from '../turms-client';
 import Validator from '../util/validator';
 import CollectionUtil from '../util/collection-util';
 import NewGroupJoinQuestion from '../model/new-group-join-question';
-import { GroupJoinQuestion } from '../model/proto/model/group/group_join_question';
 
 export default class GroupService {
     private _turmsClient: TurmsClient;

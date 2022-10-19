@@ -6,24 +6,24 @@ export const protobufPackage = "im.turms.proto";
 
 export interface QueryMessagesRequest {
   ids: string[];
-  size?: number | undefined;
   areGroupMessages?: boolean | undefined;
   areSystemMessages?: boolean | undefined;
   fromIds: string[];
   deliveryDateAfter?: string | undefined;
   deliveryDateBefore?: string | undefined;
+  maxCount?: number | undefined;
   withTotal: boolean;
 }
 
 function createBaseQueryMessagesRequest(): QueryMessagesRequest {
   return {
     ids: [],
-    size: undefined,
     areGroupMessages: undefined,
     areSystemMessages: undefined,
     fromIds: [],
     deliveryDateAfter: undefined,
     deliveryDateBefore: undefined,
+    maxCount: undefined,
     withTotal: false,
   };
 }
@@ -35,25 +35,25 @@ export const QueryMessagesRequest = {
       writer.int64(v);
     }
     writer.ldelim();
-    if (message.size !== undefined) {
-      writer.uint32(16).int32(message.size);
-    }
     if (message.areGroupMessages !== undefined) {
-      writer.uint32(24).bool(message.areGroupMessages);
+      writer.uint32(16).bool(message.areGroupMessages);
     }
     if (message.areSystemMessages !== undefined) {
-      writer.uint32(32).bool(message.areSystemMessages);
+      writer.uint32(24).bool(message.areSystemMessages);
     }
-    writer.uint32(42).fork();
+    writer.uint32(34).fork();
     for (const v of message.fromIds) {
       writer.int64(v);
     }
     writer.ldelim();
     if (message.deliveryDateAfter !== undefined) {
-      writer.uint32(48).int64(message.deliveryDateAfter);
+      writer.uint32(40).int64(message.deliveryDateAfter);
     }
     if (message.deliveryDateBefore !== undefined) {
-      writer.uint32(56).int64(message.deliveryDateBefore);
+      writer.uint32(48).int64(message.deliveryDateBefore);
+    }
+    if (message.maxCount !== undefined) {
+      writer.uint32(56).int32(message.maxCount);
     }
     if (message.withTotal === true) {
       writer.uint32(64).bool(message.withTotal);
@@ -79,15 +79,12 @@ export const QueryMessagesRequest = {
           }
           break;
         case 2:
-          message.size = reader.int32();
-          break;
-        case 3:
           message.areGroupMessages = reader.bool();
           break;
-        case 4:
+        case 3:
           message.areSystemMessages = reader.bool();
           break;
-        case 5:
+        case 4:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
@@ -97,11 +94,14 @@ export const QueryMessagesRequest = {
             message.fromIds.push(longToString(reader.int64() as Long));
           }
           break;
-        case 6:
+        case 5:
           message.deliveryDateAfter = longToString(reader.int64() as Long);
           break;
-        case 7:
+        case 6:
           message.deliveryDateBefore = longToString(reader.int64() as Long);
+          break;
+        case 7:
+          message.maxCount = reader.int32();
           break;
         case 8:
           message.withTotal = reader.bool();

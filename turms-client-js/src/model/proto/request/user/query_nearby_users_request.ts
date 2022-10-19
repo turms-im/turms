@@ -6,22 +6,22 @@ export const protobufPackage = "im.turms.proto";
 export interface QueryNearbyUsersRequest {
   latitude: number;
   longitude: number;
-  distance?: number | undefined;
-  maxNumber?: number | undefined;
+  maxCount?: number | undefined;
+  maxDistance?: number | undefined;
   withCoordinates?: boolean | undefined;
   withDistance?: boolean | undefined;
-  withInfo?: boolean | undefined;
+  withUserInfo?: boolean | undefined;
 }
 
 function createBaseQueryNearbyUsersRequest(): QueryNearbyUsersRequest {
   return {
     latitude: 0,
     longitude: 0,
-    distance: undefined,
-    maxNumber: undefined,
+    maxCount: undefined,
+    maxDistance: undefined,
     withCoordinates: undefined,
     withDistance: undefined,
-    withInfo: undefined,
+    withUserInfo: undefined,
   };
 }
 
@@ -33,11 +33,11 @@ export const QueryNearbyUsersRequest = {
     if (message.longitude !== 0) {
       writer.uint32(21).float(message.longitude);
     }
-    if (message.distance !== undefined) {
-      writer.uint32(24).int32(message.distance);
+    if (message.maxCount !== undefined) {
+      writer.uint32(24).int32(message.maxCount);
     }
-    if (message.maxNumber !== undefined) {
-      writer.uint32(32).int32(message.maxNumber);
+    if (message.maxDistance !== undefined) {
+      writer.uint32(32).int32(message.maxDistance);
     }
     if (message.withCoordinates !== undefined) {
       writer.uint32(40).bool(message.withCoordinates);
@@ -45,8 +45,8 @@ export const QueryNearbyUsersRequest = {
     if (message.withDistance !== undefined) {
       writer.uint32(48).bool(message.withDistance);
     }
-    if (message.withInfo !== undefined) {
-      writer.uint32(56).bool(message.withInfo);
+    if (message.withUserInfo !== undefined) {
+      writer.uint32(56).bool(message.withUserInfo);
     }
     return writer;
   },
@@ -65,10 +65,10 @@ export const QueryNearbyUsersRequest = {
           message.longitude = reader.float();
           break;
         case 3:
-          message.distance = reader.int32();
+          message.maxCount = reader.int32();
           break;
         case 4:
-          message.maxNumber = reader.int32();
+          message.maxDistance = reader.int32();
           break;
         case 5:
           message.withCoordinates = reader.bool();
@@ -77,7 +77,7 @@ export const QueryNearbyUsersRequest = {
           message.withDistance = reader.bool();
           break;
         case 7:
-          message.withInfo = reader.bool();
+          message.withUserInfo = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);

@@ -127,7 +127,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         fromIds: Set<Long>? = null,
         deliveryDateStart: Date? = null,
         deliveryDateEnd: Date? = null,
-        size: Int = 50
+        maxCount: Int = 50
     ): Response<List<Message>> = turmsClient.driver
         .send(
             QueryMessagesRequest.newBuilder().apply {
@@ -137,7 +137,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                 fromIds?.let { this.addAllFromIds(it) }
                 deliveryDateStart?.let { this.deliveryDateAfter = it.time }
                 deliveryDateEnd?.let { this.deliveryDateBefore = it.time }
-                this.size = size
+                this.maxCount = maxCount
                 withTotal = false
             }
         ).toResponse {
@@ -151,7 +151,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         fromIds: Set<Long>? = null,
         deliveryDateStart: Date? = null,
         deliveryDateEnd: Date? = null,
-        size: Int = 1
+        maxCount: Int = 1
     ): Response<List<MessagesWithTotal>> = turmsClient.driver
         .send(
             QueryMessagesRequest.newBuilder().apply {
@@ -161,7 +161,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                 fromIds?.let { this.addAllFromIds(it) }
                 deliveryDateStart?.let { this.deliveryDateAfter = it.time }
                 deliveryDateEnd?.let { this.deliveryDateBefore = it.time }
-                this.size = size
+                this.maxCount = maxCount
                 withTotal = true
             }
         ).toResponse {

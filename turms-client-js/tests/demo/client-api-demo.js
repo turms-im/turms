@@ -27,8 +27,8 @@ client.userService.login({
         client.userService.queryNearbyUsers({
             latitude: 139.667651,
             longitude: 35.792657,
-            distance: 100,
-            maxNumber: 10
+            maxCount: 10,
+            maxDistance: 1000
         })
             .then(response => {
                 console.log(`user ids: ${response.data}`);

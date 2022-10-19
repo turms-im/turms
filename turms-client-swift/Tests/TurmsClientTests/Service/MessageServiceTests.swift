@@ -41,10 +41,10 @@ class MessageServiceTests: XCTestCase {
         assertCompleted("updateSentMessage_shouldSucceed", service.updateSentMessage(messageId: privateMessageId!, text: "I have modified the message"))
 
         // Query
-        assertCompleted("queryMessages_shouldReturnNotEmptyMessages", recipientClient.messageService.queryMessages(areGroupMessages: false, fromIds: [MessageServiceTests.SENDER_ID], size: 10).done {
+        assertCompleted("queryMessages_shouldReturnNotEmptyMessages", recipientClient.messageService.queryMessages(areGroupMessages: false, fromIds: [MessageServiceTests.SENDER_ID], maxCount: 10).done {
             XCTAssertFalse($0.data.isEmpty)
         })
-        assertCompleted("queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal", service.queryMessagesWithTotal(areGroupMessages: false, fromIds: [MessageServiceTests.SENDER_ID], size: 1).done {
+        assertCompleted("queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal", service.queryMessagesWithTotal(areGroupMessages: false, fromIds: [MessageServiceTests.SENDER_ID], maxCount: 1).done {
             XCTAssertFalse($0.data.isEmpty)
         })
 
