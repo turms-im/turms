@@ -58,6 +58,7 @@ import system.im.turms.service.domain.common.access.servicerequest.controller.Ba
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import static im.turms.server.common.testing.Constants.ORDER_HIGHEST_PRIORITY;
 import static im.turms.server.common.testing.Constants.ORDER_HIGH_PRIORITY;
@@ -75,9 +76,9 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     private static final DeviceType USER_DEVICE = DeviceType.DESKTOP;
     private static final byte[] USER_IP = new byte[]{127, 0, 0, 1};
     private static final long REQUEST_ID = 1;
+    private static final long GROUP_SUCCESSOR = 2;
     private static final long GROUP_MEMBER_ID = 3;
     private static final long GROUP_INVITATION_INVITEE = 4;
-    private static final long GROUP_SUCCESSOR = GROUP_MEMBER_ID;
     private static final long GROUP_BLOCKED_USER_ID = 5;
 
     private static Long groupId;
@@ -152,7 +153,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setCreateGroupMembersRequest(CreateGroupMembersRequest.newBuilder()
                         .setGroupId(groupId)
-                        .addUserIds(GROUP_MEMBER_ID)
+                        .addAllUserIds(List.of(GROUP_SUCCESSOR, GROUP_MEMBER_ID))
                         .setName("name")
                         .setRole(GroupMemberRole.MEMBER))
                 .build();
@@ -455,8 +456,9 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupMembersRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester().getGroupMembersWithVersion().getGroupMembers(1).getUserId())
-                        .isEqualTo(GROUP_MEMBER_ID));
+                result -> assertThat(result.dataForRequester().getGroupMembersWithVersion().getGroupMembersList()
+                        .stream().map(member -> member.getUserId()).collect(Collectors.toList()))
+                        .containsExactlyInAnyOrder(USER_ID, GROUP_SUCCESSOR, GROUP_MEMBER_ID));
     }
 
     @Test
