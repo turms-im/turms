@@ -41,6 +41,7 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.env.common.cluster.DiscoveryProperties;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
+import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import lombok.Getter;
@@ -79,7 +80,7 @@ public class DiscoveryService implements ClusterService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiscoveryService.class);
 
-    private static final Duration CRUD_TIMEOUT_DURATION = Duration.ofSeconds(10);
+    private static final Duration CRUD_TIMEOUT_DURATION = DurationConst.ONE_MINUTE;
     private static final Comparator<Member> MEMBER_PRIORITY_COMPARATOR = DiscoveryService::compareMemberPriority;
 
     private final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1,
@@ -161,12 +162,12 @@ public class DiscoveryService implements ClusterService {
                 localMember,
                 discoveryProperties.getHeartbeatTimeoutSeconds(),
                 discoveryProperties.getHeartbeatIntervalSeconds());
-        serviceAddressManager.addOnAddressesChangedListener(addresses -> {
-            String nodeHost = addresses.memberHost();
-            String adminApiAddress = addresses.adminApiAddress();
-            String wsAddress = addresses.wsAddress();
-            String tcpAddress = addresses.tcpAddress();
-            String udpAddress = addresses.udpAddress();
+        serviceAddressManager.addOnNodeAddressInfoChangedListener(info -> {
+            String nodeHost = info.memberHost();
+            String adminApiAddress = info.adminApiAddress();
+            String wsAddress = info.wsAddress();
+            String tcpAddress = info.tcpAddress();
+            String udpAddress = info.udpAddress();
             Update update = Update.newBuilder(6)
                     .setIfNotNull(Member.Fields.memberHost, nodeHost)
                     .setIfNotNull(Member.Fields.adminApiAddress, adminApiAddress)

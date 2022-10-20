@@ -17,15 +17,19 @@
 
 package im.turms.server.common.infra.address;
 
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.AdvertiseStrategy;
 import im.turms.server.common.infra.property.env.common.AddressProperties;
-import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.property.env.common.adminapi.AdminHttpProperties;
-import lombok.SneakyThrows;
+import im.turms.server.common.infra.reactor.PublisherPool;
+import im.turms.server.common.infra.time.DurationConst;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
+import reactor.util.function.Tuple3;
 
 import javax.annotation.Nullable;
 import java.net.UnknownHostException;
@@ -40,9 +44,9 @@ public abstract class BaseServiceAddressManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseServiceAddressManager.class);
 
-    protected final PublicIpManager publicIpManager;
+    private final IpDetector ipDetector;
 
-    private final List<Consumer<AddressCollection>> onAddressesChangedListeners = new LinkedList<>();
+    private final List<Consumer<NodeAddressInfo>> onNodeAddressInfoChangedListeners = new LinkedList<>();
     // member address
     private AddressProperties memberAddressProperties;
     private final String memberBindHost;
@@ -53,40 +57,48 @@ public abstract class BaseServiceAddressManager {
     private String adminApiAddress;
 
     protected BaseServiceAddressManager(AdminHttpProperties adminHttpProperties,
-                                        PublicIpManager publicIpManager,
+                                        IpDetector ipDetector,
                                         TurmsPropertiesManager propertiesManager) {
-        this.publicIpManager = publicIpManager;
+        this.ipDetector = ipDetector;
         TurmsProperties turmsProperties = propertiesManager.getLocalProperties();
         memberBindHost = turmsProperties.getCluster().getConnection().getServer().getHost();
-        updateMemberHostIfChanged(turmsProperties);
-        updateAdminApiAddresses(adminHttpProperties, getAdminAddressProperties(turmsProperties));
-        updateCustomAddresses(adminHttpProperties, turmsProperties);
+        AddressProperties adminAddressProperties = getAdminAddressProperties(turmsProperties);
+        Mono.whenDelayError(
+                updateMemberHostIfChanged(turmsProperties),
+                updateAdminApiAddresses(adminHttpProperties, adminAddressProperties),
+                updateCustomAddresses(adminHttpProperties, turmsProperties)
+        ).block(DurationConst.ONE_MINUTE);
         propertiesManager.addLocalPropertiesChangeListener(properties -> {
             AddressProperties newAdminApiDiscoveryProperties = getAdminAddressProperties(properties);
             boolean areAdminApiAddressPropertiesChange = !adminApiAddressProperties
                     .equals(newAdminApiDiscoveryProperties);
-            boolean isMemberHostChanged = updateMemberHostIfChanged(properties);
-            if (areAdminApiAddressPropertiesChange) {
-                try {
-                    updateAdminApiAddresses(adminHttpProperties, newAdminApiDiscoveryProperties);
-                } catch (Exception e) {
-                    LOGGER.error("Failed to update admin API addresses", e);
-                }
-            }
-            boolean areCustomAddressesChanged = false;
-            try {
-                areCustomAddressesChanged = updateCustomAddresses(adminHttpProperties, turmsProperties);
-            } catch (Exception e) {
-                LOGGER.error("Failed to update custom addresses", e);
-            }
-            if (areAdminApiAddressPropertiesChange || isMemberHostChanged || areCustomAddressesChanged) {
-                AddressCollection addresses = new AddressCollection(getMemberHost(),
-                        adminApiAddress,
-                        getWsAddress(),
-                        getTcpAddress(),
-                        getUdpAddress());
-                triggerOnAddressesChangedListeners(addresses);
-            }
+            Mono<Void> updateAdminApiAddresses = areAdminApiAddressPropertiesChange
+                    ? updateAdminApiAddresses(adminHttpProperties, newAdminApiDiscoveryProperties)
+                    : Mono.empty();
+            Mono<Boolean> updateMemberHost = updateMemberHostIfChanged(properties);
+            Mono<Boolean> updateCustomAddresses = updateCustomAddresses(adminHttpProperties, turmsProperties);
+            Schedulers.single()
+                    .schedule(() -> {
+                        Tuple3<Void, Boolean, Boolean> changed;
+                        try {
+                            changed = Mono
+                                    .zipDelayError(updateAdminApiAddresses, updateMemberHost, updateCustomAddresses)
+                                    .block(DurationConst.ONE_MINUTE);
+                        } catch (Exception e) {
+                            LOGGER.error("Caught an error while updating the node address information", e);
+                            return;
+                        }
+                        boolean isMemberHostChanged = changed.getT2();
+                        boolean areCustomAddressesChanged = changed.getT3();
+                        if (areAdminApiAddressPropertiesChange || isMemberHostChanged || areCustomAddressesChanged) {
+                            NodeAddressInfo addressInfo = new NodeAddressInfo(getMemberHost(),
+                                    adminApiAddress,
+                                    getWsAddress(),
+                                    getTcpAddress(),
+                                    getUdpAddress());
+                            triggerOnNodeAddressInfoChangedListeners(addressInfo);
+                        }
+                    });
         });
     }
 
@@ -116,73 +128,81 @@ public abstract class BaseServiceAddressManager {
 
     // Listeners
 
-    public void addOnAddressesChangedListener(Consumer<AddressCollection> listener) {
-        onAddressesChangedListeners.add(listener);
+    public void addOnNodeAddressInfoChangedListener(Consumer<NodeAddressInfo> listener) {
+        onNodeAddressInfoChangedListeners.add(listener);
     }
 
-    private void triggerOnAddressesChangedListeners(AddressCollection addresses) {
-        for (Consumer<AddressCollection> listener : onAddressesChangedListeners) {
+    private void triggerOnNodeAddressInfoChangedListeners(NodeAddressInfo addresses) {
+        for (Consumer<NodeAddressInfo> listener : onNodeAddressInfoChangedListeners) {
             try {
                 listener.accept(addresses);
             } catch (Exception e) {
-                LOGGER.error("Failed to run onAddressesChangedListener", e);
+                LOGGER.error("Caught an error while triggering an onNodeAddressInfoChanged listener", e);
             }
         }
     }
 
-    // Get and Update Addresses
+    // Get and Update Address Info
 
     protected abstract AddressProperties getAdminAddressProperties(TurmsProperties properties);
 
-    protected boolean updateCustomAddresses(AdminHttpProperties adminHttpProperties,
-                                            TurmsProperties properties) {
-        return false;
+    protected Mono<Boolean> updateCustomAddresses(AdminHttpProperties adminHttpProperties,
+                                                  TurmsProperties properties) {
+        return PublisherPool.FALSE;
     }
 
-    @SneakyThrows
-    private void updateAdminApiAddresses(AdminHttpProperties adminHttpProperties,
-                                         AddressProperties newAdminApiAddressProperties) {
-
-        String host = adminHttpProperties.getHost();
+    private Mono<Void> updateAdminApiAddresses(AdminHttpProperties adminHttpProperties,
+                                               AddressProperties newAdminApiAddressProperties) {
+        String bindHost = adminHttpProperties.getHost();
         int port = adminHttpProperties.getPort();
-        if (host == null) {
-            throw new IllegalStateException("The bind host isn't specified");
+        if (bindHost == null) {
+            return Mono.error(new IllegalStateException("The bind host isn't specified"));
         }
         if (port <= 0) {
-            throw new UnknownHostException("Invalid service port: " + port);
+            return Mono.error(new UnknownHostException("Invalid service port: " + port));
         }
-        SslProperties ssl = adminHttpProperties.getSsl();
-        boolean isSslEnabled = ssl != null && ssl.isEnabled();
-        AddressCollector collector = getAddressCollector(newAdminApiAddressProperties, host, port, isSslEnabled);
-        adminApiAddress = collector.getHttpAddress();
-        adminApiAddressProperties = newAdminApiAddressProperties;
+        return queryHost(newAdminApiAddressProperties.getAdvertiseStrategy(), bindHost, newAdminApiAddressProperties.getAdvertiseHost())
+                .doOnError(t -> LOGGER.error("Failed to update the admin API address", t))
+                .flatMap(host -> {
+                    adminApiAddress = (adminHttpProperties.getSsl().isEnabled() ? "https://" : "http://") +
+                            host +
+                            (newAdminApiAddressProperties.isAttachPortToHost() ? ":" + port : "");
+                    adminApiAddressProperties = newAdminApiAddressProperties;
+                    return Mono.empty();
+                });
     }
 
-    private boolean updateMemberHostIfChanged(TurmsProperties newProperties) {
+    private Mono<Boolean> updateMemberHostIfChanged(TurmsProperties newProperties) {
         AddressProperties newAddressProperties = newProperties.getCluster().getDiscovery().getAddress();
         boolean isAddressPropertiesChanged = !newAddressProperties.equals(memberAddressProperties);
-        if (isAddressPropertiesChanged) {
-            try {
-                memberHost = getAddressCollector(newAddressProperties, memberBindHost, null, null)
-                        .getHost();
-                memberAddressProperties = newAddressProperties;
-                return true;
-            } catch (Exception e) {
-                LOGGER.error("Failed to update the member host", e);
-            }
+        if (!isAddressPropertiesChanged) {
+            return PublisherPool.FALSE;
         }
-        return false;
+        return queryHost(newAddressProperties.getAdvertiseStrategy(), memberBindHost, newAddressProperties.getAdvertiseHost())
+                .doOnError(t -> LOGGER.error("Failed to update the member host", t))
+                .map(host -> {
+                    memberHost = host;
+                    memberAddressProperties = newAddressProperties;
+                    return true;
+                });
     }
 
-    @SneakyThrows
-    private AddressCollector getAddressCollector(AddressProperties addressProperties,
-                                                 String host,
-                                                 Integer port,
-                                                 Boolean isSslEnabled) {
-        AdvertiseStrategy advertiseStrategy = addressProperties.getAdvertiseStrategy();
-        String advertiseHost = addressProperties.getAdvertiseHost();
-        boolean attachPortToHost = addressProperties.isAttachPortToHost();
-        return new AddressCollector(host, advertiseHost, port, isSslEnabled, attachPortToHost, advertiseStrategy, publicIpManager);
+    protected Mono<String> queryHost(AdvertiseStrategy advertiseStrategy, String bindHost, String advertiseHost) {
+        return switch (advertiseStrategy) {
+            case ADVERTISE_ADDRESS -> StringUtil.isBlank(advertiseHost)
+                    ? Mono.error(new IllegalStateException("The advertise host isn't specified"))
+                    : Mono.just(advertiseHost);
+            case BIND_ADDRESS -> StringUtil.isBlank(bindHost)
+                    ? Mono.error(new IllegalStateException("The bind host isn't specified"))
+                    : Mono.just(bindHost);
+            case PRIVATE_ADDRESS -> {
+                try {
+                    yield Mono.just(ipDetector.queryPrivateIp());
+                } catch (Exception e) {
+                    yield Mono.error(e);
+                }
+            }
+            case PUBLIC_ADDRESS -> ipDetector.queryPublicIp();
+        };
     }
-
 }

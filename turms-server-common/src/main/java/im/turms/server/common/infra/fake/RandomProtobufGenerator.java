@@ -71,8 +71,8 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
 
     public T generate(GeneratorOptions options) {
         Message.Builder builder = instance.newBuilderForType();
+        float possibility = options.possibilityToFillOptionalFields;
         for (FieldDescriptor field : fieldDescriptors) {
-            float possibility = options.possibilityToFillOptionalFields;
             if (field.isOptional() && possibility < 1 && random.nextFloat() > possibility) {
                 continue;
             }

@@ -18,7 +18,7 @@
 package im.turms.service.infra.address;
 
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
-import im.turms.server.common.infra.address.PublicIpManager;
+import im.turms.server.common.infra.address.IpDetector;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.AddressProperties;
@@ -30,11 +30,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServiceAddressManager extends BaseServiceAddressManager {
 
-    public ServiceAddressManager(
-            PublicIpManager publicIpManager,
-            TurmsPropertiesManager propertiesManager) {
+    public ServiceAddressManager(IpDetector ipDetector, TurmsPropertiesManager propertiesManager) {
         super(propertiesManager.getLocalProperties().getService().getAdminApi().getHttp(),
-                publicIpManager,
+                ipDetector,
                 propertiesManager);
     }
 

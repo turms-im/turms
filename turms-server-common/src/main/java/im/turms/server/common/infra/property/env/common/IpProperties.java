@@ -24,6 +24,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
 import java.util.List;
 
 /**
@@ -35,10 +36,28 @@ import java.util.List;
 @NoArgsConstructor
 public class IpProperties {
 
-    @MutableProperty
+    /**
+     * @implNote Removed addresses because they aren't available currently:
+     * bot.whatismyipaddress.com
+     */
     @Description("The public IP detectors will only be used to query the public IP of the local node " +
-            "if needed (e.g. If the discovery property \"advertiseStrategy\" is \"PUBLIC_ADDRESS\"")
+            "if needed (e.g. If the node discovery property \"advertiseStrategy\" is \"PUBLIC_ADDRESS\". " +
+            "Note that the HTTP response body must be a string of IP instead of a JSON")
+    @MutableProperty
     private List<String> publicIpDetectorAddresses =
-            List.of("https://checkip.amazonaws.com", "https://bot.whatismyipaddress.com", "https://myip.dnsomatic.com");
+            List.of("https://checkip.amazonaws.com",
+                    "https://whatismyip.akamai.com",
+                    "https://ifconfig.me/ip",
+                    "https://myip.dnsomatic.com");
+
+    @Description("The cached private IP will expire after the specified time has elapsed. 0 means no cache")
+    @MutableProperty
+    @Min(0)
+    private int cachedPrivateIpExpireAfterMillis = 60 * 1000;
+
+    @Description("The cached public IP will expire after the specified time has elapsed. 0 means no cache")
+    @MutableProperty
+    @Min(0)
+    private int cachedPublicIpExpireAfterMillis = 60 * 1000;
 
 }

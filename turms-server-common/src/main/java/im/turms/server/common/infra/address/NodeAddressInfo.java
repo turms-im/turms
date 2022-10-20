@@ -20,7 +20,7 @@ package im.turms.server.common.infra.address;
 /**
  * @author James Chen
  */
-public record AddressCollection(
+public record NodeAddressInfo(
         String memberHost,
         String adminApiAddress,
         String wsAddress,

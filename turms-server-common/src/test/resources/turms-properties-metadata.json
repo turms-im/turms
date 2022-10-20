@@ -65,7 +65,7 @@
           "options": [
             "ADVERTISE_ADDRESS",
             "BIND_ADDRESS",
-            "LOCAL_ADDRESS",
+            "PRIVATE_ADDRESS",
             "PUBLIC_ADDRESS"
           ],
           "type": "enum"
@@ -171,7 +171,7 @@
           "options": [
             "ADVERTISE_ADDRESS",
             "BIND_ADDRESS",
-            "LOCAL_ADDRESS",
+            "PRIVATE_ADDRESS",
             "PUBLIC_ADDRESS"
           ],
           "type": "enum"
@@ -578,34 +578,34 @@
     "serviceDiscovery": {
       "advertiseHost": {
         "deprecated": false,
-        "desc": "The advertise address of the local node exposed to the public. The property can be used to advertise the DDoS Protected IP address to hide the origin IP address)\n(e.g. 100.131.251.96)",
+        "desc": "The advertise address of the local node exposed to the public. The property can be used to advertise the DDoS Protected IP address to hide the origin IP address (e.g. 100.131.251.96)",
         "global": false,
         "mutable": true,
         "type": "string"
       },
       "advertiseStrategy": {
         "deprecated": false,
-        "desc": "The advertise strategy is used to help clients or load balancing servers to access the local node. Note: For security, do NOT use PUBLIC_ADDRESS in production to prevent from exposing the origin IP address for DDoS attack.",
+        "desc": "The advertise strategy is used to help clients or load balancing servers to access the local node. Note: For security, do NOT use \"PUBLIC_ADDRESS\" in production to prevent from exposing the origin IP address for DDoS attack.",
         "global": false,
         "mutable": true,
         "options": [
           "ADVERTISE_ADDRESS",
           "BIND_ADDRESS",
-          "LOCAL_ADDRESS",
+          "PRIVATE_ADDRESS",
           "PUBLIC_ADDRESS"
         ],
         "type": "enum"
       },
       "attachPortToHost": {
         "deprecated": false,
-        "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 10510so the service address will be 100.131.251.96:10510",
+        "desc": "Whether to attach the local port to the host. For example, if the local host is 100.131.251.96, and the port is 10510, so the service address will be 100.131.251.96:10510",
         "global": false,
         "mutable": true,
         "type": "boolean"
       },
       "identity": {
         "deprecated": false,
-        "desc": "The identity of the local node will be sent to clients as a notification if identity is not blank and turms.gateway.session.notifyClientsOfSessionInfoAfterConnected is true (e.g. \"turms-east-0001\")",
+        "desc": "The identity of the local node will be sent to clients as a notification if identity is not blank and \"turms.gateway.session.notifyClientsOfSessionInfoAfterConnected\" is true (e.g. \"turms-east-0001\")",
         "global": false,
         "mutable": true,
         "type": "string"
@@ -1328,9 +1328,23 @@
     }
   },
   "ip": {
+    "cachedPrivateIpExpireAfterMillis": {
+      "deprecated": false,
+      "desc": "The cached private IP will expire after the specified time has elapsed. 0 means no cache",
+      "global": false,
+      "mutable": true,
+      "type": "int"
+    },
+    "cachedPublicIpExpireAfterMillis": {
+      "deprecated": false,
+      "desc": "The cached public IP will expire after the specified time has elapsed. 0 means no cache",
+      "global": false,
+      "mutable": true,
+      "type": "int"
+    },
     "publicIpDetectorAddresses": {
       "deprecated": false,
-      "desc": "The public IP detectors will only be used to query the public IP of the local node if needed (e.g. If the discovery property \"advertiseStrategy\" is \"PUBLIC_ADDRESS\"",
+      "desc": "The public IP detectors will only be used to query the public IP of the local node if needed (e.g. If the node discovery property \"advertiseStrategy\" is \"PUBLIC_ADDRESS\". Note that the HTTP response body must be a string of IP instead of a JSON",
       "elementType": "string",
       "global": false,
       "mutable": true,
@@ -1731,7 +1745,7 @@
           "options": [
             "ADVERTISE_ADDRESS",
             "BIND_ADDRESS",
-            "LOCAL_ADDRESS",
+            "PRIVATE_ADDRESS",
             "PUBLIC_ADDRESS"
           ],
           "type": "enum"
@@ -3130,7 +3144,7 @@
         },
         "friendRequestExpireAfterSeconds": {
           "deprecated": false,
-          "desc": "A friend request will become expired after the expireAfter has elapsed",
+          "desc": "A friend request will become expired after the specified time has elapsed",
           "global": true,
           "mutable": true,
           "type": "int"

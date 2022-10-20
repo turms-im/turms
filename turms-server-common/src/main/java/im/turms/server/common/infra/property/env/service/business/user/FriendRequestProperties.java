@@ -49,7 +49,7 @@ public class FriendRequestProperties {
     @MutableProperty
     private boolean allowSendRequestAfterDeclinedOrIgnoredOrExpired;
 
-    @Description("A friend request will become expired after the expireAfter has elapsed")
+    @Description("A friend request will become expired after the specified time has elapsed")
     @GlobalProperty
     @MutableProperty
     @Min(0)

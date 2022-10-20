@@ -17,25 +17,25 @@
 
 package im.turms.gateway.infra.address;
 
-import im.turms.server.common.infra.address.AddressCollector;
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
-import im.turms.server.common.infra.address.PublicIpManager;
+import im.turms.server.common.infra.address.IpDetector;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.AdvertiseStrategy;
 import im.turms.server.common.infra.property.env.common.AddressProperties;
-import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.property.env.common.adminapi.AdminHttpProperties;
-import im.turms.server.common.infra.property.env.gateway.BaseServerProperties;
 import im.turms.server.common.infra.property.env.gateway.DiscoveryProperties;
 import im.turms.server.common.infra.property.env.gateway.TcpProperties;
 import im.turms.server.common.infra.property.env.gateway.UdpProperties;
 import im.turms.server.common.infra.property.env.gateway.WebSocketProperties;
-import lombok.SneakyThrows;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author James Chen
@@ -52,9 +52,9 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
     @Nullable
     private String udpAddress;
 
-    public ServiceAddressManager(PublicIpManager publicIpManager, TurmsPropertiesManager propertiesManager) {
+    public ServiceAddressManager(IpDetector ipDetector, TurmsPropertiesManager propertiesManager) {
         super(propertiesManager.getLocalProperties().getGateway().getAdminApi().getHttp(),
-                publicIpManager,
+                ipDetector,
                 propertiesManager);
     }
 
@@ -77,49 +77,42 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
     }
 
     @Override
-    protected boolean updateCustomAddresses(AdminHttpProperties adminHttpProperties,
-                                            TurmsProperties properties) {
+    protected Mono<Boolean> updateCustomAddresses(AdminHttpProperties adminHttpProperties,
+                                                  TurmsProperties properties) {
         if (!areAddressPropertiesChange(properties)) {
-            return false;
+            return PublisherPool.FALSE;
         }
         WebSocketProperties webSocketProperties = properties.getGateway().getWebsocket();
         TcpProperties tcpProperties = properties.getGateway().getTcp();
         UdpProperties udpProperties = properties.getGateway().getUdp();
         gatewayApiDiscoveryProperties = properties.getGateway().getServiceDiscovery();
-        wsAddress = webSocketProperties.isEnabled()
-                ? getGatewayApiAddressCollector(webSocketProperties, gatewayApiDiscoveryProperties).getWsAddress()
-                : null;
-        tcpAddress = tcpProperties.isEnabled()
-                ? getGatewayApiAddressCollector(tcpProperties, gatewayApiDiscoveryProperties).getAddress()
-                : null;
-        udpAddress = udpProperties.isEnabled()
-                ? getGatewayApiAddressCollector(udpProperties, gatewayApiDiscoveryProperties).getAddress()
-                : null;
-        return true;
+        AdvertiseStrategy advertiseStrategy = gatewayApiDiscoveryProperties.getAdvertiseStrategy();
+        String advertiseHost = gatewayApiDiscoveryProperties.getAdvertiseHost();
+        boolean attachPortToHost = gatewayApiDiscoveryProperties.isAttachPortToHost();
+        List<Mono<?>> updateMonos = new ArrayList<>(3);
+        if (webSocketProperties.isEnabled()) {
+            Mono<?> updateWsAddress = queryHost(advertiseStrategy, webSocketProperties.getHost(), advertiseHost)
+                    .doOnNext(host -> wsAddress = (adminHttpProperties.getSsl().isEnabled() ? "wss://" : "ws://") +
+                            host + (attachPortToHost ? ":" + webSocketProperties.getPort() : ""));
+            updateMonos.add(updateWsAddress);
+        }
+        if (tcpProperties.isEnabled()) {
+            Mono<?> updateTcpAddress = queryHost(advertiseStrategy, tcpProperties.getHost(), advertiseHost)
+                    .doOnNext(host -> tcpAddress = host + (attachPortToHost ? ":" + tcpProperties.getPort() : ""));
+            updateMonos.add(updateTcpAddress);
+        }
+        if (udpProperties.isEnabled()) {
+            Mono<?> updateUdpAddress = queryHost(advertiseStrategy, udpProperties.getHost(), advertiseHost)
+                    .doOnNext(host -> udpAddress = host + (attachPortToHost ? ":" + udpProperties.getPort() : ""));
+            updateMonos.add(updateUdpAddress);
+        }
+        return Mono.whenDelayError(updateMonos)
+                .thenReturn(true);
     }
 
     @Override
     protected AddressProperties getAdminAddressProperties(TurmsProperties properties) {
         return properties.getGateway().getAdminApi().getAddress();
-    }
-
-    @SneakyThrows
-    private AddressCollector getGatewayApiAddressCollector(BaseServerProperties serverProperties,
-                                                           DiscoveryProperties gatewayApiDiscoveryProperties) {
-        AdvertiseStrategy advertiseStrategy = gatewayApiDiscoveryProperties.getAdvertiseStrategy();
-        String advertiseHost = gatewayApiDiscoveryProperties.getAdvertiseHost();
-        boolean attachPortToHost = gatewayApiDiscoveryProperties.isAttachPortToHost();
-        String bindHost = serverProperties.getHost();
-        int port = serverProperties.getPort();
-        SslProperties ssl = serverProperties.getSsl();
-        boolean isSslEnabled = ssl != null && ssl.isEnabled();
-        return new AddressCollector(bindHost,
-                advertiseHost,
-                port,
-                isSslEnabled,
-                attachPortToHost,
-                advertiseStrategy,
-                publicIpManager);
     }
 
     private boolean areAddressPropertiesChange(TurmsProperties newTurmsProperties) {

@@ -24,6 +24,6 @@ package im.turms.server.common.infra.property.constant;
 public enum AdvertiseStrategy {
     ADVERTISE_ADDRESS,
     BIND_ADDRESS,
-    LOCAL_ADDRESS,
+    PRIVATE_ADDRESS,
     PUBLIC_ADDRESS
 }
