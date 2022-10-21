@@ -58,7 +58,7 @@ public class IpDetector {
         String localCachedPrivateIp = cachedPrivateIp;
         if (cachedPrivateIpExpireAfterMillis > 0 &&
                 localCachedPrivateIp != null &&
-                System.currentTimeMillis() - privateIpLastUpdatedDate > cachedPrivateIpExpireAfterMillis) {
+                System.currentTimeMillis() - privateIpLastUpdatedDate < cachedPrivateIpExpireAfterMillis) {
             return localCachedPrivateIp;
         }
         DatagramChannel channel = null;
@@ -93,7 +93,7 @@ public class IpDetector {
         String localCachedPublicIp = cachedPublicIp;
         if (cachedPublicIpExpireAfterMillis > 0 &&
                 localCachedPublicIp != null &&
-                System.currentTimeMillis() - publicIpLastUpdatedDate > cachedPublicIpExpireAfterMillis) {
+                System.currentTimeMillis() - publicIpLastUpdatedDate < cachedPublicIpExpireAfterMillis) {
             return Mono.just(localCachedPublicIp);
         }
         List<String> ipDetectorAddresses = ipProperties.getPublicIpDetectorAddresses();
