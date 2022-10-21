@@ -17,14 +17,14 @@
 
 package im.turms.service.domain.group.bo;
 
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 /**
  * @author James Chen
  */
 public record NewGroupQuestion(
         String question,
-        Set<String> answers,
+        LinkedHashSet<String> answers,
         Integer score
 ) {
 }

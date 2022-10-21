@@ -19,7 +19,7 @@ package im.turms.service.domain.group.access.admin.dto.request;
 
 import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 /**
  * @author James Chen
@@ -27,7 +27,7 @@ import java.util.Set;
 public record AddGroupJoinQuestionDTO(
         Long groupId,
         String question,
-        Set<String> answers,
+        LinkedHashSet<String> answers,
         Integer score
 ) implements ControllerDTO {
 }

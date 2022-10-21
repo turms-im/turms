@@ -27,7 +27,7 @@ import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 /**
  * @author James Chen
@@ -50,7 +50,7 @@ public final class GroupJoinQuestion extends BaseEntity {
     private final String question;
 
     @Field(Fields.ANSWERS)
-    private final Set<String> answers;
+    private final LinkedHashSet<String> answers;
 
     /**
      * Note that a score can be negative

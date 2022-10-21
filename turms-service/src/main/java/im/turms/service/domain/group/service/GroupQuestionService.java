@@ -60,6 +60,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -234,7 +235,7 @@ public class GroupQuestionService {
         List<GroupJoinQuestion> newQuestions = new ArrayList<>(questions.size());
         for (NewGroupQuestion q : questions) {
             String question = q.question();
-            Set<String> answers = q.answers();
+            LinkedHashSet<String> answers = q.answers();
             Integer score = q.score();
             try {
                 Validator.notNull(question, "question");

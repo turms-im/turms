@@ -206,12 +206,12 @@ public class GroupService {
                     $0.groupID = groupId
                     $0.questions = try questions.map { question in
                         try .with { builder in
-                            let answers = question.answers
+                            let answers = question.answers.array as! [String]
                             if answers.isEmpty {
                                 throw ResponseError(.illegalArgument, "The answers of group must not be empty")
                             }
                             builder.question = question.question
-                            builder.answers = Array(answers)
+                            builder.answers = answers
                             builder.score = question.score
                         }
                     }

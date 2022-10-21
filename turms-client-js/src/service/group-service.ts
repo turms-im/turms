@@ -231,7 +231,7 @@ export default class GroupService {
                 }
                 return {
                     question,
-                    answers,
+                    answers: new Set(answers),
                     score
                 };
             });

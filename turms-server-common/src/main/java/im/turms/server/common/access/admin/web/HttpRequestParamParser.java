@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -175,24 +176,27 @@ public class HttpRequestParamParser {
         if (values == null || values.isEmpty()) {
             if (parameter.isRequired()) {
                 throw new IllegalArgumentException("Missing required query parameter: " + parameter.name());
-            } else {
-                return null;
             }
-        } else if (Set.class.isAssignableFrom(parameter.type())) {
-            Set<Object> items = CollectionUtil.newSetWithExpectedSize(values.size());
+            return null;
+        }
+        Class<?> type = parameter.type();
+        if (Set.class.isAssignableFrom(type)) {
+            Set<Object> items = LinkedHashSet.class.isAssignableFrom(type)
+                    ? new LinkedHashSet<>(CollectionUtil.getMapCapability(values.size()))
+                    : CollectionUtil.newSetWithExpectedSize(values.size());
             for (Object value : values) {
                 items.add(parsePlainValue(value, parameter.elementType(), parameter.elementTypeForJackson()));
             }
             return items;
-        } else if (List.class.isAssignableFrom(parameter.type())) {
+        }
+        if (List.class.isAssignableFrom(type)) {
             List<Object> items = new ArrayList<>(values.size());
             for (Object value : values) {
                 items.add(parsePlainValue(value, parameter.elementType(), parameter.elementTypeForJackson()));
             }
             return items;
-        } else {
-            throw new IllegalArgumentException("Invalid parameter type: " + parameter.type());
         }
+        throw new IllegalArgumentException("Invalid parameter type: " + type);
     }
 
     private static Object parseSingleValue(MethodParameterInfo parameter,

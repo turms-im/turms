@@ -71,6 +71,7 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -446,7 +447,7 @@ public class GroupServiceController extends BaseServiceController {
             List<NewGroupQuestion> questions = new ArrayList<>(request.getQuestionsCount());
             for (GroupJoinQuestion question : request.getQuestionsList()) {
                 questions.add(new NewGroupQuestion(question.getQuestion(),
-                        CollectionUtil.newSet(question.getAnswersList()),
+                        new LinkedHashSet<>(question.getAnswersList()),
                         question.getScore()));
             }
             return groupQuestionService

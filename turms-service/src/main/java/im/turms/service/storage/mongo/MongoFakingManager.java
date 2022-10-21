@@ -60,6 +60,7 @@ import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -231,7 +232,7 @@ public final class MongoFakingManager {
                 nextId(),
                 1L,
                 "test-question",
-                Set.of("a", "b", "c"),
+                new LinkedHashSet<>(List.of("a", "b", "c")),
                 20);
         groupRelatedObjs.add(groupJoinQuestion);
         for (int i = targetUserForGroupJoinRequestStart; i <= targetUserForGroupJoinRequestEnd; i++) {
