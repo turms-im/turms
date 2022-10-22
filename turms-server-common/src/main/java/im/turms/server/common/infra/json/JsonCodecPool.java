@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import im.turms.server.common.infra.jackson.CaffeineLookupCache;
+import im.turms.server.common.infra.jackson.RawStringModule;
 import im.turms.server.common.infra.time.TimeZoneConst;
 
 /**
@@ -48,7 +49,9 @@ public class JsonCodecPool {
             .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .serializationInclusion(JsonInclude.Include.NON_NULL)
             // modules
-            .addModules(new JavaTimeModule(), new ParameterNamesModule())
+            .addModules(new JavaTimeModule(),
+                    new ParameterNamesModule(),
+                    new RawStringModule())
             // date format
             .defaultDateFormat(new StdDateFormat().withColonInTimeZone(true))
             // time zone
