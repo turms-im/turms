@@ -19,7 +19,6 @@ package im.turms.server.common.infra.plugin;
 
 import org.springframework.context.ApplicationContext;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -32,42 +31,36 @@ public class JavaPluginFactory {
     private JavaPluginFactory() {
     }
 
-    public static Plugin create(JavaPluginDescriptor descriptor, ApplicationContext context) {
-        try (PluginClassLoader loader = new PluginClassLoader(descriptor.getJarUrl())) {
+    public static JavaPlugin create(JavaPluginDescriptor descriptor, ApplicationContext context) {
+        // Note that the loader should NOT be closed here
+        // because it usually needs to load classes and resources in the JAR file later
+        PluginClassLoader classLoader = new PluginClassLoader(descriptor.getJarUrl());
+        try {
             Class<? extends TurmsPlugin> pluginClass;
             try {
-                pluginClass = (Class<? extends TurmsPlugin>) loader.loadClass(descriptor.getEntryClass());
-            } catch (ClassNotFoundException e) {
-                throw new IllegalStateException("Failed to load the plugin class " + descriptor.getEntryClass());
+                pluginClass = (Class<? extends TurmsPlugin>) classLoader.loadClass(descriptor.getEntryClass());
+            } catch (Exception e) {
+                throw new IllegalStateException("Failed to load the plugin class: " + descriptor.getEntryClass(), e);
             }
             TurmsPlugin plugin;
             try {
                 plugin = pluginClass.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
-                throw new IllegalStateException("Failed to create the plugin %s via no arg constructor"
-                        .formatted(pluginClass.getName()), e);
+                throw new IllegalStateException("Failed to create the plugin " +
+                        pluginClass.getName() +
+                        " via the no-arg constructor", e);
             }
-            return create(descriptor, plugin.getExtensions(), context);
-        } catch (IOException e) {
-            throw new IllegalStateException("Caught an error while closing the plugin class loader for the jar file: "
-                    + descriptor.getJarUrl(), e);
+            List<TurmsExtension> extensions = createExtensions(plugin.getExtensions(), context);
+            return new JavaPlugin(descriptor, extensions, classLoader);
+        } catch (Exception e) {
+            try {
+                classLoader.close();
+            } catch (Exception ex) {
+                e.addSuppressed(new RuntimeException("Caught an error while closing the plugin class loader for the jar file: "
+                        + descriptor.getJarUrl(), ex));
+            }
+            throw e;
         }
-    }
-
-    public static Plugin create(PluginDescriptor descriptor,
-                                Set<Class<? extends TurmsExtension>> extensionClasses,
-                                ApplicationContext context) {
-        List<TurmsExtension> extensions = createExtensions(extensionClasses, context);
-        return new Plugin(descriptor, extensions);
-    }
-
-    public static Plugin create(PluginDescriptor descriptor,
-                                List<TurmsExtension> extensions,
-                                ApplicationContext context) {
-        for (TurmsExtension extension : extensions) {
-            extension.setContext(context);
-        }
-        return new Plugin(descriptor, extensions);
     }
 
     private static List<TurmsExtension> createExtensions(Set<Class<? extends TurmsExtension>> extensionClasses,

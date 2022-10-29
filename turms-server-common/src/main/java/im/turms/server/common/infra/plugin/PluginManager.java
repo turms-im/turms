@@ -230,17 +230,22 @@ public class PluginManager {
         }
     }
 
-    public Plugin loadJsPlugin(String script, @Nullable Path path) {
+    public JsPlugin loadJsPlugin(String script, @Nullable Path path) {
         if (!isJsScriptEnabled) {
             throw new UnsupportedOperationException("JavaScript plugins are disabled because the classes of GraalJS aren't loaded");
         }
         if (script.isBlank()) {
             throw new IllegalArgumentException("The JavaScript plugin script must not be blank");
         }
-        JsPlugin jsPlugin = JsPluginFactory.create((Engine) engine, script, path, isJsDebugEnabled, jsInspectHost, jsInspectPort);
-        Plugin plugin = JavaPluginFactory.create(jsPlugin.descriptor(), jsPlugin.extensions(), context);
-        pluginRepository.register(plugin);
-        return plugin;
+        JsPlugin jsPlugin = JsPluginFactory.create(context,
+                (Engine) engine,
+                script,
+                path,
+                isJsDebugEnabled,
+                jsInspectHost,
+                jsInspectPort);
+        pluginRepository.register(jsPlugin);
+        return jsPlugin;
     }
 
     @SneakyThrows
@@ -289,7 +294,12 @@ public class PluginManager {
 
     public int startPlugins(Set<String> ids) {
         List<Plugin> plugins = pluginRepository.getPlugins(ids);
-        return executeOnExtensions(plugins, TurmsExtension::start, "starting", "Caught errors while starting some extensions");
+        List<Runnable> runnables = new ArrayList<>(plugins.size());
+        for (Plugin plugin : plugins) {
+            runnables.add(plugin::start);
+        }
+        ThrowableUtil.delayError(runnables, "Caught errors while starting plugins");
+        return plugins.size();
     }
 
     public int stopPlugins(Set<String> ids) {
@@ -298,37 +308,31 @@ public class PluginManager {
     }
 
     public int stopPlugins(List<Plugin> plugins) {
-        return executeOnExtensions(plugins, TurmsExtension::stop, "stopping", "Caught errors while stopping some extensions");
+        List<Runnable> runnables = new ArrayList<>(plugins.size());
+        for (Plugin plugin : plugins) {
+            runnables.add(plugin::stop);
+        }
+        ThrowableUtil.delayError(runnables, "Caught errors while stopping plugins");
+        return plugins.size();
     }
 
     public int resumePlugins(Set<String> ids) {
         List<Plugin> plugins = pluginRepository.getPlugins(ids);
-        return executeOnExtensions(plugins, TurmsExtension::resume, "resuming", "Caught errors while resuming some extensions");
+        List<Runnable> runnables = new ArrayList<>(plugins.size());
+        for (Plugin plugin : plugins) {
+            runnables.add(plugin::resume);
+        }
+        ThrowableUtil.delayError(runnables, "Caught errors while resuming plugins");
+        return plugins.size();
     }
 
     public int pausePlugins(Set<String> ids) {
         List<Plugin> plugins = pluginRepository.getPlugins(ids);
-        return executeOnExtensions(plugins, TurmsExtension::pause, "pausing", "Caught errors while pausing some extensions");
-    }
-
-    private int executeOnExtensions(List<Plugin> plugins,
-                                    Consumer<TurmsExtension> consumer,
-                                    String action,
-                                    String errorMessage) {
-        List<Runnable> runnables = new ArrayList<>(plugins.size() * 2);
+        List<Runnable> runnables = new ArrayList<>(plugins.size());
         for (Plugin plugin : plugins) {
-            for (TurmsExtension extension : plugin.extensions()) {
-                runnables.add(() -> {
-                    try {
-                        consumer.accept(extension);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Caught an error while %s the extension %s from the plugin %s"
-                                .formatted(action, extension.getClass().getName(), plugin.descriptor().getId()), e);
-                    }
-                });
-            }
+            runnables.add(plugin::pause);
         }
-        ThrowableUtil.delayError(runnables, errorMessage);
+        ThrowableUtil.delayError(runnables, "Caught errors while pausing plugins");
         return plugins.size();
     }
 

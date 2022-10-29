@@ -20,7 +20,6 @@ package im.turms.server.common.infra.plugin;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.experimental.Accessors;
-import org.graalvm.polyglot.Context;
 
 import java.util.List;
 
@@ -30,22 +29,22 @@ import java.util.List;
 @Accessors(fluent = true)
 @EqualsAndHashCode(callSuper = true)
 @Value
-public class JsPlugin extends Plugin {
-    Context context;
+public class JavaPlugin extends Plugin {
+    PluginClassLoader pluginClassLoader;
 
-    public JsPlugin(JsPluginDescriptor descriptor,
-                    List<TurmsExtension> extensions,
-                    Context context) {
+    public JavaPlugin(PluginDescriptor descriptor,
+                      List<TurmsExtension> extensions,
+                      PluginClassLoader pluginClassLoader) {
         super(descriptor, extensions);
-        this.context = context;
+        this.pluginClassLoader = pluginClassLoader;
     }
 
     @Override
     void closeContext() {
         try {
-            context.close(true);
+            pluginClassLoader.close();
         } catch (Exception e) {
-            throw new RuntimeException("Caught an error while closing the JavaScript context", e);
+            throw new RuntimeException("Caught an error while closing the plugin class loader", e);
         }
     }
 

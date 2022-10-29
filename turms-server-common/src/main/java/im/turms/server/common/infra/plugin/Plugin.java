@@ -17,6 +17,11 @@
 
 package im.turms.server.common.infra.plugin;
 
+import im.turms.server.common.infra.exception.ThrowableUtil;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,8 +37,94 @@ import java.util.List;
  *
  * @author James Chen
  */
-public record Plugin(
-        PluginDescriptor descriptor,
-        List<TurmsExtension> extensions
-) {
+@Accessors(fluent = true)
+@Data
+public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
+    private final PluginDescriptor descriptor;
+    private final List<TurmsExtension> extensions;
+
+    void start() {
+        List<Runnable> runnables = new ArrayList<>(extensions.size());
+        for (TurmsExtension extension : extensions) {
+            runnables.add(() -> {
+                try {
+                    extension.start();
+                } catch (Exception | LinkageError e) {
+                    throw new RuntimeException("Caught an error while starting the extension " +
+                            extension.getClass().getName(), e);
+                }
+            });
+        }
+        ThrowableUtil.delayError(runnables, "Caught errors while starting extensions of the plugin " + descriptor.getId());
+    }
+
+    void stop() {
+        List<Runnable> runnables = new ArrayList<>(extensions.size());
+        for (TurmsExtension extension : extensions) {
+            runnables.add(() -> {
+                try {
+                    extension.stop();
+                } catch (Exception | LinkageError e) {
+                    throw new RuntimeException("Caught an error while stopping the extension " +
+                            extension.getClass().getName(), e);
+                }
+            });
+        }
+        RuntimeException stopExtensionsException = null;
+        RuntimeException closeContextException = null;
+        try {
+            ThrowableUtil.delayError(runnables, "Caught errors while stopping extensions of the plugin " + descriptor.getId());
+        } catch (RuntimeException e) {
+            stopExtensionsException = e;
+        }
+        try {
+            closeContext();
+        } catch (RuntimeException e) {
+            closeContextException = e;
+        }
+        if (stopExtensionsException != null) {
+            if (closeContextException != null) {
+                Exception e = new RuntimeException("Caught errors while stopping the plugin " + descriptor.getId());
+                e.addSuppressed(stopExtensionsException);
+                e.addSuppressed(closeContextException);
+            } else {
+                throw stopExtensionsException;
+            }
+        } else if (closeContextException != null) {
+            throw closeContextException;
+        }
+    }
+
+    void resume() {
+        List<Runnable> runnables = new ArrayList<>(extensions.size());
+        for (TurmsExtension extension : extensions) {
+            runnables.add(() -> {
+                try {
+                    extension.resume();
+                } catch (Exception | LinkageError e) {
+                    throw new RuntimeException("Caught an error while resuming the extension " +
+                            extension.getClass().getName(), e);
+                }
+            });
+        }
+        ThrowableUtil.delayError(runnables, "Caught errors while resuming extensions of the plugin " + descriptor.getId());
+    }
+
+    void pause() {
+        List<Runnable> runnables = new ArrayList<>(extensions.size());
+        for (TurmsExtension extension : extensions) {
+            runnables.add(() -> {
+                try {
+                    extension.pause();
+                } catch (Exception | LinkageError e) {
+                    throw new RuntimeException("Caught an error while pausing the extension " +
+                            extension.getClass().getName(), e);
+                }
+            });
+        }
+        ThrowableUtil.delayError(runnables, "Caught errors while pausing extensions of the plugin " + descriptor.getId());
+    }
+
+    abstract void closeContext();
+
 }

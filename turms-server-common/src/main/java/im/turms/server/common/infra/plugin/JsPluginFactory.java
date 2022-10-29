@@ -27,6 +27,7 @@ import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
+import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
@@ -67,7 +68,8 @@ public class JsPluginFactory {
         }
     }
 
-    public static JsPlugin create(Engine engine,
+    public static JsPlugin create(ApplicationContext applicationContext,
+                                  Engine engine,
                                   String script,
                                   @Nullable Path path,
                                   boolean isDebugEnabled,
@@ -113,12 +115,13 @@ public class JsPluginFactory {
         }
         Value bindings = context.getBindings(JS_LANGUAGE_TYPE);
         JsPluginDescriptor descriptor = JsPluginDescriptorFactory.parsePluginDescriptor(plugin, path);
-        List<TurmsExtension> extensions = createExtensions(context, plugin);
+        List<TurmsExtension> extensions = createExtensions(applicationContext, plugin);
         JsContext.bindAfterInitialization(context, bindings, descriptor.getId());
-        return new JsPlugin(context, descriptor, extensions);
+        return new JsPlugin(descriptor, extensions, context);
     }
 
-    private static List<TurmsExtension> createExtensions(Context context, Value plugin) {
+    private static List<TurmsExtension> createExtensions(ApplicationContext applicationContext,
+                                                         Value plugin) {
         Value getExtensions = plugin.getMember(GET_EXTENSIONS);
         if (getExtensions == null) {
             String message = "The plugin should have a function called \"" + GET_EXTENSIONS + "\"";
@@ -156,24 +159,31 @@ public class JsPluginFactory {
                         + extensionClasses;
                 throw new CorruptedScriptException(message);
             }
-            extensions.add(createExtension(context, extensionClass));
+            extensions.add(createExtension(applicationContext, extensionClass));
         }
         return extensions;
     }
 
-    private static JsTurmsExtensionAdaptor createExtension(Context context, Value extensionClass) {
-        Value extension = extensionClass.newInstance();
-        Value getExtensionPoints = extension.getMember(GET_EXTENSION_POINTS);
-        if (getExtensionPoints == null || !getExtensionPoints.canExecute()) {
-            String message = "The method \"" + GET_EXTENSION_POINTS + "\" should return the name of extension points";
-            throw new CorruptedScriptException(message);
+    private static JsTurmsExtensionAdaptor createExtension(ApplicationContext applicationContext,
+                                                           Value extensionClass) {
+        try {
+            Value extension = extensionClass.newInstance();
+            Value getExtensionPoints = extension.getMember(GET_EXTENSION_POINTS);
+            if (getExtensionPoints == null || !getExtensionPoints.canExecute()) {
+                String message = "The method \"" + GET_EXTENSION_POINTS + "\" should return the name of extension points";
+                throw new CorruptedScriptException(message);
+            }
+            Value extensionPointStrings = getExtensionPoints.execute();
+            ExtensionClassInfo info = parseExtensionClassInfo(extension, extensionPointStrings);
+            ExtensionPoint extensionPointProxy = (ExtensionPoint) Proxy.newProxyInstance(JsPluginFactory.class.getClassLoader(),
+                    info.extensionPointClasses.toArray(new Class[0]),
+                    new JsExtensionPointInvocationHandler(info.functions));
+            JsTurmsExtensionAdaptor adaptor = new JsTurmsExtensionAdaptor(extensionPointProxy, info.extensionPointClasses, extension);
+            adaptor.setContext(applicationContext);
+            return adaptor;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create the extension " + extensionClass, e);
         }
-        Value extensionPointStrings = getExtensionPoints.execute();
-        ExtensionClassInfo info = parseExtensionClassInfo(extension, extensionPointStrings);
-        ExtensionPoint extensionPointProxy = (ExtensionPoint) Proxy.newProxyInstance(JsPluginFactory.class.getClassLoader(),
-                info.extensionPointClasses.toArray(new Class[0]),
-                new JsExtensionPointInvocationHandler(info.functions));
-        return new JsTurmsExtensionAdaptor(context, extensionPointProxy, info.extensionPointClasses, extension);
     }
 
     private static ExtensionClassInfo parseExtensionClassInfo(Value extension,
