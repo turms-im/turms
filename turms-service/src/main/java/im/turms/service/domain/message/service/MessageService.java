@@ -42,7 +42,6 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.TimeType;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.infra.property.env.service.business.message.SequenceIdProperties;
-import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.task.TaskManager;
@@ -254,27 +253,31 @@ public class MessageService {
         return messageRepository.isMessageSender(messageId, senderId);
     }
 
-    public Mono<Boolean> isMessageRecipient(@NotNull Long messageId, @NotNull Long recipientId) {
+    public Mono<Boolean> isMessageRecipientOrSender(@NotNull Long messageId, @NotNull Long userId) {
         try {
             Validator.notNull(messageId, "messageId");
-            Validator.notNull(recipientId, "recipientId");
+            Validator.notNull(userId, "userId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
+        Long groupId = null;
         if (sentMessageCache != null) {
             Message message = sentMessageCache.getIfPresent(messageId);
-            if (message != null && !message.getIsGroupMessage()) {
-                return Mono.just(message.getTargetId().equals(recipientId));
+            if (message != null) {
+                if (message.getIsGroupMessage()) {
+                    groupId = message.getTargetId();
+                } else {
+                    return Mono.just(message.getTargetId().equals(userId) || message.getSenderId().equals(userId));
+                }
             }
         }
-        return messageRepository.isMessageRecipient(messageId, recipientId);
-    }
-
-    public Mono<Boolean> isMessageRecipientOrSender(@NotNull Long messageId, @NotNull Long userId) {
-        return isMessageRecipient(messageId, userId)
-                .flatMap(isSentToUser -> isSentToUser
-                        ? PublisherPool.TRUE
-                        : isMessageSentByUser(messageId, userId));
+        if (groupId != null) {
+            return groupMemberService.isGroupMember(groupId, userId, false);
+        }
+        return messageRepository.findMessageSenderIdAndTargetIdAndIsGroupMessage(messageId)
+                .flatMap(message -> message.getIsGroupMessage()
+                        ? groupMemberService.isGroupMember(message.getTargetId(), userId, false)
+                        : Mono.just(message.getTargetId().equals(userId) || message.getSenderId().equals(userId)));
     }
 
     public Mono<ServicePermission> isMessageRecallable(@NotNull Long messageId) {

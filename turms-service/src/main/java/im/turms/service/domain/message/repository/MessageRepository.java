@@ -156,6 +156,16 @@ public class MessageRepository extends BaseRepository<Message, Long> {
         return mongoClient.findOne(entityClass, filter, options);
     }
 
+    public Mono<Message> findMessageSenderIdAndTargetIdAndIsGroupMessage(Long messageId) {
+        Filter filter = Filter.newBuilder(1)
+                .eq(DomainFieldName.ID, messageId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(Message.Fields.SENDER_ID,
+                        Message.Fields.TARGET_ID,
+                        Message.Fields.IS_GROUP_MESSAGE);
+        return mongoClient.findOne(entityClass, filter, options);
+    }
+
     public Flux<Message> findMessages(
             boolean closeToDate,
             @Nullable Collection<Long> messageIds,
@@ -194,14 +204,6 @@ public class MessageRepository extends BaseRepository<Message, Long> {
         Filter filter = Filter.newBuilder(2)
                 .eq(DomainFieldName.ID, messageId)
                 .eq(Message.Fields.SENDER_ID, senderId);
-        return mongoClient.exists(entityClass, filter);
-    }
-
-    public Mono<Boolean> isMessageRecipient(Long messageId, Long recipientId) {
-        Filter filter = Filter.newBuilder(3)
-                .eq(DomainFieldName.ID, messageId)
-                .eq(Message.Fields.TARGET_ID, recipientId)
-                .eq(Message.Fields.IS_GROUP_MESSAGE, false);
         return mongoClient.exists(entityClass, filter);
     }
 
