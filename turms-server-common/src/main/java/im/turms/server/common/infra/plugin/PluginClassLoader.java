@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.plugin;
 
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.lang.PackageConst;
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,6 +35,20 @@ public class PluginClassLoader extends URLClassLoader {
 
     public PluginClassLoader(URL jarUrl) {
         super(new URL[]{jarUrl}, parentClassLoader);
+    }
+
+    @Override
+    public Class<?> loadClass(String name) throws ClassNotFoundException {
+        try {
+            return super.loadClass(name);
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            if (name.startsWith(PackageConst.PREFIX_TURMS_BASE)) {
+                throw new ClassNotFoundException("Cannot find the class [" +
+                        name
+                        + "] of Turms. This may happen if the plugin is loaded by a wrong Turms server", e);
+            }
+            throw e;
+        }
     }
 
     @Override

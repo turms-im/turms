@@ -15,22 +15,20 @@
  * limitations under the License.
  */
 
-package im.turms.service;
-
-import im.turms.server.common.BaseTurmsApplication;
-import im.turms.server.common.infra.lang.PackageConst;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+package im.turms.server.common.infra.lang;
 
 /**
  * @author James Chen
  */
-@SpringBootApplication(
-        scanBasePackages = {PackageConst.SERVICE, PackageConst.SERVER_COMMON},
-        proxyBeanMethods = false)
-public class TurmsServiceApplication extends BaseTurmsApplication {
+public final class PackageConst {
 
-    public static void main(String[] args) {
-        bootstrap(TurmsServiceApplication.class, args);
+    public static final String PREFIX_TURMS_BASE = "im.turms.";
+
+    public static final String GATEWAY = "im.turms.gateway";
+    public static final String SERVICE = "im.turms.service";
+    public static final String SERVER_COMMON = "im.turms.server.common";
+
+    private PackageConst() {
     }
 
 }

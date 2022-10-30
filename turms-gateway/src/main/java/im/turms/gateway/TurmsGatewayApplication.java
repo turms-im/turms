@@ -18,6 +18,7 @@
 package im.turms.gateway;
 
 import im.turms.server.common.BaseTurmsApplication;
+import im.turms.server.common.infra.lang.PackageConst;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
@@ -32,7 +33,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author James Chen
  */
 @SpringBootApplication(
-        scanBasePackages = {"im.turms.gateway", "im.turms.server.common"},
+        scanBasePackages = {PackageConst.GATEWAY, PackageConst.SERVER_COMMON},
         proxyBeanMethods = false)
 public class TurmsGatewayApplication extends BaseTurmsApplication {
 
