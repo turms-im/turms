@@ -109,7 +109,7 @@ Turms服务端支持基于JVM或JavaScript语言的插件实现。
    ```java
    public class MyPlugin extends TurmsPlugin {
        @Override
-       protected Set<Class<? extends TurmsExtension>> getExtensions() {
+       public Set<Class<? extends TurmsExtension>> getExtensions() {
            return Set.of(MyStorageServiceProvider.class);
        }
    }
@@ -154,9 +154,16 @@ Turms服务端支持基于JVM或JavaScript语言的插件实现。
 * Turms不对插件进行访问控制，您需要自行确保插件中没有恶意代码。注意：恶意插件不仅可以调用函数直接强制关闭Turms服务端，甚至可以直接控制操作系统。
 * 由于Turms服务端未来将引入Valhalla项目，因此开发过程需要特别注意不要使用`synchronized`关键字来锁八大基本包装类的对象，否则将直接抛出异常。
 
-#### Class Loaders
+#### 类加载器
 
-Turms服务端中的插件实现相对灵活，既允许插件使用独立类环境，也允许插件与Turms服务端共享类环境。具体而言，在插件实现需要加载依赖包（如Netty）的时候，会让插件的class loader优先加载并使用插件JAR包内的实现，并且插件JAR包内的classes仅会被当前插件使用，不会被其他插件或Turms服务端内部使用。如果JAR包内无该依赖实现，则会让class loader将类加载工作委派给parent，并与Turms服务端共享类实现。如果Turms服务端自己也没加载该类，则会抛出`NoClassDefFoundError`异常。
+Turms服务端的插件类加载器使用parent-first类加载机制。具体而言，在插件实现需要使用一个类（如第三方依赖类：SLF4J、Netty等）时，插件类加载器会将类的加载工作委派给父类加载器，让父类加载器优先尝试加载，以与宿主Turms服务端共享类实现。如果宿主Turms服务端无该依赖的实现，则再尝试加载插件JAR包内的类实现。如果插件JAR包内也没有该类的实现，则会抛出`NoClassDefFoundError`异常。
+
+如果插件使用的第三方依赖包版本与宿主Turms服务端使用的依赖包版本发生了不兼容冲突，则插件开发者可以自行通过`maven-shade-plugin`的[Relocating Classes](https://maven.apache.org/plugins/maven-shade-plugin/examples/class-relocation.html)方法来解决依赖包冲突。
+
+补充：
+
+* 因为每个插件都使用独立的插件类加载器，因此插件JAR包内的类有且仅会被当前插件使用，而不会被其他插件或宿主Turms服务端内部使用。
+* Turms不使用child-first类加载机制的原因是：如果插件的类加载器优先加载插件JAR包内的类，则当这些类被传给宿主Turms服务端时，由于这些相同全限定名的类分别被插件的类加载器与宿主Turms服务端使用的类加载器（即application class loader）加载，因此JVM会抛出`java.lang.LinkageError`。
 
 #### 插件Debug步骤（基于IntelliJ IDEA）
 

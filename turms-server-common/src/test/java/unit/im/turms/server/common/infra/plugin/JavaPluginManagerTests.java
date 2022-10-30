@@ -27,6 +27,7 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
@@ -54,6 +55,7 @@ class JavaPluginManagerTests {
                 List.of("plugin.yaml"));
     }
 
+    @Disabled("legacy test and should be rewritten later")
     @Test
     void shouldLoadPluginWithPluginLoader() {
         MyExtensionPoint myExtensionPoint = getMyExtensionPoint();
@@ -85,6 +87,7 @@ class JavaPluginManagerTests {
                 .isEqualTo(ClassLoader.getSystemClassLoader());
     }
 
+    @Disabled("legacy test and should be rewritten later")
     @SneakyThrows
     @Test
     void shouldPreferClassesInPlugin() {

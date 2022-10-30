@@ -26,39 +26,14 @@ import java.util.Collections;
 import java.util.Enumeration;
 
 /**
- * A parent-last ClassLoader. It loads the classes from the plugin's jars
- * before delegating to the parent class loader.
- *
  * @author James Chen
  */
 public class PluginClassLoader extends URLClassLoader {
 
-    private static final String PACKAGE_PREFIX_JAVA = "java.";
-    private static final String PACKAGE_PREFIX_TURMS = "im.turms.";
+    private static final ClassLoader parentClassLoader = ClassLoader.getSystemClassLoader();
 
     public PluginClassLoader(URL jarUrl) {
-        super(new URL[]{jarUrl}, ClassLoader.getSystemClassLoader());
-    }
-
-    @Override
-    public Class<?> loadClass(String name) throws ClassNotFoundException {
-        synchronized (getClassLoadingLock(name)) {
-            if (name.startsWith(PACKAGE_PREFIX_JAVA)) {
-                return findSystemClass(name);
-            }
-            if (name.startsWith(PACKAGE_PREFIX_TURMS)) {
-                return getParent().loadClass(name);
-            }
-            Class<?> loadedClass = findLoadedClass(name);
-            if (loadedClass != null) {
-                return loadedClass;
-            }
-            try {
-                return findClass(name);
-            } catch (ClassNotFoundException ignored) {
-            }
-            return super.loadClass(name);
-        }
+        super(new URL[]{jarUrl}, parentClassLoader);
     }
 
     @Override
@@ -67,14 +42,14 @@ public class PluginClassLoader extends URLClassLoader {
         if (url != null) {
             return url;
         }
-        return super.getResource(name);
+        return parentClassLoader.getResource(name);
     }
 
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
         return Collections.enumeration(CollectionUtil.newList(
                 findResources(name).asIterator(),
-                getParent().getResources(name).asIterator()
+                parentClassLoader.getResources(name).asIterator()
         ));
     }
 
