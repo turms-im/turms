@@ -31,12 +31,15 @@ public struct Response<T> {
 
     static func fromNotification(_ notification: TurmsNotification, _ dataTransformer: ((TurmsNotification.DataMessage) throws -> T)? = nil) throws -> Response<T> {
         if !notification.hasCode {
-            throw ResponseError(.invalidNotification, "Cannot parse a success response from a notification without code")
+            throw ResponseError(
+                code: .invalidNotification,
+                reason: "Cannot parse a success response from a notification without code"
+            )
         }
         if notification.isError {
             throw ResponseError(
-                .invalidNotification,
-                "Cannot parse a success response from non-success notification"
+                code: .invalidNotification,
+                reason: "Cannot parse a success response from non-success notification"
             )
         }
         var data: T
@@ -44,8 +47,9 @@ public struct Response<T> {
             data = try dataTransformer?(notification.data) ?? () as! T
         } catch {
             throw ResponseError(
-                .invalidNotification,
-                "Failed to transform notification data: \(notification.data). Error: \(error)"
+                code: .invalidNotification,
+                reason: "Failed to transform notification data: \(notification.data)",
+                cause: error
             )
         }
         return Response(

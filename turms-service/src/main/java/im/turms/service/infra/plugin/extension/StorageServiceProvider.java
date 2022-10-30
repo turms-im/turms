@@ -17,35 +17,67 @@
 
 package im.turms.service.infra.plugin.extension;
 
-import im.turms.server.common.access.client.dto.constant.ContentType;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 /**
  * @author James Chen
  */
 public interface StorageServiceProvider extends ExtensionPoint {
 
-    Mono<Void> deleteResource(@NotNull Long requesterId,
-                              @NotNull ContentType contentType,
-                              @Nullable String keyStr,
-                              @Nullable Long keyNum);
+    // User profile picture
 
-    Mono<String> queryPresignedGetUrl(@NotNull Long requesterId,
-                                      @NotNull ContentType contentType,
-                                      @Nullable String keyStr,
-                                      @Nullable Long keyNum);
+    Mono<Void> deleteUserProfilePicture(
+            @NotNull Long requesterId,
+            @Nullable String resourceKeyStr,
+            @Nullable Long resourceKeyNum);
 
-    /**
-     * @param contentLength For S3-like object storage service, there is no content-length-range for PUT requests,
-     */
-    Mono<String> queryPresignedPutUrl(@NotNull Long requesterId,
-                                      @NotNull ContentType contentType,
-                                      @Nullable String keyStr,
-                                      @Nullable Long keyNum,
-                                      long contentLength);
+    Mono<Map<String, String>> queryUserProfilePictureUploadInfo(
+            @NotNull Long requesterId,
+            @Nullable String resourceKeyStr,
+            @Nullable Long resourceKeyNum);
+
+    Mono<Map<String, String>> queryUserProfilePictureDownloadInfo(
+            @NotNull Long requesterId,
+            @Nullable String resourceKeyStr,
+            @Nullable Long resourceKeyNum);
+
+    // Group profile picture
+
+    Mono<Void> deleteGroupProfilePicture(
+            @NotNull Long requesterId,
+            @Nullable String resourceKeyStr,
+            @Nullable Long resourceKeyNum);
+
+    Mono<Map<String, String>> queryGroupProfilePictureUploadInfo(
+            @NotNull Long requesterId,
+            @Nullable String resourceKeyStr,
+            @Nullable Long resourceKeyNum);
+
+    Mono<Map<String, String>> queryGroupProfilePictureDownloadInfo(
+            @NotNull Long requesterId,
+            @Nullable String resourceKeyStr,
+            @Nullable Long resourceKeyNum);
+
+    // Message attachment
+
+    Mono<Void> deleteMessageAttachment(
+            @NotNull Long requesterId,
+            @Nullable String resourceKeyStr,
+            @Nullable Long resourceKeyNum);
+
+    Mono<Map<String, String>> queryMessageAttachmentUploadInfo(
+            @NotNull Long requesterId,
+            @Nullable String resourceKeyStr,
+            @Nullable Long resourceKeyNum);
+
+    Mono<Map<String, String>> queryMessageAttachmentDownloadInfo(
+            @NotNull Long requesterId,
+            @Nullable String resourceKeyStr,
+            @Nullable Long resourceKeyNum);
 
 }

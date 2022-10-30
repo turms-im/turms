@@ -466,20 +466,20 @@ public struct TurmsRequest {
         set { kind = .deleteResourceRequest(newValue) }
     }
 
-    public var querySignedGetURLRequest: QuerySignedGetUrlRequest {
+    public var queryResourceDownloadInfoRequest: QueryResourceDownloadInfoRequest {
         get {
-            if case let .querySignedGetURLRequest(v)? = kind { return v }
-            return QuerySignedGetUrlRequest()
+            if case let .queryResourceDownloadInfoRequest(v)? = kind { return v }
+            return QueryResourceDownloadInfoRequest()
         }
-        set { kind = .querySignedGetURLRequest(newValue) }
+        set { kind = .queryResourceDownloadInfoRequest(newValue) }
     }
 
-    public var querySignedPutURLRequest: QuerySignedPutUrlRequest {
+    public var queryResourceUploadInfoRequest: QueryResourceUploadInfoRequest {
         get {
-            if case let .querySignedPutURLRequest(v)? = kind { return v }
-            return QuerySignedPutUrlRequest()
+            if case let .queryResourceUploadInfoRequest(v)? = kind { return v }
+            return QueryResourceUploadInfoRequest()
         }
-        set { kind = .querySignedPutURLRequest(newValue) }
+        set { kind = .queryResourceUploadInfoRequest(newValue) }
     }
 
     public var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -547,8 +547,8 @@ public struct TurmsRequest {
         case updateGroupJoinQuestionRequest(UpdateGroupJoinQuestionRequest)
         /// Storage
         case deleteResourceRequest(DeleteResourceRequest)
-        case querySignedGetURLRequest(QuerySignedGetUrlRequest)
-        case querySignedPutURLRequest(QuerySignedPutUrlRequest)
+        case queryResourceDownloadInfoRequest(QueryResourceDownloadInfoRequest)
+        case queryResourceUploadInfoRequest(QueryResourceUploadInfoRequest)
 
         #if !swift(>=4.1)
             public static func == (lhs: TurmsRequest.OneOf_Kind, rhs: TurmsRequest.OneOf_Kind) -> Bool {
@@ -764,12 +764,12 @@ public struct TurmsRequest {
                         guard case let .deleteResourceRequest(l) = lhs, case let .deleteResourceRequest(r) = rhs else { preconditionFailure() }
                         return l == r
                     }()
-                case (.querySignedGetURLRequest, .querySignedGetURLRequest): return {
-                        guard case let .querySignedGetURLRequest(l) = lhs, case let .querySignedGetURLRequest(r) = rhs else { preconditionFailure() }
+                case (.queryResourceDownloadInfoRequest, .queryResourceDownloadInfoRequest): return {
+                        guard case let .queryResourceDownloadInfoRequest(l) = lhs, case let .queryResourceDownloadInfoRequest(r) = rhs else { preconditionFailure() }
                         return l == r
                     }()
-                case (.querySignedPutURLRequest, .querySignedPutURLRequest): return {
-                        guard case let .querySignedPutURLRequest(l) = lhs, case let .querySignedPutURLRequest(r) = rhs else { preconditionFailure() }
+                case (.queryResourceUploadInfoRequest, .queryResourceUploadInfoRequest): return {
+                        guard case let .queryResourceUploadInfoRequest(l) = lhs, case let .queryResourceUploadInfoRequest(r) = rhs else { preconditionFailure() }
                         return l == r
                     }()
                 default: return false
@@ -848,8 +848,8 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         509: .standard(proto: "query_group_join_questions_request"),
         510: .standard(proto: "update_group_join_question_request"),
         1000: .standard(proto: "delete_resource_request"),
-        1001: .standard(proto: "query_signed_get_url_request"),
-        1002: .standard(proto: "query_signed_put_url_request"),
+        1001: .standard(proto: "query_resource_download_info_request"),
+        1002: .standard(proto: "query_resource_upload_info_request"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1536,29 +1536,29 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                     }
                 }()
             case 1001: try {
-                    var v: QuerySignedGetUrlRequest?
+                    var v: QueryResourceDownloadInfoRequest?
                     var hadOneofValue = false
                     if let current = self.kind {
                         hadOneofValue = true
-                        if case let .querySignedGetURLRequest(m) = current { v = m }
+                        if case let .queryResourceDownloadInfoRequest(m) = current { v = m }
                     }
                     try decoder.decodeSingularMessageField(value: &v)
                     if let v = v {
                         if hadOneofValue { try decoder.handleConflictingOneOf() }
-                        self.kind = .querySignedGetURLRequest(v)
+                        self.kind = .queryResourceDownloadInfoRequest(v)
                     }
                 }()
             case 1002: try {
-                    var v: QuerySignedPutUrlRequest?
+                    var v: QueryResourceUploadInfoRequest?
                     var hadOneofValue = false
                     if let current = self.kind {
                         hadOneofValue = true
-                        if case let .querySignedPutURLRequest(m) = current { v = m }
+                        if case let .queryResourceUploadInfoRequest(m) = current { v = m }
                     }
                     try decoder.decodeSingularMessageField(value: &v)
                     if let v = v {
                         if hadOneofValue { try decoder.handleConflictingOneOf() }
-                        self.kind = .querySignedPutURLRequest(v)
+                        self.kind = .queryResourceUploadInfoRequest(v)
                     }
                 }()
             default: break
@@ -1783,12 +1783,12 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                 guard case let .deleteResourceRequest(v)? = self.kind else { preconditionFailure() }
                 try visitor.visitSingularMessageField(value: v, fieldNumber: 1000)
             }()
-        case .querySignedGetURLRequest?: try {
-                guard case let .querySignedGetURLRequest(v)? = self.kind else { preconditionFailure() }
+        case .queryResourceDownloadInfoRequest?: try {
+                guard case let .queryResourceDownloadInfoRequest(v)? = self.kind else { preconditionFailure() }
                 try visitor.visitSingularMessageField(value: v, fieldNumber: 1001)
             }()
-        case .querySignedPutURLRequest?: try {
-                guard case let .querySignedPutURLRequest(v)? = self.kind else { preconditionFailure() }
+        case .queryResourceUploadInfoRequest?: try {
+                guard case let .queryResourceUploadInfoRequest(v)? = self.kind else { preconditionFailure() }
                 try visitor.visitSingularMessageField(value: v, fieldNumber: 1002)
             }()
         case nil: break

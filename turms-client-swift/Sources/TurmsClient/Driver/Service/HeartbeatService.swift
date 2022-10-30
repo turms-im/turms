@@ -45,7 +45,7 @@ class HeartbeatService: BaseService {
     func send() -> Promise<Void> {
         return Promise { seal in
             if !stateStore.isConnected || !stateStore.isSessionOpen {
-                seal.reject(ResponseError(.clientSessionHasBeenClosed))
+                seal.reject(ResponseError(code: .clientSessionHasBeenClosed))
                 return
             }
             stateStore.tcp!.write(HeartbeatService.HEARTBEAT_REQUEST) { error in
@@ -95,6 +95,6 @@ class HeartbeatService: BaseService {
 
     override func onDisconnected() {
         stop()
-        rejectHeartbeatPromises(ResponseError(.clientSessionHasBeenClosed))
+        rejectHeartbeatPromises(ResponseError(code: .clientSessionHasBeenClosed))
     }
 }

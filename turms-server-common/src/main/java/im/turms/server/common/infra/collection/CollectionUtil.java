@@ -19,6 +19,7 @@ package im.turms.server.common.infra.collection;
 
 import im.turms.server.common.infra.lang.PrimitiveUtil;
 import org.eclipse.collections.api.collection.ImmutableCollection;
+import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
 import javax.annotation.Nullable;
@@ -43,6 +44,7 @@ public final class CollectionUtil {
     private static final Map.Entry[] EMPTY_ENTRY_ARRAY = new Map.Entry[0];
     private static final Class<?> IMMUTABLE_COLLECTION_CLASS;
     private static final Class<?> IMMUTABLE_SET_CLASS;
+    private static final Class<?> IMMUTABLE_MAP_CLASS;
 
     static {
         IMMUTABLE_SET_CLASS = Set.of().getClass().getSuperclass();
@@ -52,6 +54,10 @@ public final class CollectionUtil {
         IMMUTABLE_COLLECTION_CLASS = IMMUTABLE_SET_CLASS.getSuperclass();
         if (!IMMUTABLE_COLLECTION_CLASS.getName().equals("java.util.ImmutableCollections$AbstractImmutableCollection")) {
             throw new IllegalStateException("Cannot find the class AbstractImmutableCollection");
+        }
+        IMMUTABLE_MAP_CLASS = Map.of().getClass().getSuperclass();
+        if (!IMMUTABLE_MAP_CLASS.getName().equals("java.util.ImmutableCollections$AbstractImmutableMap")) {
+            throw new IllegalStateException("Cannot find the class AbstractImmutableMap");
         }
     }
 
@@ -183,6 +189,10 @@ public final class CollectionUtil {
 
     public static boolean isImmutable(Iterable<?> iterable) {
         return IMMUTABLE_COLLECTION_CLASS.isInstance(iterable) || iterable instanceof ImmutableCollection;
+    }
+
+    public static boolean isImmutable(Map<?, ?> map) {
+        return IMMUTABLE_MAP_CLASS.isInstance(map) || map instanceof ImmutableMap<?, ?>;
     }
 
     public static boolean isImmutableSet(Iterable<?> iterable) {
@@ -413,6 +423,16 @@ public final class CollectionUtil {
         }
         set.remove(value);
         return set;
+    }
+
+    public static <K, V> Map<K, V> add(Map<K, V> map, K key, V value) {
+        if (isImmutable(map)) {
+            Map<K, V> newMap = newMapWithExpectedSize(map.size() + 1);
+            newMap.putAll(map);
+            map = newMap;
+        }
+        map.put(key, value);
+        return map;
     }
     //endregion
 

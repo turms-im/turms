@@ -158,7 +158,7 @@ describe('Query', () => {
     it('queryJoinedGroupIds_shouldEqualNewGroupId', async () => {
         const response = await turmsClient.groupService.queryJoinedGroupIds();
         const joinedGroupIdsWithVersion = response.data;
-        expect(joinedGroupIdsWithVersion.ids).toContain(groupId);
+        expect(joinedGroupIdsWithVersion.longs).toContain(groupId);
     });
     it('queryJoinedGroupInfos_shouldEqualNewGroupId', async () => {
         const response = await turmsClient.groupService.queryJoinedGroupInfos();
@@ -171,7 +171,7 @@ describe('Query', () => {
             groupId
         });
         const blockedUserIdsWithVersion = response.data;
-        expect(blockedUserIdsWithVersion.ids[0]).toEqual(GROUP_BLOCKED_USER_ID);
+        expect(blockedUserIdsWithVersion.longs[0]).toEqual(GROUP_BLOCKED_USER_ID);
     });
     it('queryBlockedUserInfos_shouldEqualBlockedUserId', async () => {
         const response = await turmsClient.groupService.queryBlockedUserInfos({

@@ -8,8 +8,11 @@ enum Code {
     //* For application error
     //**********************************************************
 
-    // Client - Connection
+    // Client - Common
     CONNECT_TIMEOUT = 1,
+
+    HTTP_ERROR = 90,
+    HTTP_NOT_SUCCESSFUL_RESPONSE,
 
     // Client - Request
     INVALID_REQUEST = 100,
@@ -29,11 +32,15 @@ enum Code {
     CLIENT_SESSION_ALREADY_ESTABLISHED = 300,
     CLIENT_SESSION_HAS_BEEN_CLOSED,
 
+    // Group
+
+    // Conversation
+
     // Message
-    MESSAGE_IS_REJECTED = 400,
 
     // Storage
-    QUERY_PROFILE_URL_TO_UPDATE_BEFORE_LOGIN = 500,
+    UPLOAD_USER_PROFILE_PICTURE_BEFORE_LOGIN = 700,
+    QUERY_USER_PROFILE_PICTURE_BEFORE_LOGIN,
 
     //**********************************************************
     //* Defined on the server side
@@ -203,11 +210,7 @@ enum Code {
     NOT_MEMBER_TO_QUERY_GROUP_MESSAGES = 5300,
 
     // Storage
-    STORAGE_NOT_IMPLEMENTED = 6000,
-    FILE_TOO_LARGE,
-
-    // Storage - Extension
-    REDUNDANT_REQUEST_FOR_PRESIGNED_PROFILE_URL = 6900
+    STORAGE_NOT_IMPLEMENTED = 6000
 
 }
 

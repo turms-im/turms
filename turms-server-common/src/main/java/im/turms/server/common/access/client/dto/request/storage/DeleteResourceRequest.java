@@ -33,7 +33,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private DeleteResourceRequest() {
-    contentType_ = 0;
+    type_ = 0;
     keyStr_ = "";
   }
 
@@ -63,23 +63,23 @@ private static final long serialVersionUID = 0L;
   }
 
   private int bitField0_;
-  public static final int CONTENT_TYPE_FIELD_NUMBER = 1;
-  private int contentType_;
+  public static final int TYPE_FIELD_NUMBER = 1;
+  private int type_;
   /**
-   * <code>.im.turms.proto.ContentType content_type = 1;</code>
-   * @return The enum numeric value on the wire for contentType.
+   * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+   * @return The enum numeric value on the wire for type.
    */
-  @java.lang.Override public int getContentTypeValue() {
-    return contentType_;
+  @java.lang.Override public int getTypeValue() {
+    return type_;
   }
   /**
-   * <code>.im.turms.proto.ContentType content_type = 1;</code>
-   * @return The contentType.
+   * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+   * @return The type.
    */
-  @java.lang.Override public im.turms.server.common.access.client.dto.constant.ContentType getContentType() {
+  @java.lang.Override public im.turms.server.common.access.client.dto.constant.StorageResourceType getType() {
     @SuppressWarnings("deprecation")
-    im.turms.server.common.access.client.dto.constant.ContentType result = im.turms.server.common.access.client.dto.constant.ContentType.valueOf(contentType_);
-    return result == null ? im.turms.server.common.access.client.dto.constant.ContentType.UNRECOGNIZED : result;
+    im.turms.server.common.access.client.dto.constant.StorageResourceType result = im.turms.server.common.access.client.dto.constant.StorageResourceType.valueOf(type_);
+    return result == null ? im.turms.server.common.access.client.dto.constant.StorageResourceType.UNRECOGNIZED : result;
   }
 
   public static final int KEY_STR_FIELD_NUMBER = 2;
@@ -161,8 +161,8 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (contentType_ != im.turms.server.common.access.client.dto.constant.ContentType.PROFILE.getNumber()) {
-      output.writeEnum(1, contentType_);
+    if (type_ != im.turms.server.common.access.client.dto.constant.StorageResourceType.USER_PROFILE_PICTURE.getNumber()) {
+      output.writeEnum(1, type_);
     }
     if (((bitField0_ & 0x00000001) != 0)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, keyStr_);
@@ -179,9 +179,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (contentType_ != im.turms.server.common.access.client.dto.constant.ContentType.PROFILE.getNumber()) {
+    if (type_ != im.turms.server.common.access.client.dto.constant.StorageResourceType.USER_PROFILE_PICTURE.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(1, contentType_);
+        .computeEnumSize(1, type_);
     }
     if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, keyStr_);
@@ -205,7 +205,7 @@ private static final long serialVersionUID = 0L;
     }
     im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest other = (im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest) obj;
 
-    if (contentType_ != other.contentType_) return false;
+    if (type_ != other.type_) return false;
     if (hasKeyStr() != other.hasKeyStr()) return false;
     if (hasKeyStr()) {
       if (!getKeyStr()
@@ -227,8 +227,8 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + CONTENT_TYPE_FIELD_NUMBER;
-    hash = (53 * hash) + contentType_;
+    hash = (37 * hash) + TYPE_FIELD_NUMBER;
+    hash = (53 * hash) + type_;
     if (hasKeyStr()) {
       hash = (37 * hash) + KEY_STR_FIELD_NUMBER;
       hash = (53 * hash) + getKeyStr().hashCode();
@@ -366,7 +366,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      contentType_ = 0;
+      type_ = 0;
 
       keyStr_ = "";
       bitField0_ = (bitField0_ & ~0x00000001);
@@ -400,7 +400,7 @@ private static final long serialVersionUID = 0L;
       im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest result = new im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest(this);
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
-      result.contentType_ = contentType_;
+      result.type_ = type_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
         to_bitField0_ |= 0x00000001;
       }
@@ -458,8 +458,8 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest other) {
       if (other == im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest.getDefaultInstance()) return this;
-      if (other.contentType_ != 0) {
-        setContentTypeValue(other.getContentTypeValue());
+      if (other.type_ != 0) {
+        setTypeValue(other.getTypeValue());
       }
       if (other.hasKeyStr()) {
         bitField0_ |= 0x00000001;
@@ -496,7 +496,7 @@ private static final long serialVersionUID = 0L;
               done = true;
               break;
             case 8: {
-              contentType_ = input.readEnum();
+              type_ = input.readEnum();
 
               break;
             } // case 8
@@ -527,56 +527,56 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private int contentType_ = 0;
+    private int type_ = 0;
     /**
-     * <code>.im.turms.proto.ContentType content_type = 1;</code>
-     * @return The enum numeric value on the wire for contentType.
+     * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+     * @return The enum numeric value on the wire for type.
      */
-    @java.lang.Override public int getContentTypeValue() {
-      return contentType_;
+    @java.lang.Override public int getTypeValue() {
+      return type_;
     }
     /**
-     * <code>.im.turms.proto.ContentType content_type = 1;</code>
-     * @param value The enum numeric value on the wire for contentType to set.
+     * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+     * @param value The enum numeric value on the wire for type to set.
      * @return This builder for chaining.
      */
-    public Builder setContentTypeValue(int value) {
+    public Builder setTypeValue(int value) {
 
-      contentType_ = value;
+      type_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>.im.turms.proto.ContentType content_type = 1;</code>
-     * @return The contentType.
+     * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+     * @return The type.
      */
     @java.lang.Override
-    public im.turms.server.common.access.client.dto.constant.ContentType getContentType() {
+    public im.turms.server.common.access.client.dto.constant.StorageResourceType getType() {
       @SuppressWarnings("deprecation")
-      im.turms.server.common.access.client.dto.constant.ContentType result = im.turms.server.common.access.client.dto.constant.ContentType.valueOf(contentType_);
-      return result == null ? im.turms.server.common.access.client.dto.constant.ContentType.UNRECOGNIZED : result;
+      im.turms.server.common.access.client.dto.constant.StorageResourceType result = im.turms.server.common.access.client.dto.constant.StorageResourceType.valueOf(type_);
+      return result == null ? im.turms.server.common.access.client.dto.constant.StorageResourceType.UNRECOGNIZED : result;
     }
     /**
-     * <code>.im.turms.proto.ContentType content_type = 1;</code>
-     * @param value The contentType to set.
+     * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+     * @param value The type to set.
      * @return This builder for chaining.
      */
-    public Builder setContentType(im.turms.server.common.access.client.dto.constant.ContentType value) {
+    public Builder setType(im.turms.server.common.access.client.dto.constant.StorageResourceType value) {
       if (value == null) {
         throw new NullPointerException();
       }
 
-      contentType_ = value.getNumber();
+      type_ = value.getNumber();
       onChanged();
       return this;
     }
     /**
-     * <code>.im.turms.proto.ContentType content_type = 1;</code>
+     * <code>.im.turms.proto.StorageResourceType type = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearContentType() {
+    public Builder clearType() {
 
-      contentType_ = 0;
+      type_ = 0;
       onChanged();
       return this;
     }

@@ -7,6 +7,11 @@ public enum ResponseStatusCode: Int {
     // * For application error
     // **********************************************************
 
+    // Client - Common
+    case connectTimeout = 1
+    case httpError = 90
+    case httpNotSuccessfulResponse = 91
+
     // Client - Request
     case invalidRequest = 100
     case clientRequestsTooFrequent
@@ -25,10 +30,15 @@ public enum ResponseStatusCode: Int {
     case clientSessionAlreadyEstablished = 300
     case clientSessionHasBeenClosed
 
+    // Group
+
+    // Conversation
+
     // Message
 
     // Storage
-    case queryProfileUrlToUpdateBeforeLogin = 500
+    case uploadUserProfilePictureBeforeLogin = 700
+    case queryUserProfilePictureBeforeLogin = 701
 
     // **********************************************************
     // * Defined on the server side

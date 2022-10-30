@@ -148,8 +148,8 @@ class ConnectionService extends BaseService {
       if (host == stateStore.tcp?.host && port == stateStore.tcp?.port) {
         return;
       } else {
-        throw ResponseException.fromCode(
-            ResponseStatusCode.clientSessionAlreadyEstablished);
+        throw ResponseException(
+            code: ResponseStatusCode.clientSessionAlreadyEstablished);
       }
     }
     final tcp = TcpClient(_onSocketClose, (bytes) {

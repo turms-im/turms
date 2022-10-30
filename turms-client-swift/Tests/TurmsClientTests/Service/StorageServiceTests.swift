@@ -6,6 +6,7 @@ class StorageServiceTests: XCTestCase {
     var turmsClient: TurmsClient!
     static let USER_ID: Int64 = 1
     static let GROUP_ID: Int64 = 1
+    static let MEDIA_TYPE = "image/png"
     static let PROFILE_PICTURE = Data([0, 1, 2, 3, 4])
     static let ATTACHMENT: Data = .init([0, 1, 2, 3, 4])
 
@@ -22,27 +23,27 @@ class StorageServiceTests: XCTestCase {
     func test_e2e() {
         var messageId: Int64!
         // Create
-        assertCompleted("uploadProfilePicture_shouldReturnUrl", turmsClient.storageService.uploadProfilePicture(StorageServiceTests.PROFILE_PICTURE))
-        assertCompleted("uploadGroupProfilePicture_shouldReturnUrl", turmsClient.storageService.uploadGroupProfilePicture(data: StorageServiceTests.PROFILE_PICTURE, groupId: StorageServiceTests.GROUP_ID))
+        assertCompleted("uploadUserProfilePicture_shouldReturnUploadResult", turmsClient.storageService.uploadUserProfilePicture(mediaType: StorageServiceTests.MEDIA_TYPE, data: StorageServiceTests.PROFILE_PICTURE))
+        assertCompleted("uploadGroupProfilePicture_shouldReturnUploadResult", turmsClient.storageService.uploadGroupProfilePicture(groupId: StorageServiceTests.GROUP_ID, mediaType: StorageServiceTests.MEDIA_TYPE, data: StorageServiceTests.PROFILE_PICTURE))
 
-        assertCompleted("uploadAttachment_sendMessage_shouldReturnUrl", turmsClient.messageService.sendMessage(isGroupMessage: false, targetId: 2, text: "I've attached a picture").done {
+        assertCompleted("uploadMessageAttachment_sendMessage_shouldReturnUploadResult", turmsClient.messageService.sendMessage(isGroupMessage: false, targetId: 2, text: "I've attached a picture").done {
             messageId = $0.data
         })
-        assertCompleted("uploadAttachment_shouldReturnUrl", turmsClient.storageService.uploadAttachment(messageId: messageId, data: StorageServiceTests.ATTACHMENT))
+        assertCompleted("uploadMessageAttachment_shouldReturnUploadResult", turmsClient.storageService.uploadMessageAttachment(messageId: messageId, mediaType: StorageServiceTests.MEDIA_TYPE, data: StorageServiceTests.ATTACHMENT))
 
         // Query
-        assertCompleted("queryProfilePicture_shouldEqualUploadedPicture", turmsClient.storageService.queryProfilePicture(StorageServiceTests.USER_ID).done {
-            XCTAssertEqual(StorageServiceTests.PROFILE_PICTURE, $0.data)
+        assertCompleted("queryUserProfilePicture_shouldEqualUploadedPicture", turmsClient.storageService.queryUserProfilePicture(userId: StorageServiceTests.USER_ID).done {
+            XCTAssertEqual(StorageServiceTests.PROFILE_PICTURE, $0.data.data)
         })
-        assertCompleted("queryGroupProfilePicture_shouldEqualUploadedPicture", turmsClient.storageService.queryGroupProfilePicture(StorageServiceTests.GROUP_ID).done {
-            XCTAssertEqual(StorageServiceTests.PROFILE_PICTURE, $0.data)
+        assertCompleted("queryGroupProfilePicture_shouldEqualUploadedPicture", turmsClient.storageService.queryGroupProfilePicture(groupId: StorageServiceTests.GROUP_ID).done {
+            XCTAssertEqual(StorageServiceTests.PROFILE_PICTURE, $0.data.data)
         })
-        assertCompleted("queryAttachment_shouldEqualUploadedAttachment", turmsClient.storageService.queryAttachment(messageId: messageId!).done {
-            XCTAssertEqual(StorageServiceTests.ATTACHMENT, $0.data)
+        assertCompleted("queryMessageAttachment_shouldEqualUploadedAttachment", turmsClient.storageService.queryMessageAttachment(messageId: messageId!).done {
+            XCTAssertEqual(StorageServiceTests.ATTACHMENT, $0.data.data)
         })
 
         // Delete
-        assertCompleted("deleteProfile_shouldSucceed", turmsClient.storageService.deleteProfile())
-        assertCompleted("deleteGroupProfile_shouldSucceed", turmsClient.storageService.deleteGroupProfile(StorageServiceTests.GROUP_ID))
+        assertCompleted("deleteUserProfilePicture_shouldSucceed", turmsClient.storageService.deleteUserProfilePicture())
+        assertCompleted("deleteGroupProfilePicture_shouldSucceed", turmsClient.storageService.deleteGroupProfilePicture(StorageServiceTests.GROUP_ID))
     }
 }

@@ -52,8 +52,8 @@ class HeartbeatService extends BaseService {
 
   Future<void> send() async {
     if (!stateStore.isConnected || !stateStore.isSessionOpen) {
-      throw ResponseException.fromCode(
-          ResponseStatusCode.clientSessionHasBeenClosed);
+      throw ResponseException(
+          code: ResponseStatusCode.clientSessionHasBeenClosed);
     }
     stateStore.tcp!.write(_heartbeatRequest);
     final completer = Completer<void>();
@@ -93,8 +93,8 @@ class HeartbeatService extends BaseService {
   @override
   void onDisconnected() {
     stop();
-    final exception = ResponseException.fromCode(
-        ResponseStatusCode.clientSessionHasBeenClosed);
+    final exception =
+        ResponseException(code: ResponseStatusCode.clientSessionHasBeenClosed);
     _rejectHeartbeatCompleters(exception);
   }
 }

@@ -778,14 +778,20 @@ export default class UserService {
         if (typeof deviceType === 'string') {
             deviceType = DeviceType[deviceType] as DeviceType;
             if (Validator.isFalsy(deviceType)) {
-                throw ResponseError.fromCodeAndReason(ResponseStatusCode.ILLEGAL_ARGUMENT, 'illegal DeviceType');
+                throw ResponseError.from({
+                    code: ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    reason: 'illegal DeviceType'
+                });
             }
             return deviceType;
         } else if (typeof deviceType === 'number') {
             if (deviceType >= 0 && deviceType <= DeviceType.UNKNOWN) {
                 return deviceType;
             } else {
-                throw ResponseError.fromCodeAndReason(ResponseStatusCode.ILLEGAL_ARGUMENT, 'illegal DeviceType');
+                throw ResponseError.from({
+                    code: ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    reason: 'illegal DeviceType'
+                });
             }
         }
     }

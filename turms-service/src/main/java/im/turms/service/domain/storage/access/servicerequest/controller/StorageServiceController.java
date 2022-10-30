@@ -18,23 +18,21 @@
 package im.turms.service.domain.storage.access.servicerequest.controller;
 
 import im.turms.server.common.access.client.dto.ClientMessagePool;
-import im.turms.server.common.access.client.dto.constant.ContentType;
+import im.turms.server.common.access.client.dto.constant.StorageResourceType;
 import im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest;
-import im.turms.server.common.access.client.dto.request.storage.QuerySignedGetUrlRequest;
-import im.turms.server.common.access.client.dto.request.storage.QuerySignedPutUrlRequest;
-import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest;
+import im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
 import im.turms.service.domain.common.access.servicerequest.controller.BaseServiceController;
 import im.turms.service.domain.storage.service.StorageService;
+import im.turms.service.infra.proto.ProtoModelConvertor;
 import org.springframework.stereotype.Controller;
-import reactor.core.publisher.Mono;
 
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RESOURCE_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_GET_URL_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_PUT_URL_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_RESOURCE_UPLOAD_INFO_REQUEST;
 
 /**
  * @author James Chen
@@ -48,41 +46,35 @@ public class StorageServiceController extends BaseServiceController {
         this.storageService = storageService;
     }
 
-    @ServiceRequestMapping(QUERY_SIGNED_GET_URL_REQUEST)
-    public ClientRequestHandler handleQuerySignedGetUrlRequest() {
+    @ServiceRequestMapping(QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST)
+    public ClientRequestHandler handleQueryResourceDownloadInfoRequest() {
         return clientRequest -> {
-            QuerySignedGetUrlRequest querySignedGetUrlRequest = clientRequest.turmsRequest().getQuerySignedGetUrlRequest();
-            ContentType contentType = querySignedGetUrlRequest.getContentType();
-            if (contentType == ContentType.UNRECOGNIZED) {
-                return Mono
-                        .error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
-            }
-            String keyStr = querySignedGetUrlRequest.hasKeyStr() ? querySignedGetUrlRequest.getKeyStr() : null;
-            Long keyNum = querySignedGetUrlRequest.hasKeyNum() ? querySignedGetUrlRequest.getKeyNum() : null;
-            return storageService.queryPresignedGetUrl(clientRequest.userId(), contentType, keyStr, keyNum)
-                    .map(url -> RequestHandlerResultFactory.get(ClientMessagePool
+            QueryResourceDownloadInfoRequest queryResourceDownloadInfoRequest = clientRequest.turmsRequest().getQueryResourceDownloadInfoRequest();
+            StorageResourceType resourceType = queryResourceDownloadInfoRequest.getType();
+            String resourceKeyStr = queryResourceDownloadInfoRequest.hasKeyStr() ? queryResourceDownloadInfoRequest.getKeyStr() : null;
+            Long resourceKeyNum = queryResourceDownloadInfoRequest.hasKeyNum() ? queryResourceDownloadInfoRequest.getKeyNum() : null;
+            return storageService.queryResourceDownloadInfo(clientRequest.userId(), resourceType, resourceKeyStr, resourceKeyNum)
+                    .map(info -> RequestHandlerResultFactory.get(ClientMessagePool
                             .getTurmsNotificationDataBuilder()
-                            .setUrl(url)
+                            .setStringsWithVersion(ClientMessagePool.getStringsWithVersionBuilder()
+                                    .addAllStrings(ProtoModelConvertor.toList(info))
+                                    .build())
                             .build()));
         };
     }
 
-    @ServiceRequestMapping(QUERY_SIGNED_PUT_URL_REQUEST)
-    public ClientRequestHandler handleQuerySignedPutUrlRequest() {
+    @ServiceRequestMapping(QUERY_RESOURCE_UPLOAD_INFO_REQUEST)
+    public ClientRequestHandler handleQueryResourceUploadInfoRequest() {
         return clientRequest -> {
-            QuerySignedPutUrlRequest querySignedPutUrlRequest = clientRequest.turmsRequest().getQuerySignedPutUrlRequest();
-            ContentType contentType = querySignedPutUrlRequest.getContentType();
-            if (contentType == ContentType.UNRECOGNIZED) {
-                return Mono
-                        .error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
-            }
-            long contentLength = querySignedPutUrlRequest.getContentLength();
-            String keyStr = querySignedPutUrlRequest.hasKeyStr() ? querySignedPutUrlRequest.getKeyStr() : null;
-            Long keyNum = querySignedPutUrlRequest.hasKeyNum() ? querySignedPutUrlRequest.getKeyNum() : null;
-            return storageService.queryPresignedPutUrl(clientRequest.userId(), contentType, keyStr, keyNum, contentLength)
-                    .map(url -> RequestHandlerResultFactory.get(ClientMessagePool
+            QueryResourceUploadInfoRequest queryResourceUploadInfoRequest = clientRequest.turmsRequest().getQueryResourceUploadInfoRequest();
+            StorageResourceType resourceType = queryResourceUploadInfoRequest.getType();
+            String resourceKeyStr = queryResourceUploadInfoRequest.hasKeyStr() ? queryResourceUploadInfoRequest.getKeyStr() : null;
+            Long resourceKeyNum = queryResourceUploadInfoRequest.hasKeyNum() ? queryResourceUploadInfoRequest.getKeyNum() : null;
+            return storageService.queryResourceUploadInfo(clientRequest.userId(), resourceType, resourceKeyStr, resourceKeyNum)
+                    .map(info -> RequestHandlerResultFactory.get(ClientMessagePool
                             .getTurmsNotificationDataBuilder()
-                            .setUrl(url)
+                            .setStringsWithVersion(ClientMessagePool.getStringsWithVersionBuilder()
+                                    .addAllStrings(ProtoModelConvertor.toList(info)))
                             .build()));
         };
     }
@@ -91,14 +83,10 @@ public class StorageServiceController extends BaseServiceController {
     public ClientRequestHandler handleDeleteResourceRequest() {
         return clientRequest -> {
             DeleteResourceRequest deleteResourceRequest = clientRequest.turmsRequest().getDeleteResourceRequest();
-            ContentType contentType = deleteResourceRequest.getContentType();
-            if (contentType == ContentType.UNRECOGNIZED) {
-                return Mono
-                        .error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
-            }
-            String keyStr = deleteResourceRequest.hasKeyStr() ? deleteResourceRequest.getKeyStr() : null;
-            Long keyNum = deleteResourceRequest.hasKeyNum() ? deleteResourceRequest.getKeyNum() : null;
-            return storageService.deleteResource(clientRequest.userId(), contentType, keyStr, keyNum)
+            StorageResourceType resourceType = deleteResourceRequest.getType();
+            String resourceKeyStr = deleteResourceRequest.hasKeyStr() ? deleteResourceRequest.getKeyStr() : null;
+            Long resourceKeyNum = deleteResourceRequest.hasKeyNum() ? deleteResourceRequest.getKeyNum() : null;
+            return storageService.deleteResource(clientRequest.userId(), resourceType, resourceKeyStr, resourceKeyNum)
                     .thenReturn(RequestHandlerResultFactory.OK);
         };
     }

@@ -64,8 +64,8 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_RELATED_USER_IDS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_RELATIONSHIPS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_RELATIONSHIP_GROUPS_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_GET_URL_REQUEST;
-import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_PUT_URL_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_RESOURCE_UPLOAD_INFO_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_ONLINE_STATUSES_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_PROFILES_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_CONVERSATION_REQUEST;
@@ -181,8 +181,8 @@ public enum PolicyStatementResource {
     RESOURCE(Collections.emptySet(),
             Set.of(DELETE_RESOURCE_REQUEST),
             Collections.emptySet(),
-            Set.of(QUERY_SIGNED_GET_URL_REQUEST,
-                    QUERY_SIGNED_PUT_URL_REQUEST));
+            Set.of(QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST,
+                    QUERY_RESOURCE_UPLOAD_INFO_REQUEST));
     //endregion
 
     public static final Set<PolicyStatementResource> ALL = EnumSet.allOf(PolicyStatementResource.class);

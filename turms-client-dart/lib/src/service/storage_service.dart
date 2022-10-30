@@ -1,153 +1,312 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:fixnum/fixnum.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 import '../../turms_client.dart';
+import '../extension/http_response_extensions.dart';
+import '../model/storage_resource.dart';
+import '../model/storage_upload_result.dart';
+
+typedef ResourceUrlExtractor = String Function(Map<String, String>);
 
 class StorageService {
-  // TODO: destroy
-  static final HttpClient _httpClient = HttpClient();
+  static const String _defaultUrlKeyName = 'url';
+  static final Map<StorageResourceType, String> _resourceTypeToBucketName = {
+    for (final type in StorageResourceType.values)
+      type: type.name.toLowerCase().replaceAll('_', '-')
+  };
 
   final TurmsClient _turmsClient;
-  final Uri serverUrl;
+  final String serverUrl;
+
+  // TODO: destroy
+  final http.Client _httpClient = http.Client();
 
   StorageService(this._turmsClient, String? storageServerUrl)
-      : serverUrl = Uri.parse(storageServerUrl ?? 'http://localhost:9000');
+      : serverUrl = storageServerUrl == null
+            ? 'http://localhost:9000'
+            : Uri.parse(storageServerUrl).origin;
 
-  // Profile picture
+  // User profile picture
 
-  Future<Response<String>> queryProfilePictureUrlForAccess(
-      Int64 userId) async =>
-      Response.value(
-          '$serverUrl/${_getBucketName(ContentType.PROFILE)}/$userId');
-
-  Future<Response<Uint8List>> queryProfilePicture(Int64 userId) async {
-    final response = await queryProfilePictureUrlForAccess(userId);
-    return _getBytesFromGetUrl(response.data!);
-  }
-
-  Future<Response<String>> queryProfilePictureUrlForUpload(
-      int pictureSize) async {
+  Future<Response<StorageUploadResult>> uploadUserProfilePicture(
+      String mediaType, Uint8List data,
+      {String urlKeyName = _defaultUrlKeyName}) async {
+    final type = _parseMediaType(mediaType);
+    if (data.isEmpty) {
+      throw ResponseException(
+          code: ResponseStatusCode.illegalArgument,
+          reason: 'The data of user profile picture must not be empty');
+    }
     final userId = _turmsClient.userService.userInfo?.userId;
     if (userId == null) {
-      throw ResponseException.fromCode(
-          ResponseStatusCode.queryProfileUrlToUpdateBeforeLogin);
-    } else {
-      return _getSignedPutUrl(ContentType.PROFILE, pictureSize, keyNum: userId);
+      throw ResponseException(
+          code: ResponseStatusCode.uploadUserProfilePictureBeforeLogin);
     }
+    final uploadInfo = await queryUserProfilePictureUploadInfo();
+    final url = _getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
+    return _upload(url, uploadInfo.data, userId.toString(), type, data);
   }
 
-  Future<Response<String>> uploadProfilePicture(Uint8List bytes) async {
-    final response = await queryProfilePictureUrlForUpload(bytes.length);
-    return _upload(response.data!, bytes);
+  Future<Response<void>> deleteUserProfilePicture() =>
+      _deleteResource(StorageResourceType.USER_PROFILE_PICTURE);
+
+  Future<Response<StorageResource>> queryUserProfilePicture(Int64 userId,
+      {String urlKeyName = _defaultUrlKeyName}) async {
+    final downloadInfo = await queryUserProfilePictureDownloadInfo(userId,
+        urlKeyName: urlKeyName);
+    final url = _getAndRemoveResourceUrl(downloadInfo.data, urlKeyName);
+    return _queryResource(url);
   }
 
-  Future<Response<void>> deleteProfile() =>
-      _deleteResource(ContentType.PROFILE);
+  Future<Response<Map<String, String>>>
+      queryUserProfilePictureUploadInfo() async {
+    final userId = _turmsClient.userService.userInfo?.userId;
+    if (userId == null) {
+      throw ResponseException(
+          code: ResponseStatusCode.queryUserProfilePictureBeforeLogin);
+    }
+    return _queryResourceUploadInfo(StorageResourceType.USER_PROFILE_PICTURE,
+        keyNum: userId);
+  }
+
+  Future<Response<Map<String, String>>> queryUserProfilePictureDownloadInfo(
+      Int64 userId,
+      {bool fetch = false,
+      String urlKeyName = _defaultUrlKeyName}) async {
+    if (fetch) {
+      return _queryResourceDownloadInfo(
+          StorageResourceType.USER_PROFILE_PICTURE,
+          keyNum: userId);
+    }
+    return Response.value({
+      urlKeyName:
+          '$serverUrl/${_getBucketName(StorageResourceType.USER_PROFILE_PICTURE)}/$userId'
+    });
+  }
 
   // Group profile picture
 
-  Future<Response<String>> queryGroupProfilePictureUrlForAccess(
-      Int64 groupId) async =>
-      Response.value(
-          '$serverUrl/${_getBucketName(ContentType.GROUP_PROFILE)}/$groupId');
-
-  Future<Response<Uint8List>> queryGroupProfilePicture(Int64 groupId) async {
-    final response = await queryGroupProfilePictureUrlForAccess(groupId);
-    return _getBytesFromGetUrl(response.data!);
+  Future<Response<StorageUploadResult>> uploadGroupProfilePicture(
+      Int64 groupId, String mediaType, Uint8List data,
+      {String urlKeyName = _defaultUrlKeyName}) async {
+    final type = _parseMediaType(mediaType);
+    if (data.isEmpty) {
+      throw ResponseException(
+          code: ResponseStatusCode.illegalArgument,
+          reason: 'The data of group profile picture must not be empty');
+    }
+    final uploadInfo = await queryGroupProfilePictureUploadInfo(groupId);
+    final url = _getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
+    return _upload(url, uploadInfo.data, groupId.toString(), type, data);
   }
 
-  Future<Response<String>> queryGroupProfilePictureUrlForUpload(
-      int pictureSize, Int64 groupId) =>
-      _getSignedPutUrl(ContentType.GROUP_PROFILE, pictureSize, keyNum: groupId);
+  Future<Response<void>> deleteGroupProfilePicture(Int64 groupId) =>
+      _deleteResource(StorageResourceType.GROUP_PROFILE_PICTURE,
+          keyNum: groupId);
 
-  Future<Response<String>> uploadGroupProfilePicture(
-      Uint8List bytes, Int64 groupId) async {
-    final response =
-    await queryGroupProfilePictureUrlForUpload(bytes.length, groupId);
-    return _upload(response.data!, bytes);
+  Future<Response<StorageResource>> queryGroupProfilePicture(Int64 groupId,
+      {String urlKeyName = _defaultUrlKeyName}) async {
+    final downloadInfo = await queryGroupProfilePictureDownloadInfo(groupId,
+        urlKeyName: urlKeyName);
+    final url = _getAndRemoveResourceUrl(downloadInfo.data, urlKeyName);
+    return _queryResource(url);
   }
 
-  Future<Response<void>> deleteGroupProfile(Int64 groupId) =>
-      _deleteResource(ContentType.GROUP_PROFILE, keyNum: groupId);
+  Future<Response<Map<String, String>>> queryGroupProfilePictureUploadInfo(
+          Int64 groupId) =>
+      _queryResourceUploadInfo(StorageResourceType.GROUP_PROFILE_PICTURE,
+          keyNum: groupId);
+
+  Future<Response<Map<String, String>>> queryGroupProfilePictureDownloadInfo(
+      Int64 groupId,
+      {bool fetch = false,
+      String urlKeyName = _defaultUrlKeyName}) async {
+    if (fetch) {
+      return _queryResourceDownloadInfo(
+          StorageResourceType.GROUP_PROFILE_PICTURE,
+          keyNum: groupId);
+    }
+    return Response.value({
+      urlKeyName:
+          '$serverUrl/${_getBucketName(StorageResourceType.GROUP_PROFILE_PICTURE)}/$groupId'
+    });
+  }
 
   // Message attachment
 
-  Future<Response<String>> queryAttachmentUrlForAccess(Int64 messageId,
-      {String? name}) =>
-      _getSignedGetUrl(ContentType.ATTACHMENT, keyStr: name, keyNum: messageId);
-
-  Future<Response<Uint8List>> queryAttachment(Int64 messageId,
-      {String? name}) async {
-    final response = await queryAttachmentUrlForAccess(messageId, name: name);
-    return _getBytesFromGetUrl(response.data!);
+  Future<Response<StorageUploadResult>> uploadMessageAttachment(
+      Int64 messageId, String mediaType, Uint8List data,
+      {String? name, String urlKeyName = _defaultUrlKeyName}) async {
+    final type = _parseMediaType(mediaType);
+    if (data.isEmpty) {
+      throw ResponseException(
+          code: ResponseStatusCode.illegalArgument,
+          reason: 'The data of message attachment must not be empty');
+    }
+    final uploadInfo = await queryMessageAttachmentUploadInfo(messageId);
+    final url = _getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
+    final resourceName =
+        name == null ? messageId.toString() : '$messageId/$name';
+    return _upload(url, uploadInfo.data, resourceName, type, data);
   }
 
-  Future<Response<String>> queryAttachmentUrlForUpload(
-      Int64 messageId, int attachmentSize) =>
-      _getSignedPutUrl(ContentType.ATTACHMENT, attachmentSize,
-          keyNum: messageId);
-
-  Future<Response<String>> uploadAttachment(
-      Int64 messageId, Uint8List bytes) async {
-    final response = await queryAttachmentUrlForUpload(messageId, bytes.length);
-    return _upload(response.data!, bytes);
+  Future<Response<StorageResource>> queryMessageAttachment(Int64 messageId,
+      {String? name, String urlKeyName = _defaultUrlKeyName}) async {
+    final response =
+        await queryMessageAttachmentDownloadInfo(messageId, name: name);
+    final url = _getAndRemoveResourceUrl(response.data, urlKeyName);
+    return _queryResource(url);
   }
+
+  Future<Response<Map<String, String>>> queryMessageAttachmentUploadInfo(
+          Int64 messageId,
+          {String? name}) =>
+      _queryResourceUploadInfo(StorageResourceType.MESSAGE_ATTACHMENT,
+          keyStr: name, keyNum: messageId);
+
+  Future<Response<Map<String, String>>> queryMessageAttachmentDownloadInfo(
+          Int64 messageId,
+          {String? name}) =>
+      _queryResourceDownloadInfo(StorageResourceType.MESSAGE_ATTACHMENT,
+          keyStr: name, keyNum: messageId);
 
   // Base
 
-  Future<Response<String>> _getSignedGetUrl(ContentType contentType,
-      {String? keyStr, Int64? keyNum}) async {
-    final n = await _turmsClient.driver.send(QuerySignedGetUrlRequest(
-        contentType: contentType, keyStr: keyStr, keyNum: keyNum));
-    return n.toResponse((data) => data.url);
+  Future<Response<StorageUploadResult>> _upload(
+      String url,
+      Map<String, String> formData,
+      String resourceName,
+      MediaType mediaType,
+      Uint8List data) async {
+    if (data.isEmpty) {
+      throw ResponseException(
+          code: ResponseStatusCode.illegalArgument,
+          reason: 'The data of resource must not be empty');
+    }
+    final Uri uri;
+    try {
+      uri = Uri.parse(url);
+    } on Exception catch (e) {
+      throw ResponseException(
+          code: ResponseStatusCode.illegalArgument,
+          reason: 'The URL is illegal: $url',
+          cause: e);
+    }
+    final request = http.MultipartRequest('POST', uri)
+      ..fields.addAll(formData)
+      ..fields['key'] = resourceName
+      ..fields['Content-Type'] = mediaType.toString()
+      ..files.add(http.MultipartFile.fromBytes('file', data,
+          filename: resourceName, contentType: mediaType));
+    final http.StreamedResponse response;
+    try {
+      response = await _httpClient.send(request);
+    } on Exception catch (e) {
+      throw ResponseException(
+          code: ResponseStatusCode.httpError,
+          reason:
+              'Caught an error while sending an HTTP POST request to update the resource',
+          cause: e);
+    }
+    if (response.isNotSuccessful) {
+      throw ResponseException(
+          code: ResponseStatusCode.httpNotSuccessfulResponse,
+          reason:
+              'Failed to upload the resource because the HTTP response status code is: ${response.statusCode}');
+    }
+    final String responseData;
+    try {
+      responseData = await response.stream.bytesToString();
+    } on Exception catch (e) {
+      throw ResponseException(
+          code: ResponseStatusCode.invalidResponse,
+          reason: 'Failed to get the response body as a string',
+          cause: e);
+    }
+    return Response.value(
+        StorageUploadResult(uri, response.headers, responseData));
   }
 
-  Future<Response<String>> _getSignedPutUrl(ContentType contentType, int size,
+  Future<Response<void>> _deleteResource(StorageResourceType type,
       {String? keyStr, Int64? keyNum}) async {
-    final n = await _turmsClient.driver.send(QuerySignedPutUrlRequest(
-        contentType: contentType,
-        contentLength: Int64(size),
-        keyStr: keyStr,
-        keyNum: keyNum));
-    return n.toResponse((data) => data.url);
-  }
-
-  Future<Response<void>> _deleteResource(ContentType contentType,
-      {String? keyStr, Int64? keyNum}) async {
-    final n = await _turmsClient.driver.send(DeleteResourceRequest(
-        contentType: contentType, keyStr: keyStr, keyNum: keyNum));
+    final n = await _turmsClient.driver.send(
+        DeleteResourceRequest(type: type, keyStr: keyStr, keyNum: keyNum));
     return n.toNullResponse();
   }
 
-  Future<Response<Uint8List>> _getBytesFromGetUrl(String url) async {
-    final request = await _httpClient.getUrl(Uri.parse(url));
-    final response = await request.close();
-    if (response.statusCode == 200) {
-      final bytes =
-      await response.reduce((pre, element) => pre..addAll(element));
-      return Response.value(Uint8List.fromList(bytes));
-    } else {
-      throw ResponseException.fromCode(ResponseStatusCode.invalidResponse);
+  Future<Response<StorageResource>> _queryResource(String url) async {
+    final Uri uri;
+    try {
+      uri = Uri.parse(url);
+    } on Exception catch (e) {
+      throw ResponseException(
+          code: ResponseStatusCode.illegalArgument,
+          reason: 'The URL is illegal: $url',
+          cause: e);
+    }
+    final http.Response response;
+    try {
+      response = await _httpClient.get(uri);
+    } on Exception catch (e) {
+      throw ResponseException(
+          code: ResponseStatusCode.httpError,
+          reason:
+              'Caught an error while sending an HTTP GET request to retrieve the resource',
+          cause: e);
+    }
+    if (response.isNotSuccessful) {
+      throw ResponseException(
+          code: ResponseStatusCode.httpNotSuccessfulResponse,
+          reason:
+              'Failed to retrieve the resource because the HTTP response status code is: ${response.statusCode}');
+    }
+    return Response.value(
+        StorageResource(uri, response.headers, response.bodyBytes));
+  }
+
+  Future<Response<Map<String, String>>> _queryResourceUploadInfo(
+      StorageResourceType type,
+      {String? keyStr,
+      Int64? keyNum}) async {
+    final n = await _turmsClient.driver.send(QueryResourceUploadInfoRequest(
+        type: type, keyStr: keyStr, keyNum: keyNum));
+    return n.toResponse((data) => data.stringsWithVersion.strings.toMap());
+  }
+
+  Future<Response<Map<String, String>>> _queryResourceDownloadInfo(
+      StorageResourceType type,
+      {String? keyStr,
+      Int64? keyNum}) async {
+    final n = await _turmsClient.driver.send(QueryResourceDownloadInfoRequest(
+        type: type, keyStr: keyStr, keyNum: keyNum));
+    return n.toResponse((data) => data.stringsWithVersion.strings.toMap());
+  }
+
+  String _getBucketName(StorageResourceType resourceType) =>
+      _resourceTypeToBucketName[resourceType]!;
+
+  MediaType _parseMediaType(String mediaType) {
+    try {
+      return MediaType.parse(mediaType);
+    } on Exception catch (e) {
+      throw ResponseException(
+          code: ResponseStatusCode.illegalArgument,
+          reason: 'The media type is illegal',
+          cause: e);
     }
   }
 
-  Future<Response<String>> _upload(String url, Uint8List bytes) async {
-    final request = await _httpClient.putUrl(Uri.parse(url));
-    request.add(bytes);
-    final response = await request.close();
-    if (response.statusCode == 200) {
-      final data = await response
-          .transform(utf8.decoder)
-          .reduce((previous, element) => previous + element);
-      return Response.value(data);
-    } else {
-      throw ResponseException.fromCode(ResponseStatusCode.invalidResponse);
+  String _getAndRemoveResourceUrl(Map<String, String> data, String urlKeyName) {
+    final url = data.remove(urlKeyName);
+    if (url == null) {
+      throw ResponseException(
+          code: ResponseStatusCode.invalidResponse,
+          reason:
+              'Cannot get the resource URL because the key "$urlKeyName" doesn\'t exist');
     }
+    return url;
   }
-
-  String _getBucketName(ContentType contentType) =>
-      contentType.name.toLowerCase().replaceAll('_', '-');
 }

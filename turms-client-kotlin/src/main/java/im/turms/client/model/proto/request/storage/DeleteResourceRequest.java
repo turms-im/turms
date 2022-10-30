@@ -32,46 +32,46 @@ public  final class DeleteResourceRequest extends
     keyStr_ = "";
   }
   private int bitField0_;
-  public static final int CONTENT_TYPE_FIELD_NUMBER = 1;
-  private int contentType_;
+  public static final int TYPE_FIELD_NUMBER = 1;
+  private int type_;
   /**
-   * <code>.im.turms.proto.ContentType content_type = 1;</code>
-   * @return The enum numeric value on the wire for contentType.
+   * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+   * @return The enum numeric value on the wire for type.
    */
   @java.lang.Override
-  public int getContentTypeValue() {
-    return contentType_;
+  public int getTypeValue() {
+    return type_;
   }
   /**
-   * <code>.im.turms.proto.ContentType content_type = 1;</code>
-   * @return The contentType.
+   * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+   * @return The type.
    */
   @java.lang.Override
-  public im.turms.client.model.proto.constant.ContentType getContentType() {
-    im.turms.client.model.proto.constant.ContentType result = im.turms.client.model.proto.constant.ContentType.forNumber(contentType_);
-    return result == null ? im.turms.client.model.proto.constant.ContentType.UNRECOGNIZED : result;
+  public im.turms.client.model.proto.constant.StorageResourceType getType() {
+    im.turms.client.model.proto.constant.StorageResourceType result = im.turms.client.model.proto.constant.StorageResourceType.forNumber(type_);
+    return result == null ? im.turms.client.model.proto.constant.StorageResourceType.UNRECOGNIZED : result;
   }
   /**
-   * <code>.im.turms.proto.ContentType content_type = 1;</code>
-   * @param value The enum numeric value on the wire for contentType to set.
+   * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+   * @param value The enum numeric value on the wire for type to set.
    */
-  private void setContentTypeValue(int value) {
-      contentType_ = value;
+  private void setTypeValue(int value) {
+      type_ = value;
   }
   /**
-   * <code>.im.turms.proto.ContentType content_type = 1;</code>
-   * @param value The contentType to set.
+   * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+   * @param value The type to set.
    */
-  private void setContentType(im.turms.client.model.proto.constant.ContentType value) {
-    contentType_ = value.getNumber();
+  private void setType(im.turms.client.model.proto.constant.StorageResourceType value) {
+    type_ = value.getNumber();
 
   }
   /**
-   * <code>.im.turms.proto.ContentType content_type = 1;</code>
+   * <code>.im.turms.proto.StorageResourceType type = 1;</code>
    */
-  private void clearContentType() {
+  private void clearType() {
 
-    contentType_ = 0;
+    type_ = 0;
   }
 
   public static final int KEY_STR_FIELD_NUMBER = 2;
@@ -259,48 +259,48 @@ public  final class DeleteResourceRequest extends
 
 
     /**
-     * <code>.im.turms.proto.ContentType content_type = 1;</code>
-     * @return The enum numeric value on the wire for contentType.
+     * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+     * @return The enum numeric value on the wire for type.
      */
     @java.lang.Override
-    public int getContentTypeValue() {
-      return instance.getContentTypeValue();
+    public int getTypeValue() {
+      return instance.getTypeValue();
     }
     /**
-     * <code>.im.turms.proto.ContentType content_type = 1;</code>
-     * @param value The contentType to set.
+     * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+     * @param value The type to set.
      * @return This builder for chaining.
      */
-    public Builder setContentTypeValue(int value) {
+    public Builder setTypeValue(int value) {
       copyOnWrite();
-      instance.setContentTypeValue(value);
+      instance.setTypeValue(value);
       return this;
     }
     /**
-     * <code>.im.turms.proto.ContentType content_type = 1;</code>
-     * @return The contentType.
+     * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+     * @return The type.
      */
     @java.lang.Override
-    public im.turms.client.model.proto.constant.ContentType getContentType() {
-      return instance.getContentType();
+    public im.turms.client.model.proto.constant.StorageResourceType getType() {
+      return instance.getType();
     }
     /**
-     * <code>.im.turms.proto.ContentType content_type = 1;</code>
-     * @param value The enum numeric value on the wire for contentType to set.
+     * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+     * @param value The enum numeric value on the wire for type to set.
      * @return This builder for chaining.
      */
-    public Builder setContentType(im.turms.client.model.proto.constant.ContentType value) {
+    public Builder setType(im.turms.client.model.proto.constant.StorageResourceType value) {
       copyOnWrite();
-      instance.setContentType(value);
+      instance.setType(value);
       return this;
     }
     /**
-     * <code>.im.turms.proto.ContentType content_type = 1;</code>
+     * <code>.im.turms.proto.StorageResourceType type = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearContentType() {
+    public Builder clearType() {
       copyOnWrite();
-      instance.clearContentType();
+      instance.clearType();
       return this;
     }
 
@@ -414,7 +414,7 @@ public  final class DeleteResourceRequest extends
       case BUILD_MESSAGE_INFO: {
           java.lang.Object[] objects = new java.lang.Object[] {
             "bitField0_",
-            "contentType_",
+            "type_",
             "keyStr_",
             "keyNum_",
           };

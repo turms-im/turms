@@ -25,15 +25,15 @@ public interface DeleteResourceRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.im.turms.proto.ContentType content_type = 1;</code>
-   * @return The enum numeric value on the wire for contentType.
+   * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+   * @return The enum numeric value on the wire for type.
    */
-  int getContentTypeValue();
+  int getTypeValue();
   /**
-   * <code>.im.turms.proto.ContentType content_type = 1;</code>
-   * @return The contentType.
+   * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+   * @return The type.
    */
-  im.turms.server.common.access.client.dto.constant.ContentType getContentType();
+  im.turms.server.common.access.client.dto.constant.StorageResourceType getType();
 
   /**
    * <code>optional string key_str = 2;</code>

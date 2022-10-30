@@ -946,34 +946,34 @@ public interface TurmsRequestOrBuilder extends
   im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOrBuilder getDeleteResourceRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
-   * @return Whether the querySignedGetUrlRequest field is set.
+   * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
+   * @return Whether the queryResourceDownloadInfoRequest field is set.
    */
-  boolean hasQuerySignedGetUrlRequest();
+  boolean hasQueryResourceDownloadInfoRequest();
   /**
-   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
-   * @return The querySignedGetUrlRequest.
+   * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
+   * @return The queryResourceDownloadInfoRequest.
    */
-  im.turms.server.common.access.client.dto.request.storage.QuerySignedGetUrlRequest getQuerySignedGetUrlRequest();
+  im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest getQueryResourceDownloadInfoRequest();
   /**
-   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
+   * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
    */
-  im.turms.server.common.access.client.dto.request.storage.QuerySignedGetUrlRequestOrBuilder getQuerySignedGetUrlRequestOrBuilder();
+  im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOrBuilder getQueryResourceDownloadInfoRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
-   * @return Whether the querySignedPutUrlRequest field is set.
+   * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
+   * @return Whether the queryResourceUploadInfoRequest field is set.
    */
-  boolean hasQuerySignedPutUrlRequest();
+  boolean hasQueryResourceUploadInfoRequest();
   /**
-   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
-   * @return The querySignedPutUrlRequest.
+   * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
+   * @return The queryResourceUploadInfoRequest.
    */
-  im.turms.server.common.access.client.dto.request.storage.QuerySignedPutUrlRequest getQuerySignedPutUrlRequest();
+  im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest getQueryResourceUploadInfoRequest();
   /**
-   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
+   * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
    */
-  im.turms.server.common.access.client.dto.request.storage.QuerySignedPutUrlRequestOrBuilder getQuerySignedPutUrlRequestOrBuilder();
+  im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOrBuilder getQueryResourceUploadInfoRequestOrBuilder();
 
   public im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase getKindCase();
 }

@@ -33,8 +33,8 @@ import { CreateMessageRequest } from "./message/create_message_request";
 import { QueryMessagesRequest } from "./message/query_messages_request";
 import { UpdateMessageRequest } from "./message/update_message_request";
 import { DeleteResourceRequest } from "./storage/delete_resource_request";
-import { QuerySignedGetUrlRequest } from "./storage/query_signed_get_url_request";
-import { QuerySignedPutUrlRequest } from "./storage/query_signed_put_url_request";
+import { QueryResourceDownloadInfoRequest } from "./storage/query_resource_download_info_request";
+import { QueryResourceUploadInfoRequest } from "./storage/query_resource_upload_info_request";
 import { CreateSessionRequest } from "./user/create_session_request";
 import { DeleteSessionRequest } from "./user/delete_session_request";
 import { QueryNearbyUsersRequest } from "./user/query_nearby_users_request";
@@ -147,8 +147,8 @@ export interface TurmsRequest {
     | undefined;
   /** Storage */
   deleteResourceRequest?: DeleteResourceRequest | undefined;
-  querySignedGetUrlRequest?: QuerySignedGetUrlRequest | undefined;
-  querySignedPutUrlRequest?: QuerySignedPutUrlRequest | undefined;
+  queryResourceDownloadInfoRequest?: QueryResourceDownloadInfoRequest | undefined;
+  queryResourceUploadInfoRequest?: QueryResourceUploadInfoRequest | undefined;
 }
 
 function createBaseTurmsRequest(): TurmsRequest {
@@ -206,8 +206,8 @@ function createBaseTurmsRequest(): TurmsRequest {
     queryGroupJoinQuestionsRequest: undefined,
     updateGroupJoinQuestionRequest: undefined,
     deleteResourceRequest: undefined,
-    querySignedGetUrlRequest: undefined,
-    querySignedPutUrlRequest: undefined,
+    queryResourceDownloadInfoRequest: undefined,
+    queryResourceUploadInfoRequest: undefined,
   };
 }
 
@@ -385,11 +385,13 @@ export const TurmsRequest = {
     if (message.deleteResourceRequest !== undefined) {
       DeleteResourceRequest.encode(message.deleteResourceRequest, writer.uint32(8002).fork()).ldelim();
     }
-    if (message.querySignedGetUrlRequest !== undefined) {
-      QuerySignedGetUrlRequest.encode(message.querySignedGetUrlRequest, writer.uint32(8010).fork()).ldelim();
+    if (message.queryResourceDownloadInfoRequest !== undefined) {
+      QueryResourceDownloadInfoRequest.encode(message.queryResourceDownloadInfoRequest, writer.uint32(8010).fork())
+        .ldelim();
     }
-    if (message.querySignedPutUrlRequest !== undefined) {
-      QuerySignedPutUrlRequest.encode(message.querySignedPutUrlRequest, writer.uint32(8018).fork()).ldelim();
+    if (message.queryResourceUploadInfoRequest !== undefined) {
+      QueryResourceUploadInfoRequest.encode(message.queryResourceUploadInfoRequest, writer.uint32(8018).fork())
+        .ldelim();
     }
     return writer;
   },
@@ -564,10 +566,10 @@ export const TurmsRequest = {
           message.deleteResourceRequest = DeleteResourceRequest.decode(reader, reader.uint32());
           break;
         case 1001:
-          message.querySignedGetUrlRequest = QuerySignedGetUrlRequest.decode(reader, reader.uint32());
+          message.queryResourceDownloadInfoRequest = QueryResourceDownloadInfoRequest.decode(reader, reader.uint32());
           break;
         case 1002:
-          message.querySignedPutUrlRequest = QuerySignedPutUrlRequest.decode(reader, reader.uint32());
+          message.queryResourceUploadInfoRequest = QueryResourceUploadInfoRequest.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);

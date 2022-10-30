@@ -2,158 +2,198 @@ import Foundation
 import PromiseKit
 
 public class StorageService {
+    private static let DEFAULT_URL_KEY_NAME = "url"
+    private static let RESOURCE_TYPE_TO_BUCKET_NAME: [StorageResourceType: String] = Dictionary(uniqueKeysWithValues: StorageResourceType
+        .allCases.map { ($0, "\($0)".camelCaseToSnakeCase) })
     private weak var turmsClient: TurmsClient!
-    var serverUrl: String!
+    var serverUrl: String
 
     init(_ turmsClient: TurmsClient, storageServerUrl: String? = nil) {
         self.turmsClient = turmsClient
         serverUrl = storageServerUrl ?? "http://localhost:9000"
     }
 
-    // Profile picture
+    // User profile picture
 
-    public func queryProfilePictureUrlForAccess(_ userId: Int64) -> Promise<Response<String>> {
-        do {
-            let name = try StorageService.getBucketName(.profile)
-            let url = "\(serverUrl!)/\(name)/\(userId)"
-            return Promise.value(Response.value(url))
-        } catch {
-            return Promise(error: error)
+    public func uploadUserProfilePicture(mediaType: String, data: Data, urlKeyName: String? = nil) -> Promise<Response<StorageUploadResult>> {
+        if data.isEmpty {
+            return Promise(error: ResponseError(
+                code: .illegalArgument,
+                reason: "The data of user profile picture must not be empty"
+            ))
         }
-    }
-
-    public func queryProfilePicture(_ userId: Int64) -> Promise<Response<Data>> {
-        return queryProfilePictureUrlForAccess(userId)
-            .then {
-                self.getBytesFromGetUrl($0.data)
+        guard let userId = turmsClient.userService.userInfo?.userId else {
+            return Promise(error: ResponseError(code: .uploadUserProfilePictureBeforeLogin))
+        }
+        return queryUserProfilePictureUploadInfo()
+            .then { uploadInfo -> Promise<Response<StorageUploadResult>> in
+                var infoData = uploadInfo.data
+                let url = try self.getAndRemoveResourceUrl(&infoData, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
+                return self.upload(url: url, formData: infoData, resourceName: "\(userId)", mediaType: mediaType, data: data)
             }
     }
 
-    public func queryProfilePictureUrlForUpload(_ pictureSize: Int) -> Promise<Response<String>> {
+    public func deleteUserProfilePicture() -> Promise<Response<Void>> {
+        return deleteResource(type: .userProfilePicture)
+    }
+
+    public func queryUserProfilePicture(userId: Int64, urlKeyName: String? = nil) -> Promise<Response<StorageResource>> {
+        return queryUserProfilePictureDownloadInfo(userId: userId, urlKeyName: urlKeyName)
+            .then { downloadInfo -> Promise<Response<StorageResource>> in
+                let url = try self.getResourceUrl(downloadInfo.data, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
+                return self.getResource(url)
+            }
+    }
+
+    public func queryUserProfilePictureUploadInfo() -> Promise<Response<[String: String]>> {
         if let userId = turmsClient.userService.userInfo?.userId {
-            return getSignedPutUrl(contentType: .profile, size: Int64(pictureSize), keyNum: userId)
+            return getResourceUploadInfo(type: .userProfilePicture, keyNum: userId)
         } else {
-            return Promise(error: ResponseError(ResponseStatusCode.queryProfileUrlToUpdateBeforeLogin))
+            return Promise(error: ResponseError(code: .queryUserProfilePictureBeforeLogin))
         }
     }
 
-    public func uploadProfilePicture(_ data: Data) -> Promise<Response<String>> {
-        return queryProfilePictureUrlForUpload(data.count)
-            .then {
-                self.upload(url: $0.data, data: data)
-            }
-    }
-
-    public func deleteProfile() -> Promise<Response<Void>> {
-        return deleteResource(contentType: .profile)
+    public func queryUserProfilePictureDownloadInfo(userId: Int64, fetch: Bool = false, urlKeyName: String? = nil) -> Promise<Response<[String: String]>> {
+        if fetch {
+            return queryResourceDownloadInfo(type: .userProfilePicture, keyNum: userId)
+        }
+        let url = "\(serverUrl)/\(getBucketName(.userProfilePicture))/\(userId)"
+        return Promise.value(Response.value([
+            urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME: url,
+        ]))
     }
 
     // Group profile picture
 
-    public func queryGroupProfilePictureUrlForAccess(_ groupId: Int64) -> Promise<Response<String>> {
-        do {
-            let name = try StorageService.getBucketName(.groupProfile)
-            let url = "\(serverUrl!)/\(name)/\(groupId)"
-            return Promise.value(Response.value(url))
-        } catch {
-            return Promise(error: error)
+    public func uploadGroupProfilePicture(groupId: Int64, mediaType: String, data: Data, urlKeyName: String? = nil) -> Promise<Response<StorageUploadResult>> {
+        if data.isEmpty {
+            return Promise(error: ResponseError(
+                code: .illegalArgument,
+                reason: "The data of group profile picture must not be empty"
+            ))
         }
-    }
-
-    public func queryGroupProfilePicture(_ groupId: Int64) -> Promise<Response<Data>> {
-        return queryGroupProfilePictureUrlForAccess(groupId)
-            .then {
-                self.getBytesFromGetUrl($0.data)
+        return queryGroupProfilePictureUploadInfo(groupId: groupId)
+            .then { uploadInfo -> Promise<Response<StorageUploadResult>> in
+                var infoData = uploadInfo.data
+                let url = try self.getAndRemoveResourceUrl(&infoData, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
+                return self.upload(url: url, formData: infoData, resourceName: "\(groupId)", mediaType: mediaType, data: data)
             }
     }
 
-    public func queryGroupProfilePictureUrlForUpload(pictureSize: Int, groupId: Int64) -> Promise<Response<String>> {
-        return getSignedPutUrl(contentType: .groupProfile, size: Int64(pictureSize), keyNum: groupId)
+    public func deleteGroupProfilePicture(_ groupId: Int64) -> Promise<Response<Void>> {
+        return deleteResource(type: .groupProfilePicture, keyNum: groupId)
     }
 
-    public func uploadGroupProfilePicture(data: Data, groupId: Int64) -> Promise<Response<String>> {
-        return queryGroupProfilePictureUrlForUpload(pictureSize: data.count, groupId: groupId)
-            .then {
-                self.upload(url: $0.data, data: data)
+    public func queryGroupProfilePicture(groupId: Int64, urlKeyName: String? = nil) -> Promise<Response<StorageResource>> {
+        return queryGroupProfilePictureDownloadInfo(groupId: groupId, urlKeyName: urlKeyName)
+            .then { downloadInfo -> Promise<Response<StorageResource>> in
+                let url = try self.getResourceUrl(downloadInfo.data, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
+                return self.getResource(url)
             }
     }
 
-    public func deleteGroupProfile(_ groupId: Int64) -> Promise<Response<Void>> {
-        return deleteResource(contentType: .groupProfile, keyNum: groupId)
+    public func queryGroupProfilePictureUploadInfo(groupId: Int64) -> Promise<Response<[String: String]>> {
+        return getResourceUploadInfo(type: .groupProfilePicture, keyNum: groupId)
+    }
+
+    public func queryGroupProfilePictureDownloadInfo(groupId: Int64, fetch: Bool = false, urlKeyName: String? = nil) -> Promise<Response<[String: String]>> {
+        if fetch {
+            return queryResourceDownloadInfo(type: .groupProfilePicture, keyNum: groupId)
+        }
+        let url = "\(serverUrl)/\(getBucketName(.groupProfilePicture))/\(groupId)"
+        return Promise.value(Response.value([
+            urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME: url,
+        ]))
     }
 
     // Message attachment
 
-    public func queryAttachmentUrlForAccess(messageId: Int64, name: String? = nil) -> Promise<Response<String>> {
-        return getSignedGetUrl(contentType: .attachment, keyStr: name, keyNum: messageId)
-    }
-
-    public func queryAttachment(messageId: Int64, name: String? = nil) -> Promise<Response<Data>> {
-        return queryAttachmentUrlForAccess(messageId: messageId, name: name)
-            .then {
-                self.getBytesFromGetUrl($0.data)
+    public func uploadMessageAttachment(messageId: Int64, mediaType: String, data: Data, name: String? = nil, urlKeyName: String? = nil) -> Promise<Response<StorageUploadResult>> {
+        if data.isEmpty {
+            return Promise(error: ResponseError(
+                code: .illegalArgument,
+                reason: "The data of message attachment must not be empty"
+            ))
+        }
+        return queryMessageAttachmentUploadInfo(messageId: messageId)
+            .then { uploadInfo -> Promise<Response<StorageUploadResult>> in
+                var infoData = uploadInfo.data
+                let url = try self.getAndRemoveResourceUrl(&infoData, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
+                let resourceName = name == nil ? "\(messageId)" : "\(messageId)/\(name!)"
+                return self.upload(url: url, formData: infoData, resourceName: resourceName, mediaType: mediaType, data: data)
             }
     }
 
-    public func queryAttachmentUrlForUpload(messageId: Int64, attachmentSize: Int64) -> Promise<Response<String>> {
-        return getSignedPutUrl(contentType: .attachment, size: attachmentSize, keyNum: messageId)
+    public func queryMessageAttachment(messageId: Int64, name: String? = nil, urlKeyName: String? = nil) -> Promise<Response<StorageResource>> {
+        return queryMessageAttachmentDownloadInfo(messageId: messageId, name: name)
+            .then { downloadInfo -> Promise<Response<StorageResource>> in
+                let url = try self.getResourceUrl(downloadInfo.data, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
+                return self.getResource(url)
+            }
     }
 
-    public func uploadAttachment(messageId: Int64, data: Data) -> Promise<Response<String>> {
-        return queryAttachmentUrlForUpload(messageId: messageId, attachmentSize: Int64(data.count))
-            .then {
-                self.upload(url: $0.data, data: data)
-            }
+    public func queryMessageAttachmentUploadInfo(messageId: Int64, name: String? = nil) -> Promise<Response<[String: String]>> {
+        return getResourceUploadInfo(type: .messageAttachment, keyStr: name, keyNum: messageId)
+    }
+
+    public func queryMessageAttachmentDownloadInfo(messageId: Int64, name: String? = nil) -> Promise<Response<[String: String]>> {
+        return queryResourceDownloadInfo(type: .messageAttachment, keyStr: name, keyNum: messageId)
     }
 
     // Base
 
-    private func getSignedGetUrl(contentType: ContentType, keyStr: String? = nil, keyNum: Int64? = nil) -> Promise<Response<String>> {
-        return turmsClient.driver
-            .send {
-                $0.querySignedGetURLRequest = .with {
-                    $0.contentType = contentType
-                    if let v = keyStr {
-                        $0.keyStr = v
-                    }
-                    if let v = keyNum {
-                        $0.keyNum = v
-                    }
-                }
+    private func upload(url: String, formData: [String: String], resourceName: String, mediaType: String, data: Data) -> Promise<Response<StorageUploadResult>> {
+        return Promise { seal in
+            if data.isEmpty {
+                seal.reject(ResponseError(code: .illegalArgument, reason: "The data of resource must not be empty"))
+                return
             }
-            .map {
-                try $0.toResponse {
-                    $0.url
-                }
+            let httpUrl = URL(string: url)
+            guard let httpUrl = httpUrl else {
+                seal.reject(ResponseError(code: .illegalArgument, reason: "The URL is illegal: \(url)"))
+                return
             }
+            let request = MultipartFormDataRequest(url: httpUrl)
+            formData.forEach { key, value in
+                request.addTextField(named: key, value: value)
+            }
+            request.addTextField(named: "key", value: resourceName)
+            request.addTextField(named: "Content-Type", value: mediaType)
+            request.addDataField(fieldName: "file", fileName: resourceName, data: data, mediaType: mediaType)
+
+            URLSession.shared.dataTask(with: request, completionHandler: { responseData, response, error in
+                if let error = error {
+                    seal.reject(ResponseError(
+                        code: .httpError,
+                        reason: "Caught an error while sending an HTTP POST request to update the resource",
+                        cause: error
+                    ))
+                } else if let response = response as? HTTPURLResponse {
+                    if response.isSuccessful {
+                        let text = responseData == nil ? "" : String(decoding: responseData!, as: UTF8.self)
+                        let headers = Dictionary(uniqueKeysWithValues: response.allHeaderFields.map { (String(describing: $0.key), String(describing: $0.value)) })
+                        seal.fulfill(Response.value(StorageUploadResult(uri: httpUrl, metadata: headers, data: text)))
+                    } else {
+                        seal.reject(ResponseError(
+                            code: .httpNotSuccessfulResponse,
+                            reason: "Failed to upload the resource because the HTTP response status code is: \(response.statusCode)"
+                        ))
+                    }
+                } else {
+                    seal.reject(ResponseError(
+                        code: .invalidResponse,
+                        reason: "Expected the response to be a HTTP response, but got \(response?.className ?? "nil")"
+                    ))
+                }
+            }).resume()
+        }
     }
 
-    private func getSignedPutUrl(contentType: ContentType, size: Int64, keyStr: String? = nil, keyNum: Int64? = nil) -> Promise<Response<String>> {
-        return turmsClient.driver
-            .send {
-                $0.querySignedPutURLRequest = .with {
-                    $0.contentType = contentType
-                    $0.contentLength = size
-                    if let v = keyStr {
-                        $0.keyStr = v
-                    }
-                    if let v = keyNum {
-                        $0.keyNum = v
-                    }
-                }
-            }
-            .map {
-                try $0.toResponse {
-                    $0.url
-                }
-            }
-    }
-
-    private func deleteResource(contentType: ContentType, keyStr: String? = nil, keyNum: Int64? = nil) -> Promise<Response<Void>> {
+    private func deleteResource(type: StorageResourceType, keyStr: String? = nil, keyNum: Int64? = nil) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.deleteResourceRequest = .with {
-                    $0.contentType = contentType
+                    $0.type = type
                     if let v = keyStr {
                         $0.keyStr = v
                     }
@@ -167,63 +207,116 @@ public class StorageService {
             }
     }
 
-    private func getBytesFromGetUrl(_ url: String) -> Promise<Response<Data>> {
+    private func getResource(_ url: String) -> Promise<Response<StorageResource>> {
         return Promise { seal in
-            let reqUrl = URL(string: url)!
+            let reqUrl = URL(string: url)
+            guard let reqUrl = reqUrl else {
+                seal.reject(ResponseError(
+                    code: .illegalArgument,
+                    reason: "The URL is illegal: \(url)"
+                ))
+                return
+            }
             var request = URLRequest(url: reqUrl)
             request.httpMethod = "GET"
-            URLSession.shared.dataTask(with: request) { data, response, error in
+            URLSession.shared.dataTask(with: request) { responseData, response, error in
                 if let error = error {
-                    seal.reject(error)
+                    seal.reject(ResponseError(
+                        code: .httpError,
+                        reason: "Caught an error while sending an HTTP GET request to retrieve the resource",
+                        cause: error
+                    ))
                 } else if let response = response as? HTTPURLResponse {
-                    if response.statusCode == 200 {
-                        seal.fulfill(Response.value(data!))
+                    if response.isSuccessful {
+                        let headers = Dictionary(uniqueKeysWithValues: response.allHeaderFields.map { (String(describing: $0.key), String(describing: $0.value)) })
+                        if let responseData = responseData {
+                            seal.fulfill(Response.value(StorageResource(uri: reqUrl, metadata: headers, data: responseData)))
+                        } else {
+                            seal.reject(ResponseError(
+                                code: .invalidResponse,
+                                reason: "Failed to retrieve the resource because the HTTP response body is empty"
+                            ))
+                        }
                     } else {
-                        seal.reject(ResponseError(.invalidResponse))
+                        seal.reject(ResponseError(
+                            code: .httpNotSuccessfulResponse,
+                            reason: "Failed to retrieve the resource because the HTTP response status code is: \(response.statusCode)"
+                        ))
                     }
                 } else {
-                    seal.reject(ResponseError(.invalidResponse))
+                    seal.reject(ResponseError(
+                        code: .invalidResponse,
+                        reason: "Expected the response to be a HTTP response, but got \(response?.className ?? "nil")"
+                    ))
                 }
             }
             .resume()
         }
     }
 
-    private func upload(url: String, data: Data) -> Promise<Response<String>> {
-        return Promise { seal in
-            let reqUrl = URL(string: url)!
-            var request = URLRequest(url: reqUrl)
-            request.httpMethod = "PUT"
-            request.httpBody = data
-            URLSession.shared.dataTask(with: request) { _, response, error in
-                if let error = error {
-                    seal.reject(error)
-                } else if let response = response as? HTTPURLResponse {
-                    if response.statusCode == 200 {
-                        seal.fulfill(Response.value(url))
-                    } else {
-                        seal.reject(ResponseError(.invalidResponse))
+    private func getResourceUploadInfo(type: StorageResourceType, keyStr: String? = nil, keyNum: Int64? = nil) -> Promise<Response<[String: String]>> {
+        return turmsClient.driver
+            .send {
+                $0.queryResourceUploadInfoRequest = .with {
+                    $0.type = type
+                    if let v = keyStr {
+                        $0.keyStr = v
                     }
-                } else {
-                    seal.reject(ResponseError(.invalidResponse))
+                    if let v = keyNum {
+                        $0.keyNum = v
+                    }
                 }
             }
-            .resume()
-        }
+            .map {
+                try $0.toResponse {
+                    try $0.stringsWithVersion.strings.toMap()
+                }
+            }
     }
 
-    private static func getBucketName(_ contentType: ContentType) throws -> String {
-        // Use hardcode because the methods of ContentType._protobuf_nameMap cannot be accessed
-        switch contentType {
-        case .profile:
-            return "profile"
-        case .groupProfile:
-            return "group-profile"
-        case .attachment:
-            return "attachment"
-        default:
-            let reason = "Unknown content type \(contentType)"
-            throw ResponseError(ResponseStatusCode.illegalArgument, reason)
+    private func queryResourceDownloadInfo(type: StorageResourceType, keyStr: String? = nil, keyNum: Int64? = nil) -> Promise<Response<[String: String]>> {
+        return turmsClient.driver
+            .send {
+                $0.queryResourceDownloadInfoRequest = .with {
+                    $0.type = type
+                    if let v = keyStr {
+                        $0.keyStr = v
+                    }
+                    if let v = keyNum {
+                        $0.keyNum = v
+                    }
+                }
+            }
+            .map {
+                try $0.toResponse {
+                    try $0.stringsWithVersion.strings.toMap()
+                }
+            }
+    }
+
+    private func getBucketName(_ resourceType: StorageResourceType) -> String {
+        return StorageService.RESOURCE_TYPE_TO_BUCKET_NAME[resourceType]!
+    }
+
+    private func getResourceUrl(_ data: [String: String], _ urlKeyName: String) throws -> String {
+        let url = data[urlKeyName]
+        if let uri = url {
+            return uri
         }
+        throw ResponseError(
+            code: ResponseStatusCode.invalidResponse,
+            reason: "Cannot get the resource URL because the key \"\(urlKeyName)\" doesn\'t exist"
+        )
+    }
+
+    private func getAndRemoveResourceUrl(_ data: inout [String: String], _ urlKeyName: String) throws -> String {
+        let url = data.removeValue(forKey: urlKeyName)
+        if let uri = url {
+            return uri
+        }
+        throw ResponseError(
+            code: ResponseStatusCode.invalidResponse,
+            reason: "Cannot get the resource URL because the key \"\(urlKeyName)\" doesn\'t exist"
+        )
     }
 }

@@ -113,7 +113,9 @@ export default class ConnectionService extends BaseService {
             if (websocket?.isConnected) {
                 return wsUrl === websocket.url
                     ? resolve()
-                    : reject(ResponseError.fromCode(ResponseStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
+                    : reject(ResponseError.from({
+                        code: ResponseStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED
+                    }));
             }
             this._resetStates();
             this._stateStore.websocket = WebSocketFactory.create(wsUrl, {
@@ -137,7 +139,9 @@ export default class ConnectionService extends BaseService {
             let connectTimeoutId;
             if (connectTimeout > 0) {
                 connectTimeoutId = setTimeout(() => {
-                    reject(ResponseError.fromCode(ResponseStatusCode.CONNECT_TIMEOUT));
+                    reject(ResponseError.from({
+                        code: ResponseStatusCode.CONNECT_TIMEOUT
+                    }));
                 }, connectTimeout);
             }
         });

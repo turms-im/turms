@@ -1,5 +1,5 @@
-id: im.turms.plugin.impl.MinioStorageServiceProvider
-class: im.turms.plugin.impl.MinioStorageServiceProvider
+id: im.turms.plugin.minio.MinioStoragePlugin
+class: im.turms.plugin.minio.MinioStoragePlugin
 version: 0.10.0
 provider: im.turms
 license: MIT

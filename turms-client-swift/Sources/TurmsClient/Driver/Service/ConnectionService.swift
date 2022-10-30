@@ -135,7 +135,7 @@ public class ConnectionService: BaseService {
     public func connect(host: String? = nil, port: UInt16? = nil, connectTimeout _: TimeInterval? = nil, useTls: Bool? = false, certificatePinning: CertificatePinning? = nil) -> Promise<Void> {
         return Promise { seal in
             if stateStore.isConnected {
-                seal.reject(ResponseError(.clientSessionAlreadyEstablished))
+                seal.reject(ResponseError(code: .clientSessionAlreadyEstablished))
                 return
             }
             resetStates()

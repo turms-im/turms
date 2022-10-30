@@ -18,16 +18,29 @@
 import ResponseStatusCode from '../model/response-status-code';
 import { TurmsNotification } from '../model/proto/notification/turms_notification';
 
+type ConstructorParams = {
+    requestId?: string,
+    code: number,
+    reason?: string,
+    cause?: Error
+};
 export default class ResponseError extends Error {
-    private readonly _requestId: string;
+    private readonly _requestId?: string;
     private readonly _code: number;
-    private readonly _reason: string;
+    private readonly _reason?: string;
+    private readonly _cause?: Error;
 
-    private constructor(requestId: string, code: number, reason: string) {
-        super(`${requestId}:${code}:${reason}`);
+    private constructor({
+        requestId,
+        code,
+        reason,
+        cause
+    }: ConstructorParams) {
+        super(`${requestId}:${code}:${reason}:${cause}`);
         this._requestId = requestId;
         this._code = code;
         this._reason = reason;
+        this._cause = cause;
     }
 
     static get isResponseError(): boolean {
@@ -47,23 +60,26 @@ export default class ResponseError extends Error {
     }
 
     override toString(): string {
-        return `${this._code}:${this._reason}`;
+        return `${this._requestId}:${this._code}:${this._reason}:${this._cause}`;
+    }
+
+    static from(param: ConstructorParams): ResponseError {
+        return new ResponseError(param);
     }
 
     static fromNotification(notification: TurmsNotification): ResponseError {
-        return new ResponseError(notification.requestId, notification.code, notification.reason);
-    }
-
-    static fromCode(code: number): ResponseError {
-        return new ResponseError(null, code, null);
-    }
-
-    static fromCodeAndReason(code: number, reason?: string): ResponseError {
-        return new ResponseError(null, code, reason);
+        return new ResponseError({
+            requestId: notification.requestId,
+            code: notification.code,
+            reason: notification.reason
+        });
     }
 
     static illegalParam(reason: string): never {
-        throw new ResponseError(null, ResponseStatusCode.ILLEGAL_ARGUMENT, reason);
+        throw new ResponseError({
+            code: ResponseStatusCode.ILLEGAL_ARGUMENT,
+            reason
+        });
     }
 
     static notFalsy(name: string, notEmpty = false): never {
@@ -72,7 +88,10 @@ export default class ResponseError extends Error {
     }
 
     static illegalParamPromise<T = never>(reason: string): Promise<T> {
-        const exception = new ResponseError(null, ResponseStatusCode.ILLEGAL_ARGUMENT, reason);
+        const exception = new ResponseError({
+            code: ResponseStatusCode.ILLEGAL_ARGUMENT,
+            reason: reason
+        });
         return Promise.reject(exception);
     }
 
@@ -80,4 +99,5 @@ export default class ResponseError extends Error {
         const emptyPlaceholder = notEmpty ? ' or empty' : '';
         return ResponseError.illegalParamPromise(`"${name}" must not be null${emptyPlaceholder} or an invalid param`);
     }
+
 }

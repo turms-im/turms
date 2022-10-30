@@ -18,7 +18,7 @@
 package im.turms.server.common.infra.property.env.service;
 
 import im.turms.server.common.infra.property.env.service.business.NotificationProperties;
-import im.turms.server.common.infra.property.env.service.business.StorageProperties;
+import im.turms.server.common.infra.property.env.service.business.storage.StorageProperties;
 import im.turms.server.common.infra.property.env.service.business.conversation.ConversationProperties;
 import im.turms.server.common.infra.property.env.service.business.group.GroupProperties;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;

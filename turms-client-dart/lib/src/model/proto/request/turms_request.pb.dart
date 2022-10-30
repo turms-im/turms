@@ -62,8 +62,8 @@ import 'group/enrollment/query_group_join_requests_request.pb.dart' as $48;
 import 'group/enrollment/query_group_join_questions_request.pb.dart' as $49;
 import 'group/enrollment/update_group_join_question_request.pb.dart' as $50;
 import 'storage/delete_resource_request.pb.dart' as $51;
-import 'storage/query_signed_get_url_request.pb.dart' as $52;
-import 'storage/query_signed_put_url_request.pb.dart' as $53;
+import 'storage/query_resource_download_info_request.pb.dart' as $52;
+import 'storage/query_resource_upload_info_request.pb.dart' as $53;
 
 enum TurmsRequest_Kind {
   createSessionRequest, 
@@ -118,8 +118,8 @@ enum TurmsRequest_Kind {
   queryGroupJoinQuestionsRequest, 
   updateGroupJoinQuestionRequest, 
   deleteResourceRequest, 
-  querySignedGetUrlRequest, 
-  querySignedPutUrlRequest, 
+  queryResourceDownloadInfoRequest, 
+  queryResourceUploadInfoRequest, 
   notSet
 }
 
@@ -177,8 +177,8 @@ class TurmsRequest extends $pb.GeneratedMessage {
     509 : TurmsRequest_Kind.queryGroupJoinQuestionsRequest,
     510 : TurmsRequest_Kind.updateGroupJoinQuestionRequest,
     1000 : TurmsRequest_Kind.deleteResourceRequest,
-    1001 : TurmsRequest_Kind.querySignedGetUrlRequest,
-    1002 : TurmsRequest_Kind.querySignedPutUrlRequest,
+    1001 : TurmsRequest_Kind.queryResourceDownloadInfoRequest,
+    1002 : TurmsRequest_Kind.queryResourceUploadInfoRequest,
     0 : TurmsRequest_Kind.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'TurmsRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
@@ -236,8 +236,8 @@ class TurmsRequest extends $pb.GeneratedMessage {
     ..aOM<$49.QueryGroupJoinQuestionsRequest>(509, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryGroupJoinQuestionsRequest', subBuilder: $49.QueryGroupJoinQuestionsRequest.create)
     ..aOM<$50.UpdateGroupJoinQuestionRequest>(510, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'updateGroupJoinQuestionRequest', subBuilder: $50.UpdateGroupJoinQuestionRequest.create)
     ..aOM<$51.DeleteResourceRequest>(1000, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deleteResourceRequest', subBuilder: $51.DeleteResourceRequest.create)
-    ..aOM<$52.QuerySignedGetUrlRequest>(1001, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'querySignedGetUrlRequest', subBuilder: $52.QuerySignedGetUrlRequest.create)
-    ..aOM<$53.QuerySignedPutUrlRequest>(1002, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'querySignedPutUrlRequest', subBuilder: $53.QuerySignedPutUrlRequest.create)
+    ..aOM<$52.QueryResourceDownloadInfoRequest>(1001, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryResourceDownloadInfoRequest', subBuilder: $52.QueryResourceDownloadInfoRequest.create)
+    ..aOM<$53.QueryResourceUploadInfoRequest>(1002, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'queryResourceUploadInfoRequest', subBuilder: $53.QueryResourceUploadInfoRequest.create)
     ..hasRequiredFields = false
   ;
 
@@ -296,8 +296,8 @@ class TurmsRequest extends $pb.GeneratedMessage {
     $49.QueryGroupJoinQuestionsRequest? queryGroupJoinQuestionsRequest,
     $50.UpdateGroupJoinQuestionRequest? updateGroupJoinQuestionRequest,
     $51.DeleteResourceRequest? deleteResourceRequest,
-    $52.QuerySignedGetUrlRequest? querySignedGetUrlRequest,
-    $53.QuerySignedPutUrlRequest? querySignedPutUrlRequest,
+    $52.QueryResourceDownloadInfoRequest? queryResourceDownloadInfoRequest,
+    $53.QueryResourceUploadInfoRequest? queryResourceUploadInfoRequest,
   }) {
     final _result = create();
     if (requestId != null) {
@@ -459,11 +459,11 @@ class TurmsRequest extends $pb.GeneratedMessage {
     if (deleteResourceRequest != null) {
       _result.deleteResourceRequest = deleteResourceRequest;
     }
-    if (querySignedGetUrlRequest != null) {
-      _result.querySignedGetUrlRequest = querySignedGetUrlRequest;
+    if (queryResourceDownloadInfoRequest != null) {
+      _result.queryResourceDownloadInfoRequest = queryResourceDownloadInfoRequest;
     }
-    if (querySignedPutUrlRequest != null) {
-      _result.querySignedPutUrlRequest = querySignedPutUrlRequest;
+    if (queryResourceUploadInfoRequest != null) {
+      _result.queryResourceUploadInfoRequest = queryResourceUploadInfoRequest;
     }
     return _result;
   }
@@ -1073,25 +1073,25 @@ class TurmsRequest extends $pb.GeneratedMessage {
   $51.DeleteResourceRequest ensureDeleteResourceRequest() => $_ensure(52);
 
   @$pb.TagNumber(1001)
-  $52.QuerySignedGetUrlRequest get querySignedGetUrlRequest => $_getN(53);
+  $52.QueryResourceDownloadInfoRequest get queryResourceDownloadInfoRequest => $_getN(53);
   @$pb.TagNumber(1001)
-  set querySignedGetUrlRequest($52.QuerySignedGetUrlRequest v) { setField(1001, v); }
+  set queryResourceDownloadInfoRequest($52.QueryResourceDownloadInfoRequest v) { setField(1001, v); }
   @$pb.TagNumber(1001)
-  $core.bool hasQuerySignedGetUrlRequest() => $_has(53);
+  $core.bool hasQueryResourceDownloadInfoRequest() => $_has(53);
   @$pb.TagNumber(1001)
-  void clearQuerySignedGetUrlRequest() => clearField(1001);
+  void clearQueryResourceDownloadInfoRequest() => clearField(1001);
   @$pb.TagNumber(1001)
-  $52.QuerySignedGetUrlRequest ensureQuerySignedGetUrlRequest() => $_ensure(53);
+  $52.QueryResourceDownloadInfoRequest ensureQueryResourceDownloadInfoRequest() => $_ensure(53);
 
   @$pb.TagNumber(1002)
-  $53.QuerySignedPutUrlRequest get querySignedPutUrlRequest => $_getN(54);
+  $53.QueryResourceUploadInfoRequest get queryResourceUploadInfoRequest => $_getN(54);
   @$pb.TagNumber(1002)
-  set querySignedPutUrlRequest($53.QuerySignedPutUrlRequest v) { setField(1002, v); }
+  set queryResourceUploadInfoRequest($53.QueryResourceUploadInfoRequest v) { setField(1002, v); }
   @$pb.TagNumber(1002)
-  $core.bool hasQuerySignedPutUrlRequest() => $_has(54);
+  $core.bool hasQueryResourceUploadInfoRequest() => $_has(54);
   @$pb.TagNumber(1002)
-  void clearQuerySignedPutUrlRequest() => clearField(1002);
+  void clearQueryResourceUploadInfoRequest() => clearField(1002);
   @$pb.TagNumber(1002)
-  $53.QuerySignedPutUrlRequest ensureQuerySignedPutUrlRequest() => $_ensure(54);
+  $53.QueryResourceUploadInfoRequest ensureQueryResourceUploadInfoRequest() => $_ensure(54);
 }
 

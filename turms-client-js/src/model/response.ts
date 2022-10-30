@@ -33,23 +33,27 @@ export default class Response<T> {
 
     static fromNotification<T>(notification: TurmsNotification, dataTransformer?: (data: TurmsNotification_Data) => T): Response<T> {
         if (notification.code == null) {
-            throw ResponseError.fromCodeAndReason(
-                ResponseStatusCode.INVALID_NOTIFICATION,
-                'Cannot parse a success response from a notification without code'
-            );
+            throw ResponseError.from({
+                code: ResponseStatusCode.INVALID_NOTIFICATION,
+                reason: 'Cannot parse a success response from a notification without code'
+            });
         }
         if (ResponseStatusCode.isErrorCode(notification.code)) {
-            throw ResponseError.fromCodeAndReason(
-                ResponseStatusCode.INVALID_NOTIFICATION,
-                'Cannot parse a success response from non-success notification');
+            throw ResponseError.from({
+                code: ResponseStatusCode.INVALID_NOTIFICATION,
+                reason: 'Cannot parse a success response from non-success notification'
+            });
         }
         const data = notification.data || {} as TurmsNotification_Data;
         let responseData;
         try {
             responseData = dataTransformer?.(data);
         } catch (e: any) {
-            throw ResponseError.fromCodeAndReason(ResponseStatusCode.INVALID_NOTIFICATION,
-                `Failed to transform notification data: ${notification.data}. Error: ${e?.message}`);
+            throw ResponseError.from({
+                code: ResponseStatusCode.INVALID_NOTIFICATION,
+                reason: `Failed to transform notification data: ${notification.data}`,
+                cause: e
+            });
         }
         return new Response(new Date(parseInt(notification.timestamp)),
             notification.requestId,

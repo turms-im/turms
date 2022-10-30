@@ -60,9 +60,9 @@ class DriverMessageService {
       int? burnAfter,
       Int64? preMessageId}) async {
     if (text == null && (records?.isEmpty ?? true)) {
-      throw ResponseException.fromCodeAndReason(
-          ResponseStatusCode.illegalArgument,
-          '"text" and "records" must not all be null');
+      throw ResponseException(
+          code: ResponseStatusCode.illegalArgument,
+          reason: '"text" and "records" must not all be null');
     }
     final n = await _turmsClient.driver.send(CreateMessageRequest(
         groupId: isGroupMessage ? targetId : null,

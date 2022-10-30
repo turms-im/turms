@@ -23,19 +23,17 @@ class ResponseException implements Exception {
   final Int64? requestId;
   final int code;
   final String? reason;
+  final Exception? cause;
 
-  ResponseException(this.requestId, this.code, this.reason);
-
-  ResponseException.fromCode(int code) : this(null, code, null);
-
-  ResponseException.fromCodeAndReason(int code, String? reason)
-      : this(null, code, reason);
+  ResponseException(
+      {this.requestId, required this.code, this.reason, this.cause});
 
   ResponseException.fromNotification(TurmsNotification notification)
       : this(
-            notification.hasRequestId() ? notification.requestId : null,
-            notification.code,
-            notification.hasReason() ? notification.reason : null);
+            requestId:
+                notification.hasRequestId() ? notification.requestId : null,
+            code: notification.code,
+            reason: notification.hasReason() ? notification.reason : null);
 
   @override
   int get hashCode => requestId.hashCode ^ code.hashCode ^ reason.hashCode;
@@ -47,8 +45,9 @@ class ResponseException implements Exception {
           runtimeType == other.runtimeType &&
           requestId == other.requestId &&
           code == other.code &&
-          reason == other.reason;
+          reason == other.reason &&
+          cause == other.cause;
 
   @override
-  String toString() => '$requestId:$code:$reason';
+  String toString() => '$requestId:$code:$reason:$cause';
 }

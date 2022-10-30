@@ -69,7 +69,9 @@ export default class HeartbeatService extends BaseService {
     send(): Promise<void> {
         return new Promise((resolve, reject): void => {
             if (!this._stateStore.isConnected || !this._stateStore.isSessionOpen) {
-                return reject(ResponseError.fromCode(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
+                return reject(ResponseError.from({
+                    code: ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED
+                }));
             }
             this._stateStore.websocket.send(HeartbeatService.HEARTBEAT_REQUEST);
             this._heartbeatPromises.push({
@@ -109,7 +111,9 @@ export default class HeartbeatService extends BaseService {
 
     override onDisconnected(): void {
         this.stop();
-        const error = ResponseError.fromCode(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
+        const error = ResponseError.from({
+            code: ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED
+        });
         this._rejectHeartbeatPromises(error);
     }
 }

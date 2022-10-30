@@ -29,40 +29,57 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestMethodOrder
 import org.junit.jupiter.api.Timeout
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation::class)
 internal class StorageServiceET {
+
+    @BeforeAll
+    @Timeout(5)
+    fun setup() = runBlocking {
+        turmsClient = TurmsClient(HOST)
+        turmsClient.userService.login(USER_ID, "123")
+        return@runBlocking
+    }
+
+    @AfterAll
+    @Timeout(5)
+    fun tearDown() = runBlocking {
+        turmsClient.driver.disconnect()
+        return@runBlocking
+    }
 
     /** Create */
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
-    fun uploadProfilePicture_shouldReturnUrl() = runBlocking {
-        val url = turmsClient.storageService.uploadProfilePicture(PROFILE_PICTURE)
+    fun uploadUserProfilePicture_shouldReturnUploadResult() = runBlocking {
+        val result = turmsClient.storageService.uploadUserProfilePicture(MEDIA_TYPE, PROFILE_PICTURE)
             .data
-        assertNotNull(url)
+        assertNotNull(result)
     }
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
-    fun uploadGroupProfilePicture_shouldReturnUrl() = runBlocking {
-        val url = turmsClient.storageService.uploadGroupProfilePicture(PROFILE_PICTURE, GROUP_ID)
+    fun uploadGroupProfilePicture_shouldReturnUploadResult() = runBlocking {
+        val result = turmsClient.storageService.uploadGroupProfilePicture(GROUP_ID, MEDIA_TYPE, PROFILE_PICTURE)
             .data
-        assertNotNull(url)
+        assertNotNull(result)
     }
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
-    fun uploadAttachment_shouldReturnUrl() = runBlocking {
+    fun uploadMessageAttachment_shouldReturnUploadResult() = runBlocking {
         messageId = turmsClient.messageService.sendMessage(false, targetId = 2L, text = "I've attached a picture")
             .data
-        val url = turmsClient.storageService.uploadAttachment(messageId, ATTACHMENT)
-        assertNotNull(url)
+        val result = turmsClient.storageService.uploadMessageAttachment(messageId, MEDIA_TYPE, ATTACHMENT)
+        assertNotNull(result)
     }
 
     /** Query */
@@ -70,8 +87,9 @@ internal class StorageServiceET {
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun queryProfilePicture_shouldEqualUploadedPicture() = runBlocking {
-        val bytes = turmsClient.storageService.queryProfilePicture(USER_ID)
+    fun queryUserProfilePicture_shouldEqualUploadedPicture() = runBlocking {
+        val bytes = turmsClient.storageService.queryUserProfilePicture(USER_ID)
+            .data
             .data
         assertArrayEquals(PROFILE_PICTURE, bytes)
     }
@@ -82,14 +100,16 @@ internal class StorageServiceET {
     fun queryGroupProfilePicture_shouldEqualUploadedPicture() = runBlocking {
         val bytes = turmsClient.storageService.queryGroupProfilePicture(GROUP_ID)
             .data
+            .data
         assertArrayEquals(PROFILE_PICTURE, bytes)
     }
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun queryAttachment_shouldEqualUploadedAttachment() = runBlocking {
-        val bytes = turmsClient.storageService.queryAttachment(messageId)
+    fun queryMessageAttachment_shouldEqualUploadedAttachment() = runBlocking {
+        val bytes = turmsClient.storageService.queryMessageAttachment(messageId)
+            .data
             .data
         assertArrayEquals(PROFILE_PICTURE, bytes)
     }
@@ -99,8 +119,8 @@ internal class StorageServiceET {
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun deleteProfile_shouldSucceed() = runBlocking {
-        val result = turmsClient.storageService.deleteProfile()
+    fun deleteUserProfilePicture_shouldSucceed() = runBlocking {
+        val result = turmsClient.storageService.deleteUserProfilePicture()
             .data
         assertNotNull(result)
     }
@@ -108,8 +128,8 @@ internal class StorageServiceET {
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun deleteGroupProfile_shouldSucceed() = runBlocking {
-        val result = turmsClient.storageService.deleteGroupProfile(GROUP_ID)
+    fun deleteGroupProfilePicture_shouldSucceed() = runBlocking {
+        val result = turmsClient.storageService.deleteGroupProfilePicture(GROUP_ID)
             .data
         assertNotNull(result)
     }
@@ -118,23 +138,9 @@ internal class StorageServiceET {
         private lateinit var turmsClient: TurmsClient
         private const val USER_ID = 1L
         private const val GROUP_ID: Long = 1
+        private const val MEDIA_TYPE = "image/png"
         private val PROFILE_PICTURE = byteArrayOf(1, 2, 3, 4, 9, 8, 7, 6, 5)
         private val ATTACHMENT = PROFILE_PICTURE
         private var messageId: Long = 0
-
-        @BeforeAll
-        @Timeout(5)
-        @JvmStatic
-        fun setup() = runBlocking {
-            turmsClient = TurmsClient(HOST)
-            turmsClient.userService.login(USER_ID, "123")
-        }
-
-        @AfterAll
-        @Timeout(5)
-        @JvmStatic
-        fun tearDown() = runBlocking {
-            turmsClient.driver.disconnect()
-        }
     }
 }

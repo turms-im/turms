@@ -5,8 +5,9 @@ let turmsClient: TurmsClient;
 const USER_ID = '1';
 const GROUP_ID = '1';
 
+const MEDIA_TYPE = 'image/png';
 const PROFILE_PICTURE: Buffer = new Buffer([0, 1, 2, 3]);
-const ATTACHMENT: Buffer = PROFILE_PICTURE;
+const MESSAGE_ATTACHMENT: Buffer = PROFILE_PICTURE;
 let messageId;
 
 beforeAll(async () => {
@@ -24,61 +25,69 @@ afterAll(async () => {
     await turmsClient.userService.logout();
 });
 
-describe('Create', async () => {
-    it('uploadProfilePicture_shouldReturnUrl', async () => {
-        const response = await turmsClient.storageService.uploadProfilePicture({
-            bytes: PROFILE_PICTURE
+describe('Create', () => {
+    it('uploadUserProfilePicture_shouldReturnUploadResult', async () => {
+        const response = await turmsClient.storageService.uploadUserProfilePicture({
+            mediaType: MEDIA_TYPE,
+            data: PROFILE_PICTURE
         });
-        const url = response.data;
-        expect(url).toBeTruthy();
+        const result = response.data;
+        expect(result).toBeTruthy();
     });
-    it('uploadGroupProfilePicture_shouldReturnUrl', async () => {
+    it('uploadGroupProfilePicture_shouldReturnUploadResult', async () => {
         const response = await turmsClient.storageService.uploadGroupProfilePicture({
-            bytes: PROFILE_PICTURE,
-            groupId: GROUP_ID
+            groupId: GROUP_ID,
+            mediaType: MEDIA_TYPE,
+            data: PROFILE_PICTURE
         });
-        const url = response.data;
-        expect(url).toBeTruthy();
+        const result = response.data;
+        expect(result).toBeTruthy();
     });
-    it('uploadAttachment_shouldReturnUrl', async () => {
+    it('uploadMessageAttachment_shouldReturnUploadResult', async () => {
         const sendMessageResponse = await turmsClient.messageService.sendMessage({
             isGroupMessage: false,
             targetId: '2',
             text: 'I\'ve attached a picture'
         });
         messageId = sendMessageResponse.data;
-        const uploadAttachmentResponse = await turmsClient.storageService.uploadAttachment({
+        const uploadAttachmentResponse = await turmsClient.storageService.uploadMessageAttachment({
             messageId,
-            bytes: ATTACHMENT
+            mediaType: MEDIA_TYPE,
+            data: MESSAGE_ATTACHMENT
         });
-        const url = uploadAttachmentResponse.data;
-        expect(url).toBeTruthy();
+        const result = uploadAttachmentResponse.data;
+        expect(result).toBeTruthy();
     });
 });
 
 describe('Query', () => {
-    // TODO
-    // it('queryProfilePicture_shouldEqualUploadedPicture', async () => {
-    //     const bytes = await turmsClient.storageService.queryProfilePicture(USER_ID);
-    //     expect(Buffer.from(bytes)).toEqual(PROFILE_PICTURE);
-    // });
-    // it('queryGroupProfilePicture_shouldEqualUploadedPicture', async () => {
-    //     const bytes = await turmsClient.storageService.queryGroupProfilePicture(GROUP_ID);
-    //     expect(Buffer.from(bytes)).toEqual(PROFILE_PICTURE);
-    // });
-    // it('queryAttachment_shouldEqualUploadedAttachment', async () => {
-    //     const bytes = await turmsClient.storageService.queryAttachment(messageId);
-    //     expect(Buffer.from(bytes)).toEqual(ATTACHMENT);
-    // });
+    it('queryUserProfilePicture_shouldEqualUploadedPicture', async () => {
+        const resource = await turmsClient.storageService.queryUserProfilePicture({
+            userId: USER_ID
+        });
+        expect(resource.data.data).toEqual(PROFILE_PICTURE.valueOf());
+    });
+    it('queryGroupProfilePicture_shouldEqualUploadedPicture', async () => {
+        const resource = await turmsClient.storageService.queryGroupProfilePicture({
+            groupId: GROUP_ID
+        });
+        expect(resource.data.data).toEqual(PROFILE_PICTURE.valueOf());
+    });
+    it('queryMessageAttachment_shouldEqualUploadedAttachment', async () => {
+        const resource = await turmsClient.storageService.queryMessageAttachment({
+            messageId: messageId
+        });
+        expect(resource.data.data).toEqual(MESSAGE_ATTACHMENT);
+    });
 });
 
 describe('Delete', () => {
-    it('deleteProfile_shouldSucceed', async () => {
-        const response = await turmsClient.storageService.deleteProfile();
+    it('deleteUserProfilePicture_shouldSucceed', async () => {
+        const response = await turmsClient.storageService.deleteUserProfilePicture();
         expect(response.data).toBeFalsy();
     });
-    it('deleteGroupProfile_shouldSucceed', async () => {
-        const response = await turmsClient.storageService.deleteGroupProfile({
+    it('deleteGroupProfilePicture_shouldSucceed', async () => {
+        const response = await turmsClient.storageService.deleteGroupProfilePicture({
             groupId: GROUP_ID
         });
         expect(response.data).toBeFalsy();

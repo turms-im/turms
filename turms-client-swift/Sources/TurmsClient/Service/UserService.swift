@@ -111,7 +111,10 @@ public class UserService {
 
     public func updateUserOnlineStatus(_ onlineStatus: UserStatus) -> Promise<Response<Void>> {
         if onlineStatus == .offline {
-            return Promise(error: ResponseError(ResponseStatusCode.illegalArgument, "The online status must not be OFFLINE"))
+            return Promise(error: ResponseError(
+                code: ResponseStatusCode.illegalArgument,
+                reason: "The online status must not be OFFLINE"
+            ))
         }
         return turmsClient.driver
             .send {

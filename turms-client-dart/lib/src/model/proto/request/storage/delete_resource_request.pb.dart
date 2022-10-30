@@ -10,11 +10,11 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../constant/content_type.pbenum.dart' as $0;
+import '../../constant/storage_resource_type.pbenum.dart' as $0;
 
 class DeleteResourceRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'DeleteResourceRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
-    ..e<$0.ContentType>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'contentType', $pb.PbFieldType.OE, defaultOrMaker: $0.ContentType.PROFILE, valueOf: $0.ContentType.valueOf, enumValues: $0.ContentType.values)
+    ..e<$0.StorageResourceType>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'type', $pb.PbFieldType.OE, defaultOrMaker: $0.StorageResourceType.USER_PROFILE_PICTURE, valueOf: $0.StorageResourceType.valueOf, enumValues: $0.StorageResourceType.values)
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'keyStr')
     ..aInt64(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'keyNum')
     ..hasRequiredFields = false
@@ -22,13 +22,13 @@ class DeleteResourceRequest extends $pb.GeneratedMessage {
 
   DeleteResourceRequest._() : super();
   factory DeleteResourceRequest({
-    $0.ContentType? contentType,
+    $0.StorageResourceType? type,
     $core.String? keyStr,
     $fixnum.Int64? keyNum,
   }) {
     final _result = create();
-    if (contentType != null) {
-      _result.contentType = contentType;
+    if (type != null) {
+      _result.type = type;
     }
     if (keyStr != null) {
       _result.keyStr = keyStr;
@@ -60,13 +60,13 @@ class DeleteResourceRequest extends $pb.GeneratedMessage {
   static DeleteResourceRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $0.ContentType get contentType => $_getN(0);
+  $0.StorageResourceType get type => $_getN(0);
   @$pb.TagNumber(1)
-  set contentType($0.ContentType v) { setField(1, v); }
+  set type($0.StorageResourceType v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasContentType() => $_has(0);
+  $core.bool hasType() => $_has(0);
   @$pb.TagNumber(1)
-  void clearContentType() => clearField(1);
+  void clearType() => clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get keyStr => $_getSZ(1);

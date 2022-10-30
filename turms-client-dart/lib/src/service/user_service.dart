@@ -114,9 +114,9 @@ class UserService {
   Future<Response<void>> disconnectOnlineDevices(
       List<DeviceType> deviceTypes) async {
     if (deviceTypes.isEmpty) {
-      throw ResponseException.fromCodeAndReason(
-          ResponseStatusCode.illegalArgument,
-          '"deviceTypes" must not be empty');
+      throw ResponseException(
+          code: ResponseStatusCode.illegalArgument,
+          reason: '"deviceTypes" must not be empty');
     }
     final n = await _turmsClient.driver.send(UpdateUserOnlineStatusRequest(
         userStatus: UserStatus.OFFLINE, deviceTypes: deviceTypes));

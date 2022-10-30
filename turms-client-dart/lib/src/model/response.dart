@@ -7,7 +7,7 @@ class Response<T> {
   final DateTime timestamp;
   final Int64? requestId;
   final int code;
-  final T? data;
+  final T data;
 
   Response(this.timestamp, this.requestId, this.code, this.data);
 
@@ -42,22 +42,25 @@ class Response<T> {
   static Response<T> fromNotification<T>(TurmsNotification notification,
       T Function(TurmsNotification_Data data) dataTransformer) {
     if (!notification.hasCode()) {
-      throw ResponseException.fromCodeAndReason(
-          ResponseStatusCode.invalidNotification,
-          'Cannot parse a success response from a notification without code');
+      throw ResponseException(
+          code: ResponseStatusCode.invalidNotification,
+          reason:
+              'Cannot parse a success response from a notification without code');
     }
     if (notification.isError) {
-      throw ResponseException.fromCodeAndReason(
-          ResponseStatusCode.invalidNotification,
-          'Cannot parse a success response from non-success notification');
+      throw ResponseException(
+          code: ResponseStatusCode.invalidNotification,
+          reason:
+              'Cannot parse a success response from non-success notification');
     }
     T data;
     try {
       data = dataTransformer(notification.data);
-    } catch (e) {
-      throw ResponseException.fromCodeAndReason(
-          ResponseStatusCode.invalidNotification,
-          'Failed to transform notification data: ${notification.data}. Error: $e');
+    } on Exception catch (e) {
+      throw ResponseException(
+          code: ResponseStatusCode.invalidNotification,
+          reason: 'Failed to transform notification data: ${notification.data}',
+          cause: e);
     }
     return Response(
         DateTime.fromMillisecondsSinceEpoch(notification.timestamp.toInt()),

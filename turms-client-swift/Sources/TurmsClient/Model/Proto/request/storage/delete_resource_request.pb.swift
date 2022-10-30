@@ -25,7 +25,7 @@ public struct DeleteResourceRequest {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
-    public var contentType: ContentType = .profile
+    public var type: StorageResourceType = .userProfilePicture
 
     public var keyStr: String {
         get { return _keyStr ?? String() }
@@ -66,7 +66,7 @@ private let _protobuf_package = "im.turms.proto"
 extension DeleteResourceRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
     public static let protoMessageName: String = _protobuf_package + ".DeleteResourceRequest"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-        1: .standard(proto: "content_type"),
+        1: .same(proto: "type"),
         2: .standard(proto: "key_str"),
         3: .standard(proto: "key_num"),
     ]
@@ -77,7 +77,7 @@ extension DeleteResourceRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularEnumField(value: &contentType)
+            case 1: try try decoder.decodeSingularEnumField(value: &type)
             case 2: try try decoder.decodeSingularStringField(value: &_keyStr)
             case 3: try try decoder.decodeSingularInt64Field(value: &_keyNum)
             default: break
@@ -90,8 +90,8 @@ extension DeleteResourceRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
         // allocates stack space for every if/case branch local when no optimizations
         // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
         // https://github.com/apple/swift-protobuf/issues/1182
-        if contentType != .profile {
-            try visitor.visitSingularEnumField(value: contentType, fieldNumber: 1)
+        if type != .userProfilePicture {
+            try visitor.visitSingularEnumField(value: type, fieldNumber: 1)
         }
         try { if let v = self._keyStr {
             try visitor.visitSingularStringField(value: v, fieldNumber: 2)
@@ -103,7 +103,7 @@ extension DeleteResourceRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     }
 
     public static func == (lhs: DeleteResourceRequest, rhs: DeleteResourceRequest) -> Bool {
-        if lhs.contentType != rhs.contentType { return false }
+        if lhs.type != rhs.type { return false }
         if lhs._keyStr != rhs._keyStr { return false }
         if lhs._keyNum != rhs._keyNum { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }

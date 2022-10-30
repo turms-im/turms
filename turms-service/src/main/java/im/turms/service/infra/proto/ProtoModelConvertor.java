@@ -45,9 +45,12 @@ import im.turms.service.domain.message.po.Message;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -58,6 +61,19 @@ public final class ProtoModelConvertor {
     }
 
     // Transformation
+
+    public static List<String> toList(Map<String, String> map) {
+        if (map.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Set<Map.Entry<String, String>> entries = map.entrySet();
+        List<String> list = new ArrayList<>(entries.size() << 1);
+        for (Map.Entry<String, String> entry : entries) {
+            list.add(entry.getKey());
+            list.add(entry.getValue());
+        }
+        return list;
+    }
 
     public static im.turms.server.common.access.client.dto.model.message.Message.Builder message2proto(Message message) {
         var builder = ClientMessagePool.getMessageBuilder();

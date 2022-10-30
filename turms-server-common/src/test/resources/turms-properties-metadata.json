@@ -345,8 +345,8 @@
             "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
             "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
             "DELETE_RESOURCE_REQUEST",
-            "QUERY_SIGNED_GET_URL_REQUEST",
-            "QUERY_SIGNED_PUT_URL_REQUEST",
+            "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
+            "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
             "KIND_NOT_SET"
           ],
           "type": "java.util.Set"
@@ -435,8 +435,8 @@
             "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
             "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
             "DELETE_RESOURCE_REQUEST",
-            "QUERY_SIGNED_GET_URL_REQUEST",
-            "QUERY_SIGNED_PUT_URL_REQUEST",
+            "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
+            "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
             "KIND_NOT_SET"
           ],
           "type": "java.util.Set"
@@ -1949,8 +1949,8 @@
           "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
           "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
           "DELETE_RESOURCE_REQUEST",
-          "QUERY_SIGNED_GET_URL_REQUEST",
-          "QUERY_SIGNED_PUT_URL_REQUEST",
+          "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
+          "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
           "KIND_NOT_SET"
         ],
         "type": "java.util.Set"
@@ -2040,8 +2040,8 @@
             "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
             "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
             "DELETE_RESOURCE_REQUEST",
-            "QUERY_SIGNED_GET_URL_REQUEST",
-            "QUERY_SIGNED_PUT_URL_REQUEST",
+            "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
+            "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
             "KIND_NOT_SET"
           ],
           "type": "java.util.Set"
@@ -2130,8 +2130,8 @@
             "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
             "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
             "DELETE_RESOURCE_REQUEST",
-            "QUERY_SIGNED_GET_URL_REQUEST",
-            "QUERY_SIGNED_PUT_URL_REQUEST",
+            "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
+            "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
             "KIND_NOT_SET"
           ],
           "type": "java.util.Set"
@@ -3031,71 +3031,137 @@
       }
     },
     "storage": {
-      "attachmentContentType": {
-        "deprecated": false,
-        "global": false,
-        "mutable": false,
-        "type": "string"
+      "groupProfilePicture": {
+        "allowedContentType": {
+          "deprecated": false,
+          "desc": "The allowed \"Content-Type\" of the resource that the client can upload",
+          "global": false,
+          "mutable": false,
+          "type": "string"
+        },
+        "downloadUrlExpireAfterSeconds": {
+          "deprecated": false,
+          "desc": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        },
+        "expireAfterDays": {
+          "deprecated": false,
+          "desc": "Delete the resource the specific days after creation. 0 means no expiration",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        },
+        "maxSizeBytes": {
+          "deprecated": false,
+          "desc": "The maximum size of the resource that the client can upload. 0 means no limit",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        },
+        "minSizeBytes": {
+          "deprecated": false,
+          "desc": "The minimum size of the resource that the client can upload. 0 means no limit",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        },
+        "uploadUrlExpireAfterSeconds": {
+          "deprecated": false,
+          "desc": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        }
       },
-      "attachmentExpiration": {
-        "deprecated": false,
-        "global": false,
-        "mutable": false,
-        "type": "int"
+      "messageAttachment": {
+        "allowedContentType": {
+          "deprecated": false,
+          "desc": "The allowed \"Content-Type\" of the resource that the client can upload",
+          "global": false,
+          "mutable": false,
+          "type": "string"
+        },
+        "downloadUrlExpireAfterSeconds": {
+          "deprecated": false,
+          "desc": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        },
+        "expireAfterDays": {
+          "deprecated": false,
+          "desc": "Delete the resource the specific days after creation. 0 means no expiration",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        },
+        "maxSizeBytes": {
+          "deprecated": false,
+          "desc": "The maximum size of the resource that the client can upload. 0 means no limit",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        },
+        "minSizeBytes": {
+          "deprecated": false,
+          "desc": "The minimum size of the resource that the client can upload. 0 means no limit",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        },
+        "uploadUrlExpireAfterSeconds": {
+          "deprecated": false,
+          "desc": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        }
       },
-      "attachmentSizeLimit": {
-        "deprecated": false,
-        "global": false,
-        "mutable": false,
-        "type": "int"
-      },
-      "groupProfileContentType": {
-        "deprecated": false,
-        "global": false,
-        "mutable": false,
-        "type": "string"
-      },
-      "groupProfileExpiration": {
-        "deprecated": false,
-        "global": false,
-        "mutable": false,
-        "type": "int"
-      },
-      "groupProfileSizeLimit": {
-        "deprecated": false,
-        "global": false,
-        "mutable": false,
-        "type": "int"
-      },
-      "profileContentType": {
-        "deprecated": false,
-        "global": false,
-        "mutable": false,
-        "type": "string"
-      },
-      "profileExpiration": {
-        "deprecated": false,
-        "global": false,
-        "mutable": false,
-        "type": "int"
-      },
-      "profileSizeLimit": {
-        "deprecated": false,
-        "global": false,
-        "mutable": false,
-        "type": "int"
-      },
-      "signatureDurationForGet": {
-        "deprecated": false,
-        "global": false,
-        "mutable": false,
-        "type": "java.time.Duration"
-      },
-      "signatureDurationForPut": {
-        "deprecated": false,
-        "global": false,
-        "mutable": false,
-        "type": "java.time.Duration"
+      "userProfilePicture": {
+        "allowedContentType": {
+          "deprecated": false,
+          "desc": "The allowed \"Content-Type\" of the resource that the client can upload",
+          "global": false,
+          "mutable": false,
+          "type": "string"
+        },
+        "downloadUrlExpireAfterSeconds": {
+          "deprecated": false,
+          "desc": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        },
+        "expireAfterDays": {
+          "deprecated": false,
+          "desc": "Delete the resource the specific days after creation. 0 means no expiration",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        },
+        "maxSizeBytes": {
+          "deprecated": false,
+          "desc": "The maximum size of the resource that the client can upload. 0 means no limit",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        },
+        "minSizeBytes": {
+          "deprecated": false,
+          "desc": "The minimum size of the resource that the client can upload. 0 means no limit",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        },
+        "uploadUrlExpireAfterSeconds": {
+          "deprecated": false,
+          "desc": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
+          "global": false,
+          "mutable": false,
+          "type": "int"
+        }
       }
     },
     "user": {

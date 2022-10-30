@@ -260,19 +260,13 @@ public class MessageService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Long groupId = null;
         if (sentMessageCache != null) {
             Message message = sentMessageCache.getIfPresent(messageId);
             if (message != null) {
-                if (message.getIsGroupMessage()) {
-                    groupId = message.getTargetId();
-                } else {
-                    return Mono.just(message.getTargetId().equals(userId) || message.getSenderId().equals(userId));
-                }
+                return message.getIsGroupMessage()
+                        ? groupMemberService.isGroupMember(message.getTargetId(), userId, false)
+                        : Mono.just(message.getTargetId().equals(userId) || message.getSenderId().equals(userId));
             }
-        }
-        if (groupId != null) {
-            return groupMemberService.isGroupMember(groupId, userId, false);
         }
         return messageRepository.findMessageSenderIdAndTargetIdAndIsGroupMessage(messageId)
                 .flatMap(message -> message.getIsGroupMessage()

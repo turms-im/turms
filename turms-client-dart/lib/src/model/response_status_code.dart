@@ -7,8 +7,10 @@ class ResponseStatusCode {
   //* For application error
   //**********************************************************
 
-  // Client - Connection
+  // Client - Common
   static const connectTimeout = 1;
+  static const httpError = 90;
+  static const httpNotSuccessfulResponse = 91;
 
   // Client - Request
   static const invalidRequest = 100;
@@ -28,11 +30,15 @@ class ResponseStatusCode {
   static const clientSessionAlreadyEstablished = 300;
   static const clientSessionHasBeenClosed = 301;
 
+  // Group
+
+  // Conversation
+
   // Message
-  static const messageIsRejected = 400;
 
   // Storage
-  static const queryProfileUrlToUpdateBeforeLogin = 500;
+  static const uploadUserProfilePictureBeforeLogin = 700;
+  static const queryUserProfilePictureBeforeLogin = 701;
 
   //**********************************************************
   //* Defined on the server side
@@ -203,10 +209,6 @@ class ResponseStatusCode {
 
   // Storage
   static const storageNotImplemented = 6000;
-  static const fileTooLarge = 6001;
-
-  // Storage - Extension
-  static const redundantRequestForPresignedProfileUrl = 6900;
 
   static bool isSuccessCode(int code) => 1000 <= code && code < 1100;
 

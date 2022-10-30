@@ -556,7 +556,9 @@ export default class GroupService {
             if (result) {
                 return result;
             } else {
-                throw ResponseError.fromCode(ResponseStatusCode.INVALID_RESPONSE);
+                throw ResponseError.from({
+                    code: ResponseStatusCode.INVALID_RESPONSE
+                });
             }
         }));
     }

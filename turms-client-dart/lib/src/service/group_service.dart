@@ -109,9 +109,9 @@ class GroupService {
     }
     final newQuestions = questions.map((question) {
       if (question.answers.isEmpty) {
-        throw ResponseException.fromCodeAndReason(
-            ResponseStatusCode.illegalArgument,
-            'The answers of group must not be empty');
+        throw ResponseException(
+            code: ResponseStatusCode.illegalArgument,
+            reason: 'The answers of group must not be empty');
       }
       return GroupJoinQuestion(
           question: question.question,
@@ -254,17 +254,17 @@ class GroupService {
   Future<Response<GroupJoinQuestionsAnswerResult?>> answerGroupQuestions(
       Map<Int64, String> questionIdToAnswer) async {
     if (questionIdToAnswer.isEmpty) {
-      throw ResponseException.fromCodeAndReason(
-          ResponseStatusCode.illegalArgument,
-          '"questionIdToAnswer" must not be empty');
+      throw ResponseException(
+          code: ResponseStatusCode.illegalArgument,
+          reason: '"questionIdToAnswer" must not be empty');
     }
     final n = await _turmsClient.driver.send(
         CheckGroupJoinQuestionsAnswersRequest(
             questionIdToAnswer: questionIdToAnswer));
     if (!n.data.hasGroupJoinQuestionAnswerResult()) {
-      throw ResponseException.fromCodeAndReason(
-          ResponseStatusCode.invalidResponse,
-          'Missing group join question answer result');
+      throw ResponseException(
+          code: ResponseStatusCode.invalidResponse,
+          reason: 'Missing group join question answer result');
     }
     return n.toResponse((data) => data.groupJoinQuestionAnswerResult);
   }

@@ -38,28 +38,28 @@ class DriverMessageService: BaseService {
         return Promise { seal in
             if case .createSessionRequest = request.kind {
                 if stateStore.isSessionOpen {
-                    return seal.reject(ResponseError(.clientSessionAlreadyEstablished))
+                    return seal.reject(ResponseError(code: .clientSessionAlreadyEstablished))
                 }
             } else if !stateStore.isConnected || !stateStore.isSessionOpen {
-                return seal.reject(ResponseError(.clientSessionHasBeenClosed))
+                return seal.reject(ResponseError(code: .clientSessionHasBeenClosed))
             }
             let now = Date()
             let difference = now.timeIntervalSince1970 - lastRequestDate.timeIntervalSince1970
             let isFrequent = minRequestInterval > 0 && difference <= minRequestInterval
             if isFrequent {
-                return seal.reject(ResponseError(.clientRequestsTooFrequent))
+                return seal.reject(ResponseError(code: .clientRequestsTooFrequent))
             }
             request.requestID = generateRandomId()
             if requestTimeout > 0 {
                 after(.seconds(Int(requestTimeout))).done {
-                    seal.reject(ResponseError(.requestTimeout))
+                    seal.reject(ResponseError(code: .requestTimeout))
                 }
             }
             let data: Data
             do {
                 data = try request.serializedData()
             } catch {
-                seal.reject(ResponseError(.invalidRequest, error.localizedDescription))
+                seal.reject(ResponseError(code: .invalidRequest, reason: "Failed to serialize the request: \(request)", cause: error))
                 return
             }
             requestMap.updateValue(seal, forKey: request.requestID)
@@ -79,13 +79,13 @@ class DriverMessageService: BaseService {
                     handler?.fulfill(notification)
                 } else {
                     if notification.hasReason {
-                        handler?.reject(ResponseError(code, notification.reason))
+                        handler?.reject(ResponseError(code: code, reason: notification.reason))
                     } else {
-                        handler?.reject(ResponseError(code))
+                        handler?.reject(ResponseError(code: code))
                     }
                 }
             } else {
-                handler?.reject(ResponseError(ResponseStatusCode.invalidNotification, "The code is missing"))
+                handler?.reject(ResponseError(code: ResponseStatusCode.invalidNotification, reason: "The code is missing"))
             }
         }
         notifyNotificationListener(notification)
@@ -111,6 +111,6 @@ class DriverMessageService: BaseService {
     }
 
     override func onDisconnected() {
-        rejectRequests(ResponseError(.clientSessionHasBeenClosed))
+        rejectRequests(ResponseError(code: .clientSessionHasBeenClosed))
     }
 }

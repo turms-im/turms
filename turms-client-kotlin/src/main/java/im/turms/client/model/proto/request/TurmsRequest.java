@@ -90,8 +90,8 @@ public  final class TurmsRequest extends
     QUERY_GROUP_JOIN_QUESTIONS_REQUEST(509),
     UPDATE_GROUP_JOIN_QUESTION_REQUEST(510),
     DELETE_RESOURCE_REQUEST(1000),
-    QUERY_SIGNED_GET_URL_REQUEST(1001),
-    QUERY_SIGNED_PUT_URL_REQUEST(1002),
+    QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST(1001),
+    QUERY_RESOURCE_UPLOAD_INFO_REQUEST(1002),
     KIND_NOT_SET(0);
     private final int value;
     private KindCase(int value) {
@@ -159,8 +159,8 @@ public  final class TurmsRequest extends
         case 509: return QUERY_GROUP_JOIN_QUESTIONS_REQUEST;
         case 510: return UPDATE_GROUP_JOIN_QUESTION_REQUEST;
         case 1000: return DELETE_RESOURCE_REQUEST;
-        case 1001: return QUERY_SIGNED_GET_URL_REQUEST;
-        case 1002: return QUERY_SIGNED_PUT_URL_REQUEST;
+        case 1001: return QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST;
+        case 1002: return QUERY_RESOURCE_UPLOAD_INFO_REQUEST;
         case 0: return KIND_NOT_SET;
         default: return null;
       }
@@ -3036,40 +3036,40 @@ public  final class TurmsRequest extends
     }
   }
 
-  public static final int QUERY_SIGNED_GET_URL_REQUEST_FIELD_NUMBER = 1001;
+  public static final int QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST_FIELD_NUMBER = 1001;
   /**
-   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
+   * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
    */
   @java.lang.Override
-  public boolean hasQuerySignedGetUrlRequest() {
+  public boolean hasQueryResourceDownloadInfoRequest() {
     return kindCase_ == 1001;
   }
   /**
-   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
+   * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
    */
   @java.lang.Override
-  public im.turms.client.model.proto.request.storage.QuerySignedGetUrlRequest getQuerySignedGetUrlRequest() {
+  public im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest getQueryResourceDownloadInfoRequest() {
     if (kindCase_ == 1001) {
-       return (im.turms.client.model.proto.request.storage.QuerySignedGetUrlRequest) kind_;
+       return (im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest) kind_;
     }
-    return im.turms.client.model.proto.request.storage.QuerySignedGetUrlRequest.getDefaultInstance();
+    return im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
+   * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
    */
-  private void setQuerySignedGetUrlRequest(im.turms.client.model.proto.request.storage.QuerySignedGetUrlRequest value) {
+  private void setQueryResourceDownloadInfoRequest(im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest value) {
     value.getClass();
   kind_ = value;
     kindCase_ = 1001;
   }
   /**
-   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
+   * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
    */
-  private void mergeQuerySignedGetUrlRequest(im.turms.client.model.proto.request.storage.QuerySignedGetUrlRequest value) {
+  private void mergeQueryResourceDownloadInfoRequest(im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest value) {
     value.getClass();
   if (kindCase_ == 1001 &&
-        kind_ != im.turms.client.model.proto.request.storage.QuerySignedGetUrlRequest.getDefaultInstance()) {
-      kind_ = im.turms.client.model.proto.request.storage.QuerySignedGetUrlRequest.newBuilder((im.turms.client.model.proto.request.storage.QuerySignedGetUrlRequest) kind_)
+        kind_ != im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest.getDefaultInstance()) {
+      kind_ = im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest.newBuilder((im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest) kind_)
           .mergeFrom(value).buildPartial();
     } else {
       kind_ = value;
@@ -3077,49 +3077,49 @@ public  final class TurmsRequest extends
     kindCase_ = 1001;
   }
   /**
-   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
+   * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
    */
-  private void clearQuerySignedGetUrlRequest() {
+  private void clearQueryResourceDownloadInfoRequest() {
     if (kindCase_ == 1001) {
       kindCase_ = 0;
       kind_ = null;
     }
   }
 
-  public static final int QUERY_SIGNED_PUT_URL_REQUEST_FIELD_NUMBER = 1002;
+  public static final int QUERY_RESOURCE_UPLOAD_INFO_REQUEST_FIELD_NUMBER = 1002;
   /**
-   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
+   * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
    */
   @java.lang.Override
-  public boolean hasQuerySignedPutUrlRequest() {
+  public boolean hasQueryResourceUploadInfoRequest() {
     return kindCase_ == 1002;
   }
   /**
-   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
+   * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
    */
   @java.lang.Override
-  public im.turms.client.model.proto.request.storage.QuerySignedPutUrlRequest getQuerySignedPutUrlRequest() {
+  public im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest getQueryResourceUploadInfoRequest() {
     if (kindCase_ == 1002) {
-       return (im.turms.client.model.proto.request.storage.QuerySignedPutUrlRequest) kind_;
+       return (im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest) kind_;
     }
-    return im.turms.client.model.proto.request.storage.QuerySignedPutUrlRequest.getDefaultInstance();
+    return im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
+   * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
    */
-  private void setQuerySignedPutUrlRequest(im.turms.client.model.proto.request.storage.QuerySignedPutUrlRequest value) {
+  private void setQueryResourceUploadInfoRequest(im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest value) {
     value.getClass();
   kind_ = value;
     kindCase_ = 1002;
   }
   /**
-   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
+   * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
    */
-  private void mergeQuerySignedPutUrlRequest(im.turms.client.model.proto.request.storage.QuerySignedPutUrlRequest value) {
+  private void mergeQueryResourceUploadInfoRequest(im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest value) {
     value.getClass();
   if (kindCase_ == 1002 &&
-        kind_ != im.turms.client.model.proto.request.storage.QuerySignedPutUrlRequest.getDefaultInstance()) {
-      kind_ = im.turms.client.model.proto.request.storage.QuerySignedPutUrlRequest.newBuilder((im.turms.client.model.proto.request.storage.QuerySignedPutUrlRequest) kind_)
+        kind_ != im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest.getDefaultInstance()) {
+      kind_ = im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest.newBuilder((im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest) kind_)
           .mergeFrom(value).buildPartial();
     } else {
       kind_ = value;
@@ -3127,9 +3127,9 @@ public  final class TurmsRequest extends
     kindCase_ = 1002;
   }
   /**
-   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
+   * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
    */
-  private void clearQuerySignedPutUrlRequest() {
+  private void clearQueryResourceUploadInfoRequest() {
     if (kindCase_ == 1002) {
       kindCase_ = 0;
       kind_ = null;
@@ -6040,98 +6040,98 @@ public  final class TurmsRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
+     * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
      */
     @java.lang.Override
-    public boolean hasQuerySignedGetUrlRequest() {
-      return instance.hasQuerySignedGetUrlRequest();
+    public boolean hasQueryResourceDownloadInfoRequest() {
+      return instance.hasQueryResourceDownloadInfoRequest();
     }
     /**
-     * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
+     * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
      */
     @java.lang.Override
-    public im.turms.client.model.proto.request.storage.QuerySignedGetUrlRequest getQuerySignedGetUrlRequest() {
-      return instance.getQuerySignedGetUrlRequest();
+    public im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest getQueryResourceDownloadInfoRequest() {
+      return instance.getQueryResourceDownloadInfoRequest();
     }
     /**
-     * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
+     * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
      */
-    public Builder setQuerySignedGetUrlRequest(im.turms.client.model.proto.request.storage.QuerySignedGetUrlRequest value) {
+    public Builder setQueryResourceDownloadInfoRequest(im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest value) {
       copyOnWrite();
-      instance.setQuerySignedGetUrlRequest(value);
+      instance.setQueryResourceDownloadInfoRequest(value);
       return this;
     }
     /**
-     * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
+     * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
      */
-    public Builder setQuerySignedGetUrlRequest(
-        im.turms.client.model.proto.request.storage.QuerySignedGetUrlRequest.Builder builderForValue) {
+    public Builder setQueryResourceDownloadInfoRequest(
+        im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest.Builder builderForValue) {
       copyOnWrite();
-      instance.setQuerySignedGetUrlRequest(builderForValue.build());
+      instance.setQueryResourceDownloadInfoRequest(builderForValue.build());
       return this;
     }
     /**
-     * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
+     * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
      */
-    public Builder mergeQuerySignedGetUrlRequest(im.turms.client.model.proto.request.storage.QuerySignedGetUrlRequest value) {
+    public Builder mergeQueryResourceDownloadInfoRequest(im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest value) {
       copyOnWrite();
-      instance.mergeQuerySignedGetUrlRequest(value);
+      instance.mergeQueryResourceDownloadInfoRequest(value);
       return this;
     }
     /**
-     * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
+     * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
      */
-    public Builder clearQuerySignedGetUrlRequest() {
+    public Builder clearQueryResourceDownloadInfoRequest() {
       copyOnWrite();
-      instance.clearQuerySignedGetUrlRequest();
+      instance.clearQueryResourceDownloadInfoRequest();
       return this;
     }
 
     /**
-     * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
+     * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
      */
     @java.lang.Override
-    public boolean hasQuerySignedPutUrlRequest() {
-      return instance.hasQuerySignedPutUrlRequest();
+    public boolean hasQueryResourceUploadInfoRequest() {
+      return instance.hasQueryResourceUploadInfoRequest();
     }
     /**
-     * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
+     * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
      */
     @java.lang.Override
-    public im.turms.client.model.proto.request.storage.QuerySignedPutUrlRequest getQuerySignedPutUrlRequest() {
-      return instance.getQuerySignedPutUrlRequest();
+    public im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest getQueryResourceUploadInfoRequest() {
+      return instance.getQueryResourceUploadInfoRequest();
     }
     /**
-     * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
+     * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
      */
-    public Builder setQuerySignedPutUrlRequest(im.turms.client.model.proto.request.storage.QuerySignedPutUrlRequest value) {
+    public Builder setQueryResourceUploadInfoRequest(im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest value) {
       copyOnWrite();
-      instance.setQuerySignedPutUrlRequest(value);
+      instance.setQueryResourceUploadInfoRequest(value);
       return this;
     }
     /**
-     * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
+     * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
      */
-    public Builder setQuerySignedPutUrlRequest(
-        im.turms.client.model.proto.request.storage.QuerySignedPutUrlRequest.Builder builderForValue) {
+    public Builder setQueryResourceUploadInfoRequest(
+        im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest.Builder builderForValue) {
       copyOnWrite();
-      instance.setQuerySignedPutUrlRequest(builderForValue.build());
+      instance.setQueryResourceUploadInfoRequest(builderForValue.build());
       return this;
     }
     /**
-     * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
+     * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
      */
-    public Builder mergeQuerySignedPutUrlRequest(im.turms.client.model.proto.request.storage.QuerySignedPutUrlRequest value) {
+    public Builder mergeQueryResourceUploadInfoRequest(im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest value) {
       copyOnWrite();
-      instance.mergeQuerySignedPutUrlRequest(value);
+      instance.mergeQueryResourceUploadInfoRequest(value);
       return this;
     }
     /**
-     * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
+     * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
      */
-    public Builder clearQuerySignedPutUrlRequest() {
+    public Builder clearQueryResourceUploadInfoRequest() {
       copyOnWrite();
-      instance.clearQuerySignedPutUrlRequest();
+      instance.clearQueryResourceUploadInfoRequest();
       return this;
     }
 
@@ -6207,8 +6207,8 @@ public  final class TurmsRequest extends
             im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinQuestionsRequest.class,
             im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest.class,
             im.turms.client.model.proto.request.storage.DeleteResourceRequest.class,
-            im.turms.client.model.proto.request.storage.QuerySignedGetUrlRequest.class,
-            im.turms.client.model.proto.request.storage.QuerySignedPutUrlRequest.class,
+            im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest.class,
+            im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest.class,
           };
           java.lang.String info =
               "\u00007\u0001\u0001\u0001\u03ea7\u0000\u0000\u0000\u0001\u1002\u0000\u0003<\u0000" +

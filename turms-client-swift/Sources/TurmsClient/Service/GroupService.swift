@@ -213,7 +213,10 @@ public class GroupService {
                                 throw ResponseError(.illegalArgument, "The answer of group must be a string")
                             }
                             if answers.isEmpty {
-                                throw ResponseError(.illegalArgument, "The answers of group must not be empty")
+                                throw ResponseError(
+                                    code: .illegalArgument,
+                                    reason: "The answers of group must not be empty"
+                                )
                             }
                             builder.question = question.question
                             builder.answers = answers
@@ -502,7 +505,7 @@ public class GroupService {
                     if let value = result {
                         return value
                     } else {
-                        throw ResponseError(ResponseStatusCode.invalidResponse)
+                        throw ResponseError(code: ResponseStatusCode.invalidResponse)
                     }
                 }
             }

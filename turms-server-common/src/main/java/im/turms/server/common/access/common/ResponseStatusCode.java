@@ -221,11 +221,7 @@ public enum ResponseStatusCode {
     NOT_MEMBER_TO_QUERY_GROUP_MESSAGES(5300, "Only the group members can query its group messages", 403),
 
     // Storage
-    STORAGE_NOT_IMPLEMENTED(6000, "The storage feature is enabled but not implemented yet", 501),
-    FILE_TOO_LARGE(6001, "The file is too large to upload", 413),
-
-    // Storage - Extension
-    REDUNDANT_REQUEST_FOR_PRESIGNED_PROFILE_URL(6900, "The request for the presigned profile URL is redundant", 406);
+    STORAGE_NOT_IMPLEMENTED(6000, "The storage feature is enabled but not implemented yet", 501);
 
     public static final int STATUS_CODE_LENGTH = 4;
     public static final ResponseStatusCode[] VALUES = values();

@@ -62,20 +62,20 @@ class MessageService extends BaseService {
   Future<TurmsNotification> sendRequest(TurmsRequest request) async {
     if (request.hasCreateSessionRequest()) {
       if (stateStore.isSessionOpen) {
-        throw ResponseException.fromCode(
-            ResponseStatusCode.clientSessionAlreadyEstablished);
+        throw ResponseException(
+            code: ResponseStatusCode.clientSessionAlreadyEstablished);
       }
     } else if (!stateStore.isConnected || !stateStore.isSessionOpen) {
-      throw ResponseException.fromCode(
-          ResponseStatusCode.clientSessionHasBeenClosed);
+      throw ResponseException(
+          code: ResponseStatusCode.clientSessionHasBeenClosed);
     }
     final now = DateTime.now().millisecondsSinceEpoch;
     final difference = now - stateStore.lastRequestDate;
     final isFrequent = _minRequestIntervalMillis > 0 &&
         difference <= _minRequestIntervalMillis;
     if (isFrequent) {
-      throw ResponseException.fromCode(
-          ResponseStatusCode.clientRequestsTooFrequent);
+      throw ResponseException(
+          code: ResponseStatusCode.clientRequestsTooFrequent);
     }
     final requestId = _generateRandomId();
     request.requestId = Int64(requestId);
@@ -85,7 +85,7 @@ class MessageService extends BaseService {
         ? Timer(Duration(milliseconds: _requestTimeoutMillis), () {
             final context = _idToRequest.remove(requestId);
             context?.completer.completeError(
-                ResponseException.fromCode(ResponseStatusCode.requestTimeout));
+                ResponseException(code: ResponseStatusCode.requestTimeout));
           })
         : null;
     final completer = Completer<TurmsNotification>();
@@ -112,9 +112,10 @@ class MessageService extends BaseService {
           }
         } else {
           context.completer.completeError(ResponseException(
-              notification.hasRequestId() ? notification.requestId : null,
-              ResponseStatusCode.invalidNotification,
-              'The code is missing'));
+              requestId:
+                  notification.hasRequestId() ? notification.requestId : null,
+              code: ResponseStatusCode.invalidNotification,
+              reason: 'The code is missing'));
         }
       }
     }
@@ -144,8 +145,8 @@ class MessageService extends BaseService {
 
   @override
   void onDisconnected() {
-    final exception = ResponseException.fromCode(
-        ResponseStatusCode.clientSessionHasBeenClosed);
+    final exception =
+        ResponseException(code: ResponseStatusCode.clientSessionHasBeenClosed);
     _rejectRequestCompleter(exception);
   }
 }

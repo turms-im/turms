@@ -76,16 +76,22 @@ export default class MessageService extends BaseService {
         return new Promise((resolve, reject) => {
             if (message.createSessionRequest) {
                 if (this._stateStore.isSessionOpen) {
-                    return reject(ResponseError.fromCode(ResponseStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
+                    return reject(ResponseError.from({
+                        code: ResponseStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED
+                    }));
                 }
             } else if (!this._stateStore.isConnected || !this._stateStore.isSessionOpen) {
-                return reject(ResponseError.fromCode(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
+                return reject(ResponseError.from({
+                    code: ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED
+                }));
             }
             const now = Date.now();
             const difference = now - this._stateStore.lastRequestDate;
             const isFrequent = this._minRequestInterval > 0 && difference <= this._minRequestInterval;
             if (isFrequent) {
-                return reject(ResponseError.fromCode(ResponseStatusCode.CLIENT_REQUESTS_TOO_FREQUENT));
+                return reject(ResponseError.from({
+                    code: ResponseStatusCode.CLIENT_REQUESTS_TOO_FREQUENT
+                }));
             }
             const requestId = this._generateRandomId();
             message.requestId = '' + requestId;
@@ -102,7 +108,9 @@ export default class MessageService extends BaseService {
                     if (this._requestTimeout > 0) {
                         timeoutId = setTimeout(() => {
                             delete this._idToRequest[requestId];
-                            reject(ResponseError.fromCode(ResponseStatusCode.REQUEST_TIMEOUT));
+                            reject(ResponseError.from({
+                                code: ResponseStatusCode.REQUEST_TIMEOUT
+                            }));
                         }, this._requestTimeout);
                     }
                     this._idToRequest[requestId] = {
@@ -133,7 +141,10 @@ export default class MessageService extends BaseService {
                             cb.reject(ResponseError.fromNotification(notification));
                         }
                     } else {
-                        cb.reject(ResponseError.fromCodeAndReason(ResponseStatusCode.INVALID_NOTIFICATION, 'The code is missing'));
+                        cb.reject(ResponseError.from({
+                            code: ResponseStatusCode.INVALID_NOTIFICATION,
+                            reason: 'The code is missing'
+                        }));
                     }
                 }
             }
@@ -164,7 +175,9 @@ export default class MessageService extends BaseService {
     }
 
     override onDisconnected(): void {
-        const error = ResponseError.fromCode(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
+        const error = ResponseError.from({
+            code: ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED
+        });
         this._rejectRequestPromises(error);
     }
 }

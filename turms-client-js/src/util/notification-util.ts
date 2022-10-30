@@ -76,4 +76,19 @@ export default class NotificationUtil {
         }
     }
 
+    static toMap(array: string[]): Record<string, string> {
+        const length = array.length;
+        if (length % 2 != 0) {
+            throw ResponseError.from({
+                code: ResponseStatusCode.ILLEGAL_ARGUMENT,
+                reason: 'The number of elements must be even'
+            });
+        }
+        const map = {};
+        for (let i = 0; i < length; i += 2) {
+            map[array[i]] = array[i + 1];
+        }
+        return map;
+    }
+
 }

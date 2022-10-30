@@ -38,13 +38,27 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestMethodOrder
 import org.junit.jupiter.api.Timeout
 import java.util.concurrent.ExecutionException
 import kotlin.properties.Delegates
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation::class)
 internal class UserServiceET {
+
+    @BeforeAll
+    fun setup() {
+        turmsClient = TurmsClient(HOST)
+    }
+
+    @AfterAll
+    @Timeout(5)
+    fun tearDown() = runBlocking {
+        turmsClient.driver.disconnect()
+        return@runBlocking
+    }
 
     /** Constructor */
 
@@ -325,18 +339,5 @@ internal class UserServiceET {
         private val userStatus = UserStatus.AWAY
         private lateinit var turmsClient: TurmsClient
         private var relationshipGroupIndex by Delegates.notNull<Int>()
-
-        @BeforeAll
-        @JvmStatic
-        fun setup() {
-            turmsClient = TurmsClient(HOST)
-        }
-
-        @AfterAll
-        @Timeout(5)
-        @JvmStatic
-        fun tearDown() = runBlocking {
-            turmsClient.driver.disconnect()
-        }
     }
 }

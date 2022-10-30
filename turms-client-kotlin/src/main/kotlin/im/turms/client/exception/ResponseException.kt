@@ -46,8 +46,8 @@ data class ResponseException internal constructor(
                 ResponseException(requestId, code)
         }
 
-        fun from(code: Int, reason: String? = null): ResponseException {
-            return ResponseException(null, code, reason)
+        fun from(code: Int, reason: String? = null, cause: Throwable? = null): ResponseException {
+            return ResponseException(null, code, reason, cause)
         }
     }
 

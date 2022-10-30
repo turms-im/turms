@@ -16,7 +16,6 @@ export 'src/model/builtin_system_message_type.dart'
 export 'src/model/message_addition.dart' show MessageAddition;
 export 'src/model/new_group_join_question.dart' show NewGroupJoinQuestion;
 export 'src/model/notification.dart' show Notification;
-export 'src/model/proto/constant/content_type.pb.dart' show ContentType;
 export 'src/model/proto/constant/device_type.pb.dart' show DeviceType;
 export 'src/model/proto/constant/group_member_role.pb.dart'
     show GroupMemberRole;
@@ -24,6 +23,8 @@ export 'src/model/proto/constant/profile_access_strategy.pb.dart'
     show ProfileAccessStrategy;
 export 'src/model/proto/constant/request_status.pb.dart' show RequestStatus;
 export 'src/model/proto/constant/response_action.pb.dart' show ResponseAction;
+export 'src/model/proto/constant/storage_resource_type.pb.dart'
+    show StorageResourceType;
 export 'src/model/proto/constant/user_status.pb.dart' show UserStatus;
 export 'src/model/proto/model/common/longs_with_version.pb.dart'
     show LongsWithVersion;
@@ -155,10 +156,10 @@ export 'src/model/proto/request/message/update_message_request.pb.dart'
     show UpdateMessageRequest;
 export 'src/model/proto/request/storage/delete_resource_request.pb.dart'
     show DeleteResourceRequest;
-export 'src/model/proto/request/storage/query_signed_get_url_request.pb.dart'
-    show QuerySignedGetUrlRequest;
-export 'src/model/proto/request/storage/query_signed_put_url_request.pb.dart'
-    show QuerySignedPutUrlRequest;
+export 'src/model/proto/request/storage/query_resource_download_info_request.pb.dart'
+    show QueryResourceDownloadInfoRequest;
+export 'src/model/proto/request/storage/query_resource_upload_info_request.pb.dart'
+    show QueryResourceUploadInfoRequest;
 export 'src/model/proto/request/turms_request.pb.dart' show TurmsRequest;
 export 'src/model/proto/request/user/create_session_request.pb.dart'
     show CreateSessionRequest;

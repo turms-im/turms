@@ -1,24 +1,24 @@
 /* eslint-disable */
 import Long from "long";
 import _m0 from "protobufjs/minimal";
-import { ContentType } from "../../constant/content_type";
+import { StorageResourceType } from "../../constant/storage_resource_type";
 
 export const protobufPackage = "im.turms.proto";
 
 export interface DeleteResourceRequest {
-  contentType: ContentType;
+  type: StorageResourceType;
   keyStr?: string | undefined;
   keyNum?: string | undefined;
 }
 
 function createBaseDeleteResourceRequest(): DeleteResourceRequest {
-  return { contentType: 0, keyStr: undefined, keyNum: undefined };
+  return { type: 0, keyStr: undefined, keyNum: undefined };
 }
 
 export const DeleteResourceRequest = {
   encode(message: DeleteResourceRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.contentType !== 0) {
-      writer.uint32(8).int32(message.contentType);
+    if (message.type !== 0) {
+      writer.uint32(8).int32(message.type);
     }
     if (message.keyStr !== undefined) {
       writer.uint32(18).string(message.keyStr);
@@ -37,7 +37,7 @@ export const DeleteResourceRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.contentType = reader.int32() as any;
+          message.type = reader.int32() as any;
           break;
         case 2:
           message.keyStr = reader.string();

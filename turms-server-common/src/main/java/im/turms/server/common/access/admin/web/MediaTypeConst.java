@@ -25,6 +25,7 @@ public class MediaTypeConst {
     private MediaTypeConst() {
     }
 
+    public static final String ALL_VALUE = "*/*";
     public static final String APPLICATION_JAVA_ARCHIVE = "application/java-archive";
     public static final String APPLICATION_JAVASCRIPT = "application/javascript";
     public static final String APPLICATION_JSON = "application/json";
@@ -34,6 +35,7 @@ public class MediaTypeConst {
     public static final String TEXT_PLAIN_UTF_8 = "text/plain; charset=UTF-8";
     public static final String TEXT_CSS = "text/css";
     public static final String TEXT_HTML = "text/html";
+    public static final String IMAGE = "image/*";
     public static final String IMAGE_PNG = "image/png";
 
 }

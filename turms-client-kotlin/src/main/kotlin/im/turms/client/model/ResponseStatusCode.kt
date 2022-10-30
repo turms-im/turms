@@ -28,6 +28,11 @@ object ResponseStatusCode {
     //* For application error
     //**********************************************************
 
+    // Client - Common
+    const val CONNECT_TIMEOUT = 1
+    const val HTTP_ERROR = 90
+    const val HTTP_NOT_SUCCESSFUL_RESPONSE = 91
+
     // Client - Request
     const val INVALID_REQUEST = 100
     const val CLIENT_REQUESTS_TOO_FREQUENT = 101
@@ -46,10 +51,15 @@ object ResponseStatusCode {
     const val CLIENT_SESSION_ALREADY_ESTABLISHED = 300
     const val CLIENT_SESSION_HAS_BEEN_CLOSED = 301
 
+    // Group
+
+    // Conversation
+
     // Message
 
     // Storage
-    const val QUERY_PROFILE_URL_TO_UPDATE_BEFORE_LOGIN = 500
+    const val UPLOAD_USER_PROFILE_PICTURE_BEFORE_LOGIN = 700
+    const val QUERY_USER_PROFILE_PICTURE_BEFORE_LOGIN = 701
 
     //**********************************************************
     //* Defined on the server side
@@ -220,10 +230,6 @@ object ResponseStatusCode {
 
     // Storage
     const val STORAGE_NOT_IMPLEMENTED = 6000
-    const val FILE_TOO_LARGE = 6001
-
-    // Storage - Extension
-    const val REDUNDANT_REQUEST_FOR_PRESIGNED_PROFILE_URL = 6900
 
     @JvmStatic
     fun isSuccessCode(businessCode: Int): Boolean {

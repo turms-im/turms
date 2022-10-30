@@ -31,11 +31,28 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestMethodOrder
 import org.junit.jupiter.api.Timeout
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation::class)
 internal class ConversationServiceET {
+
+    @BeforeAll
+    @Timeout(5)
+    fun setup() = runBlocking {
+        client = TurmsClient(HOST)
+        client.userService.login(USER_ID, "123")
+        return@runBlocking
+    }
+
+    @AfterAll
+    @Timeout(5)
+    fun tearDown() = runBlocking {
+        client.driver.disconnect()
+        return@runBlocking
+    }
 
     /** Constructor */
 
@@ -103,20 +120,5 @@ internal class ConversationServiceET {
         private const val RELATED_USER_ID: Long = 2
         private const val GROUP_ID: Long = 1
         private lateinit var client: TurmsClient
-
-        @BeforeAll
-        @JvmStatic
-        @Timeout(5)
-        fun setup() = runBlocking {
-            client = TurmsClient(HOST)
-            client.userService.login(USER_ID, "123")
-        }
-
-        @AfterAll
-        @JvmStatic
-        @Timeout(5)
-        fun tearDown() = runBlocking {
-            client.driver.disconnect()
-        }
     }
 }

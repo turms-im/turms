@@ -1067,7 +1067,11 @@
         "type": "boolean"
       }
     },
-    "storage": {},
+    "storage": {
+      "groupProfilePicture": {},
+      "messageAttachment": {},
+      "userProfilePicture": {}
+    },
     "user": {
       "activateUserWhenAdded": {
         "deprecated": false,

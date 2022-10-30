@@ -38,14 +38,31 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestMethodOrder
 import org.junit.jupiter.api.Timeout
 import java.util.Date
 import java.util.concurrent.ExecutionException
 import kotlin.properties.Delegates
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 internal class GroupServiceET {
+
+    @BeforeAll
+    @Timeout(5)
+    fun setup() = runBlocking {
+        client = TurmsClient(HOST)
+        client.userService.login(USER_ID, "123")
+        return@runBlocking
+    }
+
+    @AfterAll
+    @Timeout(5)
+    fun tearDown() = runBlocking {
+        client.driver.disconnect()
+        return@runBlocking
+    }
 
     /** Constructor */
 
@@ -386,6 +403,7 @@ internal class GroupServiceET {
     }
 
     companion object {
+        private const val USER_ID: Long = 1
         private const val GROUP_MEMBER_ID: Long = 3
         private const val GROUP_INVITATION_INVITEE: Long = 4
         private const val GROUP_SUCCESSOR: Long = 1
@@ -395,20 +413,5 @@ internal class GroupServiceET {
         private var groupJoinQuestionId by Delegates.notNull<Long>()
         private var groupJoinRequestId by Delegates.notNull<Long>()
         private var groupInvitationId by Delegates.notNull<Long>()
-
-        @BeforeAll
-        @Timeout(5)
-        @JvmStatic
-        fun setup() = runBlocking {
-            client = TurmsClient(HOST)
-            client.userService.login(1L, "123")
-        }
-
-        @AfterAll
-        @Timeout(5)
-        @JvmStatic
-        fun tearDown() = runBlocking {
-            client.driver.disconnect()
-        }
     }
 }

@@ -40,13 +40,36 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestMethodOrder
 import org.junit.jupiter.api.Timeout
 import java.util.Date
 import kotlin.properties.Delegates
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation::class)
 internal class MessageServiceET {
+
+    @BeforeAll
+    @Timeout(5)
+    fun setup() = runBlocking {
+        senderClient = TurmsClient(HOST)
+        recipientClient = TurmsClient(HOST)
+        groupMemberClient = TurmsClient(HOST)
+        senderClient.userService.login(SENDER_ID, "123")
+        recipientClient.userService.login(RECIPIENT_ID, "123")
+        groupMemberClient.userService.login(GROUP_MEMBER_ID, "123")
+        return@runBlocking
+    }
+
+    @AfterAll
+    @Timeout(5)
+    fun tearDown() = runBlocking {
+        senderClient.driver.disconnect()
+        recipientClient.driver.disconnect()
+        groupMemberClient.driver.disconnect()
+        return@runBlocking
+    }
 
     /** Constructor */
 
@@ -212,26 +235,5 @@ internal class MessageServiceET {
         private lateinit var groupMemberClient: TurmsClient
         private var privateMessageId by Delegates.notNull<Long>()
         private var groupMessageId by Delegates.notNull<Long>()
-
-        @BeforeAll
-        @Timeout(10)
-        @JvmStatic
-        fun setup() = runBlocking {
-            senderClient = TurmsClient(HOST)
-            recipientClient = TurmsClient(HOST)
-            groupMemberClient = TurmsClient(HOST)
-            senderClient.userService.login(SENDER_ID, "123")
-            recipientClient.userService.login(RECIPIENT_ID, "123")
-            groupMemberClient.userService.login(GROUP_MEMBER_ID, "123")
-        }
-
-        @AfterAll
-        @Timeout(5)
-        @JvmStatic
-        fun tearDown() = runBlocking {
-            senderClient.driver.disconnect()
-            recipientClient.driver.disconnect()
-            groupMemberClient.driver.disconnect()
-        }
     }
 }
